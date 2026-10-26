@@ -1,0 +1,9 @@
+{
+  "version": "2.103.2",
+  "platform": "macOS_amd64",
+  "executable": "/Users/srf/.local/share/minimir-toolchain/github-cli/gh_2.103.2_macOS_amd64/bin/gh",
+  "source": "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_macOS_amd64.zip",
+  "archive_sha256": "2dc7f1fc4761f96732995f6e4f4c6b4d705f2635da4126620c8b30eaa67b9c98",
+  "checksum_verified": true,
+  "scope": "项目独立工具路径，不修改全局PATH。GitHub身份授权由用户完成。"
+}

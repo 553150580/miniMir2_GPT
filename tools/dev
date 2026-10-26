@@ -33,6 +33,8 @@ def main():
     directories += [str(PREFIX/'protoc/36.2/bin'),str(PREFIX/'node-tools/node_modules/.bin'),str(PREFIX/'uv/bin')]
     lima=read_lock('lima.lock.json')
     if lima.get('binary_path'):directories.append(str(Path(lima['binary_path']).parent))
+    github=read_lock('github-cli.lock.json')
+    if github.get('executable'):directories.append(str(Path(github['executable']).parent))
     env=os.environ.copy()
     # macOS系统Python的launcher变量会污染另一个venv，导致版本正确但依赖路径错误。
     for key in ('__PYVENV_LAUNCHER__','PYTHONHOME','PYTHONPATH','PYTHONUSERBASE'):

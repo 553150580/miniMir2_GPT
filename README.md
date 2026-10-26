@@ -60,6 +60,10 @@ make release-check
 - 客户端只接收公共/展示字段；服务端控制字段、来源和历史经济样本不下发。
 - 代码、注释和说明使用UTF-8；运营日界为Asia/Shanghai；金额按最终策划的整数精度表示。
 
+## 阶段提交与推送
+
+远程为`https://github.com/553150580/miniMir2_GPT.git`。每阶段完成对应检查后提交并推送，再核对远程分支；不强推覆盖已有历史。GitHub CLI2.103.2已从官方发行包独立安装、双重核对摘要，通过`./tools/dev gh`调用。首次认证由用户完成，可用`./tools/dev gh auth login --hostname github.com --git-protocol https --web`，不把密码或Token交给聊天或写入仓库。命令行不继承系统代理时，读取当前系统代理并临时使用。
+
 ## 当前开发状态
 
 - 工程：本地版本基线随本轮提交保存，使用`git log -1`查看。Creator3.8.8保存了Boot/Login/RoleSelect/Game四个scene及Entity/ListItem两个prefab；最新真实Web Mobile构建exit36，构建期间源码稳定、全部6份布局哈希不变，报告中的源码摘要与当前文件一致，见[构建证据](docs/客户端构建检查.json)。
