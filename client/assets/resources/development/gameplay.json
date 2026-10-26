@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "development_only": true,
+  "runtime_ready": false,
+  "status": "candidate",
+  "items": [
+    {
+      "item_id": 218,
+      "name": "木剑",
+      "kind": "equipment",
+      "equip_slot": 0,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 193,
+      "name": "布衣",
+      "kind": "equipment",
+      "equip_slot": 1,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 35,
+      "name": "金创药(小量)",
+      "kind": "potion",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 36,
+      "name": "魔法药(小量)",
+      "kind": "potion",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    }
+  ],
+  "jobs": [
+    {
+      "job_id": 0,
+      "name": "战士",
+      "profile": "player_male"
+    },
+    {
+      "job_id": 1,
+      "name": "法师",
+      "profile": "player_female"
+    },
+    {
+      "job_id": 2,
+      "name": "道士",
+      "profile": "player_male"
+    }
+  ],
+  "experience": [
+    {
+      "level": 1,
+      "next_level_exp": 10
+    },
+    {
+      "level": 2,
+      "next_level_exp": 20
+    },
+    {
+      "level": 3,
+      "next_level_exp": 30
+    },
+    {
+      "level": 4,
+      "next_level_exp": 40
+    },
+    {
+      "level": 5,
+      "next_level_exp": 50
+    },
+    {
+      "level": 6,
+      "next_level_exp": 60
+    },
+    {
+      "level": 7,
+      "next_level_exp": 70
+    },
+    {
+      "level": 8,
+      "next_level_exp": 80
+    },
+    {
+      "level": 9,
+      "next_level_exp": 90
+    },
+    {
+      "level": 10,
+      "next_level_exp": 100
+    },
+    {
+      "level": 11,
+      "next_level_exp": 200
+    },
+    {
+      "level": 12,
+      "next_level_exp": 300
+    },
+    {
+      "level": 13,
+      "next_level_exp": 400
+    },
+    {
+      "level": 14,
+      "next_level_exp": 500
+    },
+    {
+      "level": 15,
+      "next_level_exp": 600
+    },
+    {
+      "level": 16,
+      "next_level_exp": 700
+    },
+    {
+      "level": 17,
+      "next_level_exp": 800
+    },
+    {
+      "level": 18,
+      "next_level_exp": 900
+    },
+    {
+      "level": 19,
+      "next_level_exp": 1000
+    },
+    {
+      "level": 20,
+      "next_level_exp": 1000
+    }
+  ],
+  "monster_profiles": [
+    {
+      "definition_id": 1,
+      "name": "稻草人",
+      "profile": "monster_scarecrow"
+    }
+  ],
+  "pet_profiles": [
+    {
+      "definition_id": 2,
+      "name": "变异骷髅",
+      "profile": "pet_skeleton",
+      "job_id": 2
+    }
+  ]
+}

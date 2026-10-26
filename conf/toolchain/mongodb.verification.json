@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "verification": {
+    "status": "passed_development_capability",
+    "checked_on": "2026-10-26",
+    "native_macos_compatible": false,
+    "guest_binary_version": "8.0.34",
+    "replica_set_initialized": true,
+    "single_member_primary": true,
+    "transaction_commit": true,
+    "transaction_abort": true,
+    "temporary_probe_database_dropped": true,
+    "development_database_empty": true,
+    "guest_loopback_listener_verified": true,
+    "host_loopback_forwarder_verified": true,
+    "start_stop_restart_verified": true,
+    "idempotent_start_verified": true,
+    "default_toolchain_wrapper_verified": true,
+    "guest_pid_identity_and_pidfd_stop_verified": true,
+    "auto_start_installed": false,
+    "ha_or_capacity_verified": false,
+    "production_ready": false,
+    "go_driver_smoke_verified": true,
+    "go_driver_version": "2.9.2",
+    "go_driver_smoke_evidence_path": "conf/toolchain/go-smoke-mongodb.json"
+  },
+  "uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
+  "replica_set": "minimirDev",
+  "guest_run_id": "60cc88c1-4c20-42cc-8ceb-5b42e4dd3f30",
+  "driver_smoke": {
+    "replica_initialized": true,
+    "single_member_primary": true,
+    "transaction_commit_verified": true,
+    "transaction_abort_verified": true,
+    "temporary_probe_database_dropped": true,
+    "empty_database": "minimir_dev_10f710612b37",
+    "empty_environment_collection_count": 0,
+    "server_version": "8.0.34"
+  },
+  "driver_python": "/Users/srf/.local/share/minimir-toolchain/mongodb/pymongo-venv/bin/python3",
+  "driver_packages": [
+    {
+      "package": "pymongo",
+      "version": "4.19.0",
+      "sha256": "d28d6ff5cec9fd405657de12128e3faafb9c4a0b0194527e3d761dd9d083d7a7",
+      "official_metadata_url": "https://pypi.org/pypi/pymongo/4.19.0/json"
+    },
+    {
+      "package": "dnspython",
+      "version": "2.9.0",
+      "sha256": "9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9",
+      "official_metadata_url": "https://pypi.org/pypi/dnspython/2.9.0/json"
+    }
+  ],
+  "native_failed_attempt": {
+    "run_id": "f5ea1276-fc9a-42d8-be84-eba14df13299",
+    "launch_exit_code": -6,
+    "launch_stderr": "dyld[25735]: Symbol not found: __ZTVNSt3__13pmr25monotonic_buffer_resourceE\n  Referenced from: <C847416A-12E6-3F87-82FA-BCB462145760> /Users/srf/.local/share/minimir-toolchain/mongodb/8.0.34/bin/mongod (built for macOS 14.0 which is newer than running OS)\n  Expected in:     <8CAC377D-FCC3-34DD-8FA6-C76EBB4D68C9> /usr/lib/libc++.1.dylib\n"
+  },
+  "commands_verified": [
+    "./tools/dev python3 tools/environment/mongodb_dev.py status",
+    "./tools/dev python3 tools/environment/mongodb_dev.py start",
+    "python3 tools/environment/mongodb_dev.py stop"
+  ],
+  "evidence_note": "这是开发工具链能力的历史校验快照，当前状态应调用status；不代表资产业务、HA或容量验收。",
+  "controller_sha256": "182fda98edf5a4d093a706f487246b3b6a577ec3fe9b1b5b8399f13310a8bf2e",
+  "guest_controller_sha256": "55b43607eb0c0263c920c1ee2b943018f5c6d67b0780468d2b0787b71e1b9388",
+  "go_driver_smoke": {
+    "version": "2.9.2",
+    "evidence_path": "conf/toolchain/go-smoke-mongodb.json",
+    "result": {
+      "argon2_dependency": "loaded",
+      "game_business": "not_implemented",
+      "go_dependencies": "loaded",
+      "mongodb_replica_set": "minimirDev",
+      "mongodb_server_version": "8.0.34",
+      "mongodb_transaction": "snapshot_majority_commit_and_duplicate_rollback_passed",
+      "protobuf_uint64_roundtrip": "passed",
+      "test_database_cleaned_after_check": true,
+      "websocket_dependency": "loaded"
+    }
+  }
+}

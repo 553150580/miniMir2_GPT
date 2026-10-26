@@ -1,0 +1,8 @@
+{
+  "argon2_dependency": "loaded",
+  "game_business": "not_implemented",
+  "go_dependencies": "loaded",
+  "mongodb_transaction": "not_run",
+  "protobuf_uint64_roundtrip": "passed",
+  "websocket_dependency": "loaded"
+}

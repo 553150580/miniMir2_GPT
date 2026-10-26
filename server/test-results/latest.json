@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-26T16:42:06.708644+00:00",
+  "finished_at_utc": "2026-10-26T16:42:54.794280+00:00",
+  "command": [
+    "/Users/srf/Miro2/miniMir2_GPT/tools/dev",
+    "go",
+    "test",
+    "-json",
+    "-race",
+    "./...",
+    "-count=1",
+    "-timeout=180s"
+  ],
+  "mongo_e2e_explicit": true,
+  "race_detector": true,
+  "exit_code": 0,
+  "passed": true,
+  "source_changed_during_test": false,
+  "passed_tests": [
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFullBagAutoRejectPushesActualHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackObservationSurvivesStruckAndCooldownReject"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLethalStatePushesBeforeBroadcastWindow"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestFirstLoopMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoOwnershipFence"
+    }
+  ],
+  "skipped_tests": [],
+  "fixture": {
+    "path": "config/development/first-loop.json",
+    "sha256": "4a84acd74e69b28ffa412c2bfd09a08606572beb28b2523ff2e9514d20fa1546",
+    "candidate_only": true,
+    "runtime_ready": false
+  },
+  "source_sha256": {
+    "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
+    "config/development/first-loop.json": "4a84acd74e69b28ffa412c2bfd09a08606572beb28b2523ff2e9514d20fa1546",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
+    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
+    "server/internal/devconfig/config.go": "3b37ec10015cb61d321974a9bc2ecc198c612186f79f93efd95641826aae127e",
+    "server/internal/domain/model.go": "a879dee6f4fceae4dacf0c4ce68507a546247dabc37e907ca1a9144a3678326e",
+    "server/internal/game/combat.go": "cb375df6325d998c2b784f6da7d49520985f96e4fc0416a76890901dffcdea9c",
+    "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/observation_test.go": "493785542fc79c682975cadd3f02b9aadd989bd6b31e61d82da03a9dd1c28b20",
+    "server/internal/game/runtime.go": "2da807cd31b15e8f0d1e8ce47b09514cb0629434cf66b8bd1aae736ded244cc1",
+    "server/internal/integration/first_loop_test.go": "00ebc9562f27b2587946e06abd33d33b4aab39f98410e6d46988b37ea4b3c1de",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/persistence/assets.go": "8ae1fb362e1ad5dd210aaaee4149615d46d33a836f9b95ac23cb1942bb0ef3c3",
+    "server/internal/persistence/auth.go": "effa485658f42c3de38e0f44fe57fe7d36a39410e7b36175ab652663ce4f1468",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/store.go": "b9f7ad649c92aea3aa93cfd140ea84959df822f878c96ee98feaa0b7e1bb4ce2",
+    "server/internal/protocol/protocol_ids.go": "5d460ce27186439e73a57173c59c4c83cb4ce27bed754e3e9ab18fde79b098de",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "source_sha256_after": {
+    "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
+    "config/development/first-loop.json": "4a84acd74e69b28ffa412c2bfd09a08606572beb28b2523ff2e9514d20fa1546",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
+    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
+    "server/internal/devconfig/config.go": "3b37ec10015cb61d321974a9bc2ecc198c612186f79f93efd95641826aae127e",
+    "server/internal/domain/model.go": "a879dee6f4fceae4dacf0c4ce68507a546247dabc37e907ca1a9144a3678326e",
+    "server/internal/game/combat.go": "cb375df6325d998c2b784f6da7d49520985f96e4fc0416a76890901dffcdea9c",
+    "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/observation_test.go": "493785542fc79c682975cadd3f02b9aadd989bd6b31e61d82da03a9dd1c28b20",
+    "server/internal/game/runtime.go": "2da807cd31b15e8f0d1e8ce47b09514cb0629434cf66b8bd1aae736ded244cc1",
+    "server/internal/integration/first_loop_test.go": "00ebc9562f27b2587946e06abd33d33b4aab39f98410e6d46988b37ea4b3c1de",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/persistence/assets.go": "8ae1fb362e1ad5dd210aaaee4149615d46d33a836f9b95ac23cb1942bb0ef3c3",
+    "server/internal/persistence/auth.go": "effa485658f42c3de38e0f44fe57fe7d36a39410e7b36175ab652663ce4f1468",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/store.go": "b9f7ad649c92aea3aa93cfd140ea84959df822f878c96ee98feaa0b7e1bb4ce2",
+    "server/internal/protocol/protocol_ids.go": "5d460ce27186439e73a57173c59c4c83cb4ce27bed754e3e9ab18fde79b098de",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "events_sha256": "66bb215ef64572797924ee4837daada1a45d4595d94b583d1fb3a58e0fdb3544",
+  "production_ready": false
+}

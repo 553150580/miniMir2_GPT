@@ -1,0 +1,12 @@
+[
+  {
+    "group": "architecture",
+    "formula_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+    "inspection": "{\"kind\":\"table\",\"sheet\":\"配置目录\",\"address\":\"A5:H12\",\"rows\":8,\"cols\":8,\"values\":[[\"配置表\",\"table_id\",\"记录数\",\"已定\",\"候选\",\"待核验\",\"历史\",\"发布必需\"],[\"单程序节点与监管模式\",\"arch_node_roles\",4,4,0,0,0,\"是\"],[\"首轮运行与性能实验参数\",\"arch_runtime_budgets\",39,0,39,0,0,\"是\"],[\"采用的存储围栏启动契约\",\"arch_storage_guards\",1,1,0,0,0,\"是\"],[\"消息号分配区段契约\",\"arch_protocol_ranges\",7,7,0,0,0,\"是\"],[\"配置发布和维护边界\",\"arch_config_classes\",6,6,0,0,0,\"是\"],[\"按最终范围适配的交付阶段\",\"arch_stage_gates\",8,8,0,0,0,\"是\"],[null,null,null,null,null,null,null,null]]}"
+  },
+  {
+    "group": "gameplay",
+    "formula_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+    "inspection": "{\"kind\":\"table\",\"sheet\":\"配置目录\",\"address\":\"A5:H12\",\"rows\":8,\"cols\":8,\"values\":[[\"配置表\",\"table_id\",\"记录数\",\"已定\",\"候选\",\"待核验\",\"历史\",\"发布必需\"],[\"四货币\",\"game_currencies\",4,4,0,0,0,\"是\"],[\"职业与固定形象\",\"game_jobs\",3,3,0,0,0,\"是\"],[\"装备部位\",\"game_equipment_slots\",10,10,0,0,0,\"是\"],[\"品质与词条槽\",\"game_qualities\",5,5,0,0,0,\"是\"],[\"装备阶段\",\"game_stages\",5,5,0,0,0,\"是\"],[\"产品范围与基础约束\",\"game_product_rules\",23,23,0,0,0,\"是\"],[\"角色与仓库规则\",\"game_warehouse_rules\",13,11,0,2,0,\"是\"]]}"
+  }
+]

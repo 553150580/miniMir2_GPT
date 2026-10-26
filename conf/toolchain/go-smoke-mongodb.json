@@ -1,0 +1,11 @@
+{
+  "argon2_dependency": "loaded",
+  "game_business": "not_implemented",
+  "go_dependencies": "loaded",
+  "mongodb_replica_set": "minimirDev",
+  "mongodb_server_version": "8.0.34",
+  "mongodb_transaction": "snapshot_majority_commit_and_duplicate_rollback_passed",
+  "protobuf_uint64_roundtrip": "passed",
+  "test_database_cleaned_after_check": true,
+  "websocket_dependency": "loaded"
+}

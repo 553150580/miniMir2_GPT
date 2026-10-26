@@ -1,0 +1,75 @@
+{
+  "schema_status": "draft_contract_not_implemented",
+  "runtime_ready": false,
+  "environment": "development",
+  "source_ref": "最终策划案.md §7 L942–955、§7.5 L1102–1137；架构方案.md §18 L950–1005",
+  "rules": {
+    "product_source": "最终策划案.md",
+    "architecture_source": "架构方案.md",
+    "adaptation_contract": "docs/架构适配与规则优先级.md",
+    "config_release_ref": "<approved_immutable_config_release_id>",
+    "config_content_hash": "<approved_release_sha256>",
+    "operational_day_timezone": "Asia/Shanghai",
+    "routing_authority": "mongodb"
+  },
+  "mongo": {
+    "uri_ref": "env:MINIMIR2_MONGODB_URI",
+    "database_name_ref": "env:MINIMIR2_MONGODB_DATABASE",
+    "replica_set_required": true,
+    "transaction_read_concern": "snapshot",
+    "transaction_write_concern": "majority",
+    "migration_contract": "docs/数据库集合与索引契约.json",
+    "migration_status": "pending"
+  },
+  "redis": {
+    "enabled": false,
+    "uri_ref": "env:MINIMIR2_REDIS_URI",
+    "authority": "rebuildable_cache_only"
+  },
+  "audit": {
+    "delivery_model": "transactional_outbox",
+    "database_uri_ref": "env:MINIMIR2_AUDIT_MONGODB_URI",
+    "month_partition_timezone": "Asia/Shanghai",
+    "source_ref": "架构方案.md §6.5 L371–379；最终策划案.md §7.5 L1127–1137"
+  },
+  "transport": {
+    "public_types": ["tcp_tls", "https", "wss"],
+    "websocket_path": "/ws",
+    "https_rpc_path": "/rpc",
+    "protocol_catalog_ref": "config/catalog/fragments/architecture.json#arch_protocol_ranges",
+    "public_tls_certificate_ref": "env:MINIMIR2_PUBLIC_TLS_CERT_FILE",
+    "public_tls_key_ref": "env:MINIMIR2_PUBLIC_TLS_KEY_FILE",
+    "internal_mtls_ca_ref": "env:MINIMIR2_INTERNAL_TLS_CA_FILE",
+    "internal_mtls_certificate_ref": "env:MINIMIR2_INTERNAL_TLS_CERT_FILE",
+    "internal_mtls_key_ref": "env:MINIMIR2_INTERNAL_TLS_KEY_FILE"
+  },
+  "credentials": {
+    "ticket_signing_key_ref": "env:MINIMIR2_TICKET_SIGNING_KEY_FILE",
+    "node_credential_ref": "env:MINIMIR2_NODE_CREDENTIAL_FILE",
+    "gm_identity_provider_ref": "env:MINIMIR2_GM_IDENTITY_CONFIG_FILE"
+  },
+  "runtime": {
+    "simulation_model": "shared_ready_due_scheduler_bounded_workers",
+    "role_owner_model": "single_permanent_owner",
+    "personal_scene_sync": "instance_direct_no_aoi",
+    "challenge_commit_model": "proposal_to_current_role_owner",
+    "world_fault_recovery": "stop_fence_then_initial_world",
+    "persist_temporary_world_state": false,
+    "budget_catalog_ref": "config/catalog/fragments/architecture.json#arch_runtime_budgets",
+    "budget_status": "candidate_not_benchmarked",
+    "source_ref": "最终策划案.md §7.2 L1011–1059、§7.4 L1082–1100；架构方案.md §4 L190–238、§6 L316–379"
+  },
+  "release_gates": {
+    "gameplay_endpoints_enabled": false,
+    "economic_endpoints_enabled": false,
+    "missing_fields_policy": "reject_and_keep_relevant_endpoint_closed",
+    "pending_requirements": [
+      "配置加载器和schema实现",
+      "原始占位值替换并通过验证",
+      "Mongo副本集及迁移完成",
+      "凭据和证书引用实际配置",
+      "实体与队列预算实测",
+      "规则、来源、协议与故障验收"
+    ]
+  }
+}

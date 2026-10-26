@@ -1,0 +1,593 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-10-26T11:54:18.616826+00:00",
+  "status": "passed",
+  "python_executable": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+  "python_version": "3.14.9",
+  "pillow_version": "13.0.0",
+  "stdlib_configuration_tests": {
+    "command": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/config",
+      "-p",
+      "test_*.py"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "...........\n----------------------------------------------------------------------\nRan 11 tests in 0.307s\n\nOK\n"
+  },
+  "resource_check": {
+    "command": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "/Users/srf/Miro2/miniMir2_GPT/tools/resources/inspect_wil.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "result": {
+      "status": "checked",
+      "runtime_ready": false,
+      "results": [
+        {
+          "source_id": "client_180_named",
+          "package": "Hum",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 14400,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 4416,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 60,
+              "height": 71,
+              "offset_x": 8,
+              "offset_y": -48,
+              "pixel_bytes": 4260,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Hum/frame_000000.png"
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 5348,
+              "width": 60,
+              "height": 71,
+              "offset_x": 8,
+              "offset_y": -48,
+              "pixel_bytes": 4260,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Hum/frame_000001.png"
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 9616,
+              "width": 60,
+              "height": 71,
+              "offset_x": 8,
+              "offset_y": -48,
+              "pixel_bytes": 4260,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Hum/frames.json",
+          "png_roundtrip_verified": true
+        },
+        {
+          "source_id": "client_180_named",
+          "package": "Weapon",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 45600,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 14816,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 1092,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 1104,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Weapon/frames.json",
+          "png_roundtrip_verified": true
+        },
+        {
+          "source_id": "client_180_named",
+          "package": "Hair",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 3600,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 1936,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 1092,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 1104,
+              "width": 4,
+              "height": 1,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 4,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": true,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Hair/frames.json",
+          "png_roundtrip_verified": true
+        },
+        {
+          "source_id": "client_180_named",
+          "package": "Mon1",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 1086,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 622,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 104,
+              "height": 95,
+              "offset_x": 1,
+              "offset_y": -74,
+              "pixel_bytes": 9880,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Mon1/frame_000000.png"
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 10968,
+              "width": 104,
+              "height": 97,
+              "offset_x": 2,
+              "offset_y": -76,
+              "pixel_bytes": 10088,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Mon1/frame_000001.png"
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 21064,
+              "width": 104,
+              "height": 98,
+              "offset_x": 1,
+              "offset_y": -77,
+              "pixel_bytes": 10192,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Mon1/frames.json",
+          "png_roundtrip_verified": true
+        },
+        {
+          "source_id": "client_180_named",
+          "package": "Tiles",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 11312,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 5068,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 96,
+              "height": 64,
+              "offset_x": 0,
+              "offset_y": 0,
+              "pixel_bytes": 6144,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Tiles/frame_000000.png"
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 7232,
+              "width": 96,
+              "height": 64,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 6144,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Tiles/frame_000001.png"
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 13384,
+              "width": 96,
+              "height": 64,
+              "offset_x": 7,
+              "offset_y": -44,
+              "pixel_bytes": 6144,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Tiles/frames.json",
+          "png_roundtrip_verified": true
+        },
+        {
+          "source_id": "client_180_named",
+          "package": "Magic",
+          "format": "wil_v1_palette256_uncompressed_version0",
+          "frame_count": 4010,
+          "declared_empty_frames": 0,
+          "small_frames_pixels_le_4": 2002,
+          "status": "unverified",
+          "frames_head": [
+            {
+              "frame_index": 0,
+              "source_offset": 1080,
+              "width": 44,
+              "height": 75,
+              "offset_x": 3,
+              "offset_y": -40,
+              "pixel_bytes": 3300,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Magic/frame_000000.png"
+            },
+            {
+              "frame_index": 1,
+              "source_offset": 4388,
+              "width": 60,
+              "height": 75,
+              "offset_x": -5,
+              "offset_y": -40,
+              "pixel_bytes": 4500,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": "assets/imported/samples/client_180_named/Magic/frame_000001.png"
+            },
+            {
+              "frame_index": 2,
+              "source_offset": 8896,
+              "width": 76,
+              "height": 78,
+              "offset_x": -14,
+              "offset_y": -40,
+              "pixel_bytes": 5928,
+              "declared_empty": false,
+              "empty_reason": null,
+              "small_frame_pixels_le_4": false,
+              "png_path": null
+            }
+          ],
+          "exported_png_count": 2,
+          "metadata": "assets/imported/samples/client_180_named/Magic/frames.json",
+          "png_roundtrip_verified": true
+        }
+      ],
+      "failures": []
+    }
+  },
+  "sample_refresh": {
+    "requested": true,
+    "performed": true,
+    "backup_path": "/Users/srf/Miro2/miniMir2_GPT/.work/pre-python-upgrade-samples",
+    "source_packages_modified": false,
+    "source_indices_modified": false,
+    "previous_pixels_verified_before_removal": true,
+    "rgba_preserved": true,
+    "before": [
+      {
+        "package": "Hair",
+        "frame_index": 1200,
+        "png": "client_180_named/Hair/frame_001200.png",
+        "png_sha256": "723366ce9b66d3824b90445356020542dcaa1ea8cfe6788489a12babd2a8e13b",
+        "rgba_sha256": "5649c1d6001c4a302a98bc51923544f4b8197f05b6d3bc53a2eea51247e90507",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hair",
+        "frame_index": 1201,
+        "png": "client_180_named/Hair/frame_001201.png",
+        "png_sha256": "ce8ba191d069668dc3bcb847122ea210278a4993c5ea3cf713b88f4f0903bb0b",
+        "rgba_sha256": "11bd23d332f1b827d6613a6ae0a4dcca5f1ff5220325c2b2fbfc66ba331eda4e",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hum",
+        "frame_index": 0,
+        "png": "client_180_named/Hum/frame_000000.png",
+        "png_sha256": "7204f079f6f66bdd2c6d82886b404129ca77f9bf9f20df2b008b12553e306be2",
+        "rgba_sha256": "62b09c2b7209394a0b64495fb47dae45228301698c741e58e3ce508719c74302",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hum",
+        "frame_index": 1,
+        "png": "client_180_named/Hum/frame_000001.png",
+        "png_sha256": "ddaf6d9e6e675d40dd12cb601b6d49de91c25ad73823aaee785b685c8d710add",
+        "rgba_sha256": "ed78339526502ee8ccfc0bcc38816791af69953e25c7e27688ed376bee4c859d",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Magic",
+        "frame_index": 0,
+        "png": "client_180_named/Magic/frame_000000.png",
+        "png_sha256": "3d45cacfe707de111a5947f9eab9b969ff8c8dbc16b241710e2d694065f2f527",
+        "rgba_sha256": "3fd731c37f32ce1a66ec0423bddf67876bd28a409a215032f3ccf23edaa18511",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Magic",
+        "frame_index": 1,
+        "png": "client_180_named/Magic/frame_000001.png",
+        "png_sha256": "15c3fb259e6c47abb48bdee77c20e20b2290c05c98900015ae0129cb6d11bf99",
+        "rgba_sha256": "c7725e4da2613034c13ec906187c01fd418d63b1c836051fd7e579e7daa25633",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Mon1",
+        "frame_index": 0,
+        "png": "client_180_named/Mon1/frame_000000.png",
+        "png_sha256": "926595bd75204e5a9659529bc50080bae9a2b157767055fc8129944471574505",
+        "rgba_sha256": "72b776133b93b91753dbfd12737b4ba8614c11009d321147923e16d1bb7dc2d4",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Mon1",
+        "frame_index": 1,
+        "png": "client_180_named/Mon1/frame_000001.png",
+        "png_sha256": "79e99bfc65cc1a347b21b637edeb6b3c2021e3d3d69b118e272683c3fc3eeff3",
+        "rgba_sha256": "490af8e1534fa4fd1ff2a61764f17aff52b90b132249e6bd0f97114ce8b7b106",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Tiles",
+        "frame_index": 0,
+        "png": "client_180_named/Tiles/frame_000000.png",
+        "png_sha256": "2dfa372aa04ac6b74da48e5f254cc1a90389d34e72cfb4bb9426c9b425a644e0",
+        "rgba_sha256": "c21199dd420a9e5fcab5de457bcafb5c3db78576967c0285d300253db47888d4",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Tiles",
+        "frame_index": 1,
+        "png": "client_180_named/Tiles/frame_000001.png",
+        "png_sha256": "415ee58b70e76e27d3514657152286471a45b074cdb5c7a0e94f85b00975ab2c",
+        "rgba_sha256": "0e44865c833ac1dfec4400377b1e5bcb906c1b6d7576a11931f6ff1808385245",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Weapon",
+        "frame_index": 1200,
+        "png": "client_180_named/Weapon/frame_001200.png",
+        "png_sha256": "b90c2a4cb2f78b3b8446295268898ffec24f427d97d040c9ae889b366c48560f",
+        "rgba_sha256": "616c4b0002d15a38ba361b94ef5e70eb6bcb97c0070fa8ed76b355fca9a7388d",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Weapon",
+        "frame_index": 1201,
+        "png": "client_180_named/Weapon/frame_001201.png",
+        "png_sha256": "380344faae886bbd699325a0ff947e555311213eb5c62a5a9c1b0b80ea5124ef",
+        "rgba_sha256": "7e9d0ffa21ca0db18655482ff67156a64397a3cd8a476aaf528c43780aa00b49",
+        "previous_pillow_version": "12.3.0",
+        "pixel_bytes_equal": true
+      }
+    ],
+    "after": [
+      {
+        "package": "Hair",
+        "frame_index": 1200,
+        "png": "client_180_named/Hair/frame_001200.png",
+        "png_sha256": "723366ce9b66d3824b90445356020542dcaa1ea8cfe6788489a12babd2a8e13b",
+        "rgba_sha256": "5649c1d6001c4a302a98bc51923544f4b8197f05b6d3bc53a2eea51247e90507",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hair",
+        "frame_index": 1201,
+        "png": "client_180_named/Hair/frame_001201.png",
+        "png_sha256": "ce8ba191d069668dc3bcb847122ea210278a4993c5ea3cf713b88f4f0903bb0b",
+        "rgba_sha256": "11bd23d332f1b827d6613a6ae0a4dcca5f1ff5220325c2b2fbfc66ba331eda4e",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hum",
+        "frame_index": 0,
+        "png": "client_180_named/Hum/frame_000000.png",
+        "png_sha256": "7204f079f6f66bdd2c6d82886b404129ca77f9bf9f20df2b008b12553e306be2",
+        "rgba_sha256": "62b09c2b7209394a0b64495fb47dae45228301698c741e58e3ce508719c74302",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Hum",
+        "frame_index": 1,
+        "png": "client_180_named/Hum/frame_000001.png",
+        "png_sha256": "ddaf6d9e6e675d40dd12cb601b6d49de91c25ad73823aaee785b685c8d710add",
+        "rgba_sha256": "ed78339526502ee8ccfc0bcc38816791af69953e25c7e27688ed376bee4c859d",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Magic",
+        "frame_index": 0,
+        "png": "client_180_named/Magic/frame_000000.png",
+        "png_sha256": "3d45cacfe707de111a5947f9eab9b969ff8c8dbc16b241710e2d694065f2f527",
+        "rgba_sha256": "3fd731c37f32ce1a66ec0423bddf67876bd28a409a215032f3ccf23edaa18511",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Magic",
+        "frame_index": 1,
+        "png": "client_180_named/Magic/frame_000001.png",
+        "png_sha256": "15c3fb259e6c47abb48bdee77c20e20b2290c05c98900015ae0129cb6d11bf99",
+        "rgba_sha256": "c7725e4da2613034c13ec906187c01fd418d63b1c836051fd7e579e7daa25633",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Mon1",
+        "frame_index": 0,
+        "png": "client_180_named/Mon1/frame_000000.png",
+        "png_sha256": "926595bd75204e5a9659529bc50080bae9a2b157767055fc8129944471574505",
+        "rgba_sha256": "72b776133b93b91753dbfd12737b4ba8614c11009d321147923e16d1bb7dc2d4",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Mon1",
+        "frame_index": 1,
+        "png": "client_180_named/Mon1/frame_000001.png",
+        "png_sha256": "79e99bfc65cc1a347b21b637edeb6b3c2021e3d3d69b118e272683c3fc3eeff3",
+        "rgba_sha256": "490af8e1534fa4fd1ff2a61764f17aff52b90b132249e6bd0f97114ce8b7b106",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Tiles",
+        "frame_index": 0,
+        "png": "client_180_named/Tiles/frame_000000.png",
+        "png_sha256": "2dfa372aa04ac6b74da48e5f254cc1a90389d34e72cfb4bb9426c9b425a644e0",
+        "rgba_sha256": "c21199dd420a9e5fcab5de457bcafb5c3db78576967c0285d300253db47888d4",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Tiles",
+        "frame_index": 1,
+        "png": "client_180_named/Tiles/frame_000001.png",
+        "png_sha256": "415ee58b70e76e27d3514657152286471a45b074cdb5c7a0e94f85b00975ab2c",
+        "rgba_sha256": "0e44865c833ac1dfec4400377b1e5bcb906c1b6d7576a11931f6ff1808385245",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Weapon",
+        "frame_index": 1200,
+        "png": "client_180_named/Weapon/frame_001200.png",
+        "png_sha256": "b90c2a4cb2f78b3b8446295268898ffec24f427d97d040c9ae889b366c48560f",
+        "rgba_sha256": "616c4b0002d15a38ba361b94ef5e70eb6bcb97c0070fa8ed76b355fca9a7388d",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      },
+      {
+        "package": "Weapon",
+        "frame_index": 1201,
+        "png": "client_180_named/Weapon/frame_001201.png",
+        "png_sha256": "380344faae886bbd699325a0ff947e555311213eb5c62a5a9c1b0b80ea5124ef",
+        "rgba_sha256": "7e9d0ffa21ca0db18655482ff67156a64397a3cd8a476aaf528c43780aa00b49",
+        "previous_pillow_version": "13.0.0",
+        "pixel_bytes_equal": true
+      }
+    ],
+    "generator_command": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "/Users/srf/Miro2/miniMir2_GPT/tools/resources/inspect_wil.py"
+    ]
+  },
+  "business_or_full_art_validation_passed": false,
+  "limitations": [
+    "配置11项回归与12张PNG像素检查不等于业务实现、1.80行为核验或完整美术验收。"
+  ]
+}

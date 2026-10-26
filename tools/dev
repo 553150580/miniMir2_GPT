@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+"""本项目固定工具链入口，不修改系统PATH或替换系统程序。"""
+import json
+import os
+from pathlib import Path
+import sys
+
+ROOT=Path(__file__).resolve().parents[1]
+PREFIX=Path.home()/'.local/share/minimir-toolchain'
+
+
+def read_lock(name):
+    path=ROOT/'conf/toolchain'/name
+    return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+
+
+def main():
+    go=read_lock('go.lock.json')
+    protoc=read_lock('protoc.lock.json')
+    directories=[]
+    # Python工具venv由安装清单确定；没有时仅回退到现场已安装命令。
+    python=read_lock('python.lock.json')
+    if isinstance(python.get('tools_venv'),dict):directories.append(str(Path(python['tools_venv']['path'])/'bin'))
+    if isinstance(python.get('uv'),dict) and python['uv'].get('executable'):directories.append(str(Path(python['uv']['executable']).parent))
+    for key in ('venv_path','tools_venv','venv'):
+        value=python.get(key)
+        if isinstance(value,str):directories.append(str(Path(value)/'bin'))
+    directories += [str(PREFIX/'python/tools-venv/bin'),str(PREFIX/'go-tools/bin')]
+    if go.get('executable'):directories.append(str(Path(go['executable']).parent))
+    else:directories += [str(PREFIX/'go/go1.27.3/bin')]
+    if protoc.get('binary_path'):directories.append(str(Path(protoc['binary_path']).parent))
+    elif protoc.get('executable'):directories.append(str(Path(protoc['executable']).parent))
+    directories += [str(PREFIX/'protoc/36.2/bin'),str(PREFIX/'node-tools/node_modules/.bin'),str(PREFIX/'uv/bin')]
+    lima=read_lock('lima.lock.json')
+    if lima.get('binary_path'):directories.append(str(Path(lima['binary_path']).parent))
+    env=os.environ.copy()
+    # macOS系统Python的launcher变量会污染另一个venv，导致版本正确但依赖路径错误。
+    for key in ('__PYVENV_LAUNCHER__','PYTHONHOME','PYTHONPATH','PYTHONUSERBASE'):
+        env.pop(key,None)
+    env['PATH']=os.pathsep.join(directories+[env.get('PATH','')])
+    env['GOMODCACHE']=str(PREFIX/'cache/go-mod')
+    env['GOCACHE']=str(PREFIX/'cache/go-build')
+    env['GOPATH']=str(PREFIX/'cache/go-path')
+    env['GOBIN']=str(PREFIX/'go-tools/bin')
+    env['GOTOOLCHAIN']='local'
+    env['GOPROXY']='https://goproxy.cn,https://proxy.golang.org,direct'
+    env['GOSUMDB']='sum.golang.org https://goproxy.cn/sumdb/sum.golang.org'
+    env['MINIMIR_TOOLCHAIN_ACTIVE']='1'
+    if lima.get('lima_home'):env['LIMA_HOME']=lima['lima_home']
+    if len(sys.argv)<2:
+        print('用法：./tools/dev <go|protoc|python3|pbjs|pbts|node|其他命令> [参数...]')
+        print('项目工具目录：'+str(PREFIX))
+        return 0
+    args=sys.argv[1:]
+    cwd=ROOT/'server' if args and args[0]=='go' and (ROOT/'server/go.mod').exists() else ROOT
+    if args and args[0]=='--cwd':
+        if len(args)<3:raise SystemExit('--cwd需要项目内目录和命令')
+        cwd=(ROOT/args[1]).resolve()
+        if cwd!=ROOT and ROOT not in cwd.parents:raise SystemExit('--cwd必须在本项目内')
+        args=args[2:]
+    os.chdir(cwd)
+    os.execvpe(args[0],args,env)
+
+
+if __name__=='__main__':main()

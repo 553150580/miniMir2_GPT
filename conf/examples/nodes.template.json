@@ -1,0 +1,30 @@
+{
+  "schema_status": "draft_deployment_contract_not_implemented",
+  "runtime_ready": false,
+  "source_ref": "架构方案.md §17.1 L905–920；最终策划案.md §7.5 L1102–1125",
+  "note": "参数形状参考原架构；尚无可执行文件。所有占位必须替换。该文件不是动态路由或进程权威清单。",
+  "executable_path_ref": "env:MINIMIR2_SERVER_EXECUTABLE",
+  "shared_config_path": "<absolute_path_to_private_cluster_json>",
+  "profiles": [
+    {
+      "role": "account",
+      "arguments": ["--mode=node", "--node-type=account", "--node-id=<account_node_id>", "--host-id=<host_id>", "--config=<private_cluster_json>", "--tcp-listen=<account_tcp_listen>", "--https-listen=<account_https_listen>", "--internal-listen=<account_internal_listen>", "--tcp-advertise=<account_tcp_advertise>", "--https-advertise=<account_https_advertise>", "--internal-advertise=<account_internal_advertise>"],
+      "ready_gate": "控制租约、Mongo、认证/路由/签票能力验证后才开放新授权"
+    },
+    {
+      "role": "gm",
+      "arguments": ["--mode=node", "--node-type=gm", "--node-id=<gm_node_id>", "--host-id=<host_id>", "--config=<private_cluster_json>", "--https-listen=<gm_https_listen>", "--internal-listen=<gm_internal_listen>", "--https-advertise=<gm_https_advertise>", "--internal-advertise=<gm_internal_advertise>"],
+      "ready_gate": "管理租约、管理员身份和权限、审计、控制任务验证"
+    },
+    {
+      "role": "game",
+      "arguments": ["--mode=node", "--node-type=game", "--node-id=<game_node_id>", "--host-id=<host_id>", "--config=<private_cluster_json>", "--tcp-listen=<game_tcp_listen>", "--https-listen=<game_https_listen>", "--internal-listen=<game_internal_listen>", "--tcp-advertise=<game_tcp_advertise>", "--https-advertise=<game_https_advertise>", "--internal-advertise=<game_internal_advertise>"],
+      "ready_gate": "account受控新授权、node/run/room/角色围栏、永久对账、配置和场景就绪"
+    },
+    {
+      "role": "supervisor",
+      "arguments": ["--mode=supervisor", "--host-id=<host_id>", "--internal-listen=<supervisor_internal_listen>", "--config=<private_cluster_json>"],
+      "ready_gate": "独占主机管理端、host许可、OS进程身份和期望状态对账"
+    }
+  ]
+}

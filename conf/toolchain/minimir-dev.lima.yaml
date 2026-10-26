@@ -1,0 +1,38 @@
+# 本任务独立开发VM；不注册自动开机，不挂载宿主HOME或原始资料。
+# 官方Ubuntu Minimal 24.04 LTS发布镜像，20261017；下载后核对官方SHA256SUMS。
+# 来源：https://cloud-images.ubuntu.com/minimal/releases/noble/release-20261017/
+# 使用已校验的本机缓存，避免Lima二次下载；镜像来源和完整摘要见lima.lock.json。
+minimumLimaVersion: "2.2.1"
+vmType: "vz"
+arch: "x86_64"
+cpus: 2
+memory: "3GiB"
+disk: "20GiB"
+images:
+  - location: "/Users/srf/.local/share/minimir-toolchain/lima/images/ubuntu-24.04-minimal-cloudimg-amd64.img"
+    arch: "x86_64"
+    digest: "sha256:b3296484e362ba2e713489a5de6225c719d9500962bde25d15f2f21e512c7658"
+mounts: []
+mountType: "virtiofs"
+networks: []
+containerd:
+  system: false
+  user: false
+ssh:
+  loadDotSSHPubKeys: false
+  forwardAgent: false
+  forwardX11: false
+  overVsock: true
+portForwards:
+  - guestIP: "127.0.0.1"
+    guestPort: 27017
+    hostIP: "127.0.0.1"
+    hostPort: 27118
+    proto: "tcp"
+  - guestIP: "0.0.0.0"
+    guestPortRange: [1, 65535]
+    proto: "any"
+    ignore: true
+upgradePackages: false
+propagateProxyEnv: false
+provision: []

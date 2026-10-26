@@ -1,0 +1,293 @@
+{
+  "schema_version": 2,
+  "runtime_ready": false,
+  "actual_image_count": 12,
+  "upstream_image_count": 11,
+  "user_supplement_image_count": 1,
+  "document_claimed_count": 12,
+  "count_status": "上级参考11张、项目内用户补充1张、当前总计12张；不将新增图冒充历史原有12图的一员",
+  "user_registry_path": "资料索引/用户确认参考.json",
+  "user_registry_sha256": "03a2a7813fd658600cd8d0b330c4cc96bf9d9d3db0af6534fb1df4dca83df2f3",
+  "current_highest_priority_reference": {
+    "reference_id": "user_ui_reference:main-hud-20261026",
+    "source_kind": "project_user_supplement",
+    "relative_path": "用户确认/主界面UI布局参考.png",
+    "local_reference_path": "UI参考图/用户确认/主界面UI布局参考.png",
+    "sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
+    "bytes": 778254,
+    "dimensions_px": [
+      730,
+      1390
+    ],
+    "screen": "主界面",
+    "layout_role": "main_ui_layout",
+    "priority": "current_highest",
+    "confirmation_status": "user_confirmed",
+    "confirmation_date": "2026-10-26",
+    "confirmation_evidence": "用户在当前对话附图并明确说明：主界面ui布局参考。",
+    "purpose": "用户明确确认的当前布局参考",
+    "mapping_basis": "用户附图与明确说明，并核验项目内原字节图片",
+    "same_as_legacy_requested_jpg": null,
+    "same_as_upstream_main_ui_png": null,
+    "creator_scene": "client/assets/scenes/Game.scene",
+    "creator_prefab": null,
+    "implementation_status": "开发场景已保存，正式布局和真机验收待执行",
+    "runtime_ready": false,
+    "source_unchanged": true,
+    "copied_by_prepare_local": false,
+    "creator_scene_sha256": "fe42171663c3ed850e68972bdb978474bce3fe660dad308a31b9ab814c4efb95",
+    "creator_scene_bytes": 293357,
+    "creator_scene_probe_basis": "仅只读确认文件存在及原字节SHA-256，未由索引生成器执行视觉/交互/真机验收",
+    "status": "开发场景已保存，正式布局和真机验收待执行",
+    "integrity_verified": true
+  },
+  "current_main_layout_reference_available": true,
+  "current_main_layout_user_confirmed": true,
+  "active_main_ui_reference_id": "user_ui_reference:main-hud-20261026",
+  "active_main_ui_reference_path": "UI参考图/用户确认/主界面UI布局参考.png",
+  "active_main_ui_reference_available": true,
+  "active_main_ui_reference_user_confirmed": true,
+  "current_highest_priority_status": "开发场景已保存，正式布局和真机验收待执行",
+  "legacy_requested_file": "主界面UI布局参考.jpg",
+  "legacy_requested_file_found": false,
+  "highest_priority_requested_file": "主界面UI布局参考.jpg",
+  "highest_priority_file_found": false,
+  "highest_priority_status": "历史指定JPG仍未发现；当前用户确认布局另见active字段",
+  "png_is_same_as_required_jpg": null,
+  "automatic_substitution_allowed": false,
+  "resolution_action": "对照用户确认PNG校核已保存开发场景与可编辑预制体，完成正式布局、交互和真机验收；不宣称与历史JPG或PNG相同。",
+  "fixed_ui_policy": "固定层级与布局保存在可编辑.scene/.prefab，代码绑定引用和动态数据；旧截图/工具代码不是Creator资产。",
+  "images": [
+    {
+      "reference_id": "ui_reference:01_登录.png",
+      "relative_path": "01_登录.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/01_登录.png",
+      "sha256": "8ac7fb35ff459e6ff51d66c44c64755ba299e471800e8f0293b07009456872d4",
+      "dimensions_px": [
+        941,
+        1672
+      ],
+      "screen": "登录",
+      "purpose": "登录页结构参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:02_选服.png",
+      "relative_path": "02_选服.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/02_选服.png",
+      "sha256": "8b32ac63dd7efea68b6dd02771194f7f3797ed88b1f0e06d1a8a703fb8511b21",
+      "dimensions_px": [
+        941,
+        1672
+      ],
+      "screen": "选服",
+      "purpose": "入口服与角色导航参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:03_创角.png",
+      "relative_path": "03_创角.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/03_创角.png",
+      "sha256": "967c0c615bb21f464a393986ed49ce18aa02976c4c5f41c2a5186a33c8b2b949",
+      "dimensions_px": [
+        941,
+        1672
+      ],
+      "screen": "创角",
+      "purpose": "固定职业形象选择参考；不新增性别选择",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:主界面参考图.png",
+      "relative_path": "主界面参考图.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/主界面参考图.png",
+      "sha256": "1fb8bce0fd33579e22e0ccfc7bb2e5c037dba1fc48b5533a7816cef2a80f91c1",
+      "dimensions_px": [
+        1170,
+        2532
+      ],
+      "screen": "主界面",
+      "purpose": "候选布局参考，未证明与指定最高优先JPG相同",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:我的交易记录.png",
+      "relative_path": "我的交易记录.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/我的交易记录.png",
+      "sha256": "be347f25ced8b9d68e9f4aefaa306db8de44bd5d17e6bc1a183bffbf8a152181",
+      "dimensions_px": [
+        1020,
+        2179
+      ],
+      "screen": "交易记录",
+      "purpose": "已成交与流水展示参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:我的摊位.png",
+      "relative_path": "我的摊位.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/我的摊位.png",
+      "sha256": "adc0d6c5f2607e68f769b9d492672ac512fe22a1b208aba1a20e1d6984f41105",
+      "dimensions_px": [
+        1170,
+        2532
+      ],
+      "screen": "个人挂单",
+      "purpose": "订单与仓位参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:技能.png",
+      "relative_path": "技能.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/技能.png",
+      "sha256": "a8eeb9a8879af8f0121f36f505a74020e666b25031babdf0d86d32cc7ead7a1a",
+      "dimensions_px": [
+        1009,
+        1964
+      ],
+      "screen": "技能",
+      "purpose": "学习、升级和快捷入口参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:角色预览与背包.jpg",
+      "relative_path": "角色预览与背包.jpg",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/角色预览与背包.jpg",
+      "sha256": "db0400fc8ce3ac6393d81c897921265c435b066c8850cf04a364444eaa2ee3a7",
+      "dimensions_px": [
+        1024,
+        1958
+      ],
+      "screen": "角色与背包",
+      "purpose": "装备部位、预览和背包参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:道具交易行.png",
+      "relative_path": "道具交易行.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/道具交易行.png",
+      "sha256": "7224e09f6dc3022a3c4276d67cf8170a2ad6f004a4b865982f63436213120052",
+      "dimensions_px": [
+        1030,
+        2233
+      ],
+      "screen": "道具市场",
+      "purpose": "竞购/直购列表参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:道具交易行2.png",
+      "relative_path": "道具交易行2.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/道具交易行2.png",
+      "sha256": "d255790faa10af80f4e5c6366dc343cb04401c77fd574b84904383de697e2a9f",
+      "dimensions_px": [
+        1021,
+        2235
+      ],
+      "screen": "道具市场",
+      "purpose": "候选交互补充，差异待人工确认",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "ui_reference:金币交易行.png",
+      "relative_path": "金币交易行.png",
+      "source_kind": "upstream_reference_copy",
+      "local_reference_path": "UI参考图/金币交易行.png",
+      "sha256": "4601c3c134ec210d6c73011936e5aba009fda7a3a2ea0e33feb4d7c712cb2872",
+      "dimensions_px": [
+        1032,
+        1876
+      ],
+      "screen": "金币市场",
+      "purpose": "金币撮合列表与下单参考",
+      "mapping_basis": "仅文件名归类，未进行视觉一致性验收",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "source_unchanged": true
+    },
+    {
+      "reference_id": "user_ui_reference:main-hud-20261026",
+      "source_kind": "project_user_supplement",
+      "relative_path": "用户确认/主界面UI布局参考.png",
+      "local_reference_path": "UI参考图/用户确认/主界面UI布局参考.png",
+      "sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
+      "bytes": 778254,
+      "dimensions_px": [
+        730,
+        1390
+      ],
+      "screen": "主界面",
+      "layout_role": "main_ui_layout",
+      "priority": "current_highest",
+      "confirmation_status": "user_confirmed",
+      "confirmation_date": "2026-10-26",
+      "confirmation_evidence": "用户在当前对话附图并明确说明：主界面ui布局参考。",
+      "purpose": "用户明确确认的当前布局参考",
+      "mapping_basis": "用户附图与明确说明，并核验项目内原字节图片",
+      "same_as_legacy_requested_jpg": null,
+      "same_as_upstream_main_ui_png": null,
+      "creator_scene": "client/assets/scenes/Game.scene",
+      "creator_prefab": null,
+      "implementation_status": "开发场景已保存，正式布局和真机验收待执行",
+      "runtime_ready": false,
+      "source_unchanged": true,
+      "copied_by_prepare_local": false,
+      "creator_scene_sha256": "fe42171663c3ed850e68972bdb978474bce3fe660dad308a31b9ab814c4efb95",
+      "creator_scene_bytes": 293357,
+      "creator_scene_probe_basis": "仅只读确认文件存在及原字节SHA-256，未由索引生成器执行视觉/交互/真机验收",
+      "status": "开发场景已保存，正式布局和真机验收待执行",
+      "integrity_verified": true
+    }
+  ]
+}

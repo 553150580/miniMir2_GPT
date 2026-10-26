@@ -1,0 +1,93 @@
+{
+  "tool": "protoc",
+  "installation_status": "installed",
+  "version": "36.2",
+  "version_output": "libprotoc 36.2",
+  "install_scope": "user_only",
+  "installation_root": "/Users/srf/.local/share/minimir-toolchain/protoc/36.2",
+  "binary_path": "/Users/srf/.local/share/minimir-toolchain/protoc/36.2/bin/protoc",
+  "include_path": "/Users/srf/.local/share/minimir-toolchain/protoc/36.2/include",
+  "binary_sha256": "56ba0f583d8761975d177670a3375564fd2bf5a7d96182a9d0c3b818a893c0ff",
+  "host": {
+    "os": "macOS",
+    "version": "13.7.8",
+    "architecture": "x86_64",
+    "binary_minimum_macos": "12.0",
+    "version_command_passed": true
+  },
+  "release": {
+    "repository": "protocolbuffers/protobuf",
+    "latest_api": "https://api.github.com/repos/protocolbuffers/protobuf/releases/latest",
+    "tag": "v36.2",
+    "url": "https://github.com/protocolbuffers/protobuf/releases/tag/v36.2",
+    "published_at": "2026-09-17T17:33:01Z",
+    "prerelease": false,
+    "draft": false
+  },
+  "asset": {
+    "id": 570742448,
+    "name": "protoc-36.2-osx-x86_64.zip",
+    "size_bytes": 2760113,
+    "release_download_url": "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protoc-36.2-osx-x86_64.zip",
+    "download_api_url": "https://api.github.com/repos/protocolbuffers/protobuf/releases/assets/570742448",
+    "downloaded_via": "official_github_asset_api_octet_stream",
+    "local_archive_path": "/Users/srf/.local/share/minimir-toolchain/protoc/downloads/protoc-36.2-osx-x86_64.api.zip",
+    "local_sha256": "228cc7add4616cc14ca5e80dee83209d44449a7aee95a914ae748fa374efb078",
+    "official_digest": "sha256:228cc7add4616cc14ca5e80dee83209d44449a7aee95a914ae748fa374efb078",
+    "official_digest_verified": true,
+    "verification_method": "sha256_matches_github_release_asset_digest",
+    "metadata_snapshot_path": "/Users/srf/.local/share/minimir-toolchain/protoc/metadata/latest-release.json"
+  },
+  "verification": {
+    "checked_at_utc": "2026-10-26T11:25:05.297590+00:00",
+    "command": [
+      "/Users/srf/.local/share/minimir-toolchain/protoc/36.2/bin/protoc",
+      "--proto_path=/Users/srf/Miro2/miniMir2_GPT/api/proto",
+      "--proto_path=/Users/srf/.local/share/minimir-toolchain/protoc/36.2/include",
+      "--include_imports",
+      "--include_source_info",
+      "--descriptor_set_out=/Users/srf/Miro2/miniMir2_GPT/.work/protoc-validation/protocol.descriptor.pb",
+      "/Users/srf/Miro2/miniMir2_GPT/api/proto/account.proto",
+      "/Users/srf/Miro2/miniMir2_GPT/api/proto/assets.proto",
+      "/Users/srf/Miro2/miniMir2_GPT/api/proto/common.proto",
+      "/Users/srf/Miro2/miniMir2_GPT/api/proto/world.proto"
+    ],
+    "return_code": 0,
+    "stdout": "",
+    "stderr": "",
+    "source_files": [
+      {
+        "path": "api/proto/account.proto",
+        "sha256": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964"
+      },
+      {
+        "path": "api/proto/assets.proto",
+        "sha256": "c258b5fc9299842046ca8d001bcdd1b807faa68d45469fe20a49ec7fc2977e1c"
+      },
+      {
+        "path": "api/proto/common.proto",
+        "sha256": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98"
+      },
+      {
+        "path": "api/proto/world.proto",
+        "sha256": "0226a5ff4c5f19fc578036d206f8123c4c1221924c5bf0501eb8a7e0544ac2a1"
+      }
+    ],
+    "descriptor_path": ".work/protoc-validation/protocol.descriptor.pb",
+    "descriptor_sha256": "19905598f8727ca21a6d399a8487e58c8d4538255a78cf1b755639db6c4a9860",
+    "descriptor_file_names": [
+      "common.proto",
+      "account.proto",
+      "assets.proto",
+      "world.proto"
+    ],
+    "syntax_and_imports_passed": true,
+    "go_ts_code_generated": false
+  },
+  "path_management": {
+    "system_binaries_replaced": false,
+    "shell_profile_changed": false,
+    "root_wrapper_managed_by": "primary_agent"
+  },
+  "note": "Compiler installation and descriptor compilation do not implement gameplay or generated Go/TypeScript bindings."
+}

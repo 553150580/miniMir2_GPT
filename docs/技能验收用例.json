@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "runtime_ready": false,
+  "case_count": 18,
+  "candidate_count": 67,
+  "all_status": "待执行",
+  "target_version": "传奇2 1.80，基础行为与本作扩展分别验收",
+  "cases": [
+    {
+      "case_id": "SK-COMMON-001",
+      "title": "施放前置与耗蓝",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "用有效/无效目标、MP足够/不足、冷却未结束/结束逐项施放。",
+      "expected_contract": "失败不扣永久资源；成功的扣耗、动作、冷却和命中事件按核验规则发生。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-002",
+      "title": "八方向与基础命中",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "在八方向布置同距离合法/非法目标，记录方向、命中格及结果。",
+      "expected_contract": "命中由逻辑格和合法目标决定，与屏幕坐标、特效包围盒无关。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-003",
+      "title": "距离与阻挡",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "改变距离与直线/斜角阻挡，比较追击、可施放与命中。",
+      "expected_contract": "按来源规则处理可达、射程、视线；不穿越禁止格或靠重连绕过。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-004",
+      "title": "动作与伤害时序",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "记录施放、前后摇、弹道/命中与HP变化时间，使用固定输入重放。",
+      "expected_contract": "逐技能时序、攻击上下限、命中/防御/幸运扩展接入可解释；不以通用简式代替。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-005",
+      "title": "健康重连与托管",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "战斗中断线、经account重新取票接入，跨持续效果与冷却边界。",
+      "expected_contract": "保留健康内存现场与事件进度，不刷新HP/CD或重复扣耗发奖；托管执行同一规则。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-006",
+      "title": "真实故障",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "施法/持续效果中触发房间或进程故障，完成旧执行停止和换代屏障。",
+      "expected_contract": "临时战斗现场不从数据库恢复；只保留已提交永久事实，未提交收益不补造。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-COMMON-007",
+      "title": "基础与升级扩展分验",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "对照基础等级与配置的扩展等级，比较伤害/治疗/时长和命中格。",
+      "expected_contract": "只改变经批准的数值字段；不暗增射程、目标数或攻击方式。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-MELEE-001",
+      "title": "近战贴身与八方向",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "八方向相邻格各放敌人，逐个普攻/近战技能并观察宠物占格。",
+      "expected_contract": "准确命中允许格；斜向距离、转向与攻击间隔符合核验来源。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-MELEE-002",
+      "title": "斜角与卡位",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "墙角、狭口、玩家宠物与怪物互相卡位时施放近战与位移。",
+      "expected_contract": "移动和命中分别遵守来源阻挡规则，无斜角穿墙或越占格。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-RANGE-001",
+      "title": "直线范围",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "八方向直线上布置多个目标、墙后目标及线外目标。",
+      "expected_contract": "命中格集、穿透与目标过滤逐项对照，不能全屏伤害。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-RANGE-002",
+      "title": "扇形范围",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "旋转朝向并放置扇形边缘、内角和背后目标。",
+      "expected_contract": "相对格偏移与方向旋转一致，边界无多一格/漏一格。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-RANGE-003",
+      "title": "地面持续区域",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "目标进入/离开区域、死亡、刷新区域或重复释放。",
+      "expected_contract": "每跳间隔、逐格命中、目标过滤、叠加与结束时点明确。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-PET-001",
+      "title": "召唤与单宠",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "无宠/已有宠物时召唤、重新召唤、切图和死亡。",
+      "expected_contract": "按本作1宠约束执行并登记与来源差异；永久资源先扣后生效。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-PET-002",
+      "title": "宠物移动与攻击",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "宠物跟随玩家经过狭口，远程/近战怪物分组测试。",
+      "expected_contract": "宠物独立寻路、距离、攻击与转火可解释，无默认一律远程。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-PET-003",
+      "title": "诱惑与召唤资格",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "测试怪物类别、等级、存活状态及控制免疫边界。",
+      "expected_contract": "按来源与本作约束判断资格、成功率、持续和解除，不用名称猜行为。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-BUFF-001",
+      "title": "叠加与解除",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "同源/异源重复施加，覆盖刷新、取强、叠层、到期、驱散和死亡。",
+      "expected_contract": "Buff叠加规则与计算阶段唯一，无重复乘区、无限叠加或反伤递归。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-BUFF-002",
+      "title": "防御与治疗流程",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "组合护盾、防御、魔御、治疗、毒与本作幸运扩展。",
+      "expected_contract": "结算先后、取整、上下限和耗材有来源或批准扩展依据。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    },
+    {
+      "case_id": "SK-SYNC-001",
+      "title": "客户端帧与命中一致",
+      "status": "待执行",
+      "applicable_skill_candidates": "按技能行为筛选；通用用例适用全部候选",
+      "preconditions": [
+        "目标来源版本和文件摘要已固定",
+        "相关基础参数/命中格/时序预期有可靠证据",
+        "服务端与客户端配置版本相同"
+      ],
+      "steps": "同步录制客户端帧号、绘制偏移、声音与服务端命中事件。",
+      "expected_contract": "八方向动作与技能触发可对应；表现差异不能改变服务端命中规则。",
+      "verified_numeric_expectation": null,
+      "source_evidence": [],
+      "execution_artifacts": [],
+      "result": null,
+      "note": "本文件是待执行的验收契约；没有具体来源预期或执行产物时不得填通过。"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "registry_kind": "project_user_supplied_references",
+  "registration_policy": "手工登记用户明确提供的项目内参考；生成器只读核验图片，不复制或覆盖图片/场景。",
+  "references": [
+    {
+      "reference_id": "user_ui_reference:main-hud-20261026",
+      "reference_kind": "ui_layout_image",
+      "screen": "主界面",
+      "layout_role": "main_ui_layout",
+      "priority": "current_highest",
+      "confirmation_status": "user_confirmed",
+      "confirmation_date": "2026-10-26",
+      "confirmation_evidence": "用户在当前对话附图并明确说明：主界面ui布局参考。",
+      "source_kind": "project_user_supplement",
+      "local_reference_path": "UI参考图/用户确认/主界面UI布局参考.png",
+      "expected_sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
+      "expected_bytes": 778254,
+      "expected_dimensions_px": [730, 1390],
+      "same_as_legacy_requested_jpg": null,
+      "same_as_upstream_main_ui_png": null,
+      "relationship_note": "作为当前用户确认的最高优先布局来源，解决缺少当前主界面参考的问题；不声称与历史JPG或上级既有PNG相同。",
+      "creator_scene": null,
+      "creator_prefab": null,
+      "implementation_status": "待制作",
+      "runtime_ready": false
+    }
+  ]
+}

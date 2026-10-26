@@ -1,0 +1,6 @@
+# 目标：CPython 3.14.9 / macOS x86_64，Pillow 13.0.0稳定版。
+# 来源：https://pypi.org/pypi/Pillow/13.0.0/json
+# 仅锁已核验的cp314 macosx_10_15_x86_64 wheel；无额外运行依赖。
+# uv pip install --require-hashes --only-binary=:all: -r 本文件
+Pillow==13.0.0 \
+    --hash=sha256:49c12af515073e9bf511e4ef736743bf70d531a643668722279314b937742ba4

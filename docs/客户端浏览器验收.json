@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-27",
+  "scope": "first_development_loop_browser_acceptance",
+  "development_only": true,
+  "passed": true,
+  "url": "http://127.0.0.1:18080/",
+  "diagnostic_url": "http://127.0.0.1:18080/?renderQA=1",
+  "creator_build": {
+    "report": "docs/客户端构建检查.json",
+    "sha256": "b5fe80c7a37b1c44082764813b8f780c9db972d2ff8084fa22b5505ebc772024",
+    "current_sources_and_layouts_match_report": true
+  },
+  "server_test": {
+    "report": "server/test-results/latest.json",
+    "sha256": "82df36988afdb594ba8a3ea1fc0ce1fdc25d6c5771315163d1fe5c9e1aa9dd7c",
+    "race": true,
+    "current_sources_match_report": true
+  },
+  "checkpoints": [
+    "内置EditBox登录及密码遮罩",
+    "五槽选角、实际创建道士",
+    "整套动作预载后取票、入场基线ACK与SyncReady",
+    "来源地图、角色、骷髅、稻草人",
+    "1/4/8怪切换及死亡状态即时同步",
+    "自动战斗、实际击杀掉落和升级",
+    "背包列表、详情叠层、背景分别返回、保留滚动",
+    "装备与开发回收确认后增加50绑定金币",
+    "点地后开包仍由(2,2)到(5,7)",
+    "摇杆向右从(5,7)到(6,7)",
+    "主动复活，健康重登不自动复活",
+    "免费托管21600秒、离线、重新认证、战报及实际扣时",
+    "角色/宠物/怪物显示中间位置与预载换帧",
+    "高屏/宽屏等比、Status固定顶部、无新快照时镜头重夹"
+  ],
+  "hosting_observed": {
+    "claimed_seconds": 21600,
+    "used_seconds": 31,
+    "kills": 2,
+    "experience": 30,
+    "remaining_seconds": 21569,
+    "note": "本地测试角色的实际事件战报，不按时间推算收益。"
+  },
+  "viewport_cases": [
+    {
+      "window": [
+        720,
+        1280
+      ],
+      "top_hud_height": 118,
+      "bottom_hud_height": 268,
+      "battle_viewport": [
+        720,
+        894
+      ],
+      "status_center_y": 160
+    },
+    {
+      "window": [
+        720,
+        1600
+      ],
+      "top_hud_height": 118,
+      "bottom_hud_height": 268,
+      "battle_viewport": [
+        720,
+        1214
+      ],
+      "status_center_y": 160
+    },
+    {
+      "window": [
+        960,
+        1280
+      ],
+      "top_hud_height": 118,
+      "bottom_hud_height": 268,
+      "battle_viewport": [
+        960,
+        894
+      ],
+      "status_center_y": 160
+    }
+  ],
+  "viewport_notes": "UI及世界贴图尺度不随额外宽高变化。16x16开发地图有真实边界；高屏超出整张地图时保留空白，不拉伸也不新增格子。",
+  "animation_observed": {
+    "preloaded_frames_taoist": 1000,
+    "world_sprite_type": "SIMPLE",
+    "trim": false,
+    "render_log": "outputs/development-first-loop-20261027/移动动画运行日志.json",
+    "render_log_sha256": "d5953176786799625b9f1c51ec9f0736479ad8153ec4cdc8232913c3d22c51b9",
+    "samples": [
+      {
+        "scope": "development_render",
+        "stage": "initial",
+        "duration_ms": 5009,
+        "updates": 224,
+        "mean_update_ms": 22.463228699605025,
+        "max_update_ms": 153.60000002384186,
+        "intermediate_grid_samples": {
+          "player": 109,
+          "pet": 172,
+          "monster": 124
+        },
+        "changed_animation_frames": 118,
+        "preloaded_frames": 1000
+      },
+      {
+        "scope": "development_render",
+        "stage": "steady",
+        "duration_ms": 5027,
+        "updates": 249,
+        "mean_update_ms": 20.269758064540163,
+        "max_update_ms": 39.29999998211861,
+        "intermediate_grid_samples": {
+          "player": 0,
+          "pet": 0,
+          "monster": 0
+        },
+        "changed_animation_frames": 27,
+        "preloaded_frames": 1000
+      }
+    ],
+    "scope_note": "本机IAB开发构建的两段5秒样本；后续窗口三类移动计数为0时正在近身交战/站立。不是手机真机、完整压力测试或60fps承诺。"
+  },
+  "console_errors_or_warnings": 0,
+  "screenshots": [
+    {
+      "path": "outputs/development-first-loop-20261027/主界面-720x1280.jpg",
+      "sha256": "28073e8c00884e163ab3cfd9ced3ba1a1c6d5d4c0646e3f79b858ca8df579fe7",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/主界面-720x1600.jpg",
+      "sha256": "b9b82a31f8f1d13a5f6b5b0b6aee6ffbbab12fe758b967d9426c1ba3790a4e3d",
+      "size": [
+        720,
+        1600
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/主界面-960x1280.jpg",
+      "sha256": "4f306f2fbe2146d53f840e60fbbbea105520e507127e9d7b9ca96479c20adcdd",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/八怪战斗.jpg",
+      "sha256": "ef97c34cc699856958b021dfba51a9bf47f11804cb738008bf42f8c6eab1f0b7",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/四怪战斗.jpg",
+      "sha256": "49775479c19357ee2937c1dd9eebc028af0d5205597ecf248ada1f692600ddb5",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/托管实际扣时.jpg",
+      "sha256": "07f124b5a64a569ac801510cdff7ff872ca589ed07a528867b71b5c283a5ffea",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/托管领取.jpg",
+      "sha256": "ef70cf69c8666629391ab89081eba830665aeb2191b677444db91b2201189994",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/离线重登战报.jpg",
+      "sha256": "b269398d7f321bf9990ee9dcd36ac81a4cf121aa5e4d7c462a8b61d6cb2d3cbb",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-first-loop-20261027/移动动画修复后.jpg",
+      "sha256": "d314bf3a8f17514687d76204e4fafb09215e2ae7fa16758d3f8ae30c955f8d0d",
+      "size": [
+        720,
+        1280
+      ]
+    }
+  ],
+  "physical_mobile_verified": false,
+  "full_hud_art_reference_accepted": false,
+  "all_p0_complete": false,
+  "production_ready": false
+}

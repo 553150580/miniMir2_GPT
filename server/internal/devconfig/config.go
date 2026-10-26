@@ -1,0 +1,213 @@
+package devconfig
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net"
+	"net/url"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+type Point struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+type Fighter struct {
+	JobID        uint32 `json:"job_id"`
+	DefinitionID uint32 `json:"definition_id"`
+	HP           int64  `json:"hp"`
+	MP           int64  `json:"mp"`
+	AttackMin    int64  `json:"attack_min"`
+	AttackMax    int64  `json:"attack_max"`
+	Defence      int64  `json:"defence"`
+	AttackMS     int64  `json:"attack_ms"`
+	MoveMS       int64  `json:"move_ms"`
+}
+type Monster struct {
+	Fighter
+	ID        uint32 `json:"id"`
+	Exp       int64  `json:"exp"`
+	GoldMin   int64  `json:"gold_min"`
+	GoldMax   int64  `json:"gold_max"`
+	RespawnMS int64  `json:"respawn_ms"`
+}
+type Item struct {
+	ID             uint32   `json:"id"`
+	Name           string   `json:"name"`
+	EquipmentSlot  uint32   `json:"equipment_slot"`
+	IsEquipment    bool     `json:"is_equipment"`
+	AttackBonus    int64    `json:"attack_bonus"`
+	AttackMinBonus int64    `json:"attack_min_bonus"`
+	AttackMaxBonus int64    `json:"attack_max_bonus"`
+	DefenceBonus   int64    `json:"defence_bonus"`
+	RecycleGold    int64    `json:"recycle_gold"`
+	Stackable      bool     `json:"stackable"`
+	AllowedJobs    []uint32 `json:"allowed_jobs"`
+}
+type Fixture struct {
+	SchemaVersion   int    `json:"schema_version"`
+	RuleVersion     uint64 `json:"rule_version"`
+	DevelopmentOnly bool   `json:"development_only"`
+	RuntimeReady    bool   `json:"runtime_ready"`
+	SourceStatus    string `json:"source_status"`
+	DamageFormula   string `json:"damage_formula"`
+	Map             struct {
+		ID            uint64  `json:"id"`
+		Width         int     `json:"width"`
+		Height        int     `json:"height"`
+		Blocked       []Point `json:"blocked"`
+		PlayerSpawn   Point   `json:"player_spawn"`
+		PetSpawn      Point   `json:"pet_spawn"`
+		MonsterSpawns []Point `json:"monster_spawns"`
+	} `json:"map"`
+	Players  []Fighter `json:"players"`
+	Pet      Fighter   `json:"pet"`
+	Monsters []Monster `json:"monsters"`
+	Items    []Item    `json:"items"`
+	Drops    struct {
+		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
+		ItemIDs            []uint32 `json:"item_ids"`
+		EmptyPPM           int      `json:"empty_ppm"`
+		GoldPPM            int      `json:"gold_ppm"`
+		ItemPPM            int      `json:"item_ppm"`
+		EquipmentPPM       int      `json:"equipment_ppm"`
+		EquipmentGuarantee int      `json:"equipment_guarantee"`
+	} `json:"drops"`
+	Progression struct {
+		ExpPerLevel []int64 `json:"exp_per_level"`
+	} `json:"progression"`
+	InitialInventory   []uint32 `json:"initial_inventory"`
+	InitialBoundGold   int64    `json:"initial_bound_gold"`
+	InventoryCapacity  int      `json:"inventory_capacity"`
+	AllowFreeDevRevive bool     `json:"allow_free_dev_revive"`
+	Hash               string   `json:"-"`
+}
+type Config struct {
+	Environment    string   `json:"environment"`
+	AccountAddress string   `json:"account_address"`
+	GameAddress    string   `json:"game_address"`
+	GMAddress      string   `json:"gm_address"`
+	MongoURI       string   `json:"mongo_uri"`
+	Database       string   `json:"database"`
+	FixtureFile    string   `json:"fixture_file"`
+	NodeID         string   `json:"node_id"`
+	OriginID       uint64   `json:"origin_id"`
+	RunID          uint64   `json:"run_id"`
+	AllowedOrigins []string `json:"allowed_origins"`
+	Root           string   `json:"-"`
+	Fixture        Fixture  `json:"-"`
+}
+
+func Load(path string) (Config, error) {
+	var c Config
+	absolute, e := filepath.Abs(path)
+	if e != nil {
+		return c, e
+	}
+	b, e := os.ReadFile(absolute)
+	if e != nil {
+		return c, e
+	}
+	if e = json.Unmarshal(b, &c); e != nil {
+		return c, e
+	}
+	c.Root = filepath.Clean(filepath.Join(filepath.Dir(absolute), "../.."))
+	if c.Environment != "development" {
+		return c, errors.New("当前首循环仅可显式development启动；生产尚未提供TLS/发行配置，拒绝启动")
+	}
+	for _, address := range []string{c.AccountAddress, c.GameAddress, c.GMAddress} {
+		host, _, err := net.SplitHostPort(address)
+		if err != nil || host != "127.0.0.1" {
+			return c, errors.New("development监听必须显式127.0.0.1")
+		}
+	}
+	u, e := url.Parse(c.MongoURI)
+	if e != nil || u.Hostname() != "127.0.0.1" || u.Port() != "27118" || u.User != nil || u.Query().Get("replicaSet") != "minimirDev" {
+		return c, errors.New("仅允许本任务独立loopback Mongo副本集")
+	}
+	if c.Database != "minimir_dev_game" && !strings.HasPrefix(c.Database, "minimir_dev_game_test_") {
+		return c, errors.New("必须使用专用开发游戏数据库")
+	}
+	if c.NodeID == "" || c.OriginID == 0 || c.RunID == 0 {
+		return c, errors.New("节点与路由ID缺失")
+	}
+	fixturePath := c.FixtureFile
+	if !filepath.IsAbs(fixturePath) {
+		fixturePath = filepath.Join(c.Root, fixturePath)
+	}
+	b, e = os.ReadFile(fixturePath)
+	if e != nil {
+		return c, e
+	}
+	if e = json.Unmarshal(b, &c.Fixture); e != nil {
+		return c, e
+	}
+	hash := sha256.Sum256(b)
+	c.Fixture.Hash = hex.EncodeToString(hash[:])
+	return c, c.Fixture.Validate()
+}
+func (f *Fixture) Validate() error {
+	if f.SchemaVersion != 1 || !f.DevelopmentOnly || f.RuntimeReady || f.RuleVersion == 0 || f.SourceStatus != "candidate" || f.DamageFormula != "development_range_minus_defence" {
+		return errors.New("必须显式启用有来源的candidate开发fixture；不冒充1.80正式数值")
+	}
+	if f.Map.Width != 16 || f.Map.Height != 16 || len(f.Map.MonsterSpawns) < 8 || f.Map.ID == 0 {
+		return errors.New("首场景必须16×16并提供8个可达怪物槽位")
+	}
+	if f.InventoryCapacity < 1 || f.InventoryCapacity > 100 || f.InitialBoundGold < 0 {
+		return errors.New("开发背包容量/初始资金不合法")
+	}
+	if len(f.Players) == 0 || len(f.Monsters) == 0 || len(f.Items) == 0 {
+		return errors.New("职业、怪物、物品不能为空")
+	}
+	valid := func(a Fighter) bool {
+		return a.HP > 0 && a.HP < 1000000 && a.AttackMin >= 0 && a.AttackMax >= a.AttackMin && a.AttackMax < 100000 && a.Defence >= 0 && a.MoveMS >= 100 && a.AttackMS >= 100
+	}
+	for _, a := range f.Players {
+		if a.JobID > 2 || !valid(a) {
+			return errors.New("职业fixture参数缺失")
+		}
+	}
+	if !valid(f.Pet) {
+		return errors.New("宠物fixture缺失")
+	}
+	for _, m := range f.Monsters {
+		if !valid(m.Fighter) || m.ID == 0 || m.Exp < 0 || m.GoldMin < 0 || m.GoldMax < m.GoldMin || m.RespawnMS != 10000 {
+			return errors.New("怪物参数须明确，普通怪独立10秒复活")
+		}
+	}
+	for _, i := range f.Items {
+		if i.ID == 0 || i.RecycleGold < 0 || i.EquipmentSlot > 9 {
+			return errors.New("物品参数不合法")
+		}
+	}
+	if f.Drops.EmptyPPM != 650000 || f.Drops.GoldPPM != 200000 || f.Drops.ItemPPM != 100000 || f.Drops.EquipmentPPM != 50000 || f.Drops.EquipmentGuarantee != 20 || len(f.Drops.EquipmentItemIDs) == 0 {
+		return errors.New("普通掉落须互斥65/20/10/5与20杀保底")
+	}
+	for _, id := range append(append([]uint32{}, f.Drops.EquipmentItemIDs...), f.InitialInventory...) {
+		if _, ok := f.Item(id); !ok {
+			return fmt.Errorf("物品引用%d不存在", id)
+		}
+	}
+	return nil
+}
+func (f *Fixture) Player(job uint32) (Fighter, bool) {
+	for _, p := range f.Players {
+		if p.JobID == job {
+			return p, true
+		}
+	}
+	return Fighter{}, false
+}
+func (f *Fixture) Item(id uint32) (Item, bool) {
+	for _, i := range f.Items {
+		if i.ID == id {
+			return i, true
+		}
+	}
+	return Item{}, false
+}

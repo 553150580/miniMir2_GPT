@@ -1,0 +1,271 @@
+{
+  "prepared": true,
+  "prepared_on": "2026-10-26",
+  "layout": {
+    "server": "server/",
+    "client": "client/",
+    "shared_protocol": "shared/proto/"
+  },
+  "workbooks": [
+    "outputs/development-prep-20261026/架构配置.xlsx",
+    "outputs/development-prep-20261026/玩法配置.xlsx"
+  ],
+  "configuration": {
+    "tables": 98,
+    "records": 784,
+    "record_status_counts": {
+      "candidate": 286,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69
+    },
+    "registered_release_gaps": 61,
+    "runtime_ready": false,
+    "structure_valid": true,
+    "core_content_tables_pending": 27,
+    "formal_release_blockers": 492,
+    "core_content_tables_empty": [
+      "game_job_growth",
+      "game_appearance",
+      "game_npcs",
+      "game_skill_upgrades",
+      "game_range_patterns",
+      "game_buffs",
+      "game_effects",
+      "game_pet_growth",
+      "game_rebirth_costs",
+      "game_drop_quotas",
+      "game_refine_values",
+      "game_pickaxes",
+      "game_craft_recipes",
+      "game_repair_prices",
+      "game_boss_templates",
+      "game_dungeon_templates",
+      "game_arena_rewards",
+      "game_quests",
+      "game_daily_tasks",
+      "game_achievements",
+      "game_codex",
+      "game_soul_stars",
+      "game_medal_levels",
+      "game_reward_groups",
+      "game_reward_entries",
+      "game_system_mail",
+      "game_attribute_pipeline"
+    ],
+    "core_content_pending_definition": "当前预览server投影中，gameplay且release_required=true并且记录为空的表；不把候选非空表计为空表。",
+    "current_preview_version": "dev-first-loop-v0.1-73a9a84aaf90",
+    "new_first_loop_candidate_records": 51
+  },
+  "reference_inputs": {
+    "indexed_files": 6998,
+    "independent_local_copies": 321,
+    "ui_images": 12,
+    "upstream_ui_images": 11,
+    "user_provided_ui_images": 1,
+    "user_provided_copies": 1,
+    "local_reference_files_total": 322,
+    "main_ui_layout_reference": "UI参考图/用户确认/主界面UI布局参考.png",
+    "main_ui_layout_reference_sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
+    "main_ui_layout_reference_user_confirmed": true,
+    "main_ui_creator_layout_verified": false,
+    "skill_candidates": 67,
+    "skill_acceptance_contracts": 18,
+    "skills_verified_against_target_180": false,
+    "main_ui_browser_geometry_verified": true
+  },
+  "resources": {
+    "sample_pngs": 12,
+    "frame_indices_preserved": 80008,
+    "current_path": "client/assets/imported/samples/",
+    "direction_timing_verified": false,
+    "evidence": "conf/toolchain/resource-layout-verification.json",
+    "direction_timing_scope": "目标1.80正式验收尚未通过；开发候选动作映射已做回读与联系图检查。",
+    "development_path": "client/assets/resources/development/",
+    "development_pngs": 1593,
+    "development_profiles": 4,
+    "development_action_direction_sets": 160,
+    "development_contact_pages_reviewed": 20,
+    "development_pixel_roundtrip_check": "passed",
+    "development_asset_manifest": "client/assets/resources/development/manifest.json",
+    "development_map": {
+      "width": 16,
+      "height": 16,
+      "blocked_cells": 17,
+      "connected_walkable_cells": 239
+    },
+    "official_180_art_or_behavior_acceptance": false
+  },
+  "verification": {
+    "config_regression_tests": 11,
+    "go_module_compile": "passed",
+    "go_module_checksums": "all modules verified",
+    "client_pb_message_definitions": 37,
+    "client_64bit_boundary_cases": 174,
+    "client_typescript": "真实cc声明 strict + skipLibCheck passed；官方声明自身缺失隔离，项目脚本仍严格检查",
+    "mongodb_go_driver": "2.9.2 snapshot/majority commit and duplicate rollback passed",
+    "evidence": [
+      "conf/toolchain/go-smoke-mongodb.json",
+      "conf/toolchain/client-pb-verification.json",
+      "conf/toolchain/python-tools-layout-check.json",
+      "docs/开发环境检查.json",
+      "docs/客户端构建检查.json",
+      "server/test-results/latest.json",
+      "docs/客户端浏览器验收.json"
+    ],
+    "protocol_message_ids": 32,
+    "protocol_error_codes": 16,
+    "client_int64_fields": 54,
+    "client_script_tests": {
+      "ui_models": 9,
+      "scene_loader": 16,
+      "wire_and_viewport": 6,
+      "status": "passed",
+      "includes_bounded_out_of_order_expired_baseline_assembly": true,
+      "total_js_tests": 62,
+      "pending_economic_operations": 8,
+      "entity_motion": 14,
+      "entity_animation": 9
+    },
+    "creator_cli_last_completed_build": {
+      "version": "3.8.8",
+      "platform": "web-mobile",
+      "exit_code": 36,
+      "success": true,
+      "scene_prefab_layout_preserved": true,
+      "report": "docs/客户端构建检查.json"
+    },
+    "server_mongodb_pb_http_ws_integration": {
+      "passed": true,
+      "race_detector": true,
+      "exit_code": 0,
+      "passed_tests": [
+        "TestGridEightDirectionsAndCornerBlocking",
+        "TestFullBagAutoRejectPushesActualHosting",
+        "TestDeadPlayerCountChangePushesSnapshotWithoutReset",
+        "TestAttackObservationSurvivesStruckAndCooldownReject",
+        "TestLethalStatePushesBeforeBroadcastWindow",
+        "TestMoveCompletionGatesAttackForPlayerPetMonster/player",
+        "TestMoveCompletionGatesAttackForPlayerPetMonster/pet",
+        "TestMoveCompletionGatesAttackForPlayerPetMonster/monster",
+        "TestMoveCompletionGatesAttackForPlayerPetMonster",
+        "TestFirstLoopMongoWS",
+        "TestMongoOwnershipFence"
+      ],
+      "report": "server/test-results/latest.json"
+    },
+    "browser_end_to_end": {
+      "status": "passed",
+      "completed_checkpoints": [
+        "内置EditBox登录及密码遮罩",
+        "五槽选角、实际创建道士",
+        "整套动作预载后取票、入场基线ACK与SyncReady",
+        "来源地图、角色、骷髅、稻草人",
+        "1/4/8怪切换及死亡状态即时同步",
+        "自动战斗、实际击杀掉落和升级",
+        "背包列表、详情叠层、背景分别返回、保留滚动",
+        "装备与开发回收确认后增加50绑定金币",
+        "点地后开包仍由(2,2)到(5,7)",
+        "摇杆向右从(5,7)到(6,7)",
+        "主动复活，健康重登不自动复活",
+        "免费托管21600秒、离线、重新认证、战报及实际扣时",
+        "角色/宠物/怪物显示中间位置与预载换帧",
+        "高屏/宽屏等比、Status固定顶部、无新快照时镜头重夹"
+      ],
+      "full_loop_verified": true,
+      "current_work": "本轮首循环及用户反馈的移动/动画修复已完成实际构建与浏览器复验。",
+      "report": "docs/客户端浏览器验收.json"
+    },
+    "aggregate_make_test": {
+      "status": "passed",
+      "passed_js_tests": 62,
+      "passed_configuration_regressions": 11,
+      "full_command_finished": true,
+      "exit_code": 0,
+      "command": "make test",
+      "verified_on": "2026-10-27"
+    },
+    "entry_handshake": {
+      "baseline_sent_before_ack": true,
+      "ready_before_first_matching_ack": false,
+      "activate_only_once_on_matching_ack": true,
+      "duplicate_ack_ignored": true,
+      "sync_ready_after_activation": true
+    },
+    "entity_observation_fields": {
+      "move_interval_ms": 11,
+      "attack_sequence": 12,
+      "types": "uint32",
+      "gameplay_values_changed": false
+    },
+    "entity_presentation": {
+      "motion_tests": 14,
+      "animation_tests": 9,
+      "preload_before_ticket": true,
+      "simple_sprite_trim_false": true,
+      "browser_render_samples": true,
+      "physical_mobile_verified": false
+    }
+  },
+  "game_runtime_ready": false,
+  "creator_project_build_verified": true,
+  "production_ready": false,
+  "source_locks": [
+    {
+      "path": "最终策划案.md",
+      "sha256": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4"
+    },
+    {
+      "path": "架构方案.md",
+      "sha256": "76ff24111f1e4325f11d5242927ca1fb811da15d97d162a6e01580fe5165e1a9"
+    }
+  ],
+  "toolchain_ready": true,
+  "development_database_ready": true,
+  "development_ready": true,
+  "environment_checks_passed": 34,
+  "updated_on": "2026-10-27",
+  "implementation_status": "first_development_loop_browser_verified",
+  "git": {
+    "initialized": true,
+    "initial_commit_created": true,
+    "remote": "https://github.com/553150580/miniMir2_GPT.git",
+    "branch": "main",
+    "stage_policy": "每阶段完成对应验收后提交、推送并核对远程；不强推既有历史。"
+  },
+  "creator_project": {
+    "version": "3.8.8",
+    "scenes": [
+      "Boot",
+      "Login",
+      "RoleSelect",
+      "Game"
+    ],
+    "prefabs": [
+      "Entity",
+      "ListItem"
+    ],
+    "editable_assets_saved": true,
+    "physical_mobile_verified": false
+  },
+  "development_loop_ready": true,
+  "development_loop_status": "browser_verified",
+  "development_readiness_scope": "本轮1—5首开发闭环已完成本地浏览器验收；全P0、完整HUD美术、手机真机与正式发布继续保留未完成状态。",
+  "local_development_endpoints": {
+    "client_same_origin": "http://127.0.0.1:18080",
+    "account": "127.0.0.1:18100",
+    "game": "127.0.0.1:18101",
+    "gm": "127.0.0.1:18102",
+    "lifecycle_commands": [
+      "make dev-start",
+      "make dev-status",
+      "make dev-stop"
+    ]
+  },
+  "aggregate_acceptance_status": {
+    "T001": "partially_implemented",
+    "T020": "partially_implemented",
+    "T021": "partially_implemented",
+    "T022": "partially_implemented"
+  }
+}

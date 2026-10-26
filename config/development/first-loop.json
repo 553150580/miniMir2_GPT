@@ -1,0 +1,684 @@
+{
+  "schema_version": 1,
+  "rule_version": 1,
+  "development_only": true,
+  "runtime_ready": false,
+  "source_status": "candidate",
+  "damage_formula": "development_range_minus_defence",
+  "allow_free_dev_revive": true,
+  "map": {
+    "id": 1,
+    "width": 16,
+    "height": 16,
+    "blocked": [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 7,
+        "y": 3
+      },
+      {
+        "x": 8,
+        "y": 3
+      },
+      {
+        "x": 7,
+        "y": 4
+      },
+      {
+        "x": 8,
+        "y": 4
+      },
+      {
+        "x": 12,
+        "y": 4
+      },
+      {
+        "x": 13,
+        "y": 4
+      },
+      {
+        "x": 12,
+        "y": 5
+      },
+      {
+        "x": 13,
+        "y": 5
+      },
+      {
+        "x": 0,
+        "y": 7
+      },
+      {
+        "x": 1,
+        "y": 7
+      },
+      {
+        "x": 2,
+        "y": 7
+      },
+      {
+        "x": 0,
+        "y": 8
+      },
+      {
+        "x": 1,
+        "y": 8
+      },
+      {
+        "x": 2,
+        "y": 8
+      },
+      {
+        "x": 7,
+        "y": 14
+      },
+      {
+        "x": 7,
+        "y": 15
+      }
+    ],
+    "player_spawn": {
+      "x": 8,
+      "y": 8
+    },
+    "pet_spawn": {
+      "x": 8,
+      "y": 7
+    },
+    "monster_spawns": [
+      {
+        "x": 1,
+        "y": 1
+      },
+      {
+        "x": 1,
+        "y": 14
+      },
+      {
+        "x": 14,
+        "y": 1
+      },
+      {
+        "x": 14,
+        "y": 14
+      },
+      {
+        "x": 1,
+        "y": 4
+      },
+      {
+        "x": 3,
+        "y": 2
+      },
+      {
+        "x": 4,
+        "y": 14
+      },
+      {
+        "x": 2,
+        "y": 12
+      }
+    ]
+  },
+  "players": [
+    {
+      "job_id": 0,
+      "definition_id": 0,
+      "hp": 18,
+      "mp": 14,
+      "attack_min": 0,
+      "attack_max": 0,
+      "defence": 0,
+      "attack_ms": 1386,
+      "move_ms": 600
+    },
+    {
+      "job_id": 1,
+      "definition_id": 1,
+      "hp": 15,
+      "mp": 17,
+      "attack_min": 0,
+      "attack_max": 0,
+      "defence": 0,
+      "attack_ms": 1386,
+      "move_ms": 600
+    },
+    {
+      "job_id": 2,
+      "definition_id": 2,
+      "hp": 16,
+      "mp": 13,
+      "attack_min": 0,
+      "attack_max": 0,
+      "defence": 0,
+      "attack_ms": 1386,
+      "move_ms": 600
+    }
+  ],
+  "pet": {
+    "job_id": 2,
+    "definition_id": 2,
+    "hp": 60,
+    "mp": 0,
+    "attack_min": 10,
+    "attack_max": 20,
+    "defence": 10,
+    "attack_ms": 1000,
+    "move_ms": 1000
+  },
+  "monsters": [
+    {
+      "job_id": 0,
+      "definition_id": 1,
+      "hp": 15,
+      "mp": 0,
+      "attack_min": 1,
+      "attack_max": 2,
+      "defence": 0,
+      "attack_ms": 2500,
+      "move_ms": 1500,
+      "id": 1,
+      "exp": 15,
+      "gold_min": 30,
+      "gold_max": 30,
+      "respawn_ms": 10000
+    }
+  ],
+  "items": [
+    {
+      "id": 218,
+      "name": "木剑",
+      "equipment_slot": 0,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 2,
+      "attack_max_bonus": 5,
+      "defence_bonus": 0,
+      "recycle_gold": 50,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": 193,
+      "name": "布衣",
+      "equipment_slot": 1,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 2,
+      "recycle_gold": 400,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": 35,
+      "name": "金创药(小量)",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": 36,
+      "name": "魔法药(小量)",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "drops": {
+    "equipment_item_ids": [
+      218,
+      193
+    ],
+    "item_ids": [
+      35,
+      36
+    ],
+    "empty_ppm": 650000,
+    "gold_ppm": 200000,
+    "item_ppm": 100000,
+    "equipment_ppm": 50000,
+    "equipment_guarantee": 20
+  },
+  "progression": {
+    "exp_per_level": [
+      10,
+      20,
+      30,
+      40,
+      50,
+      60,
+      70,
+      80,
+      90,
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800,
+      900,
+      1000,
+      1000
+    ]
+  },
+  "initial_inventory": [
+    218,
+    218,
+    193,
+    35,
+    36
+  ],
+  "initial_bound_gold": 0,
+  "inventory_capacity": 32,
+  "_source_evidence": {
+    "status": "candidate",
+    "official_180_restoration_verified": false,
+    "record_sources": {
+      "game_monsters": [
+        {
+          "id": 1,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:13；client/assets/resources/development/manifest.json",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 2,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_items": [
+        {
+          "id": 218,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。"
+        },
+        {
+          "id": 193,
+          "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195",
+          "note": "来源原名布衣(男)。本作无性别穿戴门槛，不新增男女装备分类，同itemID按职业固定外观；允许职业[0,1,2]是目标规则适配。女法师衣服外观映射仍待正式资源验收。仅development候选，未通过目标1.80行为或数值验收。"
+        },
+        {
+          "id": 35,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:37",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。"
+        },
+        {
+          "id": 36,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:38",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。"
+        }
+      ],
+      "game_equipment": [
+        {
+          "id": 218,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 品质0、阶段0是开发夹具对接本项目枚举的工程选择；不把来源Color当品质。"
+        },
+        {
+          "id": 193,
+          "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195",
+          "note": "来源原名布衣(男)。本作无性别穿戴门槛，不新增男女装备分类，同itemID按职业固定外观；允许职业[0,1,2]是目标规则适配。女法师衣服外观映射仍待正式资源验收。仅development候选，未通过目标1.80行为或数值验收。"
+        }
+      ],
+      "game_maps": [
+        {
+          "id": 1,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_map_collisions": [
+        {
+          "id": 1,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_map_regions": [
+        {
+          "id": 1,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_monster_spawns": [
+        {
+          "id": 1,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 2,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 3,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 4,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 5,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 6,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 7,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 8,
+          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_pet_templates": [
+        {
+          "id": 1,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 只给道士开发夹具注入宠物，召唤资格/技能耗材未实现，不开放正式召唤。"
+        }
+      ],
+      "game_exp_levels": [
+        {
+          "id": 1,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:4",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 2,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:5",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 3,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:6",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 4,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:7",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 5,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:8",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 6,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:9",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 7,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:10",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 8,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:11",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 9,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:12",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 10,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:13",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 11,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:14",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 12,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:15",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 13,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:16",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 14,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:17",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 15,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:18",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 16,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:19",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 17,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:20",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 18,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:21",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 19,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:22",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 20,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:23",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_drop_pools": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:602-614；../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 仅采纳来源条目与金币数量，旧独立掉率废弃；类别后子集等权是开发选择。"
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:602-614；../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 仅采纳来源条目与金币数量，旧独立掉率废弃；类别后子集等权是开发选择。"
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:602-614；../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 仅采纳来源条目与金币数量，旧独立掉率废弃；类别后子集等权是开发选择。"
+        }
+      ],
+      "game_drop_entries": [
+        {
+          "id": 1,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 子集权重1是开发候选，不沿用来源独立概率。"
+        },
+        {
+          "id": 2,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 子集权重1是开发候选，不沿用来源独立概率。"
+        },
+        {
+          "id": 3,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 子集权重1是开发候选，不沿用来源独立概率。"
+        },
+        {
+          "id": 4,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 子集权重1是开发候选，不沿用来源独立概率。"
+        },
+        {
+          "id": 5,
+          "source_ref": "../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt:6",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_skills": [
+        {
+          "id": 0,
+          "source_ref": "../SuprcodeCrystal/Server/MirObjects/HumanObject.cs:2974-2981；../SuprcodeCrystal/Server/MirObjects/MapObject.cs:243-259",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 普攻0为本项目开发消息标识，非来源技能ID；三职业共用近身普攻，职业专属施法仍禁用。"
+        }
+      ],
+      "game_recycle_values": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:125；用户2026-10-26开发闭环授权",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 正式金币分布未知仍空；开发测试仅在独立夹具授权引用来源售价，不能冒充本表已核验回收价。"
+        }
+      ],
+      "dev_first_loop_profile": [
+        {
+          "id": 1,
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        }
+      ],
+      "game_drop_categories": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 4,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        }
+      ]
+    },
+    "player_stats": "../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600",
+    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。",
+    "damage_scope": "仅验证无幸运/命中/元素/Buff的源物理区间减固定防御子集。不是完整1.80伤害管线。",
+    "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
+    "potion_effects": "Raw source Ac20/Mac30 are retained as provenance only; recovery amount/tick/cooldown is unverified and not enabled.",
+    "workbook_sync": "exported_from_current_unique_excel",
+    "source_locks": [
+      {
+        "path": "最终策划案.md",
+        "sha256": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4"
+      },
+      {
+        "path": "架构方案.md",
+        "sha256": "76ff24111f1e4325f11d5242927ca1fb811da15d97d162a6e01580fe5165e1a9"
+      },
+      {
+        "path": "UI参考图/用户确认/主界面UI布局参考.png",
+        "sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2"
+      },
+      {
+        "path": "资料索引/用户确认参考.json",
+        "sha256": "03a2a7813fd658600cd8d0b330c4cc96bf9d9d3db0af6534fb1df4dca83df2f3"
+      },
+      {
+        "path": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv",
+        "sha256": "d97075ce90dd0a86cf75b9d1d16959c1b3478b2503e20624d880ff8ccaa05a39"
+      },
+      {
+        "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+        "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7"
+      },
+      {
+        "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Exps.ini",
+        "sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+      },
+      {
+        "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+        "sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179"
+      },
+      {
+        "path": "/Users/srf/Miro2/SuprcodeCrystal/Shared/BaseStats.cs",
+        "sha256": "b103cbfb609c1d5b578b0f920e40972fda46bbb1057f18fca391ab3dd9da4dfa"
+      },
+      {
+        "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/HumanObject.cs",
+        "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+      },
+      {
+        "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/MapObject.cs",
+        "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f"
+      },
+      {
+        "path": "client/assets/resources/development/manifest.json",
+        "sha256": "133e5206efe140f6c6b70be844a6ca1d221b9c6fec767190ccdcf4a2d42833e1"
+      },
+      {
+        "path": "client/assets/resources/development/maps/first-map.json",
+        "sha256": "df28f45ebdcfcbe6aadc990a46a5fbd3f3c7f0b82bd9dd500fd009d99c4e350c"
+      }
+    ],
+    "workbook": {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256": "5ffba0bd4d9a811ff9816a8712705f3adf0abd57febb3712afbbb2d540a3b5ce"
+    },
+    "exporter_sha256": "8fa7ad1ef1263eb2fbe30c0a4397027e892d1ded1a3e30e0e2701bb6c46044a8"
+  }
+}

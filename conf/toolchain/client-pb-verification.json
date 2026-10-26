@@ -1,0 +1,485 @@
+{
+  "status": "passed",
+  "validation_scope": "candidate_static_protobuf_wire_codec_only",
+  "node_version": "v24.22.1",
+  "runtime_long_loaded": true,
+  "int64_number_conversion": false,
+  "message_count": 37,
+  "message_names": [
+    "RoleKey",
+    "GridPoint",
+    "OperationContext",
+    "OperationResult",
+    "Heartbeat",
+    "HeartbeatResult",
+    "Batch",
+    "ConfigVersion",
+    "LocalLoginRequest",
+    "LoginResult",
+    "RoleDirectoryRequest",
+    "RoleSummary",
+    "RoleDirectoryResult",
+    "CreateRoleRequest",
+    "EntryTicketRequest",
+    "EntryTicketResult",
+    "EnterLineRequest",
+    "EnterLineResult",
+    "EnterWorldAck",
+    "SyncReady",
+    "EntityState",
+    "SceneBaselineChunk",
+    "MoveIntent",
+    "CastIntent",
+    "AutoBattleIntent",
+    "HostingState",
+    "DeathNotice",
+    "ReviveChoice",
+    "WalletState",
+    "ItemView",
+    "EquippedItem",
+    "InventoryResult",
+    "EquipRequest",
+    "RecycleRequest",
+    "ClaimHostingTimeRequest",
+    "BuyHostingTimeRequest",
+    "HostingReport"
+  ],
+  "int64_field_count": 54,
+  "int64_boundary_cases": 174,
+  "int64_checks": [
+    {
+      "message": "RoleKey",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "expected_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "expected_rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationResult",
+      "field": "command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationResult",
+      "field": "new_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "Heartbeat",
+      "field": "client_monotonic_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HeartbeatResult",
+      "field": "server_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ConfigVersion",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ConfigVersion",
+      "field": "resource_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "LoginResult",
+      "field": "expires_at_unix",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleDirectoryRequest",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleSummary",
+      "field": "appearance_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleDirectoryResult",
+      "field": "route_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CreateRoleRequest",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "run_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "route_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "expires_at_unix",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "room_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "resource_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "next_economic_command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterWorldAck",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterWorldAck",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "next_economic_command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityState",
+      "field": "hp",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "hp_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "mp",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "mp_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "state_sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MoveIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AutoBattleIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingState",
+      "field": "state_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DeathNotice",
+      "field": "inplace_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "DeathNotice",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WalletState",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "InventoryResult",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "InventoryResult",
+      "field": "experience",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "used_seconds",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "kills",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "experience",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "settlement_sequence",
+      "type": "uint64",
+      "cases": 3
+    }
+  ],
+  "bytes_field_count": 12,
+  "bytes_checks": [
+    {
+      "message": "RoleKey",
+      "field": "role_id",
+      "repeated": false
+    },
+    {
+      "message": "OperationContext",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "OperationResult",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "Batch",
+      "field": "application_bodies",
+      "repeated": true
+    },
+    {
+      "message": "LoginResult",
+      "field": "account_id",
+      "repeated": false
+    },
+    {
+      "message": "CreateRoleRequest",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "DeathNotice",
+      "field": "death_id",
+      "repeated": false
+    },
+    {
+      "message": "ReviveChoice",
+      "field": "death_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemView",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "RecycleRequest",
+      "field": "item_instance_ids",
+      "repeated": true
+    },
+    {
+      "message": "HostingReport",
+      "field": "hosting_session_id",
+      "repeated": false
+    }
+  ],
+  "nested_wallet_and_drops": "passed",
+  "utf8_strings": "passed",
+  "truncated_known_message_rejected": true,
+  "proto_sources": [
+    {
+      "path": "shared/proto/common.proto",
+      "sha256": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98"
+    },
+    {
+      "path": "shared/proto/account.proto",
+      "sha256": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964"
+    },
+    {
+      "path": "shared/proto/world.proto",
+      "sha256": "6a50896815a47256e59fd73292d31fa4b2ed283a72440c03426e07f5ee33d080"
+    },
+    {
+      "path": "shared/proto/assets.proto",
+      "sha256": "626b66274df8b6c724240442728f7fd05ffc99b549327298cdbc243c843107bc"
+    }
+  ],
+  "generated_files": [
+    {
+      "path": "client/assets/scripts/generated/protobuf/client_pb.js",
+      "sha256": "059c1aa820cfdf11c8cf8108489f76e3f895a9f08c9bfa2cf680591b6476d2f4",
+      "bytes": 516108
+    },
+    {
+      "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
+      "sha256": "c88ec33efcd312ba98af992472450347b646f4eb6c17a0dc5336628f853de2e9",
+      "bytes": 180723
+    }
+  ],
+  "runtime_dependency_scope": "client/node_modules",
+  "runtime_dependencies": {
+    "protobufjs": "8.8.1",
+    "long": "5.3.2"
+  },
+  "business_logic_verified": false,
+  "authentication_verified": false,
+  "creator_project_build_verified": false,
+  "limitations": [
+    "协议仍为研发草案；未实现服务器业务或账号认证。",
+    "本检查不替代Creator实际打包、真机或网络互通验收。",
+    "bytes线格式不会替服务端校验永久ID必须16字节等业务约束。",
+    "业务调用必须显式构造Long；禁止Number/parseInt/long.toNumber传递64位值。"
+  ]
+}

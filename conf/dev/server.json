@@ -1,0 +1,13 @@
+{
+  "environment": "development",
+  "account_address": "127.0.0.1:18100",
+  "game_address": "127.0.0.1:18101",
+  "gm_address": "127.0.0.1:18102",
+  "mongo_uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
+  "database": "minimir_dev_game",
+  "fixture_file": "config/development/first-loop.json",
+  "node_id": "game-dev",
+  "origin_id": 1,
+  "run_id": 1,
+  "allowed_origins": ["127.0.0.1:*", "localhost:*"]
+}

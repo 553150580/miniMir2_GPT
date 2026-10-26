@@ -1,0 +1,56 @@
+// 由protocol_manifest.json生成，草案未发布。
+package protocol
+
+const (
+	MsgC2SHeartbeat uint16 = 1
+	MsgS2CHeartbeat uint16 = 2
+	MsgS2CBatch uint16 = 3
+	MsgC2SEnterWorldAck uint16 = 4
+	MsgS2CSceneBaseline uint16 = 5
+	MsgS2CSyncReady uint16 = 6
+	MsgC2SLocalLogin uint16 = 10001
+	MsgS2CLogin uint16 = 10002
+	MsgC2SRoleDirectory uint16 = 10003
+	MsgS2CRoleDirectory uint16 = 10004
+	MsgC2SCreateRole uint16 = 10005
+	MsgS2CCreateRole uint16 = 10006
+	MsgC2SEntryTicket uint16 = 10007
+	MsgS2CEntryTicket uint16 = 10008
+	MsgC2SLocalRegister uint16 = 10009
+	MsgS2CLocalRegister uint16 = 10010
+	MsgC2SEnterLine uint16 = 20001
+	MsgS2CEnterLine uint16 = 20002
+	MsgC2SMoveIntent uint16 = 20006
+	MsgS2CDeathNotice uint16 = 30001
+	MsgC2SReviveChoice uint16 = 30002
+	MsgC2SCastIntent uint16 = 30003
+	MsgC2SAutoBattle uint16 = 30004
+	MsgS2CHostingState uint16 = 30005
+	MsgC2SEquip uint16 = 40001
+	MsgC2SRecycle uint16 = 40002
+	MsgS2CInventory uint16 = 40003
+	MsgS2CWallet uint16 = 40004
+	MsgS2COperationResult uint16 = 40005
+	MsgC2SClaimHostingTime uint16 = 40006
+	MsgC2SBuyHostingTime uint16 = 40007
+	MsgS2CHostingReport uint16 = 40008
+)
+
+const (
+	CodeOK uint32 = 0
+	CodeInvalidArgument uint32 = 1001
+	CodeUnauthenticated uint32 = 1002
+	CodeServerBusy uint32 = 1003
+	CodeStaleSession uint32 = 2001
+	CodeRouteChanged uint32 = 2002
+	CodeLineFull uint32 = 2101
+	CodeQueueRequired uint32 = 2102
+	CodeLineForbidden uint32 = 2103
+	CodeLineRecovering uint32 = 2104
+	CodeCombatTransferLocked uint32 = 2105
+	CodeSelfTradeForbidden uint32 = 4101
+	CodeWarehouseWithdrawOnly uint32 = 4201
+	CodeWarehouseInactive uint32 = 4202
+	CodeOperationConflict uint32 = 4301
+	CodeOperationPending uint32 = 4302
+)

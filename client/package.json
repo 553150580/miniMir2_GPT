@@ -1,0 +1,18 @@
+{
+  "name": "minimir2-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "传奇2竖屏挂机版Creator3.8.8客户端，开发候选内容与正式发布分别验收",
+  "scripts": {
+    "protobuf:generate": "node ../tools/protocol/generate_client_pb.cjs",
+    "protobuf:verify": "node ../tools/protocol/verify_client_pb.cjs"
+  },
+  "dependencies": {
+    "long": "5.3.2",
+    "protobufjs": "8.8.1"
+  },
+  "uuid": "a7318764-8efb-5257-8090-3986b0b2168c",
+  "creator": {
+    "version": "3.8.8"
+  }
+}

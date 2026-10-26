@@ -1,0 +1,31 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+// 永久ID采用128位字节；长度由服务端校验，高频实体使用场景内uint32句柄。
+message RoleKey { bytes role_id = 1; uint64 origin_server_id = 2; }
+message GridPoint { sint32 x = 1; sint32 y = 2; }
+message OperationContext {
+  bytes op_id = 1;
+  uint64 command_seq = 2;
+  uint64 expected_revision = 3;
+  uint64 expected_rule_version = 4;
+}
+message OperationResult {
+  bytes op_id = 1;
+  uint64 command_seq = 2;
+  uint64 new_revision = 3;
+  uint32 error_code = 4;
+  bool pending = 5;
+}
+message Heartbeat { uint64 client_monotonic_ms = 1; }
+message HeartbeatResult { uint64 server_unix_ms = 1; }
+// 批次内每项为带msg_id/request_seq/binding_epoch等头的完整应用body。
+message Batch { repeated bytes application_bodies = 1; }
+message ConfigVersion {
+  uint64 rule_version = 1;
+  string content_hash = 2;
+  uint64 resource_version = 3;
+  uint32 protocol_version = 4;
+}
+

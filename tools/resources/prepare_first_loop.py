@@ -1,0 +1,205 @@
+#!/usr/bin/env python3
+"""Extract bounded source candidates; export the explicit development fixture from current Excel."""
+from __future__ import annotations
+import argparse
+import csv
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+
+ROOT=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(ROOT/'tools/config'))
+import export_configs as config
+WORK=ROOT/'.work/first-loop'
+DEST=ROOT/'config/development/first-loop.json'
+CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
+EXP=ROOT.parent/'MirServer沉默世界_MYF/Mir200/Exps.ini'
+MON_DROPS=ROOT.parent/'MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt'
+ASSETS=ROOT/'client/assets/resources/development'
+NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
+TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
+           'game_monster_spawns','game_pet_templates','game_exp_levels','game_drop_pools','game_drop_entries',
+           'game_skills','game_recycle_values','dev_first_loop_profile']
+
+def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+def read(path):return json.loads(path.read_text(encoding='utf-8'))
+def csv_rows(name):
+    with (CSV_ROOT/name).open(encoding='utf-8-sig',newline='') as f:return [(i,row) for i,row in enumerate(csv.DictReader(f),2)]
+def find(rows,name):return next((i,r) for i,r in rows if r.get('Name')==name)
+def meta(id,source,note=NOTE):return {'id':id,'record_status':'candidate','source_ref':source,'note':note}
+def schema_profile():
+    fields=[{'name':'id','title':'配置编号','type':'int','required':True,'target':'none','minimum':1},
+            {'name':'profile_key','title':'开发配置键','type':'string','required':True,'target':'none'},
+            {'name':'parameters','title':'仅开发测试参数','type':'json','required':True,'target':'none'},
+            {'name':'record_status','title':'参数状态','type':'string','required':True,'target':'none','enum_values':['confirmed','candidate','unverified','historical']},
+            {'name':'source_ref','title':'来源与开发授权','type':'string','required':True,'target':'none'},
+            {'name':'note','title':'说明','type':'string','required':False,'target':'none'}]
+    return {'table_id':'dev_first_loop_profile','sheet_name':'开发首循环夹具','title':'开发首循环夹具','domain':'开发隔离',
+            'source_sections':['用户2026-10-26授权首批正式开发；仅显式development构建；tools/resources/prepare_first_loop.py'],
+            'release_required':False,'min_rows':1,'fields':fields,'workbook_group':'gameplay'}
+
+def extract():
+    monsters=csv_rows('ApexM2_Monster.csv');items=csv_rows('ApexM2_stditems.csv');mapping=read(ASSETS/'maps/first-map.json')
+    tables={};sources=[]
+    def add(t,row):tables.setdefault(t,[]).append(row)
+    def source(path):
+        relative=str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+        sources.append({'path':relative,'sha256':config.sha256(path)})
+    for p in [CSV_ROOT/'ApexM2_Monster.csv',CSV_ROOT/'ApexM2_stditems.csv',EXP,MON_DROPS,
+              ROOT.parent/'SuprcodeCrystal/Shared/BaseStats.cs',ROOT.parent/'SuprcodeCrystal/Server/MirObjects/HumanObject.cs',
+              ROOT.parent/'SuprcodeCrystal/Server/MirObjects/MapObject.cs',ASSETS/'manifest.json',ASSETS/'maps/first-map.json']:source(p)
+    for id,name,key,category,resource in [(1,'稻草人','dev_scarecrow','ordinary','monster_scarecrow'),(2,'变异骷髅','dev_skeleton_pet','pet_template','pet_skeleton')]:
+        line,r=find(monsters,name);ref=f'资料参考/myf/Mud2/DB/ApexM2_Monster.csv:{line}；client/assets/resources/development/manifest.json'
+        attrs={k:int(r[v]) for k,v in [('mp','MP'),('physical_attack_min','DC'),('physical_attack_max','DCMAX'),('physical_defence_min','AC'),('physical_defence_max','AC'),('magic_defence','MAC'),('accuracy','HIT'),('agility','SPEED')]}
+        add('game_monsters',{**meta(id,ref), 'monster_key':key,'display_name':name,'level':int(r['Lvl']),'category':category,
+                            'hp':int(r['HP']),'attributes':attrs,'attack_interval_ms':int(r['ATTACK_SPD']),'move_interval_ms':int(r['WALK_SPD']),
+                            'attack_behavior_id':'development_range_minus_defence','aggro_range_cells':None,'chase_range_cells':None,
+                            'exp':int(r['Exp']),'drop_pool_id':1 if id==1 else None,'resource_key':resource})
+    for name,item_type,slot in [('木剑','equipment',0),('布衣(男)','equipment',1),('金创药(小量)','potion',None),('魔法药(小量)','potion',None)]:
+        line,r=find(items,name);id=int(r['Idx']);ref=f'资料参考/myf/Mud2/DB/ApexM2_stditems.csv:{line}'
+        add('game_items',{**meta(id,ref,NOTE+' 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。'),
+                          'item_key':f'dev_source_item_{id}','display_name':'布衣' if id==193 else name,'item_type':item_type,'max_stack':1 if slot is not None else None,
+                          'effect_list_id':None,'weight':int(r['Weight']),'quality':0 if slot is not None else None,'description':'来源子集开发候选',
+                          'icon_resource_key':None})
+        if slot is not None:
+            attrs={'physical_attack_min':int(r['Dc']),'physical_attack_max':int(r['Dc2']),
+                   'physical_defence_min':int(r['Ac']) if slot==1 else 0,'physical_defence_max':int(r['Ac2']) if slot==1 else 0,
+                   'magic_defence_min':int(r['Mac']) if slot==1 else 0,'magic_defence_max':int(r['Mac2']) if slot==1 else 0}
+            add('game_equipment',{**meta(id,ref,NOTE+' 品质0、阶段0是开发夹具对接本项目枚举的工程选择；不把来源Color当品质。'),
+                'item_id':id,'equipment_type':'weapon' if slot==0 else 'armour','class_restriction':[0,1,2],'required_level':int(r['NeedLevel']),
+                'quality':0,'stage':0,'base_attributes':attrs,'original_durability_u':int(r['DuraMax']),'weight':int(r['Weight']),
+                'craft_bonus_strengthenable':False})
+    for row in tables['game_items']+tables['game_equipment']:
+        if row['id']==193:
+            row['source_ref']='最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195'
+            row['note']='来源原名布衣(男)。本作无性别穿戴门槛，不新增男女装备分类，同itemID按职业固定外观；允许职业[0,1,2]是目标规则适配。女法师衣服外观映射仍待正式资源验收。仅development候选，未通过目标1.80行为或数值验收。'
+    map_ref='client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格'
+    add('game_maps',{**meta(1,map_ref),'map_key':'dev_map0_crop128_128','display_name':'开发地图0局部','scene_kind':'ordinary',
+                    'width_cells':16,'height_cells':16,'required_level':1,'collision_id':1,'spawn_cell':mapping['player_spawn'],
+                    'tile_resource_key':'development/maps/first-map','map_version':mapping['source_sha256'][:16]})
+    add('game_map_collisions',{**meta(1,map_ref),'map_key':'dev_map0_crop128_128','width_cells':16,'height_cells':16,
+        'blocked_cells':mapping['blocked'],'walkable_encoding':'blocked_xy_objects','client_navigation':{'cell_width':48,'cell_height':32,'source_origin':mapping['source_origin']},
+        'diagonal_rule':'development_no_corner_cutting','source_hash':mapping['source_sha256']})
+    add('game_map_regions',{**meta(1,map_ref),'map_id':1,'region_key':'development_combat','region_cells':{'min_x':0,'min_y':0,'max_x':15,'max_y':15},
+                           'npc_id':None,'monster_pool':[{'monster_id':1,'slots':8}],'entry_rules':{'development_only':True}})
+    for i,p in enumerate(mapping['monster_spawns'],1):
+        add('game_monster_spawns',{**meta(i,map_ref+'；最终策划案.md:普通怪10秒复活'),'map_id':1,'slot_index':i-1,'monster_id':1,'cell':p,
+             'respawn_seconds':10,'spawn_kind':'ordinary','slot_resize_policy':'development_fixed_eight_reachable_slots'})
+    pet=next(x for x in tables['game_monsters'] if x['id']==2)
+    add('game_pet_templates',{**meta(1,pet['source_ref'],NOTE+' 只给道士开发夹具注入宠物，召唤资格/技能耗材未实现，不开放正式召唤。'),
+        'pet_key':'dev_skeleton','summon_skill_id':None,'monster_template_id':2,'base_attributes':{'hp':pet['hp'],**pet['attributes']},
+        'attack_behavior':'development_melee_adjacent','follow_and_return':None,'lifetime_and_betrayal':None,'resource_key':'pet_skeleton'})
+    exp_lines=EXP.read_text(encoding='utf-8-sig').splitlines();exp_values=[]
+    for no,line in enumerate(exp_lines,1):
+        if no>1 and line.startswith('['):break
+        match=re.fullmatch(r'Level(\d+)=(\d+)',line)
+        if match and 1<=int(match[1])<=20:
+            level,amount=map(int,match.groups());exp_values.append((level,amount))
+            add('game_exp_levels',{**meta(level,f'../MirServer沉默世界_MYF/Mir200/Exps.ini:{no}'),
+                 'level':level,'next_level_exp':amount,'growth_target':'development_candidate_only','measurement_version':'myf_source_unbalanced'})
+    assert len(exp_values)==20
+    for id,key,category in [(1,'dev_equipment_subset','equipment'),(2,'dev_potion_subset','item'),(3,'dev_gold_subset','gold')]:
+        add('game_drop_pools',{**meta(id,'最终策划案.md:602-614；../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt',NOTE+' 仅采纳来源条目与金币数量，旧独立掉率废弃；类别后子集等权是开发选择。'),
+            'pool_key':key,'source_kind':'ordinary_monster','category_key':category,'selection_mode':'development_equal_subset',
+            'equipment_stage_range':[0,0] if category=='equipment' else None,'quality_weights':{'0':1} if category=='equipment' else None,'max_random_quality':0 if category=='equipment' else None})
+    for id,pool,item in [(1,1,218),(2,1,193),(3,2,35),(4,2,36)]:
+        add('game_drop_entries',{**meta(id,'../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt',NOTE+' 子集权重1是开发候选，不沿用来源独立概率。'),
+            'pool_id':pool,'item_id':item,'currency_key':None,'weight':1,'quantity_min':1,'quantity_max':1,'binding_policy':'bound_development_only'})
+    add('game_drop_entries',{**meta(5,'../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt:6'),
+        'pool_id':3,'item_id':None,'currency_key':'bound_gold','weight':1,'quantity_min':30,'quantity_max':30,'binding_policy':'bound_development_only'})
+    add('game_skills',{**meta(0,'../SuprcodeCrystal/Server/MirObjects/HumanObject.cs:2974-2981；../SuprcodeCrystal/Server/MirObjects/MapObject.cs:243-259',NOTE+' 普攻0为本项目开发消息标识，非来源技能ID；三职业共用近身普攻，职业专属施法仍禁用。'),
+        'skill_key':'development_basic_attack','display_name':'开发普攻','class_id':None,'learn_level':1,'behavior_id':'development_range_minus_defence',
+        'target_rule':{'enemy_only':True,'adjacent_eight_directions':True,'class_ids':[0,1,2]},'range_pattern_id':None,'cooldown_ms':None,
+        'cast_timing':{'animation':'attack','logic':'server_attack_interval'},'resource_costs':{'mp':0,'items':[]},
+        'damage_or_heal_path':'development_range_minus_defence','effect_ids':[],'action_resource_key':'player_male.attack',
+        'reference_evidence_id':'dev_physical_basic_v1','target_180_verified':False})
+    add('game_recycle_values',{**meta(1,'最终策划案.md:125；用户2026-10-26开发闭环授权',NOTE+' 正式金币分布未知仍空；开发测试仅在独立夹具授权引用来源售价，不能冒充本表已核验回收价。'),
+        'equipment_stage':0,'quality':0,'gold_distribution':None,'broken_gold':0,'stone_probability_ppm':None,'broken_byproducts':None,
+        'oil_probability_formula':None,'rewards_combinable':None})
+    players=[{'job_id':0,'definition_id':0,'hp':18,'mp':14,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600},
+             {'job_id':1,'definition_id':1,'hp':15,'mp':17,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600},
+             {'job_id':2,'definition_id':2,'hp':16,'mp':13,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600}]
+    profile={'rule_version':1,'map_id':1,'monster_id':1,'pet_id':1,'players':players,'inventory_capacity':32,
+             'initial_inventory':[218,218,193,35,36],'initial_bound_gold':0,'allow_free_dev_revive':True,
+             'damage_formula':'development_range_minus_defence','recycle_test_gold_by_item':{'218':50,'193':400,'35':0,'36':0},
+             'technical_parameters_notice':'32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。',
+             'player_stats_source':'../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600',
+             'damage_scope_notice':'仅验证无幸运/命中/元素/Buff的源物理区间减固定防御子集。不是完整1.80伤害管线。',
+             'revive_notice':'开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。'}
+    add('dev_first_loop_profile',{**meta(1,'用户2026-10-26授权1-5开发；'+profile['player_stats_source'],NOTE),
+        'profile_key':'first_loop_closed_development','parameters':profile})
+    patch={'tables':tables,'new_table':schema_profile(),'source_locks':sources,'source_status':'candidate','development_only':True}
+    save(WORK/'config-candidates.json',patch)
+    return patch
+
+def fixture_from_rows(tables):
+    one=lambda table,id:next(r for r in tables[table] if r['id']==id)
+    profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',1);collision=one('game_map_collisions',m['collision_id'])
+    geo=read(ASSETS/'maps/first-map.json');monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
+    fighter=lambda r:{'job_id':2 if r['id']==2 else 0,'definition_id':r['id'],'hp':r['hp'],'mp':r['attributes']['mp'],
+        'attack_min':r['attributes']['physical_attack_min'],'attack_max':r['attributes']['physical_attack_max'],
+        'defence':r['attributes']['physical_defence_min'],'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms']}
+    items=[]
+    for r in tables['game_items']:
+        if r['id'] not in [35,36,193,218]:continue
+        eq=next((x for x in tables['game_equipment'] if x['item_id']==r['id']),None);attrs=eq['base_attributes'] if eq else {}
+        items.append({'id':r['id'],'name':r['display_name'],'equipment_slot':0 if eq and eq['equipment_type']=='weapon' else 1 if eq else 0,
+                      'is_equipment':eq is not None,'attack_bonus':0,'attack_min_bonus':attrs.get('physical_attack_min',0),
+                      'attack_max_bonus':attrs.get('physical_attack_max',0),'defence_bonus':attrs.get('physical_defence_min',0),
+                      'recycle_gold':profile['recycle_test_gold_by_item'][str(r['id'])],'stackable':eq is None,
+                      'allowed_jobs':eq['class_restriction'] if eq else [0,1,2]})
+    categories={r['category_key']:r['prob_ppm'] for r in tables['game_drop_categories']}
+    drop_gold=one('game_drop_entries',5)
+    result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
+        'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
+        'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':collision['blocked_cells'],
+               'player_spawn':m['spawn_cell'],'pet_spawn':geo['pet_spawn'],'monster_spawns':[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]},
+        'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
+                    'gold_min':drop_gold['quantity_min'],'gold_max':drop_gold['quantity_max'],'respawn_ms':10000}],
+        'items':items,'drops':{'equipment_item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==1],
+                             'item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==2],
+                             **{key+'_ppm':categories[key] for key in ['empty','gold','item','equipment']},'equipment_guarantee':20},
+        'progression':{'exp_per_level':[r['next_level_exp'] for r in sorted(tables['game_exp_levels'],key=lambda r:r['level'])]},
+        'initial_inventory':profile['initial_inventory'],'initial_bound_gold':profile['initial_bound_gold'],'inventory_capacity':profile['inventory_capacity'],
+        '_source_evidence':{'status':'candidate','official_180_restoration_verified':False,
+                            'record_sources':{tid:[{'id':r['id'],'source_ref':r['source_ref'],'note':r['note']} for r in rows] for tid,rows in tables.items()},
+                            'player_stats':profile['player_stats_source'],'technical_parameters':profile['technical_parameters_notice'],
+                            'damage_scope':profile['damage_scope_notice'],'revive':profile['revive_notice'],
+                            'potion_effects':'Raw source Ac20/Mac30 are retained as provenance only; recovery amount/tick/cooldown is unverified and not enabled.'}}
+    return result
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true');p.add_argument('--check',action='store_true');args=p.parse_args()
+    if args.extract:
+        if any(t['table_id']=='dev_first_loop_profile' for t in config.load_json(ROOT/'config/schema/catalog.json')['tables']):
+            raise ValueError('开发表已初始化；后续只编辑唯一Excel，再运行本工具导出，不用来源提取覆盖已维护数据。')
+        patch=extract();fixture=fixture_from_rows(patch['tables']|{'game_drop_categories':config.collect(config.load_json(ROOT/'config/schema/catalog.json'))[0]['game_drop_categories']})
+        fixture['_source_evidence']['workbook_sync']='pending_initial_extraction'
+    else:
+        schema=config.load_json(ROOT/'config/schema/catalog.json');tables,errors,_,_=config.collect(schema)
+        if errors:raise ValueError(errors)
+        selected={tid:tables[tid] for tid in TABLE_IDS}
+        selected['game_drop_categories']=tables['game_drop_categories'];fixture=fixture_from_rows(selected)
+        fixture['_source_evidence']['workbook_sync']='exported_from_current_unique_excel'
+        fixture['_source_evidence']['source_locks']=schema['source_locks']
+        book=ROOT/next(w['path'] for w in schema['workbooks'] if w['group']=='gameplay')
+        fixture['_source_evidence']['workbook']={'path':str(book.relative_to(ROOT)),'sha256':config.sha256(book)}
+        fixture['_source_evidence']['exporter_sha256']=config.sha256(Path(__file__))
+    if args.check:
+        if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
+    else:save(DEST,fixture)
+    gameplay={'schema_version':1,'development_only':True,'runtime_ready':False,'status':'candidate',
+              'items':[{'item_id':r['id'],'name':r['name'],'kind':'equipment' if r['is_equipment'] else 'potion',
+                        **({'equip_slot':r['equipment_slot']} if r['is_equipment'] else {}),'allowed_jobs':r['allowed_jobs'],'use_enabled':False} for r in fixture['items']],
+              'jobs':[{'job_id':0,'name':'战士','profile':'player_male'},{'job_id':1,'name':'法师','profile':'player_female'},{'job_id':2,'name':'道士','profile':'player_male'}],
+              'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
+              'monster_profiles':[{'definition_id':1,'name':'稻草人','profile':'monster_scarecrow'}],
+              'pet_profiles':[{'definition_id':2,'name':'变异骷髅','profile':'pet_skeleton','job_id':2}]}
+    public_path=ASSETS/'gameplay.json'
+    if args.check:
+        if read(public_path)!=gameplay:raise ValueError('public development gameplay metadata outdated')
+    else:save(public_path,gameplay)
+    print(json.dumps({'status':'checked' if args.check else 'generated','path':str(DEST),'sha256':config.sha256(DEST),'development_only':True,'runtime_ready':False},ensure_ascii=False))
+if __name__=='__main__':raise SystemExit(main())

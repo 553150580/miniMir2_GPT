@@ -1,0 +1,17 @@
+{
+  "started_at": "2026-10-26T17:02:28.427Z",
+  "entries": [
+    {
+      "level": "info",
+      "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5009,\"updates\":224,\"mean_update_ms\":22.463228699605025,\"max_update_ms\":153.60000002384186,\"intermediate_grid_samples\":{\"player\":109,\"pet\":172,\"monster\":124},\"changed_animation_frames\":118,\"preloaded_frames\":1000}",
+      "timestamp": "2026-10-26T17:04:55.533Z",
+      "url": "http://127.0.0.1:18080/assets/main/index.js"
+    },
+    {
+      "level": "info",
+      "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5027,\"updates\":249,\"mean_update_ms\":20.269758064540163,\"max_update_ms\":39.29999998211861,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":27,\"preloaded_frames\":1000}",
+      "timestamp": "2026-10-26T17:05:00.563Z",
+      "url": "http://127.0.0.1:18080/assets/main/index.js"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+import "common.proto";
+
+message EnterLineRequest { string account_ticket = 1; }
+message EnterLineResult {
+  uint64 scene_epoch = 1;
+  uint64 baseline_id = 2;
+  uint64 room_id = 3;
+  uint32 line_id = 4;
+  uint64 resource_version = 5;
+  GridPoint position = 6;
+  uint32 scene_kind = 7;
+  uint64 next_economic_command_seq = 8;
+}
+message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
+// 仅在当前场景基线ACK验证成功后发送，客户端据此恢复经济命令序号。
+message SyncReady { uint64 scene_epoch = 1; uint64 baseline_id = 2; uint64 next_economic_command_seq = 3; }
+message EntityState {
+  uint32 entity_handle = 1;
+  uint32 entity_kind = 2;
+  uint32 definition_id = 3;
+  GridPoint position = 4;
+  uint32 direction = 5;
+  int64 hp = 6;
+  int64 hp_max = 7;
+  uint32 action = 8;
+  int64 mp = 9;
+  int64 mp_max = 10;
+  // 纯观察字段：当前实体实际移动间隔，0表示不适用；不改变战斗参数。
+  uint32 move_interval_ms = 11;
+  // 每次受理攻击递增，独立于可能被受击覆盖的action；初始为0。
+  uint32 attack_sequence = 12;
+}
+message SceneBaselineChunk {
+  uint64 scene_epoch = 1;
+  uint64 baseline_id = 2;
+  uint32 chunk_index = 3;
+  uint32 chunk_count = 4;
+  uint64 state_sequence = 5;
+  repeated EntityState entities = 6;
+}
+message MoveIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; GridPoint destination = 3; uint32 direction = 4; bool release_joystick = 5; }
+message CastIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; uint32 target_handle = 4; GridPoint target_grid = 5; uint32 direction = 6; }
+message AutoBattleIntent { uint64 scene_epoch = 1; bool enabled = 2; uint32 monster_count = 3; }
+message HostingState { uint32 remain_hosting_sec = 1; bool auto_battle_enabled = 2; uint64 state_revision = 3; }
+message DeathNotice {
+  bytes death_id = 1;
+  uint32 cause_code = 2;
+  uint32 allowed_actions = 3;
+  int64 inplace_price_yuanbao_units = 4;
+  uint64 rule_version = 5;
+}
+message ReviveChoice { bytes death_id = 1; uint32 action = 2; OperationContext operation = 3; }
+

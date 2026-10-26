@@ -1,0 +1,1433 @@
+{
+  "workbook_group": "architecture",
+  "tables": [
+    {
+      "table_id": "arch_node_roles",
+      "sheet_name": "架构_节点角色",
+      "title": "单程序节点与监管模式",
+      "source_sections": [
+        "最终策划案.md §7.1/7.5",
+        "架构方案.md §2/17.1"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "角色代码",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "process_mode",
+          "title": "进程模式",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "singleton_scope",
+          "title": "单例范围",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "responsibilities",
+          "title": "职责",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "adaptation_status",
+          "title": "适配状态",
+          "type": "string",
+          "required": true,
+          "target": "server",
+          "enum_values": [
+            "adopt",
+            "adapt",
+            "defer"
+          ]
+        },
+        {
+          "name": "implementation_status",
+          "title": "实现状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "not_implemented"
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §7.1 L961、§7.5 L1106–1110；架构方案.md §2 L54",
+          "note": "新授权走account事务；发现注册不能自行取得run权限",
+          "code": "account",
+          "process_mode": "node",
+          "singleton_scope": "cluster_control_role",
+          "responsibilities": "认证、入口与角色目录、短期票据、受控节点/run新授权",
+          "adaptation_status": "adapt",
+          "implementation_status": "not_implemented"
+        },
+        {
+          "id": 2,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §7.5 L1108–1109；架构方案.md §17 L903–948",
+          "note": "原文明确的技术参考；实现与验收待执行",
+          "code": "gm",
+          "process_mode": "node",
+          "singleton_scope": "cluster_control_role",
+          "responsibilities": "权限管理、配置与维护/合服任务、审计、受控业务命令",
+          "adaptation_status": "adopt",
+          "implementation_status": "not_implemented"
+        },
+        {
+          "id": 3,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §7.1 L961、§7.5 L1110；架构方案.md §2 L55",
+          "note": "共享调度与有界Worker；特殊挑战永久写经角色owner",
+          "code": "game",
+          "process_mode": "node",
+          "singleton_scope": "exclusive_per_run_lease",
+          "responsibilities": "多run、角色唯一owner、个人/多人战斗、托管、资产及双市场",
+          "adaptation_status": "adapt",
+          "implementation_status": "not_implemented"
+        },
+        {
+          "id": 4,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §2 L57、§17.1 L905–920；最终策划案.md §7.5 L1112",
+          "note": "架构技术扩展；尚无OS服务或启动器",
+          "code": "supervisor",
+          "process_mode": "supervisor",
+          "singleton_scope": "host_management_endpoint",
+          "responsibilities": "本机进程启动/停止/重启、OS进程身份核验、计划任务与对账",
+          "adaptation_status": "adopt",
+          "implementation_status": "not_implemented"
+        }
+      ]
+    },
+    {
+      "table_id": "arch_runtime_budgets",
+      "sheet_name": "架构_候选预算",
+      "title": "首轮运行与性能实验参数",
+      "source_sections": [
+        "架构方案.md §4.1/4.2/6.2/6.3/8.1/19",
+        "最终策划案.md §7.2/10.3"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "参数代码",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "value",
+          "title": "候选值",
+          "type": "number",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "value_unit",
+          "title": "单位",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "applicability",
+          "title": "适用范围",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "adaptation_status",
+          "title": "适配状态",
+          "type": "string",
+          "required": true,
+          "target": "server",
+          "enum_values": [
+            "adopt",
+            "adapt",
+            "defer"
+          ]
+        },
+        {
+          "name": "verification_status",
+          "title": "验证状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "pending"
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §4.1 L198–204",
+          "note": "worker数量仅实验起点；与DB组无对应关系",
+          "code": "role_worker_count",
+          "value": 8,
+          "value_unit": "个/game",
+          "applicability": "角色单写worker",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 2,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §4.1 L206",
+          "note": "软时间预算共同生效",
+          "code": "role_commands_per_round",
+          "value": 16,
+          "value_unit": "条/轮",
+          "applicability": "角色公平轮转",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 3,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §4.1 L206",
+          "note": "软预算；复杂计算需拆分",
+          "code": "role_round_soft_budget_ms",
+          "value": 1,
+          "value_unit": "ms",
+          "applicability": "角色公平轮转",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 4,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §4.2 L213",
+          "note": "按策划共享调度，非每个人实例独立执行池",
+          "code": "simulation_hz",
+          "value": 20,
+          "value_unit": "Hz",
+          "applicability": "活跃战斗模拟起点",
+          "adaptation_status": "adapt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 5,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "策划§7.5 L1122另有20/5起步建议；采用当前架构候选并实测",
+          "code": "lease_duration_sec",
+          "value": 15,
+          "value_unit": "s",
+          "applicability": "node/run授权租约试验",
+          "adaptation_status": "adapt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 6,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "不是account离线时重新授权",
+          "code": "lease_renew_interval_sec",
+          "value": 3,
+          "value_unit": "s",
+          "applicability": "直接续租既有授权",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 7,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "至少提前3秒；实现需数据库时间与本地保守截止",
+          "code": "lease_safety_margin_sec",
+          "value": 3,
+          "value_unit": "s",
+          "applicability": "失租前保守隔离",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 8,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不能跨升级/权益/配置/交易顺序边界",
+          "code": "reward_batch_max_events",
+          "value": 32,
+          "value_unit": "条",
+          "applicability": "普通奖励聚合",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 9,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不得丢保底、限额或业务身份",
+          "code": "reward_batch_max_kib",
+          "value": 16,
+          "value_unit": "KiB",
+          "applicability": "普通奖励聚合",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 10,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "只合并可验证等价连续事件",
+          "code": "reward_batch_wait_ms",
+          "value": 10,
+          "value_unit": "ms",
+          "applicability": "普通奖励聚合",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 11,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "失败项有界拆分，未知原身份对账",
+          "code": "db_batch_max_operations",
+          "value": 32,
+          "value_unit": "条",
+          "applicability": "数据库批",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 12,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "短事务预算",
+          "code": "db_batch_max_kib",
+          "value": 64,
+          "value_unit": "KiB",
+          "applicability": "数据库批",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 13,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不在事务里等队列",
+          "code": "db_batch_wait_ms",
+          "value": 10,
+          "value_unit": "ms",
+          "applicability": "数据库批",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 14,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "同组串行、多run公平",
+          "code": "transactions_per_run",
+          "value": 8,
+          "value_unit": "笔",
+          "applicability": "每run并发事务",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 15,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "与连接池上限分别控制",
+          "code": "transactions_per_node",
+          "value": 32,
+          "value_unit": "笔",
+          "applicability": "每game并发事务",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 16,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "同时受字节上限限制",
+          "code": "run_queue_operations",
+          "value": 2048,
+          "value_unit": "笔",
+          "applicability": "每run待提交上限",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 17,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不是永久库存容量",
+          "code": "run_queue_mib",
+          "value": 8,
+          "value_unit": "MiB",
+          "applicability": "每run待提交字节",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 18,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "跨组需一次性申请完整组集",
+          "code": "db_group_queue_operations",
+          "value": 128,
+          "value_unit": "笔",
+          "applicability": "每DB组排队上限",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 19,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "达到配额有界拒绝",
+          "code": "db_group_queue_mib",
+          "value": 1,
+          "value_unit": "MiB",
+          "applicability": "每DB组排队字节",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 20,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "提交未知不能用超时直接退款",
+          "code": "transaction_deadline_sec",
+          "value": 3,
+          "value_unit": "s",
+          "applicability": "初始事务目标截止",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 21,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "大型基线分块",
+          "code": "protocol_default_frame_kib",
+          "value": 64,
+          "value_unit": "KiB",
+          "applicability": "默认应用帧",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 22,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "分配前检查总长/解压预算",
+          "code": "protocol_absolute_frame_kib",
+          "value": 256,
+          "value_unit": "KiB",
+          "applicability": "应用帧绝对上限",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 23,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "未识别版本/flags拒绝",
+          "code": "protocol_length_prefix_max_bytes",
+          "value": 5,
+          "value_unit": "byte",
+          "applicability": "uvarint32长度前缀",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 24,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "候选配额，完成/隔离通道需保留",
+          "code": "role_mailbox_commands",
+          "value": 128,
+          "value_unit": "条",
+          "applicability": "角色命令邮箱",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 25,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "数量和字节共同限制",
+          "code": "role_mailbox_kib",
+          "value": 128,
+          "value_unit": "KiB",
+          "applicability": "角色命令邮箱",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 26,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "不能饿死内部控制",
+          "code": "worker_mailbox_commands",
+          "value": 8192,
+          "value_unit": "条",
+          "applicability": "每worker命令邮箱",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 27,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "同时验证等待年龄",
+          "code": "worker_mailbox_mib",
+          "value": 8,
+          "value_unit": "MiB",
+          "applicability": "每worker命令邮箱",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 28,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1017",
+          "note": "性能目标未测；不强加普通实例固定tick",
+          "code": "line_tick_p99_target_ms",
+          "value": 25,
+          "value_unit": "ms",
+          "applicability": "候选多人模拟p99",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 29,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1018",
+          "note": "不是全网RTT保证",
+          "code": "command_queue_p99_target_ms",
+          "value": 100,
+          "value_unit": "ms",
+          "applicability": "服务端命令排队目标",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 30,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1019",
+          "note": "排队/DB/回执分别计量",
+          "code": "permanent_operation_p99_target_ms",
+          "value": 500,
+          "value_unit": "ms",
+          "applicability": "永久操作端到端目标",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 31,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1016；最终策划案.md §10.3 L1260",
+          "note": "容量待压测，不是当前承载",
+          "code": "load_target_active_roles_per_run",
+          "value": 3000,
+          "value_unit": "角色",
+          "applicability": "ONLINE+托管混合负载目标",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 32,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "普通个人地图不使用公共人数配置",
+          "code": "public_scene_load_step_low",
+          "value": 100,
+          "value_unit": "角色",
+          "applicability": "多人公共场景实验步阶",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 33,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "先基于玩法许可与实际广播预算",
+          "code": "public_scene_load_step_mid",
+          "value": 300,
+          "value_unit": "角色",
+          "applicability": "多人公共场景实验步阶",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 34,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "不承诺500全同屏",
+          "code": "public_scene_load_step_high",
+          "value": 500,
+          "value_unit": "角色",
+          "applicability": "多人公共场景分散实体试验",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 35,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1011",
+          "note": "Mongo/机器人/指标机独立",
+          "code": "load_test_cpu_cores",
+          "value": 8,
+          "value_unit": "专用核",
+          "applicability": "首轮game实验机",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 36,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1011",
+          "note": "仅可复现实验起点",
+          "code": "load_test_memory_gib",
+          "value": 16,
+          "value_unit": "GiB",
+          "applicability": "首轮game实验机",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 37,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.1 L1024",
+          "note": "混合角色轮换和跨档归档，未执行",
+          "code": "soak_test_duration_hours",
+          "value": 48,
+          "value_unit": "h",
+          "applicability": "候选长稳最短时长",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 38,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.2 L1043",
+          "note": "每客户端对每Mongo服务端；另计监控连接",
+          "code": "business_mongo_pool_size",
+          "value": 64,
+          "value_unit": "连接/服务端",
+          "applicability": "业务Mongo客户端池",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        },
+        {
+          "id": 39,
+          "record_status": "candidate",
+          "source_ref": "架构方案.md §19.2 L1043",
+          "note": "不能被业务队列阻塞",
+          "code": "control_mongo_pool_size",
+          "value": 8,
+          "value_unit": "连接/服务端",
+          "applicability": "续租控制独立池",
+          "adaptation_status": "adopt",
+          "verification_status": "pending"
+        }
+      ]
+    },
+    {
+      "table_id": "arch_storage_guards",
+      "sheet_name": "架构_存储围栏",
+      "title": "采用的存储围栏启动契约",
+      "source_sections": [
+        "架构方案.md §6.2 L332–344",
+        "最终策划案.md §7.5 L1123"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "契约代码",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "guard_group_count",
+          "title": "固定组数",
+          "type": "int",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "hash_algorithm",
+          "title": "分组算法",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "group_key",
+          "title": "分组输入",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "protected_fields",
+          "title": "保护字段",
+          "type": "json",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "implementation_status",
+          "title": "实现状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "not_implemented"
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §6.2 L334–340；最终策划案.md §7.5 L1123",
+          "note": "技术参考采用；每事务实际写guard，控制发布改全部相关组；数量/算法不热更，需实现与故障验收",
+          "code": "account_guard_groups",
+          "guard_group_count": 32,
+          "hash_algorithm": "sha256_first_u64_big_endian_mod_32",
+          "group_key": "account_id_raw_16_bytes",
+          "protected_fields": [
+            "owner_instance",
+            "run_epoch",
+            "control_version",
+            "seq"
+          ],
+          "implementation_status": "not_implemented"
+        }
+      ]
+    },
+    {
+      "table_id": "arch_protocol_ranges",
+      "sheet_name": "架构_消息号区段",
+      "title": "消息号分配区段契约",
+      "source_sections": [
+        "架构方案.md §8.2 L428–440",
+        "最终策划案.md §7.5 L1114–1116"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "区段代码",
+          "type": "string",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "min_message_id",
+          "title": "起始ID",
+          "type": "int",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "max_message_id",
+          "title": "结束ID",
+          "type": "int",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "purpose",
+          "title": "内容",
+          "type": "string",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "internal_only",
+          "title": "仅内部监听",
+          "type": "bool",
+          "required": true,
+          "target": "both"
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "connection_baseline",
+          "min_message_id": 1,
+          "max_message_id": 999,
+          "purpose": "心跳、批次、连接与基线控制",
+          "internal_only": false
+        },
+        {
+          "id": 2,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "account_directory",
+          "min_message_id": 10000,
+          "max_message_id": 19999,
+          "purpose": "认证、选服、角色目录、票据",
+          "internal_only": false
+        },
+        {
+          "id": 3,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "entry_movement",
+          "min_message_id": 20000,
+          "max_message_id": 29999,
+          "purpose": "入场、场景/线路、转图、实体移动",
+          "internal_only": false
+        },
+        {
+          "id": 4,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "combat",
+          "min_message_id": 30000,
+          "max_message_id": 39999,
+          "purpose": "技能、伤害、死亡、复活、自动战斗",
+          "internal_only": false
+        },
+        {
+          "id": 5,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "assets_markets",
+          "min_message_id": 40000,
+          "max_message_id": 49999,
+          "purpose": "背包、仓库、双市场、商城；面对面交易延后",
+          "internal_only": false
+        },
+        {
+          "id": 6,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "team_mail_activity",
+          "min_message_id": 50000,
+          "max_message_id": 59999,
+          "purpose": "队伍、系统邮件、活动；公会延后",
+          "internal_only": false
+        },
+        {
+          "id": 7,
+          "record_status": "confirmed",
+          "source_ref": "架构方案.md §8.2 L432–440；最终策划案.md §7.5 L1114–1116",
+          "note": "只分配区段；具体消息/错误码尚待生成和兼容测试，区段预留不开放额外玩法",
+          "code": "internal_control",
+          "min_message_id": 60000,
+          "max_message_id": 65534,
+          "purpose": "仅内部节点控制与GM",
+          "internal_only": true
+        }
+      ]
+    },
+    {
+      "table_id": "arch_config_classes",
+      "sheet_name": "架构_配置分类",
+      "title": "配置发布和维护边界",
+      "source_sections": [
+        "最终策划案.md §5.11 L787–845",
+        "架构方案.md §18.1 L950–962"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "分类代码",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "contents",
+          "title": "内容",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "activation_mode",
+          "title": "生效方式",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "release_contract",
+          "title": "发布契约",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "策划要求普通个人实例独立无AOI；不包含当前禁用玩法",
+          "code": "scene_structure",
+          "contents": "地图结构、场景容量、碰撞、权限",
+          "activation_mode": "maintenance_restart",
+          "release_contract": "受影响run排空，核验资源/规则版本后重启"
+        },
+        {
+          "id": 2,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "固定算法不能普通热更",
+          "code": "startup_runtime",
+          "contents": "节点监听、Worker、guard算法、持久结构",
+          "activation_mode": "startup_validate_or_migrate",
+          "release_contract": "启动校验；结构变化经迁移"
+        },
+        {
+          "id": 3,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "未知来源/缺必填字段不进入正式发布",
+          "code": "gameplay_snapshot",
+          "contents": "职业/技能/Buff/掉落/成长等数值",
+          "activation_mode": "immutable_versioned_snapshot",
+          "release_contract": "完整校验，在安全边界切不可变快照；历史事件保留版本"
+        },
+        {
+          "id": 4,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "仓库激活价格不是当前产品功能，不导入该收费入口",
+          "code": "economic_quote",
+          "contents": "商城、托管报价、允许的资产费用",
+          "activation_mode": "versioned_control_publish",
+          "release_contract": "关闭相关新购买并收束在途，发布指针/guard后恢复；旧订单沿历史规则"
+        },
+        {
+          "id": 5,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "不从本地JSON直接覆盖运行权",
+          "code": "operational_control",
+          "contents": "origin路由、租约、封禁、计划、维护/合服",
+          "activation_mode": "persistent_control_transaction",
+          "release_contract": "持久计划/控制事务与执行回执"
+        },
+        {
+          "id": 6,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §5.11 L787–845；架构方案.md §18.1 L952–962",
+          "note": "固定UI布局仍在scene/prefab，服务端字段不下发",
+          "code": "client_projection",
+          "contents": "展示、资源和必要地图字段",
+          "activation_mode": "client_projection_of_release",
+          "release_contract": "同一发布清单显式server/client/both/none投影"
+        }
+      ]
+    },
+    {
+      "table_id": "arch_stage_gates",
+      "sheet_name": "架构_交付门槛",
+      "title": "按最终范围适配的交付阶段",
+      "source_sections": [
+        "最终策划案.md §7.5/8.2/10",
+        "架构方案.md §20.1 L1047–1062"
+      ],
+      "release_required": true,
+      "min_rows": 1,
+      "fields": [
+        {
+          "name": "id",
+          "title": "记录ID",
+          "type": "int",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "record_status",
+          "title": "规则记录状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "confirmed",
+            "candidate",
+            "unverified",
+            "historical"
+          ]
+        },
+        {
+          "name": "source_ref",
+          "title": "来源定位",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "note",
+          "title": "适配与状态说明",
+          "type": "string",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "code",
+          "title": "阶段代码",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "stage_title",
+          "title": "阶段名称",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "acceptance_test_ids",
+          "title": "验收用例ID",
+          "type": "json",
+          "required": true,
+          "target": "none"
+        },
+        {
+          "name": "deliverables",
+          "title": "交付物",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "pass_condition",
+          "title": "通过条件",
+          "type": "string",
+          "required": true,
+          "target": "server"
+        },
+        {
+          "name": "execution_status",
+          "title": "执行状态",
+          "type": "string",
+          "required": true,
+          "target": "none",
+          "enum_values": [
+            "pending"
+          ]
+        }
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §7.5 L1135、§8.2 L1151；架构方案.md §20.1 L1053",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s00",
+          "stage_title": "资料、工程与生成链",
+          "acceptance_test_ids": [
+            "T000",
+            "T001",
+            "T002",
+            "T003"
+          ],
+          "deliverables": "资料索引、Go/Creator骨架、源表schema和资源转换",
+          "pass_condition": "原文件不变；构建与生成/投影校验；首批资源回读",
+          "execution_status": "pending"
+        },
+        {
+          "id": 2,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §7.1/7.4/7.5；架构方案.md §20.1 L1054–1055",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s01",
+          "stage_title": "所有权、资产提交与账号",
+          "acceptance_test_ids": [
+            "T010",
+            "T011",
+            "T012",
+            "T013",
+            "T014"
+          ],
+          "deliverables": "租约围栏/四钱包/幂等/票据/五角色",
+          "pass_condition": "双启与旧写拒绝、未知对账、五角色和票据单次消费",
+          "execution_status": "pending"
+        },
+        {
+          "id": 3,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §8.2 L1151–1152、§10.2 L1244–1249",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s02",
+          "stage_title": "场景与首个可玩闭环",
+          "acceptance_test_ids": [
+            "T020",
+            "T021",
+            "T022",
+            "T023"
+          ],
+          "deliverables": "个人地图、真实战斗、掉落入包和托管战报、UI",
+          "pass_condition": "真机10实体；健康重连保留；故障新世界；永久结果不重不漏",
+          "execution_status": "pending"
+        },
+        {
+          "id": 4,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §4.1–4.8/4.12/4.25、§8.2 L1152",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s03",
+          "stage_title": "三职业、权益、托管和工坊",
+          "acceptance_test_ids": [
+            "T030",
+            "T031",
+            "T032",
+            "T033",
+            "T034",
+            "T035"
+          ],
+          "deliverables": "全部技能、统一属性、双卡、托管、挖矿打造修理",
+          "pass_condition": "技能逐项对拍、事件判绑、日领/购时/两次授权及资产并发",
+          "execution_status": "pending"
+        },
+        {
+          "id": 5,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §4.3/4.9、§7.1、§10.2；架构方案.md §20.1 L1058–1059（适配）",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s04",
+          "stage_title": "仓库、双市场与充值",
+          "acceptance_test_ids": [
+            "T040",
+            "T041",
+            "T042",
+            "T043",
+            "T044"
+          ],
+          "deliverables": "共享/个人仓、道具竞购、金币撮合、充值账本",
+          "pass_condition": "origin隔离、市场终态与退款、十分精度及10%共用税余数守恒",
+          "execution_status": "pending"
+        },
+        {
+          "id": 6,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §4.17–4.21、§7.2、§8.2 L1153",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s05",
+          "stage_title": "BOSS、副本、镜像与任务",
+          "acceptance_test_ids": [
+            "T050",
+            "T051",
+            "T052",
+            "T053",
+            "T054"
+          ],
+          "deliverables": "普通+至多一挑战、世界BOSS、三人副本、镜像、图鉴任务",
+          "pass_condition": "固定快照/owner结算/终态竞争、资格与供给、系统奖励独立绑定",
+          "execution_status": "pending"
+        },
+        {
+          "id": 7,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §4.4–4.6/4.22–4.24、§5、§8.2 L1154",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s06",
+          "stage_title": "完整养成与经济复算",
+          "acceptance_test_ids": [
+            "T060",
+            "T061",
+            "T062",
+            "T063",
+            "T064"
+          ],
+          "deliverables": "强化洗炼幸运、技能深追、炼体魂兽勋章翅膀、转生、战令商城与广告奖励",
+          "pass_condition": "全来源预算、唯一wing与保底、三职业矩阵及四钱包守恒",
+          "execution_status": "pending"
+        },
+        {
+          "id": 8,
+          "record_status": "confirmed",
+          "source_ref": "最终策划案.md §6/7/8.2 L1155/10；架构方案.md §20.1 L1061–1062",
+          "note": "所有实现和验收待执行；阶段切片不删减最终P0",
+          "code": "s07",
+          "stage_title": "运维、合服与上线门槛",
+          "acceptance_test_ids": [
+            "T070",
+            "T071",
+            "T072",
+            "T073",
+            "T074",
+            "T075",
+            "T076"
+          ],
+          "deliverables": "发布回滚、GM监管、维护合服、备份恢复、混合压测与发行",
+          "pass_condition": "故障注入、旧owner拒绝、配额保留、真机/容量/平台证据",
+          "execution_status": "pending"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B_ARCH_IMPLEMENTATION",
+      "domain": "runtime",
+      "description": "节点/提交器/协议/迁移/启动器尚未实现",
+      "source_ref": "架构方案.md §20.1 L1047–1062",
+      "resolution": "完成对应阶段代码、构建和故障验收",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_PERSONAL_RUNTIME",
+      "domain": "runtime",
+      "description": "共享调度、角色owner与特殊挑战的适配尚未验证",
+      "source_ref": "最终策划案.md §7.2 L1024–1036",
+      "resolution": "验证个人实例与最多一挑战并行、永久结算及换代",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_ENTITY_BUDGETS",
+      "domain": "capacity",
+      "description": "实体、队列、生成速率及Line/run/node配额缺少实测发布值",
+      "source_ref": "架构方案.md §19.1 L1026；最终策划案.md §10.3 L1260",
+      "resolution": "以真实实体谱压测填写完整正数预算",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_PROTOCOL_SCHEMA",
+      "domain": "protocol",
+      "description": "仅有消息号区段，PB/错误码/兼容和帧校验未全部完成",
+      "source_ref": "架构方案.md §8.1–8.2 L405–446",
+      "resolution": "生成完整协议并执行帧/越界/兼容/重放测试",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_DEPLOYMENT",
+      "domain": "deployment",
+      "description": "数据库副本集、证书和凭据引用、路由与索引未部署",
+      "source_ref": "最终策划案.md §7.5；架构方案.md §18.3 L999–1005",
+      "resolution": "在隔离开发环境实施迁移和凭据注入并验证启动",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_CAPACITY",
+      "domain": "capacity",
+      "description": "全部容量与延迟目标仅为候选，未压测",
+      "source_ref": "架构方案.md §19 L1007–1043；最终策划案.md §10.3 L1254–1262",
+      "resolution": "提交版本锁定的混合负载、故障及长稳证据",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_SOURCE_RULES",
+      "domain": "rules",
+      "description": "技能来源/正式数值等未核验项仍需完成",
+      "source_ref": "最终策划案.md §5.11 L831–845、附录C L1415–1419",
+      "resolution": "逐项来源、规则、配置及用例状态通过发布门禁",
+      "blocking": true
+    },
+    {
+      "id": "B_ARCH_DEATH_RULES",
+      "domain": "combat",
+      "description": "普通挂机与挑战的死亡/复活及重入规则尚需逐项核验，不能默认采用架构处罚或付费复活",
+      "source_ref": "最终策划案.md §4.8 L294–296、§4.18 L457；架构方案.md §10 L601–661",
+      "resolution": "完成1.80对照与产品规则清单，明确每场景死亡/复活/费用/重入并验证防重",
+      "blocking": true
+    }
+  ]
+}

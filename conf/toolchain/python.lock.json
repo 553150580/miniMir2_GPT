@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "component": "user_python_resource_and_configuration_tools",
+  "checked_at_utc": "2026-10-26T11:58:55.124738+00:00",
+  "user_timezone": "Asia/Shanghai",
+  "host": {
+    "os": "macOS",
+    "version": "13.7.8",
+    "arch": "x86_64"
+  },
+  "installation_scope": "user_only",
+  "system_python_replaced": false,
+  "codex_bundled_dependencies_modified": false,
+  "mongo_venv_modified": false,
+  "uv": {
+    "version": "0.13.5",
+    "version_output": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-apple-darwin)",
+    "executable": "/Users/srf/.local/share/minimir-toolchain/uv/uv-x86_64-apple-darwin/uv",
+    "executable_sha256": "7ed737e90584ec4f77edb50f64a9c420f8f878c4e3328ca9a2ba4585ca3b80f8",
+    "official_release_api": "https://api.github.com/repos/astral-sh/uv/releases/tags/0.13.5",
+    "release_published_at": "2026-10-22T01:35:54Z",
+    "archive": {
+      "path": "/Users/srf/.local/share/minimir-toolchain/uv/downloads/uv-x86_64-apple-darwin-0.13.5.tar.gz",
+      "url": "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-x86_64-apple-darwin.tar.gz",
+      "bytes": 17167423,
+      "release_api_digest": "sha256:b0f52b0e3945b4107d89024ea38e625683011fbfc05a0d98f9fa2d6dcee28c66",
+      "sha256": "b0f52b0e3945b4107d89024ea38e625683011fbfc05a0d98f9fa2d6dcee28c66",
+      "verified": true
+    },
+    "checksum_asset": {
+      "url": "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-x86_64-apple-darwin.tar.gz.sha256",
+      "digest": "sha256:af1c6bf821df66aea8dd12de0b89f548379447ee879f282f5aca4e857fa30399",
+      "sha256": "af1c6bf821df66aea8dd12de0b89f548379447ee879f282f5aca4e857fa30399",
+      "matches_archive": true
+    },
+    "release_api_digest_verified_before_first_uv_execution": true,
+    "macos_13_execution_verified": true,
+    "compatibility_fallback_used": false
+  },
+  "python": {
+    "implementation": "CPython",
+    "version": "3.14.9",
+    "version_output": "Python 3.14.9",
+    "installation_dir": "/Users/srf/.local/share/minimir-toolchain/python/managed/cpython-3.14.9-macos-x86_64-none",
+    "executable": "/Users/srf/.local/share/minimir-toolchain/python/managed/cpython-3.14.9-macos-x86_64-none/bin/python3.14",
+    "executable_sha256": "342357c798e879759d82dac55d468d04e5d781b2deb2fc909bea202af402489e",
+    "managed_by": "uv 0.13.5",
+    "binary_distributor": "Astral python-build-standalone",
+    "python_org_official_installer": false,
+    "release_api": "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20261021",
+    "build_release": "20261021",
+    "archive": {
+      "path": "/Users/srf/.local/share/minimir-toolchain/python/downloads/20261021/cpython-3.14.9+20261021-x86_64-apple-darwin-install_only_stripped.tar.gz",
+      "upstream_url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261021/cpython-3.14.9%2B20261021-x86_64-apple-darwin-install_only_stripped.tar.gz",
+      "download_url": "https://releases.astral.sh/github/python-build-standalone/releases/download/20261021/cpython-3.14.9%2B20261021-x86_64-apple-darwin-install_only_stripped.tar.gz",
+      "bytes": 26822518,
+      "release_api_digest": "sha256:9957784870f6eb613ab82fa7ac3201627940f493e6643c749fb3f126930a4232",
+      "sha256": "9957784870f6eb613ab82fa7ac3201627940f493e6643c749fb3f126930a4232",
+      "verified": true
+    },
+    "final_installation_from_preverified_local_archive": true,
+    "python_org_current_3_14_patch_at_check": "3.14.10",
+    "selected_patch_reason": "Python官网3.14.10已发布，但本次官方uv 0.13.5与Astral最新构建20261021仅提供3.14.9；按实际可信构建目录固定最新可安装的3.14维护patch，不猜造3.14.10下载。",
+    "version_evidence": [
+      "https://www.python.org/downloads/",
+      "https://docs.astral.sh/uv/concepts/python-versions/",
+      "https://api.github.com/repos/astral-sh/python-build-standalone/releases/tags/20261021"
+    ],
+    "uv_available_versions": {
+      "path": "/Users/srf/.local/share/minimir-toolchain/python/uv-python-3.14-available.json",
+      "sha256": "6e671d941995c2bd8e49804b1719fe186a48562f6e5860f4581e346a91905ddf"
+    }
+  },
+  "tools_venv": {
+    "path": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv",
+    "python": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+    "isolated": true,
+    "pinned_base_interpreter": "/Users/srf/.local/share/minimir-toolchain/python/managed/cpython-3.14.9-macos-x86_64-none/bin/python3.14",
+    "installed_packages": [
+      {
+        "name": "pillow",
+        "version": "13.0.0"
+      }
+    ],
+    "all_installed_packages_hash_locked": true,
+    "requirements": {
+      "path": "conf/toolchain/python-tools.requirements.lock",
+      "sha256": "d8cb4f51e9ac6b5d119e329b5647198d0f91c5049c346cf01e1eca12f2886cab"
+    },
+    "packages": [
+      {
+        "name": "Pillow",
+        "version": "13.0.0",
+        "metadata_url": "https://pypi.org/pypi/Pillow/13.0.0/json",
+        "requires_python": ">=3.11",
+        "wheel_filename": "pillow-13.0.0-cp314-cp314-macosx_10_15_x86_64.whl",
+        "wheel_url": "https://files.pythonhosted.org/packages/84/a1/be060135d85187b25fa8b2573786c0e45c62ae27527fff5257675eb97f4a/pillow-13.0.0-cp314-cp314-macosx_10_15_x86_64.whl",
+        "wheel_sha256": "49c12af515073e9bf511e4ef736743bf70d531a643668722279314b937742ba4",
+        "installed_with_require_hashes": true,
+        "installed_imaging_extension": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/lib/python3.14/site-packages/PIL/_imaging.cpython-314-darwin.so",
+        "installed_imaging_extension_sha256": "0f78cc157f1a84d703f168a3041c52eca826ff3994edd8c64e2e2973ec926f45",
+        "runtime_dependencies": []
+      }
+    ]
+  },
+  "pymongo_compatibility_evidence": {
+    "version": "4.19.0",
+    "metadata_url": "https://pypi.org/pypi/pymongo/4.19.0/json",
+    "requires_python": ">=3.11",
+    "cp314_macos_x86_64_wheel": {
+      "filename": "pymongo-4.19.0-cp314-cp314-macosx_10_15_x86_64.whl",
+      "sha256": "08c354566ab8b5dce6d805f35d61b5575455d3ea1835d7b90151d53e8c32e669"
+    },
+    "installed_in_tools_venv": false,
+    "mongo_environment_owned_by_separate_task": true
+  },
+  "commands": {
+    "install_python": [
+      "/Users/srf/.local/share/minimir-toolchain/uv/uv-x86_64-apple-darwin/uv",
+      "--no-config",
+      "python",
+      "install",
+      "3.14.9",
+      "--no-bin",
+      "--reinstall",
+      "--mirror",
+      "file:///Users/srf/.local/share/minimir-toolchain/python/downloads"
+    ],
+    "install_python_env": {
+      "UV_PYTHON_INSTALL_DIR": "/Users/srf/.local/share/minimir-toolchain/python/managed",
+      "UV_CACHE_DIR": "/Users/srf/.local/share/minimir-toolchain/uv/cache"
+    },
+    "create_tools_venv": [
+      "/Users/srf/.local/share/minimir-toolchain/uv/uv-x86_64-apple-darwin/uv",
+      "--no-config",
+      "venv",
+      "--python",
+      "/Users/srf/.local/share/minimir-toolchain/python/managed/cpython-3.14.9-macos-x86_64-none/bin/python3.14",
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv"
+    ],
+    "install_tools": [
+      "/Users/srf/.local/share/minimir-toolchain/uv/uv-x86_64-apple-darwin/uv",
+      "--no-config",
+      "pip",
+      "install",
+      "--python",
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "--require-hashes",
+      "--only-binary=:all:",
+      "--index-url",
+      "https://pypi.org/simple",
+      "-r",
+      "conf/toolchain/python-tools.requirements.lock"
+    ],
+    "verify": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "tools/environment/verify_python_tools.py"
+    ],
+    "stdlib_configuration_tests": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tools/config",
+      "-p",
+      "test_*.py"
+    ],
+    "resource_check": [
+      "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
+      "tools/resources/inspect_wil.py",
+      "--check"
+    ]
+  },
+  "verification": {
+    "status": "passed",
+    "configuration_tests": 11,
+    "resource_packages": 6,
+    "png_roundtrips": 12,
+    "rgba_preserved_across_pillow_upgrade": true,
+    "refresh_report": {
+      "path": "conf/toolchain/python-tools-verification.json",
+      "sha256": "a9a3cfea8d4ab1515a0cfdb5cd4b1a92f893c54af91e30a2d9b2453a7d11baa7"
+    },
+    "current_check_report": {
+      "path": "conf/toolchain/python-tools-current-check.json",
+      "sha256": "6de61ddd7d0bc189432ca9b09a37c40a2a9968dd79749fb3503dfaeeb3bb9507"
+    },
+    "old_sample_backup": "/Users/srf/Miro2/miniMir2_GPT/.work/pre-python-upgrade-samples",
+    "raw_wil_wix_modified": false,
+    "ui_reference_modified": false,
+    "source_code_indices_modified": false,
+    "business_or_full_art_validation_passed": false
+  },
+  "metadata_snapshots": [
+    {
+      "path": "/Users/srf/.local/share/minimir-toolchain/uv/downloads/release-0.13.5.json",
+      "sha256": "13854a41feda834f3fe73f78a3fae58bc94309cbcb02b30c90a0ebd110e8fabc"
+    },
+    {
+      "path": "/Users/srf/.local/share/minimir-toolchain/python/downloads/release-20261021.json",
+      "sha256": "8fb06f5039cbba8e2d2b5bf50e812af0058eaa4e2c30c554a1e061ff871943ee"
+    },
+    {
+      "path": "/Users/srf/.local/share/minimir-toolchain/python/downloads/pillow-13.0.0.pypi.json",
+      "sha256": "56cd02ba0c8d44417b3f5e6b5bff96861810d89a4f14ba2863a91f619f86a842"
+    },
+    {
+      "path": "/Users/srf/.local/share/minimir-toolchain/python/downloads/pymongo-4.19.0.pypi.json",
+      "sha256": "9811eff1c4b51d5aeefa8c6d140c0844a5e360e77b604303b354461d5e81aa0e"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{"Time":"2026-10-27T00:42:08.608786+08:00","Action":"start","Package":"minimir/api/generated/minimirv1"}
+{"Time":"2026-10-27T00:42:08.612322+08:00","Action":"output","Package":"minimir/api/generated/minimirv1","Output":"?   \tminimir/api/generated/minimirv1\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:08.614755+08:00","Action":"skip","Package":"minimir/api/generated/minimirv1","Elapsed":0.007}
+{"Time":"2026-10-27T00:42:12.805677+08:00","Action":"start","Package":"minimir/cmd/nbserver"}
+{"Time":"2026-10-27T00:42:12.806217+08:00","Action":"output","Package":"minimir/cmd/nbserver","Output":"?   \tminimir/cmd/nbserver\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.806335+08:00","Action":"skip","Package":"minimir/cmd/nbserver","Elapsed":0.001}
+{"Time":"2026-10-27T00:42:12.80635+08:00","Action":"start","Package":"minimir/cmd/toolchain-smoke"}
+{"Time":"2026-10-27T00:42:12.806903+08:00","Action":"output","Package":"minimir/cmd/toolchain-smoke","Output":"?   \tminimir/cmd/toolchain-smoke\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.807009+08:00","Action":"skip","Package":"minimir/cmd/toolchain-smoke","Elapsed":0.001}
+{"Time":"2026-10-27T00:42:12.807265+08:00","Action":"start","Package":"minimir/internal/bootstrap"}
+{"Time":"2026-10-27T00:42:12.807341+08:00","Action":"output","Package":"minimir/internal/bootstrap","Output":"?   \tminimir/internal/bootstrap\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.807384+08:00","Action":"skip","Package":"minimir/internal/bootstrap","Elapsed":0}
+{"Time":"2026-10-27T00:42:12.808162+08:00","Action":"start","Package":"minimir/internal/configtypes"}
+{"Time":"2026-10-27T00:42:12.808413+08:00","Action":"output","Package":"minimir/internal/configtypes","Output":"?   \tminimir/internal/configtypes\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.808479+08:00","Action":"skip","Package":"minimir/internal/configtypes","Elapsed":0.001}
+{"Time":"2026-10-27T00:42:12.808511+08:00","Action":"start","Package":"minimir/internal/devconfig"}
+{"Time":"2026-10-27T00:42:12.808652+08:00","Action":"output","Package":"minimir/internal/devconfig","Output":"?   \tminimir/internal/devconfig\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.808698+08:00","Action":"skip","Package":"minimir/internal/devconfig","Elapsed":0}
+{"Time":"2026-10-27T00:42:12.808724+08:00","Action":"start","Package":"minimir/internal/domain"}
+{"Time":"2026-10-27T00:42:12.808789+08:00","Action":"output","Package":"minimir/internal/domain","Output":"?   \tminimir/internal/domain\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:12.80881+08:00","Action":"skip","Package":"minimir/internal/domain","Elapsed":0}
+{"Time":"2026-10-27T00:42:15.981078+08:00","Action":"start","Package":"minimir/internal/game"}
+{"Time":"2026-10-27T00:42:16.003629+08:00","Action":"start","Package":"minimir/internal/integration"}
+{"Time":"2026-10-27T00:42:16.003822+08:00","Action":"start","Package":"minimir/internal/persistence"}
+{"Time":"2026-10-27T00:42:16.003973+08:00","Action":"output","Package":"minimir/internal/persistence","Output":"?   \tminimir/internal/persistence\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:16.004069+08:00","Action":"skip","Package":"minimir/internal/persistence","Elapsed":0}
+{"Time":"2026-10-27T00:42:16.004122+08:00","Action":"start","Package":"minimir/internal/protocol"}
+{"Time":"2026-10-27T00:42:16.004275+08:00","Action":"output","Package":"minimir/internal/protocol","Output":"?   \tminimir/internal/protocol\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:16.004336+08:00","Action":"skip","Package":"minimir/internal/protocol","Elapsed":0}
+{"Time":"2026-10-27T00:42:16.004423+08:00","Action":"start","Package":"minimir/internal/transport"}
+{"Time":"2026-10-27T00:42:16.004523+08:00","Action":"output","Package":"minimir/internal/transport","Output":"?   \tminimir/internal/transport\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:16.004577+08:00","Action":"skip","Package":"minimir/internal/transport","Elapsed":0}
+{"Time":"2026-10-27T00:42:16.004577+08:00","Action":"start","Package":"minimir/internal/wire"}
+{"Time":"2026-10-27T00:42:16.00464+08:00","Action":"output","Package":"minimir/internal/wire","Output":"?   \tminimir/internal/wire\t[no test files]\n"}
+{"Time":"2026-10-27T00:42:16.00467+08:00","Action":"skip","Package":"minimir/internal/wire","Elapsed":0}
+{"Time":"2026-10-27T00:42:19.561587+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestGridEightDirectionsAndCornerBlocking"}
+{"Time":"2026-10-27T00:42:19.561683+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestGridEightDirectionsAndCornerBlocking","Output":"=== RUN   TestGridEightDirectionsAndCornerBlocking\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.562109+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestGridEightDirectionsAndCornerBlocking","Output":"--- PASS: TestGridEightDirectionsAndCornerBlocking (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.56213+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestGridEightDirectionsAndCornerBlocking","Elapsed":0}
+{"Time":"2026-10-27T00:42:19.562146+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestFullBagAutoRejectPushesActualHosting"}
+{"Time":"2026-10-27T00:42:19.562154+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestFullBagAutoRejectPushesActualHosting","Output":"=== RUN   TestFullBagAutoRejectPushesActualHosting\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.562204+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestFullBagAutoRejectPushesActualHosting","Output":"--- PASS: TestFullBagAutoRejectPushesActualHosting (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.56222+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestFullBagAutoRejectPushesActualHosting","Elapsed":0}
+{"Time":"2026-10-27T00:42:19.562228+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestDeadPlayerCountChangePushesSnapshotWithoutReset"}
+{"Time":"2026-10-27T00:42:19.562234+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestDeadPlayerCountChangePushesSnapshotWithoutReset","Output":"=== RUN   TestDeadPlayerCountChangePushesSnapshotWithoutReset\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.571479+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestDeadPlayerCountChangePushesSnapshotWithoutReset","Output":"--- PASS: TestDeadPlayerCountChangePushesSnapshotWithoutReset (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.571646+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestDeadPlayerCountChangePushesSnapshotWithoutReset","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.571686+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestAttackObservationSurvivesStruckAndCooldownReject"}
+{"Time":"2026-10-27T00:42:19.571696+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestAttackObservationSurvivesStruckAndCooldownReject","Output":"=== RUN   TestAttackObservationSurvivesStruckAndCooldownReject\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.577149+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestAttackObservationSurvivesStruckAndCooldownReject","Output":"--- PASS: TestAttackObservationSurvivesStruckAndCooldownReject (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.57719+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestAttackObservationSurvivesStruckAndCooldownReject","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.577206+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestLethalStatePushesBeforeBroadcastWindow"}
+{"Time":"2026-10-27T00:42:19.577213+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestLethalStatePushesBeforeBroadcastWindow","Output":"=== RUN   TestLethalStatePushesBeforeBroadcastWindow\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.588387+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestLethalStatePushesBeforeBroadcastWindow","Output":"--- PASS: TestLethalStatePushesBeforeBroadcastWindow (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.588448+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestLethalStatePushesBeforeBroadcastWindow","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.588623+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster"}
+{"Time":"2026-10-27T00:42:19.588646+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster","Output":"=== RUN   TestMoveCompletionGatesAttackForPlayerPetMonster\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.588686+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/player"}
+{"Time":"2026-10-27T00:42:19.588695+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/player","Output":"=== RUN   TestMoveCompletionGatesAttackForPlayerPetMonster/player\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.596739+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/player","Output":"--- PASS: TestMoveCompletionGatesAttackForPlayerPetMonster/player (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.596912+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/player","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.596979+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/pet"}
+{"Time":"2026-10-27T00:42:19.597+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/pet","Output":"=== RUN   TestMoveCompletionGatesAttackForPlayerPetMonster/pet\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.604024+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/pet","Output":"--- PASS: TestMoveCompletionGatesAttackForPlayerPetMonster/pet (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.6041+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/pet","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.604121+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/monster"}
+{"Time":"2026-10-27T00:42:19.604129+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/monster","Output":"=== RUN   TestMoveCompletionGatesAttackForPlayerPetMonster/monster\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.617908+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/monster","Output":"--- PASS: TestMoveCompletionGatesAttackForPlayerPetMonster/monster (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.61806+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster/monster","Elapsed":0.01}
+{"Time":"2026-10-27T00:42:19.618342+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster","Output":"--- PASS: TestMoveCompletionGatesAttackForPlayerPetMonster (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:19.618418+08:00","Action":"pass","Package":"minimir/internal/game","Test":"TestMoveCompletionGatesAttackForPlayerPetMonster","Elapsed":0.03}
+{"Time":"2026-10-27T00:42:19.618847+08:00","Action":"output","Package":"minimir/internal/game","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:20.623635+08:00","Action":"output","Package":"minimir/internal/game","Output":"ok  \tminimir/internal/game\t4.642s\n"}
+{"Time":"2026-10-27T00:42:20.623807+08:00","Action":"pass","Package":"minimir/internal/game","Elapsed":4.643}
+{"Time":"2026-10-27T00:42:21.138475+08:00","Action":"run","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS"}
+{"Time":"2026-10-27T00:42:21.138598+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"=== RUN   TestFirstLoopMongoWS\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:22.326952+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"2026/10/27 00:42:22 INFO 开发节点就绪 mode=account address=127.0.0.1:58042 database=minimir_dev_game_test_035f9b9395e45aba969db570bfeea050 instance=5d9f2368d7929bdb2f84919700e64d29 runtime_ready=false\n"}
+{"Time":"2026-10-27T00:42:22.332629+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"2026/10/27 00:42:22 INFO 开发节点就绪 mode=gm address=127.0.0.1:58044 database=minimir_dev_game_test_035f9b9395e45aba969db570bfeea050 instance=9f68c8b14ec7b37fd128139ab8f3ce66 runtime_ready=false\n"}
+{"Time":"2026-10-27T00:42:23.038647+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"2026/10/27 00:42:23 INFO 开发节点就绪 mode=game address=127.0.0.1:58043 database=minimir_dev_game_test_035f9b9395e45aba969db570bfeea050 instance=37478f8a1017e4c3af935f783af91ce6 runtime_ready=false\n"}
+{"Time":"2026-10-27T00:42:49.364852+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"    first_loop_test.go:371: 通过: DB=minimir_dev_game_test_035f9b9395e45aba969db570bfeea050；5槽、单票、ACK、移动、资产幂等、21600秒日领、离线用时2秒、真实升级到2级、8怪切换、健康重连\n"}
+{"Time":"2026-10-27T00:42:50.229906+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Output":"--- PASS: TestFirstLoopMongoWS (29.09s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:50.230281+08:00","Action":"pass","Package":"minimir/internal/integration","Test":"TestFirstLoopMongoWS","Elapsed":29.09}
+{"Time":"2026-10-27T00:42:50.230457+08:00","Action":"run","Package":"minimir/internal/integration","Test":"TestMongoOwnershipFence"}
+{"Time":"2026-10-27T00:42:50.230489+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestMongoOwnershipFence","Output":"=== RUN   TestMongoOwnershipFence\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:53.404076+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestMongoOwnershipFence","Output":"    ownership_test.go:106: 通过：有效owner拒抢、停止→32组guard换代、旧owner写被拒、旧session被拒、原收益游标只提交一次\n"}
+{"Time":"2026-10-27T00:42:53.541112+08:00","Action":"output","Package":"minimir/internal/integration","Test":"TestMongoOwnershipFence","Output":"--- PASS: TestMongoOwnershipFence (3.31s)\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:53.541176+08:00","Action":"pass","Package":"minimir/internal/integration","Test":"TestMongoOwnershipFence","Elapsed":3.31}
+{"Time":"2026-10-27T00:42:53.541195+08:00","Action":"output","Package":"minimir/internal/integration","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-10-27T00:42:54.653032+08:00","Action":"output","Package":"minimir/internal/integration","Output":"ok  \tminimir/internal/integration\t38.648s\n"}
+{"Time":"2026-10-27T00:42:54.653264+08:00","Action":"pass","Package":"minimir/internal/integration","Elapsed":38.649}

@@ -1,0 +1,44 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+import "common.proto";
+
+message WalletState {
+  int64 gold = 1;
+  int64 bound_gold = 2;
+  int64 yuanbao_units = 3;
+  int64 bound_yuanbao_units = 4;
+  uint64 revision = 5;
+}
+message ItemView {
+  bytes instance_id = 1;
+  uint32 item_id = 2;
+  int64 quantity = 3;
+  bool bound = 4;
+  uint64 version = 5;
+}
+message EquippedItem { uint32 slot = 1; ItemView item = 2; }
+message InventoryResult {
+  repeated ItemView items = 1;
+  uint32 capacity = 2;
+  uint64 revision = 3;
+  repeated EquippedItem equipped = 4;
+  uint32 level = 5;
+  int64 experience = 6;
+}
+message EquipRequest { bytes item_instance_id = 1; uint32 slot = 2; OperationContext operation = 3; }
+message RecycleRequest { repeated bytes item_instance_ids = 1; OperationContext operation = 2; }
+message ClaimHostingTimeRequest { uint32 benefit_kind = 1; OperationContext operation = 2; }
+message BuyHostingTimeRequest { uint32 requested_seconds = 1; OperationContext operation = 2; }
+// 战报展示已提交收益，卡到期前后绑定分账；此消息不触发重抽或重判绑定。
+message HostingReport {
+  bytes hosting_session_id = 1;
+  uint64 used_seconds = 2;
+  uint64 kills = 3;
+  int64 experience = 4;
+  WalletState earned = 5;
+  repeated ItemView drops = 6;
+  uint32 stop_reason = 7;
+  uint64 settlement_sequence = 8;
+}
+

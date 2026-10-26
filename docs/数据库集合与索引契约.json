@@ -1,0 +1,4507 @@
+{
+  "document_title": "数据库集合与索引契约",
+  "schema_version": "draft_1",
+  "created_on": "2026-10-26",
+  "implementation_status": "not_implemented",
+  "migration_status": "pending",
+  "runtime_ready": false,
+  "contract_notice": "这是候选逻辑/物理映射与索引契约，不是数据库脚本；未连接数据库、未创建集合/索引、未迁移数据。类型、枚举、命名需在实现前落实为版本化schema。",
+  "source_priority": [
+    "最终策划案.md：产品/数值/范围/资产和故障边界",
+    "架构方案.md：技术参考，冲突按docs/架构适配与规则优先级.md"
+  ],
+  "source_snapshots": [
+    {
+      "path": "最终策划案.md",
+      "sha256": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4"
+    },
+    {
+      "path": "架构方案.md",
+      "sha256": "76ff24111f1e4325f11d5242927ca1fb811da15d97d162a6e01580fe5165e1a9"
+    }
+  ],
+  "database_contract": {
+    "deployment": "MongoDB副本集",
+    "transaction_read_concern": "snapshot",
+    "transaction_write_concern": "majority",
+    "business_collections_same_replica_set": true,
+    "independent_audit_delivery": "transactional_outbox",
+    "currency": "金币整数；元宝int64十分单位，1=0.1显示元宝",
+    "routing": "origin_routes是origin→run唯一权威，run_servers是run→目标node部署控制，租约才是运行权"
+  },
+  "storage_mapping_decisions_pending": [
+    "当前契约为候选物理映射，角色永久状态/四钱包/物品/托管余额各只有一份权威",
+    "role_states引用wallets和inventory；items持有实例负载，容器只保存有界引用；hosting_accounts保存唯一时长余额，hosting_sessions只保存区间统计",
+    "普通掉装保底在role_pity_states；物品培养保底在items，翅膀保底在role_wings，禁止重复可写副本",
+    "实现若为性能改用有界聚合须同步更新契约、索引和迁移计划，不增加第二份资产权威",
+    "所有候选索引须经查询谱、事务冲突、唯一性和迁移预演验证"
+  ],
+  "forbidden_persistence": [
+    "临时玩家/宠物位置与路径",
+    "临时HP/MP、短Buff/CD、仇恨和AI",
+    "room怪物和地面掉落实例",
+    "临时战斗快照和随机流",
+    "原始票据、明文密码、私钥和秘密连接字符串日志"
+  ],
+  "collections": [
+    {
+      "collection_name": "accounts",
+      "purpose": "本地/第三方账号身份与全账号封禁屏障",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §5.2 L264、§7.1 L383–391、§6.2 L340；最终策划案.md §7.1 L981–985",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "global_account_id",
+          "required": true,
+          "description": "全局账号ID"
+        },
+        {
+          "name": "local_account_norm",
+          "type": "string",
+          "required": false,
+          "description": "本地账号规范键；不存实际值"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "required": false,
+          "description": "平台身份提供者"
+        },
+        {
+          "name": "provider_uid",
+          "type": "string",
+          "required": false,
+          "description": "平台UID，不套本地账号格式"
+        },
+        {
+          "name": "credential_ref_or_hash",
+          "type": "protected_binary",
+          "required": false,
+          "description": "散列或受控凭据字段；契约无秘密值"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "description": "有效/封禁等业务状态"
+        },
+        {
+          "name": "auth_version",
+          "type": "int64",
+          "required": true,
+          "description": "账号安全版本"
+        },
+        {
+          "name": "auth_guard_seq",
+          "type": "int64",
+          "required": true,
+          "description": "经济提交/封禁实际写冲突计数"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "local_account_unique",
+          "keys": [
+            {
+              "field": "local_account_norm",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending",
+          "partial_filter_contract": "仅本地账号键存在的记录"
+        },
+        {
+          "name": "platform_uid_unique",
+          "keys": [
+            {
+              "field": "provider",
+              "direction": 1
+            },
+            {
+              "field": "provider_uid",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending",
+          "partial_filter_contract": "仅平台身份字段齐全记录"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "注册匹配唯一索引；变更安全状态递增auth_version",
+        "业务经济提交实际条件写active/auth_version/auth_guard_seq；封禁与之冲突排序"
+      ],
+      "transaction_invariants": [
+        "账号状态与控制事件/审计在同一受保护事务；多角色不得绕过全账号封禁"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "roles",
+      "purpose": "全局角色身份和永久入口槽位，非临时战斗现场",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L975–985；架构方案.md §5.2 L265",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "global_role_id",
+          "required": true,
+          "description": "全局角色ID"
+        },
+        {
+          "name": "account_id",
+          "type": "global_account_id",
+          "required": true,
+          "description": "永久账号归属"
+        },
+        {
+          "name": "origin_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "创建入口永久不改"
+        },
+        {
+          "name": "slot",
+          "type": "int",
+          "required": true,
+          "description": "1至5"
+        },
+        {
+          "name": "job",
+          "type": "int",
+          "required": true,
+          "description": "固定职业枚举"
+        },
+        {
+          "name": "gender",
+          "type": "int",
+          "required": true,
+          "description": "随职业固定外观性别"
+        },
+        {
+          "name": "name_key",
+          "type": "string",
+          "required": true,
+          "description": "规范角色名"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "角色目录版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "account_origin_slot_unique",
+          "keys": [
+            {
+              "field": "account_id",
+              "direction": 1
+            },
+            {
+              "field": "origin_server_id",
+              "direction": 1
+            },
+            {
+              "field": "slot",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "account_origin_directory",
+          "keys": [
+            {
+              "field": "account_id",
+              "direction": 1
+            },
+            {
+              "field": "origin_server_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "创角和槽位占用同一原子流程，不允许先count再insert",
+        "角色永久ID/origin不因合服、迁服、换进程修改"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "role_states",
+      "purpose": "有界角色永久成长与经济命令水位；不存room现场",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L981–993、§7.2 L1022；架构方案.md §5.3 L292–314",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "与roles一对一"
+        },
+        {
+          "name": "level_and_growth",
+          "type": "bounded_object",
+          "required": true,
+          "description": "等级/经验/技能/强化/炼体/魂兽/勋章/任务/图鉴等永久状态"
+        },
+        {
+          "name": "economic_command_seq",
+          "type": "int64",
+          "required": true,
+          "description": "跨重登不清零的经济命令水位"
+        },
+        {
+          "name": "inventory_ref",
+          "type": "role_id",
+          "required": true,
+          "description": "背包容器索引引用，不复制items权威负载"
+        },
+        {
+          "name": "wallet_ref",
+          "type": "role_id",
+          "required": true,
+          "description": "四钱包引用，不另存可独立修改副本"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "永久版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "本候选物理映射分离wallets/items，role_states不得再保存第二份资产权威",
+        "实现可选择有界聚合，但需更新本契约且仅保留一份权威；不是每属性一张表",
+        "临时位置/HP/MP/Buff/CD/路径/AI/随机流不得入库"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "wallets",
+      "purpose": "每角色四货币的唯一权威余额",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.3 L135–154、§5.11 L799、§7.1 L990",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色钱包ID"
+        },
+        {
+          "name": "gold",
+          "type": "int64",
+          "required": true,
+          "description": "非绑定金币整数"
+        },
+        {
+          "name": "bound_gold",
+          "type": "int64",
+          "required": true,
+          "description": "绑定金币整数"
+        },
+        {
+          "name": "yuanbao_units",
+          "type": "int64",
+          "required": true,
+          "description": "非绑元宝，1单位=0.1显示元宝"
+        },
+        {
+          "name": "bound_yuanbao_units",
+          "type": "int64",
+          "required": true,
+          "description": "绑定元宝，同精度"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "CAS版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "余额不为负，所有整数运算检查溢出",
+        "非绑元宝仅核验充值铸币；转移/冻结/退款守恒",
+        "扣款与业务资格、绑定结果、资产流水/回执同事务"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "items",
+      "purpose": "装备/物品实例和唯一容器归属",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.2 L111–127、§4.7 L248–278、§7.1 L990–997",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "item_instance_id",
+          "required": true,
+          "description": "全局唯一物品实例ID"
+        },
+        {
+          "name": "item_id",
+          "type": "int",
+          "required": true,
+          "description": "配置物品ID，区别于实例ID"
+        },
+        {
+          "name": "owner_kind",
+          "type": "enum",
+          "required": true,
+          "description": "role_inventory/personal_warehouse/shared_warehouse/order/claim"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "description": "可信容器ID"
+        },
+        {
+          "name": "bound_role_id",
+          "type": "role_id_or_null",
+          "required": true,
+          "description": "非空表示角色绑定"
+        },
+        {
+          "name": "quantity",
+          "type": "int64",
+          "required": true,
+          "description": "正数，堆叠等价键一致"
+        },
+        {
+          "name": "instance_properties",
+          "type": "bounded_object",
+          "required": true,
+          "description": "品质/词条/幸运/持久/保底等实例字段"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "物品CAS版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "owner_lookup",
+          "keys": [
+            {
+              "field": "owner_kind",
+              "direction": 1
+            },
+            {
+              "field": "owner_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "同一物品仅一容器归属；转移双方容器槽位与物品owner同事务",
+        "绑定衍生物继承；已有角色绑定不可解除",
+        "不存可独立改写的can_trade字段；上架时集中校验CanTrade"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "inventories",
+      "purpose": "有界角色背包槽位与容量",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.2 L107–129、§7.1 L990",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色背包"
+        },
+        {
+          "name": "slots",
+          "type": "bounded_item_references",
+          "required": true,
+          "description": "只引用物品实例及槽位；实例负载在items"
+        },
+        {
+          "name": "capacity",
+          "type": "int",
+          "required": true,
+          "description": "当前合法容量"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "背包版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "容量与受保护物品规则按策划/正式配置",
+        "同事务转移items.owner和槽位，超容不静默删物品"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "shared_warehouses",
+      "purpose": "永久account+origin独立50格共享仓及非绑货币",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.2 L109、§4.3 L154、§7.1 L986–997",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "warehouse_id",
+          "required": true,
+          "description": "稳定仓库标识"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "账号归属"
+        },
+        {
+          "name": "origin_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "永久入口仓隔离"
+        },
+        {
+          "name": "slots",
+          "type": "bounded_item_references",
+          "required": true,
+          "description": "固定50格物品引用"
+        },
+        {
+          "name": "gold",
+          "type": "int64",
+          "required": true,
+          "description": "非绑金币整数"
+        },
+        {
+          "name": "yuanbao_units",
+          "type": "int64",
+          "required": true,
+          "description": "非绑元宝十分单位"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "并发存取版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "account_origin_unique",
+          "keys": [
+            {
+              "field": "account_id",
+              "direction": 1
+            },
+            {
+              "field": "origin_server_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "有效特权角色才能访问；禁止绑定物品/绑定币存入",
+        "不启用架构付费激活或来源仓300格共享容量",
+        "合服origin不同仍隔离；两角色并发取物仅一成功"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "personal_warehouses",
+      "purpose": "角色独享仓；默认30格/页、扩页按策划",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.2 L109、§7.1 L987",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "独享仓归属"
+        },
+        {
+          "name": "pages",
+          "type": "bounded_page_references",
+          "required": true,
+          "description": "合法页数与物品引用"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "仓库版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "允许绑定/非绑物品，不存任何货币",
+        "扩页扣3000非绑元宝与页状态/回执同事务"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "role_authority",
+      "purpose": "角色唯一永久写入owner与归属屏障",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L988、§7.2 L1032–1036、§7.4 L1094",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "唯一角色authority"
+        },
+        {
+          "name": "owner_instance",
+          "type": "instance_id",
+          "required": true,
+          "description": "当前永久owner进程"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "授权run"
+        },
+        {
+          "name": "run_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "run许可代次"
+        },
+        {
+          "name": "authority_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "角色归属代次"
+        },
+        {
+          "name": "owner_room_id",
+          "type": "stable_room_id_or_null",
+          "required": true,
+          "description": "通常普通挂机room承载；不含临时成员"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "ONLINE_OWNER/OFFLINE/TRANSFERRING等待实现枚举"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "归属CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "角色永久变更实际条件写当前authority与revision",
+        "真实迁移需旧执行停止和归属屏障；观察附着不修改此owner",
+        "显式离线业务与新登录竞争同一authority"
+      ],
+      "transaction_invariants": [
+        "挑战只提案，不自行写资产",
+        "新owner按原challenge/op重新验证；旧任务不能升级epoch授权"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "role_sessions",
+      "purpose": "唯一有效操作者和连接附着授权",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L979、L985；架构方案.md §8.3 L508–512",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色有效会话"
+        },
+        {
+          "name": "session_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "操作者绑定代次"
+        },
+        {
+          "name": "auth_version",
+          "type": "int64",
+          "required": true,
+          "description": "签入账号安全版本"
+        },
+        {
+          "name": "connection_binding",
+          "type": "bounded_object",
+          "required": true,
+          "description": "合法node/run/owner/观察输入授权"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "会话CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "同一角色重复连接接管旧会话，不影响同账号其它角色",
+        "所有新连接均经account取票；超出现有授权范围重新授权"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "node_leases",
+      "purpose": "节点与account/gm控制单例许可",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.5 L1118–1125；架构方案.md §2.2 L69–77",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "node_or_singleton_key",
+          "required": true,
+          "description": "稳定node及singleton:account/gm键"
+        },
+        {
+          "name": "instance_id",
+          "type": "instance_id",
+          "required": true,
+          "description": "本次进程启动身份"
+        },
+        {
+          "name": "node_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "节点代次"
+        },
+        {
+          "name": "expires_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "数据库时间有效期"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "许可CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "受控注册/接管校验部署规格和内部凭据",
+        "同实例合法续租不得复活过期授权",
+        "节点撤销须关联run全部围栏确认"
+      ],
+      "transaction_invariants": [
+        "不能凭同名节点或account断线抢占仍有效实例"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "run_leases",
+      "purpose": "每run独占授权与有效期限",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.5 L1118–1125；架构方案.md §6.2 L334–344",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "run_server_id",
+          "required": true,
+          "description": "独占run"
+        },
+        {
+          "name": "node_id",
+          "type": "node_id",
+          "required": true,
+          "description": "授权game身份"
+        },
+        {
+          "name": "instance_id",
+          "type": "instance_id",
+          "required": true,
+          "description": "授权进程实例"
+        },
+        {
+          "name": "owner_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "run所有权代次"
+        },
+        {
+          "name": "expires_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "数据库服务端时间截止"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "许可CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "新授权经account短事务；game只直接续租现有许可",
+        "node/run授权满足有效期与相同实例",
+        "接管/撤销与run_write_guards形成真实写冲突"
+      ],
+      "transaction_invariants": [
+        "同run同一时刻仅一个有效实例",
+        "旧实例停止/隔离未确认不得另开世界"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "run_write_guards",
+      "purpose": "32组存储写屏障，非缓存锁",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §6.2 L334–340；最终策划案.md §7.5 L1123",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "guard_id",
+          "required": true,
+          "description": "run+group唯一键"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "运行服"
+        },
+        {
+          "name": "group_id",
+          "type": "int",
+          "required": true,
+          "description": "0至31"
+        },
+        {
+          "name": "owner_instance",
+          "type": "instance_id",
+          "required": true,
+          "description": "当前授权实例"
+        },
+        {
+          "name": "run_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "所有权代次"
+        },
+        {
+          "name": "control_version",
+          "type": "int64",
+          "required": true,
+          "description": "规则/运营控制版本"
+        },
+        {
+          "name": "seq",
+          "type": "int64",
+          "required": true,
+          "description": "事务必须实际递增"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "run_group_unique",
+          "keys": [
+            {
+              "field": "run_server_id",
+              "direction": 1
+            },
+            {
+              "field": "group_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "account原始16字节SHA256前8字节无符号大端mod32分组",
+        "业务实际条件写所有参与账号组；无账号系统元数据用0组",
+        "接管/撤销/控制发布实际修改全部相关32组，不只读租约"
+      ],
+      "transaction_invariants": [
+        "组数量/算法固定启动检查，不热改",
+        "只携带token或内存检查不构成fencing"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "room_controls",
+      "purpose": "room执行代次、隔离状态和停止/重建屏障",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L988、§7.2 L1022、§7.4 L1084–1098",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "stable_room_execution_key",
+          "required": true,
+          "description": "稳定room控制身份"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "所属run"
+        },
+        {
+          "name": "room_epoch",
+          "type": "int64",
+          "required": true,
+          "description": "room执行代次"
+        },
+        {
+          "name": "owner_instance",
+          "type": "instance_id",
+          "required": true,
+          "description": "执行实例"
+        },
+        {
+          "name": "stop_barrier",
+          "type": "bounded_object",
+          "required": true,
+          "description": "旧调用停止/隔离与换代确认"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "控制CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "永久提交写适用room guard；重建与旧来源形成真实冲突",
+        "确认旧执行停止/隔离后递增room_epoch"
+      ],
+      "transaction_invariants": [
+        "不保存room成员、怪物、掉落、位置或战斗快照",
+        "恢复产生新事件，不重放丢失战斗"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "challenges",
+      "purpose": "特殊挑战业务身份、费用次数与终态",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.2 L1032–1036、§7.4 L1094",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "challenge_id",
+          "required": true,
+          "description": "稳定挑战ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "受益/费用角色"
+        },
+        {
+          "name": "challenge_kind",
+          "type": "enum",
+          "required": true,
+          "description": "个人BOSS/世界BOSS/副本/竞技等"
+        },
+        {
+          "name": "execution_identity",
+          "type": "bounded_object",
+          "required": true,
+          "description": "来源实例、room_epoch及挑战代次"
+        },
+        {
+          "name": "config_version",
+          "type": "string",
+          "required": true,
+          "description": "入场规则引用"
+        },
+        {
+          "name": "costs_and_attempts",
+          "type": "bounded_object",
+          "required": true,
+          "description": "预占/扣减与最终次数处理"
+        },
+        {
+          "name": "terminal_state",
+          "type": "enum",
+          "required": true,
+          "description": "非终态/成功/取消等"
+        },
+        {
+          "name": "settlement_ref",
+          "type": "operation_id_or_null",
+          "required": true,
+          "description": "永久结算回执"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "终态CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_challenge_lookup",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "terminal_state",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "每角色最多一个未终结特殊挑战；需事务资格锁或唯一活动槽位，不能先查再插",
+        "固定入场战斗快照只在room内存，持久挑战不保存临时HP/CD/位置",
+        "成功与取消/退款竞争同一终态，资产/次数/积分/来源防重同事务"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "active_challenge_slots",
+      "purpose": "每角色至多一个特殊挑战的事务资格",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §3.3 L87、§7.2 L1030–1036",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色唯一活动挑战槽"
+        },
+        {
+          "name": "challenge_id",
+          "type": "challenge_id_or_null",
+          "required": true,
+          "description": "占用挑战"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "CAS版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "分配challenge_id、次数/费用与占槽同事务",
+        "只有原挑战终态确认才释放；重试不能另建第二挑战"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "asset_operations",
+      "purpose": "稳定操作ID、请求指纹、原授权和确定回执",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L990、L997、§7.4 L1094；架构方案.md §6.4 L361–369",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "operation_id",
+          "required": true,
+          "description": "稳定操作主键"
+        },
+        {
+          "name": "actor_scope",
+          "type": "string",
+          "required": true,
+          "description": "可信账号/角色/系统主体范围"
+        },
+        {
+          "name": "op_id",
+          "type": "string",
+          "required": true,
+          "description": "请求稳定幂等ID"
+        },
+        {
+          "name": "request_fingerprint",
+          "type": "sha256",
+          "required": true,
+          "description": "实际输入与版本摘要"
+        },
+        {
+          "name": "original_authorization",
+          "type": "bounded_object",
+          "required": true,
+          "description": "原run/owner/epoch/config授权"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "description": "pending/confirmed/rejected/unknown待实现枚举"
+        },
+        {
+          "name": "result",
+          "type": "bounded_object",
+          "required": true,
+          "description": "固定结果及资产版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "actor_op_unique",
+          "keys": [
+            {
+              "field": "actor_scope",
+              "direction": 1
+            },
+            {
+              "field": "op_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "同op同指纹返回原结果；不同指纹冲突",
+        "永久资产/资格/命令水位是最终防重依据，回执不能单独代表已变化"
+      ],
+      "retention_contract": "未终结/未知/退款/补偿不得TTL；已终态清理须保留永久水位/资格或墓碑；架构30天仅清理起点待制定"
+    },
+    {
+      "collection_name": "ordinary_settlements",
+      "purpose": "普通挂机小段永久确认和来源连续水位",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.1 L105、§7.2 L1054–1057、§7.4 L1094",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "settlement_id",
+          "required": true,
+          "description": "段唯一ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "结算角色"
+        },
+        {
+          "name": "hosting_session_id",
+          "type": "string_or_null",
+          "required": true,
+          "description": "关联托管区间"
+        },
+        {
+          "name": "source_epoch",
+          "type": "string",
+          "required": true,
+          "description": "受控事件流代次"
+        },
+        {
+          "name": "first_event_seq",
+          "type": "int64",
+          "required": true,
+          "description": "连续段起点"
+        },
+        {
+          "name": "last_event_seq",
+          "type": "int64",
+          "required": true,
+          "description": "连续段终点"
+        },
+        {
+          "name": "used_hosting_delta_sec",
+          "type": "int64",
+          "required": true,
+          "description": "只记录真实托管消耗"
+        },
+        {
+          "name": "confirmed_rewards",
+          "type": "bounded_object",
+          "required": true,
+          "description": "已提交随机结果与绑定/版本引用"
+        },
+        {
+          "name": "config_and_entitlement_refs",
+          "type": "bounded_object",
+          "required": true,
+          "description": "发生时规则与权益"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "防重版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_source_segment_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "source_epoch",
+              "direction": 1
+            },
+            {
+              "field": "last_event_seq",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "收益、用时、游标、保底/额度与回执同事务",
+        "月卡生效到期/日界/配置/地图等级变化拆段",
+        "未提交临时段丢弃不补收益和扣时；未知沿原段ID对账"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "hosting_accounts",
+      "purpose": "每角色唯一托管余额及当前会话引用",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.1 L97–105、§7.2 L1048–1054、§7.4 L1094",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_id",
+          "required": true,
+          "description": "每角色唯一余额"
+        },
+        {
+          "name": "remain_hosting_sec",
+          "type": "int64",
+          "required": true,
+          "description": "已确认可用托管余额"
+        },
+        {
+          "name": "active_hosting_session_id",
+          "type": "session_id_or_null",
+          "required": true,
+          "description": "当前区间"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "领取/购时/消耗CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "余额只有此处可写；日领/购时/结算在同一事务增减",
+        "实际扣时与段收益、永久游标、保底/额度同事务",
+        "在线/维护/故障不扣托管时间；未领取不补，日领累积"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "hosting_sessions",
+      "purpose": "托管余额/区间、已用时游标和已提交战报",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.1 L97–105、§7.2 L1048–1054、§7.4 L1094",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "hosting_session_id",
+          "required": true,
+          "description": "唯一托管区间"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色"
+        },
+        {
+          "name": "confirmed_used_sec",
+          "type": "int64",
+          "required": true,
+          "description": "真实托管累计已用时"
+        },
+        {
+          "name": "confirmed_event_cursor",
+          "type": "bounded_object",
+          "required": true,
+          "description": "已提交收益连续游标"
+        },
+        {
+          "name": "report",
+          "type": "bounded_summary",
+          "required": true,
+          "description": "已确认统计与停止原因，绑定分段"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "计量CAS"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "current/terminal等待实现状态"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_session_lookup",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        },
+        {
+          "name": "one_current_hosting_session",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending",
+          "partial_filter_contract": "仅state为当前未终结会话"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "角色余额唯一权威在hosting_accounts；会话仅保存本区间已确认用时/收益统计和来源游标",
+        "日领/购时/耗时与确定经济事实原子提交",
+        "在线不扣；维护故障不扣；不存恢复位置/HP/CD/随机流"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "entitlements",
+      "purpose": "角色独立双卡有效期",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.12 L341–376、§7.1 L992",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "entitlement_id",
+          "required": true,
+          "description": "权益记录"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色归属"
+        },
+        {
+          "name": "entitlement_kind",
+          "type": "enum",
+          "required": true,
+          "description": "privilege/hosting"
+        },
+        {
+          "name": "expires_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "服务端有效截止"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "续费CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_entitlement_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "entitlement_kind",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "续费只延长，不跨角色共享",
+        "卡到期不改变已有资产绑定；事件发生时快照判定"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "benefit_claims",
+      "purpose": "上海运营日的角色权益领取与补差",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.1 L97、§4.12 L360、§7.1 L992",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "claim_id",
+          "required": true,
+          "description": "领取账本ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色"
+        },
+        {
+          "name": "benefit_kind",
+          "type": "enum",
+          "required": true,
+          "description": "时长/特权日领等"
+        },
+        {
+          "name": "operation_date",
+          "type": "local_date",
+          "required": true,
+          "description": "Asia/Shanghai运营日期"
+        },
+        {
+          "name": "claimed_amount",
+          "type": "int64",
+          "required": true,
+          "description": "当日已领总额"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "领取/补差CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_kind_day_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "benefit_kind",
+              "direction": 1
+            },
+            {
+              "field": "operation_date",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "日领额度免费6h/托管卡12h为同一总额度；补差最多6h",
+        "资格/账本/托管余额同事务；续费不重复领，未领不补"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "item_orders",
+      "purpose": "运行服道具竞购/直购托管订单",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.3 L156–163、§4.4 L193、§7.1 L991",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "listing_id",
+          "required": true,
+          "description": "每次上架新稳定ID"
+        },
+        {
+          "name": "seller_role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "卖方角色"
+        },
+        {
+          "name": "seller_account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "卖方账号"
+        },
+        {
+          "name": "origin_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "永久来源"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "市场业务范围"
+        },
+        {
+          "name": "item_instance_id",
+          "type": "item_instance_id",
+          "required": true,
+          "description": "托管物品"
+        },
+        {
+          "name": "phase",
+          "type": "enum",
+          "required": true,
+          "description": "AUCTION/DIRECT/SETTLING/TERMINAL"
+        },
+        {
+          "name": "price_units",
+          "type": "int64",
+          "required": true,
+          "description": "元宝十分整数"
+        },
+        {
+          "name": "auction_end_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "含合法末段延时的当前截止"
+        },
+        {
+          "name": "price_round",
+          "type": "int64",
+          "required": true,
+          "description": "价位轮次"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "订单CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "run_phase_deadline",
+          "keys": [
+            {
+              "field": "run_server_id",
+              "direction": 1
+            },
+            {
+              "field": "phase",
+              "direction": 1
+            },
+            {
+              "field": "auction_end_at",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        },
+        {
+          "name": "active_escrow_item_unique",
+          "keys": [
+            {
+              "field": "item_instance_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending",
+          "partial_filter_contract": "仅仍持有托管物品的非终态订单"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "上架移入托管，CanTrade/特权/绑定/占用检查同事务",
+        "末段不足20分钟延至20分钟；有预购禁止卖家撤单",
+        "已成交、退款、退物各只提交一次；不能改为负余额取消费",
+        "同账号同run上架最多5单，配额与订单/物品转移同事务"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "item_bids",
+      "purpose": "竞购价位参与资格与冻结资金",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.3 L156–163；架构方案.md §5.2 L274、§13.6 L774–778",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "bid_id",
+          "required": true,
+          "description": "稳定竞购ID"
+        },
+        {
+          "name": "listing_id",
+          "type": "listing_id",
+          "required": true,
+          "description": "订单"
+        },
+        {
+          "name": "price_round",
+          "type": "int64",
+          "required": true,
+          "description": "价位轮次"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "竞购者"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "账号"
+        },
+        {
+          "name": "frozen_yuanbao_units",
+          "type": "int64",
+          "required": true,
+          "description": "已冻结元宝"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "active/winner/refund_pending/refunded"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "竞购/退款CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "listing_round_account_effective_unique",
+          "keys": [
+            {
+              "field": "listing_id",
+              "direction": 1
+            },
+            {
+              "field": "price_round",
+              "direction": 1
+            },
+            {
+              "field": "account_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending",
+          "partial_filter_contract": "仅有效未终结预购状态"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "资格、冻结、竞购记录原子提交",
+        "随机整单赢家在事务重试前固定；未中/旧价退款引用原冻结，不额外铸币",
+        "同账号同拍品最多一个有效预购，按账号唯一性防止多角色增加随机权重"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "gold_orders",
+      "purpose": "本run金币限价委托与冻结资产",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.9 L298–319、§7.1 L991；架构方案.md §14（仅撮合技术）",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "order_id",
+          "required": true,
+          "description": "委托稳定ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "委托角色"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "账号"
+        },
+        {
+          "name": "origin_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "永久来源"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "市场范围"
+        },
+        {
+          "name": "side",
+          "type": "enum",
+          "required": true,
+          "description": "buy/sell"
+        },
+        {
+          "name": "limit_price_units",
+          "type": "int64",
+          "required": true,
+          "description": "每万金币元宝报价，十分单位"
+        },
+        {
+          "name": "remaining_lots",
+          "type": "int64",
+          "required": true,
+          "description": "每手10000金币"
+        },
+        {
+          "name": "accepted_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "持久时间优先"
+        },
+        {
+          "name": "frozen_asset",
+          "type": "bounded_object",
+          "required": true,
+          "description": "冻结的非绑元宝或金币"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "active/partial/terminal"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "撮合/撤单CAS"
+        },
+        {
+          "name": "expires_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "按合法配置确定并确认前展示的到期时间"
+        },
+        {
+          "name": "order_rule_version",
+          "type": "string",
+          "required": true,
+          "description": "期限及挂单规则版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "book_price_time",
+          "keys": [
+            {
+              "field": "run_server_id",
+              "direction": 1
+            },
+            {
+              "field": "side",
+              "direction": 1
+            },
+            {
+              "field": "limit_price_units",
+              "direction": 1
+            },
+            {
+              "field": "accepted_at",
+              "direction": 1
+            },
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "价格优先同价时间优先；实际成交/退款使用同一十分整数精度",
+        "撮合、撤单、到期竞争同一revision；只退余量",
+        "佣金按最终策划10%累计税余数，不能沿架构5%规则",
+        "同账号同run最多5买单+5卖单，配额与委托同事务",
+        "期限配置化，不固定沿架构7天；挂单直接托管金币/元宝，不铸金条或要求独立摊位余额"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "settlements",
+      "purpose": "两市场已确定成交及永久退款/交付事实",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L991、§4.9 L315；架构方案.md §5.2 L276",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "trade_id",
+          "required": true,
+          "description": "稳定成交或结算ID"
+        },
+        {
+          "name": "market_kind",
+          "type": "enum",
+          "required": true,
+          "description": "item/gold"
+        },
+        {
+          "name": "source_order_ids",
+          "type": "bounded_array",
+          "required": true,
+          "description": "原订单"
+        },
+        {
+          "name": "buyer_account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "买方"
+        },
+        {
+          "name": "seller_account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "卖方"
+        },
+        {
+          "name": "gross_units",
+          "type": "int64",
+          "required": true,
+          "description": "税前元宝十分单位"
+        },
+        {
+          "name": "tax_units",
+          "type": "int64",
+          "required": true,
+          "description": "实际累计税额"
+        },
+        {
+          "name": "net_units",
+          "type": "int64",
+          "required": true,
+          "description": "卖方实收"
+        },
+        {
+          "name": "config_version",
+          "type": "string",
+          "required": true,
+          "description": "结算规则版本"
+        },
+        {
+          "name": "terminal_result",
+          "type": "bounded_object",
+          "required": true,
+          "description": "交付与退款事实"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "成交、资产托管余量、税与税余数同一事务",
+        "订单重启或领取重试不重复成交/发物/退款"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "seller_tax_remainders",
+      "purpose": "双市场共用、抗拆单的稳定卖方税余数",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.9 L315、§7.1 L991",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "seller_tax_key",
+          "required": true,
+          "description": "稳定卖方税键"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "账号"
+        },
+        {
+          "name": "origin_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "永久入口"
+        },
+        {
+          "name": "remainder",
+          "type": "int",
+          "required": true,
+          "description": "0至9，非可用资产"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "并发成交CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "seller_account_origin_unique",
+          "keys": [
+            {
+              "field": "account_id",
+              "direction": 1
+            },
+            {
+              "field": "origin_server_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "tax=floor((gross_units+remainder)/10)，新余数mod10",
+        "道具/金币市场共用；换角色/重登/合服不清零",
+        "成交入账、税与余数同事务，不对未成交/全额退款计税"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "business_jobs",
+      "purpose": "开奖、退款、挑战取消、排空、恢复等有界持久工作",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.3–7.4 L1061–1100；架构方案.md §5.2 L277、§6.4 L369",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "job_id",
+          "required": true,
+          "description": "固定任务ID"
+        },
+        {
+          "name": "kind",
+          "type": "enum",
+          "required": true,
+          "description": "明确业务任务类型"
+        },
+        {
+          "name": "original_authorization",
+          "type": "bounded_object",
+          "required": true,
+          "description": "原决议与来源/配置/执行代次"
+        },
+        {
+          "name": "scope",
+          "type": "bounded_object",
+          "required": true,
+          "description": "参与账号/角色/run"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "pending/running/unknown/terminal"
+        },
+        {
+          "name": "cursor",
+          "type": "bounded_object",
+          "required": true,
+          "description": "已处理水位"
+        },
+        {
+          "name": "next_retry_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "有界退避"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "任务CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "pending_job_retry",
+          "keys": [
+            {
+              "field": "state",
+              "direction": 1
+            },
+            {
+              "field": "next_retry_at",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "任务只推进固定原决议，不把旧业务改绑新epoch",
+        "无owner时等待合法归属或可靠OFFLINE授权，不能直接写资产"
+      ],
+      "retention_contract": "未终结和未知任务不得TTL；终态保留防重摘要"
+    },
+    {
+      "collection_name": "origin_servers",
+      "purpose": "永久入口元数据与开放状态",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L969–985",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "origin_server_id",
+          "required": true,
+          "description": "永久入口"
+        },
+        {
+          "name": "display_metadata",
+          "type": "bounded_object",
+          "required": true,
+          "description": "区服展示"
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "required": true,
+          "description": "运营入口状态"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "元数据版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "受控运营流程和预期版本CAS"
+      ],
+      "transaction_invariants": [
+        "origin不因合服改变；run映射唯一权威放origin_routes"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "origin_routes",
+      "purpose": "origin→run唯一权威映射",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L967–1009；架构方案.md §2.1 L67",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "origin_server_id",
+          "required": true,
+          "description": "永久入口键"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "当前运行服"
+        },
+        {
+          "name": "route_version",
+          "type": "int64",
+          "required": true,
+          "description": "路由版本"
+        },
+        {
+          "name": "membership_version",
+          "type": "int64",
+          "required": true,
+          "description": "合服成员版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "run_origin_lookup",
+          "keys": [
+            {
+              "field": "run_server_id",
+              "direction": 1
+            },
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "维护/合服控制事务匹配预期路由版本并写相关全部guard"
+      ],
+      "transaction_invariants": [
+        "不另设独立可编辑的run成员真相；不无限递归合服链",
+        "旧票据/旧owner拒绝；未成交先退再发布统一市场"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "run_servers",
+      "purpose": "运行服部署/维护/配置及成员控制",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L973–985；架构方案.md §2.1 L67",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "run_server_id",
+          "required": true,
+          "description": "运行服"
+        },
+        {
+          "name": "game_node_id",
+          "type": "node_id",
+          "required": true,
+          "description": "目标game身份"
+        },
+        {
+          "name": "assignment_version",
+          "type": "int64",
+          "required": true,
+          "description": "部署版本"
+        },
+        {
+          "name": "config_version",
+          "type": "string",
+          "required": true,
+          "description": "批准的配置快照"
+        },
+        {
+          "name": "desired_state",
+          "type": "enum",
+          "required": true,
+          "description": "READY/MAINTENANCE等期望状态"
+        },
+        {
+          "name": "control_version",
+          "type": "int64",
+          "required": true,
+          "description": "发布控制版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "运营控制CAS与node/run授权及32guard联动"
+      ],
+      "transaction_invariants": [
+        "换node不修改角色origin或仓库身份；未完成恢复门禁不开放票据"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "game_nodes",
+      "purpose": "节点目录、地址和负载摘要（运行权以租约为准）",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L985、§7.5 L1124；架构方案.md §2.2 L75",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "game_node_id",
+          "required": true,
+          "description": "稳定部署身份"
+        },
+        {
+          "name": "instance_id",
+          "type": "instance_id",
+          "required": true,
+          "description": "当前发现的进程实例"
+        },
+        {
+          "name": "endpoints",
+          "type": "bounded_object",
+          "required": true,
+          "description": "公告/内部地址，不含凭据"
+        },
+        {
+          "name": "capacity_summary",
+          "type": "bounded_object",
+          "required": true,
+          "description": "采样负载/版本"
+        },
+        {
+          "name": "sampled_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "摘要时间"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "受控注册与实例/路由版本核验"
+      ],
+      "transaction_invariants": [
+        "目录与缓存可重建，摘要不能代替有效运行权"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "config_releases",
+      "purpose": "不可变配置快照、摘要、来源与发布决议",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §5.11 L787–845、§7.1 L993；架构方案.md §18.1 L960–962",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "release_id",
+          "required": true,
+          "description": "配置发布身份"
+        },
+        {
+          "name": "schema_version",
+          "type": "string",
+          "required": true,
+          "description": "schema版本"
+        },
+        {
+          "name": "content_version",
+          "type": "string",
+          "required": true,
+          "description": "内容版本"
+        },
+        {
+          "name": "content_hash",
+          "type": "sha256",
+          "required": true,
+          "description": "不可变内容摘要"
+        },
+        {
+          "name": "source_manifest_ref",
+          "type": "string",
+          "required": true,
+          "description": "来源清单"
+        },
+        {
+          "name": "validation_result_ref",
+          "type": "string",
+          "required": true,
+          "description": "校验与证据"
+        },
+        {
+          "name": "published_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "明确生效点"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "发布指针与控制guard原子更新，完整快照一次切换"
+      ],
+      "transaction_invariants": [
+        "候选/未核验不能正式发布；客户端投影无server字段",
+        "订单/事件/报价引用历史版本；回滚只发布新决议不倒退资产"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "drop_quota_ledgers",
+      "purpose": "阶段×品质×来源×稳定窗口高品质掉落限额",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §5.2 L600–614、§7.1 L1006、§7.2 L1057",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "quota_key",
+          "required": true,
+          "description": "稳定配额键"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "当前业务范围"
+        },
+        {
+          "name": "equipment_stage",
+          "type": "int",
+          "required": true,
+          "description": "阶段"
+        },
+        {
+          "name": "quality",
+          "type": "int",
+          "required": true,
+          "description": "品质"
+        },
+        {
+          "name": "source_kind",
+          "type": "enum",
+          "required": true,
+          "description": "随机掉落来源"
+        },
+        {
+          "name": "window_key",
+          "type": "string",
+          "required": true,
+          "description": "稳定限额窗口"
+        },
+        {
+          "name": "consumed",
+          "type": "int64",
+          "required": true,
+          "description": "已消耗数"
+        },
+        {
+          "name": "reserved",
+          "type": "int64",
+          "required": true,
+          "description": "未决预占"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "配额CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "quota_domain_unique",
+          "keys": [
+            {
+              "field": "run_server_id",
+              "direction": 1
+            },
+            {
+              "field": "equipment_stage",
+              "direction": 1
+            },
+            {
+              "field": "quality",
+              "direction": 1
+            },
+            {
+              "field": "source_kind",
+              "direction": 1
+            },
+            {
+              "field": "window_key",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "配额确认与发奖同事务，重试不重复占额",
+        "固定品质打造不扣随机额度；合服合并已用量不清零"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "role_pity_states",
+      "purpose": "角色普通掉装永久保底状态；物品/翅膀培养保底各在对应对象",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §5.2 L602–614、§4.6 L219–246、§7.4 L1084",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "role_pity_key",
+          "required": true,
+          "description": "角色+普通掉落保底类型"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色"
+        },
+        {
+          "name": "pity_kind",
+          "type": "enum",
+          "required": true,
+          "description": "普通装备20杀保底等经批准角色级玩法"
+        },
+        {
+          "name": "progress",
+          "type": "bounded_object",
+          "required": true,
+          "description": "连续未掉装已确认计数"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "保底CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_pity_kind_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "pity_kind",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "计数与实际奖励/游标同事务，故障和重登不清零",
+        "物品用油保底在items.instance_properties、翅膀保底在role_wings，不能重复另存同份进度"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "role_wings",
+      "purpose": "角色唯一永久翅膀实例及幸运/保底",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.24 L535–551、§10.2 L1228–1232",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "wing_id",
+          "required": true,
+          "description": "唯一翅膀ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "永久归属角色"
+        },
+        {
+          "name": "stage",
+          "type": "int",
+          "required": true,
+          "description": "翅膀阶"
+        },
+        {
+          "name": "lucky",
+          "type": "int",
+          "required": true,
+          "description": "当前幸运"
+        },
+        {
+          "name": "pity_progress",
+          "type": "bounded_object",
+          "required": true,
+          "description": "两阶段保底"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "培养CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_wing_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "激活仅一wing_id，升阶/换外观不重置幸运保底",
+        "角色专属不可卸/交易/存仓/分解，不占背包和10强化位",
+        "保底权威在本对象，不再写独立role_pity_states同份进度"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "mails",
+      "purpose": "系统通知与奖励领取资格，仅系统发件",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.13 L385、§7.1 L999；架构方案.md §5.2 L281",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "mail_id",
+          "required": true,
+          "description": "系统邮件"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "接收角色"
+        },
+        {
+          "name": "reward_key",
+          "type": "string",
+          "required": true,
+          "description": "系统奖励唯一身份"
+        },
+        {
+          "name": "attachments",
+          "type": "bounded_asset_references",
+          "required": true,
+          "description": "已承诺奖励或领取资格"
+        },
+        {
+          "name": "claim_state",
+          "type": "enum",
+          "required": true,
+          "description": "pending/claimed等"
+        },
+        {
+          "name": "expires_at",
+          "type": "utc_datetime_or_null",
+          "required": false,
+          "description": "按正式邮件规则"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "领取CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_reward_unique",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "reward_key",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "role_mail_lookup",
+          "keys": [
+            {
+              "field": "role_id",
+              "direction": 1
+            },
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "不开放玩家互寄；附件按来源绑定，领取幂等",
+        "展示清理不能删除已承诺未领取资产或唯一奖励资格"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "arena_seasons",
+      "purpose": "15天镜像竞技赛季与结算状态",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.19 L473–483",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "season_id",
+          "required": true,
+          "description": "赛季稳定ID"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "赛季池"
+        },
+        {
+          "name": "phase",
+          "type": "enum",
+          "required": true,
+          "description": "active/settling/terminal"
+        },
+        {
+          "name": "config_version",
+          "type": "string",
+          "required": true,
+          "description": "规则版本"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "赛季CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "先排名发奖，再1:1结转独立兑换余额，竞技分清零",
+        "合服/重启不隐式重发赛季奖励"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "arena_season_entries",
+      "purpose": "角色赛季分、次数、连胜与结转防重",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.19 L475–483",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "season_role_key",
+          "required": true,
+          "description": "赛季+角色"
+        },
+        {
+          "name": "season_id",
+          "type": "season_id",
+          "required": true,
+          "description": "赛季"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "角色"
+        },
+        {
+          "name": "score",
+          "type": "int64",
+          "required": true,
+          "description": "竞技分"
+        },
+        {
+          "name": "streak",
+          "type": "int",
+          "required": true,
+          "description": "连胜"
+        },
+        {
+          "name": "daily_attempts",
+          "type": "bounded_day_ledger",
+          "required": true,
+          "description": "上海日期次数"
+        },
+        {
+          "name": "last_challenge_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "同分时间优先"
+        },
+        {
+          "name": "settlement_state",
+          "type": "enum",
+          "required": true,
+          "description": "未结转/已结转"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "挑战/结转CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "season_role_unique",
+          "keys": [
+            {
+              "field": "season_id",
+              "direction": 1
+            },
+            {
+              "field": "role_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "season_rank",
+          "keys": [
+            {
+              "field": "season_id",
+              "direction": 1
+            },
+            {
+              "field": "score",
+              "direction": -1
+            },
+            {
+              "field": "last_challenge_at",
+              "direction": 1
+            }
+          ],
+          "unique": false,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "积分/次数/连胜/挑战终态同事务；重复不加分",
+        "独立兑换余额可放role_states，消费不影响已结算排名"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "mirror_snapshots",
+      "purpose": "竞技对手业务镜像数据（不含战斗现场）",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.19 L475–483、§7.2 L1022",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "snapshot_id",
+          "required": true,
+          "description": "镜像版本ID"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "来源角色"
+        },
+        {
+          "name": "season_id",
+          "type": "season_id",
+          "required": true,
+          "description": "赛季"
+        },
+        {
+          "name": "config_version",
+          "type": "string",
+          "required": true,
+          "description": "属性/技能规则版本"
+        },
+        {
+          "name": "combat_definition",
+          "type": "bounded_immutable_object",
+          "required": true,
+          "description": "批准的装备属性/技能/宠物业务快照"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "仅业务镜像，不能存临时HP/CD/怪物/地面现场",
+        "挑战入场采用固定镜像版本，后续换装不追溯改本次战斗"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "names",
+      "purpose": "规范名字唯一注册；当前角色名，公会名预留不开",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §7.2 L393–397；最终策划案.md §7.1 L981",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "name_id",
+          "required": true,
+          "description": "命名记录"
+        },
+        {
+          "name": "namespace",
+          "type": "string",
+          "required": true,
+          "description": "命名域"
+        },
+        {
+          "name": "name_key",
+          "type": "string",
+          "required": true,
+          "description": "规范名"
+        },
+        {
+          "name": "owner_id",
+          "type": "string",
+          "required": true,
+          "description": "当前拥有者"
+        },
+        {
+          "name": "reservation_state",
+          "type": "enum",
+          "required": true,
+          "description": "占用/保留状态"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "namespace_name_unique",
+          "keys": [
+            {
+              "field": "namespace",
+              "direction": 1
+            },
+            {
+              "field": "name_key",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "ops_plans",
+      "purpose": "维护/合服/迁服的持久步骤与回执",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L1001–1009、§7.3 L1061–1080",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "plan_id",
+          "required": true,
+          "description": "操作计划"
+        },
+        {
+          "name": "expected_route_version",
+          "type": "int64",
+          "required": true,
+          "description": "预期映射版本"
+        },
+        {
+          "name": "steps",
+          "type": "bounded_object",
+          "required": true,
+          "description": "步骤及回执"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "执行状态"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "计划CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "ops_audit",
+      "purpose": "配置/运营动作前后值及责任审计",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §7.1 L993、§7.5 L1127–1137",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "audit_id",
+          "required": true,
+          "description": "审计ID"
+        },
+        {
+          "name": "operator_id",
+          "type": "string",
+          "required": true,
+          "description": "可信管理员"
+        },
+        {
+          "name": "occurred_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "服务端时刻"
+        },
+        {
+          "name": "action",
+          "type": "string",
+          "required": true,
+          "description": "白名单动作"
+        },
+        {
+          "name": "before_after",
+          "type": "bounded_object",
+          "required": true,
+          "description": "前后值、原因及版本"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "audit_outbox",
+      "purpose": "与主库重要资产同事务的审计投送",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §6.5 L371–379；最终策划案.md §7.5 L1133–1137",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "event_id",
+          "required": true,
+          "description": "稳定事件"
+        },
+        {
+          "name": "original_occurred_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "原发生时间"
+        },
+        {
+          "name": "partition_month_shanghai",
+          "type": "yyyy_mm",
+          "required": true,
+          "description": "原发生上海月份"
+        },
+        {
+          "name": "payload",
+          "type": "bounded_typed_object",
+          "required": true,
+          "description": "固定核心字段和类型化details，无秘密"
+        },
+        {
+          "name": "delivery_state",
+          "type": "enum",
+          "required": true,
+          "description": "待投/已确认"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "投送CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "market_stat_events",
+      "purpose": "成交行情/佣金投影输入，不作资产账本",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §5.2 L283、§6.5 L377；最终策划案.md §9 L1165–1181",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "event_id",
+          "required": true,
+          "description": "成交统计唯一事件"
+        },
+        {
+          "name": "trade_id",
+          "type": "trade_id",
+          "required": true,
+          "description": "确定成交来源"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "原统计归属"
+        },
+        {
+          "name": "occurred_at",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "原成交时间"
+        },
+        {
+          "name": "projection_state",
+          "type": "enum",
+          "required": true,
+          "description": "待投影/完成"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "run_server_data",
+      "purpose": "运行服行情和审计后的统计投影",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §5.2 L284、§14.5 L817–833",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "run_server_id",
+          "required": true,
+          "description": "运行服统计键"
+        },
+        {
+          "name": "market_statistics",
+          "type": "bounded_object",
+          "required": true,
+          "description": "由确定成交事件生成的投影"
+        },
+        {
+          "name": "projection_cursor",
+          "type": "string",
+          "required": true,
+          "description": "防重水位"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "投影CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "host_agents",
+      "purpose": "主机监管实例与本机独占执行权",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.1 L915–920",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "host_id",
+          "required": true,
+          "description": "固定主机标识"
+        },
+        {
+          "name": "supervisor_instance_id",
+          "type": "instance_id",
+          "required": true,
+          "description": "监管实例"
+        },
+        {
+          "name": "lease",
+          "type": "bounded_object",
+          "required": true,
+          "description": "监管许可"
+        },
+        {
+          "name": "management_endpoint",
+          "type": "string",
+          "required": true,
+          "description": "独占管理地址"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "process_specs",
+      "purpose": "受控进程期望规格和实例身份对账",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.1 L918–920",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "node_id",
+          "required": true,
+          "description": "目标进程规格"
+        },
+        {
+          "name": "executable_path",
+          "type": "string",
+          "required": true,
+          "description": "绝对受控路径"
+        },
+        {
+          "name": "argument_references",
+          "type": "bounded_string_array",
+          "required": true,
+          "description": "结构化参数，不拼shell"
+        },
+        {
+          "name": "desired_state",
+          "type": "enum",
+          "required": true,
+          "description": "RUNNING/STOPPED"
+        },
+        {
+          "name": "spec_revision",
+          "type": "int64",
+          "required": true,
+          "description": "规格版本"
+        },
+        {
+          "name": "launch_generation",
+          "type": "int64",
+          "required": true,
+          "description": "本次启动代次"
+        },
+        {
+          "name": "expected_instance_id",
+          "type": "instance_id",
+          "required": true,
+          "description": "预期实例"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "gm_jobs",
+      "purpose": "管理动作逐目标执行状态",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.2 L922–930；最终策划案.md §7.5 L1127–1137",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "job_id",
+          "required": true,
+          "description": "管理任务"
+        },
+        {
+          "name": "operator_id",
+          "type": "string",
+          "required": true,
+          "description": "管理员"
+        },
+        {
+          "name": "target_scope",
+          "type": "bounded_object",
+          "required": true,
+          "description": "主机/node/run范围"
+        },
+        {
+          "name": "spec_revision",
+          "type": "int64",
+          "required": true,
+          "description": "预期规格"
+        },
+        {
+          "name": "expected_instance_id",
+          "type": "instance_id_or_null",
+          "required": true,
+          "description": "原目标身份"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "待受理/执行/完成/未知"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "job CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "ops_schedules",
+      "purpose": "版本化运维计划及取消屏障",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.4 L940–948",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "schedule_id",
+          "required": true,
+          "description": "计划"
+        },
+        {
+          "name": "version",
+          "type": "int64",
+          "required": true,
+          "description": "版本"
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "required": true,
+          "description": "指定时区"
+        },
+        {
+          "name": "window",
+          "type": "bounded_object",
+          "required": true,
+          "description": "开始/结束/错过策略"
+        },
+        {
+          "name": "cancelled",
+          "type": "bool",
+          "required": true,
+          "description": "取消状态"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "计划guard"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "schedule_runs",
+      "purpose": "每次计划发生的唯一执行身份",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.4 L942–946",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "occurrence_run_id",
+          "required": true,
+          "description": "执行ID"
+        },
+        {
+          "name": "schedule_id",
+          "type": "schedule_id",
+          "required": true,
+          "description": "计划"
+        },
+        {
+          "name": "version",
+          "type": "int64",
+          "required": true,
+          "description": "受理版本"
+        },
+        {
+          "name": "occurrence",
+          "type": "utc_datetime",
+          "required": true,
+          "description": "该次发生时刻"
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "required": true,
+          "description": "目标"
+        },
+        {
+          "name": "state",
+          "type": "enum",
+          "required": true,
+          "description": "待受理/已受理/终态"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "schedule_occurrence_target_unique",
+          "keys": [
+            {
+              "field": "schedule_id",
+              "direction": 1
+            },
+            {
+              "field": "version",
+              "direction": 1
+            },
+            {
+              "field": "occurrence",
+              "direction": 1
+            },
+            {
+              "field": "target",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "control_events",
+      "purpose": "封禁/配置/运营控制持久通知",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "架构方案.md §17.3 L932–938；最终策划案.md §7.5 L1127–1137",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "event_id",
+          "required": true,
+          "description": "控制事件"
+        },
+        {
+          "name": "subject",
+          "type": "string",
+          "required": true,
+          "description": "账号/运行服/节点等"
+        },
+        {
+          "name": "control_version",
+          "type": "int64",
+          "required": true,
+          "description": "递增控制版本"
+        },
+        {
+          "name": "payload",
+          "type": "bounded_object",
+          "required": true,
+          "description": "受控动作与原授权"
+        },
+        {
+          "name": "acknowledgements",
+          "type": "bounded_object",
+          "required": true,
+          "description": "分目标确认"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "管理/控制事务校验预期版本、权限和固定目标实例；涉及运行权时实际写相关run guards",
+        "投影/审计/回执不能绕过当前权威提交资产"
+      ],
+      "transaction_invariants": [
+        "唯一业务键与版本CAS必须实施；当前仅合同，不是已执行迁移"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "market_account_quotas",
+      "purpose": "同账号同运行服市场并发订单配额",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.3 L158、§4.9 L304–310",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "account_run_key",
+          "required": true,
+          "description": "账号+run稳定键"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "账号"
+        },
+        {
+          "name": "run_server_id",
+          "type": "server_id",
+          "required": true,
+          "description": "运行服"
+        },
+        {
+          "name": "active_item_orders",
+          "type": "int",
+          "required": true,
+          "description": "道具最多5单"
+        },
+        {
+          "name": "active_gold_buy_orders",
+          "type": "int",
+          "required": true,
+          "description": "金币买单最多5"
+        },
+        {
+          "name": "active_gold_sell_orders",
+          "type": "int",
+          "required": true,
+          "description": "金币卖单最多5"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "跨角色配额CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "account_run_quota_unique",
+          "keys": [
+            {
+              "field": "account_id",
+              "direction": 1
+            },
+            {
+              "field": "run_server_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "开单/终态/取消与计数同事务，不先读再插绕过上限",
+        "恢复须核对订单实际终态，错误计数不能新增虚假名额"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    },
+    {
+      "collection_name": "payment_orders",
+      "purpose": "充值/现金直购的原始支付订单核验与唯一入账",
+      "record_status": "candidate",
+      "adaptation_status": "adapt",
+      "implementation_status": "not_implemented",
+      "migration_status": "pending",
+      "source_ref": "最终策划案.md §4.3 L141、§4.12 L341–376、§7.1 L999",
+      "key_fields": [
+        {
+          "name": "_id",
+          "type": "payment_order_id",
+          "required": true,
+          "description": "服务端稳定订单"
+        },
+        {
+          "name": "provider",
+          "type": "string",
+          "required": true,
+          "description": "发行支付渠道"
+        },
+        {
+          "name": "external_order_id",
+          "type": "string",
+          "required": true,
+          "description": "渠道订单唯一身份"
+        },
+        {
+          "name": "account_id",
+          "type": "account_id",
+          "required": true,
+          "description": "受益账号"
+        },
+        {
+          "name": "role_id",
+          "type": "role_id",
+          "required": true,
+          "description": "明确受益角色"
+        },
+        {
+          "name": "purchase_kind",
+          "type": "enum",
+          "required": true,
+          "description": "recharge/privilege_card/hosting_card/battle_pass等合法商品"
+        },
+        {
+          "name": "expected_quote",
+          "type": "immutable_object",
+          "required": true,
+          "description": "金额/币种/商品/版本及权益，不含秘密"
+        },
+        {
+          "name": "verification_state",
+          "type": "enum",
+          "required": true,
+          "description": "待核验/已确认/拒绝/未知"
+        },
+        {
+          "name": "asset_operation_ref",
+          "type": "operation_id_or_null",
+          "required": true,
+          "description": "唯一入账或权益操作"
+        },
+        {
+          "name": "revision",
+          "type": "int64",
+          "required": true,
+          "description": "回调/查询CAS"
+        }
+      ],
+      "indexes": [
+        {
+          "name": "_id_unique",
+          "keys": [
+            {
+              "field": "_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        },
+        {
+          "name": "provider_order_unique",
+          "keys": [
+            {
+              "field": "provider",
+              "direction": 1
+            },
+            {
+              "field": "external_order_id",
+              "direction": 1
+            }
+          ],
+          "unique": true,
+          "migration_status": "pending"
+        }
+      ],
+      "cas_and_guard_contract": [
+        "业务提交匹配当前run运行权并实际写涉及账号组guard",
+        "匹配角色authority/会话或显式系统授权及角色/业务revision",
+        "需要账号资格时实际写accounts状态屏障，禁止事务外一次性检查"
+      ],
+      "transaction_invariants": [
+        "服务端核验渠道/金额/受益人/商品，回调重放只入账一次",
+        "只有recharge新增非绑元宝；现金直接购买卡/战令只给对应权益，不同时铸元宝",
+        "验证结果/唯一入账/权益与回执原子提交，未知沿原支付订单对账"
+      ],
+      "retention_contract": "永久或按业务终态保留；任何清理须先证明防重不丢失"
+    }
+  ],
+  "deferred_domains": [
+    {
+      "domain": "guilds_and_siege",
+      "implementation_status": "deferred",
+      "source_ref": "最终策划案.md §1 L45、§4.11 L337–339、§7.1 L999、§8.1 L1141–1145"
+    },
+    {
+      "domain": "open_world_pk_and_red_name",
+      "implementation_status": "deferred",
+      "source_ref": "最终策划案.md §1 L45、§4.11 L337–339、§7.1 L999、§8.1 L1141–1145"
+    },
+    {
+      "domain": "face_to_face_trade",
+      "implementation_status": "deferred",
+      "source_ref": "最终策划案.md §1 L45、§4.11 L337–339、§7.1 L999、§8.1 L1141–1145"
+    },
+    {
+      "domain": "player_to_player_mail",
+      "implementation_status": "deferred",
+      "source_ref": "最终策划案.md §1 L45、§4.11 L337–339、§7.1 L999、§8.1 L1141–1145"
+    },
+    {
+      "domain": "cash_withdrawal",
+      "implementation_status": "deferred",
+      "source_ref": "最终策划案.md §1 L45、§4.11 L337–339、§7.1 L999、§8.1 L1141–1145"
+    }
+  ],
+  "migration_acceptance": [
+    "先检查重复键并生成报告，不能运行时自动修复唯一冲突",
+    "索引/结构/数据迁移有版本、回执、预演和备份；未知中断沿原迁移ID对账",
+    "并发第6角色/重复item/仓库最后格/挑战单槽/重复领取/双市场税余数全部验收",
+    "接管与旧事务、封禁与交易、成功与取消分别形成真实DB写冲突",
+    "核验所有既有资产和永久游标后才能开放新票据；未执行时保持migration_status=pending"
+  ]
+}

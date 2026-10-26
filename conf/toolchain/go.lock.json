@@ -1,0 +1,13 @@
+{
+  "version": "go1.27.3",
+  "platform": "darwin-amd64",
+  "source_metadata": "https://go.dev/dl/?mode=json",
+  "official_download": "https://go.dev/dl/go1.27.3.darwin-amd64.tar.gz",
+  "downloaded_from": "https://go.dev/dl/go1.27.3.darwin-amd64.tar.gz",
+  "archive_sha256": "b6f8e931e4ab497fcde6da8ae4499a58f9d258e55c8a80824a516eae5950a750",
+  "official_checksum_verified": true,
+  "installation": "/Users/srf/.local/share/minimir-toolchain/go/go1.27.3",
+  "executable": "/Users/srf/.local/share/minimir-toolchain/go/go1.27.3/bin/go",
+  "version_output": "go version go1.27.3 darwin/amd64",
+  "system_go_replaced": false
+}

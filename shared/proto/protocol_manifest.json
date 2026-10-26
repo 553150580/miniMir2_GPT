@@ -1,0 +1,543 @@
+{
+  "schema_version": 1,
+  "protocol_version": 1,
+  "status": "draft",
+  "source_ref": "架构方案.md:405-506；最终策划案.md:959-1061",
+  "scope": "首个可玩闭环协议草案，公共线路与野外PK等能力按当前范围门禁",
+  "reserved_messages": [
+    {
+      "value": 20003,
+      "name": "MsgC2SQueueJoin",
+      "status": "deferred",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 20004,
+      "name": "MsgS2CQueueStatus",
+      "status": "deferred",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 20005,
+      "name": "MsgC2SSwitchLine",
+      "status": "deferred",
+      "source_ref": "架构方案.md:444-450"
+    }
+  ],
+  "messages": [
+    {
+      "value": 1,
+      "name": "MsgC2SHeartbeat",
+      "proto_message": "Heartbeat",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 2,
+      "name": "MsgS2CHeartbeat",
+      "proto_message": "HeartbeatResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 3,
+      "name": "MsgS2CBatch",
+      "proto_message": "Batch",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 4,
+      "name": "MsgC2SEnterWorldAck",
+      "proto_message": "EnterWorldAck",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 5,
+      "name": "MsgS2CSceneBaseline",
+      "proto_message": "SceneBaselineChunk",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 6,
+      "name": "MsgS2CSyncReady",
+      "proto_message": "SyncReady",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-26首个可玩闭环：基线就绪确认与本地开发账号注册"
+    },
+    {
+      "value": 10001,
+      "name": "MsgC2SLocalLogin",
+      "proto_message": "LocalLoginRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10002,
+      "name": "MsgS2CLogin",
+      "proto_message": "LoginResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10003,
+      "name": "MsgC2SRoleDirectory",
+      "proto_message": "RoleDirectoryRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10004,
+      "name": "MsgS2CRoleDirectory",
+      "proto_message": "RoleDirectoryResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10005,
+      "name": "MsgC2SCreateRole",
+      "proto_message": "CreateRoleRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10006,
+      "name": "MsgS2CCreateRole",
+      "proto_message": "RoleSummary",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10007,
+      "name": "MsgC2SEntryTicket",
+      "proto_message": "EntryTicketRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10008,
+      "name": "MsgS2CEntryTicket",
+      "proto_message": "EntryTicketResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 10009,
+      "name": "MsgC2SLocalRegister",
+      "proto_message": "LocalLoginRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-26首个可玩闭环：基线就绪确认与本地开发账号注册"
+    },
+    {
+      "value": 10010,
+      "name": "MsgS2CLocalRegister",
+      "proto_message": "LoginResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-26首个可玩闭环：基线就绪确认与本地开发账号注册"
+    },
+    {
+      "value": 20001,
+      "name": "MsgC2SEnterLine",
+      "proto_message": "EnterLineRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "architecture_example",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 20002,
+      "name": "MsgS2CEnterLine",
+      "proto_message": "EnterLineResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "architecture_example",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 20006,
+      "name": "MsgC2SMoveIntent",
+      "proto_message": "MoveIntent",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 30001,
+      "name": "MsgS2CDeathNotice",
+      "proto_message": "DeathNotice",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "architecture_example",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 30002,
+      "name": "MsgC2SReviveChoice",
+      "proto_message": "ReviveChoice",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "architecture_example",
+      "source_ref": "架构方案.md:444-450"
+    },
+    {
+      "value": 30003,
+      "name": "MsgC2SCastIntent",
+      "proto_message": "CastIntent",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 30004,
+      "name": "MsgC2SAutoBattle",
+      "proto_message": "AutoBattleIntent",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 30005,
+      "name": "MsgS2CHostingState",
+      "proto_message": "HostingState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40001,
+      "name": "MsgC2SEquip",
+      "proto_message": "EquipRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40002,
+      "name": "MsgC2SRecycle",
+      "proto_message": "RecycleRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40003,
+      "name": "MsgS2CInventory",
+      "proto_message": "InventoryResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40004,
+      "name": "MsgS2CWallet",
+      "proto_message": "WalletState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40005,
+      "name": "MsgS2COperationResult",
+      "proto_message": "OperationResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40006,
+      "name": "MsgC2SClaimHostingTime",
+      "proto_message": "ClaimHostingTimeRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40007,
+      "name": "MsgC2SBuyHostingTime",
+      "proto_message": "BuyHostingTimeRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40008,
+      "name": "MsgS2CHostingReport",
+      "proto_message": "HostingReport",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    }
+  ],
+  "error_codes": [
+    {
+      "value": 0,
+      "name": "CodeOK",
+      "display_zh": "成功",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 1001,
+      "name": "CodeInvalidArgument",
+      "display_zh": "参数不合法",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 1002,
+      "name": "CodeUnauthenticated",
+      "display_zh": "需要重新认证",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 1003,
+      "name": "CodeServerBusy",
+      "display_zh": "服务繁忙",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2001,
+      "name": "CodeStaleSession",
+      "display_zh": "会话已失效",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2002,
+      "name": "CodeRouteChanged",
+      "display_zh": "路由已变更",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2101,
+      "name": "CodeLineFull",
+      "display_zh": "场景容量已满",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2102,
+      "name": "CodeQueueRequired",
+      "display_zh": "需要排队",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": false
+    },
+    {
+      "value": 2103,
+      "name": "CodeLineForbidden",
+      "display_zh": "无进入权限",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2104,
+      "name": "CodeLineRecovering",
+      "display_zh": "场景恢复中",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 2105,
+      "name": "CodeCombatTransferLocked",
+      "display_zh": "战斗转移受限",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 4101,
+      "name": "CodeSelfTradeForbidden",
+      "display_zh": "禁止同账号自成交",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 4201,
+      "name": "CodeWarehouseWithdrawOnly",
+      "display_zh": "仓库只取不存",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 4202,
+      "name": "CodeWarehouseInactive",
+      "display_zh": "仓库未激活",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": false
+    },
+    {
+      "value": 4301,
+      "name": "CodeOperationConflict",
+      "display_zh": "操作版本或请求冲突",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 4302,
+      "name": "CodeOperationPending",
+      "display_zh": "操作仍在处理中",
+      "status": "draft",
+      "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    }
+  ]
+}
