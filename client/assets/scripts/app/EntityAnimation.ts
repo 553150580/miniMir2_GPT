@@ -5,6 +5,12 @@ export interface AnimationObservation { direction: number; action: number; attac
 export interface AnimationMotion { moving: boolean; direction: number; stepProgress: number; }
 export interface AnimationSample { action: EntityAction; direction: number; frame: number; }
 
+// 怪物及宝宝按原帧播放一步，AI发步间隔只决定下一次目标何时到达。
+// 玩家仍沿当前权威步进节奏显示；无外观定义的实体保留既有恢复方式。
+export function movementDisplayDurationMs(entityKind: number, walking: AnimationDefinition | undefined, moveIntervalMs: number): number {
+    return (entityKind === 2 || entityKind === 3) && walking ? walking.count * walking.duration_ms : moveIntervalMs;
+}
+
 // 连续显示时钟独立于快照：重复状态、朝向变化和服务端短暂standing不截断动作。
 export class EntityAnimation {
     private observed = false;

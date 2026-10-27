@@ -1,0 +1,29 @@
+{
+  "commands": [
+    {
+      "command": "make check",
+      "exit_code": 0,
+      "scope": "来源清单、本地副本、配置结构、协议生成一致性"
+    },
+    {
+      "command": "./tools/dev python3 -m unittest discover -s tools/config -p 'test_*.py'",
+      "exit_code": 0,
+      "passed": 33
+    },
+    {
+      "command": "./tools/dev node tools/protocol/verify_client_pb.cjs",
+      "exit_code": 0,
+      "messages": 58,
+      "int64_fields": 108,
+      "int64_boundary_cases": 359
+    },
+    {
+      "command": "./tools/dev node tools/config/verify_bindings.mjs",
+      "exit_code": 0,
+      "typecheck": "passed"
+    }
+  ],
+  "fixture_sha256": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+  "runtime_ready": false,
+  "production_ready": false
+}

@@ -106,7 +106,6 @@ func TestMoveCompletionGatesAttackForPlayerPetMonster(t *testing.T) {
 			case 2:
 				from = r.Pet
 				target = r.Monsters[0]
-				target.Pos = devconfig.Point{X: 7, Y: 9}
 			case 3:
 				from = r.Monsters[0]
 				target = &r.Player
@@ -114,12 +113,20 @@ func TestMoveCompletionGatesAttackForPlayerPetMonster(t *testing.T) {
 			now := time.Now()
 			stats := w.fighter(r, from)
 			end := now.Add(time.Duration(stats.MoveMS) * time.Millisecond)
-			from.NextMove = end
 			originalAttack := now.Add(-time.Millisecond)
 			from.NextAttack = originalAttack
+			destination := map[uint32]devconfig.Point{1: {X: 9, Y: 8}, 2: {X: 7, Y: 9}, 3: {X: 9, Y: 9}}[kind]
+			w.move(r, from, destination, now, stats.MoveMS)
+			if from.Pos != destination || from.NextMove != end {
+				t.Fatal("普通行走前态未真正建立")
+			}
+			if kind != 1 && from.NextAttack != end {
+				t.Fatal("怪物/宠物普通行走未推进原攻击门禁")
+			}
+			attackAfterWalk := from.NextAttack
 			beforeHP := target.HP
 			w.attack(r, from, target, end.Add(-time.Nanosecond))
-			if target.HP != beforeHP || from.AttackSequence != 0 || !from.NextAttack.Equal(originalAttack) {
+			if target.HP != beforeHP || from.AttackSequence != 0 || !from.NextAttack.Equal(attackAfterWalk) {
 				t.Fatal("移动未结束却伤害/递增攻击序号/改变攻击CD")
 			}
 			w.attack(r, from, target, end)

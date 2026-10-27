@@ -1,7 +1,7 @@
 export interface MotionPoint { readonly x: number; readonly y: number; }
 export interface MotionTarget extends MotionPoint {
     readonly direction: number;
-    // 调用方传入权威移动间隔；积压时允许缩短显示时长以追上快照。
+    // 调用方传入显示步长，与AI发步间隔分开；积压时允许缩短显示时长以追上快照。
     readonly durationMs: number;
     readonly snap?: boolean;
 }

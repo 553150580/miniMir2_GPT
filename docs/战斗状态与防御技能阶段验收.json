@@ -51,9 +51,9 @@
   },
   "checks": {
     "javascript": {
-      "passed": 223,
+      "passed": 207,
       "scene": 16,
-      "ui_app": 207
+      "ui_app": 191
     },
     "python": {
       "passed": 33
@@ -121,5 +121,12 @@
     "QA等级与钱包预置不证明自然获取、经济平衡或正式成长",
     "完整P0、目标1.80认证、手机真机、容量、正式部署与全故障尚未完成"
   ],
-  "evidence_directory": "outputs/development-combat-status-20261028"
+  "evidence_directory": "outputs/development-combat-status-20261028",
+  "errata": {
+    "recorded_on": "2026-10-28",
+    "javascript_prior_reported_total": 223,
+    "javascript_corrected_total": 207,
+    "reason": "历史207已包含16场景测试；原摘要重复相加。原归档和日志不改写。",
+    "evidence": "outputs/development-movement-clock-20261028/历史JS测试计数勘误.json"
+  }
 }

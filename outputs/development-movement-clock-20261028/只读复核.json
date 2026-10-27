@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-27T19:19:45.654810+00:00",
+  "scope": "仅普通移动的动作/攻击时钟解耦和怪物/宠物显示步长；不收录未实现位移技能的来源结论",
+  "method": "只读diff、源码、现有回归及摘要核对；审阅者未改源码或重跑测试",
+  "result": "未发现当前可执行的实质缺陷；来源等号边界差异按known_limits保留",
+  "actionable_findings": [],
+  "reviewed_files_sha256": {
+    "server/internal/game/combat.go": "b3c0be58048c1eb2209d141a3324bc3af24ea83a8e9fb99b9f6c4438f089fe9d",
+    "server/internal/game/melee.go": "63c82bcb0ef49e2a8c49117301d2ef22b6efa4161f5c587d9ae3a0a615a4b9da",
+    "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
+    "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
+    "client/assets/scripts/app/EntityAnimation.ts": "77afb9a2d2290b6b272d1cc24a173eab5ba34481c732c46d7bec3a10b0e68159",
+    "client/assets/scripts/app/EntityMotion.ts": "480a21bc1c279ab0a12e20fb07f281524ac900eeb2e1d8df77ded09e400552ef",
+    "client/assets/scripts/app/GameWorldView.ts": "a6d15e0e59c3c319aab7085bbb4d70f31b153ba6cc3eba610868e0566897b2dc",
+    "client/tests/app/map_runtime.test.cjs": "18faa6f21d44ed06c27715303fc09fe246a2ec467c2c0b170795362d6932e8c6",
+    "client/tests/app/walking_clock.test.cjs": "bb6e95f5b315bd422f0cbefc27bbb1fa659b1d46dace07cd827828f692813323"
+  },
+  "server_review": [
+    {
+      "topic": "移动节流与攻击资格分开",
+      "conclusion": "attack/attackFacing只依赖原NextAttack和ActionReadyAt，移除NextMove通用锁；不能提前结束已有攻击截止。",
+      "implementation": [
+        {
+          "path": "server/internal/game/combat.go",
+          "start_line": 187,
+          "end_line": 208,
+          "meaning": "普通攻击"
+        },
+        {
+          "path": "server/internal/game/melee.go",
+          "start_line": 182,
+          "end_line": 189,
+          "meaning": "玩家朝向攻击"
+        }
+      ],
+      "source": [
+        {
+          "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+          "start_line": 138,
+          "end_line": 142,
+          "meaning": "Human.CanAttack使用>=Action/Attack"
+        },
+        {
+          "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+          "start_line": 653,
+          "end_line": 665,
+          "meaning": "Monster.CanAttack使用>Action/Attack，不读取MoveTime"
+        }
+      ]
+    },
+    {
+      "topic": "普通walk保留互锁及未来截止",
+      "conclusion": "怪/宠普通move后NextAttack=max(原NextAttack,NextMove)，不缩短已有更晚CD；玩家ActionReadyAt=NextMove不变。",
+      "implementation": [
+        {
+          "path": "server/internal/game/combat.go",
+          "start_line": 133,
+          "end_line": 142,
+          "meaning": "普通walk落脚时钟"
+        }
+      ],
+      "source": [
+        {
+          "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+          "start_line": 2128,
+          "end_line": 2131,
+          "meaning": "MoveTime=now+MoveSpeed；只在AttackTime更早时推进"
+        }
+      ]
+    },
+    {
+      "topic": "原法术/资源未改",
+      "conclusion": "差异不改NextSpell、SkillCooldowns、MP、技能配置或资源定义；attack_clock_test覆盖原Attack更晚、共享法术及单技截止不被释放。"
+    },
+    {
+      "topic": "真实walk前态与边界回归",
+      "conclusion": "observation_test改为实际move建立普通walk，而非只手设NextMove；再核截止前1ns拒绝/equal受理。新增4项测试含三类实体子测试，分别覆盖动作锁、移动自身节流、更晚Attack保留及法术CD。",
+      "tests": [
+        "TestAttackUsesActionAndAttackClocksIndependentOfMoveThrottle",
+        "TestIndependentMoveThrottleStillWaitsUntil500Boundary",
+        "TestWalkPreservesLaterAttackDeadlineAndPlayerActionLock",
+        "TestAttackCannotReleaseExistingAttackOrSpellDeadlines",
+        "TestMoveCompletionGatesAttackForPlayerPetMonster"
+      ]
+    }
+  ],
+  "client_review": [
+    {
+      "topic": "资源显示一步与AI发步节奏分开",
+      "conclusion": "helper仅entityKind2/3且有walking定义时取count*duration_ms；当前两种实际资源均6×100=600ms。玩家保留moveInterval，缺定义沿原fallback，没有在运行代码硬编码600。",
+      "implementation": [
+        {
+          "path": "client/assets/scripts/app/EntityAnimation.ts",
+          "start_line": 8,
+          "end_line": 12,
+          "meaning": "时长选择"
+        },
+        {
+          "path": "client/assets/scripts/app/GameWorldView.ts",
+          "start_line": 139,
+          "end_line": 145,
+          "meaning": "真实视图传参"
+        }
+      ],
+      "source": "manifest.profiles.pet_skeleton/monster_scarecrow.layers[0].actions.walking"
+    },
+    {
+      "topic": "不积累拖尾或斜穿",
+      "conclusion": "EntityMotion本轮仅注释改变；预算仍min(显示时长,已知新落点cadence)，重复坐标不重计时，已知拐点保留。walking_clock四项真实manifest/Motion/Animation回归核慢1000/2000ms发步只走600ms再站立，以及提前新格有界追赶；map_runtime真实View核半步、落脚位置与帧。"
+    },
+    {
+      "topic": "hold/死亡/复活/导航保持",
+      "conclusion": "holdUntil/releaseHold与死亡优先未改；View仍死亡releaseHold、复活/拾取物显式snap，跨格丢路径和后台空窗恢复边界不变。NavigationIntent、MapTouchNavigator、TouchJoystick、AppRoot未改；10份scene/prefab及meta逐字节保持。"
+    }
+  ],
+  "known_limits": [
+    {
+      "kind": "source_equivalence_boundary",
+      "detail": "Human来源允许截止相等，Monster来源严格>。本项目既有now.Before门禁相等可用，本轮仍保留>=候选边界，代码有明确注释；不宣称此处与Monster源码完全相等。未来更改须独立调度/回归。"
+    },
+    {
+      "kind": "acceptance_scope",
+      "detail": "289 Go和211客户端/strict只引用分工实际报告并核当前hash；审阅者未执行Creator、浏览器、真机、容量或真实提交未知故障注入，不扩大通过范围。"
+    },
+    {
+      "kind": "configuration_scope",
+      "detail": "仍为rule9原fixture/resource；两本Excel、地图、PNG、协议及护符disabled开关未随修复改动，无新技能交付。"
+    }
+  ],
+  "existing_evidence": {
+    "server": {
+      "report": "server/test-results/latest.json",
+      "sha256": "9cddb30a9eb09b2e0b382d6cb2933c23c1daae45462b15ad69194ae484a6db17",
+      "passed_including_subtests": 289,
+      "skipped": 0,
+      "race": true,
+      "mongo_e2e": true,
+      "source_stable": true,
+      "reviewed_four_files_match": true
+    },
+    "client": {
+      "freeze": ".work/movement-clock/client-freeze.json",
+      "freeze_sha256": "9d529b63bdffd2d4931f8906375ecb59c3b0e1896224d26cefa428e332562558",
+      "implementation_sha256": "d63d32cd8bb423ba188e5cb1bfe607ad1be79c8749113a2dfd0a5e412885451b",
+      "tests_total": 211,
+      "scene": 16,
+      "ui_app": 195,
+      "failed": 0,
+      "skipped": 0,
+      "strict_exit_code": 0,
+      "strict_seconds": 22.105,
+      "frozen_input_mismatches": []
+    },
+    "protected_inputs": {
+      "before": ".work/movement-clock/protected-before.json",
+      "mismatches": [],
+      "saved_asset_and_meta_mismatches": [],
+      "includes": "10保存资产、fixture、manifest、map和两本Excel"
+    },
+    "historical_count_correction": {
+      "original_log": "outputs/development-combat-status-20261028/client-tests.log",
+      "original_sha256": "124b38315f1f1adc8954318895e803fbb6546fa01d0f1b099ee81acfa21bfc22",
+      "scene_section_first_line": 183,
+      "reported_total": 207,
+      "included_scene": 16,
+      "actual_ui_app": 191,
+      "old_incorrect_aggregate": 223,
+      "reason": "旧207日志已含16场景，再加16重复；本次195 UI/app比旧191新增4，合计211。原归档不改。",
+      "authorized_document_corrections": [
+        "docs/开发阶段与验收清单.md",
+        "shared/proto/README.md"
+      ]
+    }
+  }
+}

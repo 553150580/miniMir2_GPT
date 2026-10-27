@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "scope": "本阶段全部归档文件，不含本清单自身；旧阶段归档不改写",
+  "file_count": 33,
+  "bytes_total": 1402638,
+  "files": [
+    {
+      "path": "01-四周小物与开阔中央.jpg",
+      "bytes": 115865,
+      "sha256": "79db7fcf06e146212fa29a85f747c87f070202a0f270d095ecc22ed8b02a84a8"
+    },
+    {
+      "path": "02-导航时打开技能面板.jpg",
+      "bytes": 95267,
+      "sha256": "018569ee3926954d7ef55a02a06eb1f73d713155ffd7e5b885aeb04569667490"
+    },
+    {
+      "path": "03-720x1280基准与导航终点.jpg",
+      "bytes": 169903,
+      "sha256": "1482c44c22989807ffd548a2768fb1852204203059e4b870e5524ff6e3b69052"
+    },
+    {
+      "path": "04-加高窗口面板与导航保持.jpg",
+      "bytes": 142377,
+      "sha256": "ef727b0496a75ad65d49b27a9963730343c7da35bf146102588e6c3154c07619"
+    },
+    {
+      "path": "05-720x1600仅增加战斗视口.jpg",
+      "bytes": 176822,
+      "sha256": "3b5abd1dab2e7bba0ce3baeb941a10ae9674e486fa4aa969f54277a42bc67971"
+    },
+    {
+      "path": "06-恢复窗口后的最终开阔场景.jpg",
+      "bytes": 115105,
+      "sha256": "6a8d13a08c7ab8439036bffafa634bde2dadf6c52fedf547aa6320881bafadbe"
+    },
+    {
+      "path": "asset-preservation.json",
+      "bytes": 2907,
+      "sha256": "bf065660256ce28449bb47da822562a3236f8e17c105a8aeda65a7bc3a5c581d"
+    },
+    {
+      "path": "client-freeze.json",
+      "bytes": 1458,
+      "sha256": "9d529b63bdffd2d4931f8906375ecb59c3b0e1896224d26cefa428e332562558"
+    },
+    {
+      "path": "client-tests-result.json",
+      "bytes": 23914,
+      "sha256": "a493681868632cd9564817a3be7093b74effcc928937812641b7e53d2986c01f"
+    },
+    {
+      "path": "client-tests.log",
+      "bytes": 23468,
+      "sha256": "279d2716419bb6afc49fde9e1fb818c6499f12eab72cd159024f04ac4eda32f1"
+    },
+    {
+      "path": "creator/creator-cli.log",
+      "bytes": 93535,
+      "sha256": "0659329434db1e90f7c50abc7348415537cd36c65b9277b9fdac28e0311b934e"
+    },
+    {
+      "path": "creator/客户端构建检查.json",
+      "bytes": 7442,
+      "sha256": "7d7b871149a440e0cfa497dfd2a6dd0b1d5adcd402d30645e632498ffaf16956"
+    },
+    {
+      "path": "implementation-inputs.json",
+      "bytes": 15423,
+      "sha256": "3c551365b6822a21eec16468f00be7d5f4a7991042ac545dd0163de1fd8e89d7"
+    },
+    {
+      "path": "protected-before.json",
+      "bytes": 1928,
+      "sha256": "b04076f52a4802f2c5e3048179f764cc8e87e2c4835131a02cce06cab9504909"
+    },
+    {
+      "path": "server/latest.events.jsonl",
+      "bytes": 289163,
+      "sha256": "7560087a3ba8f05c509d9672ba10c689ffe5cb241698ce303f4fa0035d128099"
+    },
+    {
+      "path": "server/latest.json",
+      "bytes": 57135,
+      "sha256": "9cddb30a9eb09b2e0b382d6cb2933c23c1daae45462b15ad69194ae484a6db17"
+    },
+    {
+      "path": "server/开发节点装载.json",
+      "bytes": 443,
+      "sha256": "b94de76cf61da0bb52bf6a44be83b860cf1cfda2fca1bdf71f953404b3032030"
+    },
+    {
+      "path": "source-hashes.json",
+      "bytes": 12808,
+      "sha256": "6b0fd661e963070285bee6043860fbd19395c108740a5b7fe029e37c551e8905"
+    },
+    {
+      "path": "strict-tsc-result.json",
+      "bytes": 371,
+      "sha256": "0b7bef738d113075f86d3a72a1c34b73645d9e96f88a56fecd1fa4d0a4ff53eb"
+    },
+    {
+      "path": "strict-tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "公共输入与协议检查.json",
+      "bytes": 786,
+      "sha256": "71485613325dc30903701cba14efca25ff3ccc251519afaeaec3b9c0a770c36c"
+    },
+    {
+      "path": "历史JS测试计数勘误.json",
+      "bytes": 753,
+      "sha256": "aaf0aee35081c1fd29ea88f598e68603b2517a052e40cdbd209118f4b9f78440"
+    },
+    {
+      "path": "只读复核.json",
+      "bytes": 8272,
+      "sha256": "98a43dcfb0ebe6f9a5deffe1ab816fa6466d5563f1c231e046c09306f11ed733"
+    },
+    {
+      "path": "场边小物与连通性复核.json",
+      "bytes": 771,
+      "sha256": "10e8839ff15cdfee0ffdb2228e9d075dff0316ee222141b375c67433d991f6ec"
+    },
+    {
+      "path": "最终只读复核.json",
+      "bytes": 25443,
+      "sha256": "885ad279693850c8823a31cd066f174fe2432a0650c2d995dbbc309fc9ef3ecd"
+    },
+    {
+      "path": "本机浏览器验收.json",
+      "bytes": 3677,
+      "sha256": "af80937ab4e1004a13fa9f62b6a5ed8c4a2949e25a6ecc06c018e2dc1cbbd93f"
+    },
+    {
+      "path": "来源与实施契约.json",
+      "bytes": 2620,
+      "sha256": "d365c1bae44e4f09af7a0587f3f5ddfdc63668ee505edbd9de755580d7509046"
+    },
+    {
+      "path": "构建与输入保持复核.json",
+      "bytes": 2307,
+      "sha256": "b0996bf08ad72fbfcbf4e2751bcf95acc89b5f48f6e8dc6c64754aecec627d0f"
+    },
+    {
+      "path": "浏览器检查点.json",
+      "bytes": 1492,
+      "sha256": "e7920197f01d1a8ed5f10a18f3a7601b72416f365399081aa009edc2d3093294"
+    },
+    {
+      "path": "浏览器表现追踪.json",
+      "bytes": 908,
+      "sha256": "57023b9395bef848fabe2609915e6eba30b55e01f2ee6b28a72924ff6be5c349"
+    },
+    {
+      "path": "浏览器警告与错误.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "浏览器输入追踪.json",
+      "bytes": 7417,
+      "sha256": "eac6a05b8bbfc6a930fb2bda983be8ac726997ac807012a4d46c3971ed80ce59"
+    },
+    {
+      "path": "阶段验收.json",
+      "bytes": 2855,
+      "sha256": "d6fd0edfec1ac219f881abcb1dfac2fad08fe8ebd660ef3847f262fcec465cd0"
+    }
+  ]
+}

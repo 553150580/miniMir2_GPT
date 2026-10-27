@@ -136,6 +136,9 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)
 	if e.Kind == 1 {
 		e.ActionReadyAt = e.NextMove
+	} else if e.NextAttack.Before(e.NextMove) {
+		// Crystal Monster.Walk:2128–2131：普通行走推进AttackTime；被推的移动节流不承担攻击门禁。
+		e.NextAttack = e.NextMove
 	}
 }
 func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
@@ -193,7 +196,8 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 		w.attackFacing(r, facing(from.Pos, target.Pos, from.Direction), 0, sequence, now)
 		return
 	}
-	if r.Pending || from.HP <= 0 || target.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.NextMove) || now.Before(from.ActionReadyAt) || distance(from.Pos, target.Pos) > 1 {
+	// 攻击不依赖移动节流；保留本作>=截止边界，来源怪物严格>的调度差异不在本次改变。
+	if r.Pending || from.HP <= 0 || target.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || distance(from.Pos, target.Pos) > 1 {
 		return
 	}
 	dx, dy := target.Pos.X-from.Pos.X, target.Pos.Y-from.Pos.Y

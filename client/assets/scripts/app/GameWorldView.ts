@@ -1,5 +1,5 @@
 import { EventTouch, game, instantiate, isValid, Label, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
-import { AnimationSample, EntityAnimation } from './EntityAnimation';
+import { AnimationSample, EntityAnimation, movementDisplayDurationMs } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
 import { CombatEffects } from './CombatEffects';
@@ -139,7 +139,8 @@ export class GameWorldView {
             const previous = visual.state;
             if (!previous.hp.isZero() && state.hp.isZero()) visual.motion.releaseHold(now);
             visual.motion.push({ x: state.position.x, y: state.position.y, direction: state.direction,
-                durationMs: state.moveIntervalMs, snap: state.entityKind === 4 || (previous.hp.isZero() && !state.hp.isZero()) }, now);
+                durationMs: movementDisplayDurationMs(state.entityKind, visual.profile?.layers[0].actions.walking, state.moveIntervalMs),
+                snap: state.entityKind === 4 || (previous.hp.isZero() && !state.hp.isZero()) }, now);
             visual.animation?.observe({ direction: state.direction, action: state.action, attackSequence: state.attackSequence, castSequence: state.castSequence,
                 dead: state.hp.isZero(), injured: state.hp.lessThan(previous.hp) }, now);
             visual.state = state;

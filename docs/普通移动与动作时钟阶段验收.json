@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "recorded_at_utc": "2026-10-27T19:24:34.819321+00:00",
+  "stage": "普通移动显示与动作时钟修复",
+  "status": "限定自动检查、真实Mongo/WS、Creator与本机浏览器范围通过",
+  "configuration": {
+    "unchanged": true,
+    "version": "dev-combat-status-v0.9-48873786ee49",
+    "rule_version": 9,
+    "fixture_sha256": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+    "skills": 19,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "implementation": {
+    "monster_pet_step_duration": "各自walking.count×walking.duration_ms，当前6×100=600ms",
+    "server_ai_cadence_unchanged": true,
+    "ordinary_walk_attack_clock": "怪物/宠物NextAttack=max旧值,NextMove；玩家ActionReadyAt保持",
+    "attack_gate": "NextAttack与ActionReadyAt，移除NextMove共享守卫",
+    "kept_equal_deadline_adaptation": true,
+    "new_displacement_skills": false,
+    "map_size": [
+      17,
+      17
+    ],
+    "small_edge_props": 4,
+    "blocked_cells": 4,
+    "connected_walkable_cells": 285,
+    "saved_layouts_changed": false
+  },
+  "checks": {
+    "javascript": {
+      "passed": 211,
+      "scene": 16,
+      "ui_app": 195,
+      "new_checks": 4,
+      "skipped": 0
+    },
+    "python": {
+      "passed": 33
+    },
+    "protobuf_boundaries": {
+      "passed": 359,
+      "messages": 58,
+      "message_ids": 46,
+      "int64_fields": 108,
+      "error_codes": 31
+    },
+    "go": {
+      "passed_including_subtests": 289,
+      "skipped": 0,
+      "mongo_ws": true,
+      "race": true,
+      "source_files": 72,
+      "source_stable_during_test": true,
+      "report_sha256": "9cddb30a9eb09b2e0b382d6cb2933c23c1daae45462b15ad69194ae484a6db17"
+    },
+    "strict_creator_types": {
+      "passed": true
+    },
+    "historical_js_count_erratum": "v0.9原223重复加16场景；正确207=16+191，旧归档不改"
+  },
+  "creator": {
+    "creator": "3.8.8",
+    "platform": "web-mobile",
+    "success": true,
+    "seconds": 193.42,
+    "exit_code": 36,
+    "saved_assets": 10,
+    "layouts_preserved": true,
+    "source_stable": true
+  },
+  "browser": {
+    "report": "outputs/development-movement-clock-20261028/本机浏览器验收.json",
+    "screenshots": 6,
+    "input_records": 25,
+    "render_records": 2,
+    "warn_or_error": 0,
+    "viewport_restored": true
+  },
+  "limits": [
+    "仅当前普通移动与时钟修复，不完成完整T030/P0",
+    "源怪物严格>与本作既有>=的边界差异保留",
+    "推挤/冲撞需要显式权威路径和专用显示，瞬移还需绑定地图、跨图与TemporalFlux",
+    "护符单位和报价仍待定，运行材料入口关闭",
+    "真机、60FPS、容量、完整目标1.80与正式发布未完成"
+  ],
+  "evidence_directory": "outputs/development-movement-clock-20261028"
+}

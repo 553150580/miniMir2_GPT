@@ -1,0 +1,109 @@
+{
+  "recorded_at_utc": "2026-10-27T19:13:54.656655+00:00",
+  "scope": "普通walk显示时钟、普通walk攻击时钟推进；非位移技能验收",
+  "sources": [
+    {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16",
+      "lines": [
+        [
+          21,
+          28
+        ]
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/MonsterObject.cs",
+      "sha256": "2bb09d7378a198a8fcd24299a8d855dcfbf767413db88fa15054371663fb1c4d",
+      "lines": [
+        [
+          1263,
+          1285
+        ],
+        [
+          3770,
+          3789
+        ]
+      ]
+    },
+    {
+      "path": "../SuprcodeCrystal/Client/MirScenes/GameScene.cs",
+      "sha256": "935d1ca35ddf4800bccdac4cd1675fcb59a269560a57bf98c2b952a459ffb504",
+      "lines": [
+        [
+          1187,
+          1197
+        ],
+        [
+          2304,
+          2313
+        ]
+      ]
+    },
+    {
+      "path": "../SuprcodeCrystal/Shared/ServerPackets.cs",
+      "sha256": "12a81d64c9d1ce1d5c2245f8fc6da5fa9aba9f3b83281603df0117ebd8a004e2",
+      "lines": [
+        [
+          1094,
+          1118
+        ]
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "lines": [
+        [
+          635,
+          662
+        ],
+        [
+          2095,
+          2134
+        ]
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "lines": [
+        [
+          117,
+          169
+        ]
+      ]
+    }
+  ],
+  "visual_contract": {
+    "current_profiles": [
+      "monster_scarecrow",
+      "pet_skeleton"
+    ],
+    "walking_frames": 6,
+    "frame_duration_ms": 100,
+    "display_step_ms": 600,
+    "server_cadence_ms": [
+      1000,
+      2000
+    ],
+    "resource_metadata_not_new_gameplay_numbers": true,
+    "other_source_frame_overrides_not_certified": true
+  },
+  "clock_contract": {
+    "normal_monster_pet_walk": "NextAttack=max(旧NextAttack,NextMove)",
+    "attack_gate": [
+      "ActionReadyAt",
+      "NextAttack"
+    ],
+    "move_gate": [
+      "ActionReadyAt",
+      "NextMove"
+    ],
+    "project_equal_deadline_allowed": true,
+    "source_monster_strict_deadline": "Envir.Time > deadline",
+    "new_displacement_skills_implemented": false,
+    "test_300_500_ms": "仅前态，不是新增推挤运行配置"
+  },
+  "target_180_certified": false
+}

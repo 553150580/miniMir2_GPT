@@ -1,0 +1,39 @@
+{
+  "map_path": "client/assets/resources/development/maps/first-map.json",
+  "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb",
+  "map_size": [
+    17,
+    17
+  ],
+  "props": [
+    {
+      "id": "edge_wood_fixture",
+      "frame": "Objects:9760",
+      "x": 1,
+      "y": 7
+    },
+    {
+      "id": "edge_brazier",
+      "frame": "Objects:1127",
+      "x": 7,
+      "y": 1
+    },
+    {
+      "id": "edge_sign",
+      "frame": "Objects:8898",
+      "x": 15,
+      "y": 9
+    },
+    {
+      "id": "edge_grass_rock",
+      "frame": "Objects:7092",
+      "x": 7,
+      "y": 15
+    }
+  ],
+  "runtime_blocked": 4,
+  "connected_walkable_without_corner_cut": 285,
+  "source_blocked_evidence": 17,
+  "no_central_large_objects": true,
+  "passed": true
+}

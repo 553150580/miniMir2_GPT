@@ -1,0 +1,17 @@
+{
+  "recorded_at_utc": "2026-10-27T19:17:12.972232+00:00",
+  "phase": "防御状态v0.9测试计数勘误",
+  "immutable_historical_log": "outputs/development-combat-status-20261028/client-tests.log",
+  "historical_log_sha256": "124b38315f1f1adc8954318895e803fbb6546fa01d0f1b099ee81acfa21bfc22",
+  "source_observation": "历史client-tests.log第183行起含场景管理测试，末尾207已含scene16；历史摘要再次加scene16得到223，为重复计数。",
+  "prior_reported_total": 223,
+  "corrected_historical_total": 207,
+  "historical_scene": 16,
+  "historical_ui_app": 191,
+  "current_total": 211,
+  "current_scene": 16,
+  "current_ui_app": 195,
+  "new_checks": 4,
+  "no_tests_removed": true,
+  "historical_archive_bytes_preserved": true
+}

@@ -1,0 +1,39 @@
+{
+  "frozen_at": "2026-10-27T19:16:18.337151+00:00",
+  "base_commit": "c14ddc4e8f8c53f00f2465604445f1d2dedbb436",
+  "client_implementation_sha256": "d63d32cd8bb423ba188e5cb1bfe607ad1be79c8749113a2dfd0a5e412885451b",
+  "implementation_hash_rule": "sha256 of UTF-8 json.dumps(implementation_inputs,sort_keys=True,separators=(comma,colon)); full input map in implementation-inputs.json",
+  "changed_runtime_files": [
+    "client/assets/scripts/app/EntityAnimation.ts",
+    "client/assets/scripts/app/EntityMotion.ts",
+    "client/assets/scripts/app/GameWorldView.ts"
+  ],
+  "tests": {
+    "scene": 16,
+    "app_ui": 195,
+    "total": 211,
+    "failed": 0,
+    "skipped": 0,
+    "command": [
+      "make",
+      "client-scene-test",
+      "client-test"
+    ],
+    "log": ".work/movement-clock/client-tests.log"
+  },
+  "strict_tsc_exit": 0,
+  "strict_tsc_result": ".work/movement-clock/strict-tsc-result.json",
+  "saved_assets": 10,
+  "asset_preservation": ".work/movement-clock/asset-preservation.json",
+  "sources": ".work/movement-clock/source-hashes.json",
+  "new_regressions": 4,
+  "test_files": [
+    "client/tests/app/map_runtime.test.cjs",
+    "client/tests/app/walking_clock.test.cjs"
+  ],
+  "old_baseline_count_note": "combat-status client-tests.log total207 already includes16scene; actual old app/UI191. Current211=16+195. No tests removed.",
+  "creator_build_run": false,
+  "browser_run": false,
+  "server_restart": false,
+  "git_mutations": false
+}

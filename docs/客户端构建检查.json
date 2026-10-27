@@ -30,7 +30,7 @@
     "client/assets/scripts/app/GameHUD.ts": "1807ce2f283bde9890bb4c1b0b6ba304ddf9e0c47919db553c17c10b12acf590",
     "client/assets/scripts/app/InputTrace.ts": "55da40adb82cf3628f32eb3be2e7531d58927b1f4b2b5da547d587ab5a7758f3",
     "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
-    "client/assets/scripts/app/EntityMotion.ts": "21972eb0b64075a45acd7a4bf9ac63b3abe0055566fee9284a311773dfb1d535",
+    "client/assets/scripts/app/EntityMotion.ts": "480a21bc1c279ab0a12e20fb07f281524ac900eeb2e1d8df77ded09e400552ef",
     "client/assets/scripts/app/PotionModel.ts": "e5653b4d17a9698bef14449e81f2e8de8cb8e1fdc7ef72c12c6cc80643241670",
     "client/assets/scripts/app/MapSurface.ts": "33474beb2021090df2d41e2f80190f30ec62edfb0b248e1aff6766719bc0270c",
     "client/assets/scripts/app/CastingSupplyModel.ts": "4519739a00a4e128a1b9602810f07d0e1fe9b05dcf4636f60357bf07210456e2",
@@ -39,7 +39,7 @@
     "client/assets/scripts/app/WorldAssets.ts": "583fcd73c143c6f372c2cd303153ace0cdf87d6229c6c6560320708bbac4ed68",
     "client/assets/scripts/app/EntityHeadAnchor.ts": "6f812e75693ccf200a39b66271c7e51d9ac4df6bb54de6847f72b94be869bfed",
     "client/assets/scripts/app/StatusEffects.ts": "d3a90d81eb468a0d896082c31d30a69d2282cf521129834cd65c098bee7fc134",
-    "client/assets/scripts/app/GameWorldView.ts": "04078c2adbca97bb57734749b636e2fddd644d35ebd4fb702a29ede16c4e6e51",
+    "client/assets/scripts/app/GameWorldView.ts": "a6d15e0e59c3c319aab7085bbb4d70f31b153ba6cc3eba610868e0566897b2dc",
     "client/assets/scripts/app/HudModel.ts": "5a10fa2038d78424f795897ace46829a858df3e5653bbbb581fc7269fe546f21",
     "client/assets/scripts/app/GameSession.ts": "0df500f4fd28ce88e866b914ef75d122958ef3d782dba1eac8ea79751fd49e0d",
     "client/assets/scripts/app/PendingOperations.ts": "6f1e2c78c6ca8469d81eccc571a910c1d55cf0b7a34a83130f6afabfbf47c79a",
@@ -50,7 +50,7 @@
     "client/assets/scripts/app/BeamGeometry.ts": "94105e4ee4c89b0dbf53e43d75790a77e375be30a73af4670105db79ec16bc34",
     "client/assets/scripts/app/GameErrors.ts": "0ef04069b2337812e81f28e6258af4e12c8e7423da4b3cb7450ca27433890db5",
     "client/assets/scripts/app/GameConnection.ts": "c3b92e2b0fc1fe0bb7132ff96a54375c462d24bdfee032b5ed18420969e774f6",
-    "client/assets/scripts/app/EntityAnimation.ts": "c30a1bdd0ee1f91a0651fdbeeb8205c7ec9adc1ac21b4ea77381b803c9fd63e9",
+    "client/assets/scripts/app/EntityAnimation.ts": "77afb9a2d2290b6b272d1cc24a173eab5ba34481c732c46d7bec3a10b0e68159",
     "client/assets/scripts/app/StatusPlayback.ts": "28adbbba05f3a5777203b532170c9ea79121b39e48648c1743ce844c0d6ab940",
     "client/assets/scripts/app/BaselineAssembler.ts": "687e62aceb5b4e3d8aac0cfcd28ea93f7a77e5fd816f67d880eeaebe58617e9c",
     "client/assets/scripts/app/CastPlayback.ts": "ebd7f45fd3531595518d6d5b4a4a02c54301487d22bd53af178c82b99d69d393",
@@ -69,7 +69,7 @@
     "client/assets/scripts/generated/protobuf/client_pb.d.ts": "dfe0e3ba2023e29953921acd07ac92e39c4a993667451e1d07e7f25c4e697838",
     "client/assets/scripts/generated/protobuf/client_pb.js": "19b373f738da63e0092446b070ee49802810d292150bb517c9a20f855abf5d46"
   },
-  "seconds": 187.1,
+  "seconds": 193.42,
   "log": "/Users/srf/Miro2/miniMir2_GPT/.work/creator-cli.log",
   "physical_mobile_verified": false
 }

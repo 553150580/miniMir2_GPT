@@ -1,0 +1,14 @@
+[
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5012,\"updates\":145,\"mean_update_ms\":34.80416666654249,\"max_update_ms\":178.59999999403954,\"intermediate_grid_samples\":{\"player\":35,\"pet\":58,\"monster\":35},\"changed_animation_frames\":102,\"preloaded_frames\":1272}",
+    "timestamp": "2026-10-27T19:19:57.910Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5026,\"updates\":144,\"mean_update_ms\":35.14685314685315,\"max_update_ms\":46.5,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":30,\"preloaded_frames\":1272}",
+    "timestamp": "2026-10-27T19:20:02.935Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

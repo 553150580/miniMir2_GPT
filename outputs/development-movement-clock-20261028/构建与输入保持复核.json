@@ -1,0 +1,29 @@
+{
+  "protected_inputs": {
+    "captured_at_utc": "2026-10-27T19:12:23.401344+00:00",
+    "source_commit": "c14ddc4e8f8c53f00f2465604445f1d2dedbb436",
+    "sha256": {
+      "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+      "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+      "client/assets/scenes/Game.scene": "4263e30f530ae174c570e43e6b5f3d21fede2b6bda2dd93b8bd10dfb42f762d5",
+      "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+      "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+      "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+      "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+      "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+      "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+      "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+      "config/development/first-loop.json": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+      "client/assets/resources/development/manifest.json": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a",
+      "client/assets/resources/development/maps/first-map.json": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb",
+      "outputs/development-prep-20261026/玩法配置.xlsx": "0472e11200410d37ebb4f4ad9f2a7c43644a1690e887882dbda26c3d6339f9b5",
+      "outputs/development-prep-20261026/架构配置.xlsx": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab"
+    }
+  },
+  "changed_files": [],
+  "saved_assets": 10,
+  "build_source_stable": true,
+  "build_seconds": 193.42,
+  "passed": true,
+  "build_log_notes": "Babel对大于500KB的生成PB发出styling deoptimised提示和Creator内部trackTimeEnd提示；以exit36、构建产物、源码和布局保护共同确认成功。"
+}

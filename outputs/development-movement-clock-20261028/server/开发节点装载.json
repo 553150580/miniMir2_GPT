@@ -1,0 +1,10 @@
+{
+  "recorded_at_utc": "2026-10-27T19:19:09.576806+00:00",
+  "mode": "受控优雅停止后重新编译启动；不作为健康重入证据",
+  "pid": 94255,
+  "run_id": "041bd5b7-4e9c-4e3d-8e81-f2fdf5ce90af",
+  "binary_sha256": "ade843a14da0bf5f4c4a68aba7741fc47cc804f438ddc7fc13f2f476c3635efd",
+  "fixture_sha256": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+  "development_only": true,
+  "production_ready": false
+}

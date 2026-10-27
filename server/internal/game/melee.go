@@ -184,7 +184,8 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 	if direction >= uint32(len(directions)) {
 		return p.CodeInvalidArgument
 	}
-	if r.Pending || r.Isolated || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.NextMove) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) {
+	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
+	if r.Pending || r.Isolated || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) {
 		return p.CodeSkillStateBlocked
 	}
 	s, rank := w.selectedAttack(r, direction, now)
