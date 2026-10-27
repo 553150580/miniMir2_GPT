@@ -68,11 +68,13 @@
     "main_ui_layout_reference": "UI参考图/用户确认/主界面UI布局参考.png",
     "main_ui_layout_reference_sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
     "main_ui_layout_reference_user_confirmed": true,
-    "main_ui_creator_layout_verified": false,
+    "main_ui_creator_layout_verified": true,
     "skill_candidates": 67,
     "skill_acceptance_contracts": 18,
     "skills_verified_against_target_180": false,
-    "main_ui_browser_geometry_verified": true
+    "main_ui_browser_geometry_verified": true,
+    "main_ui_stage_evidence": "docs/主界面阶段验收.json",
+    "main_ui_user_visual_acceptance": false
   },
   "resources": {
     "sample_pngs": 12,
@@ -94,7 +96,13 @@
       "blocked_cells": 17,
       "connected_walkable_cells": 239
     },
-    "official_180_art_or_behavior_acceptance": false
+    "official_180_art_or_behavior_acceptance": false,
+    "hud_assets": {
+      "path": "client/assets/resources/ui180/",
+      "pngs": 30,
+      "pixel_roundtrip": "passed",
+      "manifest": "client/assets/resources/ui180/manifest.json"
+    }
   },
   "verification": {
     "config_regression_tests": 11,
@@ -111,7 +119,8 @@
       "docs/开发环境检查.json",
       "docs/客户端构建检查.json",
       "server/test-results/latest.json",
-      "docs/客户端浏览器验收.json"
+      "docs/客户端浏览器验收.json",
+      "docs/主界面阶段验收.json"
     ],
     "protocol_message_ids": 32,
     "protocol_error_codes": 16,
@@ -122,10 +131,13 @@
       "wire_and_viewport": 6,
       "status": "passed",
       "includes_bounded_out_of_order_expired_baseline_assembly": true,
-      "total_js_tests": 62,
+      "total_js_tests": 87,
       "pending_economic_operations": 8,
       "entity_motion": 14,
-      "entity_animation": 9
+      "entity_animation": 9,
+      "hud_models": 6,
+      "system_messages": 10,
+      "serialized_hud_layout": 9
     },
     "creator_cli_last_completed_build": {
       "version": "3.8.8",
@@ -173,12 +185,12 @@
         "高屏/宽屏等比、Status固定顶部、无新快照时镜头重夹"
       ],
       "full_loop_verified": true,
-      "current_work": "本轮首循环及用户反馈的移动/动画修复已完成实际构建与浏览器复验。",
+      "current_work": "首循环为历史验收；本阶段主界面布局与现有功能接入另见主界面阶段验收。",
       "report": "docs/客户端浏览器验收.json"
     },
     "aggregate_make_test": {
       "status": "passed",
-      "passed_js_tests": 62,
+      "passed_js_tests": 87,
       "passed_configuration_regressions": 11,
       "full_command_finished": true,
       "exit_code": 0,
@@ -205,6 +217,12 @@
       "simple_sprite_trim_false": true,
       "browser_render_samples": true,
       "physical_mobile_verified": false
+    },
+    "main_hud_stage": {
+      "passed": true,
+      "report": "docs/主界面阶段验收.json",
+      "world_chat_implemented": false,
+      "physical_mobile_verified": false
     }
   },
   "game_runtime_ready": false,
@@ -225,7 +243,7 @@
   "development_ready": true,
   "environment_checks_passed": 34,
   "updated_on": "2026-10-27",
-  "implementation_status": "first_development_loop_browser_verified",
+  "implementation_status": "main_hud_stage_browser_verified",
   "git": {
     "initialized": true,
     "initial_commit_created": true,
@@ -250,7 +268,7 @@
   },
   "development_loop_ready": true,
   "development_loop_status": "browser_verified",
-  "development_readiness_scope": "本轮1—5首开发闭环已完成本地浏览器验收；全P0、完整HUD美术、手机真机与正式发布继续保留未完成状态。",
+  "development_readiness_scope": "首循环和主界面布局阶段已完成本机浏览器验收；完整聊天、全P0、手机真机与正式发布继续保留未完成状态。",
   "local_development_endpoints": {
     "client_same_origin": "http://127.0.0.1:18080",
     "account": "127.0.0.1:18100",

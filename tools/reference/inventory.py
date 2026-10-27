@@ -372,7 +372,7 @@ def saved_main_ui_scene() -> dict | None:
             raise ValueError("开发场景只读登记不接受符号链接")
         cursor = cursor.parent
     return {"path": relative.as_posix(), "sha256": digest(path), "bytes": path.stat().st_size,
-            "status": "开发场景已保存，正式布局和真机验收待执行",
+            "status": "可编辑场景已保存；视觉/交互与真机验收以独立阶段报告为准",
             "probe_basis": "仅只读确认文件存在及原字节SHA-256，未由索引生成器执行视觉/交互/真机验收"}
 
 
@@ -470,7 +470,7 @@ def ui_mapping(manifest: dict) -> dict:
             "highest_priority_requested_file": legacy_required, "highest_priority_file_found": legacy_found,
             "highest_priority_status": "历史指定JPG已找到，仍待核验" if legacy_found else "历史指定JPG仍未发现；当前用户确认布局另见active字段",
             "png_is_same_as_required_jpg": None, "automatic_substitution_allowed": False,
-            "resolution_action": ("对照用户确认PNG校核已保存开发场景与可编辑预制体，完成正式布局、交互和真机验收；不宣称与历史JPG或PNG相同。" if current.get("creator_scene") else "使用用户已明确确认的PNG作为当前布局基线，制作和验收可编辑.scene/.prefab；不宣称与历史JPG或PNG相同。") if current else "补齐指定JPG或由用户明确确认当前布局；不能宣布主界面布局验收通过。",
+            "resolution_action": ("已保存可编辑场景与预制体的视觉、交互和真机验收以独立阶段报告为准；索引只登记来源和场景摘要，不宣称与历史JPG或PNG相同。" if current.get("creator_scene") else "使用用户已明确确认的PNG作为当前布局基线，制作和验收可编辑.scene/.prefab；不宣称与历史JPG或PNG相同。") if current else "补齐指定JPG或由用户明确确认当前布局；不能宣布主界面布局验收通过。",
             "fixed_ui_policy": "固定层级与布局保存在可编辑.scene/.prefab，代码绑定引用和动态数据；旧截图/工具代码不是Creator资产。",
             "images": images}
 
@@ -488,7 +488,7 @@ def ui_source_summary(ui: dict) -> str:
                 "不声称用户新增PNG与该JPG或上级既有`主界面参考图.png`相同。")
     if current and current.get("creator_scene"):
         summary += (f"已只读登记开发场景 `{current['creator_scene']}` 及SHA-256 `{current['creator_scene_sha256']}`；"
-                    "开发场景已保存，正式布局和真机验收待执行，runtime_ready仍为false。")
+                    "可编辑场景已保存；视觉/交互与真机验收以独立阶段报告为准，runtime_ready仍为false。")
     else:
         summary += "可编辑开发场景尚未登记；图片来源确认不等于布局验收，runtime_ready仍为false。"
     return summary
@@ -497,7 +497,7 @@ def ui_source_summary(ui: dict) -> str:
 def ui_next_action(ui: dict) -> str:
     current = ui["current_highest_priority_reference"]
     if current and current.get("creator_scene"):
-        return "下一步对照已确认图校核已保存的开发场景与可编辑预制体，完成固定布局、交互和真机验收。"
+        return "对照已确认图与可编辑场景的视觉、交互及真机验收以独立阶段报告为准；本索引仅登记来源、场景存在性与摘要。"
     return "下一步以已确认图制作可编辑.scene/.prefab，完成固定布局与交互验收。"
 
 

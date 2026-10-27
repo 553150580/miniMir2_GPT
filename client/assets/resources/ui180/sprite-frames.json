@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "assets": {
+    "portrait-warrior-male": {
+      "path": "client/assets/resources/ui180/portrait-warrior-male.png",
+      "resource_path": "ui180/portrait-warrior-male/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "7cdb8e2a-5383-5aad-a0df-18bb2d094e90",
+      "texture_uuid": "7cdb8e2a-5383-5aad-a0df-18bb2d094e90@6c48a",
+      "sprite_frame_uuid": "7cdb8e2a-5383-5aad-a0df-18bb2d094e90@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "portrait-wizard-male": {
+      "path": "client/assets/resources/ui180/portrait-wizard-male.png",
+      "resource_path": "ui180/portrait-wizard-male/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "a7065df6-6806-5fcd-8de6-8f560396f774",
+      "texture_uuid": "a7065df6-6806-5fcd-8de6-8f560396f774@6c48a",
+      "sprite_frame_uuid": "a7065df6-6806-5fcd-8de6-8f560396f774@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "portrait-taoist-male": {
+      "path": "client/assets/resources/ui180/portrait-taoist-male.png",
+      "resource_path": "ui180/portrait-taoist-male/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "dda4c3cf-d7c8-5635-8c5e-3b74f97386b7",
+      "texture_uuid": "dda4c3cf-d7c8-5635-8c5e-3b74f97386b7@6c48a",
+      "sprite_frame_uuid": "dda4c3cf-d7c8-5635-8c5e-3b74f97386b7@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "portrait-warrior-female": {
+      "path": "client/assets/resources/ui180/portrait-warrior-female.png",
+      "resource_path": "ui180/portrait-warrior-female/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "2b6ba1c8-d73c-5797-9d8e-56152e038016",
+      "texture_uuid": "2b6ba1c8-d73c-5797-9d8e-56152e038016@6c48a",
+      "sprite_frame_uuid": "2b6ba1c8-d73c-5797-9d8e-56152e038016@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "portrait-wizard-female": {
+      "path": "client/assets/resources/ui180/portrait-wizard-female.png",
+      "resource_path": "ui180/portrait-wizard-female/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "f317c1c7-603f-5a6c-8e45-372c41bafe7c",
+      "texture_uuid": "f317c1c7-603f-5a6c-8e45-372c41bafe7c@6c48a",
+      "sprite_frame_uuid": "f317c1c7-603f-5a6c-8e45-372c41bafe7c@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "portrait-taoist-female": {
+      "path": "client/assets/resources/ui180/portrait-taoist-female.png",
+      "resource_path": "ui180/portrait-taoist-female/spriteFrame",
+      "width": 56,
+      "height": 54,
+      "image_uuid": "06752560-4dcc-5652-aec5-3e647cb7e65c",
+      "texture_uuid": "06752560-4dcc-5652-aec5-3e647cb7e65c@6c48a",
+      "sprite_frame_uuid": "06752560-4dcc-5652-aec5-3e647cb7e65c@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "button-normal": {
+      "path": "client/assets/resources/ui180/button-normal.png",
+      "resource_path": "ui180/button-normal/spriteFrame",
+      "width": 100,
+      "height": 34,
+      "image_uuid": "94b6ccf3-2517-52b0-aaa4-8fb28fcd50f8",
+      "texture_uuid": "94b6ccf3-2517-52b0-aaa4-8fb28fcd50f8@6c48a",
+      "sprite_frame_uuid": "94b6ccf3-2517-52b0-aaa4-8fb28fcd50f8@f9941",
+      "borders": {
+        "top": 4,
+        "bottom": 4,
+        "left": 4,
+        "right": 4
+      }
+    },
+    "button-pressed": {
+      "path": "client/assets/resources/ui180/button-pressed.png",
+      "resource_path": "ui180/button-pressed/spriteFrame",
+      "width": 100,
+      "height": 34,
+      "image_uuid": "7c1ee83e-50ff-5bc3-8ef0-83353f0714cd",
+      "texture_uuid": "7c1ee83e-50ff-5bc3-8ef0-83353f0714cd@6c48a",
+      "sprite_frame_uuid": "7c1ee83e-50ff-5bc3-8ef0-83353f0714cd@f9941",
+      "borders": {
+        "top": 4,
+        "bottom": 4,
+        "left": 4,
+        "right": 4
+      }
+    },
+    "button-small-normal": {
+      "path": "client/assets/resources/ui180/button-small-normal.png",
+      "resource_path": "ui180/button-small-normal/spriteFrame",
+      "width": 64,
+      "height": 20,
+      "image_uuid": "e74d8d1a-63b8-5962-ab2f-e0292f00f9b8",
+      "texture_uuid": "e74d8d1a-63b8-5962-ab2f-e0292f00f9b8@6c48a",
+      "sprite_frame_uuid": "e74d8d1a-63b8-5962-ab2f-e0292f00f9b8@f9941",
+      "borders": {
+        "top": 3,
+        "bottom": 3,
+        "left": 3,
+        "right": 3
+      }
+    },
+    "button-small-pressed": {
+      "path": "client/assets/resources/ui180/button-small-pressed.png",
+      "resource_path": "ui180/button-small-pressed/spriteFrame",
+      "width": 64,
+      "height": 20,
+      "image_uuid": "666cf3a9-f5ad-51df-b889-5d9c01aa1a73",
+      "texture_uuid": "666cf3a9-f5ad-51df-b889-5d9c01aa1a73@6c48a",
+      "sprite_frame_uuid": "666cf3a9-f5ad-51df-b889-5d9c01aa1a73@f9941",
+      "borders": {
+        "top": 3,
+        "bottom": 3,
+        "left": 3,
+        "right": 3
+      }
+    },
+    "slot": {
+      "path": "client/assets/resources/ui180/slot.png",
+      "resource_path": "ui180/slot/spriteFrame",
+      "width": 32,
+      "height": 30,
+      "image_uuid": "6e4734cc-c62c-55b3-a0ae-e369f4b17557",
+      "texture_uuid": "6e4734cc-c62c-55b3-a0ae-e369f4b17557@6c48a",
+      "sprite_frame_uuid": "6e4734cc-c62c-55b3-a0ae-e369f4b17557@f9941",
+      "borders": {
+        "top": 3,
+        "bottom": 3,
+        "left": 3,
+        "right": 3
+      }
+    },
+    "slot-small": {
+      "path": "client/assets/resources/ui180/slot-small.png",
+      "resource_path": "ui180/slot-small/spriteFrame",
+      "width": 28,
+      "height": 26,
+      "image_uuid": "692c36b6-3262-5aa3-8458-ec12654fb027",
+      "texture_uuid": "692c36b6-3262-5aa3-8458-ec12654fb027@6c48a",
+      "sprite_frame_uuid": "692c36b6-3262-5aa3-8458-ec12654fb027@f9941",
+      "borders": {
+        "top": 3,
+        "bottom": 3,
+        "left": 3,
+        "right": 3
+      }
+    },
+    "slot-highlight": {
+      "path": "client/assets/resources/ui180/slot-highlight.png",
+      "resource_path": "ui180/slot-highlight/spriteFrame",
+      "width": 60,
+      "height": 60,
+      "image_uuid": "5720b24e-fdff-58c2-9c68-f3cb096abb11",
+      "texture_uuid": "5720b24e-fdff-58c2-9c68-f3cb096abb11@6c48a",
+      "sprite_frame_uuid": "5720b24e-fdff-58c2-9c68-f3cb096abb11@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "panel": {
+      "path": "client/assets/resources/ui180/panel.png",
+      "resource_path": "ui180/panel/spriteFrame",
+      "width": 312,
+      "height": 215,
+      "image_uuid": "5e3acebb-51e5-508b-b640-a142040e661b",
+      "texture_uuid": "5e3acebb-51e5-508b-b640-a142040e661b@6c48a",
+      "sprite_frame_uuid": "5e3acebb-51e5-508b-b640-a142040e661b@f9941",
+      "borders": {
+        "top": 8,
+        "bottom": 8,
+        "left": 8,
+        "right": 8
+      }
+    },
+    "icon-gold": {
+      "path": "client/assets/resources/ui180/icon-gold.png",
+      "resource_path": "ui180/icon-gold/spriteFrame",
+      "width": 36,
+      "height": 21,
+      "image_uuid": "5ead547d-1dd2-504b-a3cd-8062e609506c",
+      "texture_uuid": "5ead547d-1dd2-504b-a3cd-8062e609506c@6c48a",
+      "sprite_frame_uuid": "5ead547d-1dd2-504b-a3cd-8062e609506c@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-yuanbao": {
+      "path": "client/assets/resources/ui180/icon-yuanbao.png",
+      "resource_path": "ui180/icon-yuanbao/spriteFrame",
+      "width": 36,
+      "height": 21,
+      "image_uuid": "f195cea9-34e5-58df-9b0d-1880fd5a5018",
+      "texture_uuid": "f195cea9-34e5-58df-9b0d-1880fd5a5018@6c48a",
+      "sprite_frame_uuid": "f195cea9-34e5-58df-9b0d-1880fd5a5018@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "orb-neutral": {
+      "path": "client/assets/resources/ui180/orb-neutral.png",
+      "resource_path": "ui180/orb-neutral/spriteFrame",
+      "width": 96,
+      "height": 92,
+      "image_uuid": "1f89517f-66a9-5d0e-8d97-ffa71b73c925",
+      "texture_uuid": "1f89517f-66a9-5d0e-8d97-ffa71b73c925@6c48a",
+      "sprite_frame_uuid": "1f89517f-66a9-5d0e-8d97-ffa71b73c925@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "orb-red": {
+      "path": "client/assets/resources/ui180/orb-red.png",
+      "resource_path": "ui180/orb-red/spriteFrame",
+      "width": 96,
+      "height": 92,
+      "image_uuid": "e34ba82a-6dad-5304-af9e-266c92d49d7b",
+      "texture_uuid": "e34ba82a-6dad-5304-af9e-266c92d49d7b@6c48a",
+      "sprite_frame_uuid": "e34ba82a-6dad-5304-af9e-266c92d49d7b@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "orb-red-blue": {
+      "path": "client/assets/resources/ui180/orb-red-blue.png",
+      "resource_path": "ui180/orb-red-blue/spriteFrame",
+      "width": 92,
+      "height": 90,
+      "image_uuid": "e4458b01-57f5-5b82-9b3d-2e0f02ed40cf",
+      "texture_uuid": "e4458b01-57f5-5b82-9b3d-2e0f02ed40cf@6c48a",
+      "sprite_frame_uuid": "e4458b01-57f5-5b82-9b3d-2e0f02ed40cf@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "bar-red": {
+      "path": "client/assets/resources/ui180/bar-red.png",
+      "resource_path": "ui180/bar-red/spriteFrame",
+      "width": 96,
+      "height": 6,
+      "image_uuid": "8a941b50-5b63-5efd-bb63-93d68c424974",
+      "texture_uuid": "8a941b50-5b63-5efd-bb63-93d68c424974@6c48a",
+      "sprite_frame_uuid": "8a941b50-5b63-5efd-bb63-93d68c424974@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "bar-blue": {
+      "path": "client/assets/resources/ui180/bar-blue.png",
+      "resource_path": "ui180/bar-blue/spriteFrame",
+      "width": 92,
+      "height": 6,
+      "image_uuid": "ed4bcb98-1227-541b-bfe5-207ed8bbfd4b",
+      "texture_uuid": "ed4bcb98-1227-541b-bfe5-207ed8bbfd4b@6c48a",
+      "sprite_frame_uuid": "ed4bcb98-1227-541b-bfe5-207ed8bbfd4b@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "bar-green": {
+      "path": "client/assets/resources/ui180/bar-green.png",
+      "resource_path": "ui180/bar-green/spriteFrame",
+      "width": 92,
+      "height": 6,
+      "image_uuid": "0c2f3b71-b0a9-5130-8377-440fde997524",
+      "texture_uuid": "0c2f3b71-b0a9-5130-8377-440fde997524@6c48a",
+      "sprite_frame_uuid": "0c2f3b71-b0a9-5130-8377-440fde997524@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-red-potion": {
+      "path": "client/assets/resources/ui180/icon-red-potion.png",
+      "resource_path": "ui180/icon-red-potion/spriteFrame",
+      "width": 12,
+      "height": 20,
+      "image_uuid": "c13b5330-dc05-552c-abd9-3d156b95edc6",
+      "texture_uuid": "c13b5330-dc05-552c-abd9-3d156b95edc6@6c48a",
+      "sprite_frame_uuid": "c13b5330-dc05-552c-abd9-3d156b95edc6@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-blue-potion": {
+      "path": "client/assets/resources/ui180/icon-blue-potion.png",
+      "resource_path": "ui180/icon-blue-potion/spriteFrame",
+      "width": 12,
+      "height": 20,
+      "image_uuid": "e4ce1343-787e-56a6-a1c5-2ebdb6829199",
+      "texture_uuid": "e4ce1343-787e-56a6-a1c5-2ebdb6829199@6c48a",
+      "sprite_frame_uuid": "e4ce1343-787e-56a6-a1c5-2ebdb6829199@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-attack": {
+      "path": "client/assets/resources/ui180/icon-attack.png",
+      "resource_path": "ui180/icon-attack/spriteFrame",
+      "width": 44,
+      "height": 36,
+      "image_uuid": "5b63d2fc-9fbc-51cf-b66a-5f572cc7092f",
+      "texture_uuid": "5b63d2fc-9fbc-51cf-b66a-5f572cc7092f@6c48a",
+      "sprite_frame_uuid": "5b63d2fc-9fbc-51cf-b66a-5f572cc7092f@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-settings": {
+      "path": "client/assets/resources/ui180/icon-settings.png",
+      "resource_path": "ui180/icon-settings/spriteFrame",
+      "width": 44,
+      "height": 35,
+      "image_uuid": "ff752bd3-1598-5408-8e96-7263813a5874",
+      "texture_uuid": "ff752bd3-1598-5408-8e96-7263813a5874@6c48a",
+      "sprite_frame_uuid": "ff752bd3-1598-5408-8e96-7263813a5874@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-skills": {
+      "path": "client/assets/resources/ui180/icon-skills.png",
+      "resource_path": "ui180/icon-skills/spriteFrame",
+      "width": 32,
+      "height": 30,
+      "image_uuid": "0ce9491d-10b5-56a5-850b-8d84034d8838",
+      "texture_uuid": "0ce9491d-10b5-56a5-850b-8d84034d8838@6c48a",
+      "sprite_frame_uuid": "0ce9491d-10b5-56a5-850b-8d84034d8838@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-pet": {
+      "path": "client/assets/resources/ui180/icon-pet.png",
+      "resource_path": "ui180/icon-pet/spriteFrame",
+      "width": 32,
+      "height": 30,
+      "image_uuid": "49c13b34-5ebb-56b3-a4bc-5f6949116138",
+      "texture_uuid": "49c13b34-5ebb-56b3-a4bc-5f6949116138@6c48a",
+      "sprite_frame_uuid": "49c13b34-5ebb-56b3-a4bc-5f6949116138@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "icon-basic-skill": {
+      "path": "client/assets/resources/ui180/icon-basic-skill.png",
+      "resource_path": "ui180/icon-basic-skill/spriteFrame",
+      "width": 32,
+      "height": 30,
+      "image_uuid": "616b9d8d-4eb6-5f6e-9e14-12bd7501010a",
+      "texture_uuid": "616b9d8d-4eb6-5f6e-9e14-12bd7501010a@6c48a",
+      "sprite_frame_uuid": "616b9d8d-4eb6-5f6e-9e14-12bd7501010a@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    },
+    "checkmark": {
+      "path": "client/assets/resources/ui180/checkmark.png",
+      "resource_path": "ui180/checkmark/spriteFrame",
+      "width": 24,
+      "height": 24,
+      "image_uuid": "8dd6100e-5e06-50b4-a853-9ebed54f62e0",
+      "texture_uuid": "8dd6100e-5e06-50b4-a853-9ebed54f62e0@6c48a",
+      "sprite_frame_uuid": "8dd6100e-5e06-50b4-a853-9ebed54f62e0@f9941",
+      "borders": {
+        "top": 0,
+        "bottom": 0,
+        "left": 0,
+        "right": 0
+      }
+    }
+  }
+}

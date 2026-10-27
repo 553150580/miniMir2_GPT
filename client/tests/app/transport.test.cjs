@@ -5,11 +5,28 @@ const path=require('node:path');
 const {createRequire}=require('node:module');
 const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
 const source=path.resolve(__dirname,'../../assets/scripts/app');
-function load(name){
-    const file=path.join(source,name+'.ts');
+const loadedModules=new Map();
+function loadSource(file){
+    if(loadedModules.has(file))return loadedModules.get(file).exports;
+    const nativeRequire=createRequire(file);
+    const requireSource=specifier=>{
+        if(specifier.startsWith('./')||specifier.startsWith('../')){
+            const resolved=path.resolve(path.dirname(file),specifier);
+            const candidates=path.extname(resolved)==='.ts'?[resolved]
+                :path.extname(resolved)===''?[resolved+'.ts',path.join(resolved,'index.ts')]:[];
+            const dependency=candidates.find(candidate=>fs.existsSync(candidate));
+            if(dependency)return loadSource(dependency);
+        }
+        // 生成的 protobuf.js 和 long 等依赖沿用 Node 原生解析。
+        return nativeRequire(specifier);
+    };
     const result=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,esModuleInterop:true}});
-    const module={exports:{}};new Function('require','module','exports',result.outputText)(createRequire(file),module,module.exports);return module.exports;
+    const module={exports:{}};loadedModules.set(file,module);
+    try{new Function('require','module','exports',result.outputText)(requireSource,module,module.exports);}
+    catch(error){loadedModules.delete(file);throw error;}
+    return module.exports;
 }
+function load(name){return loadSource(path.join(source,name+'.ts'));}
 const {encodePacket,decodePacket,GameConnection}=load('GameConnection');
 const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');

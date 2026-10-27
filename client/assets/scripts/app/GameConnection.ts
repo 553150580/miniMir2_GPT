@@ -1,5 +1,6 @@
 import clientPb from '../generated/protobuf/client_pb.js';
 import Long from 'long';
+import { protocolErrorMessage } from './GameErrors';
 
 const pb = clientPb.minimir.v1;
 type MessageType = { encode(value: any): { finish(): Uint8Array }; decode(value: Uint8Array): any };
@@ -90,7 +91,7 @@ export class GameConnection {
         if (!response.ok) throw new Error(`认证服务返回HTTP ${response.status}`);
         const packet = decodePacket(new Uint8Array(await response.arrayBuffer()));
         if (packet.seq !== seq) throw new Error('认证响应序号不匹配');
-        if (packet.error) throw new Error(`操作失败，错误码${packet.error}`);
+        if (packet.error) throw new Error(protocolErrorMessage(packet.id, packet.error));
         return packet.value;
     }
 
@@ -108,7 +109,7 @@ export class GameConnection {
                 const pending = this.pending.get(packet.seq);
                 if (pending && (packet.error || packet.id === pending.response)) {
                     this.pending.delete(packet.seq); clearTimeout(pending.timer);
-                    if (packet.error) pending.fail(new Error(`操作失败，错误码${packet.error}`)); else pending.ok(packet.value);
+                    if (packet.error) pending.fail(new Error(protocolErrorMessage(packet.id, packet.error))); else pending.ok(packet.value);
                 }
                 for (const listener of Array.from(this.listeners)) listener(packet);
             } catch (error) { this.report(error instanceof Error ? error.message : String(error)); }

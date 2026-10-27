@@ -1,0 +1,42 @@
+{
+  "scope": "local_iab_development_hud",
+  "runs": [
+    {
+      "phase": "交互与多尺寸复验",
+      "started_at": "2026-10-27T00:08:39.832Z",
+      "logs": [
+        {
+          "level": "info",
+          "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5015,\"updates\":239,\"mean_update_ms\":21.07268907555512,\"max_update_ms\":131.2999999821186,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":55,\"preloaded_frames\":1000}",
+          "timestamp": "2026-10-27T00:10:25.586Z",
+          "url": "http://127.0.0.1:18080/assets/main/index.js"
+        },
+        {
+          "level": "info",
+          "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5012,\"updates\":236,\"mean_update_ms\":21.328510638373963,\"max_update_ms\":42.5,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":50,\"preloaded_frames\":1000}",
+          "timestamp": "2026-10-27T00:10:30.599Z",
+          "url": "http://127.0.0.1:18080/assets/main/index.js"
+        }
+      ]
+    },
+    {
+      "phase": "最终静态说明与主界面复验",
+      "started_at": "2026-10-27T00:19:21.498Z",
+      "logs": [
+        {
+          "level": "info",
+          "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5012,\"updates\":232,\"mean_update_ms\":21.696969696969695,\"max_update_ms\":152.5,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":66,\"preloaded_frames\":1000}",
+          "timestamp": "2026-10-27T00:21:56.174Z",
+          "url": "http://127.0.0.1:18080/assets/main/index.js"
+        },
+        {
+          "level": "info",
+          "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5018,\"updates\":246,\"mean_update_ms\":20.48081632657927,\"max_update_ms\":39.400000005960464,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":61,\"preloaded_frames\":1000}",
+          "timestamp": "2026-10-27T00:22:01.191Z",
+          "url": "http://127.0.0.1:18080/assets/main/index.js"
+        }
+      ]
+    }
+  ],
+  "physical_mobile_verified": false
+}

@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-27",
+  "scope": "main_hud_existing_features_and_responsive_layout",
+  "development_only": true,
+  "passed": true,
+  "creator_build": {
+    "report": "docs/客户端构建检查.json",
+    "sha256": "02aa4d3e6bbe0e1fecab349faf711f6afbd0c9f27f8fac29b24f3e8750e03247",
+    "current_sources_and_layouts_match_report": true
+  },
+  "editable_layout": {
+    "scene": "client/assets/scenes/Game.scene",
+    "sha256": "a068505bb31739f0deb25ced200ceac74960c5684122ac9f0cbdc2737b078238",
+    "fixed_ui_serialized": true,
+    "layout_files_preserved_by_build": 6,
+    "runtime_layout_generation": false
+  },
+  "art": {
+    "path": "client/assets/resources/ui180/",
+    "pngs": 30,
+    "png_bytes": 148022,
+    "manifest": "client/assets/resources/ui180/manifest.json",
+    "manifest_sha256": "2c84f65d35d0053930089d00d98b72e93042335be8cf7b8b914dc90735feb75e",
+    "source_pixel_roundtrip": true,
+    "art_style_reference": "传奇1.80",
+    "official_item_mapping_verified": false,
+    "note": "药品图标采用通用入口候选；Items316/317为空帧，未据此修改任何道具或技能配置。"
+  },
+  "checks": {
+    "make_check": "passed",
+    "make_test": "passed",
+    "js_tests": 87,
+    "scene_tests": 16,
+    "ui_app_tests": 71,
+    "hud_model_tests": 6,
+    "system_message_tests": 10,
+    "serialized_layout_tests": 9,
+    "configuration_tests": 11,
+    "go_tests": "passed",
+    "pb_int64_cases": 174,
+    "creator_strict_typecheck": "passed",
+    "source_resource_check": "passed",
+    "server_changed": false
+  },
+  "viewport_cases": [
+    {
+      "window": [
+        720,
+        1280
+      ],
+      "ui_scale": 1,
+      "top_hud": 128,
+      "bottom_hud": 344,
+      "battle_viewport": [
+        720,
+        808
+      ]
+    },
+    {
+      "window": [
+        720,
+        1600
+      ],
+      "ui_scale": 1,
+      "top_hud": 128,
+      "bottom_hud": 344,
+      "battle_viewport": [
+        720,
+        1128
+      ]
+    },
+    {
+      "window": [
+        960,
+        1280
+      ],
+      "ui_scale": 1,
+      "top_hud": 128,
+      "bottom_hud": 344,
+      "battle_viewport": [
+        960,
+        808
+      ]
+    },
+    {
+      "window": [
+        360,
+        800
+      ],
+      "ui_scale": 0.5,
+      "top_hud": 128,
+      "bottom_hud": 344,
+      "battle_viewport": [
+        720,
+        1128
+      ]
+    }
+  ],
+  "measurement_basis": "HUD与战斗视口尺寸为Creator逻辑单位，来源为序列化Widget及布局契约测试；实际浏览器截图对比了比例、停靠及画布边界。360×800对应720×1600逻辑画布。地图16×16边界外保留空白，不拉伸、不新增地图格。",
+  "browser_checkpoints": [
+    "原生EditBox登录与密码遮罩",
+    "真实头像、钱包、药品数量、坐标、小地图点与经验同步",
+    "HP/MP填充进度、死亡与主动复活状态",
+    "常用功能菜单接入背包，Tab与ViewStack切换",
+    "背包滚动后打开详情，点击背景只关顶层并保留滚动位置",
+    "系统消息展开、原生EditBox搜索、真实战报过滤",
+    "满包开启自动战斗被拒绝，友好提示只记一条，Toggle回到手动",
+    "720×1280、720×1600、960×1280及360×800等比布局",
+    "最终静态说明修正后重新构建并复验主界面与功能菜单"
+  ],
+  "validation_sequence_note": "交互与尺寸验收后仅修正四处面板静态说明，未改布局参数或业务代码；最终重新构建并复验菜单和主界面。原始截图及两轮运行日志一并保留。",
+  "console_errors_or_warnings": 0,
+  "browser_logs": "outputs/development-hud-20261027/浏览器运行日志.json",
+  "screenshots": [
+    {
+      "path": "outputs/development-hud-20261027/主界面-360x800.jpg",
+      "sha256": "2be26f1a217aac736860d094db035d83410cf404385af2b04c16dd1c9174a171",
+      "size": [
+        360,
+        800
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/主界面-720x1280.jpg",
+      "sha256": "db8f3a6a1cefbfa14fd46203a9947ca504ca5f92add4c20a70444793f054111b",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/主界面-720x1600.jpg",
+      "sha256": "56f2f46314875bc98b190c3aa4ed85a1125878dd7cefa314dd84a23f5603f4cb",
+      "size": [
+        720,
+        1600
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/主界面-960x1280.jpg",
+      "sha256": "bfa52f7c01f82af1abf9305e0ae78ecedc625ba9f70f2f273eead87946559c48",
+      "size": [
+        960,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/关闭详情保留背包滚动.jpg",
+      "sha256": "7c7c2cfb1e78fc39434bfe0bcb3f2345262bd8b44e670ed4b3dc57853e0fec8f",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/常用功能菜单.jpg",
+      "sha256": "4305e95b93e74d21d470539572042bd549b50df78d82589ea1b4508a16af3300",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/满包拒绝与开关回退.jpg",
+      "sha256": "56d5ec5ae077d7388946ab9bc13f9e07f5396fc35d8c348f419f1fcdd40feeef",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/系统消息搜索.jpg",
+      "sha256": "cc7b5f64d4331739a7e3d1af41506742f49b17b6a14e40dcae56f9034fed4fbe",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/背包滚动位置.jpg",
+      "sha256": "1452dfcb70bc3a5b615a3cdeec907a2963d122f44fce52ff5707381f2419802f",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-hud-20261027/详情覆盖背包.jpg",
+      "sha256": "0fd4567d8ac6fa8eb28ba34fdc84b8e821c3f39280277a9817fe26f6a55570de",
+      "size": [
+        720,
+        1280
+      ]
+    }
+  ],
+  "world_chat_implemented": false,
+  "physical_mobile_verified": false,
+  "full_hud_art_reference_user_accepted": false,
+  "all_p0_complete": false,
+  "runtime_ready": false,
+  "production_ready": false
+}

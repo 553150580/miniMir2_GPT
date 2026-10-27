@@ -7,9 +7,11 @@
   "url": "http://127.0.0.1:18080/",
   "diagnostic_url": "http://127.0.0.1:18080/?renderQA=1",
   "creator_build": {
-    "report": "docs/客户端构建检查.json",
+    "report": "outputs/development-first-loop-20261027/Creator构建检查.json",
     "sha256": "b5fe80c7a37b1c44082764813b8f780c9db972d2ff8084fa22b5505ebc772024",
-    "current_sources_and_layouts_match_report": true
+    "current_sources_and_layouts_match_report": false,
+    "historical_source_commit": "f3b2ad57c3eb554e96174903c210332b8d40d6ab",
+    "superseded_by": "docs/主界面阶段验收.json"
   },
   "server_test": {
     "report": "server/test-results/latest.json",

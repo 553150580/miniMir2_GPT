@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, director, EditBox, game, Game, isValid, Label, Node, profiler, ProgressBar, sys } from 'cc';
+import { _decorator, Button, Component, director, EditBox, game, Game, isValid, Label, Node, profiler, ProgressBar, sys, Toggle } from 'cc';
 import Long from 'long';
 import { CreatorSceneBackend } from '../core/scene/CreatorSceneBackend';
 import { SceneLoader } from '../core/scene/SceneLoader';
@@ -14,6 +14,8 @@ import { operation, roleIdentity, session } from './GameSession';
 import { PendingOperations } from './PendingOperations';
 import { GameWorldView } from './GameWorldView';
 import { WorldAssets } from './WorldAssets';
+import { GameHUD } from './GameHUD';
+import { GameMessages } from './GameMessages';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -25,6 +27,8 @@ export class AppRoot extends Component {
     private readonly cleanups: Array<() => void> = [];
     private nav = new NavigationIntent();
     private world?: GameWorldView;
+    private hud?: GameHUD;
+    private messages?: GameMessages;
     private ui?: UIMgr;
     private popup?: PopupView;
     private selectedRole = -1;
@@ -151,12 +155,20 @@ export class AppRoot extends Component {
     private async gameScene(): Promise<void> {
         if (!session.entry || !session.role) { await this.changeScene('Login'); return; }
         this.ui = this.find('UIMgr').getComponent(UIMgr)!; this.popup = this.find('PopupView').getComponent(PopupView)!;
+        const safe = this.node.getChildByName('Safe')!;
+        this.hud = safe.getComponent(GameHUD)!;
+        this.messages = safe.getComponent(GameMessages)!;
+        if (!this.hud || !this.messages) throw new Error('场景尚未保存HUD与消息组件');
+        const selectedMessage = (value: { title: string; message: string }): void => { this.popup!.show('Details', value); };
+        safe.on(GameMessages.EVENT_SELECTED, selectedMessage, this);
+        this.cleanups.push(() => { if (isValid(safe, true)) safe.off(GameMessages.EVENT_SELECTED, selectedMessage, this); });
         this.button('BottomHUD/Footer/ChangeRole', () => this.leave(false));
         const viewport = this.find('MapViewport'); const world = viewport.getChildByName('World')!;
         this.world = new GameWorldView(viewport, world, world.getChildByName('Entities')!, session.role.name, session.role.job);
         const prepared = session.preparedWorld;
         if (!prepared) throw new Error('入场前尚未准备动作资源，请返回选角重试');
         session.preparedWorld = null;
+        this.hud.setMapFrame(prepared.background);
         this.world.prepare(prepared, entity => this.popup!.show('Details', { title: '实体详情', message: `类型：${entity.entityKind}\n位置：${entity.position.x}, ${entity.position.y}\n生命：${entity.hp.toString()} / ${entity.hpMax.toString()}` }));
         if (this.disposed) return;
         viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.world!.screenToGrid(point));
@@ -185,10 +197,13 @@ export class AppRoot extends Component {
     }
 
     private bindGameButtons(): void {
-        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
+        for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
+            this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => { this.ui!.open(panel); this.refreshGame(); });
+        }
+        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['BottomHUD/Footer/Map','Role'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
-        this.button('MapViewport/Actions/Auto', () => { this.auto = !this.auto; return this.autoState(); });
+        this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); });
         this.button('MapViewport/Actions/Count', () => { this.count = this.count === 1 ? 4 : this.count === 4 ? 8 : 1; return this.autoState(); });
         for (const path of ['MapViewport/Actions/Attack','BottomHUD/Skills/BasicAttack']) this.button(path, async () => {
             if (!session.ready) throw new Error('场景尚未就绪');
@@ -201,7 +216,15 @@ export class AppRoot extends Component {
             const target = session.baseline?.entities.find((entity: any) => entity.entityKind === 3 && !entity.hp.isZero());
             if (target) session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: 0, targetHandle: target.entityHandle, targetGrid: target.position });
         });
-        for (const path of ['BottomHUD/Skills/RedPotion','BottomHUD/Skills/BluePotion','BottomHUD/Skills/SkillsPanel','BottomHUD/Skills/PetPanel','BottomHUD/QuickNav/Boss','BottomHUD/QuickNav/Quest','BottomHUD/Footer/Map']) this.button(path, () => this.popup!.show('Help', { title: '功能说明', message: '当前首批开放移动、普攻、自动战斗、背包装备分解及免费托管。其它功能按后续阶段开放。' }));
+        for (const [path, title, message] of [
+            ['BottomHUD/Skills/RedPotion','金创药','背包数量显示在快捷栏。药品使用暂未开放。'],
+            ['BottomHUD/Skills/BluePotion','魔法药','背包数量显示在快捷栏。药品使用暂未开放。'],
+            ['BottomHUD/Skills/SkillsPanel','技能','当前可以手动普攻或开启自动战斗。职业技能暂未开放。'],
+            ['BottomHUD/Skills/PetPanel','宠物','宠物会跟随角色并参与战斗。宠物管理暂未开放。'],
+            ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
+            ['BottomHUD/QuickNav/Quest','任务','任务系统暂未开放。'],
+            ['MapViewport/Mission','战斗状态','点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。'],
+        ] as const) this.button(path, () => this.popup!.show('Help', { title, message }));
         this.button('UIMgr/Panels/Settings/Help', () => this.popup!.show('Help', { title: '操作帮助', message: '左下摇杆控制八方向，轻触空地寻路。打开面板和聊天保留地面目标，主动方向接管才终止原寻路。点击半透明背景返回。' }));
         this.button('UIMgr/Panels/Hosting/Leave', () => this.leave(true));
         this.button('UIMgr/Panels/Hosting/Claim', () => this.economic(40006, { benefitKind: 0 }));
@@ -230,16 +253,14 @@ export class AppRoot extends Component {
             this.lastBaseline = baseline.stateSequence.toString(); this.world.apply(baseline);
             const player = baseline.entities.find((entity: any) => entity.entityKind === 1);
             if (player) {
-                this.text('TopHUD/Position', `(${player.position.x},${player.position.y})`);
-                this.text('BottomHUD/Footer/HPText', `${player.hp}/${player.hpMax}`);
-                this.find('BottomHUD/Footer/HP').getComponent(ProgressBar)!.progress = player.hpMax.isZero() ? 0 : Number(BigInt(player.hp.toString()) * 10000n / BigInt(player.hpMax.toString())) / 10000;
                 this.nav.completeGroundTarget(player.position);
             }
         }
-        this.text('TopHUD/RoleName', session.role?.name ?? '角色'); this.text('TopHUD/Level', `等级 ${session.inventory?.level ?? session.role?.level ?? 1}`);
-        this.text('TopHUD/Gold', `绑金 ${session.wallet?.boundGold ?? 0}`);
-        this.text('BottomHUD/ExperienceText', `经验 ${session.inventory?.experience ?? 0}`);
-        this.text('MapViewport/Actions/Auto/Label', this.auto ? '自动 开' : '自动 关'); this.text('MapViewport/Actions/Count/Label', `刷怪 ${this.count}`);
+        const presentation = { role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
+            hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
+            auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map };
+        this.hud?.refresh(presentation);
+        this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
@@ -252,19 +273,10 @@ export class AppRoot extends Component {
             const selected = this.world.gameplay.items.find((row: any) => row.item_id === this.selectedItem?.itemId);
             this.text(`UIMgr/Panels/${panel}/Message`, this.selectedItem ? `当前选择：${selected?.name ?? '物品'}` : '点击条目查看详情并选择物品');
         }
-        const player = baseline?.entities.find((entity: any) => entity.entityKind === 1);
-        if (player) {
-            const ratio = (value: Long, total: Long): number => total.isZero() ? 0 : Math.max(0, Math.min(1, Number(BigInt(value.toString()) * 10000n / BigInt(total.toString())) / 10000));
-            this.text('BottomHUD/Footer/MPText', `${player.mp}/${player.mpMax}`);
-            this.find('BottomHUD/Footer/MP').getComponent(ProgressBar)!.progress = ratio(player.mp, player.mpMax);
-            this.text('MapViewport/Actions/Attack/Label', player.hp.isZero() ? '复活' : '攻击');
-            const next = this.world.gameplay.experience.find((row: any) => row.level === session.inventory?.level);
-            this.find('BottomHUD/Experience').getComponent(ProgressBar)!.progress = next ? ratio(session.inventory.experience, Long.fromString(String(next.next_level_exp))) : 0;
-        }
         this.text('UIMgr/Panels/Hosting/Message', `剩余托管 ${session.hosting?.remainHostingSec ?? 0} 秒\n在线自动战斗不扣托管时间`);
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', report ? `托管 ${report.usedSeconds} 秒，击杀 ${report.kills}\n经验 ${report.experience}\n收益已按事件时状态确认` : '暂无已提交托管战报');
-        this.status(session.lastError || (session.ready ? '场景已就绪 · 开发候选内容' : '正在同步场景'));
+        this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
         if (session.ready && !this.reconciliationStarted) {
             this.reconciliationStarted = true;
             try { if (session.pending?.get(roleIdentity())) void this.submitPending().catch(error => this.error(error)); }
@@ -272,7 +284,15 @@ export class AppRoot extends Component {
         }
     }
 
-    private async autoState(): Promise<void> { if (!session.ready) throw new Error('场景尚未就绪'); await session.connection.request(30004, { sceneEpoch: session.entry.sceneEpoch, enabled: this.auto, monsterCount: this.count }); this.refreshGame(); }
+    private async autoState(): Promise<void> {
+        try {
+            if (!session.ready) throw new Error('场景尚未就绪');
+            await session.connection.request(30004, { sceneEpoch: session.entry.sceneEpoch, enabled: this.auto, monsterCount: this.count });
+        } finally {
+            // Toggle会先翻转自身；拒绝或断线时也立即恢复服务端确认的状态。
+            this.refreshGame();
+        }
+    }
 
     private async economic(id: number, value: any): Promise<void> {
         if (this.economicBusy || this.unresolved) throw new Error('上一笔操作正在核对，请等待回执');
@@ -319,7 +339,10 @@ export class AppRoot extends Component {
     private error(error: unknown): void { const message = error instanceof Error ? error.message : String(error); session.lastError = message; this.status(message); }
     private button(path: string, action: () => unknown): void {
         const node = this.find(path); const handler = (): void => {
-            if (this.uiActionBusy) return;
+            if (this.uiActionBusy) {
+                if (node.getComponent(Toggle)) this.refreshGame();
+                return;
+            }
             try {
                 session.lastError = '';
                 const result = action();

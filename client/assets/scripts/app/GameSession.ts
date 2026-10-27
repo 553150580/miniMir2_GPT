@@ -4,6 +4,7 @@ import { SceneManager } from '../core/scene/SceneManager';
 import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
 import type { WorldAssets } from './WorldAssets';
+import { protocolErrorMessage } from './GameErrors';
 const assembler = new BaselineAssembler();
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
@@ -27,7 +28,7 @@ export const session = {
     update: new Set<() => void>(),
 };
 session.connection.subscribe((packet: Packet) => {
-    if (packet.error) { session.lastError = `服务端拒绝：${packet.error}`; }
+    if (packet.error) { session.lastError = protocolErrorMessage(packet.id, packet.error); }
     else switch (packet.id) {
         case 20002:
             assembler.reset(); session.entry = packet.value; session.baseline = null; session.ready = false;
