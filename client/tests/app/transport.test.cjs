@@ -32,6 +32,18 @@ const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
 
+test('药品使用帧保留原实例、最大64位场景代次与经济操作身份',()=>{
+    const instance=new Uint8Array(16).fill(5),operationId=new Uint8Array(16).fill(9);
+    const encoded=encodePacket(40009,19,Long.UONE,{itemInstanceId:instance,itemId:35,sceneEpoch:Long.MAX_UNSIGNED_VALUE,
+        operation:{opId:operationId,commandSeq:Long.fromString('9007199254740993',true),expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE}});
+    const decoded=decodePacket(encoded);
+    assert.equal(decoded.id,40009);assert.equal(decoded.value.itemId,35);
+    assert.deepEqual(decoded.value.itemInstanceId,instance);
+    assert.equal(decoded.value.sceneEpoch.toString(),'18446744073709551615');
+    assert.deepEqual(decoded.value.operation.opId,operationId);
+    assert.equal(decoded.value.operation.commandSeq.toString(),'9007199254740993');
+});
+
 test('应用帧与snake_case协议往返：大ID、64位水位和bytes保持精确',()=>{
     const binding=Long.fromString('18446744073709551615',true);
     const bytes=encodePacket(20002,4294967295,binding,{sceneEpoch:Long.fromString('9007199254740993',true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.fromString('9007199254740995',true),position:{x:-7,y:8}});

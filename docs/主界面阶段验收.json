@@ -5,9 +5,11 @@
   "development_only": true,
   "passed": true,
   "creator_build": {
-    "report": "docs/客户端构建检查.json",
+    "report": "outputs/development-hud-20261027/Creator构建检查.json",
     "sha256": "02aa4d3e6bbe0e1fecab349faf711f6afbd0c9f27f8fac29b24f3e8750e03247",
-    "current_sources_and_layouts_match_report": true
+    "current_sources_and_layouts_match_report": false,
+    "historical_source_commit": "62fca85ee9a3978de8fb16550d099ba1f7a1475f",
+    "superseded_by": "docs/药品阶段验收.json"
   },
   "editable_layout": {
     "scene": "client/assets/scenes/Game.scene",

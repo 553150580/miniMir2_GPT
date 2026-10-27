@@ -28,6 +28,13 @@ message InventoryResult {
 }
 message EquipRequest { bytes item_instance_id = 1; uint32 slot = 2; OperationContext operation = 3; }
 message RecycleRequest { repeated bytes item_instance_ids = 1; OperationContext operation = 2; }
+// 药品只作用于原场景；永久消耗由角色owner确认，临时药效不持久化。
+message UseItemRequest {
+  bytes item_instance_id = 1;
+  uint32 item_id = 2;
+  uint64 scene_epoch = 3;
+  OperationContext operation = 4;
+}
 message ClaimHostingTimeRequest { uint32 benefit_kind = 1; OperationContext operation = 2; }
 message BuyHostingTimeRequest { uint32 requested_seconds = 1; OperationContext operation = 2; }
 // 战报展示已提交收益，卡到期前后绑定分账；此消息不触发重抽或重判绑定。

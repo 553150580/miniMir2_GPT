@@ -13815,10 +13815,55 @@
           },
           "revive_notice": {
             "type": "string"
+          },
+          "potions": {
+            "type": "object",
+            "properties": {
+              "tick_ms": {
+                "type": "int",
+                "minimum": 1
+              },
+              "base_per_tick": {
+                "type": "int",
+                "minimum": 1
+              },
+              "levels_per_step": {
+                "type": "int",
+                "minimum": 1
+              },
+              "use_delay_ms": {
+                "type": "int",
+                "minimum": 1
+              },
+              "queue_cap": {
+                "type": "int",
+                "minimum": 1
+              },
+              "effects": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "int",
+                      "minimum": 1
+                    },
+                    "hp": {
+                      "type": "int",
+                      "minimum": 0
+                    },
+                    "mp": {
+                      "type": "int",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
-      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600"
+      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）"
     }
   ]
 }

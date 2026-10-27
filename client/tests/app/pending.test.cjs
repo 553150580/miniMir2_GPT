@@ -161,3 +161,37 @@ test('其它白名单经济消息可往返，账号存储命名空间互不干�
         store.clear('roleA');
     }
 });
+
+test('使用药品的未决记录保存原实例、代次与操作身份，重载后PB字节不变', () => {
+    const storage = new MemoryStorage();
+    const original = { id: 40009, value: { itemInstanceId: id(7), itemId: 35,
+        sceneEpoch: Long.MAX_UNSIGNED_VALUE, operation: pending().value.operation } };
+    const encode = value => pb.UseItemRequest.encode({ item_instance_id: value.itemInstanceId, item_id: value.itemId,
+        scene_epoch: value.sceneEpoch, operation: { op_id: value.operation.opId, command_seq: value.operation.commandSeq,
+            expected_revision: value.operation.expectedRevision, expected_rule_version: value.operation.expectedRuleVersion } }).finish();
+    const store = new PendingOperations(storage, key);
+    store.set('roleA', original);
+    const restored = new PendingOperations(storage, key).get('roleA');
+    assert.equal(restored.id, 40009);
+    assert.equal(restored.value.sceneEpoch.toString(), '18446744073709551615');
+    assert.deepEqual(encode(restored.value), encode(original.value));
+    assert.throws(() => store.set('roleA', { ...original, value: { ...original.value, itemInstanceId: id(8) } }), { code: 'PENDING_EXISTS' });
+    assert.deepEqual(store.get('roleA').value.itemInstanceId, id(7));
+});
+
+test('药品未决请求拒绝不安全代次、无效实例及额外字段，不能夹带新数量或凭据', () => {
+    for (const mutate of [
+        value => { value.sceneEpoch = 9007199254740992; },
+        value => { value.sceneEpoch = Long.UZERO; },
+        value => { value.sceneEpoch = Long.NEG_ONE; },
+        value => { value.itemId = 0; }, value => { value.itemId = -1; },
+        value => { value.itemInstanceId = new Uint8Array(15); },
+        value => { value.quantity = 100; }, value => { value.token = 'secret'; },
+    ]) {
+        const store = new PendingOperations();
+        const value = { itemInstanceId: id(7), itemId: 35, sceneEpoch: Long.UONE, operation: pending().value.operation };
+        mutate(value);
+        assert.throws(() => store.set('roleA', { id: 40009, value }), { code: 'INVALID_OPERATION' });
+        assert.equal(store.get('roleA'), null);
+    }
+});

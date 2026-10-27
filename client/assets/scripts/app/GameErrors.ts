@@ -1,8 +1,12 @@
+import { CodeItemUseBlocked, CodeItemUseCooldown } from '../generated/protocol_ids';
+
 const FULL_BAG_AUTO_MESSAGE = '背包已满，整理后再开启自动战斗';
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。
 export function protocolErrorMessage(messageId: number, errorCode: number): string {
     if (messageId === 30004 && errorCode === 2103) return FULL_BAG_AUTO_MESSAGE;
+    if (errorCode === CodeItemUseBlocked) return '角色倒下或当前状态不能使用药品';
+    if (errorCode === CodeItemUseCooldown) return '药品使用过快，请稍后再试';
     return `操作失败，错误码${errorCode}`;
 }
 

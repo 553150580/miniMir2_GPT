@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -119,6 +119,12 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
     } else if (id === 40006) {
         const item = record(input.value, ['benefitKind', 'operation']);
         payload = { benefitKind: uint32(item.benefitKind), operation: operation(item.operation, stored) };
+    } else if (id === 40009) {
+        const item = record(input.value, ['itemInstanceId', 'itemId', 'sceneEpoch', 'operation']);
+        const itemId = uint32(item.itemId), epoch = longValue(item.sceneEpoch, stored);
+        if (!itemId || epoch.isNegative() || epoch.isZero()) return invalid('药品ID及场景代次必须为正整数');
+        payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), itemId,
+            sceneEpoch: epoch, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

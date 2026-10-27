@@ -54,7 +54,7 @@
       "game_attribute_pipeline"
     ],
     "core_content_pending_definition": "当前预览server投影中，gameplay且release_required=true并且记录为空的表；不把候选非空表计为空表。",
-    "current_preview_version": "dev-first-loop-v0.1-73a9a84aaf90",
+    "current_preview_version": "dev-potions-v0.2-9edc647841f0",
     "new_first_loop_candidate_records": 51
   },
   "reference_inputs": {
@@ -105,11 +105,11 @@
     }
   },
   "verification": {
-    "config_regression_tests": 11,
+    "config_regression_tests": 16,
     "go_module_compile": "passed",
     "go_module_checksums": "all modules verified",
-    "client_pb_message_definitions": 37,
-    "client_64bit_boundary_cases": 174,
+    "client_pb_message_definitions": 38,
+    "client_64bit_boundary_cases": 177,
     "client_typescript": "真实cc声明 strict + skipLibCheck passed；官方声明自身缺失隔离，项目脚本仍严格检查",
     "mongodb_go_driver": "2.9.2 snapshot/majority commit and duplicate rollback passed",
     "evidence": [
@@ -120,24 +120,26 @@
       "docs/客户端构建检查.json",
       "server/test-results/latest.json",
       "docs/客户端浏览器验收.json",
-      "docs/主界面阶段验收.json"
+      "docs/主界面阶段验收.json",
+      "docs/药品阶段验收.json"
     ],
-    "protocol_message_ids": 32,
-    "protocol_error_codes": 16,
-    "client_int64_fields": 54,
+    "protocol_message_ids": 33,
+    "protocol_error_codes": 18,
+    "client_int64_fields": 55,
     "client_script_tests": {
       "ui_models": 9,
       "scene_loader": 16,
-      "wire_and_viewport": 6,
+      "wire_and_viewport": 7,
       "status": "passed",
       "includes_bounded_out_of_order_expired_baseline_assembly": true,
-      "total_js_tests": 87,
-      "pending_economic_operations": 8,
+      "total_js_tests": 99,
+      "pending_economic_operations": 10,
       "entity_motion": 14,
       "entity_animation": 9,
       "hud_models": 6,
       "system_messages": 10,
-      "serialized_hud_layout": 9
+      "serialized_hud_layout": 9,
+      "potion_models": 9
     },
     "creator_cli_last_completed_build": {
       "version": "3.8.8",
@@ -161,8 +163,36 @@
         "TestMoveCompletionGatesAttackForPlayerPetMonster/pet",
         "TestMoveCompletionGatesAttackForPlayerPetMonster/monster",
         "TestMoveCompletionGatesAttackForPlayerPetMonster",
+        "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene",
+        "TestPotionTicksIndependentPoolsCapAndNoCatchup",
+        "TestPotionDeathAndPendingPauseWithoutReset",
+        "TestPotionGateSharedCooldownAndDeadSceneChecks",
+        "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting",
+        "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence",
+        "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending",
+        "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12",
+        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending",
+        "TestManualAttackCannotTargetInactiveMonsterSlots",
+        "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding",
+        "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例",
+        "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型",
+        "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符",
+        "TestPotionConsumeFailuresDoNotMutateInventory/数量不足",
+        "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出",
+        "TestPotionConsumeFailuresDoNotMutateInventory/无场景",
+        "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品",
+        "TestPotionConsumeFailuresDoNotMutateInventory/死亡",
+        "TestPotionConsumeFailuresDoNotMutateInventory/共享节流",
+        "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求",
+        "TestPotionConsumeFailuresDoNotMutateInventory",
         "TestFirstLoopMongoWS",
-        "TestMongoOwnershipFence"
+        "TestMongoOwnershipFence",
+        "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
       ],
       "report": "server/test-results/latest.json"
     },
@@ -185,13 +215,13 @@
         "高屏/宽屏等比、Status固定顶部、无新快照时镜头重夹"
       ],
       "full_loop_verified": true,
-      "current_work": "首循环为历史验收；本阶段主界面布局与现有功能接入另见主界面阶段验收。",
+      "current_work": "首循环与HUD保留对应历史验收；本阶段手动药品与持久库存复验通过，见药品阶段验收。",
       "report": "docs/客户端浏览器验收.json"
     },
     "aggregate_make_test": {
       "status": "passed",
-      "passed_js_tests": 87,
-      "passed_configuration_regressions": 11,
+      "passed_js_tests": 99,
+      "passed_configuration_regressions": 16,
       "full_command_finished": true,
       "exit_code": 0,
       "command": "make test",
@@ -223,6 +253,14 @@
       "report": "docs/主界面阶段验收.json",
       "world_chat_implemented": false,
       "physical_mobile_verified": false
+    },
+    "manual_potions_stage": {
+      "passed": true,
+      "report": "docs/药品阶段验收.json",
+      "rule_version": 2,
+      "automatic_use": false,
+      "target_180_amounts_verified": false,
+      "physical_mobile_verified": false
     }
   },
   "game_runtime_ready": false,
@@ -243,7 +281,7 @@
   "development_ready": true,
   "environment_checks_passed": 34,
   "updated_on": "2026-10-27",
-  "implementation_status": "main_hud_stage_browser_verified",
+  "implementation_status": "manual_potions_stage_browser_verified",
   "git": {
     "initialized": true,
     "initial_commit_created": true,
@@ -268,7 +306,7 @@
   },
   "development_loop_ready": true,
   "development_loop_status": "browser_verified",
-  "development_readiness_scope": "首循环和主界面布局阶段已完成本机浏览器验收；完整聊天、全P0、手机真机与正式发布继续保留未完成状态。",
+  "development_readiness_scope": "首循环、HUD和手动药品开发子集已完成本机浏览器验收；完整技能、聊天、全P0、手机真机及正式发布尚未完成。",
   "local_development_endpoints": {
     "client_same_origin": "http://127.0.0.1:18080",
     "account": "127.0.0.1:18100",
@@ -284,6 +322,7 @@
     "T001": "partially_implemented",
     "T020": "partially_implemented",
     "T021": "partially_implemented",
-    "T022": "partially_implemented"
+    "T022": "partially_implemented",
+    "T035": "partially_implemented"
   }
 }

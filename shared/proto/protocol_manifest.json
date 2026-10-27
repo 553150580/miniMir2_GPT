@@ -408,6 +408,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+    },
+    {
+      "value": 40009,
+      "name": "MsgC2SUseItem",
+      "proto_message": "UseItemRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:294；药品开发消费阶段新分配编号，尚未发布"
     }
   ],
   "error_codes": [
@@ -497,6 +509,22 @@
       "display_zh": "战斗转移受限",
       "status": "draft",
       "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 3101,
+      "name": "CodeItemUseBlocked",
+      "display_zh": "当前状态不能使用药品",
+      "status": "draft",
+      "source_ref": "药品开发消费阶段，服务器状态与共享节流校验",
+      "active_in_scope": true
+    },
+    {
+      "value": 3102,
+      "name": "CodeItemUseCooldown",
+      "display_zh": "药品使用间隔未到",
+      "status": "draft",
+      "source_ref": "药品开发消费阶段，服务器状态与共享节流校验",
       "active_in_scope": true
     },
     {

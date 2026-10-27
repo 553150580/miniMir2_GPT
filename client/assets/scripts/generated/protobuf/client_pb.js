@@ -9516,6 +9516,290 @@ $root.minimir = (function() {
             return RecycleRequest;
         })();
 
+        v1.UseItemRequest = (function() {
+
+            /**
+             * Properties of a UseItemRequest.
+             * @typedef {Object} minimir.v1.UseItemRequest.$Properties
+             * @property {Uint8Array|null} [item_instance_id] UseItemRequest item_instance_id
+             * @property {number|null} [item_id] UseItemRequest item_id
+             * @property {Long|null} [scene_epoch] UseItemRequest scene_epoch
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] UseItemRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a UseItemRequest.
+             * @memberof minimir.v1
+             * @interface IUseItemRequest
+             * @augments minimir.v1.UseItemRequest.$Properties
+             * @deprecated Use minimir.v1.UseItemRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a UseItemRequest.
+             * @typedef {minimir.v1.UseItemRequest.$Properties} minimir.v1.UseItemRequest.$Shape
+             */
+
+            /**
+             * Constructs a new UseItemRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a UseItemRequest.
+             * @constructor
+             * @param {minimir.v1.UseItemRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var UseItemRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * UseItemRequest item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.UseItemRequest
+             * @instance
+             */
+            UseItemRequest.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * UseItemRequest item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.UseItemRequest
+             * @instance
+             */
+            UseItemRequest.prototype.item_id = 0;
+
+            /**
+             * UseItemRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.UseItemRequest
+             * @instance
+             */
+            UseItemRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * UseItemRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.UseItemRequest
+             * @instance
+             */
+            UseItemRequest.prototype.operation = null;
+
+            /**
+             * Creates a new UseItemRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {minimir.v1.UseItemRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.UseItemRequest} UseItemRequest instance
+             * @type {{
+             *   (properties: minimir.v1.UseItemRequest.$Shape): minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape;
+             *   (properties?: minimir.v1.UseItemRequest.$Properties): minimir.v1.UseItemRequest;
+             * }}
+             */
+            UseItemRequest.create = function(properties) {
+                return new UseItemRequest(properties);
+            };
+
+            /**
+             * Encodes the specified UseItemRequest message. Does not implicitly {@link minimir.v1.UseItemRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {minimir.v1.UseItemRequest.$Properties} message UseItemRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UseItemRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.item_instance_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.item_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.scene_epoch);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified UseItemRequest message, length delimited. Does not implicitly {@link minimir.v1.UseItemRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {minimir.v1.UseItemRequest.$Properties} message UseItemRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            UseItemRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a UseItemRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape} UseItemRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UseItemRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.UseItemRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a UseItemRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape} UseItemRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            UseItemRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a UseItemRequest message.
+             * @function verify
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            UseItemRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for UseItemRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.UseItemRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            UseItemRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.UseItemRequest";
+            };
+
+            return UseItemRequest;
+        })();
+
         v1.ClaimHostingTimeRequest = (function() {
 
             /**

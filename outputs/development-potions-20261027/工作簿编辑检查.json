@@ -1,0 +1,28 @@
+{
+  "changed_cells": [
+    "开发首循环夹具!C4",
+    "开发首循环夹具!E4:F4",
+    "物品定义!M6:M7"
+  ],
+  "rule_version": 2,
+  "formula_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+  "potions": {
+    "tick_ms": 200,
+    "base_per_tick": 5,
+    "levels_per_step": 10,
+    "use_delay_ms": 300,
+    "queue_cap": 65535,
+    "effects": [
+      {
+        "item_id": 35,
+        "hp": 20,
+        "mp": 0
+      },
+      {
+        "item_id": 36,
+        "hp": 0,
+        "mp": 30
+      }
+    ]
+  }
+}

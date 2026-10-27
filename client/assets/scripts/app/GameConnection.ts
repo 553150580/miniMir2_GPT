@@ -17,6 +17,7 @@ const codecs: Record<number, MessageType> = {
     40001: pb.EquipRequest, 40002: pb.RecycleRequest, 40003: pb.InventoryResult,
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,
+    40009: pb.UseItemRequest,
 };
 
 function variable(value: Long): number[] {

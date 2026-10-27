@@ -34,6 +34,7 @@ const (
 	MsgC2SClaimHostingTime uint16 = 40006
 	MsgC2SBuyHostingTime uint16 = 40007
 	MsgS2CHostingReport uint16 = 40008
+	MsgC2SUseItem uint16 = 40009
 )
 
 const (
@@ -48,6 +49,8 @@ const (
 	CodeLineForbidden uint32 = 2103
 	CodeLineRecovering uint32 = 2104
 	CodeCombatTransferLocked uint32 = 2105
+	CodeItemUseBlocked uint32 = 3101
+	CodeItemUseCooldown uint32 = 3102
 	CodeSelfTradeForbidden uint32 = 4101
 	CodeWarehouseWithdrawOnly uint32 = 4201
 	CodeWarehouseInactive uint32 = 4202

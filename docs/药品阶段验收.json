@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-10-27",
+  "scope": "development_manual_potions",
+  "development_only": true,
+  "passed": true,
+  "configuration": {
+    "version": "dev-potions-v0.2-9edc647841f0",
+    "rule_version": 2,
+    "fixture": "config/development/first-loop.json",
+    "fixture_sha256": "446435e26cfa5590f4ccc1f0c40e76e46b83893a7ca84d4f8acde6ef92f200cb",
+    "workbook": "outputs/development-prep-20261026/玩法配置.xlsx",
+    "workbook_sha256": "6432661c7c9daa42df859a7571d77ac51eb5f49c71584599aa1a8c6953e854ed",
+    "worksheets_compared": 95,
+    "changed_cells": [
+      [
+        "物品定义",
+        "M6"
+      ],
+      [
+        "物品定义",
+        "M7"
+      ],
+      [
+        "开发首循环夹具",
+        "C4"
+      ],
+      [
+        "开发首循环夹具",
+        "E4"
+      ],
+      [
+        "开发首循环夹具",
+        "F4"
+      ]
+    ],
+    "unrelated_structure_styles_formulas_validations_preserved": true,
+    "target_180_potion_amounts_verified": false,
+    "rules_and_adaptations": "docs/药品与技能实施边界.md"
+  },
+  "creator_build": {
+    "report": "docs/客户端构建检查.json",
+    "sha256": "a02bee16f5e5d8ca86fcb4201400a7f678bd786992c7355344526d41a9e00514",
+    "current_sources_and_layouts_match_report": true,
+    "editable_layouts_preserved": 6,
+    "layouts_unchanged_since_hud_stage": true
+  },
+  "server_test": {
+    "report": "server/test-results/latest.json",
+    "sha256": "54d70e1147de086eae416f9eebf673f32714f8b4a211d63ebde66cb0d3044aec",
+    "race": true,
+    "passed_tests_including_subtests": 39,
+    "skipped": 0,
+    "current_sources_match_report": true
+  },
+  "checks": {
+    "make_test": "passed",
+    "javascript_tests": 99,
+    "scene_tests": 16,
+    "ui_app_tests": 83,
+    "configuration_tests": 16,
+    "potion_model_tests": 9,
+    "pending_operation_tests": 10,
+    "wire_viewport_tests": 7,
+    "go_tests": "passed",
+    "creator_strict_typecheck": "passed",
+    "pb_data_messages": 38,
+    "int64_fields": 55,
+    "int64_boundary_cases": 177,
+    "protocol_message_ids": 33,
+    "protocol_error_codes": 18,
+    "make_check": "passed",
+    "development_resources_check": "passed"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:18080/?renderQA=1",
+    "role": "药品验收",
+    "job": "战士",
+    "red_before": {
+      "hp": 6,
+      "hp_max": 18,
+      "quantity": 1
+    },
+    "red_after": {
+      "hp": 18,
+      "hp_max": 18,
+      "quantity": 0
+    },
+    "blue_cancel_quantity": 1,
+    "blue_confirm_quantity": 0,
+    "blue_mana_was_full": true,
+    "death_rejected_without_consumption": true,
+    "empty_inventory_rejected": true,
+    "final_node_relogin_quantities": {
+      "red": 0,
+      "blue": 0
+    },
+    "console_errors_or_warnings": 0,
+    "logs": "outputs/development-potions-20261027/浏览器运行日志.json",
+    "note": "战斗持续进行，截图之间仍会受怪物攻击；用药对比以所列前后截图为准。最后仅补充服务端满队列历史回执保护，重新跑真实竞态测试并重启节点后复验原角色持久库存。"
+  },
+  "operation_semantics": [
+    "原实例、类型、数量、场景、存活与共享节流验证",
+    "owner事务扣1、原回执及审计一并提交",
+    "原场景与原经济序号防止重复加入药效",
+    "新场景只核对已提交消耗，不补发旧临时效果",
+    "健康断线保留现场，已付款药效可推进但不触发战斗/收益/扣托管时长",
+    "有界队列满时历史回执保持待核对，仅明确新水位请求拒绝为未受理"
+  ],
+  "screenshots": [
+    {
+      "path": "outputs/development-potions-20261027/取消用药数量不变.jpg",
+      "sha256": "37354740695f4d104c95d1fb22f42b8f5a45b21d879edd80ff40cd9cf31ac8a4",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/最终节点重登库存.jpg",
+      "sha256": "4b4aa2961ec400503e29ff67c626cbd991798835b559412cb273f48ea3dfc344",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/死亡拒绝用药.jpg",
+      "sha256": "92e72131ef3874069186d2523c0fbc24d9c787df4168623bb7072298e3ef8ef8",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/满魔法用药确认.jpg",
+      "sha256": "cb570da70853dde12821a5ef57437778a71a9e1283fec41daa30da2a8aa77a81",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/空药品拒绝.jpg",
+      "sha256": "e4867c6c4c333137429cc332507f67f565ae9c80a8f5de33856fa6c9731cdb15",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/红药使用前.jpg",
+      "sha256": "25f18fdaaca1f4e850ff641d49c4e5b0197a819aab0d9309ee87efdfd3d799e9",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/红药使用后.jpg",
+      "sha256": "5043bd308c65cf77c89b64d036e00d5df308e8a0b36083d708e53d5a1525adb8",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/红药恢复后续同步.jpg",
+      "sha256": "a26fbf697d6efac738a359e360928e655cc52e4240e1479f30135125135204b4",
+      "size": [
+        720,
+        1280
+      ]
+    },
+    {
+      "path": "outputs/development-potions-20261027/蓝药确认扣除一件.jpg",
+      "sha256": "16c4a3149ce4d0d654194a86203b7beb9b7bd617ba2b55969de71e59286cfbfc",
+      "size": [
+        720,
+        1280
+      ]
+    }
+  ],
+  "automatic_potion_use_implemented": false,
+  "class_skills_implemented": false,
+  "unknown_transaction_commit_result_fault_injected": false,
+  "physical_mobile_verified": false,
+  "runtime_ready": false,
+  "all_p0_complete": false,
+  "production_ready": false
+}

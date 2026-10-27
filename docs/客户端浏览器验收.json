@@ -14,10 +14,11 @@
     "superseded_by": "docs/主界面阶段验收.json"
   },
   "server_test": {
-    "report": "server/test-results/latest.json",
+    "report": "outputs/development-first-loop-20261027/服务端集成验收.json",
     "sha256": "82df36988afdb594ba8a3ea1fc0ce1fdc25d6c5771315163d1fe5c9e1aa9dd7c",
     "race": true,
-    "current_sources_match_report": true
+    "current_sources_match_report": false,
+    "historical_source_commit": "f3b2ad57c3eb554e96174903c210332b8d40d6ab"
   },
   "checkpoints": [
     "内置EditBox登录及密码遮罩",

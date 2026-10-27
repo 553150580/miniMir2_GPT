@@ -6,11 +6,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math"
 	"net"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type Point struct {
@@ -49,6 +51,29 @@ type Item struct {
 	Stackable      bool     `json:"stackable"`
 	AllowedJobs    []uint32 `json:"allowed_jobs"`
 }
+type PotionEffect struct {
+	ItemID uint32 `json:"item_id"`
+	HP     int64  `json:"hp"`
+	MP     int64  `json:"mp"`
+}
+type PotionRules struct {
+	TickMS        int64          `json:"tick_ms"`
+	BasePerTick   int64          `json:"base_per_tick"`
+	LevelsPerStep int64          `json:"levels_per_step"`
+	UseDelayMS    int64          `json:"use_delay_ms"`
+	QueueCap      int64          `json:"queue_cap"`
+	Effects       []PotionEffect `json:"effects"`
+}
+
+func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
+	for _, effect := range p.Effects {
+		if effect.ItemID == itemID {
+			return effect, true
+		}
+	}
+	return PotionEffect{}, false
+}
+
 type Fixture struct {
 	SchemaVersion   int    `json:"schema_version"`
 	RuleVersion     uint64 `json:"rule_version"`
@@ -65,10 +90,11 @@ type Fixture struct {
 		PetSpawn      Point   `json:"pet_spawn"`
 		MonsterSpawns []Point `json:"monster_spawns"`
 	} `json:"map"`
-	Players  []Fighter `json:"players"`
-	Pet      Fighter   `json:"pet"`
-	Monsters []Monster `json:"monsters"`
-	Items    []Item    `json:"items"`
+	Players  []Fighter   `json:"players"`
+	Pet      Fighter     `json:"pet"`
+	Monsters []Monster   `json:"monsters"`
+	Items    []Item      `json:"items"`
+	Potions  PotionRules `json:"potions"`
 	Drops    struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`
@@ -184,6 +210,19 @@ func (f *Fixture) Validate() error {
 		if i.ID == 0 || i.RecycleGold < 0 || i.EquipmentSlot > 9 {
 			return errors.New("物品参数不合法")
 		}
+	}
+	p := f.Potions
+	maxMS := int64(math.MaxInt64) / int64(time.Millisecond)
+	if p.TickMS <= 0 || p.TickMS > maxMS || p.UseDelayMS <= 0 || p.UseDelayMS > maxMS || p.BasePerTick <= 0 || p.LevelsPerStep <= 0 || p.QueueCap <= 0 || len(p.Effects) == 0 {
+		return errors.New("药品恢复周期、节流、等级步长和队列容量必须完整且可计时")
+	}
+	seenPotions := map[uint32]bool{}
+	for _, effect := range p.Effects {
+		item, ok := f.Item(effect.ItemID)
+		if !ok || item.IsEquipment || seenPotions[effect.ItemID] || effect.HP < 0 || effect.MP < 0 || (effect.HP == 0 && effect.MP == 0) {
+			return errors.New("药品效果必须引用唯一的非装备物品，恢复量为非负且至少一项有效")
+		}
+		seenPotions[effect.ItemID] = true
 	}
 	if f.Drops.EmptyPPM != 650000 || f.Drops.GoldPPM != 200000 || f.Drops.ItemPPM != 100000 || f.Drops.EquipmentPPM != 50000 || f.Drops.EquipmentGuarantee != 20 || len(f.Drops.EquipmentItemIDs) == 0 {
 		return errors.New("普通掉落须互斥65/20/10/5与20杀保底")

@@ -61,14 +61,23 @@ type Run struct {
 	State          string    `bson:"state"`
 }
 type Operation struct {
-	ID         string    `bson:"_id"`
-	Digest     string    `bson:"digest"`
-	RoleID     string    `bson:"role_id"`
-	CommandSeq int64     `bson:"command_seq"`
-	Revision   int64     `bson:"revision"`
-	Code       uint32    `bson:"code"`
-	Kind       string    `bson:"kind"`
-	Created    time.Time `bson:"created_at"`
+	ID         string         `bson:"_id"`
+	Digest     string         `bson:"digest"`
+	RoleID     string         `bson:"role_id"`
+	CommandSeq int64          `bson:"command_seq"`
+	Revision   int64          `bson:"revision"`
+	Code       uint32         `bson:"code"`
+	Kind       string         `bson:"kind"`
+	Created    time.Time      `bson:"created_at"`
+	Potion     *PotionReceipt `bson:"potion,omitempty"`
+}
+
+// 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
+type PotionReceipt struct {
+	Scene  string `bson:"scene_epoch"`
+	ItemID uint32 `bson:"item_id"`
+	HP     int64  `bson:"restore_hp"`
+	MP     int64  `bson:"restore_mp"`
 }
 
 func Hash(b []byte) string { h := sha256.Sum256(b); return hex.EncodeToString(h[:]) }

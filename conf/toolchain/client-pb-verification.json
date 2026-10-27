@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 37,
+  "message_count": 38,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -40,12 +40,13 @@
     "InventoryResult",
     "EquipRequest",
     "RecycleRequest",
+    "UseItemRequest",
     "ClaimHostingTimeRequest",
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 54,
-  "int64_boundary_cases": 174,
+  "int64_field_count": 55,
+  "int64_boundary_cases": 177,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -348,6 +349,12 @@
       "cases": 4
     },
     {
+      "message": "UseItemRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "HostingReport",
       "field": "used_seconds",
       "type": "uint64",
@@ -372,7 +379,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 12,
+  "bytes_field_count": 13,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -430,6 +437,11 @@
       "repeated": true
     },
     {
+      "message": "UseItemRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
       "message": "HostingReport",
       "field": "hosting_session_id",
       "repeated": false
@@ -453,19 +465,19 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "626b66274df8b6c724240442728f7fd05ffc99b549327298cdbc243c843107bc"
+      "sha256": "6c39adf8a128931d0d3689d8f6facca8f2edfbd2d3ad5a2950d19487921882ca"
     }
   ],
   "generated_files": [
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "059c1aa820cfdf11c8cf8108489f76e3f895a9f08c9bfa2cf680591b6476d2f4",
-      "bytes": 516108
+      "sha256": "392753c0859fa2e74da5c1ebb2a8a652a4a81e7e275263cd1392a69cc55da08e",
+      "bytes": 530329
     },
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "c88ec33efcd312ba98af992472450347b646f4eb6c17a0dc5336628f853de2e9",
-      "bytes": 180723
+      "sha256": "de4502ee0c73051cd68e8d2c0a2fe83a1d3a4ce88684be4c856087baab722bb7",
+      "bytes": 185727
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

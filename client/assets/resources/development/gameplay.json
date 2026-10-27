@@ -37,7 +37,16 @@
         1,
         2
       ],
-      "use_enabled": false
+      "use_enabled": true,
+      "potion": {
+        "tick_ms": 200,
+        "base_per_tick": 5,
+        "levels_per_step": 10,
+        "use_delay_ms": 300,
+        "queue_cap": 65535,
+        "hp": 20,
+        "mp": 0
+      }
     },
     {
       "item_id": 36,
@@ -48,7 +57,16 @@
         1,
         2
       ],
-      "use_enabled": false
+      "use_enabled": true,
+      "potion": {
+        "tick_ms": 200,
+        "base_per_tick": 5,
+        "levels_per_step": 10,
+        "use_delay_ms": 300,
+        "queue_cap": 65535,
+        "hp": 0,
+        "mp": 30
+      }
     }
   ],
   "jobs": [

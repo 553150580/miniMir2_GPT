@@ -16,6 +16,8 @@ import { GameWorldView } from './GameWorldView';
 import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
+import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
+import { protocolErrorMessage } from './GameErrors';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -205,6 +207,8 @@ export class AppRoot extends Component {
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
         this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); });
         this.button('MapViewport/Actions/Count', () => { this.count = this.count === 1 ? 4 : this.count === 4 ? 8 : 1; return this.autoState(); });
+        this.button('BottomHUD/Skills/RedPotion', () => this.usePotion(35));
+        this.button('BottomHUD/Skills/BluePotion', () => this.usePotion(36));
         for (const path of ['MapViewport/Actions/Attack','BottomHUD/Skills/BasicAttack']) this.button(path, async () => {
             if (!session.ready) throw new Error('场景尚未就绪');
             const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
@@ -217,8 +221,6 @@ export class AppRoot extends Component {
             if (target) session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: 0, targetHandle: target.entityHandle, targetGrid: target.position });
         });
         for (const [path, title, message] of [
-            ['BottomHUD/Skills/RedPotion','金创药','背包数量显示在快捷栏。药品使用暂未开放。'],
-            ['BottomHUD/Skills/BluePotion','魔法药','背包数量显示在快捷栏。药品使用暂未开放。'],
             ['BottomHUD/Skills/SkillsPanel','技能','当前可以手动普攻或开启自动战斗。职业技能暂未开放。'],
             ['BottomHUD/Skills/PetPanel','宠物','宠物会跟随角色并参与战斗。宠物管理暂未开放。'],
             ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
@@ -284,6 +286,29 @@ export class AppRoot extends Component {
         }
     }
 
+    private potionSnapshot(): PotionSnapshot {
+        return {
+            ready: session.ready,
+            roleIdentity: session.role ? roleIdentity() : '',
+            sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO,
+            ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
+            inventory: session.inventory,
+            definitions: this.world?.gameplay.items ?? [],
+            player: session.baseline?.entities.find((entity: any) => entity.entityKind === 1) ?? null,
+        };
+    }
+
+    private async usePotion(itemId: number): Promise<void> {
+        const preview = createPotionPreview(this.potionSnapshot(), itemId);
+        if (preview.requiresConfirmation && !await this.popup!.confirm('Confirm', preview.message, preview.title)) return;
+        if (this.disposed) return;
+        validatePotionPreview(preview, this.potionSnapshot());
+        await this.economic(40009, {
+            itemInstanceId: potionInstanceId(preview), itemId: preview.itemId,
+            sceneEpoch: Long.fromString(preview.sceneEpoch, true),
+        });
+    }
+
     private async autoState(): Promise<void> {
         try {
             if (!session.ready) throw new Error('场景尚未就绪');
@@ -321,7 +346,7 @@ export class AppRoot extends Component {
         }
         if (result.pending) { this.unresolved = true; throw new Error('操作仍在处理中，请重新认证查询结果'); }
         ledger!.clear(role); this.unresolved = false;
-        if (result.errorCode) throw new Error(`操作未完成：${result.errorCode}`);
+        if (result.errorCode) throw new Error(protocolErrorMessage(pending.id, result.errorCode));
         this.status('操作已由服务端确认');
     }
 

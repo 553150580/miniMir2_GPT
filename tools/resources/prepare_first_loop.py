@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Extract bounded source candidates; export the explicit development fixture from current Excel."""
+"""从唯一Excel导出显式开发夹具；保留已封存的首轮来源提取入口。"""
 from __future__ import annotations
 import argparse
+from copy import deepcopy
 import csv
 import hashlib
 import json
@@ -30,6 +31,7 @@ def csv_rows(name):
 def find(rows,name):return next((i,r) for i,r in rows if r.get('Name')==name)
 def meta(id,source,note=NOTE):return {'id':id,'record_status':'candidate','source_ref':source,'note':note}
 def schema_profile():
+    """仅供历史首次初始化；当前已维护Excel，不能再次提取覆盖。"""
     fields=[{'name':'id','title':'配置编号','type':'int','required':True,'target':'none','minimum':1},
             {'name':'profile_key','title':'开发配置键','type':'string','required':True,'target':'none'},
             {'name':'parameters','title':'仅开发测试参数','type':'json','required':True,'target':'none'},
@@ -37,10 +39,11 @@ def schema_profile():
             {'name':'source_ref','title':'来源与开发授权','type':'string','required':True,'target':'none'},
             {'name':'note','title':'说明','type':'string','required':False,'target':'none'}]
     return {'table_id':'dev_first_loop_profile','sheet_name':'开发首循环夹具','title':'开发首循环夹具','domain':'开发隔离',
-            'source_sections':['用户2026-10-26授权首批正式开发；仅显式development构建；tools/resources/prepare_first_loop.py'],
+            'source_sections':['用户2026-10-26授权首批正式开发；历史首次初始化结构；当前参数只维护唯一Excel，初始化后禁止--extract'],
             'release_required':False,'min_rows':1,'fields':fields,'workbook_group':'gameplay'}
 
 def extract():
+    """封存的首次来源提取，不是当前数值源；main在已初始化仓库拒绝此入口。"""
     monsters=csv_rows('ApexM2_Monster.csv');items=csv_rows('ApexM2_stditems.csv');mapping=read(ASSETS/'maps/first-map.json')
     tables={};sources=[]
     def add(t,row):tables.setdefault(t,[]).append(row)
@@ -121,6 +124,8 @@ def extract():
     players=[{'job_id':0,'definition_id':0,'hp':18,'mp':14,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600},
              {'job_id':1,'definition_id':1,'hp':15,'mp':17,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600},
              {'job_id':2,'definition_id':2,'hp':16,'mp':13,'attack_min':0,'attack_max':0,'defence':0,'attack_ms':1386,'move_ms':600}]
+    # 以下仅保留最初rule_version=1的提取记录；当前药品等参数不得在此另设默认值。
+    # 已初始化仓库的--extract会被拒绝，后续只读Excel生成最新开发夹具。
     profile={'rule_version':1,'map_id':1,'monster_id':1,'pet_id':1,'players':players,'inventory_capacity':32,
              'initial_inventory':[218,218,193,35,36],'initial_bound_gold':0,'allow_free_dev_revive':True,
              'damage_formula':'development_range_minus_defence','recycle_test_gold_by_item':{'218':50,'193':400,'35':0,'36':0},
@@ -133,6 +138,28 @@ def extract():
     patch={'tables':tables,'new_table':schema_profile(),'source_locks':sources,'source_status':'candidate','development_only':True}
     save(WORK/'config-candidates.json',patch)
     return patch
+
+POTION_FIELDS=('tick_ms','base_per_tick','levels_per_step','use_delay_ms','queue_cap')
+
+def potion_rules(profile,items):
+    """只校验并复制Excel内的药品参数，不填缺省数值或猜测正式堆叠规则。"""
+    settings=profile.get('potions')
+    if not isinstance(settings,dict):raise ValueError('开发夹具缺少potions；请维护唯一Excel后重新导出')
+    for field in POTION_FIELDS:
+        value=settings.get(field)
+        if type(value) is not int or value<=0:raise ValueError('药品参数须为正整数：'+field)
+    effects=settings.get('effects')
+    if not isinstance(effects,list) or not effects:raise ValueError('药品effects必须是非空列表')
+    known={item['id']:item for item in items};seen=set()
+    for effect in effects:
+        if not isinstance(effect,dict):raise ValueError('药品effect必须是对象')
+        item_id=effect.get('item_id');hp=effect.get('hp');mp=effect.get('mp')
+        if type(item_id) is not int or item_id in seen or item_id not in known or known[item_id]['is_equipment']:
+            raise ValueError('药品效果须引用导出夹具中的唯一非装备物品')
+        if type(hp) is not int or type(mp) is not int or hp<0 or mp<0 or hp+mp==0:
+            raise ValueError('药品hp/mp须为非负整数且至少一项有效')
+        seen.add(item_id)
+    return deepcopy(settings)
 
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
@@ -152,8 +179,10 @@ def fixture_from_rows(tables):
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2]})
     categories={r['category_key']:r['prob_ppm'] for r in tables['game_drop_categories']}
     drop_gold=one('game_drop_entries',5)
+    potions=potion_rules(profile,items)
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
+        'potions':potions,
         'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':collision['blocked_cells'],
                'player_spawn':m['spawn_cell'],'pet_spawn':geo['pet_spawn'],'monster_spawns':[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
@@ -167,11 +196,40 @@ def fixture_from_rows(tables):
                             'record_sources':{tid:[{'id':r['id'],'source_ref':r['source_ref'],'note':r['note']} for r in rows] for tid,rows in tables.items()},
                             'player_stats':profile['player_stats_source'],'technical_parameters':profile['technical_parameters_notice'],
                             'damage_scope':profile['damage_scope_notice'],'revive':profile['revive_notice'],
-                            'potion_effects':'Raw source Ac20/Mac30 are retained as provenance only; recovery amount/tick/cooldown is unverified and not enabled.'}}
+                            'potion_effects':{
+                                'status':'candidate','target_180_verified':False,
+                                'parameters_source':'唯一玩法Excel/开发首循环夹具/parameters.potions；本工具不补默认数值',
+                                'reference_document':'docs/药品与技能实施边界.md',
+                                'amount_source':'资料参考/myf/Mud2/DB/ApexM2_stditems.csv:37-38记录Ac20/Mac30；未取得MYF字段语义实现，仅作跨来源开发恢复测试量，不是已核验原服药效。',
+                                'recovery_source':'资料参考/crystal/Server/MirObjects/HumanObject.cs:186,550-648；PlayerObject.cs:5820-5837,6330-6337；普通药分HP/MP累计队列，满值仍扣并清对应剩余，死亡暂停保留。',
+                                'use_delay_adaptation':'../SuprcodeCrystal/Client/MirControls/MirItemCell.cs:541-543,625仅有客户端共享300ms节流；本作提升为服务端共享节流属于明确development适配。',
+                                'full_resource_use':'仍消费，客户端提交前明示并确认；恢复满值后清除对应剩余队列',
+                                'death_policy':'死亡拒绝新使用，已提交剩余效果暂停保留，不因重新连接重发',
+                                'automatic_use_enabled':False,
+                                'formal_scope':'正式game_items堆叠上限及effect_list_id仍待核验；未开放正式效果表或职业技能。'}}}
     return result
 
+def public_gameplay(fixture):
+    """客户端只接收显式展示白名单，来源、夹具说明和服务端内部字段留在源侧。"""
+    potions=fixture['potions'];effects={effect['item_id']:effect for effect in potions['effects']}
+    shared={field:potions[field] for field in POTION_FIELDS}
+    items=[]
+    for row in fixture['items']:
+        effect=effects.get(row['id']) if not row['is_equipment'] else None
+        item={'item_id':row['id'],'name':row['name'],'kind':'equipment' if row['is_equipment'] else 'potion',
+              **({'equip_slot':row['equipment_slot']} if row['is_equipment'] else {}),
+              'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None}
+        if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
+        items.append(item)
+    return {'schema_version':1,'development_only':True,'runtime_ready':False,'status':'candidate',
+            'items':items,
+            'jobs':[{'job_id':0,'name':'战士','profile':'player_male'},{'job_id':1,'name':'法师','profile':'player_female'},{'job_id':2,'name':'道士','profile':'player_male'}],
+            'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
+            'monster_profiles':[{'definition_id':1,'name':'稻草人','profile':'monster_scarecrow'}],
+            'pet_profiles':[{'definition_id':2,'name':'变异骷髅','profile':'pet_skeleton','job_id':2}]}
+
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true');p.add_argument('--check',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true',help='历史首次初始化；已建立开发表后禁止重跑，不能覆盖唯一Excel');p.add_argument('--check',action='store_true');args=p.parse_args()
     if args.extract:
         if any(t['table_id']=='dev_first_loop_profile' for t in config.load_json(ROOT/'config/schema/catalog.json')['tables']):
             raise ValueError('开发表已初始化；后续只编辑唯一Excel，再运行本工具导出，不用来源提取覆盖已维护数据。')
@@ -190,13 +248,7 @@ def main():
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)
-    gameplay={'schema_version':1,'development_only':True,'runtime_ready':False,'status':'candidate',
-              'items':[{'item_id':r['id'],'name':r['name'],'kind':'equipment' if r['is_equipment'] else 'potion',
-                        **({'equip_slot':r['equipment_slot']} if r['is_equipment'] else {}),'allowed_jobs':r['allowed_jobs'],'use_enabled':False} for r in fixture['items']],
-              'jobs':[{'job_id':0,'name':'战士','profile':'player_male'},{'job_id':1,'name':'法师','profile':'player_female'},{'job_id':2,'name':'道士','profile':'player_male'}],
-              'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
-              'monster_profiles':[{'definition_id':1,'name':'稻草人','profile':'monster_scarecrow'}],
-              'pet_profiles':[{'definition_id':2,'name':'变异骷髅','profile':'pet_skeleton','job_id':2}]}
+    gameplay=public_gameplay(fixture)
     public_path=ASSETS/'gameplay.json'
     if args.check:
         if read(public_path)!=gameplay:raise ValueError('public development gameplay metadata outdated')

@@ -74,33 +74,36 @@ type entity struct {
 	Monster        *devconfig.Monster
 }
 type room struct {
-	Role            domain.Role
-	Auth            persistence.Auth
-	Conn            Connection
-	Ready           bool
-	Scene           uint64
-	Baseline        uint64
-	Sequence        uint64
-	Player          entity
-	Pet             *entity
-	Monsters        []*entity
-	MonsterCount    int
-	Auto            bool
-	Manual          bool
-	ManualDirection uint32
-	Destination     *devconfig.Point
-	Pending         bool
-	PendingRetry    *job
-	RetryAt         time.Time
-	Waiting         []command
-	LastTick        time.Time
-	HostMS          int64
-	HostSession     string
-	DeathID         string
-	AwaitUntil      time.Time
-	LastBroadcast   time.Time
-	Loot            []*entity
-	LootUntil       time.Time
+	Role               domain.Role
+	Auth               persistence.Auth
+	Conn               Connection
+	Ready              bool
+	Scene              uint64
+	Baseline           uint64
+	Sequence           uint64
+	Player             entity
+	Pet                *entity
+	Monsters           []*entity
+	MonsterCount       int
+	Auto               bool
+	Manual             bool
+	ManualDirection    uint32
+	Destination        *devconfig.Point
+	Pending            bool
+	PendingRetry       *job
+	RetryAt            time.Time
+	Waiting            []command
+	LastTick           time.Time
+	HostMS             int64
+	HostSession        string
+	DeathID            string
+	AwaitUntil         time.Time
+	LastBroadcast      time.Time
+	Loot               []*entity
+	LootUntil          time.Time
+	Potions            potionState
+	PendingOperationID string
+	PendingFingerprint string
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -334,6 +337,10 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
+	if c.frame.ID == p.MsgC2SUseItem && r.Pending {
+		w.queuePotion(r, c)
+		return
+	}
 	switch c.frame.ID {
 	case p.MsgC2SMoveIntent:
 		var q pb.MoveIntent
@@ -381,13 +388,13 @@ func (w *worker) command(c command) {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
 			return
 		}
-		for _, m := range r.Monsters {
+		for _, m := range r.Monsters[:r.MonsterCount] {
 			if m.Handle == q.TargetHandle && m.HP > 0 {
 				w.attack(r, &r.Player, m, time.Now())
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -435,7 +442,7 @@ func (w *worker) join(r *room, c command) {
 				return
 			}
 			c.conn.SetBinding(uint64(auth.SessionEpoch))
-			w.send(r, p.MsgS2CEnterLine, c.frame.Request, &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: 1, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(role.EconomicSeq + 1)})
+			w.send(r, p.MsgS2CEnterLine, c.frame.Request, &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(role.EconomicSeq + 1)})
 			w.baseline(r)
 			w.after(r)
 		}
@@ -453,6 +460,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	player, _ := f.Player(role.Job)
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.Role = role
+	r.Potions.LastAppliedSeq = role.EconomicSeq
 	r.Auto = true
 	r.MonsterCount = 1
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
@@ -466,7 +474,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	}
 }
 func (w *worker) after(r *room) {
-	if len(r.Waiting) > 0 && !r.Pending {
+	for len(r.Waiting) > 0 && !r.Pending {
 		c := r.Waiting[0]
 		r.Waiting = r.Waiting[1:]
 		w.command(c)
@@ -575,6 +583,18 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.Kind = "revive"
 		q.Context = x.Operation
 		q.ValidRevive = w.e.Store.Cfg.Fixture.AllowFreeDevRevive && x.Action == 1 && r.Player.HP == 0 && reviveID == r.DeathID
+	case p.MsgC2SUseItem:
+		var x pb.UseItemRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
+			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
+			return
+		}
+		q.Kind = "use_item"
+		q.Context = x.Operation
+		q.ItemID = domain.Hex(x.ItemInstanceId)
+		q.ItemDefinitionID = x.ItemId
+		q.SceneEpoch = x.SceneEpoch
+		q.PotionGateCode = potionGate(r, x.SceneEpoch, time.Now())
 	}
 	if q.Context == nil || len(q.Context.OpId) != 16 {
 		w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -589,10 +609,12 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		return
 	}
 	r.Pending = true
+	r.PendingOperationID = domain.Hex(q.Context.OpId)
+	r.PendingFingerprint = q.Fingerprint
 	auth := r.Auth
 	var j job
 	j = job{target: w, run: func() func(*worker) {
-		role, result, err := w.e.Store.Asset(w.e.ctx, auth, q)
+		role, result, receipt, err := w.e.Store.AssetWithReceipt(w.e.ctx, auth, q)
 		return func(w *worker) {
 			if err != nil && persistence.Code(err) == p.CodeOperationPending {
 				r.PendingRetry = &j
@@ -602,6 +624,8 @@ func (w *worker) asset(r *room, f wire.Frame) {
 				return
 			}
 			r.Pending = false
+			r.PendingOperationID = ""
+			r.PendingFingerprint = ""
 			if err == nil && role.Revision >= r.Role.Revision {
 				r.Role = role
 			}
@@ -617,6 +641,9 @@ func (w *worker) asset(r *room, f wire.Frame) {
 				r.Destination = nil
 				r.HostMS = 0
 			}
+			if err == nil && result.ErrorCode == 0 && q.Kind == "use_item" {
+				w.applyPotionReceipt(r, receipt, time.Now())
+			}
 			w.send(r, p.MsgS2COperationResult, f.Request, result)
 			w.assets(r)
 			w.snapshot(r)
@@ -631,7 +658,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem:
 		return true
 	}
 	return false
@@ -661,6 +688,11 @@ func operationID(f wire.Frame) []byte {
 		}
 	case p.MsgC2SReviveChoice:
 		q := &pb.ReviveChoice{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
+	case p.MsgC2SUseItem:
+		q := &pb.UseItemRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}

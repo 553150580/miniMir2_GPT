@@ -3824,6 +3824,120 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a UseItemRequest.
+         * @deprecated Use minimir.v1.UseItemRequest.$Properties instead.
+         */
+        interface IUseItemRequest extends minimir.v1.UseItemRequest.$Properties {
+        }
+
+        /** Represents a UseItemRequest. */
+        class UseItemRequest {
+
+            /**
+             * Constructs a new UseItemRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.UseItemRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** UseItemRequest item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** UseItemRequest item_id. */
+            item_id: number;
+
+            /** UseItemRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** UseItemRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new UseItemRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns UseItemRequest instance
+             */
+            static create(properties: minimir.v1.UseItemRequest.$Shape): minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape;
+            static create(properties?: minimir.v1.UseItemRequest.$Properties): minimir.v1.UseItemRequest;
+
+            /**
+             * Encodes the specified UseItemRequest message. Does not implicitly {@link minimir.v1.UseItemRequest.verify|verify} messages.
+             * @param message UseItemRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.UseItemRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified UseItemRequest message, length delimited. Does not implicitly {@link minimir.v1.UseItemRequest.verify|verify} messages.
+             * @param message UseItemRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.UseItemRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a UseItemRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape} UseItemRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape;
+
+            /**
+             * Decodes a UseItemRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape} UseItemRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.UseItemRequest & minimir.v1.UseItemRequest.$Shape;
+
+            /**
+             * Verifies a UseItemRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for UseItemRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace UseItemRequest {
+
+            /** Properties of a UseItemRequest. */
+            interface $Properties {
+
+                /** UseItemRequest item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** UseItemRequest item_id */
+                item_id?: (number|null);
+
+                /** UseItemRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** UseItemRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a UseItemRequest. */
+            type $Shape = minimir.v1.UseItemRequest.$Properties;
+        }
+
+        /**
          * Properties of a ClaimHostingTimeRequest.
          * @deprecated Use minimir.v1.ClaimHostingTimeRequest.$Properties instead.
          */

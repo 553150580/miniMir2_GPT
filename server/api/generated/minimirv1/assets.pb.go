@@ -421,6 +421,75 @@ func (x *RecycleRequest) GetOperation() *OperationContext {
 	return nil
 }
 
+// 药品只作用于原场景；永久消耗由角色owner确认，临时药效不持久化。
+type UseItemRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ItemInstanceId []byte                 `protobuf:"bytes,1,opt,name=item_instance_id,json=itemInstanceId,proto3" json:"item_instance_id,omitempty"`
+	ItemId         uint32                 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+	SceneEpoch     uint64                 `protobuf:"varint,3,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	Operation      *OperationContext      `protobuf:"bytes,4,opt,name=operation,proto3" json:"operation,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *UseItemRequest) Reset() {
+	*x = UseItemRequest{}
+	mi := &file_assets_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UseItemRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UseItemRequest) ProtoMessage() {}
+
+func (x *UseItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UseItemRequest.ProtoReflect.Descriptor instead.
+func (*UseItemRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *UseItemRequest) GetItemInstanceId() []byte {
+	if x != nil {
+		return x.ItemInstanceId
+	}
+	return nil
+}
+
+func (x *UseItemRequest) GetItemId() uint32 {
+	if x != nil {
+		return x.ItemId
+	}
+	return 0
+}
+
+func (x *UseItemRequest) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *UseItemRequest) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
 type ClaimHostingTimeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BenefitKind   uint32                 `protobuf:"varint,1,opt,name=benefit_kind,json=benefitKind,proto3" json:"benefit_kind,omitempty"`
@@ -431,7 +500,7 @@ type ClaimHostingTimeRequest struct {
 
 func (x *ClaimHostingTimeRequest) Reset() {
 	*x = ClaimHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[6]
+	mi := &file_assets_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -443,7 +512,7 @@ func (x *ClaimHostingTimeRequest) String() string {
 func (*ClaimHostingTimeRequest) ProtoMessage() {}
 
 func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[6]
+	mi := &file_assets_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -456,7 +525,7 @@ func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*ClaimHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{6}
+	return file_assets_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ClaimHostingTimeRequest) GetBenefitKind() uint32 {
@@ -483,7 +552,7 @@ type BuyHostingTimeRequest struct {
 
 func (x *BuyHostingTimeRequest) Reset() {
 	*x = BuyHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[7]
+	mi := &file_assets_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -495,7 +564,7 @@ func (x *BuyHostingTimeRequest) String() string {
 func (*BuyHostingTimeRequest) ProtoMessage() {}
 
 func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[7]
+	mi := &file_assets_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -508,7 +577,7 @@ func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuyHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*BuyHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{7}
+	return file_assets_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *BuyHostingTimeRequest) GetRequestedSeconds() uint32 {
@@ -542,7 +611,7 @@ type HostingReport struct {
 
 func (x *HostingReport) Reset() {
 	*x = HostingReport{}
-	mi := &file_assets_proto_msgTypes[8]
+	mi := &file_assets_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -554,7 +623,7 @@ func (x *HostingReport) String() string {
 func (*HostingReport) ProtoMessage() {}
 
 func (x *HostingReport) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[8]
+	mi := &file_assets_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -567,7 +636,7 @@ func (x *HostingReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingReport.ProtoReflect.Descriptor instead.
 func (*HostingReport) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{8}
+	return file_assets_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *HostingReport) GetHostingSessionId() []byte {
@@ -664,7 +733,13 @@ const file_assets_proto_rawDesc = "" +
 	"\toperation\x18\x03 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
 	"\x0eRecycleRequest\x12*\n" +
 	"\x11item_instance_ids\x18\x01 \x03(\fR\x0fitemInstanceIds\x12:\n" +
-	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xb0\x01\n" +
+	"\x0eUseItemRequest\x12(\n" +
+	"\x10item_instance_id\x18\x01 \x01(\fR\x0eitemInstanceId\x12\x17\n" +
+	"\aitem_id\x18\x02 \x01(\rR\x06itemId\x12\x1f\n" +
+	"\vscene_epoch\x18\x03 \x01(\x04R\n" +
+	"sceneEpoch\x12:\n" +
+	"\toperation\x18\x04 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
 	"\x17ClaimHostingTimeRequest\x12!\n" +
 	"\fbenefit_kind\x18\x01 \x01(\rR\vbenefitKind\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x80\x01\n" +
@@ -696,7 +771,7 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_assets_proto_goTypes = []any{
 	(*WalletState)(nil),             // 0: minimir.v1.WalletState
 	(*ItemView)(nil),                // 1: minimir.v1.ItemView
@@ -704,26 +779,28 @@ var file_assets_proto_goTypes = []any{
 	(*InventoryResult)(nil),         // 3: minimir.v1.InventoryResult
 	(*EquipRequest)(nil),            // 4: minimir.v1.EquipRequest
 	(*RecycleRequest)(nil),          // 5: minimir.v1.RecycleRequest
-	(*ClaimHostingTimeRequest)(nil), // 6: minimir.v1.ClaimHostingTimeRequest
-	(*BuyHostingTimeRequest)(nil),   // 7: minimir.v1.BuyHostingTimeRequest
-	(*HostingReport)(nil),           // 8: minimir.v1.HostingReport
-	(*OperationContext)(nil),        // 9: minimir.v1.OperationContext
+	(*UseItemRequest)(nil),          // 6: minimir.v1.UseItemRequest
+	(*ClaimHostingTimeRequest)(nil), // 7: minimir.v1.ClaimHostingTimeRequest
+	(*BuyHostingTimeRequest)(nil),   // 8: minimir.v1.BuyHostingTimeRequest
+	(*HostingReport)(nil),           // 9: minimir.v1.HostingReport
+	(*OperationContext)(nil),        // 10: minimir.v1.OperationContext
 }
 var file_assets_proto_depIdxs = []int32{
-	1, // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
-	1, // 1: minimir.v1.InventoryResult.items:type_name -> minimir.v1.ItemView
-	2, // 2: minimir.v1.InventoryResult.equipped:type_name -> minimir.v1.EquippedItem
-	9, // 3: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	9, // 4: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	9, // 5: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	9, // 6: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	0, // 7: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
-	1, // 8: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
+	1,  // 1: minimir.v1.InventoryResult.items:type_name -> minimir.v1.ItemView
+	2,  // 2: minimir.v1.InventoryResult.equipped:type_name -> minimir.v1.EquippedItem
+	10, // 3: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	10, // 4: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	10, // 5: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	10, // 6: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	10, // 7: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	0,  // 8: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
+	1,  // 9: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_assets_proto_init() }
@@ -738,7 +815,7 @@ func file_assets_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

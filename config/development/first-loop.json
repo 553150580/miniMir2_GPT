@@ -1,11 +1,30 @@
 {
   "schema_version": 1,
-  "rule_version": 1,
+  "rule_version": 2,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
   "damage_formula": "development_range_minus_defence",
   "allow_free_dev_revive": true,
+  "potions": {
+    "tick_ms": 200,
+    "base_per_tick": 5,
+    "levels_per_step": 10,
+    "use_delay_ms": 300,
+    "queue_cap": 65535,
+    "effects": [
+      {
+        "item_id": 35,
+        "hp": 20,
+        "mp": 0
+      },
+      {
+        "item_id": 36,
+        "hp": 0,
+        "mp": 30
+      }
+    ]
+  },
   "map": {
     "id": 1,
     "width": 16,
@@ -335,12 +354,12 @@
         {
           "id": 35,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:37",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。"
+          "note": "正式堆叠与药效映射仍待核验；本轮仅development启用逐件消费候选，恢复量和时序由开发首循环夹具统一维护。原Looks/Shape不作为已核验图标或药效证据。"
         },
         {
           "id": 36,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:38",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原Looks/Shape仅作来源候选；未映射图标、最大堆叠和药品恢复时序仍留空。"
+          "note": "正式堆叠与药效映射仍待核验；本轮仅development启用逐件消费候选，恢复量和时序由开发首循环夹具统一维护。原Looks/Shape不作为已核验图标或药效证据。"
         }
       ],
       "game_equipment": [
@@ -588,8 +607,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）",
+          "note": "仅development候选，正式发布仍禁用。红20/蓝30是跨来源开发测试量，不证明MYF Ac/Mac字段语义；Crystal普通药分跳/上限/满值清队列/死亡暂停；来源客户端300ms共享节流提升为服务器校验。详见docs/药品与技能实施边界.md。"
         }
       ],
       "game_drop_categories": [
@@ -619,7 +638,19 @@
     "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。",
     "damage_scope": "仅验证无幸运/命中/元素/Buff的源物理区间减固定防御子集。不是完整1.80伤害管线。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
-    "potion_effects": "Raw source Ac20/Mac30 are retained as provenance only; recovery amount/tick/cooldown is unverified and not enabled.",
+    "potion_effects": {
+      "status": "candidate",
+      "target_180_verified": false,
+      "parameters_source": "唯一玩法Excel/开发首循环夹具/parameters.potions；本工具不补默认数值",
+      "reference_document": "docs/药品与技能实施边界.md",
+      "amount_source": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:37-38记录Ac20/Mac30；未取得MYF字段语义实现，仅作跨来源开发恢复测试量，不是已核验原服药效。",
+      "recovery_source": "资料参考/crystal/Server/MirObjects/HumanObject.cs:186,550-648；PlayerObject.cs:5820-5837,6330-6337；普通药分HP/MP累计队列，满值仍扣并清对应剩余，死亡暂停保留。",
+      "use_delay_adaptation": "../SuprcodeCrystal/Client/MirControls/MirItemCell.cs:541-543,625仅有客户端共享300ms节流；本作提升为服务端共享节流属于明确development适配。",
+      "full_resource_use": "仍消费，客户端提交前明示并确认；恢复满值后清除对应剩余队列",
+      "death_policy": "死亡拒绝新使用，已提交剩余效果暂停保留，不因重新连接重发",
+      "automatic_use_enabled": false,
+      "formal_scope": "正式game_items堆叠上限及effect_list_id仍待核验；未开放正式效果表或职业技能。"
+    },
     "workbook_sync": "exported_from_current_unique_excel",
     "source_locks": [
       {
@@ -677,8 +708,8 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "5ffba0bd4d9a811ff9816a8712705f3adf0abd57febb3712afbbb2d540a3b5ce"
+      "sha256": "6432661c7c9daa42df859a7571d77ac51eb5f49c71584599aa1a8c6953e854ed"
     },
-    "exporter_sha256": "8fa7ad1ef1263eb2fbe30c0a4397027e892d1ded1a3e30e0e2701bb6c46044a8"
+    "exporter_sha256": "d631d2fd025d339239770352dbff01a6009d75ae853cb8e70c67b636364e1773"
   }
 }

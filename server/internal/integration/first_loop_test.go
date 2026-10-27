@@ -546,7 +546,7 @@ func (c *client) player() *pb.EntityState {
 	return nil
 }
 func (c *client) operation() *pb.OperationContext {
-	return &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: c.watermark + 1, ExpectedRevision: c.inventory.Revision, ExpectedRuleVersion: 1}
+	return &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: c.watermark + 1, ExpectedRevision: c.inventory.Revision, ExpectedRuleVersion: c.entry.ResourceVersion}
 }
 func (c *client) asset(id uint16, q proto.Message) *pb.OperationResult {
 	req := c.send(id, q)

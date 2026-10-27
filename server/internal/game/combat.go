@@ -234,6 +234,10 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Player.HP <= 0 {
 		return
 	}
+	if w.tickPotions(r, now) {
+		// 恢复量已经由权威场景应用，立即同步；不等待下一次战斗或奖励事务。
+		w.snapshot(r)
+	}
 	if offline && (r.Role.HostingSeconds <= 0 || r.Role.PickupStopped || !r.Auto) {
 		return
 	}
