@@ -63,6 +63,9 @@ type Item struct {
 	Stackable            bool     `json:"stackable"`
 	AllowedJobs          []uint32 `json:"allowed_jobs"`
 	BookSkillID          uint32   `json:"book_skill_id"`
+	IsSkillPage          bool     `json:"is_skill_page"`
+	DropQuality          uint32   `json:"drop_quality"`
+	MaxStack             int64    `json:"max_stack"`
 	DefenceMinBonus      int64    `json:"defence_min_bonus"`
 	DefenceMaxBonus      int64    `json:"defence_max_bonus"`
 	MagicDefenceMinBonus int64    `json:"magic_defence_min_bonus"`
@@ -116,6 +119,10 @@ type Fixture struct {
 	Healing           HealingRules       `json:"healing"`
 	PlayerGrowth      []PlayerGrowth     `json:"player_growth"`
 	InitialSkillBooks []InitialSkillBook `json:"initial_skill_books"`
+	SkillUpgrades     []SkillUpgrade     `json:"skill_upgrades"`
+	SkillShop         []SkillShop        `json:"skill_shop"`
+	SkillBookRecycle  []SkillBookRecycle `json:"skill_book_recycle"`
+	SkillEconomy      SkillEconomy       `json:"skill_economy"`
 	Drops             struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`

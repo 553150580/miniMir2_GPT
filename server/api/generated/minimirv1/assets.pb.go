@@ -98,12 +98,16 @@ func (x *WalletState) GetRevision() uint64 {
 }
 
 type ItemView struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	InstanceId    []byte                 `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	ItemId        uint32                 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
-	Quantity      int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
-	Bound         bool                   `protobuf:"varint,4,opt,name=bound,proto3" json:"bound,omitempty"`
-	Version       uint64                 `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	InstanceId []byte                 `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	ItemId     uint32                 `protobuf:"varint,2,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+	Quantity   int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Bound      bool                   `protobuf:"varint,4,opt,name=bound,proto3" json:"bound,omitempty"`
+	Version    uint64                 `protobuf:"varint,5,opt,name=version,proto3" json:"version,omitempty"`
+	// 来源与品质属于物品实例，旧实例空来源保持未知，不反推成掉落。
+	SourceKind    string `protobuf:"bytes,6,opt,name=source_kind,json=sourceKind,proto3" json:"source_kind,omitempty"`
+	SourceId      string `protobuf:"bytes,7,opt,name=source_id,json=sourceId,proto3" json:"source_id,omitempty"`
+	Quality       uint32 `protobuf:"varint,8,opt,name=quality,proto3" json:"quality,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,6 +173,27 @@ func (x *ItemView) GetBound() bool {
 func (x *ItemView) GetVersion() uint64 {
 	if x != nil {
 		return x.Version
+	}
+	return 0
+}
+
+func (x *ItemView) GetSourceKind() string {
+	if x != nil {
+		return x.SourceKind
+	}
+	return ""
+}
+
+func (x *ItemView) GetSourceId() string {
+	if x != nil {
+		return x.SourceId
+	}
+	return ""
+}
+
+func (x *ItemView) GetQuality() uint32 {
+	if x != nil {
+		return x.Quality
 	}
 	return 0
 }
@@ -611,6 +636,480 @@ func (x *LearnSkillRequest) GetOperation() *OperationContext {
 	return nil
 }
 
+// kind：1购书/书页，2技能升级，3技能书分解。预览不冻结资产。
+type ItemConsumption struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	InstanceId    []byte                 `protobuf:"bytes,1,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	Version       uint64                 `protobuf:"varint,2,opt,name=version,proto3" json:"version,omitempty"`
+	Quantity      int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ItemConsumption) Reset() {
+	*x = ItemConsumption{}
+	mi := &file_assets_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ItemConsumption) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ItemConsumption) ProtoMessage() {}
+
+func (x *ItemConsumption) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ItemConsumption.ProtoReflect.Descriptor instead.
+func (*ItemConsumption) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ItemConsumption) GetInstanceId() []byte {
+	if x != nil {
+		return x.InstanceId
+	}
+	return nil
+}
+
+func (x *ItemConsumption) GetVersion() uint64 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
+func (x *ItemConsumption) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+type SkillAssetPreviewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Kind          uint32                 `protobuf:"varint,1,opt,name=kind,proto3" json:"kind,omitempty"`
+	OfferId       uint32                 `protobuf:"varint,2,opt,name=offer_id,json=offerId,proto3" json:"offer_id,omitempty"`
+	Quantity      int64                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	SkillId       uint32                 `protobuf:"varint,4,opt,name=skill_id,json=skillId,proto3" json:"skill_id,omitempty"`
+	Materials     []*ItemConsumption     `protobuf:"bytes,5,rep,name=materials,proto3" json:"materials,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SkillAssetPreviewRequest) Reset() {
+	*x = SkillAssetPreviewRequest{}
+	mi := &file_assets_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillAssetPreviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillAssetPreviewRequest) ProtoMessage() {}
+
+func (x *SkillAssetPreviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillAssetPreviewRequest.ProtoReflect.Descriptor instead.
+func (*SkillAssetPreviewRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SkillAssetPreviewRequest) GetKind() uint32 {
+	if x != nil {
+		return x.Kind
+	}
+	return 0
+}
+
+func (x *SkillAssetPreviewRequest) GetOfferId() uint32 {
+	if x != nil {
+		return x.OfferId
+	}
+	return 0
+}
+
+func (x *SkillAssetPreviewRequest) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *SkillAssetPreviewRequest) GetSkillId() uint32 {
+	if x != nil {
+		return x.SkillId
+	}
+	return 0
+}
+
+func (x *SkillAssetPreviewRequest) GetMaterials() []*ItemConsumption {
+	if x != nil {
+		return x.Materials
+	}
+	return nil
+}
+
+type SkillMaterialView struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Item            *ItemView              `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	ConsumeQuantity int64                  `protobuf:"varint,2,opt,name=consume_quantity,json=consumeQuantity,proto3" json:"consume_quantity,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *SkillMaterialView) Reset() {
+	*x = SkillMaterialView{}
+	mi := &file_assets_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillMaterialView) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillMaterialView) ProtoMessage() {}
+
+func (x *SkillMaterialView) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillMaterialView.ProtoReflect.Descriptor instead.
+func (*SkillMaterialView) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SkillMaterialView) GetItem() *ItemView {
+	if x != nil {
+		return x.Item
+	}
+	return nil
+}
+
+func (x *SkillMaterialView) GetConsumeQuantity() int64 {
+	if x != nil {
+		return x.ConsumeQuantity
+	}
+	return 0
+}
+
+// key由服务端枚举白名单提供，显示基础威力/准确/耗蓝，不伪装最终伤害。
+type SkillNumericComparison struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Key           string                 `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	BeforeMin     int64                  `protobuf:"varint,2,opt,name=before_min,json=beforeMin,proto3" json:"before_min,omitempty"`
+	BeforeMax     int64                  `protobuf:"varint,3,opt,name=before_max,json=beforeMax,proto3" json:"before_max,omitempty"`
+	AfterMin      int64                  `protobuf:"varint,4,opt,name=after_min,json=afterMin,proto3" json:"after_min,omitempty"`
+	AfterMax      int64                  `protobuf:"varint,5,opt,name=after_max,json=afterMax,proto3" json:"after_max,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SkillNumericComparison) Reset() {
+	*x = SkillNumericComparison{}
+	mi := &file_assets_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillNumericComparison) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillNumericComparison) ProtoMessage() {}
+
+func (x *SkillNumericComparison) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillNumericComparison.ProtoReflect.Descriptor instead.
+func (*SkillNumericComparison) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SkillNumericComparison) GetKey() string {
+	if x != nil {
+		return x.Key
+	}
+	return ""
+}
+
+func (x *SkillNumericComparison) GetBeforeMin() int64 {
+	if x != nil {
+		return x.BeforeMin
+	}
+	return 0
+}
+
+func (x *SkillNumericComparison) GetBeforeMax() int64 {
+	if x != nil {
+		return x.BeforeMax
+	}
+	return 0
+}
+
+func (x *SkillNumericComparison) GetAfterMin() int64 {
+	if x != nil {
+		return x.AfterMin
+	}
+	return 0
+}
+
+func (x *SkillNumericComparison) GetAfterMax() int64 {
+	if x != nil {
+		return x.AfterMax
+	}
+	return 0
+}
+
+type SkillAssetPreview struct {
+	state           protoimpl.MessageState    `protogen:"open.v1"`
+	PreviewId       []byte                    `protobuf:"bytes,1,opt,name=preview_id,json=previewId,proto3" json:"preview_id,omitempty"`
+	Kind            uint32                    `protobuf:"varint,2,opt,name=kind,proto3" json:"kind,omitempty"`
+	RuleVersion     uint64                    `protobuf:"varint,3,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
+	ConfigHash      string                    `protobuf:"bytes,4,opt,name=config_hash,json=configHash,proto3" json:"config_hash,omitempty"`
+	RoleRevision    uint64                    `protobuf:"varint,5,opt,name=role_revision,json=roleRevision,proto3" json:"role_revision,omitempty"`
+	ExpiresAtUnixMs uint64                    `protobuf:"varint,6,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	SkillId         uint32                    `protobuf:"varint,7,opt,name=skill_id,json=skillId,proto3" json:"skill_id,omitempty"`
+	FromLevel       uint32                    `protobuf:"varint,8,opt,name=from_level,json=fromLevel,proto3" json:"from_level,omitempty"`
+	ToLevel         uint32                    `protobuf:"varint,9,opt,name=to_level,json=toLevel,proto3" json:"to_level,omitempty"`
+	Spend           *WalletState              `protobuf:"bytes,10,opt,name=spend,proto3" json:"spend,omitempty"`
+	Materials       []*SkillMaterialView      `protobuf:"bytes,11,rep,name=materials,proto3" json:"materials,omitempty"`
+	Outputs         []*ItemView               `protobuf:"bytes,12,rep,name=outputs,proto3" json:"outputs,omitempty"`
+	Stats           []*SkillNumericComparison `protobuf:"bytes,13,rep,name=stats,proto3" json:"stats,omitempty"`
+	OfferId         uint32                    `protobuf:"varint,14,opt,name=offer_id,json=offerId,proto3" json:"offer_id,omitempty"`
+	Quantity        int64                     `protobuf:"varint,15,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *SkillAssetPreview) Reset() {
+	*x = SkillAssetPreview{}
+	mi := &file_assets_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillAssetPreview) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillAssetPreview) ProtoMessage() {}
+
+func (x *SkillAssetPreview) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillAssetPreview.ProtoReflect.Descriptor instead.
+func (*SkillAssetPreview) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SkillAssetPreview) GetPreviewId() []byte {
+	if x != nil {
+		return x.PreviewId
+	}
+	return nil
+}
+
+func (x *SkillAssetPreview) GetKind() uint32 {
+	if x != nil {
+		return x.Kind
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetRuleVersion() uint64 {
+	if x != nil {
+		return x.RuleVersion
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetConfigHash() string {
+	if x != nil {
+		return x.ConfigHash
+	}
+	return ""
+}
+
+func (x *SkillAssetPreview) GetRoleRevision() uint64 {
+	if x != nil {
+		return x.RoleRevision
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetExpiresAtUnixMs() uint64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetSkillId() uint32 {
+	if x != nil {
+		return x.SkillId
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetFromLevel() uint32 {
+	if x != nil {
+		return x.FromLevel
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetToLevel() uint32 {
+	if x != nil {
+		return x.ToLevel
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetSpend() *WalletState {
+	if x != nil {
+		return x.Spend
+	}
+	return nil
+}
+
+func (x *SkillAssetPreview) GetMaterials() []*SkillMaterialView {
+	if x != nil {
+		return x.Materials
+	}
+	return nil
+}
+
+func (x *SkillAssetPreview) GetOutputs() []*ItemView {
+	if x != nil {
+		return x.Outputs
+	}
+	return nil
+}
+
+func (x *SkillAssetPreview) GetStats() []*SkillNumericComparison {
+	if x != nil {
+		return x.Stats
+	}
+	return nil
+}
+
+func (x *SkillAssetPreview) GetOfferId() uint32 {
+	if x != nil {
+		return x.OfferId
+	}
+	return 0
+}
+
+func (x *SkillAssetPreview) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+type SkillAssetCommitRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PreviewId     []byte                 `protobuf:"bytes,1,opt,name=preview_id,json=previewId,proto3" json:"preview_id,omitempty"`
+	Operation     *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SkillAssetCommitRequest) Reset() {
+	*x = SkillAssetCommitRequest{}
+	mi := &file_assets_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SkillAssetCommitRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SkillAssetCommitRequest) ProtoMessage() {}
+
+func (x *SkillAssetCommitRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SkillAssetCommitRequest.ProtoReflect.Descriptor instead.
+func (*SkillAssetCommitRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *SkillAssetCommitRequest) GetPreviewId() []byte {
+	if x != nil {
+		return x.PreviewId
+	}
+	return nil
+}
+
+func (x *SkillAssetCommitRequest) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
 type ClaimHostingTimeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BenefitKind   uint32                 `protobuf:"varint,1,opt,name=benefit_kind,json=benefitKind,proto3" json:"benefit_kind,omitempty"`
@@ -621,7 +1120,7 @@ type ClaimHostingTimeRequest struct {
 
 func (x *ClaimHostingTimeRequest) Reset() {
 	*x = ClaimHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[9]
+	mi := &file_assets_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -633,7 +1132,7 @@ func (x *ClaimHostingTimeRequest) String() string {
 func (*ClaimHostingTimeRequest) ProtoMessage() {}
 
 func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[9]
+	mi := &file_assets_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -646,7 +1145,7 @@ func (x *ClaimHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClaimHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*ClaimHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{9}
+	return file_assets_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ClaimHostingTimeRequest) GetBenefitKind() uint32 {
@@ -673,7 +1172,7 @@ type BuyHostingTimeRequest struct {
 
 func (x *BuyHostingTimeRequest) Reset() {
 	*x = BuyHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[10]
+	mi := &file_assets_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -685,7 +1184,7 @@ func (x *BuyHostingTimeRequest) String() string {
 func (*BuyHostingTimeRequest) ProtoMessage() {}
 
 func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[10]
+	mi := &file_assets_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -698,7 +1197,7 @@ func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuyHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*BuyHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{10}
+	return file_assets_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *BuyHostingTimeRequest) GetRequestedSeconds() uint32 {
@@ -732,7 +1231,7 @@ type HostingReport struct {
 
 func (x *HostingReport) Reset() {
 	*x = HostingReport{}
-	mi := &file_assets_proto_msgTypes[11]
+	mi := &file_assets_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -744,7 +1243,7 @@ func (x *HostingReport) String() string {
 func (*HostingReport) ProtoMessage() {}
 
 func (x *HostingReport) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[11]
+	mi := &file_assets_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -757,7 +1256,7 @@ func (x *HostingReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingReport.ProtoReflect.Descriptor instead.
 func (*HostingReport) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{11}
+	return file_assets_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *HostingReport) GetHostingSessionId() []byte {
@@ -828,14 +1327,18 @@ const file_assets_proto_rawDesc = "" +
 	"bound_gold\x18\x02 \x01(\x03R\tboundGold\x12#\n" +
 	"\ryuanbao_units\x18\x03 \x01(\x03R\fyuanbaoUnits\x12.\n" +
 	"\x13bound_yuanbao_units\x18\x04 \x01(\x03R\x11boundYuanbaoUnits\x12\x1a\n" +
-	"\brevision\x18\x05 \x01(\x04R\brevision\"\x90\x01\n" +
+	"\brevision\x18\x05 \x01(\x04R\brevision\"\xe8\x01\n" +
 	"\bItemView\x12\x1f\n" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x17\n" +
 	"\aitem_id\x18\x02 \x01(\rR\x06itemId\x12\x1a\n" +
 	"\bquantity\x18\x03 \x01(\x03R\bquantity\x12\x14\n" +
 	"\x05bound\x18\x04 \x01(\bR\x05bound\x12\x18\n" +
-	"\aversion\x18\x05 \x01(\x04R\aversion\"L\n" +
+	"\aversion\x18\x05 \x01(\x04R\aversion\x12\x1f\n" +
+	"\vsource_kind\x18\x06 \x01(\tR\n" +
+	"sourceKind\x12\x1b\n" +
+	"\tsource_id\x18\a \x01(\tR\bsourceId\x12\x18\n" +
+	"\aquality\x18\b \x01(\rR\aquality\"L\n" +
 	"\fEquippedItem\x12\x12\n" +
 	"\x04slot\x18\x01 \x01(\rR\x04slot\x12(\n" +
 	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"?\n" +
@@ -868,7 +1371,53 @@ const file_assets_proto_rawDesc = "" +
 	"\x11LearnSkillRequest\x12(\n" +
 	"\x10item_instance_id\x18\x01 \x01(\fR\x0eitemInstanceId\x12\x19\n" +
 	"\bskill_id\x18\x02 \x01(\rR\askillId\x12:\n" +
-	"\toperation\x18\x03 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
+	"\toperation\x18\x03 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"h\n" +
+	"\x0fItemConsumption\x12\x1f\n" +
+	"\vinstance_id\x18\x01 \x01(\fR\n" +
+	"instanceId\x12\x18\n" +
+	"\aversion\x18\x02 \x01(\x04R\aversion\x12\x1a\n" +
+	"\bquantity\x18\x03 \x01(\x03R\bquantity\"\xbb\x01\n" +
+	"\x18SkillAssetPreviewRequest\x12\x12\n" +
+	"\x04kind\x18\x01 \x01(\rR\x04kind\x12\x19\n" +
+	"\boffer_id\x18\x02 \x01(\rR\aofferId\x12\x1a\n" +
+	"\bquantity\x18\x03 \x01(\x03R\bquantity\x12\x19\n" +
+	"\bskill_id\x18\x04 \x01(\rR\askillId\x129\n" +
+	"\tmaterials\x18\x05 \x03(\v2\x1b.minimir.v1.ItemConsumptionR\tmaterials\"h\n" +
+	"\x11SkillMaterialView\x12(\n" +
+	"\x04item\x18\x01 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\x12)\n" +
+	"\x10consume_quantity\x18\x02 \x01(\x03R\x0fconsumeQuantity\"\xa2\x01\n" +
+	"\x16SkillNumericComparison\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x1d\n" +
+	"\n" +
+	"before_min\x18\x02 \x01(\x03R\tbeforeMin\x12\x1d\n" +
+	"\n" +
+	"before_max\x18\x03 \x01(\x03R\tbeforeMax\x12\x1b\n" +
+	"\tafter_min\x18\x04 \x01(\x03R\bafterMin\x12\x1b\n" +
+	"\tafter_max\x18\x05 \x01(\x03R\bafterMax\"\xbe\x04\n" +
+	"\x11SkillAssetPreview\x12\x1d\n" +
+	"\n" +
+	"preview_id\x18\x01 \x01(\fR\tpreviewId\x12\x12\n" +
+	"\x04kind\x18\x02 \x01(\rR\x04kind\x12!\n" +
+	"\frule_version\x18\x03 \x01(\x04R\vruleVersion\x12\x1f\n" +
+	"\vconfig_hash\x18\x04 \x01(\tR\n" +
+	"configHash\x12#\n" +
+	"\rrole_revision\x18\x05 \x01(\x04R\froleRevision\x12+\n" +
+	"\x12expires_at_unix_ms\x18\x06 \x01(\x04R\x0fexpiresAtUnixMs\x12\x19\n" +
+	"\bskill_id\x18\a \x01(\rR\askillId\x12\x1d\n" +
+	"\n" +
+	"from_level\x18\b \x01(\rR\tfromLevel\x12\x19\n" +
+	"\bto_level\x18\t \x01(\rR\atoLevel\x12-\n" +
+	"\x05spend\x18\n" +
+	" \x01(\v2\x17.minimir.v1.WalletStateR\x05spend\x12;\n" +
+	"\tmaterials\x18\v \x03(\v2\x1d.minimir.v1.SkillMaterialViewR\tmaterials\x12.\n" +
+	"\aoutputs\x18\f \x03(\v2\x14.minimir.v1.ItemViewR\aoutputs\x128\n" +
+	"\x05stats\x18\r \x03(\v2\".minimir.v1.SkillNumericComparisonR\x05stats\x12\x19\n" +
+	"\boffer_id\x18\x0e \x01(\rR\aofferId\x12\x1a\n" +
+	"\bquantity\x18\x0f \x01(\x03R\bquantity\"t\n" +
+	"\x17SkillAssetCommitRequest\x12\x1d\n" +
+	"\n" +
+	"preview_id\x18\x01 \x01(\fR\tpreviewId\x12:\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
 	"\x17ClaimHostingTimeRequest\x12!\n" +
 	"\fbenefit_kind\x18\x01 \x01(\rR\vbenefitKind\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x80\x01\n" +
@@ -900,40 +1449,53 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_assets_proto_goTypes = []any{
-	(*WalletState)(nil),             // 0: minimir.v1.WalletState
-	(*ItemView)(nil),                // 1: minimir.v1.ItemView
-	(*EquippedItem)(nil),            // 2: minimir.v1.EquippedItem
-	(*LearnedSkill)(nil),            // 3: minimir.v1.LearnedSkill
-	(*InventoryResult)(nil),         // 4: minimir.v1.InventoryResult
-	(*EquipRequest)(nil),            // 5: minimir.v1.EquipRequest
-	(*RecycleRequest)(nil),          // 6: minimir.v1.RecycleRequest
-	(*UseItemRequest)(nil),          // 7: minimir.v1.UseItemRequest
-	(*LearnSkillRequest)(nil),       // 8: minimir.v1.LearnSkillRequest
-	(*ClaimHostingTimeRequest)(nil), // 9: minimir.v1.ClaimHostingTimeRequest
-	(*BuyHostingTimeRequest)(nil),   // 10: minimir.v1.BuyHostingTimeRequest
-	(*HostingReport)(nil),           // 11: minimir.v1.HostingReport
-	(*OperationContext)(nil),        // 12: minimir.v1.OperationContext
+	(*WalletState)(nil),              // 0: minimir.v1.WalletState
+	(*ItemView)(nil),                 // 1: minimir.v1.ItemView
+	(*EquippedItem)(nil),             // 2: minimir.v1.EquippedItem
+	(*LearnedSkill)(nil),             // 3: minimir.v1.LearnedSkill
+	(*InventoryResult)(nil),          // 4: minimir.v1.InventoryResult
+	(*EquipRequest)(nil),             // 5: minimir.v1.EquipRequest
+	(*RecycleRequest)(nil),           // 6: minimir.v1.RecycleRequest
+	(*UseItemRequest)(nil),           // 7: minimir.v1.UseItemRequest
+	(*LearnSkillRequest)(nil),        // 8: minimir.v1.LearnSkillRequest
+	(*ItemConsumption)(nil),          // 9: minimir.v1.ItemConsumption
+	(*SkillAssetPreviewRequest)(nil), // 10: minimir.v1.SkillAssetPreviewRequest
+	(*SkillMaterialView)(nil),        // 11: minimir.v1.SkillMaterialView
+	(*SkillNumericComparison)(nil),   // 12: minimir.v1.SkillNumericComparison
+	(*SkillAssetPreview)(nil),        // 13: minimir.v1.SkillAssetPreview
+	(*SkillAssetCommitRequest)(nil),  // 14: minimir.v1.SkillAssetCommitRequest
+	(*ClaimHostingTimeRequest)(nil),  // 15: minimir.v1.ClaimHostingTimeRequest
+	(*BuyHostingTimeRequest)(nil),    // 16: minimir.v1.BuyHostingTimeRequest
+	(*HostingReport)(nil),            // 17: minimir.v1.HostingReport
+	(*OperationContext)(nil),         // 18: minimir.v1.OperationContext
 }
 var file_assets_proto_depIdxs = []int32{
 	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
 	1,  // 1: minimir.v1.InventoryResult.items:type_name -> minimir.v1.ItemView
 	2,  // 2: minimir.v1.InventoryResult.equipped:type_name -> minimir.v1.EquippedItem
 	3,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
-	12, // 4: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	12, // 5: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	12, // 6: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
-	12, // 7: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
-	12, // 8: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	12, // 9: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	0,  // 10: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
-	1,  // 11: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
-	12, // [12:12] is the sub-list for method output_type
-	12, // [12:12] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	18, // 4: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	18, // 5: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	18, // 6: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	18, // 7: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
+	9,  // 8: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
+	1,  // 9: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
+	0,  // 10: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
+	11, // 11: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
+	1,  // 12: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
+	12, // 13: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
+	18, // 14: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	18, // 15: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	18, // 16: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	0,  // 17: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
+	1,  // 18: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_assets_proto_init() }
@@ -948,7 +1510,7 @@ func file_assets_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

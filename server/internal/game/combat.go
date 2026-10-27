@@ -3,6 +3,7 @@ package game
 import (
 	"context"
 	"crypto/rand"
+	"fmt"
 	"math/big"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
@@ -140,7 +141,7 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 			a.MagicDefenceMax += def.MagicDefenceMaxBonus
 		}
 		for _, skill := range f.Skills {
-			if level, learned := r.Role.Skill(skill.ID); learned && skill.Behavior == "fencing" {
+			if level, learned := r.Role.Skill(skill.ID); learned && skill.Behavior == "fencing" && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
 				a.Accuracy += int64(level) * skill.AccuracyPerLevel
 			}
 		}
@@ -386,6 +387,9 @@ func (w *worker) kill(r *room, m *entity, now time.Time) {
 	if equipment {
 		ids := f.Drops.EquipmentItemIDs
 		item := domain.Item{ID: domain.ID(), ItemID: ids[random(int64(len(ids)))], Quantity: 1, Bound: bound, Version: 1}
+		item.SourceKind, item.SourceID = "monster_drop", fmt.Sprint(q.SourceSeq)
+		definition, _ := f.Item(item.ItemID)
+		item.Quality = definition.DropQuality
 		q.Item = &item
 		q.NoEquipmentKills = 0
 	} else if roll >= 650000 && roll < 850000 {
@@ -393,6 +397,9 @@ func (w *worker) kill(r *room, m *entity, now time.Time) {
 	} else if roll >= 850000 && roll < 950000 && len(f.Drops.ItemIDs) > 0 {
 		ids := f.Drops.ItemIDs
 		item := domain.Item{ID: domain.ID(), ItemID: ids[random(int64(len(ids)))], Quantity: 1, Bound: bound, Version: 1}
+		item.SourceKind, item.SourceID = "monster_drop", fmt.Sprint(q.SourceSeq)
+		definition, _ := f.Item(item.ItemID)
+		item.Quality = definition.DropQuality
 		q.Item = &item
 	}
 	if r.Conn == nil {

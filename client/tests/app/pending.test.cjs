@@ -43,6 +43,18 @@ test('技能学习未决保存原书与原经济身份，拒绝补造等级、�
         assert.throws(()=>store.set('roleA',{id:40010,value}),{code:'INVALID_OPERATION'});assert.equal(store.get('roleA'),null);
     }
 });
+
+test('技能资产提交仅保存原previewId与经济身份，重连不能改报价或夹带价格材料',()=>{
+    const storage=new MemoryStorage(),original={id:40013,value:{previewId:id(9),operation:pending().value.operation}};
+    const store=new PendingOperations(storage,key);store.set('roleA',original);
+    const restored=new PendingOperations(storage,key).get('roleA');
+    const encode=value=>pb.SkillAssetCommitRequest.encode({preview_id:value.previewId,operation:{op_id:value.operation.opId,command_seq:value.operation.commandSeq,expected_revision:value.operation.expectedRevision,expected_rule_version:value.operation.expectedRuleVersion}}).finish();
+    assert.deepEqual(encode(restored.value),encode(original.value));
+    assert.throws(()=>store.set('roleA',{id:40013,value:{...original.value,previewId:id(8)}}),{code:'PENDING_EXISTS'});
+    for(const mutate of [v=>{v.previewId=new Uint8Array(15);},v=>{v.price=1;},v=>{v.materials=[];},v=>{v.bound=false;},v=>{v.token='secret';}]){
+        const value={...original.value};mutate(value);assert.throws(()=>new PendingOperations().set('roleA',{id:40013,value}),{code:'INVALID_OPERATION'});
+    }
+});
 function wire(value) {
     return pb.RecycleRequest.encode({ item_instance_ids: value.itemInstanceIds, operation: {
         op_id: value.operation.opId, command_seq: value.operation.commandSeq,

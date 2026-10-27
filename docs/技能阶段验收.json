@@ -45,7 +45,7 @@
     "report": "outputs/development-skills-20261027/Creator构建检查.json",
     "sha256": "6f1ec65efb841bce3d93a33f701e80fb913b3283901c5929d5c883c6753b9378",
     "seconds": 144.12,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "saved_layouts": 7,
     "layout_preservation": "outputs/development-skills-20261027/既有界面布局核对.json"
   },
@@ -55,7 +55,7 @@
     "race": true,
     "passed_records": 54,
     "skipped": 0,
-    "current_sources_match": true
+    "current_sources_match": false
   },
   "source_review": "outputs/development-skills-20261027/技能源码独立复核.json",
   "browser": {
@@ -171,5 +171,8 @@
     "完整装备/幸运/元素/Buff与源普攻550ms互锁",
     "真实未知提交故障注入、手机真机与容量",
     "首次无追踪时状态变化未归因；保留观察，追踪后未再次出现额外请求，不据此宣称已根治"
-  ]
+  ],
+  "historical_stage": true,
+  "source_commit": "421ce1c127a63d02da59ae9ba6a4f757a6b308ed",
+  "current_work_note": "后续技能获取与升级改变配置/源码，本报告只证明421ce1c阶段，不能视为当前通过。"
 }

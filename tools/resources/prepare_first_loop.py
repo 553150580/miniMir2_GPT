@@ -22,7 +22,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_exp_levels','game_drop_pools','game_drop_entries',
-           'game_skills','game_recycle_values','dev_first_loop_profile']
+           'game_skills','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -161,14 +161,32 @@ def potion_rules(profile,items):
         seen.add(item_id)
     return deepcopy(settings)
 
-SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm'.split()
+SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm'.split()
 HEALING_FIELDS='tick_ms base_per_tick pet_base_per_tick levels_per_step queue_fraction_divisor queue_cap'.split()
 GROWTH_FIELDS='hp_gain hp_gain_rate mp_gain mp_gain_rate attack_divisor defence_max_divisor magic_divisor tao_divisor magic_defence_min_divisor magic_defence_max_divisor'.split()
 
-def validate_skills(profile):
+def skill_definitions(tables,profile):
+    """正式技能表是唯一技能数值源；开发夹具仅选择ID，不保留旧参数副本。"""
+    if 'skills' in profile:raise ValueError('技能参数已迁入技能基础定义，请删除开发夹具中的旧skills副本')
+    ids=profile.get('skill_ids')
+    if not isinstance(ids,list) or not ids or len(set(ids))!=len(ids):raise ValueError('开发技能ID选择缺失或重复')
+    result=[]
+    for id in ids:
+        try:
+            row=next(r for r in tables['game_skills'] if r['id']==id)
+            result.append({'id':id,'name':row['display_name'],'job_id':row['class_id'],'book_item_id':row['book_item_id'],
+                'learn_level':row['learn_level'],'learned_level':row['native_start_level'],'max_level':row['native_max_level'],
+                'behavior':row['behavior_id'],'cooldown_base_ms':row['cooldown_ms'],
+                **{k:row['target_rule'][k] for k in ['range_cells','target_move_tolerance_cells']},
+                **{k:row['cast_timing'][k] for k in ['cooldown_reduction_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell']},
+                **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost']},
+                **{k:row['damage_parameters'][k] for k in ['accuracy_per_level','power_base','power_bonus','mpower_base','mpower_bonus','multiplier_base_ppm','multiplier_bonus_ppm']}})
+        except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
+    return result
+
+def validate_skills(profile,skills):
     """技能参数必须来自当前Excel，不按技能名或来源表临时填运行数值。"""
     import math
-    skills=profile.get('skills')
     if not isinstance(skills,list) or not skills:raise ValueError('开发夹具缺少技能定义')
     ids=set();books=set();behaviors=set()
     for skill in skills:
@@ -177,6 +195,7 @@ def validate_skills(profile):
         if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in ['fencing','fireball','healing']:raise ValueError('技能名称/行为不合法')
         if not skill['id'] or skill['id'] in ids or not skill['book_item_id'] or skill['book_item_id'] in books or skill['job_id']>2 or not skill['learn_level']:
             raise ValueError('技能身份、职业、学习条件或技能书重复/缺失')
+        if skill['max_level']<skill['learned_level'] or skill['max_level']>255:raise ValueError('技能开放等级域不合法')
         if skill['behavior']!='fencing' and any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','range_cells','delay_base_ms']):raise ValueError('主动技能时序与射程必须完整')
         ids.add(skill['id']);books.add(skill['book_item_id']);behaviors.add(skill['behavior'])
     if behaviors!={'fencing','fireball','healing'}:raise ValueError('首组三职业候选技能不完整')
@@ -192,12 +211,48 @@ def validate_skills(profile):
     expected={(s['job_id'],s['book_item_id']) for s in skills}
     if not isinstance(initial,list) or len(initial)!=len(expected) or {(r['job_id'],r['item_id']) for r in initial}!=expected:raise ValueError('初始书必须逐项引用当前职业技能书')
 
+def skill_economy(tables,profile,skills,items):
+    """书价、页价、分解页数与逐技能消耗分别读取其唯一表，不回填测试缺省。"""
+    economy=deepcopy(profile.get('skill_economy'))
+    if not isinstance(economy,dict) or set(economy)!={'page_item_id','preview_ttl_ms','preview_material_limit'} or any(type(v) is not int or v<=0 for v in economy.values()):raise ValueError('技能经济技术参数缺失')
+    by_item={r['id']:r for r in items};by_skill={r['id']:r for r in skills}
+    if economy['page_item_id'] not in by_item or not by_item[economy['page_item_id']].get('is_skill_page'):raise ValueError('书页物品引用不符')
+    upgrades=[]
+    for row in tables['game_skill_upgrades']:
+        if row['skill_id'] not in by_skill:continue
+        skill=by_skill[row['skill_id']];rank=row['level'];costs=row['book_cost']
+        if type(rank) is not int or not skill['learned_level']<rank<=skill['max_level']:raise ValueError('升级目标阶越界')
+        if costs!=[{'item_id':skill['book_item_id'],'quantity':rank+1}]:raise ValueError('每阶技能书必须等于目标阶+1，且只消耗对应技能书')
+        if row['preserve_behavior_shape'] is not True or row['allowed_numeric_changes']!={'native_rank':rank}:raise ValueError('升级只能改变已支持的原生数值阶，不能覆盖射程/目标/行为')
+        if type(row['page_cost']) is not int or row['page_cost']<0 or row['page_item_id']!=economy['page_item_id'] or type(row['required_role_level']) is not int or row['required_role_level']<=0:raise ValueError('升级材料或等级条件缺失')
+        upgrades.append({'skill_id':skill['id'],'level':rank,'required_role_level':row['required_role_level'],'book_costs':deepcopy(costs),'page_item_id':row['page_item_id'],'page_cost':row['page_cost']})
+    for skill in skills:
+        rows=[r for r in upgrades if r['skill_id']==skill['id']]
+        if sorted(r['level'] for r in rows)!=list(range(skill['learned_level']+1,skill['max_level']+1)):raise ValueError('逐技能升级行重复或不连续')
+    offers=[];seen=set()
+    for choice in profile['skill_shop_entries']:
+        try:row=next(r for r in tables['game_shop_prices'] if r['id']==choice['offer_id'])
+        except StopIteration as error:raise ValueError('技能商品未引用商城表') from error
+        currency=row['payment_currency'];price=row['price_gold'] if currency=='gold' else row['price_u']
+        if choice['offer_id'] in seen or choice['item_id'] not in by_item or currency not in ['gold','ingot','bound_ingot'] or type(price) is not int or price<=0 or row['daily_limit'] is not None:raise ValueError('技能商品身份/价格/限购未受支持')
+        if type(row['quantity']) is not int or row['quantity']<=0 or type(choice['max_purchase_quantity']) is not int or choice['max_purchase_quantity']<=0:raise ValueError('技能商品数量须为正整数')
+        seen.add(choice['offer_id'])
+        offers.append({'id':choice['offer_id'],'item_id':choice['item_id'],'quantity':row['quantity'],'currency':currency,'price_units':price,'required_role_level':choice['required_role_level'],'output_bound':row['purchased_bound'],'max_purchase_quantity':choice['max_purchase_quantity']})
+    sources=profile['recycle_source_kinds'];books=profile['recyclable_book_ids']
+    if not sources or set(sources)!={'monster_drop'} or len(set(books))!=len(books) or any(id not in by_item or not by_item[id].get('book_skill_id') for id in books):raise ValueError('可拆页书本或来源白名单不符；商店/赠书/未知来源不得启用')
+    recycle=[]
+    for item_id in books:
+        for row in tables['game_book_recycle']:
+            if row['npc_basic_book_pages']!=0 or type(row['pages']) is not int or row['pages']<=0:raise ValueError('NPC书不得生成书页，品质页数必须有效')
+            recycle.append({'item_id':item_id,'book_quality':row['book_quality'],'page_item_id':economy['page_item_id'],'pages_per_book':row['pages'],'allowed_source_kinds':deepcopy(sources)})
+    return {'skill_economy':economy,'skill_upgrades':upgrades,'skill_shop':offers,'skill_book_recycle':recycle}
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',1);collision=one('game_map_collisions',m['collision_id'])
     geo=read(ASSETS/'maps/first-map.json');monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
-    validate_skills(profile)
-    skills=deepcopy(profile['skills']);healing=deepcopy(profile['healing']);growth=deepcopy(profile['player_growth'])
+    skills=skill_definitions(tables,profile);validate_skills(profile,skills)
+    healing=deepcopy(profile['healing']);growth=deepcopy(profile['player_growth'])
     resist_weights={row['magic_resist_weight'] for row in profile['players']}
     if len(resist_weights)!=1:raise ValueError('当前开发子集使用同一有来源的魔法闪避权重')
     resist_weight=next(iter(resist_weights))
@@ -222,16 +277,21 @@ def fixture_from_rows(tables):
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2]})
     for skill in skills:
         if any(item['id']==skill['book_item_id'] for item in items):raise ValueError('技能书ID与已有物品冲突')
-        items.append({'id':skill['book_item_id'],'name':'《'+skill['name']+'》','equipment_slot':0,'is_equipment':False,
+        source=one('game_items',skill['book_item_id'])
+        items.append({'id':skill['book_item_id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,
                       'book_skill_id':skill['id'],'attack_bonus':0,'attack_min_bonus':0,'attack_max_bonus':0,'defence_bonus':0,
                       'defence_min_bonus':0,'defence_max_bonus':0,'magic_defence_min_bonus':0,'magic_defence_max_bonus':0,
-                      'recycle_gold':0,'stackable':False,'allowed_jobs':[skill['job_id']]})
+                      'recycle_gold':0,'stackable':False,'max_stack':source['max_stack'],'drop_quality':profile['skill_book_drop_quality'],'allowed_jobs':[skill['job_id']]})
+    source=one('game_items',profile['skill_economy']['page_item_id'])
+    items.append({'id':source['id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,'is_skill_page':True,
+                  'max_stack':source['max_stack'],'recycle_gold':0,'stackable':True,'allowed_jobs':[0,1,2]})
+    economy=skill_economy(tables,profile,skills,items)
     categories={r['category_key']:r['prob_ppm'] for r in tables['game_drop_categories']}
     drop_gold=one('game_drop_entries',5)
     potions=potion_rules(profile,items)
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
-        'potions':potions,'skills':skills,'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),
+        'potions':potions,'skills':skills,'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
         'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':collision['blocked_cells'],
                'player_spawn':m['spawn_cell'],'pet_spawn':geo['pet_spawn'],'monster_spawns':[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
@@ -258,12 +318,13 @@ def fixture_from_rows(tables):
                                 'formal_scope':'正式game_items堆叠上限及effect_list_id仍待核验；未开放完整正式效果表。'},
                             'skills':{'status':'candidate','target_180_verified':False,
                                 'reference_document':'docs/技能来源核验与实施清单.md',
-                                'parameters_source':'唯一玩法Excel/开发首循环夹具；技能、职业成长、独立治疗时钟及初始书清单',
-                                'scope':'仅基本剑术被动、火球单体延迟命中、治愈自身/自有宠物；技能升级/书页/其余完整技能仍关闭',
+                                'parameters_source':'唯一玩法Excel：技能基础定义、技能逐级扩展、商城商品候选、技能书分解候选；开发夹具仅引用ID与技术预算',
+                                'scope':'首组三技能原生0至3阶、原书/书页升级、NPC购书与掉落书拆页；其余完整技能仍待实现',
                                 'learning_adaptation':'7级学习资格、新角色按职业1本绑定书属于development候选；原生初学等级0，未学由列表缺项表示',
                                 'attribute_scope':'三职默认成长与DC/MC/SC/AC/MAC、准确敏捷；不含元素/幸运/完整Buff，来源默认不是源服实库',
                                 'monster_resist_scope':'本轮开发怪物/宠物不配置魔法闪避加成（0）；权重从唯一Excel中共同的源码默认候选权重取得',
-                                'formal_tables_populated':False}}}
+                                'formal_skill_and_upgrade_tables_populated':True,
+                                'economy_reference':'docs/技能获取与升级实施边界.md；书本=目标阶+1用户确定，页与来源渠道候选'}}}
     return result
 
 def public_gameplay(fixture):
@@ -273,21 +334,24 @@ def public_gameplay(fixture):
     items=[]
     for row in fixture['items']:
         effect=effects.get(row['id']) if not row['is_equipment'] else None
-        item={'item_id':row['id'],'name':row['name'],'kind':'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'potion',
+        item={'item_id':row['id'],'name':row['name'],'kind':'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion',
               **({'equip_slot':row['equipment_slot']} if row['is_equipment'] else {}),
               'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None}
         if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)
     skills=[{'id':s['id'],'name':s['name'],'job_id':s['job_id'],'book_item_id':s['book_item_id'],
-             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'kind':s['behavior'],'active':s['behavior']!='fencing',
+             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['behavior']!='fencing',
              'range':s['range_cells'],'base_cost':s['mp_base_cost'],'level_cost':s['mp_level_cost'],
              'cast_ms':s['action_ms'],'delay_base_ms':s['cooldown_base_ms'],'delay_reduction_ms':s['cooldown_reduction_ms'],
              'impact_base_ms':s['delay_base_ms'],'projectile_ms_per_cell':s['projectile_ms_per_cell'],
              'accuracy_per_level':s['accuracy_per_level'],
              'source_status':'candidate','target_180_verified':False} for s in fixture['skills']]
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
-            'skills':skills,
+            'skills':skills,'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
+            'shop_offers':[{'offer_id':r['id'],'item_id':r['item_id'],'name':next(i['name'] for i in fixture['items'] if i['id']==r['item_id']),
+                            'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],
+                            'output_bound':r['output_bound'],'max_purchase_quantity':r['max_purchase_quantity'],'source_status':'candidate'} for r in fixture['skill_shop']],
             'items':items,
             'jobs':[{'job_id':0,'name':'战士','profile':'player_male'},{'job_id':1,'name':'法师','profile':'player_female'},{'job_id':2,'name':'道士','profile':'player_male'}],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],

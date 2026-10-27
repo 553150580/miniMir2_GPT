@@ -236,3 +236,50 @@ func TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence(t *testing.T) 
 		t.Fatalf("被动/AC/MAC聚合不符:%+v", fighter)
 	}
 }
+
+func TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth(t *testing.T) {
+	now := time.Unix(1800000000, 0)
+	for _, job := range []uint32{0, 1, 2} {
+		w, r, _ := skillWorker(t, job)
+		s := w.e.Store.Cfg.Fixture.Skills[0]
+		for _, candidate := range w.e.Store.Cfg.Fixture.Skills {
+			if candidate.JobID == job {
+				s = candidate
+			}
+		}
+		for rank := s.LearnedLevel; rank <= s.MaxLevel; rank++ {
+			r.Role.Skills[0].Level = rank
+			if job == 0 {
+				stats := w.fighter(r, &r.Player)
+				if stats.Accuracy != 5+int64(rank)*s.AccuracyPerLevel {
+					t.Fatal("基本剑术升级未真正提高准确")
+				}
+				continue
+			}
+			r.Player.MP = r.Player.MaxMP
+			r.Player.NextMove = time.Time{}
+			r.NextSpell = time.Time{}
+			r.SkillCooldowns = nil
+			r.Casts = nil
+			target := uint32(10)
+			if job == 2 {
+				target = 1
+				r.Player.HP = 1
+			}
+			mana := r.Player.MP
+			if code := w.cast(r, s.ID, target, rank+1, now); code != 0 {
+				t.Fatalf("job%d rank%d不能施法:%d", job, rank, code)
+			}
+			if r.Player.MP != mana-s.MPBaseCost-int64(rank)*s.MPLevelCost || r.Casts[0].Skill.RangeCells != s.RangeCells || r.Casts[0].Skill.Behavior != s.Behavior {
+				t.Fatal("升级修改基础形状或没有使用按级耗蓝")
+			}
+			want := []int64{5, 7, 9, 11}[rank]
+			if job == 2 {
+				want = []int64{13, 16, 19, 23}[rank]
+			}
+			if r.Casts[0].Amount != want {
+				t.Fatalf("job%d rank%d值=%d，预期%d", job, rank, r.Casts[0].Amount, want)
+			}
+		}
+	}
+}

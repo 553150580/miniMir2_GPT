@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "recorded_at_utc": "2026-10-27T06:23:45.614401+00:00",
+  "stage": "首组三技能获取、拆书与原生0到3阶材料升级",
+  "status": "限定开发候选范围自动、真实Mongo与浏览器验收通过",
+  "scope": {
+    "skills": [
+      "基本剑术",
+      "火球术",
+      "治愈术"
+    ],
+    "skill_shop": true,
+    "book_recycle": true,
+    "explicit_material_upgrade_0_to_3": true,
+    "permanent_receipt_without_ttl": true,
+    "complete_target_180_skills": false,
+    "all_p0_complete": false,
+    "formal_acquisition_and_balance_verified": false,
+    "physical_mobile_verified": false,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "configuration": {
+    "version": "dev-skill-growth-v0.4-d9101bd94921",
+    "rule_version": 4,
+    "fixture": {
+      "path": "config/development/first-loop.json",
+      "sha256": "4b17671d9e2a11bc74a572cb6cd53034ed72cebbfe514e325888f11d46b25def"
+    },
+    "workbook": {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256": "848b76d00eead4b28dec1c4be825d67c54c03c522c32f38715938dcd45f11e2a"
+    },
+    "only_numeric_maintenance": "两本唯一Excel；生成JSON与快照不是维护入口",
+    "skill_definitions_migrated_from_profile": true,
+    "profession_skills": 3,
+    "upgrade_rows": 9,
+    "confirmed_book_formula": "用户确认：升级目标原生阶数+1；初次学会另需1本",
+    "book_costs_for_target_rank_1_2_3": [
+      2,
+      3,
+      4
+    ],
+    "candidate_page_costs": [
+      5,
+      10,
+      20
+    ],
+    "candidate_book_gold_price": 500,
+    "candidate_page_prices_ledger_units": {
+      "ingot": 50,
+      "bound_ingot": 100
+    },
+    "price_units": "金币整数；元宝/绑元账本为显示值十倍，支付选项独立",
+    "record_count": 806,
+    "table_count": 98,
+    "status_counts": {
+      "candidate": 308,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69
+    },
+    "required_empty_tables": 26,
+    "release_blockers": 520,
+    "workbook_preservation": {
+      "path": "outputs/development-skill-growth-20261027/工作簿保留核对.json",
+      "sha256": "56262370a7eeb22d91a501682412466077d943cdf13d4af02232fd9f211f3ee2"
+    },
+    "workbook_preserved_sheets": 95,
+    "authorized_cell_changes": 327,
+    "unexpected_changes": 0,
+    "visual_review": "技能基础、逐级扩展、物品、商城和追加字段均已渲染查看；不改无关布局/公式/原生控件"
+  },
+  "automatic": {
+    "make_test": "passed",
+    "make_check": "passed",
+    "development_resources_check": "passed",
+    "javascript": 134,
+    "scene": 16,
+    "ui_app": 118,
+    "python_configuration": 20,
+    "pb_messages": 47,
+    "long_fields": 69,
+    "pb_boundary_cases": 227,
+    "message_ids": 38,
+    "error_codes": 29,
+    "strict_creator_typescript": "passed",
+    "log": {
+      "path": "outputs/development-skill-growth-20261027/自动回归日志.txt",
+      "sha256": "cc6323af215556ad3b2e1014cd5c0d5ef651d50c324513f3885f0ebf1e6134f7"
+    }
+  },
+  "creator_build": {
+    "report": {
+      "path": "outputs/development-skill-growth-20261027/Creator最终构建检查.json",
+      "sha256": "839b7e4963060c453fbf90e2540eff986b3a4a1ebf82164f153bb9e978c63104"
+    },
+    "seconds": 139.33,
+    "creator": "3.8.8",
+    "platform": "web-mobile",
+    "exit_code": 36,
+    "current_sources_match": true,
+    "saved_layouts": 7,
+    "layout_scope": "构建前后七份保存布局未被工具覆盖；原HUD733对象保留，技能列表为新增按钮明确调整",
+    "layout_review": {
+      "path": "outputs/development-skill-growth-20261027/既有界面布局核对.json",
+      "sha256": "da6402f1f1bc3de980b5389f215f232d4ddfd0c1d7a3e48b818afdaded7c7cf7"
+    }
+  },
+  "server": {
+    "report": {
+      "path": "outputs/development-skill-growth-20261027/服务端真实集成检查.json",
+      "sha256": "97e1617ad1d7fde74f184a277e731bfdba71d51cf5484ba2cad72624a1afc7df"
+    },
+    "events": {
+      "path": "outputs/development-skill-growth-20261027/服务端真实集成事件.jsonl",
+      "sha256": "32eddbe7ccff10ae4359333d53728084418791212aa6295e29d763ef8d19ce2e"
+    },
+    "race": true,
+    "passed_test_records": 64,
+    "skipped": 0,
+    "current_sources_match": true,
+    "covered": [
+      "三技能各阶精确费用、前置等级与成长数值",
+      "两金币分摊与独立元宝选项",
+      "掉落书来源/品质和逐原书绑定继承、NPC/赠书/legacy禁拆",
+      "过期/替换/跨角色/旧版本/变版报价拒绝、显式原实例数量",
+      "并发单胜、永久回执与失去客户端响应后原操作查证",
+      "已有30天回执TTL无损迁移、并发启动与预览TTL保留"
+    ],
+    "real_network_unknown_commit_fault_injection": false,
+    "ttl_migration_notice": "移除旧TTL并保留现有回执，不能恢复过去已过期删除的历史"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:18080/?renderQA=1",
+    "device": "桌面IAB 720×1280；结束恢复窗口默认尺寸",
+    "passed": true,
+    "prepared_inputs": "新隔离QA三职业15级、测试钱包和两本有明确monster_drop测试来源的不同绑定书；初始赠书沿正常建角流程",
+    "natural_leveling_or_formal_drop_verified": false,
+    "business_build_scope": {
+      "path": "outputs/development-skill-growth-20261027/初版浏览器构建范围.json",
+      "sha256": "96e409794065b7f513c33423a62a4b6ba16f2b623e0d7e432af52bdcdd30eef3"
+    },
+    "business_observed": [
+      "初学rank0",
+      "两本NPC治愈书费用550金币+450绑定金币，取消不扣费",
+      "NPC购书不可拆页；选择绑定/非绑定测试掉落书各1本，分别产出同绑定书页各5",
+      "绑定元宝250.0购买25页，另外三钱包不扣",
+      "治愈术0→1扣2书5页、1→2扣3书10页、2→3扣4书20页",
+      "基础威力4→7→10→14、原生等级3、MP消耗9、射程仍9格",
+      "三阶手动施法一次，MP74→65；当时满HP，不证明受伤回血"
+    ],
+    "final_build_regression": [
+      "重载最终139.33秒构建并重新登录，等级3/MP65/绑元750保留",
+      "首次书店火球首行完整，切换模式重新回顶",
+      "滚到底部选绑定元宝书页5份，取消报价后位置/原SKU/数量5/钱包750保留",
+      "已消耗书页/技能书离开材料列表、满阶明确没有下一阶"
+    ],
+    "console_warn_error": [],
+    "physical_mobile_verified": false,
+    "healing_wounded_hp_live_browser_verified": false,
+    "historical_untraced_auto_observation": "421ce1c前阶段无追踪Auto/MP变化仍未归因；本阶段不据此宣称已根治",
+    "trace": {
+      "path": "outputs/development-skill-growth-20261027/浏览器输入追踪.json",
+      "sha256": "eae9dcb7a27ca13ba002e1085259ebfb7e8fe84acad50579a2fbec0437c354ec"
+    },
+    "trace_scope": "限额读取的本阶段输入追踪，不是完整无损操作日志；未含凭据"
+  },
+  "screenshots": [
+    {
+      "path": "outputs/development-skill-growth-20261027/一到二阶三书十页显式选择.jpg",
+      "sha256": "eb177bdb1c7e04ef8bffe3111b17ff855a7f5275d288a24945fdb22fd166be6b"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/一到二阶基础威力7到10.jpg",
+      "sha256": "31866a3085189d477a054db9efed8410266f25e8735867b9581ac78079493012"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/三阶施放后魔法65.jpg",
+      "sha256": "63182f88442d49a88ba07c29a1f7ddd71eeaba38c5c56030caf53b9558959879"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/不同绑定书分别产出五页.jpg",
+      "sha256": "89adbc52e175e43c482a6eb6a9c3377f2532d2dece6bd1ef432993b6555e95d2"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/两本NPC书产物限制.jpg",
+      "sha256": "08b35295aedf3d79903d9947717bb81b07a6d83cb45bd1b1bd748d205437a427"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/二到三阶四书二十页选择.jpg",
+      "sha256": "c03479615b1b73242426f5223d60e0e5b521b75edb2f31f0284599737a4f069c"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/二到三阶基础威力10到14.jpg",
+      "sha256": "54dba1416e5fd540f244b7ecb8ee1453155f3f68d6f5a8e31328b834feda2db7"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/原书显式数量与NPC禁拆.jpg",
+      "sha256": "9d3431121dec1e25b5cf0644408c3249c3dc692fd20d5bd04ef4a50b20726e5d"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/取消购书钱包不变.jpg",
+      "sha256": "a7fd9d55d0400d2b5f8436cfb06c956edab6a95877e6f7d987e9b18733f0a059"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/学习原生零阶.jpg",
+      "sha256": "1a15d7743081a4eff3dbd8d4b67be156311f7b86324c954886f93d9be05d85dd"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/拆书提交后保留NPC书.jpg",
+      "sha256": "8d7f51940899ec748c2de237e628679349d9323eb5ae97b5d283432a458d6ba5"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终书店首次回顶.jpg",
+      "sha256": "6a55443bcd632152b23ea9a67d63849b526e1162e0a9049c7fce34847bf48cd9"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终交付三阶技能界面.jpg",
+      "sha256": "58858d8d4a6310df71ea2bfe264980e513f0bff89fa11e39115a74f26a826a1b"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终切换模式重新回顶.jpg",
+      "sha256": "f3e75cefaec381743821b167ebd629dbc272561cfd4a07690ed132e2d50bf4d2"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终取消保留滚动数量钱包.jpg",
+      "sha256": "4635cfabb48dfa8171e9e687a2a67b6101a49073d90372265e673ca41004d537"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终报价前滚动与数量5.jpg",
+      "sha256": "e7513e6d0edf652e316268f0ca2ea3535b4f6ccf25cbc287053b5f8a74813455"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终拆书列表升级后为空.jpg",
+      "sha256": "e53b82e70e1de71d19c656d7f9238aa19b0276bfcf346d93e1399fe58d5d357a"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终构建三阶与65MP持久.jpg",
+      "sha256": "f004f11e1d63a5d6b05a8b89f3cfa87094e380fb48fc69f29425b2f7c547b156"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/最终满阶不再升级.jpg",
+      "sha256": "a03ed6eae7b2a1660603716a74d44e4afc9a5dca2d4aa0f31fcc68a19ed5eb4a"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/治愈术一阶与耗蓝5.jpg",
+      "sha256": "afbba59cdae184fb480b48007df158e141e35ea59ca96417af5f27ec21d2ca1e"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/治愈术三阶耗蓝9.jpg",
+      "sha256": "ddb9e8fe3dcf474fa64904a81bd5c6390c58ebe33515e458aebbe6b804a2d4be"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/绑定元宝购买25书页报价.jpg",
+      "sha256": "05973effb78cfc32304928291fd706a7c4842533a4f1a23aed12678499cc5659"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/购书确认后.jpg",
+      "sha256": "d9ce2ac3278ac303175a85727d49858020e57b3b9e633157bb2fa6b0d4cee5f4"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/购书预览两钱包拆分.jpg",
+      "sha256": "66dc60698a74d074a5f949b64fbf0c7f30ac7072aa00447350e3609a1600c736"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/零到一阶基础威力4到7.jpg",
+      "sha256": "b666d6c055591b50bda78f379a7b12ae780f57a9012268567b300e3ac3e7c86a"
+    },
+    {
+      "path": "outputs/development-skill-growth-20261027/零到一阶耗蓝与原书明细.jpg",
+      "sha256": "492846e270eef109c9880bb1a0cd91f940ae1206cbcddc62bb4b3b77072d5e0d"
+    }
+  ],
+  "remaining": [
+    "完整职业技能与目标1.80来源逐项认证",
+    "正式渠道、自然可达性、价格/页数与经济平衡",
+    "幸运/元素/完整Buff、完整装备属性与源普攻550ms互锁",
+    "聊天、其它P0系统、手机真机、容量与真实提交未知故障注入"
+  ]
+}

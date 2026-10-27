@@ -32,6 +32,20 @@ const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
 
+test('物品来源品质与技能报价字段精确往返，未知旧来源保持空值，报价提交只携原ID',()=>{
+    const item={instanceId:new Uint8Array(16).fill(3),itemId:7,quantity:Long.MAX_VALUE,bound:false,version:Long.MAX_UNSIGNED_VALUE,sourceKind:'monster_drop',sourceId:'dev-drop-1',quality:1};
+    const legacy=decodePacket(encodePacket(40003,1,Long.UONE,{items:[{itemId:7,quantity:Long.ONE}]})).value.items[0];
+    assert.equal(legacy.sourceKind,'');assert.equal(legacy.sourceId,'');assert.equal(legacy.quality,0);
+    const request=decodePacket(encodePacket(40011,19,Long.UONE,{kind:2,skillId:1,materials:[{instanceId:item.instanceId,version:item.version,quantity:Long.fromInt(2)}]})).value;
+    assert.equal(request.materials[0].version.toString(),'18446744073709551615');assert.equal(request.materials[0].quantity.toString(),'2');
+    const previewId=new Uint8Array(16).fill(9),preview=decodePacket(encodePacket(40012,19,Long.UONE,{previewId,kind:2,ruleVersion:Long.MAX_UNSIGNED_VALUE,configHash:'a'.repeat(64),roleRevision:Long.fromString('9007199254740993',true),expiresAtUnixMs:Long.fromString('1900000000000',true),skillId:1,fromLevel:0,toLevel:1,
+        spend:{gold:Long.fromInt(200),boundGold:Long.fromInt(300)},materials:[{item,consumeQuantity:Long.fromInt(2)}],outputs:[{...item,itemId:900001,bound:true}],stats:[{key:'accuracy_bonus',beforeMin:Long.ZERO,beforeMax:Long.ZERO,afterMin:Long.fromInt(3),afterMax:Long.fromInt(3)}]})).value;
+    assert.equal(preview.materials[0].item.sourceKind,'monster_drop');assert.equal(preview.materials[0].item.quality,1);assert.equal(preview.materials[0].item.quantity.toString(),'9223372036854775807');
+    assert.equal(preview.roleRevision.toString(),'9007199254740993');assert.equal(preview.expiresAtUnixMs.toString(),'1900000000000');assert.equal(preview.stats[0].beforeMin.toString(),'0');
+    const commit=decodePacket(encodePacket(40013,20,Long.UONE,{previewId,operation:{opId:new Uint8Array(16).fill(8),commandSeq:Long.UONE,expectedRevision:preview.roleRevision,expectedRuleVersion:preview.ruleVersion}})).value;
+    assert.deepEqual(commit.previewId,previewId);assert.equal(commit.operation.expectedRevision.toString(),'9007199254740993');
+});
+
 test('学习0级状态、原书学习请求及施法事件大ID按新PB定义精确往返',()=>{
     const instance=new Uint8Array(16).fill(7),opId=new Uint8Array(16).fill(8);
     const request=decodePacket(encodePacket(40010,19,Long.UONE,{itemInstanceId:instance,skillId:1,operation:{opId,
@@ -123,5 +137,9 @@ test('同序号的快照不能抢经济回执，旧绑定被隔离，自动状�
         const auto=connection.request(30004,{sceneEpoch:Long.UONE,enabled:false,monsterCount:4});
         const autoSeq=decodePacket(socket.sent.at(-1)).seq;
         deliver(30005,autoSeq,Long.fromInt(5,true),{autoBattleEnabled:false,remainHostingSec:21600});assert.equal((await auto).remainHostingSec,21600);
+        let quoted=false;const preview=connection.request(40011,{kind:1,offerId:1,quantity:Long.ONE}).then(value=>{quoted=true;return value;});
+        const previewSeq=decodePacket(socket.sent.at(-1)).seq;
+        deliver(40003,previewSeq,Long.fromInt(5,true),{items:[],revision:Long.UONE});await Promise.resolve();assert.equal(quoted,false);
+        deliver(40012,previewSeq,Long.fromInt(5,true),{previewId:new Uint8Array(16).fill(5),kind:1,offerId:1,quantity:Long.ONE});assert.equal((await preview).offerId,1);
     }finally{connection.close();global.WebSocket=original;delete global.location;}
 });

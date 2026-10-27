@@ -15,19 +15,32 @@
 | unverified | 来源版本、数值或行为尚待核验 | 可进入研发预览，必需表禁止正式发布 |
 | historical | 历史经济测算条件或结果 | 不进入双端运行数据 |
 
-每条记录均保留 `source_ref` 和 `note`；导出时剔除它们和其它 `target=none` 字段。来源是既有文档章节/行号或提取记录，状态不能代替来源证据。参数修改需要同步其证据；关闭发布缺口需要填写具体报告或批准变更引用。
+每条记录均保留 `source_ref` 和 `note`；导出时剔除它们和其它 `target=none` 字段。来源是既有文档章节/行号、用户已确认规则或提取记录，状态不能代替来源证据。参数修改需要同步其证据；关闭发布缺口需要填写具体报告或批准变更引用。
+
+## 当前技能获取与升级配置
+
+当前快照为`dev-skill-growth-v0.4-d9101bd94921`、rule_version4。98表806记录，candidate308、confirmed393、historical36、unverified69；26张发布必需空表及520项正式阻断继续保留。新增候选和未核验字段使阻断增加，不能把表已填充写成正式配置或平衡已经成熟。
+
+- 三条职业基础候选已从开发profile.skills迁到正式配置域`game_skills`的“技能基础定义”，开发profile只用skill_ids选择技能，另保留开发普攻0。技能行为、初始等级、耗蓝、时序、威力和来源引用不在profile并存第二份。
+- `game_skill_upgrades`保存三技能×三目标阶共9行。用户确认“每阶需要技能书=阶数+1”，按目标原生rank解释为升1/2/3阶各2/3/4本；这个书本规则为confirmed。5/10/20页、Crystal三技能各自等级门槛、来源基础参数及开发掉书渠道继续candidate，不启用源随机练功，不把目标版本和全技能上限一并认证。
+- `game_shop_prices`是唯一商品价格源，技能运行投影选择其中5项：3书各500金币、书页50元宝账本单位或100绑元账本单位。500金币为development定价候选；`price_gold`是金币整数，`price_u`是元宝/绑元十倍定点单位，两列按币种独立校验，不能把500金币写成500元宝单位。元宝/绑元商品明确选择，金币类按绑定金币优先分摊，购后绑定。
+- `game_book_recycle`保留四品质5/10/20/50页的唯一候选，运行时投影为三书×四品质12条。来源、来源ID与品质属于永久物品身份，NPC购书、初始赠书及legacy禁拆页；合规掉落书逐原书继承绑定。NPC回收金币仍未配置，不套MYF冲突500/2000旧回收脚本。
+
+预览与提交均引用当前配置版本、角色revision、具体原实例/数量/版本及原Plan。空材料不能由服务端自行选取，规则或资产变化则拒绝旧预览；永久扣费/rank、原操作回执及审计在owner事务提交。永久经济回执不设TTL，迁移只去掉`operations.created_at`单字段TTL并保留现存文档；`skill_quotes.expires_at`和票据的临时TTL另行保留。已被旧TTL删除的历史不能因此恢复。
+
+首版自动检查为131项JS（16场景、115项UI/应用）、20项Python、227个PB64位边界；真实Mongo+WS全包race64条pass、0跳过、源码稳定。首版Creator175.31秒已通过；List修复新增3项真实类回归，当前客户端134项（16场景、118项UI/应用）及严格tsc通过，最终make test退出0，修复后Creator实际139.33秒、exit36、源码稳定，7份资产构建前后未被覆盖。构建布局校验仅证明开始/结束7份资产未被工具覆盖；原HUD733对象保持，技能面板为三个已保存按钮明确编辑了列表位置和高度，不是相比HEAD全部布局不变。浏览器道士0→1/1→2/2→3分别扣2本+5页、3本+10页、4本+20页，来源绑定拆页5+5已有观察；三阶施法仅证明满HP时MP74→65，不证明受伤回血。隔离15级、钱包和来源书为QA预置，非自然获取证据；道士0→3及拆书业务浏览器已通过；最终列表、取消报价保留与重登持久复核已通过，限定范围结果见`docs/技能获取与升级阶段验收.json`。
 
 ## 命令
 
 ```bash
 # 仅检查结构、字段、ID、引用和当前缺口
-python3 tools/config/export_configs.py --check
+./tools/dev python3 tools/config/export_configs.py --check
 
 # 从实际Excel读取，生成带哈希的不可变双端研发预览和Go/TS字段绑定
-python3 tools/config/export_configs.py --version dev-prep-v0.1
+./tools/dev python3 tools/config/export_configs.py --version dev-prep-v0.1
 
 # 正式门禁；当前未实现/未核验部分会返回退出码2
-python3 tools/config/export_configs.py --check --mode release
+./tools/dev python3 tools/config/export_configs.py --check --mode release
 ```
 
 检查报告在 `config/reports/配置校验报告.json`。导出到 `config/releases/<版本>-<内容哈希>/`，完成后原子切换 `preview_current.json` 指针；正式门禁不通过时不会生成半套发布数据。它只生成本地文件，尚未连接gameNode，也不对线上环境发布。

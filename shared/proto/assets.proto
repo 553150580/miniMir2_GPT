@@ -16,6 +16,10 @@ message ItemView {
   int64 quantity = 3;
   bool bound = 4;
   uint64 version = 5;
+  // 来源与品质属于物品实例，旧实例空来源保持未知，不反推成掉落。
+  string source_kind = 6;
+  string source_id = 7;
+  uint32 quality = 8;
 }
 message EquippedItem { uint32 slot = 1; ItemView item = 2; }
 // 已学技能属于永久成长；短冷却、施法与治疗队列不保存在此处。
@@ -43,6 +47,42 @@ message LearnSkillRequest {
   uint32 skill_id = 2;
   OperationContext operation = 3;
 }
+// kind：1购书/书页，2技能升级，3技能书分解。预览不冻结资产。
+message ItemConsumption { bytes instance_id = 1; uint64 version = 2; int64 quantity = 3; }
+message SkillAssetPreviewRequest {
+  uint32 kind = 1;
+  uint32 offer_id = 2;
+  int64 quantity = 3;
+  uint32 skill_id = 4;
+  repeated ItemConsumption materials = 5;
+}
+message SkillMaterialView { ItemView item = 1; int64 consume_quantity = 2; }
+// key由服务端枚举白名单提供，显示基础威力/准确/耗蓝，不伪装最终伤害。
+message SkillNumericComparison {
+  string key = 1;
+  int64 before_min = 2;
+  int64 before_max = 3;
+  int64 after_min = 4;
+  int64 after_max = 5;
+}
+message SkillAssetPreview {
+  bytes preview_id = 1;
+  uint32 kind = 2;
+  uint64 rule_version = 3;
+  string config_hash = 4;
+  uint64 role_revision = 5;
+  uint64 expires_at_unix_ms = 6;
+  uint32 skill_id = 7;
+  uint32 from_level = 8;
+  uint32 to_level = 9;
+  WalletState spend = 10;
+  repeated SkillMaterialView materials = 11;
+  repeated ItemView outputs = 12;
+  repeated SkillNumericComparison stats = 13;
+  uint32 offer_id = 14;
+  int64 quantity = 15;
+}
+message SkillAssetCommitRequest { bytes preview_id = 1; OperationContext operation = 2; }
 message ClaimHostingTimeRequest { uint32 benefit_kind = 1; OperationContext operation = 2; }
 message BuyHostingTimeRequest { uint32 requested_seconds = 1; OperationContext operation = 2; }
 // 战报展示已提交收益，卡到期前后绑定分账；此消息不触发重抽或重判绑定。

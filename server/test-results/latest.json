@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "started_at_utc": "2026-10-27T03:12:00.034890+00:00",
-  "finished_at_utc": "2026-10-27T03:13:12.988463+00:00",
+  "started_at_utc": "2026-10-27T05:08:54.920125+00:00",
+  "finished_at_utc": "2026-10-27T05:10:24.366375+00:00",
   "command": [
     "/Users/srf/Miro2/miniMir2_GPT/tools/dev",
     "go",
@@ -124,6 +124,10 @@
     },
     {
       "package": "minimir/internal/game",
+      "test": "TestSkillCommitPendingRetainsOriginalPreviewAndReceiptReconciliation"
+    },
+    {
+      "package": "minimir/internal/game",
       "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
     },
     {
@@ -149,6 +153,10 @@
     {
       "package": "minimir/internal/game",
       "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth"
     },
     {
       "package": "minimir/internal/persistence",
@@ -200,6 +208,26 @@
     },
     {
       "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradeLevelPrerequisiteCapAndExactCost"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillPowerRanksUseSourceToEvenAndFencingGrowth"
+    },
+    {
+      "package": "minimir/internal/persistence",
       "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
     },
     {
@@ -217,6 +245,18 @@
     {
       "package": "minimir/internal/integration",
       "test": "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoPermanentReceiptIndexMigration"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoReceiptMigrationFailureRejectsStartup"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillAssetEconomyMongoWS"
     },
     {
       "package": "minimir/internal/integration",
@@ -238,84 +278,98 @@
   "skipped_tests": [],
   "fixture": {
     "path": "config/development/first-loop.json",
-    "sha256": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "sha256": "4b17671d9e2a11bc74a572cb6cd53034ed72cebbfe514e325888f11d46b25def",
     "candidate_only": true,
     "runtime_ready": false
   },
   "source_sha256": {
     "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
-    "config/development/first-loop.json": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "config/development/first-loop.json": "4b17671d9e2a11bc74a572cb6cd53034ed72cebbfe514e325888f11d46b25def",
     "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
     "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
     "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
     "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
-    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
-    "server/internal/devconfig/config.go": "1aaf0ce72b3a70f69b2388f22b953c4c712c18a7b9a92bf265502ae5c0fde57f",
-    "server/internal/devconfig/skills.go": "70977a5f6146f8f3383c7dc92573e8d0ab4349952de22bf933f0ca9061911d9a",
+    "server/internal/configtypes/config_types.go": "3c597ec6147568e73a7b35a7f5ff262d86d31be1e2e3ae269bc5dadb45077fb6",
+    "server/internal/devconfig/config.go": "e862da3926bb120c2735c0ceeea7a2a81c5065900b0118dc1301f03765192215",
+    "server/internal/devconfig/skill_economy.go": "d0a6b4929767adf242d58811ebe82756931c6b4b8a00a15dfc0bc7b8883be6ab",
+    "server/internal/devconfig/skills.go": "db46f371cce34a6b524ec106c8b5c9f5d4cd9d110117f74a35bac57415757d49",
     "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
-    "server/internal/domain/model.go": "91d64ef5ca08f38ca95f3250e561cd9e94d0403ddbaf82da978f1f47898755b6",
-    "server/internal/game/combat.go": "e097491a24102230c59e87f18ca46521dfc8ad51ed7f7debf0d1c99386b747ae",
+    "server/internal/domain/model.go": "97d0fc91573ec85faa9b8c6cc99ba8bb0cd27a7b26a8dafac421e2417e0b6bb6",
+    "server/internal/game/combat.go": "2a502838cdad098a92d6aa383395f1215fdde231465ddb4d219b78096ea337ec",
     "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
     "server/internal/game/observation_test.go": "6350815f00da99426cad15d68c0034c2694349ff7f90296fdf541aea2607d870",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
     "server/internal/game/potions_test.go": "0687584fdd1ceb7947af751bbb2e5b48013a8d43694f674b72b67b06ae6277bf",
-    "server/internal/game/runtime.go": "ccb5a688f66a607785863207413ec383d5517cd545de4c3c09d41b5b06b80c47",
-    "server/internal/game/skills.go": "738bef138f43adbf6f475d53add313871e183c18ba29a4d86c83a390076b6fa7",
-    "server/internal/game/skills_test.go": "d90634f1e73f0e578bf21aa9b151001ce1a0c90d2b6578b4774ed8d80ba65ec8",
+    "server/internal/game/runtime.go": "7a038d2cb87c45d35f3b1059b09f74a938a0952f789161062d1ce1f0f71cbd21",
+    "server/internal/game/skill_assets.go": "cd08efbc9fdcde98c31b1c322f9f160163508ed46df1e12869fff639b2baf7e5",
+    "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
+    "server/internal/game/skills.go": "f69174ea9eaa30119eb9d9567bd5da65fb15a5dd6264f4111424c780fea1a723",
+    "server/internal/game/skills_test.go": "bdb23ebf92aa617ce4ac0c829bcb334f8e9398947d637290b3832aa8304da163",
     "server/internal/integration/first_loop_test.go": "68603f8a0abf1a5d277a007a5bc604f62fc108ef073af3728d0f6d3e71d2e926",
     "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
     "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/receipt_migration_test.go": "d049a5d4243d2ec4e76634cded33088a60fa99e33ae65218f6bf19fb9ac09408",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
     "server/internal/integration/skills_test.go": "d799801f41ca6c3f45e6abaacea138221285a6a492bace1216ce8e2d1010d3f7",
-    "server/internal/persistence/assets.go": "722eafdb3244bb6db037f89d9cdfeb0c9a34913c3f0736a3f29ba6962d91a307",
-    "server/internal/persistence/auth.go": "c330815048f879bcf38a2891a229c925a56a25e1d61046d700022cf25629f943",
+    "server/internal/persistence/assets.go": "89ffac305819eb8cf4e395b7194910fa9f5b78b22e223690c3d919478f86dd6b",
+    "server/internal/persistence/auth.go": "8b5d97ebd4117d0639c96f10171736b15c86f1b3bbe450fb3d72a713f19753c1",
     "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
     "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/skill_assets.go": "177431fd430fe795621d8ba793e346660722c2a46df169c98d21de7f300b7c05",
+    "server/internal/persistence/skill_assets_test.go": "3fd513e4cd48bf002c08d90407333ec38e4884664dfe16f5d83c63fb9579b792",
     "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
     "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
-    "server/internal/persistence/store.go": "e966a88a6833413d726a58b9ccc4c7c92a727ab5b91a133868fb63d1a6b5f116",
-    "server/internal/protocol/protocol_ids.go": "b5b33bf8d528e431ba3a33ac7475c855d301b6c2ecf3598576fca69980c14808",
+    "server/internal/persistence/store.go": "7e53176302511515bc50b7318e8a146da574377085fce7e01a14030071a7f77f",
+    "server/internal/protocol/protocol_ids.go": "d379d8cda82aedc589ee91fc3a21cebc35c325491edbf6734c2e6a175b333fd7",
     "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
     "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
     "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
   },
   "source_sha256_after": {
     "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
-    "config/development/first-loop.json": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "config/development/first-loop.json": "4b17671d9e2a11bc74a572cb6cd53034ed72cebbfe514e325888f11d46b25def",
     "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
     "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
     "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
     "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
-    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
-    "server/internal/devconfig/config.go": "1aaf0ce72b3a70f69b2388f22b953c4c712c18a7b9a92bf265502ae5c0fde57f",
-    "server/internal/devconfig/skills.go": "70977a5f6146f8f3383c7dc92573e8d0ab4349952de22bf933f0ca9061911d9a",
+    "server/internal/configtypes/config_types.go": "3c597ec6147568e73a7b35a7f5ff262d86d31be1e2e3ae269bc5dadb45077fb6",
+    "server/internal/devconfig/config.go": "e862da3926bb120c2735c0ceeea7a2a81c5065900b0118dc1301f03765192215",
+    "server/internal/devconfig/skill_economy.go": "d0a6b4929767adf242d58811ebe82756931c6b4b8a00a15dfc0bc7b8883be6ab",
+    "server/internal/devconfig/skills.go": "db46f371cce34a6b524ec106c8b5c9f5d4cd9d110117f74a35bac57415757d49",
     "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
-    "server/internal/domain/model.go": "91d64ef5ca08f38ca95f3250e561cd9e94d0403ddbaf82da978f1f47898755b6",
-    "server/internal/game/combat.go": "e097491a24102230c59e87f18ca46521dfc8ad51ed7f7debf0d1c99386b747ae",
+    "server/internal/domain/model.go": "97d0fc91573ec85faa9b8c6cc99ba8bb0cd27a7b26a8dafac421e2417e0b6bb6",
+    "server/internal/game/combat.go": "2a502838cdad098a92d6aa383395f1215fdde231465ddb4d219b78096ea337ec",
     "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
     "server/internal/game/observation_test.go": "6350815f00da99426cad15d68c0034c2694349ff7f90296fdf541aea2607d870",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
     "server/internal/game/potions_test.go": "0687584fdd1ceb7947af751bbb2e5b48013a8d43694f674b72b67b06ae6277bf",
-    "server/internal/game/runtime.go": "ccb5a688f66a607785863207413ec383d5517cd545de4c3c09d41b5b06b80c47",
-    "server/internal/game/skills.go": "738bef138f43adbf6f475d53add313871e183c18ba29a4d86c83a390076b6fa7",
-    "server/internal/game/skills_test.go": "d90634f1e73f0e578bf21aa9b151001ce1a0c90d2b6578b4774ed8d80ba65ec8",
+    "server/internal/game/runtime.go": "7a038d2cb87c45d35f3b1059b09f74a938a0952f789161062d1ce1f0f71cbd21",
+    "server/internal/game/skill_assets.go": "cd08efbc9fdcde98c31b1c322f9f160163508ed46df1e12869fff639b2baf7e5",
+    "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
+    "server/internal/game/skills.go": "f69174ea9eaa30119eb9d9567bd5da65fb15a5dd6264f4111424c780fea1a723",
+    "server/internal/game/skills_test.go": "bdb23ebf92aa617ce4ac0c829bcb334f8e9398947d637290b3832aa8304da163",
     "server/internal/integration/first_loop_test.go": "68603f8a0abf1a5d277a007a5bc604f62fc108ef073af3728d0f6d3e71d2e926",
     "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
     "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/receipt_migration_test.go": "d049a5d4243d2ec4e76634cded33088a60fa99e33ae65218f6bf19fb9ac09408",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
     "server/internal/integration/skills_test.go": "d799801f41ca6c3f45e6abaacea138221285a6a492bace1216ce8e2d1010d3f7",
-    "server/internal/persistence/assets.go": "722eafdb3244bb6db037f89d9cdfeb0c9a34913c3f0736a3f29ba6962d91a307",
-    "server/internal/persistence/auth.go": "c330815048f879bcf38a2891a229c925a56a25e1d61046d700022cf25629f943",
+    "server/internal/persistence/assets.go": "89ffac305819eb8cf4e395b7194910fa9f5b78b22e223690c3d919478f86dd6b",
+    "server/internal/persistence/auth.go": "8b5d97ebd4117d0639c96f10171736b15c86f1b3bbe450fb3d72a713f19753c1",
     "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
     "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/skill_assets.go": "177431fd430fe795621d8ba793e346660722c2a46df169c98d21de7f300b7c05",
+    "server/internal/persistence/skill_assets_test.go": "3fd513e4cd48bf002c08d90407333ec38e4884664dfe16f5d83c63fb9579b792",
     "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
     "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
-    "server/internal/persistence/store.go": "e966a88a6833413d726a58b9ccc4c7c92a727ab5b91a133868fb63d1a6b5f116",
-    "server/internal/protocol/protocol_ids.go": "b5b33bf8d528e431ba3a33ac7475c855d301b6c2ecf3598576fca69980c14808",
+    "server/internal/persistence/store.go": "7e53176302511515bc50b7318e8a146da574377085fce7e01a14030071a7f77f",
+    "server/internal/protocol/protocol_ids.go": "d379d8cda82aedc589ee91fc3a21cebc35c325491edbf6734c2e6a175b333fd7",
     "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
     "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
     "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
   },
-  "events_sha256": "822384d393703fbd64dbcf190bff4591c0a56656f219e02fc033fe5f4e61d378",
+  "events_sha256": "32eddbe7ccff10ae4359333d53728084418791212aa6295e29d763ef8d19ce2e",
   "production_ready": false
 }

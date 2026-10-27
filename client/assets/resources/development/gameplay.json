@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 3,
+  "rule_version": 4,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -12,6 +12,7 @@
       "book_item_id": 7,
       "learn_level": 7,
       "initial_level": 0,
+      "max_level": 3,
       "kind": "fireball",
       "active": true,
       "range": 9,
@@ -33,6 +34,7 @@
       "book_item_id": 21,
       "learn_level": 7,
       "initial_level": 0,
+      "max_level": 3,
       "kind": "healing",
       "active": true,
       "range": 9,
@@ -54,6 +56,7 @@
       "book_item_id": 1,
       "learn_level": 7,
       "initial_level": 0,
+      "max_level": 3,
       "kind": "fencing",
       "active": false,
       "range": 0,
@@ -67,6 +70,297 @@
       "accuracy_per_level": 3,
       "source_status": "candidate",
       "target_180_verified": false
+    }
+  ],
+  "skill_upgrades": [
+    {
+      "skill_id": 1,
+      "level": 1,
+      "required_role_level": 7,
+      "book_costs": [
+        {
+          "item_id": 7,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 1,
+      "level": 2,
+      "required_role_level": 9,
+      "book_costs": [
+        {
+          "item_id": 7,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 1,
+      "level": 3,
+      "required_role_level": 11,
+      "book_costs": [
+        {
+          "item_id": 7,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 2,
+      "level": 1,
+      "required_role_level": 7,
+      "book_costs": [
+        {
+          "item_id": 21,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 2,
+      "level": 2,
+      "required_role_level": 11,
+      "book_costs": [
+        {
+          "item_id": 21,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 2,
+      "level": 3,
+      "required_role_level": 14,
+      "book_costs": [
+        {
+          "item_id": 21,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 3,
+      "level": 1,
+      "required_role_level": 7,
+      "book_costs": [
+        {
+          "item_id": 1,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 3,
+      "level": 2,
+      "required_role_level": 9,
+      "book_costs": [
+        {
+          "item_id": 1,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 3,
+      "level": 3,
+      "required_role_level": 12,
+      "book_costs": [
+        {
+          "item_id": 1,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    }
+  ],
+  "skill_book_recycle": [
+    {
+      "item_id": 7,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 7,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 7,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 7,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 21,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 21,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 21,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 21,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 1,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 1,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 1,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 1,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    }
+  ],
+  "shop_offers": [
+    {
+      "offer_id": 6,
+      "item_id": 7,
+      "name": "《火球术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 7,
+      "item_id": 21,
+      "name": "《治愈术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 8,
+      "item_id": 1,
+      "name": "《基本剑术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 3,
+      "item_id": 900001,
+      "name": "书页",
+      "quantity": 1,
+      "currency_kind": "ingot",
+      "price_units": 50,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 4,
+      "item_id": 900001,
+      "name": "书页",
+      "quantity": 1,
+      "currency_kind": "bound_ingot",
+      "price_units": 100,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
     }
   ],
   "items": [
@@ -163,6 +457,17 @@
       ],
       "use_enabled": false,
       "skill_id": 3
+    },
+    {
+      "item_id": 900001,
+      "name": "书页",
+      "kind": "skill_page",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
     }
   ],
   "jobs": [

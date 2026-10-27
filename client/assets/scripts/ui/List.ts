@@ -100,11 +100,13 @@ export class List extends Component {
         const view = this.viewport.getComponent(UITransform);
         if (!content || !view || !this.scrollView) return;
         const height = Math.max(view.height, this.items.length * this.rowHeight);
+        const initialized = this.measuredViewport > 0;
         const unchanged = content.height === height && this.measuredViewport === view.height;
         this.measuredViewport = view.height;
         // 同尺寸的数据刷新只重绑内容，不打断手指拖动、惯性或回弹。
         if (preserve && unchanged) return;
-        const offset = preserve ? this.scrollView.getScrollOffset().y : 0;
+        // 隐藏列表首次绑定时，ScrollView尚未初始化边界，不能把默认偏移当作用户滚动。
+        const offset = preserve && initialized ? this.scrollView.getScrollOffset().y : 0;
         this.scrollView.stopAutoScroll();
         content.setContentSize(content.width, height);
         this.scrollView.scrollToOffset(new Vec2(0,

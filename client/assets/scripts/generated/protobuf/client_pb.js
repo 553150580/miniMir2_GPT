@@ -8598,6 +8598,9 @@ $root.minimir = (function() {
              * @property {Long|null} [quantity] ItemView quantity
              * @property {boolean|null} [bound] ItemView bound
              * @property {Long|null} [version] ItemView version
+             * @property {string|null} [source_kind] ItemView source_kind
+             * @property {string|null} [source_id] ItemView source_id
+             * @property {number|null} [quality] ItemView quality
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -8670,6 +8673,30 @@ $root.minimir = (function() {
             ItemView.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * ItemView source_kind.
+             * @member {string} source_kind
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.source_kind = "";
+
+            /**
+             * ItemView source_id.
+             * @member {string} source_id
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.source_id = "";
+
+            /**
+             * ItemView quality.
+             * @member {number} quality
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.quality = 0;
+
+            /**
              * Creates a new ItemView instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ItemView
@@ -8711,6 +8738,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 4, wireType 0 =*/32).bool(message.bound);
                 if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
                     writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.version);
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind") && message.source_kind !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.source_kind);
+                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id") && message.source_id !== "")
+                    writer.uint32(/* id 7, wireType 2 =*/58).string(message.source_id);
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.quality);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -8813,6 +8846,33 @@ $root.minimir = (function() {
                                 delete message.version;
                             continue;
                         }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.source_kind = value;
+                            else
+                                delete message.source_kind;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.source_id = value;
+                            else
+                                delete message.source_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.quality = value;
+                            else
+                                delete message.quality;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -8876,6 +8936,15 @@ $root.minimir = (function() {
                 if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
                     if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
                         return "version: integer|Long expected";
+                if (message.source_kind != null && $Object.hasOwnProperty.call(message, "source_kind"))
+                    if (!$util.isString(message.source_kind))
+                        return "source_kind: string expected";
+                if (message.source_id != null && $Object.hasOwnProperty.call(message, "source_id"))
+                    if (!$util.isString(message.source_id))
+                        return "source_id: string expected";
+                if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
+                    if (!$util.isInteger(message.quality))
+                        return "quality: integer expected";
                 return null;
             };
 
@@ -10795,6 +10864,1925 @@ $root.minimir = (function() {
             };
 
             return LearnSkillRequest;
+        })();
+
+        v1.ItemConsumption = (function() {
+
+            /**
+             * Properties of an ItemConsumption.
+             * @typedef {Object} minimir.v1.ItemConsumption.$Properties
+             * @property {Uint8Array|null} [instance_id] ItemConsumption instance_id
+             * @property {Long|null} [version] ItemConsumption version
+             * @property {Long|null} [quantity] ItemConsumption quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ItemConsumption.
+             * @memberof minimir.v1
+             * @interface IItemConsumption
+             * @augments minimir.v1.ItemConsumption.$Properties
+             * @deprecated Use minimir.v1.ItemConsumption.$Properties instead.
+             */
+
+            /**
+             * Shape of an ItemConsumption.
+             * @typedef {minimir.v1.ItemConsumption.$Properties} minimir.v1.ItemConsumption.$Shape
+             */
+
+            /**
+             * Constructs a new ItemConsumption.
+             * @memberof minimir.v1
+             * @classdesc Represents an ItemConsumption.
+             * @constructor
+             * @param {minimir.v1.ItemConsumption.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ItemConsumption = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ItemConsumption instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.ItemConsumption
+             * @instance
+             */
+            ItemConsumption.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * ItemConsumption version.
+             * @member {Long} version
+             * @memberof minimir.v1.ItemConsumption
+             * @instance
+             */
+            ItemConsumption.prototype.version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemConsumption quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.ItemConsumption
+             * @instance
+             */
+            ItemConsumption.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new ItemConsumption instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {minimir.v1.ItemConsumption.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ItemConsumption} ItemConsumption instance
+             * @type {{
+             *   (properties: minimir.v1.ItemConsumption.$Shape): minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape;
+             *   (properties?: minimir.v1.ItemConsumption.$Properties): minimir.v1.ItemConsumption;
+             * }}
+             */
+            ItemConsumption.create = function(properties) {
+                return new ItemConsumption(properties);
+            };
+
+            /**
+             * Encodes the specified ItemConsumption message. Does not implicitly {@link minimir.v1.ItemConsumption.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {minimir.v1.ItemConsumption.$Properties} message ItemConsumption message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemConsumption.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.instance_id);
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version") && (typeof message.version === "object" ? message.version.low || message.version.high : message.version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ItemConsumption message, length delimited. Does not implicitly {@link minimir.v1.ItemConsumption.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {minimir.v1.ItemConsumption.$Properties} message ItemConsumption message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ItemConsumption.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ItemConsumption message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape} ItemConsumption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemConsumption.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ItemConsumption();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.version = value;
+                            else
+                                delete message.version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ItemConsumption message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape} ItemConsumption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ItemConsumption.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ItemConsumption message.
+             * @function verify
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ItemConsumption.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.version != null && $Object.hasOwnProperty.call(message, "version"))
+                    if (!$util.isInteger(message.version) && !(message.version && $util.isInteger(message.version.low) && $util.isInteger(message.version.high)))
+                        return "version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ItemConsumption
+             * @function getTypeUrl
+             * @memberof minimir.v1.ItemConsumption
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ItemConsumption.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ItemConsumption";
+            };
+
+            return ItemConsumption;
+        })();
+
+        v1.SkillAssetPreviewRequest = (function() {
+
+            /**
+             * Properties of a SkillAssetPreviewRequest.
+             * @typedef {Object} minimir.v1.SkillAssetPreviewRequest.$Properties
+             * @property {number|null} [kind] SkillAssetPreviewRequest kind
+             * @property {number|null} [offer_id] SkillAssetPreviewRequest offer_id
+             * @property {Long|null} [quantity] SkillAssetPreviewRequest quantity
+             * @property {number|null} [skill_id] SkillAssetPreviewRequest skill_id
+             * @property {Array.<minimir.v1.ItemConsumption.$Properties>|null} [materials] SkillAssetPreviewRequest materials
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillAssetPreviewRequest.
+             * @memberof minimir.v1
+             * @interface ISkillAssetPreviewRequest
+             * @augments minimir.v1.SkillAssetPreviewRequest.$Properties
+             * @deprecated Use minimir.v1.SkillAssetPreviewRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillAssetPreviewRequest.
+             * @typedef {minimir.v1.SkillAssetPreviewRequest.$Properties} minimir.v1.SkillAssetPreviewRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SkillAssetPreviewRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillAssetPreviewRequest.
+             * @constructor
+             * @param {minimir.v1.SkillAssetPreviewRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillAssetPreviewRequest = function (properties) {
+                this.materials = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillAssetPreviewRequest kind.
+             * @member {number} kind
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @instance
+             */
+            SkillAssetPreviewRequest.prototype.kind = 0;
+
+            /**
+             * SkillAssetPreviewRequest offer_id.
+             * @member {number} offer_id
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @instance
+             */
+            SkillAssetPreviewRequest.prototype.offer_id = 0;
+
+            /**
+             * SkillAssetPreviewRequest quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @instance
+             */
+            SkillAssetPreviewRequest.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SkillAssetPreviewRequest skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @instance
+             */
+            SkillAssetPreviewRequest.prototype.skill_id = 0;
+
+            /**
+             * SkillAssetPreviewRequest materials.
+             * @member {Array.<minimir.v1.ItemConsumption.$Properties>} materials
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @instance
+             */
+            SkillAssetPreviewRequest.prototype.materials = $util.emptyArray;
+
+            /**
+             * Creates a new SkillAssetPreviewRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {minimir.v1.SkillAssetPreviewRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillAssetPreviewRequest} SkillAssetPreviewRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SkillAssetPreviewRequest.$Shape): minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape;
+             *   (properties?: minimir.v1.SkillAssetPreviewRequest.$Properties): minimir.v1.SkillAssetPreviewRequest;
+             * }}
+             */
+            SkillAssetPreviewRequest.create = function(properties) {
+                return new SkillAssetPreviewRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SkillAssetPreviewRequest message. Does not implicitly {@link minimir.v1.SkillAssetPreviewRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {minimir.v1.SkillAssetPreviewRequest.$Properties} message SkillAssetPreviewRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetPreviewRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.kind);
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id") && message.offer_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.offer_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.quantity);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.skill_id);
+                if (message.materials != null && message.materials.length)
+                    for (var i = 0; i < message.materials.length; ++i)
+                        $root.minimir.v1.ItemConsumption.encode(message.materials[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillAssetPreviewRequest message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetPreviewRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {minimir.v1.SkillAssetPreviewRequest.$Properties} message SkillAssetPreviewRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetPreviewRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillAssetPreviewRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape} SkillAssetPreviewRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetPreviewRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillAssetPreviewRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.offer_id = value;
+                            else
+                                delete message.offer_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.materials && message.materials.length))
+                                message.materials = [];
+                            message.materials.push($root.minimir.v1.ItemConsumption.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillAssetPreviewRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape} SkillAssetPreviewRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetPreviewRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillAssetPreviewRequest message.
+             * @function verify
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillAssetPreviewRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id"))
+                    if (!$util.isInteger(message.offer_id))
+                        return "offer_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.materials != null && $Object.hasOwnProperty.call(message, "materials")) {
+                    if (!$Array.isArray(message.materials))
+                        return "materials: array expected";
+                    for (var i = 0; i < message.materials.length; ++i) {
+                        var error = $root.minimir.v1.ItemConsumption.verify(message.materials[i], _depth + 1);
+                        if (error)
+                            return "materials." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillAssetPreviewRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillAssetPreviewRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillAssetPreviewRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillAssetPreviewRequest";
+            };
+
+            return SkillAssetPreviewRequest;
+        })();
+
+        v1.SkillMaterialView = (function() {
+
+            /**
+             * Properties of a SkillMaterialView.
+             * @typedef {Object} minimir.v1.SkillMaterialView.$Properties
+             * @property {minimir.v1.ItemView.$Properties|null} [item] SkillMaterialView item
+             * @property {Long|null} [consume_quantity] SkillMaterialView consume_quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillMaterialView.
+             * @memberof minimir.v1
+             * @interface ISkillMaterialView
+             * @augments minimir.v1.SkillMaterialView.$Properties
+             * @deprecated Use minimir.v1.SkillMaterialView.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillMaterialView.
+             * @typedef {minimir.v1.SkillMaterialView.$Properties} minimir.v1.SkillMaterialView.$Shape
+             */
+
+            /**
+             * Constructs a new SkillMaterialView.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillMaterialView.
+             * @constructor
+             * @param {minimir.v1.SkillMaterialView.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillMaterialView = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillMaterialView item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.SkillMaterialView
+             * @instance
+             */
+            SkillMaterialView.prototype.item = null;
+
+            /**
+             * SkillMaterialView consume_quantity.
+             * @member {Long} consume_quantity
+             * @memberof minimir.v1.SkillMaterialView
+             * @instance
+             */
+            SkillMaterialView.prototype.consume_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new SkillMaterialView instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {minimir.v1.SkillMaterialView.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillMaterialView} SkillMaterialView instance
+             * @type {{
+             *   (properties: minimir.v1.SkillMaterialView.$Shape): minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape;
+             *   (properties?: minimir.v1.SkillMaterialView.$Properties): minimir.v1.SkillMaterialView;
+             * }}
+             */
+            SkillMaterialView.create = function(properties) {
+                return new SkillMaterialView(properties);
+            };
+
+            /**
+             * Encodes the specified SkillMaterialView message. Does not implicitly {@link minimir.v1.SkillMaterialView.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {minimir.v1.SkillMaterialView.$Properties} message SkillMaterialView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillMaterialView.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.consume_quantity != null && $Object.hasOwnProperty.call(message, "consume_quantity") && (typeof message.consume_quantity === "object" ? message.consume_quantity.low || message.consume_quantity.high : message.consume_quantity !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.consume_quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillMaterialView message, length delimited. Does not implicitly {@link minimir.v1.SkillMaterialView.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {minimir.v1.SkillMaterialView.$Properties} message SkillMaterialView message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillMaterialView.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillMaterialView message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape} SkillMaterialView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillMaterialView.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillMaterialView();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.consume_quantity = value;
+                            else
+                                delete message.consume_quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillMaterialView message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape} SkillMaterialView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillMaterialView.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillMaterialView message.
+             * @function verify
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillMaterialView.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                if (message.consume_quantity != null && $Object.hasOwnProperty.call(message, "consume_quantity"))
+                    if (!$util.isInteger(message.consume_quantity) && !(message.consume_quantity && $util.isInteger(message.consume_quantity.low) && $util.isInteger(message.consume_quantity.high)))
+                        return "consume_quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillMaterialView
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillMaterialView
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillMaterialView.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillMaterialView";
+            };
+
+            return SkillMaterialView;
+        })();
+
+        v1.SkillNumericComparison = (function() {
+
+            /**
+             * Properties of a SkillNumericComparison.
+             * @typedef {Object} minimir.v1.SkillNumericComparison.$Properties
+             * @property {string|null} [key] SkillNumericComparison key
+             * @property {Long|null} [before_min] SkillNumericComparison before_min
+             * @property {Long|null} [before_max] SkillNumericComparison before_max
+             * @property {Long|null} [after_min] SkillNumericComparison after_min
+             * @property {Long|null} [after_max] SkillNumericComparison after_max
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillNumericComparison.
+             * @memberof minimir.v1
+             * @interface ISkillNumericComparison
+             * @augments minimir.v1.SkillNumericComparison.$Properties
+             * @deprecated Use minimir.v1.SkillNumericComparison.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillNumericComparison.
+             * @typedef {minimir.v1.SkillNumericComparison.$Properties} minimir.v1.SkillNumericComparison.$Shape
+             */
+
+            /**
+             * Constructs a new SkillNumericComparison.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillNumericComparison.
+             * @constructor
+             * @param {minimir.v1.SkillNumericComparison.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillNumericComparison = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillNumericComparison key.
+             * @member {string} key
+             * @memberof minimir.v1.SkillNumericComparison
+             * @instance
+             */
+            SkillNumericComparison.prototype.key = "";
+
+            /**
+             * SkillNumericComparison before_min.
+             * @member {Long} before_min
+             * @memberof minimir.v1.SkillNumericComparison
+             * @instance
+             */
+            SkillNumericComparison.prototype.before_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SkillNumericComparison before_max.
+             * @member {Long} before_max
+             * @memberof minimir.v1.SkillNumericComparison
+             * @instance
+             */
+            SkillNumericComparison.prototype.before_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SkillNumericComparison after_min.
+             * @member {Long} after_min
+             * @memberof minimir.v1.SkillNumericComparison
+             * @instance
+             */
+            SkillNumericComparison.prototype.after_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * SkillNumericComparison after_max.
+             * @member {Long} after_max
+             * @memberof minimir.v1.SkillNumericComparison
+             * @instance
+             */
+            SkillNumericComparison.prototype.after_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new SkillNumericComparison instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {minimir.v1.SkillNumericComparison.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillNumericComparison} SkillNumericComparison instance
+             * @type {{
+             *   (properties: minimir.v1.SkillNumericComparison.$Shape): minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape;
+             *   (properties?: minimir.v1.SkillNumericComparison.$Properties): minimir.v1.SkillNumericComparison;
+             * }}
+             */
+            SkillNumericComparison.create = function(properties) {
+                return new SkillNumericComparison(properties);
+            };
+
+            /**
+             * Encodes the specified SkillNumericComparison message. Does not implicitly {@link minimir.v1.SkillNumericComparison.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {minimir.v1.SkillNumericComparison.$Properties} message SkillNumericComparison message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillNumericComparison.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.key != null && $Object.hasOwnProperty.call(message, "key") && message.key !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.key);
+                if (message.before_min != null && $Object.hasOwnProperty.call(message, "before_min") && (typeof message.before_min === "object" ? message.before_min.low || message.before_min.high : message.before_min !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.before_min);
+                if (message.before_max != null && $Object.hasOwnProperty.call(message, "before_max") && (typeof message.before_max === "object" ? message.before_max.low || message.before_max.high : message.before_max !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.before_max);
+                if (message.after_min != null && $Object.hasOwnProperty.call(message, "after_min") && (typeof message.after_min === "object" ? message.after_min.low || message.after_min.high : message.after_min !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.after_min);
+                if (message.after_max != null && $Object.hasOwnProperty.call(message, "after_max") && (typeof message.after_max === "object" ? message.after_max.low || message.after_max.high : message.after_max !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.after_max);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillNumericComparison message, length delimited. Does not implicitly {@link minimir.v1.SkillNumericComparison.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {minimir.v1.SkillNumericComparison.$Properties} message SkillNumericComparison message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillNumericComparison.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillNumericComparison message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape} SkillNumericComparison
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillNumericComparison.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillNumericComparison();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.key = value;
+                            else
+                                delete message.key;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.before_min = value;
+                            else
+                                delete message.before_min;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.before_max = value;
+                            else
+                                delete message.before_max;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.after_min = value;
+                            else
+                                delete message.after_min;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.after_max = value;
+                            else
+                                delete message.after_max;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillNumericComparison message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape} SkillNumericComparison
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillNumericComparison.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillNumericComparison message.
+             * @function verify
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillNumericComparison.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.key != null && $Object.hasOwnProperty.call(message, "key"))
+                    if (!$util.isString(message.key))
+                        return "key: string expected";
+                if (message.before_min != null && $Object.hasOwnProperty.call(message, "before_min"))
+                    if (!$util.isInteger(message.before_min) && !(message.before_min && $util.isInteger(message.before_min.low) && $util.isInteger(message.before_min.high)))
+                        return "before_min: integer|Long expected";
+                if (message.before_max != null && $Object.hasOwnProperty.call(message, "before_max"))
+                    if (!$util.isInteger(message.before_max) && !(message.before_max && $util.isInteger(message.before_max.low) && $util.isInteger(message.before_max.high)))
+                        return "before_max: integer|Long expected";
+                if (message.after_min != null && $Object.hasOwnProperty.call(message, "after_min"))
+                    if (!$util.isInteger(message.after_min) && !(message.after_min && $util.isInteger(message.after_min.low) && $util.isInteger(message.after_min.high)))
+                        return "after_min: integer|Long expected";
+                if (message.after_max != null && $Object.hasOwnProperty.call(message, "after_max"))
+                    if (!$util.isInteger(message.after_max) && !(message.after_max && $util.isInteger(message.after_max.low) && $util.isInteger(message.after_max.high)))
+                        return "after_max: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillNumericComparison
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillNumericComparison
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillNumericComparison.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillNumericComparison";
+            };
+
+            return SkillNumericComparison;
+        })();
+
+        v1.SkillAssetPreview = (function() {
+
+            /**
+             * Properties of a SkillAssetPreview.
+             * @typedef {Object} minimir.v1.SkillAssetPreview.$Properties
+             * @property {Uint8Array|null} [preview_id] SkillAssetPreview preview_id
+             * @property {number|null} [kind] SkillAssetPreview kind
+             * @property {Long|null} [rule_version] SkillAssetPreview rule_version
+             * @property {string|null} [config_hash] SkillAssetPreview config_hash
+             * @property {Long|null} [role_revision] SkillAssetPreview role_revision
+             * @property {Long|null} [expires_at_unix_ms] SkillAssetPreview expires_at_unix_ms
+             * @property {number|null} [skill_id] SkillAssetPreview skill_id
+             * @property {number|null} [from_level] SkillAssetPreview from_level
+             * @property {number|null} [to_level] SkillAssetPreview to_level
+             * @property {minimir.v1.WalletState.$Properties|null} [spend] SkillAssetPreview spend
+             * @property {Array.<minimir.v1.SkillMaterialView.$Properties>|null} [materials] SkillAssetPreview materials
+             * @property {Array.<minimir.v1.ItemView.$Properties>|null} [outputs] SkillAssetPreview outputs
+             * @property {Array.<minimir.v1.SkillNumericComparison.$Properties>|null} [stats] SkillAssetPreview stats
+             * @property {number|null} [offer_id] SkillAssetPreview offer_id
+             * @property {Long|null} [quantity] SkillAssetPreview quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillAssetPreview.
+             * @memberof minimir.v1
+             * @interface ISkillAssetPreview
+             * @augments minimir.v1.SkillAssetPreview.$Properties
+             * @deprecated Use minimir.v1.SkillAssetPreview.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillAssetPreview.
+             * @typedef {minimir.v1.SkillAssetPreview.$Properties} minimir.v1.SkillAssetPreview.$Shape
+             */
+
+            /**
+             * Constructs a new SkillAssetPreview.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillAssetPreview.
+             * @constructor
+             * @param {minimir.v1.SkillAssetPreview.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillAssetPreview = function (properties) {
+                this.materials = [];
+                this.outputs = [];
+                this.stats = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillAssetPreview preview_id.
+             * @member {Uint8Array} preview_id
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.preview_id = $util.newBuffer([]);
+
+            /**
+             * SkillAssetPreview kind.
+             * @member {number} kind
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.kind = 0;
+
+            /**
+             * SkillAssetPreview rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillAssetPreview config_hash.
+             * @member {string} config_hash
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.config_hash = "";
+
+            /**
+             * SkillAssetPreview role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillAssetPreview expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillAssetPreview skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.skill_id = 0;
+
+            /**
+             * SkillAssetPreview from_level.
+             * @member {number} from_level
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.from_level = 0;
+
+            /**
+             * SkillAssetPreview to_level.
+             * @member {number} to_level
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.to_level = 0;
+
+            /**
+             * SkillAssetPreview spend.
+             * @member {minimir.v1.WalletState.$Properties|null|undefined} spend
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.spend = null;
+
+            /**
+             * SkillAssetPreview materials.
+             * @member {Array.<minimir.v1.SkillMaterialView.$Properties>} materials
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.materials = $util.emptyArray;
+
+            /**
+             * SkillAssetPreview outputs.
+             * @member {Array.<minimir.v1.ItemView.$Properties>} outputs
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.outputs = $util.emptyArray;
+
+            /**
+             * SkillAssetPreview stats.
+             * @member {Array.<minimir.v1.SkillNumericComparison.$Properties>} stats
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.stats = $util.emptyArray;
+
+            /**
+             * SkillAssetPreview offer_id.
+             * @member {number} offer_id
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.offer_id = 0;
+
+            /**
+             * SkillAssetPreview quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.SkillAssetPreview
+             * @instance
+             */
+            SkillAssetPreview.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new SkillAssetPreview instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {minimir.v1.SkillAssetPreview.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillAssetPreview} SkillAssetPreview instance
+             * @type {{
+             *   (properties: minimir.v1.SkillAssetPreview.$Shape): minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape;
+             *   (properties?: minimir.v1.SkillAssetPreview.$Properties): minimir.v1.SkillAssetPreview;
+             * }}
+             */
+            SkillAssetPreview.create = function(properties) {
+                return new SkillAssetPreview(properties);
+            };
+
+            /**
+             * Encodes the specified SkillAssetPreview message. Does not implicitly {@link minimir.v1.SkillAssetPreview.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {minimir.v1.SkillAssetPreview.$Properties} message SkillAssetPreview message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetPreview.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.preview_id != null && $Object.hasOwnProperty.call(message, "preview_id") && message.preview_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.preview_id);
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.kind);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash") && message.config_hash !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.config_hash);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.role_revision);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.expires_at_unix_ms);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.skill_id);
+                if (message.from_level != null && $Object.hasOwnProperty.call(message, "from_level") && message.from_level !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.from_level);
+                if (message.to_level != null && $Object.hasOwnProperty.call(message, "to_level") && message.to_level !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.to_level);
+                if (message.spend != null && $Object.hasOwnProperty.call(message, "spend"))
+                    $root.minimir.v1.WalletState.encode(message.spend, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.materials != null && message.materials.length)
+                    for (var i = 0; i < message.materials.length; ++i)
+                        $root.minimir.v1.SkillMaterialView.encode(message.materials[i], writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.outputs != null && message.outputs.length)
+                    for (var i = 0; i < message.outputs.length; ++i)
+                        $root.minimir.v1.ItemView.encode(message.outputs[i], writer.uint32(/* id 12, wireType 2 =*/98).fork(), _depth + 1).ldelim();
+                if (message.stats != null && message.stats.length)
+                    for (var i = 0; i < message.stats.length; ++i)
+                        $root.minimir.v1.SkillNumericComparison.encode(message.stats[i], writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id") && message.offer_id !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.offer_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillAssetPreview message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetPreview.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {minimir.v1.SkillAssetPreview.$Properties} message SkillAssetPreview message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetPreview.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillAssetPreview message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape} SkillAssetPreview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetPreview.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillAssetPreview();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.preview_id = value;
+                            else
+                                delete message.preview_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.config_hash = value;
+                            else
+                                delete message.config_hash;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.from_level = value;
+                            else
+                                delete message.from_level;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.to_level = value;
+                            else
+                                delete message.to_level;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.spend = $root.minimir.v1.WalletState.decode(reader, reader.size(), $undefined, _depth + 1, message.spend);
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.materials && message.materials.length))
+                                message.materials = [];
+                            message.materials.push($root.minimir.v1.SkillMaterialView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.outputs && message.outputs.length))
+                                message.outputs = [];
+                            message.outputs.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.stats && message.stats.length))
+                                message.stats = [];
+                            message.stats.push($root.minimir.v1.SkillNumericComparison.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.offer_id = value;
+                            else
+                                delete message.offer_id;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillAssetPreview message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape} SkillAssetPreview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetPreview.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillAssetPreview message.
+             * @function verify
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillAssetPreview.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.preview_id != null && $Object.hasOwnProperty.call(message, "preview_id"))
+                    if (!(message.preview_id && typeof message.preview_id.length === "number" || $util.isString(message.preview_id)))
+                        return "preview_id: buffer expected";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash"))
+                    if (!$util.isString(message.config_hash))
+                        return "config_hash: string expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.from_level != null && $Object.hasOwnProperty.call(message, "from_level"))
+                    if (!$util.isInteger(message.from_level))
+                        return "from_level: integer expected";
+                if (message.to_level != null && $Object.hasOwnProperty.call(message, "to_level"))
+                    if (!$util.isInteger(message.to_level))
+                        return "to_level: integer expected";
+                if (message.spend != null && $Object.hasOwnProperty.call(message, "spend")) {
+                    var error = $root.minimir.v1.WalletState.verify(message.spend, _depth + 1);
+                    if (error)
+                        return "spend." + error;
+                }
+                if (message.materials != null && $Object.hasOwnProperty.call(message, "materials")) {
+                    if (!$Array.isArray(message.materials))
+                        return "materials: array expected";
+                    for (var i = 0; i < message.materials.length; ++i) {
+                        var error = $root.minimir.v1.SkillMaterialView.verify(message.materials[i], _depth + 1);
+                        if (error)
+                            return "materials." + error;
+                    }
+                }
+                if (message.outputs != null && $Object.hasOwnProperty.call(message, "outputs")) {
+                    if (!$Array.isArray(message.outputs))
+                        return "outputs: array expected";
+                    for (var i = 0; i < message.outputs.length; ++i) {
+                        var error = $root.minimir.v1.ItemView.verify(message.outputs[i], _depth + 1);
+                        if (error)
+                            return "outputs." + error;
+                    }
+                }
+                if (message.stats != null && $Object.hasOwnProperty.call(message, "stats")) {
+                    if (!$Array.isArray(message.stats))
+                        return "stats: array expected";
+                    for (var i = 0; i < message.stats.length; ++i) {
+                        var error = $root.minimir.v1.SkillNumericComparison.verify(message.stats[i], _depth + 1);
+                        if (error)
+                            return "stats." + error;
+                    }
+                }
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id"))
+                    if (!$util.isInteger(message.offer_id))
+                        return "offer_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillAssetPreview
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillAssetPreview
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillAssetPreview.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillAssetPreview";
+            };
+
+            return SkillAssetPreview;
+        })();
+
+        v1.SkillAssetCommitRequest = (function() {
+
+            /**
+             * Properties of a SkillAssetCommitRequest.
+             * @typedef {Object} minimir.v1.SkillAssetCommitRequest.$Properties
+             * @property {Uint8Array|null} [preview_id] SkillAssetCommitRequest preview_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SkillAssetCommitRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillAssetCommitRequest.
+             * @memberof minimir.v1
+             * @interface ISkillAssetCommitRequest
+             * @augments minimir.v1.SkillAssetCommitRequest.$Properties
+             * @deprecated Use minimir.v1.SkillAssetCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillAssetCommitRequest.
+             * @typedef {minimir.v1.SkillAssetCommitRequest.$Properties} minimir.v1.SkillAssetCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SkillAssetCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillAssetCommitRequest.
+             * @constructor
+             * @param {minimir.v1.SkillAssetCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillAssetCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillAssetCommitRequest preview_id.
+             * @member {Uint8Array} preview_id
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @instance
+             */
+            SkillAssetCommitRequest.prototype.preview_id = $util.newBuffer([]);
+
+            /**
+             * SkillAssetCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @instance
+             */
+            SkillAssetCommitRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SkillAssetCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {minimir.v1.SkillAssetCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillAssetCommitRequest} SkillAssetCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SkillAssetCommitRequest.$Shape): minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape;
+             *   (properties?: minimir.v1.SkillAssetCommitRequest.$Properties): minimir.v1.SkillAssetCommitRequest;
+             * }}
+             */
+            SkillAssetCommitRequest.create = function(properties) {
+                return new SkillAssetCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SkillAssetCommitRequest message. Does not implicitly {@link minimir.v1.SkillAssetCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {minimir.v1.SkillAssetCommitRequest.$Properties} message SkillAssetCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.preview_id != null && $Object.hasOwnProperty.call(message, "preview_id") && message.preview_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.preview_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillAssetCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {minimir.v1.SkillAssetCommitRequest.$Properties} message SkillAssetCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillAssetCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillAssetCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape} SkillAssetCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillAssetCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.preview_id = value;
+                            else
+                                delete message.preview_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillAssetCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape} SkillAssetCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillAssetCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillAssetCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillAssetCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.preview_id != null && $Object.hasOwnProperty.call(message, "preview_id"))
+                    if (!(message.preview_id && typeof message.preview_id.length === "number" || $util.isString(message.preview_id)))
+                        return "preview_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillAssetCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillAssetCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillAssetCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillAssetCommitRequest";
+            };
+
+            return SkillAssetCommitRequest;
         })();
 
         v1.ClaimHostingTimeRequest = (function() {

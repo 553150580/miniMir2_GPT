@@ -146,7 +146,7 @@ func (w *worker) lineOfSight(from, to devconfig.Point) bool {
 func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time) uint32 {
 	s, exists := w.e.Store.Cfg.Fixture.Skill(id)
 	level, learned := r.Role.Skill(id)
-	if !exists || !learned || s.JobID != r.Role.Job || level != s.LearnedLevel {
+	if !exists || !learned || s.JobID != r.Role.Job || level < s.LearnedLevel || level > s.MaxLevel {
 		return p.CodeSkillNotLearned
 	}
 	if s.Behavior == "fencing" || r.Pending || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || len(r.Casts) >= 64 {

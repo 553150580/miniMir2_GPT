@@ -22,6 +22,8 @@ import { GameSkills } from './GameSkills';
 import { createSkillLearnPreview, primarySkill, selectSkillTarget, SkillRow, SkillSnapshot, skillBookInstance, validateSkillLearnPreview } from './SkillModel';
 import type { CastEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
+import { GameSkillAssets } from './GameSkillAssets';
+import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -36,6 +38,7 @@ export class AppRoot extends Component {
     private hud?: GameHUD;
     private messages?: GameMessages;
     private skills?: GameSkills;
+    private skillAssets?: GameSkillAssets;
     private ui?: UIMgr;
     private popup?: PopupView;
     private selectedRole = -1;
@@ -183,6 +186,8 @@ export class AppRoot extends Component {
         });
         this.skills = new GameSkills(safe, this.popup);
         this.cleanups.push(() => this.skills?.dispose());
+        this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
+        this.cleanups.push(() => this.skillAssets?.dispose());
         const cast = (event: CastEvent): void => this.world?.acceptCast(event);
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
         if (this.disposed) return;
@@ -236,6 +241,15 @@ export class AppRoot extends Component {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             this.castSkill(skill);
         });
+        for (const [path, kind] of [['Shop', 1], ['Upgrade', 2], ['Salvage', 3]] as const) this.button(`UIMgr/Panels/Skills/${path}`, () => {
+            const selected = this.skills?.selected;
+            if (kind === 2 && !selected?.learned) throw new Error('先学会并选择要升级的技能');
+            this.skillAssets!.open(kind, kind === 2 ? selected!.definition.id : 0); this.ui!.open('SkillAssets'); this.refreshGame();
+        });
+        this.button('UIMgr/Panels/SkillAssets/Reset', () => this.skillAssets!.reset());
+        this.button('UIMgr/Panels/SkillAssets/Preview', () => this.previewSkillAsset());
+        this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Minus', () => this.skillAssets!.adjustPurchase(-1));
+        this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus', () => this.skillAssets!.adjustPurchase(1));
         for (const [path, title, message] of [
             ['BottomHUD/Skills/PetPanel','宠物','宠物会跟随角色并参与战斗。宠物管理暂未开放。'],
             ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
@@ -256,6 +270,8 @@ export class AppRoot extends Component {
             this.button(`UIMgr/Panels/${panel}/Recycle`, async () => {
                 if (!this.selectedItem) throw new Error('先选择物品');
                 const definition = this.world!.gameplay.items.find((item: any) => item.item_id === this.selectedItem.itemId);
+                if (definition?.kind === 'book') { this.skillAssets!.open(3); this.ui!.open('SkillAssets'); this.refreshGame(); return; }
+                if (definition?.kind !== 'equipment') throw new Error('该物品不能分解');
                 if (await this.popup!.confirm('Confirm', `分解${definition?.name ?? '所选装备'}？分解所得继承装备绑定状态。`)) await this.economic(40002, { itemInstanceIds: [this.selectedItem.instanceId] });
             });
         }
@@ -279,13 +295,19 @@ export class AppRoot extends Component {
             quickSkillLabel: primarySkill(this.skillSnapshot())?.definition.name };
         this.hud?.refresh(presentation);
         this.skills?.refresh(this.skillSnapshot());
+        this.skillAssets?.refresh(this.skillAssetsSnapshot());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
             const items = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
             list.setItems(items, (node, item: any) => { const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId); node.getChildByName('Text')!.getComponent(Label)!.string = `${definition?.name ?? item.itemId} ×${item.quantity} ${item.bound ? '绑定' : '非绑定'}`; }, true);
-            if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, item: any) => { this.selectedItem = item; const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId); this.popup!.show('Details', { title: definition?.name ?? '物品详情', message: `数量 ${item.quantity}\n${item.bound ? '绑定物品' : '非绑定物品'}` }); }); }
+            if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, item: any) => {
+                this.selectedItem = item;
+                const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
+                const book = definition?.kind === 'book' ? `\n${canRecycleBook(item, this.world!.gameplay.skill_book_recycle ?? []) ? '可按白名单拆书为书页' : '此来源或品质不能拆书为书页'}` : '';
+                this.popup!.show('Details', { title: definition?.name ?? '物品详情', message: `数量 ${item.quantity}\n${item.bound ? '绑定物品' : '非绑定物品'}\n来源 ${sourceName(item.sourceKind)}\n品质 ${item.quality ?? 0}${book}` });
+            }); }
         }
         this.lastInventory = session.inventory;
         for (const panel of ['Inventory','Role']) {
@@ -301,6 +323,34 @@ export class AppRoot extends Component {
             try { if (session.pending?.get(roleIdentity())) void this.submitPending().catch(error => this.error(error)); }
             catch (error) { this.unresolved = true; this.error(error); }
         }
+    }
+
+    private skillAssetsSnapshot(): SkillAssetsSnapshot {
+        return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO,
+            ruleVersion: session.entry?.resourceVersion ?? Long.UZERO, inventory: session.inventory, wallet: session.wallet,
+            definitions: this.world?.gameplay.items ?? [], skills: this.world?.gameplay.skills ?? [], offers: this.world?.gameplay.shop_offers ?? [],
+            upgrades: this.world?.gameplay.skill_upgrades ?? [], recycle: this.world?.gameplay.skill_book_recycle ?? [] };
+    }
+
+    private async previewSkillAsset(): Promise<void> {
+        const prepared = this.skillAssets!.prepare(); this.skillAssets!.lock(true);
+        try {
+            const request = { ...prepared.request, quantity: Long.fromString(prepared.request.quantity.toString()), materials: prepared.request.materials.map(item => ({
+                instanceId: item.instanceId, version: item.version, quantity: Long.fromString(item.quantity.toString()),
+            })) };
+            const quote: SkillAssetQuote = await session.connection.request(40011, request);
+            if (this.disposed) return;
+            const validate = (): void => {
+                validateSkillAssetContext(prepared.context, quote, this.skillAssetsSnapshot(), Date.now());
+                validateQuotedMaterials(quote, prepared.request.materials, this.skillAssetsSnapshot());
+                if (quote.kind !== request.kind || (quote.kind === 1 && (quote.offerId !== request.offerId || quote.quantity.toString() !== request.quantity.toString()))
+                    || (quote.kind === 2 && quote.skillId !== request.skillId)) throw new Error('报价与原操作不一致，请重新预览');
+            };
+            validate();
+            if (!await this.skillAssets!.showQuote(quote) || this.disposed) return;
+            validate();
+            await this.economic(40013, { previewId: new Uint8Array(quote.previewId) });
+        } finally { if (!this.disposed) this.skillAssets!.lock(false); }
     }
 
     private skillSnapshot(): SkillSnapshot {

@@ -163,7 +163,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -197,7 +197,11 @@
       "source_behavior_notes": [
         "施法者MC输入；到期时继续检查合法敌方、同图和目标离原格距离。",
         "源Magic公共校验可能先扣蓝；本作按最终策划先验证再确认施放应另登记开发适配。"
-      ]
+      ],
+      "project_implementation_reference": "docs/技能获取与升级实施边界.md",
+      "implementation_config_version": "dev-skill-growth-v0.4-d9101bd94921",
+      "implementation_rule_version": 4,
+      "project_implementation_acceptance_reference": "docs/技能获取与升级阶段验收.json"
     },
     {
       "candidate_key": "myf_magic_2",
@@ -244,7 +248,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -290,7 +294,11 @@
       "source_behavior_notes": [
         "人类目标按目标等级与当前剩余治疗额度计算分跳；宠物继承MonsterObject分支，固定每跳最多5。",
         "治疗队列独立于普通药品；来源死亡暂停保留，满值在计时块外清队列。"
-      ]
+      ],
+      "project_implementation_reference": "docs/技能获取与升级实施边界.md",
+      "implementation_config_version": "dev-skill-growth-v0.4-d9101bd94921",
+      "implementation_rule_version": 4,
+      "project_implementation_acceptance_reference": "docs/技能获取与升级阶段验收.json"
     },
     {
       "candidate_key": "myf_magic_3",
@@ -337,7 +345,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -359,7 +367,11 @@
       "source_behavior_notes": [
         "已学状态与原生rank分开；新UserMagic默认rank0，准确增量为0。",
         "源训练及完整升级未因此得到本作授权；rank1至3可作为固定输入测试。"
-      ]
+      ],
+      "project_implementation_reference": "docs/技能获取与升级实施边界.md",
+      "implementation_config_version": "dev-skill-growth-v0.4-d9101bd94921",
+      "implementation_rule_version": 4,
+      "project_implementation_acceptance_reference": "docs/技能获取与升级阶段验收.json"
     },
     {
       "candidate_key": "myf_magic_4",

@@ -3321,6 +3321,15 @@
           "type": "string",
           "required": false,
           "target": "none"
+        },
+        {
+          "name": "price_gold",
+          "title": "每件金币价格",
+          "type": "int",
+          "required": false,
+          "target": "both",
+          "minimum": 0,
+          "unit": "金币"
         }
       ],
       "workbook_group": "gameplay"
@@ -5687,6 +5696,37 @@
           "type": "string",
           "required": false,
           "target": "none"
+        },
+        {
+          "name": "book_item_id",
+          "title": "学习书物品ID",
+          "type": "int",
+          "required": false,
+          "target": "both",
+          "minimum": 0
+        },
+        {
+          "name": "native_start_level",
+          "title": "原生初学阶",
+          "type": "int",
+          "required": false,
+          "target": "both",
+          "minimum": 0
+        },
+        {
+          "name": "native_max_level",
+          "title": "原生开放最高阶",
+          "type": "int",
+          "required": false,
+          "target": "both",
+          "minimum": 0
+        },
+        {
+          "name": "damage_parameters",
+          "title": "技能数值参数",
+          "type": "json",
+          "required": false,
+          "target": "both"
         }
       ],
       "workbook_group": "gameplay"
@@ -5780,6 +5820,23 @@
           "type": "string",
           "required": false,
           "target": "none"
+        },
+        {
+          "name": "required_role_level",
+          "title": "所需角色等级",
+          "type": "int",
+          "required": true,
+          "target": "both",
+          "minimum": 1
+        },
+        {
+          "name": "page_item_id",
+          "title": "书页物品ID",
+          "type": "int",
+          "required": true,
+          "target": "both",
+          "minimum": 1,
+          "ref_table": "game_items"
         }
       ],
       "workbook_group": "gameplay"
@@ -13909,108 +13966,6 @@
               }
             }
           },
-          "skills": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "job_id": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "book_item_id": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "learn_level": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "learned_level": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "mp_base_cost": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "mp_level_cost": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "cooldown_base_ms": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "cooldown_reduction_ms": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "global_spell_ms": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "action_ms": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "range_cells": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "delay_base_ms": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "projectile_ms_per_cell": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "target_move_tolerance_cells": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "accuracy_per_level": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "power_base": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "power_bonus": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "mpower_base": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "mpower_bonus": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "multiplier_base_ppm": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "multiplier_bonus_ppm": {
-                  "type": "int",
-                  "minimum": 0
-                },
-                "name": {
-                  "type": "string"
-                },
-                "behavior": {
-                  "type": "string"
-                }
-              }
-            }
-          },
           "healing": {
             "type": "object",
             "properties": {
@@ -14115,10 +14070,762 @@
                 }
               }
             }
+          },
+          "skill_ids": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1
+            }
+          },
+          "skill_economy": {
+            "type": "object",
+            "properties": {
+              "page_item_id": {
+                "type": "int",
+                "minimum": 1
+              },
+              "preview_ttl_ms": {
+                "type": "int",
+                "minimum": 1
+              },
+              "preview_material_limit": {
+                "type": "int",
+                "minimum": 1
+              }
+            }
+          },
+          "skill_shop_entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "offer_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "item_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "required_role_level": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "max_purchase_quantity": {
+                  "type": "int",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "recyclable_book_ids": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1
+            }
+          },
+          "recycle_source_kinds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "skill_book_drop_quality": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
       "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 1,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 1,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 1,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 1,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 2,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 2,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 2,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 2,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 3,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 3,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 3,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 3,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 11,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 11,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 12,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 12,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 13,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 13,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 21,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 21,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 22,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 22,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 23,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 23,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 31,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 31,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 32,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 32,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 33,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 33,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：每阶技能书=目标阶+1；docs/技能获取与升级实施边界.md（页与等级门槛候选）"
     }
   ]
 }

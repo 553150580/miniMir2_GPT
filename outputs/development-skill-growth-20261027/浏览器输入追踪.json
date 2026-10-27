@@ -1,0 +1,770 @@
+[
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078349233,\"event\":\"button\",\"path\":\"Role2\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:19:09.236Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078350078,\"event\":\"button\",\"path\":\"Enter\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:19:10.082Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078373437,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:19:33.469Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078377613,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:19:37.619Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078388702,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:19:48.704Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078399925,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:19:59.926Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078410013,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:20:10.015Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078420022,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:20:20.024Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078430122,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:20:30.123Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078440220,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:20:40.223Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078451322,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:20:51.324Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078461422,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:21:01.424Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078471526,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:21:11.529Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078481618,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:21:21.619Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078492719,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:21:32.723Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078502820,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T05:21:42.823Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078503811,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"event_type\":\"toggle\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:21:43.816Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078503813,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:21:43.837Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078503837,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:21:43.844Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078504421,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:21:44.426Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078505126,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Learn\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:21:45.131Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078505791,\"event\":\"send\",\"message_id\":40010,\"packet_seq\":7,\"skill_id\":2}",
+    "timestamp": "2026-10-27T05:21:45.793Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078505868,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:21:45.869Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078518108,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Shop\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:21:58.124Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078586062,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:23:06.065Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078586607,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:23:06.610Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078665526,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:24:25.528Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078679207,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:24:39.210Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793078681244,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Salvage\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:24:41.263Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079078154,\"event\":\"button\",\"path\":\"MapViewport/Actions/Attack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:31:18.159Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079176036,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:32:56.041Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079176853,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:32:56.856Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079177489,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Salvage\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:32:57.499Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079178316,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:32:58.324Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079179094,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:32:59.097Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079204920,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:33:24.925Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079233518,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:33:53.520Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079235418,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Shop\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:33:55.424Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283238,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.244Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283346,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.348Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283466,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.469Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283573,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.579Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283778,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.779Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283893,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.897Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079283977,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:43.980Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284086,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.088Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284178,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.180Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284287,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.288Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284389,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.391Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284480,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.481Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284560,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.561Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284670,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.672Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284745,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.747Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284853,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.854Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079284955,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:44.957Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285068,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.069Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285182,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.186Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285292,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.293Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285414,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.417Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285518,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.519Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285617,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.619Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079285720,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:45.722Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079286424,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:34:46.430Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079311820,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:35:11.821Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079313471,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Upgrade\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:13.473Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079331124,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:31.131Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079331536,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:31.540Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079331936,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:31.940Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079332025,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:32.026Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079332108,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:32.113Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079332237,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:32.243Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079332367,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:32.371Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079333198,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:35:33.201Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079410568,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:36:50.573Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079412476,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Shop\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:36:52.481Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450171,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.174Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450280,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.282Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450385,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.387Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450486,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.488Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450590,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.593Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079450688,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:30.691Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079451411,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:37:31.415Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079487040,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:38:07.041Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079488649,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Upgrade\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:08.655Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079538045,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:58.067Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079538554,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:58.558Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079538980,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:58.985Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079539399,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:59.403Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079539810,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:38:59.814Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079540236,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:00.242Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079540682,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:00.687Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079541111,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:01.116Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079541548,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:01.550Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079541964,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:01.967Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079542371,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:02.373Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079542773,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:02.778Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079563100,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:23.103Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079564203,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:39:24.207Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079664878,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:41:04.880Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079685130,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:25.133Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079685564,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:25.568Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079686042,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:26.045Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079686472,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:26.475Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079703620,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:43.625Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079703711,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:43.712Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079703827,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:43.831Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079703922,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:43.924Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704016,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.018Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704132,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.134Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704262,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.265Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704378,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.382Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704500,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.502Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704601,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.602Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704709,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.710Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704804,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.806Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079704915,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:44.917Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705023,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.026Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705107,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.108Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705211,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.214Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705395,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.411Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705496,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.498Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705589,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.593Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079705689,\"event\":\"button\",\"path\":\"SkillAssets/Materials/Plus\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:45.691Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079706755,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:41:46.757Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079739458,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T05:42:19.462Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079793979,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Use\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T05:43:13.983Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079793981,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":24,\"skill_id\":2,\"input_sequence\":1}",
+    "timestamp": "2026-10-27T05:43:13.984Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793079793995,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":2,\"input_sequence\":1,\"cast_id\":\"1\"}",
+    "timestamp": "2026-10-27T05:43:14.001Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

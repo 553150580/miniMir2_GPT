@@ -444,6 +444,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案.md:4.8；2026-10-27有来源候选技能开发"
+    },
+    {
+      "value": 40011,
+      "name": "MsgC2SSkillAssetPreview",
+      "proto_message": "SkillAssetPreviewRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+    },
+    {
+      "value": 40012,
+      "name": "MsgS2CSkillAssetPreview",
+      "proto_message": "SkillAssetPreview",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+    },
+    {
+      "value": 40013,
+      "name": "MsgC2SSkillAssetCommit",
+      "proto_message": "SkillAssetCommitRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
     }
   ],
   "error_codes": [
@@ -637,6 +673,46 @@
       "display_zh": "输入已过期",
       "status": "draft",
       "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3301,
+      "name": "CodeSkillPreviewStale",
+      "display_zh": "技能报价已失效，请重新预览",
+      "status": "draft",
+      "source_ref": "最终策划案4.8；技能获取与升级开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3302,
+      "name": "CodeSkillMaterials",
+      "display_zh": "技能材料不足或选择不符",
+      "status": "draft",
+      "source_ref": "最终策划案4.8；技能获取与升级开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3303,
+      "name": "CodeSkillUpgradeBlocked",
+      "display_zh": "当前技能等级或角色等级不符",
+      "status": "draft",
+      "source_ref": "最终策划案4.8；技能获取与升级开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3304,
+      "name": "CodeSkillBookSource",
+      "display_zh": "该来源技能书不能分解",
+      "status": "draft",
+      "source_ref": "最终策划案4.8；技能获取与升级开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3305,
+      "name": "CodeSkillPurchaseBlocked",
+      "display_zh": "当前商品或购买数量不符合条件",
+      "status": "draft",
+      "source_ref": "最终策划案4.8；技能获取与升级开发协议",
       "active_in_scope": true
     }
   ]

@@ -38,15 +38,18 @@ func (w Wallet) Proto(rev int64) *pb.WalletState {
 }
 
 type Item struct {
-	ID       string `bson:"instance_id" json:"instance_id"`
-	ItemID   uint32 `bson:"item_id" json:"item_id"`
-	Quantity int64  `bson:"quantity" json:"quantity"`
-	Bound    bool   `bson:"bound" json:"bound"`
-	Version  int64  `bson:"version" json:"version"`
+	ID         string `bson:"instance_id" json:"instance_id"`
+	ItemID     uint32 `bson:"item_id" json:"item_id"`
+	Quantity   int64  `bson:"quantity" json:"quantity"`
+	Bound      bool   `bson:"bound" json:"bound"`
+	Version    int64  `bson:"version" json:"version"`
+	SourceKind string `bson:"source_kind,omitempty" json:"source_kind"`
+	SourceID   string `bson:"source_id,omitempty" json:"source_id"`
+	Quality    uint32 `bson:"quality,omitempty" json:"quality"`
 }
 
 func (i Item) Proto() *pb.ItemView {
-	return &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version)}
+	return &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality}
 }
 
 type Equipped struct {

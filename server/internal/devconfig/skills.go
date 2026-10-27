@@ -12,6 +12,7 @@ type Skill struct {
 	BookItemID               uint32 `json:"book_item_id"`
 	LearnLevel               uint32 `json:"learn_level"`
 	LearnedLevel             uint32 `json:"learned_level"`
+	MaxLevel                 uint32 `json:"max_level"`
 	Behavior                 string `json:"behavior"`
 	MPBaseCost               int64  `json:"mp_base_cost"`
 	MPLevelCost              int64  `json:"mp_level_cost"`
@@ -127,7 +128,7 @@ func (f *Fixture) ValidateSkills() error {
 				return errors.New("技能参数越界")
 			}
 		}
-		if s.CooldownReductionMS*int64(s.LearnedLevel) > s.CooldownBaseMS {
+		if s.MaxLevel < s.LearnedLevel || s.MaxLevel > 255 || s.CooldownReductionMS*int64(s.MaxLevel) > s.CooldownBaseMS {
 			return errors.New("技能冷却不能为负")
 		}
 		seen[s.ID] = true
@@ -162,6 +163,13 @@ func (f *Fixture) ValidateSkills() error {
 		if a.MagicMin < 0 || a.MagicMax < a.MagicMin || a.TaoMin < 0 || a.TaoMax < a.TaoMin || a.DefenceMin < 0 || a.DefenceMax < a.DefenceMin || a.MagicDefenceMin < 0 || a.MagicDefenceMax < a.MagicDefenceMin || a.Accuracy < 0 || a.Agility < 0 || a.MagicResist < 0 || a.MagicResistWeight <= 0 || a.MagicResist > a.MagicResistWeight {
 			return errors.New("AC/MAC/命中/抗魔区间无效")
 		}
+	}
+	upgradesEnabled := len(f.SkillUpgrades) > 0 || len(f.SkillShop) > 0 || f.SkillEconomy.PageItemID != 0
+	for _, s := range f.Skills {
+		upgradesEnabled = upgradesEnabled || s.MaxLevel > s.LearnedLevel
+	}
+	if upgradesEnabled {
+		return f.ValidateSkillEconomy()
 	}
 	return nil
 }

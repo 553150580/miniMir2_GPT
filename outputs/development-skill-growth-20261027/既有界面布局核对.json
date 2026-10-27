@@ -1,0 +1,240 @@
+{
+  "base_commit": "421ce1c127a63d02da59ae9ba6a4f757a6b308ed",
+  "old_objects": 779,
+  "new_objects": 938,
+  "hud_first_733_fields_preserved_except_appended_panel_children": true,
+  "intentional_skill_panel_changes": "技能列表高度470→360、y -35→-20，保存三项入口按钮；不覆盖其他既有布局",
+  "old_object_changes": [
+    {
+      "index": 253,
+      "name": "Panels",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 257
+        },
+        {
+          "__id__": 298
+        },
+        {
+          "__id__": 339
+        },
+        {
+          "__id__": 363
+        },
+        {
+          "__id__": 373
+        },
+        {
+          "__id__": 425
+        },
+        {
+          "__id__": 649
+        },
+        {
+          "__id__": 733
+        }
+      ],
+      "after": [
+        {
+          "__id__": 257
+        },
+        {
+          "__id__": 298
+        },
+        {
+          "__id__": 339
+        },
+        {
+          "__id__": 363
+        },
+        {
+          "__id__": 373
+        },
+        {
+          "__id__": 425
+        },
+        {
+          "__id__": 649
+        },
+        {
+          "__id__": 733
+        },
+        {
+          "__id__": 800
+        }
+      ]
+    },
+    {
+      "index": 450,
+      "name": "Panels",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 454
+        },
+        {
+          "__id__": 464
+        },
+        {
+          "__id__": 474
+        }
+      ],
+      "after": [
+        {
+          "__id__": 454
+        },
+        {
+          "__id__": 464
+        },
+        {
+          "__id__": 474
+        },
+        {
+          "__id__": 878
+        }
+      ]
+    },
+    {
+      "index": 733,
+      "name": "Skills",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        }
+      ],
+      "after": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        },
+        {
+          "__id__": 779
+        },
+        {
+          "__id__": 786
+        },
+        {
+          "__id__": 793
+        }
+      ]
+    },
+    {
+      "index": 743,
+      "name": "List",
+      "field": "_lpos",
+      "before": {
+        "__type__": "cc.Vec3",
+        "x": 0,
+        "y": -35,
+        "z": 0
+      },
+      "after": {
+        "__type__": "cc.Vec3",
+        "x": 0,
+        "y": -20,
+        "z": 0
+      }
+    },
+    {
+      "index": 744,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 470
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 360
+      }
+    },
+    {
+      "index": 747,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 470
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 360
+      }
+    },
+    {
+      "index": 749,
+      "name": "Content",
+      "field": "_lpos",
+      "before": {
+        "__type__": "cc.Vec3",
+        "x": 0,
+        "y": 235,
+        "z": 0
+      },
+      "after": {
+        "__type__": "cc.Vec3",
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    },
+    {
+      "index": 750,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 470
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 600,
+        "height": 360
+      }
+    },
+    {
+      "index": 776,
+      "name": "",
+      "field": "_string",
+      "before": "开发候选 · 技能升级暂未开放",
+      "after": "开发候选 · 各技能独立升级"
+    }
+  ],
+  "sha256": "88d17d7e81d406ca0a578e90cda1d777b5bb6dcd98998a1249b73e901a7cd9fc"
+}

@@ -3461,6 +3461,15 @@ export namespace minimir {
             /** ItemView version. */
             version: Long;
 
+            /** ItemView source_kind. */
+            source_kind: string;
+
+            /** ItemView source_id. */
+            source_id: string;
+
+            /** ItemView quality. */
+            quality: number;
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -3538,6 +3547,15 @@ export namespace minimir {
 
                 /** ItemView version */
                 version?: (Long|null);
+
+                /** ItemView source_kind */
+                source_kind?: (string|null);
+
+                /** ItemView source_id */
+                source_id?: (string|null);
+
+                /** ItemView quality */
+                quality?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -4313,6 +4331,738 @@ export namespace minimir {
 
             /** Shape of a LearnSkillRequest. */
             type $Shape = minimir.v1.LearnSkillRequest.$Properties;
+        }
+
+        /**
+         * Properties of an ItemConsumption.
+         * @deprecated Use minimir.v1.ItemConsumption.$Properties instead.
+         */
+        interface IItemConsumption extends minimir.v1.ItemConsumption.$Properties {
+        }
+
+        /** Represents an ItemConsumption. */
+        class ItemConsumption {
+
+            /**
+             * Constructs a new ItemConsumption.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ItemConsumption.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ItemConsumption instance_id. */
+            instance_id: Uint8Array;
+
+            /** ItemConsumption version. */
+            version: Long;
+
+            /** ItemConsumption quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new ItemConsumption instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ItemConsumption instance
+             */
+            static create(properties: minimir.v1.ItemConsumption.$Shape): minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape;
+            static create(properties?: minimir.v1.ItemConsumption.$Properties): minimir.v1.ItemConsumption;
+
+            /**
+             * Encodes the specified ItemConsumption message. Does not implicitly {@link minimir.v1.ItemConsumption.verify|verify} messages.
+             * @param message ItemConsumption message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ItemConsumption.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ItemConsumption message, length delimited. Does not implicitly {@link minimir.v1.ItemConsumption.verify|verify} messages.
+             * @param message ItemConsumption message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ItemConsumption.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ItemConsumption message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape} ItemConsumption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape;
+
+            /**
+             * Decodes an ItemConsumption message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape} ItemConsumption
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ItemConsumption & minimir.v1.ItemConsumption.$Shape;
+
+            /**
+             * Verifies an ItemConsumption message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ItemConsumption
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ItemConsumption {
+
+            /** Properties of an ItemConsumption. */
+            interface $Properties {
+
+                /** ItemConsumption instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** ItemConsumption version */
+                version?: (Long|null);
+
+                /** ItemConsumption quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ItemConsumption. */
+            type $Shape = minimir.v1.ItemConsumption.$Properties;
+        }
+
+        /**
+         * Properties of a SkillAssetPreviewRequest.
+         * @deprecated Use minimir.v1.SkillAssetPreviewRequest.$Properties instead.
+         */
+        interface ISkillAssetPreviewRequest extends minimir.v1.SkillAssetPreviewRequest.$Properties {
+        }
+
+        /** Represents a SkillAssetPreviewRequest. */
+        class SkillAssetPreviewRequest {
+
+            /**
+             * Constructs a new SkillAssetPreviewRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillAssetPreviewRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillAssetPreviewRequest kind. */
+            kind: number;
+
+            /** SkillAssetPreviewRequest offer_id. */
+            offer_id: number;
+
+            /** SkillAssetPreviewRequest quantity. */
+            quantity: Long;
+
+            /** SkillAssetPreviewRequest skill_id. */
+            skill_id: number;
+
+            /** SkillAssetPreviewRequest materials. */
+            materials: minimir.v1.ItemConsumption.$Properties[];
+
+            /**
+             * Creates a new SkillAssetPreviewRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillAssetPreviewRequest instance
+             */
+            static create(properties: minimir.v1.SkillAssetPreviewRequest.$Shape): minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape;
+            static create(properties?: minimir.v1.SkillAssetPreviewRequest.$Properties): minimir.v1.SkillAssetPreviewRequest;
+
+            /**
+             * Encodes the specified SkillAssetPreviewRequest message. Does not implicitly {@link minimir.v1.SkillAssetPreviewRequest.verify|verify} messages.
+             * @param message SkillAssetPreviewRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillAssetPreviewRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillAssetPreviewRequest message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetPreviewRequest.verify|verify} messages.
+             * @param message SkillAssetPreviewRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillAssetPreviewRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillAssetPreviewRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape} SkillAssetPreviewRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape;
+
+            /**
+             * Decodes a SkillAssetPreviewRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape} SkillAssetPreviewRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillAssetPreviewRequest & minimir.v1.SkillAssetPreviewRequest.$Shape;
+
+            /**
+             * Verifies a SkillAssetPreviewRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillAssetPreviewRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillAssetPreviewRequest {
+
+            /** Properties of a SkillAssetPreviewRequest. */
+            interface $Properties {
+
+                /** SkillAssetPreviewRequest kind */
+                kind?: (number|null);
+
+                /** SkillAssetPreviewRequest offer_id */
+                offer_id?: (number|null);
+
+                /** SkillAssetPreviewRequest quantity */
+                quantity?: (Long|null);
+
+                /** SkillAssetPreviewRequest skill_id */
+                skill_id?: (number|null);
+
+                /** SkillAssetPreviewRequest materials */
+                materials?: (minimir.v1.ItemConsumption.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillAssetPreviewRequest. */
+            type $Shape = minimir.v1.SkillAssetPreviewRequest.$Properties;
+        }
+
+        /**
+         * Properties of a SkillMaterialView.
+         * @deprecated Use minimir.v1.SkillMaterialView.$Properties instead.
+         */
+        interface ISkillMaterialView extends minimir.v1.SkillMaterialView.$Properties {
+        }
+
+        /** Represents a SkillMaterialView. */
+        class SkillMaterialView {
+
+            /**
+             * Constructs a new SkillMaterialView.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillMaterialView.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillMaterialView item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /** SkillMaterialView consume_quantity. */
+            consume_quantity: Long;
+
+            /**
+             * Creates a new SkillMaterialView instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillMaterialView instance
+             */
+            static create(properties: minimir.v1.SkillMaterialView.$Shape): minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape;
+            static create(properties?: minimir.v1.SkillMaterialView.$Properties): minimir.v1.SkillMaterialView;
+
+            /**
+             * Encodes the specified SkillMaterialView message. Does not implicitly {@link minimir.v1.SkillMaterialView.verify|verify} messages.
+             * @param message SkillMaterialView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillMaterialView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillMaterialView message, length delimited. Does not implicitly {@link minimir.v1.SkillMaterialView.verify|verify} messages.
+             * @param message SkillMaterialView message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillMaterialView.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillMaterialView message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape} SkillMaterialView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape;
+
+            /**
+             * Decodes a SkillMaterialView message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape} SkillMaterialView
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillMaterialView & minimir.v1.SkillMaterialView.$Shape;
+
+            /**
+             * Verifies a SkillMaterialView message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillMaterialView
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillMaterialView {
+
+            /** Properties of a SkillMaterialView. */
+            interface $Properties {
+
+                /** SkillMaterialView item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** SkillMaterialView consume_quantity */
+                consume_quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillMaterialView. */
+            type $Shape = minimir.v1.SkillMaterialView.$Properties;
+        }
+
+        /**
+         * Properties of a SkillNumericComparison.
+         * @deprecated Use minimir.v1.SkillNumericComparison.$Properties instead.
+         */
+        interface ISkillNumericComparison extends minimir.v1.SkillNumericComparison.$Properties {
+        }
+
+        /** Represents a SkillNumericComparison. */
+        class SkillNumericComparison {
+
+            /**
+             * Constructs a new SkillNumericComparison.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillNumericComparison.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillNumericComparison key. */
+            key: string;
+
+            /** SkillNumericComparison before_min. */
+            before_min: Long;
+
+            /** SkillNumericComparison before_max. */
+            before_max: Long;
+
+            /** SkillNumericComparison after_min. */
+            after_min: Long;
+
+            /** SkillNumericComparison after_max. */
+            after_max: Long;
+
+            /**
+             * Creates a new SkillNumericComparison instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillNumericComparison instance
+             */
+            static create(properties: minimir.v1.SkillNumericComparison.$Shape): minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape;
+            static create(properties?: minimir.v1.SkillNumericComparison.$Properties): minimir.v1.SkillNumericComparison;
+
+            /**
+             * Encodes the specified SkillNumericComparison message. Does not implicitly {@link minimir.v1.SkillNumericComparison.verify|verify} messages.
+             * @param message SkillNumericComparison message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillNumericComparison.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillNumericComparison message, length delimited. Does not implicitly {@link minimir.v1.SkillNumericComparison.verify|verify} messages.
+             * @param message SkillNumericComparison message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillNumericComparison.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillNumericComparison message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape} SkillNumericComparison
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape;
+
+            /**
+             * Decodes a SkillNumericComparison message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape} SkillNumericComparison
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillNumericComparison & minimir.v1.SkillNumericComparison.$Shape;
+
+            /**
+             * Verifies a SkillNumericComparison message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillNumericComparison
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillNumericComparison {
+
+            /** Properties of a SkillNumericComparison. */
+            interface $Properties {
+
+                /** SkillNumericComparison key */
+                key?: (string|null);
+
+                /** SkillNumericComparison before_min */
+                before_min?: (Long|null);
+
+                /** SkillNumericComparison before_max */
+                before_max?: (Long|null);
+
+                /** SkillNumericComparison after_min */
+                after_min?: (Long|null);
+
+                /** SkillNumericComparison after_max */
+                after_max?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillNumericComparison. */
+            type $Shape = minimir.v1.SkillNumericComparison.$Properties;
+        }
+
+        /**
+         * Properties of a SkillAssetPreview.
+         * @deprecated Use minimir.v1.SkillAssetPreview.$Properties instead.
+         */
+        interface ISkillAssetPreview extends minimir.v1.SkillAssetPreview.$Properties {
+        }
+
+        /** Represents a SkillAssetPreview. */
+        class SkillAssetPreview {
+
+            /**
+             * Constructs a new SkillAssetPreview.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillAssetPreview.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillAssetPreview preview_id. */
+            preview_id: Uint8Array;
+
+            /** SkillAssetPreview kind. */
+            kind: number;
+
+            /** SkillAssetPreview rule_version. */
+            rule_version: Long;
+
+            /** SkillAssetPreview config_hash. */
+            config_hash: string;
+
+            /** SkillAssetPreview role_revision. */
+            role_revision: Long;
+
+            /** SkillAssetPreview expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** SkillAssetPreview skill_id. */
+            skill_id: number;
+
+            /** SkillAssetPreview from_level. */
+            from_level: number;
+
+            /** SkillAssetPreview to_level. */
+            to_level: number;
+
+            /** SkillAssetPreview spend. */
+            spend?: (minimir.v1.WalletState.$Properties|null);
+
+            /** SkillAssetPreview materials. */
+            materials: minimir.v1.SkillMaterialView.$Properties[];
+
+            /** SkillAssetPreview outputs. */
+            outputs: minimir.v1.ItemView.$Properties[];
+
+            /** SkillAssetPreview stats. */
+            stats: minimir.v1.SkillNumericComparison.$Properties[];
+
+            /** SkillAssetPreview offer_id. */
+            offer_id: number;
+
+            /** SkillAssetPreview quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new SkillAssetPreview instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillAssetPreview instance
+             */
+            static create(properties: minimir.v1.SkillAssetPreview.$Shape): minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape;
+            static create(properties?: minimir.v1.SkillAssetPreview.$Properties): minimir.v1.SkillAssetPreview;
+
+            /**
+             * Encodes the specified SkillAssetPreview message. Does not implicitly {@link minimir.v1.SkillAssetPreview.verify|verify} messages.
+             * @param message SkillAssetPreview message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillAssetPreview.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillAssetPreview message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetPreview.verify|verify} messages.
+             * @param message SkillAssetPreview message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillAssetPreview.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillAssetPreview message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape} SkillAssetPreview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape;
+
+            /**
+             * Decodes a SkillAssetPreview message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape} SkillAssetPreview
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillAssetPreview & minimir.v1.SkillAssetPreview.$Shape;
+
+            /**
+             * Verifies a SkillAssetPreview message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillAssetPreview
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillAssetPreview {
+
+            /** Properties of a SkillAssetPreview. */
+            interface $Properties {
+
+                /** SkillAssetPreview preview_id */
+                preview_id?: (Uint8Array|null);
+
+                /** SkillAssetPreview kind */
+                kind?: (number|null);
+
+                /** SkillAssetPreview rule_version */
+                rule_version?: (Long|null);
+
+                /** SkillAssetPreview config_hash */
+                config_hash?: (string|null);
+
+                /** SkillAssetPreview role_revision */
+                role_revision?: (Long|null);
+
+                /** SkillAssetPreview expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** SkillAssetPreview skill_id */
+                skill_id?: (number|null);
+
+                /** SkillAssetPreview from_level */
+                from_level?: (number|null);
+
+                /** SkillAssetPreview to_level */
+                to_level?: (number|null);
+
+                /** SkillAssetPreview spend */
+                spend?: (minimir.v1.WalletState.$Properties|null);
+
+                /** SkillAssetPreview materials */
+                materials?: (minimir.v1.SkillMaterialView.$Properties[]|null);
+
+                /** SkillAssetPreview outputs */
+                outputs?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** SkillAssetPreview stats */
+                stats?: (minimir.v1.SkillNumericComparison.$Properties[]|null);
+
+                /** SkillAssetPreview offer_id */
+                offer_id?: (number|null);
+
+                /** SkillAssetPreview quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillAssetPreview. */
+            type $Shape = minimir.v1.SkillAssetPreview.$Properties;
+        }
+
+        /**
+         * Properties of a SkillAssetCommitRequest.
+         * @deprecated Use minimir.v1.SkillAssetCommitRequest.$Properties instead.
+         */
+        interface ISkillAssetCommitRequest extends minimir.v1.SkillAssetCommitRequest.$Properties {
+        }
+
+        /** Represents a SkillAssetCommitRequest. */
+        class SkillAssetCommitRequest {
+
+            /**
+             * Constructs a new SkillAssetCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillAssetCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillAssetCommitRequest preview_id. */
+            preview_id: Uint8Array;
+
+            /** SkillAssetCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SkillAssetCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillAssetCommitRequest instance
+             */
+            static create(properties: minimir.v1.SkillAssetCommitRequest.$Shape): minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape;
+            static create(properties?: minimir.v1.SkillAssetCommitRequest.$Properties): minimir.v1.SkillAssetCommitRequest;
+
+            /**
+             * Encodes the specified SkillAssetCommitRequest message. Does not implicitly {@link minimir.v1.SkillAssetCommitRequest.verify|verify} messages.
+             * @param message SkillAssetCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillAssetCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillAssetCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.SkillAssetCommitRequest.verify|verify} messages.
+             * @param message SkillAssetCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillAssetCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillAssetCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape} SkillAssetCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape;
+
+            /**
+             * Decodes a SkillAssetCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape} SkillAssetCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillAssetCommitRequest & minimir.v1.SkillAssetCommitRequest.$Shape;
+
+            /**
+             * Verifies a SkillAssetCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillAssetCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillAssetCommitRequest {
+
+            /** Properties of a SkillAssetCommitRequest. */
+            interface $Properties {
+
+                /** SkillAssetCommitRequest preview_id */
+                preview_id?: (Uint8Array|null);
+
+                /** SkillAssetCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillAssetCommitRequest. */
+            type $Shape = minimir.v1.SkillAssetCommitRequest.$Properties;
         }
 
         /**

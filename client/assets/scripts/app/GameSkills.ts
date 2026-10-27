@@ -54,7 +54,7 @@ export class GameSkills {
         this.selectedId = row.definition.id;
         if (this.input) this.refresh(this.input);
         this.popup.show('Details', { title: row.definition.name,
-            message: `${row.status}\n${row.definition.active ? `消耗魔法 ${row.cost}\n射程 ${row.definition.range}格` : `被动技能，无需主动施放\n当前准确 +${skillAccuracy(row)}`}\n${row.definition.learn_level}级可使用对应技能书学习\n技能训练与升级暂未开放` });
+            message: `${row.status}\n${row.definition.active ? `消耗魔法 ${row.cost}\n射程 ${row.definition.range}格` : `被动技能，无需主动施放\n当前准确 +${skillAccuracy(row)}`}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
     }
     private saved(path: string): Node {
         const node = this.panel.getChildByPath(path); if (!node) throw new Error(`技能面板缺少保存节点：${path}`); return node;

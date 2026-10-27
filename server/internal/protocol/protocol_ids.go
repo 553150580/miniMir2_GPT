@@ -37,6 +37,9 @@ const (
 	MsgC2SUseItem uint16 = 40009
 	MsgS2CCastAccepted uint16 = 30006
 	MsgC2SLearnSkill uint16 = 40010
+	MsgC2SSkillAssetPreview uint16 = 40011
+	MsgS2CSkillAssetPreview uint16 = 40012
+	MsgC2SSkillAssetCommit uint16 = 40013
 )
 
 const (
@@ -64,4 +67,9 @@ const (
 	CodeSkillResource uint32 = 3204
 	CodeSkillTarget uint32 = 3205
 	CodeStaleInput uint32 = 3206
+	CodeSkillPreviewStale uint32 = 3301
+	CodeSkillMaterials uint32 = 3302
+	CodeSkillUpgradeBlocked uint32 = 3303
+	CodeSkillBookSource uint32 = 3304
+	CodeSkillPurchaseBlocked uint32 = 3305
 )

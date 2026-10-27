@@ -1,0 +1,4 @@
+./tools/dev python3 tools/resources/build_development_assets.py --check
+{"status": "checked", "output": "/Users/srf/Miro2/miniMir2_GPT/client/assets/resources/development", "profiles": 4, "frames": 2017, "pngs": 2017, "map": {"id": 1, "path": "maps/first-map.json", "background": "maps/first-map.png", "width": 16, "height": 16, "tile_width": 48, "tile_height": 32, "projection": "source_mir_grid_48x32", "source_origin": {"x": 128, "y": 128}}, "manifest_sha256": "6d5ffffa8d947fe6236e47580314ea42904a9d7b59f8a039a51e53c014524d3a", "runtime_ready": false}
+./tools/dev python3 tools/resources/prepare_first_loop.py --check
+{"status": "checked", "path": "/Users/srf/Miro2/miniMir2_GPT/config/development/first-loop.json", "sha256": "4b17671d9e2a11bc74a572cb6cd53034ed72cebbfe514e325888f11d46b25def", "development_only": true, "runtime_ready": false}

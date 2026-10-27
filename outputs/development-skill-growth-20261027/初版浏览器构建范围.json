@@ -1,0 +1,18 @@
+{
+  "phase": "列表最小修复前的业务浏览器验收",
+  "creator_seconds": 175.31,
+  "success": true,
+  "final_build": false,
+  "known_defect": "首次书店列表偏到底部，最终构建已修复",
+  "changed_after_business_qa": {
+    "client/assets/scripts/ui/List.ts": {
+      "before": "0c1a5f043c985faf61a7051780c3b5e9068eb47045f9d686756317ec85f4200e",
+      "after": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c"
+    },
+    "client/assets/scripts/app/GameSkillAssets.ts": {
+      "before": "1c3ce7cb6145958f6ecacc4a39d6e6caeb9265dc9af01bffcf555691d097fb91",
+      "after": "232292e052fae3c28842224f1dfeab4cea51b846d8fe1218748ba3632eaa0b33"
+    }
+  },
+  "note": "依据初版实构输出与已读源码摘要登记范围，不是原始完整构建报告。最终实构另存Creator最终构建检查.json。"
+}

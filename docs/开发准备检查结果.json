@@ -12,9 +12,9 @@
   ],
   "configuration": {
     "tables": 98,
-    "records": 784,
+    "records": 806,
     "record_status_counts": {
-      "candidate": 286,
+      "candidate": 308,
       "confirmed": 393,
       "historical": 36,
       "unverified": 69
@@ -22,13 +22,12 @@
     "registered_release_gaps": 61,
     "runtime_ready": false,
     "structure_valid": true,
-    "core_content_tables_pending": 27,
-    "formal_release_blockers": 492,
+    "core_content_tables_pending": 26,
+    "formal_release_blockers": 520,
     "core_content_tables_empty": [
       "game_job_growth",
       "game_appearance",
       "game_npcs",
-      "game_skill_upgrades",
       "game_range_patterns",
       "game_buffs",
       "game_effects",
@@ -54,8 +53,44 @@
       "game_attribute_pipeline"
     ],
     "core_content_pending_definition": "当前预览server投影中，gameplay且release_required=true并且记录为空的表；不把候选非空表计为空表。",
-    "current_preview_version": "dev-skills-v0.3-37024f96bd1d",
-    "new_first_loop_candidate_records": 51
+    "current_preview_version": "dev-skill-growth-v0.4-d9101bd94921",
+    "new_first_loop_candidate_records": 51,
+    "rule_version": 4,
+    "skill_sources": {
+      "basic_table": "game_skills",
+      "profession_records": 3,
+      "legacy_development_attack_id": 0,
+      "upgrade_table": "game_skill_upgrades",
+      "upgrade_records": 9,
+      "profile_skill_selection": "parameters.skill_ids",
+      "profile_skills_removed": true,
+      "shop_price_table": "game_shop_prices",
+      "skill_shop_offers": 5,
+      "recycle_table": "game_book_recycle",
+      "quality_rows": 4,
+      "runtime_book_quality_projections": 12,
+      "price_gold": "金币整数，与price_u分开",
+      "price_u": "元宝/绑定元宝十倍定点账本单位，与price_gold分开",
+      "book_count_rule": {
+        "status": "confirmed",
+        "source": "用户2026-10-27明确每阶需要技能书=阶数+1",
+        "basis": "目标原生rank",
+        "rank1": 2,
+        "rank2": 3,
+        "rank3": 4
+      },
+      "candidate_values": {
+        "page_costs": [
+          5,
+          10,
+          20
+        ],
+        "npc_book_gold": 500,
+        "role_level_gates": "沿Crystal首组三技能各自门槛；候选",
+        "development_book_drop_source": "开发掉书渠道，不证明目标1.80或正式自然获取"
+      },
+      "formal_status_notice": "新增候选和未核验项使门禁增至520，不表示正式配置成熟。"
+    }
   },
   "reference_inputs": {
     "indexed_files": 6999,
@@ -106,11 +141,11 @@
     }
   },
   "verification": {
-    "config_regression_tests": 18,
+    "config_regression_tests": 20,
     "go_module_compile": "passed",
     "go_module_checksums": "all modules verified",
-    "client_pb_message_definitions": 41,
-    "client_64bit_boundary_cases": 183,
+    "client_pb_message_definitions": 47,
+    "client_64bit_boundary_cases": 227,
     "client_typescript": "真实cc声明 strict + skipLibCheck passed；官方声明自身缺失隔离，项目脚本仍严格检查",
     "mongodb_go_driver": "2.9.2 snapshot/majority commit and duplicate rollback passed",
     "evidence": [
@@ -125,14 +160,16 @@
       "docs/药品阶段验收.json",
       "docs/技能阶段验收.json"
     ],
-    "protocol_message_ids": 35,
-    "protocol_error_codes": 24,
-    "client_int64_fields": 57,
+    "protocol_message_ids": 38,
+    "protocol_error_codes": 29,
+    "client_int64_fields": 69,
     "client_script_tests": {
       "scene_loader": 16,
-      "ui_and_app": 102,
-      "total_js_tests": 118,
-      "status": "passed"
+      "ui_and_app": 118,
+      "total_js_tests": 134,
+      "status": "passed_after_list_fix",
+      "list_regression_tests_added": 3,
+      "current_note": "List修复后134项客户端测试及严格tsc通过；最终make test退出0。"
     },
     "creator_cli_last_completed_build": {
       "version": "3.8.8",
@@ -140,13 +177,34 @@
       "exit_code": 36,
       "success": true,
       "scene_prefab_layout_preserved": true,
+      "layout_files": 7,
+      "source_stable_during_build": true,
       "report": "docs/客户端构建检查.json",
-      "seconds": 144.12
+      "seconds": 139.33,
+      "scope": "List最小修复后的最终构建",
+      "current_source_build_pending": false,
+      "final_stage_build_confirmed": true,
+      "layout_preservation_scope": "仅构建开始/结束的7份scene/prefab未被工具覆盖，不表示与HEAD布局相同。",
+      "intentional_layout_changes": {
+        "original_hud_objects_preserved": 733,
+        "skills_list_y": {
+          "before": -35,
+          "after": -20
+        },
+        "skills_list_height": {
+          "before": 470,
+          "after": 360
+        },
+        "affected_saved_layout_nodes": "技能列表viewport/mask/content等4处，为3个已保存操作按钮留空间",
+        "head_scene_objects": 779,
+        "current_scene_objects": 938
+      }
     },
     "server_mongodb_pb_http_ws_integration": {
       "passed": true,
       "race_detector": true,
       "exit_code": 0,
+      "passed_test_count": 64,
       "passed_tests": [
         {
           "package": "minimir/internal/devconfig",
@@ -254,6 +312,10 @@
         },
         {
           "package": "minimir/internal/game",
+          "test": "TestSkillCommitPendingRetainsOriginalPreviewAndReceiptReconciliation"
+        },
+        {
+          "package": "minimir/internal/game",
           "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
         },
         {
@@ -279,6 +341,10 @@
         {
           "package": "minimir/internal/game",
           "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth"
         },
         {
           "package": "minimir/internal/persistence",
@@ -330,6 +396,26 @@
         },
         {
           "package": "minimir/internal/persistence",
+          "test": "TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestSkillUpgradeLevelPrerequisiteCapAndExactCost"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestSkillPowerRanksUseSourceToEvenAndFencingGrowth"
+        },
+        {
+          "package": "minimir/internal/persistence",
           "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
         },
         {
@@ -350,6 +436,18 @@
         },
         {
           "package": "minimir/internal/integration",
+          "test": "TestMongoPermanentReceiptIndexMigration"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestMongoReceiptMigrationFailureRejectsStartup"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSkillAssetEconomyMongoWS"
+        },
+        {
+          "package": "minimir/internal/integration",
           "test": "TestSkillLearningAndCastingMongoWS/fencing"
         },
         {
@@ -367,7 +465,8 @@
       ],
       "skipped_tests": [],
       "source_changed_during_test": false,
-      "report": "server/test-results/latest.json"
+      "report": "server/test-results/latest.json",
+      "scope": "v4服务端真实Mongo/PB HTTP/WS与迁移测试，不代表真实网络提交未知故障、浏览器或完整产品验收。"
     },
     "browser_end_to_end": {
       "status": "passed",
@@ -388,17 +487,21 @@
         "高屏/宽屏等比、Status固定顶部、无新快照时镜头重夹"
       ],
       "full_loop_verified": true,
-      "current_work": "首循环与HUD保留对应历史验收；本阶段手动药品与持久库存复验通过，见药品阶段验收。",
-      "report": "docs/客户端浏览器验收.json"
+      "current_work": "首循环/HUD/药品/首组技能各保留历史证据；当前获取与升级已完成限定范围本机浏览器验收，详见当前阶段报告。",
+      "report": "docs/客户端浏览器验收.json",
+      "scope": "首循环历史浏览器验收；不代表当前获取与升级阶段"
     },
     "aggregate_make_test": {
       "status": "passed",
-      "passed_js_tests": 99,
-      "passed_configuration_regressions": 16,
+      "passed_js_tests": 134,
+      "passed_configuration_regressions": 20,
       "full_command_finished": true,
       "exit_code": 0,
       "command": "make test",
-      "verified_on": "2026-10-27"
+      "make_check_exit_code": 0,
+      "verified_on": "2026-10-27",
+      "current_source_rerun_pending": false,
+      "scope": "List最小修复后的最终make test；首版131项JS另留历史。"
     },
     "entry_handshake": {
       "baseline_sent_before_ack": true,
@@ -411,7 +514,9 @@
       "move_interval_ms": 11,
       "attack_sequence": 12,
       "types": "uint32",
-      "gameplay_values_changed": false
+      "gameplay_values_changed": false,
+      "cast_sequence": 13,
+      "cast_skill_id": 14
     },
     "entity_presentation": {
       "motion_tests": 14,
@@ -434,6 +539,100 @@
       "automatic_use": false,
       "target_180_amounts_verified": false,
       "physical_mobile_verified": false
+    },
+    "first_candidate_skills_stage_history": {
+      "commit": "421ce1c",
+      "report": "docs/技能阶段验收.json",
+      "config_version": "dev-skills-v0.3-37024f96bd1d",
+      "rule_version": 3,
+      "js_tests": 118,
+      "python_tests": 18,
+      "mongo_race_passed_tests": 54,
+      "mongo_race_skipped_tests": 0,
+      "creator_seconds": 144.12,
+      "layout_files": 7,
+      "auto_observation": "首次无追踪状态变化尚未归因，保留观察，不把未复现写成已根治。",
+      "physical_mobile_verified": false
+    },
+    "skill_acquisition_and_growth_stage": {
+      "status": "limited_stage_browser_verified",
+      "report_finalized": true,
+      "config_version": "dev-skill-growth-v0.4-d9101bd94921",
+      "rule_version": 4,
+      "basic_skills": 3,
+      "upgrade_rows": 9,
+      "book_count_status": "confirmed_user_target_rank_plus_one",
+      "page_and_price_status": "candidate",
+      "explicit_instances_required": true,
+      "material_origin_and_quality_persisted": true,
+      "npc_initial_and_legacy_page_recycling_blocked": true,
+      "permanent_receipt_ttl_removed": true,
+      "old_ttl_deleted_data_recoverable": false,
+      "quote_ttl_separate": true,
+      "observed_browser_checkpoints": [
+        "初学0级",
+        "NPC两本购书550金币+450绑定金币",
+        "取消报价资产不变",
+        "NPC书不可拆提示",
+        "不同绑定掉落书逐原书拆页5+5并保持绑定分别输出",
+        "道士0→1扣2本+5页",
+        "道士1→2扣3本+10页",
+        "道士2→3扣4本+20页",
+        "三阶治愈施法MP74→65，HP当时已满"
+      ],
+      "healing_injured_target_browser_verified": false,
+      "fixture_notice": "隔离QA预置15级、钱包及monster_drop来源书，不是自然获取或正式掉落渠道证据。",
+      "remaining_browser_or_build_checks": [],
+      "target_180_certified": false,
+      "full_profession_skills_complete": false,
+      "physical_mobile_verified": false,
+      "network_unknown_transaction_fault_injected": false,
+      "balance_verified": false,
+      "browser_business_0_to_3_passed": true,
+      "browser_business_0_to_3_scope": "道士，隔离QA预置角色；不扩大为所有职业或自然获取验收",
+      "browser_book_recycling_binding_passed": true,
+      "report": "docs/技能获取与升级阶段验收.json",
+      "final_list_browser_regression_passed": true,
+      "browser_console_new_warn_errors": 0,
+      "final_browser_checkpoints": [
+        "139.33秒构建重载并重新登录道士，rank3/MP65/绑定元宝750持久",
+        "书店首次火球首行完整",
+        "取消5份绑定元宝书页报价，原滚动位置/SKU/数量5/钱包750全部保留",
+        "切到拆书材料为空",
+        "升级明确显示无下一阶",
+        "返回书店回到顶端",
+        "新增控制台warn/error为0"
+      ],
+      "screenshots": "outputs/development-skill-growth-20261027/最终*.jpg",
+      "scope": "当前rule4首组三技能获取与材料升级开发子集；0→3与拆书业务以隔离预置道士/资产实证，最终列表和重登持久另复核；不代表自然获取、全职业完整技能或正式发布。"
+    },
+    "economic_receipt_retention": {
+      "permanent_operation_ttl": false,
+      "regular_index_key": "operations.created_at",
+      "migration_preserves_existing_documents": true,
+      "migration_failure_blocks_startup": true,
+      "expired_historical_data_restored": false,
+      "preview_expiry_ttl": "skill_quotes.expires_at",
+      "evidence_test_names": [
+        "TestMongoPermanentReceiptIndexMigration",
+        "TestMongoReceiptMigrationFailureRejectsStartup"
+      ]
+    },
+    "creator_cli_initial_growth_build_history": {
+      "seconds": 175.31,
+      "exit_code": 36,
+      "success": true,
+      "scope": "List最小修复前首版历史构建"
+    },
+    "initial_skill_growth_checks_history": {
+      "js_tests": 131,
+      "scene_loader_tests": 16,
+      "ui_and_app_tests": 115,
+      "python_configuration_tests": 20,
+      "pb_boundary_cases": 227,
+      "mongo_race_tests": 64,
+      "creator_seconds": 175.31,
+      "scope": "List最小修复前首版，保留历史数字"
     }
   },
   "game_runtime_ready": false,
@@ -498,13 +697,15 @@
   "development_ready": true,
   "environment_checks_passed": 34,
   "updated_on": "2026-10-27",
-  "implementation_status": "first_candidate_skills_implemented_browser_key_paths_verified_observation_open",
+  "implementation_status": "first_skill_acquisition_growth_limited_stage_browser_verified",
   "git": {
     "initialized": true,
     "initial_commit_created": true,
     "remote": "https://github.com/553150580/miniMir2_GPT.git",
     "branch": "main",
-    "stage_policy": "每阶段完成对应验收后提交、推送并核对远程；不强推既有历史。"
+    "stage_policy": "每阶段完成对应验收后提交、推送并核对远程；不强推既有历史。",
+    "current_stage_commit_push_status": "see_git_history_and_verified_remote",
+    "current_stage_commit_push_note": "阶段通过后随本次改动提交、推送并在交付时核对远程；准确提交标识见Git历史，不在仓内自引用本提交hash。"
   },
   "creator_project": {
     "version": "3.8.8",
@@ -524,7 +725,7 @@
   },
   "development_loop_ready": true,
   "development_loop_status": "browser_verified",
-  "development_readiness_scope": "首循环、HUD和手动药品开发子集已完成本机浏览器验收；完整技能、聊天、全P0、手机真机及正式发布尚未完成。",
+  "development_readiness_scope": "首循环/HUD/药品/首组技能保留历史限定范围；当前获取与升级最终make test134项JS、20项Python、139.33秒构建及限定范围本机浏览器验收完成；完整技能、正式经济、真机、网络未知提交故障、平衡和发布未完成。",
   "local_development_endpoints": {
     "client_same_origin": "http://127.0.0.1:18080",
     "account": "127.0.0.1:18100",
@@ -545,5 +746,8 @@
     "T030": "partially_implemented_target_version_unverified",
     "T031": "partially_implemented_base_attributes_only"
   },
-  "current_stage_evidence": "docs/技能阶段验收.json"
+  "current_stage_evidence": "docs/技能获取与升级阶段验收.json",
+  "current_source_creator_build_pending": false,
+  "current_stage_evidence_status": "finalized",
+  "current_stage_browser_passed": true
 }

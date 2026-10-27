@@ -19,6 +19,7 @@ const codecs: Record<number, MessageType> = {
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,
     40009: pb.UseItemRequest, 40010: pb.LearnSkillRequest,
+    40011: pb.SkillAssetPreviewRequest, 40012: pb.SkillAssetPreview, 40013: pb.SkillAssetCommitRequest,
 };
 
 function variable(value: Long): number[] {
@@ -137,7 +138,7 @@ export class GameConnection {
         const seq = ++this.sequence;
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error('操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            this.pending.set(seq, { response: id === 20001 ? 20002 : id === 30004 ? 30005 : 40005, ok, fail, timer });
+            this.pending.set(seq, { response: id === 20001 ? 20002 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005, ok, fail, timer });
             this.socket!.send(encodePacket(id, seq, this.binding, value));
             traceInput(inputTraceMessage('send', id, seq, value));
         });

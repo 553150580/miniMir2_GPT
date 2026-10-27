@@ -119,12 +119,15 @@ func (s *Store) Migrate(ctx context.Context) error {
 	if _, e = s.DB.Collection("application_meta").UpdateOne(ctx, bson.M{"_id": "minimir_development"}, bson.M{"$setOnInsert": bson.M{"application": "minimir_first_loop", "schema_version": 1}}, options.UpdateOne().SetUpsert(true)); e != nil {
 		return e
 	}
+	if e = s.retainOperationReceipts(ctx); e != nil {
+		return fmt.Errorf("迁移永久操作回执索引失败: %w", e)
+	}
 	indexes := map[string][]mongo.IndexModel{
 		"accounts":       {{Keys: bson.D{{Key: "name", Value: 1}}, Options: options.Index().SetUnique(true)}},
 		"roles":          {{Keys: bson.D{{Key: "account_id", Value: 1}, {Key: "origin_server_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}, {Keys: bson.D{{Key: "name_key", Value: 1}}, Options: options.Index().SetUnique(true)}},
 		"account_tokens": {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"entry_tickets":  {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
-		"operations":     {{Keys: bson.D{{Key: "created_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(30 * 24 * 3600)}},
+		"skill_quotes":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 	}
 	for name, models := range indexes {
 		if _, e = s.DB.Collection(name).Indexes().CreateMany(ctx, models); e != nil {
@@ -137,6 +140,108 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 	_, e = s.DB.Collection("run_control").UpdateOne(ctx, bson.M{"_id": s.Cfg.RunID}, bson.M{"$setOnInsert": Run{ID: s.Cfg.RunID, State: "stopped", LeaseUntil: time.Unix(0, 0)}}, options.UpdateOne().SetUpsert(true))
 	return e
+}
+
+// 永久回执不能按时间删除；仅移除本集合created_at单字段TTL，不修改任何业务文档。
+func (s *Store) retainOperationReceipts(ctx context.Context) error {
+	view := s.DB.Collection("operations").Indexes()
+	list := func() ([]mongo.IndexSpecification, error) {
+		indexes, err := view.ListSpecifications(ctx)
+		var command mongo.CommandError
+		if errors.As(err, &command) && command.Code == 26 {
+			return nil, nil // 新库尚无operations集合，后面的建索引会创建它。
+		}
+		return indexes, err
+	}
+	direction := func(index mongo.IndexSpecification) (int32, error) {
+		keys, err := index.KeysDocument.Elements()
+		if err != nil {
+			return 0, err
+		}
+		if len(keys) != 1 || keys[0].Key() != "created_at" {
+			return 0, nil
+		}
+		value, ok := keys[0].Value().AsInt64OK()
+		if !ok || (value != 1 && value != -1) {
+			return 0, nil
+		}
+		return int32(value), nil
+	}
+	indexes, err := list()
+	if err != nil {
+		return err
+	}
+	legacyNames := map[string]bool{}
+	required := map[int32]mongo.IndexSpecification{1: {}}
+	for _, index := range indexes {
+		order, err := direction(index)
+		if err != nil {
+			return err
+		}
+		if order == 0 || index.ExpireAfterSeconds == nil {
+			continue
+		}
+		legacyNames[index.Name] = true
+		required[order] = index
+		if err = view.DropOne(ctx, index.Name); err != nil {
+			var command mongo.CommandError
+			if !errors.As(err, &command) || command.Code != 27 {
+				return err
+			}
+			// 并发启动可能已删除同一旧TTL；只容忍该明确错误，随后仍核对普通索引。
+		}
+	}
+	for order, previous := range required {
+		hasRegular := func() (bool, error) {
+			current, err := list()
+			if err != nil {
+				return false, err
+			}
+			found := false
+			for _, index := range current {
+				keyOrder, err := direction(index)
+				if err != nil {
+					return false, err
+				}
+				if keyOrder == order {
+					if index.ExpireAfterSeconds != nil {
+						return false, errors.New("永久回执created_at仍存在TTL索引")
+					}
+					found = true
+				}
+			}
+			return found, nil
+		}
+		found, err := hasRegular()
+		if err != nil {
+			return err
+		}
+		if found {
+			continue
+		}
+		name := "operations_created_at_retained"
+		if order < 0 {
+			name += "_desc"
+		}
+		// 不复用旧TTL名称，避免另一启动者拿旧列表误删刚建立的普通索引。
+		for legacyNames[name] {
+			name += "_retained"
+		}
+		opts := options.Index().SetName(name)
+		if previous.Unique != nil {
+			opts.SetUnique(*previous.Unique)
+		}
+		if previous.Sparse != nil {
+			opts.SetSparse(*previous.Sparse)
+		}
+		if _, err = view.CreateOne(ctx, mongo.IndexModel{Keys: bson.D{{Key: "created_at", Value: order}}, Options: opts}); err != nil {
+			// 其他模式同时建立同key普通索引时只接受已核实的终态，其余错误使启动失败。
+			if found, inspectErr := hasRegular(); inspectErr != nil || !found {
+				return err
+			}
+		}
+	}
+	return nil
 }
 func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)

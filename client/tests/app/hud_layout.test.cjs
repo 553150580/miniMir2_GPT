@@ -206,10 +206,37 @@ test('技能普通弹窗保存复用列表与学习施放按钮，游戏特效�
     assert.equal(scene[scroll._content.__id__]._parent.__id__,scene.indexOf(view));assert.equal(template._active,false);
     component(template,'cc.Button');assert(list.rowHeight>=96);
     for(const button of ['Learn','Use'])component(node(`UIMgr/Panels/Skills/${button}`),'cc.Button');
-    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'开发候选 · 技能升级暂未开放');
+    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'开发候选 · 各技能独立升级');
     assert.equal(node('MapViewport/World/Effects')._parent.__id__,scene.indexOf(node('MapViewport/World')));
     const effect=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Effect.prefab'),'utf8'));
     const sprite=effect.find(value=>value.__type__==='cc.Sprite');assert(sprite);assert.equal(sprite._type,SPRITE_SIMPLE);
     assert.equal(sprite._isTrimmedMode,false);assert.equal(sprite._srcBlendFactor,2);assert.equal(sprite._dstBlendFactor,1);
     assert(!effect.some(value=>value.__type__==='cc.Graphics'));
+});
+
+test('技能资产普通列表保存原实例数量按钮，独立报价覆盖层保存可滚动完整明细',()=>{
+    for(const name of ['Shop','Upgrade','Salvage'])component(node(`UIMgr/Panels/Skills/${name}`),'cc.Button');
+    const assets=node('UIMgr/Panels/SkillAssets');component(assets,'cc.Sprite');component(assets,'cc.BlockInputEvents');
+    for(const name of ['Plus','Minus'])component(node(`UIMgr/Panels/SkillAssets/PurchaseQuantity/${name}`),'cc.Button');
+    component(node('UIMgr/Panels/SkillAssets/PurchaseQuantity/Quantity'),'cc.Label');
+    for(const name of ['OffersList','MaterialsList']){
+        const listNode=node(`UIMgr/Panels/SkillAssets/${name}`),scroll=component(listNode,'cc.ScrollView'),list=component(listNode,scriptType('ui/List'));
+        const template=scene[list.templateNode.__id__];component(scene[list.viewport.__id__],'cc.Mask');assert.equal(scroll._content.__id__,template._parent.__id__);
+        assert.equal(template._active,false);
+        if(name==='MaterialsList'){
+            for(const control of ['Plus','Minus'])component(children(template).find(child=>child._name===control),'cc.Button');
+            component(children(template).find(child=>child._name==='Quantity'),'cc.Label');
+        }
+    }
+    const quote=node('PopupView/Panels/SkillQuote');component(quote,'cc.Sprite');component(quote,'cc.BlockInputEvents');
+    const listNode=node('PopupView/Panels/SkillQuote/List'),list=component(listNode,scriptType('ui/List'));
+    component(listNode,'cc.ScrollView');component(scene[list.viewport.__id__],'cc.Mask');
+    for(const name of ['ConfirmButton','CancelButton'])component(node(`PopupView/Panels/SkillQuote/${name}`),'cc.Button');
+});
+
+test('用户确认HUD的首733对象保持，普通与覆盖面板仅允许追加子引用',()=>{
+    const {createHash}=require('node:crypto');
+    const saved=JSON.parse(JSON.stringify(scene.slice(0,733)));
+    for(const value of saved)if(value._children)value._children=value._children.filter(reference=>reference.__id__<733);
+    assert.equal(createHash('sha256').update(JSON.stringify(saved)).digest('hex'),'6063336aad1501a1e8364dd500f3c6aab74f9586a49ed81ad9571f04cdda258e');
 });

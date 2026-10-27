@@ -135,7 +135,7 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 	}
 	for _, book := range s.Cfg.Fixture.InitialSkillBooks {
 		if book.JobID == q.Job {
-			r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: book.ItemID, Quantity: 1, Bound: true, Version: 1})
+			r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: book.ItemID, Quantity: 1, Bound: true, Version: 1, SourceKind: "initial_grant", SourceID: domain.Hex(q.OpId)})
 		}
 	}
 	var result domain.Role

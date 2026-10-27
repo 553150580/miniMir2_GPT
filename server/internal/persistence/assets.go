@@ -27,6 +27,7 @@ type AssetRequest struct {
 	SceneEpoch       uint64
 	PotionGateCode   uint32
 	SkillID          uint32
+	PreviewID        string
 }
 
 func add(a, b int64) (int64, error) {
@@ -86,6 +87,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		oldRevision := r.Revision
 		businessCode := uint32(0)
 		var potion *PotionReceipt
+		var skillDetails *skillPlan
 		switch q.Kind {
 		case "equip":
 			index := -1
@@ -214,6 +216,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case "learn_skill":
 			r, businessCode = learnSkill(r, q, s.Cfg.Fixture)
+		case "skill_assets_commit":
+			r, businessCode, skillDetails, e = s.commitSkillAsset(tc, r, q)
+			if e != nil {
+				return e
+			}
 		default:
 			businessCode = p.CodeInvalidArgument
 		}
@@ -232,7 +239,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if _, e = s.DB.Collection("operations").InsertOne(tc, op); e != nil {
 			return e
 		}
-		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, bson.M{"_id": opID, "role_id": r.ID, "account_id": a.AccountID, "kind": q.Kind, "op_id": domain.Hex(q.Context.OpId), "revision": r.Revision, "result_code": businessCode, "at": time.Now()}); e != nil {
+		audit := bson.M{"_id": opID, "role_id": r.ID, "account_id": a.AccountID, "kind": q.Kind, "op_id": domain.Hex(q.Context.OpId), "revision": r.Revision, "result_code": businessCode, "at": time.Now()}
+		if skillDetails != nil {
+			audit["preview_id"] = q.PreviewID
+			audit["skill_plan"] = skillDetails
+		}
+		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
 		}
 		out = r

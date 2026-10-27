@@ -3,14 +3,14 @@
   "protoc_gen_go": "protoc-gen-go v1.36.12",
   "sources": {
     "account.proto": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964",
-    "assets.proto": "4a05e2d89a347b5742961e5825bbb6d6b1803aec485cacdecd08d28738e03a1a",
+    "assets.proto": "e61916895aa87548540ef70861a3968186a5421354b472daffdebdcd67f4507c",
     "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
     "world.proto": "d6f102ea9477e2b7ae682435ce9d2f79728fa22f1f6f664261164bcd1e80256f"
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/world.pb.go": "475165ed181d45f8bc857ce44a7cf059ad32e15a2452c761f77c652a09444a92",
-    "server/api/generated/minimirv1/assets.pb.go": "0c69173d2485a052a44aac47a1e5108e6d3fac496c15cae48ff134f86c36f3d1",
+    "server/api/generated/minimirv1/assets.pb.go": "d4d2688839824e6ed6c5cc9265f2167ded6e83ac451890f2ea4d381eefb77f78",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18"
   },
   "business_implemented": false

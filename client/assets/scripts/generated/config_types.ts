@@ -273,6 +273,7 @@ export interface GameShopPrices {
   quantity: number | null;
   purchased_bound: boolean | null;
   daily_limit: number | null;
+  price_gold: number | null;
 }
 
 export interface GameChallengeRules {
@@ -517,6 +518,10 @@ export interface GameSkills {
   damage_or_heal_path: string | null;
   effect_ids: unknown | null;
   action_resource_key: string | null;
+  book_item_id: number | null;
+  native_start_level: number | null;
+  native_max_level: number | null;
+  damage_parameters: unknown | null;
 }
 
 export interface GameSkillUpgrades {
@@ -527,6 +532,8 @@ export interface GameSkillUpgrades {
   page_cost: number | null;
   allowed_numeric_changes: unknown | null;
   preserve_behavior_shape: boolean | null;
+  required_role_level: number | null;
+  page_item_id: number | null;
 }
 
 export interface GameRangePatterns {

@@ -348,11 +348,13 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
-	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill) && r.Pending {
+	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill || c.frame.ID == p.MsgC2SSkillAssetCommit) && r.Pending {
 		w.queuePotion(r, c)
 		return
 	}
 	switch c.frame.ID {
+	case p.MsgC2SSkillAssetPreview:
+		w.skillAssetPreview(r, c.frame)
 	case p.MsgC2SMoveIntent:
 		var q pb.MoveIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
@@ -419,7 +421,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -569,6 +571,15 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	reviveID := ""
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SSkillAssetCommit:
+		var x pb.SkillAssetCommitRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.PreviewId) != 16 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind = "skill_assets_commit"
+		q.Context = x.Operation
+		q.PreviewID = domain.Hex(x.PreviewId)
 	case p.MsgC2SEquip:
 		var x pb.EquipRequest
 		if proto.Unmarshal(f.Payload, &x) != nil {
@@ -699,7 +710,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit:
 		return true
 	}
 	return false
@@ -707,6 +718,11 @@ func economic(id uint16) bool {
 func operationContext(f wire.Frame) *pb.OperationContext {
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SSkillAssetCommit:
+		q := &pb.SkillAssetCommitRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SEquip:
 		q := &pb.EquipRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {

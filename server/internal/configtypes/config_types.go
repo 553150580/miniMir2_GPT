@@ -327,6 +327,7 @@ type GameShopPrices struct {
     Quantity *int64 `json:"quantity"`
     PurchasedBound *bool `json:"purchased_bound"`
     DailyLimit *int64 `json:"daily_limit"`
+    PriceGold *int64 `json:"price_gold"`
 }
 
 type GameChallengeRules struct {
@@ -577,6 +578,10 @@ type GameSkills struct {
     DamageOrHealPath *string `json:"damage_or_heal_path"`
     EffectIds json.RawMessage `json:"effect_ids"`
     ActionResourceKey *string `json:"action_resource_key"`
+    BookItemId *int64 `json:"book_item_id"`
+    NativeStartLevel *int64 `json:"native_start_level"`
+    NativeMaxLevel *int64 `json:"native_max_level"`
+    DamageParameters json.RawMessage `json:"damage_parameters"`
 }
 
 type GameSkillUpgrades struct {
@@ -587,6 +592,8 @@ type GameSkillUpgrades struct {
     PageCost *int64 `json:"page_cost"`
     AllowedNumericChanges json.RawMessage `json:"allowed_numeric_changes"`
     PreserveBehaviorShape *bool `json:"preserve_behavior_shape"`
+    RequiredRoleLevel *int64 `json:"required_role_level"`
+    PageItemId *int64 `json:"page_item_id"`
 }
 
 type GameRangePatterns struct {
