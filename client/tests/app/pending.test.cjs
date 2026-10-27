@@ -221,3 +221,20 @@ test('药品未决请求拒绝不安全代次、无效实例及额外字段，�
         assert.equal(store.get('roleA'), null);
     }
 });
+
+test('材料施法与护符装卸持久保留原实例、Long版本、生命代次及op；坏载荷不得落盘',()=>{
+    const large=Long.fromString('9007199254740993',true),operation=pending().value.operation;
+    const cast={sceneEpoch:large,inputSequence:7,skillId:14,targetHandle:0,targetGrid:{x:8,y:9},direction:4,materialInstanceId:id(7),materialVersion:large,casterLife:Long.UZERO,operation};
+    const equip={itemInstanceId:id(7),itemVersion:large,unequip:true,operation};
+    for(const [message,value,codec]of [[40014,cast,pb.CastWithMaterialRequest],[40015,equip,pb.SetCastingSupplyRequest]]){
+        const storage=new MemoryStorage(),ledger=new PendingOperations(storage,key);ledger.set('roleA',{id:message,value});const restored=new PendingOperations(storage,key).get('roleA');
+        assert.equal(restored.id,message);assert.deepEqual(restored.value.operation.opId,operation.opId);
+        const snake=v=>v==null||Long.isLong(v)||v instanceof Uint8Array?v:Array.isArray(v)?v.map(snake):typeof v==='object'?Object.fromEntries(Object.entries(v).map(([k,v])=>[k.replace(/[A-Z]/g,x=>'_'+x.toLowerCase()),snake(v)])):v;
+        assert.deepEqual(codec.encode(snake(restored.value)).finish(),codec.encode(snake(value)).finish());
+    }
+    for(const mutate of [v=>v.materialVersion=9007199254740992,v=>v.casterLife=Long.fromInt(-1),v=>v.direction=8,v=>v.inputSequence=0,v=>v.targetGrid={x:1,y:-1},v=>v.targetGrid={x:1,y:2,extra:3},v=>v.materialInstanceId=id(3).slice(1),v=>v.skillId=0,v=>v.token='secret']){
+        const value={...cast,targetGrid:{...cast.targetGrid}};mutate(value);assert.throws(()=>new PendingOperations().set('roleA',{id:40014,value}),{code:'INVALID_OPERATION'});
+    }
+    assert.throws(()=>new PendingOperations().set('roleA',{id:40015,value:{...equip,slot:100}}),{code:'INVALID_OPERATION'});
+    assert.throws(()=>new PendingOperations().set('roleA',{id:40015,value:{...equip,unequip:1}}),{code:'INVALID_OPERATION'});
+});

@@ -8,7 +8,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm":
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour":
 		return true
 	}
 	return false
@@ -94,7 +94,7 @@ func (f *Fixture) ValidateCombat() error {
 			return errors.New("技能范围或数值路径无效")
 		}
 		switch s.TargetKind {
-		case "passive", "enemy_entity", "enemy_grid", "friendly_entity", "friendly_grid", "attack_mode", "attack_charge", "enemy_direction", "enemy_self":
+		case "passive", "enemy_entity", "enemy_grid", "friendly_entity", "friendly_grid", "friendly_self", "attack_mode", "attack_charge", "enemy_direction", "enemy_self":
 		default:
 			return errors.New("技能目标类型无效")
 		}
@@ -114,6 +114,10 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "friendly_entity"
 		case "mass_healing":
 			wanted = "friendly_grid"
+		case "soul_shield", "blessed_armour":
+			wanted = "friendly_grid"
+		case "magic_shield":
+			wanted = "friendly_self"
 		case "firebang", "ice_storm":
 			wanted = "enemy_grid"
 		}

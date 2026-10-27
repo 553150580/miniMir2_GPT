@@ -22,6 +22,7 @@ type pendingCast struct {
 	Direction         uint32
 	LineRemaining     int
 	SkillLevel        uint32
+	BuffDurationMS    int64
 }
 
 func acceptInput(r *room, sequence uint32) bool {
@@ -69,22 +70,14 @@ func (w *worker) physicalDamage(r *room, from, target *entity) int64 {
 	if w.draw(b.Agility+1) > a.Accuracy {
 		return 0
 	}
-	damage := w.interval(a.AttackMin, a.AttackMax) - w.interval(b.DefenceMin, b.DefenceMax)
-	if damage < 0 {
-		return 0
-	}
-	return damage
+	return statusDamage(target, w.interval(a.AttackMin, a.AttackMax), w.interval(b.DefenceMin, b.DefenceMax))
 }
 func (w *worker) magicDamage(r *room, target *entity, amount int64) int64 {
 	b := w.fighter(r, target)
 	if b.MagicResist > 0 && w.draw(b.MagicResistWeight) < b.MagicResist {
 		return 0
 	}
-	amount -= w.interval(b.MagicDefenceMin, b.MagicDefenceMax)
-	if amount < 0 {
-		return 0
-	}
-	return amount
+	return statusDamage(target, amount, w.interval(b.MagicDefenceMin, b.MagicDefenceMax))
 }
 
 // Crystal MagicInfo.cs:180–211：基础区间、技能随机项、四分之一取偶舍入及倍率分开。

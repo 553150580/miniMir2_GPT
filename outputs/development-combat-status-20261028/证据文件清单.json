@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "scope": "非浏览器归档文件清单；不包含本清单自身，不替代后续阶段总清单",
+  "files": [
+    {
+      "source": ".work/combat-status/client-freeze.json",
+      "path": "client-freeze.json",
+      "bytes": 4163,
+      "sha256": "9c90b57fc76ce18f5ced92fc6616293b3effc454a029f5fcace94bcae2961f06"
+    },
+    {
+      "source": ".work/combat-status/client-layout-preservation.json",
+      "path": "client-layout-preservation.json",
+      "bytes": 13819,
+      "sha256": "f093e9d494e6a1ecad878f387f5c17f1d1ebb1480506609b3cdcb2123c8bf252"
+    },
+    {
+      "source": ".work/combat-status/source-hashes.json",
+      "path": "source-hashes.json",
+      "bytes": 12808,
+      "sha256": "d180f23c3f25fb628a13185790e1380a9870b6af16fee1ed4c411e83a25ed082"
+    },
+    {
+      "source": ".work/combat-status/client-tests.log",
+      "path": "client-tests.log",
+      "bytes": 22459,
+      "sha256": "124b38315f1f1adc8954318895e803fbb6546fa01d0f1b099ee81acfa21bfc22"
+    },
+    {
+      "source": ".work/combat-status/scene-tests.log",
+      "path": "scene-tests.log",
+      "bytes": 1623,
+      "sha256": "f9e8204b830d1a2eee3c9dd112f6a9b8bc764d833a70aa229fbb7a4a82751369"
+    },
+    {
+      "source": ".work/combat-status/strict-tsc-result.json",
+      "path": "strict-tsc-result.json",
+      "bytes": 333,
+      "sha256": "d7bb4eada4324edaa7ab0835126350910adc7899790ac91e0992d1371c666bd6"
+    },
+    {
+      "source": ".work/combat-status/strict-tsc.log",
+      "path": "strict-tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/combat-status/import-normalization-tests.log",
+      "path": "import-normalization-tests.log",
+      "bytes": 3491,
+      "sha256": "a579f488819b37ae4e9c9e5a676c4c1a430926f4dbc46f62c8d39f8f5ff3fa0b"
+    },
+    {
+      "source": ".work/combat-status/resource-and-config-check.json",
+      "path": "resource-and-config-check.json",
+      "bytes": 2253,
+      "sha256": "5ca791a42fdde4d62799a04336c1a42b9289967cb6d839dcb3be56cc9fd2c785"
+    },
+    {
+      "source": ".work/combat-status/resource-source-94.json",
+      "path": "resource-source-94.json",
+      "bytes": 23418,
+      "sha256": "8f2870d47700f474221092579cdafb78ec94ba40cd5b95e28bf9b853543015a1"
+    },
+    {
+      "source": ".work/combat-status/previous-2914-frames.json",
+      "path": "previous-2914-frames.json",
+      "bytes": 1425849,
+      "sha256": "76dbeb83968dddb195eb230a4b8fdc144a5c5c0c90fabb9c06f8c1dbc052cf4c"
+    },
+    {
+      "source": ".work/combat-status/check.log",
+      "path": "check.log",
+      "bytes": 1036,
+      "sha256": "264d6a152509b2ce89a1bacff8e6db52d43dc44ecbe1d07668383709a0e4fcbe"
+    },
+    {
+      "source": ".work/combat-status/preservation-check.json",
+      "path": "excel/preservation-check.json",
+      "bytes": 19904,
+      "sha256": "baebc259bc991e39a1c9d0afba5f4b9a18cbfaf8f0c6c9e6f7644c860b5bec13"
+    },
+    {
+      "source": ".work/combat-status/workbook-qa.json",
+      "path": "excel/workbook-qa.json",
+      "bytes": 1835,
+      "sha256": "51ecee1b0205d2e0c649c5ffe3381f24d713628f447a6a3eff9e239e74932299"
+    },
+    {
+      "source": ".work/combat-status/新增三项技能.png",
+      "path": "excel/新增三项技能.png",
+      "bytes": 28148,
+      "sha256": "ff9b83f53231ce56891f4d7698cb006a4874a7a404648796bb7f4c4bf5b05351"
+    },
+    {
+      "source": ".work/combat-status/新增书本与护符.png",
+      "path": "excel/新增书本与护符.png",
+      "bytes": 24386,
+      "sha256": "9f4a3aa7ff6574e7fd234c4170dd71adb94a11be8379716cafb8ea26ad6470bb"
+    },
+    {
+      "source": ".work/combat-status/状态定义修改后.png",
+      "path": "excel/状态定义修改后.png",
+      "bytes": 95833,
+      "sha256": "199bb5fb2b71e6d205de233f5ee24cd6d9963205a62edf8de44c7f7a38edd16d"
+    },
+    {
+      "source": ".work/combat-status/时长与中文名称.png",
+      "path": "excel/时长与中文名称.png",
+      "bytes": 63359,
+      "sha256": "a656600675af0198fc892419dab9465bcea9dceaf8294bf9124ab120eabc65b4"
+    },
+    {
+      "source": ".work/combat-status/oracle/report.json",
+      "path": "oracle/report.json",
+      "bytes": 1906,
+      "sha256": "37407be0549e2ed53e07a62ae260fef84c5f482e53b8028f9a7b6484d4e74ce5"
+    },
+    {
+      "source": ".work/combat-status/oracle/vectors.json",
+      "path": "oracle/vectors.json",
+      "bytes": 64692,
+      "sha256": "d8a06279c0b890d21d788d5242ee7d5cf4402f8de495180863c97a5e2ccfb870"
+    },
+    {
+      "source": ".work/combat-status/status-oracle.json.gz",
+      "path": "oracle/source-status-vectors.json.gz",
+      "bytes": 3533,
+      "sha256": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa"
+    },
+    {
+      "source": ".work/combat-status/creator-first-failed-layout.json",
+      "path": "creator/creator-first-failed-layout.json",
+      "bytes": 7444,
+      "sha256": "a1b9ed65819b17408b29de8b8305e337fb59ff559a3024a9605a6975ff7c27ad"
+    },
+    {
+      "source": ".work/combat-status/creator-first-cli.log",
+      "path": "creator/creator-first-cli.log",
+      "bytes": 93531,
+      "sha256": "2197b58cd58693df5f36542cd7744c8d8cc994e19c6b075e25e53e859e3a0562"
+    },
+    {
+      "source": ".work/combat-status/prefab-import-normalization.json",
+      "path": "creator/prefab-import-normalization.json",
+      "bytes": 4484,
+      "sha256": "50594c098e8b506908064cc23e16e15eab0a936e53eea16edf0c3e221dd82f1c"
+    },
+    {
+      "source": ".work/combat-status/StatusBadge-before-first-build.prefab",
+      "path": "creator/StatusBadge-before-first-build.prefab",
+      "bytes": 6581,
+      "sha256": "878b7ad1c5e7ca3dcc938023f41119c89e96ab7560566dfbd7b01cebc95b2c13"
+    },
+    {
+      "source": ".work/combat-status/StatusBadge-before-first-build.prefab.meta",
+      "path": "creator/StatusBadge-before-first-build.prefab.meta",
+      "bytes": 167,
+      "sha256": "e46ad2736ae4cf24d96ecc20e238503b68e5dc40803709ffd0d25edc87462eeb"
+    },
+    {
+      "source": ".work/combat-status/StatusBadge-after-first-build.prefab",
+      "path": "creator/StatusBadge-after-first-build.prefab",
+      "bytes": 6580,
+      "sha256": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a"
+    },
+    {
+      "source": ".work/combat-status/client-freeze-before-first-build.json",
+      "path": "creator/client-freeze-before-first-build.json",
+      "bytes": 3830,
+      "sha256": "37f1c8ff4e9a6800c282730429abd070e04b7257c89c05d4a9efc7c99f3e1470"
+    },
+    {
+      "source": ".work/combat-status/client-layout-preservation-before-first-build.json",
+      "path": "creator/client-layout-preservation-before-first-build.json",
+      "bytes": 13729,
+      "sha256": "8178ef6f62d81c41df98b1049573b789aefd68e1bf67534352c4c197bac20b75"
+    },
+    {
+      "source": ".work/combat-status/creator-build.log",
+      "path": "creator/creator-build.log",
+      "bytes": 313,
+      "sha256": "e4d34384965ed4dbe74d87756851d4ff1c5bd04be83c44ed11ae89123acc7eee"
+    },
+    {
+      "source": ".work/combat-status/server-full.log",
+      "path": "server/server-full.log",
+      "bytes": 38284,
+      "sha256": "c74f0b1cf90e0d31c64394ade776a462bb12458d9966aec44cbd0456d8c51bc7"
+    },
+    {
+      "source": ".work/combat-status/server-start.json",
+      "path": "server/server-start.json",
+      "bytes": 1052,
+      "sha256": "4e13eda21fb5fcef985834de9184e3dbd9fe5a06b63cc5f5ae384078b1a54985"
+    },
+    {
+      "source": ".work/combat-status/source-contract.json",
+      "path": "source/source-contract.json",
+      "bytes": 14353,
+      "sha256": "492eb6018391ca0e81846d1f4caeeaaba110559005ea208fbcabe6f99c884688"
+    },
+    {
+      "source": ".work/combat-status/来源契约.md",
+      "path": "source/来源契约.md",
+      "bytes": 3954,
+      "sha256": "8d499b82dc3be241e1f499b2615aa934ebf7748fad221e7132bab050fae794a9"
+    },
+    {
+      "source": ".work/combat-status/source-shield-contact.png",
+      "path": "source/source-shield-contact.png",
+      "bytes": 89973,
+      "sha256": "1117ac8c49570b441f18686e6ec3ca23dca119103f0d5eaff41fe058bbd7866e"
+    },
+    {
+      "source": ".work/combat-status/source-tao-shields-contact.png",
+      "path": "source/source-tao-shields-contact.png",
+      "bytes": 236155,
+      "sha256": "954b8a17d7075cb87167787a2bc888183797b65d20cb0549f8dcffb6a1e7ff5a"
+    },
+    {
+      "source": "docs/客户端构建检查.json",
+      "path": "creator/客户端构建检查.json",
+      "bytes": 7441,
+      "sha256": "808a6013342634fcbf377514ee8bebea788813d4d15eecf8dc74ad4569de4c83"
+    },
+    {
+      "source": ".work/creator-cli.log",
+      "path": "creator/creator-cli.log",
+      "bytes": 93534,
+      "sha256": "6f4d8b05f675b55b4629b9bfffd5e40563fb8dedb313fc44c5c6c119a2831c60"
+    },
+    {
+      "source": "server/test-results/latest.json",
+      "path": "server/latest.json",
+      "bytes": 55169,
+      "sha256": "8a036cb1a74f490f85017db62f2d4810ce99567da3c3929cac820827b4796521"
+    },
+    {
+      "source": "server/test-results/latest.events.jsonl",
+      "path": "server/latest.events.jsonl",
+      "bytes": 277921,
+      "sha256": "f611beee9d55a8f0f10723b7ffa038974673ea2059070acb6e8381ffa894a653"
+    },
+    {
+      "source": "本次限定范围汇总",
+      "path": "non-browser-summary.json",
+      "bytes": 5603,
+      "sha256": "33c04695d2930d76eb488efe319f5335c0ff9532f3d90ff50270e3d67b721040"
+    },
+    {
+      "source": "本次限定范围汇总",
+      "path": "非浏览器证据摘要.md",
+      "bytes": 2516,
+      "sha256": "e036d71c7ed9311bb28be1e862ca1f29939cb926af665a2859a559a336b1e886"
+    },
+    {
+      "source": "conf/toolchain/client-pb-verification.json",
+      "path": "protocol/client-pb-verification.json",
+      "bytes": 18359,
+      "sha256": "b5ac35a4888655bc8f04f22b80e430e1cddb66ee46449359fa973c15a0fca32b"
+    },
+    {
+      "source": "conf/toolchain/go-pb-generation.json",
+      "path": "protocol/go-pb-generation.json",
+      "bytes": 977,
+      "sha256": "4f3c1eb6b94ec43779461c21648da8cf91c3ce1e4ecbd97f1fec26f82d2b5dec"
+    }
+  ],
+  "files_count": 44,
+  "bytes_total": 2796798
+}

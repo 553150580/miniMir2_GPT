@@ -1,0 +1,616 @@
+{
+  "base_commit": "78ae22865cb21c40c5d72e381ef21efeeeee7429",
+  "base_assets": {
+    "client/assets/scenes/Game.scene": "ab015be00e79cfc24578341143df1c706fc09407bb35f578615815026639f8c2",
+    "client/assets/resources/prefabs/Entity.prefab": "bdd25266397d947596ba312b3cb6f2a604dc417f68453da59feecffec864e7ca"
+  },
+  "scene": {
+    "before_count": 988,
+    "after_count": 1053,
+    "old_differences": [
+      {
+        "index": 21,
+        "name": "MapViewport",
+        "changed_keys": [
+          "_children"
+        ],
+        "before": {
+          "_children": [
+            {
+              "__id__": 26
+            },
+            {
+              "__id__": 60
+            },
+            {
+              "__id__": 66
+            },
+            {
+              "__id__": 74
+            },
+            {
+              "__id__": 945
+            }
+          ]
+        },
+        "after": {
+          "_children": [
+            {
+              "__id__": 26
+            },
+            {
+              "__id__": 60
+            },
+            {
+              "__id__": 66
+            },
+            {
+              "__id__": 74
+            },
+            {
+              "__id__": 945
+            },
+            {
+              "__id__": 988
+            }
+          ]
+        }
+      },
+      {
+        "index": 253,
+        "name": "Panels",
+        "changed_keys": [
+          "_children"
+        ],
+        "before": {
+          "_children": [
+            {
+              "__id__": 257
+            },
+            {
+              "__id__": 298
+            },
+            {
+              "__id__": 339
+            },
+            {
+              "__id__": 363
+            },
+            {
+              "__id__": 373
+            },
+            {
+              "__id__": 425
+            },
+            {
+              "__id__": 649
+            },
+            {
+              "__id__": 733
+            },
+            {
+              "__id__": 800
+            }
+          ]
+        },
+        "after": {
+          "_children": [
+            {
+              "__id__": 257
+            },
+            {
+              "__id__": 298
+            },
+            {
+              "__id__": 339
+            },
+            {
+              "__id__": 363
+            },
+            {
+              "__id__": 373
+            },
+            {
+              "__id__": 425
+            },
+            {
+              "__id__": 649
+            },
+            {
+              "__id__": 733
+            },
+            {
+              "__id__": 800
+            },
+            {
+              "__id__": 1026
+            }
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "name": "Panels",
+        "changed_keys": [
+          "_children"
+        ],
+        "before": {
+          "_children": [
+            {
+              "__id__": 454
+            },
+            {
+              "__id__": 464
+            },
+            {
+              "__id__": 474
+            },
+            {
+              "__id__": 878
+            }
+          ]
+        },
+        "after": {
+          "_children": [
+            {
+              "__id__": 454
+            },
+            {
+              "__id__": 464
+            },
+            {
+              "__id__": 474
+            },
+            {
+              "__id__": 878
+            },
+            {
+              "__id__": 999
+            }
+          ]
+        }
+      }
+    ],
+    "all_other_old_objects_unchanged": true,
+    "old_988_canonical_sha256": "e22c27b81e71cdab6349819ed528c85a495419112e2e5776fbbd705cdd445fb8",
+    "appended": [
+      {
+        "index": 988,
+        "type": "cc.Node",
+        "name": "BuffBar"
+      },
+      {
+        "index": 989,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 990,
+        "type": "cc.Widget",
+        "name": ""
+      },
+      {
+        "index": 991,
+        "type": "cc.Layout",
+        "name": ""
+      },
+      {
+        "index": 992,
+        "type": "cc.Node",
+        "name": "Overview"
+      },
+      {
+        "index": 993,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 994,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 995,
+        "type": "cc.Button",
+        "name": ""
+      },
+      {
+        "index": 996,
+        "type": "cc.Node",
+        "name": "Label"
+      },
+      {
+        "index": 997,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 998,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 999,
+        "type": "cc.Node",
+        "name": "StatusDetails"
+      },
+      {
+        "index": 1000,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1001,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1002,
+        "type": "cc.BlockInputEvents",
+        "name": ""
+      },
+      {
+        "index": 1003,
+        "type": "cc.Node",
+        "name": "Title"
+      },
+      {
+        "index": 1004,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1005,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 1006,
+        "type": "cc.Node",
+        "name": "Message"
+      },
+      {
+        "index": 1007,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1008,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 1009,
+        "type": "cc.Node",
+        "name": "List"
+      },
+      {
+        "index": 1010,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1011,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1012,
+        "type": "cc.ScrollView",
+        "name": ""
+      },
+      {
+        "index": 1013,
+        "type": "39a82802rlT3Z9OWj3G8DOj",
+        "name": ""
+      },
+      {
+        "index": 1014,
+        "type": "cc.Node",
+        "name": "View"
+      },
+      {
+        "index": 1015,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1016,
+        "type": "cc.Mask",
+        "name": ""
+      },
+      {
+        "index": 1017,
+        "type": "cc.Node",
+        "name": "Content"
+      },
+      {
+        "index": 1018,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1019,
+        "type": "cc.Node",
+        "name": "ItemTemplate"
+      },
+      {
+        "index": 1020,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1021,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1022,
+        "type": "cc.Button",
+        "name": ""
+      },
+      {
+        "index": 1023,
+        "type": "cc.Node",
+        "name": "Text"
+      },
+      {
+        "index": 1024,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1025,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 1026,
+        "type": "cc.Node",
+        "name": "CombatStatus"
+      },
+      {
+        "index": 1027,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1028,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1029,
+        "type": "cc.BlockInputEvents",
+        "name": ""
+      },
+      {
+        "index": 1030,
+        "type": "cc.Node",
+        "name": "Title"
+      },
+      {
+        "index": 1031,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1032,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 1033,
+        "type": "cc.Node",
+        "name": "Message"
+      },
+      {
+        "index": 1034,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1035,
+        "type": "cc.Label",
+        "name": ""
+      },
+      {
+        "index": 1036,
+        "type": "cc.Node",
+        "name": "List"
+      },
+      {
+        "index": 1037,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1038,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1039,
+        "type": "cc.ScrollView",
+        "name": ""
+      },
+      {
+        "index": 1040,
+        "type": "39a82802rlT3Z9OWj3G8DOj",
+        "name": ""
+      },
+      {
+        "index": 1041,
+        "type": "cc.Node",
+        "name": "View"
+      },
+      {
+        "index": 1042,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1043,
+        "type": "cc.Mask",
+        "name": ""
+      },
+      {
+        "index": 1044,
+        "type": "cc.Node",
+        "name": "Content"
+      },
+      {
+        "index": 1045,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1046,
+        "type": "cc.Node",
+        "name": "ItemTemplate"
+      },
+      {
+        "index": 1047,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1048,
+        "type": "cc.Sprite",
+        "name": ""
+      },
+      {
+        "index": 1049,
+        "type": "cc.Button",
+        "name": ""
+      },
+      {
+        "index": 1050,
+        "type": "cc.Node",
+        "name": "Text"
+      },
+      {
+        "index": 1051,
+        "type": "cc.UITransform",
+        "name": ""
+      },
+      {
+        "index": 1052,
+        "type": "cc.Label",
+        "name": ""
+      }
+    ]
+  },
+  "entity": {
+    "before_count": 21,
+    "after_count": 24,
+    "old_differences": [
+      {
+        "index": 1,
+        "name": "Entity",
+        "changed_keys": [
+          "_children"
+        ],
+        "before": {
+          "_children": [
+            {
+              "__id__": 3
+            },
+            {
+              "__id__": 6
+            },
+            {
+              "__id__": 9
+            }
+          ]
+        },
+        "after": {
+          "_children": [
+            {
+              "__id__": 3
+            },
+            {
+              "__id__": 21
+            },
+            {
+              "__id__": 6
+            },
+            {
+              "__id__": 9
+            }
+          ]
+        }
+      }
+    ],
+    "all_other_old_objects_unchanged": true,
+    "old_21_canonical_sha256": "628e03206b2ef5370978bed19c5204a32bf268284ab25736e63ec7c33fda7973",
+    "saved_sibling_order": [
+      "Body",
+      "AttachedEffects",
+      "Name",
+      "HP"
+    ],
+    "name_24_scale_0_7_and_head_labels_unchanged": true
+  },
+  "saved_assets": [
+    {
+      "path": "client/assets/resources/prefabs/Beam.prefab",
+      "sha256": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+      "meta_sha256": "8cf11ea9a90593b5702967c335c665b9a34221e960904f427890ad8b581304b7"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Effect.prefab",
+      "sha256": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+      "meta_sha256": "0ff2ae4c018e2c57f3281ac78eadd3cac02d461b5dc86650624e67d8eb05c8c5"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Entity.prefab",
+      "sha256": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+      "meta_sha256": "e94abefaed2e6b6a24924b0e5ff19c48f2324f82e3300290d01553f9dc867994"
+    },
+    {
+      "path": "client/assets/resources/prefabs/ListItem.prefab",
+      "sha256": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+      "meta_sha256": "508ab1c3f8d5d20f271ef1172d2c9d8f5e48c916133f3d253f49069a420b9a2d"
+    },
+    {
+      "path": "client/assets/resources/prefabs/MapProp.prefab",
+      "sha256": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+      "meta_sha256": "15937f137a52433ba42bc1fd6a6d110b223c6f9b17ebb29a9e4bbf343feb1ae6"
+    },
+    {
+      "path": "client/assets/resources/prefabs/StatusBadge.prefab",
+      "sha256": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+      "meta_sha256": "40532adfdbe509b65e325e7f9ef3095d3089b38fa2c130ca6886a7c60bcbd42b"
+    },
+    {
+      "path": "client/assets/scenes/Boot.scene",
+      "sha256": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+      "meta_sha256": "117e4834d9271d6e1a91dc84ca0ac11eb925a723570477672410a7c95c278fde"
+    },
+    {
+      "path": "client/assets/scenes/Game.scene",
+      "sha256": "4263e30f530ae174c570e43e6b5f3d21fede2b6bda2dd93b8bd10dfb42f762d5",
+      "meta_sha256": "8f9e60677e3d5d37bb71fe5e3ffaece1c57e82f2b23d917ca586c271780d44d9"
+    },
+    {
+      "path": "client/assets/scenes/Login.scene",
+      "sha256": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+      "meta_sha256": "33f2b2a4da3b997c5bf90a644d2186fea5b116298c09980cd83166cf4ecb2d3e"
+    },
+    {
+      "path": "client/assets/scenes/RoleSelect.scene",
+      "sha256": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+      "meta_sha256": "9ca49a03196b193c59331ef5c0980f6ce1d2e8786d2943c91d509e1f6442718f"
+    }
+  ],
+  "policies": [
+    "固定状态条/滚动详情/普通状态面板和徽标模板均保存可编辑资产，无运行时固定布局生成",
+    "旧988对象仅三处追加子引用；Entity只插入AttachedEffects，名字/HP/身体/原兄弟相对顺序不变",
+    "附体盾容器保存于Body之后、Name/HP之前，不在运行时调整该容器兄弟顺序",
+    "独立常驻表现由完整基线状态驱动，0秒存在保留、空列表清除、重连恢复常驻不补起手",
+    "未决材料施法/装卸保留原实例/版本/生命/场景/op；不乐观扣物或修改属性",
+    "护符disabled：Use/快捷/装入/卸下不发送材料请求，不进入瞄准；死亡时快捷仍可复活"
+  ],
+  "creator_import_normalization": ".work/combat-status/prefab-import-normalization.json"
+}

@@ -1,0 +1,1112 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/enabled_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/enabled_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/slot_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/slot_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/item_ids_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/item_ids_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/buff_id_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/buff_id_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_item_id_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_item_id_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_quantity_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/0"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_quantity_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/2"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/kind_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/4"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/kind_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/value_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIceStormImpactOccupantsAndThunderStormOwnOriginUndeadMAC"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNewMageAutoCannotStallAdjacentOrdinaryFallback"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/value_by_level_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAllNewCastFailuresKeepManaCooldownAndInputReadyState"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_divisor_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusFormulaMatchesIndependentCSharpOracle"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusDiscreteTickRefreshAndDamageKeepClocksAndValues"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusMagicShieldDeathRecastAndLateSelfPosition"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_divisor_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusCorpseBuffReviveMigrationPetReplacementAndFaultReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusPendingFreezeBeforeEqualImpactAndFullBaseline"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_add_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusPositiveNetWearBeforeLimitedHPDeathAndMissNoWear"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_add_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/2002"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/1002"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/2001"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_kind_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/4301"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialReceiptOneEffectOriginalWatermarkAndSceneLife"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_kind_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/healthy_disconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_pending"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_add_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_generation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_room"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_add_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_life"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_auth"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_multiplier_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialHistoricalRequestNeverPollutesNewBindingInput"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_multiplier_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialUnknownKeepsOriginalJobAndRandomPlanUntilKnownOnce"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusAreaFriendlyValidCellsAndCapacityRejectBeforeResources"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_seconds_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_seconds_by_level_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusMissingSupplyAutoFallsThroughAndSlotNeverAddsGearStats"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking/16"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking/17"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSeventeenGridCanRouteThroughMoreThanOld256VisitedNodes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSeventeenGridIntentsKeepLogicalCoordinatesAndRejectOutsideEdge"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/tick_ms_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/1"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/tick_ms_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/hit_duration_loss_ms_per_hp_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireEmptyCellsEmitActualStepAndBlockedCellStops"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireCellHitsAllLegalOccupantsAndReadyOnlySuppressesOldSteps"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact/online_to_offline"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/hit_duration_loss_ms_per_hp_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact/offline_to_online"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireSurvivesDeathButOldChildCannotSurviveReviveLife"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFullBagAutoRejectPushesActualHosting"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stack_policy_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSlayingPassiveAndNextAttackReadiness"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stack_policy_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/1"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/remove_on_player_death_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/4"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/remove_on_player_death_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/6"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/allow_dead_targets_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/0"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/allow_dead_targets_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/1"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/activation_kind_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/activation_kind_missing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/2"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/max_attack_bonus_by_level_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/max_attack_bonus_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_denominator_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_denominator_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_numerators_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_numerators_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_direction_offsets_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_direction_offsets_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_distance_cells_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_distance_cells_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_impact_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_impact_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/charge_window_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/charge_window_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_cells_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_cells_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_step_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_step_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_stop_on_blocked_null"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/3"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_stop_on_blocked_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/non_undead_divisor_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/non_undead_divisor_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/4"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestHellFireRequiresExplicitSingleRayTimingParameters"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapApprovedDimensionsAndDerivedSearchBudget"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺地图ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺怪物槽位"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡负坐标"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生静态孤岛"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡重复"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/八向连通不得穿角"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapConnectivityChecksBirthCellsWithoutInventingWholeGroundConnectivity"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/5"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSourcePlayerGrowthThreeJobs"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFlamingChargeExactManaAirSwingExpiryAndOriginalCooldown"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestModeSequenceReplayBindingAndNavigationIsolation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonSharedDrawAndFourKillFactsKeepActualImpactTimes"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSkillFixtureRejectsInvalidSourceBounds"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackBudgetRejectDoesNotConsumeModesManaOrReadiness"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSameConnectionReviveAdvancesModeRevisionAndRetainsOriginalModes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackObservationSurvivesStruckAndCooldownReject"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLethalStatePushesBeforeBroadcastWindow"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionTicksIndependentPoolsCapAndNoCatchup"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionDeathAndPendingPauseWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionGateSharedCooldownAndDeadSceneChecks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestManualAttackCannotTargetInactiveMonsterSlots"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillCommitPendingRetainsOriginalPreviewAndReceiptReconciliation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewInFlightDoesNotFreezeCombatOrRecovery"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewCompletionPreservesConcurrentPermanentPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/baseline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/closed"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/binding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/session"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/room"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration/success"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration/error"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewErrorReleasesOnlyPreviewSlot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewQueueBusyAndMalformedLeaveNoPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewDisconnectInvalidatesQueuedCompletion"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplySlotMoveSwapAndConsumptionCopyOwnership"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/未开放"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/未学"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/错职业"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/错实例"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/旧版本"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/溢出版本"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/数量不足"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/不等价大符"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/背包不能直用"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/旧场景门禁"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyUnequipFullBagAndDisabledUnknownUnits"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillCooldownResourceTargetAndProjectileObstruction"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestStatusUpgradeQuoteShowsRealRankParametersWithoutFakeDamage"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/数量不足"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/无场景"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/死亡"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/共享节流"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReachesFullBeforeCombatClearsWaitingHealingBalance"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestInputWatermarkSharedByMoveAndCastAndRejectsOldBinding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradeLevelPrerequisiteCapAndExactCost"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillPowerRanksUseSourceToEvenAndFencingGrowth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHumanAttackActionImpactAndLevelSpeedAreIndependent"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackActorRefBlocksNewLifeAndOldScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestReadyOnlyGatesInputAndObservationNotAuthoritativeWorld"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNewSingleSkillsUseExactPowerFlightAndUndeadRules"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSpiritSwordUsesNonlinearAccuracyAtEveryRank"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestEnemyGridAreaUsesImpactPositionsAndFiltersFriendsAndInactiveSlots"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMassHealingUsesIndependentSCPathAndFriendlyQueues"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTimelineOrdersDifferentEventKindsAndFreezesPaidFactsAcrossRetry"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestCombatBudgetsAndInvalidGroundRejectBeforeCosts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAutomaticSkillPriorityUsesTargetsAndFallsBackWithoutTouchingNavigation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLateImpactUsesDueForBothPrivilegeBoundariesAndHostingSegment"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHardSettlementFailureIsolatesWithoutDiscardingPaidFacts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPrivilegeRenewalDoesNotRewriteAlreadyDueDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestBlockedAreaCenterStillAffectsWalkableNeighboursAndClipsMapEdges"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSourceDamageMatchesIndependentCSharpOracle"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatAreaFiveSkillsAndEightKillMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatModesEightSkillsLearningModesCastingAndReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS/runtime_disabled"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS/isolated_material_units"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestFirstLoopMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoOwnershipFence"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoPermanentReceiptIndexMigration"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoReceiptMigrationFailureRejectsStartup"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillAssetEconomyMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fencing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fireball"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/healing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS"
+    }
+  ],
+  "skipped": [],
+  "report": "/Users/srf/Miro2/miniMir2_GPT/server/test-results/latest.json",
+  "fixture_sha256": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864"
+}

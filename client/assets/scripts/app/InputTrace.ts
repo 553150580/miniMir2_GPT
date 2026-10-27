@@ -10,13 +10,14 @@ export function inputTraceMessage(direction: 'send' | 'receive', id: number, seq
     const row: InputTraceRecord = { event: direction, message_id: id, packet_seq: sequence };
     const field = (name: string, source: unknown): void => { const number = uint(source); if (number !== undefined) row[name] = number; };
     if (direction === 'send') {
-        if (id === 30003 || id === 30009 || id === 30011) {
+        if (id === 30003 || id === 30009 || id === 30011 || id === 40014) {
             field('skill_id', value?.skillId); field('input_sequence', value?.inputSequence); field('direction', value?.direction);
             if (id === 30009 && typeof value?.enabled === 'boolean') row.enabled = value.enabled;
         }
         else if (id === 30004) { if (typeof value?.enabled === 'boolean') row.enabled = value.enabled; }
         else if (id === 40009) field('item_id', value?.itemId);
         else if (id === 40010) field('skill_id', value?.skillId);
+        else if (id === 40015) { if (typeof value?.unequip === 'boolean') row.unequip = value.unequip; }
         else return null;
     } else {
         if (id === 30005) { if (typeof value?.autoBattleEnabled === 'boolean') row.enabled = value.autoBattleEnabled; }

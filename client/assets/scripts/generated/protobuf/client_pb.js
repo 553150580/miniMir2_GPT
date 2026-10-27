@@ -5300,6 +5300,8 @@ $root.minimir = (function() {
              * @property {number|null} [attack_interval_ms] EntityState attack_interval_ms
              * @property {number|null} [attack_skill_id] EntityState attack_skill_id
              * @property {number|null} [attack_skill_level] EntityState attack_skill_level
+             * @property {Array.<minimir.v1.EntityStatusState.$Properties>|null} [statuses] EntityState statuses
+             * @property {minimir.v1.CombatAttributes.$Properties|null} [combat_attributes] EntityState combat_attributes
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5325,6 +5327,7 @@ $root.minimir = (function() {
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
             var EntityState = function (properties) {
+                this.statuses = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -5476,6 +5479,22 @@ $root.minimir = (function() {
             EntityState.prototype.attack_skill_level = 0;
 
             /**
+             * EntityState statuses.
+             * @member {Array.<minimir.v1.EntityStatusState.$Properties>} statuses
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.statuses = $util.emptyArray;
+
+            /**
+             * EntityState combat_attributes.
+             * @member {minimir.v1.CombatAttributes.$Properties|null|undefined} combat_attributes
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.combat_attributes = null;
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -5543,6 +5562,11 @@ $root.minimir = (function() {
                     writer.uint32(/* id 17, wireType 0 =*/136).uint32(message.attack_skill_id);
                 if (message.attack_skill_level != null && $Object.hasOwnProperty.call(message, "attack_skill_level") && message.attack_skill_level !== 0)
                     writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.attack_skill_level);
+                if (message.statuses != null && message.statuses.length)
+                    for (var i = 0; i < message.statuses.length; ++i)
+                        $root.minimir.v1.EntityStatusState.encode(message.statuses[i], writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
+                if (message.combat_attributes != null && $Object.hasOwnProperty.call(message, "combat_attributes"))
+                    $root.minimir.v1.CombatAttributes.encode(message.combat_attributes, writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5759,6 +5783,20 @@ $root.minimir = (function() {
                                 delete message.attack_skill_level;
                             continue;
                         }
+                    case 19: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.statuses && message.statuses.length))
+                                message.statuses = [];
+                            message.statuses.push($root.minimir.v1.EntityStatusState.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 20: {
+                            if (wireType !== 2)
+                                break;
+                            message.combat_attributes = $root.minimir.v1.CombatAttributes.decode(reader, reader.size(), $undefined, _depth + 1, message.combat_attributes);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5863,6 +5901,20 @@ $root.minimir = (function() {
                 if (message.attack_skill_level != null && $Object.hasOwnProperty.call(message, "attack_skill_level"))
                     if (!$util.isInteger(message.attack_skill_level))
                         return "attack_skill_level: integer expected";
+                if (message.statuses != null && $Object.hasOwnProperty.call(message, "statuses")) {
+                    if (!$Array.isArray(message.statuses))
+                        return "statuses: array expected";
+                    for (var i = 0; i < message.statuses.length; ++i) {
+                        var error = $root.minimir.v1.EntityStatusState.verify(message.statuses[i], _depth + 1);
+                        if (error)
+                            return "statuses." + error;
+                    }
+                }
+                if (message.combat_attributes != null && $Object.hasOwnProperty.call(message, "combat_attributes")) {
+                    var error = $root.minimir.v1.CombatAttributes.verify(message.combat_attributes, _depth + 1);
+                    if (error)
+                        return "combat_attributes." + error;
+                }
                 return null;
             };
 
@@ -5881,6 +5933,898 @@ $root.minimir = (function() {
             };
 
             return EntityState;
+        })();
+
+        v1.EntityStatusState = (function() {
+
+            /**
+             * Properties of an EntityStatusState.
+             * @typedef {Object} minimir.v1.EntityStatusState.$Properties
+             * @property {number|null} [status_id] EntityStatusState status_id
+             * @property {number|null} [source_skill_id] EntityStatusState source_skill_id
+             * @property {number|null} [skill_level] EntityStatusState skill_level
+             * @property {number|null} [remaining_ms] EntityStatusState remaining_ms
+             * @property {Long|null} [max_physical_defence_bonus] EntityStatusState max_physical_defence_bonus
+             * @property {Long|null} [max_magic_defence_bonus] EntityStatusState max_magic_defence_bonus
+             * @property {number|null} [damage_reduction_percent] EntityStatusState damage_reduction_percent
+             * @property {number|null} [caster_handle] EntityStatusState caster_handle
+             * @property {Long|null} [caster_life] EntityStatusState caster_life
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EntityStatusState.
+             * @memberof minimir.v1
+             * @interface IEntityStatusState
+             * @augments minimir.v1.EntityStatusState.$Properties
+             * @deprecated Use minimir.v1.EntityStatusState.$Properties instead.
+             */
+
+            /**
+             * Shape of an EntityStatusState.
+             * @typedef {minimir.v1.EntityStatusState.$Properties} minimir.v1.EntityStatusState.$Shape
+             */
+
+            /**
+             * Constructs a new EntityStatusState.
+             * @memberof minimir.v1
+             * @classdesc Represents an EntityStatusState.
+             * @constructor
+             * @param {minimir.v1.EntityStatusState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EntityStatusState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EntityStatusState status_id.
+             * @member {number} status_id
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.status_id = 0;
+
+            /**
+             * EntityStatusState source_skill_id.
+             * @member {number} source_skill_id
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.source_skill_id = 0;
+
+            /**
+             * EntityStatusState skill_level.
+             * @member {number} skill_level
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.skill_level = 0;
+
+            /**
+             * EntityStatusState remaining_ms.
+             * @member {number} remaining_ms
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.remaining_ms = 0;
+
+            /**
+             * EntityStatusState max_physical_defence_bonus.
+             * @member {Long} max_physical_defence_bonus
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.max_physical_defence_bonus = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * EntityStatusState max_magic_defence_bonus.
+             * @member {Long} max_magic_defence_bonus
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.max_magic_defence_bonus = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * EntityStatusState damage_reduction_percent.
+             * @member {number} damage_reduction_percent
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.damage_reduction_percent = 0;
+
+            /**
+             * EntityStatusState caster_handle.
+             * @member {number} caster_handle
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.caster_handle = 0;
+
+            /**
+             * EntityStatusState caster_life.
+             * @member {Long} caster_life
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new EntityStatusState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {minimir.v1.EntityStatusState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EntityStatusState} EntityStatusState instance
+             * @type {{
+             *   (properties: minimir.v1.EntityStatusState.$Shape): minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape;
+             *   (properties?: minimir.v1.EntityStatusState.$Properties): minimir.v1.EntityStatusState;
+             * }}
+             */
+            EntityStatusState.create = function(properties) {
+                return new EntityStatusState(properties);
+            };
+
+            /**
+             * Encodes the specified EntityStatusState message. Does not implicitly {@link minimir.v1.EntityStatusState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {minimir.v1.EntityStatusState.$Properties} message EntityStatusState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EntityStatusState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.status_id != null && $Object.hasOwnProperty.call(message, "status_id") && message.status_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.status_id);
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id") && message.source_skill_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.source_skill_id);
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level") && message.skill_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.skill_level);
+                if (message.remaining_ms != null && $Object.hasOwnProperty.call(message, "remaining_ms") && message.remaining_ms !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.remaining_ms);
+                if (message.max_physical_defence_bonus != null && $Object.hasOwnProperty.call(message, "max_physical_defence_bonus") && (typeof message.max_physical_defence_bonus === "object" ? message.max_physical_defence_bonus.low || message.max_physical_defence_bonus.high : message.max_physical_defence_bonus !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.max_physical_defence_bonus);
+                if (message.max_magic_defence_bonus != null && $Object.hasOwnProperty.call(message, "max_magic_defence_bonus") && (typeof message.max_magic_defence_bonus === "object" ? message.max_magic_defence_bonus.low || message.max_magic_defence_bonus.high : message.max_magic_defence_bonus !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.max_magic_defence_bonus);
+                if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent") && message.damage_reduction_percent !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.damage_reduction_percent);
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle") && message.caster_handle !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.caster_handle);
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.caster_life);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EntityStatusState message, length delimited. Does not implicitly {@link minimir.v1.EntityStatusState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {minimir.v1.EntityStatusState.$Properties} message EntityStatusState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EntityStatusState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EntityStatusState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape} EntityStatusState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EntityStatusState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EntityStatusState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.status_id = value;
+                            else
+                                delete message.status_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.source_skill_id = value;
+                            else
+                                delete message.source_skill_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_level = value;
+                            else
+                                delete message.skill_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.remaining_ms = value;
+                            else
+                                delete message.remaining_ms;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_physical_defence_bonus = value;
+                            else
+                                delete message.max_physical_defence_bonus;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_magic_defence_bonus = value;
+                            else
+                                delete message.max_magic_defence_bonus;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.damage_reduction_percent = value;
+                            else
+                                delete message.damage_reduction_percent;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.caster_handle = value;
+                            else
+                                delete message.caster_handle;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.caster_life = value;
+                            else
+                                delete message.caster_life;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EntityStatusState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape} EntityStatusState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EntityStatusState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EntityStatusState message.
+             * @function verify
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EntityStatusState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.status_id != null && $Object.hasOwnProperty.call(message, "status_id"))
+                    if (!$util.isInteger(message.status_id))
+                        return "status_id: integer expected";
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id"))
+                    if (!$util.isInteger(message.source_skill_id))
+                        return "source_skill_id: integer expected";
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level"))
+                    if (!$util.isInteger(message.skill_level))
+                        return "skill_level: integer expected";
+                if (message.remaining_ms != null && $Object.hasOwnProperty.call(message, "remaining_ms"))
+                    if (!$util.isInteger(message.remaining_ms))
+                        return "remaining_ms: integer expected";
+                if (message.max_physical_defence_bonus != null && $Object.hasOwnProperty.call(message, "max_physical_defence_bonus"))
+                    if (!$util.isInteger(message.max_physical_defence_bonus) && !(message.max_physical_defence_bonus && $util.isInteger(message.max_physical_defence_bonus.low) && $util.isInteger(message.max_physical_defence_bonus.high)))
+                        return "max_physical_defence_bonus: integer|Long expected";
+                if (message.max_magic_defence_bonus != null && $Object.hasOwnProperty.call(message, "max_magic_defence_bonus"))
+                    if (!$util.isInteger(message.max_magic_defence_bonus) && !(message.max_magic_defence_bonus && $util.isInteger(message.max_magic_defence_bonus.low) && $util.isInteger(message.max_magic_defence_bonus.high)))
+                        return "max_magic_defence_bonus: integer|Long expected";
+                if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent"))
+                    if (!$util.isInteger(message.damage_reduction_percent))
+                        return "damage_reduction_percent: integer expected";
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle"))
+                    if (!$util.isInteger(message.caster_handle))
+                        return "caster_handle: integer expected";
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
+                    if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
+                        return "caster_life: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EntityStatusState
+             * @function getTypeUrl
+             * @memberof minimir.v1.EntityStatusState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EntityStatusState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EntityStatusState";
+            };
+
+            return EntityStatusState;
+        })();
+
+        v1.CombatAttributes = (function() {
+
+            /**
+             * Properties of a CombatAttributes.
+             * @typedef {Object} minimir.v1.CombatAttributes.$Properties
+             * @property {Long|null} [physical_attack_min] CombatAttributes physical_attack_min
+             * @property {Long|null} [physical_attack_max] CombatAttributes physical_attack_max
+             * @property {Long|null} [physical_defence_min] CombatAttributes physical_defence_min
+             * @property {Long|null} [physical_defence_max] CombatAttributes physical_defence_max
+             * @property {Long|null} [magic_defence_min] CombatAttributes magic_defence_min
+             * @property {Long|null} [magic_defence_max] CombatAttributes magic_defence_max
+             * @property {Long|null} [magic_attack_min] CombatAttributes magic_attack_min
+             * @property {Long|null} [magic_attack_max] CombatAttributes magic_attack_max
+             * @property {Long|null} [spirit_attack_min] CombatAttributes spirit_attack_min
+             * @property {Long|null} [spirit_attack_max] CombatAttributes spirit_attack_max
+             * @property {Long|null} [accuracy] CombatAttributes accuracy
+             * @property {Long|null} [agility] CombatAttributes agility
+             * @property {number|null} [damage_reduction_percent] CombatAttributes damage_reduction_percent
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CombatAttributes.
+             * @memberof minimir.v1
+             * @interface ICombatAttributes
+             * @augments minimir.v1.CombatAttributes.$Properties
+             * @deprecated Use minimir.v1.CombatAttributes.$Properties instead.
+             */
+
+            /**
+             * Shape of a CombatAttributes.
+             * @typedef {minimir.v1.CombatAttributes.$Properties} minimir.v1.CombatAttributes.$Shape
+             */
+
+            /**
+             * Constructs a new CombatAttributes.
+             * @memberof minimir.v1
+             * @classdesc Represents a CombatAttributes.
+             * @constructor
+             * @param {minimir.v1.CombatAttributes.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var CombatAttributes = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CombatAttributes physical_attack_min.
+             * @member {Long} physical_attack_min
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.physical_attack_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes physical_attack_max.
+             * @member {Long} physical_attack_max
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.physical_attack_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes physical_defence_min.
+             * @member {Long} physical_defence_min
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.physical_defence_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes physical_defence_max.
+             * @member {Long} physical_defence_max
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.physical_defence_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes magic_defence_min.
+             * @member {Long} magic_defence_min
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.magic_defence_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes magic_defence_max.
+             * @member {Long} magic_defence_max
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.magic_defence_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes magic_attack_min.
+             * @member {Long} magic_attack_min
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.magic_attack_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes magic_attack_max.
+             * @member {Long} magic_attack_max
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.magic_attack_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes spirit_attack_min.
+             * @member {Long} spirit_attack_min
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.spirit_attack_min = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes spirit_attack_max.
+             * @member {Long} spirit_attack_max
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.spirit_attack_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes accuracy.
+             * @member {Long} accuracy
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.accuracy = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes agility.
+             * @member {Long} agility
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.agility = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatAttributes damage_reduction_percent.
+             * @member {number} damage_reduction_percent
+             * @memberof minimir.v1.CombatAttributes
+             * @instance
+             */
+            CombatAttributes.prototype.damage_reduction_percent = 0;
+
+            /**
+             * Creates a new CombatAttributes instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {minimir.v1.CombatAttributes.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.CombatAttributes} CombatAttributes instance
+             * @type {{
+             *   (properties: minimir.v1.CombatAttributes.$Shape): minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape;
+             *   (properties?: minimir.v1.CombatAttributes.$Properties): minimir.v1.CombatAttributes;
+             * }}
+             */
+            CombatAttributes.create = function(properties) {
+                return new CombatAttributes(properties);
+            };
+
+            /**
+             * Encodes the specified CombatAttributes message. Does not implicitly {@link minimir.v1.CombatAttributes.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {minimir.v1.CombatAttributes.$Properties} message CombatAttributes message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CombatAttributes.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.physical_attack_min != null && $Object.hasOwnProperty.call(message, "physical_attack_min") && (typeof message.physical_attack_min === "object" ? message.physical_attack_min.low || message.physical_attack_min.high : message.physical_attack_min !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int64(message.physical_attack_min);
+                if (message.physical_attack_max != null && $Object.hasOwnProperty.call(message, "physical_attack_max") && (typeof message.physical_attack_max === "object" ? message.physical_attack_max.low || message.physical_attack_max.high : message.physical_attack_max !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.physical_attack_max);
+                if (message.physical_defence_min != null && $Object.hasOwnProperty.call(message, "physical_defence_min") && (typeof message.physical_defence_min === "object" ? message.physical_defence_min.low || message.physical_defence_min.high : message.physical_defence_min !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.physical_defence_min);
+                if (message.physical_defence_max != null && $Object.hasOwnProperty.call(message, "physical_defence_max") && (typeof message.physical_defence_max === "object" ? message.physical_defence_max.low || message.physical_defence_max.high : message.physical_defence_max !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.physical_defence_max);
+                if (message.magic_defence_min != null && $Object.hasOwnProperty.call(message, "magic_defence_min") && (typeof message.magic_defence_min === "object" ? message.magic_defence_min.low || message.magic_defence_min.high : message.magic_defence_min !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.magic_defence_min);
+                if (message.magic_defence_max != null && $Object.hasOwnProperty.call(message, "magic_defence_max") && (typeof message.magic_defence_max === "object" ? message.magic_defence_max.low || message.magic_defence_max.high : message.magic_defence_max !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.magic_defence_max);
+                if (message.magic_attack_min != null && $Object.hasOwnProperty.call(message, "magic_attack_min") && (typeof message.magic_attack_min === "object" ? message.magic_attack_min.low || message.magic_attack_min.high : message.magic_attack_min !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.magic_attack_min);
+                if (message.magic_attack_max != null && $Object.hasOwnProperty.call(message, "magic_attack_max") && (typeof message.magic_attack_max === "object" ? message.magic_attack_max.low || message.magic_attack_max.high : message.magic_attack_max !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.magic_attack_max);
+                if (message.spirit_attack_min != null && $Object.hasOwnProperty.call(message, "spirit_attack_min") && (typeof message.spirit_attack_min === "object" ? message.spirit_attack_min.low || message.spirit_attack_min.high : message.spirit_attack_min !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.spirit_attack_min);
+                if (message.spirit_attack_max != null && $Object.hasOwnProperty.call(message, "spirit_attack_max") && (typeof message.spirit_attack_max === "object" ? message.spirit_attack_max.low || message.spirit_attack_max.high : message.spirit_attack_max !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.spirit_attack_max);
+                if (message.accuracy != null && $Object.hasOwnProperty.call(message, "accuracy") && (typeof message.accuracy === "object" ? message.accuracy.low || message.accuracy.high : message.accuracy !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.accuracy);
+                if (message.agility != null && $Object.hasOwnProperty.call(message, "agility") && (typeof message.agility === "object" ? message.agility.low || message.agility.high : message.agility !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.agility);
+                if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent") && message.damage_reduction_percent !== 0)
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.damage_reduction_percent);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CombatAttributes message, length delimited. Does not implicitly {@link minimir.v1.CombatAttributes.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {minimir.v1.CombatAttributes.$Properties} message CombatAttributes message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CombatAttributes.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CombatAttributes message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape} CombatAttributes
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CombatAttributes.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.CombatAttributes();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.physical_attack_min = value;
+                            else
+                                delete message.physical_attack_min;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.physical_attack_max = value;
+                            else
+                                delete message.physical_attack_max;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.physical_defence_min = value;
+                            else
+                                delete message.physical_defence_min;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.physical_defence_max = value;
+                            else
+                                delete message.physical_defence_max;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.magic_defence_min = value;
+                            else
+                                delete message.magic_defence_min;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.magic_defence_max = value;
+                            else
+                                delete message.magic_defence_max;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.magic_attack_min = value;
+                            else
+                                delete message.magic_attack_min;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.magic_attack_max = value;
+                            else
+                                delete message.magic_attack_max;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.spirit_attack_min = value;
+                            else
+                                delete message.spirit_attack_min;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.spirit_attack_max = value;
+                            else
+                                delete message.spirit_attack_max;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.accuracy = value;
+                            else
+                                delete message.accuracy;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.agility = value;
+                            else
+                                delete message.agility;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.damage_reduction_percent = value;
+                            else
+                                delete message.damage_reduction_percent;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CombatAttributes message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape} CombatAttributes
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CombatAttributes.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a CombatAttributes message.
+             * @function verify
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CombatAttributes.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.physical_attack_min != null && $Object.hasOwnProperty.call(message, "physical_attack_min"))
+                    if (!$util.isInteger(message.physical_attack_min) && !(message.physical_attack_min && $util.isInteger(message.physical_attack_min.low) && $util.isInteger(message.physical_attack_min.high)))
+                        return "physical_attack_min: integer|Long expected";
+                if (message.physical_attack_max != null && $Object.hasOwnProperty.call(message, "physical_attack_max"))
+                    if (!$util.isInteger(message.physical_attack_max) && !(message.physical_attack_max && $util.isInteger(message.physical_attack_max.low) && $util.isInteger(message.physical_attack_max.high)))
+                        return "physical_attack_max: integer|Long expected";
+                if (message.physical_defence_min != null && $Object.hasOwnProperty.call(message, "physical_defence_min"))
+                    if (!$util.isInteger(message.physical_defence_min) && !(message.physical_defence_min && $util.isInteger(message.physical_defence_min.low) && $util.isInteger(message.physical_defence_min.high)))
+                        return "physical_defence_min: integer|Long expected";
+                if (message.physical_defence_max != null && $Object.hasOwnProperty.call(message, "physical_defence_max"))
+                    if (!$util.isInteger(message.physical_defence_max) && !(message.physical_defence_max && $util.isInteger(message.physical_defence_max.low) && $util.isInteger(message.physical_defence_max.high)))
+                        return "physical_defence_max: integer|Long expected";
+                if (message.magic_defence_min != null && $Object.hasOwnProperty.call(message, "magic_defence_min"))
+                    if (!$util.isInteger(message.magic_defence_min) && !(message.magic_defence_min && $util.isInteger(message.magic_defence_min.low) && $util.isInteger(message.magic_defence_min.high)))
+                        return "magic_defence_min: integer|Long expected";
+                if (message.magic_defence_max != null && $Object.hasOwnProperty.call(message, "magic_defence_max"))
+                    if (!$util.isInteger(message.magic_defence_max) && !(message.magic_defence_max && $util.isInteger(message.magic_defence_max.low) && $util.isInteger(message.magic_defence_max.high)))
+                        return "magic_defence_max: integer|Long expected";
+                if (message.magic_attack_min != null && $Object.hasOwnProperty.call(message, "magic_attack_min"))
+                    if (!$util.isInteger(message.magic_attack_min) && !(message.magic_attack_min && $util.isInteger(message.magic_attack_min.low) && $util.isInteger(message.magic_attack_min.high)))
+                        return "magic_attack_min: integer|Long expected";
+                if (message.magic_attack_max != null && $Object.hasOwnProperty.call(message, "magic_attack_max"))
+                    if (!$util.isInteger(message.magic_attack_max) && !(message.magic_attack_max && $util.isInteger(message.magic_attack_max.low) && $util.isInteger(message.magic_attack_max.high)))
+                        return "magic_attack_max: integer|Long expected";
+                if (message.spirit_attack_min != null && $Object.hasOwnProperty.call(message, "spirit_attack_min"))
+                    if (!$util.isInteger(message.spirit_attack_min) && !(message.spirit_attack_min && $util.isInteger(message.spirit_attack_min.low) && $util.isInteger(message.spirit_attack_min.high)))
+                        return "spirit_attack_min: integer|Long expected";
+                if (message.spirit_attack_max != null && $Object.hasOwnProperty.call(message, "spirit_attack_max"))
+                    if (!$util.isInteger(message.spirit_attack_max) && !(message.spirit_attack_max && $util.isInteger(message.spirit_attack_max.low) && $util.isInteger(message.spirit_attack_max.high)))
+                        return "spirit_attack_max: integer|Long expected";
+                if (message.accuracy != null && $Object.hasOwnProperty.call(message, "accuracy"))
+                    if (!$util.isInteger(message.accuracy) && !(message.accuracy && $util.isInteger(message.accuracy.low) && $util.isInteger(message.accuracy.high)))
+                        return "accuracy: integer|Long expected";
+                if (message.agility != null && $Object.hasOwnProperty.call(message, "agility"))
+                    if (!$util.isInteger(message.agility) && !(message.agility && $util.isInteger(message.agility.low) && $util.isInteger(message.agility.high)))
+                        return "agility: integer|Long expected";
+                if (message.damage_reduction_percent != null && $Object.hasOwnProperty.call(message, "damage_reduction_percent"))
+                    if (!$util.isInteger(message.damage_reduction_percent))
+                        return "damage_reduction_percent: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for CombatAttributes
+             * @function getTypeUrl
+             * @memberof minimir.v1.CombatAttributes
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CombatAttributes.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.CombatAttributes";
+            };
+
+            return CombatAttributes;
         })();
 
         v1.SceneBaselineChunk = (function() {
@@ -13597,6 +14541,711 @@ $root.minimir = (function() {
             };
 
             return LearnSkillRequest;
+        })();
+
+        v1.SetCastingSupplyRequest = (function() {
+
+            /**
+             * Properties of a SetCastingSupplyRequest.
+             * @typedef {Object} minimir.v1.SetCastingSupplyRequest.$Properties
+             * @property {Uint8Array|null} [item_instance_id] SetCastingSupplyRequest item_instance_id
+             * @property {Long|null} [item_version] SetCastingSupplyRequest item_version
+             * @property {boolean|null} [unequip] SetCastingSupplyRequest unequip
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetCastingSupplyRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetCastingSupplyRequest.
+             * @memberof minimir.v1
+             * @interface ISetCastingSupplyRequest
+             * @augments minimir.v1.SetCastingSupplyRequest.$Properties
+             * @deprecated Use minimir.v1.SetCastingSupplyRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetCastingSupplyRequest.
+             * @typedef {minimir.v1.SetCastingSupplyRequest.$Properties} minimir.v1.SetCastingSupplyRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SetCastingSupplyRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SetCastingSupplyRequest.
+             * @constructor
+             * @param {minimir.v1.SetCastingSupplyRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SetCastingSupplyRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetCastingSupplyRequest item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @instance
+             */
+            SetCastingSupplyRequest.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * SetCastingSupplyRequest item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @instance
+             */
+            SetCastingSupplyRequest.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SetCastingSupplyRequest unequip.
+             * @member {boolean} unequip
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @instance
+             */
+            SetCastingSupplyRequest.prototype.unequip = false;
+
+            /**
+             * SetCastingSupplyRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @instance
+             */
+            SetCastingSupplyRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SetCastingSupplyRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {minimir.v1.SetCastingSupplyRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SetCastingSupplyRequest} SetCastingSupplyRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SetCastingSupplyRequest.$Shape): minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape;
+             *   (properties?: minimir.v1.SetCastingSupplyRequest.$Properties): minimir.v1.SetCastingSupplyRequest;
+             * }}
+             */
+            SetCastingSupplyRequest.create = function(properties) {
+                return new SetCastingSupplyRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SetCastingSupplyRequest message. Does not implicitly {@link minimir.v1.SetCastingSupplyRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {minimir.v1.SetCastingSupplyRequest.$Properties} message SetCastingSupplyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetCastingSupplyRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.item_instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.item_version);
+                if (message.unequip != null && $Object.hasOwnProperty.call(message, "unequip") && message.unequip !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.unequip);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetCastingSupplyRequest message, length delimited. Does not implicitly {@link minimir.v1.SetCastingSupplyRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {minimir.v1.SetCastingSupplyRequest.$Properties} message SetCastingSupplyRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetCastingSupplyRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetCastingSupplyRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape} SetCastingSupplyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetCastingSupplyRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SetCastingSupplyRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.unequip = value;
+                            else
+                                delete message.unequip;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetCastingSupplyRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape} SetCastingSupplyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetCastingSupplyRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SetCastingSupplyRequest message.
+             * @function verify
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetCastingSupplyRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.unequip != null && $Object.hasOwnProperty.call(message, "unequip"))
+                    if (typeof message.unequip !== "boolean")
+                        return "unequip: boolean expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SetCastingSupplyRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SetCastingSupplyRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetCastingSupplyRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SetCastingSupplyRequest";
+            };
+
+            return SetCastingSupplyRequest;
+        })();
+
+        v1.CastWithMaterialRequest = (function() {
+
+            /**
+             * Properties of a CastWithMaterialRequest.
+             * @typedef {Object} minimir.v1.CastWithMaterialRequest.$Properties
+             * @property {Long|null} [scene_epoch] CastWithMaterialRequest scene_epoch
+             * @property {number|null} [input_sequence] CastWithMaterialRequest input_sequence
+             * @property {number|null} [skill_id] CastWithMaterialRequest skill_id
+             * @property {number|null} [target_handle] CastWithMaterialRequest target_handle
+             * @property {minimir.v1.GridPoint.$Properties|null} [target_grid] CastWithMaterialRequest target_grid
+             * @property {number|null} [direction] CastWithMaterialRequest direction
+             * @property {Uint8Array|null} [material_instance_id] CastWithMaterialRequest material_instance_id
+             * @property {Long|null} [material_version] CastWithMaterialRequest material_version
+             * @property {Long|null} [caster_life] CastWithMaterialRequest caster_life
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] CastWithMaterialRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CastWithMaterialRequest.
+             * @memberof minimir.v1
+             * @interface ICastWithMaterialRequest
+             * @augments minimir.v1.CastWithMaterialRequest.$Properties
+             * @deprecated Use minimir.v1.CastWithMaterialRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a CastWithMaterialRequest.
+             * @typedef {minimir.v1.CastWithMaterialRequest.$Properties} minimir.v1.CastWithMaterialRequest.$Shape
+             */
+
+            /**
+             * Constructs a new CastWithMaterialRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a CastWithMaterialRequest.
+             * @constructor
+             * @param {minimir.v1.CastWithMaterialRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var CastWithMaterialRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CastWithMaterialRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastWithMaterialRequest input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.input_sequence = 0;
+
+            /**
+             * CastWithMaterialRequest skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.skill_id = 0;
+
+            /**
+             * CastWithMaterialRequest target_handle.
+             * @member {number} target_handle
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.target_handle = 0;
+
+            /**
+             * CastWithMaterialRequest target_grid.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} target_grid
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.target_grid = null;
+
+            /**
+             * CastWithMaterialRequest direction.
+             * @member {number} direction
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.direction = 0;
+
+            /**
+             * CastWithMaterialRequest material_instance_id.
+             * @member {Uint8Array} material_instance_id
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.material_instance_id = $util.newBuffer([]);
+
+            /**
+             * CastWithMaterialRequest material_version.
+             * @member {Long} material_version
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.material_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastWithMaterialRequest caster_life.
+             * @member {Long} caster_life
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastWithMaterialRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @instance
+             */
+            CastWithMaterialRequest.prototype.operation = null;
+
+            /**
+             * Creates a new CastWithMaterialRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {minimir.v1.CastWithMaterialRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.CastWithMaterialRequest} CastWithMaterialRequest instance
+             * @type {{
+             *   (properties: minimir.v1.CastWithMaterialRequest.$Shape): minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape;
+             *   (properties?: minimir.v1.CastWithMaterialRequest.$Properties): minimir.v1.CastWithMaterialRequest;
+             * }}
+             */
+            CastWithMaterialRequest.create = function(properties) {
+                return new CastWithMaterialRequest(properties);
+            };
+
+            /**
+             * Encodes the specified CastWithMaterialRequest message. Does not implicitly {@link minimir.v1.CastWithMaterialRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {minimir.v1.CastWithMaterialRequest.$Properties} message CastWithMaterialRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CastWithMaterialRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.input_sequence);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.skill_id);
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle") && message.target_handle !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.target_handle);
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid"))
+                    $root.minimir.v1.GridPoint.encode(message.target_grid, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction") && message.direction !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.direction);
+                if (message.material_instance_id != null && $Object.hasOwnProperty.call(message, "material_instance_id") && message.material_instance_id.length)
+                    writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.material_instance_id);
+                if (message.material_version != null && $Object.hasOwnProperty.call(message, "material_version") && (typeof message.material_version === "object" ? message.material_version.low || message.material_version.high : message.material_version !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.material_version);
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.caster_life);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CastWithMaterialRequest message, length delimited. Does not implicitly {@link minimir.v1.CastWithMaterialRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {minimir.v1.CastWithMaterialRequest.$Properties} message CastWithMaterialRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CastWithMaterialRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CastWithMaterialRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape} CastWithMaterialRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CastWithMaterialRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.CastWithMaterialRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_handle = value;
+                            else
+                                delete message.target_handle;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.target_grid = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.target_grid);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.direction = value;
+                            else
+                                delete message.direction;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.material_instance_id = value;
+                            else
+                                delete message.material_instance_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.material_version = value;
+                            else
+                                delete message.material_version;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.caster_life = value;
+                            else
+                                delete message.caster_life;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CastWithMaterialRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape} CastWithMaterialRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CastWithMaterialRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a CastWithMaterialRequest message.
+             * @function verify
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CastWithMaterialRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle"))
+                    if (!$util.isInteger(message.target_handle))
+                        return "target_handle: integer expected";
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.target_grid, _depth + 1);
+                    if (error)
+                        return "target_grid." + error;
+                }
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction"))
+                    if (!$util.isInteger(message.direction))
+                        return "direction: integer expected";
+                if (message.material_instance_id != null && $Object.hasOwnProperty.call(message, "material_instance_id"))
+                    if (!(message.material_instance_id && typeof message.material_instance_id.length === "number" || $util.isString(message.material_instance_id)))
+                        return "material_instance_id: buffer expected";
+                if (message.material_version != null && $Object.hasOwnProperty.call(message, "material_version"))
+                    if (!$util.isInteger(message.material_version) && !(message.material_version && $util.isInteger(message.material_version.low) && $util.isInteger(message.material_version.high)))
+                        return "material_version: integer|Long expected";
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
+                    if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
+                        return "caster_life: integer|Long expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for CastWithMaterialRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.CastWithMaterialRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CastWithMaterialRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.CastWithMaterialRequest";
+            };
+
+            return CastWithMaterialRequest;
         })();
 
         v1.ItemConsumption = (function() {

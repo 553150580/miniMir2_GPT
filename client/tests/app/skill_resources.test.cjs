@@ -23,7 +23,7 @@ test('雷电巨大原始纵向帧保留997像素与WIL偏移，动作与旧资�
 });
 test('实际public投影的主动技能均有同kind完整资源，被动精神力读取独立准确阶表',()=>{
     const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
-    assert.equal(gameplay.skills.length,16);
+    assert.equal(gameplay.skills.length,19);
     for(const skill of gameplay.skills){
         if(skill.active){assert.equal(manifest.effects[String(skill.id)]?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(manifest.effects[String(skill.id)].hit_anchor,'grid');}
     }
@@ -57,4 +57,23 @@ test('疾光八方向梁、雷光自身单效果、冰咆哮原起手及地表�
     for(const id of [7,9,10,12,24,25,26,33])for(const key of module.exports.effectFrameKeys(manifest.effects[id])){
         const frame=manifest.frames[key],png=fs.readFileSync(path.join(base,frame.png));assert.equal(png.readUInt32BE(16),frame.width);assert.equal(png.readUInt32BE(20),frame.height);assert.equal(frame.png_roundtrip_verified,true);
     }
+});
+
+test('实际三防御技能19项投影与94原WIL帧对齐，常驻盾独立于瞬时施法，护符不冒充强化装备',()=>{
+    const crypto=require('node:crypto'),gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
+    for(const [id,kind,target]of [[14,'soul_shield','friendly_grid'],[15,'blessed_armour','friendly_grid'],[31,'magic_shield','friendly_self']]){
+        const skill=gameplay.skills.find(row=>row.id===id);assert.equal(skill.kind,kind);assert.equal(skill.target_kind,target);assert.equal(skill.activation_kind,'cast');assert.equal(skill.buff_id,id);
+        if(id!==31){assert.equal(skill.area_radius,3);assert.equal(skill.material_item_id,187);assert.equal(skill.material_quantity,1);assert.equal(manifest.effects[id].hit_anchor,'grid');}else{assert.equal(skill.material_item_id,0);assert.equal(skill.material_quantity,0);}
+    }
+    assert.equal(gameplay.statuses.length,3);for(const status of gameplay.statuses){assert(status.name&&status.short_name);assert(Array.from(status.short_name).length*24<=88);assert.equal(status.attribute_effects.value_by_level.length,4);assert.equal(status.duration_rule.seconds_by_level.length,4);}
+    assert.equal(gameplay.casting_supply.slot,100);assert(gameplay.casting_supply.item_ids.includes(187));const item=gameplay.items.find(row=>row.item_id===187);assert.equal(item.kind,'casting_supply');assert.equal(item.equip_slot,100);assert.notEqual(item.is_equipment,true);
+    assert.deepEqual(manifest.effects['31'].cast.frames,Array.from({length:10},(_,i)=>`Magic:${3880+i}`));assert.equal(manifest.effects['31'].cast.duration_ms,600);
+    const persistent=manifest.statuses['31'];assert.deepEqual(persistent.idle.frames,['Magic:3890','Magic:3891','Magic:3892']);assert.deepEqual(persistent.struck.frames,['Magic:3900','Magic:3901','Magic:3902']);assert.equal(persistent.idle.duration_ms,600);assert.equal(persistent.struck.duration_ms,600);
+    const keys=new Set([...manifest.effects['31'].cast.frames,...persistent.idle.frames,...persistent.struck.frames]);
+    for(const [id,start]of [[14,1320],[15,1340]]){const effect=manifest.effects[id];assert.equal(effect.cast,undefined);assert.equal(effect.projectile.frame_ms,30);assert.equal(effect.projectile.directions.length,16);assert.equal(effect.hit.duration_ms,1200);
+        for(let direction=0;direction<16;direction++){const expected=Array.from({length:3},(_,i)=>`Magic:${1160+direction*10+i}`);assert.deepEqual(effect.projectile.directions[direction],expected);expected.forEach(key=>keys.add(key));}
+        assert.deepEqual(effect.hit.frames,Array.from({length:15},(_,i)=>`Magic:${start+i}`));effect.hit.frames.forEach(key=>keys.add(key));assert.equal(manifest.statuses[id],undefined);
+    }
+    assert.equal(keys.size,94);for(const key of keys){const frame=manifest.frames[key];assert(frame&&!frame.declared_empty&&frame.visible_alpha_pixels>0);const image=fs.readFileSync(path.join(base,frame.png));assert.equal(crypto.createHash('sha256').update(image).digest('hex'),frame.png_sha256);assert.equal(image.readUInt32BE(16),frame.width);assert.equal(image.readUInt32BE(20),frame.height);}
+    assert.equal(manifest.frames['Magic:3890'].width,92);assert.equal(manifest.frames['Magic:3890'].height,110);assert.equal(manifest.frames['Magic:3890'].offset_y,-78);
 });

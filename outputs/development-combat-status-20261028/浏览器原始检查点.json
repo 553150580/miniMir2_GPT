@@ -1,0 +1,79 @@
+{
+  "started_at": "2026-10-27T18:05:35.036Z",
+  "finished_at": "2026-10-27T18:28:31.482Z",
+  "shots": [
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/01-小型场边装饰与法师头顶.jpg",
+      "at": "2026-10-27T18:10:33.189Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/02-魔法盾购书报价.jpg",
+      "at": "2026-10-27T18:11:48.640Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/03-魔法盾说明与独立详情.jpg",
+      "at": "2026-10-27T18:13:54.782Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/04-魔法盾生效与权威倒计时.jpg",
+      "at": "2026-10-27T18:14:22.674Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/05-两次施放受理与耗蓝.jpg",
+      "at": "2026-10-27T18:15:26.982Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/06-权威战斗属性与减伤.jpg",
+      "at": "2026-10-27T18:18:13.800Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/07-状态结束后移除徽标与盾壳.jpg",
+      "at": "2026-10-27T18:19:16.877Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/08-状态徽标打开独立详情.jpg",
+      "at": "2026-10-27T18:20:40.751Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/09-健康重入真实资源加载.jpg",
+      "at": "2026-10-27T18:21:41.849Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/10-健康重入未重置HP和MP.jpg",
+      "at": "2026-10-27T18:22:37.790Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/11-道士技能范围与护符说明.jpg",
+      "at": "2026-10-27T18:24:46.531Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/12-未审定护符入口明确关闭.jpg",
+      "at": "2026-10-27T18:24:47.688Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/13-加高窗口只扩大战斗视野并保持导航.jpg",
+      "at": "2026-10-27T18:25:28.325Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/历史尺寸过渡_不作验收/14-宽屏等比地图与四周小物.jpg",
+      "at": "2026-10-27T18:25:59.538Z",
+      "accepted": false,
+      "reason": "尺寸切换后的瞬时过渡帧"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/历史尺寸过渡_不作验收/15-恢复窗口后的开阔战场.jpg",
+      "at": "2026-10-27T18:26:00.353Z",
+      "accepted": false,
+      "reason": "尺寸切换后的瞬时过渡帧"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/14-宽屏等比地图与四周小物.jpg",
+      "at": "2026-10-27T18:27:29.718Z"
+    },
+    {
+      "path": "/Users/srf/Miro2/miniMir2_GPT/outputs/development-combat-status-20261028/15-恢复窗口后的开阔战场.jpg",
+      "at": "2026-10-27T18:28:31.445Z"
+    }
+  ],
+  "viewport_restored": true
+}

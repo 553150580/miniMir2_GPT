@@ -360,6 +360,17 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		afterMin, afterMax := powerBounds(s, p.To)
 		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: s.AccuracyBonus(p.From), BeforeMax: s.AccuracyBonus(p.From), AfterMin: s.AccuracyBonus(p.To), AfterMax: s.AccuracyBonus(p.To)}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}
+		if b, found := f.Buff(s.BuffID); found {
+			comparison := func(key string, before, after int64) *pb.SkillNumericComparison {
+				return &pb.SkillNumericComparison{Key: key, BeforeMin: before, BeforeMax: before, AfterMin: after, AfterMax: after}
+			}
+			out.Stats = []*pb.SkillNumericComparison{comparison("mp_cost", s.MPBaseCost+int64(p.From)*s.MPLevelCost, s.MPBaseCost+int64(p.To)*s.MPLevelCost)}
+			if b.Kind == "magic_shield" {
+				out.Stats = append(out.Stats, comparison("damage_reduction_percent", b.ValueByLevel[p.From], b.ValueByLevel[p.To]), comparison("duration_rank_factor", int64(p.From)+1, int64(p.To)+1))
+			} else {
+				out.Stats = append(out.Stats, comparison("base_duration_seconds", b.DurationSecondsByLevel[p.From], b.DurationSecondsByLevel[p.To]), comparison("material_quantity", s.MaterialQuantity, s.MaterialQuantity))
+			}
+		}
 		if s.Behavior == "slaying" {
 			out.Stats = append(out.Stats, &pb.SkillNumericComparison{Key: "max_attack_bonus", BeforeMin: s.MaximumAttackBonus(p.From), BeforeMax: s.MaximumAttackBonus(p.From), AfterMin: s.MaximumAttackBonus(p.To), AfterMax: s.MaximumAttackBonus(p.To)})
 		}

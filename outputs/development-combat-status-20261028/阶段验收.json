@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "recorded_at_utc": "2026-10-27T18:31:34.433769+00:00",
+  "stage": "战斗状态与三项防御技能开发子集",
+  "status": "限定配置、自动检查、真实Mongo/WS、Creator与本机浏览器范围通过；护符运行入口关闭",
+  "configuration": {
+    "version": "dev-combat-status-v0.9-48873786ee49",
+    "rule_version": 9,
+    "tables": 98,
+    "records": 922,
+    "status_counts": {
+      "candidate": 423,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 70
+    },
+    "required_empty_tables": 24,
+    "release_blockers": 668,
+    "skills": 19,
+    "upgrades": 57,
+    "shop_offers": 21,
+    "book_recycle_rows": 76,
+    "fixture_sha256": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+    "workbook_sha256": "0472e11200410d37ebb4f4ad9f2a7c43644a1690e887882dbda26c3d6339f9b5",
+    "schema_sha256": "fe44ee43fb8e6ad0bed1b787c9dda15fea75c7694aeb2f172a2c5d4f9a13fff6",
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "implementation": {
+    "new_skill_ids": [
+      31,
+      14,
+      15
+    ],
+    "buffs": 3,
+    "casting_supply_enabled": false,
+    "material_item_id": 187,
+    "material_package_units": null,
+    "material_package_price": null,
+    "actor_name_label_font_size": 24,
+    "actor_name_prefab_scale": 0.7,
+    "map_geometry_unchanged": true,
+    "map_size": [
+      17,
+      17
+    ],
+    "small_edge_props": 4,
+    "blocked_cells": 4,
+    "connected_walkable_cells": 285
+  },
+  "checks": {
+    "javascript": {
+      "passed": 223,
+      "scene": 16,
+      "ui_app": 207
+    },
+    "python": {
+      "passed": 33
+    },
+    "protobuf_boundaries": {
+      "passed": 359,
+      "messages": 58,
+      "int64_fields": 108,
+      "message_ids": 46,
+      "error_codes": 31
+    },
+    "go": {
+      "passed_including_subtests": 276,
+      "skipped": 0,
+      "mongo_ws": true,
+      "race": true,
+      "source_files": 71,
+      "source_stable_during_test": true,
+      "current_sources_match": true,
+      "report_sha256": "8a036cb1a74f490f85017db62f2d4810ce99567da3c3929cac820827b4796521"
+    },
+    "csharp_source_formula": {
+      "vectors": 586,
+      "sdk": "10.0.403",
+      "scope": "逐字公式/表达式由.NET独立执行；最小索引器和确定性SC桩；不覆盖完整PRNG、完整伤害分支、对象调度或目标1.80认证"
+    },
+    "resources": {
+      "total_png": 3008,
+      "preserved_png_and_full_metadata": 2914,
+      "new_original_frames": 94,
+      "manifest_sha256": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a",
+      "map_sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+    }
+  },
+  "creator": {
+    "creator": "3.8.8",
+    "platform": "web-mobile",
+    "success": true,
+    "seconds": 187.1,
+    "exit_code": 36,
+    "assets": 10,
+    "layouts_preserved": true,
+    "source_stable": true,
+    "current_sources_match": true,
+    "first_build": "CLI exit36但新增Badge末尾LF/导入meta规范化触发保护失败，原始报告保留；确认原字节和语义后重新冻结，第二次稳定通过"
+  },
+  "browser": {
+    "report": "outputs/development-combat-status-20261028/本机浏览器验收.json",
+    "accepted_screenshots": 15,
+    "excluded_transition_screenshots": 2,
+    "input_records": 188,
+    "render_records": 6,
+    "warn_or_error": 0,
+    "viewport_restored": true,
+    "observed_runtime_new_skill_ids": [
+      31
+    ],
+    "material_player_flow_verified": false
+  },
+  "limits": [
+    "14/15实际材料入口关闭，购符包数量与报价待定；正向事务和效果仅隔离测试验证",
+    "真实Mongo未知提交故障未注入；Pending同job/同随机计划回调只作单元回归",
+    "独立.NET仅提取公式子集，不证明完整PRNG或源对象调度",
+    "源94帧转换通过不表示14/15本机正向表现已验收",
+    "QA等级与钱包预置不证明自然获取、经济平衡或正式成长",
+    "完整P0、目标1.80认证、手机真机、容量、正式部署与全故障尚未完成"
+  ],
+  "evidence_directory": "outputs/development-combat-status-20261028"
+}

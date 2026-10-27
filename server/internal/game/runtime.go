@@ -82,51 +82,55 @@ type entity struct {
 	Life             uint64
 	HealAmount       int64
 	NextHeal         time.Time
+	Statuses         map[uint32]*combatStatus
 }
 type room struct {
-	Role               domain.Role
-	Auth               persistence.Auth
-	Conn               Connection
-	Ready              bool
-	Scene              uint64
-	Baseline           uint64
-	Sequence           uint64
-	Player             entity
-	Pet                *entity
-	Monsters           []*entity
-	MonsterCount       int
-	Auto               bool
-	Manual             bool
-	ManualDirection    uint32
-	Destination        *devconfig.Point
-	Pending            bool
-	PendingRetry       *job
-	RetryAt            time.Time
-	Waiting            []command
-	LastTick           time.Time
-	HostMS             int64
-	HostSession        string
-	DeathID            string
-	AwaitUntil         time.Time
-	LastBroadcast      time.Time
-	Loot               []*entity
-	LootUntil          time.Time
-	Potions            potionState
-	PendingOperationID string
-	PendingFingerprint string
-	InputSequence      uint32
-	NextSpell          time.Time
-	SkillCooldowns     map[uint32]time.Time
-	Casts              []pendingCast
-	CastID             uint64
-	Attacks            []pendingAttack
-	EventID            uint64
-	ScheduleID         uint64
-	KillFacts          []killFact
-	PreviewInFlight    bool
-	PreviewGeneration  uint64
-	Isolated           bool
-	Melee              meleeState
+	Role                domain.Role
+	Auth                persistence.Auth
+	Conn                Connection
+	Ready               bool
+	Scene               uint64
+	Baseline            uint64
+	Sequence            uint64
+	Player              entity
+	Pet                 *entity
+	Monsters            []*entity
+	MonsterCount        int
+	Auto                bool
+	Manual              bool
+	ManualDirection     uint32
+	Destination         *devconfig.Point
+	Pending             bool
+	PendingRetry        *job
+	RetryAt             time.Time
+	Waiting             []command
+	LastTick            time.Time
+	HostMS              int64
+	HostSession         string
+	DeathID             string
+	AwaitUntil          time.Time
+	LastBroadcast       time.Time
+	Loot                []*entity
+	LootUntil           time.Time
+	Potions             potionState
+	PendingOperationID  string
+	PendingFingerprint  string
+	InputSequence       uint32
+	NextSpell           time.Time
+	SkillCooldowns      map[uint32]time.Time
+	Casts               []pendingCast
+	CastID              uint64
+	Attacks             []pendingAttack
+	EventID             uint64
+	ScheduleID          uint64
+	KillFacts           []killFact
+	PreviewInFlight     bool
+	PreviewGeneration   uint64
+	Isolated            bool
+	MaterialEconomicSeq int64
+	MaterialSourceSeq   int64
+	MaterialGeneration  uint64
+	Melee               meleeState
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -386,7 +390,7 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
-	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill || c.frame.ID == p.MsgC2SSkillAssetCommit) && r.Pending {
+	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill || c.frame.ID == p.MsgC2SSkillAssetCommit || c.frame.ID == p.MsgC2SCastWithMaterial || c.frame.ID == p.MsgC2SSetCastingSupply) && r.Pending {
 		w.queuePotion(r, c)
 		return
 	}
@@ -419,6 +423,8 @@ func (w *worker) command(c command) {
 		if code := w.attackFacing(r, q.Direction, q.SkillId, q.InputSequence, time.Now()); code != 0 {
 			w.failure(r, c.frame, code)
 		}
+	case p.MsgC2SCastWithMaterial:
+		w.materialCast(r, c.frame)
 	case p.MsgC2SSkillAssetPreview:
 		w.skillAssetPreview(r, c.frame)
 	case p.MsgC2SMoveIntent:
@@ -487,7 +493,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -561,6 +567,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.Role = role
 	r.Potions.LastAppliedSeq = role.EconomicSeq
+	r.MaterialEconomicSeq, r.MaterialSourceSeq = role.EconomicSeq, role.SourceSeq
 	r.Auto = true
 	r.MonsterCount = 1
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
@@ -585,6 +592,13 @@ func (w *worker) after(r *room) {
 
 func (w *worker) revivePlayer(r *room) {
 	r.Player.Life++
+	for id, status := range r.Player.Statuses {
+		if status.RemoveOnDeath {
+			delete(r.Player.Statuses, id)
+		} else {
+			status.TargetLife = r.Player.Life
+		}
+	}
 	// 生命代次切换必须同时推进模式观察版本；同连接客户端不能被旧revision永久挡住。
 	r.Melee.Revision++
 	r.Player.HP = r.Player.MaxHP
@@ -650,12 +664,14 @@ func (w *worker) baseline(r *room) {
 	for _, e := range entities {
 		moveMS := uint32(0)
 		attackMS := uint32(0)
+		var attributes *pb.CombatAttributes
 		if e.Kind >= 1 && e.Kind <= 3 {
 			stats := w.fighter(r, e)
 			moveMS = uint32(stats.MoveMS)
 			attackMS = uint32(stats.AttackMS)
+			attributes = w.combatAttributesPB(r, e)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes})
 	}
 	w.send(r, p.MsgS2CSceneBaseline, 0, out)
 }
@@ -664,6 +680,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	reviveID := ""
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SSetCastingSupply:
+		var x pb.SetCastingSupplyRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.ItemID, q.ItemVersion, q.Unequip = "set_casting_supply", x.Operation, domain.Hex(x.ItemInstanceId), x.ItemVersion, x.Unequip
 	case p.MsgC2SSkillAssetCommit:
 		var x pb.SkillAssetCommitRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.PreviewId) != 16 {
@@ -785,6 +808,10 @@ func (w *worker) asset(r *room, f wire.Frame) {
 				w.applyPotionReceipt(r, receipt, time.Now())
 			}
 			w.send(r, p.MsgS2COperationResult, f.Request, result)
+			if q.Kind == "set_casting_supply" && err != nil && r.Auth == auth && hardAuthorityFailure(persistence.Code(err)) {
+				w.isolateRoom(r)
+				return
+			}
 			w.assets(r)
 			w.snapshot(r)
 			if revived {
@@ -801,7 +828,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial:
 		return true
 	}
 	return false
@@ -809,6 +836,16 @@ func economic(id uint16) bool {
 func operationContext(f wire.Frame) *pb.OperationContext {
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SCastWithMaterial:
+		q := &pb.CastWithMaterialRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
+	case p.MsgC2SSetCastingSupply:
+		q := &pb.SetCastingSupplyRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SSkillAssetCommit:
 		q := &pb.SkillAssetCommitRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {

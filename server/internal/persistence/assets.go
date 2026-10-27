@@ -29,6 +29,11 @@ type AssetRequest struct {
 	PotionGateCode   uint32
 	SkillID          uint32
 	PreviewID        string
+	ItemVersion      uint64
+	CasterLife       uint64
+	CastGateCode     uint32
+	Unequip          bool
+	SourceSeq        int64
 }
 
 func add(a, b int64) (int64, error) {
@@ -52,6 +57,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	}
 	result.OpId = q.Context.OpId
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
+	if q.SourceSeq > 0 {
+		if q.Kind != "cast_material" || q.Context.CommandSeq != 0 {
+			return out, result, receipt, Fail(p.CodeInvalidArgument, "自动施法必须使用独立来源流水")
+		}
+		opID = "source_cast:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
+	}
 	e := s.tx(ctx, func(tc context.Context) error {
 		receipt = Operation{}
 		if e := s.fence(tc, a); e != nil {
@@ -70,7 +81,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var old Operation
 		e = s.DB.Collection("operations").FindOne(tc, bson.M{"_id": opID}).Decode(&old)
 		if e == nil {
-			if old.Digest != q.Fingerprint {
+			if old.Digest != q.Fingerprint || q.SourceSeq > 0 && old.SourceSeq != q.SourceSeq {
 				return Fail(p.CodeOperationConflict, "同op_id请求内容改变")
 			}
 			result.CommandSeq = uint64(r.EconomicSeq)
@@ -82,13 +93,15 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if !errors.Is(e, mongo.ErrNoDocuments) {
 			return e
 		}
-		if q.Context.CommandSeq != uint64(r.EconomicSeq+1) || q.Context.ExpectedRevision != uint64(r.Revision) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
+		sequenceValid := q.SourceSeq == 0 && q.Context.CommandSeq == uint64(r.EconomicSeq+1) || q.SourceSeq > 0 && q.SourceSeq == r.SourceSeq+1
+		if !sequenceValid || q.Context.ExpectedRevision != uint64(r.Revision) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
 			return Fail(p.CodeOperationConflict, "操作序列/版本变化，请刷新后保留原操作身份")
 		}
 		oldRevision := r.Revision
 		businessCode := uint32(0)
 		var potion *PotionReceipt
 		var skillDetails *skillPlan
+		var casting *CastingReceipt
 		switch q.Kind {
 		case "equip":
 			index := -1
@@ -110,7 +123,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 					eligible = true
 				}
 			}
-			if !ok || !def.IsEquipment || def.EquipmentSlot != q.Slot || !eligible {
+			if !ok || !def.IsEquipment || def.EquipmentSlot != q.Slot || q.Slot > 9 || !eligible {
 				businessCode = p.CodeInvalidArgument
 				break
 			}
@@ -217,6 +230,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 		case "learn_skill":
 			r, businessCode = learnSkill(r, q, s.Cfg.Fixture)
+		case "set_casting_supply":
+			r, businessCode = setCastingSupply(r, q, s.Cfg.Fixture)
+		case "cast_material":
+			r, casting, businessCode = consumeCastingMaterial(r, q, s.Cfg.Fixture)
 		case "skill_assets_commit":
 			r, businessCode, skillDetails, e = s.commitSkillAsset(tc, r, q)
 			if e != nil {
@@ -231,12 +248,16 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
 		}
-		r.EconomicSeq++
+		if q.SourceSeq > 0 {
+			r.SourceSeq++
+		} else {
+			r.EconomicSeq++
+		}
 		r.Revision++
 		if e = s.replace(tc, r, oldRevision); e != nil {
 			return e
 		}
-		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion}
+		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting}
 		if _, e = s.DB.Collection("operations").InsertOne(tc, op); e != nil {
 			return e
 		}
@@ -244,6 +265,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if skillDetails != nil {
 			audit["preview_id"] = q.PreviewID
 			audit["skill_plan"] = skillDetails
+		}
+		if casting != nil {
+			audit["casting_use"] = casting
+			audit["source_seq"] = q.SourceSeq
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e

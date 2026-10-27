@@ -1,0 +1,156 @@
+{
+  "creator": "3.8.8",
+  "app_path": "/Applications/Cocos/Creator/3.8.8/CocosCreator.app",
+  "evidence_kind": "实际安装Creator首次导入的前后字节与元数据；本机importer为ccc二进制，仅登记摘要，不声称已读其源码实现",
+  "first_build_report": ".work/combat-status/creator-first-failed-layout.json",
+  "prefab": {
+    "path": "client/assets/resources/prefabs/StatusBadge.prefab",
+    "before_bytes": 6581,
+    "after_bytes": 6580,
+    "before_sha256": "878b7ad1c5e7ca3dcc938023f41119c89e96ab7560566dfbd7b01cebc95b2c13",
+    "after_sha256": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+    "after_plus_single_lf_sha256": "878b7ad1c5e7ca3dcc938023f41119c89e96ab7560566dfbd7b01cebc95b2c13",
+    "difference": "仅删除末尾单个0x0A，其他每一个字节严格相同",
+    "json_object_equivalent": true,
+    "all_geometry_components_references_text_color_events_unchanged": true
+  },
+  "metadata": {
+    "before": {
+      "ver": "1.1.40",
+      "importer": "prefab",
+      "imported": true,
+      "uuid": "0f81c34b-d009-40b5-bd55-25c8b663ecf6",
+      "files": [],
+      "subMetas": {},
+      "userData": {}
+    },
+    "after": {
+      "ver": "1.1.50",
+      "importer": "prefab",
+      "imported": true,
+      "uuid": "0f81c34b-d009-40b5-bd55-25c8b663ecf6",
+      "files": [
+        ".json"
+      ],
+      "subMetas": {},
+      "userData": {
+        "syncNodeName": "StatusBadge"
+      }
+    },
+    "uuid_unchanged": true,
+    "changes": {
+      "ver": {
+        "before": "1.1.40",
+        "after": "1.1.50"
+      },
+      "files": {
+        "before": [],
+        "after": [
+          ".json"
+        ]
+      },
+      "userData": {
+        "before": {},
+        "after": {
+          "syncNodeName": "StatusBadge"
+        }
+      }
+    },
+    "other_fields_unchanged": true,
+    "existing_imported_prefab_metadata": [
+      {
+        "name": "Entity",
+        "metadata": {
+          "ver": "1.1.50",
+          "importer": "prefab",
+          "imported": true,
+          "uuid": "c9bea89f-459f-51a1-8432-ba51045d01cd",
+          "files": [
+            ".json"
+          ],
+          "subMetas": {},
+          "userData": {
+            "syncNodeName": "Entity"
+          }
+        }
+      },
+      {
+        "name": "Effect",
+        "metadata": {
+          "ver": "1.1.50",
+          "importer": "prefab",
+          "imported": true,
+          "uuid": "f376aa9d-6742-40d0-9f70-b7e6a7d57f1c",
+          "files": [
+            ".json"
+          ],
+          "subMetas": {},
+          "userData": {
+            "syncNodeName": "Effect"
+          }
+        }
+      },
+      {
+        "name": "MapProp",
+        "metadata": {
+          "ver": "1.1.50",
+          "importer": "prefab",
+          "imported": true,
+          "uuid": "49d439e1-205d-4de7-8973-4bb42218cf94",
+          "files": [
+            ".json"
+          ],
+          "subMetas": {},
+          "userData": {
+            "syncNodeName": "MapProp"
+          }
+        }
+      },
+      {
+        "name": "Beam",
+        "metadata": {
+          "ver": "1.1.50",
+          "importer": "prefab",
+          "imported": true,
+          "uuid": "8e1b04ac-d0f5-4897-b3d8-c99f933ae3f1",
+          "files": [
+            ".json"
+          ],
+          "subMetas": {},
+          "userData": {
+            "syncNodeName": "Beam"
+          }
+        }
+      },
+      {
+        "name": "ListItem",
+        "metadata": {
+          "ver": "1.1.50",
+          "importer": "prefab",
+          "imported": true,
+          "uuid": "488420ed-e474-5db7-9b2b-6d24f1464a7e",
+          "files": [
+            ".json"
+          ],
+          "subMetas": {},
+          "userData": {
+            "syncNodeName": "ListItem"
+          }
+        }
+      }
+    ]
+  },
+  "installed_importer_binaries": [
+    {
+      "archive": "Contents/Resources/app.asar",
+      "path": "modules/engine-extensions/extensions/engine-extends/dist/importer/importers/prefab.ccc",
+      "sha256": "e0d2c1ce47e089394144872eb7fb57a5d0fd07bb41b5142c8714ae3d0e5cc3b2"
+    },
+    {
+      "archive": "Contents/Resources/app.asar",
+      "path": "modules/engine-extensions/extensions/engine-extends/dist/importer/importers/migrates/prefab.ccc",
+      "sha256": "a92f4d52471b683cc784e144cf4f953e22d64a581d05ecb7e909909b8e83368a"
+    }
+  ],
+  "decision": "接受Creator导入规范化后的当前字节与meta；不恢复LF、不改变任何布局或脚本，保留首次wrapper失败记录并重新实构验证稳定性"
+}

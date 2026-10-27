@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "sdk_version": "10.0.403",
+  "vectors": 586,
+  "source_files": {
+    "human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "read_only": true
+    },
+    "map": {
+      "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "read_only": true
+    },
+    "magic_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/MagicInfo.cs",
+      "sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "read_only": true
+    }
+  },
+  "compiled_source_sha256": "cd6ad286fb21c12927e51a33ad1ede18e4bbd4c3047804f40ed9306b1bc11224",
+  "go_fixture_sha256": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa",
+  "source_fragments": {
+    "magic_getpower_int": "        public int GetPower(int power)\n        {\n            return (int)Math.Round(power / 4F * (Level + 1) + DefPower());\n        }\n",
+    "reduction_and_armour": "if (Stats[Stat.DamageReductionPercent] > 0)\n            {\n                damage -= (damage * Stats[Stat.DamageReductionPercent]) / 100;\n            }\n\n            if (armour >= damage)\n            {\n                BroadcastDamageIndicator(DamageType.Miss);\n                return 0;\n            }",
+    "remaining_loss": "var duration = (int)Math.Min(int.MaxValue, magicShield.ExpireTime - ((damage - armour) * 60));",
+    "tao_duration_expression": "GetAttackPower(Stats[Stat.MinSC], Stats[Stat.MaxSC]) * 4 + (magic.Level + 1) * 50",
+    "target_level_expression": "target.Level / 7 + 4"
+  },
+  "scope": "逐字公式/表达式由.NET独立执行；最小索引器和确定性SC桩；不覆盖完整PRNG、完整伤害分支、对象调度或目标1.80认证",
+  "runtime_configuration": false
+}

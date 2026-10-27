@@ -175,3 +175,13 @@ test('同序号的快照不能抢经济回执，旧绑定被隔离，自动状�
         deliver(40012,previewSeq,Long.fromInt(5,true),{previewId:new Uint8Array(16).fill(5),kind:1,offerId:1,quantity:Long.ONE});assert.equal((await preview).offerId,1);
     }finally{connection.close();global.WebSocket=original;delete global.location;}
 });
+
+test('防御状态/属性及材料施法/装卸精确保留64位，完整空状态不会成为保留指令',()=>{
+    const large=Long.fromString('9007199254740993',true),operation={opId:new Uint8Array(16).fill(7),commandSeq:large,expectedRevision:large,expectedRuleVersion:large};
+    const value=decodePacket(encodePacket(40014,4,Long.UONE,{sceneEpoch:large,inputSequence:9,skillId:14,targetHandle:0,targetGrid:{x:8,y:9},direction:4,materialInstanceId:new Uint8Array(16).fill(5),materialVersion:large,casterLife:Long.UZERO,operation})).value;
+    assert.equal(value.materialVersion.toString(),large.toString());assert.equal(value.casterLife.toString(),'0');assert.equal(value.operation.commandSeq.toString(),large.toString());assert.deepEqual(value.targetGrid,{x:8,y:9});
+    const supply=decodePacket(encodePacket(40015,5,Long.UONE,{itemInstanceId:new Uint8Array(16).fill(5),itemVersion:large,unequip:true,operation})).value;assert.equal(supply.itemVersion.toString(),large.toString());assert.equal(supply.unequip,true);
+    const baseline=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:1,life:Long.UZERO,statuses:[{statusId:31,sourceSkillId:31,skillLevel:0,remainingMs:0,maxPhysicalDefenceBonus:Long.MAX_VALUE,maxMagicDefenceBonus:Long.MAX_VALUE,damageReductionPercent:20,casterHandle:1,casterLife:large}],combatAttributes:{physicalAttackMin:Long.MAX_VALUE,magicDefenceMax:Long.MAX_VALUE,damageReductionPercent:20}},{entityHandle:2,statuses:[]}]})).value;
+    assert.equal(baseline.entities[0].statuses[0].casterLife.toString(),large.toString());assert.equal(baseline.entities[0].statuses[0].maxMagicDefenceBonus.toString(),Long.MAX_VALUE.toString());assert.equal(baseline.entities[0].statuses[0].remainingMs,0);
+    assert.equal(baseline.entities[0].combatAttributes.physicalAttackMin.toString(),Long.MAX_VALUE.toString());assert.deepEqual(baseline.entities[1].statuses,[]);
+});

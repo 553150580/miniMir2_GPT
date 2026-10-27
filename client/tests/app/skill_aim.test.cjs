@@ -4,13 +4,14 @@ const fs=require('node:fs');
 const path=require('node:path');
 const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
 const root=path.resolve(__dirname,'../../..');
+const Long=require('node:module').createRequire(path.join(root,'client/assets/scripts/app/AppRoot.ts'))('long');
 const models=require('../../../.work/ui-tests/app/SkillModel.js');
 const {NavigationIntent}=require('../../../.work/ui-tests/input/NavigationIntent.js');
 const decorator=(...args)=>args.length>1?undefined:(...params)=>params.length===1?params[0]:undefined;
 const decorators=new Proxy({},{get(){return decorator;}});
 class Vec2{constructor(x=0,y=0){this.x=x;this.y=y;}set(value){this.x=value.x;this.y=value.y;return this;}static distance(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}}
 const game={totalTime:100};
-function load(file,requireModule){const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,experimentalDecorators:true}});const module={exports:{}};new Function('require','module','exports',compiled.outputText)(requireModule,module,module.exports);return module.exports;}
+function load(file,requireModule){const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,experimentalDecorators:true,esModuleInterop:true}});const module={exports:{}};new Function('require','module','exports',compiled.outputText)(requireModule,module,module.exports);return module.exports;}
 const {MapTouchNavigator}=load(path.join(root,'client/assets/scripts/input/MapTouchNavigator.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{},Vec2,game,warn:(_message,error)=>{throw error;}}:{});
 test('真实地图轻触拦截只提交瞄准回调，原地面导航不变；普通轻触仍可更新导航',()=>{
     const nav=new NavigationIntent();nav.setGroundTarget({x:9,y:8});
@@ -31,7 +32,7 @@ function app(){
     const session={ready:true,role:{job:1},entry:{sceneEpoch:'1',resourceVersion:'5'},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
         baseline:{entities:[{entityHandle:1,entityKind:1,hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,hp:'100',position:{x:4,y:4},direction:0}]},connection:{send:(id,value)=>sent.push({id,value})}};
     const {AppRoot}=load(path.join(root,'client/assets/scripts/app/AppRoot.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{}}
-        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='./GameSession'?{session,roleIdentity:()=> 'roleA'}:id==='./SkillModel'?models:{});
+        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
     const instance=new AppRoot(),saved={active:false,getComponent:()=>({string:''})};
     instance.world={gameplay:{skills:definitions,items:[]},map:{width:16,height:16},showAim:value=>shown.push(value)};instance.ui={top:null};instance.find=()=>saved;instance.error=error=>{throw error;};
     const row=id=>models.skillRows(instance.skillSnapshot()).find(row=>row.definition.id===id);
@@ -102,4 +103,40 @@ test('真实AppRoot将屏幕摇杆八方向转成逻辑方向发送，原生摇�
     instance.world.logicalDirection=(x,y)=>projection.logicalDirectionFromScreen(x,y);instance.world.update=()=>{};
     const screens=[[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
     screens.forEach(([x,y],index)=>{instance.nav.setJoystick({x,y});instance.update(.2);assert.equal(sent[index].id,20006);assert.equal(sent[index].value.direction,(index+7)%8);assert.deepEqual(instance.nav.state.direction,{x,y});});
+});
+
+test('真实AppRoot自身魔法盾不误选宠物；友方材料瞄准固定原护符，经Pending超时保留原op重试，不发30003或改导航',async()=>{
+    const {instance,session,sent,row,definitions,definition}=app(),errors=[];
+    definitions.push({...definition(31,'magic_shield','friendly_self')},{...definition(14,'soul_shield','friendly_grid'),area_radius:3,material_item_id:187,material_quantity:1});
+    session.inventory.learnedSkills.push({skillId:31,level:0},{skillId:14,level:0});session.baseline.entities[0].life=Long.UZERO;session.entry.sceneEpoch=Long.UONE;
+    session.baseline.entities.push({entityHandle:2,entityKind:2,hp:'100',position:{x:3,y:2}});instance.selectedTarget=2;instance.nav.setGroundTarget({x:9,y:8});
+    instance.castSkill(row(31));assert.equal(sent.length,1);assert.equal(sent[0].id,30003);assert.equal(sent[0].value.targetHandle,0);assert.deepEqual(sent[0].value.targetGrid,{x:2,y:2});
+    const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.fromString('9007199254740993',true),quantity:Long.fromInt(5),bound:true};
+    session.inventory.items=[];session.inventory.equipped=[{slot:100,item}];instance.world.gameplay.casting_supply={enabled:true,slot:100,item_ids:[187]};
+    const {PendingOperations}=load(path.join(root,'client/assets/scripts/app/PendingOperations.ts'),id=>id==='long'?Long:{});session.pending=new PendingOperations();
+    const requests=[];session.connection.request=(id,value)=>{requests.push({id,value});return Promise.reject(new Error('提交结果未知'));};instance.error=e=>errors.push(e.message);instance.status=()=>{};
+    instance.castSkill(row(14));assert.equal(sent.length,1);assert(instance.aim.supply);instance.consumeGround({x:4,y:4});await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(requests.length,1);assert.equal(requests[0].id,40014);assert.equal(requests[0].value.materialVersion.toString(),'9007199254740993');assert.equal(requests[0].value.casterLife.toString(),'0');
+    assert.equal(sent.filter(r=>r.value.skillId===14).length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});assert.equal(item.quantity.toString(),'5');assert.equal(session.baseline.entities[0].mp,'100');assert.match(errors[0],/未知/);
+    const pending=session.pending.get('roleA');assert(pending);assert.equal(pending.id,40014);const original=pending.value.operation.opId;
+    session.entry.sceneEpoch=Long.fromInt(2,true);session.connection.request=(id,value)=>{requests.push({id,value});return Promise.resolve({opId:original,pending:false,errorCode:0});};
+    await instance.submitPending();assert.equal(requests[1].value.sceneEpoch.toString(),'1');assert.deepEqual(requests[1].value.operation.opId,original);assert.equal(session.pending.get('roleA'),null);
+});
+test('真实AppRoot材料瞄准期间原护符变化拒绝，不换用背包；装入确认跨life变化不提交',async()=>{
+    const {instance,session,row,definitions,definition}=app(),errors=[],calls=[];
+    definitions.push({...definition(14,'soul_shield','friendly_grid'),material_item_id:187,material_quantity:1});session.inventory.learnedSkills.push({skillId:14,level:0});session.baseline.entities[0].life='0';
+    const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:'3',quantity:'5',bound:true};session.inventory.equipped=[{slot:100,item}];session.inventory.items=[{...item,instanceId:new Uint8Array(16).fill(8)}];
+    instance.world.gameplay.casting_supply={enabled:true,slot:100,item_ids:[187]};instance.world.gameplay.items=[{item_id:187,name:'护身符',kind:'casting_supply'}];
+    instance.nav.setGroundTarget({x:9,y:8});instance.error=e=>errors.push(e.message);instance.economic=(id,value)=>{calls.push({id,value});return Promise.resolve();};
+    instance.castSkill(row(14));item.version='4';instance.consumeGround({x:3,y:3});assert.match(errors[0],/原护符/);assert.equal(calls.length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+    instance.selectedItem=session.inventory.items[0];instance.popup={confirm:async()=>{session.baseline.entities[0].life='1';return true;}};
+    await assert.rejects(instance.setCastingSupply(false),/已变化/);assert.equal(calls.length,0);
+});
+
+test('实际disabled护符门禁在Use/快捷共用施法入口和装卸入口前拒绝，不进瞄准或发送任何材料请求',async()=>{
+    const {instance,session,row,definitions,definition,sent}=app();definitions.push({...definition(14,'soul_shield','friendly_grid'),material_item_id:187,material_quantity:1});session.inventory.learnedSkills.push({skillId:14,level:0});
+    instance.world.gameplay.casting_supply={enabled:false,slot:100,item_ids:[187]};instance.nav.setGroundTarget({x:9,y:8});instance.economic=()=>{throw new Error('禁止创建经济请求');};
+    assert.throws(()=>instance.castSkill(row(14)),/施法护符暂未开放/);assert.equal(instance.aim,null);assert.equal(sent.length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+    assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(14)),'护符未开放');assert.equal(models.skillQuickStateLabel(instance.skillSnapshot(),row(14)),'未开放');
+    await assert.rejects(instance.setCastingSupply(false),/施法护符暂未开放/);await assert.rejects(instance.setCastingSupply(true),/施法护符暂未开放/);assert.equal(sent.length,0);
 });

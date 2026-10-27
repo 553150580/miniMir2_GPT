@@ -143,6 +143,9 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	if e.Kind == 1 {
 		a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
 		for _, item := range r.Role.Equipped {
+			if item.Slot == devconfig.CastingSupplySlot {
+				continue
+			}
 			def, _ := f.Item(item.Item.ItemID)
 			a.AttackMin += def.AttackBonus + def.AttackMinBonus
 			a.AttackMax += def.AttackBonus + def.AttackMaxBonus
@@ -162,12 +165,12 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 		if w.sourceTimeline() {
 			a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 		}
-		return a
+		return statusFighter(e, a)
 	}
 	if e.Kind == 2 {
-		return f.Pet
+		return statusFighter(e, f.Pet)
 	}
-	return e.Monster.Fighter
+	return statusFighter(e, e.Monster.Fighter)
 }
 func (w *worker) nearest(r *room, from *entity) *entity {
 	var best *entity
@@ -221,6 +224,7 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 	if damage <= 0 || target.HP <= 0 {
 		return
 	}
+	wearStatuses(target, damage)
 	target.HP -= damage
 	if target.HP < 0 {
 		target.HP = 0
@@ -228,6 +232,7 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 	target.Action = 3
 	target.ActionUntil = now.Add(200 * time.Millisecond)
 	if target.HP == 0 {
+		removeDeathStatuses(target)
 		target.Action = 4
 		if target.Kind == 3 {
 			target.RespawnAt = now.Add(10 * time.Second)
@@ -289,6 +294,10 @@ func (w *worker) step(r *room, now time.Time) {
 		return
 	}
 	w.expireModes(r, now)
+	// A28：本作统一在本帧事件前处理全部实体状态；按实际处理时钟离散扣时，不回造Due历史。
+	if w.tickStatuses(r, now) {
+		w.snapshot(r)
+	}
 	w.flushKillFacts(r)
 	if r.Pending || len(r.KillFacts) > 0 {
 		return
@@ -341,6 +350,7 @@ func (w *worker) step(r *room, now time.Time) {
 		if m.HP == 0 && !m.RespawnAt.IsZero() && !now.Before(m.RespawnAt) {
 			m.HP = m.MaxHP
 			m.Life++
+			m.Statuses = nil
 			m.Pos = w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]
 			m.RespawnAt = time.Time{}
 			m.Action = 0

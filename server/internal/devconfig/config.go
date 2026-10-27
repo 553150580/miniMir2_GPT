@@ -20,6 +20,7 @@ type Point struct {
 	Y int `json:"y"`
 }
 type Fighter struct {
+	Level             uint32 `json:"level"`
 	JobID             uint32 `json:"job_id"`
 	DefinitionID      uint32 `json:"definition_id"`
 	HP                int64  `json:"hp"`
@@ -119,6 +120,8 @@ type Fixture struct {
 	Items             []Item             `json:"items"`
 	Potions           PotionRules        `json:"potions"`
 	Skills            []Skill            `json:"skills"`
+	Buffs             []BuffDefinition   `json:"buffs"`
+	CastingSupply     CastingSupplyRules `json:"casting_supply"`
 	Healing           HealingRules       `json:"healing"`
 	PlayerGrowth      []PlayerGrowth     `json:"player_growth"`
 	InitialSkillBooks []InitialSkillBook `json:"initial_skill_books"`
@@ -239,7 +242,7 @@ func (f *Fixture) Validate() error {
 		}
 	}
 	for _, i := range f.Items {
-		if i.ID == 0 || i.RecycleGold < 0 || i.EquipmentSlot > 9 {
+		if i.ID == 0 || i.RecycleGold < 0 || i.EquipmentSlot > 9 && !(i.EquipmentSlot == CastingSupplySlot && f.IsCastingSupply(i.ID)) {
 			return errors.New("物品参数不合法")
 		}
 	}

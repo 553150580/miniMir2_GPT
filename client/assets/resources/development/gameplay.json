@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 8,
+  "rule_version": 9,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -16,6 +16,9 @@
       "kind": "fireball",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": true,
@@ -59,6 +62,9 @@
       "kind": "healing",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "friendly_entity",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -102,6 +108,9 @@
       "kind": "fencing",
       "active": false,
       "activation_kind": "passive",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "passive",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -145,6 +154,9 @@
       "kind": "spirit_sword",
       "active": false,
       "activation_kind": "passive",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "passive",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -188,6 +200,9 @@
       "kind": "great_fireball",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": true,
@@ -231,6 +246,9 @@
       "kind": "thunderbolt",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -274,6 +292,9 @@
       "kind": "firebang",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_grid",
       "area_radius": 1,
       "require_line_of_sight": false,
@@ -317,6 +338,9 @@
       "kind": "mass_healing",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "friendly_grid",
       "area_radius": 1,
       "require_line_of_sight": false,
@@ -360,6 +384,9 @@
       "kind": "slaying",
       "active": false,
       "activation_kind": "passive_proc",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "passive",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -403,6 +430,9 @@
       "kind": "thrusting",
       "active": true,
       "activation_kind": "toggle",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "attack_mode",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -448,6 +478,9 @@
       "kind": "half_moon",
       "active": true,
       "activation_kind": "toggle",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "attack_mode",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -495,6 +528,9 @@
       "kind": "flaming_sword",
       "active": true,
       "activation_kind": "charge",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "attack_charge",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -538,6 +574,9 @@
       "kind": "lightning",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_direction",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -581,6 +620,9 @@
       "kind": "ice_storm",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_grid",
       "area_radius": 1,
       "require_line_of_sight": false,
@@ -624,6 +666,9 @@
       "kind": "thunder_storm",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_self",
       "area_radius": 2,
       "require_line_of_sight": false,
@@ -667,6 +712,9 @@
       "kind": "hell_fire",
       "active": true,
       "activation_kind": "cast",
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
       "target_kind": "enemy_direction",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -698,8 +746,251 @@
       "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
+    },
+    {
+      "id": 14,
+      "name": "幽灵盾",
+      "job_id": 2,
+      "book_item_id": 28,
+      "learn_level": 22,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "soul_shield",
+      "active": true,
+      "activation_kind": "cast",
+      "buff_id": 14,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "friendly_grid",
+      "area_radius": 3,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 2,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 50,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 15,
+      "name": "神圣战甲术",
+      "job_id": 2,
+      "book_item_id": 29,
+      "learn_level": 25,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "blessed_armour",
+      "active": true,
+      "activation_kind": "cast",
+      "buff_id": 15,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "target_kind": "friendly_grid",
+      "area_radius": 3,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 2,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 50,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 31,
+      "name": "魔法盾",
+      "job_id": 1,
+      "book_item_id": 18,
+      "learn_level": 31,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "magic_shield",
+      "active": true,
+      "activation_kind": "cast",
+      "buff_id": 31,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "target_kind": "friendly_self",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 35,
+      "level_cost": 5,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
     }
   ],
+  "statuses": [
+    {
+      "id": 14,
+      "name": "幽灵盾",
+      "short_name": "幽盾",
+      "kind": "max_magic_defence",
+      "stack_policy": "refresh_duration_keep_values",
+      "tick_ms": 1000,
+      "remove_on_player_death": false,
+      "duration_rule": {
+        "kind": "sc_rank_linear",
+        "stat_add": 0,
+        "stat_multiplier": 4,
+        "seconds_by_level": [
+          50,
+          100,
+          150,
+          200
+        ]
+      },
+      "attribute_effects": {
+        "kind": "max_magic_defence",
+        "value_by_level": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "target_level_divisor": 7,
+        "target_level_add": 4,
+        "hit_duration_loss_ms_per_hp": 0
+      }
+    },
+    {
+      "id": 15,
+      "name": "神圣战甲术",
+      "short_name": "战甲",
+      "kind": "max_physical_defence",
+      "stack_policy": "refresh_duration_keep_values",
+      "tick_ms": 1000,
+      "remove_on_player_death": false,
+      "duration_rule": {
+        "kind": "sc_rank_linear",
+        "stat_add": 0,
+        "stat_multiplier": 4,
+        "seconds_by_level": [
+          50,
+          100,
+          150,
+          200
+        ]
+      },
+      "attribute_effects": {
+        "kind": "max_physical_defence",
+        "value_by_level": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "target_level_divisor": 7,
+        "target_level_add": 4,
+        "hit_duration_loss_ms_per_hp": 0
+      }
+    },
+    {
+      "id": 31,
+      "name": "魔法盾",
+      "short_name": "魔盾",
+      "kind": "magic_shield",
+      "stack_policy": "ignore_present_on_impact",
+      "tick_ms": 1000,
+      "remove_on_player_death": true,
+      "duration_rule": {
+        "kind": "mc_source_power",
+        "stat_add": 15,
+        "stat_multiplier": 0,
+        "seconds_by_level": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "attribute_effects": {
+        "kind": "magic_shield",
+        "value_by_level": [
+          20,
+          30,
+          40,
+          50
+        ],
+        "target_level_divisor": 0,
+        "target_level_add": 0,
+        "hit_duration_loss_ms_per_hp": 60
+      }
+    }
+  ],
+  "casting_supply": {
+    "enabled": false,
+    "slot": 100,
+    "item_ids": [
+      187
+    ]
+  },
   "skill_upgrades": [
     {
       "skill_id": 1,
@@ -1324,6 +1615,123 @@
       ],
       "page_item_id": 900001,
       "page_cost": 20
+    },
+    {
+      "skill_id": 14,
+      "level": 1,
+      "required_role_level": 22,
+      "book_costs": [
+        {
+          "item_id": 28,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 14,
+      "level": 2,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 28,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 14,
+      "level": 3,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 28,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 15,
+      "level": 1,
+      "required_role_level": 25,
+      "book_costs": [
+        {
+          "item_id": 29,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 15,
+      "level": 2,
+      "required_role_level": 27,
+      "book_costs": [
+        {
+          "item_id": 29,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 15,
+      "level": 3,
+      "required_role_level": 29,
+      "book_costs": [
+        {
+          "item_id": 29,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 31,
+      "level": 1,
+      "required_role_level": 31,
+      "book_costs": [
+        {
+          "item_id": 18,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 31,
+      "level": 2,
+      "required_role_level": 34,
+      "book_costs": [
+        {
+          "item_id": 18,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 31,
+      "level": 3,
+      "required_role_level": 38,
+      "book_costs": [
+        {
+          "item_id": 18,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
     }
   ],
   "skill_book_recycle": [
@@ -1902,6 +2310,114 @@
       "allowed_source_kinds": [
         "monster_drop"
       ]
+    },
+    {
+      "item_id": 28,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 28,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 28,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 28,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 29,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 29,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 29,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 29,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 18,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 18,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 18,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 18,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
     }
   ],
   "shop_offers": [
@@ -2116,6 +2632,42 @@
       "quantity": 1,
       "currency_kind": "gold",
       "price_units": 1200,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 22,
+      "item_id": 28,
+      "name": "《幽灵盾》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 3500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 23,
+      "item_id": 29,
+      "name": "《神圣战甲术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 4500,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 24,
+      "item_id": 18,
+      "name": "《魔法盾》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 15000,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32,
@@ -2348,9 +2900,51 @@
       "skill_id": 9
     },
     {
+      "item_id": 28,
+      "name": "《幽灵盾》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 14
+    },
+    {
+      "item_id": 29,
+      "name": "《神圣战甲术》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 15
+    },
+    {
+      "item_id": 18,
+      "name": "《魔法盾》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 31
+    },
+    {
       "item_id": 900001,
       "name": "书页",
       "kind": "skill_page",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 187,
+      "name": "护身符",
+      "kind": "casting_supply",
+      "equip_slot": 100,
       "allowed_jobs": [
         0,
         1,

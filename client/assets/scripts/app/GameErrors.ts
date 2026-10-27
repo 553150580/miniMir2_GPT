@@ -1,5 +1,6 @@
 import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNotLearned, CodeSkillResource, CodeSkillStateBlocked, CodeSkillTarget,
-    CodeSkillPreviewStale, CodeSkillMaterials, CodeSkillUpgradeBlocked, CodeSkillBookSource, CodeSkillPurchaseBlocked } from '../generated/protocol_ids';
+    CodeSkillPreviewStale, CodeSkillMaterials, CodeSkillUpgradeBlocked, CodeSkillBookSource, CodeSkillPurchaseBlocked,
+    CodeSkillMaterialRequired, CodeSkillMaterialChanged } from '../generated/protocol_ids';
 
 const FULL_BAG_AUTO_MESSAGE = '背包已满，整理后再开启自动战斗';
 
@@ -18,6 +19,8 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (errorCode === CodeSkillUpgradeBlocked) return '当前等级或技能状态不能升级';
     if (errorCode === CodeSkillBookSource) return '此来源或品质的技能书不能分解';
     if (errorCode === CodeSkillPurchaseBlocked) return '余额、背包或购买条件不满足';
+    if (errorCode === CodeSkillMaterialRequired) return '请先装入对应施法护符，并确认剩余数量充足';
+    if (errorCode === CodeSkillMaterialChanged) return '原护符已变化，请重新选择后施法或装卸';
     return `操作失败，错误码${errorCode}`;
 }
 

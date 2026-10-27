@@ -552,6 +552,30 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+    },
+    {
+      "value": 40014,
+      "name": "MsgC2SCastWithMaterial",
+      "proto_message": "CastWithMaterialRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议"
+    },
+    {
+      "value": 40015,
+      "name": "MsgC2SSetCastingSupply",
+      "proto_message": "SetCastingSupplyRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议"
     }
   ],
   "error_codes": [
@@ -785,6 +809,22 @@
       "display_zh": "当前商品或购买数量不符合条件",
       "status": "draft",
       "source_ref": "最终策划案4.8；技能获取与升级开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3207,
+      "name": "CodeSkillMaterialRequired",
+      "display_zh": "请在护符槽装入足够护符",
+      "status": "draft",
+      "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3208,
+      "name": "CodeSkillMaterialChanged",
+      "display_zh": "护符实例或数量已变化，请刷新",
+      "status": "draft",
+      "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议",
       "active_in_scope": true
     }
   ]

@@ -48,7 +48,7 @@ test('真实世界渲染将直立物件与角色统一排序，身体武器及�
     class Effects{constructor(...args){this.sample=args[6];effects=this;}update(){}attack(){}dispose(){}}
     const makeSprite=name=>{const n=new Node(name);n.add(Sprite,new Sprite());return n;};
     cc.instantiate=prefab=>{if(prefab==='prop')return makeSprite('prop');if(prefab instanceof Node)return makeSprite(prefab.name);const n=new Node('entity'),body=makeSprite('Body');body.getComponent(UITransform).setContentSize(64,96);body.parent=n;const name=new Node('Name');name.add(Label,{});name.setPosition(0,78);name.scale=new Vec3(.7,.7,1);name.parent=n;const hp=new Node('HP');hp.add(ProgressBar,{});hp.setPosition(0,58);hp.parent=n;return n;};
-    const {GameWorldView}=load(path.join(source,'GameWorldView.ts'),id=>id==='cc'?cc:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):id==='./EntityHeadAnchor'?require('../../../.work/ui-tests/app/EntityHeadAnchor.js'):id==='./MapSurface'?{prepareMapSurface(){}}:id==='./EntityMotion'?{EntityMotion}:id==='./EntityAnimation'?{EntityAnimation}:id==='./CombatEffects'?{CombatEffects:Effects}:{});
+    const {GameWorldView}=load(path.join(source,'GameWorldView.ts'),id=>id==='cc'?cc:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):id==='./EntityHeadAnchor'?require('../../../.work/ui-tests/app/EntityHeadAnchor.js'):id==='./MapSurface'?{prepareMapSurface(){}}:id==='./EntityMotion'?{EntityMotion}:id==='./EntityAnimation'?{EntityAnimation}:id==='./CombatEffects'?{CombatEffects:Effects}:id==='./StatusEffects'?{StatusEffects:class{observe(){}update(){}dispose(){}}}:{});
     const viewport=new Node('viewport');viewport.getComponent(UITransform).setContentSize(720,808);const world=new Node('world'),entities=new Node('entities');entities.parent=world;new Node('Effects').parent=world;
     const frames=new Map(),definitions={};
     const layer=package=>({package,actions:Object.fromEntries(['standing','walking','attack','struck','die','casting'].map(action=>[action,{count:6,duration_ms:100,directions:Array.from({length:8},(_,direction)=>({frames:Array.from({length:6},(_,i)=>{const key=`${package}:${action}:${direction}:${i}`;frames.set(key,{key});definitions[key]={width:20,height:80,offset_x:0,offset_y:action==='casting'?-400:action==='die'?-900:-40-direction-i,declared_empty:false};return key;})}))}]))});
@@ -81,4 +81,32 @@ test('真实疾光渲染使用保存Mask和原图尺寸，固定原点的六格�
     const root=instances[0],sprite=root.getChildByName('Sprite');assert.deepEqual(root.position,new Vec3(0,24));assert(Math.abs(root.getComponent(UITransform).width-Math.hypot(192,96))<1e-8);
     assert.equal(sprite.getComponent(UITransform).width,400);assert.equal(sprite.getComponent(UITransform).height,220);assert.deepEqual(root.scale,new Vec3(1,1,1));assert.deepEqual(sprite.scale,new Vec3(1,1,1));
     assert(Math.abs(root.angle+sprite.angle+7.1250163489)<1e-7);
+});
+
+test('真实常驻盾只用保存AttachedEffects与原图，完整基线恢复常驻而不补起手，空状态清除',()=>{
+    const {StatusEffects}=load(path.join(source,'StatusEffects.ts'),id=>id==='cc'?cc:id==='./StatusPlayback'?require('../../../.work/ui-tests/app/StatusPlayback.js'):{});
+    const instances=[];cc.instantiate=()=>{const node=new Node('Effect');node.add(Sprite,new Sprite());instances.push(node);return node;};
+    const parent=new Node('AttachedEffects'),native={width:92,height:110,offset_x:-21,offset_y:-78,declared_empty:false};
+    const keys=['Magic:3890','Magic:3891','Magic:3892','Magic:3900','Magic:3901','Magic:3902'];
+    const assets={effectPrefab:{},manifest:{statuses:{31:{idle:{frames:keys.slice(0,3),duration_ms:600},struck:{frames:keys.slice(3),duration_ms:600}}},frames:Object.fromEntries(keys.map(key=>[key,native]))},frames:new Map(keys.map(key=>[key,{key}]))};
+    const effects=new StatusEffects(assets,'1',(_id,life)=>life==='0'?parent:null),status={statusId:31,remainingMs:0};
+    const entity=(statuses,hp='100')=>({entityHandle:1,entityKind:1,life:'0',hp,statuses});
+    effects.observe('1',[entity([status])],0);effects.update(0);assert.equal(instances.length,1);const n=instances[0];assert.equal(n.parent,parent);assert.equal(n.getComponent(Sprite).spriteFrame.key,'Magic:3890');assert.deepEqual(n.position,new Vec3(-45,94));assert.equal(n.getComponent(UITransform).width,92);assert.deepEqual(n.scale,new Vec3(1,1,1));
+    effects.update(200);assert.equal(n.getComponent(Sprite).spriteFrame.key,'Magic:3891');effects.observe('2',[entity([status],'90')],250);effects.update(250);assert.equal(n.getComponent(Sprite).spriteFrame.key,'Magic:3900');effects.update(850);assert.match(n.getComponent(Sprite).spriteFrame.key,/389/);
+    effects.observe('3',[entity([],'90')],900);effects.update(900);assert.equal(n.destroyed,true);assert.equal(effects.nodes.size,0);
+    effects.dispose();
+});
+
+test('真实预载会为无该职业技能的角色加载常驻状态六帧与保存徽标，退场统一释放原引用',async()=>{
+    class Asset{constructor(json){this.json=json;this.refs=0;}addRef(){this.refs++;}decRef(){this.refs--;}}
+    class JsonAsset extends Asset{}class Prefab extends Asset{}class SpriteFrame extends Asset{}
+    const map={...geometry,surface_width:1088,surface_height:544,world_height:592,background_offset_y:24,props:[]};
+    const keys=[3890,3891,3892,3900,3901,3902].map(id=>`Magic:${id}`),manifest={map:{...map},profiles:{player:{layers:[]}},effects:{},statuses:{31:{idle:{frames:keys.slice(0,3)},struck:{frames:keys.slice(3)}}}},frames={};
+    const values={'development/manifest':new JsonAsset(manifest),'development/maps/first-map':new JsonAsset(map),'development/gameplay':new JsonAsset({jobs:[{job_id:0,profile:'player'}],monster_profiles:[],pet_profiles:[],skills:[]})};
+    for(const key of keys){const id=key.split(':')[1],png=`frames/Magic/frame_${id.padStart(6,'0')}.png`;frames[key]={png,declared_empty:false};values['development/'+png.replace('.png','')+'/spriteFrame']=new SpriteFrame();}manifest.frames=frames;
+    for(const name of ['Entity','Effect','MapProp','Beam','StatusBadge'])values['prefabs/'+name]=new Prefab();values['development/maps/first-map/spriteFrame']=new SpriteFrame();
+    const requested=[],ccAssets={Asset,JsonAsset,Prefab,SpriteFrame,resources:{load(key,type,callback){requested.push(key);queueMicrotask(()=>callback(values[key]?null:new Error(key),values[key]));}}};
+    const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),id=>id==='cc'?ccAssets:id==='./GridProjection'?{GridProjection}:{});
+    const assets=await WorldAssets.prepare(0,()=>{});assert.equal(assets.frames.size,6);assert(requested.includes('prefabs/StatusBadge'));assert(keys.every(key=>assets.frames.has(key)));
+    assert(Object.values(values).every(asset=>asset.refs===1));assets.dispose();assert(Object.values(values).every(asset=>asset.refs===0));assert.equal(assets.frames.size,0);assets.dispose();assert(Object.values(values).every(asset=>asset.refs===0));
 });

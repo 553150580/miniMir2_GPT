@@ -1,0 +1,56 @@
+{
+  "status": "configuration_and_resources_checked_not_game_business_or_creator_browser_acceptance",
+  "original_frames_compared": 2914,
+  "original_complete_metadata_or_png_byte_mismatches": [],
+  "new_source_frames_compared": 94,
+  "new_source_frame_metadata_or_rgba_mismatches": [],
+  "total_frames": 3008,
+  "skills": 19,
+  "buffs": 3,
+  "public_statuses": 3,
+  "rule_version": 9,
+  "casting_supply": {
+    "enabled": false,
+    "slot": 100,
+    "item_ids": [
+      187
+    ]
+  },
+  "supply_shop_enabled": false,
+  "checks": {
+    "python_config_tests": 33,
+    "python_config_exit": 0,
+    "preview_structure_exit": 0,
+    "resource_check_exit": 0,
+    "fixture_check_exit": 0,
+    "binding_verification_exit": 0
+  },
+  "hashes": {
+    "tools/resources/prepare_first_loop.py": "741624d952e03e0870d5c28bdd88bc89abcfecd2e2fd615f1c17c910382f5a59",
+    "tools/resources/build_development_assets.py": "6773eeaa45b8440d5f9e03597889ae5a323947b9326735b3f5b860403dacfd39",
+    "config/development/first-loop.json": "1c77283542c749a67bbd5606ad4ed9f99650b014f73febf01404c93bdb5d0864",
+    "client/assets/resources/development/manifest.json": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a",
+    "client/assets/resources/development/maps/first-map.json": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb",
+    "client/assets/resources/development/maps/first-map.png": "4d496800640463f6ac1bb50f0dac08d8433d623d32b74439544b337812a1debc",
+    "client/assets/resources/development/gameplay.json": "e318e30aa7771c08e447532e737d51e9f05c7df877c3c453259b049526c6bc44",
+    "config/releases/preview_current.json": "7ebc90ce7b4501f44d6556db1c9586cda1f28bb4251da3f00f18ac76f24b8453"
+  },
+  "preview_current": {
+    "path": "dev-combat-status-v0.9-48873786ee49",
+    "version": "dev-combat-status-v0.9-48873786ee49",
+    "content_sha256": "48873786ee49283672281f7e7fe91b147cb90e8b45e02ec231834ccc47580ec3",
+    "runtime_ready": false
+  },
+  "configuration_report": {
+    "record_count": 922,
+    "status_counts": {
+      "candidate": 423,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 70
+    },
+    "runtime_ready": false,
+    "release_blocker_count": 668
+  },
+  "version": "dev-combat-status-v0.9-48873786ee49"
+}

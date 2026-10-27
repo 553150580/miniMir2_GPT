@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 54,
+  "message_count": 58,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -27,6 +27,8 @@
     "EnterWorldAck",
     "SyncReady",
     "EntityState",
+    "EntityStatusState",
+    "CombatAttributes",
     "SceneBaselineChunk",
     "MoveIntent",
     "CastIntent",
@@ -51,6 +53,8 @@
     "RecycleRequest",
     "UseItemRequest",
     "LearnSkillRequest",
+    "SetCastingSupplyRequest",
+    "CastWithMaterialRequest",
     "ItemConsumption",
     "SkillAssetPreviewRequest",
     "SkillMaterialView",
@@ -61,8 +65,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 89,
-  "int64_boundary_cases": 288,
+  "int64_field_count": 108,
+  "int64_boundary_cases": 359,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -261,6 +265,96 @@
       "field": "life",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "max_physical_defence_bonus",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "max_magic_defence_bonus",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_defence_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_defence_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_defence_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_defence_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "spirit_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "spirit_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "accuracy",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "agility",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "SceneBaselineChunk",
@@ -503,6 +597,30 @@
       "cases": 3
     },
     {
+      "message": "SetCastingSupplyRequest",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "material_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "ItemConsumption",
       "field": "version",
       "type": "uint64",
@@ -599,7 +717,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 17,
+  "bytes_field_count": 19,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -667,6 +785,16 @@
       "repeated": false
     },
     {
+      "message": "SetCastingSupplyRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "material_instance_id",
+      "repeated": false
+    },
+    {
       "message": "ItemConsumption",
       "field": "instance_id",
       "repeated": false
@@ -701,23 +829,23 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "f976d4e6f94cd7bd0b437ec3b59f007083480bfe140c36c25922f4e79e8a6474"
+      "sha256": "2743cbf15ac1ccc35e0cd4c519856dcaab9c1a9a5c6da34c5ada5c2413fc044c"
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "e61916895aa87548540ef70861a3968186a5421354b472daffdebdcd67f4507c"
+      "sha256": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23"
     }
   ],
   "generated_files": [
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "8fb458ab109927fef6c15daf8ef4a93cb07d8ba08f4742544e1fa0ab320165a6",
-      "bytes": 822357
+      "sha256": "19b373f738da63e0092446b070ee49802810d292150bb517c9a20f855abf5d46",
+      "bytes": 914966
     },
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "282ba3bf3548f25b72373966269383711b184d3150e5380963699cb3b7d0406c",
-      "bytes": 274877
+      "sha256": "dfe0e3ba2023e29953921acd07ac92e39c4a993667451e1d07e7f25c4e697838",
+      "bytes": 300619
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

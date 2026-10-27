@@ -20,6 +20,7 @@ export class WorldAssets {
     effectPrefab!: Prefab;
     propPrefab!: Prefab;
     beamPrefab!: Prefab;
+    statusBadgePrefab!: Prefab;
     background!: SpriteFrame;
     readonly frames = new Map<string, SpriteFrame>();
     private owned = new Set<Asset>();
@@ -47,6 +48,7 @@ export class WorldAssets {
             result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
             result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
             result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
+            result.statusBadgePrefab = result.own(await load<Prefab>('prefabs/StatusBadge', Prefab));
             result.background = result.own(await load<SpriteFrame>('development/maps/first-map/spriteFrame', SpriteFrame));
             const profileIds = new Set<string>();
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
@@ -55,6 +57,11 @@ export class WorldAssets {
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
             for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();
+            // 可接收的常驻状态与职业无关，入场前持有，不在受益时临时异步加载。
+            for (const key of effectFrameKeys(result.manifest.statuses)) {
+                if (!result.manifest.frames[key]) throw new Error(`缺少常驻状态帧定义：${key}`);
+                if (!result.manifest.frames[key].declared_empty) keys.add(key);
+            }
             for (const prop of result.map.props ?? []) {
                 const frame = result.manifest.frames[prop.frame];
                 if (!frame || frame.declared_empty) throw new Error(`地图物件缺少原始帧：${prop.frame}`);

@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "scope": "只读来源契约和已声明开发适配；不是运行数值配置，不认证目标1.80",
+  "is_runtime_configuration": false,
+  "unique_runtime_numeric_source": "两本唯一Excel；此处仅来源审计",
+  "target_180_verified": false,
+  "sources": {
+    "human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "read_only": true
+    },
+    "player": {
+      "path": "资料参考/crystal/Server/MirObjects/PlayerObject.cs",
+      "sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "read_only": true
+    },
+    "monster": {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "read_only": true
+    },
+    "map_object": {
+      "path": "资料参考/crystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "read_only": true
+    },
+    "map": {
+      "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "read_only": true
+    },
+    "environment": {
+      "path": "资料参考/crystal/Server/MirEnvir/Envir.cs",
+      "sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
+      "read_only": true
+    },
+    "magic_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/MagicInfo.cs",
+      "sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "read_only": true
+    },
+    "buff_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/BuffInfo.cs",
+      "sha256": "19738c0c4e1bc713e2c5b8def0d621c557567dcdd2f68073fcc9c94d3c1f552f",
+      "read_only": true
+    },
+    "enums": {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398",
+      "read_only": true
+    },
+    "myf_magic": {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv",
+      "sha256": "356a53a109a9a222900b9e910d1bc304fbbcf54b4679731c17d5ae86c48d9030",
+      "read_only": true
+    },
+    "myf_items": {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+      "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7",
+      "read_only": true
+    }
+  },
+  "skills": [
+    {
+      "myf_id": 31,
+      "name": "魔法盾",
+      "job_id": 1,
+      "crystal_spell_id": 43,
+      "crystal_symbol": "MagicShield",
+      "book_item_id": 18,
+      "myf_magic_line": 32,
+      "book_line": 20,
+      "book_price_gold_source_candidate": 15000,
+      "learning_levels": [
+        31,
+        34,
+        38
+      ],
+      "source_practice_need": [
+        3000,
+        7000,
+        10000
+      ],
+      "cost_by_rank": [
+        35,
+        40,
+        45,
+        50
+      ],
+      "source_range_cells": 0,
+      "target": "self",
+      "impact_delay_ms": 500,
+      "duration_seconds": "round_to_even(binary32(binary32((one_MC_draw + 15) / 4F) * (rank + 1)) + DefPower=0)",
+      "reduction_percent_by_rank": [
+        20,
+        30,
+        40,
+        50
+      ],
+      "damage_reduction_order": "先命中/原伤/源倍率等已适用前置，再 raw -= trunc(raw*percent/100)，然后减本次AC/MAC；当前既有子集外的暴击/反弹/元素不得据此声称已覆盖",
+      "positive_damage_duration_loss_ms_per_net_damage": 60,
+      "recast": "在延迟回调HasBuff即返回，不刷新；源MP与通用动作/法术时钟已先支付",
+      "on_player_death": "显式RemoveBuff，先标记/remaining=0；实际列表移除走后续buff处理",
+      "source_refs": [
+        "environment:749-764",
+        "human:3590-3592",
+        "human:6198-6204",
+        "human:7126-7166",
+        "human:7244-7276",
+        "human:7347-7358",
+        "magic_info:214-217",
+        "player:635-636"
+      ]
+    },
+    {
+      "myf_id": 14,
+      "name": "幽灵盾",
+      "job_id": 2,
+      "crystal_spell_id": 69,
+      "crystal_symbol": "SoulShield",
+      "book_item_id": 28,
+      "myf_magic_line": 15,
+      "book_line": 30,
+      "book_price_gold_source_candidate": 3500,
+      "learning_levels": [
+        22,
+        24,
+        26
+      ],
+      "source_practice_need": [
+        2000,
+        3500,
+        7000
+      ],
+      "cost_by_rank": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "source_range_cells": 9,
+      "target": "friendly_grid",
+      "area_radius_cells": 3,
+      "shape": "7x7正方形，地图边界裁剪；每个target所在cell.Valid，中心可阻挡，无飞行线/视线阻挡检查",
+      "impact_delay_ms": "500 + 50 * ChebyshevDistance(cast_origin, selected_center)",
+      "duration_seconds": "one_SC_draw * 4 + (rank + 1) * 50",
+      "duration_rank_terms": [
+        50,
+        100,
+        150,
+        200
+      ],
+      "stats": "仅MaxMAC += floor(target.Level/7)+4；不加MinMAC，不依施法rank提高该属性",
+      "materials": "从已装备Type.Amulet、Shape0、Count>=1选择；ConsumeItem扣Count1，非CurrentDura",
+      "recast": "仅重设剩余时长，可缩短；保留原Stats、LastTime、NextTime；Caster仅原Node不存在时换新",
+      "on_player_death": "保留并继续计时，不因死亡暂停；复活仍同来源状态",
+      "source_refs": [
+        "environment:1032-1047",
+        "human:4512-4524",
+        "map:1044-1097",
+        "map_object:570-669",
+        "buff_info:24",
+        "player:652-659"
+      ]
+    },
+    {
+      "myf_id": 15,
+      "name": "神圣战甲术",
+      "job_id": 2,
+      "crystal_spell_id": 71,
+      "crystal_symbol": "BlessedArmour",
+      "book_item_id": 29,
+      "myf_magic_line": 16,
+      "book_line": 31,
+      "book_price_gold_source_candidate": 4500,
+      "learning_levels": [
+        25,
+        27,
+        29
+      ],
+      "source_practice_need": [
+        4000,
+        6000,
+        10000
+      ],
+      "cost_by_rank": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "source_range_cells": 9,
+      "target": "friendly_grid",
+      "area_radius_cells": 3,
+      "shape": "与幽灵盾同一7x7分支",
+      "impact_delay_ms": "500 + 50 * ChebyshevDistance(cast_origin, selected_center)",
+      "duration_seconds": "one_SC_draw * 4 + (rank + 1) * 50",
+      "duration_rank_terms": [
+        50,
+        100,
+        150,
+        200
+      ],
+      "stats": "仅MaxAC += floor(target.Level/7)+4；不加MinAC",
+      "materials": "与幽灵盾相同，扣已装备护符Count1",
+      "recast": "与幽灵盾相同，ResetDuration不换Stats",
+      "on_player_death": "与幽灵盾相同，保留并继续计时",
+      "source_refs": [
+        "environment:1064-1079",
+        "human:4512-4524",
+        "map:1044-1097",
+        "buff_info:25"
+      ]
+    }
+  ],
+  "shared_source_clock": {
+    "source_expire_time_means": "剩余毫秒，不是绝对到期时刻",
+    "source_properties": "三者Properties=None；Visible默认false；StackType.ResetDuration",
+    "new_buff": {
+      "last_time": "actual_apply_now",
+      "next_time": 0,
+      "remaining_ms": "source_duration_ms",
+      "flag_for_removal": false
+    },
+    "process": {
+      "skip_when": "NextTime > actual_now",
+      "equality": "NextTime == actual_now处理；扣时后remaining==0立即移除",
+      "elapsed": "实际处理now - LastTime，无补跑多个历史tick",
+      "last_time_after_tick": "actual_now",
+      "next_time_after_tick": "actual_now + 1000ms",
+      "keep_when": "(remaining>0 or Infinite) and not FlagForRemoval",
+      "dead_actor_pause": false
+    },
+    "damage_refresh": {
+      "remaining_ms": "old_remaining - positive_net_damage * 60",
+      "last_time_reset": false,
+      "next_time_reset": false,
+      "stats_replaced": false,
+      "nonpositive_removal": "保留有效属性/HasBuff至下次目标ProcessBuffs，不在受击AddBuff中立即移除"
+    },
+    "soul_armour_refresh": {
+      "remaining_ms": "新持续时间，非加总、非取大值",
+      "last_time_reset": false,
+      "next_time_reset": false,
+      "stats_replaced": false,
+      "flag_cleared": false
+    },
+    "source_local_order": {
+      "human": "Human.Process323处理Buff；358调用base.MapObject.Process；后者228-233按实际到期/equal执行玩家自身ActionList；Player532-543分派CompleteMagic/CompleteAttack",
+      "monster": "Monster.Process1194先base动作，1225 AI，1227 Buff处理，和Human局部顺序不同",
+      "map_area_actions": "Envir2130-2141对象调度之后Map.Process732-737执行范围actions；跨对象没有统一的全局Buff先于命中保证",
+      "new_buff_first_process": "NextTime默认0，下一次该对象Buff处理即可扣少量elapsed并排now+1000，不固定首次等待整1000ms"
+    },
+    "source_refs": [
+      "map_object:570-641",
+      "map_object:672-714",
+      "human:397-450",
+      "human:323-358",
+      "monster:1192-1229",
+      "monster:1611-1663",
+      "map:732-737",
+      "environment:2127-2141"
+    ]
+  },
+  "target_life_and_death": {
+    "friendly_filter": "Player/Monster/Hero且IsFriendlyTarget；本项目本阶段只本人和自己的宝宝，野怪不友方；源分支无Dead过滤",
+    "player": "死亡显式清31；14/15无RemoveOnDeath属性，保留并继续时钟；不是复活重新施法",
+    "pet": "Die966-975不清Buff，尸体Node保留期间仍ProcessBuffs；DeadTime到期1195-1215移除对象并终止，源重召新对象不带Buff",
+    "pet_stat_level": "Monster.Level=Info.Level，非PetLevel或主人等级；当前来源变异骷髅level15，MaxAC/MaxMAC增6",
+    "already_applied_caster_life": "不能因原施加者后续死亡/复活或Caster.Node失效而删除目标已应用Buff",
+    "project_generation_guard": "继续已有ActorRef隔离迟到施法与重生代次；玩家已应用14/15跨主动复活需要显式保留迁代，不能把施法延迟事件也一起放行",
+    "magic_shield_late_application": {
+      "source": "Human6198–6203无Dead检查；Player.Die578–666不清ActionList，已施放而500ms前死亡的玩家仍有Node时，延迟回调可能补起新盾",
+      "project": "ROOT表31 allow_dead_targets=false明确拒绝死亡目标补盾；此为本作开发生命周期策略，不称与源边界完全一致"
+    }
+  },
+  "source_logout": {
+    "source_flow": "StopGame377-387仅移除RemoveOnExit；三者保留剩余、Caster=null/ObjectID=0；Player1292-1299重登LastTime=now并updateOnly恢复；源正式退出间剩余不衰减",
+    "project_rule": "最终策划4.8健康托管推进效果，正常重连保留内存；不移植源临时Buff持久化/离线冻结，不做故障恢复快照"
+  },
+  "materials_source": {
+    "crystal_selection_refs": [
+      "human:6859-6868"
+    ],
+    "crystal_consume_refs": [
+      "human:1346-1375"
+    ],
+    "decrement_field": "UserItem.Count",
+    "decrement_amount": 1,
+    "uses_current_dura": false,
+    "equipment_only": true,
+    "shape": 0,
+    "myf_candidates": [
+      {
+        "item_id": 187,
+        "name": "护身符",
+        "line": 189,
+        "raw_stdmode": 25,
+        "raw_shape": 5,
+        "raw_duramax": 1000,
+        "raw_price_gold": 500
+      },
+      {
+        "item_id": 188,
+        "name": "护身符(大)",
+        "line": 190,
+        "raw_stdmode": 25,
+        "raw_shape": 5,
+        "raw_duramax": 3000,
+        "raw_price_gold": 3000
+      }
+    ],
+    "cross_source_limits": "MYF Shape5/DuraMax不可直接当Crystal Shape0/Count1000/3000；未读取来源账号数据库，未证明正式包单位或本作正式价格",
+    "project_decision": "ROOT选择独立永久材料槽slot100、owner原子消费，再触发临时施法；属于本作显式适配",
+    "user_pending": {
+      "package_units": null,
+      "package_price": null,
+      "activation": "用户未答不得激活猜值"
+    }
+  },
+  "source_vs_project_precheck": {
+    "source": "Human3450-3451已扣MP后SoulShield才查材料；缺材料cast=false但通用SpellTime/ActionTime已设，个人magic.CastTime不更新",
+    "project": "按最终策划先校验资源与owner提交；失败不产生临时效果，不把源先扣MP的失败路径自动当产品规则"
+  },
+  "project_development_clock_decision": "ROOT已选实际处理now/约1000ms离散移除，不回造Due历史；全房间固定phase顺序是确定性调度适配，不冒称源跨对象统一顺序",
+  "counterexamples": [
+    {
+      "case": "防御前减伤",
+      "raw": 10,
+      "percent": 20,
+      "armour": 3,
+      "net_expected": 5,
+      "wrong_post_defence_result": 6
+    },
+    {
+      "case": "整数减去截断减伤，不是剩余乘法向下取整",
+      "raw": 5,
+      "percent": 50,
+      "armour": 2,
+      "net_expected": 1
+    },
+    {
+      "case": "受击不重置LastTime",
+      "last_time": 600,
+      "next_time": 1600,
+      "remaining_before_damage": 3900,
+      "hit_now": 1200,
+      "net_damage": 10,
+      "remaining_after_damage": 3300,
+      "at_1600_remaining": 2300
+    },
+    {
+      "case": "削负仍有效直到下一Buff检查",
+      "last_time": 0,
+      "next_time": 1000,
+      "remaining_before_hit": 100,
+      "net_damage": 2,
+      "remaining_after_hit": -20,
+      "before_1000_has_buff": true,
+      "at_1000_removed": true
+    },
+    {
+      "case": "持续时间恰为0移除",
+      "last_time": 0,
+      "next_time": 1000,
+      "remaining": 1000,
+      "process_now": 1000,
+      "removed": true
+    },
+    {
+      "case": "已有14/15重施不重置LastTime",
+      "last_time": 0,
+      "next_time": 1000,
+      "refresh_now": 500,
+      "new_remaining": 50000,
+      "at_1000_remaining": 49000,
+      "wrong_refresh_anchor_result": 49500
+    }
+  ],
+  "verification_status": "来源阅读已完成，正式代码/资源/业务验收待本阶段实现分别证明",
+  "shared_source_cast_timing": {
+    "action_ms": 600,
+    "global_spell_ms": 1800,
+    "individual_delay_ms": 1800,
+    "cooldown_reduction_per_rank_ms": 0,
+    "source_refs": [
+      "human:186",
+      "human:3424-3429",
+      "magic_info:18",
+      "magic_info:219-221"
+    ],
+    "magic_shield_mp_equal_cost_allowed": true
+  }
+}

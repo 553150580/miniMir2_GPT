@@ -15,6 +15,9 @@ type Skill struct {
 	LearnedLevel              uint32   `json:"learned_level"`
 	MaxLevel                  uint32   `json:"max_level"`
 	Behavior                  string   `json:"behavior"`
+	BuffID                    uint32   `json:"buff_id"`
+	MaterialItemID            uint32   `json:"material_item_id"`
+	MaterialQuantity          int64    `json:"material_quantity"`
 	ActivationKind            string   `json:"activation_kind"`
 	MPBaseCost                int64    `json:"mp_base_cost"`
 	MPLevelCost               int64    `json:"mp_level_cost"`
@@ -135,6 +138,7 @@ func (f *Fixture) PlayerAtLevel(job, level uint32) (Fighter, bool) {
 	if !ok {
 		return p, false
 	}
+	p.Level = level
 	for _, g := range f.PlayerGrowth {
 		if g.JobID != job {
 			continue
@@ -233,6 +237,9 @@ func (f *Fixture) ValidateSkills() error {
 	}
 	for _, s := range f.Skills {
 		upgradesEnabled = upgradesEnabled || s.MaxLevel > s.LearnedLevel
+	}
+	if err := f.ValidateBuffs(); err != nil {
+		return err
 	}
 	if upgradesEnabled {
 		return f.ValidateSkillEconomy()

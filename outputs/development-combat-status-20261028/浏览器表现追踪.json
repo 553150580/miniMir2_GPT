@@ -1,0 +1,38 @@
+[
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5021,\"updates\":237,\"mean_update_ms\":21.27415254232237,\"max_update_ms\":142.90000000596046,\"intermediate_grid_samples\":{\"player\":61,\"pet\":0,\"monster\":90},\"changed_animation_frames\":86,\"preloaded_frames\":1304}",
+    "timestamp": "2026-10-27T18:09:33.717Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5003,\"updates\":241,\"mean_update_ms\":20.845416666691502,\"max_update_ms\":47.5,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":58,\"preloaded_frames\":1304}",
+    "timestamp": "2026-10-27T18:09:38.720Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5003,\"updates\":232,\"mean_update_ms\":21.65714285719446,\"max_update_ms\":64.30000001192093,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":42,\"preloaded_frames\":1304}",
+    "timestamp": "2026-10-27T18:22:03.410Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5012,\"updates\":241,\"mean_update_ms\":20.884583333383002,\"max_update_ms\":40.099999994039536,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":38,\"preloaded_frames\":1304}",
+    "timestamp": "2026-10-27T18:22:08.423Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5008,\"updates\":248,\"mean_update_ms\":20.275303643724698,\"max_update_ms\":73.7999999821186,\"intermediate_grid_samples\":{\"player\":118,\"pet\":196,\"monster\":138},\"changed_animation_frames\":110,\"preloaded_frames\":1272}",
+    "timestamp": "2026-10-27T18:23:42.750Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5011,\"updates\":257,\"mean_update_ms\":19.573828125023283,\"max_update_ms\":38.599999994039536,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":32,\"preloaded_frames\":1272}",
+    "timestamp": "2026-10-27T18:23:47.759Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

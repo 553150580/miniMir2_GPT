@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "scope": "本阶段所有归档文件，含明确排除验收的尺寸过渡历史；不包含本清单自身",
+  "file_count": 69,
+  "bytes_total": 5342313,
+  "files": [
+    {
+      "path": "01-小型场边装饰与法师头顶.jpg",
+      "bytes": 172666,
+      "sha256": "984134ce48e8f6f4e46b0ca9d227c9d218edf557dfb5b6c23f3d391c71160e8a"
+    },
+    {
+      "path": "02-魔法盾购书报价.jpg",
+      "bytes": 115204,
+      "sha256": "d0401eef40e8f0380f567d8cd1f4401526c0c9f9c81d7b26379c1898cd02dfea"
+    },
+    {
+      "path": "03-魔法盾说明与独立详情.jpg",
+      "bytes": 124391,
+      "sha256": "e2ac4de4340157fac01a1dcdae456c9cf532d5d3270edd6d99a1ce0c239148e5"
+    },
+    {
+      "path": "04-魔法盾生效与权威倒计时.jpg",
+      "bytes": 174883,
+      "sha256": "7d47c0637e4c1cdb764fc498ae5fe22ef707e84ecd892b5bcb1b675b9d14c14e"
+    },
+    {
+      "path": "05-两次施放受理与耗蓝.jpg",
+      "bytes": 174588,
+      "sha256": "c150472ac6b1382d20b11041beec49c7753b912785f106c567920a6c5372ae23"
+    },
+    {
+      "path": "06-权威战斗属性与减伤.jpg",
+      "bytes": 129002,
+      "sha256": "0f55f7add44ef797450e2b230e0749a7cd9013c0f12be8ded1f104ab2ee6ff87"
+    },
+    {
+      "path": "07-状态结束后移除徽标与盾壳.jpg",
+      "bytes": 170908,
+      "sha256": "df10921361381131f4db15188519a6c6a9508e34fbe879171cd2841a5cdd7d0d"
+    },
+    {
+      "path": "08-状态徽标打开独立详情.jpg",
+      "bytes": 111069,
+      "sha256": "6774e453dbd1a4694739596ea47a34c1fb6907e26105de529c89c3be2ccfc1d3"
+    },
+    {
+      "path": "09-健康重入真实资源加载.jpg",
+      "bytes": 44287,
+      "sha256": "130d2816afc76a1d95a29996d867f215bb31c4e865c3611311a69d9c4588c7af"
+    },
+    {
+      "path": "10-健康重入未重置HP和MP.jpg",
+      "bytes": 171451,
+      "sha256": "ba5c98ccf62f426305196dd3f3df417fb25aa10ddaa75db8d73cbcda48d2689e"
+    },
+    {
+      "path": "11-道士技能范围与护符说明.jpg",
+      "bytes": 127991,
+      "sha256": "140f554229a1ba6b3c88001c44dd90fa7e527b6fdb1be4ec3f0c9e821cd2bfb2"
+    },
+    {
+      "path": "12-未审定护符入口明确关闭.jpg",
+      "bytes": 132793,
+      "sha256": "d1333506686526a215c0a620282bac585a1858f6e57d8a32ab5267631cd7c684"
+    },
+    {
+      "path": "13-加高窗口只扩大战斗视野并保持导航.jpg",
+      "bytes": 178634,
+      "sha256": "77793961a66a9cfe9cce370aec64c3d26c067306b72bf0ed3c00916227a481db"
+    },
+    {
+      "path": "14-宽屏等比地图与四周小物.jpg",
+      "bytes": 198529,
+      "sha256": "fc7f5dbed1870ca6cb38f2bfb5db748913ed7461db59bc0bd8e5a1ea714f0fe8"
+    },
+    {
+      "path": "15-恢复窗口后的开阔战场.jpg",
+      "bytes": 115516,
+      "sha256": "2e73c1162bb1d81aa0ea44b14b2e31d0d485518fc91b4e3ce18da59490546b47"
+    },
+    {
+      "path": "check.log",
+      "bytes": 1036,
+      "sha256": "264d6a152509b2ce89a1bacff8e6db52d43dc44ecbe1d07668383709a0e4fcbe"
+    },
+    {
+      "path": "client-freeze.json",
+      "bytes": 4163,
+      "sha256": "9c90b57fc76ce18f5ced92fc6616293b3effc454a029f5fcace94bcae2961f06"
+    },
+    {
+      "path": "client-layout-preservation.json",
+      "bytes": 13819,
+      "sha256": "f093e9d494e6a1ecad878f387f5c17f1d1ebb1480506609b3cdcb2123c8bf252"
+    },
+    {
+      "path": "client-tests.log",
+      "bytes": 22459,
+      "sha256": "124b38315f1f1adc8954318895e803fbb6546fa01d0f1b099ee81acfa21bfc22"
+    },
+    {
+      "path": "creator/StatusBadge-after-first-build.prefab",
+      "bytes": 6580,
+      "sha256": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a"
+    },
+    {
+      "path": "creator/StatusBadge-before-first-build.prefab",
+      "bytes": 6581,
+      "sha256": "878b7ad1c5e7ca3dcc938023f41119c89e96ab7560566dfbd7b01cebc95b2c13"
+    },
+    {
+      "path": "creator/StatusBadge-before-first-build.prefab.meta",
+      "bytes": 167,
+      "sha256": "e46ad2736ae4cf24d96ecc20e238503b68e5dc40803709ffd0d25edc87462eeb"
+    },
+    {
+      "path": "creator/client-freeze-before-first-build.json",
+      "bytes": 3830,
+      "sha256": "37f1c8ff4e9a6800c282730429abd070e04b7257c89c05d4a9efc7c99f3e1470"
+    },
+    {
+      "path": "creator/client-layout-preservation-before-first-build.json",
+      "bytes": 13729,
+      "sha256": "8178ef6f62d81c41df98b1049573b789aefd68e1bf67534352c4c197bac20b75"
+    },
+    {
+      "path": "creator/creator-build.log",
+      "bytes": 313,
+      "sha256": "e4d34384965ed4dbe74d87756851d4ff1c5bd04be83c44ed11ae89123acc7eee"
+    },
+    {
+      "path": "creator/creator-cli.log",
+      "bytes": 93534,
+      "sha256": "6f4d8b05f675b55b4629b9bfffd5e40563fb8dedb313fc44c5c6c119a2831c60"
+    },
+    {
+      "path": "creator/creator-first-cli.log",
+      "bytes": 93531,
+      "sha256": "2197b58cd58693df5f36542cd7744c8d8cc994e19c6b075e25e53e859e3a0562"
+    },
+    {
+      "path": "creator/creator-first-failed-layout.json",
+      "bytes": 7444,
+      "sha256": "a1b9ed65819b17408b29de8b8305e337fb59ff559a3024a9605a6975ff7c27ad"
+    },
+    {
+      "path": "creator/prefab-import-normalization.json",
+      "bytes": 4484,
+      "sha256": "50594c098e8b506908064cc23e16e15eab0a936e53eea16edf0c3e221dd82f1c"
+    },
+    {
+      "path": "creator/客户端构建检查.json",
+      "bytes": 7441,
+      "sha256": "808a6013342634fcbf377514ee8bebea788813d4d15eecf8dc74ad4569de4c83"
+    },
+    {
+      "path": "excel/preservation-check.json",
+      "bytes": 19904,
+      "sha256": "baebc259bc991e39a1c9d0afba5f4b9a18cbfaf8f0c6c9e6f7644c860b5bec13"
+    },
+    {
+      "path": "excel/workbook-qa.json",
+      "bytes": 1835,
+      "sha256": "51ecee1b0205d2e0c649c5ffe3381f24d713628f447a6a3eff9e239e74932299"
+    },
+    {
+      "path": "excel/新增三项技能.png",
+      "bytes": 28148,
+      "sha256": "ff9b83f53231ce56891f4d7698cb006a4874a7a404648796bb7f4c4bf5b05351"
+    },
+    {
+      "path": "excel/新增书本与护符.png",
+      "bytes": 24386,
+      "sha256": "9f4a3aa7ff6574e7fd234c4170dd71adb94a11be8379716cafb8ea26ad6470bb"
+    },
+    {
+      "path": "excel/时长与中文名称.png",
+      "bytes": 63359,
+      "sha256": "a656600675af0198fc892419dab9465bcea9dceaf8294bf9124ab120eabc65b4"
+    },
+    {
+      "path": "excel/状态定义修改后.png",
+      "bytes": 95833,
+      "sha256": "199bb5fb2b71e6d205de233f5ee24cd6d9963205a62edf8de44c7f7a38edd16d"
+    },
+    {
+      "path": "import-normalization-tests.log",
+      "bytes": 3491,
+      "sha256": "a579f488819b37ae4e9c9e5a676c4c1a430926f4dbc46f62c8d39f8f5ff3fa0b"
+    },
+    {
+      "path": "non-browser-summary.json",
+      "bytes": 5603,
+      "sha256": "33c04695d2930d76eb488efe319f5335c0ff9532f3d90ff50270e3d67b721040"
+    },
+    {
+      "path": "oracle/report.json",
+      "bytes": 1906,
+      "sha256": "37407be0549e2ed53e07a62ae260fef84c5f482e53b8028f9a7b6484d4e74ce5"
+    },
+    {
+      "path": "oracle/source-status-vectors.json.gz",
+      "bytes": 3533,
+      "sha256": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa"
+    },
+    {
+      "path": "oracle/vectors.json",
+      "bytes": 64692,
+      "sha256": "d8a06279c0b890d21d788d5242ee7d5cf4402f8de495180863c97a5e2ccfb870"
+    },
+    {
+      "path": "previous-2914-frames.json",
+      "bytes": 1425849,
+      "sha256": "76dbeb83968dddb195eb230a4b8fdc144a5c5c0c90fabb9c06f8c1dbc052cf4c"
+    },
+    {
+      "path": "protocol/client-pb-verification.json",
+      "bytes": 18359,
+      "sha256": "b5ac35a4888655bc8f04f22b80e430e1cddb66ee46449359fa973c15a0fca32b"
+    },
+    {
+      "path": "protocol/go-pb-generation.json",
+      "bytes": 977,
+      "sha256": "4f3c1eb6b94ec43779461c21648da8cf91c3ce1e4ecbd97f1fec26f82d2b5dec"
+    },
+    {
+      "path": "resource-and-config-check.json",
+      "bytes": 2253,
+      "sha256": "5ca791a42fdde4d62799a04336c1a42b9289967cb6d839dcb3be56cc9fd2c785"
+    },
+    {
+      "path": "resource-source-94.json",
+      "bytes": 23418,
+      "sha256": "8f2870d47700f474221092579cdafb78ec94ba40cd5b95e28bf9b853543015a1"
+    },
+    {
+      "path": "scene-tests.log",
+      "bytes": 1623,
+      "sha256": "f9e8204b830d1a2eee3c9dd112f6a9b8bc764d833a70aa229fbb7a4a82751369"
+    },
+    {
+      "path": "server/latest.events.jsonl",
+      "bytes": 277921,
+      "sha256": "f611beee9d55a8f0f10723b7ffa038974673ea2059070acb6e8381ffa894a653"
+    },
+    {
+      "path": "server/latest.json",
+      "bytes": 55169,
+      "sha256": "8a036cb1a74f490f85017db62f2d4810ce99567da3c3929cac820827b4796521"
+    },
+    {
+      "path": "server/server-full.log",
+      "bytes": 38284,
+      "sha256": "c74f0b1cf90e0d31c64394ade776a462bb12458d9966aec44cbd0456d8c51bc7"
+    },
+    {
+      "path": "server/server-start.json",
+      "bytes": 1052,
+      "sha256": "4e13eda21fb5fcef985834de9184e3dbd9fe5a06b63cc5f5ae384078b1a54985"
+    },
+    {
+      "path": "source/source-contract.json",
+      "bytes": 14353,
+      "sha256": "492eb6018391ca0e81846d1f4caeeaaba110559005ea208fbcabe6f99c884688"
+    },
+    {
+      "path": "source/source-shield-contact.png",
+      "bytes": 89973,
+      "sha256": "1117ac8c49570b441f18686e6ec3ca23dca119103f0d5eaff41fe058bbd7866e"
+    },
+    {
+      "path": "source/source-tao-shields-contact.png",
+      "bytes": 236155,
+      "sha256": "954b8a17d7075cb87167787a2bc888183797b65d20cb0549f8dcffb6a1e7ff5a"
+    },
+    {
+      "path": "source/来源契约.md",
+      "bytes": 3954,
+      "sha256": "8d499b82dc3be241e1f499b2615aa934ebf7748fad221e7132bab050fae794a9"
+    },
+    {
+      "path": "source-hashes.json",
+      "bytes": 12808,
+      "sha256": "d180f23c3f25fb628a13185790e1380a9870b6af16fee1ed4c411e83a25ed082"
+    },
+    {
+      "path": "strict-tsc-result.json",
+      "bytes": 333,
+      "sha256": "d7bb4eada4324edaa7ab0835126350910adc7899790ac91e0992d1371c666bd6"
+    },
+    {
+      "path": "strict-tsc.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "历史尺寸过渡_不作验收/14-宽屏等比地图与四周小物.jpg",
+      "bytes": 198507,
+      "sha256": "9a82d9593a39dd47c0546347d530afa270a4e6e731f2a2a2bf7e490a6993320a"
+    },
+    {
+      "path": "历史尺寸过渡_不作验收/15-恢复窗口后的开阔战场.jpg",
+      "bytes": 115497,
+      "sha256": "18b489366c4536e39ff1228533fb0e6817a3f9a370cca4866dd32bc94f8cb180"
+    },
+    {
+      "path": "最终只读复核.json",
+      "bytes": 1137,
+      "sha256": "81f7f2fcaf7a12c7e20087447209e36edcc0b4091f451ae6f13d262cef01b15b"
+    },
+    {
+      "path": "本机浏览器验收.json",
+      "bytes": 10338,
+      "sha256": "a92c0c1da67c0bf8fdf0f4182550770bdf6a168ea0e85fe27189fff266e2b423"
+    },
+    {
+      "path": "浏览器原始检查点.json",
+      "bytes": 3443,
+      "sha256": "1371651700f7244590f7a98787f6a0ff869a58cd7fef5ba27eff59d245c8d4eb"
+    },
+    {
+      "path": "浏览器表现追踪.json",
+      "bytes": 2744,
+      "sha256": "3d3b0cfe87ece995935f50f0b08a920ea27bfbf15f9aea176af8d8eababdb3e0"
+    },
+    {
+      "path": "浏览器警告与错误.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "浏览器输入追踪.json",
+      "bytes": 57654,
+      "sha256": "2ffd818024938842ae645799ef82ab892c07c62737631a319615d642e28b3bd5"
+    },
+    {
+      "path": "证据文件清单.json",
+      "bytes": 10126,
+      "sha256": "f4a1699152904f3bb138dc839638dcee38233d766e7ec51ff60c7d066abb35aa"
+    },
+    {
+      "path": "阶段验收.json",
+      "bytes": 4154,
+      "sha256": "e8d26b4be15052e855c351b26a38d76622a6b5c2a99b9f3050b8714b9f8bd034"
+    },
+    {
+      "path": "非浏览器证据摘要.md",
+      "bytes": 2516,
+      "sha256": "e036d71c7ed9311bb28be1e862ca1f29939cb926af665a2859a559a336b1e886"
+    }
+  ]
+}

@@ -2240,6 +2240,12 @@ export namespace minimir {
             /** EntityState attack_skill_level. */
             attack_skill_level: number;
 
+            /** EntityState statuses. */
+            statuses: minimir.v1.EntityStatusState.$Properties[];
+
+            /** EntityState combat_attributes. */
+            combat_attributes?: (minimir.v1.CombatAttributes.$Properties|null);
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -2357,12 +2363,330 @@ export namespace minimir {
                 /** EntityState attack_skill_level */
                 attack_skill_level?: (number|null);
 
+                /** EntityState statuses */
+                statuses?: (minimir.v1.EntityStatusState.$Properties[]|null);
+
+                /** EntityState combat_attributes */
+                combat_attributes?: (minimir.v1.CombatAttributes.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an EntityState. */
             type $Shape = minimir.v1.EntityState.$Properties;
+        }
+
+        /**
+         * Properties of an EntityStatusState.
+         * @deprecated Use minimir.v1.EntityStatusState.$Properties instead.
+         */
+        interface IEntityStatusState extends minimir.v1.EntityStatusState.$Properties {
+        }
+
+        /** Represents an EntityStatusState. */
+        class EntityStatusState {
+
+            /**
+             * Constructs a new EntityStatusState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EntityStatusState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EntityStatusState status_id. */
+            status_id: number;
+
+            /** EntityStatusState source_skill_id. */
+            source_skill_id: number;
+
+            /** EntityStatusState skill_level. */
+            skill_level: number;
+
+            /** EntityStatusState remaining_ms. */
+            remaining_ms: number;
+
+            /** EntityStatusState max_physical_defence_bonus. */
+            max_physical_defence_bonus: Long;
+
+            /** EntityStatusState max_magic_defence_bonus. */
+            max_magic_defence_bonus: Long;
+
+            /** EntityStatusState damage_reduction_percent. */
+            damage_reduction_percent: number;
+
+            /** EntityStatusState caster_handle. */
+            caster_handle: number;
+
+            /** EntityStatusState caster_life. */
+            caster_life: Long;
+
+            /**
+             * Creates a new EntityStatusState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EntityStatusState instance
+             */
+            static create(properties: minimir.v1.EntityStatusState.$Shape): minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape;
+            static create(properties?: minimir.v1.EntityStatusState.$Properties): minimir.v1.EntityStatusState;
+
+            /**
+             * Encodes the specified EntityStatusState message. Does not implicitly {@link minimir.v1.EntityStatusState.verify|verify} messages.
+             * @param message EntityStatusState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EntityStatusState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EntityStatusState message, length delimited. Does not implicitly {@link minimir.v1.EntityStatusState.verify|verify} messages.
+             * @param message EntityStatusState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EntityStatusState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EntityStatusState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape} EntityStatusState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape;
+
+            /**
+             * Decodes an EntityStatusState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape} EntityStatusState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EntityStatusState & minimir.v1.EntityStatusState.$Shape;
+
+            /**
+             * Verifies an EntityStatusState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EntityStatusState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EntityStatusState {
+
+            /** Properties of an EntityStatusState. */
+            interface $Properties {
+
+                /** EntityStatusState status_id */
+                status_id?: (number|null);
+
+                /** EntityStatusState source_skill_id */
+                source_skill_id?: (number|null);
+
+                /** EntityStatusState skill_level */
+                skill_level?: (number|null);
+
+                /** EntityStatusState remaining_ms */
+                remaining_ms?: (number|null);
+
+                /** EntityStatusState max_physical_defence_bonus */
+                max_physical_defence_bonus?: (Long|null);
+
+                /** EntityStatusState max_magic_defence_bonus */
+                max_magic_defence_bonus?: (Long|null);
+
+                /** EntityStatusState damage_reduction_percent */
+                damage_reduction_percent?: (number|null);
+
+                /** EntityStatusState caster_handle */
+                caster_handle?: (number|null);
+
+                /** EntityStatusState caster_life */
+                caster_life?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EntityStatusState. */
+            type $Shape = minimir.v1.EntityStatusState.$Properties;
+        }
+
+        /**
+         * Properties of a CombatAttributes.
+         * @deprecated Use minimir.v1.CombatAttributes.$Properties instead.
+         */
+        interface ICombatAttributes extends minimir.v1.CombatAttributes.$Properties {
+        }
+
+        /** Represents a CombatAttributes. */
+        class CombatAttributes {
+
+            /**
+             * Constructs a new CombatAttributes.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.CombatAttributes.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** CombatAttributes physical_attack_min. */
+            physical_attack_min: Long;
+
+            /** CombatAttributes physical_attack_max. */
+            physical_attack_max: Long;
+
+            /** CombatAttributes physical_defence_min. */
+            physical_defence_min: Long;
+
+            /** CombatAttributes physical_defence_max. */
+            physical_defence_max: Long;
+
+            /** CombatAttributes magic_defence_min. */
+            magic_defence_min: Long;
+
+            /** CombatAttributes magic_defence_max. */
+            magic_defence_max: Long;
+
+            /** CombatAttributes magic_attack_min. */
+            magic_attack_min: Long;
+
+            /** CombatAttributes magic_attack_max. */
+            magic_attack_max: Long;
+
+            /** CombatAttributes spirit_attack_min. */
+            spirit_attack_min: Long;
+
+            /** CombatAttributes spirit_attack_max. */
+            spirit_attack_max: Long;
+
+            /** CombatAttributes accuracy. */
+            accuracy: Long;
+
+            /** CombatAttributes agility. */
+            agility: Long;
+
+            /** CombatAttributes damage_reduction_percent. */
+            damage_reduction_percent: number;
+
+            /**
+             * Creates a new CombatAttributes instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CombatAttributes instance
+             */
+            static create(properties: minimir.v1.CombatAttributes.$Shape): minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape;
+            static create(properties?: minimir.v1.CombatAttributes.$Properties): minimir.v1.CombatAttributes;
+
+            /**
+             * Encodes the specified CombatAttributes message. Does not implicitly {@link minimir.v1.CombatAttributes.verify|verify} messages.
+             * @param message CombatAttributes message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.CombatAttributes.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CombatAttributes message, length delimited. Does not implicitly {@link minimir.v1.CombatAttributes.verify|verify} messages.
+             * @param message CombatAttributes message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.CombatAttributes.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CombatAttributes message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape} CombatAttributes
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape;
+
+            /**
+             * Decodes a CombatAttributes message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape} CombatAttributes
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.CombatAttributes & minimir.v1.CombatAttributes.$Shape;
+
+            /**
+             * Verifies a CombatAttributes message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for CombatAttributes
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace CombatAttributes {
+
+            /** Properties of a CombatAttributes. */
+            interface $Properties {
+
+                /** CombatAttributes physical_attack_min */
+                physical_attack_min?: (Long|null);
+
+                /** CombatAttributes physical_attack_max */
+                physical_attack_max?: (Long|null);
+
+                /** CombatAttributes physical_defence_min */
+                physical_defence_min?: (Long|null);
+
+                /** CombatAttributes physical_defence_max */
+                physical_defence_max?: (Long|null);
+
+                /** CombatAttributes magic_defence_min */
+                magic_defence_min?: (Long|null);
+
+                /** CombatAttributes magic_defence_max */
+                magic_defence_max?: (Long|null);
+
+                /** CombatAttributes magic_attack_min */
+                magic_attack_min?: (Long|null);
+
+                /** CombatAttributes magic_attack_max */
+                magic_attack_max?: (Long|null);
+
+                /** CombatAttributes spirit_attack_min */
+                spirit_attack_min?: (Long|null);
+
+                /** CombatAttributes spirit_attack_max */
+                spirit_attack_max?: (Long|null);
+
+                /** CombatAttributes accuracy */
+                accuracy?: (Long|null);
+
+                /** CombatAttributes agility */
+                agility?: (Long|null);
+
+                /** CombatAttributes damage_reduction_percent */
+                damage_reduction_percent?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a CombatAttributes. */
+            type $Shape = minimir.v1.CombatAttributes.$Properties;
         }
 
         /**
@@ -5321,6 +5645,270 @@ export namespace minimir {
 
             /** Shape of a LearnSkillRequest. */
             type $Shape = minimir.v1.LearnSkillRequest.$Properties;
+        }
+
+        /**
+         * Properties of a SetCastingSupplyRequest.
+         * @deprecated Use minimir.v1.SetCastingSupplyRequest.$Properties instead.
+         */
+        interface ISetCastingSupplyRequest extends minimir.v1.SetCastingSupplyRequest.$Properties {
+        }
+
+        /** Represents a SetCastingSupplyRequest. */
+        class SetCastingSupplyRequest {
+
+            /**
+             * Constructs a new SetCastingSupplyRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SetCastingSupplyRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SetCastingSupplyRequest item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** SetCastingSupplyRequest item_version. */
+            item_version: Long;
+
+            /** SetCastingSupplyRequest unequip. */
+            unequip: boolean;
+
+            /** SetCastingSupplyRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SetCastingSupplyRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SetCastingSupplyRequest instance
+             */
+            static create(properties: minimir.v1.SetCastingSupplyRequest.$Shape): minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape;
+            static create(properties?: minimir.v1.SetCastingSupplyRequest.$Properties): minimir.v1.SetCastingSupplyRequest;
+
+            /**
+             * Encodes the specified SetCastingSupplyRequest message. Does not implicitly {@link minimir.v1.SetCastingSupplyRequest.verify|verify} messages.
+             * @param message SetCastingSupplyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SetCastingSupplyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SetCastingSupplyRequest message, length delimited. Does not implicitly {@link minimir.v1.SetCastingSupplyRequest.verify|verify} messages.
+             * @param message SetCastingSupplyRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SetCastingSupplyRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SetCastingSupplyRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape} SetCastingSupplyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape;
+
+            /**
+             * Decodes a SetCastingSupplyRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape} SetCastingSupplyRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SetCastingSupplyRequest & minimir.v1.SetCastingSupplyRequest.$Shape;
+
+            /**
+             * Verifies a SetCastingSupplyRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SetCastingSupplyRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SetCastingSupplyRequest {
+
+            /** Properties of a SetCastingSupplyRequest. */
+            interface $Properties {
+
+                /** SetCastingSupplyRequest item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** SetCastingSupplyRequest item_version */
+                item_version?: (Long|null);
+
+                /** SetCastingSupplyRequest unequip */
+                unequip?: (boolean|null);
+
+                /** SetCastingSupplyRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SetCastingSupplyRequest. */
+            type $Shape = minimir.v1.SetCastingSupplyRequest.$Properties;
+        }
+
+        /**
+         * Properties of a CastWithMaterialRequest.
+         * @deprecated Use minimir.v1.CastWithMaterialRequest.$Properties instead.
+         */
+        interface ICastWithMaterialRequest extends minimir.v1.CastWithMaterialRequest.$Properties {
+        }
+
+        /** Represents a CastWithMaterialRequest. */
+        class CastWithMaterialRequest {
+
+            /**
+             * Constructs a new CastWithMaterialRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.CastWithMaterialRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** CastWithMaterialRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** CastWithMaterialRequest input_sequence. */
+            input_sequence: number;
+
+            /** CastWithMaterialRequest skill_id. */
+            skill_id: number;
+
+            /** CastWithMaterialRequest target_handle. */
+            target_handle: number;
+
+            /** CastWithMaterialRequest target_grid. */
+            target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** CastWithMaterialRequest direction. */
+            direction: number;
+
+            /** CastWithMaterialRequest material_instance_id. */
+            material_instance_id: Uint8Array;
+
+            /** CastWithMaterialRequest material_version. */
+            material_version: Long;
+
+            /** CastWithMaterialRequest caster_life. */
+            caster_life: Long;
+
+            /** CastWithMaterialRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new CastWithMaterialRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CastWithMaterialRequest instance
+             */
+            static create(properties: minimir.v1.CastWithMaterialRequest.$Shape): minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape;
+            static create(properties?: minimir.v1.CastWithMaterialRequest.$Properties): minimir.v1.CastWithMaterialRequest;
+
+            /**
+             * Encodes the specified CastWithMaterialRequest message. Does not implicitly {@link minimir.v1.CastWithMaterialRequest.verify|verify} messages.
+             * @param message CastWithMaterialRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.CastWithMaterialRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CastWithMaterialRequest message, length delimited. Does not implicitly {@link minimir.v1.CastWithMaterialRequest.verify|verify} messages.
+             * @param message CastWithMaterialRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.CastWithMaterialRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CastWithMaterialRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape} CastWithMaterialRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape;
+
+            /**
+             * Decodes a CastWithMaterialRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape} CastWithMaterialRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.CastWithMaterialRequest & minimir.v1.CastWithMaterialRequest.$Shape;
+
+            /**
+             * Verifies a CastWithMaterialRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for CastWithMaterialRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace CastWithMaterialRequest {
+
+            /** Properties of a CastWithMaterialRequest. */
+            interface $Properties {
+
+                /** CastWithMaterialRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** CastWithMaterialRequest input_sequence */
+                input_sequence?: (number|null);
+
+                /** CastWithMaterialRequest skill_id */
+                skill_id?: (number|null);
+
+                /** CastWithMaterialRequest target_handle */
+                target_handle?: (number|null);
+
+                /** CastWithMaterialRequest target_grid */
+                target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** CastWithMaterialRequest direction */
+                direction?: (number|null);
+
+                /** CastWithMaterialRequest material_instance_id */
+                material_instance_id?: (Uint8Array|null);
+
+                /** CastWithMaterialRequest material_version */
+                material_version?: (Long|null);
+
+                /** CastWithMaterialRequest caster_life */
+                caster_life?: (Long|null);
+
+                /** CastWithMaterialRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a CastWithMaterialRequest. */
+            type $Shape = minimir.v1.CastWithMaterialRequest.$Properties;
         }
 
         /**

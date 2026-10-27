@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -133,6 +133,17 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
     } else if (id === 40013) {
         const item = record(input.value, ['previewId', 'operation']);
         payload = { previewId: bytes16(item.previewId, stored), operation: operation(item.operation, stored) };
+    } else if (id === 40014) {
+        const item = record(input.value, ['sceneEpoch', 'inputSequence', 'skillId', 'targetHandle', 'targetGrid', 'direction', 'materialInstanceId', 'materialVersion', 'casterLife', 'operation']);
+        const grid = record(item.targetGrid, ['x', 'y']), epoch = longValue(item.sceneEpoch, stored), version = longValue(item.materialVersion, stored), life = longValue(item.casterLife, stored);
+        const skillId = uint32(item.skillId), inputSequence = uint32(item.inputSequence), direction = uint32(item.direction);
+        if (!skillId || !inputSequence || direction > 7 || epoch.isNegative() || epoch.isZero() || version.isNegative() || version.isZero() || life.isNegative()) return invalid('材料施法的原场景、版本、方向或输入序号无效');
+        payload = { sceneEpoch: epoch, inputSequence, skillId, targetHandle: uint32(item.targetHandle), targetGrid: { x: uint32(grid.x), y: uint32(grid.y) }, direction,
+            materialInstanceId: bytes16(item.materialInstanceId, stored), materialVersion: version, casterLife: life, operation: operation(item.operation, stored) };
+    } else if (id === 40015) {
+        const item = record(input.value, ['itemInstanceId', 'itemVersion', 'unequip', 'operation']), version = longValue(item.itemVersion, stored);
+        if (typeof item.unequip !== 'boolean' || version.isNegative() || version.isZero()) return invalid('护符装卸的原版本或动作无效');
+        payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), itemVersion: version, unequip: item.unequip, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

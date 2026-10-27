@@ -78,7 +78,7 @@ export function effectPoses(value: PlayingCast, now: number, casterDuration = va
     if (definition.kind === 'lightning' && elapsed >= definition.cast_ms && elapsed < definition.cast_ms + beamDuration) {
         result.push({ kind: 'beam', key: key + ':beam', elapsed: elapsed - definition.cast_ms, fraction: 0, direction: event.direction });
     }
-    if ((definition.kind === 'fireball' || definition.kind === 'great_fireball') && value.resolvedAt === undefined && elapsed >= definition.impact_base_ms && elapsed < event.delayMs) {
+    if (['fireball', 'great_fireball', 'soul_shield', 'blessed_armour'].includes(definition.kind) && value.resolvedAt === undefined && elapsed >= definition.impact_base_ms && elapsed < event.delayMs) {
         const duration = event.delayMs - definition.impact_base_ms;
         result.push({ kind: 'projectile', key: key + ':projectile', elapsed: elapsed - definition.impact_base_ms,
             fraction: duration > 0 ? (elapsed - definition.impact_base_ms) / duration : 1,

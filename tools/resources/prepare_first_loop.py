@@ -22,7 +22,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_exp_levels','game_drop_pools','game_drop_entries',
-           'game_skills','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -164,11 +164,14 @@ def potion_rules(profile,items):
 SKILL_TARGET_FIELDS='range_cells target_move_tolerance_cells area_radius require_line_of_sight auto_priority auto_min_targets secondary_direction_offsets secondary_distance_cells line_cells line_stop_on_blocked activation_kind'.split()
 SKILL_CAST_FIELDS='cooldown_reduction_ms global_spell_ms action_ms delay_base_ms projectile_ms_per_cell secondary_impact_ms charge_window_ms line_step_ms'.split()
 SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm accuracy_by_level healing_stat_multiplier add_caster_level undead_multiplier_ppm max_attack_bonus_by_level ready_proc_denominator ready_proc_numerators non_undead_divisor'.split()
-SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator'.split()
+SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator buff_id material_item_id material_quantity'.split()
 SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked']
 SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
-SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm']
-SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour']
+SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self','friendly_self']
+BUFF_BEHAVIORS={'magic_shield':'magic_shield','soul_shield':'max_magic_defence','blessed_armour':'max_physical_defence'}
+BUFF_ATTRIBUTE_FIELDS='kind value_by_level target_level_divisor target_level_add hit_duration_loss_ms_per_hp'.split()
+BUFF_DURATION_FIELDS='kind stat_add stat_multiplier seconds_by_level'.split()
 COMBAT_TIMING_FIELDS='player_attack_base_ms player_attack_speed_step_ms player_attack_level_step_ms player_attack_level_cap_ms player_attack_min_ms player_attack_action_ms player_attack_impact_ms event_capacity kill_queue_capacity'.split()
 HEALING_FIELDS='tick_ms base_per_tick pet_base_per_tick levels_per_step queue_fraction_divisor queue_cap'.split()
 GROWTH_FIELDS='hp_gain hp_gain_rate mp_gain mp_gain_rate attack_divisor defence_max_divisor magic_divisor tao_divisor magic_defence_min_divisor magic_defence_max_divisor'.split()
@@ -182,16 +185,77 @@ def skill_definitions(tables,profile):
     for id in ids:
         try:
             row=next(r for r in tables['game_skills'] if r['id']==id)
+            if row['resource_costs'].get('items')!=[]:raise ValueError('旧items耗材入口必须显式为空，永久材料只由有类型字段引用')
+            refs=row['effect_ids']
+            if not isinstance(refs,list) or any(type(v) is not int or v<=0 for v in refs) or len(set(refs))!=len(refs):raise ValueError('技能效果引用须为唯一正整数列表')
+            is_buff=row['behavior_id'] in BUFF_BEHAVIORS
+            if len(refs)!=(1 if is_buff else 0):raise ValueError('状态技能须有且仅有一个效果引用，旧技能不得挂隐形状态')
+            buff_id=0
+            if refs:
+                effect=next(r for r in tables['game_effects'] if r['id']==refs[0])
+                if effect['effect_type']!='defensive_buff' or effect['trigger_phase']!='cast_impact' or effect['target_rule']!={'kind':row['target_rule']['kind']} or effect['proc_limit']!={'per_cast':1} or type(effect['proc_limit']['per_cast']) is not int or effect['recursive_trigger_allowed'] is not False:raise ValueError('状态效果触发管线、目标或递归门禁不一致')
+                if not isinstance(effect['parameters'],dict) or set(effect['parameters'])!={'buff_id'}:raise ValueError('状态效果必须唯一引用game_buffs，不内嵌另一份数值')
+                buff_id=effect['parameters']['buff_id']
+                if type(buff_id) is not int or buff_id<=0:raise ValueError('状态引用缺失或无效')
             result.append({'id':id,'name':row['display_name'],'job_id':row['class_id'],'book_item_id':row['book_item_id'],
                 'learn_level':row['learn_level'],'learned_level':row['native_start_level'],'max_level':row['native_max_level'],
                 'behavior':row['behavior_id'],'cooldown_base_ms':row['cooldown_ms'],
                 'target_kind':row['target_rule']['kind'],
                 **{k:row['target_rule'][k] for k in SKILL_TARGET_FIELDS},
                 **{k:row['cast_timing'][k] for k in SKILL_CAST_FIELDS},
-                **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost']},
+                'buff_id':buff_id,
+                **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost','material_item_id','material_quantity']},
                 **{k:row['damage_parameters'][k] for k in SKILL_DAMAGE_FIELDS}})
         except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
     return result
+
+def casting_supply_rules(profile,tables):
+    rules=profile.get('casting_supply')
+    if not isinstance(rules,dict) or set(rules)!={'enabled','slot','item_ids'} or type(rules['enabled']) is not bool or type(rules['slot']) is not int or rules['slot']!=100:raise ValueError('施法材料开关、独立槽与白名单必须显式来自Excel')
+    ids=rules['item_ids']
+    if not isinstance(ids,list) or not ids or any(type(v) is not int or v<=0 for v in ids) or len(set(ids))!=len(ids):raise ValueError('施法材料白名单缺失或重复')
+    for id in ids:
+        row=next((r for r in tables['game_items'] if r['id']==id),None)
+        if row is None or row['item_type']!='casting_supply':raise ValueError('独立材料槽只能引用施法材料物品')
+        if row['max_stack'] is not None and (type(row['max_stack']) is not int or not 0<row['max_stack']<=2**31-1):raise ValueError('已填写的护符数量上限无效')
+        if rules['enabled'] and (type(row['max_stack']) is not int or not 0<row['max_stack']<=2**31-1):raise ValueError('未确认正数量单位前不得开启护符')
+    return deepcopy(rules)
+
+def buff_definitions(tables,skills,supply):
+    """唯一状态表投影为服务端扁平类型；名称另保留为客户端展示白名单。"""
+    result=[];names={};seen=set()
+    for skill in skills:
+        id=skill['buff_id'];kind=BUFF_BEHAVIORS.get(skill['behavior'])
+        if not kind:
+            if id or skill['material_item_id'] or skill['material_quantity']:raise ValueError('非状态技能不得附加状态或施法材料')
+            continue
+        row=next((r for r in tables['game_buffs'] if r['id']==id),None)
+        if row is None or id in seen:raise ValueError('状态引用不存在或被多个技能复用')
+        seen.add(id);attributes=row.get('attribute_effects');duration=row.get('duration_rule');immunity=row.get('immunity_rules');remove=row.get('remove_events')
+        if not isinstance(attributes,dict) or set(attributes)!=set(BUFF_ATTRIBUTE_FIELDS) or not isinstance(duration,dict) or set(duration)!=set(BUFF_DURATION_FIELDS):raise ValueError('状态属性/时长规则必须完整且没有并行参数')
+        if not isinstance(immunity,dict) or set(immunity)!={'allow_dead_targets','friendly_only'} or type(immunity['allow_dead_targets']) is not bool or immunity['friendly_only'] is not True:raise ValueError('状态目标与尸体策略缺失')
+        if not isinstance(remove,list) or any(not isinstance(v,str) for v in remove) or len(set(remove))!=len(remove) or set(remove)!={'despawn','scene_dispose'}|({'player_death'} if kind=='magic_shield' else set()):raise ValueError('状态死亡、离场清理策略与来源不符')
+        if type(row.get('duration_ms')) is not int or row['duration_ms']!=0:raise ValueError('状态时长只维护duration_rule，旧duration_ms必须显式中性0')
+        if attributes['kind']!=kind:raise ValueError('技能与状态属性类型不一致')
+        if any(not isinstance(row.get(k),str) or not row[k] for k in ['display_name','short_name']):raise ValueError('状态中文名称及短名必须来自Excel')
+        flat={'id':id,'kind':kind,'value_by_level':deepcopy(attributes['value_by_level']),
+              **{k:attributes[k] for k in ['target_level_divisor','target_level_add','hit_duration_loss_ms_per_hp']},
+              'duration_kind':duration['kind'],'stat_add':duration['stat_add'],'stat_multiplier':duration['stat_multiplier'],
+              'duration_seconds_by_level':deepcopy(duration['seconds_by_level']),'tick_ms':row['tick_ms'],
+              'stack_policy':row['stack_policy'],'remove_on_player_death':'player_death' in remove,'allow_dead_targets':immunity['allow_dead_targets']}
+        for key in ['value_by_level','duration_seconds_by_level']:
+            if not isinstance(flat[key],list) or len(flat[key])!=skill['max_level']+1 or any(type(v) is not int or not 0<=v<=2**31-1 for v in flat[key]):raise ValueError('状态逐阶数值缺失或越界')
+        for key in ['target_level_divisor','target_level_add','hit_duration_loss_ms_per_hp','stat_add','stat_multiplier','tick_ms']:
+            if type(flat[key]) is not int or not 0<=flat[key]<=2**31-1:raise ValueError('状态数值必须为有界非负整数')
+        if not flat['tick_ms']:raise ValueError('状态离散时钟不得为0')
+        if kind=='magic_shield':
+            if flat['duration_kind']!='mc_source_power' or flat['stack_policy']!='ignore_present_on_impact' or flat['allow_dead_targets'] or not flat['hit_duration_loss_ms_per_hp'] or any(v>100 for v in flat['value_by_level']):raise ValueError('魔法盾重施、减伤或时长规则无效')
+            if flat['target_level_divisor'] or flat['target_level_add'] or flat['stat_multiplier'] or any(flat['duration_seconds_by_level']) or skill['material_item_id'] or skill['material_quantity']:raise ValueError('魔法盾不得混入道士属性或永久耗材')
+        else:
+            if flat['duration_kind']!='sc_rank_linear' or flat['stack_policy']!='refresh_duration_keep_values' or not flat['allow_dead_targets'] or not flat['target_level_divisor'] or flat['hit_duration_loss_ms_per_hp'] or flat['stat_add'] or any(flat['value_by_level']):raise ValueError('道士防御状态必须保留初值与尸体计时规则')
+            if skill['material_item_id'] not in supply['item_ids'] or not skill['material_quantity']:raise ValueError('道士状态必须引用永久护符材料')
+        result.append(flat);names[str(id)]={'name':row['display_name'],'short_name':row['short_name']}
+    return result,names
 
 def validate_skills(profile,skills):
     """技能参数必须来自当前Excel，不按技能名或来源表临时填运行数值。"""
@@ -209,13 +273,14 @@ def validate_skills(profile,skills):
         if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
         passive=skill['behavior'] in ['fencing','spirit_sword','slaying']
         if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
-        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self'}
+        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid'}
         if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
         activation={'fencing':'passive','spirit_sword':'passive','slaying':'passive_proc','thrusting':'toggle','half_moon':'toggle','flaming_sword':'charge'}.get(skill['behavior'],'cast')
         if skill['activation_kind']!=activation:raise ValueError('技能激活方式与执行管线不一致')
         if activation=='cast':
             if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','auto_min_targets']):raise ValueError('施法时序或自动策略缺失')
-            if skill['target_kind'] not in ['enemy_direction','enemy_self'] and skill['range_cells']<=0:raise ValueError('锁定或地面施法缺少射程')
+            if skill['target_kind'] not in ['enemy_direction','enemy_self','friendly_self'] and skill['range_cells']<=0:raise ValueError('锁定或地面施法缺少射程')
+            if skill['target_kind']=='friendly_self' and skill['range_cells']!=0:raise ValueError('自身技能不得附加射程')
         elif activation in ['toggle','charge','passive_proc'] and any(skill[k] for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell','auto_priority','auto_min_targets']):raise ValueError('近战模式不得复用施法时钟或自动施法策略')
         if skill['area_radius']>16 or (skill['target_kind'].endswith('_grid') or skill['target_kind']=='enemy_self')!=(skill['area_radius']>0):raise ValueError('区域半径与目标类型不匹配')
         for field in ['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators']:
@@ -353,12 +418,13 @@ def fixture_from_rows(tables):
     validate_map_inputs(m,collision,profile,spawns)
     monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
     skills=skill_definitions(tables,profile);validate_skills(profile,skills)
+    supply=casting_supply_rules(profile,tables);buffs,buff_names=buff_definitions(tables,skills,supply)
     if profile['combat_timing']['kill_queue_capacity']<sum(r['map_id']==m['id'] for r in tables['game_monster_spawns'])+1:raise ValueError('逐杀队列必须覆盖本地图全部怪物槽及后续结算边界')
     healing=deepcopy(profile['healing']);growth=deepcopy(profile['player_growth'])
     resist_weights={row['magic_resist_weight'] for row in profile['players']}
     if len(resist_weights)!=1:raise ValueError('当前开发子集使用同一有来源的魔法闪避权重')
     resist_weight=next(iter(resist_weights))
-    fighter=lambda r:{'job_id':2 if r['id']==2 else 0,'definition_id':r['id'],'hp':r['hp'],'mp':r['attributes']['mp'],
+    fighter=lambda r:{'job_id':2 if r['id']==2 else 0,'definition_id':r['id'],'level':r['level'],'hp':r['hp'],'mp':r['attributes']['mp'],
         'attack_min':r['attributes']['physical_attack_min'],'attack_max':r['attributes']['physical_attack_max'],
         'defence':r['attributes']['physical_defence_min'],'defence_min':r['attributes']['physical_defence_min'],
         'defence_max':r['attributes']['physical_defence_max'],'magic_defence_min':r['attributes']['magic_defence'],
@@ -388,13 +454,20 @@ def fixture_from_rows(tables):
     source=one('game_items',profile['skill_economy']['page_item_id'])
     items.append({'id':source['id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,'is_skill_page':True,
                   'max_stack':source['max_stack'],'recycle_gold':0,'stackable':True,'allowed_jobs':[0,1,2]})
+    for id in supply['item_ids']:
+        source=one('game_items',id)
+        if any(item['id']==id for item in items):raise ValueError('施法材料不能同时充当装备、技能书或药品')
+        items.append({'id':id,'name':source['display_name'],'kind':'casting_supply','equipment_slot':supply['slot'],
+                      'is_equipment':False,'stackable':True,'max_stack':source['max_stack'] if supply['enabled'] else 0,
+                      'recycle_gold':0,'allowed_jobs':[0,1,2]})
     economy=skill_economy(tables,profile,skills,items)
+    if not supply['enabled'] and any(r['item_id'] in supply['item_ids'] for r in economy['skill_shop']):raise ValueError('护符单位/价格未授权，不得开启护符商品')
     categories={r['category_key']:r['prob_ppm'] for r in tables['game_drop_categories']}
     drop_gold=one('game_drop_entries',5)
     potions=potion_rules(profile,items)
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
-        'potions':potions,'skills':skills,'combat_timing':deepcopy(profile['combat_timing']),'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
+        'potions':potions,'skills':skills,'buffs':buffs,'casting_supply':supply,'combat_timing':deepcopy(profile['combat_timing']),'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
         'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':deepcopy(collision['blocked_cells']),
                'player_spawn':deepcopy(m['spawn_cell']),'pet_spawn':deepcopy(profile['pet_spawn']),'monster_spawns':deepcopy(spawns)},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
@@ -405,6 +478,7 @@ def fixture_from_rows(tables):
         'progression':{'exp_per_level':[r['next_level_exp'] for r in sorted(tables['game_exp_levels'],key=lambda r:r['level'])]},
         'initial_inventory':profile['initial_inventory'],'initial_bound_gold':profile['initial_bound_gold'],'inventory_capacity':profile['inventory_capacity'],
         '_source_evidence':{'status':'candidate','official_180_restoration_verified':False,
+                            'buff_names':buff_names,
                             'record_sources':{tid:[{'id':r['id'],'source_ref':r['source_ref'],'note':r['note']} for r in rows] for tid,rows in tables.items()},
                             'player_stats':profile['player_stats_source'],'technical_parameters':profile['technical_parameters_notice'],
                             'damage_scope':profile['damage_scope_notice'],'revive':profile['revive_notice'],
@@ -420,11 +494,11 @@ def fixture_from_rows(tables):
                                 'automatic_use_enabled':False,
                                 'formal_scope':'正式game_items堆叠上限及effect_list_id仍待核验；未开放完整正式效果表。'},
                             'skills':{'status':'candidate','target_180_verified':False,
-                                'reference_document':'docs/范围技能与战斗时序实施边界.md',
+                                'reference_document':'docs/技能来源核验与实施清单.md',
                                 'parameters_source':'唯一玩法Excel：技能基础定义、技能逐级扩展、商城商品候选、技能书分解候选；开发夹具仅引用ID与技术预算',
-                                'scope':'八项技能原生0至3阶、单体/3×3伤害与治疗、原书/书页升级、NPC购书与掉落书拆页；完整目标版本与其余技能仍待实现',
+                                'scope':'已登记开发技能及三状态来源候选；范围、状态与材料按唯一表投影，转换成功不代表本阶段业务或完整目标版本通过',
                                 'learning_adaptation':'学习取各自Crystal Level1为本作开发适配；新角色仍按首组三职业1本绑定书，原生初学0，未学由列表缺项表示',
-                                'attribute_scope':'三职默认成长与DC/MC/SC/AC/MAC、准确敏捷；不含元素/幸运/完整Buff，来源默认不是源服实库',
+                                'attribute_scope':'三职默认成长、DC/MC/SC/AC/MAC与准确敏捷，新增三防御状态候选；不含元素/幸运/完整Buff，来源默认不是源服实库',
                                 'monster_resist_scope':'本轮开发怪物/宠物不配置魔法闪避加成（0）；权重从唯一Excel中共同的源码默认候选权重取得',
                                 'formal_skill_and_upgrade_tables_populated':True,
                                 'economy_reference':'docs/技能获取与升级实施边界.md；书本=目标阶+1用户确定，页与来源渠道候选'}}}
@@ -437,8 +511,8 @@ def public_gameplay(fixture):
     items=[]
     for row in fixture['items']:
         effect=effects.get(row['id']) if not row['is_equipment'] else None
-        item={'item_id':row['id'],'name':row['name'],'kind':'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion',
-              **({'equip_slot':row['equipment_slot']} if row['is_equipment'] else {}),
+        item={'item_id':row['id'],'name':row['name'],'kind':'casting_supply' if row.get('kind')=='casting_supply' else 'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion',
+              **({'equip_slot':row['equipment_slot']} if row['is_equipment'] or row.get('kind')=='casting_supply' else {}),
               'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None}
         if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
@@ -446,6 +520,7 @@ def public_gameplay(fixture):
     skills=[{'id':s['id'],'name':s['name'],'job_id':s['job_id'],'book_item_id':s['book_item_id'],
              'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['activation_kind'] not in ['passive','passive_proc'],
              'activation_kind':s['activation_kind'],
+             'buff_id':s['buff_id'],'material_item_id':s['material_item_id'],'material_quantity':s['material_quantity'],
              'target_kind':s['target_kind'],'area_radius':s['area_radius'],'require_line_of_sight':s['require_line_of_sight'],
              'range':s['range_cells'],'base_cost':s['mp_base_cost'],'level_cost':s['mp_level_cost'],
              'cast_ms':s['action_ms'],'delay_base_ms':s['cooldown_base_ms'],'delay_reduction_ms':s['cooldown_reduction_ms'],
@@ -455,8 +530,17 @@ def public_gameplay(fixture):
              'secondary_direction_offsets':deepcopy(s['secondary_direction_offsets']),'secondary_distance_cells':s['secondary_distance_cells'],
              'line_cells':s['line_cells'],'line_step_ms':s['line_step_ms'],'charge_window_ms':s['charge_window_ms'],
              'source_status':'candidate','target_180_verified':False} for s in fixture['skills']]
+    statuses=[]
+    for buff in fixture['buffs']:
+        names=fixture['_source_evidence']['buff_names'][str(buff['id'])]
+        statuses.append({'id':buff['id'],'name':names['name'],'short_name':names['short_name'],'kind':buff['kind'],
+            'stack_policy':buff['stack_policy'],'tick_ms':buff['tick_ms'],'remove_on_player_death':buff['remove_on_player_death'],
+            'duration_rule':{'kind':buff['duration_kind'],'stat_add':buff['stat_add'],'stat_multiplier':buff['stat_multiplier'],'seconds_by_level':deepcopy(buff['duration_seconds_by_level'])},
+            'attribute_effects':{'kind':buff['kind'],'value_by_level':deepcopy(buff['value_by_level']),
+                **{key:buff[key] for key in ['target_level_divisor','target_level_add','hit_duration_loss_ms_per_hp']}}})
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
-            'skills':skills,'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
+            'skills':skills,'statuses':statuses,'casting_supply':deepcopy(fixture['casting_supply']),
+            'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
             'shop_offers':[{'offer_id':r['id'],'item_id':r['item_id'],'name':next(i['name'] for i in fixture['items'] if i['id']==r['item_id']),
                             'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],
                             'output_bound':r['output_bound'],'max_purchase_quantity':r['max_purchase_quantity'],'source_status':'candidate'} for r in fixture['skill_shop']],

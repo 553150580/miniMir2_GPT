@@ -47,6 +47,26 @@ message LearnSkillRequest {
   uint32 skill_id = 2;
   OperationContext operation = 3;
 }
+// 护符属于独立消耗槽，不新增普通强化装备部位；装入与取下都核对原实例/版本。
+message SetCastingSupplyRequest {
+  bytes item_instance_id = 1;
+  uint64 item_version = 2;
+  bool unequip = 3;
+  OperationContext operation = 4;
+}
+// 永久材料由角色owner先扣，再向原scene/life应用一次临时施法；重试保留原op。
+message CastWithMaterialRequest {
+  uint64 scene_epoch = 1;
+  uint32 input_sequence = 2;
+  uint32 skill_id = 3;
+  uint32 target_handle = 4;
+  GridPoint target_grid = 5;
+  uint32 direction = 6;
+  bytes material_instance_id = 7;
+  uint64 material_version = 8;
+  uint64 caster_life = 9;
+  OperationContext operation = 10;
+}
 // kind：1购书/书页，2技能升级，3技能书分解。预览不冻结资产。
 message ItemConsumption { bytes instance_id = 1; uint64 version = 2; int64 quantity = 3; }
 message SkillAssetPreviewRequest {

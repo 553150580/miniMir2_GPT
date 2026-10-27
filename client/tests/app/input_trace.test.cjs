@@ -15,6 +15,8 @@ test('输入追踪只投影指定消息及字段，Long施法ID保持原精度�
         ['send',30004,{...secrets,enabled:false},{enabled:false}],
         ['send',40009,{...secrets,itemId:36},{item_id:36}],
         ['send',40010,{...secrets,skillId:2},{skill_id:2}],
+        ['send',40014,{...secrets,skillId:14,inputSequence:8,materialInstanceId:new Uint8Array(16)},{skill_id:14,input_sequence:8}],
+        ['send',40015,{...secrets,unequip:true,itemInstanceId:new Uint8Array(16)},{unequip:true}],
         ['receive',30005,{...secrets,autoBattleEnabled:true},{enabled:true}],
         ['receive',30006,{...secrets,skillId:1,inputSequence:99,castId:{toString:()=> '9007199254740993'}},{skill_id:1,input_sequence:99,cast_id:'9007199254740993'}],
         ['receive',30007,{...secrets,attackSequence:9,eventId:{toString:()=> '9007199254740994'}},{attack_sequence:9,event_id:'9007199254740994'}],

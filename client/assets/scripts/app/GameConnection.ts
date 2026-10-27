@@ -22,6 +22,7 @@ const codecs: Record<number, MessageType> = {
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,
     40009: pb.UseItemRequest, 40010: pb.LearnSkillRequest,
     40011: pb.SkillAssetPreviewRequest, 40012: pb.SkillAssetPreview, 40013: pb.SkillAssetCommitRequest,
+    40014: pb.CastWithMaterialRequest, 40015: pb.SetCastingSupplyRequest,
 };
 
 function variable(value: Long): number[] {

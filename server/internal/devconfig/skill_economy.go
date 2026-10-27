@@ -98,7 +98,7 @@ func (f *Fixture) ValidateSkillEconomy() error {
 	shops := map[uint32]bool{}
 	for _, s := range f.SkillShop {
 		i, exists := f.Item(s.ItemID)
-		if !exists || s.ID == 0 || shops[s.ID] || (!i.IsSkillPage && i.BookSkillID == 0) || s.Quantity <= 0 || s.PriceUnits <= 0 || s.MaxPurchaseQuantity <= 0 || !s.OutputBound || (s.Currency != "gold" && s.Currency != "ingot" && s.Currency != "bound_ingot") {
+		if !exists || s.ID == 0 || shops[s.ID] || (!i.IsSkillPage && i.BookSkillID == 0 && !f.IsCastingSupply(i.ID)) || f.IsCastingSupply(i.ID) && !f.CastingSupply.Enabled || s.Quantity <= 0 || s.PriceUnits <= 0 || s.MaxPurchaseQuantity <= 0 || !s.OutputBound || (s.Currency != "gold" && s.Currency != "ingot" && s.Currency != "bound_ingot") {
 			return errors.New("技能商店商品/币种/绑定无效")
 		}
 		shops[s.ID] = true

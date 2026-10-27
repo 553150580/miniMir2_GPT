@@ -138,5 +138,12 @@
   "final_readonly_review": {
     "path": "outputs/development-isometric-map-20261027/最终只读复核.json",
     "sha256": "aac6af83aded1f16e9b544b0a9ea50744d91b511771ff8c75c7967262f854dd8"
+  },
+  "subsequent_stage": {
+    "stage": "战斗状态与防御技能",
+    "report": "docs/战斗状态与防御技能阶段验收.json",
+    "current_code_snapshot_matches": false,
+    "map_geometry_resource_hash_unchanged": true,
+    "scope": "本报告保留v0.8当时限定验收与原始摘要；当前代码和构建以rule9阶段报告为准"
   }
 }

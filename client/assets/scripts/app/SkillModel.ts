@@ -3,9 +3,11 @@ import { PotionInteger, PotionItem } from './PotionModel';
 export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
-        | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'; active: boolean; range: number;
+        | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
+        | 'magic_shield' | 'soul_shield' | 'blessed_armour'; active: boolean; range: number;
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
-    target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
+    target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
+    buff_id?: number; material_item_id?: number; material_quantity?: number;
     area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[]; max_attack_bonus_by_level?: readonly number[];
     secondary_direction_offsets?: readonly number[]; secondary_distance_cells?: number; line_cells?: number; line_step_ms?: number; charge_window_ms?: number;
     base_cost: number; level_cost: number; cast_ms: number; impact_base_ms: number; projectile_ms_per_cell: number; accuracy_per_level: number;
@@ -17,6 +19,10 @@ export interface SkillInventory {
 export interface SkillSnapshot {
     ready: boolean; roleIdentity: string; job: number; sceneEpoch: PotionInteger; ruleVersion: PotionInteger;
     inventory: SkillInventory | null; definitions: readonly SkillDefinition[]; modes?: SkillModeState | null; modesReceivedAt?: number;
+    castingSupply?: { name: string; quantity: string } | null;
+    castingSupplyEnabled?: boolean;
+    statusDefinitions?: readonly { id: number; duration_rule?: { stat_multiplier: number; seconds_by_level: readonly number[] };
+        attribute_effects: { value_by_level: readonly number[]; target_level_divisor?: number; target_level_add?: number } }[];
 }
 export interface SkillModeEntry { skillId: number; enabled: boolean; ready: boolean; remainingMs: number; cooldownRemainingMs: number; }
 export interface SkillModeState { sceneEpoch: PotionInteger; revision: PotionInteger; playerLife: PotionInteger; serverTimeUnixMs: PotionInteger; states: readonly SkillModeEntry[]; }
@@ -113,6 +119,7 @@ export function skillModeStatus(snapshot: SkillSnapshot, definition: SkillDefini
     return cooldown ? `冷却 ${cooldown}秒` : activation === 'charge' ? '可充能' : '攻击时有机会准备下一击';
 }
 export function skillActionLabel(snapshot: SkillSnapshot, row: SkillRow): string {
+    if (row.definition.material_quantity && snapshot.castingSupplyEnabled === false) return '护符未开放';
     const activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     if (activation === 'toggle') return state?.enabled ? '关闭' : '开启';
     if (activation === 'charge') return state?.ready ? '已就绪' : '充能';
@@ -124,11 +131,30 @@ export function skillPassiveText(row: SkillRow): string {
 }
 // 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
 export function skillQuickLabel(definition: SkillDefinition): string {
-    return ({ firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光' } as Record<string, string>)[definition.kind] ?? definition.name;
+    return ({ firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
 }
 export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
+    if (row.definition.material_quantity && snapshot.castingSupplyEnabled === false) return '未开放';
     const label = skillQuickLabel(row.definition), activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     return activation === 'toggle' && state ? `${label}${state.enabled ? '开' : '关'}` : activation === 'charge' && state?.ready ? `${label}备` : label;
+}
+export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): string[] {
+    const definition = row.definition, lines = [row.status, `魔法消耗 ${row.cost}`];
+    const status = snapshot.statusDefinitions?.find(value => value.id === definition.buff_id), reduction = status?.attribute_effects.value_by_level[row.level];
+    if (definition.kind === 'magic_shield') lines.push('仅对自己施放', reduction === undefined ? '获得伤害减免，实际数值见当前状态' : `当前等级伤害减免 ${reduction}%`, '持续时间受魔法属性与技能等级影响',
+        '受到实际伤害会缩短持续时间', '已有魔法盾时重施仍消耗魔法，但不刷新', '角色倒下后魔法盾解除');
+    else if (definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') lines.push(`轻触地面选择中心，友方范围半径${definition.area_radius ?? 0}格`,
+        definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
+        '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进');
+    else if (!definition.active) lines.push(skillPassiveText(row));
+    else lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
+    if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
+        lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);
+    if (definition.material_quantity) lines.push(`每次消耗已装入护符 ${definition.material_quantity}份`, snapshot.castingSupplyEnabled === false ? '施法护符暂未开放' : snapshot.castingSupply
+        ? `当前护符：${snapshot.castingSupply.name} · 余${snapshot.castingSupply.quantity}` : '尚未装入施法护符，请在背包中选择装入');
+    lines.push(`${definition.learn_level}级可使用对应技能书学习`, '升级需选择书本与书页，先查看报价');
+    return lines;
 }
 export function createSkillLearnPreview(snapshot: SkillSnapshot, skillId: number): SkillLearnPreview {
     if (!snapshot.ready || !snapshot.inventory || !snapshot.roleIdentity) throw new Error('角色与背包尚未同步');

@@ -524,6 +524,11 @@ func (c *client) send(id uint16, q proto.Message) uint32 {
 			c.input++
 			message.InputSequence = c.input
 		}
+	case *pb.CastWithMaterialRequest:
+		if message.InputSequence == 0 {
+			c.input++
+			message.InputSequence = c.input
+		}
 	case *pb.AttackIntent:
 		if message.InputSequence == 0 {
 			c.input++

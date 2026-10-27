@@ -46,6 +46,8 @@ const (
 	MsgC2SSkillAssetPreview uint16 = 40011
 	MsgS2CSkillAssetPreview uint16 = 40012
 	MsgC2SSkillAssetCommit uint16 = 40013
+	MsgC2SCastWithMaterial uint16 = 40014
+	MsgC2SSetCastingSupply uint16 = 40015
 )
 
 const (
@@ -78,4 +80,6 @@ const (
 	CodeSkillUpgradeBlocked uint32 = 3303
 	CodeSkillBookSource uint32 = 3304
 	CodeSkillPurchaseBlocked uint32 = 3305
+	CodeSkillMaterialRequired uint32 = 3207
+	CodeSkillMaterialChanged uint32 = 3208
 )

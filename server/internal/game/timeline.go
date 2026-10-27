@@ -226,10 +226,11 @@ func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
 	attacker, defender := w.fighter(r, caster), w.fighter(r, target)
 	damage := int64(0)
 	if a.Defence == defenceAC || w.draw(defender.Agility+1) <= attacker.Accuracy {
-		damage = a.Amount
+		armour := int64(0)
 		if a.Defence != defenceAgility {
-			damage -= w.interval(defender.DefenceMin, defender.DefenceMax)
+			armour = w.interval(defender.DefenceMin, defender.DefenceMax)
 		}
+		damage = statusDamage(target, a.Amount, armour)
 	}
 	if damage < 0 {
 		damage = 0

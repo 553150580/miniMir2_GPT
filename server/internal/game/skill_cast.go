@@ -10,12 +10,22 @@ import (
 	"time"
 )
 
-type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea bool }
+type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status bool }
+
+type preparedCast struct {
+	Skill                                 devconfig.Skill
+	Level                                 uint32
+	Caster, Target                        actorRef
+	Origin, Point                         devconfig.Point
+	Direction                             uint32
+	Cost, Amount, DelayMS, BuffDurationMS int64
+}
 
 var skillHandlers = map[string]skillHandler{
 	"fencing": {Passive: true}, "spirit_sword": {Passive: true},
 	"fireball": {}, "great_fireball": {}, "thunderbolt": {UndeadBonus: true},
 	"firebang": {Area: true}, "healing": {Healing: true}, "mass_healing": {Healing: true, Area: true},
+	"magic_shield": {Status: true}, "soul_shield": {Status: true, Area: true}, "blessed_armour": {Status: true, Area: true},
 	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
 	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
 }
@@ -90,60 +100,91 @@ func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, gr
 	return w.castDirected(r, id, targetHandle, input, r.Player.Direction, now, ground...)
 }
 func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32, now time.Time, ground ...*pb.GridPoint) uint32 {
+	plan, code := w.prepareCast(r, id, targetHandle, direction, now, false, ground...)
+	if code != 0 {
+		return code
+	}
+	return w.acceptPreparedCast(r, plan, input, now)
+}
+func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed bool, ground ...*pb.GridPoint) (*preparedCast, uint32) {
+	if direction > 7 {
+		return nil, p.CodeSkillTarget
+	}
 	s, exists := w.e.Store.Cfg.Fixture.Skill(id)
 	level, learned := r.Role.Skill(id)
 	handler, registered := skillHandlers[s.Behavior]
 	if !exists || !learned || !registered || s.JobID != r.Role.Job || level < s.LearnedLevel || level > s.MaxLevel {
-		return p.CodeSkillNotLearned
+		return nil, p.CodeSkillNotLearned
 	}
 	if handler.Passive || r.Pending || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || len(r.Casts)+len(r.Attacks) >= w.eventCapacity() || !w.killBudgetAvailable(r) {
-		return p.CodeSkillStateBlocked
+		return nil, p.CodeSkillStateBlocked
 	}
 	if now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[id]) {
-		return p.CodeSkillCooldown
+		return nil, p.CodeSkillCooldown
 	}
 	var target *entity
 	var point devconfig.Point
-	if handler.Direction || handler.SelfArea {
+	if handler.Direction || handler.SelfArea || s.TargetKind == "friendly_self" {
 		if targetHandle != 0 || direction > 7 {
-			return p.CodeSkillTarget
+			return nil, p.CodeSkillTarget
 		}
 		if len(ground) > 0 && ground[0] != nil && !w.inBounds(devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}) {
-			return p.CodeSkillTarget
+			return nil, p.CodeSkillTarget
 		}
 		point = r.Player.Pos
 	} else if handler.Area {
 		if targetHandle != 0 || len(ground) == 0 || ground[0] == nil {
-			return p.CodeSkillTarget
+			return nil, p.CodeSkillTarget
 		}
 		point = devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}
 		if !w.inBounds(point) {
-			return p.CodeSkillTarget
+			return nil, p.CodeSkillTarget
 		}
 	} else {
 		target = w.skillTarget(r, s, targetHandle)
 		if target == nil {
-			return p.CodeSkillTarget
+			return nil, p.CodeSkillTarget
 		}
 		point = target.Pos
 	}
 	if distance(r.Player.Pos, point) > s.RangeCells {
-		return p.CodeSkillTarget
+		return nil, p.CodeSkillTarget
 	}
 	requireFlight := s.RequireLineOfSight || (s.TargetKind == "" && s.Behavior == "fireball")
 	if requireFlight && !w.lineOfSight(r.Player.Pos, point) {
-		return p.CodeSkillTarget
+		return nil, p.CodeSkillTarget
 	}
 	cost := s.MPBaseCost + int64(level)*s.MPLevelCost
 	if r.Player.MP < cost {
-		return p.CodeSkillResource
+		return nil, p.CodeSkillResource
 	}
 	if len(r.Casts)+len(r.Attacks)+1 > w.eventCapacity() {
-		return p.CodeSkillStateBlocked
+		return nil, p.CodeSkillStateBlocked
+	}
+	if s.MaterialQuantity > 0 && !materialAllowed {
+		return nil, p.CodeSkillMaterialRequired
 	}
 	stats := w.fighter(r, &r.Player)
 	amount := int64(0)
-	if handler.Healing {
+	duration := int64(0)
+	if handler.Status {
+		definition, ok := w.e.Store.Cfg.Fixture.Buff(s.BuffID)
+		if !ok {
+			return nil, p.CodeSkillNotLearned
+		}
+		switch definition.DurationKind {
+		case "mc_source_power":
+			stat := w.interval(stats.MagicMin, stats.MagicMax)
+			power := s.PowerBase + w.draw(s.PowerBonus)
+			duration = buffDurationSeconds(s, definition, level, stat, power)
+		case "sc_rank_linear":
+			duration = buffDurationSeconds(s, definition, level, w.interval(stats.TaoMin, stats.TaoMax), 0)
+		}
+		if duration <= 0 || duration > math.MaxInt32/int64(time.Second/time.Millisecond) {
+			return nil, p.CodeSkillStateBlocked
+		}
+		duration *= int64(time.Second / time.Millisecond)
+	} else if handler.Healing {
 		multiplier := s.HealingStatMultiplier
 		addLevel := s.AddCasterLevel
 		if s.TargetKind == "" && s.Behavior == "healing" {
@@ -162,8 +203,28 @@ func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32
 	}
 	delay := s.DelayBaseMS + int64(distance(r.Player.Pos, point))*s.ProjectileMSPerCell
 	if delay > math.MaxUint32 || r.CastID == math.MaxUint64 {
+		return nil, p.CodeSkillStateBlocked
+	}
+	plan := &preparedCast{Skill: s, Level: level, Caster: reference(r, &r.Player), Origin: r.Player.Pos, Point: point, Cost: cost, Amount: amount, DelayMS: delay, BuffDurationMS: duration, Direction: r.Player.Direction}
+	if target != nil {
+		plan.Target = reference(r, target)
+	}
+	if handler.Direction {
+		plan.Direction = direction
+	} else if !handler.SelfArea && s.TargetKind != "friendly_self" {
+		plan.Direction = facing(r.Player.Pos, point, r.Player.Direction)
+	}
+	return plan, 0
+}
+
+func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, now time.Time) uint32 {
+	if plan == nil || plan.Caster.Scene != r.Scene || plan.Caster.Life != r.Player.Life || r.Player.HP <= 0 {
 		return p.CodeSkillStateBlocked
 	}
+	s, level := plan.Skill, plan.Level
+	id := s.ID
+	point, amount, delay, cost := plan.Point, plan.Amount, plan.DelayMS, plan.Cost
+
 	r.Player.MP -= cost
 	r.Player.Action = 5
 	r.Player.ActionUntil = now.Add(time.Duration(s.ActionMS) * time.Millisecond)
@@ -173,23 +234,14 @@ func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32
 	r.Player.CastSkillID = id
 	r.CastID++
 	r.ScheduleID++
-	if handler.Direction {
-		r.Player.Direction = direction
-	} else if !handler.SelfArea {
-		r.Player.Direction = facing(r.Player.Pos, point, r.Player.Direction)
-	}
+	r.Player.Direction = plan.Direction
 	r.NextSpell = now.Add(time.Duration(s.GlobalSpellMS) * time.Millisecond)
 	if r.SkillCooldowns == nil {
 		r.SkillCooldowns = map[uint32]time.Time{}
 	}
 	r.SkillCooldowns[id] = now.Add(time.Duration(s.CooldownBaseMS-int64(level)*s.CooldownReductionMS) * time.Millisecond)
-	handle := uint32(0)
-	life := uint64(0)
-	if target != nil {
-		handle = target.Handle
-		life = target.Life
-	}
-	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: reference(r, &r.Player), ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level}
+	handle, life := plan.Target.Handle, plan.Target.Life
+	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
 	if s.Behavior == "hell_fire" {
 		event.LineRemaining = s.LineCells
 	}
@@ -197,7 +249,7 @@ func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32
 		event.HostSession = r.HostSession
 	}
 	r.Casts = append(r.Casts, event)
-	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(r.Player.Pos), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
+	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(plan.Origin), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
 	w.snapshot(r)
 	return 0
 }
@@ -213,7 +265,9 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 		return
 	}
 	targets := []*entity{}
-	if handler.Direction {
+	if handler.Status {
+		targets = w.buffTargets(r, c)
+	} else if handler.Direction {
 		targets = w.lineTargets(r, c)
 		if c.Skill.Behavior == "hell_fire" {
 			point := stepPoint(c.TargetPoint, c.Direction, 1)
@@ -257,6 +311,10 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 		return
 	}
 	for _, target := range targets {
+		if handler.Status {
+			w.applyBuff(r, c, target, now)
+			continue
+		}
 		amount := int64(0)
 		outcome := uint32(2)
 		if handler.Healing {
@@ -326,6 +384,39 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 		var target *entity
 		var grid *pb.GridPoint
 		direction := r.Player.Direction
+		if handler.Status {
+			missing := func(e *entity) bool { return e != nil && e.HP > 0 && e.Statuses[s.BuffID] == nil }
+			center := r.Player.Pos
+			if s.TargetKind == "friendly_self" {
+				if !missing(&r.Player) {
+					continue
+				}
+			} else {
+				if !missing(&r.Player) {
+					if !missing(r.Pet) {
+						continue
+					}
+					center = r.Pet.Pos
+				}
+				count := 0
+				for _, e := range []*entity{&r.Player, r.Pet} {
+					if missing(e) && distance(e.Pos, center) <= s.AreaRadius && w.walkable(e.Pos) {
+						count++
+					}
+				}
+				if count < s.AutoMinTargets {
+					continue
+				}
+			}
+			if s.MaterialQuantity > 0 {
+				if w.autoMaterialCast(r, s, center, now) {
+					return nil, true
+				}
+			} else if w.castDirected(r, s.ID, 0, 0, direction, now, pointPB(center)) == 0 {
+				return nil, true
+			}
+			continue
+		}
 		if handler.SelfArea {
 			if len(w.areaTargets(r, s, r.Player.Pos)) < s.AutoMinTargets {
 				continue

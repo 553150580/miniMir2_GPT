@@ -47,7 +47,7 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6"
+      "sha256": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
@@ -6053,6 +6053,27 @@
           "type": "string",
           "required": false,
           "target": "none"
+        },
+        {
+          "name": "duration_rule",
+          "title": "按施法属性计算时长",
+          "type": "json",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "display_name",
+          "title": "状态名称",
+          "type": "string",
+          "required": true,
+          "target": "both"
+        },
+        {
+          "name": "short_name",
+          "title": "徽标短名",
+          "type": "string",
+          "required": true,
+          "target": "client"
         }
       ],
       "workbook_group": "gameplay"
@@ -14210,6 +14231,25 @@
                 "minimum": 0
               }
             }
+          },
+          "casting_supply": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "slot": {
+                "type": "int",
+                "minimum": 0
+              },
+              "item_ids": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 1
+                }
+              }
+            }
           }
         }
       },
@@ -15225,6 +15265,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -15431,6 +15479,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -15637,6 +15693,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -15843,6 +15907,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -16049,6 +16121,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -16255,6 +16335,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -16461,6 +16549,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -16667,6 +16763,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -16873,6 +16977,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -17079,6 +17191,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -17285,6 +17405,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -17491,6 +17619,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -17697,6 +17833,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -17903,6 +18047,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -18109,6 +18261,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -19092,6 +19252,14 @@
               "type": "int",
               "minimum": 0
             }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
           }
         }
       },
@@ -19349,6 +19517,1425 @@
         }
       },
       "source_ref": "用户2026-10-27新要求：中央无大型遮挡物，四周少量小型代表性设施与装饰；原0.map只提供地板来源，原树阻挡不继续沿用；docs/17x17菱形地图实施边界.md"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 14,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 14,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 14,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 14,
+      "field": "effect_ids",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "int",
+          "minimum": 0
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 14,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 15,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 15,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 15,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 15,
+      "field": "effect_ids",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "int",
+          "minimum": 0
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 15,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 31,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 31,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 31,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 31,
+      "field": "effect_ids",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "int",
+          "minimum": 0
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 31,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 141,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 141,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 142,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 142,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 143,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 143,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 151,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 151,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 152,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 152,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 153,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 153,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 311,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 311,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 312,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 312,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 313,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 313,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 14,
+      "field": "attribute_effects",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "value_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "target_level_divisor": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_level_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "hit_duration_loss_ms_per_hp": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 14,
+      "field": "remove_events",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 14,
+      "field": "immunity_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "allow_dead_targets": {
+            "type": "boolean"
+          },
+          "friendly_only": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 14,
+      "field": "duration_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "stat_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "seconds_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 15,
+      "field": "attribute_effects",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "value_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "target_level_divisor": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_level_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "hit_duration_loss_ms_per_hp": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 15,
+      "field": "remove_events",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 15,
+      "field": "immunity_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "allow_dead_targets": {
+            "type": "boolean"
+          },
+          "friendly_only": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 15,
+      "field": "duration_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "stat_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "seconds_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 31,
+      "field": "attribute_effects",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "value_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "target_level_divisor": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_level_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "hit_duration_loss_ms_per_hp": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 31,
+      "field": "remove_events",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 31,
+      "field": "immunity_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "allow_dead_targets": {
+            "type": "boolean"
+          },
+          "friendly_only": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_buffs",
+      "id": 31,
+      "field": "duration_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "stat_add": {
+            "type": "int",
+            "minimum": 0
+          },
+          "stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "seconds_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 14,
+      "field": "parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "buff_id": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 14,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 14,
+      "field": "proc_limit",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "per_cast": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 15,
+      "field": "parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "buff_id": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 15,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 15,
+      "field": "proc_limit",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "per_cast": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 31,
+      "field": "parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "buff_id": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 31,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_effects",
+      "id": 31,
+      "field": "proc_limit",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "per_cast": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
     }
   ]
 }

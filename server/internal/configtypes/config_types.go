@@ -616,6 +616,8 @@ type GameBuffs struct {
     RemoveEvents json.RawMessage `json:"remove_events"`
     ImmunityRules json.RawMessage `json:"immunity_rules"`
     BudgetGroup *string `json:"budget_group"`
+    DurationRule json.RawMessage `json:"duration_rule"`
+    DisplayName *string `json:"display_name"`
 }
 
 type GameEffects struct {

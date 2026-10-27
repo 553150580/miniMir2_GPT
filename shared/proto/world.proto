@@ -39,6 +39,36 @@ message EntityState {
   uint32 attack_interval_ms = 16;
   uint32 attack_skill_id = 17;
   uint32 attack_skill_level = 18;
+  // 当前生命的权威状态全量；空列表清除，剩余时间为0不等于客户端可自行移除。
+  repeated EntityStatusState statuses = 19;
+  CombatAttributes combat_attributes = 20;
+}
+message EntityStatusState {
+  uint32 status_id = 1;
+  uint32 source_skill_id = 2;
+  uint32 skill_level = 3;
+  uint32 remaining_ms = 4;
+  int64 max_physical_defence_bonus = 5;
+  int64 max_magic_defence_bonus = 6;
+  uint32 damage_reduction_percent = 7;
+  uint32 caster_handle = 8;
+  uint64 caster_life = 9;
+}
+// 纯观察值：含已生效临时状态，客户端不据此重新计算命中或修改伤害。
+message CombatAttributes {
+  int64 physical_attack_min = 1;
+  int64 physical_attack_max = 2;
+  int64 physical_defence_min = 3;
+  int64 physical_defence_max = 4;
+  int64 magic_defence_min = 5;
+  int64 magic_defence_max = 6;
+  int64 magic_attack_min = 7;
+  int64 magic_attack_max = 8;
+  int64 spirit_attack_min = 9;
+  int64 spirit_attack_max = 10;
+  int64 accuracy = 11;
+  int64 agility = 12;
+  uint32 damage_reduction_percent = 13;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;

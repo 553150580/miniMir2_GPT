@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-27T18:05:35.036Z",
+  "finished_at_utc": "2026-10-27T18:28:31.482Z",
+  "status": "限定本机开发浏览器范围通过，关闭的材料路径不作玩家正向施放验收",
+  "target": "http://127.0.0.1:18080/?renderQA=1",
+  "phone_verified": false,
+  "production_ready": false,
+  "qa_setup": {
+    "isolated_new_account": true,
+    "existing_accounts_modified": false,
+    "three_roles_level": 40,
+    "initial_wallet_per_role": {
+      "gold": 500000,
+      "bound_gold": 300,
+      "ingot_units": 10000,
+      "bound_ingot_units": 10000
+    },
+    "prelearned_new_skills": false,
+    "notice": "只为资格和报价路径预置新角色等级及测试钱包；不是自然成长/收益或正式经济平衡证据；不归档密码或票据"
+  },
+  "observations": [
+    {
+      "case": "正常购书与原书学习",
+      "skill_id": 31,
+      "book_item_id": 18,
+      "price_gold": 15000,
+      "bound_gold_cost_observed": 330,
+      "gold_cost_observed": 14670,
+      "quantity": 1,
+      "initial_rank": 0,
+      "scope": "NPC品质0绑定书；未在浏览器验收新增技能的逐阶升级"
+    },
+    {
+      "case": "手动施放与权威状态",
+      "mp_observed": [
+        893,
+        858
+      ],
+      "two_additional_casts_mp_observed": [
+        858,
+        788
+      ],
+      "damage_reduction_percent_observed": 20,
+      "attributes_observed": {
+        "physical_attack": "5–5",
+        "magic_attack": "5–5",
+        "physical_defence": "0–0",
+        "magic_defence": "0–0"
+      },
+      "scope": "原起手、常驻壳、倒计时、到期徽标与壳移除、独立实时详情已观察；已有盾重施不刷新以服务端回归为精确证据，不把单张倒计时截图当完整时序证明"
+    },
+    {
+      "case": "健康重入",
+      "mp_after_reentry": 228,
+      "max_mp": 893,
+      "hp_after_reentry": 58,
+      "max_hp": 192,
+      "position": [
+        2,
+        2
+      ],
+      "scope": "HP/MP及原现场没有回满；本机资源重载超过盾时长，未声称浏览器观察到重入后的有效盾壳。有效状态健康重入由真实WS回归证明"
+    },
+    {
+      "case": "道士材料门禁",
+      "selected_skill_id": 14,
+      "use_text": "护符未开放",
+      "mp_before_and_after": 453,
+      "material_request_sends": 0,
+      "scope": "未开启瞄准或材料请求。14/15正向材料施放与自动耗符仅在隔离测试实例验证；本机未播放14/15正向效果"
+    },
+    {
+      "case": "场景和导航",
+      "start": [
+        2,
+        2
+      ],
+      "ground_target": [
+        8,
+        8
+      ],
+      "arrived": [
+        8,
+        8
+      ],
+      "skills_panel_open_during_navigation": true,
+      "resize_did_not_clear_target": true,
+      "viewport_sizes": [
+        [
+          720,
+          1280
+        ],
+        [
+          720,
+          1600
+        ],
+        [
+          960,
+          1280
+        ]
+      ],
+      "viewport_override_reset": true,
+      "scope": "同宽增高仅增加战斗可见空间；地图、角色、字体与控件不拉伸。四周4件小物与头顶规则保持，尺寸切换的2张过渡帧另存且排除验收"
+    }
+  ],
+  "trace": {
+    "input_records": 188,
+    "render_records": 6,
+    "accepted_casts": 19,
+    "accepted_skill_ids": [
+      31
+    ],
+    "new_warn_or_error": 0,
+    "material_send_count": 0,
+    "event_counts": {
+      "button": 27,
+      "receive": 150,
+      "send": 11
+    },
+    "scope": "输入追踪仅允许字段，不包含移动报文或完整状态/账户凭据；导航到点以实际画面核对，不伪称有移动网络追踪"
+  },
+  "render": {
+    "records": [
+      {
+        "scope": "development_render",
+        "stage": "initial",
+        "duration_ms": 5021,
+        "updates": 237,
+        "mean_update_ms": 21.27415254232237,
+        "max_update_ms": 142.90000000596046,
+        "intermediate_grid_samples": {
+          "player": 61,
+          "pet": 0,
+          "monster": 90
+        },
+        "changed_animation_frames": 86,
+        "preloaded_frames": 1304
+      },
+      {
+        "scope": "development_render",
+        "stage": "steady",
+        "duration_ms": 5003,
+        "updates": 241,
+        "mean_update_ms": 20.845416666691502,
+        "max_update_ms": 47.5,
+        "intermediate_grid_samples": {
+          "player": 0,
+          "pet": 0,
+          "monster": 0
+        },
+        "changed_animation_frames": 58,
+        "preloaded_frames": 1304
+      },
+      {
+        "scope": "development_render",
+        "stage": "initial",
+        "duration_ms": 5003,
+        "updates": 232,
+        "mean_update_ms": 21.65714285719446,
+        "max_update_ms": 64.30000001192093,
+        "intermediate_grid_samples": {
+          "player": 0,
+          "pet": 0,
+          "monster": 0
+        },
+        "changed_animation_frames": 42,
+        "preloaded_frames": 1304
+      },
+      {
+        "scope": "development_render",
+        "stage": "steady",
+        "duration_ms": 5012,
+        "updates": 241,
+        "mean_update_ms": 20.884583333383002,
+        "max_update_ms": 40.099999994039536,
+        "intermediate_grid_samples": {
+          "player": 0,
+          "pet": 0,
+          "monster": 0
+        },
+        "changed_animation_frames": 38,
+        "preloaded_frames": 1304
+      },
+      {
+        "scope": "development_render",
+        "stage": "initial",
+        "duration_ms": 5008,
+        "updates": 248,
+        "mean_update_ms": 20.275303643724698,
+        "max_update_ms": 73.7999999821186,
+        "intermediate_grid_samples": {
+          "player": 118,
+          "pet": 196,
+          "monster": 138
+        },
+        "changed_animation_frames": 110,
+        "preloaded_frames": 1272
+      },
+      {
+        "scope": "development_render",
+        "stage": "steady",
+        "duration_ms": 5011,
+        "updates": 257,
+        "mean_update_ms": 19.573828125023283,
+        "max_update_ms": 38.599999994039536,
+        "intermediate_grid_samples": {
+          "player": 0,
+          "pet": 0,
+          "monster": 0
+        },
+        "changed_animation_frames": 32,
+        "preloaded_frames": 1272
+      }
+    ],
+    "scope": "只表示本机抽样；观察到角色/怪物/宠物中间格和序列帧变化，不认证手机FPS或容量"
+  },
+  "screenshots": [
+    {
+      "path": "outputs/development-combat-status-20261028/01-小型场边装饰与法师头顶.jpg",
+      "sha256": "984134ce48e8f6f4e46b0ca9d227c9d218edf557dfb5b6c23f3d391c71160e8a",
+      "at": "2026-10-27T18:10:33.189Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/02-魔法盾购书报价.jpg",
+      "sha256": "d0401eef40e8f0380f567d8cd1f4401526c0c9f9c81d7b26379c1898cd02dfea",
+      "at": "2026-10-27T18:11:48.640Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/03-魔法盾说明与独立详情.jpg",
+      "sha256": "e2ac4de4340157fac01a1dcdae456c9cf532d5d3270edd6d99a1ce0c239148e5",
+      "at": "2026-10-27T18:13:54.782Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/04-魔法盾生效与权威倒计时.jpg",
+      "sha256": "7d47c0637e4c1cdb764fc498ae5fe22ef707e84ecd892b5bcb1b675b9d14c14e",
+      "at": "2026-10-27T18:14:22.674Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/05-两次施放受理与耗蓝.jpg",
+      "sha256": "c150472ac6b1382d20b11041beec49c7753b912785f106c567920a6c5372ae23",
+      "at": "2026-10-27T18:15:26.982Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/06-权威战斗属性与减伤.jpg",
+      "sha256": "0f55f7add44ef797450e2b230e0749a7cd9013c0f12be8ded1f104ab2ee6ff87",
+      "at": "2026-10-27T18:18:13.800Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/07-状态结束后移除徽标与盾壳.jpg",
+      "sha256": "df10921361381131f4db15188519a6c6a9508e34fbe879171cd2841a5cdd7d0d",
+      "at": "2026-10-27T18:19:16.877Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/08-状态徽标打开独立详情.jpg",
+      "sha256": "6774e453dbd1a4694739596ea47a34c1fb6907e26105de529c89c3be2ccfc1d3",
+      "at": "2026-10-27T18:20:40.751Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/09-健康重入真实资源加载.jpg",
+      "sha256": "130d2816afc76a1d95a29996d867f215bb31c4e865c3611311a69d9c4588c7af",
+      "at": "2026-10-27T18:21:41.849Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/10-健康重入未重置HP和MP.jpg",
+      "sha256": "ba5c98ccf62f426305196dd3f3df417fb25aa10ddaa75db8d73cbcda48d2689e",
+      "at": "2026-10-27T18:22:37.790Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/11-道士技能范围与护符说明.jpg",
+      "sha256": "140f554229a1ba6b3c88001c44dd90fa7e527b6fdb1be4ec3f0c9e821cd2bfb2",
+      "at": "2026-10-27T18:24:46.531Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/12-未审定护符入口明确关闭.jpg",
+      "sha256": "d1333506686526a215c0a620282bac585a1858f6e57d8a32ab5267631cd7c684",
+      "at": "2026-10-27T18:24:47.688Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/13-加高窗口只扩大战斗视野并保持导航.jpg",
+      "sha256": "77793961a66a9cfe9cce370aec64c3d26c067306b72bf0ed3c00916227a481db",
+      "at": "2026-10-27T18:25:28.325Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/14-宽屏等比地图与四周小物.jpg",
+      "sha256": "fc7f5dbed1870ca6cb38f2bfb5db748913ed7461db59bc0bd8e5a1ea714f0fe8",
+      "at": "2026-10-27T18:27:29.718Z"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/15-恢复窗口后的开阔战场.jpg",
+      "sha256": "2e73c1162bb1d81aa0ea44b14b2e31d0d485518fc91b4e3ce18da59490546b47",
+      "at": "2026-10-27T18:28:31.445Z"
+    }
+  ],
+  "excluded_transition_frames": [
+    {
+      "path": "outputs/development-combat-status-20261028/历史尺寸过渡_不作验收/14-宽屏等比地图与四周小物.jpg",
+      "reason": "尺寸切换后的瞬时过渡帧"
+    },
+    {
+      "path": "outputs/development-combat-status-20261028/历史尺寸过渡_不作验收/15-恢复窗口后的开阔战场.jpg",
+      "reason": "尺寸切换后的瞬时过渡帧"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "recorded_at_utc": "2026-10-27T18:39:17.177751+00:00",
+  "source_entries_checked": 131,
+  "resource_config_entries_checked": 8,
+  "unchanged_non_browser_archives": 44,
+  "accepted_browser_images": 15,
+  "issues": [],
+  "server_run_id": "e5693e6a-e7eb-46d1-92b3-94d5cfdbdd4c",
+  "server_pid": 91096,
+  "current_creator_report_sha256": "808a6013342634fcbf377514ee8bebea788813d4d15eecf8dc74ad4569de4c83",
+  "current_server_report_sha256": "8a036cb1a74f490f85017db62f2d4810ce99567da3c3929cac820827b4796521",
+  "phase_report_sha256": "e8d26b4be15052e855c351b26a38d76622a6b5c2a99b9f3050b8714b9f8bd034",
+  "scope": "只读复核已有通过结果与当前文件一致性；不扩大业务、手机、目标版本或容量验收",
+  "git_whitespace": {
+    "generated_snapshot_only": [
+      "config/releases/dev-combat-status-v0.9-48873786ee49/config_types.go:901: new blank line at EOF.",
+      "config/releases/dev-combat-status-v0.9-48873786ee49/config_types.ts:811: new blank line at EOF."
+    ],
+    "preserved_exact_generator_output": true,
+    "handwritten_files_have_no_reported_whitespace_errors": true
+  }
+}

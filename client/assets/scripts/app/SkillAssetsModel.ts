@@ -148,7 +148,8 @@ export function validateQuotedMaterials(quote: SkillAssetQuote, choices: readonl
     if (spend.some((value, index) => BigInt(value) > BigInt(balance[index]))) throw new Error('报价支出超出当前钱包余额');
 }
 
-const STAT_NAMES: Record<string, string> = { accuracy_bonus: '准确加成', base_power: '技能基础威力', mp_cost: '魔法消耗', max_attack_bonus: '攻击上限加成' };
+const STAT_NAMES: Record<string, string> = { accuracy_bonus: '准确加成', base_power: '技能基础威力', mp_cost: '魔法消耗', max_attack_bonus: '攻击上限加成',
+    damage_reduction_percent: '伤害减免（%）', duration_rank_factor: '持续时间阶数系数（非秒数）', base_duration_seconds: '基础持续时间（秒，另加道术项）', material_quantity: '每次施法护符用量' };
 export function skillQuoteLines(quote: SkillAssetQuote, definitions: readonly SkillAssetDefinition[]): string[] {
     const name = (id: number): string => definitions.find(row => row.item_id === id)?.name ?? `物品${id}`;
     const lines: string[] = [];

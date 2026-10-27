@@ -7,6 +7,7 @@ import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayba
 import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
 import { prepareMapSurface } from './MapSurface';
 import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
+import { StatusEffects } from './StatusEffects';
 
 interface Visual {
     node: Node;
@@ -27,6 +28,7 @@ export class GameWorldView {
     gameplay: any;
     private assets?: WorldAssets;
     private effects?: CombatEffects;
+    private statusEffects?: StatusEffects;
     private lastAttackId = 0n;
     private visuals = new Map<number, Visual>();
     private projection?: GridProjection;
@@ -49,13 +51,17 @@ export class GameWorldView {
         this.manifest = assets.manifest; this.map = assets.map; this.gameplay = assets.gameplay;
         this.projection = new GridProjection(this.map);
         prepareMapSurface(this.world, assets, this.projection);
+        this.statusEffects = new StatusEffects(assets, this.sceneEpoch, (handle, life) => {
+            const visual = this.visuals.get(handle);
+            return visual?.state.life?.toString() === life ? visual.node.getChildByName('AttachedEffects') : null;
+        });
         for (const prop of this.map.props ?? []) {
             const definition = this.manifest.frames[prop.frame], frame = assets.frames.get(prop.frame);
             if (!frame || !definition) throw new Error(`地图物件尚未预载：${prop.frame}`);
             const node = instantiate(assets.propPrefab); node.name = prop.id; node.parent = this.entities;
             const transform = node.getComponent(UITransform)!; transform.setAnchorPoint(prop.anchor_x, prop.anchor_y); transform.setContentSize(definition.width, definition.height);
             const sprite = node.getComponent(Sprite)!; sprite.spriteFrame = frame; sprite.trim = false; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-            // 原树/岩石切片按来源证实的共同脚点整体投影；片间保持原矩形像素关系。
+            // 小装饰采用显式脚点及原图像素偏移，不参与HUD布局。
             const foot = this.grid(prop.display_x ?? prop.x, prop.display_y ?? prop.y); node.setPosition(foot.x + prop.pixel_offset_x, foot.y + prop.pixel_offset_y);
             const id = prop.group_id ? `${prop.group_id}:${String(prop.part_index).padStart(4, '0')}:${prop.id}` : prop.id;
             this.props.push({ node, foot, id });
@@ -147,6 +153,7 @@ export class GameWorldView {
                 : Math.max(0, Math.min(1, Number(BigInt(state.hp.toString()) * 10000n / BigInt(state.hpMax.toString())) / 10000));
         }
         for (const [id, visual] of this.visuals) if (!alive.has(id)) { visual.node.destroy(); this.visuals.delete(id); }
+        if (baseline.stateSequence != null) this.statusEffects?.observe(baseline.stateSequence, baseline.entities, now);
         // 首帧定位同样走显示模型；后续快照绝不直接设置节点为新格坐标。
         this.update(0, this.job, this.weaponEquipped);
     }
@@ -216,6 +223,7 @@ export class GameWorldView {
         for (const visual of this.visuals.values()) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
         depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
         this.effects?.update(now);
+        this.statusEffects?.update(now);
         this.refitCamera();
         if (audit && now - audit.start >= 5000) {
             console.info('表现验收', JSON.stringify({ scope: 'development_render', stage: audit.stage, duration_ms: Math.round(now - audit.start),
@@ -234,7 +242,7 @@ export class GameWorldView {
         if (isValid(this.viewport, true)) this.viewport.off(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
         this.playerPosition = null;
         for (const visual of this.visuals.values()) if (isValid(visual.node, true)) visual.node.destroy();
-        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.assets?.dispose(); this.assets = undefined;
+        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined; this.assets?.dispose(); this.assets = undefined;
         for (const prop of this.props) if (isValid(prop.node, true)) prop.node.destroy(); this.props.length = 0;
     }
 }

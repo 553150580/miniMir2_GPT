@@ -1,0 +1,1130 @@
+[
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124518725,\"event\":\"button\",\"path\":\"Login\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:08:38.729Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124537922,\"event\":\"button\",\"path\":\"Role1\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:08:57.924Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124538739,\"event\":\"button\",\"path\":\"Enter\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:08:58.742Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124568858,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:09:28.884Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124570757,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":1,\"skill_id\":0,\"event_id\":\"1\"}",
+    "timestamp": "2026-10-27T18:09:30.759Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124571155,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":1,\"skill_id\":0,\"outcome\":1,\"event_id\":\"2\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:31.159Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124571854,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":2,\"skill_id\":0,\"event_id\":\"3\"}",
+    "timestamp": "2026-10-27T18:09:31.857Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124572155,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":2,\"skill_id\":0,\"outcome\":2,\"event_id\":\"4\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:32.157Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124572954,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":3,\"skill_id\":0,\"event_id\":\"5\"}",
+    "timestamp": "2026-10-27T18:09:32.957Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124573253,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":3,\"skill_id\":0,\"outcome\":2,\"event_id\":\"6\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:33.259Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124574054,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":4,\"skill_id\":0,\"event_id\":\"7\"}",
+    "timestamp": "2026-10-27T18:09:34.055Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124574355,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":4,\"skill_id\":0,\"outcome\":1,\"event_id\":\"8\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:34.357Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124575155,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":5,\"skill_id\":0,\"event_id\":\"9\"}",
+    "timestamp": "2026-10-27T18:09:35.156Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124575554,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":5,\"skill_id\":0,\"outcome\":2,\"event_id\":\"10\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:35.557Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124576255,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":6,\"skill_id\":0,\"event_id\":\"11\"}",
+    "timestamp": "2026-10-27T18:09:36.259Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124576557,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":6,\"skill_id\":0,\"outcome\":1,\"event_id\":\"12\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:36.559Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124576611,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:09:36.612Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124587255,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":7,\"skill_id\":0,\"event_id\":\"13\"}",
+    "timestamp": "2026-10-27T18:09:47.257Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124587558,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":7,\"skill_id\":0,\"outcome\":2,\"event_id\":\"14\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:47.572Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124588360,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":8,\"skill_id\":0,\"event_id\":\"15\"}",
+    "timestamp": "2026-10-27T18:09:48.362Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124588657,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":8,\"skill_id\":0,\"outcome\":1,\"event_id\":\"16\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:48.671Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124589465,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":9,\"skill_id\":0,\"event_id\":\"17\"}",
+    "timestamp": "2026-10-27T18:09:49.472Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124589854,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":9,\"skill_id\":0,\"outcome\":1,\"event_id\":\"18\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:49.870Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124590554,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":10,\"skill_id\":0,\"event_id\":\"19\"}",
+    "timestamp": "2026-10-27T18:09:50.556Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124590854,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":10,\"skill_id\":0,\"outcome\":2,\"event_id\":\"20\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:50.855Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124591656,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":11,\"skill_id\":0,\"event_id\":\"21\"}",
+    "timestamp": "2026-10-27T18:09:51.657Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124591954,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":11,\"skill_id\":0,\"outcome\":2,\"event_id\":\"22\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:51.956Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124592754,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":12,\"skill_id\":0,\"event_id\":\"23\"}",
+    "timestamp": "2026-10-27T18:09:52.756Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124593054,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":12,\"skill_id\":0,\"outcome\":2,\"event_id\":\"24\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:53.056Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124593858,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":13,\"skill_id\":0,\"event_id\":\"25\"}",
+    "timestamp": "2026-10-27T18:09:53.859Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124594261,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":13,\"skill_id\":0,\"outcome\":1,\"event_id\":\"26\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:09:54.266Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124594326,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:09:54.333Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124604954,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":14,\"skill_id\":0,\"event_id\":\"27\"}",
+    "timestamp": "2026-10-27T18:10:04.956Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124605355,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":14,\"skill_id\":0,\"outcome\":2,\"event_id\":\"28\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:05.358Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124606055,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":15,\"skill_id\":0,\"event_id\":\"29\"}",
+    "timestamp": "2026-10-27T18:10:06.057Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124606455,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":15,\"skill_id\":0,\"outcome\":1,\"event_id\":\"30\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:06.457Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124607157,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":16,\"skill_id\":0,\"event_id\":\"31\"}",
+    "timestamp": "2026-10-27T18:10:07.159Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124607456,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":16,\"skill_id\":0,\"outcome\":1,\"event_id\":\"32\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:07.457Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124608258,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":17,\"skill_id\":0,\"event_id\":\"33\"}",
+    "timestamp": "2026-10-27T18:10:08.260Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124608555,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":17,\"skill_id\":0,\"outcome\":2,\"event_id\":\"34\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:08.557Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124609357,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":18,\"skill_id\":0,\"event_id\":\"35\"}",
+    "timestamp": "2026-10-27T18:10:09.360Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124609658,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":18,\"skill_id\":0,\"outcome\":1,\"event_id\":\"36\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:09.659Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124609710,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:10:09.712Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124619657,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":19,\"skill_id\":0,\"event_id\":\"37\"}",
+    "timestamp": "2026-10-27T18:10:19.658Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124620055,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":19,\"skill_id\":0,\"outcome\":1,\"event_id\":\"38\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:20.057Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124620756,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":20,\"skill_id\":0,\"event_id\":\"39\"}",
+    "timestamp": "2026-10-27T18:10:20.758Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124621156,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":20,\"skill_id\":0,\"outcome\":2,\"event_id\":\"40\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:21.157Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124621855,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":21,\"skill_id\":0,\"event_id\":\"41\"}",
+    "timestamp": "2026-10-27T18:10:21.857Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124622156,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":21,\"skill_id\":0,\"outcome\":1,\"event_id\":\"42\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:22.158Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124622955,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":22,\"skill_id\":0,\"event_id\":\"43\"}",
+    "timestamp": "2026-10-27T18:10:22.959Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124623258,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":22,\"skill_id\":0,\"outcome\":1,\"event_id\":\"44\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:10:23.263Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124623319,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:10:23.320Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124632677,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"event_type\":\"toggle\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:10:32.680Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124632678,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:10:32.710Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124632696,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:10:32.710Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124633797,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:10:33.802Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124654909,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Shop\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:10:54.911Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124692117,\"event\":\"button\",\"path\":\"UIMgr/Panels/SkillAssets/Preview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:11:32.120Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124709377,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:11:49.379Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124836094,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Learn\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:13:56.101Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124846788,\"event\":\"send\",\"message_id\":40010,\"packet_seq\":9,\"skill_id\":31}",
+    "timestamp": "2026-10-27T18:14:06.790Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124846884,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:14:06.885Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124861442,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Use\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:14:21.450Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124861446,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":10,\"skill_id\":31,\"input_sequence\":1,\"direction\":7}",
+    "timestamp": "2026-10-27T18:14:21.451Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124861454,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":1,\"cast_id\":\"1\"}",
+    "timestamp": "2026-10-27T18:14:21.455Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124924021,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:15:24.023Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124924022,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":11,\"skill_id\":31,\"input_sequence\":2,\"direction\":7}",
+    "timestamp": "2026-10-27T18:15:24.023Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124924035,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":2,\"cast_id\":\"2\"}",
+    "timestamp": "2026-10-27T18:15:24.038Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124926149,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:15:26.151Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124926149,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":12,\"skill_id\":31,\"input_sequence\":3,\"direction\":7}",
+    "timestamp": "2026-10-27T18:15:26.151Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793124926166,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":3,\"cast_id\":\"3\"}",
+    "timestamp": "2026-10-27T18:15:26.168Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125066544,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"event_type\":\"toggle\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:17:46.550Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125066546,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":13,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:17:46.552Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125066560,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":13,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:17:46.561Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125066568,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"4\"}",
+    "timestamp": "2026-10-27T18:17:46.569Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125067270,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":23,\"skill_id\":0,\"event_id\":\"45\"}",
+    "timestamp": "2026-10-27T18:17:47.443Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125067569,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":23,\"skill_id\":0,\"outcome\":2,\"event_id\":\"46\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:17:47.571Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125068369,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":24,\"skill_id\":0,\"event_id\":\"47\"}",
+    "timestamp": "2026-10-27T18:17:48.370Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125068768,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":24,\"skill_id\":0,\"outcome\":1,\"event_id\":\"48\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:17:48.770Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125069469,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":25,\"skill_id\":0,\"event_id\":\"49\"}",
+    "timestamp": "2026-10-27T18:17:49.470Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125069769,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":25,\"skill_id\":0,\"outcome\":1,\"event_id\":\"50\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:17:49.771Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125070568,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":26,\"skill_id\":0,\"event_id\":\"51\"}",
+    "timestamp": "2026-10-27T18:17:50.570Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125070875,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":26,\"skill_id\":0,\"outcome\":1,\"event_id\":\"52\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:17:50.877Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125070950,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:17:50.952Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125072469,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"5\"}",
+    "timestamp": "2026-10-27T18:17:52.474Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125078273,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"6\"}",
+    "timestamp": "2026-10-27T18:17:58.284Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125079085,\"event\":\"button\",\"path\":\"MapViewport/BuffBar/Overview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:17:59.092Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125080971,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":27,\"skill_id\":0,\"event_id\":\"53\"}",
+    "timestamp": "2026-10-27T18:18:00.973Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125081369,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":27,\"skill_id\":0,\"outcome\":1,\"event_id\":\"54\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:01.370Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125082074,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":28,\"skill_id\":0,\"event_id\":\"55\"}",
+    "timestamp": "2026-10-27T18:18:02.076Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125082369,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":28,\"skill_id\":0,\"outcome\":1,\"event_id\":\"56\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:02.370Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125083169,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":29,\"skill_id\":0,\"event_id\":\"57\"}",
+    "timestamp": "2026-10-27T18:18:03.172Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125083480,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":29,\"skill_id\":0,\"outcome\":1,\"event_id\":\"58\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:03.482Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125083553,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:18:03.554Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125084176,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"7\"}",
+    "timestamp": "2026-10-27T18:18:04.177Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125089973,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"8\"}",
+    "timestamp": "2026-10-27T18:18:09.974Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125093572,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":30,\"skill_id\":0,\"event_id\":\"59\"}",
+    "timestamp": "2026-10-27T18:18:13.575Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125093970,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":30,\"skill_id\":0,\"outcome\":1,\"event_id\":\"60\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:13.972Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125094691,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":31,\"skill_id\":0,\"event_id\":\"61\"}",
+    "timestamp": "2026-10-27T18:18:14.696Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125095076,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":31,\"skill_id\":0,\"outcome\":1,\"event_id\":\"62\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:15.103Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125095769,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":32,\"skill_id\":0,\"event_id\":\"63\"}",
+    "timestamp": "2026-10-27T18:18:15.773Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125096170,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":32,\"skill_id\":0,\"outcome\":2,\"event_id\":\"64\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:16.171Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125096369,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"9\"}",
+    "timestamp": "2026-10-27T18:18:16.370Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125097070,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":33,\"skill_id\":0,\"event_id\":\"65\"}",
+    "timestamp": "2026-10-27T18:18:17.072Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125097369,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":33,\"skill_id\":0,\"outcome\":2,\"event_id\":\"66\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:17.372Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125098169,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":34,\"skill_id\":0,\"event_id\":\"67\"}",
+    "timestamp": "2026-10-27T18:18:18.171Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125098579,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":34,\"skill_id\":0,\"outcome\":1,\"event_id\":\"68\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:18.582Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125098639,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:18:18.640Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125102174,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"10\"}",
+    "timestamp": "2026-10-27T18:18:22.175Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125108081,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"11\"}",
+    "timestamp": "2026-10-27T18:18:28.084Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125108683,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":35,\"skill_id\":0,\"event_id\":\"69\"}",
+    "timestamp": "2026-10-27T18:18:28.686Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125109070,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":35,\"skill_id\":0,\"outcome\":1,\"event_id\":\"70\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:29.072Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125109772,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":36,\"skill_id\":0,\"event_id\":\"71\"}",
+    "timestamp": "2026-10-27T18:18:29.774Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125110070,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":36,\"skill_id\":0,\"outcome\":2,\"event_id\":\"72\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:30.075Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125110871,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":37,\"skill_id\":0,\"event_id\":\"73\"}",
+    "timestamp": "2026-10-27T18:18:30.873Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125111271,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":37,\"skill_id\":0,\"outcome\":1,\"event_id\":\"74\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:31.278Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125111970,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":38,\"skill_id\":0,\"event_id\":\"75\"}",
+    "timestamp": "2026-10-27T18:18:31.974Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125112373,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":38,\"skill_id\":0,\"outcome\":1,\"event_id\":\"76\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:32.377Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125112438,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:18:32.439Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125113973,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"12\"}",
+    "timestamp": "2026-10-27T18:18:33.975Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125119877,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"13\"}",
+    "timestamp": "2026-10-27T18:18:39.883Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125122371,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":39,\"skill_id\":0,\"event_id\":\"77\"}",
+    "timestamp": "2026-10-27T18:18:42.373Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125122677,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":39,\"skill_id\":0,\"outcome\":1,\"event_id\":\"78\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:42.679Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125123474,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":40,\"skill_id\":0,\"event_id\":\"79\"}",
+    "timestamp": "2026-10-27T18:18:43.476Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125123772,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":40,\"skill_id\":0,\"outcome\":2,\"event_id\":\"80\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:43.773Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125124572,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":41,\"skill_id\":0,\"event_id\":\"81\"}",
+    "timestamp": "2026-10-27T18:18:44.573Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125124872,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":41,\"skill_id\":0,\"outcome\":2,\"event_id\":\"82\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:44.874Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125125672,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":42,\"skill_id\":0,\"event_id\":\"83\"}",
+    "timestamp": "2026-10-27T18:18:45.675Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125125971,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":42,\"skill_id\":0,\"outcome\":1,\"event_id\":\"84\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:45.972Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125126270,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"14\"}",
+    "timestamp": "2026-10-27T18:18:46.271Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125126875,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":43,\"skill_id\":0,\"event_id\":\"85\"}",
+    "timestamp": "2026-10-27T18:18:46.877Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125127171,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":43,\"skill_id\":0,\"outcome\":2,\"event_id\":\"86\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:47.174Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125127971,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":44,\"skill_id\":0,\"event_id\":\"87\"}",
+    "timestamp": "2026-10-27T18:18:47.973Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125128271,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":44,\"skill_id\":0,\"outcome\":2,\"event_id\":\"88\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:48.274Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125129071,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":45,\"skill_id\":0,\"event_id\":\"89\"}",
+    "timestamp": "2026-10-27T18:18:49.074Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125129370,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":45,\"skill_id\":0,\"outcome\":2,\"event_id\":\"90\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:49.371Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125130170,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":46,\"skill_id\":0,\"event_id\":\"91\"}",
+    "timestamp": "2026-10-27T18:18:50.172Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125130472,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":46,\"skill_id\":0,\"outcome\":2,\"event_id\":\"92\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:50.475Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125131270,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":47,\"skill_id\":0,\"event_id\":\"93\"}",
+    "timestamp": "2026-10-27T18:18:51.273Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125131570,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":47,\"skill_id\":0,\"outcome\":2,\"event_id\":\"94\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:51.572Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125131971,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"15\"}",
+    "timestamp": "2026-10-27T18:18:51.972Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125132672,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":48,\"skill_id\":0,\"event_id\":\"95\"}",
+    "timestamp": "2026-10-27T18:18:52.673Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125132974,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":48,\"skill_id\":0,\"outcome\":1,\"event_id\":\"96\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:18:52.976Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125133030,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:18:53.033Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125137973,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":0,\"cast_id\":\"16\"}",
+    "timestamp": "2026-10-27T18:18:57.976Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125140449,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"event_type\":\"toggle\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:19:00.453Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125140450,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":14,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:19:00.456Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125140476,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":14,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:19:00.481Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125178821,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:19:38.828Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125178824,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":15,\"skill_id\":31,\"input_sequence\":4,\"direction\":7}",
+    "timestamp": "2026-10-27T18:19:38.828Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125178836,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":4,\"cast_id\":\"17\"}",
+    "timestamp": "2026-10-27T18:19:38.844Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125236751,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:20:36.758Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125236753,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":16,\"skill_id\":31,\"input_sequence\":5,\"direction\":7}",
+    "timestamp": "2026-10-27T18:20:36.760Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125236777,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":5,\"cast_id\":\"18\"}",
+    "timestamp": "2026-10-27T18:20:36.787Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125238388,\"event\":\"button\",\"path\":\"MapViewport/BuffBar/Overview\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:20:38.389Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125276398,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:21:16.403Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125276400,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":17,\"skill_id\":31,\"input_sequence\":6,\"direction\":7}",
+    "timestamp": "2026-10-27T18:21:16.405Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125276411,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":31,\"input_sequence\":6,\"cast_id\":\"19\"}",
+    "timestamp": "2026-10-27T18:21:16.414Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125277218,\"event\":\"button\",\"path\":\"BottomHUD/Footer/ChangeRole\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:21:17.220Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125289877,\"event\":\"button\",\"path\":\"Role1\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:21:29.881Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125290690,\"event\":\"button\",\"path\":\"Enter\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:21:30.694Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125318429,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:21:58.430Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125390068,\"event\":\"button\",\"path\":\"BottomHUD/Footer/ChangeRole\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:23:10.073Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125390893,\"event\":\"button\",\"path\":\"Role2\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:23:10.898Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125391732,\"event\":\"button\",\"path\":\"Enter\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:23:11.736Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125417770,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:23:37.772Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125420180,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":1,\"skill_id\":0,\"event_id\":\"1\"}",
+    "timestamp": "2026-10-27T18:23:40.181Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125420479,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":1,\"skill_id\":0,\"outcome\":2,\"event_id\":\"2\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:23:40.480Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125421280,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":2,\"skill_id\":0,\"event_id\":\"3\"}",
+    "timestamp": "2026-10-27T18:23:41.285Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125421680,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":2,\"skill_id\":0,\"outcome\":1,\"event_id\":\"4\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:23:41.683Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125422034,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:23:42.036Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125432681,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":3,\"skill_id\":0,\"event_id\":\"5\"}",
+    "timestamp": "2026-10-27T18:23:52.684Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125433082,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":3,\"skill_id\":0,\"outcome\":1,\"event_id\":\"6\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:23:53.086Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125433146,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:23:53.148Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125443680,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":4,\"skill_id\":0,\"event_id\":\"7\"}",
+    "timestamp": "2026-10-27T18:24:03.683Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125444081,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":4,\"skill_id\":0,\"outcome\":2,\"event_id\":\"8\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:24:04.084Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125444149,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:24:04.152Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125454180,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":5,\"skill_id\":0,\"event_id\":\"9\"}",
+    "timestamp": "2026-10-27T18:24:14.182Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125454582,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":5,\"skill_id\":0,\"outcome\":1,\"event_id\":\"10\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:24:14.584Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125454639,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:24:14.642Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125464681,\"event\":\"receive\",\"message_id\":30007,\"packet_seq\":0,\"attack_sequence\":6,\"skill_id\":0,\"event_id\":\"11\"}",
+    "timestamp": "2026-10-27T18:24:24.684Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125464983,\"event\":\"receive\",\"message_id\":30008,\"packet_seq\":0,\"attack_sequence\":6,\"skill_id\":0,\"outcome\":1,\"event_id\":\"12\",\"cast_id\":\"0\"}",
+    "timestamp": "2026-10-27T18:24:24.985Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125465112,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T18:24:25.114Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125470048,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"event_type\":\"toggle\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:24:30.053Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125470050,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":26,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:24:30.059Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125470060,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":26,\"enabled\":false}",
+    "timestamp": "2026-10-27T18:24:30.062Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125470744,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:24:30.746Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793125505660,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"event_type\":\"click\",\"blocked\":false}",
+    "timestamp": "2026-10-27T18:25:05.662Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

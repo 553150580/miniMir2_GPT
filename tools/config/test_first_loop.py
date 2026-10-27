@@ -23,6 +23,7 @@ def candidate_tables():
     # 故意使用区别于当前Excel的参数，验证导出器没有补入第二套数值。
     players=[{'job_id':i,'magic_resist_weight':17,'attack_speed':0} for i in range(3)]
     profile={'rule_version':9,'map_id':1,'monster_id':1,'pet_id':1,'players':players,
+             'casting_supply':{'enabled':False,'slot':100,'item_ids':[187]},
              'inventory_capacity':4,'initial_inventory':[35,36],'initial_bound_gold':0,'pet_spawn':{'x':1,'y':0},
              'allow_free_dev_revive':True,'damage_formula':'测试结算路径',
              'recycle_test_gold_by_item':{'35':0,'36':0,'193':0,'218':0},
@@ -43,6 +44,7 @@ def candidate_tables():
                      secondary_direction_offsets=[],secondary_distance_cells=0,secondary_impact_ms=0,charge_window_ms=0,
                      line_cells=0,line_step_ms=0,line_stop_on_blocked=False,non_undead_divisor=1,
                      max_attack_bonus_by_level=[0,0,0,0],ready_proc_denominator=0,ready_proc_numerators=[0,0,0,0])
+        skill.update(buff_id=0,material_item_id=0,material_quantity=0)
         native.append(skill)
     profile['healing']={k:13 for k in first_loop.HEALING_FIELDS}
     profile['player_growth']=[{**{k:3.25 for k in first_loop.GROWTH_FIELDS},'job_id':i,'hp_base':11,'mp_base':12} for i in range(3)]
@@ -51,7 +53,7 @@ def candidate_tables():
                    skill_shop_entries=[{'offer_id':301,'item_id':1000,'required_role_level':2,'max_purchase_quantity':17},
                                        {'offer_id':302,'item_id':900001,'required_role_level':1,'max_purchase_quantity':19}],
                    recyclable_book_ids=[r['book_item_id'] for r in native],recycle_source_kinds=['monster_drop'],skill_book_drop_quality=2)
-    fighter=source_row(1,hp=18,attributes={'mp':14,'physical_attack_min':1,'physical_attack_max':2,'physical_defence_min':0,
+    fighter=source_row(1,level=17,hp=18,attributes={'mp':14,'physical_attack_min':1,'physical_attack_max':2,'physical_defence_min':0,
                                         'physical_defence_max':3,'magic_defence':4,'accuracy':5,'agility':6,'undead':True},
                        attack_interval_ms=700,move_interval_ms=500,exp=3)
     tables={
@@ -74,14 +76,15 @@ def candidate_tables():
     }
     tables['game_items'] += [source_row(r['book_item_id'],display_name=r['name'],item_type='skill_book',max_stack=1) for r in native]
     tables['game_items'].append(source_row(900001,display_name='测试书页',item_type='skill_page',max_stack=99))
-    tables['game_skills']=[];tables['game_skill_upgrades']=[]
+    tables['game_items'].append(source_row(187,display_name='测试护符',item_type='casting_supply',max_stack=None))
+    tables['game_skills']=[];tables['game_skill_upgrades']=[];tables['game_effects']=[];tables['game_buffs']=[]
     for r in native:
         tables['game_skills'].append(source_row(r['id'],display_name=r['name'],class_id=r['job_id'],book_item_id=r['book_item_id'],
           learn_level=r['learn_level'],native_start_level=r['learned_level'],native_max_level=r['max_level'],behavior_id=r['behavior'],cooldown_ms=r['cooldown_base_ms'],
           target_rule={'kind':r['target_kind'],**{k:r[k] for k in first_loop.SKILL_TARGET_FIELDS}},
           cast_timing={k:r[k] for k in first_loop.SKILL_CAST_FIELDS},
-          resource_costs={k:r[k] for k in ['mp_base_cost','mp_level_cost']},
-          damage_parameters={k:r[k] for k in first_loop.SKILL_DAMAGE_FIELDS}))
+          resource_costs={k:r[k] for k in ['mp_base_cost','mp_level_cost','material_item_id','material_quantity']}|{'items':[]},
+          effect_ids=[],damage_parameters={k:r[k] for k in first_loop.SKILL_DAMAGE_FIELDS}))
         for rank in range(1,r['max_level']+1):
             tables['game_skill_upgrades'].append(source_row(r['id']*10+rank,skill_id=r['id'],level=rank,book_cost=[{'item_id':r['book_item_id'],'quantity':rank+1}],
               page_cost=13+rank,page_item_id=900001,allowed_numeric_changes={'native_rank':rank},preserve_behavior_shape=True,required_role_level=8+rank))
@@ -94,8 +97,100 @@ def candidate_tables():
 def fixture(tables):
     return first_loop.fixture_from_rows(tables)
 
+def add_status_skill(tables,behavior='magic_shield',skill_id=401,buff_id=701):
+    """测试值刻意区别源候选，验证唯一表引用和扁平/公共两种派生结构。"""
+    magic=behavior=='magic_shield';book=skill_id+1000;effect=skill_id+2000
+    row=deepcopy(tables['game_skills'][1]);row.update(id=skill_id,book_item_id=book,class_id=1 if magic else 2,behavior_id=behavior)
+    row['target_rule'].update(kind='friendly_self' if magic else 'friendly_grid',range_cells=0 if magic else 7,area_radius=0 if magic else 2,require_line_of_sight=False)
+    row['effect_ids']=[effect];row['resource_costs'].update(material_item_id=0 if magic else 187,material_quantity=0 if magic else 3)
+    tables['game_skills'].append(row);tables['dev_first_loop_profile'][0]['parameters']['skill_ids'].append(skill_id)
+    tables['game_items'].append(source_row(book,display_name='测试防御书',item_type='skill_book',max_stack=1))
+    for rank in range(1,4):
+        upgrade=deepcopy(tables['game_skill_upgrades'][rank-1]);upgrade.update(id=skill_id*10+rank,skill_id=skill_id,book_cost=[{'item_id':book,'quantity':rank+1}]);tables['game_skill_upgrades'].append(upgrade)
+    kind='magic_shield' if magic else 'max_magic_defence' if behavior=='soul_shield' else 'max_physical_defence'
+    tables['game_effects'].append(source_row(effect,effect_type='defensive_buff',parameters={'buff_id':buff_id},trigger_phase='cast_impact',
+        target_rule={'kind':row['target_rule']['kind']},proc_limit={'per_cast':1},recursive_trigger_allowed=False))
+    buff=source_row(buff_id,display_name='测试防御状态',short_name='测盾',duration_ms=0,tick_ms=773,
+        attribute_effects={'kind':kind,'value_by_level':[13,29,47,61] if magic else [0,0,0,0],
+            'target_level_divisor':0 if magic else 9,'target_level_add':0 if magic else 2,'hit_duration_loss_ms_per_hp':17 if magic else 0},
+        duration_rule={'kind':'mc_source_power' if magic else 'sc_rank_linear','stat_add':19 if magic else 0,
+            'stat_multiplier':0 if magic else 6,'seconds_by_level':[0,0,0,0] if magic else [37,71,109,151]},
+        stack_policy='ignore_present_on_impact' if magic else 'refresh_duration_keep_values',
+        remove_events=['despawn','scene_dispose']+(['player_death'] if magic else []),immunity_rules={'allow_dead_targets':not magic,'friendly_only':True})
+    tables['game_buffs'].append(buff)
+    return row,buff
+
 
 class PotionProjectionTests(unittest.TestCase):
+    def test_unique_buff_effect_chain_has_no_private_fields_or_numeric_defaults(self):
+        tables=candidate_tables();skill,buff=add_status_skill(tables)
+        buff['owner_internal']='不得公开';tables['game_effects'][0]['source_ref']='不得公开的来源'
+        before=deepcopy(tables);result=fixture(tables);public=first_loop.public_gameplay(result)
+        self.assertEqual(tables,before)
+        self.assertEqual(result['skills'][-1]['buff_id'],701)
+        self.assertEqual(result['buffs'][0]['value_by_level'],[13,29,47,61])
+        self.assertEqual(result['buffs'][0]['stat_add'],19);self.assertEqual(result['buffs'][0]['tick_ms'],773)
+        self.assertEqual(result['pet']['level'],17)
+        row=public['statuses'][0]
+        self.assertEqual(set(row),{'id','name','short_name','kind','stack_policy','tick_ms','remove_on_player_death','duration_rule','attribute_effects'})
+        self.assertEqual(row['attribute_effects'],buff['attribute_effects']);self.assertEqual(row['duration_rule'],buff['duration_rule'])
+        self.assertEqual(row['name'],buff['display_name']);self.assertEqual(row['short_name'],'测盾')
+        self.assertNotIn('不得公开',json.dumps(public,ensure_ascii=False));self.assertNotIn('source_ref',json.dumps(public))
+        buff['attribute_effects']['value_by_level'][0]=99
+        self.assertEqual(result['buffs'][0]['value_by_level'][0],13)
+        row['duration_rule']['seconds_by_level'][0]=5
+        self.assertEqual(result['buffs'][0]['duration_seconds_by_level'][0],0)
+
+    def test_tao_status_uses_explicit_material_and_keeps_source_death_policy(self):
+        tables=candidate_tables();add_status_skill(tables,'soul_shield',402,702);add_status_skill(tables,'blessed_armour',403,703)
+        result=fixture(tables);public=first_loop.public_gameplay(result)
+        self.assertEqual([r['target_level_divisor'] for r in result['buffs']],[9,9])
+        self.assertEqual([r['duration_seconds_by_level'] for r in result['buffs']],[[37,71,109,151]]*2)
+        self.assertTrue(all(r['allow_dead_targets'] and not r['remove_on_player_death'] for r in result['buffs']))
+        self.assertEqual([r['material_quantity'] for r in public['skills'][-2:]],[3,3])
+        self.assertTrue(all(r['material_item_id']==187 for r in public['skills'][-2:]))
+        self.assertEqual(len(result['initial_skill_books']),3)
+
+    def test_disabled_material_stays_unactivated_and_positive_units_are_required_to_enable(self):
+        tables=candidate_tables();add_status_skill(tables,'soul_shield',402,702)
+        result=fixture(tables);public=first_loop.public_gameplay(result);item=next(r for r in result['items'] if r['id']==187)
+        self.assertFalse(result['casting_supply']['enabled']);self.assertEqual(item['max_stack'],0);self.assertFalse(item['is_equipment'])
+        self.assertEqual(next(r for r in public['items'] if r['item_id']==187)['kind'],'casting_supply')
+        self.assertEqual(next(r for r in public['items'] if r['item_id']==187)['equip_slot'],100)
+        tables['dev_first_loop_profile'][0]['parameters']['casting_supply']['enabled']=True
+        with self.assertRaisesRegex(ValueError,'数量单位'):fixture(tables)
+        next(r for r in tables['game_items'] if r['id']==187)['max_stack']=53
+        enabled=fixture(tables);self.assertEqual(next(r for r in enabled['items'] if r['id']==187)['max_stack'],53)
+        self.assertTrue(first_loop.public_gameplay(enabled)['casting_supply']['enabled'])
+        tables['dev_first_loop_profile'][0]['parameters']['casting_supply']['enabled']=False
+        profile=tables['dev_first_loop_profile'][0]['parameters'];profile['skill_shop_entries'].append({'offer_id':303,'item_id':187,'required_role_level':1,'max_purchase_quantity':2})
+        tables['game_shop_prices'].append(source_row(303,payment_currency='gold',price_gold=17,price_u=None,quantity=5,purchased_bound=True,daily_limit=None))
+        with self.assertRaisesRegex(ValueError,'不得开启护符商品'):fixture(tables)
+
+    def test_status_rejects_missing_neutral_fields_parallel_values_and_behavior_drift(self):
+        baseline=candidate_tables();add_status_skill(baseline)
+        changes=[('missing_material',lambda t:t['game_skills'][0]['resource_costs'].pop('material_quantity')),
+            ('missing_effect_ids',lambda t:t['game_skills'][0].pop('effect_ids')),
+            ('unknown_effect',lambda t:t['game_skills'][-1].update(effect_ids=[999999])),
+            ('parallel_effect_values',lambda t:t['game_effects'][0]['parameters'].update(duration_ms=123)),
+            ('recursive',lambda t:t['game_effects'][0].update(recursive_trigger_allowed=True)),
+            ('boolean_proc_count',lambda t:t['game_effects'][0].update(proc_limit={'per_cast':True})),
+            ('wrong_target',lambda t:t['game_effects'][0].update(target_rule={'kind':'friendly_grid'})),
+            ('wrong_trigger',lambda t:t['game_effects'][0].update(trigger_phase='cast_accept')),
+            ('missing_buff',lambda t:t['game_buffs'].clear()),
+            ('missing_duration_field',lambda t:t['game_buffs'][0]['duration_rule'].pop('stat_add')),
+            ('two_duration_sources',lambda t:t['game_buffs'][0].update(duration_ms=1)),
+            ('boolean_neutral_duration',lambda t:t['game_buffs'][0].update(duration_ms=False)),
+            ('old_skill_hidden_material',lambda t:t['game_skills'][0]['resource_costs'].update(material_item_id=187,material_quantity=1)),
+            ('wrong_death',lambda t:t['game_buffs'][0].update(remove_events=['despawn','scene_dispose'])),
+            ('wrong_stack',lambda t:t['game_buffs'][0].update(stack_policy='stack')),
+            ('wrong_dead_target',lambda t:t['game_buffs'][0]['immunity_rules'].update(allow_dead_targets=True)),
+            ('wrong_array',lambda t:t['game_buffs'][0]['attribute_effects'].update(value_by_level=[1,2])),
+            ('percent_overflow',lambda t:t['game_buffs'][0]['attribute_effects'].update(value_by_level=[1,2,3,101]))]
+        for name,change in changes:
+            tables=deepcopy(baseline);change(tables)
+            with self.subTest(name=name),self.assertRaises(ValueError):fixture(tables)
+
     def test_edge_decoration_position_is_unique_and_source_collision_stays_evidence(self):
         tables=candidate_tables();definition=tables['game_maps'][0];collision=tables['game_map_collisions'][0]
         definition['decorations']=[{'id':'small_sign','frame':'Objects:8898','collision_cell_index':0}]

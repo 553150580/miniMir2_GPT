@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "archived_at_utc": "2026-10-27T18:11:04.896003+00:00",
+  "evidence_scope": "已通过的非浏览器限定开发证据；浏览器结果由主线后续独立归档",
+  "evidence_status": "non_browser_finalized_browser_pending",
+  "browser_acceptance": "pending",
+  "current_stage_browser_passed": false,
+  "version": "dev-combat-status-v0.9-48873786ee49",
+  "rule_version": 9,
+  "checks": {
+    "javascript": {
+      "total": 223,
+      "ui_app": 207,
+      "scene": 16,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": [
+        "client-tests.log",
+        "scene-tests.log"
+      ]
+    },
+    "python": {
+      "total": 33,
+      "exit_code": 0,
+      "evidence": "resource-and-config-check.json"
+    },
+    "protobuf_boundaries": {
+      "total": 359,
+      "status": "passed",
+      "message_count": 58,
+      "int64_field_count": 108,
+      "validation_scope": "candidate_static_protobuf_wire_codec_only",
+      "evidence": [
+        "protocol/client-pb-verification.json",
+        "protocol/go-pb-generation.json"
+      ],
+      "execution_basis": "本轮make protocol生成绑定时实际执行PB边界验证"
+    },
+    "go_mongo_ws_race": {
+      "passed_tests_including_subtests": 276,
+      "skipped": 0,
+      "exit_code": 0,
+      "source_stable": true,
+      "evidence": [
+        "server/latest.json",
+        "server/latest.events.jsonl",
+        "server/server-full.log"
+      ]
+    },
+    "csharp_formula_vectors": {
+      "total": 586,
+      "status": "passed",
+      "scope": "逐字公式/表达式由.NET独立执行；最小索引器和确定性SC桩；不覆盖完整PRNG、完整伤害分支、对象调度或目标1.80认证",
+      "evidence": [
+        "oracle/report.json",
+        "oracle/vectors.json",
+        "oracle/source-status-vectors.json.gz"
+      ]
+    },
+    "resources": {
+      "total_png_frames": 3008,
+      "previous_frames_preserved_byte_for_byte": 2914,
+      "new_source_frames": 94,
+      "evidence": [
+        "resource-and-config-check.json",
+        "resource-source-94.json",
+        "previous-2914-frames.json"
+      ]
+    },
+    "workbook_protection": {
+      "worksheets": 95,
+      "controlled_cell_changes": 384,
+      "issues": 0,
+      "preview_images": 4,
+      "evidence": [
+        "excel/preservation-check.json",
+        "excel/workbook-qa.json"
+      ]
+    },
+    "creator": {
+      "version": "3.8.8",
+      "platform": "web-mobile",
+      "seconds": 187.1,
+      "exit_code": 36,
+      "success": true,
+      "saved_assets_preserved": 10,
+      "source_stable": true,
+      "evidence": [
+        "creator/客户端构建检查.json",
+        "creator/creator-cli.log",
+        "creator/creator-build.log"
+      ]
+    }
+  },
+  "casting_supply": {
+    "enabled": false,
+    "slot": 100,
+    "item_ids": [
+      187
+    ],
+    "skills_14_15_runtime_material_entry_enabled": false,
+    "package_units_and_price_user_confirmation": "pending",
+    "isolated_test_positive_units_are_runtime_configuration": false
+  },
+  "limitations": [
+    "浏览器验收待完成，当前归档不证明浏览器全部通过。",
+    "14/15保留技能和状态定义，但运行护符材料装卸/施法入口disabled；独立真实WS测试中的正数单位只属于随机测试实例，不是运行价格/包数量。",
+    "Unknown提交/迟到回调竞争由单测覆盖，本阶段未进行真实Mongo提交未知故障注入，不将回调单测称为故障注入验收。",
+    "首次Creator虽CLI exit36但布局摘要保护未通过，报告保留success=false；证明仅StatusBadge末尾LF及导入meta规范化后，最终重新实构通过。",
+    "586向量证明已提取公式子集，不证明完整PRNG、源对象调度、所有伤害分支或目标1.80完整认证。",
+    "完整P0、手机真机、正式平衡、容量和正式发布仍未完成。"
+  ],
+  "runtime_ready": false,
+  "production_ready": false,
+  "target180_certified": false,
+  "physical_mobile_verified": false,
+  "server_start": {
+    "pid": 91096,
+    "run_id": "e5693e6a-e7eb-46d1-92b3-94d5cfdbdd4c",
+    "evidence": "server/server-start.json"
+  },
+  "archive_constraints": {
+    "no_extra_workbook_copy": true,
+    "no_builder_configuration": true,
+    "no_qa_account_or_credentials": true,
+    "no_intermediate_server_start": true
+  },
+  "source_hash_verification_at_archive": {
+    "mismatches": [],
+    "events_hash_verified": true
+  },
+  "execution_records": [
+    {
+      "scope": "引用/配置/协议生成物检查",
+      "execution": "主线执行make check",
+      "evidence": "check.log"
+    },
+    {
+      "scope": "场景管理器16项",
+      "execution": "主线单独执行场景测试",
+      "evidence": "scene-tests.log"
+    },
+    {
+      "scope": "UI及应用207项",
+      "execution": "客户端分工单独执行",
+      "evidence": "client-tests.log"
+    },
+    {
+      "scope": "Python配置33项及绑定同步验证",
+      "execution": "配置资源分工单独执行；未为归档重新运行",
+      "evidence": "resource-and-config-check.json"
+    },
+    {
+      "scope": "PB编解码359边界及生成一致性",
+      "execution": "本轮make protocol实际执行",
+      "evidence": "protocol/client-pb-verification.json"
+    },
+    {
+      "scope": "全部Go真实Mongo/WS与race",
+      "execution": "完整runner实际执行go test -json -race ./... -count=1 -timeout=180s",
+      "evidence": "server/latest.json"
+    },
+    {
+      "scope": "Creator Web Mobile",
+      "execution": "主线实际执行客户端构建器",
+      "evidence": "creator/creator-build.log"
+    }
+  ]
+}

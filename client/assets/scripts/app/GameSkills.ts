@@ -1,7 +1,7 @@
 import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { isDirectionalSkill, isGroundSkill, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
+import { isDirectionalSkill, isGroundSkill, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -13,7 +13,7 @@ export class GameSkills {
     private key = '';
     private quickSkillId = 0;
 
-    constructor(safe: Node, private readonly popup: PopupView) {
+    constructor(safe: Node, private readonly popup: PopupView, private readonly showDetails?: (title: string, lines: readonly string[]) => void) {
         const panel = safe.getChildByPath('UIMgr/Panels/Skills');
         const list = panel?.getChildByName('List')?.getComponent(List);
         if (!panel || !list) throw new Error('技能面板尚未保存为Creator资产');
@@ -35,7 +35,7 @@ export class GameSkills {
         toggle.setIsCheckedWithoutNotify(!!mode?.enabled);
         toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode);
         this.text('ModeToggle/Label', mode ? mode.enabled ? '已开启' : '未开启' : '同步中');
-        const key = JSON.stringify({ ready: input.ready, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId });
+        const key = JSON.stringify({ ready: input.ready, castingSupplyEnabled: input.castingSupplyEnabled, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
@@ -52,6 +52,7 @@ export class GameSkills {
         const use = this.saved('Use').getComponent(Button)!;
         learn.interactable = !!selected?.canLearn;
         use.interactable = !!(input.ready && selected?.learned && selected.definition.active
+            && (!selected.definition.material_quantity || input.castingSupplyEnabled !== false)
             && (!['toggle', 'charge'].includes(skillActivation(selected.definition)) || skillMode(input, selected.definition.id))
             && !(skillActivation(selected.definition) === 'charge' && skillMode(input, selected.definition.id)?.ready));
         this.saved('BindQuick').getComponent(Button)!.interactable = !!(selected?.learned && selected.definition.active);
@@ -68,17 +69,18 @@ export class GameSkills {
     private onSelected(_index: number, row: SkillRow): void {
         this.selectedId = row.definition.id;
         if (this.input) this.refresh(this.input);
-        this.popup.show('Details', { title: row.definition.name,
-            message: `${row.status}\n${this.description(row, this.input!)}\n${row.definition.active && skillActivation(row.definition) === 'cast' ? isDirectionalSkill(row.definition) ? '轻触地图选择八方向' : isGroundSkill(row.definition) ? `地面范围 ${row.definition.area_radius ?? 0}格` : '' : ''}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
+        const lines = skillDescriptionLines(row, this.input!);
+        if (this.showDetails) this.showDetails(row.definition.name, lines);
+        else this.popup.show('Details', { title: row.definition.name, message: lines.join('\n') });
     }
     private description(row: SkillRow, input: SkillSnapshot): string {
         const activation = skillActivation(row.definition), mode = skillModeStatus(input, row.definition);
         if (!row.definition.active) return `${skillPassiveText(row)}${mode ? `\n${mode}` : ''}`;
         if (activation === 'toggle') return `${mode} · 普攻按模式出招`;
         if (activation === 'charge') return `${mode} · 充能消耗魔法 ${row.cost}`;
-        const target = row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`
+        const target = row.definition.target_kind === 'friendly_self' ? '仅自身' : row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`
             : isDirectionalSkill(row.definition) ? `前方${row.definition.line_cells ?? 0}格` : `射程 ${row.definition.range}格`;
-        return `魔法消耗 ${row.cost} · ${target}`;
+        return `魔法消耗 ${row.cost} · ${target}${row.definition.material_quantity ? ` · 护符${row.definition.material_quantity}` : ''}`;
     }
     private saved(path: string): Node {
         const node = this.panel.getChildByPath(path); if (!node) throw new Error(`技能面板缺少保存节点：${path}`); return node;

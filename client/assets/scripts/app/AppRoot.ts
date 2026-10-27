@@ -24,6 +24,9 @@ import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastP
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
 import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
+import { GameCombatStatus } from './GameCombatStatus';
+import { combatAttributeLines, statusLines } from './CombatStatusModel';
+import { captureSupply, CastingSupplySnapshot, selectedCastingSupply, SupplySelection, validateSupply } from './CastingSupplyModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -39,13 +42,14 @@ export class AppRoot extends Component {
     private messages?: GameMessages;
     private skills?: GameSkills;
     private skillAssets?: GameSkillAssets;
+    private combatStatus?: GameCombatStatus;
     private ui?: UIMgr;
     private popup?: PopupView;
     private selectedRole = -1;
     private selectedJob = 0;
     private selectedItem: any = null;
     private selectedTarget: number | null = null;
-    private aim: { skillId: number; role: string; scene: string; rule: string } | null = null;
+    private aim: { skillId: number; role: string; scene: string; rule: string; supply?: SupplySelection } | null = null;
     private inputSequence = 0;
     private auto = true;
     private count = 1;
@@ -81,6 +85,7 @@ export class AppRoot extends Component {
 
     update(dt: number): void {
         this.world?.update(dt, session.role?.job ?? 0, !!session.inventory?.equipped?.some((entry: any) => entry.slot === 0));
+        this.combatStatus?.update();
         if (!session.ready || !this.world) return;
         this.moveTimer += dt;
         if (this.moveTimer < .15) return;
@@ -183,9 +188,13 @@ export class AppRoot extends Component {
         this.world.prepare(prepared, entity => {
             if (this.consumeGround(entity.position)) return;
             this.selectedTarget = entity.entityHandle;
-            this.popup!.show('Details', { title: '实体详情', message: `类型：${entity.entityKind}\n位置：${entity.position.x}, ${entity.position.y}\n生命：${entity.hp.toString()} / ${entity.hpMax.toString()}` });
+            this.combatStatus?.showDetails('实体详情', [`${({ 1: '角色', 2: '宠物', 3: '怪物', 4: '掉落' } as Record<number, string>)[entity.entityKind] ?? '实体'}`, `位置 ${entity.position.x}, ${entity.position.y}`,
+                `生命 ${entity.hp} / ${entity.hpMax}`, ...combatAttributeLines(entity.combatAttributes),
+                ...(entity.statuses ?? []).flatMap((status: any) => statusLines(status, game.totalTime, game.totalTime, this.world!.gameplay.statuses))]);
         });
-        this.skills = new GameSkills(safe, this.popup);
+        this.combatStatus = new GameCombatStatus(safe, this.ui, this.popup, prepared.statusBadgePrefab, prepared.gameplay.statuses);
+        this.cleanups.push(() => this.combatStatus?.dispose());
+        this.skills = new GameSkills(safe, this.popup, (title, lines) => this.combatStatus!.showDetails(title, lines));
         this.cleanups.push(() => this.skills?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
@@ -241,18 +250,18 @@ export class AppRoot extends Component {
             const skill = this.quickSkill();
             if (!skill) return this.basicAttack();
             if (!skill.learned) { this.ui!.open('Skills'); this.refreshGame(); return; }
-            this.castSkill(skill);
+            return this.castSkill(skill);
         });
         this.button('BottomHUD/Skills/SkillsPanel', () => { this.ui!.open('Skills'); this.refreshGame(); });
         this.button('UIMgr/Panels/Skills/Learn', () => this.learnSkill());
         this.button('UIMgr/Panels/Skills/Use', () => {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
-            this.castSkill(skill);
+            return this.castSkill(skill);
         });
         this.button('UIMgr/Panels/Skills/ModeToggle', () => {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             const enabled = this.find('UIMgr/Panels/Skills/ModeToggle').getComponent(Toggle)!.isChecked;
-            try { this.castSkill(skill, enabled); }
+            try { return this.castSkill(skill, enabled); }
             finally { this.refreshGame(); }
         }, Toggle.EventType.TOGGLE);
         this.button('UIMgr/Panels/Skills/BindQuick', () => {
@@ -261,6 +270,8 @@ export class AppRoot extends Component {
             session.quickSkills.set(roleIdentity(), selected.definition.id); this.refreshGame();
         });
         this.button('MapViewport/Aiming/Cancel', () => this.cancelAim());
+        this.button('MapViewport/BuffBar/Overview', () => this.combatStatus!.openOverview());
+        this.button('UIMgr/Panels/Role/Equip', () => this.setCastingSupply(true));
         for (const [path, kind] of [['Shop', 1], ['Upgrade', 2], ['Salvage', 3]] as const) this.button(`UIMgr/Panels/Skills/${path}`, () => {
             const selected = this.skills?.selected;
             if (kind === 2 && !selected?.learned) throw new Error('先学会并选择要升级的技能');
@@ -285,7 +296,8 @@ export class AppRoot extends Component {
             this.button(`UIMgr/Panels/${panel}/Equip`, () => {
                 if (!this.selectedItem) throw new Error('先选择物品');
                 const definition = this.world!.gameplay.items.find((item: any) => item.item_id === this.selectedItem.itemId);
-                if (!definition || definition.equip_slot == null) throw new Error('该物品不能装备');
+                if (definition?.kind === 'casting_supply') return this.setCastingSupply(false);
+                if (!definition || definition.kind !== 'equipment' || definition.equip_slot == null || definition.equip_slot === 100) throw new Error('该物品不能装备');
                 return this.economic(40001, { itemInstanceId: this.selectedItem.instanceId, slot: definition.equip_slot });
             });
             this.button(`UIMgr/Panels/${panel}/Recycle`, async () => {
@@ -317,6 +329,18 @@ export class AppRoot extends Component {
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
         this.hud?.refresh(presentation);
         this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
+        this.combatStatus?.refresh(baseline, session.ready);
+        const player = baseline?.entities.find((entity: any) => entity.entityKind === 1);
+        const materialDisabled = !!quick?.definition.material_quantity && this.world.gameplay.casting_supply?.enabled === false;
+        this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready && (!materialDisabled || player?.hp.isZero()));
+        const supply = session.inventory?.equipped?.find((entry: any) => entry.slot === this.world!.gameplay.casting_supply?.slot)?.item;
+        this.find('UIMgr/Panels/Role/Equip').active = !!supply;
+        this.text('UIMgr/Panels/Role/Equip/Label', this.world.gameplay.casting_supply?.enabled ? '卸下护符' : '护符未开放');
+        this.find('UIMgr/Panels/Role/Equip').getComponent(Button)!.interactable = !!(session.ready && this.world.gameplay.casting_supply?.enabled && supply);
+        const selectedDefinition = this.world.gameplay.items.find((item: any) => item.item_id === this.selectedItem?.itemId);
+        const selectedSupply = selectedDefinition?.kind === 'casting_supply', supplyEnabled = this.world.gameplay.casting_supply?.enabled;
+        this.text('UIMgr/Panels/Inventory/Equip/Label', selectedSupply ? supplyEnabled ? '装入护符' : '护符未开放' : '装备');
+        this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && (!selectedSupply || supplyEnabled));
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
@@ -379,9 +403,13 @@ export class AppRoot extends Component {
     private skillSnapshot(): SkillSnapshot {
         const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
         const modes = session.skillModes && player?.life?.toString() === session.skillModes.playerLife.toString() ? session.skillModes : null;
+        const supply = session.inventory?.equipped?.find((entry: any) => entry.slot === this.world?.gameplay.casting_supply?.slot)?.item;
+        const supplyName = this.world?.gameplay.items?.find((item: any) => item.item_id === supply?.itemId)?.name;
         return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
             sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
-            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], modes, modesReceivedAt: session.skillModesReceivedAt };
+            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], modes, modesReceivedAt: session.skillModesReceivedAt,
+            castingSupply: supply ? { name: supplyName ?? '施法护符', quantity: supply.quantity.toString() } : null,
+            castingSupplyEnabled: this.world?.gameplay.casting_supply?.enabled, statusDefinitions: this.world?.gameplay.statuses };
     }
 
     private async learnSkill(): Promise<void> {
@@ -393,7 +421,38 @@ export class AppRoot extends Component {
         await this.economic(40010, { itemInstanceId: skillBookInstance(preview), skillId: preview.skillId });
     }
 
-    private castSkill(skill: SkillRow, modeEnabled?: boolean): void {
+    private supplySnapshot(): CastingSupplySnapshot {
+        const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
+        return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO,
+            ruleVersion: session.entry?.resourceVersion ?? Long.UZERO, playerLife: player?.life ?? Long.UZERO,
+            inventory: session.inventory, config: this.world?.gameplay.casting_supply };
+    }
+    private async setCastingSupply(unequip: boolean): Promise<void> {
+        const snapshot = this.supplySnapshot();
+        if (!snapshot.config?.enabled) throw new Error('施法护符暂未开放');
+        const item = unequip
+            ? snapshot.inventory?.equipped.find(entry => entry.slot === snapshot.config?.slot)?.item
+            : snapshot.inventory?.items.find(value => this.selectedItem?.instanceId?.length === 16 && value.instanceId.length === 16
+                && value.instanceId.every((byte, index) => byte === this.selectedItem.instanceId[index]));
+        if (!item) throw new Error(unequip ? '尚未装入护符' : '先在背包选择施法护符');
+        const selection = captureSupply(snapshot, item), name = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId)?.name ?? '施法护符';
+        if (!await this.popup!.confirm('Confirm', `${unequip ? '卸下' : '装入'}${name}？\n剩余 ${item.quantity}份 · ${item.bound ? '绑定' : '非绑定'}\n护符仅用于材料施法，不占强化装备槽`, unequip ? '卸下护符' : '装入护符')) return;
+        if (this.disposed) return;
+        validateSupply(selection, this.supplySnapshot(), unequip);
+        await this.economic(40015, { itemInstanceId: new Uint8Array(selection.instanceId), itemVersion: Long.fromString(selection.version, true), unequip });
+    }
+    private submitCast(row: SkillRow, targetHandle: number, targetGrid: { x: number; y: number }, direction: number, originalSupply?: SupplySelection): void | Promise<void> {
+        const intent = { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id,
+            targetHandle, targetGrid: { x: targetGrid.x, y: targetGrid.y }, direction };
+        if (!row.definition.material_quantity) { session.connection.send(30003, intent); return; }
+        const snapshot = this.supplySnapshot(), supply = originalSupply ?? selectedCastingSupply(snapshot, row.definition);
+        // 地面瞄准不因无关掉落重选；护符实例/版本/数量仍固定，经济上下文使用提交时修订。
+        validateSupply(supply, snapshot, true, false);
+        return this.economic(40014, { ...intent, materialInstanceId: new Uint8Array(supply.instanceId), materialVersion: Long.fromString(supply.version, true),
+            casterLife: Long.fromString(supply.life, true) });
+    }
+
+    private castSkill(skill: SkillRow, modeEnabled?: boolean): void | Promise<void> {
         if (!session.ready) throw new Error('场景尚未就绪');
         const current = skillRows(this.skillSnapshot()).find(row => row.definition.id === skill.definition.id);
         if (!current) throw new Error('技能状态已变化，请重新选择');
@@ -411,21 +470,19 @@ export class AppRoot extends Component {
             const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
             if (isGroundSkill(current.definition)) validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map);
             else validateCaster(current, session.baseline?.entities ?? []);
-            this.aim = { skillId: current.definition.id, role: roleIdentity(), scene: session.entry.sceneEpoch.toString(), rule: session.entry.resourceVersion.toString() };
+            const supply = current.definition.material_quantity ? selectedCastingSupply(this.supplySnapshot(), current.definition) : undefined;
+            this.aim = { skillId: current.definition.id, role: roleIdentity(), scene: session.entry.sceneEpoch.toString(), rule: session.entry.resourceVersion.toString(), supply };
             this.text('MapViewport/Aiming/Text', `${current.definition.name}：轻触${isDirectionalSkill(current.definition) ? '周围选择方向' : '地面施放'}`);
             this.find('MapViewport/Aiming').active = true; this.world!.showAim(player.position);
             if (this.ui?.top?.name === 'Skills') this.ui.back();
             return;
         }
-        if (current.definition.target_kind === 'enemy_self') {
+        if (current.definition.target_kind === 'enemy_self' || current.definition.target_kind === 'friendly_self') {
             const player = validateCaster(current, session.baseline?.entities ?? []);
-            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
-                skillId: current.definition.id, targetHandle: 0, targetGrid: player.position, direction: player.direction });
-            return;
+            return this.submitCast(current, 0, player.position, player.direction);
         }
         const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedTarget);
-        session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
-            skillId: current.definition.id, targetHandle: target.entityHandle, targetGrid: target.position });
+        return this.submitCast(current, target.entityHandle, target.position, 0);
     }
 
     private quickSkill(): SkillRow | null { return primarySkill(this.skillSnapshot(), session.role ? session.quickSkills.get(roleIdentity()) ?? 0 : 0); }
@@ -440,8 +497,8 @@ export class AppRoot extends Component {
             const target = isDirectionalSkill(row.definition) ? validateDirectionTarget(row, session.baseline?.entities ?? [], grid, this.world!.map)
                 : validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map);
             const player = session.baseline.entities.find((entity: any) => entity.entityKind === 1);
-            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
-                skillId: row.definition.id, targetHandle: 0, targetGrid: target, direction: gridDirection(player.position, target, player.direction) });
+            const result = this.submitCast(row, 0, { x: target.x, y: target.y }, gridDirection(player.position, target, player.direction), this.aim.supply);
+            if (result instanceof Promise) void result.catch(error => this.error(error));
             this.cancelAim();
         } catch (error) { this.error(error); }
         return true;

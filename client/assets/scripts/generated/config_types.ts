@@ -558,6 +558,9 @@ export interface GameBuffs {
   remove_events: unknown | null;
   immunity_rules: unknown | null;
   budget_group: string | null;
+  duration_rule: unknown | null;
+  display_name: string | null;
+  short_name: string | null;
 }
 
 export interface GameEffects {
