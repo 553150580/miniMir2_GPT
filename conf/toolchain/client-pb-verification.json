@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 38,
+  "message_count": 41,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -30,6 +30,7 @@
     "SceneBaselineChunk",
     "MoveIntent",
     "CastIntent",
+    "CastAccepted",
     "AutoBattleIntent",
     "HostingState",
     "DeathNotice",
@@ -37,16 +38,18 @@
     "WalletState",
     "ItemView",
     "EquippedItem",
+    "LearnedSkill",
     "InventoryResult",
     "EquipRequest",
     "RecycleRequest",
     "UseItemRequest",
+    "LearnSkillRequest",
     "ClaimHostingTimeRequest",
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 55,
-  "int64_boundary_cases": 177,
+  "int64_field_count": 57,
+  "int64_boundary_cases": 183,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -271,6 +274,18 @@
       "cases": 3
     },
     {
+      "message": "CastAccepted",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "AutoBattleIntent",
       "field": "scene_epoch",
       "type": "uint64",
@@ -379,7 +394,7 @@
       "cases": 3
     }
   ],
-  "bytes_field_count": 13,
+  "bytes_field_count": 14,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -442,6 +457,11 @@
       "repeated": false
     },
     {
+      "message": "LearnSkillRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
       "message": "HostingReport",
       "field": "hosting_session_id",
       "repeated": false
@@ -461,23 +481,23 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "6a50896815a47256e59fd73292d31fa4b2ed283a72440c03426e07f5ee33d080"
+      "sha256": "d6f102ea9477e2b7ae682435ce9d2f79728fa22f1f6f664261164bcd1e80256f"
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "6c39adf8a128931d0d3689d8f6facca8f2edfbd2d3ad5a2950d19487921882ca"
+      "sha256": "4a05e2d89a347b5742961e5825bbb6d6b1803aec485cacdecd08d28738e03a1a"
     }
   ],
   "generated_files": [
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "392753c0859fa2e74da5c1ebb2a8a652a4a81e7e275263cd1392a69cc55da08e",
-      "bytes": 530329
+      "sha256": "d663ff28b34ac8feb8793e438ba8fab5e32524a5b43935991c610bb5aeb7ff03",
+      "bytes": 579753
     },
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "de4502ee0c73051cd68e8d2c0a2fe83a1d3a4ce88684be4c856087baab722bb7",
-      "bytes": 185727
+      "sha256": "aac1870e52d4f7e2711175df100526a176a0f39a81d44f94d32ae48d7f6a7ffb",
+      "bytes": 201706
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

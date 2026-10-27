@@ -1,0 +1,20 @@
+{
+  "base_commit": "eccc58a52b9369cfdaf40ab9d0833f7175d2e446",
+  "original_objects": 733,
+  "current_objects": 779,
+  "original_object_fields_preserved_except_appended_children": true,
+  "changes": [
+    {
+      "index": 26,
+      "name": "World",
+      "field": "_children",
+      "appended": 1
+    },
+    {
+      "index": 253,
+      "name": "Panels",
+      "field": "_children",
+      "appended": 1
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+./tools/dev python3 tools/reference/inventory.py --check
+{"status": "checked", "indexed_files": 6999, "candidate_skills": 67, "ui_images": 12, "upstream_ui_images": 11, "user_supplement_ui_images": 1, "all_skills_status": "待核验", "all_acceptance_status": "待执行", "runtime_ready": false}
+./tools/dev python3 tools/reference/prepare_local.py --check
+{"status": "checked", "files": 322, "counts_by_source": {"crystal": 306, "myf": 5, "ui_reference": 11}, "newly_copied": 0, "bytes": 21962909, "source_unchanged": true, "runtime_ready": false}
+./tools/dev python3 tools/config/export_configs.py --check
+{"structure_valid": true, "runtime_ready": false, "table_count": 98, "record_count": 784, "status_counts": {"candidate": 286, "confirmed": 393, "historical": 36, "unverified": 69}}
+./tools/dev python3 tools/config/generate_protocol.py --check
+{"valid": true, "messages": 35, "error_codes": 24, "proto_source_lint": "passed", "protoc_compile": "verified_generated_sources_current", "game_business": "not_verified_by_generator"}

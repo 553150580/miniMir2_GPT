@@ -13,7 +13,7 @@ const output = path.join(root, '.work/ui-tests');
 mkdirSync(output, { recursive: true });
 const result = spawnSync(process.execPath, [path.join(typescript, 'lib/tsc.js'), '--strict', '--noEmitOnError',
     '--target', 'ES2020', '--lib', 'ES2020', '--module', 'commonjs', '--rootDir', source, '--outDir', output,
-    ...['ui/PanelStackState.ts', 'ui/VirtualListWindow.ts', 'input/NavigationIntent.ts', 'app/HudModel.ts', 'app/SystemMessageLog.ts', 'app/PotionModel.ts'].map(file => path.join(source, file)),
+    ...['ui/PanelStackState.ts', 'ui/VirtualListWindow.ts', 'input/NavigationIntent.ts', 'app/HudModel.ts', 'app/SystemMessageLog.ts', 'app/PotionModel.ts', 'app/SkillModel.ts', 'app/CastPlayback.ts'].map(file => path.join(source, file)),
 ], { cwd: root, stdio: 'inherit' });
 if (result.error) throw result.error;
 if (result.status !== 0) process.exit(result.status ?? 1);

@@ -54,17 +54,17 @@
       "game_attribute_pipeline"
     ],
     "core_content_pending_definition": "当前预览server投影中，gameplay且release_required=true并且记录为空的表；不把候选非空表计为空表。",
-    "current_preview_version": "dev-potions-v0.2-9edc647841f0",
+    "current_preview_version": "dev-skills-v0.3-37024f96bd1d",
     "new_first_loop_candidate_records": 51
   },
   "reference_inputs": {
-    "indexed_files": 6998,
-    "independent_local_copies": 321,
+    "indexed_files": 6999,
+    "independent_local_copies": 322,
     "ui_images": 12,
     "upstream_ui_images": 11,
     "user_provided_ui_images": 1,
     "user_provided_copies": 1,
-    "local_reference_files_total": 322,
+    "local_reference_files_total": 323,
     "main_ui_layout_reference": "UI参考图/用户确认/主界面UI布局参考.png",
     "main_ui_layout_reference_sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2",
     "main_ui_layout_reference_user_confirmed": true,
@@ -74,7 +74,8 @@
     "skills_verified_against_target_180": false,
     "main_ui_browser_geometry_verified": true,
     "main_ui_stage_evidence": "docs/主界面阶段验收.json",
-    "main_ui_user_visual_acceptance": false
+    "main_ui_user_visual_acceptance": false,
+    "skill_identity_mapping_records": 33
   },
   "resources": {
     "sample_pngs": 12,
@@ -84,9 +85,9 @@
     "evidence": "conf/toolchain/resource-layout-verification.json",
     "direction_timing_scope": "目标1.80正式验收尚未通过；开发候选动作映射已做回读与联系图检查。",
     "development_path": "client/assets/resources/development/",
-    "development_pngs": 1593,
+    "development_pngs": 2017,
     "development_profiles": 4,
-    "development_action_direction_sets": 160,
+    "development_action_direction_sets": 176,
     "development_contact_pages_reviewed": 20,
     "development_pixel_roundtrip_check": "passed",
     "development_asset_manifest": "client/assets/resources/development/manifest.json",
@@ -105,11 +106,11 @@
     }
   },
   "verification": {
-    "config_regression_tests": 16,
+    "config_regression_tests": 18,
     "go_module_compile": "passed",
     "go_module_checksums": "all modules verified",
-    "client_pb_message_definitions": 38,
-    "client_64bit_boundary_cases": 177,
+    "client_pb_message_definitions": 41,
+    "client_64bit_boundary_cases": 183,
     "client_typescript": "真实cc声明 strict + skipLibCheck passed；官方声明自身缺失隔离，项目脚本仍严格检查",
     "mongodb_go_driver": "2.9.2 snapshot/majority commit and duplicate rollback passed",
     "evidence": [
@@ -121,25 +122,17 @@
       "server/test-results/latest.json",
       "docs/客户端浏览器验收.json",
       "docs/主界面阶段验收.json",
-      "docs/药品阶段验收.json"
+      "docs/药品阶段验收.json",
+      "docs/技能阶段验收.json"
     ],
-    "protocol_message_ids": 33,
-    "protocol_error_codes": 18,
-    "client_int64_fields": 55,
+    "protocol_message_ids": 35,
+    "protocol_error_codes": 24,
+    "client_int64_fields": 57,
     "client_script_tests": {
-      "ui_models": 9,
       "scene_loader": 16,
-      "wire_and_viewport": 7,
-      "status": "passed",
-      "includes_bounded_out_of_order_expired_baseline_assembly": true,
-      "total_js_tests": 99,
-      "pending_economic_operations": 10,
-      "entity_motion": 14,
-      "entity_animation": 9,
-      "hud_models": 6,
-      "system_messages": 10,
-      "serialized_hud_layout": 9,
-      "potion_models": 9
+      "ui_and_app": 102,
+      "total_js_tests": 118,
+      "status": "passed"
     },
     "creator_cli_last_completed_build": {
       "version": "3.8.8",
@@ -147,53 +140,233 @@
       "exit_code": 36,
       "success": true,
       "scene_prefab_layout_preserved": true,
-      "report": "docs/客户端构建检查.json"
+      "report": "docs/客户端构建检查.json",
+      "seconds": 144.12
     },
     "server_mongodb_pb_http_ws_integration": {
       "passed": true,
       "race_detector": true,
       "exit_code": 0,
       "passed_tests": [
-        "TestGridEightDirectionsAndCornerBlocking",
-        "TestFullBagAutoRejectPushesActualHosting",
-        "TestDeadPlayerCountChangePushesSnapshotWithoutReset",
-        "TestAttackObservationSurvivesStruckAndCooldownReject",
-        "TestLethalStatePushesBeforeBroadcastWindow",
-        "TestMoveCompletionGatesAttackForPlayerPetMonster/player",
-        "TestMoveCompletionGatesAttackForPlayerPetMonster/pet",
-        "TestMoveCompletionGatesAttackForPlayerPetMonster/monster",
-        "TestMoveCompletionGatesAttackForPlayerPetMonster",
-        "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene",
-        "TestPotionTicksIndependentPoolsCapAndNoCatchup",
-        "TestPotionDeathAndPendingPauseWithoutReset",
-        "TestPotionGateSharedCooldownAndDeadSceneChecks",
-        "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting",
-        "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence",
-        "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending",
-        "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12",
-        "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending",
-        "TestManualAttackCannotTargetInactiveMonsterSlots",
-        "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding",
-        "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例",
-        "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型",
-        "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符",
-        "TestPotionConsumeFailuresDoNotMutateInventory/数量不足",
-        "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出",
-        "TestPotionConsumeFailuresDoNotMutateInventory/无场景",
-        "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品",
-        "TestPotionConsumeFailuresDoNotMutateInventory/死亡",
-        "TestPotionConsumeFailuresDoNotMutateInventory/共享节流",
-        "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求",
-        "TestPotionConsumeFailuresDoNotMutateInventory",
-        "TestFirstLoopMongoWS",
-        "TestMongoOwnershipFence",
-        "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+        {
+          "package": "minimir/internal/devconfig",
+          "test": "TestSourcePlayerGrowthThreeJobs"
+        },
+        {
+          "package": "minimir/internal/devconfig",
+          "test": "TestSkillFixtureRejectsInvalidSourceBounds"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestGridEightDirectionsAndCornerBlocking"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestFullBagAutoRejectPushesActualHosting"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestAttackObservationSurvivesStruckAndCooldownReject"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestLethalStatePushesBeforeBroadcastWindow"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/player"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/pet"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/monster"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestMoveCompletionGatesAttackForPlayerPetMonster"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionTicksIndependentPoolsCapAndNoCatchup"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionDeathAndPendingPauseWithoutReset"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionGateSharedCooldownAndDeadSceneChecks"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestManualAttackCannotTargetInactiveMonsterSlots"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestSkillCooldownResourceTargetAndProjectileObstruction"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestPotionReachesFullBeforeCombatClearsWaitingHealingBalance"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestInputWatermarkSharedByMoveAndCastAndRejectsOldBinding"
+        },
+        {
+          "package": "minimir/internal/game",
+          "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/数量不足"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/无场景"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/死亡"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/共享节流"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestPotionConsumeFailuresDoNotMutateInventory"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
+        },
+        {
+          "package": "minimir/internal/persistence",
+          "test": "TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestFirstLoopMongoWS"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestMongoOwnershipFence"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSkillLearningAndCastingMongoWS/fencing"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSkillLearningAndCastingMongoWS/fireball"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSkillLearningAndCastingMongoWS/healing"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSkillLearningAndCastingMongoWS"
+        }
       ],
+      "skipped_tests": [],
+      "source_changed_during_test": false,
       "report": "server/test-results/latest.json"
     },
     "browser_end_to_end": {
@@ -274,6 +447,50 @@
     {
       "path": "架构方案.md",
       "sha256": "76ff24111f1e4325f11d5242927ca1fb811da15d97d162a6e01580fe5165e1a9"
+    },
+    {
+      "path": "UI参考图/用户确认/主界面UI布局参考.png",
+      "sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2"
+    },
+    {
+      "path": "资料索引/用户确认参考.json",
+      "sha256": "03a2a7813fd658600cd8d0b330c4cc96bf9d9d3db0af6534fb1df4dca83df2f3"
+    },
+    {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv",
+      "sha256": "d97075ce90dd0a86cf75b9d1d16959c1b3478b2503e20624d880ff8ccaa05a39"
+    },
+    {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+      "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7"
+    },
+    {
+      "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Exps.ini",
+      "sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+      "sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Shared/BaseStats.cs",
+      "sha256": "b103cbfb609c1d5b578b0f920e40972fda46bbb1057f18fca391ab3dd9da4dfa"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f"
+    },
+    {
+      "path": "client/assets/resources/development/manifest.json",
+      "sha256": "6d5ffffa8d947fe6236e47580314ea42904a9d7b59f8a039a51e53c014524d3a"
+    },
+    {
+      "path": "client/assets/resources/development/maps/first-map.json",
+      "sha256": "df28f45ebdcfcbe6aadc990a46a5fbd3f3c7f0b82bd9dd500fd009d99c4e350c"
     }
   ],
   "toolchain_ready": true,
@@ -281,7 +498,7 @@
   "development_ready": true,
   "environment_checks_passed": 34,
   "updated_on": "2026-10-27",
-  "implementation_status": "manual_potions_stage_browser_verified",
+  "implementation_status": "first_candidate_skills_implemented_browser_key_paths_verified_observation_open",
   "git": {
     "initialized": true,
     "initial_commit_created": true,
@@ -299,7 +516,8 @@
     ],
     "prefabs": [
       "Entity",
-      "ListItem"
+      "ListItem",
+      "Effect"
     ],
     "editable_assets_saved": true,
     "physical_mobile_verified": false
@@ -323,6 +541,9 @@
     "T020": "partially_implemented",
     "T021": "partially_implemented",
     "T022": "partially_implemented",
-    "T035": "partially_implemented"
-  }
+    "T035": "partially_implemented",
+    "T030": "partially_implemented_target_version_unverified",
+    "T031": "partially_implemented_base_attributes_only"
+  },
+  "current_stage_evidence": "docs/技能阶段验收.json"
 }

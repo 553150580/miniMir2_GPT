@@ -18,7 +18,7 @@ MAP_SOURCE = ROOT.parent / '传奇1.80客户端/Map/0.map'
 TILE_WIDTH, TILE_HEIGHT = 48, 32
 DIRECTIONS = ['up','up_right','right','down_right','down','down_left','left','up_left']
 PLAYER_ACTIONS = {'standing':(0,4,8,500),'walking':(64,6,8,100),'attack':(200,6,8,100),
-                  'struck':(472,3,8,100),'die':(536,4,8,100)}
+                  'casting':(392,6,8,100),'struck':(472,3,8,100),'die':(536,4,8,100)}
 MONSTER_ACTIONS = {'standing':(0,4,10,500),'walking':(80,6,10,100),'attack':(160,6,10,100),
                    'struck':(240,2,2,200),'die':(260,10,10,100)}
 PROFILES = [('player_male',[('Hum',1200),('Weapon',1200),('Hair',1200)],PLAYER_ACTIONS),
@@ -178,14 +178,26 @@ def main():
                                           'loop':action in ['standing','walking'],'directions':directions}
             profile['layers'].append(layer)
         profiles[name]=profile
+    # Magic原图含用于加色混合的暗色像素；保持原像素，由保存的特效Sprite选择加色混合。
+    def effect(start,count,duration):
+        return {'frames':[importer.frame('Magic',start+i) for i in range(count)],'duration_ms':duration,'blend':'additive'}
+    effects={
+        '1':{'kind':'fireball','cast':effect(0,10,600),'hit':effect(170,10,600),
+             'projectile':{'directions':[[importer.frame('Magic',10+d*10+i) for i in range(6)] for d in range(16)],
+                           'frame_ms':30,'blend':'additive'}},
+        '2':{'kind':'healing','cast':effect(200,10,600),'hit':effect(370,10,800)},
+    }
     manifest={'schema_version':1,'purpose':'first_loop_development_candidates','development_only':True,'runtime_ready':False,
               'status':'candidate','official_180_restoration_verified':False,'pillow_version':PILLOW_VERSION,
               'converter':'tools/resources/build_development_assets.py','converter_sha256':sha(Path(__file__)),
               'wil_decoder_sha256':sha(ROOT/'tools/resources/inspect_wil.py'),'map':map_info,'direction_names':DIRECTIONS,
               'coordinate_contract':'Source image top-left = entity draw origin + WIL offset_x,offset_y. PNGs remain uncropped and unscaled; y is down in source grid.',
-              'sources':list(importer.sources.values()),'profiles':profiles,'frames':importer.frames,
+              'sources':list(importer.sources.values()),'profiles':profiles,'effects':effects,'frames':importer.frames,
               'evidence':[evidence('资料参考/crystal/Client/MirObjects/Frames.cs',23,33,'monster compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/Frames.cs',153,168,'player compact action order/count/interval'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1643,1657,'fireball/healing cast Magic frame groups'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2837,2883,'fireball projectile/hit and healing target effects'),
+                          evidence('资料参考/crystal/Client/MirObjects/Effect.cs',152,216,'16-direction projectile frames and additive rendering'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',4887,4919,'weapon/body/hair order by direction'),
                           evidence('资料参考/crystal/Client/MirObjects/MapCode.cs',226,259,'v0 layers, 1-based images, column-major cells'),
                           evidence('资料参考/crystal/Server/MirEnvir/Map.cs',112,151,'three layer 0x8000 collision bits')],

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "rule_version": 2,
+  "rule_version": 3,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
-  "damage_formula": "development_range_minus_defence",
+  "damage_formula": "development_source_combat",
   "allow_free_dev_revive": true,
   "potions": {
     "tick_ms": 200,
@@ -25,6 +25,155 @@
       }
     ]
   },
+  "skills": [
+    {
+      "learn_level": 7,
+      "learned_level": 0,
+      "mp_base_cost": 3,
+      "mp_level_cost": 2,
+      "cooldown_base_ms": 1800,
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "range_cells": 9,
+      "delay_base_ms": 500,
+      "accuracy_per_level": 0,
+      "power_bonus": 0,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "id": 1,
+      "name": "火球术",
+      "job_id": 1,
+      "book_item_id": 7,
+      "behavior": "fireball",
+      "projectile_ms_per_cell": 50,
+      "target_move_tolerance_cells": 2,
+      "power_base": 2,
+      "mpower_base": 8
+    },
+    {
+      "learn_level": 7,
+      "learned_level": 0,
+      "mp_base_cost": 3,
+      "mp_level_cost": 2,
+      "cooldown_base_ms": 1800,
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "range_cells": 9,
+      "delay_base_ms": 500,
+      "accuracy_per_level": 0,
+      "power_bonus": 0,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "id": 2,
+      "name": "治愈术",
+      "job_id": 2,
+      "book_item_id": 21,
+      "behavior": "healing",
+      "projectile_ms_per_cell": 0,
+      "target_move_tolerance_cells": 0,
+      "power_base": 0,
+      "mpower_base": 14
+    },
+    {
+      "learn_level": 7,
+      "learned_level": 0,
+      "mp_base_cost": 0,
+      "mp_level_cost": 0,
+      "cooldown_base_ms": 1800,
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 0,
+      "action_ms": 0,
+      "range_cells": 0,
+      "delay_base_ms": 0,
+      "accuracy_per_level": 3,
+      "power_bonus": 0,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "id": 3,
+      "name": "基本剑术",
+      "job_id": 0,
+      "book_item_id": 1,
+      "behavior": "fencing",
+      "projectile_ms_per_cell": 0,
+      "target_move_tolerance_cells": 0,
+      "power_base": 0,
+      "mpower_base": 0
+    }
+  ],
+  "healing": {
+    "tick_ms": 600,
+    "base_per_tick": 5,
+    "pet_base_per_tick": 5,
+    "levels_per_step": 10,
+    "queue_fraction_divisor": 10,
+    "queue_cap": 65535
+  },
+  "player_growth": [
+    {
+      "job_id": 0,
+      "hp_base": 14,
+      "mp_base": 11,
+      "hp_gain": 4,
+      "hp_gain_rate": 4.5,
+      "mp_gain": 3.5,
+      "mp_gain_rate": 0,
+      "attack_divisor": 5,
+      "defence_max_divisor": 7,
+      "magic_divisor": 0,
+      "tao_divisor": 0,
+      "magic_defence_min_divisor": 0,
+      "magic_defence_max_divisor": 0
+    },
+    {
+      "job_id": 1,
+      "hp_base": 14,
+      "mp_base": 13,
+      "hp_gain": 15,
+      "hp_gain_rate": 1.8,
+      "mp_gain": 5,
+      "mp_gain_rate": 0,
+      "attack_divisor": 7,
+      "defence_max_divisor": 0,
+      "magic_divisor": 7,
+      "tao_divisor": 0,
+      "magic_defence_min_divisor": 0,
+      "magic_defence_max_divisor": 0
+    },
+    {
+      "job_id": 2,
+      "hp_base": 14,
+      "mp_base": 13,
+      "hp_gain": 6,
+      "hp_gain_rate": 2.5,
+      "mp_gain": 8,
+      "mp_gain_rate": 0,
+      "attack_divisor": 7,
+      "defence_max_divisor": 0,
+      "magic_divisor": 0,
+      "tao_divisor": 7,
+      "magic_defence_min_divisor": 12,
+      "magic_defence_max_divisor": 6
+    }
+  ],
+  "initial_skill_books": [
+    {
+      "job_id": 1,
+      "item_id": 7
+    },
+    {
+      "job_id": 2,
+      "item_id": 21
+    },
+    {
+      "job_id": 0,
+      "item_id": 1
+    }
+  ],
   "map": {
     "id": 1,
     "width": 16,
@@ -152,7 +301,19 @@
       "attack_max": 0,
       "defence": 0,
       "attack_ms": 1386,
-      "move_ms": 600
+      "move_ms": 600,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "accuracy": 5,
+      "agility": 15,
+      "magic_resist": 0,
+      "magic_resist_weight": 10
     },
     {
       "job_id": 1,
@@ -163,7 +324,19 @@
       "attack_max": 0,
       "defence": 0,
       "attack_ms": 1386,
-      "move_ms": 600
+      "move_ms": 600,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "accuracy": 5,
+      "agility": 15,
+      "magic_resist": 0,
+      "magic_resist_weight": 10
     },
     {
       "job_id": 2,
@@ -174,7 +347,19 @@
       "attack_max": 0,
       "defence": 0,
       "attack_ms": 1386,
-      "move_ms": 600
+      "move_ms": 600,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "accuracy": 5,
+      "agility": 18,
+      "magic_resist": 0,
+      "magic_resist_weight": 10
     }
   ],
   "pet": {
@@ -185,6 +370,18 @@
     "attack_min": 10,
     "attack_max": 20,
     "defence": 10,
+    "defence_min": 10,
+    "defence_max": 10,
+    "magic_defence_min": 10,
+    "magic_defence_max": 10,
+    "magic_min": 0,
+    "magic_max": 0,
+    "tao_min": 0,
+    "tao_max": 0,
+    "accuracy": 15,
+    "agility": 20,
+    "magic_resist": 0,
+    "magic_resist_weight": 10,
     "attack_ms": 1000,
     "move_ms": 1000
   },
@@ -197,6 +394,18 @@
       "attack_min": 1,
       "attack_max": 2,
       "defence": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 5,
+      "agility": 10,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
       "attack_ms": 2500,
       "move_ms": 1500,
       "id": 1,
@@ -216,6 +425,10 @@
       "attack_min_bonus": 2,
       "attack_max_bonus": 5,
       "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
       "recycle_gold": 50,
       "stackable": false,
       "allowed_jobs": [
@@ -233,6 +446,10 @@
       "attack_min_bonus": 0,
       "attack_max_bonus": 0,
       "defence_bonus": 2,
+      "defence_min_bonus": 2,
+      "defence_max_bonus": 2,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 1,
       "recycle_gold": 400,
       "stackable": false,
       "allowed_jobs": [
@@ -250,6 +467,10 @@
       "attack_min_bonus": 0,
       "attack_max_bonus": 0,
       "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
       "recycle_gold": 0,
       "stackable": true,
       "allowed_jobs": [
@@ -267,12 +488,76 @@
       "attack_min_bonus": 0,
       "attack_max_bonus": 0,
       "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
       "recycle_gold": 0,
       "stackable": true,
       "allowed_jobs": [
         0,
         1,
         2
+      ]
+    },
+    {
+      "id": 7,
+      "name": "《火球术》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 1,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "allowed_jobs": [
+        1
+      ]
+    },
+    {
+      "id": 21,
+      "name": "《治愈术》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 2,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "allowed_jobs": [
+        2
+      ]
+    },
+    {
+      "id": 1,
+      "name": "《基本剑术》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 3,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "allowed_jobs": [
+        0
       ]
     }
   ],
@@ -607,8 +892,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）",
-          "note": "仅development候选，正式发布仍禁用。红20/蓝30是跨来源开发测试量，不证明MYF Ac/Mac字段语义；Crystal普通药分跳/上限/满值清队列/死亡暂停；来源客户端300ms共享节流提升为服务器校验。详见docs/药品与技能实施边界.md。"
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）",
+          "note": "仅development候选。红蓝药与首组三职业技能；完整技能、升级、1.80还原及正式发布仍待验收。来源与例外见技能/药品边界文档。"
         }
       ],
       "game_drop_categories": [
@@ -634,9 +919,9 @@
         }
       ]
     },
-    "player_stats": "../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600",
-    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。",
-    "damage_scope": "仅验证无幸运/命中/元素/Buff的源物理区间减固定防御子集。不是完整1.80伤害管线。",
+    "player_stats": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证",
+    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。",
+    "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
     "potion_effects": {
       "status": "candidate",
@@ -649,7 +934,18 @@
       "full_resource_use": "仍消费，客户端提交前明示并确认；恢复满值后清除对应剩余队列",
       "death_policy": "死亡拒绝新使用，已提交剩余效果暂停保留，不因重新连接重发",
       "automatic_use_enabled": false,
-      "formal_scope": "正式game_items堆叠上限及effect_list_id仍待核验；未开放正式效果表或职业技能。"
+      "formal_scope": "正式game_items堆叠上限及effect_list_id仍待核验；未开放完整正式效果表。"
+    },
+    "skills": {
+      "status": "candidate",
+      "target_180_verified": false,
+      "reference_document": "docs/技能来源核验与实施清单.md",
+      "parameters_source": "唯一玩法Excel/开发首循环夹具；技能、职业成长、独立治疗时钟及初始书清单",
+      "scope": "仅基本剑术被动、火球单体延迟命中、治愈自身/自有宠物；技能升级/书页/其余完整技能仍关闭",
+      "learning_adaptation": "7级学习资格、新角色按职业1本绑定书属于development候选；原生初学等级0，未学由列表缺项表示",
+      "attribute_scope": "三职默认成长与DC/MC/SC/AC/MAC、准确敏捷；不含元素/幸运/完整Buff，来源默认不是源服实库",
+      "monster_resist_scope": "本轮开发怪物/宠物不配置魔法闪避加成（0）；权重从唯一Excel中共同的源码默认候选权重取得",
+      "formal_tables_populated": false
     },
     "workbook_sync": "exported_from_current_unique_excel",
     "source_locks": [
@@ -699,7 +995,7 @@
       },
       {
         "path": "client/assets/resources/development/manifest.json",
-        "sha256": "133e5206efe140f6c6b70be844a6ca1d221b9c6fec767190ccdcf4a2d42833e1"
+        "sha256": "6d5ffffa8d947fe6236e47580314ea42904a9d7b59f8a039a51e53c014524d3a"
       },
       {
         "path": "client/assets/resources/development/maps/first-map.json",
@@ -708,8 +1004,8 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "6432661c7c9daa42df859a7571d77ac51eb5f49c71584599aa1a8c6953e854ed"
+      "sha256": "983e353f86e3ef84da51181463ca4484af1ef5d85e00899c04e7b34e690554d1"
     },
-    "exporter_sha256": "d631d2fd025d339239770352dbff01a6009d75ae853cb8e70c67b636364e1773"
+    "exporter_sha256": "c1949ad13da59f223e28bba21a690c68e1bc92af4a2b22ab8a8298614e25ee83"
   }
 }

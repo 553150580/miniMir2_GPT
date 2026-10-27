@@ -2222,6 +2222,12 @@ export namespace minimir {
             /** EntityState attack_sequence. */
             attack_sequence: number;
 
+            /** EntityState cast_sequence. */
+            cast_sequence: number;
+
+            /** EntityState cast_skill_id. */
+            cast_skill_id: number;
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -2320,6 +2326,12 @@ export namespace minimir {
 
                 /** EntityState attack_sequence */
                 attack_sequence?: (number|null);
+
+                /** EntityState cast_sequence */
+                cast_sequence?: (number|null);
+
+                /** EntityState cast_skill_id */
+                cast_skill_id?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -2699,6 +2711,156 @@ export namespace minimir {
 
             /** Shape of a CastIntent. */
             type $Shape = minimir.v1.CastIntent.$Properties;
+        }
+
+        /**
+         * Properties of a CastAccepted.
+         * @deprecated Use minimir.v1.CastAccepted.$Properties instead.
+         */
+        interface ICastAccepted extends minimir.v1.CastAccepted.$Properties {
+        }
+
+        /** Represents a CastAccepted. */
+        class CastAccepted {
+
+            /**
+             * Constructs a new CastAccepted.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.CastAccepted.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** CastAccepted scene_epoch. */
+            scene_epoch: Long;
+
+            /** CastAccepted cast_id. */
+            cast_id: Long;
+
+            /** CastAccepted skill_id. */
+            skill_id: number;
+
+            /** CastAccepted caster_handle. */
+            caster_handle: number;
+
+            /** CastAccepted target_handle. */
+            target_handle: number;
+
+            /** CastAccepted origin. */
+            origin?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** CastAccepted target_grid. */
+            target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** CastAccepted direction. */
+            direction: number;
+
+            /** CastAccepted delay_ms. */
+            delay_ms: number;
+
+            /** CastAccepted input_sequence. */
+            input_sequence: number;
+
+            /**
+             * Creates a new CastAccepted instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CastAccepted instance
+             */
+            static create(properties: minimir.v1.CastAccepted.$Shape): minimir.v1.CastAccepted & minimir.v1.CastAccepted.$Shape;
+            static create(properties?: minimir.v1.CastAccepted.$Properties): minimir.v1.CastAccepted;
+
+            /**
+             * Encodes the specified CastAccepted message. Does not implicitly {@link minimir.v1.CastAccepted.verify|verify} messages.
+             * @param message CastAccepted message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.CastAccepted.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CastAccepted message, length delimited. Does not implicitly {@link minimir.v1.CastAccepted.verify|verify} messages.
+             * @param message CastAccepted message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.CastAccepted.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CastAccepted message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.CastAccepted & minimir.v1.CastAccepted.$Shape} CastAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.CastAccepted & minimir.v1.CastAccepted.$Shape;
+
+            /**
+             * Decodes a CastAccepted message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.CastAccepted & minimir.v1.CastAccepted.$Shape} CastAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.CastAccepted & minimir.v1.CastAccepted.$Shape;
+
+            /**
+             * Verifies a CastAccepted message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for CastAccepted
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace CastAccepted {
+
+            /** Properties of a CastAccepted. */
+            interface $Properties {
+
+                /** CastAccepted scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** CastAccepted cast_id */
+                cast_id?: (Long|null);
+
+                /** CastAccepted skill_id */
+                skill_id?: (number|null);
+
+                /** CastAccepted caster_handle */
+                caster_handle?: (number|null);
+
+                /** CastAccepted target_handle */
+                target_handle?: (number|null);
+
+                /** CastAccepted origin */
+                origin?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** CastAccepted target_grid */
+                target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** CastAccepted direction */
+                direction?: (number|null);
+
+                /** CastAccepted delay_ms */
+                delay_ms?: (number|null);
+
+                /** CastAccepted input_sequence */
+                input_sequence?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a CastAccepted. */
+            type $Shape = minimir.v1.CastAccepted.$Properties;
         }
 
         /**
@@ -3488,6 +3650,108 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a LearnedSkill.
+         * @deprecated Use minimir.v1.LearnedSkill.$Properties instead.
+         */
+        interface ILearnedSkill extends minimir.v1.LearnedSkill.$Properties {
+        }
+
+        /** Represents a LearnedSkill. */
+        class LearnedSkill {
+
+            /**
+             * Constructs a new LearnedSkill.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.LearnedSkill.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** LearnedSkill skill_id. */
+            skill_id: number;
+
+            /** LearnedSkill level. */
+            level: number;
+
+            /**
+             * Creates a new LearnedSkill instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns LearnedSkill instance
+             */
+            static create(properties: minimir.v1.LearnedSkill.$Shape): minimir.v1.LearnedSkill & minimir.v1.LearnedSkill.$Shape;
+            static create(properties?: minimir.v1.LearnedSkill.$Properties): minimir.v1.LearnedSkill;
+
+            /**
+             * Encodes the specified LearnedSkill message. Does not implicitly {@link minimir.v1.LearnedSkill.verify|verify} messages.
+             * @param message LearnedSkill message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.LearnedSkill.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified LearnedSkill message, length delimited. Does not implicitly {@link minimir.v1.LearnedSkill.verify|verify} messages.
+             * @param message LearnedSkill message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.LearnedSkill.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a LearnedSkill message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.LearnedSkill & minimir.v1.LearnedSkill.$Shape} LearnedSkill
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.LearnedSkill & minimir.v1.LearnedSkill.$Shape;
+
+            /**
+             * Decodes a LearnedSkill message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.LearnedSkill & minimir.v1.LearnedSkill.$Shape} LearnedSkill
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.LearnedSkill & minimir.v1.LearnedSkill.$Shape;
+
+            /**
+             * Verifies a LearnedSkill message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for LearnedSkill
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace LearnedSkill {
+
+            /** Properties of a LearnedSkill. */
+            interface $Properties {
+
+                /** LearnedSkill skill_id */
+                skill_id?: (number|null);
+
+                /** LearnedSkill level */
+                level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a LearnedSkill. */
+            type $Shape = minimir.v1.LearnedSkill.$Properties;
+        }
+
+        /**
          * Properties of an InventoryResult.
          * @deprecated Use minimir.v1.InventoryResult.$Properties instead.
          */
@@ -3523,6 +3787,9 @@ export namespace minimir {
 
             /** InventoryResult experience. */
             experience: Long;
+
+            /** InventoryResult learned_skills. */
+            learned_skills: minimir.v1.LearnedSkill.$Properties[];
 
             /**
              * Creates a new InventoryResult instance using the specified properties.
@@ -3604,6 +3871,9 @@ export namespace minimir {
 
                 /** InventoryResult experience */
                 experience?: (Long|null);
+
+                /** InventoryResult learned_skills */
+                learned_skills?: (minimir.v1.LearnedSkill.$Properties[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -3935,6 +4205,114 @@ export namespace minimir {
 
             /** Shape of a UseItemRequest. */
             type $Shape = minimir.v1.UseItemRequest.$Properties;
+        }
+
+        /**
+         * Properties of a LearnSkillRequest.
+         * @deprecated Use minimir.v1.LearnSkillRequest.$Properties instead.
+         */
+        interface ILearnSkillRequest extends minimir.v1.LearnSkillRequest.$Properties {
+        }
+
+        /** Represents a LearnSkillRequest. */
+        class LearnSkillRequest {
+
+            /**
+             * Constructs a new LearnSkillRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.LearnSkillRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** LearnSkillRequest item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** LearnSkillRequest skill_id. */
+            skill_id: number;
+
+            /** LearnSkillRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new LearnSkillRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns LearnSkillRequest instance
+             */
+            static create(properties: minimir.v1.LearnSkillRequest.$Shape): minimir.v1.LearnSkillRequest & minimir.v1.LearnSkillRequest.$Shape;
+            static create(properties?: minimir.v1.LearnSkillRequest.$Properties): minimir.v1.LearnSkillRequest;
+
+            /**
+             * Encodes the specified LearnSkillRequest message. Does not implicitly {@link minimir.v1.LearnSkillRequest.verify|verify} messages.
+             * @param message LearnSkillRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.LearnSkillRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified LearnSkillRequest message, length delimited. Does not implicitly {@link minimir.v1.LearnSkillRequest.verify|verify} messages.
+             * @param message LearnSkillRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.LearnSkillRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a LearnSkillRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.LearnSkillRequest & minimir.v1.LearnSkillRequest.$Shape} LearnSkillRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.LearnSkillRequest & minimir.v1.LearnSkillRequest.$Shape;
+
+            /**
+             * Decodes a LearnSkillRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.LearnSkillRequest & minimir.v1.LearnSkillRequest.$Shape} LearnSkillRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.LearnSkillRequest & minimir.v1.LearnSkillRequest.$Shape;
+
+            /**
+             * Verifies a LearnSkillRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for LearnSkillRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace LearnSkillRequest {
+
+            /** Properties of a LearnSkillRequest. */
+            interface $Properties {
+
+                /** LearnSkillRequest item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** LearnSkillRequest skill_id */
+                skill_id?: (number|null);
+
+                /** LearnSkillRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a LearnSkillRequest. */
+            type $Shape = minimir.v1.LearnSkillRequest.$Properties;
         }
 
         /**

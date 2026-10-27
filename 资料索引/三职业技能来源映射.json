@@ -1,0 +1,2131 @@
+{
+  "schema_version": 1,
+  "audited_on": "2026-10-27",
+  "scope": "MYF首段MagID1至33与Crystal源码的只读候选交叉定位",
+  "runtime_ready": false,
+  "is_runtime_configuration": false,
+  "unique_numeric_source": "outputs/development-prep-20261026/玩法配置.xlsx",
+  "complete_target_180_list_verified": false,
+  "historical_gxx_snapshot_recovered": false,
+  "missing_historical_paths": [
+    "资料参考/gxx/",
+    "config/reference_mapping/skills_mapping.json"
+  ],
+  "mapping_count": 33,
+  "crystal_profession_candidate_count": 67,
+  "status_notice": "本文件仅来源定位，不授权启用技能；不得把源码可读、名称相近或来源首段33条当成目标1.80完整清单、运行服实参或技能对拍通过。",
+  "cross_source_conflicts": [
+    "MYF与Crystal技能ID不同，必须分别保存；不能直接拼接ID。",
+    "MYF技能表NeedL与Crystal默认Level1/2/3不一致；后者亦用于源熟练等级门槛。",
+    "MYF书Shape为职业分组候选，不能套用Crystal书Shape即SpellID的学习分支。",
+    "Crystal默认仅在MagicExists=false时补入，来源实际数据库可以覆盖；本轮不读取来源账号或数据库。"
+  ],
+  "source_files": {
+    "myf_magic": {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv",
+      "local_reference_path": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv",
+      "sha256": "356a53a109a9a222900b9e910d1bc304fbbcf54b4679731c17d5ae86c48d9030",
+      "read_only": true
+    },
+    "myf_items": {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+      "local_reference_path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+      "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7",
+      "read_only": true
+    },
+    "crystal_enums": {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "local_reference_path": "资料参考/crystal/Shared/Enums.cs",
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398",
+      "read_only": true
+    },
+    "crystal_magic_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/MagicInfo.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirDatabase/MagicInfo.cs",
+      "sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "read_only": true
+    },
+    "crystal_human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "read_only": true
+    },
+    "crystal_map_object": {
+      "path": "资料参考/crystal/Server/MirObjects/MapObject.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "read_only": true
+    },
+    "crystal_player": {
+      "path": "资料参考/crystal/Server/MirObjects/PlayerObject.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirObjects/PlayerObject.cs",
+      "sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "read_only": true
+    },
+    "crystal_monster": {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "read_only": true
+    },
+    "crystal_client_player": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "local_reference_path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a",
+      "read_only": true
+    },
+    "crystal_frames": {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "local_reference_path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16",
+      "read_only": true
+    },
+    "crystal_environment": {
+      "path": "../SuprcodeCrystal/Server/MirEnvir/Envir.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirEnvir/Envir.cs",
+      "sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
+      "read_only": true
+    },
+    "crystal_base_stats": {
+      "path": "../SuprcodeCrystal/Shared/BaseStats.cs",
+      "local_reference_path": "资料参考/crystal/Shared/BaseStats.cs",
+      "sha256": "b103cbfb609c1d5b578b0f920e40972fda46bbb1057f18fca391ab3dd9da4dfa",
+      "read_only": true
+    },
+    "crystal_stats": {
+      "path": "../SuprcodeCrystal/Shared/Data/Stat.cs",
+      "local_reference_path": "资料参考/crystal/Shared/Data/Stat.cs",
+      "sha256": "d38bd55d2b27f6dcd8f70111b9715cbd07a6c20363ddc74cfa9774a953bfbfbe",
+      "read_only": true
+    },
+    "crystal_functions": {
+      "path": "../SuprcodeCrystal/Shared/Functions/Functions.cs",
+      "local_reference_path": "资料参考/crystal/Shared/Functions/Functions.cs",
+      "sha256": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278",
+      "read_only": true
+    },
+    "crystal_settings": {
+      "path": "../SuprcodeCrystal/Server/Settings.cs",
+      "local_reference_path": null,
+      "sha256": "c9fbfa492e33b1a4e07a79a86a002c7918418531b7bdf4ba6671916a38f2faec",
+      "read_only": true,
+      "relevant_lines": [
+        296,
+        519
+      ],
+      "role": "仅默认抵抗权重和配置覆盖的源码定位；不复制完整运维域，不读取来源服配置实值"
+    }
+  },
+  "skills": [
+    {
+      "candidate_key": "myf_magic_1",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 2,
+        "id": 1,
+        "job_id": 1,
+        "name": "火球术",
+        "raw_learning_levels": [
+          7,
+          11,
+          16
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1165,
+        "id": 31,
+        "symbol": "FireBall",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 548,
+          "end_line": 565
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3501,
+            5916
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 9,
+          "item_id": 7,
+          "name": "火球术",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false,
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 3939,
+          "end_line": 3949,
+          "purpose": "火球目标、飞行遮挡与延迟"
+        },
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 5916,
+          "end_line": 5929,
+          "purpose": "延迟完成与MAC路径"
+        },
+        {
+          "source_file_id": "crystal_map_object",
+          "start_line": 321,
+          "end_line": 336,
+          "purpose": "CanFly逐格路径"
+        },
+        {
+          "source_file_id": "crystal_map_object",
+          "start_line": 490,
+          "end_line": 496,
+          "purpose": "MAC及魔法抵抗路径"
+        }
+      ],
+      "source_behavior_notes": [
+        "施法者MC输入；到期时继续检查合法敌方、同图和目标离原格距离。",
+        "源Magic公共校验可能先扣蓝；本作按最终策划先验证再确认施放应另登记开发适配。"
+      ]
+    },
+    {
+      "candidate_key": "myf_magic_2",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 3,
+        "id": 2,
+        "job_id": 2,
+        "name": "治愈术",
+        "raw_learning_levels": [
+          7,
+          11,
+          16
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1192,
+        "id": 61,
+        "symbol": "Healing",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 956,
+          "end_line": 972
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3506,
+            6018
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 23,
+          "item_id": 21,
+          "name": "治愈术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false,
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 4355,
+          "end_line": 4363,
+          "purpose": "治愈额度与500ms延迟"
+        },
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 6018,
+          "end_line": 6026,
+          "purpose": "治愈队列叠加与封顶"
+        },
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 602,
+          "end_line": 645,
+          "purpose": "人类目标动态分跳与满值清队列"
+        },
+        {
+          "source_file_id": "crystal_monster",
+          "start_line": 602,
+          "end_line": 602,
+          "purpose": "怪物及宠物治疗节拍"
+        },
+        {
+          "source_file_id": "crystal_monster",
+          "start_line": 1414,
+          "end_line": 1451,
+          "purpose": "怪物及宠物固定分跳、死亡暂停与满值清队列"
+        },
+        {
+          "source_file_id": "crystal_monster",
+          "start_line": 2541,
+          "end_line": 2544,
+          "purpose": "本角色宠物友方判断"
+        }
+      ],
+      "source_behavior_notes": [
+        "人类目标按目标等级与当前剩余治疗额度计算分跳；宠物继承MonsterObject分支，固定每跳最多5。",
+        "治疗队列独立于普通药品；来源死亡暂停保留，满值在计时块外清队列。"
+      ]
+    },
+    {
+      "candidate_key": "myf_magic_3",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 4,
+        "id": 3,
+        "job_id": 0,
+        "name": "基本剑术",
+        "raw_learning_levels": [
+          7,
+          11,
+          16
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1146,
+        "id": 1,
+        "symbol": "Fencing",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 296,
+          "end_line": 297
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2303,
+            6820
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 3,
+          "item_id": 1,
+          "name": "基本剑术",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false,
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 2303,
+          "end_line": 2306,
+          "purpose": "基本剑术准确被动，原生rank0收益为0"
+        },
+        {
+          "source_file_id": "crystal_map_object",
+          "start_line": 466,
+          "end_line": 473,
+          "purpose": "准确及敏捷物理命中分支"
+        }
+      ],
+      "source_behavior_notes": [
+        "已学状态与原生rank分开；新UserMagic默认rank0，准确增量为0。",
+        "源训练及完整升级未因此得到本作授权；rank1至3可作为固定输入测试。"
+      ]
+    },
+    {
+      "candidate_key": "myf_magic_4",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 5,
+        "id": 4,
+        "job_id": 2,
+        "name": "精神力战法",
+        "raw_learning_levels": [
+          9,
+          13,
+          19
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1193,
+        "id": 62,
+        "symbol": "SpiritSword",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 973,
+          "end_line": 975
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2312,
+            6821
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 24,
+          "item_id": 22,
+          "name": "精神力战法",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_5",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 6,
+        "id": 5,
+        "job_id": 1,
+        "name": "大火球",
+        "raw_learning_levels": [
+          19,
+          23,
+          25
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1168,
+        "id": 34,
+        "symbol": "GreatFireBall",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 599,
+          "end_line": 616
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3502,
+            5917
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 14,
+          "item_id": 12,
+          "name": "大火球",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_6",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 7,
+        "id": 6,
+        "job_id": 2,
+        "name": "施毒术",
+        "raw_learning_levels": [
+          14,
+          17,
+          20
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1194,
+        "id": 63,
+        "symbol": "Poisoning",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 976,
+          "end_line": 978
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3522,
+            6043
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 25,
+          "item_id": 23,
+          "name": "施毒术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_7",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 8,
+        "id": 7,
+        "job_id": 0,
+        "name": "攻杀剑术",
+        "raw_learning_levels": [
+          19,
+          22,
+          24
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1147,
+        "id": 2,
+        "symbol": "Slaying",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 298,
+          "end_line": 299
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2308,
+            2860,
+            2898,
+            3148
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 4,
+          "item_id": 2,
+          "name": "攻杀剑术",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_8",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 9,
+        "id": 8,
+        "job_id": 1,
+        "name": "抗拒火环",
+        "raw_learning_levels": [
+          12,
+          15,
+          19
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1166,
+        "id": 32,
+        "symbol": "Repulsion",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 566,
+          "end_line": 582
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3514
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 10,
+          "item_id": 8,
+          "name": "抗拒火环",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_9",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 10,
+        "id": 9,
+        "job_id": 1,
+        "name": "地狱火",
+        "raw_learning_levels": [
+          16,
+          21,
+          26
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1169,
+        "id": 35,
+        "symbol": "HellFire",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 617,
+          "end_line": 634
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3525
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 12,
+          "item_id": 10,
+          "name": "地狱火",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_10",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 11,
+        "id": 10,
+        "job_id": 1,
+        "name": "疾光电影",
+        "raw_learning_levels": [
+          26,
+          29,
+          32
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1174,
+        "id": 40,
+        "symbol": "Lightning",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 693,
+          "end_line": 710
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3568
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 18,
+          "item_id": 16,
+          "name": "疾光电影",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_11",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 12,
+        "id": 11,
+        "job_id": 1,
+        "name": "雷电术",
+        "raw_learning_levels": [
+          17,
+          20,
+          23
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1170,
+        "id": 36,
+        "symbol": "ThunderBolt",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 635,
+          "end_line": 653
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3528,
+            5918
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 13,
+          "item_id": 11,
+          "name": "雷电术",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_12",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 13,
+        "id": 12,
+        "job_id": 0,
+        "name": "刺杀剑术",
+        "raw_learning_levels": [
+          25,
+          27,
+          29
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1148,
+        "id": 3,
+        "symbol": "Thrusting",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 300,
+          "end_line": 315
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2919,
+            2999,
+            3018,
+            3163,
+            8514
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 5,
+          "item_id": 3,
+          "name": "刺杀剑术",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_13",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 14,
+        "id": 13,
+        "job_id": 2,
+        "name": "灵魂火符",
+        "raw_learning_levels": [
+          18,
+          21,
+          24
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1195,
+        "id": 64,
+        "symbol": "SoulFireBall",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 979,
+          "end_line": 996
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3531,
+            5919
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 26,
+          "item_id": 24,
+          "name": "灵魂火符",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_14",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 15,
+        "id": 14,
+        "job_id": 2,
+        "name": "幽灵盾",
+        "raw_learning_levels": [
+          22,
+          24,
+          26
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1199,
+        "id": 69,
+        "symbol": "SoulShield",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1032,
+          "end_line": 1047
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3561
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 30,
+          "item_id": 28,
+          "name": "幽灵盾",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_15",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 16,
+        "id": 15,
+        "job_id": 2,
+        "name": "神圣战甲术",
+        "raw_learning_levels": [
+          25,
+          27,
+          29
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1201,
+        "id": 71,
+        "symbol": "BlessedArmour",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1064,
+          "end_line": 1079
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3562
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 31,
+          "item_id": 29,
+          "name": "神圣战甲术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_16",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 17,
+        "id": 16,
+        "job_id": 2,
+        "name": "困魔咒",
+        "raw_learning_levels": [
+          28,
+          30,
+          32
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1203,
+        "id": 73,
+        "symbol": "TrapHexagon",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1097,
+          "end_line": 1112
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3656
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 33,
+          "item_id": 31,
+          "name": "困魔咒",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_17",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 18,
+        "id": 17,
+        "job_id": 2,
+        "name": "召唤骷髅",
+        "raw_learning_levels": [
+          19,
+          23,
+          26
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1196,
+        "id": 65,
+        "symbol": "SummonSkeleton",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 997,
+          "end_line": 1012
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3534
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 27,
+          "item_id": 25,
+          "name": "召唤骷髅",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_18",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 19,
+        "id": 18,
+        "job_id": 2,
+        "name": "隐身术",
+        "raw_learning_levels": [
+          20,
+          23,
+          26
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1197,
+        "id": 67,
+        "symbol": "Hiding",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1013,
+          "end_line": 1015
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3541,
+            6135
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 28,
+          "item_id": 26,
+          "name": "隐身术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_19",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 20,
+        "id": 19,
+        "job_id": 2,
+        "name": "集体隐身术",
+        "raw_learning_levels": [
+          21,
+          25,
+          29
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1198,
+        "id": 68,
+        "symbol": "MassHiding",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1016,
+          "end_line": 1031
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3558
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 29,
+          "item_id": 27,
+          "name": "集体隐身术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_20",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 21,
+        "id": 20,
+        "job_id": 1,
+        "name": "诱惑之光",
+        "raw_learning_levels": [
+          13,
+          18,
+          24
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1167,
+        "id": 33,
+        "symbol": "ElectricShock",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 583,
+          "end_line": 598
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3519,
+            6033
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 11,
+          "item_id": 9,
+          "name": "诱惑之光",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_21",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 22,
+        "id": 21,
+        "job_id": 1,
+        "name": "瞬息移动",
+        "raw_learning_levels": [
+          19,
+          22,
+          25
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1171,
+        "id": 37,
+        "symbol": "Teleport",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 654,
+          "end_line": 656
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3537,
+            6096
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 15,
+          "item_id": 13,
+          "name": "瞬息移动",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_22",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 23,
+        "id": 22,
+        "job_id": 1,
+        "name": "火墙",
+        "raw_learning_levels": [
+          24,
+          29,
+          33
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1173,
+        "id": 39,
+        "symbol": "FireWall",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 675,
+          "end_line": 692
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3565,
+            5112
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 17,
+          "item_id": 15,
+          "name": "火墙",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_23",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 24,
+        "id": 23,
+        "job_id": 1,
+        "name": "爆裂火焰",
+        "raw_learning_levels": [
+          22,
+          27,
+          31
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1172,
+        "id": 38,
+        "symbol": "FireBang",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 657,
+          "end_line": 674
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3554
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 16,
+          "item_id": 14,
+          "name": "爆裂火焰",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_24",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 25,
+        "id": 24,
+        "job_id": 1,
+        "name": "地狱雷光",
+        "raw_learning_levels": [
+          30,
+          32,
+          34
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1176,
+        "id": 42,
+        "symbol": "ThunderStorm",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 729,
+          "end_line": 748
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3580
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 19,
+          "item_id": 17,
+          "name": "地狱雷光",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_25",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 26,
+        "id": 25,
+        "job_id": 0,
+        "name": "半月弯刀",
+        "raw_learning_levels": [
+          28,
+          31,
+          34
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1149,
+        "id": 4,
+        "symbol": "HalfMoon",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 316,
+          "end_line": 332
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2929,
+            3001,
+            3020,
+            3167,
+            8517
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 6,
+          "item_id": 4,
+          "name": "半月弯刀",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 1
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_26",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 27,
+        "id": 26,
+        "job_id": 0,
+        "name": "烈火剑法",
+        "raw_learning_levels": [
+          35,
+          37,
+          40
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1153,
+        "id": 8,
+        "symbol": "FlamingSword",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 384,
+          "end_line": 400
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            2920,
+            3189,
+            8538
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 8,
+          "item_id": 6,
+          "name": "烈火剑法",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_27",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 28,
+        "id": 27,
+        "job_id": 0,
+        "name": "野蛮冲撞",
+        "raw_learning_levels": [
+          30,
+          34,
+          39
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1150,
+        "id": 5,
+        "symbol": "ShoulderDash",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 333,
+          "end_line": 350
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3577
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 7,
+          "item_id": 5,
+          "name": "野蛮冲撞",
+          "stdmode": 4,
+          "raw_shape": 0,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_28",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 29,
+        "id": 28,
+        "job_id": 2,
+        "name": "心灵启示",
+        "raw_learning_levels": [
+          26,
+          30,
+          35
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1200,
+        "id": 70,
+        "symbol": "Revelation",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1048,
+          "end_line": 1063
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3620,
+            6284
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 32,
+          "item_id": 30,
+          "name": "心灵启示",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_29",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 30,
+        "id": 29,
+        "job_id": 2,
+        "name": "群体治疗术",
+        "raw_learning_levels": [
+          33,
+          35,
+          38
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1205,
+        "id": 75,
+        "symbol": "MassHealing",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1129,
+          "end_line": 1146
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3574
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 34,
+          "item_id": 32,
+          "name": "群体治疗术",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_30",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 31,
+        "id": 30,
+        "job_id": 2,
+        "name": "召唤神兽",
+        "raw_learning_levels": [
+          35,
+          37,
+          40
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1208,
+        "id": 78,
+        "symbol": "SummonShinsu",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 1179,
+          "end_line": 1194
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3605
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 35,
+          "item_id": 33,
+          "name": "召唤神兽",
+          "stdmode": 4,
+          "raw_shape": 2,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_31",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 32,
+        "id": 31,
+        "job_id": 1,
+        "name": "魔法盾",
+        "raw_learning_levels": [
+          31,
+          34,
+          38
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1177,
+        "id": 43,
+        "symbol": "MagicShield",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 749,
+          "end_line": 764
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3590,
+            6198
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 20,
+          "item_id": 18,
+          "name": "魔法盾",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_32",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 33,
+        "id": 32,
+        "job_id": 1,
+        "name": "圣言术",
+        "raw_learning_levels": [
+          32,
+          35,
+          39
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1178,
+        "id": 44,
+        "symbol": "TurnUndead",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 765,
+          "end_line": 780
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3596,
+            6211
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 21,
+          "item_id": 19,
+          "name": "圣言术",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    },
+    {
+      "candidate_key": "myf_magic_33",
+      "myf": {
+        "source_file_id": "myf_magic",
+        "line": 34,
+        "id": 33,
+        "job_id": 1,
+        "name": "冰咆哮",
+        "raw_learning_levels": [
+          35,
+          37,
+          40
+        ]
+      },
+      "crystal": {
+        "source_file_id": "crystal_enums",
+        "enum_line": 1180,
+        "id": 46,
+        "symbol": "IceStorm",
+        "default_parameters_location": {
+          "source_file_id": "crystal_environment",
+          "start_line": 799,
+          "end_line": 816
+        },
+        "human_case_references": {
+          "source_file_id": "crystal_human",
+          "lines": [
+            3555
+          ]
+        }
+      },
+      "book_candidates": [
+        {
+          "source_file_id": "myf_items",
+          "line": 22,
+          "item_id": 20,
+          "name": "冰咆哮",
+          "stdmode": 4,
+          "raw_shape": 1,
+          "raw_need_level": 0
+        }
+      ],
+      "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
+      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
+      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "target_version": "传奇2 1.80",
+      "target_version_status": "unverified",
+      "target_180_verified": false,
+      "enabled_for_formal_runtime": false
+    }
+  ],
+  "crystal_additional_candidates": [
+    {
+      "source_spell_id": 6,
+      "source_symbol": "TwinDrakeBlade",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 7,
+      "source_symbol": "Entrapment",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 9,
+      "source_symbol": "LionRoar",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 10,
+      "source_symbol": "CrossHalfMoon",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 11,
+      "source_symbol": "BladeAvalanche",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 12,
+      "source_symbol": "ProtectionField",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 13,
+      "source_symbol": "Rage",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 14,
+      "source_symbol": "CounterAttack",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 15,
+      "source_symbol": "SlashingBurst",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 16,
+      "source_symbol": "Fury",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 17,
+      "source_symbol": "ImmortalSkin",
+      "source_job_group": "Warrior",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 41,
+      "source_symbol": "FrostCrunch",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 45,
+      "source_symbol": "Vampirism",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 47,
+      "source_symbol": "FlameDisruptor",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 48,
+      "source_symbol": "Mirroring",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 49,
+      "source_symbol": "FlameField",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 50,
+      "source_symbol": "Blizzard",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 51,
+      "source_symbol": "MagicBooster",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 52,
+      "source_symbol": "MeteorStrike",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 53,
+      "source_symbol": "IceThrust",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 54,
+      "source_symbol": "FastMove",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 55,
+      "source_symbol": "StormEscape",
+      "source_job_group": "Wizard",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 72,
+      "source_symbol": "EnergyRepulsor",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 74,
+      "source_symbol": "Purification",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 76,
+      "source_symbol": "Hallucination",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 77,
+      "source_symbol": "UltimateEnhancer",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 79,
+      "source_symbol": "Reincarnation",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 80,
+      "source_symbol": "SummonHolyDeva",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 81,
+      "source_symbol": "Curse",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 82,
+      "source_symbol": "Plague",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 83,
+      "source_symbol": "PoisonCloud",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 84,
+      "source_symbol": "EnergyShield",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 85,
+      "source_symbol": "PetEnhancer",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    },
+    {
+      "source_spell_id": 86,
+      "source_symbol": "HealingCircle",
+      "source_job_group": "Taoist",
+      "target_version_status": "unverified",
+      "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
+    }
+  ],
+  "further_evidence": "docs/技能来源核验与实施清单.md"
+}

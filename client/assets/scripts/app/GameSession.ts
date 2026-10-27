@@ -5,6 +5,7 @@ import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
+import type { CastEvent } from './CastPlayback';
 const assembler = new BaselineAssembler();
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
@@ -26,6 +27,7 @@ export const session = {
     preparedWorld: null as WorldAssets | null,
     lastError: '',
     update: new Set<() => void>(),
+    casts: new Set<(event: CastEvent) => void>(),
 };
 session.connection.subscribe((packet: Packet) => {
     if (packet.error) { session.lastError = protocolErrorMessage(packet.id, packet.error); }
@@ -49,6 +51,11 @@ session.connection.subscribe((packet: Packet) => {
         case 40004: session.wallet = packet.value; break;
         case 30005: session.hosting = packet.value; break;
         case 30001: session.death = packet.value; break;
+        case 30006:
+            if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
+                for (const listener of Array.from(session.casts)) listener(packet.value);
+            }
+            break;
         case 40008: session.report = packet.value; break;
         case 40005: if (!packet.value.pending) session.command = packet.value.commandSeq.add(1); break;
     }

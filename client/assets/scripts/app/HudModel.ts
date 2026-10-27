@@ -12,6 +12,7 @@ export interface HudInput {
     lastError?: string;
     auto: boolean;
     count: number;
+    quickSkillLabel?: string;
     gameplay: { jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
     map: { name?: string; width: number; height: number } | null;
 }

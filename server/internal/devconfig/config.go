@@ -20,15 +20,27 @@ type Point struct {
 	Y int `json:"y"`
 }
 type Fighter struct {
-	JobID        uint32 `json:"job_id"`
-	DefinitionID uint32 `json:"definition_id"`
-	HP           int64  `json:"hp"`
-	MP           int64  `json:"mp"`
-	AttackMin    int64  `json:"attack_min"`
-	AttackMax    int64  `json:"attack_max"`
-	Defence      int64  `json:"defence"`
-	AttackMS     int64  `json:"attack_ms"`
-	MoveMS       int64  `json:"move_ms"`
+	JobID             uint32 `json:"job_id"`
+	DefinitionID      uint32 `json:"definition_id"`
+	HP                int64  `json:"hp"`
+	MP                int64  `json:"mp"`
+	AttackMin         int64  `json:"attack_min"`
+	AttackMax         int64  `json:"attack_max"`
+	Defence           int64  `json:"defence"`
+	AttackMS          int64  `json:"attack_ms"`
+	MoveMS            int64  `json:"move_ms"`
+	MagicMin          int64  `json:"magic_min"`
+	MagicMax          int64  `json:"magic_max"`
+	TaoMin            int64  `json:"tao_min"`
+	TaoMax            int64  `json:"tao_max"`
+	DefenceMin        int64  `json:"defence_min"`
+	DefenceMax        int64  `json:"defence_max"`
+	MagicDefenceMin   int64  `json:"magic_defence_min"`
+	MagicDefenceMax   int64  `json:"magic_defence_max"`
+	Accuracy          int64  `json:"accuracy"`
+	Agility           int64  `json:"agility"`
+	MagicResist       int64  `json:"magic_resist"`
+	MagicResistWeight int64  `json:"magic_resist_weight"`
 }
 type Monster struct {
 	Fighter
@@ -39,17 +51,22 @@ type Monster struct {
 	RespawnMS int64  `json:"respawn_ms"`
 }
 type Item struct {
-	ID             uint32   `json:"id"`
-	Name           string   `json:"name"`
-	EquipmentSlot  uint32   `json:"equipment_slot"`
-	IsEquipment    bool     `json:"is_equipment"`
-	AttackBonus    int64    `json:"attack_bonus"`
-	AttackMinBonus int64    `json:"attack_min_bonus"`
-	AttackMaxBonus int64    `json:"attack_max_bonus"`
-	DefenceBonus   int64    `json:"defence_bonus"`
-	RecycleGold    int64    `json:"recycle_gold"`
-	Stackable      bool     `json:"stackable"`
-	AllowedJobs    []uint32 `json:"allowed_jobs"`
+	ID                   uint32   `json:"id"`
+	Name                 string   `json:"name"`
+	EquipmentSlot        uint32   `json:"equipment_slot"`
+	IsEquipment          bool     `json:"is_equipment"`
+	AttackBonus          int64    `json:"attack_bonus"`
+	AttackMinBonus       int64    `json:"attack_min_bonus"`
+	AttackMaxBonus       int64    `json:"attack_max_bonus"`
+	DefenceBonus         int64    `json:"defence_bonus"`
+	RecycleGold          int64    `json:"recycle_gold"`
+	Stackable            bool     `json:"stackable"`
+	AllowedJobs          []uint32 `json:"allowed_jobs"`
+	BookSkillID          uint32   `json:"book_skill_id"`
+	DefenceMinBonus      int64    `json:"defence_min_bonus"`
+	DefenceMaxBonus      int64    `json:"defence_max_bonus"`
+	MagicDefenceMinBonus int64    `json:"magic_defence_min_bonus"`
+	MagicDefenceMaxBonus int64    `json:"magic_defence_max_bonus"`
 }
 type PotionEffect struct {
 	ItemID uint32 `json:"item_id"`
@@ -90,12 +107,16 @@ type Fixture struct {
 		PetSpawn      Point   `json:"pet_spawn"`
 		MonsterSpawns []Point `json:"monster_spawns"`
 	} `json:"map"`
-	Players  []Fighter   `json:"players"`
-	Pet      Fighter     `json:"pet"`
-	Monsters []Monster   `json:"monsters"`
-	Items    []Item      `json:"items"`
-	Potions  PotionRules `json:"potions"`
-	Drops    struct {
+	Players           []Fighter          `json:"players"`
+	Pet               Fighter            `json:"pet"`
+	Monsters          []Monster          `json:"monsters"`
+	Items             []Item             `json:"items"`
+	Potions           PotionRules        `json:"potions"`
+	Skills            []Skill            `json:"skills"`
+	Healing           HealingRules       `json:"healing"`
+	PlayerGrowth      []PlayerGrowth     `json:"player_growth"`
+	InitialSkillBooks []InitialSkillBook `json:"initial_skill_books"`
+	Drops             struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`
 		EmptyPPM           int      `json:"empty_ppm"`
@@ -178,7 +199,7 @@ func Load(path string) (Config, error) {
 	return c, c.Fixture.Validate()
 }
 func (f *Fixture) Validate() error {
-	if f.SchemaVersion != 1 || !f.DevelopmentOnly || f.RuntimeReady || f.RuleVersion == 0 || f.SourceStatus != "candidate" || f.DamageFormula != "development_range_minus_defence" {
+	if f.SchemaVersion != 1 || !f.DevelopmentOnly || f.RuntimeReady || f.RuleVersion == 0 || f.SourceStatus != "candidate" || (f.DamageFormula != "development_range_minus_defence" && f.DamageFormula != "development_source_combat") {
 		return errors.New("必须显式启用有来源的candidate开发fixture；不冒充1.80正式数值")
 	}
 	if f.Map.Width != 16 || f.Map.Height != 16 || len(f.Map.MonsterSpawns) < 8 || f.Map.ID == 0 {
@@ -231,6 +252,9 @@ func (f *Fixture) Validate() error {
 		if _, ok := f.Item(id); !ok {
 			return fmt.Errorf("物品引用%d不存在", id)
 		}
+	}
+	if f.DamageFormula == "development_source_combat" {
+		return f.ValidateSkills()
 	}
 	return nil
 }

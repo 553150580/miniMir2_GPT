@@ -1,0 +1,326 @@
+[
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073034577,\"event\":\"button\",\"path\":\"Login\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:50:34.581Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073087577,\"event\":\"button\",\"path\":\"Role2\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:51:27.579Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073088375,\"event\":\"button\",\"path\":\"Enter\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:51:28.382Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073114140,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:51:54.179Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073114150,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:51:54.179Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073125093,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:05.095Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073135185,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:15.189Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073145193,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:25.195Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073156289,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:36.296Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073167292,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:47.294Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073177279,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:52:57.281Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073188376,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T03:53:08.380Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073189513,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:53:09.518Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073189515,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:53:09.518Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073189535,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":6,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:53:09.538Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073190441,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:53:10.443Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073226926,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Learn\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:53:46.930Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073227609,\"event\":\"send\",\"message_id\":40010,\"packet_seq\":7,\"skill_id\":2}",
+    "timestamp": "2026-10-27T03:53:47.613Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073227691,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:53:47.704Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073269913,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:54:29.918Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073285007,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:54:45.012Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073285631,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:54:45.633Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073285633,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":9,\"skill_id\":2,\"input_sequence\":1}",
+    "timestamp": "2026-10-27T03:54:45.635Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073285680,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":2,\"input_sequence\":1,\"cast_id\":\"1\"}",
+    "timestamp": "2026-10-27T03:54:45.684Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073311024,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:55:11.027Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073311025,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":10,\"skill_id\":2,\"input_sequence\":2}",
+    "timestamp": "2026-10-27T03:55:11.028Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073311052,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":2,\"input_sequence\":2,\"cast_id\":\"2\"}",
+    "timestamp": "2026-10-27T03:55:11.054Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073384545,\"event\":\"button\",\"path\":\"BottomHUD/Footer/ChangeRole\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:56:24.550Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073385450,\"event\":\"button\",\"path\":\"Role1\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:56:25.452Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073386293,\"event\":\"button\",\"path\":\"Enter\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:56:26.298Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073406974,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:56:46.975Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073510481,\"event\":\"button\",\"path\":\"MapViewport/Actions/Attack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:58:30.489Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073511374,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T03:58:31.381Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073512169,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T03:58:32.171Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073512170,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":16,\"skill_id\":1,\"input_sequence\":1}",
+    "timestamp": "2026-10-27T03:58:32.172Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073512189,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":1,\"input_sequence\":1,\"cast_id\":\"37\"}",
+    "timestamp": "2026-10-27T03:58:32.193Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073629513,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:00:29.516Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073629514,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":17,\"skill_id\":1,\"input_sequence\":2}",
+    "timestamp": "2026-10-27T04:00:29.516Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073629535,\"event\":\"receive\",\"message_id\":30006,\"packet_seq\":0,\"skill_id\":1,\"input_sequence\":2,\"cast_id\":\"38\"}",
+    "timestamp": "2026-10-27T04:00:29.539Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073629645,\"event\":\"button\",\"path\":\"BottomHUD/Skills/BasicAttack\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:00:29.646Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073629645,\"event\":\"send\",\"message_id\":30003,\"packet_seq\":18,\"skill_id\":1,\"input_sequence\":3}",
+    "timestamp": "2026-10-27T04:00:29.647Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073651251,\"event\":\"button\",\"path\":\"BottomHUD/Footer/ChangeRole\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:00:51.255Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073652131,\"event\":\"button\",\"path\":\"Role0\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:00:52.136Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073652935,\"event\":\"button\",\"path\":\"Enter\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:00:52.940Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073671468,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T04:01:11.470Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073713305,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T04:01:53.309Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073761999,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":true}",
+    "timestamp": "2026-10-27T04:02:42.000Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073778931,\"event\":\"button\",\"path\":\"MapViewport/Actions/Auto\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:02:58.934Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073778933,\"event\":\"send\",\"message_id\":30004,\"packet_seq\":23,\"enabled\":false}",
+    "timestamp": "2026-10-27T04:02:58.937Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073778942,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":23,\"enabled\":false}",
+    "timestamp": "2026-10-27T04:02:58.946Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073779588,\"event\":\"button\",\"path\":\"BottomHUD/Skills/SkillsPanel\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:02:59.591Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073780366,\"event\":\"button\",\"path\":\"UIMgr/Panels/Skills/Learn\",\"blocked\":false}",
+    "timestamp": "2026-10-27T04:03:00.375Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073781132,\"event\":\"send\",\"message_id\":40010,\"packet_seq\":24,\"skill_id\":3}",
+    "timestamp": "2026-10-27T04:03:01.136Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "输入验收 {\"at_ms\":1793073781253,\"event\":\"receive\",\"message_id\":30005,\"packet_seq\":0,\"enabled\":false}",
+    "timestamp": "2026-10-27T04:03:01.254Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

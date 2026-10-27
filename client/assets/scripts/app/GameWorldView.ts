@@ -2,6 +2,8 @@ import { EventTouch, game, instantiate, isValid, Label, Node, ProgressBar, Sprit
 import { EntityAnimation } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
+import { CombatEffects } from './CombatEffects';
+import { CastEvent } from './CastPlayback';
 
 interface Visual {
     node: Node;
@@ -20,6 +22,7 @@ export class GameWorldView {
     map: any;
     gameplay: any;
     private assets?: WorldAssets;
+    private effects?: CombatEffects;
     private visuals = new Map<number, Visual>();
     private disposed = false;
     private selected: (entity: any) => void = () => {};
@@ -29,7 +32,7 @@ export class GameWorldView {
     private audit = typeof location !== 'undefined' && new URLSearchParams(location.search).get('renderQA') === '1'
         ? { stage: 'initial', start: 0, last: 0, updates: 0, maxGap: 0, changedFrames: 0, intermediate: [0, 0, 0, 0] } : null;
 
-    constructor(readonly viewport: Node, readonly world: Node, readonly entities: Node, readonly playerName: string, readonly job: number) {
+    constructor(readonly viewport: Node, readonly world: Node, readonly entities: Node, readonly playerName: string, readonly job: number, readonly sceneEpoch: { toString(): string }) {
         if (isValid(this.viewport, true)) this.viewport.on(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
     }
 
@@ -40,7 +43,12 @@ export class GameWorldView {
         this.world.getComponent(UITransform)!.setContentSize(this.map.width * this.map.tile_width, this.map.height * this.map.tile_height);
         const sprite = this.world.getComponent(Sprite)!;
         sprite.spriteFrame = assets.background; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        const effects = this.world.getChildByName('Effects');
+        if (!effects) throw new Error('场景尚未保存游戏特效容器');
+        this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null);
     }
+
+    acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
 
     grid(x: number, y: number): Vec3 { return new Vec3((x + .5) * 48 - this.map.width * 24, (this.map.height - y - .5) * 32 - this.map.height * 16); }
 
@@ -82,7 +90,7 @@ export class GameWorldView {
             if (!previous.hp.isZero() && state.hp.isZero()) visual.motion.releaseHold(now);
             visual.motion.push({ x: state.position.x, y: state.position.y, direction: state.direction,
                 durationMs: state.moveIntervalMs, snap: state.entityKind === 4 || (previous.hp.isZero() && !state.hp.isZero()) }, now);
-            visual.animation?.observe({ direction: state.direction, action: state.action, attackSequence: state.attackSequence,
+            visual.animation?.observe({ direction: state.direction, action: state.action, attackSequence: state.attackSequence, castSequence: state.castSequence,
                 dead: state.hp.isZero(), injured: state.hp.lessThan(previous.hp) }, now);
             visual.state = state;
             const name = visual.node.getChildByName('Name')!;
@@ -128,7 +136,7 @@ export class GameWorldView {
             if (visual.state.entityKind === 1) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
             if (!pose) { for (const sprite of visual.body) sprite.node.active = false; continue; }
-            if (pose.action === 'attack' || pose.action === 'struck') visual.motion.holdUntil(visual.animation!.playbackUntil);
+            if (pose.action === 'attack' || pose.action === 'struck' || pose.action === 'casting') visual.motion.holdUntil(visual.animation!.playbackUntil);
             const profile = visual.profile;
             if (visual.orderDirection !== pose.direction) {
                 const order: string[] = profile.layer_order_by_direction?.[pose.direction] ?? profile.layers.map((layer: any) => layer.package);
@@ -159,6 +167,7 @@ export class GameWorldView {
         // 依据当帧脚底位置处理遮挡，HUD不参与世界深度排序。
         Array.from(this.visuals.values()).sort((a, b) => b.node.position.y - a.node.position.y || a.state.entityHandle - b.state.entityHandle)
             .forEach((visual, index) => { if (visual.node.getSiblingIndex() !== index) visual.node.setSiblingIndex(index); });
+        this.effects?.update(now);
         this.refitCamera();
         if (audit && now - audit.start >= 5000) {
             console.info('表现验收', JSON.stringify({ scope: 'development_render', stage: audit.stage, duration_ms: Math.round(now - audit.start),
@@ -176,6 +185,6 @@ export class GameWorldView {
         if (isValid(this.viewport, true)) this.viewport.off(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
         this.playerPosition = null;
         for (const visual of this.visuals.values()) if (isValid(visual.node, true)) visual.node.destroy();
-        this.visuals.clear(); this.assets?.dispose(); this.assets = undefined;
+        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.assets?.dispose(); this.assets = undefined;
     }
 }

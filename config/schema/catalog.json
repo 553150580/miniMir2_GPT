@@ -47,7 +47,7 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "133e5206efe140f6c6b70be844a6ca1d221b9c6fec767190ccdcf4a2d42833e1"
+      "sha256": "6d5ffffa8d947fe6236e47580314ea42904a9d7b59f8a039a51e53c014524d3a"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
@@ -13758,6 +13758,54 @@
                 "move_ms": {
                   "type": "int",
                   "minimum": 0
+                },
+                "magic_min": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "magic_max": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "tao_min": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "tao_max": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "defence_min": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "defence_max": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "magic_defence_min": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "magic_defence_max": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "accuracy": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "agility": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "magic_resist": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "magic_resist_weight": {
+                  "type": "int",
+                  "minimum": 0
                 }
               }
             }
@@ -13857,6 +13905,213 @@
                       "minimum": 0
                     }
                   }
+                }
+              }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "job_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "book_item_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "learn_level": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "learned_level": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "mp_base_cost": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "mp_level_cost": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "cooldown_base_ms": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "cooldown_reduction_ms": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "global_spell_ms": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "action_ms": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "range_cells": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "delay_base_ms": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "projectile_ms_per_cell": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "target_move_tolerance_cells": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "accuracy_per_level": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "power_base": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "power_bonus": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "mpower_base": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "mpower_bonus": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "multiplier_base_ppm": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "multiplier_bonus_ppm": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "name": {
+                  "type": "string"
+                },
+                "behavior": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "healing": {
+            "type": "object",
+            "properties": {
+              "tick_ms": {
+                "type": "int",
+                "minimum": 1
+              },
+              "base_per_tick": {
+                "type": "int",
+                "minimum": 1
+              },
+              "pet_base_per_tick": {
+                "type": "int",
+                "minimum": 1
+              },
+              "levels_per_step": {
+                "type": "int",
+                "minimum": 1
+              },
+              "queue_fraction_divisor": {
+                "type": "int",
+                "minimum": 1
+              },
+              "queue_cap": {
+                "type": "int",
+                "minimum": 1
+              }
+            }
+          },
+          "initial_skill_books": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "item_id": {
+                  "type": "int",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "player_growth": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "hp_gain": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "hp_gain_rate": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "mp_gain": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "mp_gain_rate": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "attack_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "defence_max_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "magic_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "tao_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "magic_defence_min_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "magic_defence_max_divisor": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "job_id": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "hp_base": {
+                  "type": "int",
+                  "minimum": 0
+                },
+                "mp_base": {
+                  "type": "int",
+                  "minimum": 0
                 }
               }
             }

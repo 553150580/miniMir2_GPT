@@ -10,6 +10,7 @@ export class WorldAssets {
     map: any;
     gameplay: any;
     prefab!: Prefab;
+    effectPrefab!: Prefab;
     background!: SpriteFrame;
     readonly frames = new Map<string, SpriteFrame>();
     private owned = new Set<Asset>();
@@ -27,6 +28,7 @@ export class WorldAssets {
             result.map = result.own(await load<JsonAsset>('development/maps/first-map', JsonAsset)).json;
             result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
             result.prefab = result.own(await load<Prefab>('prefabs/Entity', Prefab));
+            result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
             result.background = result.own(await load<SpriteFrame>('development/maps/first-map/spriteFrame', SpriteFrame));
             const profileIds = new Set<string>();
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
@@ -43,6 +45,19 @@ export class WorldAssets {
                         const definition = result.manifest.frames[key];
                         if (!definition) throw new Error(`缺少动作帧定义：${key}`);
                         if (!definition.declared_empty) keys.add(key);
+                    }
+                }
+            }
+            for (const skill of result.gameplay.skills ?? []) {
+                if (skill.job_id !== job || !skill.active) continue;
+                const effect = result.manifest.effects?.[String(skill.id)];
+                if (!effect) throw new Error(`缺少技能表现资源：${skill.id}`);
+                for (const part of Object.values(effect) as any[]) {
+                    if (!part || typeof part !== 'object') continue;
+                    const effectKeys = part.frames ?? (part.directions ? part.directions.flat() : []);
+                    for (const key of effectKeys) {
+                        if (!result.manifest.frames[key]) throw new Error(`缺少技能帧定义：${key}`);
+                        if (!result.manifest.frames[key].declared_empty) keys.add(key);
                     }
                 }
             }

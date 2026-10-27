@@ -32,6 +32,8 @@ message EntityState {
   uint32 move_interval_ms = 11;
   // 每次受理攻击递增，独立于可能被受击覆盖的action；初始为0。
   uint32 attack_sequence = 12;
+  uint32 cast_sequence = 13;
+  uint32 cast_skill_id = 14;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;
@@ -43,6 +45,19 @@ message SceneBaselineChunk {
 }
 message MoveIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; GridPoint destination = 3; uint32 direction = 4; bool release_joystick = 5; }
 message CastIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; uint32 target_handle = 4; GridPoint target_grid = 5; uint32 direction = 6; }
+// 只描述本次已确认的临时施法；基线不重放旧投射物或命中特效。
+message CastAccepted {
+  uint64 scene_epoch = 1;
+  uint64 cast_id = 2;
+  uint32 skill_id = 3;
+  uint32 caster_handle = 4;
+  uint32 target_handle = 5;
+  GridPoint origin = 6;
+  GridPoint target_grid = 7;
+  uint32 direction = 8;
+  uint32 delay_ms = 9;
+  uint32 input_sequence = 10;
+}
 message AutoBattleIntent { uint64 scene_epoch = 1; bool enabled = 2; uint32 monster_count = 3; }
 message HostingState { uint32 remain_hosting_sec = 1; bool auto_battle_enabled = 2; uint64 state_revision = 3; }
 message DeathNotice {

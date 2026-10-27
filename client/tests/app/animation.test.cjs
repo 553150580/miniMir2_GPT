@@ -12,6 +12,27 @@ const idle={moving:false,direction:4,stepProgress:1};
 const state=(changes={})=>({direction:4,action:0,attackSequence:0,dead:false,injured:false,...changes});
 const controller=()=>{const value=new EntityAnimation(definitions);value.observe(state(),0);return value;};
 
+test('八方向施法按独立序号完整播放6×100毫秒，重复快照与受击不重启',()=>{
+    for(let direction=0;direction<8;direction++){
+        const value=new EntityAnimation({...definitions,casting:{count:6,duration_ms:100}});
+        value.observe(state({castSequence:0}),0);value.observe(state({action:5,castSequence:1,direction}),100);
+        for(let frame=0;frame<6;frame++){
+            if(frame)value.observe(state({action:3,castSequence:1,direction:(direction+2)%8,injured:true}),100+100*frame);
+            assert.deepEqual(value.sample(100+100*frame,idle),{action:'casting',direction,frame});
+        }
+        assert.equal(value.playbackUntil,700);assert.equal(value.sample(700,idle).action,'standing');
+        value.observe(state({castSequence:2,direction}),800);assert.equal(value.sample(800,idle).action,'casting');
+    }
+});
+test('健康重连的历史施法序号不补播，仍在施法的首次快照可显示当前动作',()=>{
+    const value=new EntityAnimation({...definitions,casting:{count:6,duration_ms:100}});
+    value.observe(state({castSequence:100}),1000);assert.equal(value.sample(1000,idle).action,'standing');
+    value.observe(state({castSequence:100}),1200);assert.equal(value.sample(1200,idle).action,'standing');
+    const active=new EntityAnimation({...definitions,casting:{count:6,duration_ms:100}});
+    active.observe(state({castSequence:100,action:5,direction:7}),1000);
+    assert.deepEqual(active.sample(1000,idle),{action:'casting',direction:7,frame:0});
+});
+
 test('攻击独立序号能看见同快照被受击覆盖的攻击，后续idle不会截断六帧',()=>{
     const value=controller();value.observe(state({action:3,attackSequence:1,injured:true}),100);
     assert.equal(value.sample(100,idle).action,'attack');

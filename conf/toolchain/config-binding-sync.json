@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-potions-v0.2-9edc647841f0",
+  "config_version": "dev-skills-v0.3-37024f96bd1d",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

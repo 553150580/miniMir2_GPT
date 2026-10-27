@@ -2,7 +2,6 @@ package game
 
 import (
 	"bytes"
-	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
@@ -40,17 +39,17 @@ func potionFingerprint(f wire.Frame) string {
 
 func (w *worker) queuePotion(r *room, c command) {
 	const waitingLimit = 2 // 与现有重连等待共用有界队列，不能无限积累请求。
-	var request pb.UseItemRequest
-	if proto.Unmarshal(c.frame.Payload, &request) != nil || request.Operation == nil || len(request.Operation.OpId) != 16 {
+	op := operationContext(c.frame)
+	if op == nil || len(op.OpId) != 16 {
 		w.failure(r, c.frame, p.CodeInvalidArgument)
 		return
 	}
-	id := request.Operation.OpId
+	id := op.OpId
 	digest := potionFingerprint(c.frame)
 	known := r.PendingOperationID == domain.Hex(id)
 	conflict := known && digest != r.PendingFingerprint
 	for _, waiting := range r.Waiting {
-		if waiting.frame.ID == p.MsgC2SUseItem && bytes.Equal(operationID(waiting.frame), id) {
+		if economic(waiting.frame.ID) && bytes.Equal(operationID(waiting.frame), id) {
 			known = true
 			conflict = conflict || potionFingerprint(waiting.frame) != digest
 		}
@@ -60,7 +59,7 @@ func (w *worker) queuePotion(r *room, c command) {
 		return
 	}
 	if len(r.Waiting) >= waitingLimit {
-		historical := request.Operation.CommandSeq > 0 && r.Role.EconomicSeq >= 0 && request.Operation.CommandSeq <= uint64(r.Role.EconomicSeq)
+		historical := op.CommandSeq > 0 && r.Role.EconomicSeq >= 0 && op.CommandSeq <= uint64(r.Role.EconomicSeq)
 		if known || historical {
 			// 已在途或落在历史经济水位内的请求可能已经提交；未查原回执前不能当作未受理。
 			w.send(r, p.MsgS2COperationResult, c.frame.Request, &pb.OperationResult{OpId: id, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision), ErrorCode: p.CodeOperationPending, Pending: true})

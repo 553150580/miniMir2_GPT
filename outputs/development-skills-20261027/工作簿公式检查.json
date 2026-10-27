@@ -1,0 +1,9 @@
+{
+  "changed_cells": [
+    "开发首循环夹具!C4",
+    "开发首循环夹具!E4",
+    "开发首循环夹具!F4"
+  ],
+  "rule_version": 3,
+  "formula_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}"
+}

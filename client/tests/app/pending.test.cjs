@@ -29,6 +29,20 @@ function pending(seed = 1) {
         expectedRevision: Long.fromString('9007199254740993', false), expectedRuleVersion: Long.MIN_VALUE,
     } } };
 }
+
+test('技能学习未决保存原书与原经济身份，拒绝补造等级、数量、错误ID或凭据', () => {
+    const storage = new MemoryStorage(), original = { id: 40010, value: { itemInstanceId: id(7), skillId: 1, operation: pending().value.operation } };
+    new PendingOperations(storage,key).set('roleA', original);
+    const restored = new PendingOperations(storage,key).get('roleA');
+    const encode = value => pb.LearnSkillRequest.encode({ item_instance_id:value.itemInstanceId,skill_id:value.skillId,
+        operation:{ op_id:value.operation.opId,command_seq:value.operation.commandSeq,expected_revision:value.operation.expectedRevision,expected_rule_version:value.operation.expectedRuleVersion } }).finish();
+    assert.deepEqual(encode(restored.value),encode(original.value));
+    for(const mutate of [v=>{v.itemInstanceId=new Uint8Array(15);},v=>{v.skillId=0;},v=>{v.skillId=1.5;},v=>{v.skillId=4294967296;},
+        v=>{v.level=3;},v=>{v.quantity=2;},v=>{v.token='secret';}]){
+        const value={...original.value};mutate(value);const store=new PendingOperations();
+        assert.throws(()=>store.set('roleA',{id:40010,value}),{code:'INVALID_OPERATION'});assert.equal(store.get('roleA'),null);
+    }
+});
 function wire(value) {
     return pb.RecycleRequest.encode({ item_instance_ids: value.itemInstanceIds, operation: {
         op_id: value.operation.opId, command_seq: value.operation.commandSeq,

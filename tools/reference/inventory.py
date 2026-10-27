@@ -43,7 +43,7 @@ CRYSTAL_PREFIXES = (
 )
 CRYSTAL_EXACT = {
     "Shared/Enums.cs", "Shared/BaseStats.cs", "Shared/Functions/Functions.cs",
-    "Server/MirEnvir/Map.cs", "Client/MirControls/MirMapControl.cs",
+    "Server/MirEnvir/Map.cs", "Server/MirEnvir/Envir.cs", "Client/MirControls/MirMapControl.cs",
     "Client/MirScenes/Dialogs/MapControl.cs", "LibraryEditor/LMain.cs",
 }
 MYF_SCRIPT_PREFIXES = (

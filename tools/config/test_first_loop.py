@@ -21,7 +21,8 @@ def source_row(id,**values):
 
 def candidate_tables():
     # 故意使用区别于当前Excel的参数，验证导出器没有补入第二套数值。
-    profile={'rule_version':9,'map_id':1,'monster_id':1,'pet_id':1,'players':[],
+    players=[{'job_id':i,'magic_resist_weight':17} for i in range(3)]
+    profile={'rule_version':9,'map_id':1,'monster_id':1,'pet_id':1,'players':players,
              'inventory_capacity':4,'initial_inventory':[35,36],'initial_bound_gold':0,
              'allow_free_dev_revive':True,'damage_formula':'测试结算路径',
              'recycle_test_gold_by_item':{'35':0,'36':0,'193':0,'218':0},
@@ -29,7 +30,18 @@ def candidate_tables():
              'damage_scope_notice':'测试结算边界','revive_notice':'测试复活边界',
              'potions':{'tick_ms':173,'base_per_tick':9,'levels_per_step':7,'use_delay_ms':347,
                         'queue_cap':1234,'effects':[{'item_id':35,'hp':17,'mp':0},{'item_id':36,'hp':0,'mp':23}]}}
-    fighter=source_row(1,hp=18,attributes={'mp':14,'physical_attack_min':1,'physical_attack_max':2,'physical_defence_min':0},
+    profile['skills']=[]
+    for i,kind in enumerate(['fencing','fireball','healing']):
+        skill={field:1 for field in first_loop.SKILL_INT_FIELDS}
+        skill.update(id=100+i,job_id=i,book_item_id=1000+i,name='测试'+kind,behavior=kind,
+                     learned_level=0,learn_level=8,mp_base_cost=6,mp_level_cost=4,range_cells=2,
+                     delay_base_ms=451,projectile_ms_per_cell=37)
+        profile['skills'].append(skill)
+    profile['healing']={k:13 for k in first_loop.HEALING_FIELDS}
+    profile['player_growth']=[{**{k:3.25 for k in first_loop.GROWTH_FIELDS},'job_id':i,'hp_base':11,'mp_base':12} for i in range(3)]
+    profile['initial_skill_books']=[{'job_id':s['job_id'],'item_id':s['book_item_id']} for s in profile['skills']]
+    fighter=source_row(1,hp=18,attributes={'mp':14,'physical_attack_min':1,'physical_attack_max':2,'physical_defence_min':0,
+                                        'physical_defence_max':3,'magic_defence':4,'accuracy':5,'agility':6},
                        attack_interval_ms=700,move_interval_ms=500,exp=3)
     return {
         'dev_first_loop_profile':[source_row(1,parameters=profile)],
@@ -112,6 +124,38 @@ class PotionProjectionTests(unittest.TestCase):
         self.assertIn('Ac20/Mac30',evidence['amount_source'])
         self.assertIn('死亡拒绝新使用',evidence['death_policy'])
         self.assertIn('仍消费',evidence['full_resource_use'])
+
+    def test_skill_and_growth_projection_uses_only_excel_values(self):
+        tables=candidate_tables();before=deepcopy(tables);result=fixture(tables)
+        profile=before['dev_first_loop_profile'][0]['parameters']
+        for key in ['skills','healing','player_growth','initial_skill_books']:
+            self.assertEqual(result[key],profile[key])
+            self.assertIsNot(result[key],tables['dev_first_loop_profile'][0]['parameters'][key])
+        public=first_loop.public_gameplay(result)
+        row=public['skills'][1];source=profile['skills'][1]
+        self.assertEqual(row['impact_base_ms'],451);self.assertEqual(row['projectile_ms_per_cell'],37)
+        self.assertEqual(row['base_cost'],6);self.assertEqual(row['level_cost'],4)
+        self.assertEqual(row['initial_level'],0);self.assertFalse(row['target_180_verified'])
+        book=next(x for x in public['items'] if x['item_id']==source['book_item_id'])
+        self.assertEqual(book['kind'],'book');self.assertEqual(book['skill_id'],source['id'])
+        self.assertFalse(book['use_enabled']);self.assertNotIn('potion',book)
+        self.assertEqual(result['monsters'][0]['magic_defence_max'],4)
+        self.assertEqual(result['monsters'][0]['magic_resist_weight'],17)
+        self.assertNotIn('power_base',json.dumps(public))
+        self.assertEqual(tables,before)
+
+    def test_missing_duplicated_or_fractional_skill_contract_is_rejected(self):
+        profile=candidate_tables()['dev_first_loop_profile'][0]['parameters'];bad=[]
+        for field in ['skills','healing','player_growth','initial_skill_books']:
+            p=deepcopy(profile);p.pop(field);bad.append(p)
+        p=deepcopy(profile);p['skills'][1]['book_item_id']=p['skills'][0]['book_item_id'];bad.append(p)
+        p=deepcopy(profile);p['skills'][1]['mp_base_cost']=0.5;bad.append(p)
+        p=deepcopy(profile);p['skills'][1]['delay_base_ms']=0;bad.append(p)
+        p=deepcopy(profile);p['healing']['pet_base_per_tick']=0;bad.append(p)
+        p=deepcopy(profile);p['player_growth'][0]['hp_gain']=float('nan');bad.append(p)
+        p=deepcopy(profile);p['initial_skill_books'][0]['item_id']=9999;bad.append(p)
+        for p in bad:
+            with self.subTest(profile=p),self.assertRaises(ValueError):first_loop.validate_skills(p)
 
     def test_initialized_project_cannot_reextract_or_save(self):
         schema={'tables':[{'table_id':'dev_first_loop_profile'}]}

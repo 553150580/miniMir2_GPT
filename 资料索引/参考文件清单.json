@@ -126,12 +126,12 @@
       "access": "read_only",
       "symlink_traversal": false,
       "role": "只读参考，非本项目运行目录",
-      "indexed_files": 305,
-      "indexed_bytes": 4045805,
-      "hashed_files": 305,
+      "indexed_files": 306,
+      "indexed_bytes": 4259762,
+      "hashed_files": 306,
       "unhashed_files": 0,
       "excluded_encountered_files_by_reason": {
-        "reference_source": 259,
+        "reference_source": 258,
         "unrelated_or_operational_source": 39
       },
       "excluded_count_note": "只统计遍历遇到的文件；被剪枝敏感目录不枚举、不计内部文件，不输出其文件名和内容"
@@ -41058,6 +41058,20 @@
       "file_type": "csharp_source",
       "bytes": 895,
       "sha256": "fc22c4a014e082f24a242e3d094b0290fd49194c12639a1c6f596b149d8e3b5b",
+      "hash_status": "sha256_full",
+      "hash_reason": "不超过16MiB",
+      "source_modified": false,
+      "copied": false,
+      "text_encoding": "utf-8-sig"
+    },
+    {
+      "reference_id": "crystal:Server/MirEnvir/Envir.cs",
+      "source_id": "crystal",
+      "relative_path": "Server/MirEnvir/Envir.cs",
+      "category": "reference_source",
+      "file_type": "csharp_source",
+      "bytes": 213957,
+      "sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
       "hash_status": "sha256_full",
       "hash_reason": "不超过16MiB",
       "source_modified": false,

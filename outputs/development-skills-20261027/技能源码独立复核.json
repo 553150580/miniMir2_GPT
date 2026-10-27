@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-27",
+  "review_kind": "独立只读代码与来源复核；仅写本报告",
+  "status": "首批开发候选范围内未发现未解决阻断项",
+  "target_180_certified": false,
+  "skill_complete_certified": false,
+  "source_mapping": "资料索引/三职业技能来源映射.json",
+  "source_design": "docs/技能来源核验与实施清单.md",
+  "snapshots": [
+    {
+      "path": "server/internal/devconfig/skills.go",
+      "sha256": "70977a5f6146f8f3383c7dc92573e8d0ab4349952de22bf933f0ca9061911d9a"
+    },
+    {
+      "path": "server/internal/game/skills.go",
+      "sha256": "738bef138f43adbf6f475d53add313871e183c18ba29a4d86c83a390076b6fa7"
+    },
+    {
+      "path": "server/internal/game/combat.go",
+      "sha256": "e097491a24102230c59e87f18ca46521dfc8ad51ed7f7debf0d1c99386b747ae"
+    },
+    {
+      "path": "server/internal/persistence/skills.go",
+      "sha256": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4"
+    },
+    {
+      "path": "server/internal/persistence/assets.go",
+      "sha256": "722eafdb3244bb6db037f89d9cdfeb0c9a34913c3f0736a3f29ba6962d91a307"
+    },
+    {
+      "path": "server/internal/persistence/store.go",
+      "sha256": "e966a88a6833413d726a58b9ccc4c7c92a727ab5b91a133868fb63d1a6b5f116"
+    },
+    {
+      "path": "server/internal/game/runtime.go",
+      "sha256": "ccb5a688f66a607785863207413ec383d5517cd545de4c3c09d41b5b06b80c47"
+    },
+    {
+      "path": "server/internal/domain/model.go",
+      "sha256": "91d64ef5ca08f38ca95f3250e561cd9e94d0403ddbaf82da978f1f47898755b6"
+    },
+    {
+      "path": "server/internal/game/skills_test.go",
+      "sha256": "d90634f1e73f0e578bf21aa9b151001ce1a0c90d2b6578b4774ed8d80ba65ec8"
+    },
+    {
+      "path": "server/internal/devconfig/skills_test.go",
+      "sha256": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4"
+    },
+    {
+      "path": "server/internal/persistence/skills_test.go",
+      "sha256": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e"
+    },
+    {
+      "path": "config/development/first-loop.json",
+      "sha256": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd"
+    }
+  ],
+  "reviewed_boundaries": [
+    {
+      "subject": "职业成长与舍入",
+      "result": "源码公式及float32步骤已静态对照；三职业7级固定输入测试通过。当前技能rank0、MPower8/14、Power2/0、倍率1下整数四分之一中点取偶与源结果等价。",
+      "implementation": [
+        "server/internal/devconfig/skills.go:70-113",
+        "server/internal/game/skills.go:85-101"
+      ],
+      "source": [
+        "资料参考/crystal/Shared/BaseStats.cs:155-181",
+        "资料参考/crystal/Server/MirDatabase/MagicInfo.cs:180-221"
+      ]
+    },
+    {
+      "subject": "物理准确敏捷与AC、法术MR与MAC",
+      "result": "ACAgility的随机上界+1及大于准确时未命中、AC/MAC上下限随机、0伤害下限、剑术rank乘3均与声明子集一致；默认MR0不随机抵抗。",
+      "implementation": [
+        "server/internal/game/skills.go:62-82",
+        "server/internal/game/combat.go:128-152"
+      ],
+      "source": [
+        "资料参考/crystal/Server/MirObjects/MapObject.cs:243-279,460-497",
+        "资料参考/crystal/Server/MirObjects/HumanObject.cs:2303-2306"
+      ]
+    },
+    {
+      "subject": "Healing队列",
+      "result": "人类动态额度与宠物固定5分支区分；严格大于600ms节拍、空队列推进时钟、死亡暂停保留、满值清理、队列65535封顶及与药品队列分离均已定位。",
+      "implementation": [
+        "server/internal/game/skills.go:206-263",
+        "server/internal/game/combat.go:251-271"
+      ],
+      "source": [
+        "资料参考/crystal/Server/MirObjects/HumanObject.cs:552,602-645,6018-6026",
+        "资料参考/crystal/Server/MirObjects/MonsterObject.cs:602,1414-1451"
+      ]
+    },
+    {
+      "subject": "延迟目标与失败副作用",
+      "result": "施放验证先于扣蓝、动作/CD/事件；目标射程来自权威坐标。延迟场景代次、目标Life代次、存活及火球原格2格限制均已定位；无效或缺蓝不改MP/CD。",
+      "implementation": [
+        "server/internal/game/skills.go:103-236",
+        "server/internal/game/runtime.go:675-683",
+        "server/internal/game/combat.go:289-301"
+      ],
+      "source": [
+        "资料参考/crystal/Server/MirObjects/HumanObject.cs:3400-3451,3939-3949,5916-5929,6018-6026",
+        "资料参考/crystal/Server/MirObjects/MapObject.cs:321-336",
+        "资料参考/crystal/Shared/Functions/Functions.cs:180-201"
+      ]
+    },
+    {
+      "subject": "原书学习与永久原子性",
+      "result": "克隆切片后扣原实例1并添加已学Level0；Role.Skill以bool区分未学。扣书/技能/角色CAS/原op回执/审计在snapshot+majority事务内，unknown保留原job，仅确认后刷新场景。另一个只读子审阅得到相同结论。",
+      "implementation": [
+        "server/internal/persistence/skills.go:10-40",
+        "server/internal/persistence/assets.go:68-84,215-235",
+        "server/internal/persistence/store.go:141-159,204-212",
+        "server/internal/game/runtime.go:655-691",
+        "server/internal/domain/model.go:104-125"
+      ],
+      "source": [
+        "资料参考/crystal/Server/MirObjects/PlayerObject.cs:6077-6088,6330-6337"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "SKILL-REVIEW-01",
+      "priority": "P2",
+      "status": "已由服务端实现者修复，修后针对测试及包测试通过",
+      "subject": "药品补满时漏清尚未到跳点的治愈余额",
+      "original_trigger": "HealAmount>0且NextHeal未到，tickHealing先看到未满保留；tickPotions补满后若同帧受击，旧治疗余额可继续恢复。",
+      "source": "资料参考/crystal/Server/MirObjects/HumanObject.cs:641-645",
+      "resolution": "两恢复阶段结束后、战斗前统一清满HP对应Potions.HP和HealAmount。",
+      "resolution_location": "server/internal/game/combat.go:267-271",
+      "regression_test": "server/internal/game/skills_test.go:140-159"
+    }
+  ],
+  "declared_adaptations": [
+    "MYF同名书与Crystal技能不同ID体系使用显式映射；本项目7级学习门槛和绑定职业书为开发补给。",
+    "依据最终策划先验证再确认施放，拒绝无效目标或缺蓝不推进施法CD；比源Magic先写公共时钟/扣蓝的部分路径更严格。",
+    "死亡治疗目标拒绝、Life代次保护、健康断线仍处理已释放效果及Pending冻结均为项目开发适配，不认证源服离线和重生语义。"
+  ],
+  "limits": [
+    "magicAmount整数四分之一与PPM算法只在首批已声明小参数/倍率1子集作源等价判断；不是任意大MPower、原生等级或非整数倍率的C#float32通用克隆。扩大参数前需补等价验证或约束。",
+    "装备MC/SC、元素、幸运、完整Buff、暴击及来源外部数据库覆盖未因本次复核而实现或认证。",
+    "本次没有执行真实Mongo故障或浏览器验收；不以代码审阅及包测试代替这些验收。",
+    "目标1.80完整技能清单和历史gxx映射仍未恢复或认证。"
+  ],
+  "checks": [
+    {
+      "command": "./tools/dev go test ./internal/devconfig ./internal/game ./internal/persistence -count=1",
+      "status": "通过",
+      "packages": {
+        "minimir/internal/devconfig": "1.549s",
+        "minimir/internal/game": "2.058s",
+        "minimir/internal/persistence": "3.624s"
+      },
+      "real_mongo_integration": false
+    },
+    {
+      "check": "33项来源映射：15份SHA、14份归档副本、33枚举/默认参数/case/书行",
+      "status": "通过"
+    }
+  ]
+}

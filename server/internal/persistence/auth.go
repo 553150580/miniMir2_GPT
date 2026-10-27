@@ -133,6 +133,11 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 	for _, id := range s.Cfg.Fixture.InitialInventory {
 		r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: id, Quantity: 1, Bound: true, Version: 1})
 	}
+	for _, book := range s.Cfg.Fixture.InitialSkillBooks {
+		if book.JobID == q.Job {
+			r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: book.ItemID, Quantity: 1, Bound: true, Version: 1})
+		}
+	}
 	var result domain.Role
 	e := s.tx(ctx, func(tc context.Context) error {
 		if e := s.accountGuard(tc, a); e != nil {

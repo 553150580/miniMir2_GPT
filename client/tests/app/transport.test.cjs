@@ -32,6 +32,21 @@ const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
 
+test('学习0级状态、原书学习请求及施法事件大ID按新PB定义精确往返',()=>{
+    const instance=new Uint8Array(16).fill(7),opId=new Uint8Array(16).fill(8);
+    const request=decodePacket(encodePacket(40010,19,Long.UONE,{itemInstanceId:instance,skillId:1,operation:{opId,
+        commandSeq:Long.MAX_UNSIGNED_VALUE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE}})).value;
+    assert.deepEqual(request.itemInstanceId,instance);assert.equal(request.skillId,1);assert.equal(request.operation.commandSeq.toString(),'18446744073709551615');
+    const inventory=decodePacket(encodePacket(40003,0,Long.UONE,{learnedSkills:[{skillId:1,level:0}]})).value;
+    assert.deepEqual(inventory.learnedSkills,[{skillId:1,level:0}]);
+    const event=decodePacket(encodePacket(30006,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,castId:Long.fromString('9007199254740993',true),skillId:1,
+        casterHandle:1,targetHandle:3,origin:{x:2,y:3},targetGrid:{x:5,y:3},direction:2,delayMs:650,inputSequence:99})).value;
+    assert.equal(event.sceneEpoch.toString(),'18446744073709551615');assert.equal(event.castId.toString(),'9007199254740993');
+    assert.equal(event.delayMs,650);assert.equal(event.inputSequence,99);assert.deepEqual(event.targetGrid,{x:5,y:3});
+    const baseline=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:1,action:5,castSequence:4294967295,castSkillId:1}]})).value;
+    assert.equal(baseline.entities[0].castSequence,4294967295);assert.equal(baseline.entities[0].castSkillId,1);
+});
+
 test('药品使用帧保留原实例、最大64位场景代次与经济操作身份',()=>{
     const instance=new Uint8Array(16).fill(5),operationId=new Uint8Array(16).fill(9);
     const encoded=encodePacket(40009,19,Long.UONE,{itemInstanceId:instance,itemId:35,sceneEpoch:Long.MAX_UNSIGNED_VALUE,

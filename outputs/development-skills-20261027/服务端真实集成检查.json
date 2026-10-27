@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-27T03:12:00.034890+00:00",
+  "finished_at_utc": "2026-10-27T03:13:12.988463+00:00",
+  "command": [
+    "/Users/srf/Miro2/miniMir2_GPT/tools/dev",
+    "go",
+    "test",
+    "-json",
+    "-race",
+    "./...",
+    "-count=1",
+    "-timeout=180s"
+  ],
+  "mongo_e2e_explicit": true,
+  "race_detector": true,
+  "exit_code": 0,
+  "passed": true,
+  "source_changed_during_test": false,
+  "passed_tests": [
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSourcePlayerGrowthThreeJobs"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSkillFixtureRejectsInvalidSourceBounds"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFullBagAutoRejectPushesActualHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackObservationSurvivesStruckAndCooldownReject"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLethalStatePushesBeforeBroadcastWindow"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionTicksIndependentPoolsCapAndNoCatchup"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionDeathAndPendingPauseWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionGateSharedCooldownAndDeadSceneChecks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestManualAttackCannotTargetInactiveMonsterSlots"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillCooldownResourceTargetAndProjectileObstruction"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReachesFullBeforeCombatClearsWaitingHealingBalance"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestInputWatermarkSharedByMoveAndCastAndRejectsOldBinding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/数量不足"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/无场景"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/死亡"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/共享节流"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestFirstLoopMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoOwnershipFence"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fencing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fireball"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/healing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS"
+    }
+  ],
+  "skipped_tests": [],
+  "fixture": {
+    "path": "config/development/first-loop.json",
+    "sha256": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "candidate_only": true,
+    "runtime_ready": false
+  },
+  "source_sha256": {
+    "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
+    "config/development/first-loop.json": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
+    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
+    "server/internal/devconfig/config.go": "1aaf0ce72b3a70f69b2388f22b953c4c712c18a7b9a92bf265502ae5c0fde57f",
+    "server/internal/devconfig/skills.go": "70977a5f6146f8f3383c7dc92573e8d0ab4349952de22bf933f0ca9061911d9a",
+    "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
+    "server/internal/domain/model.go": "91d64ef5ca08f38ca95f3250e561cd9e94d0403ddbaf82da978f1f47898755b6",
+    "server/internal/game/combat.go": "e097491a24102230c59e87f18ca46521dfc8ad51ed7f7debf0d1c99386b747ae",
+    "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/observation_test.go": "6350815f00da99426cad15d68c0034c2694349ff7f90296fdf541aea2607d870",
+    "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+    "server/internal/game/potions_test.go": "0687584fdd1ceb7947af751bbb2e5b48013a8d43694f674b72b67b06ae6277bf",
+    "server/internal/game/runtime.go": "ccb5a688f66a607785863207413ec383d5517cd545de4c3c09d41b5b06b80c47",
+    "server/internal/game/skills.go": "738bef138f43adbf6f475d53add313871e183c18ba29a4d86c83a390076b6fa7",
+    "server/internal/game/skills_test.go": "d90634f1e73f0e578bf21aa9b151001ce1a0c90d2b6578b4774ed8d80ba65ec8",
+    "server/internal/integration/first_loop_test.go": "68603f8a0abf1a5d277a007a5bc604f62fc108ef073af3728d0f6d3e71d2e926",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/skills_test.go": "d799801f41ca6c3f45e6abaacea138221285a6a492bace1216ce8e2d1010d3f7",
+    "server/internal/persistence/assets.go": "722eafdb3244bb6db037f89d9cdfeb0c9a34913c3f0736a3f29ba6962d91a307",
+    "server/internal/persistence/auth.go": "c330815048f879bcf38a2891a229c925a56a25e1d61046d700022cf25629f943",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+    "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
+    "server/internal/persistence/store.go": "e966a88a6833413d726a58b9ccc4c7c92a727ab5b91a133868fb63d1a6b5f116",
+    "server/internal/protocol/protocol_ids.go": "b5b33bf8d528e431ba3a33ac7475c855d301b6c2ecf3598576fca69980c14808",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "source_sha256_after": {
+    "conf/dev/server.json": "83aac14f2117bccfb2f9bd624d588c5318f18a52c97322a8b4e3bf696c25199b",
+    "config/development/first-loop.json": "a84877822fe2914e76e3d8243eb775d2bad71f39c26ca4f971f6145e84b91bdd",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "94b834615eae3138f44d668cc7023037f6f09103eee0fe3cc4bb37140254a3bb",
+    "server/internal/configtypes/config_types.go": "0cccb0993d60f1638e648d01ea0c557c8da578a7f963ec898d3df07df2a0b7a6",
+    "server/internal/devconfig/config.go": "1aaf0ce72b3a70f69b2388f22b953c4c712c18a7b9a92bf265502ae5c0fde57f",
+    "server/internal/devconfig/skills.go": "70977a5f6146f8f3383c7dc92573e8d0ab4349952de22bf933f0ca9061911d9a",
+    "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
+    "server/internal/domain/model.go": "91d64ef5ca08f38ca95f3250e561cd9e94d0403ddbaf82da978f1f47898755b6",
+    "server/internal/game/combat.go": "e097491a24102230c59e87f18ca46521dfc8ad51ed7f7debf0d1c99386b747ae",
+    "server/internal/game/grid_test.go": "cdf26b8c9df3da7d2973e8ea41fc6e6e9afa4b3c11fe590c78363a942bfbb444",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/observation_test.go": "6350815f00da99426cad15d68c0034c2694349ff7f90296fdf541aea2607d870",
+    "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+    "server/internal/game/potions_test.go": "0687584fdd1ceb7947af751bbb2e5b48013a8d43694f674b72b67b06ae6277bf",
+    "server/internal/game/runtime.go": "ccb5a688f66a607785863207413ec383d5517cd545de4c3c09d41b5b06b80c47",
+    "server/internal/game/skills.go": "738bef138f43adbf6f475d53add313871e183c18ba29a4d86c83a390076b6fa7",
+    "server/internal/game/skills_test.go": "d90634f1e73f0e578bf21aa9b151001ce1a0c90d2b6578b4774ed8d80ba65ec8",
+    "server/internal/integration/first_loop_test.go": "68603f8a0abf1a5d277a007a5bc604f62fc108ef073af3728d0f6d3e71d2e926",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/skills_test.go": "d799801f41ca6c3f45e6abaacea138221285a6a492bace1216ce8e2d1010d3f7",
+    "server/internal/persistence/assets.go": "722eafdb3244bb6db037f89d9cdfeb0c9a34913c3f0736a3f29ba6962d91a307",
+    "server/internal/persistence/auth.go": "c330815048f879bcf38a2891a229c925a56a25e1d61046d700022cf25629f943",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+    "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
+    "server/internal/persistence/store.go": "e966a88a6833413d726a58b9ccc4c7c92a727ab5b91a133868fb63d1a6b5f116",
+    "server/internal/protocol/protocol_ids.go": "b5b33bf8d528e431ba3a33ac7475c855d301b6c2ecf3598576fca69980c14808",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "events_sha256": "822384d393703fbd64dbcf190bff4591c0a56656f219e02fc033fe5f4e61d378",
+  "production_ready": false
+}

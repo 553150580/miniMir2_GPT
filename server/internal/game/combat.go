@@ -128,12 +128,21 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	f := &w.e.Store.Cfg.Fixture
 	if e.Kind == 1 {
-		a, _ := f.Player(r.Role.Job)
+		a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
 		for _, item := range r.Role.Equipped {
 			def, _ := f.Item(item.Item.ItemID)
 			a.AttackMin += def.AttackBonus + def.AttackMinBonus
 			a.AttackMax += def.AttackBonus + def.AttackMaxBonus
 			a.Defence += def.DefenceBonus
+			a.DefenceMin += def.DefenceMinBonus
+			a.DefenceMax += def.DefenceMaxBonus
+			a.MagicDefenceMin += def.MagicDefenceMinBonus
+			a.MagicDefenceMax += def.MagicDefenceMaxBonus
+		}
+		for _, skill := range f.Skills {
+			if level, learned := r.Role.Skill(skill.ID); learned && skill.Behavior == "fencing" {
+				a.Accuracy += int64(level) * skill.AccuracyPerLevel
+			}
 		}
 		return a
 	}
@@ -160,9 +169,12 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time) {
 		return
 	}
 	a, b := w.fighter(r, from), w.fighter(r, target)
-	damage := a.AttackMin + random(a.AttackMax-a.AttackMin+1) - b.Defence
-	if damage < 1 {
-		damage = 1
+	damage := w.physicalDamage(r, from, target)
+	if w.e.Store.Cfg.Fixture.DamageFormula != "development_source_combat" {
+		damage = w.interval(a.AttackMin, a.AttackMax) - b.Defence
+		if damage < 1 {
+			damage = 1
+		}
 	}
 	from.AttackSequence++
 	from.NextAttack = now.Add(time.Duration(a.AttackMS) * time.Millisecond)
@@ -173,6 +185,12 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time) {
 			from.Direction = uint32(i)
 			break
 		}
+	}
+	w.applyDamage(r, from, target, damage, now)
+}
+func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now time.Time) {
+	if damage <= 0 || target.HP <= 0 {
+		return
 	}
 	target.HP -= damage
 	if target.HP < 0 {
@@ -230,6 +248,14 @@ func (w *worker) step(r *room, now time.Time) {
 		}
 		return
 	}
+	// 已经释放的法术与恢复队列不属于后续离线战斗授权；未知事务仍在上方冻结。
+	w.advanceCasts(r, now)
+	if r.Pending {
+		return
+	}
+	if w.tickHealing(r, now) {
+		w.snapshot(r)
+	}
 	offline := r.Conn == nil
 	if r.Player.HP <= 0 {
 		return
@@ -237,6 +263,11 @@ func (w *worker) step(r *room, now time.Time) {
 	if w.tickPotions(r, now) {
 		// 恢复量已经由权威场景应用，立即同步；不等待下一次战斗或奖励事务。
 		w.snapshot(r)
+	}
+	if r.Player.HP >= r.Player.MaxHP {
+		// Crystal ProcessRegen统一结算满值后清除所有HP恢复余额，不能供同帧受击后复用。
+		r.Player.HealAmount = 0
+		r.Potions.HP = 0
 	}
 	if offline && (r.Role.HostingSeconds <= 0 || r.Role.PickupStopped || !r.Auto) {
 		return
@@ -263,6 +294,7 @@ func (w *worker) step(r *room, now time.Time) {
 	for i, m := range r.Monsters {
 		if m.HP == 0 && !m.RespawnAt.IsZero() && !now.Before(m.RespawnAt) {
 			m.HP = m.MaxHP
+			m.Life++
 			m.Pos = w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]
 			m.RespawnAt = time.Time{}
 			m.Action = 0
@@ -286,7 +318,17 @@ func (w *worker) step(r *room, now time.Time) {
 			w.move(r, &r.Player, *r.Destination, now, a.MoveMS)
 		}
 	} else if r.Auto {
-		if target := w.nearest(r, &r.Player); target != nil {
+		if target, handled := w.autoSkill(r, now); handled {
+			if target != nil {
+				// 法师使用同一套施法规则；缺蓝或冷却不会绕过规则改为普攻。
+				for _, skill := range w.e.Store.Cfg.Fixture.Skills {
+					if skill.Behavior == "fireball" && skill.JobID == r.Role.Job && (distance(r.Player.Pos, target.Pos) > skill.RangeCells || !w.lineOfSight(r.Player.Pos, target.Pos)) {
+						w.move(r, &r.Player, target.Pos, now, a.MoveMS)
+						break
+					}
+				}
+			}
+		} else if target := w.nearest(r, &r.Player); target != nil {
 			if distance(r.Player.Pos, target.Pos) <= 1 {
 				w.attack(r, &r.Player, target, now)
 			} else {
@@ -381,6 +423,7 @@ func (w *worker) settle(r *room, q persistence.Settlement) {
 			}
 			if role.Revision >= r.Role.Revision {
 				r.Role = role
+				w.refreshPlayerStats(r)
 			}
 			if r.Role.PickupStopped {
 				r.Auto = false

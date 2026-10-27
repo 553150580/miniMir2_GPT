@@ -27,7 +27,7 @@ export class GameHUD extends Component {
             ['BottomHUD/Skills/RedPotion/Count', state.redPotionCount], ['BottomHUD/Skills/BluePotion/Count', state.bluePotionCount],
             ['MapViewport/Mission/Text', state.objective], ['MapViewport/Actions/Auto/Label', state.auto],
             ['MapViewport/Actions/Count/Label', state.count], ['MapViewport/Actions/Attack/Label', state.attack],
-            ['BottomHUD/Skills/BasicAttack/Label', state.attack],
+            ['BottomHUD/Skills/BasicAttack/Label', state.attack === '复活' ? state.attack : input.quickSkillLabel ?? state.attack],
         ];
         for (const [path, value] of values) this.text(path, value);
         this.progress('BottomHUD/Footer/HP', state.hp);

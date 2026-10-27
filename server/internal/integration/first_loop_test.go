@@ -225,6 +225,10 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	}
 	c.inventoryAt(res.NewRevision)
 	// 在线不扣离线时长，点地后松摇杆不取消寻路；无重连生命/位置重置。
+	itemsBeforeCombat := map[string]bool{}
+	for _, item := range persisted.Items {
+		itemsBeforeCombat[item.ID] = true
+	}
 	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, Destination: &pb.GridPoint{X: 6, Y: 8}})
 	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, ReleaseJoystick: true})
 	c.until(func(f wire.Frame) bool {
@@ -295,7 +299,14 @@ func TestFirstLoopMongoWS(t *testing.T) {
 			break
 		}
 	}
-	if persisted.NoEquipmentKills != 0 || len(persisted.Items) != 4 {
+	newEquipment := 0
+	for _, item := range persisted.Items {
+		definition, exists := cfg.Fixture.Item(item.ItemID)
+		if !itemsBeforeCombat[item.ID] && exists && definition.IsEquipment {
+			newEquipment++
+		}
+	}
+	if persisted.NoEquipmentKills != 0 || len(persisted.Items) != len(itemsBeforeCombat)+1 || newEquipment != 1 {
 		t.Fatalf("实际第20次保底未入背包: counter=%d items=%d", persisted.NoEquipmentKills, len(persisted.Items))
 	}
 	if persisted.Level <= 1 || persisted.SourceSeq <= initialSource {
@@ -432,6 +443,7 @@ type client struct {
 	stop      context.CancelFunc
 	binding   uint64
 	request   uint32
+	input     uint32
 	entry     *pb.EnterLineResult
 	inventory *pb.InventoryResult
 	scene     *pb.SceneBaselineChunk
@@ -492,17 +504,36 @@ func join(t *testing.T, address, ticket string) *client {
 }
 func (c *client) close() { c.ws.CloseNow(); c.stop() }
 func (c *client) send(id uint16, q proto.Message) uint32 {
+	switch message := q.(type) {
+	case *pb.MoveIntent:
+		if message.InputSequence == 0 {
+			c.input++
+			message.InputSequence = c.input
+		}
+	case *pb.CastIntent:
+		if message.InputSequence == 0 {
+			c.input++
+			message.InputSequence = c.input
+		}
+	}
 	c.request++
 	must(c.t, c.ws.Write(c.ctx, websocket.MessageBinary, wire.Encode(wire.Message(id, c.request, c.binding, q))))
 	return c.request
 }
 func (c *client) read() wire.Frame {
+	f := c.readFrame()
+	if f.Error != 0 {
+		c.t.Fatalf("WS %d error%d", f.ID, f.Error)
+	}
+	return f
+}
+func (c *client) readFrame() wire.Frame {
 	_, b, e := c.ws.Read(c.ctx)
 	must(c.t, e)
 	f, e := wire.Decode(b)
 	must(c.t, e)
 	if f.Error != 0 {
-		c.t.Fatalf("WS %d error%d", f.ID, f.Error)
+		return f
 	}
 	c.binding = f.Binding
 	switch f.ID {

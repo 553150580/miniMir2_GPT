@@ -54,6 +54,7 @@ type worker struct {
 	control  chan command
 	done     chan func(*worker)
 	rooms    map[string]*room
+	roll     func(int64) int64
 }
 type entity struct {
 	Handle         uint32
@@ -72,6 +73,11 @@ type entity struct {
 	NextAttack     time.Time
 	RespawnAt      time.Time
 	Monster        *devconfig.Monster
+	CastSequence   uint32
+	CastSkillID    uint32
+	Life           uint64
+	HealAmount     int64
+	NextHeal       time.Time
 }
 type room struct {
 	Role               domain.Role
@@ -104,6 +110,11 @@ type room struct {
 	Potions            potionState
 	PendingOperationID string
 	PendingFingerprint string
+	InputSequence      uint32
+	NextSpell          time.Time
+	SkillCooldowns     map[uint32]time.Time
+	Casts              []pendingCast
+	CastID             uint64
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -337,7 +348,7 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
-	if c.frame.ID == p.MsgC2SUseItem && r.Pending {
+	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill) && r.Pending {
 		w.queuePotion(r, c)
 		return
 	}
@@ -346,6 +357,10 @@ func (w *worker) command(c command) {
 		var q pb.MoveIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
+			return
+		}
+		if !acceptInput(r, q.InputSequence) {
+			w.failure(r, c.frame, p.CodeStaleInput)
 			return
 		}
 		if q.ReleaseJoystick {
@@ -384,8 +399,18 @@ func (w *worker) command(c command) {
 		w.snapshot(r)
 	case p.MsgC2SCastIntent:
 		var q pb.CastIntent
-		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.SkillId != 0 {
+		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
+			return
+		}
+		if !acceptInput(r, q.InputSequence) {
+			w.failure(r, c.frame, p.CodeStaleInput)
+			return
+		}
+		if q.SkillId != 0 {
+			if code := w.cast(r, q.SkillId, q.TargetHandle, q.InputSequence, time.Now()); code != 0 {
+				w.failure(r, c.frame, code)
+			}
 			return
 		}
 		for _, m := range r.Monsters[:r.MonsterCount] {
@@ -394,7 +419,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -428,6 +453,8 @@ func (w *worker) join(r *room, c command) {
 			}
 			r.Role = role
 			r.Auth = auth
+			r.InputSequence = 0
+			r.Manual = false
 			r.Conn = c.conn
 			r.Ready = false
 			r.Baseline = w.e.baseline.Add(1)
@@ -464,6 +491,8 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Auto = true
 	r.MonsterCount = 1
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
+	w.refreshPlayerStats(r)
+	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP
 	if role.Job == f.Pet.JobID {
 		r.Pet = &entity{Handle: 2, Kind: 2, Def: f.Pet.DefinitionID, Pos: f.Map.PetSpawn, HP: f.Pet.HP, MaxHP: f.Pet.HP, MP: f.Pet.MP, MaxMP: f.Pet.MP}
 	}
@@ -531,7 +560,7 @@ func (w *worker) baseline(r *room) {
 		if e.Kind >= 1 && e.Kind <= 3 {
 			moveMS = uint32(w.fighter(r, e).MoveMS)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID})
 	}
 	w.send(r, p.MsgS2CSceneBaseline, 0, out)
 }
@@ -595,6 +624,16 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.ItemDefinitionID = x.ItemId
 		q.SceneEpoch = x.SceneEpoch
 		q.PotionGateCode = potionGate(r, x.SceneEpoch, time.Now())
+	case p.MsgC2SLearnSkill:
+		var x pb.LearnSkillRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind = "learn_skill"
+		q.Context = x.Operation
+		q.ItemID = domain.Hex(x.ItemInstanceId)
+		q.SkillID = x.SkillId
 	}
 	if q.Context == nil || len(q.Context.OpId) != 16 {
 		w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -628,11 +667,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 			r.PendingFingerprint = ""
 			if err == nil && role.Revision >= r.Role.Revision {
 				r.Role = role
+				w.refreshPlayerStats(r)
 			}
 			if err != nil {
 				result.ErrorCode = persistence.Code(err)
 			}
 			if err == nil && result.ErrorCode == 0 && q.Kind == "revive" && reviveID == r.DeathID && r.Player.HP <= 0 {
+				r.Player.Life++
 				r.Player.HP = r.Player.MaxHP
 				r.Player.MP = r.Player.MaxMP
 				r.Player.Pos = w.e.Store.Cfg.Fixture.Map.PlayerSpawn
@@ -658,12 +699,12 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill:
 		return true
 	}
 	return false
 }
-func operationID(f wire.Frame) []byte {
+func operationContext(f wire.Frame) *pb.OperationContext {
 	var op *pb.OperationContext
 	switch f.ID {
 	case p.MsgC2SEquip:
@@ -696,7 +737,16 @@ func operationID(f wire.Frame) []byte {
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
+	case p.MsgC2SLearnSkill:
+		q := &pb.LearnSkillRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	}
+	return op
+}
+func operationID(f wire.Frame) []byte {
+	op := operationContext(f)
 	if op != nil {
 		return op.OpId
 	}

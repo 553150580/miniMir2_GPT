@@ -35,6 +35,8 @@ const (
 	MsgC2SBuyHostingTime uint16 = 40007
 	MsgS2CHostingReport uint16 = 40008
 	MsgC2SUseItem uint16 = 40009
+	MsgS2CCastAccepted uint16 = 30006
+	MsgC2SLearnSkill uint16 = 40010
 )
 
 const (
@@ -56,4 +58,10 @@ const (
 	CodeWarehouseInactive uint32 = 4202
 	CodeOperationConflict uint32 = 4301
 	CodeOperationPending uint32 = 4302
+	CodeSkillNotLearned uint32 = 3201
+	CodeSkillStateBlocked uint32 = 3202
+	CodeSkillCooldown uint32 = 3203
+	CodeSkillResource uint32 = 3204
+	CodeSkillTarget uint32 = 3205
+	CodeStaleInput uint32 = 3206
 )

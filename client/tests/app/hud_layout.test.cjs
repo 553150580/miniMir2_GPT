@@ -198,3 +198,18 @@ test('普通弹窗和覆盖弹窗位于全部HUD之上，各自保存独立遮�
         }
     }
 });
+
+test('技能普通弹窗保存复用列表与学习施放按钮，游戏特效只实例化保存的Sprite模板', () => {
+    const panel=node('UIMgr/Panels/Skills');component(panel,'cc.Sprite');component(panel,'cc.BlockInputEvents');
+    const listNode=node('UIMgr/Panels/Skills/List'),scroll=component(listNode,'cc.ScrollView'),list=component(listNode,scriptType('ui/List'));
+    const template=scene[list.templateNode.__id__],view=scene[list.viewport.__id__];component(view,'cc.Mask');
+    assert.equal(scene[scroll._content.__id__]._parent.__id__,scene.indexOf(view));assert.equal(template._active,false);
+    component(template,'cc.Button');assert(list.rowHeight>=96);
+    for(const button of ['Learn','Use'])component(node(`UIMgr/Panels/Skills/${button}`),'cc.Button');
+    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'开发候选 · 技能升级暂未开放');
+    assert.equal(node('MapViewport/World/Effects')._parent.__id__,scene.indexOf(node('MapViewport/World')));
+    const effect=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Effect.prefab'),'utf8'));
+    const sprite=effect.find(value=>value.__type__==='cc.Sprite');assert(sprite);assert.equal(sprite._type,SPRITE_SIMPLE);
+    assert.equal(sprite._isTrimmedMode,false);assert.equal(sprite._srcBlendFactor,2);assert.equal(sprite._dstBlendFactor,1);
+    assert(!effect.some(value=>value.__type__==='cc.Graphics'));
+});

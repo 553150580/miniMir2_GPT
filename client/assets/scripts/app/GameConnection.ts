@@ -1,6 +1,7 @@
 import clientPb from '../generated/protobuf/client_pb.js';
 import Long from 'long';
 import { protocolErrorMessage } from './GameErrors';
+import { inputTraceMessage, traceInput } from './InputTrace';
 
 const pb = clientPb.minimir.v1;
 type MessageType = { encode(value: any): { finish(): Uint8Array }; decode(value: Uint8Array): any };
@@ -13,11 +14,11 @@ const codecs: Record<number, MessageType> = {
     10007: pb.EntryTicketRequest, 10008: pb.EntryTicketResult,
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
-    30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState,
+    30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     40001: pb.EquipRequest, 40002: pb.RecycleRequest, 40003: pb.InventoryResult,
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,
-    40009: pb.UseItemRequest,
+    40009: pb.UseItemRequest, 40010: pb.LearnSkillRequest,
 };
 
 function variable(value: Long): number[] {
@@ -107,6 +108,7 @@ export class GameConnection {
                 const packet = decodePacket(new Uint8Array(event.data));
                 if (packet.id === 20002 && !packet.error) this.binding = packet.binding;
                 else if (!this.binding.isZero() && !packet.binding.equals(this.binding)) return;
+                if (!packet.error) traceInput(inputTraceMessage('receive', packet.id, packet.seq, packet.value));
                 const pending = this.pending.get(packet.seq);
                 if (pending && (packet.error || packet.id === pending.response)) {
                     this.pending.delete(packet.seq); clearTimeout(pending.timer);
@@ -126,7 +128,8 @@ export class GameConnection {
 
     send(id: number, value: any): number {
         if (this.socket?.readyState !== WebSocket.OPEN) throw new Error('游戏尚未连接');
-        const seq = ++this.sequence; this.socket.send(encodePacket(id, seq, this.binding, value)); return seq;
+        const seq = ++this.sequence; this.socket.send(encodePacket(id, seq, this.binding, value));
+        traceInput(inputTraceMessage('send', id, seq, value)); return seq;
     }
 
     request(id: number, value: any): Promise<any> {
@@ -136,6 +139,7 @@ export class GameConnection {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error('操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
             this.pending.set(seq, { response: id === 20001 ? 20002 : id === 30004 ? 30005 : 40005, ok, fail, timer });
             this.socket!.send(encodePacket(id, seq, this.binding, value));
+            traceInput(inputTraceMessage('send', id, seq, value));
         });
     }
 

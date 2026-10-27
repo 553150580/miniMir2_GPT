@@ -16,6 +16,8 @@ func observedWorker(t *testing.T, r *room) *worker {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// 本组只验证动作观察/死亡推送；源命中与零伤害另由技能回归覆盖。
+	cfg.Fixture.DamageFormula = "development_range_minus_defence"
 	for _, m := range r.Monsters {
 		if m.Monster == nil {
 			m.Monster = &cfg.Fixture.Monsters[0]

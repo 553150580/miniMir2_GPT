@@ -287,8 +287,10 @@ func TestManualAttackCannotTargetInactiveMonsterSlots(t *testing.T) {
 	r.Monsters[0].Monster = definition
 	hidden := &entity{Handle: 11, Kind: 3, HP: 40, MaxHP: 40, Pos: devconfig.Point{X: 8, Y: 9}, Monster: definition}
 	r.Monsters = append(r.Monsters, hidden)
+	input := uint32(0)
 	send := func(target uint32) {
-		w.command(command{role: "role", conn: conn, frame: wire.Message(p.MsgC2SCastIntent, 1, 3, &pb.CastIntent{SceneEpoch: r.Scene, TargetHandle: target})})
+		input++
+		w.command(command{role: "role", conn: conn, frame: wire.Message(p.MsgC2SCastIntent, 1, 3, &pb.CastIntent{SceneEpoch: r.Scene, TargetHandle: target, InputSequence: input})})
 	}
 	send(hidden.Handle)
 	if hidden.HP != 40 || r.Player.AttackSequence != 0 {

@@ -1,4 +1,4 @@
-import { CodeItemUseBlocked, CodeItemUseCooldown } from '../generated/protocol_ids';
+import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNotLearned, CodeSkillResource, CodeSkillStateBlocked, CodeSkillTarget } from '../generated/protocol_ids';
 
 const FULL_BAG_AUTO_MESSAGE = '背包已满，整理后再开启自动战斗';
 
@@ -7,6 +7,11 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (messageId === 30004 && errorCode === 2103) return FULL_BAG_AUTO_MESSAGE;
     if (errorCode === CodeItemUseBlocked) return '角色倒下或当前状态不能使用药品';
     if (errorCode === CodeItemUseCooldown) return '药品使用过快，请稍后再试';
+    if (errorCode === CodeSkillNotLearned) return '尚未学会该技能';
+    if (errorCode === CodeSkillStateBlocked) return '角色倒下或当前状态不能施放技能';
+    if (errorCode === CodeSkillCooldown) return '技能尚未冷却，请稍后再试';
+    if (errorCode === CodeSkillResource) return '魔法不足，不能施放技能';
+    if (errorCode === CodeSkillTarget) return '目标已失效或超出技能射程';
     return `操作失败，错误码${errorCode}`;
 }
 

@@ -1,8 +1,74 @@
 {
   "schema_version": 1,
+  "rule_version": 3,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
+  "skills": [
+    {
+      "id": 1,
+      "name": "火球术",
+      "job_id": 1,
+      "book_item_id": 7,
+      "learn_level": 7,
+      "initial_level": 0,
+      "kind": "fireball",
+      "active": true,
+      "range": 9,
+      "base_cost": 3,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 50,
+      "accuracy_per_level": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 2,
+      "name": "治愈术",
+      "job_id": 2,
+      "book_item_id": 21,
+      "learn_level": 7,
+      "initial_level": 0,
+      "kind": "healing",
+      "active": true,
+      "range": 9,
+      "base_cost": 3,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 3,
+      "name": "基本剑术",
+      "job_id": 0,
+      "book_item_id": 1,
+      "learn_level": 7,
+      "initial_level": 0,
+      "kind": "fencing",
+      "active": false,
+      "range": 0,
+      "base_cost": 0,
+      "level_cost": 0,
+      "cast_ms": 0,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 3,
+      "source_status": "candidate",
+      "target_180_verified": false
+    }
+  ],
   "items": [
     {
       "item_id": 218,
@@ -67,6 +133,36 @@
         "hp": 0,
         "mp": 30
       }
+    },
+    {
+      "item_id": 7,
+      "name": "《火球术》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 1
+    },
+    {
+      "item_id": 21,
+      "name": "《治愈术》",
+      "kind": "book",
+      "allowed_jobs": [
+        2
+      ],
+      "use_enabled": false,
+      "skill_id": 2
+    },
+    {
+      "item_id": 1,
+      "name": "《基本剑术》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 3
     }
   ],
   "jobs": [

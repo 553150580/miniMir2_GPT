@@ -420,6 +420,30 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案.md:294；药品开发消费阶段新分配编号，尚未发布"
+    },
+    {
+      "value": 30006,
+      "name": "MsgS2CCastAccepted",
+      "proto_message": "CastAccepted",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:4.8；2026-10-27有来源候选技能开发"
+    },
+    {
+      "value": 40010,
+      "name": "MsgC2SLearnSkill",
+      "proto_message": "LearnSkillRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:4.8；2026-10-27有来源候选技能开发"
     }
   ],
   "error_codes": [
@@ -565,6 +589,54 @@
       "display_zh": "操作仍在处理中",
       "status": "draft",
       "source_ref": "架构方案.md:455-473",
+      "active_in_scope": true
+    },
+    {
+      "value": 3201,
+      "name": "CodeSkillNotLearned",
+      "display_zh": "尚未学习该职业技能",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3202,
+      "name": "CodeSkillStateBlocked",
+      "display_zh": "当前状态不能施法",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3203,
+      "name": "CodeSkillCooldown",
+      "display_zh": "技能尚在冷却",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3204,
+      "name": "CodeSkillResource",
+      "display_zh": "施法资源不足",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3205,
+      "name": "CodeSkillTarget",
+      "display_zh": "技能目标不合法或超出范围",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
+      "active_in_scope": true
+    },
+    {
+      "value": 3206,
+      "name": "CodeStaleInput",
+      "display_zh": "输入已过期",
+      "status": "draft",
+      "source_ref": "最终策划案.md:4.8；2026-10-27候选技能管线",
       "active_in_scope": true
     }
   ]

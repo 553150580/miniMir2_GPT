@@ -39,19 +39,19 @@
     "rules_and_adaptations": "docs/药品与技能实施边界.md"
   },
   "creator_build": {
-    "report": "docs/客户端构建检查.json",
+    "report": "outputs/development-potions-20261027/Creator构建检查.json",
     "sha256": "a02bee16f5e5d8ca86fcb4201400a7f678bd786992c7355344526d41a9e00514",
-    "current_sources_and_layouts_match_report": true,
+    "current_sources_and_layouts_match_report": false,
     "editable_layouts_preserved": 6,
     "layouts_unchanged_since_hud_stage": true
   },
   "server_test": {
-    "report": "server/test-results/latest.json",
+    "report": "outputs/development-potions-20261027/服务端真实集成检查.json",
     "sha256": "54d70e1147de086eae416f9eebf673f32714f8b4a211d63ebde66cb0d3044aec",
     "race": true,
     "passed_tests_including_subtests": 39,
     "skipped": 0,
-    "current_sources_match_report": true
+    "current_sources_match_report": false
   },
   "checks": {
     "make_test": "passed",
@@ -187,5 +187,8 @@
   "physical_mobile_verified": false,
   "runtime_ready": false,
   "all_p0_complete": false,
-  "production_ready": false
+  "production_ready": false,
+  "historical_stage": true,
+  "source_commit": "eccc58a52b9369cfdaf40ab9d0833f7175d2e446",
+  "current_work_note": "本报告保留药品阶段已验证版本；当前技能阶段改变规则和源码，后续结果单独记录。"
 }

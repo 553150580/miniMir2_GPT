@@ -18,6 +18,10 @@ import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { protocolErrorMessage } from './GameErrors';
+import { GameSkills } from './GameSkills';
+import { createSkillLearnPreview, primarySkill, selectSkillTarget, SkillRow, SkillSnapshot, skillBookInstance, validateSkillLearnPreview } from './SkillModel';
+import type { CastEvent } from './CastPlayback';
+import { traceInput } from './InputTrace';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -25,17 +29,19 @@ const names = ['男战士', '女法师', '男道士'];
 @ccclass('AppRoot')
 export class AppRoot extends Component {
     @property sceneKind = 'Boot';
-    private readonly buttons: Array<[Node, () => void]> = [];
+    private readonly buttons: Array<[Node, string, () => void]> = [];
     private readonly cleanups: Array<() => void> = [];
     private nav = new NavigationIntent();
     private world?: GameWorldView;
     private hud?: GameHUD;
     private messages?: GameMessages;
+    private skills?: GameSkills;
     private ui?: UIMgr;
     private popup?: PopupView;
     private selectedRole = -1;
     private selectedJob = 0;
     private selectedItem: any = null;
+    private selectedTarget: number | null = null;
     private inputSequence = 0;
     private auto = true;
     private count = 1;
@@ -86,7 +92,7 @@ export class AppRoot extends Component {
     onDestroy(): void {
         this.disposed = true;
         this.world?.dispose();
-        for (const [node, handler] of this.buttons) if (isValid(node, true)) node.off(Button.EventType.CLICK, handler, this);
+        for (const [node, eventType, handler] of this.buttons) if (isValid(node, true)) node.off(eventType, handler, this);
         for (const cleanup of this.cleanups) cleanup();
         game.off(Game.EVENT_HIDE, this.releaseInput, this);
         if (typeof window !== 'undefined') window.removeEventListener('blur', this.releaseInput);
@@ -166,12 +172,19 @@ export class AppRoot extends Component {
         this.cleanups.push(() => { if (isValid(safe, true)) safe.off(GameMessages.EVENT_SELECTED, selectedMessage, this); });
         this.button('BottomHUD/Footer/ChangeRole', () => this.leave(false));
         const viewport = this.find('MapViewport'); const world = viewport.getChildByName('World')!;
-        this.world = new GameWorldView(viewport, world, world.getChildByName('Entities')!, session.role.name, session.role.job);
+        this.world = new GameWorldView(viewport, world, world.getChildByName('Entities')!, session.role.name, session.role.job, session.entry.sceneEpoch);
         const prepared = session.preparedWorld;
         if (!prepared) throw new Error('入场前尚未准备动作资源，请返回选角重试');
         session.preparedWorld = null;
         this.hud.setMapFrame(prepared.background);
-        this.world.prepare(prepared, entity => this.popup!.show('Details', { title: '实体详情', message: `类型：${entity.entityKind}\n位置：${entity.position.x}, ${entity.position.y}\n生命：${entity.hp.toString()} / ${entity.hpMax.toString()}` }));
+        this.world.prepare(prepared, entity => {
+            this.selectedTarget = entity.entityHandle;
+            this.popup!.show('Details', { title: '实体详情', message: `类型：${entity.entityKind}\n位置：${entity.position.x}, ${entity.position.y}\n生命：${entity.hp.toString()} / ${entity.hpMax.toString()}` });
+        });
+        this.skills = new GameSkills(safe, this.popup);
+        this.cleanups.push(() => this.skills?.dispose());
+        const cast = (event: CastEvent): void => this.world?.acceptCast(event);
+        session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
         if (this.disposed) return;
         viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.world!.screenToGrid(point));
         this.joystick = this.find('MapViewport/Joystick').getComponent(TouchJoystick)!;
@@ -205,23 +218,25 @@ export class AppRoot extends Component {
         for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['BottomHUD/Footer/Map','Role'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
-        this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); });
+        this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); }, Toggle.EventType.TOGGLE);
         this.button('MapViewport/Actions/Count', () => { this.count = this.count === 1 ? 4 : this.count === 4 ? 8 : 1; return this.autoState(); });
         this.button('BottomHUD/Skills/RedPotion', () => this.usePotion(35));
         this.button('BottomHUD/Skills/BluePotion', () => this.usePotion(36));
-        for (const path of ['MapViewport/Actions/Attack','BottomHUD/Skills/BasicAttack']) this.button(path, async () => {
-            if (!session.ready) throw new Error('场景尚未就绪');
-            const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
-            if (player?.hp.isZero()) {
-                if (!session.death || !(session.death.allowedActions & 1)) throw new Error('当前场景暂未开放复活');
-                if (await this.popup!.confirm('Confirm', '返回出生点复活？', '角色已倒下')) { await this.economic(30002, { deathId: session.death.deathId, action: 1 }); session.death = null; }
-                return;
-            }
-            const target = session.baseline?.entities.find((entity: any) => entity.entityKind === 3 && !entity.hp.isZero());
-            if (target) session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: 0, targetHandle: target.entityHandle, targetGrid: target.position });
+        this.button('MapViewport/Actions/Attack', () => this.basicAttack());
+        this.button('BottomHUD/Skills/BasicAttack', () => {
+            if (session.baseline?.entities.find((entity: any) => entity.entityKind === 1)?.hp.isZero()) return this.basicAttack();
+            const skill = primarySkill(this.skillSnapshot());
+            if (!skill) return this.basicAttack();
+            if (!skill.learned) { this.ui!.open('Skills'); this.refreshGame(); return; }
+            this.castSkill(skill);
+        });
+        this.button('BottomHUD/Skills/SkillsPanel', () => { this.ui!.open('Skills'); this.refreshGame(); });
+        this.button('UIMgr/Panels/Skills/Learn', () => this.learnSkill());
+        this.button('UIMgr/Panels/Skills/Use', () => {
+            const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
+            this.castSkill(skill);
         });
         for (const [path, title, message] of [
-            ['BottomHUD/Skills/SkillsPanel','技能','当前可以手动普攻或开启自动战斗。职业技能暂未开放。'],
             ['BottomHUD/Skills/PetPanel','宠物','宠物会跟随角色并参与战斗。宠物管理暂未开放。'],
             ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
             ['BottomHUD/QuickNav/Quest','任务','任务系统暂未开放。'],
@@ -260,8 +275,10 @@ export class AppRoot extends Component {
         }
         const presentation = { role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
-            auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map };
+            auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
+            quickSkillLabel: primarySkill(this.skillSnapshot())?.definition.name };
         this.hud?.refresh(presentation);
+        this.skills?.refresh(this.skillSnapshot());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
@@ -284,6 +301,47 @@ export class AppRoot extends Component {
             try { if (session.pending?.get(roleIdentity())) void this.submitPending().catch(error => this.error(error)); }
             catch (error) { this.unresolved = true; this.error(error); }
         }
+    }
+
+    private skillSnapshot(): SkillSnapshot {
+        return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
+            sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
+            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [] };
+    }
+
+    private async learnSkill(): Promise<void> {
+        const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
+        const preview = createSkillLearnPreview(this.skillSnapshot(), skill.definition.id);
+        if (!await this.popup!.confirm('Confirm', preview.message, '学习技能')) return;
+        if (this.disposed) return;
+        validateSkillLearnPreview(preview, this.skillSnapshot());
+        await this.economic(40010, { itemInstanceId: skillBookInstance(preview), skillId: preview.skillId });
+    }
+
+    private castSkill(skill: SkillRow): void {
+        if (!session.ready) throw new Error('场景尚未就绪');
+        const current = primarySkill(this.skillSnapshot());
+        if (!current || current.definition.id !== skill.definition.id) throw new Error('技能状态已变化，请重新选择');
+        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedTarget);
+        session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+            skillId: current.definition.id, targetHandle: target.entityHandle, targetGrid: target.position });
+    }
+
+    private async basicAttack(): Promise<void> {
+        if (!session.ready) throw new Error('场景尚未就绪');
+        const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
+        if (player?.hp.isZero()) {
+            if (!session.death || !(session.death.allowedActions & 1)) throw new Error('当前场景暂未开放复活');
+            const death = session.death, role = roleIdentity(), epoch = session.entry.sceneEpoch.toString();
+            if (await this.popup!.confirm('Confirm', '返回出生点复活？', '角色已倒下')) {
+                if (this.disposed || roleIdentity() !== role || session.entry.sceneEpoch.toString() !== epoch || session.death !== death) throw new Error('复活状态已变化，请重新确认');
+                await this.economic(30002, { deathId: death.deathId, action: 1 }); session.death = null;
+            }
+            return;
+        }
+        const targets = session.baseline?.entities.filter((entity: any) => entity.entityKind === 3 && !entity.hp.isZero()) ?? [];
+        const target = targets.find((entity: any) => entity.entityHandle === this.selectedTarget) ?? targets[0];
+        if (target) session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: 0, targetHandle: target.entityHandle, targetGrid: target.position });
     }
 
     private potionSnapshot(): PotionSnapshot {
@@ -362,8 +420,9 @@ export class AppRoot extends Component {
     private text(path: string, value: string): void { const label = this.find(path).getComponent(Label); if (label) label.string = value; }
     private status(message: string): void { const label = this.node.getChildByPath('Safe/Status')?.getComponent(Label); if (label) label.string = message; }
     private error(error: unknown): void { const message = error instanceof Error ? error.message : String(error); session.lastError = message; this.status(message); }
-    private button(path: string, action: () => unknown): void {
+    private button(path: string, action: () => unknown, eventType: string = Button.EventType.CLICK): void {
         const node = this.find(path); const handler = (): void => {
+            traceInput({ event: 'button', path, event_type: eventType, blocked: this.uiActionBusy });
             if (this.uiActionBusy) {
                 if (node.getComponent(Toggle)) this.refreshGame();
                 return;
@@ -374,6 +433,6 @@ export class AppRoot extends Component {
                 if (result instanceof Promise) { this.uiActionBusy = true; result.catch(error => this.error(error)).finally(() => { this.uiActionBusy = false; }); }
             } catch (error) { this.error(error); }
         };
-        node.on(Button.EventType.CLICK, handler, this); this.buttons.push([node, handler]);
+        node.on(eventType, handler, this); this.buttons.push([node, eventType, handler]);
     }
 }

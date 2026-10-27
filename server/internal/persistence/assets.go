@@ -26,6 +26,7 @@ type AssetRequest struct {
 	ItemDefinitionID uint32
 	SceneEpoch       uint64
 	PotionGateCode   uint32
+	SkillID          uint32
 }
 
 func add(a, b int64) (int64, error) {
@@ -211,6 +212,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			if businessCode == 0 {
 				potion = &PotionReceipt{Scene: strconv.FormatUint(q.SceneEpoch, 10), ItemID: effect.ItemID, HP: effect.HP, MP: effect.MP}
 			}
+		case "learn_skill":
+			r, businessCode = learnSkill(r, q, s.Cfg.Fixture)
 		default:
 			businessCode = p.CodeInvalidArgument
 		}

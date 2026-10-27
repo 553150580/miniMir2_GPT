@@ -1,0 +1,29 @@
+{
+  "url": "http://127.0.0.1:18080/?renderQA=1",
+  "device": "桌面IAB，720×1280触屏布局",
+  "test_setup": "隔离QA账号三职业7级未学前态；不是正常升级或正式技能渠道验收",
+  "key_paths_verified": [
+    "三职业学习扣除原书，初学等级0持久，取消学习原书保留",
+    "战士基本剑术显示被动、当前准确+0，训练升级关闭",
+    "法师火球八方向施法资源、魔法88→85；一次输入/请求/受理各1",
+    "连续两次施法请求2次受理1次，第二次动作锁拒绝且不再扣蓝",
+    "道士治愈施法与目标特效，魔法74→71，第二次68；手动期间无额外请求",
+    "健康重连保留已学状态与未满MP；最终Toggle开关各一次请求和权威回包true/false"
+  ],
+  "final_trace": "outputs/development-skills-20261027/浏览器输入追踪-最终.json",
+  "final_toggle_event": "toggle",
+  "final_magic_cost": {
+    "before": 88,
+    "after": 85,
+    "amount": 3
+  },
+  "console_warn_error": [],
+  "initial_untraced_state_observation": {
+    "resolved": false,
+    "note": "初次无追踪时观察到Auto/MP/蓝药变化；用户说明没有操作。后续输入追踪未重现额外请求；不能归因或宣称已根治。已单独修复引擎Toggle重新启用后CLICK监听可能读旧值的可复现风险。"
+  },
+  "healing_wounded_hp_live_browser_verified": false,
+  "healing_actual_queue_verified_by": "server/test-results/latest.json，真实MongoWS与固定输入单元回归",
+  "physical_mobile_verified": false,
+  "complete_skills_verified": false
+}
