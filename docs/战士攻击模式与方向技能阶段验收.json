@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "recorded_at_utc": "2026-10-27T13:41:14.590526+00:00",
+  "stage": "战士攻击模式、四项法术与权威逐格表现",
+  "status": "限定development候选范围通过自动、真实Mongo/WS、Creator实构和本机浏览器验收",
+  "scope": {
+    "new_skills": [
+      "攻杀剑术",
+      "刺杀剑术",
+      "半月弯刀",
+      "烈火剑法",
+      "地狱火",
+      "疾光电影",
+      "冰咆哮",
+      "地狱雷光"
+    ],
+    "candidate_runtime_skill_count": 16,
+    "upgrade_rows": 48,
+    "shop_offers": 18,
+    "book_recycle_projections": 64,
+    "starting_book_count": 3,
+    "all_p0_complete": false,
+    "complete_target_180_skills": false,
+    "formal_balance_verified": false,
+    "physical_mobile_verified": false,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "configuration": {
+    "version": "dev-combat-modes-v0.6a-015eb33fec33",
+    "rule_version": 6,
+    "fixture": {
+      "path": "config/development/first-loop.json",
+      "sha256": "b8bbe18c18283465130fb3c660c7b73787839e140bcc7f47929c571d76a96d7e"
+    },
+    "workbook": {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256": "98ce110cae765561c95efe88924717d250b34df08f954932000635ae16c4d7be"
+    },
+    "unique_numeric_maintenance": "仍为两本唯一Excel，源码oracle只作独立测试期望",
+    "tables": 98,
+    "records": 897,
+    "status_counts": {
+      "candidate": 399,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69
+    },
+    "required_empty_tables": 26,
+    "release_blockers": 637,
+    "workbook_preservation": {
+      "path": "outputs/development-combat-modes-20261027/工作簿保留核对.json",
+      "sha256": "a6e99df503c2f703581e695b4293dc144cbcb187fd58e8cc7195d216492a89b2"
+    },
+    "worksheets": 95,
+    "scoped_cells": 797,
+    "unexpected_changes": 0,
+    "book_costs_confirmed_by_user": [
+      2,
+      3,
+      4
+    ],
+    "candidate_page_costs": [
+      5,
+      10,
+      20
+    ],
+    "hellfire_shape": {
+      "status": "confirmed_by_user",
+      "ranks": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "forward_cells": 4,
+      "side_rays": false,
+      "source_difference": "明确不采用Crystal rank3三射线，不能称目标1.80形状完全等价"
+    },
+    "auto_strategy": "模式/充能手动开启；Auto使用既有状态，施法优先/目标数仍开发候选"
+  },
+  "source_review": {
+    "document": {
+      "path": "docs/战士攻击模式与方向技能实施边界.md",
+      "sha256": "3d1d980b6561cdfad538f40322aaad546412998b14157976724dc48cea48e715"
+    },
+    "target_version_verified": false,
+    "csharp_oracle": {
+      "path": "outputs/development-combat-modes-20261027/源语言公式对拍/report.json",
+      "sha256": "f3794f1f779ac9464c08afb8483925bd4678f013542ef8a6e097b60ceb0ebeb9"
+    },
+    "csharp_actual_vectors": 29512,
+    "go_comparison_vectors": 29512,
+    "mismatches": 0,
+    "naive_combined_ppm_differences": 1723,
+    "scope": "逐字只读源码默认值/公式独立编译比较，未证明来源实库、完整PRNG或全部伤害管线",
+    "toolchain": {
+      "path": "conf/toolchain/dotnet.lock.json",
+      "sha256": "40c10f73193386e6c88dfe211b215ff8f436ede5880d34f7b99e4e179e8c7483"
+    }
+  },
+  "automatic": {
+    "make_test": true,
+    "make_check": true,
+    "development_resources_check": true,
+    "javascript": 175,
+    "scene": 16,
+    "ui_app": 159,
+    "python_configuration": 25,
+    "protobuf_messages": 54,
+    "long_fields": 89,
+    "pb_boundary_cases": 288,
+    "message_ids": 44,
+    "error_codes": 29,
+    "strict_creator_typescript": true,
+    "test_log": {
+      "path": "outputs/development-combat-modes-20261027/完整自动检查.log",
+      "sha256": "dde664c650565a9c9d175541571c97d5d2102b41b2086e671b76b3af3f5fcee1"
+    },
+    "release_check": "按预期退出2，结构有效但637项正式阻断",
+    "release_report": {
+      "path": "outputs/development-combat-modes-20261027/正式发布门禁.json",
+      "sha256": "56fd33c414683df09bfcd949c136e7088dfa1b3e81cfdc9cd13160e57c20b978"
+    }
+  },
+  "creator_build": {
+    "report": {
+      "path": "outputs/development-combat-modes-20261027/Creator构建检查.json",
+      "sha256": "514f33be4fd3bdc14f0f64f67c8d59c4e876f7e0120eba1abefc9d9cfb34ea83"
+    },
+    "creator": "3.8.8",
+    "platform": "web-mobile",
+    "seconds": 314.29,
+    "exit_code": 36,
+    "source_stable_during_build": true,
+    "current_sources_match": true,
+    "saved_scene_prefab_count": 7,
+    "build_did_not_overwrite_saved_layouts": true,
+    "intentional_layout_changes": "963→973，仅追加保存的ModeToggle；原963对象只Skills子列表追加引用，其余完全相等",
+    "layout_review": {
+      "path": "outputs/development-combat-modes-20261027/保存Toggle布局差分.json",
+      "sha256": "3a6ae4a9c439f9f1465eeb7532a0b37336f03d1fceb264d3048142590bc26b7a"
+    }
+  },
+  "server": {
+    "report": {
+      "path": "outputs/development-combat-modes-20261027/服务端集成验收.json",
+      "sha256": "1572d765d858e27ca55d9771dd67877577295af7b9c99420e8a67609dbced7ac"
+    },
+    "events": {
+      "path": "outputs/development-combat-modes-20261027/服务端集成事件.jsonl",
+      "sha256": "072bb8d0765f9599a489f21a51a3b292adc1d9b5d5c8337be2b0266b1eeecc5c"
+    },
+    "race": true,
+    "passed_test_records": 172,
+    "skipped": 0,
+    "current_sources_match": true,
+    "covered": [
+      "八项真实购书/学习/权威施放",
+      "四战士八方向/0ms旁格与300ms前格/多杀",
+      "逐步binary32独立C#公式29512向量",
+      "烈火严格MP门槛/原截止/健康重连",
+      "地狱火实际链式四格/同对象跨格/同格全目标/空格/阻挡/hosting权限切换",
+      "同连接复活新life和mode revision/原op重放",
+      "旧经济预览不附加无意义max_attack_bonus"
+    ],
+    "real_network_unknown_commit_fault_injection": false
+  },
+  "resources": {
+    "pngs": 2909,
+    "new_frames": 728,
+    "previous_frames_preserved": 2181,
+    "manifest": {
+      "path": "client/assets/resources/development/manifest.json",
+      "sha256": "1628ec86c748974432fa4ad9ebcede16dfbd2e6f3cb9989bf5808684d64d82bc"
+    },
+    "converter": {
+      "path": "tools/resources/build_development_assets.py",
+      "sha256": "6e7c87f02df4514b6c53c66c7754eb3dcd0c450e68b03aa899983e2e792b8ed9"
+    },
+    "source_evidence": {
+      "path": "outputs/development-combat-modes-20261027/原始帧资源核对.json",
+      "sha256": "8d26d49f5c816eeff0e2ec2dad317c8dd2c63342ff2a2cde153d75fe99997975"
+    },
+    "formal_180_art_verified": false
+  },
+  "browser": {
+    "passed": true,
+    "url": "http://127.0.0.1:18080/?renderQA=1",
+    "device": "本机IAB 720×1280，非手机真机",
+    "exclusive_started_at": "2026-10-27T12:41:41.907Z",
+    "prepared_inputs": "全新隔离账号三角色仅预置40级和测试钱包；没有预学技能或额外原书，实际使用NPC购书和owner学习",
+    "natural_leveling_or_formal_acquisition_verified": false,
+    "observed": [
+      "战士四本新书合计35000金币，先扣330绑金再扣34670金币；基本剑术用初始书，四新项均用原书学习",
+      "刺杀开启、半月开启与关闭实际30009；烈火MP151→144，受理26和outcome1及原帧刀光；半月与攻杀有权威攻击事件",
+      "健康切角重入仍MP0、刺杀已开启；本机未复现每个刺杀距离/每阶升级，其余以真实集成覆盖",
+      "法师四本合计38200金币，正常购入并用原书学习；价格和等级仍开发候选",
+      "地狱火两次MP893→883→873；两次实际四格事件，空格也有Step，逐格原帧已观察",
+      "地狱雷光MP873→844→815；冰咆哮815→782→749；疾光749→711，实际范围/落点/方向梁已观察",
+      "冰咆哮后地面导航在开技能面板期间仍到(6,8)，疾光后继续到(7,9)途中；取消/旧目标等边界由AppRoot回归覆盖"
+    ],
+    "actual_cast_counts": {
+      "9": 2,
+      "24": 2,
+      "33": 2,
+      "10": 1
+    },
+    "actual_attack_counts": {
+      "0": 265,
+      "26": 1,
+      "25": 48,
+      "7": 20
+    },
+    "hellfire_actual_step_indices": {
+      "1": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "2": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "console_warn_error": 0,
+    "trace_records": 886,
+    "input_trace": {
+      "path": "outputs/development-combat-modes-20261027/浏览器输入追踪.json",
+      "sha256": "68592787783dd1ded11cff841c3b2542a8d7ee2f672446c8c9c0f3a6e4f632fb"
+    },
+    "console_report": {
+      "path": "outputs/development-combat-modes-20261027/浏览器控制台检查.json",
+      "sha256": "17eea0f94fe951df3bc318fd1132c6f21c740517f50bf66f50103d634ccdcb8a"
+    },
+    "trace_scope": "只读取显式renderQA输入/受理追踪，不读取游戏私有运行时，不把点击次数直接当命中数",
+    "historical_untraced_auto_observation": "首组旧观察未归因仍保留，不以当前独占复验称已根治",
+    "end_state": "显式关闭战士Auto并回角色选择，临时720×1280保留供接续地图验收，最终地图完成时重置"
+  },
+  "screenshots": [
+    {
+      "path": "outputs/development-combat-modes-20261027/01-战士初始状态.jpg",
+      "sha256": "b0571d6ec62a4b5baf2b2324b0077fd4ed64fc1a261df9ca24757981ce170620"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/02-战士入场.jpg",
+      "sha256": "15acecd0c58d177c63a78b6c2b8cb8ec5a9ff433162863f0ad981d6e209a257b"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/03-战士技能列表.jpg",
+      "sha256": "4b520929f1a6eaa9ba28661a3dda98f6bce551fed5f0a3434b17855d5137cd35"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/04-新技能书商店.jpg",
+      "sha256": "fccd7f50b954e2213a8a4b3f4a689c49b31d41a4c539a71a10343ec30d5c7210"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/05-烈火购书确认.jpg",
+      "sha256": "8347ed738ea0562fdb56979dba0a7f3e9fbe8eb08b3c1c18b77973671830a1f4"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/06-战士书单.jpg",
+      "sha256": "e18cfcd59d3ed655f07eb92638a6bb5f19390c240d2b0eb005f821bb08a6edbc"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/07-战士原书学习前.jpg",
+      "sha256": "efda772909683a798fea292f5c6585e6becc7642a37946236309bb6475c8ba07"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/08-刺杀原生开关.jpg",
+      "sha256": "2669d5bafc492f0bd8ded218abbd37fd992b9c3483e4582853aff0ddf55fa7ba"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/09-烈火充能.jpg",
+      "sha256": "f2a26c6257c69119d0d05442029395c2d3eec271fff1bf4de93b5fec858f84d0"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/10-战士模式实战.jpg",
+      "sha256": "595284628cb288963a8c60edbd44ec5726cf0aef77a6152f2230fd090d36dc1a"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/11-四怪模式.jpg",
+      "sha256": "25f803b9df64eba28582c76d0a2f2173aea8878e7396dbf1e25ab8b5229d5448"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/12-刺杀与攻杀实战.jpg",
+      "sha256": "a3e19482c20007cbb718017b3354fbd1385da1b49bbc2d842710dd6a0d63d5b9"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/13-法师新增书单.jpg",
+      "sha256": "b72cbc7b86e10122e4dc2093f852ab79841a17c09a05fd495ade5c8004a8aef4"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/14-法师末尾书单.jpg",
+      "sha256": "3a024973c7891e729039b15afb6da1b1a0ee6dc2f96e71837ee81f83244b4c04"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/15-法师四项学习入口.jpg",
+      "sha256": "5c0a763dc52a584c41ad95bbf13143379aa21f3f3f3b2f6a3b0b26f6f952bd07"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/16-地狱火方向瞄准.jpg",
+      "sha256": "3a236d5210038536d264b7c183cdf45f6ea94b7196e1e4238c4eab4a56993e7d"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/17-地狱火逐格表现.jpg",
+      "sha256": "e753da4393859091d633f4b845ed11d38c01aedf49773703ecbc0eb4d2e0267a"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/18-地狱火实际格帧A.jpg",
+      "sha256": "bdcf635bcba767c141c7173b115b7c8841722453219cd004299afd6bf96a4ed4"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/19-地狱火实际格帧B.jpg",
+      "sha256": "30f277aeb16f8429b1cb02e5e9b7740a00165c558b7601786a5dd5557a85de83"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/20-地狱雷光表现.jpg",
+      "sha256": "181025e6aab870ff99c7f27b0c129d9f708baddea7a880aff45000d6af074916"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/21-地狱雷光全景.jpg",
+      "sha256": "1930609bed32334c746b62ab5788633a6b494930f5d8a7b67dc09c431df052ef"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/22-冰咆哮地面表现.jpg",
+      "sha256": "8068b156e6ffb8df688b146b91180e2dd8579f646b29abe1c8e06e08c33529a9"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/23-冰咆哮落点.jpg",
+      "sha256": "f8a7b354850045e9123486b658360ea1ec6209370a6ef544c0065ff6a4eb7de1"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/24-冰咆哮独立地面范围.jpg",
+      "sha256": "807d2382bbbad2ad7b7027fa193b3345fce30400db78dae63140d0677b9799f7"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/25-疾光方向梁.jpg",
+      "sha256": "63a684f573db03c900b17156c36e518141732e6a6dd995be03c2bb1c12953a98"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/26-施法后继续导航.jpg",
+      "sha256": "1f37a77229ab16b9a6adcd05b9846458b1f55b2980a955dd5fb2f85e8d62ed05"
+    },
+    {
+      "path": "outputs/development-combat-modes-20261027/27-重入后模式与魔法保持.jpg",
+      "sha256": "f6ff36acbba87f10646bef463654c44fd2110d5f227791f1439014cc6dbe37ad"
+    }
+  ],
+  "remaining": [
+    "完整目标1.80技能清单与认证、Buff/施毒/永久施法材料/真实召唤/位移等",
+    "正式数值平衡、完整P0、手机真机、容量/长稳及全故障",
+    "新增地图17×17/2.5D菱形/土层为用户下一独立阶段，当前本报告仍16×16逻辑地图",
+    "NPC来源书不拆页；页面与升级门槛继续candidate"
+  ]
+}

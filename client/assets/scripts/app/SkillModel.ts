@@ -2,9 +2,12 @@ import { PotionInteger, PotionItem } from './PotionModel';
 
 export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
-    kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'; active: boolean; range: number;
-    target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid';
-    area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[];
+    kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
+        | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'; active: boolean; range: number;
+    activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
+    target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
+    area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[]; max_attack_bonus_by_level?: readonly number[];
+    secondary_direction_offsets?: readonly number[]; secondary_distance_cells?: number; line_cells?: number; line_step_ms?: number; charge_window_ms?: number;
     base_cost: number; level_cost: number; cast_ms: number; impact_base_ms: number; projectile_ms_per_cell: number; accuracy_per_level: number;
 }
 export interface SkillInventory {
@@ -13,7 +16,24 @@ export interface SkillInventory {
 }
 export interface SkillSnapshot {
     ready: boolean; roleIdentity: string; job: number; sceneEpoch: PotionInteger; ruleVersion: PotionInteger;
-    inventory: SkillInventory | null; definitions: readonly SkillDefinition[];
+    inventory: SkillInventory | null; definitions: readonly SkillDefinition[]; modes?: SkillModeState | null; modesReceivedAt?: number;
+}
+export interface SkillModeEntry { skillId: number; enabled: boolean; ready: boolean; remainingMs: number; cooldownRemainingMs: number; }
+export interface SkillModeState { sceneEpoch: PotionInteger; revision: PotionInteger; playerLife: PotionInteger; serverTimeUnixMs: PotionInteger; states: readonly SkillModeEntry[]; }
+export function acceptsSkillModeState(current: SkillModeState | null, incoming: SkillModeState, scene: PotionInteger): boolean {
+    try {
+        if (!incoming || incoming.sceneEpoch.toString() !== scene.toString() || !Array.isArray(incoming.states) || incoming.states.length > 64
+            || integer(incoming.playerLife) < 0n || integer(incoming.serverTimeUnixMs) < 1n) return false;
+        if (current?.sceneEpoch.toString() === scene.toString() && integer(incoming.revision) <= integer(current.revision)) return false;
+        integer(incoming.revision);
+        const ids = new Set<number>();
+        for (const state of incoming.states) {
+            if (!Number.isSafeInteger(state.skillId) || state.skillId < 1 || ids.has(state.skillId) || typeof state.enabled !== 'boolean' || typeof state.ready !== 'boolean'
+                || ![state.remainingMs, state.cooldownRemainingMs].every(value => Number.isSafeInteger(value) && value >= 0 && value <= 0xffffffff)) return false;
+            ids.add(state.skillId);
+        }
+        return true;
+    } catch { return false; }
 }
 export interface SkillRow {
     definition: SkillDefinition; learned: boolean; level: number; canLearn: boolean; cost: number; status: string;
@@ -74,9 +94,41 @@ export function skillTargetKind(definition: SkillDefinition): NonNullable<SkillD
     throw new Error('技能缺少明确的目标规则');
 }
 export function isGroundSkill(definition: SkillDefinition): boolean { return ['enemy_grid', 'friendly_grid'].includes(skillTargetKind(definition)); }
+export function skillActivation(definition: SkillDefinition): NonNullable<SkillDefinition['activation_kind']> {
+    return definition.activation_kind ?? (definition.active ? 'cast' : 'passive');
+}
+export function isDirectionalSkill(definition: SkillDefinition): boolean { return skillTargetKind(definition) === 'enemy_direction'; }
+export function isAreaEffect(definition: SkillDefinition): boolean { return isGroundSkill(definition) || ['enemy_direction', 'enemy_self'].includes(skillTargetKind(definition)); }
+export function skillMode(snapshot: SkillSnapshot, skillId: number): SkillModeEntry | undefined {
+    return snapshot.modes?.sceneEpoch.toString() === snapshot.sceneEpoch.toString() ? snapshot.modes.states.find(value => value.skillId === skillId) : undefined;
+}
+export function skillModeStatus(snapshot: SkillSnapshot, definition: SkillDefinition, now = Date.now()): string {
+    const activation = skillActivation(definition), state = skillMode(snapshot, definition.id);
+    if (activation !== 'toggle' && activation !== 'charge' && activation !== 'passive_proc') return '';
+    if (!state) return '等待战斗状态';
+    if (activation === 'toggle') return state.enabled ? '已开启' : '已关闭';
+    const elapsed = Math.max(0, now - (snapshot.modesReceivedAt ?? now));
+    if (state.ready) return state.remainingMs > 0 ? `已就绪 · 剩余${Math.max(0, Math.ceil((state.remainingMs - elapsed) / 1000))}秒` : '下一击已就绪';
+    const cooldown = Math.max(0, Math.ceil((state.cooldownRemainingMs - elapsed) / 1000));
+    return cooldown ? `冷却 ${cooldown}秒` : activation === 'charge' ? '可充能' : '攻击时有机会准备下一击';
+}
+export function skillActionLabel(snapshot: SkillSnapshot, row: SkillRow): string {
+    const activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
+    if (activation === 'toggle') return state?.enabled ? '关闭' : '开启';
+    if (activation === 'charge') return state?.ready ? '已就绪' : '充能';
+    return !row.definition.active ? '被动技能' : '施放';
+}
+export function skillPassiveText(row: SkillRow): string {
+    const bonus = row.definition.kind === 'slaying' ? row.learned ? row.definition.max_attack_bonus_by_level?.[row.level] : 0 : undefined;
+    return `当前准确 +${skillAccuracy(row)}${bonus !== undefined ? ` · 攻击上限 +${bonus}` : ''}`;
+}
 // 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
 export function skillQuickLabel(definition: SkillDefinition): string {
-    return definition.kind === 'firebang' ? '爆裂' : definition.kind === 'mass_healing' ? '群疗' : definition.name;
+    return ({ firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光' } as Record<string, string>)[definition.kind] ?? definition.name;
+}
+export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
+    const label = skillQuickLabel(row.definition), activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
+    return activation === 'toggle' && state ? `${label}${state.enabled ? '开' : '关'}` : activation === 'charge' && state?.ready ? `${label}备` : label;
 }
 export function createSkillLearnPreview(snapshot: SkillSnapshot, skillId: number): SkillLearnPreview {
     if (!snapshot.ready || !snapshot.inventory || !snapshot.roleIdentity) throw new Error('角色与背包尚未同步');
@@ -136,11 +188,18 @@ export function validateGroundTarget(row: SkillRow, entities: readonly SkillEnti
     if (Math.max(Math.abs(grid.x - player.position.x), Math.abs(grid.y - player.position.y)) > row.definition.range) throw new Error('目标超出技能射程，请重新选择地面');
     return { x: grid.x, y: grid.y };
 }
-function validateCaster(row: SkillRow, entities: readonly SkillEntity[]): SkillEntity {
+export function validateDirectionTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }): { x: number; y: number; direction: number } {
+    const player = validateCaster(row, entities);
+    if (!isDirectionalSkill(row.definition)) throw new Error('该技能无需方向瞄准');
+    if (![grid.x, grid.y].every(value => Number.isSafeInteger(value) && value >= 0) || grid.x >= bounds.width || grid.y >= bounds.height) throw new Error('方向目标超出地图边界');
+    if (grid.x === player.position.x && grid.y === player.position.y) throw new Error('请轻触角色周围选择方向');
+    return { x: grid.x, y: grid.y, direction: gridDirection(player.position, grid, player.direction) };
+}
+export function validateCaster(row: SkillRow, entities: readonly SkillEntity[], checkCost = true): SkillEntity {
     if (!row.learned) throw new Error('尚未学会该技能');
     if (!row.definition.active) throw new Error('该技能为被动技能，无需主动施放');
     const player = entities.find(entity => entity.entityKind === 1);
     if (!player || integer(player.hp) === 0n) throw new Error('角色已倒下，不能施放技能');
-    if (integer(player.mp ?? 0) < BigInt(row.cost)) throw new Error('魔法不足');
+    if (checkCost && integer(player.mp ?? 0) < BigInt(row.cost)) throw new Error('魔法不足');
     return player;
 }

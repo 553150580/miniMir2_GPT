@@ -1,0 +1,16 @@
+{
+  "version": "10.0.403",
+  "platform": "osx-x64",
+  "detected_process_machine": "x86_64",
+  "hardware_arm64_sysctl": null,
+  "source_metadata": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/10.0/releases.json",
+  "source_metadata_sha256": "8fa7ae2d46b1f94416d5458c7ed68b0c3cafc5efb8e34d89dea3a98bf0a38b33",
+  "official_download": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.403/dotnet-sdk-10.0.403-osx-x64.tar.gz",
+  "archive_sha512": "ce95d225b86d2401f111c2aa6df0f5e6855c375b7b34ab4a73df90c56f2b0fc2a44398cfe455cb689670bc8590012e943b64c7a590122af98cdc067721b12223",
+  "official_checksum_verified": true,
+  "installation": "/Users/srf/.local/share/minimir-toolchain/dotnet/10.0.403",
+  "executable": "/Users/srf/.local/share/minimir-toolchain/dotnet/10.0.403/dotnet",
+  "executable_sha256": "9a176efc73dc886b4c6a4af0992ffbe862e6143381e6d00f24858e9ffda6c212",
+  "version_output": "10.0.403",
+  "system_dotnet_replaced": false
+}

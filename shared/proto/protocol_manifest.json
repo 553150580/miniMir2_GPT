@@ -350,6 +350,54 @@
       "source_ref": "2026-10-27范围技能与战斗时序：普通攻击受理和权威命中观察，尚未正式发布"
     },
     {
+      "value": 30009,
+      "name": "MsgC2SSkillModeIntent",
+      "proto_message": "SkillModeIntent",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27战士攻击模式和方向施法开发；临时权威状态，未正式发布"
+    },
+    {
+      "value": 30010,
+      "name": "MsgS2CSkillModeState",
+      "proto_message": "SkillModeState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27战士攻击模式和方向施法开发；临时权威状态，未正式发布"
+    },
+    {
+      "value": 30011,
+      "name": "MsgC2SAttackIntent",
+      "proto_message": "AttackIntent",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27战士攻击模式和方向施法开发；临时权威状态，未正式发布"
+    },
+    {
+      "value": 30012,
+      "name": "MsgS2CCastStep",
+      "proto_message": "CastStep",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27用户审定地狱火固定四格；实际推进格观察，不重播旧步"
+    },
+    {
       "value": 40001,
       "name": "MsgC2SEquip",
       "proto_message": "EquipRequest",

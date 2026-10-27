@@ -38,7 +38,11 @@ def candidate_tables():
                      learned_level=0,max_level=3,learn_level=8,mp_base_cost=6,mp_level_cost=4,range_cells=2,
                      delay_base_ms=451,projectile_ms_per_cell=37,cooldown_base_ms=113)
         skill.update(target_kind='passive' if kind=='fencing' else 'friendly_entity' if kind=='healing' else 'enemy_entity',
-                     area_radius=0,require_line_of_sight=kind=='fireball',add_caster_level=kind=='healing',accuracy_by_level=[0,1,2,3])
+                     activation_kind='passive' if kind=='fencing' else 'cast',
+                     area_radius=0,require_line_of_sight=kind=='fireball',add_caster_level=kind=='healing',accuracy_by_level=[0,1,2,3],
+                     secondary_direction_offsets=[],secondary_distance_cells=0,secondary_impact_ms=0,charge_window_ms=0,
+                     line_cells=0,line_step_ms=0,line_stop_on_blocked=False,non_undead_divisor=1,
+                     max_attack_bonus_by_level=[0,0,0,0],ready_proc_denominator=0,ready_proc_numerators=[0,0,0,0])
         native.append(skill)
     profile['healing']={k:13 for k in first_loop.HEALING_FIELDS}
     profile['player_growth']=[{**{k:3.25 for k in first_loop.GROWTH_FIELDS},'job_id':i,'hp_base':11,'mp_base':12} for i in range(3)]
@@ -73,10 +77,10 @@ def candidate_tables():
     for r in native:
         tables['game_skills'].append(source_row(r['id'],display_name=r['name'],class_id=r['job_id'],book_item_id=r['book_item_id'],
           learn_level=r['learn_level'],native_start_level=r['learned_level'],native_max_level=r['max_level'],behavior_id=r['behavior'],cooldown_ms=r['cooldown_base_ms'],
-          target_rule={'kind':r['target_kind'],**{k:r[k] for k in ['range_cells','target_move_tolerance_cells','area_radius','require_line_of_sight','auto_priority','auto_min_targets']}},
-          cast_timing={k:r[k] for k in ['cooldown_reduction_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell']},
+          target_rule={'kind':r['target_kind'],**{k:r[k] for k in first_loop.SKILL_TARGET_FIELDS}},
+          cast_timing={k:r[k] for k in first_loop.SKILL_CAST_FIELDS},
           resource_costs={k:r[k] for k in ['mp_base_cost','mp_level_cost']},
-          damage_parameters={k:r[k] for k in ['accuracy_per_level','power_base','power_bonus','mpower_base','mpower_bonus','multiplier_base_ppm','multiplier_bonus_ppm','accuracy_by_level','healing_stat_multiplier','add_caster_level','undead_multiplier_ppm']}))
+          damage_parameters={k:r[k] for k in first_loop.SKILL_DAMAGE_FIELDS}))
         for rank in range(1,r['max_level']+1):
             tables['game_skill_upgrades'].append(source_row(r['id']*10+rank,skill_id=r['id'],level=rank,book_cost=[{'item_id':r['book_item_id'],'quantity':rank+1}],
               page_cost=13+rank,page_item_id=900001,allowed_numeric_changes={'native_rank':rank},preserve_behavior_shape=True,required_role_level=8+rank))
@@ -253,6 +257,55 @@ class PotionProjectionTests(unittest.TestCase):
         self.assertEqual(next(r for r in result['items'] if r['id']==218)['attack_speed_bonus'],0)
         tables['dev_first_loop_profile'][0]['parameters']['combat_timing']['event_capacity']=17
         self.assertEqual(result['combat_timing']['event_capacity'],13)
+
+    def test_melee_mode_and_direction_fields_travel_without_magic_clock_defaults(self):
+        tables=candidate_tables();profile=tables['dev_first_loop_profile'][0]['parameters']
+        cases=[('slaying','passive','passive_proc'),('thrusting','attack_mode','toggle'),
+               ('half_moon','attack_mode','toggle'),('flaming_sword','attack_charge','charge'),
+               ('lightning','enemy_direction','cast'),('ice_storm','enemy_grid','cast'),('thunder_storm','enemy_self','cast'),('hell_fire','enemy_direction','cast')]
+        for index,(behavior,target,activation) in enumerate(cases):
+            row=deepcopy(tables['game_skills'][1]);id=200+index;book=2000+index
+            row.update(id=id,class_id=0 if index<4 else 1,book_item_id=book,behavior_id=behavior)
+            row['target_rule'].update(kind=target,activation_kind=activation,range_cells=0 if target in ['passive','attack_mode','attack_charge','enemy_direction','enemy_self'] else 7,
+                area_radius=3 if target in ['enemy_grid','enemy_self'] else 0,line_cells=(4 if behavior=='hell_fire' else 5) if target=='enemy_direction' else 0,
+                auto_priority=0 if index<4 else 17,auto_min_targets=0 if index<4 else 3)
+            if index<4:
+                row['cooldown_ms']=0
+                for key in first_loop.SKILL_CAST_FIELDS:row['cast_timing'][key]=0
+            if activation=='toggle':row['target_rule'].update(secondary_direction_offsets=[-2,1],secondary_distance_cells=3)
+            if activation=='charge':row['cast_timing']['charge_window_ms']=4321
+            if behavior=='hell_fire':
+                row['target_rule']['line_stop_on_blocked']=True
+                row['cast_timing']['line_step_ms']=73
+            if behavior=='slaying':row['damage_parameters'].update(max_attack_bonus_by_level=[2,4,9,17],ready_proc_denominator=19,ready_proc_numerators=[1,3,5,7])
+            if behavior=='thunder_storm':row['damage_parameters']['non_undead_divisor']=7
+            tables['game_skills'].append(row);profile['skill_ids'].append(id)
+            tables['game_items'].append(source_row(book,display_name=behavior,item_type='skill_book',max_stack=1))
+            for rank in range(1,4):
+                upgrade=deepcopy(tables['game_skill_upgrades'][rank-1]);upgrade.update(id=id*10+rank,skill_id=id,book_cost=[{'item_id':book,'quantity':rank+1}]);tables['game_skill_upgrades'].append(upgrade)
+        result=fixture(tables);public=first_loop.public_gameplay(result)
+        by={r['behavior']:r for r in result['skills']};shown={r['kind']:r for r in public['skills']}
+        self.assertEqual(by['slaying']['max_attack_bonus_by_level'],[2,4,9,17])
+        self.assertFalse(shown['slaying']['active'])
+        self.assertEqual(shown['half_moon']['secondary_direction_offsets'],[-2,1])
+        self.assertEqual(shown['flaming_sword']['charge_window_ms'],4321)
+        self.assertEqual(shown['lightning']['line_cells'],5)
+        self.assertEqual(by['thunder_storm']['non_undead_divisor'],7)
+        self.assertEqual(by['thrusting']['global_spell_ms'],0)
+        self.assertEqual(shown['hell_fire']['line_cells'],4)
+        self.assertEqual(shown['hell_fire']['line_step_ms'],73)
+        self.assertEqual(len(result['initial_skill_books']),3)
+
+    def test_new_skill_fields_must_be_explicit_and_cannot_change_execution_pipeline(self):
+        baseline=candidate_tables()
+        for section,key,value in [('target_rule','activation_kind','toggle'),('target_rule','line_cells',3),
+                                  ('target_rule','secondary_direction_offsets',[0,0]),('target_rule','secondary_direction_offsets',[-7,1]),('cast_timing','charge_window_ms',100),
+                                  ('damage_parameters','non_undead_divisor',0),('damage_parameters','ready_proc_denominator',7)]:
+            rows=deepcopy(baseline);rows['game_skills'][1][section][key]=value
+            with self.subTest(key=key),self.assertRaises(ValueError):fixture(rows)
+        for section,key in [('target_rule','activation_kind'),('cast_timing','line_step_ms'),('damage_parameters','max_attack_bonus_by_level')]:
+            rows=deepcopy(baseline);rows['game_skills'][1][section].pop(key)
+            with self.subTest(missing=key),self.assertRaisesRegex(ValueError,'缺少实际执行字段'):fixture(rows)
 
 
 if __name__=='__main__':unittest.main()

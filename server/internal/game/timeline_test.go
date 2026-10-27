@@ -15,9 +15,23 @@ import (
 func stageAWorker(t *testing.T, job uint32) (*worker, *room, *capturedConnection) {
 	t.Helper()
 	w, r, c := skillWorker(t, job)
-	if len(w.e.Store.Cfg.Fixture.Skills) != 8 || !w.sourceTimeline() {
-		t.Fatal("本组需要唯一Excel导出的8技能/战斗时序候选")
+	if !w.sourceTimeline() {
+		t.Fatal("本组需要唯一Excel导出的技能/战斗时序候选")
 	}
+	for _, id := range []uint32{1, 2, 3, 4, 5, 11, 23, 29} {
+		if _, exists := w.e.Store.Cfg.Fixture.Skill(id); !exists {
+			t.Fatal("原8技能回归输入不完整")
+		}
+	}
+	// 本组隔离原8项策略；新阶段技能由各自回归显式授予，不能悄悄改变本组输入。
+	old := map[uint32]bool{1: true, 2: true, 3: true, 4: true, 5: true, 11: true, 23: true, 29: true}
+	learned := r.Role.Skills[:0]
+	for _, s := range r.Role.Skills {
+		if old[s.SkillID] {
+			learned = append(learned, s)
+		}
+	}
+	r.Role.Skills = learned
 	r.Role.Level = 31
 	w.refreshPlayerStats(r)
 	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP

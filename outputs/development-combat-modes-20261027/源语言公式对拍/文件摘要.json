@@ -1,0 +1,34 @@
+[
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/SourceFormula.cs",
+    "sha256": "67b880a14f133962252cdd6794e4a6f10a20dd9b981e2e2f6766f2be759498aa"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/csharp-results.jsonl.gz",
+    "sha256": "12a7ac8193b8f6dc43cda98eebf28b0f319a69a5a9874bf732354521d5a46c64"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/dotnet-releases10.0.json",
+    "sha256": "8fa7ae2d46b1f94416d5458c7ed68b0c3cafc5efb8e34d89dea3a98bf0a38b33"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/execution.log",
+    "sha256": "d112e8519a0c36b30da5120e6bd2d4cb470343d2537679726203adf17d9bc56b"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/ppm-differences.json.gz",
+    "sha256": "bf1fd4d7abf9572cd5b1944fd5d352c26075a928c94d11e62095eaedd01b079e"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/report.json",
+    "sha256": "f3794f1f779ac9464c08afb8483925bd4678f013542ef8a6e097b60ceb0ebeb9"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/requests.json.gz",
+    "sha256": "39735b14845928145a7f61be23e06a1620550e0241b49b47ca4339382533d146"
+  },
+  {
+    "path": "outputs/development-combat-modes-20261027/源语言公式对拍/vectors.json.gz",
+    "sha256": "f79409b2afdc8dcb775b5f88dc5a33247cca1f78d4d849ca33fcc7adc2355a44"
+  }
+]

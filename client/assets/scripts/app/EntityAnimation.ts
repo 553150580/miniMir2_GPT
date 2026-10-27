@@ -16,6 +16,7 @@ export class EntityAnimation {
     private direction = 4;
     private pendingAttack = false;
     private pendingAttackDirection = 4;
+    private playingAttackSequence = 0;
     private pendingHurt = false;
     private action: EntityAction = 'standing';
     private started = 0;
@@ -28,6 +29,7 @@ export class EntityAnimation {
         if (this.dead || sequence === this.attackSequence) return;
         this.attackSequence = sequence; this.pendingAttack = true; this.pendingAttackDirection = direction;
     }
+    get currentAttackSequence(): number { return this.playingAttackSequence; }
 
     get playbackUntil(): number {
         const definition = this.definitions[this.action];
@@ -103,7 +105,10 @@ export class EntityAnimation {
             frame: Math.min(definition.count - 1, Math.floor(Math.max(0, motion.stepProgress) * definition.count)) };
     }
 
-    private begin(action: EntityAction, now: number, direction = this.direction): void { this.action = action; this.started = now; this.actionDirection = direction; }
+    private begin(action: EntityAction, now: number, direction = this.direction): void {
+        this.action = action; this.started = now; this.actionDirection = direction;
+        if (action === 'attack') this.playingAttackSequence = this.attackSequence;
+    }
     private frame(action: EntityAction, elapsed: number, direction: number, loop: boolean): AnimationSample {
         const definition = this.definitions[action]!;
         const index = Math.max(0, Math.floor(elapsed / definition.duration_ms));

@@ -128,7 +128,7 @@
     "seconds": 116.84,
     "exit_code": 36,
     "source_stable_during_build": true,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "saved_scene_prefab_count": 7,
     "build_did_not_overwrite_saved_layouts": true,
     "intentional_layout_changes": "保存快捷按钮、瞄准提示/取消及地图目标Sprite；技能学习/施放按钮缩窄让出第三入口。原HUD尺寸/位置不改。",
@@ -150,7 +150,7 @@
     "race": true,
     "passed_test_records": 96,
     "skipped": 0,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "covered": [
       "550ms动作门槛、300ms人类命中、等级攻速和独立视觉时钟",
       "ActorRef及原出生代次、统一Due/受理次序、防旧目标和旧瞬时重放",
@@ -332,5 +332,6 @@
     "攻杀/刺杀/半月/烈火、直线与其它范围，永久符粉消耗/Buff/毒/火墙，召唤/诱惑/控制/位移",
     "完整装备/幸运/元素、正式渠道与经济平衡、自然升级可达性",
     "双市场/权益仓库/挑战养成任务等其它P0、手机真机、容量与真实网络提交未知故障注入"
-  ]
+  ],
+  "historical_scope_notice": "8831c5c阶段的8技能记录；本阶段源码已推进，历史构建/集成归档保持原样，当前见战士攻击模式与方向技能阶段验收.json"
 }

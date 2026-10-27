@@ -1,5 +1,11 @@
 import { Asset, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 
+export function effectFrameKeys(value: any): string[] {
+    if (!value || typeof value !== 'object') return [];
+    if (Array.isArray(value)) return value.flatMap(part => typeof part === 'string' && /^[A-Za-z0-9]+:\d+$/.test(part) ? [part] : effectFrameKeys(part));
+    return Object.values(value).flatMap(effectFrameKeys);
+}
+
 function load<T extends Asset>(path: string, type: any): Promise<T> {
     return new Promise((resolve, reject) => resources.load(path, type, (error, value) => error ? reject(error) : resolve(value as T)));
 }
@@ -49,16 +55,12 @@ export class WorldAssets {
                 }
             }
             for (const skill of result.gameplay.skills ?? []) {
-                if (skill.job_id !== job || !skill.active) continue;
+                if (skill.job_id !== job || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
                 const effect = result.manifest.effects?.[String(skill.id)];
                 if (!effect) throw new Error(`缺少技能表现资源：${skill.id}`);
-                for (const part of Object.values(effect) as any[]) {
-                    if (!part || typeof part !== 'object') continue;
-                    const effectKeys = part.frames ?? (part.directions ? part.directions.flat() : []);
-                    for (const key of effectKeys) {
-                        if (!result.manifest.frames[key]) throw new Error(`缺少技能帧定义：${key}`);
-                        if (!result.manifest.frames[key].declared_empty) keys.add(key);
-                    }
+                for (const key of effectFrameKeys(effect)) {
+                    if (!result.manifest.frames[key]) throw new Error(`缺少技能帧定义：${key}`);
+                    if (!result.manifest.frames[key].declared_empty) keys.add(key);
                 }
             }
             const pending = Array.from(keys);

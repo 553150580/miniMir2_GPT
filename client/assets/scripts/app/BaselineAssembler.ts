@@ -21,13 +21,15 @@ export class BaselineAssembler {
         if (this.chunks.size !== this.expected) return null;
         const entities: any[] = [];
         const handles = new Set<number>();
+        let skillModeState: any = null;
         for (let index = 0; index < this.expected; index++) {
+            skillModeState ??= this.chunks.get(index).skillModeState;
             for (const entity of this.chunks.get(index).entities) {
                 if (!Number.isInteger(entity.entityHandle) || entity.entityHandle < 1 || handles.has(entity.entityHandle)) throw new Error('基线实体句柄无效或重复');
                 handles.add(entity.entityHandle); entities.push(entity);
                 if (entities.length > 2048) throw new Error('场景基线实体总数越界');
             }
         }
-        return { ...chunk, entities };
+        return { ...chunk, entities, skillModeState };
     }
 }

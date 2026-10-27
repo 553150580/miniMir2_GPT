@@ -34,7 +34,7 @@ function app(){
     const instance=new AppRoot(),saved={active:false,getComponent:()=>({string:''})};
     instance.world={gameplay:{skills:definitions,items:[]},map:{width:16,height:16},showAim:value=>shown.push(value)};instance.ui={top:null};instance.find=()=>saved;instance.error=error=>{throw error;};
     const row=id=>models.skillRows(instance.skillSnapshot()).find(row=>row.definition.id===id);
-    return {instance,session,sent,shown,row};
+    return {instance,session,sent,shown,row,definitions,definition};
 }
 test('真实AppRoot可以施放列表第二主动技能，不再强制第一个技能，快捷选择按角色隔离',()=>{
     const {instance,session,sent,row}=app();instance.castSkill(row(11));assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,11);assert.equal(sent[0].value.targetHandle,3);
@@ -64,4 +64,33 @@ test('真实世界坐标转换：普通导航拒绝阻挡中心，瞄准允许�
     world.map={width:4,height:4,cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
     const point=world.grid(1,1);assert.equal(world.screenToGrid(point),null);assert.deepEqual(world.screenToGrid(point,false),{x:1,y:1});
     const outside=world.grid(4,1);assert.equal(world.screenToGrid(outside),null);assert.equal(world.screenToGrid(outside,false),null);
+});
+test('真实AppRoot方向瞄准不选替代怪、不限制点击到近端、拒绝原地，原地雷光直接提交且导航保持',()=>{
+    const {instance,session,sent,row,definitions,definition}=app(),errors=[];
+    definitions.push({...definition(10,'lightning','enemy_direction'),activation_kind:'cast'}, {...definition(24,'thunder_storm','enemy_self'),activation_kind:'cast'});
+    session.inventory.learnedSkills.push({skillId:10,level:0},{skillId:24,level:0});instance.error=error=>errors.push(error.message);
+    instance.nav.setGroundTarget({x:9,y:8});instance.castSkill(row(10));assert.equal(sent.length,0);
+    instance.consumeGround({x:2,y:2});assert.match(errors[0],/选择方向/);assert(instance.aim);assert.equal(sent.length,0);
+    instance.consumeGround({x:15,y:2});assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,10);assert.equal(sent[0].value.direction,2);assert.equal(sent[0].value.targetHandle,0);
+    assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+    instance.castSkill(row(24));assert.equal(sent.length,2);assert.equal(sent[1].value.skillId,24);assert.equal(sent[1].value.targetHandle,0);assert.deepEqual(sent[1].value.targetGrid,{x:2,y:2});
+    assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+});
+test('真实AppRoot模式与烈火走专用请求，关闭不扣本地魔法，未确认不翻状态、错误出生代次不提交',()=>{
+    const {instance,session,sent,row,definitions,definition}=app();
+    definitions.push({...definition(12,'thrusting','attack_mode'),activation_kind:'toggle'}, {...definition(26,'flaming_sword','attack_charge'),activation_kind:'charge'});
+    session.inventory.learnedSkills.push({skillId:12,level:0},{skillId:26,level:0});
+    const player=session.baseline.entities[0];player.life='0';player.mp='0';
+    session.skillModes={sceneEpoch:'1',revision:'1',playerLife:'0',serverTimeUnixMs:'1900000000000',states:[{skillId:12,enabled:true,ready:false,remainingMs:0,cooldownRemainingMs:0},{skillId:26,enabled:false,ready:false,remainingMs:0,cooldownRemainingMs:0}]};
+    instance.nav.setGroundTarget({x:9,y:8});instance.castSkill(row(12));assert.equal(sent[0].id,30009);assert.equal(sent[0].value.enabled,false);
+    assert.equal(session.skillModes.states[0].enabled,true);assert.equal(player.mp,'0');assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+    player.mp='100';instance.castSkill(row(26));assert.equal(sent[1].id,30009);assert.equal(sent[1].value.skillId,26);assert.equal(sent[1].value.enabled,true);
+    assert.equal(session.skillModes.states[1].ready,false);
+    session.skillModes.states[1].ready=true;assert.throws(()=>instance.castSkill(row(26)),/已就绪/);assert.equal(sent.length,2);
+    player.life='1';assert.throws(()=>instance.castSkill(row(12)),/尚未同步/);assert.equal(sent.length,2);
+});
+test('真实AppRoot普通攻击只发送朝向AttackIntent，空挥同样可操作且不造Cast或清导航',async()=>{
+    const {instance,session,sent}=app();for(const entity of session.baseline.entities)entity.hp={isZero:()=>false,toString:()=> '100'};
+    instance.nav.setGroundTarget({x:9,y:8});await instance.basicAttack();assert.equal(sent[0].id,30011);assert.equal(sent[0].value.skillId,0);assert.equal(sent[0].value.direction,3);
+    session.baseline.entities.splice(1);await instance.basicAttack();assert.equal(sent[1].id,30011);assert.equal(sent[1].value.direction,4);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
 });

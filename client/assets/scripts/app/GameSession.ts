@@ -5,7 +5,8 @@ import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
-import type { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
+import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
+import { acceptsSkillModeState, SkillModeState } from './SkillModel';
 const assembler = new BaselineAssembler();
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
@@ -19,6 +20,8 @@ export const session = {
     inventory: null as any,
     wallet: null as any,
     hosting: null as any,
+    skillModes: null as SkillModeState | null,
+    skillModesReceivedAt: 0,
     report: null as any,
     death: null as any,
     ready: false,
@@ -30,6 +33,7 @@ export const session = {
     casts: new Set<(event: CastEvent) => void>(),
     attacks: new Set<(event: AttackEvent) => void>(),
     impacts: new Set<(event: ImpactEvent) => void>(),
+    castSteps: new Set<(event: CastStepEvent) => void>(),
     quickSkills: new Map<string, number>(),
 };
 session.connection.subscribe((packet: Packet) => {
@@ -37,12 +41,15 @@ session.connection.subscribe((packet: Packet) => {
     else switch (packet.id) {
         case 20002:
             assembler.reset(); session.entry = packet.value; session.baseline = null; session.ready = false;
-            session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null;
+            session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
             session.command = packet.value.nextEconomicCommandSeq ?? Long.UONE; break;
         case 5:
             if (session.entry) {
                 const complete = assembler.accept(packet.value, session.entry.sceneEpoch, session.entry.baselineId);
-                if (complete && (!session.baseline || complete.stateSequence.greaterThan(session.baseline.stateSequence))) session.baseline = complete;
+                if (complete && (!session.baseline || complete.stateSequence.greaterThan(session.baseline.stateSequence))) {
+                    session.baseline = complete;
+                    if (complete.skillModeState) acceptModes(complete.skillModeState);
+                }
             }
             break;
         case 6:
@@ -53,6 +60,7 @@ session.connection.subscribe((packet: Packet) => {
         case 40003: session.inventory = packet.value; break;
         case 40004: session.wallet = packet.value; break;
         case 30005: session.hosting = packet.value; break;
+        case 30010: acceptModes(packet.value); break;
         case 30001: session.death = packet.value; break;
         case 30006:
             if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
@@ -69,6 +77,11 @@ session.connection.subscribe((packet: Packet) => {
                 for (const listener of Array.from(session.impacts)) listener(packet.value);
             }
             break;
+        case 30012:
+            if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
+                for (const listener of Array.from(session.castSteps)) listener(packet.value);
+            }
+            break;
         case 40008: session.report = packet.value; break;
         case 40005: if (!packet.value.pending) session.command = packet.value.commandSeq.add(1); break;
     }
@@ -77,6 +90,11 @@ session.connection.subscribe((packet: Packet) => {
 session.connection.onStatus(message => { session.lastError = message; session.ready = false; notify(); });
 
 function notify(): void { for (const update of Array.from(session.update)) { try { update(); } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); } } }
+function acceptModes(value: SkillModeState): void {
+    if (session.entry && acceptsSkillModeState(session.skillModes, value, session.entry.sceneEpoch)) {
+        session.skillModes = value; session.skillModesReceivedAt = Date.now();
+    }
+}
 
 export function roleIdentity(): string {
     if (!session.role) throw new Error('尚未选择角色');

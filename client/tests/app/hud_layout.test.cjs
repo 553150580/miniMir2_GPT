@@ -33,6 +33,15 @@ function component(node, type) {
 const transform = node => component(node, 'cc.UITransform');
 const children = node => (node._children ?? []).map(reference => scene[reference.__id__]);
 function descendants(node) { return children(node).flatMap(child => [child, ...descendants(child)]); }
+test('战士模式开关保存为原生Toggle，与施放按钮共用位置，原963对象仅允许追加子引用',()=>{
+    const toggle=node('UIMgr/Panels/Skills/ModeToggle'),use=node('UIMgr/Panels/Skills/Use');
+    assert.deepEqual(toggle._lpos,use._lpos);assert.deepEqual(transform(toggle)._contentSize,transform(use)._contentSize);
+    const value=component(toggle,'cc.Toggle');assert.equal(value._isChecked,false);assert.equal(toggle._active,false);
+    assert.equal(scene[value._checkMark.__id__].__type__,'cc.Sprite');assert.equal(component(node('UIMgr/Panels/Skills/ModeToggle/Label'),'cc.Label')._fontSize,24);
+    const before=scene.slice(0,963).map(row=>{const value=structuredClone(row);if(value._children)value._children=value._children.filter(ref=>ref.__id__<963);return value;});
+    const hash=require('node:crypto').createHash('sha256').update(JSON.stringify(before)).digest('hex');
+    assert.equal(hash,'a8fdb9fbcd23b9b88f7efad739104b5ffbb6be6be46cc120d960b6693fc30ead');assert.equal(scene.length,973);
+});
 function compressedUuid(uuid) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     const hex = uuid.replace(/-/g, '');

@@ -76,8 +76,10 @@ test('服务器报价必须完整对应所选实例、消耗量和来源，不�
 test('滚动报价列出四钱包、逐技能数值、原材料绑定来源和产物，基础威力不冒充总伤害',()=>{
     const input=snapshot(),preview=quote(input);preview.spend={...preview.spend,gold:'200',boundGold:'300',yuanbaoUnits:'50',boundYuanbaoUnits:'100'};
     preview.outputs=[{...input.inventory.items[2],quantity:'5',bound:false,sourceKind:'skill_recycle'}];
+    preview.stats.push({key:'max_attack_bonus',beforeMin:'5',beforeMax:'5',afterMin:'6',afterMax:'6'});
     const text=skillQuoteLines(preview,input.definitions).join('\n');
     for(const expression of [/金币支出 200/,/绑定金币支出 300/,/元宝支出 5\.0/,/绑定元宝支出 10\.0/,/技能等级 0 → 1/,/技能基础威力\n当前下限 2\n当前上限 3\n下一阶下限 3\n下一阶上限 5/,/准确加成\n当前值 0\n下一阶 3/,/非绑定 · 怪物掉落/,/绑定 · NPC书店/,/非绑定 · 拆书所得/])assert.match(text,expression);
     assert.doesNotMatch(text,/预计伤害|总伤害|总治疗/);assert.equal(yuanbaoText('9007199254740993'),'900719925474099.3');
+    assert.match(text,/攻击上限加成\n当前值 5\n下一阶 6/);
     assert.equal(assetId(input.inventory.items[0].instanceId),'01'.repeat(16));
 });

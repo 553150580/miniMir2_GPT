@@ -64,3 +64,18 @@ test('普通Button仍默认CLICK，清理按注册事件类型移除',()=>{
     toggle.node.emit(Button.EventType.CLICK);assert.equal(clicks,1);
     root.onDestroy();toggle.node.emit(Button.EventType.CLICK);assert.equal(clicks,1);
 });
+test('真实技能模式Toggle绑定只发送一次最终勾选，发送与拒绝前保持权威值，状态回推不反向发送',()=>{
+    for(const restart of [false,true]){
+        const {root,toggle}=setup(),submitted=[],selected={definition:{id:12}},register=root.button.bind(root);let authoritative=true;
+        root.skills={selected};root.castSkill=(skill,enabled)=>submitted.push({skill,enabled});
+        root.refreshGame=()=>toggle.setIsCheckedWithoutNotify(authoritative);
+        root.button=(path,action,eventType)=>{if(path==='UIMgr/Panels/Skills/ModeToggle')register(path,action,eventType);};
+        root.bindGameButtons();if(restart){toggle.onDisable();toggle.onEnable();}
+        toggle.node.emit(Button.EventType.CLICK);assert.deepEqual(submitted,[{skill:selected,enabled:false}]);assert.equal(toggle.isChecked,true);
+        root.refreshGame();assert.equal(submitted.length,1);assert.equal(toggle.isChecked,true);
+        authoritative=false;root.refreshGame();assert.equal(toggle.isChecked,false);assert.equal(submitted.length,1);
+        root.uiActionBusy=true;toggle.node.emit(Button.EventType.CLICK);assert.equal(submitted.length,1);assert.equal(toggle.isChecked,false);
+        root.uiActionBusy=false;toggle.node.emit(Button.EventType.CLICK);assert.equal(submitted.length,2);assert.equal(submitted[1].enabled,true);assert.equal(toggle.isChecked,false);
+        root.onDestroy();
+    }
+});

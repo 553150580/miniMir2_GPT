@@ -150,8 +150,9 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 			a.MagicDefenceMax += def.MagicDefenceMaxBonus
 		}
 		for _, skill := range f.Skills {
-			if level, learned := r.Role.Skill(skill.ID); learned && (skill.Behavior == "fencing" || skill.Behavior == "spirit_sword") && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
+			if level, learned := r.Role.Skill(skill.ID); learned && (skill.Behavior == "fencing" || skill.Behavior == "spirit_sword" || skill.Behavior == "slaying") && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
 				a.Accuracy += skill.AccuracyBonus(level)
+				a.AttackMax += skill.MaximumAttackBonus(level)
 			}
 		}
 		if w.sourceTimeline() {
@@ -174,6 +175,17 @@ func (w *worker) nearest(r *room, from *entity) *entity {
 	return best
 }
 func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...uint32) {
+	if from.Kind == 1 && w.sourceTimeline() {
+		if target == nil || target.HP <= 0 || distance(from.Pos, target.Pos) > 1 {
+			return
+		}
+		sequence := uint32(0)
+		if len(input) > 0 {
+			sequence = input[0]
+		}
+		w.attackFacing(r, facing(from.Pos, target.Pos, from.Direction), 0, sequence, now)
+		return
+	}
 	if r.Pending || from.HP <= 0 || target.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.NextMove) || now.Before(from.ActionReadyAt) || distance(from.Pos, target.Pos) > 1 {
 		return
 	}
@@ -182,29 +194,6 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 		return
 	}
 	a, b := w.fighter(r, from), w.fighter(r, target)
-	if from.Kind == 1 && w.sourceTimeline() {
-		if len(r.Attacks)+len(r.Casts) >= w.e.Store.Cfg.Fixture.CombatTiming.EventCapacity || !w.killBudgetAvailable(r) {
-			return
-		}
-		from.AttackSequence++
-		r.ScheduleID++
-		from.NextAttack = now.Add(time.Duration(a.AttackMS) * time.Millisecond)
-		from.ActionReadyAt = now.Add(time.Duration(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackActionMS) * time.Millisecond)
-		from.Action = 2
-		from.ActionUntil = now.Add(200 * time.Millisecond)
-		from.Direction = facing(from.Pos, target.Pos, from.Direction)
-		r.Attacks = append(r.Attacks, pendingAttack{Caster: reference(r, from), Target: reference(r, target), Due: now.Add(time.Duration(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS) * time.Millisecond), Amount: w.interval(a.AttackMin, a.AttackMax), Sequence: from.AttackSequence, Order: r.ScheduleID, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true})
-		if r.Conn == nil {
-			r.Attacks[len(r.Attacks)-1].HostSession = r.HostSession
-		}
-		sequence := uint32(0)
-		if len(input) > 0 {
-			sequence = input[0]
-		}
-		w.send(r, p.MsgS2CAttackAccepted, 0, &pb.AttackAccepted{SceneEpoch: r.Scene, EventId: w.nextEvent(r), CasterHandle: from.Handle, TargetHandle: target.Handle, Origin: pointPB(from.Pos), TargetGrid: pointPB(target.Pos), Direction: from.Direction, DelayMs: uint32(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS), AttackSequence: from.AttackSequence, InputSequence: sequence})
-		w.snapshot(r)
-		return
-	}
 	damage := w.physicalDamage(r, from, target)
 	if w.e.Store.Cfg.Fixture.DamageFormula != "development_source_combat" {
 		damage = w.interval(a.AttackMin, a.AttackMax) - b.Defence
@@ -295,6 +284,7 @@ func (w *worker) step(r *room, now time.Time) {
 		}
 		return
 	}
+	w.expireModes(r, now)
 	w.flushKillFacts(r)
 	if r.Pending || len(r.KillFacts) > 0 {
 		return

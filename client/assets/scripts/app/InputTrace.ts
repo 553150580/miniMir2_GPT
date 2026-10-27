@@ -10,7 +10,10 @@ export function inputTraceMessage(direction: 'send' | 'receive', id: number, seq
     const row: InputTraceRecord = { event: direction, message_id: id, packet_seq: sequence };
     const field = (name: string, source: unknown): void => { const number = uint(source); if (number !== undefined) row[name] = number; };
     if (direction === 'send') {
-        if (id === 30003) { field('skill_id', value?.skillId); field('input_sequence', value?.inputSequence); }
+        if (id === 30003 || id === 30009 || id === 30011) {
+            field('skill_id', value?.skillId); field('input_sequence', value?.inputSequence); field('direction', value?.direction);
+            if (id === 30009 && typeof value?.enabled === 'boolean') row.enabled = value.enabled;
+        }
         else if (id === 30004) { if (typeof value?.enabled === 'boolean') row.enabled = value.enabled; }
         else if (id === 40009) field('item_id', value?.itemId);
         else if (id === 40010) field('skill_id', value?.skillId);
@@ -19,6 +22,10 @@ export function inputTraceMessage(direction: 'send' | 'receive', id: number, seq
         if (id === 30005) { if (typeof value?.autoBattleEnabled === 'boolean') row.enabled = value.autoBattleEnabled; }
         else if (id === 30006) {
             field('skill_id', value?.skillId); field('input_sequence', value?.inputSequence);
+            const cast = value?.castId?.toString();
+            if (typeof cast === 'string' && /^(?:0|[1-9]\d{0,19})$/.test(cast)) row.cast_id = cast;
+        } else if (id === 30012) {
+            field('skill_id', value?.skillId); field('step_index', value?.stepIndex);
             const cast = value?.castId?.toString();
             if (typeof cast === 'string' && /^(?:0|[1-9]\d{0,19})$/.test(cast)) row.cast_id = cast;
         } else if (id === 30007 || id === 30008) {

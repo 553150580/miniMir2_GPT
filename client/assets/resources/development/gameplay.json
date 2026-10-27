@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 5,
+  "rule_version": 6,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -15,6 +15,7 @@
       "max_level": 3,
       "kind": "fireball",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": true,
@@ -33,6 +34,17 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -46,6 +58,7 @@
       "max_level": 3,
       "kind": "healing",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "friendly_entity",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -64,6 +77,17 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -77,6 +101,7 @@
       "max_level": 3,
       "kind": "fencing",
       "active": false,
+      "activation_kind": "passive",
       "target_kind": "passive",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -95,6 +120,17 @@
         6,
         9
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -108,6 +144,7 @@
       "max_level": 3,
       "kind": "spirit_sword",
       "active": false,
+      "activation_kind": "passive",
       "target_kind": "passive",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -126,6 +163,17 @@
         5,
         8
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -139,6 +187,7 @@
       "max_level": 3,
       "kind": "great_fireball",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": true,
@@ -157,6 +206,17 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -170,6 +230,7 @@
       "max_level": 3,
       "kind": "thunderbolt",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "enemy_entity",
       "area_radius": 0,
       "require_line_of_sight": false,
@@ -188,6 +249,17 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -201,6 +273,7 @@
       "max_level": 3,
       "kind": "firebang",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "enemy_grid",
       "area_radius": 1,
       "require_line_of_sight": false,
@@ -219,6 +292,17 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     },
@@ -232,6 +316,7 @@
       "max_level": 3,
       "kind": "mass_healing",
       "active": true,
+      "activation_kind": "cast",
       "target_kind": "friendly_grid",
       "area_radius": 1,
       "require_line_of_sight": false,
@@ -250,6 +335,367 @@
         0,
         0
       ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 7,
+      "name": "攻杀剑术",
+      "job_id": 0,
+      "book_item_id": 2,
+      "learn_level": 15,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "slaying",
+      "active": false,
+      "activation_kind": "passive_proc",
+      "target_kind": "passive",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 0,
+      "level_cost": 0,
+      "cast_ms": 0,
+      "delay_base_ms": 0,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 1,
+      "accuracy_by_level": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "max_attack_bonus_by_level": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 12,
+      "name": "刺杀剑术",
+      "job_id": 0,
+      "book_item_id": 3,
+      "learn_level": 22,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "thrusting",
+      "active": true,
+      "activation_kind": "toggle",
+      "target_kind": "attack_mode",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 0,
+      "level_cost": 0,
+      "cast_ms": 0,
+      "delay_base_ms": 0,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [
+        0
+      ],
+      "secondary_distance_cells": 2,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 25,
+      "name": "半月弯刀",
+      "job_id": 0,
+      "book_item_id": 4,
+      "learn_level": 26,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "half_moon",
+      "active": true,
+      "activation_kind": "toggle",
+      "target_kind": "attack_mode",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 3,
+      "level_cost": 0,
+      "cast_ms": 0,
+      "delay_base_ms": 0,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [
+        -1,
+        1,
+        2
+      ],
+      "secondary_distance_cells": 1,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 26,
+      "name": "烈火剑法",
+      "job_id": 0,
+      "book_item_id": 6,
+      "learn_level": 35,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "flaming_sword",
+      "active": true,
+      "activation_kind": "charge",
+      "target_kind": "attack_charge",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 7,
+      "level_cost": 0,
+      "cast_ms": 0,
+      "delay_base_ms": 0,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 10000,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 10,
+      "name": "疾光电影",
+      "job_id": 1,
+      "book_item_id": 16,
+      "learn_level": 26,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "lightning",
+      "active": true,
+      "activation_kind": "cast",
+      "target_kind": "enemy_direction",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 38,
+      "level_cost": 7,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 6,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 33,
+      "name": "冰咆哮",
+      "job_id": 1,
+      "book_item_id": 20,
+      "learn_level": 35,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "ice_storm",
+      "active": true,
+      "activation_kind": "cast",
+      "target_kind": "enemy_grid",
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "range": 9,
+      "base_cost": 33,
+      "level_cost": 3,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 24,
+      "name": "地狱雷光",
+      "job_id": 1,
+      "book_item_id": 17,
+      "learn_level": 30,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "thunder_storm",
+      "active": true,
+      "activation_kind": "cast",
+      "target_kind": "enemy_self",
+      "area_radius": 2,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 29,
+      "level_cost": 9,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false
+    },
+    {
+      "id": 9,
+      "name": "地狱火",
+      "job_id": 1,
+      "book_item_id": 10,
+      "learn_level": 16,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "hell_fire",
+      "active": true,
+      "activation_kind": "cast",
+      "target_kind": "enemy_direction",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 10,
+      "level_cost": 3,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 4,
+      "line_step_ms": 100,
+      "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
     }
@@ -566,6 +1012,318 @@
       ],
       "page_item_id": 900001,
       "page_cost": 20
+    },
+    {
+      "skill_id": 7,
+      "level": 1,
+      "required_role_level": 15,
+      "book_costs": [
+        {
+          "item_id": 2,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 7,
+      "level": 2,
+      "required_role_level": 17,
+      "book_costs": [
+        {
+          "item_id": 2,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 7,
+      "level": 3,
+      "required_role_level": 20,
+      "book_costs": [
+        {
+          "item_id": 2,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 12,
+      "level": 1,
+      "required_role_level": 22,
+      "book_costs": [
+        {
+          "item_id": 3,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 12,
+      "level": 2,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 3,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 12,
+      "level": 3,
+      "required_role_level": 27,
+      "book_costs": [
+        {
+          "item_id": 3,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 25,
+      "level": 1,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 4,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 25,
+      "level": 2,
+      "required_role_level": 28,
+      "book_costs": [
+        {
+          "item_id": 4,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 25,
+      "level": 3,
+      "required_role_level": 31,
+      "book_costs": [
+        {
+          "item_id": 4,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 26,
+      "level": 1,
+      "required_role_level": 35,
+      "book_costs": [
+        {
+          "item_id": 6,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 26,
+      "level": 2,
+      "required_role_level": 37,
+      "book_costs": [
+        {
+          "item_id": 6,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 26,
+      "level": 3,
+      "required_role_level": 40,
+      "book_costs": [
+        {
+          "item_id": 6,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 10,
+      "level": 1,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 16,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 10,
+      "level": 2,
+      "required_role_level": 29,
+      "book_costs": [
+        {
+          "item_id": 16,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 10,
+      "level": 3,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 16,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 33,
+      "level": 1,
+      "required_role_level": 35,
+      "book_costs": [
+        {
+          "item_id": 20,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 33,
+      "level": 2,
+      "required_role_level": 37,
+      "book_costs": [
+        {
+          "item_id": 20,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 33,
+      "level": 3,
+      "required_role_level": 40,
+      "book_costs": [
+        {
+          "item_id": 20,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 24,
+      "level": 1,
+      "required_role_level": 30,
+      "book_costs": [
+        {
+          "item_id": 17,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 24,
+      "level": 2,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 17,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 24,
+      "level": 3,
+      "required_role_level": 34,
+      "book_costs": [
+        {
+          "item_id": 17,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 9,
+      "level": 1,
+      "required_role_level": 16,
+      "book_costs": [
+        {
+          "item_id": 10,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 9,
+      "level": 2,
+      "required_role_level": 20,
+      "book_costs": [
+        {
+          "item_id": 10,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 9,
+      "level": 3,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 10,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
     }
   ],
   "skill_book_recycle": [
@@ -856,6 +1614,294 @@
       "allowed_source_kinds": [
         "monster_drop"
       ]
+    },
+    {
+      "item_id": 2,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 2,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 2,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 2,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 3,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 3,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 3,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 3,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 4,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 4,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 4,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 4,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 6,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 6,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 6,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 6,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 16,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 16,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 16,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 16,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 20,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 20,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 20,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 20,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 17,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 17,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 17,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 17,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 10,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 10,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 10,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 10,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
     }
   ],
   "shop_offers": [
@@ -974,6 +2020,102 @@
       "quantity": 1,
       "currency_kind": "gold",
       "price_units": 15000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 14,
+      "item_id": 2,
+      "name": "《攻杀剑术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 2000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 15,
+      "item_id": 3,
+      "name": "《刺杀剑术》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 5000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 16,
+      "item_id": 4,
+      "name": "《半月弯刀》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 8000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 17,
+      "item_id": 6,
+      "name": "《烈火剑法》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 20000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 18,
+      "item_id": 16,
+      "name": "《疾光电影》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 5000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 19,
+      "item_id": 20,
+      "name": "《冰咆哮》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 20000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 20,
+      "item_id": 17,
+      "name": "《地狱雷光》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 12000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 21,
+      "item_id": 10,
+      "name": "《地狱火》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 1200,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32,
@@ -1124,6 +2266,86 @@
       ],
       "use_enabled": false,
       "skill_id": 29
+    },
+    {
+      "item_id": 2,
+      "name": "《攻杀剑术》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 7
+    },
+    {
+      "item_id": 3,
+      "name": "《刺杀剑术》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 12
+    },
+    {
+      "item_id": 4,
+      "name": "《半月弯刀》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 25
+    },
+    {
+      "item_id": 6,
+      "name": "《烈火剑法》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 26
+    },
+    {
+      "item_id": 16,
+      "name": "《疾光电影》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 10
+    },
+    {
+      "item_id": 20,
+      "name": "《冰咆哮》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 33
+    },
+    {
+      "item_id": 17,
+      "name": "《地狱雷光》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 24
+    },
+    {
+      "item_id": 10,
+      "name": "《地狱火》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 9
     },
     {
       "item_id": 900001,

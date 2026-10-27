@@ -610,12 +610,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "常驻准确和MaxDC按已学rank生效；攻杀为下一次攻击准备，被动准备不走法术CD。",
+        "已受理空挥也可准备，消费后可再次准备；不猜测额外暴击倍率。"
+      ]
     },
     {
       "candidate_key": "myf_magic_8",
@@ -710,12 +719,29 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "用户已审定本作rank0–3均为固定正前单线4格；Crystal rank3左右射线明确不采用，不能标成源形状全等。",
+        "首格500ms，后格以实际处理时钟+100ms创建；无效格终止，同对象进入下一格可再次被命中。",
+        "30012 CastStep仅观察实际处理有效格；源客户端50ms视觉排程不作为业务100ms依据，也不用于客户端预排后格。"
+      ],
+      "project_adaptation": {
+        "status": "user_confirmed",
+        "scope": "本作地狱火形状与权威逐格表现",
+        "all_ranks": "固定正前单线4格",
+        "source_rank3_side_lines_adopted": false,
+        "target_180_shape_equivalence_verified": false
+      }
     },
     {
       "candidate_key": "myf_magic_10",
@@ -760,12 +786,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "固定受理原点与八方向，前6格在500ms后处理；无效格跳过继续，每格取首个合法目标。",
+        "方向梁使用源原像素与偏移，身体施法帧结束后播放，不随施法者后续位置移动。"
+      ]
     },
     {
       "candidate_key": "myf_magic_11",
@@ -884,12 +919,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "原生Toggle管理持续模式；前格普通DC/AC/Agility在300ms后处理，第2格仅Agility即时处理。",
+        "前格为空不阻止远格；健康重连恢复内存模式，不补播旧刀光。"
+      ]
     },
     {
       "candidate_key": "myf_magic_13",
@@ -1508,12 +1552,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "原施放点周围5×5，500ms后查询当前合法目标；非亡灵先整数除10，再走魔御与抵抗。",
+        "整次施放只播放一次原点效果，不按受影响目标重复。"
+      ]
     },
     {
       "candidate_key": "myf_magic_25",
@@ -1562,12 +1615,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "原生Toggle管理持续模式；前格普通攻击300ms，旁格为方向−1、+1、+2并即时处理，总共4格。",
+        "不能替换成对称三格扇形；旁格共享一次技能DC值，分别检查Agility。"
+      ]
     },
     {
       "candidate_key": "myf_magic_26",
@@ -1614,12 +1676,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "主动充能要求MP严格大于7并扣7，原10秒截止兼再充冷却；合法前格才消费，空挥不消费。",
+        "烈火前格300ms后结算，只扣AC而不判Agility；提前使用不重置原截止。"
+      ]
     },
     {
       "candidate_key": "myf_magic_27",
@@ -1986,12 +2057,21 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "默认值、行为与原WIL效果定位已纳入本阶段实现；最终集成和浏览器结论按阶段报告分别登记",
+      "project_implementation_status": "已实现开发候选的owner原书学习、rank0–3材料升级、权威行为与触屏表现；Creator真实构建已完成，最终自动、复活修复后全包集成与浏览器验收收尾中，不预先标记阶段通过",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/战士攻击模式与方向技能实施边界.md",
+      "implementation_config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+      "implementation_rule_version": 6,
+      "project_implementation_acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+      "acceptance_evidence_status": "implementation_complete_final_acceptance_pending",
+      "source_behavior_notes": [
+        "地图内9格射程中心3×3，500ms后逐目标查询有效格；不新增冻结或减速。",
+        "原起手与地面效果分别播放，地面效果不按目标数量重复。"
+      ]
     }
   ],
   "crystal_additional_candidates": [
@@ -2236,24 +2316,98 @@
   ],
   "further_evidence": "docs/技能来源核验与实施清单.md",
   "development_implementation_summary": {
-    "config_version": "dev-combat-area-v0.5-ddfb248d01b3",
-    "rule_version": 5,
+    "config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+    "rule_version": 6,
     "implemented_skill_ids": [
       1,
       2,
       3,
       4,
       5,
+      7,
+      9,
+      10,
       11,
+      12,
       23,
-      29
+      24,
+      25,
+      26,
+      29,
+      33
     ],
-    "new_five_auto_and_creator_passed": true,
-    "new_five_real_integration_and_browser_finalized": true,
+    "new_skill_ids": [
+      7,
+      9,
+      10,
+      12,
+      24,
+      25,
+      26,
+      33
+    ],
+    "implemented_skill_count": 16,
+    "skill_upgrade_count": 48,
+    "skill_shop_count": 18,
+    "skill_book_recycle_count": 64,
+    "initial_book_skill_ids": [
+      1,
+      2,
+      3
+    ],
+    "implementation_status": "静态实现与资源接入完成，最终阶段验收收尾中",
+    "acceptance_reference": "docs/战士攻击模式与方向技能阶段验收.json",
+    "acceptance_status": "pending_final_evidence",
+    "creator_build": {
+      "seconds": 314.29,
+      "exit_code": 36,
+      "source_stable": true,
+      "saved_layouts_preserved_during_build": 7
+    },
+    "catalog_counts": {
+      "tables": 98,
+      "rows": 897,
+      "candidate": 399,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69,
+      "required_empty_tables": 26,
+      "formal_blockers": 637
+    },
+    "protocol_counts": {
+      "pb_messages": 54,
+      "message_ids": 44,
+      "error_codes": 29,
+      "long_fields": 89,
+      "boundary_cases": 288
+    },
+    "resource_frames": 2909,
     "formal_runtime_enabled": false,
-    "new_five_real_integration_passed": true,
-    "new_five_real_integration_test_count": 96,
-    "new_five_browser_status": "passed_limited_stage",
-    "browser_scope_notice": "群疗HP263→273为受击期间净变化；受伤宠双目标由真实集成覆盖；旧Auto观察保持未归因。"
-  }
+    "target_180_verified": false,
+    "mode_lifecycle_notice": "临时模式按scene/life/revision同步；同连接成功复活同时递增life与模式revision，健康重连不补旧刀光。",
+    "hell_fire_adaptation_notice": "用户审定所有rank单线4格；实际处理时钟+100ms推进，30012实际CastStep驱动逐格效果，源视觉50ms不替代业务。"
+  },
+  "development_implementation_history": [
+    {
+      "config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "rule_version": 5,
+      "implemented_skill_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        23,
+        29
+      ],
+      "new_five_auto_and_creator_passed": true,
+      "new_five_real_integration_and_browser_finalized": true,
+      "formal_runtime_enabled": false,
+      "new_five_real_integration_passed": true,
+      "new_five_real_integration_test_count": 96,
+      "new_five_browser_status": "passed_limited_stage",
+      "browser_scope_notice": "群疗HP263→273为受击期间净变化；受伤宠双目标由真实集成覆盖；旧Auto观察保持未归因。"
+    }
+  ]
 }

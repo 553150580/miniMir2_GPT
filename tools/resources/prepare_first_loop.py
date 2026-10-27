@@ -161,10 +161,14 @@ def potion_rules(profile,items):
         seen.add(item_id)
     return deepcopy(settings)
 
-SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets'.split()
-SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level']
-SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing']
-SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid']
+SKILL_TARGET_FIELDS='range_cells target_move_tolerance_cells area_radius require_line_of_sight auto_priority auto_min_targets secondary_direction_offsets secondary_distance_cells line_cells line_stop_on_blocked activation_kind'.split()
+SKILL_CAST_FIELDS='cooldown_reduction_ms global_spell_ms action_ms delay_base_ms projectile_ms_per_cell secondary_impact_ms charge_window_ms line_step_ms'.split()
+SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm accuracy_by_level healing_stat_multiplier add_caster_level undead_multiplier_ppm max_attack_bonus_by_level ready_proc_denominator ready_proc_numerators non_undead_divisor'.split()
+SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator'.split()
+SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked']
+SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm']
+SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self']
 COMBAT_TIMING_FIELDS='player_attack_base_ms player_attack_speed_step_ms player_attack_level_step_ms player_attack_level_cap_ms player_attack_min_ms player_attack_action_ms player_attack_impact_ms event_capacity kill_queue_capacity'.split()
 HEALING_FIELDS='tick_ms base_per_tick pet_base_per_tick levels_per_step queue_fraction_divisor queue_cap'.split()
 GROWTH_FIELDS='hp_gain hp_gain_rate mp_gain mp_gain_rate attack_divisor defence_max_divisor magic_divisor tao_divisor magic_defence_min_divisor magic_defence_max_divisor'.split()
@@ -182,10 +186,10 @@ def skill_definitions(tables,profile):
                 'learn_level':row['learn_level'],'learned_level':row['native_start_level'],'max_level':row['native_max_level'],
                 'behavior':row['behavior_id'],'cooldown_base_ms':row['cooldown_ms'],
                 'target_kind':row['target_rule']['kind'],
-                **{k:row['target_rule'][k] for k in ['range_cells','target_move_tolerance_cells','area_radius','require_line_of_sight','auto_priority','auto_min_targets']},
-                **{k:row['cast_timing'][k] for k in ['cooldown_reduction_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell']},
+                **{k:row['target_rule'][k] for k in SKILL_TARGET_FIELDS},
+                **{k:row['cast_timing'][k] for k in SKILL_CAST_FIELDS},
                 **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost']},
-                **{k:row['damage_parameters'][k] for k in ['accuracy_per_level','power_base','power_bonus','mpower_base','mpower_bonus','multiplier_base_ppm','multiplier_bonus_ppm','accuracy_by_level','healing_stat_multiplier','add_caster_level','undead_multiplier_ppm']}})
+                **{k:row['damage_parameters'][k] for k in SKILL_DAMAGE_FIELDS}})
         except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
     return result
 
@@ -195,7 +199,7 @@ def validate_skills(profile,skills):
     if not isinstance(skills,list) or not skills:raise ValueError('开发夹具缺少技能定义')
     ids=set();books=set();behaviors=set()
     for skill in skills:
-        if not isinstance(skill,dict) or set(skill)!=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|{'name','behavior','target_kind','accuracy_by_level'}:raise ValueError('技能字段不完整')
+        if not isinstance(skill,dict) or set(skill)!=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|set(SKILL_ARRAY_FIELDS)|{'name','behavior','target_kind','activation_kind'}:raise ValueError('技能字段不完整')
         if any(type(skill[k]) is not int or skill[k]<0 or skill[k]>2**32-1 for k in SKILL_INT_FIELDS):raise ValueError('技能字段须为有界非负整数')
         if any(type(skill[k]) is not bool for k in SKILL_BOOL_FIELDS):raise ValueError('技能开关必须是明确布尔值')
         if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in SKILL_BEHAVIORS or skill['target_kind'] not in SKILL_TARGETS:raise ValueError('技能名称/行为/目标类型不合法')
@@ -203,14 +207,32 @@ def validate_skills(profile,skills):
             raise ValueError('技能身份、职业、学习条件或技能书重复/缺失')
         if skill['max_level']<skill['learned_level'] or skill['max_level']>255:raise ValueError('技能开放等级域不合法')
         if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
-        passive=skill['behavior'] in ['fencing','spirit_sword']
+        passive=skill['behavior'] in ['fencing','spirit_sword','slaying']
         if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
-        targets={'fencing':'passive','spirit_sword':'passive','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid'}
+        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self'}
         if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
-        if not passive and any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','range_cells','delay_base_ms','auto_min_targets']):raise ValueError('主动技能时序与射程必须完整')
-        if skill['area_radius']>16 or (skill['target_kind'].endswith('_grid'))!=(skill['area_radius']>0):raise ValueError('区域半径与目标类型不匹配')
-        accuracy=skill['accuracy_by_level']
-        if not isinstance(accuracy,list) or len(accuracy)!=skill['max_level']+1 or any(type(v) is not int or v<0 or v>2**31-1 for v in accuracy):raise ValueError('被动逐阶准确数组缺失或越界')
+        activation={'fencing':'passive','spirit_sword':'passive','slaying':'passive_proc','thrusting':'toggle','half_moon':'toggle','flaming_sword':'charge'}.get(skill['behavior'],'cast')
+        if skill['activation_kind']!=activation:raise ValueError('技能激活方式与执行管线不一致')
+        if activation=='cast':
+            if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','auto_min_targets']):raise ValueError('施法时序或自动策略缺失')
+            if skill['target_kind'] not in ['enemy_direction','enemy_self'] and skill['range_cells']<=0:raise ValueError('锁定或地面施法缺少射程')
+        elif activation in ['toggle','charge','passive_proc'] and any(skill[k] for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell','auto_priority','auto_min_targets']):raise ValueError('近战模式不得复用施法时钟或自动施法策略')
+        if skill['area_radius']>16 or (skill['target_kind'].endswith('_grid') or skill['target_kind']=='enemy_self')!=(skill['area_radius']>0):raise ValueError('区域半径与目标类型不匹配')
+        for field in ['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators']:
+            value=skill[field]
+            if not isinstance(value,list) or len(value)!=skill['max_level']+1 or any(type(v) is not int or v<0 or v>2**31-1 for v in value):raise ValueError('逐阶数组缺失或越界：'+field)
+        offsets=skill['secondary_direction_offsets']
+        if not isinstance(offsets,list) or len(offsets)>8 or any(type(v) is not int or v < -7 or v>7 for v in offsets):raise ValueError('近战旁格朝向无效')
+        if len({v%8 for v in offsets})!=len(offsets) or (skill['secondary_distance_cells']==1 and 0 in offsets):raise ValueError('近战旁格重复或覆盖前格')
+        if (activation=='toggle')!=bool(offsets) or bool(offsets)!=(skill['secondary_distance_cells']>0):raise ValueError('近战旁格范围与模式不一致')
+        if (activation=='charge')!=(skill['charge_window_ms']>0):raise ValueError('充能截止与技能方式不一致')
+        if (skill['target_kind']=='enemy_direction')!=(skill['line_cells']>0) or skill['line_cells']>16:raise ValueError('方向技能直线格数无效')
+        if skill['behavior']=='hell_fire' and (skill['line_cells']!=4 or not skill['line_stop_on_blocked'] or skill['line_step_ms']<=0):raise ValueError('地狱火必须遵守用户已审定的固定四格与逐格阻挡管线')
+        if skill['target_kind']!='enemy_direction' and (skill['line_step_ms'] or skill['line_stop_on_blocked']):raise ValueError('非方向技能不得附加分格传播')
+        if skill['non_undead_divisor']<1:raise ValueError('非亡灵除数必须为正整数')
+        if activation=='passive_proc':
+            if not skill['ready_proc_denominator'] or any(n>skill['ready_proc_denominator'] for n in skill['ready_proc_numerators']):raise ValueError('攻杀准备概率无效')
+        elif skill['ready_proc_denominator'] or any(skill['ready_proc_numerators']) or any(skill['max_attack_bonus_by_level']):raise ValueError('非攻杀技能不得附加准备概率或攻击上限')
         ids.add(skill['id']);books.add(skill['book_item_id']);behaviors.add(skill['behavior'])
     if not {'fencing','fireball','healing'}.issubset(behaviors):raise ValueError('首组三职业候选技能不完整')
     timing=profile.get('combat_timing')
@@ -361,12 +383,16 @@ def public_gameplay(fixture):
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)
     skills=[{'id':s['id'],'name':s['name'],'job_id':s['job_id'],'book_item_id':s['book_item_id'],
-             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['behavior'] not in ['fencing','spirit_sword'],
+             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['activation_kind'] not in ['passive','passive_proc'],
+             'activation_kind':s['activation_kind'],
              'target_kind':s['target_kind'],'area_radius':s['area_radius'],'require_line_of_sight':s['require_line_of_sight'],
              'range':s['range_cells'],'base_cost':s['mp_base_cost'],'level_cost':s['mp_level_cost'],
              'cast_ms':s['action_ms'],'delay_base_ms':s['cooldown_base_ms'],'delay_reduction_ms':s['cooldown_reduction_ms'],
              'impact_base_ms':s['delay_base_ms'],'projectile_ms_per_cell':s['projectile_ms_per_cell'],
              'accuracy_per_level':s['accuracy_per_level'],'accuracy_by_level':deepcopy(s['accuracy_by_level']),
+             'max_attack_bonus_by_level':deepcopy(s['max_attack_bonus_by_level']),
+             'secondary_direction_offsets':deepcopy(s['secondary_direction_offsets']),'secondary_distance_cells':s['secondary_distance_cells'],
+             'line_cells':s['line_cells'],'line_step_ms':s['line_step_ms'],'charge_window_ms':s['charge_window_ms'],
              'source_status':'candidate','target_180_verified':False} for s in fixture['skills']]
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
             'skills':skills,'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),

@@ -37,6 +37,8 @@ message EntityState {
   // 出生代次和当前实际攻击间隔只用于观察，不能由客户端授予。
   uint64 life = 15;
   uint32 attack_interval_ms = 16;
+  uint32 attack_skill_id = 17;
+  uint32 attack_skill_level = 18;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;
@@ -45,9 +47,40 @@ message SceneBaselineChunk {
   uint32 chunk_count = 4;
   uint64 state_sequence = 5;
   repeated EntityState entities = 6;
+  SkillModeState skill_mode_state = 7;
 }
 message MoveIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; GridPoint destination = 3; uint32 direction = 4; bool release_joystick = 5; }
 message CastIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; uint32 target_handle = 4; GridPoint target_grid = 5; uint32 direction = 6; }
+// 近战按受理时的逻辑朝向取格；skill_id为0时由权威模式选技，其它值只校验预期。
+message AttackIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 direction = 3; uint32 skill_id = 4; }
+message SkillModeIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; bool enabled = 4; }
+message SkillModeEntry {
+  uint32 skill_id = 1;
+  bool enabled = 2;
+  bool ready = 3;
+  uint32 remaining_ms = 4;
+  uint32 cooldown_remaining_ms = 5;
+}
+// 临时内存状态；剩余时间只供显示，客户端倒计时不能授予准备状态。
+message SkillModeState {
+  uint64 scene_epoch = 1;
+  uint64 revision = 2;
+  repeated SkillModeEntry states = 3;
+  uint64 player_life = 4;
+  uint64 server_time_unix_ms = 5;
+}
+// 只观察实际已推进的传播格；空有效格也发，阻挡格不发，不在基线重播旧步。
+message CastStep {
+  uint64 scene_epoch = 1;
+  uint64 cast_id = 2;
+  uint32 skill_id = 3;
+  uint32 caster_handle = 4;
+  uint64 caster_life = 5;
+  GridPoint grid = 6;
+  uint32 direction = 7;
+  uint32 step_index = 8;
+  uint32 skill_level = 9;
+}
 // 只描述本次已确认的临时施法；基线不重放旧投射物或命中特效。
 message CastAccepted {
   uint64 scene_epoch = 1;
@@ -62,6 +95,7 @@ message CastAccepted {
   uint32 input_sequence = 10;
   uint64 caster_life = 11;
   uint64 target_life = 12;
+  uint32 skill_level = 13;
 }
 // 普通攻击受理与到期结算分开，身体动作不代替实际命中结果。
 message AttackAccepted {
@@ -75,6 +109,9 @@ message AttackAccepted {
   uint32 delay_ms = 8;
   uint32 attack_sequence = 9;
   uint32 input_sequence = 10;
+  uint32 skill_id = 11;
+  uint32 skill_level = 12;
+  uint64 caster_life = 13;
 }
 // outcome：1命中、2闪避或抵抗、3原目标失效、4加入治疗队列；4不是立即恢复HP。
 message CombatImpact {

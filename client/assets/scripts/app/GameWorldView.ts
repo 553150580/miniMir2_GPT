@@ -1,9 +1,9 @@
 import { EventTouch, game, instantiate, isValid, Label, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
-import { EntityAnimation } from './EntityAnimation';
+import { AnimationSample, EntityAnimation } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
 import { CombatEffects } from './CombatEffects';
-import { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
+import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 
 interface Visual {
     node: Node;
@@ -14,6 +14,7 @@ interface Visual {
     animation: EntityAnimation | null;
     keys: string[];
     orderDirection: number;
+    pose: AnimationSample | null;
 }
 
 // 权威格坐标用于规则与点击；每帧显示位置及动作独立插值，不生成固定UI布局。
@@ -47,15 +48,22 @@ export class GameWorldView {
         const effects = this.world.getChildByName('Effects');
         if (!effects) throw new Error('场景尚未保存游戏特效容器');
         this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null,
-            handle => this.visuals.get(handle)?.state.life?.toString() ?? null);
+            handle => this.visuals.get(handle)?.state.life?.toString() ?? null, handle => {
+                const visual = this.visuals.get(handle), pose = visual?.pose;
+                return pose?.action === 'attack' && visual?.animation ? { attackSequence: visual.animation.currentAttackSequence, frame: pose.frame, direction: pose.direction } : null;
+            });
     }
 
     acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
+    acceptCastStep(event: CastStepEvent): void { if (!this.disposed) this.effects?.step(event, game.totalTime); }
     acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
     acceptAttack(event: AttackEvent): void {
         if (this.disposed || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;
         const id = BigInt(event.eventId.toString()); if (id <= this.lastAttackId) return; this.lastAttackId = id;
-        this.visuals.get(event.casterHandle)?.animation?.acceptAttack(event.attackSequence, event.direction);
+        const visual = this.visuals.get(event.casterHandle);
+        if (event.casterLife != null && visual?.state.life?.toString() !== event.casterLife.toString()) return;
+        visual?.animation?.acceptAttack(event.attackSequence, event.direction);
+        this.effects?.attack(event, game.totalTime);
     }
 
     grid(x: number, y: number): Vec3 { return new Vec3((x + .5) * 48 - this.map.width * 24, (this.map.height - y - .5) * 32 - this.map.height * 16); }
@@ -97,7 +105,7 @@ export class GameWorldView {
                     const current = this.visuals.get(state.entityHandle); if (current) this.selected(current.state);
                 });
                 visual = { node, body: sprites, state, profile, motion: new EntityMotion(),
-                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1 };
+                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null };
                 this.visuals.set(state.entityHandle, visual);
             }
             const previous = visual.state;
@@ -149,6 +157,7 @@ export class GameWorldView {
             visual.node.setPosition(this.grid(motion.x, motion.y));
             if (visual.state.entityKind === 1) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
+            visual.pose = pose ?? null;
             if (!pose) { for (const sprite of visual.body) sprite.node.active = false; continue; }
             if (pose.action === 'attack' || pose.action === 'struck' || pose.action === 'casting') visual.motion.holdUntil(visual.animation!.playbackUntil);
             const profile = visual.profile;

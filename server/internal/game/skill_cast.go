@@ -10,12 +10,14 @@ import (
 	"time"
 )
 
-type skillHandler struct{ Passive, Healing, Area, UndeadBonus bool }
+type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea bool }
 
 var skillHandlers = map[string]skillHandler{
 	"fencing": {Passive: true}, "spirit_sword": {Passive: true},
 	"fireball": {}, "great_fireball": {}, "thunderbolt": {UndeadBonus: true},
 	"firebang": {Area: true}, "healing": {Healing: true}, "mass_healing": {Healing: true, Area: true},
+	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
+	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
 }
 
 func targetKind(s devconfig.Skill) string {
@@ -53,7 +55,41 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 	sort.Slice(out, func(i, j int) bool { return out[i].Handle < out[j].Handle })
 	return out
 }
+
+func (w *worker) lineTargets(r *room, c pendingCast) []*entity {
+	if c.Skill.Behavior == "hell_fire" && c.LineRemaining > 0 {
+		point := stepPoint(c.TargetPoint, c.Direction, 1)
+		if !w.walkable(point) {
+			return nil
+		}
+		var out []*entity
+		for _, e := range r.Monsters[:r.MonsterCount] {
+			if e.HP > 0 && e.Pos == point {
+				out = append(out, e)
+			}
+		}
+		sort.Slice(out, func(i, j int) bool { return out[i].Handle < out[j].Handle })
+		return out
+	}
+	var out []*entity
+	for i := 1; i <= c.Skill.LineCells; i++ {
+		point := stepPoint(c.TargetPoint, c.Direction, i)
+		if !w.walkable(point) {
+			if c.Skill.LineStopOnBlocked {
+				break
+			}
+			continue
+		}
+		if target := w.enemyAt(r, point); target != nil {
+			out = append(out, target)
+		}
+	}
+	return out
+}
 func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, ground ...*pb.GridPoint) uint32 {
+	return w.castDirected(r, id, targetHandle, input, r.Player.Direction, now, ground...)
+}
+func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32, now time.Time, ground ...*pb.GridPoint) uint32 {
 	s, exists := w.e.Store.Cfg.Fixture.Skill(id)
 	level, learned := r.Role.Skill(id)
 	handler, registered := skillHandlers[s.Behavior]
@@ -68,7 +104,15 @@ func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, gr
 	}
 	var target *entity
 	var point devconfig.Point
-	if handler.Area {
+	if handler.Direction || handler.SelfArea {
+		if targetHandle != 0 || direction > 7 {
+			return p.CodeSkillTarget
+		}
+		if len(ground) > 0 && ground[0] != nil && !w.inBounds(devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}) {
+			return p.CodeSkillTarget
+		}
+		point = r.Player.Pos
+	} else if handler.Area {
 		if targetHandle != 0 || len(ground) == 0 || ground[0] == nil {
 			return p.CodeSkillTarget
 		}
@@ -93,6 +137,9 @@ func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, gr
 	cost := s.MPBaseCost + int64(level)*s.MPLevelCost
 	if r.Player.MP < cost {
 		return p.CodeSkillResource
+	}
+	if len(r.Casts)+len(r.Attacks)+1 > w.eventCapacity() {
+		return p.CodeSkillStateBlocked
 	}
 	stats := w.fighter(r, &r.Player)
 	amount := int64(0)
@@ -126,7 +173,11 @@ func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, gr
 	r.Player.CastSkillID = id
 	r.CastID++
 	r.ScheduleID++
-	r.Player.Direction = facing(r.Player.Pos, point, r.Player.Direction)
+	if handler.Direction {
+		r.Player.Direction = direction
+	} else if !handler.SelfArea {
+		r.Player.Direction = facing(r.Player.Pos, point, r.Player.Direction)
+	}
 	r.NextSpell = now.Add(time.Duration(s.GlobalSpellMS) * time.Millisecond)
 	if r.SkillCooldowns == nil {
 		r.SkillCooldowns = map[uint32]time.Time{}
@@ -138,11 +189,15 @@ func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time, gr
 		handle = target.Handle
 		life = target.Life
 	}
-	r.Casts = append(r.Casts, pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: reference(r, &r.Player), ID: r.CastID, Order: r.ScheduleID, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true})
-	if r.Conn == nil {
-		r.Casts[len(r.Casts)-1].HostSession = r.HostSession
+	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: reference(r, &r.Player), ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level}
+	if s.Behavior == "hell_fire" {
+		event.LineRemaining = s.LineCells
 	}
-	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(r.Player.Pos), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life})
+	if r.Conn == nil {
+		event.HostSession = r.HostSession
+	}
+	r.Casts = append(r.Casts, event)
+	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(r.Player.Pos), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
 	w.snapshot(r)
 	return 0
 }
@@ -158,7 +213,30 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 		return
 	}
 	targets := []*entity{}
-	if handler.Area {
+	if handler.Direction {
+		targets = w.lineTargets(r, c)
+		if c.Skill.Behavior == "hell_fire" {
+			point := stepPoint(c.TargetPoint, c.Direction, 1)
+			if !w.walkable(point) {
+				return
+			}
+			w.send(r, p.MsgS2CCastStep, 0, &pb.CastStep{SceneEpoch: r.Scene, CastId: c.ID, SkillId: c.Skill.ID, CasterHandle: c.Caster.Handle, CasterLife: c.Caster.Life, Grid: pointPB(point), Direction: c.Direction, StepIndex: uint32(c.Skill.LineCells - c.LineRemaining + 1), SkillLevel: c.SkillLevel})
+			if c.LineRemaining > 1 {
+				// Crystal Map.CompleteMagic按本次实际处理时间创建下一格，不追赶卡帧。
+				child := c
+				child.TargetPoint, child.LineRemaining = point, c.LineRemaining-1
+				child.Due = now.Add(time.Duration(c.Skill.LineStepMS) * time.Millisecond)
+				r.ScheduleID++
+				child.Order = r.ScheduleID
+				child.PrivilegeUntil, child.PrivilegeCaptured = r.Role.PrivilegeUntil, true
+				child.HostSession = ""
+				if r.Conn == nil {
+					child.HostSession = r.HostSession
+				}
+				r.Casts = append(r.Casts, child)
+			}
+		}
+	} else if handler.Area {
 		targets = w.areaTargets(r, c.Skill, c.TargetPoint)
 	} else {
 		target := w.skillTarget(r, c.Skill, c.Target)
@@ -168,10 +246,14 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 	}
 	if len(targets) == 0 {
 		outcome := uint32(3)
-		if handler.Area {
+		if handler.Area || handler.Direction {
 			outcome = 2
 		}
-		w.impact(r, c.Skill.ID, c.Caster.Handle, c.Target, c.TargetLife, c.TargetPoint, 0, outcome, handler.Healing, c.ID, 0)
+		point := c.TargetPoint
+		if c.Skill.Behavior == "hell_fire" {
+			point = stepPoint(point, c.Direction, 1)
+		}
+		w.impact(r, c.Skill.ID, c.Caster.Handle, c.Target, c.TargetLife, point, 0, outcome, handler.Healing, c.ID, 0)
 		return
 	}
 	for _, target := range targets {
@@ -187,7 +269,11 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 				}
 			}
 		} else {
-			damage := w.magicDamage(r, target, c.Amount)
+			value := c.Amount
+			if c.Skill.Behavior == "thunder_storm" && target.Monster != nil && !target.Monster.Undead {
+				value /= c.Skill.NonUndeadDivisor
+			}
+			damage := w.magicDamage(r, target, value)
 			before := target.HP
 			w.applyDamage(r, caster, target, damage, now, hitContext{At: c.Due, HostSession: c.HostSession, PrivilegeUntil: c.PrivilegeUntil, PrivilegeCaptured: c.PrivilegeCaptured})
 			amount = before - target.HP
@@ -199,21 +285,21 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 	}
 }
 func (w *worker) advanceCasts(r *room, now time.Time) {
-	remaining := r.Casts[:0]
+	casts := r.Casts
+	r.Casts = nil
 	resolved := false
-	for i, c := range r.Casts {
+	for i, c := range casts {
 		if r.Pending {
-			remaining = append(remaining, r.Casts[i:]...)
+			r.Casts = append(r.Casts, casts[i:]...)
 			break
 		}
 		if now.Before(c.Due) {
-			remaining = append(remaining, c)
+			r.Casts = append(r.Casts, c)
 			continue
 		}
 		w.resolveCast(r, c, now)
 		resolved = true
 	}
-	r.Casts = remaining
 	if resolved {
 		w.snapshot(r)
 	}
@@ -230,14 +316,47 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 	var approach *entity
 	for _, s := range skills {
 		handler, ok := skillHandlers[s.Behavior]
-		if !ok || handler.Passive || s.JobID != r.Role.Job {
+		if !ok || handler.Passive || s.Activation() != "cast" || s.JobID != r.Role.Job {
 			continue
 		}
-		if _, learned := r.Role.Skill(s.ID); !learned {
+		rank, learned := r.Role.Skill(s.ID)
+		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) || r.Player.MP < s.MPBaseCost+int64(rank)*s.MPLevelCost {
 			continue
 		}
 		var target *entity
 		var grid *pb.GridPoint
+		direction := r.Player.Direction
+		if handler.SelfArea {
+			if len(w.areaTargets(r, s, r.Player.Pos)) < s.AutoMinTargets {
+				continue
+			}
+			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
+				return nil, true
+			}
+			continue
+		}
+		if handler.Direction {
+			count := 0
+			for d := range directions {
+				n := len(w.lineTargets(r, pendingCast{Skill: s, TargetPoint: r.Player.Pos, Direction: uint32(d)}))
+				if n > count {
+					count, direction = n, uint32(d)
+				}
+			}
+			if count < s.AutoMinTargets {
+				if approach == nil {
+					nearest := w.nearest(r, &r.Player)
+					if nearest != nil && distance(r.Player.Pos, nearest.Pos) > 1 {
+						approach = nearest
+					}
+				}
+				continue
+			}
+			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
+				return nil, true
+			}
+			continue
+		}
 		if handler.Healing {
 			target = &r.Player
 			if target.HP >= target.MaxHP && r.Pet != nil && r.Pet.HP > 0 && r.Pet.HP < r.Pet.MaxHP {
@@ -284,7 +403,7 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 		if target != nil {
 			handle = target.Handle
 		}
-		if w.cast(r, s.ID, handle, 0, now, grid) == 0 {
+		if w.castDirected(r, s.ID, handle, 0, direction, now, grid) == 0 {
 			return nil, true
 		}
 	}

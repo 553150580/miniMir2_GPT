@@ -181,6 +181,12 @@ def main():
     # Magic原图含用于加色混合的暗色像素；保持原像素，由保存的特效Sprite选择加色混合。
     def effect(start,count,duration,package='Magic'):
         return {'frames':[importer.frame(package,start+i) for i in range(count)],'duration_ms':duration,'blend':'additive'}
+    def directional_effect(start,count,duration,stride=10):
+        return {'directions':[[importer.frame('Magic',start+d*stride+i) for i in range(count)] for d in range(8)],
+                'duration_ms':duration,'blend':'additive'}
+    def ranked_attack(start):
+        # 刀光源索引本身按等级分四组；身体仍使用已核验的原WIL Attack1六帧，不套用Crystal紧凑帧号。
+        return {'levels':[directional_effect(start+rank*90,6,600) for rank in range(4)],'duration_ms':600,'blend':'additive'}
     effects={
         '1':{'kind':'fireball','cast':effect(0,10,600),'hit':effect(170,10,600),
              'projectile':{'directions':[[importer.frame('Magic',10+d*10+i) for i in range(6)] for d in range(16)],
@@ -189,9 +195,19 @@ def main():
         '5':{'kind':'great_fireball','cast':effect(400,10,600),'hit':effect(570,10,600),
              'projectile':{'directions':[[importer.frame('Magic',410+d*10+i) for i in range(6)] for d in range(16)],
                            'frame_ms':30,'blend':'additive'}},
+        '7':{'kind':'slaying','attack':ranked_attack(1820)},
+        '9':{'kind':'hell_fire','cast':effect(920,10,600),'cast_anchor':'origin','step':effect(930,6,500),
+             'step_anchor':'grid','step_trigger':'authoritative_cast_step',
+             'visual_adaptation':'User-approved fixed forward line for every rank; source rank3 side lines are not displayed.'},
+        '10':{'kind':'lightning','beam':directional_effect(970,6,600,20),'beam_anchor':'origin'},
         '11':{'kind':'thunderbolt','cast':effect(20,3,300,'Magic2'),'hit':effect(10,5,400,'Magic2')},
+        '12':{'kind':'thrusting','attack':ranked_attack(2190)},
         '23':{'kind':'firebang','cast':effect(1650,10,600),'hit':effect(1660,10,1000),'hit_anchor':'grid'},
+        '24':{'kind':'thunder_storm','cast':effect(1680,10,600),'cast_anchor':'origin'},
+        '25':{'kind':'half_moon','attack':ranked_attack(2560)},
+        '26':{'kind':'flaming_sword','attack':directional_effect(3480,6,600)},
         '29':{'kind':'mass_healing','cast':effect(1790,10,600),'hit':effect(1800,10,1000),'hit_anchor':'grid'},
+        '33':{'kind':'ice_storm','cast':effect(3840,10,600),'hit':effect(3850,20,1300),'hit_anchor':'grid'},
     }
     manifest={'schema_version':1,'purpose':'first_loop_development_candidates','development_only':True,'runtime_ready':False,
               'status':'candidate','official_180_restoration_verified':False,'pillow_version':PILLOW_VERSION,
@@ -209,6 +225,14 @@ def main():
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2954,2964,'thunderbolt target effect'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2997,3003,'firebang ground effect'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',3073,3079,'mass-healing ground effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',4953,4975,'ranked Slaying/Thrusting/HalfMoon and FlamingSword directional Attack1 overlays'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1077,1079,'FlamingSword Attack4 also selects Attack1 body frames'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',3222,3227,'Lightning eight-direction beam after spell body finishes'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1697,1701,'HellFire caster Magic frame group'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2907,2948,'HellFire per-cell effect pixels; source 50ms scheduling and rank3 side lines are not adopted'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1962,1966,'ThunderStorm single caster-origin area effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1980,1984,'IceStorm caster effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',3083,3088,'IceStorm single ground area effect'),
                           evidence('资料参考/crystal/Client/MirObjects/Effect.cs',152,216,'16-direction projectile frames and additive rendering'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',4887,4919,'weapon/body/hair order by direction'),
                           evidence('资料参考/crystal/Client/MirObjects/MapCode.cs',226,259,'v0 layers, 1-based images, column-major cells'),

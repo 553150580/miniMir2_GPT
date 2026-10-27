@@ -35,6 +35,27 @@ func skillEconomyFixture(t *testing.T) (domain.Role, devconfig.Fixture) {
 	return r, f
 }
 
+func TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(t *testing.T) {
+	_, f := skillEconomyFixture(t)
+	for _, skill := range f.Skills {
+		quote := skillQuote{Plan: skillPlan{Kind: 2, SkillID: skill.ID, From: 0, To: 1}}
+		preview := quote.Proto(f)
+		want := 3
+		if skill.Behavior == "slaying" {
+			want = 4
+		}
+		if len(preview.Stats) != want {
+			t.Fatalf("技能%d无意义中性数组污染预览:%d/%d", skill.ID, len(preview.Stats), want)
+		}
+		if want == 4 {
+			bonus := preview.Stats[3]
+			if bonus.Key != "max_attack_bonus" || bonus.BeforeMin != 5 || bonus.AfterMin != 6 || bonus.BeforeMax != bonus.BeforeMin || bonus.AfterMax != bonus.AfterMin {
+				t.Fatal("攻杀预览未反映真实永久最大DC成长")
+			}
+		}
+	}
+}
+
 func explicitUpgrade(r domain.Role, f devconfig.Fixture, id uint32) *pb.SkillAssetPreviewRequest {
 	level, _ := r.Skill(id)
 	row, _ := f.Upgrade(id, level+1)

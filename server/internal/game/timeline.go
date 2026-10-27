@@ -26,6 +26,9 @@ type pendingAttack struct {
 	HostSession       string
 	PrivilegeUntil    time.Time
 	PrivilegeCaptured bool
+	SkillID           uint32
+	SkillLevel        uint32
+	Defence           physicalDefence
 }
 type killFact struct {
 	ID                  string
@@ -211,19 +214,22 @@ func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
 	}
 	target := w.resolve(r, a.Target)
 	if target == nil || target.HP <= 0 {
-		w.impact(r, 0, a.Caster.Handle, a.Target.Handle, a.Target.Life, devconfig.Point{}, 0, 3, false, 0, a.Sequence)
+		w.impact(r, a.SkillID, a.Caster.Handle, a.Target.Handle, a.Target.Life, devconfig.Point{}, 0, 3, false, 0, a.Sequence)
 		return
 	}
 	// 来源CompleteAttack不要求施法者仍存活；伤害/防御在到期时结算，坐标不重新限制近战。
 	caster := w.resolve(r, a.Caster)
 	if caster == nil {
-		w.impact(r, 0, a.Caster.Handle, target.Handle, target.Life, target.Pos, 0, 3, false, 0, a.Sequence)
+		w.impact(r, a.SkillID, a.Caster.Handle, target.Handle, target.Life, target.Pos, 0, 3, false, 0, a.Sequence)
 		return
 	}
 	attacker, defender := w.fighter(r, caster), w.fighter(r, target)
 	damage := int64(0)
-	if w.draw(defender.Agility+1) <= attacker.Accuracy {
-		damage = a.Amount - w.interval(defender.DefenceMin, defender.DefenceMax)
+	if a.Defence == defenceAC || w.draw(defender.Agility+1) <= attacker.Accuracy {
+		damage = a.Amount
+		if a.Defence != defenceAgility {
+			damage -= w.interval(defender.DefenceMin, defender.DefenceMax)
+		}
 	}
 	if damage < 0 {
 		damage = 0
@@ -235,7 +241,7 @@ func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
 	if actual == 0 {
 		outcome = 2
 	}
-	w.impact(r, 0, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence)
+	w.impact(r, a.SkillID, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence)
 }
 func (w *worker) advanceAttacks(r *room, now time.Time) {
 	remaining := r.Attacks[:0]

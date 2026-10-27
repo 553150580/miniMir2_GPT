@@ -19,8 +19,8 @@ import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
-import { createSkillLearnPreview, gridDirection, isGroundSkill, primarySkill, selectSkillTarget, skillQuickLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
-import type { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
+import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
+import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
 import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
@@ -192,6 +192,8 @@ export class AppRoot extends Component {
         this.cleanups.push(() => this.skillAssets?.dispose());
         const cast = (event: CastEvent): void => this.world?.acceptCast(event);
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
+        const castStep = (event: CastStepEvent): void => this.world?.acceptCastStep(event);
+        session.castSteps.add(castStep); this.cleanups.push(() => session.castSteps.delete(castStep));
         const attack = (event: AttackEvent): void => this.world?.acceptAttack(event);
         session.attacks.add(attack); this.cleanups.push(() => session.attacks.delete(attack));
         const impact = (event: ImpactEvent): void => this.world?.acceptImpact(event);
@@ -248,6 +250,12 @@ export class AppRoot extends Component {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             this.castSkill(skill);
         });
+        this.button('UIMgr/Panels/Skills/ModeToggle', () => {
+            const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
+            const enabled = this.find('UIMgr/Panels/Skills/ModeToggle').getComponent(Toggle)!.isChecked;
+            try { this.castSkill(skill, enabled); }
+            finally { this.refreshGame(); }
+        }, Toggle.EventType.TOGGLE);
         this.button('UIMgr/Panels/Skills/BindQuick', () => {
             const selected = this.skills?.selected;
             if (!selected?.learned || !selected.definition.active) throw new Error('请选择已学会的主动技能');
@@ -269,7 +277,8 @@ export class AppRoot extends Component {
             ['BottomHUD/QuickNav/Quest','任务','任务系统暂未开放。'],
             ['MapViewport/Mission','战斗状态','点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。'],
         ] as const) this.button(path, () => this.popup!.show('Help', { title, message }));
-        this.button('UIMgr/Panels/Settings/Help', () => this.popup!.show('Help', { title: '操作帮助', message: '左下摇杆控制八方向，轻触空地寻路。打开面板和聊天保留地面目标，主动方向接管才终止原寻路。点击半透明背景返回。' }));
+        this.button('UIMgr/Panels/Settings/Help', () => this.popup!.show('Help', { title: '操作帮助', message: '左下摇杆控制八方向，轻触空地寻路。打开面板和聊天保留地面目标，主动方向接管才终止原寻路。点击半透明背景返回。'
+            + (session.role?.job === 0 ? '\n刺杀、半月需手动开启；烈火需手动充能。自动战斗仅使用已开启的模式和已就绪的烈火。' : '') }));
         this.button('UIMgr/Panels/Hosting/Leave', () => this.leave(true));
         this.button('UIMgr/Panels/Hosting/Claim', () => this.economic(40006, { benefitKind: 0 }));
         for (const panel of ['Inventory','Role']) {
@@ -306,7 +315,7 @@ export class AppRoot extends Component {
         const presentation = { role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
-            quickSkillLabel: quick ? skillQuickLabel(quick.definition) : undefined };
+            quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
         this.hud?.refresh(presentation);
         this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
         this.find('MapViewport/Aiming').active = !!this.aim;
@@ -369,9 +378,11 @@ export class AppRoot extends Component {
     }
 
     private skillSnapshot(): SkillSnapshot {
+        const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
+        const modes = session.skillModes && player?.life?.toString() === session.skillModes.playerLife.toString() ? session.skillModes : null;
         return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
             sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
-            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [] };
+            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], modes, modesReceivedAt: session.skillModesReceivedAt };
     }
 
     private async learnSkill(): Promise<void> {
@@ -383,17 +394,34 @@ export class AppRoot extends Component {
         await this.economic(40010, { itemInstanceId: skillBookInstance(preview), skillId: preview.skillId });
     }
 
-    private castSkill(skill: SkillRow): void {
+    private castSkill(skill: SkillRow, modeEnabled?: boolean): void {
         if (!session.ready) throw new Error('场景尚未就绪');
         const current = skillRows(this.skillSnapshot()).find(row => row.definition.id === skill.definition.id);
         if (!current) throw new Error('技能状态已变化，请重新选择');
-        if (isGroundSkill(current.definition)) {
+        const activation = skillActivation(current.definition);
+        if (activation === 'toggle' || activation === 'charge') {
+            const mode = skillMode(this.skillSnapshot(), current.definition.id);
+            if (!mode) throw new Error('战斗状态尚未同步，请稍后再试');
+            validateCaster(current, session.baseline?.entities ?? [], activation === 'charge');
+            if (activation === 'charge' && mode.ready) throw new Error('烈火已就绪，普通攻击命中前方目标时释放');
+            session.connection.send(30009, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+                skillId: current.definition.id, enabled: activation === 'toggle' ? modeEnabled ?? !mode.enabled : true });
+            return;
+        }
+        if (isGroundSkill(current.definition) || isDirectionalSkill(current.definition)) {
             const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
-            validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map);
+            if (isGroundSkill(current.definition)) validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map);
+            else validateCaster(current, session.baseline?.entities ?? []);
             this.aim = { skillId: current.definition.id, role: roleIdentity(), scene: session.entry.sceneEpoch.toString(), rule: session.entry.resourceVersion.toString() };
-            this.text('MapViewport/Aiming/Text', `${current.definition.name}：轻触地面施放`);
+            this.text('MapViewport/Aiming/Text', `${current.definition.name}：轻触${isDirectionalSkill(current.definition) ? '周围选择方向' : '地面施放'}`);
             this.find('MapViewport/Aiming').active = true; this.world!.showAim(player.position);
             if (this.ui?.top?.name === 'Skills') this.ui.back();
+            return;
+        }
+        if (current.definition.target_kind === 'enemy_self') {
+            const player = validateCaster(current, session.baseline?.entities ?? []);
+            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+                skillId: current.definition.id, targetHandle: 0, targetGrid: player.position, direction: player.direction });
             return;
         }
         const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedTarget);
@@ -410,7 +438,8 @@ export class AppRoot extends Component {
                 || this.aim.rule !== session.entry?.resourceVersion.toString()) throw new Error('瞄准状态已变化，请重新选择技能');
             const row = skillRows(this.skillSnapshot()).find(value => value.definition.id === this.aim!.skillId);
             if (!row) throw new Error('技能状态已变化，请重新选择');
-            const target = validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map);
+            const target = isDirectionalSkill(row.definition) ? validateDirectionTarget(row, session.baseline?.entities ?? [], grid, this.world!.map)
+                : validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map);
             const player = session.baseline.entities.find((entity: any) => entity.entityKind === 1);
             session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
                 skillId: row.definition.id, targetHandle: 0, targetGrid: target, direction: gridDirection(player.position, target, player.direction) });
@@ -433,7 +462,8 @@ export class AppRoot extends Component {
         }
         const targets = session.baseline?.entities.filter((entity: any) => entity.entityKind === 3 && !entity.hp.isZero()) ?? [];
         const target = targets.find((entity: any) => entity.entityHandle === this.selectedTarget) ?? targets[0];
-        if (target) session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: 0, targetHandle: target.entityHandle, targetGrid: target.position });
+        if (player) session.connection.send(30011, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+            skillId: 0, direction: target ? gridDirection(player.position, target.position, player.direction) : player.direction });
     }
 
     private potionSnapshot(): PotionSnapshot {

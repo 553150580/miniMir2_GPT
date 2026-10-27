@@ -335,12 +335,7 @@ func (s *Store) commitSkillAsset(ctx context.Context, r domain.Role, q AssetRequ
 
 func powerBounds(s devconfig.Skill, rank uint32) (int64, int64) {
 	round := func(m, power int64) int64 {
-		n := m*(int64(rank)+1) + power*4
-		whole, rem := n/4, n%4
-		if rem > 2 || (rem == 2 && whole%2 != 0) {
-			whole++
-		}
-		return whole
+		return s.SourcePower(rank, m, power)
 	}
 	mpower, power := s.MPowerBase, s.PowerBase
 	if s.MPowerBonus > 0 {
@@ -365,6 +360,9 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		afterMin, afterMax := powerBounds(s, p.To)
 		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: s.AccuracyBonus(p.From), BeforeMax: s.AccuracyBonus(p.From), AfterMin: s.AccuracyBonus(p.To), AfterMax: s.AccuracyBonus(p.To)}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}
+		if s.Behavior == "slaying" {
+			out.Stats = append(out.Stats, &pb.SkillNumericComparison{Key: "max_attack_bonus", BeforeMin: s.MaximumAttackBonus(p.From), BeforeMax: s.MaximumAttackBonus(p.From), AfterMin: s.MaximumAttackBonus(p.To), AfterMax: s.MaximumAttackBonus(p.To)})
+		}
 	}
 	return out
 }

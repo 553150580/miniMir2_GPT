@@ -1,0 +1,222 @@
+{
+  "status": "passed",
+  "sdk_version": "10.0.403",
+  "platform": "osx-x64",
+  "source_files": [
+    {
+      "path": "资料参考/crystal/Server/MirDatabase/MagicInfo.cs",
+      "sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirEnvir/Envir.cs",
+      "sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7"
+    }
+  ],
+  "source_formula_lines": {
+    "fields": [
+      13,
+      22
+    ],
+    "methods": [
+      180,
+      222
+    ]
+  },
+  "default_initializers": [
+    {
+      "skill_id": 1,
+      "symbol": "FireBall",
+      "start_line": 549,
+      "end_line": 565
+    },
+    {
+      "skill_id": 2,
+      "symbol": "Healing",
+      "start_line": 957,
+      "end_line": 972
+    },
+    {
+      "skill_id": 3,
+      "symbol": "Fencing",
+      "start_line": 297,
+      "end_line": 297
+    },
+    {
+      "skill_id": 4,
+      "symbol": "SpiritSword",
+      "start_line": 974,
+      "end_line": 975
+    },
+    {
+      "skill_id": 5,
+      "symbol": "GreatFireBall",
+      "start_line": 600,
+      "end_line": 616
+    },
+    {
+      "skill_id": 7,
+      "symbol": "Slaying",
+      "start_line": 299,
+      "end_line": 299
+    },
+    {
+      "skill_id": 9,
+      "symbol": "HellFire",
+      "start_line": 618,
+      "end_line": 634
+    },
+    {
+      "skill_id": 10,
+      "symbol": "Lightning",
+      "start_line": 694,
+      "end_line": 710
+    },
+    {
+      "skill_id": 11,
+      "symbol": "ThunderBolt",
+      "start_line": 636,
+      "end_line": 653
+    },
+    {
+      "skill_id": 12,
+      "symbol": "Thrusting",
+      "start_line": 301,
+      "end_line": 315
+    },
+    {
+      "skill_id": 23,
+      "symbol": "FireBang",
+      "start_line": 658,
+      "end_line": 674
+    },
+    {
+      "skill_id": 24,
+      "symbol": "ThunderStorm",
+      "start_line": 730,
+      "end_line": 748
+    },
+    {
+      "skill_id": 25,
+      "symbol": "HalfMoon",
+      "start_line": 317,
+      "end_line": 332
+    },
+    {
+      "skill_id": 26,
+      "symbol": "FlamingSword",
+      "start_line": 385,
+      "end_line": 400
+    },
+    {
+      "skill_id": 29,
+      "symbol": "MassHealing",
+      "start_line": 1130,
+      "end_line": 1146
+    },
+    {
+      "skill_id": 33,
+      "symbol": "IceStorm",
+      "start_line": 800,
+      "end_line": 816
+    }
+  ],
+  "compiled_source_sha256": "67b880a14f133962252cdd6794e4a6f10a20dd9b981e2e2f6766f2be759498aa",
+  "vector_count": 29512,
+  "ranks": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "base_inputs": [
+    0,
+    1,
+    2,
+    5,
+    10,
+    15,
+    20,
+    45,
+    85,
+    90,
+    100,
+    255,
+    1024,
+    32767,
+    65535,
+    16777215,
+    16777216
+  ],
+  "random_terms_exhaustive": true,
+  "independent_binary32_port_mismatches": 0,
+  "naive_ppm_difference_count": 1723,
+  "counterexamples": [
+    {
+      "skill_id": 26,
+      "rank": 3,
+      "base": 45,
+      "mpower_roll": 0,
+      "power_roll": 0,
+      "mpower_base": 0,
+      "mpower_bonus": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "multiplier_base": 1.4,
+      "multiplier_bonus": 0.4,
+      "multiplier_base_bits": 1068708659,
+      "multiplier_bonus_bits": 1053609165,
+      "multiplier_bits": 1076258406,
+      "expected_power": 0,
+      "expected_damage": 116,
+      "expected_delay_ms": 1800,
+      "multiplier_base_ppm": 1400000,
+      "multiplier_bonus_ppm": 400000
+    },
+    {
+      "skill_id": 26,
+      "rank": 3,
+      "base": 85,
+      "mpower_roll": 0,
+      "power_roll": 0,
+      "mpower_base": 0,
+      "mpower_bonus": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "multiplier_base": 1.4,
+      "multiplier_bonus": 0.4,
+      "multiplier_base_bits": 1068708659,
+      "multiplier_bonus_bits": 1053609165,
+      "multiplier_bits": 1076258406,
+      "expected_power": 0,
+      "expected_damage": 220,
+      "expected_delay_ms": 1800,
+      "multiplier_base_ppm": 1400000,
+      "multiplier_bonus_ppm": 400000
+    },
+    {
+      "skill_id": 26,
+      "rank": 3,
+      "base": 90,
+      "mpower_roll": 0,
+      "power_roll": 0,
+      "mpower_base": 0,
+      "mpower_bonus": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "multiplier_base": 1.4,
+      "multiplier_bonus": 0.4,
+      "multiplier_base_bits": 1068708659,
+      "multiplier_bonus_bits": 1053609165,
+      "multiplier_bits": 1076258406,
+      "expected_power": 0,
+      "expected_damage": 233,
+      "expected_delay_ms": 1800,
+      "multiplier_base_ppm": 1400000,
+      "multiplier_bonus_ppm": 400000
+    }
+  ],
+  "vectors_sha256": "83877fb61aeac73ae7f2cedabf0b32e8e99f54f2feebac6659f48af4ec45af14",
+  "go_fixture_sha256": "f74443f754ce915a14c10e72fe2f2e77aef4a1cb3fe7ef9aab4b769ba0563062",
+  "scope": "真实.NET编译逐字源公式和默认initializer；固定抽样逐项验证，不比较完整PRNG时序，不认证目标1.80或来源实库参数",
+  "runtime_configuration": false
+}

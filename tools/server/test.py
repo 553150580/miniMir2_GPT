@@ -10,7 +10,9 @@ def main():
  if a.race:cmd+=['-race']
  cmd+=['./internal/integration' if a.integration_only else './...','-count=1','-timeout=180s']
  env=dict(os.environ);env['MINIMIR_MONGO_E2E']='1' if a.mongo else '0'
- files=list((ROOT/'server/internal').rglob('*.go'))+list((ROOT/'server/cmd/nbserver').rglob('*.go'))+[ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json']
+ files=list((ROOT/'server/internal').rglob('*.go'))+list((ROOT/'server/cmd/nbserver').rglob('*.go'))+list((ROOT/'server/api/generated').rglob('*.go'))+[ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json']
+ # 源语言对拍的压缩期望也是测试输入；冻结检查同时覆盖生成PB与所有testdata。
+ files=sorted(set(files+[p for p in (ROOT/'server/internal').rglob('*') if p.is_file() and 'testdata' in p.parts]))
  before={str(x.relative_to(ROOT)):sha(x) for x in sorted(files)}
  started=datetime.datetime.now(datetime.timezone.utc).isoformat()
  result=subprocess.run(cmd,cwd=ROOT,env=env,capture_output=True,text=True,timeout=240)

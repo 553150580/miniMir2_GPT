@@ -1,0 +1,138 @@
+{
+  "base_commit": "8831c5c65746e70839c2802cd77d5e139992f2c9",
+  "path": "client/assets/scenes/Game.scene",
+  "old_object_count": 963,
+  "new_object_count": 973,
+  "appended_objects": [
+    {
+      "index": 963,
+      "type": "cc.Node",
+      "name": "ModeToggle"
+    },
+    {
+      "index": 964,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 965,
+      "type": "cc.Sprite",
+      "name": ""
+    },
+    {
+      "index": 966,
+      "type": "cc.Toggle",
+      "name": ""
+    },
+    {
+      "index": 967,
+      "type": "cc.Node",
+      "name": "Label"
+    },
+    {
+      "index": 968,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 969,
+      "type": "cc.Label",
+      "name": ""
+    },
+    {
+      "index": 970,
+      "type": "cc.Node",
+      "name": "Checked"
+    },
+    {
+      "index": 971,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 972,
+      "type": "cc.Sprite",
+      "name": ""
+    }
+  ],
+  "old_object_diffs": [
+    {
+      "index": 733,
+      "type": "cc.Node",
+      "name": "Skills",
+      "changed_keys": [
+        "_children"
+      ],
+      "before_children": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        },
+        {
+          "__id__": 779
+        },
+        {
+          "__id__": 786
+        },
+        {
+          "__id__": 793
+        },
+        {
+          "__id__": 938
+        }
+      ],
+      "after_children": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        },
+        {
+          "__id__": 779
+        },
+        {
+          "__id__": 786
+        },
+        {
+          "__id__": 793
+        },
+        {
+          "__id__": 938
+        },
+        {
+          "__id__": 963
+        }
+      ]
+    }
+  ],
+  "all_old_objects_equal_after_removing_new_child_refs": true,
+  "scene_sha256": "f8015a1b3a35ff8b3eba48105610c8593892b75c5ebe3bc2223407b014889233",
+  "layout_change": "仅Skills[733]追加ModeToggle[963]子引用；ModeToggle与Use共用(0,-325)和180x60，所有旧布局值原样保留"
+}

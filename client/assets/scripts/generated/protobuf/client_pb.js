@@ -5298,6 +5298,8 @@ $root.minimir = (function() {
              * @property {number|null} [cast_skill_id] EntityState cast_skill_id
              * @property {Long|null} [life] EntityState life
              * @property {number|null} [attack_interval_ms] EntityState attack_interval_ms
+             * @property {number|null} [attack_skill_id] EntityState attack_skill_id
+             * @property {number|null} [attack_skill_level] EntityState attack_skill_level
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5458,6 +5460,22 @@ $root.minimir = (function() {
             EntityState.prototype.attack_interval_ms = 0;
 
             /**
+             * EntityState attack_skill_id.
+             * @member {number} attack_skill_id
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.attack_skill_id = 0;
+
+            /**
+             * EntityState attack_skill_level.
+             * @member {number} attack_skill_level
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.attack_skill_level = 0;
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -5521,6 +5539,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.life);
                 if (message.attack_interval_ms != null && $Object.hasOwnProperty.call(message, "attack_interval_ms") && message.attack_interval_ms !== 0)
                     writer.uint32(/* id 16, wireType 0 =*/128).uint32(message.attack_interval_ms);
+                if (message.attack_skill_id != null && $Object.hasOwnProperty.call(message, "attack_skill_id") && message.attack_skill_id !== 0)
+                    writer.uint32(/* id 17, wireType 0 =*/136).uint32(message.attack_skill_id);
+                if (message.attack_skill_level != null && $Object.hasOwnProperty.call(message, "attack_skill_level") && message.attack_skill_level !== 0)
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.attack_skill_level);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5719,6 +5741,24 @@ $root.minimir = (function() {
                                 delete message.attack_interval_ms;
                             continue;
                         }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_skill_id = value;
+                            else
+                                delete message.attack_skill_id;
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_skill_level = value;
+                            else
+                                delete message.attack_skill_level;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5817,6 +5857,12 @@ $root.minimir = (function() {
                 if (message.attack_interval_ms != null && $Object.hasOwnProperty.call(message, "attack_interval_ms"))
                     if (!$util.isInteger(message.attack_interval_ms))
                         return "attack_interval_ms: integer expected";
+                if (message.attack_skill_id != null && $Object.hasOwnProperty.call(message, "attack_skill_id"))
+                    if (!$util.isInteger(message.attack_skill_id))
+                        return "attack_skill_id: integer expected";
+                if (message.attack_skill_level != null && $Object.hasOwnProperty.call(message, "attack_skill_level"))
+                    if (!$util.isInteger(message.attack_skill_level))
+                        return "attack_skill_level: integer expected";
                 return null;
             };
 
@@ -5848,6 +5894,7 @@ $root.minimir = (function() {
              * @property {number|null} [chunk_count] SceneBaselineChunk chunk_count
              * @property {Long|null} [state_sequence] SceneBaselineChunk state_sequence
              * @property {Array.<minimir.v1.EntityState.$Properties>|null} [entities] SceneBaselineChunk entities
+             * @property {minimir.v1.SkillModeState.$Properties|null} [skill_mode_state] SceneBaselineChunk skill_mode_state
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5929,6 +5976,14 @@ $root.minimir = (function() {
             SceneBaselineChunk.prototype.entities = $util.emptyArray;
 
             /**
+             * SceneBaselineChunk skill_mode_state.
+             * @member {minimir.v1.SkillModeState.$Properties|null|undefined} skill_mode_state
+             * @memberof minimir.v1.SceneBaselineChunk
+             * @instance
+             */
+            SceneBaselineChunk.prototype.skill_mode_state = null;
+
+            /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @function create
              * @memberof minimir.v1.SceneBaselineChunk
@@ -5973,6 +6028,8 @@ $root.minimir = (function() {
                 if (message.entities != null && message.entities.length)
                     for (var i = 0; i < message.entities.length; ++i)
                         $root.minimir.v1.EntityState.encode(message.entities[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.skill_mode_state != null && $Object.hasOwnProperty.call(message, "skill_mode_state"))
+                    $root.minimir.v1.SkillModeState.encode(message.skill_mode_state, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -6083,6 +6140,12 @@ $root.minimir = (function() {
                             message.entities.push($root.minimir.v1.EntityState.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.skill_mode_state = $root.minimir.v1.SkillModeState.decode(reader, reader.size(), $undefined, _depth + 1, message.skill_mode_state);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -6154,6 +6217,11 @@ $root.minimir = (function() {
                         if (error)
                             return "entities." + error;
                     }
+                }
+                if (message.skill_mode_state != null && $Object.hasOwnProperty.call(message, "skill_mode_state")) {
+                    var error = $root.minimir.v1.SkillModeState.verify(message.skill_mode_state, _depth + 1);
+                    if (error)
+                        return "skill_mode_state." + error;
                 }
                 return null;
             };
@@ -6812,6 +6880,1598 @@ $root.minimir = (function() {
             return CastIntent;
         })();
 
+        v1.AttackIntent = (function() {
+
+            /**
+             * Properties of an AttackIntent.
+             * @typedef {Object} minimir.v1.AttackIntent.$Properties
+             * @property {Long|null} [scene_epoch] AttackIntent scene_epoch
+             * @property {number|null} [input_sequence] AttackIntent input_sequence
+             * @property {number|null} [direction] AttackIntent direction
+             * @property {number|null} [skill_id] AttackIntent skill_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AttackIntent.
+             * @memberof minimir.v1
+             * @interface IAttackIntent
+             * @augments minimir.v1.AttackIntent.$Properties
+             * @deprecated Use minimir.v1.AttackIntent.$Properties instead.
+             */
+
+            /**
+             * Shape of an AttackIntent.
+             * @typedef {minimir.v1.AttackIntent.$Properties} minimir.v1.AttackIntent.$Shape
+             */
+
+            /**
+             * Constructs a new AttackIntent.
+             * @memberof minimir.v1
+             * @classdesc Represents an AttackIntent.
+             * @constructor
+             * @param {minimir.v1.AttackIntent.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var AttackIntent = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AttackIntent scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * AttackIntent input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.input_sequence = 0;
+
+            /**
+             * AttackIntent direction.
+             * @member {number} direction
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.direction = 0;
+
+            /**
+             * AttackIntent skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.AttackIntent
+             * @instance
+             */
+            AttackIntent.prototype.skill_id = 0;
+
+            /**
+             * Creates a new AttackIntent instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {minimir.v1.AttackIntent.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.AttackIntent} AttackIntent instance
+             * @type {{
+             *   (properties: minimir.v1.AttackIntent.$Shape): minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape;
+             *   (properties?: minimir.v1.AttackIntent.$Properties): minimir.v1.AttackIntent;
+             * }}
+             */
+            AttackIntent.create = function(properties) {
+                return new AttackIntent(properties);
+            };
+
+            /**
+             * Encodes the specified AttackIntent message. Does not implicitly {@link minimir.v1.AttackIntent.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {minimir.v1.AttackIntent.$Properties} message AttackIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AttackIntent.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.input_sequence);
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction") && message.direction !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.direction);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.skill_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AttackIntent message, length delimited. Does not implicitly {@link minimir.v1.AttackIntent.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {minimir.v1.AttackIntent.$Properties} message AttackIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AttackIntent.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AttackIntent message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape} AttackIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AttackIntent.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.AttackIntent();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.direction = value;
+                            else
+                                delete message.direction;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AttackIntent message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape} AttackIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AttackIntent.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an AttackIntent message.
+             * @function verify
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AttackIntent.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction"))
+                    if (!$util.isInteger(message.direction))
+                        return "direction: integer expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for AttackIntent
+             * @function getTypeUrl
+             * @memberof minimir.v1.AttackIntent
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AttackIntent.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.AttackIntent";
+            };
+
+            return AttackIntent;
+        })();
+
+        v1.SkillModeIntent = (function() {
+
+            /**
+             * Properties of a SkillModeIntent.
+             * @typedef {Object} minimir.v1.SkillModeIntent.$Properties
+             * @property {Long|null} [scene_epoch] SkillModeIntent scene_epoch
+             * @property {number|null} [input_sequence] SkillModeIntent input_sequence
+             * @property {number|null} [skill_id] SkillModeIntent skill_id
+             * @property {boolean|null} [enabled] SkillModeIntent enabled
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillModeIntent.
+             * @memberof minimir.v1
+             * @interface ISkillModeIntent
+             * @augments minimir.v1.SkillModeIntent.$Properties
+             * @deprecated Use minimir.v1.SkillModeIntent.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillModeIntent.
+             * @typedef {minimir.v1.SkillModeIntent.$Properties} minimir.v1.SkillModeIntent.$Shape
+             */
+
+            /**
+             * Constructs a new SkillModeIntent.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillModeIntent.
+             * @constructor
+             * @param {minimir.v1.SkillModeIntent.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillModeIntent = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillModeIntent scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.SkillModeIntent
+             * @instance
+             */
+            SkillModeIntent.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillModeIntent input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.SkillModeIntent
+             * @instance
+             */
+            SkillModeIntent.prototype.input_sequence = 0;
+
+            /**
+             * SkillModeIntent skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.SkillModeIntent
+             * @instance
+             */
+            SkillModeIntent.prototype.skill_id = 0;
+
+            /**
+             * SkillModeIntent enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.SkillModeIntent
+             * @instance
+             */
+            SkillModeIntent.prototype.enabled = false;
+
+            /**
+             * Creates a new SkillModeIntent instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {minimir.v1.SkillModeIntent.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillModeIntent} SkillModeIntent instance
+             * @type {{
+             *   (properties: minimir.v1.SkillModeIntent.$Shape): minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape;
+             *   (properties?: minimir.v1.SkillModeIntent.$Properties): minimir.v1.SkillModeIntent;
+             * }}
+             */
+            SkillModeIntent.create = function(properties) {
+                return new SkillModeIntent(properties);
+            };
+
+            /**
+             * Encodes the specified SkillModeIntent message. Does not implicitly {@link minimir.v1.SkillModeIntent.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {minimir.v1.SkillModeIntent.$Properties} message SkillModeIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeIntent.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.input_sequence);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.skill_id);
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.enabled);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillModeIntent message, length delimited. Does not implicitly {@link minimir.v1.SkillModeIntent.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {minimir.v1.SkillModeIntent.$Properties} message SkillModeIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeIntent.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillModeIntent message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape} SkillModeIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeIntent.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillModeIntent();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillModeIntent message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape} SkillModeIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeIntent.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillModeIntent message.
+             * @function verify
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillModeIntent.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillModeIntent
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillModeIntent
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillModeIntent.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillModeIntent";
+            };
+
+            return SkillModeIntent;
+        })();
+
+        v1.SkillModeEntry = (function() {
+
+            /**
+             * Properties of a SkillModeEntry.
+             * @typedef {Object} minimir.v1.SkillModeEntry.$Properties
+             * @property {number|null} [skill_id] SkillModeEntry skill_id
+             * @property {boolean|null} [enabled] SkillModeEntry enabled
+             * @property {boolean|null} [ready] SkillModeEntry ready
+             * @property {number|null} [remaining_ms] SkillModeEntry remaining_ms
+             * @property {number|null} [cooldown_remaining_ms] SkillModeEntry cooldown_remaining_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillModeEntry.
+             * @memberof minimir.v1
+             * @interface ISkillModeEntry
+             * @augments minimir.v1.SkillModeEntry.$Properties
+             * @deprecated Use minimir.v1.SkillModeEntry.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillModeEntry.
+             * @typedef {minimir.v1.SkillModeEntry.$Properties} minimir.v1.SkillModeEntry.$Shape
+             */
+
+            /**
+             * Constructs a new SkillModeEntry.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillModeEntry.
+             * @constructor
+             * @param {minimir.v1.SkillModeEntry.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillModeEntry = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillModeEntry skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.SkillModeEntry
+             * @instance
+             */
+            SkillModeEntry.prototype.skill_id = 0;
+
+            /**
+             * SkillModeEntry enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.SkillModeEntry
+             * @instance
+             */
+            SkillModeEntry.prototype.enabled = false;
+
+            /**
+             * SkillModeEntry ready.
+             * @member {boolean} ready
+             * @memberof minimir.v1.SkillModeEntry
+             * @instance
+             */
+            SkillModeEntry.prototype.ready = false;
+
+            /**
+             * SkillModeEntry remaining_ms.
+             * @member {number} remaining_ms
+             * @memberof minimir.v1.SkillModeEntry
+             * @instance
+             */
+            SkillModeEntry.prototype.remaining_ms = 0;
+
+            /**
+             * SkillModeEntry cooldown_remaining_ms.
+             * @member {number} cooldown_remaining_ms
+             * @memberof minimir.v1.SkillModeEntry
+             * @instance
+             */
+            SkillModeEntry.prototype.cooldown_remaining_ms = 0;
+
+            /**
+             * Creates a new SkillModeEntry instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {minimir.v1.SkillModeEntry.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillModeEntry} SkillModeEntry instance
+             * @type {{
+             *   (properties: minimir.v1.SkillModeEntry.$Shape): minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape;
+             *   (properties?: minimir.v1.SkillModeEntry.$Properties): minimir.v1.SkillModeEntry;
+             * }}
+             */
+            SkillModeEntry.create = function(properties) {
+                return new SkillModeEntry(properties);
+            };
+
+            /**
+             * Encodes the specified SkillModeEntry message. Does not implicitly {@link minimir.v1.SkillModeEntry.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {minimir.v1.SkillModeEntry.$Properties} message SkillModeEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeEntry.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.skill_id);
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.enabled);
+                if (message.ready != null && $Object.hasOwnProperty.call(message, "ready") && message.ready !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.ready);
+                if (message.remaining_ms != null && $Object.hasOwnProperty.call(message, "remaining_ms") && message.remaining_ms !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.remaining_ms);
+                if (message.cooldown_remaining_ms != null && $Object.hasOwnProperty.call(message, "cooldown_remaining_ms") && message.cooldown_remaining_ms !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.cooldown_remaining_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillModeEntry message, length delimited. Does not implicitly {@link minimir.v1.SkillModeEntry.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {minimir.v1.SkillModeEntry.$Properties} message SkillModeEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeEntry.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillModeEntry message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape} SkillModeEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeEntry.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillModeEntry();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.ready = value;
+                            else
+                                delete message.ready;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.remaining_ms = value;
+                            else
+                                delete message.remaining_ms;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.cooldown_remaining_ms = value;
+                            else
+                                delete message.cooldown_remaining_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillModeEntry message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape} SkillModeEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeEntry.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillModeEntry message.
+             * @function verify
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillModeEntry.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.ready != null && $Object.hasOwnProperty.call(message, "ready"))
+                    if (typeof message.ready !== "boolean")
+                        return "ready: boolean expected";
+                if (message.remaining_ms != null && $Object.hasOwnProperty.call(message, "remaining_ms"))
+                    if (!$util.isInteger(message.remaining_ms))
+                        return "remaining_ms: integer expected";
+                if (message.cooldown_remaining_ms != null && $Object.hasOwnProperty.call(message, "cooldown_remaining_ms"))
+                    if (!$util.isInteger(message.cooldown_remaining_ms))
+                        return "cooldown_remaining_ms: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillModeEntry
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillModeEntry
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillModeEntry.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillModeEntry";
+            };
+
+            return SkillModeEntry;
+        })();
+
+        v1.SkillModeState = (function() {
+
+            /**
+             * Properties of a SkillModeState.
+             * @typedef {Object} minimir.v1.SkillModeState.$Properties
+             * @property {Long|null} [scene_epoch] SkillModeState scene_epoch
+             * @property {Long|null} [revision] SkillModeState revision
+             * @property {Array.<minimir.v1.SkillModeEntry.$Properties>|null} [states] SkillModeState states
+             * @property {Long|null} [player_life] SkillModeState player_life
+             * @property {Long|null} [server_time_unix_ms] SkillModeState server_time_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SkillModeState.
+             * @memberof minimir.v1
+             * @interface ISkillModeState
+             * @augments minimir.v1.SkillModeState.$Properties
+             * @deprecated Use minimir.v1.SkillModeState.$Properties instead.
+             */
+
+            /**
+             * Shape of a SkillModeState.
+             * @typedef {minimir.v1.SkillModeState.$Properties} minimir.v1.SkillModeState.$Shape
+             */
+
+            /**
+             * Constructs a new SkillModeState.
+             * @memberof minimir.v1
+             * @classdesc Represents a SkillModeState.
+             * @constructor
+             * @param {minimir.v1.SkillModeState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SkillModeState = function (properties) {
+                this.states = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SkillModeState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.SkillModeState
+             * @instance
+             */
+            SkillModeState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillModeState revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.SkillModeState
+             * @instance
+             */
+            SkillModeState.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillModeState states.
+             * @member {Array.<minimir.v1.SkillModeEntry.$Properties>} states
+             * @memberof minimir.v1.SkillModeState
+             * @instance
+             */
+            SkillModeState.prototype.states = $util.emptyArray;
+
+            /**
+             * SkillModeState player_life.
+             * @member {Long} player_life
+             * @memberof minimir.v1.SkillModeState
+             * @instance
+             */
+            SkillModeState.prototype.player_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SkillModeState server_time_unix_ms.
+             * @member {Long} server_time_unix_ms
+             * @memberof minimir.v1.SkillModeState
+             * @instance
+             */
+            SkillModeState.prototype.server_time_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new SkillModeState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {minimir.v1.SkillModeState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SkillModeState} SkillModeState instance
+             * @type {{
+             *   (properties: minimir.v1.SkillModeState.$Shape): minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape;
+             *   (properties?: minimir.v1.SkillModeState.$Properties): minimir.v1.SkillModeState;
+             * }}
+             */
+            SkillModeState.create = function(properties) {
+                return new SkillModeState(properties);
+            };
+
+            /**
+             * Encodes the specified SkillModeState message. Does not implicitly {@link minimir.v1.SkillModeState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {minimir.v1.SkillModeState.$Properties} message SkillModeState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.revision);
+                if (message.states != null && message.states.length)
+                    for (var i = 0; i < message.states.length; ++i)
+                        $root.minimir.v1.SkillModeEntry.encode(message.states[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.player_life != null && $Object.hasOwnProperty.call(message, "player_life") && (typeof message.player_life === "object" ? message.player_life.low || message.player_life.high : message.player_life !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.player_life);
+                if (message.server_time_unix_ms != null && $Object.hasOwnProperty.call(message, "server_time_unix_ms") && (typeof message.server_time_unix_ms === "object" ? message.server_time_unix_ms.low || message.server_time_unix_ms.high : message.server_time_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.server_time_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SkillModeState message, length delimited. Does not implicitly {@link minimir.v1.SkillModeState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {minimir.v1.SkillModeState.$Properties} message SkillModeState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SkillModeState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SkillModeState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape} SkillModeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SkillModeState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.states && message.states.length))
+                                message.states = [];
+                            message.states.push($root.minimir.v1.SkillModeEntry.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.player_life = value;
+                            else
+                                delete message.player_life;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.server_time_unix_ms = value;
+                            else
+                                delete message.server_time_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SkillModeState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape} SkillModeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SkillModeState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SkillModeState message.
+             * @function verify
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SkillModeState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                if (message.states != null && $Object.hasOwnProperty.call(message, "states")) {
+                    if (!$Array.isArray(message.states))
+                        return "states: array expected";
+                    for (var i = 0; i < message.states.length; ++i) {
+                        var error = $root.minimir.v1.SkillModeEntry.verify(message.states[i], _depth + 1);
+                        if (error)
+                            return "states." + error;
+                    }
+                }
+                if (message.player_life != null && $Object.hasOwnProperty.call(message, "player_life"))
+                    if (!$util.isInteger(message.player_life) && !(message.player_life && $util.isInteger(message.player_life.low) && $util.isInteger(message.player_life.high)))
+                        return "player_life: integer|Long expected";
+                if (message.server_time_unix_ms != null && $Object.hasOwnProperty.call(message, "server_time_unix_ms"))
+                    if (!$util.isInteger(message.server_time_unix_ms) && !(message.server_time_unix_ms && $util.isInteger(message.server_time_unix_ms.low) && $util.isInteger(message.server_time_unix_ms.high)))
+                        return "server_time_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for SkillModeState
+             * @function getTypeUrl
+             * @memberof minimir.v1.SkillModeState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SkillModeState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SkillModeState";
+            };
+
+            return SkillModeState;
+        })();
+
+        v1.CastStep = (function() {
+
+            /**
+             * Properties of a CastStep.
+             * @typedef {Object} minimir.v1.CastStep.$Properties
+             * @property {Long|null} [scene_epoch] CastStep scene_epoch
+             * @property {Long|null} [cast_id] CastStep cast_id
+             * @property {number|null} [skill_id] CastStep skill_id
+             * @property {number|null} [caster_handle] CastStep caster_handle
+             * @property {Long|null} [caster_life] CastStep caster_life
+             * @property {minimir.v1.GridPoint.$Properties|null} [grid] CastStep grid
+             * @property {number|null} [direction] CastStep direction
+             * @property {number|null} [step_index] CastStep step_index
+             * @property {number|null} [skill_level] CastStep skill_level
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CastStep.
+             * @memberof minimir.v1
+             * @interface ICastStep
+             * @augments minimir.v1.CastStep.$Properties
+             * @deprecated Use minimir.v1.CastStep.$Properties instead.
+             */
+
+            /**
+             * Shape of a CastStep.
+             * @typedef {minimir.v1.CastStep.$Properties} minimir.v1.CastStep.$Shape
+             */
+
+            /**
+             * Constructs a new CastStep.
+             * @memberof minimir.v1
+             * @classdesc Represents a CastStep.
+             * @constructor
+             * @param {minimir.v1.CastStep.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var CastStep = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CastStep scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastStep cast_id.
+             * @member {Long} cast_id
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.cast_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastStep skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.skill_id = 0;
+
+            /**
+             * CastStep caster_handle.
+             * @member {number} caster_handle
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.caster_handle = 0;
+
+            /**
+             * CastStep caster_life.
+             * @member {Long} caster_life
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastStep grid.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} grid
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.grid = null;
+
+            /**
+             * CastStep direction.
+             * @member {number} direction
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.direction = 0;
+
+            /**
+             * CastStep step_index.
+             * @member {number} step_index
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.step_index = 0;
+
+            /**
+             * CastStep skill_level.
+             * @member {number} skill_level
+             * @memberof minimir.v1.CastStep
+             * @instance
+             */
+            CastStep.prototype.skill_level = 0;
+
+            /**
+             * Creates a new CastStep instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {minimir.v1.CastStep.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.CastStep} CastStep instance
+             * @type {{
+             *   (properties: minimir.v1.CastStep.$Shape): minimir.v1.CastStep & minimir.v1.CastStep.$Shape;
+             *   (properties?: minimir.v1.CastStep.$Properties): minimir.v1.CastStep;
+             * }}
+             */
+            CastStep.create = function(properties) {
+                return new CastStep(properties);
+            };
+
+            /**
+             * Encodes the specified CastStep message. Does not implicitly {@link minimir.v1.CastStep.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {minimir.v1.CastStep.$Properties} message CastStep message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CastStep.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id") && (typeof message.cast_id === "object" ? message.cast_id.low || message.cast_id.high : message.cast_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.cast_id);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.skill_id);
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle") && message.caster_handle !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.caster_handle);
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.caster_life);
+                if (message.grid != null && $Object.hasOwnProperty.call(message, "grid"))
+                    $root.minimir.v1.GridPoint.encode(message.grid, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction") && message.direction !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.direction);
+                if (message.step_index != null && $Object.hasOwnProperty.call(message, "step_index") && message.step_index !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.step_index);
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level") && message.skill_level !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.skill_level);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CastStep message, length delimited. Does not implicitly {@link minimir.v1.CastStep.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {minimir.v1.CastStep.$Properties} message CastStep message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CastStep.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CastStep message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.CastStep & minimir.v1.CastStep.$Shape} CastStep
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CastStep.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.CastStep();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.cast_id = value;
+                            else
+                                delete message.cast_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.caster_handle = value;
+                            else
+                                delete message.caster_handle;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.caster_life = value;
+                            else
+                                delete message.caster_life;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.grid = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.grid);
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.direction = value;
+                            else
+                                delete message.direction;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.step_index = value;
+                            else
+                                delete message.step_index;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_level = value;
+                            else
+                                delete message.skill_level;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CastStep message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.CastStep & minimir.v1.CastStep.$Shape} CastStep
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CastStep.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a CastStep message.
+             * @function verify
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CastStep.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id"))
+                    if (!$util.isInteger(message.cast_id) && !(message.cast_id && $util.isInteger(message.cast_id.low) && $util.isInteger(message.cast_id.high)))
+                        return "cast_id: integer|Long expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle"))
+                    if (!$util.isInteger(message.caster_handle))
+                        return "caster_handle: integer expected";
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
+                    if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
+                        return "caster_life: integer|Long expected";
+                if (message.grid != null && $Object.hasOwnProperty.call(message, "grid")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.grid, _depth + 1);
+                    if (error)
+                        return "grid." + error;
+                }
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction"))
+                    if (!$util.isInteger(message.direction))
+                        return "direction: integer expected";
+                if (message.step_index != null && $Object.hasOwnProperty.call(message, "step_index"))
+                    if (!$util.isInteger(message.step_index))
+                        return "step_index: integer expected";
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level"))
+                    if (!$util.isInteger(message.skill_level))
+                        return "skill_level: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for CastStep
+             * @function getTypeUrl
+             * @memberof minimir.v1.CastStep
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CastStep.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.CastStep";
+            };
+
+            return CastStep;
+        })();
+
         v1.CastAccepted = (function() {
 
             /**
@@ -6829,6 +8489,7 @@ $root.minimir = (function() {
              * @property {number|null} [input_sequence] CastAccepted input_sequence
              * @property {Long|null} [caster_life] CastAccepted caster_life
              * @property {Long|null} [target_life] CastAccepted target_life
+             * @property {number|null} [skill_level] CastAccepted skill_level
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -6957,6 +8618,14 @@ $root.minimir = (function() {
             CastAccepted.prototype.target_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * CastAccepted skill_level.
+             * @member {number} skill_level
+             * @memberof minimir.v1.CastAccepted
+             * @instance
+             */
+            CastAccepted.prototype.skill_level = 0;
+
+            /**
              * Creates a new CastAccepted instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CastAccepted
@@ -7012,6 +8681,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.caster_life);
                 if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life") && (typeof message.target_life === "object" ? message.target_life.low || message.target_life.high : message.target_life !== 0))
                     writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.target_life);
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level") && message.skill_level !== 0)
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.skill_level);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7171,6 +8842,15 @@ $root.minimir = (function() {
                                 delete message.target_life;
                             continue;
                         }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_level = value;
+                            else
+                                delete message.skill_level;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7259,6 +8939,9 @@ $root.minimir = (function() {
                 if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life"))
                     if (!$util.isInteger(message.target_life) && !(message.target_life && $util.isInteger(message.target_life.low) && $util.isInteger(message.target_life.high)))
                         return "target_life: integer|Long expected";
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level"))
+                    if (!$util.isInteger(message.skill_level))
+                        return "skill_level: integer expected";
                 return null;
             };
 
@@ -7294,6 +8977,9 @@ $root.minimir = (function() {
              * @property {number|null} [delay_ms] AttackAccepted delay_ms
              * @property {number|null} [attack_sequence] AttackAccepted attack_sequence
              * @property {number|null} [input_sequence] AttackAccepted input_sequence
+             * @property {number|null} [skill_id] AttackAccepted skill_id
+             * @property {number|null} [skill_level] AttackAccepted skill_level
+             * @property {Long|null} [caster_life] AttackAccepted caster_life
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -7406,6 +9092,30 @@ $root.minimir = (function() {
             AttackAccepted.prototype.input_sequence = 0;
 
             /**
+             * AttackAccepted skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.skill_id = 0;
+
+            /**
+             * AttackAccepted skill_level.
+             * @member {number} skill_level
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.skill_level = 0;
+
+            /**
+             * AttackAccepted caster_life.
+             * @member {Long} caster_life
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new AttackAccepted instance using the specified properties.
              * @function create
              * @memberof minimir.v1.AttackAccepted
@@ -7457,6 +9167,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.attack_sequence);
                 if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.input_sequence);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.skill_id);
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level") && message.skill_level !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.skill_level);
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.caster_life);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7598,6 +9314,33 @@ $root.minimir = (function() {
                                 delete message.input_sequence;
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_level = value;
+                            else
+                                delete message.skill_level;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.caster_life = value;
+                            else
+                                delete message.caster_life;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7680,6 +9423,15 @@ $root.minimir = (function() {
                 if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
                     if (!$util.isInteger(message.input_sequence))
                         return "input_sequence: integer expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.skill_level != null && $Object.hasOwnProperty.call(message, "skill_level"))
+                    if (!$util.isInteger(message.skill_level))
+                        return "skill_level: integer expected";
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
+                    if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
+                        return "caster_life: integer|Long expected";
                 return null;
             };
 

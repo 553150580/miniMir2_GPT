@@ -29,6 +29,10 @@ const (
 	MsgS2CCastAccepted uint16 = 30006
 	MsgS2CAttackAccepted uint16 = 30007
 	MsgS2CCombatImpact uint16 = 30008
+	MsgC2SSkillModeIntent uint16 = 30009
+	MsgS2CSkillModeState uint16 = 30010
+	MsgC2SAttackIntent uint16 = 30011
+	MsgS2CCastStep uint16 = 30012
 	MsgC2SEquip uint16 = 40001
 	MsgC2SRecycle uint16 = 40002
 	MsgS2CInventory uint16 = 40003

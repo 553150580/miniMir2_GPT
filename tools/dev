@@ -35,6 +35,8 @@ def main():
     if lima.get('binary_path'):directories.append(str(Path(lima['binary_path']).parent))
     github=read_lock('github-cli.lock.json')
     if github.get('executable'):directories.append(str(Path(github['executable']).parent))
+    dotnet=read_lock('dotnet.lock.json')
+    if dotnet.get('executable'):directories.append(str(Path(dotnet['executable']).parent))
     env=os.environ.copy()
     # macOS系统Python的launcher变量会污染另一个venv，导致版本正确但依赖路径错误。
     for key in ('__PYVENV_LAUNCHER__','PYTHONHOME','PYTHONPATH','PYTHONUSERBASE'):
@@ -48,6 +50,18 @@ def main():
     env['GOPROXY']='https://goproxy.cn,https://proxy.golang.org,direct'
     env['GOSUMDB']='sum.golang.org https://goproxy.cn/sumdb/sum.golang.org'
     env['MINIMIR_TOOLCHAIN_ACTIVE']='1'
+    if dotnet.get('installation'):
+        env['DOTNET_ROOT']=dotnet['installation']
+        env['DOTNET_ROOT_ARM64' if dotnet.get('platform')=='osx-arm64' else 'DOTNET_ROOT_X64']=dotnet['installation']
+        env['DOTNET_MULTILEVEL_LOOKUP']='0'
+        env['DOTNET_CLI_TELEMETRY_OPTOUT']='1'
+        env['DOTNET_SKIP_FIRST_TIME_EXPERIENCE']='1'
+        env['DOTNET_NOLOGO']='1'
+        env['DOTNET_CLI_HOME']=str(PREFIX/'cache/dotnet-cli')
+        env['DOTNET_GENERATE_ASPNET_CERTIFICATE']='false'
+        env['DOTNET_ADD_GLOBAL_TOOLS_TO_PATH']='false'
+        env['DOTNET_CLI_WORKLOAD_UPDATE_NOTIFY_DISABLE']='true'
+        env['NUGET_PACKAGES']=str(PREFIX/'cache/nuget')
     if lima.get('lima_home'):env['LIMA_HOME']=lima['lima_home']
     if len(sys.argv)<2:
         print('用法：./tools/dev <go|protoc|python3|pbjs|pbts|node|其他命令> [参数...]')

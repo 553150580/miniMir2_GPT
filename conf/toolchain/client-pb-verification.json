@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 49,
+  "message_count": 54,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -30,6 +30,11 @@
     "SceneBaselineChunk",
     "MoveIntent",
     "CastIntent",
+    "AttackIntent",
+    "SkillModeIntent",
+    "SkillModeEntry",
+    "SkillModeState",
+    "CastStep",
     "CastAccepted",
     "AttackAccepted",
     "CombatImpact",
@@ -56,8 +61,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 79,
-  "int64_boundary_cases": 258,
+  "int64_field_count": 89,
+  "int64_boundary_cases": 288,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -288,6 +293,60 @@
       "cases": 3
     },
     {
+      "message": "AttackIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "player_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "server_time_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "CastAccepted",
       "field": "scene_epoch",
       "type": "uint64",
@@ -320,6 +379,12 @@
     {
       "message": "AttackAccepted",
       "field": "event_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "caster_life",
       "type": "uint64",
       "cases": 3
     },
@@ -636,7 +701,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "a956068695740174bde1a58063196cdbff56156cfaf7e993b4a44a00facf9a2c"
+      "sha256": "f976d4e6f94cd7bd0b437ec3b59f007083480bfe140c36c25922f4e79e8a6474"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -646,13 +711,13 @@
   "generated_files": [
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "a6b2b92f0b3b035bc7549234e82ab182517319c04a1ca8ebe8413311ccb6d517",
-      "bytes": 734382
+      "sha256": "8fb458ab109927fef6c15daf8ef4a93cb07d8ba08f4742544e1fa0ab320165a6",
+      "bytes": 822357
     },
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "4ae18ee2a68289721b07f0aa81c0efe0db896af30f69af351e799dbfba3a943f",
-      "bytes": 248031
+      "sha256": "282ba3bf3548f25b72373966269383711b184d3150e5380963699cb3b7d0406c",
+      "bytes": 274877
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

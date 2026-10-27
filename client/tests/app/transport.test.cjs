@@ -31,6 +31,27 @@ const {encodePacket,decodePacket,GameConnection}=load('GameConnection');
 const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
+test('真实逐格CastStep保留64位场景/施法/生命和原格，空有效格不需要target字段',()=>{
+    const large=Long.fromString('9007199254740993',true),step=decodePacket(encodePacket(30012,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,castId:large,skillId:9,casterHandle:1,casterLife:large,grid:{x:4,y:2},direction:2,stepIndex:3,skillLevel:3})).value;
+    assert.equal(step.sceneEpoch.toString(),'18446744073709551615');assert.equal(step.castId.toString(),large.toString());assert.equal(step.casterLife.toString(),large.toString());
+    assert.deepEqual(step.grid,{x:4,y:2});assert.equal(step.stepIndex,3);assert.equal(step.skillLevel,3);assert.equal(step.targetHandle,undefined);
+});
+
+test('战士模式、朝向空挥及受理阶数/生命按新PB往返，模式基线跨分块仍完整恢复',()=>{
+    const large=Long.fromString('9007199254740993',true),mode={sceneEpoch:large,revision:large,playerLife:Long.UZERO,serverTimeUnixMs:large,
+        states:[{skillId:26,enabled:false,ready:true,remainingMs:10000,cooldownRemainingMs:10000}]};
+    const request=decodePacket(encodePacket(30009,1,Long.UONE,{sceneEpoch:large,inputSequence:4294967295,skillId:12,enabled:true})).value;
+    assert.equal(request.sceneEpoch.toString(),large.toString());assert.equal(request.enabled,true);assert.equal(request.inputSequence,4294967295);
+    const attack=decodePacket(encodePacket(30011,2,Long.UONE,{sceneEpoch:large,inputSequence:3,direction:7,skillId:0})).value;assert.equal(attack.direction,7);assert.equal(attack.skillId,0);
+    const state=decodePacket(encodePacket(30010,0,Long.UONE,mode)).value;assert.equal(state.playerLife.toString(),'0');assert.equal(state.revision.toString(),large.toString());assert.equal(state.states[0].ready,true);
+    const accepted=decodePacket(encodePacket(30007,0,Long.UONE,{skillId:25,skillLevel:3,casterLife:large})).value;assert.equal(accepted.skillId,25);assert.equal(accepted.skillLevel,3);assert.equal(accepted.casterLife.toString(),large.toString());
+    const cast=decodePacket(encodePacket(30006,0,Long.UONE,{skillId:33,skillLevel:2})).value;assert.equal(cast.skillLevel,2);
+    const assembler=new BaselineAssembler(),chunk={sceneEpoch:large,baselineId:large,stateSequence:Long.UONE,chunkCount:2};
+    const first=decodePacket(encodePacket(5,0,Long.UONE,{...chunk,chunkIndex:0,entities:[{entityHandle:1,attackSkillId:26,attackSkillLevel:3}],skillModeState:mode})).value;
+    assert.equal(assembler.accept(first,large,large),null);
+    const last=decodePacket(encodePacket(5,0,Long.UONE,{...chunk,chunkIndex:1,entities:[{entityHandle:2}]})).value;
+    const baseline=assembler.accept(last,large,large);assert.equal(baseline.skillModeState.revision.toString(),large.toString());assert.equal(baseline.entities[0].attackSkillId,26);assert.equal(baseline.entities[0].attackSkillLevel,3);
+});
 
 test('物品来源品质与技能报价字段精确往返，未知旧来源保持空值，报价提交只携原ID',()=>{
     const item={instanceId:new Uint8Array(16).fill(3),itemId:7,quantity:Long.MAX_VALUE,bound:false,version:Long.MAX_UNSIGNED_VALUE,sourceKind:'monster_drop',sourceId:'dev-drop-1',quality:1};

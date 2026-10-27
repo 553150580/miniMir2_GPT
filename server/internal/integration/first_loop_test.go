@@ -362,14 +362,23 @@ func TestFirstLoopMongoWS(t *testing.T) {
 		t.Fatal("死亡重连假回血或丢失原death_id")
 	}
 	revive := &pb.ReviveChoice{DeathId: c.death.DeathId, Action: 1, Operation: c.operation()}
+	deadLife, deadModeRevision := c.player().Life, c.scene.SkillModeState.Revision
 	revived := c.asset(p.MsgC2SReviveChoice, revive)
 	if revived.ErrorCode != 0 {
 		t.Fatalf("开发主动复活失败:%v", revived)
 	}
 	c.inventoryAt(revived.NewRevision)
 	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && c.player().Hp == c.player().HpMax })
+	if c.player().Life != deadLife+1 || c.scene.SkillModeState.PlayerLife != c.player().Life || c.scene.SkillModeState.Revision <= deadModeRevision {
+		t.Fatal("同连接复活未同步新生命代次和严格递增的模式版本")
+	}
+	modeRevision := c.scene.SkillModeState.Revision
 	if r := c.asset(p.MsgC2SReviveChoice, revive); r.ErrorCode != 0 {
 		t.Fatalf("复活原op重放失败:%v", r)
+	}
+	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline })
+	if c.player().Life != deadLife+1 || c.scene.SkillModeState.Revision != modeRevision {
+		t.Fatal("复活原op重放额外推进生命/模式版本")
 	}
 	// 数据库不得含临时战斗现场。
 	var document bson.M
@@ -511,6 +520,16 @@ func (c *client) send(id uint16, q proto.Message) uint32 {
 			message.InputSequence = c.input
 		}
 	case *pb.CastIntent:
+		if message.InputSequence == 0 {
+			c.input++
+			message.InputSequence = c.input
+		}
+	case *pb.AttackIntent:
+		if message.InputSequence == 0 {
+			c.input++
+			message.InputSequence = c.input
+		}
+	case *pb.SkillModeIntent:
 		if message.InputSequence == 0 {
 			c.input++
 			message.InputSequence = c.input

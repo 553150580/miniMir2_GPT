@@ -58,28 +58,30 @@ type worker struct {
 	roll     func(int64) int64
 }
 type entity struct {
-	Handle         uint32
-	Kind           uint32
-	Def            uint32
-	Pos            devconfig.Point
-	Direction      uint32
-	HP             int64
-	MP             int64
-	MaxMP          int64
-	MaxHP          int64
-	Action         uint32
-	AttackSequence uint32
-	ActionUntil    time.Time
-	NextMove       time.Time
-	NextAttack     time.Time
-	ActionReadyAt  time.Time
-	RespawnAt      time.Time
-	Monster        *devconfig.Monster
-	CastSequence   uint32
-	CastSkillID    uint32
-	Life           uint64
-	HealAmount     int64
-	NextHeal       time.Time
+	Handle           uint32
+	Kind             uint32
+	Def              uint32
+	Pos              devconfig.Point
+	Direction        uint32
+	HP               int64
+	MP               int64
+	MaxMP            int64
+	MaxHP            int64
+	Action           uint32
+	AttackSequence   uint32
+	AttackSkillID    uint32
+	AttackSkillLevel uint32
+	ActionUntil      time.Time
+	NextMove         time.Time
+	NextAttack       time.Time
+	ActionReadyAt    time.Time
+	RespawnAt        time.Time
+	Monster          *devconfig.Monster
+	CastSequence     uint32
+	CastSkillID      uint32
+	Life             uint64
+	HealAmount       int64
+	NextHeal         time.Time
 }
 type room struct {
 	Role               domain.Role
@@ -124,6 +126,7 @@ type room struct {
 	PreviewInFlight    bool
 	PreviewGeneration  uint64
 	Isolated           bool
+	Melee              meleeState
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -368,7 +371,9 @@ func (w *worker) command(c command) {
 			return
 		}
 		r.Ready = true
+		w.expireModes(r, time.Now())
 		w.snapshot(r)
+		w.modes(r, time.Now())
 		w.assets(r)
 		w.send(r, p.MsgS2CHostingReport, 0, r.Role.HostingReport())
 		if r.Player.HP == 0 {
@@ -386,6 +391,34 @@ func (w *worker) command(c command) {
 		return
 	}
 	switch c.frame.ID {
+	case p.MsgC2SSkillModeIntent:
+		var q pb.SkillModeIntent
+		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene {
+			w.failure(r, c.frame, p.CodeInvalidArgument)
+			return
+		}
+		if !acceptInput(r, q.InputSequence) {
+			w.failure(r, c.frame, p.CodeStaleInput)
+			w.modes(r, time.Now())
+			return
+		}
+		if code := w.setSkillMode(r, q.SkillId, q.Enabled, time.Now()); code != 0 {
+			w.failure(r, c.frame, code)
+			w.modes(r, time.Now())
+		}
+	case p.MsgC2SAttackIntent:
+		var q pb.AttackIntent
+		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
+			w.failure(r, c.frame, p.CodeInvalidArgument)
+			return
+		}
+		if !acceptInput(r, q.InputSequence) {
+			w.failure(r, c.frame, p.CodeStaleInput)
+			return
+		}
+		if code := w.attackFacing(r, q.Direction, q.SkillId, q.InputSequence, time.Now()); code != 0 {
+			w.failure(r, c.frame, code)
+		}
 	case p.MsgC2SSkillAssetPreview:
 		w.skillAssetPreview(r, c.frame)
 	case p.MsgC2SMoveIntent:
@@ -443,7 +476,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.SkillId != 0 {
-			if code := w.cast(r, q.SkillId, q.TargetHandle, q.InputSequence, time.Now(), q.TargetGrid); code != 0 {
+			if code := w.castDirected(r, q.SkillId, q.TargetHandle, q.InputSequence, q.Direction, time.Now(), q.TargetGrid); code != 0 {
 				w.failure(r, c.frame, code)
 			}
 			return
@@ -549,10 +582,23 @@ func (w *worker) after(r *room) {
 		w.command(c)
 	}
 }
+
+func (w *worker) revivePlayer(r *room) {
+	r.Player.Life++
+	// 生命代次切换必须同时推进模式观察版本；同连接客户端不能被旧revision永久挡住。
+	r.Melee.Revision++
+	r.Player.HP = r.Player.MaxHP
+	r.Player.MP = r.Player.MaxMP
+	r.Player.Pos = w.e.Store.Cfg.Fixture.Map.PlayerSpawn
+	r.Player.Action = 0
+	r.DeathID = ""
+	r.Destination = nil
+	r.HostMS = 0
+}
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
 	if !r.Ready {
 		switch id {
-		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CDeathNotice:
+		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CCastStep, p.MsgS2CSkillModeState, p.MsgS2CDeathNotice:
 			return
 		}
 	}
@@ -594,7 +640,7 @@ func (w *worker) baseline(r *room) {
 		return
 	}
 	r.Sequence++
-	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence}
+	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now())}
 	entities := []*entity{&r.Player}
 	if r.Pet != nil {
 		entities = append(entities, r.Pet)
@@ -609,7 +655,7 @@ func (w *worker) baseline(r *room) {
 			moveMS = uint32(stats.MoveMS)
 			attackMS = uint32(stats.AttackMS)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel})
 	}
 	w.send(r, p.MsgS2CSceneBaseline, 0, out)
 }
@@ -731,15 +777,9 @@ func (w *worker) asset(r *room, f wire.Frame) {
 			if err != nil {
 				result.ErrorCode = persistence.Code(err)
 			}
-			if err == nil && result.ErrorCode == 0 && q.Kind == "revive" && reviveID == r.DeathID && r.Player.HP <= 0 {
-				r.Player.Life++
-				r.Player.HP = r.Player.MaxHP
-				r.Player.MP = r.Player.MaxMP
-				r.Player.Pos = w.e.Store.Cfg.Fixture.Map.PlayerSpawn
-				r.Player.Action = 0
-				r.DeathID = ""
-				r.Destination = nil
-				r.HostMS = 0
+			revived := err == nil && result.ErrorCode == 0 && q.Kind == "revive" && reviveID == r.DeathID && r.Player.HP <= 0
+			if revived {
+				w.revivePlayer(r)
 			}
 			if err == nil && result.ErrorCode == 0 && q.Kind == "use_item" {
 				w.applyPotionReceipt(r, receipt, time.Now())
@@ -747,6 +787,9 @@ func (w *worker) asset(r *room, f wire.Frame) {
 			w.send(r, p.MsgS2COperationResult, f.Request, result)
 			w.assets(r)
 			w.snapshot(r)
+			if revived {
+				w.modes(r, time.Now())
+			}
 			w.after(r)
 		}
 	}}

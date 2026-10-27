@@ -1,7 +1,7 @@
-import { Button, isValid, Label, Node } from 'cc';
+import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { isGroundSkill, SkillRow, SkillSnapshot, skillAccuracy, skillRows } from './SkillModel';
+import { isDirectionalSkill, isGroundSkill, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -27,26 +27,37 @@ export class GameSkills {
         this.quickSkillId = quickSkillId;
         this.input = input; this.rows = skillRows(input);
         if (!this.rows.some(row => row.definition.id === this.selectedId)) this.selectedId = this.rows[0]?.definition.id ?? 0;
-        const key = JSON.stringify({ ready: input.ready, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn]), selected: this.selectedId, quick: quickSkillId });
+        // 原生Toggle的点击会先改变勾选；即使数据键相同，也必须无通知恢复权威状态。
+        const current = this.selected, toggleNode = this.saved('ModeToggle'), toggle = toggleNode.getComponent(Toggle)!;
+        const usesToggle = !!current && skillActivation(current.definition) === 'toggle';
+        toggleNode.active = usesToggle; this.saved('Use').active = !usesToggle;
+        const mode = current ? skillMode(input, current.definition.id) : undefined;
+        toggle.setIsCheckedWithoutNotify(!!mode?.enabled);
+        toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode);
+        this.text('ModeToggle/Label', mode ? mode.enabled ? '已开启' : '未开启' : '同步中');
+        const key = JSON.stringify({ ready: input.ready, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
             const row = data as SkillRow;
             const text = node.getChildByName('Text')?.getComponent(Label);
-            if (text) text.string = `${row.definition.name}${row.definition.active ? '' : '（被动）'}\n${row.status}\n${row.definition.active ? `魔法消耗 ${row.cost} · 射程 ${row.definition.range}格` : `当前准确 +${skillAccuracy(row)}`}`;
+            const summary = skillActivation(row.definition) === 'passive_proc' ? skillModeStatus(input, row.definition) : this.description(row, input);
+            if (text) text.string = `${row.definition.name}${row.definition.active ? '' : '（被动）'}\n${row.status}\n${summary}`;
             const marker = node.getChildByName('Selected');
             if (marker) marker.active = row.definition.id === this.selectedId;
         }, true);
         const selected = this.selected;
-        this.text('Message', selected ? `${selected.definition.name} · ${selected.status}\n${selected.definition.active ? `魔法消耗 ${selected.cost}` : `当前准确 +${skillAccuracy(selected)} · 无需主动施放`}` : '本职业暂无可用技能');
+        this.text('Message', selected ? `${selected.definition.name} · ${selected.status}\n${this.description(selected, input)}` : '本职业暂无可用技能');
         const learn = this.saved('Learn').getComponent(Button)!;
         const use = this.saved('Use').getComponent(Button)!;
         learn.interactable = !!selected?.canLearn;
-        use.interactable = !!(input.ready && selected?.learned && selected.definition.active);
+        use.interactable = !!(input.ready && selected?.learned && selected.definition.active
+            && (!['toggle', 'charge'].includes(skillActivation(selected.definition)) || skillMode(input, selected.definition.id))
+            && !(skillActivation(selected.definition) === 'charge' && skillMode(input, selected.definition.id)?.ready));
         this.saved('BindQuick').getComponent(Button)!.interactable = !!(selected?.learned && selected.definition.active);
         this.text('BindQuick/Label', selected?.definition.id === quickSkillId ? '当前快捷' : '设为快捷');
         this.text('Learn/Label', selected?.learned ? '已学会' : '学习');
-        this.text('Use/Label', selected && !selected.definition.active ? selected.learned ? '被动生效' : '被动技能' : '施放');
+        this.text('Use/Label', selected ? skillActionLabel(input, selected) : '施放');
     }
 
     dispose(): void {
@@ -58,7 +69,16 @@ export class GameSkills {
         this.selectedId = row.definition.id;
         if (this.input) this.refresh(this.input);
         this.popup.show('Details', { title: row.definition.name,
-            message: `${row.status}\n${row.definition.active ? `消耗魔法 ${row.cost}\n射程 ${row.definition.range}格${isGroundSkill(row.definition) ? ` · 地面范围${row.definition.area_radius ?? 0}格` : ''}` : `被动技能，无需主动施放\n当前准确 +${skillAccuracy(row)}`}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
+            message: `${row.status}\n${this.description(row, this.input!)}\n${row.definition.active && skillActivation(row.definition) === 'cast' ? isDirectionalSkill(row.definition) ? '轻触地图选择八方向' : isGroundSkill(row.definition) ? `地面范围 ${row.definition.area_radius ?? 0}格` : '' : ''}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
+    }
+    private description(row: SkillRow, input: SkillSnapshot): string {
+        const activation = skillActivation(row.definition), mode = skillModeStatus(input, row.definition);
+        if (!row.definition.active) return `${skillPassiveText(row)}${mode ? `\n${mode}` : ''}`;
+        if (activation === 'toggle') return `${mode} · 普攻按模式出招`;
+        if (activation === 'charge') return `${mode} · 充能消耗魔法 ${row.cost}`;
+        const target = row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`
+            : isDirectionalSkill(row.definition) ? `前方${row.definition.line_cells ?? 0}格` : `射程 ${row.definition.range}格`;
+        return `魔法消耗 ${row.cost} · ${target}`;
     }
     private saved(path: string): Node {
         const node = this.panel.getChildByPath(path); if (!node) throw new Error(`技能面板缺少保存节点：${path}`); return node;

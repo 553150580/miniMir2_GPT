@@ -1,8 +1,6 @@
 package game
 
 import (
-	"math"
-	"math/big"
 	"minimir/internal/devconfig"
 	"time"
 )
@@ -21,6 +19,9 @@ type pendingCast struct {
 	HostSession       string
 	PrivilegeUntil    time.Time
 	PrivilegeCaptured bool
+	Direction         uint32
+	LineRemaining     int
+	SkillLevel        uint32
 }
 
 func acceptInput(r *room, sequence uint32) bool {
@@ -90,18 +91,7 @@ func (w *worker) magicDamage(r *room, target *entity, amount int64) int64 {
 func (w *worker) magicAmount(s devconfig.Skill, level uint32, base int64) int64 {
 	mpower := s.MPowerBase + w.draw(s.MPowerBonus)
 	power := s.PowerBase + w.draw(s.PowerBonus)
-	numerator := mpower*(int64(level)+1) + power*4
-	whole, remainder := numerator/4, numerator%4
-	if remainder > 2 || (remainder == 2 && whole%2 != 0) {
-		whole++
-	}
-	value := big.NewInt(base + whole)
-	value.Mul(value, big.NewInt(s.MultiplierBasePPM+int64(level)*s.MultiplierBonusPPM))
-	value.Quo(value, big.NewInt(1000000))
-	if value.Cmp(big.NewInt(math.MaxInt32)) > 0 {
-		return math.MaxInt32
-	}
-	return value.Int64()
+	return s.SourceDamage(level, base, s.SourcePower(level, mpower, power))
 }
 
 func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity {

@@ -2234,6 +2234,12 @@ export namespace minimir {
             /** EntityState attack_interval_ms. */
             attack_interval_ms: number;
 
+            /** EntityState attack_skill_id. */
+            attack_skill_id: number;
+
+            /** EntityState attack_skill_level. */
+            attack_skill_level: number;
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -2345,6 +2351,12 @@ export namespace minimir {
                 /** EntityState attack_interval_ms */
                 attack_interval_ms?: (number|null);
 
+                /** EntityState attack_skill_id */
+                attack_skill_id?: (number|null);
+
+                /** EntityState attack_skill_level */
+                attack_skill_level?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -2389,6 +2401,9 @@ export namespace minimir {
 
             /** SceneBaselineChunk entities. */
             entities: minimir.v1.EntityState.$Properties[];
+
+            /** SceneBaselineChunk skill_mode_state. */
+            skill_mode_state?: (minimir.v1.SkillModeState.$Properties|null);
 
             /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
@@ -2470,6 +2485,9 @@ export namespace minimir {
 
                 /** SceneBaselineChunk entities */
                 entities?: (minimir.v1.EntityState.$Properties[]|null);
+
+                /** SceneBaselineChunk skill_mode_state */
+                skill_mode_state?: (minimir.v1.SkillModeState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -2726,6 +2744,618 @@ export namespace minimir {
         }
 
         /**
+         * Properties of an AttackIntent.
+         * @deprecated Use minimir.v1.AttackIntent.$Properties instead.
+         */
+        interface IAttackIntent extends minimir.v1.AttackIntent.$Properties {
+        }
+
+        /** Represents an AttackIntent. */
+        class AttackIntent {
+
+            /**
+             * Constructs a new AttackIntent.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.AttackIntent.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** AttackIntent scene_epoch. */
+            scene_epoch: Long;
+
+            /** AttackIntent input_sequence. */
+            input_sequence: number;
+
+            /** AttackIntent direction. */
+            direction: number;
+
+            /** AttackIntent skill_id. */
+            skill_id: number;
+
+            /**
+             * Creates a new AttackIntent instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns AttackIntent instance
+             */
+            static create(properties: minimir.v1.AttackIntent.$Shape): minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape;
+            static create(properties?: minimir.v1.AttackIntent.$Properties): minimir.v1.AttackIntent;
+
+            /**
+             * Encodes the specified AttackIntent message. Does not implicitly {@link minimir.v1.AttackIntent.verify|verify} messages.
+             * @param message AttackIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.AttackIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified AttackIntent message, length delimited. Does not implicitly {@link minimir.v1.AttackIntent.verify|verify} messages.
+             * @param message AttackIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.AttackIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an AttackIntent message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape} AttackIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape;
+
+            /**
+             * Decodes an AttackIntent message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape} AttackIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.AttackIntent & minimir.v1.AttackIntent.$Shape;
+
+            /**
+             * Verifies an AttackIntent message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for AttackIntent
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace AttackIntent {
+
+            /** Properties of an AttackIntent. */
+            interface $Properties {
+
+                /** AttackIntent scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** AttackIntent input_sequence */
+                input_sequence?: (number|null);
+
+                /** AttackIntent direction */
+                direction?: (number|null);
+
+                /** AttackIntent skill_id */
+                skill_id?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an AttackIntent. */
+            type $Shape = minimir.v1.AttackIntent.$Properties;
+        }
+
+        /**
+         * Properties of a SkillModeIntent.
+         * @deprecated Use minimir.v1.SkillModeIntent.$Properties instead.
+         */
+        interface ISkillModeIntent extends minimir.v1.SkillModeIntent.$Properties {
+        }
+
+        /** Represents a SkillModeIntent. */
+        class SkillModeIntent {
+
+            /**
+             * Constructs a new SkillModeIntent.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillModeIntent.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillModeIntent scene_epoch. */
+            scene_epoch: Long;
+
+            /** SkillModeIntent input_sequence. */
+            input_sequence: number;
+
+            /** SkillModeIntent skill_id. */
+            skill_id: number;
+
+            /** SkillModeIntent enabled. */
+            enabled: boolean;
+
+            /**
+             * Creates a new SkillModeIntent instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillModeIntent instance
+             */
+            static create(properties: minimir.v1.SkillModeIntent.$Shape): minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape;
+            static create(properties?: minimir.v1.SkillModeIntent.$Properties): minimir.v1.SkillModeIntent;
+
+            /**
+             * Encodes the specified SkillModeIntent message. Does not implicitly {@link minimir.v1.SkillModeIntent.verify|verify} messages.
+             * @param message SkillModeIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillModeIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillModeIntent message, length delimited. Does not implicitly {@link minimir.v1.SkillModeIntent.verify|verify} messages.
+             * @param message SkillModeIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillModeIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillModeIntent message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape} SkillModeIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape;
+
+            /**
+             * Decodes a SkillModeIntent message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape} SkillModeIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillModeIntent & minimir.v1.SkillModeIntent.$Shape;
+
+            /**
+             * Verifies a SkillModeIntent message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillModeIntent
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillModeIntent {
+
+            /** Properties of a SkillModeIntent. */
+            interface $Properties {
+
+                /** SkillModeIntent scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** SkillModeIntent input_sequence */
+                input_sequence?: (number|null);
+
+                /** SkillModeIntent skill_id */
+                skill_id?: (number|null);
+
+                /** SkillModeIntent enabled */
+                enabled?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillModeIntent. */
+            type $Shape = minimir.v1.SkillModeIntent.$Properties;
+        }
+
+        /**
+         * Properties of a SkillModeEntry.
+         * @deprecated Use minimir.v1.SkillModeEntry.$Properties instead.
+         */
+        interface ISkillModeEntry extends minimir.v1.SkillModeEntry.$Properties {
+        }
+
+        /** Represents a SkillModeEntry. */
+        class SkillModeEntry {
+
+            /**
+             * Constructs a new SkillModeEntry.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillModeEntry.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillModeEntry skill_id. */
+            skill_id: number;
+
+            /** SkillModeEntry enabled. */
+            enabled: boolean;
+
+            /** SkillModeEntry ready. */
+            ready: boolean;
+
+            /** SkillModeEntry remaining_ms. */
+            remaining_ms: number;
+
+            /** SkillModeEntry cooldown_remaining_ms. */
+            cooldown_remaining_ms: number;
+
+            /**
+             * Creates a new SkillModeEntry instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillModeEntry instance
+             */
+            static create(properties: minimir.v1.SkillModeEntry.$Shape): minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape;
+            static create(properties?: minimir.v1.SkillModeEntry.$Properties): minimir.v1.SkillModeEntry;
+
+            /**
+             * Encodes the specified SkillModeEntry message. Does not implicitly {@link minimir.v1.SkillModeEntry.verify|verify} messages.
+             * @param message SkillModeEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillModeEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillModeEntry message, length delimited. Does not implicitly {@link minimir.v1.SkillModeEntry.verify|verify} messages.
+             * @param message SkillModeEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillModeEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillModeEntry message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape} SkillModeEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape;
+
+            /**
+             * Decodes a SkillModeEntry message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape} SkillModeEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillModeEntry & minimir.v1.SkillModeEntry.$Shape;
+
+            /**
+             * Verifies a SkillModeEntry message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillModeEntry
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillModeEntry {
+
+            /** Properties of a SkillModeEntry. */
+            interface $Properties {
+
+                /** SkillModeEntry skill_id */
+                skill_id?: (number|null);
+
+                /** SkillModeEntry enabled */
+                enabled?: (boolean|null);
+
+                /** SkillModeEntry ready */
+                ready?: (boolean|null);
+
+                /** SkillModeEntry remaining_ms */
+                remaining_ms?: (number|null);
+
+                /** SkillModeEntry cooldown_remaining_ms */
+                cooldown_remaining_ms?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillModeEntry. */
+            type $Shape = minimir.v1.SkillModeEntry.$Properties;
+        }
+
+        /**
+         * Properties of a SkillModeState.
+         * @deprecated Use minimir.v1.SkillModeState.$Properties instead.
+         */
+        interface ISkillModeState extends minimir.v1.SkillModeState.$Properties {
+        }
+
+        /** Represents a SkillModeState. */
+        class SkillModeState {
+
+            /**
+             * Constructs a new SkillModeState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SkillModeState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SkillModeState scene_epoch. */
+            scene_epoch: Long;
+
+            /** SkillModeState revision. */
+            revision: Long;
+
+            /** SkillModeState states. */
+            states: minimir.v1.SkillModeEntry.$Properties[];
+
+            /** SkillModeState player_life. */
+            player_life: Long;
+
+            /** SkillModeState server_time_unix_ms. */
+            server_time_unix_ms: Long;
+
+            /**
+             * Creates a new SkillModeState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SkillModeState instance
+             */
+            static create(properties: minimir.v1.SkillModeState.$Shape): minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape;
+            static create(properties?: minimir.v1.SkillModeState.$Properties): minimir.v1.SkillModeState;
+
+            /**
+             * Encodes the specified SkillModeState message. Does not implicitly {@link minimir.v1.SkillModeState.verify|verify} messages.
+             * @param message SkillModeState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SkillModeState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SkillModeState message, length delimited. Does not implicitly {@link minimir.v1.SkillModeState.verify|verify} messages.
+             * @param message SkillModeState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SkillModeState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SkillModeState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape} SkillModeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape;
+
+            /**
+             * Decodes a SkillModeState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape} SkillModeState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SkillModeState & minimir.v1.SkillModeState.$Shape;
+
+            /**
+             * Verifies a SkillModeState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SkillModeState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SkillModeState {
+
+            /** Properties of a SkillModeState. */
+            interface $Properties {
+
+                /** SkillModeState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** SkillModeState revision */
+                revision?: (Long|null);
+
+                /** SkillModeState states */
+                states?: (minimir.v1.SkillModeEntry.$Properties[]|null);
+
+                /** SkillModeState player_life */
+                player_life?: (Long|null);
+
+                /** SkillModeState server_time_unix_ms */
+                server_time_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SkillModeState. */
+            type $Shape = minimir.v1.SkillModeState.$Properties;
+        }
+
+        /**
+         * Properties of a CastStep.
+         * @deprecated Use minimir.v1.CastStep.$Properties instead.
+         */
+        interface ICastStep extends minimir.v1.CastStep.$Properties {
+        }
+
+        /** Represents a CastStep. */
+        class CastStep {
+
+            /**
+             * Constructs a new CastStep.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.CastStep.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** CastStep scene_epoch. */
+            scene_epoch: Long;
+
+            /** CastStep cast_id. */
+            cast_id: Long;
+
+            /** CastStep skill_id. */
+            skill_id: number;
+
+            /** CastStep caster_handle. */
+            caster_handle: number;
+
+            /** CastStep caster_life. */
+            caster_life: Long;
+
+            /** CastStep grid. */
+            grid?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** CastStep direction. */
+            direction: number;
+
+            /** CastStep step_index. */
+            step_index: number;
+
+            /** CastStep skill_level. */
+            skill_level: number;
+
+            /**
+             * Creates a new CastStep instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CastStep instance
+             */
+            static create(properties: minimir.v1.CastStep.$Shape): minimir.v1.CastStep & minimir.v1.CastStep.$Shape;
+            static create(properties?: minimir.v1.CastStep.$Properties): minimir.v1.CastStep;
+
+            /**
+             * Encodes the specified CastStep message. Does not implicitly {@link minimir.v1.CastStep.verify|verify} messages.
+             * @param message CastStep message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.CastStep.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CastStep message, length delimited. Does not implicitly {@link minimir.v1.CastStep.verify|verify} messages.
+             * @param message CastStep message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.CastStep.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CastStep message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.CastStep & minimir.v1.CastStep.$Shape} CastStep
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.CastStep & minimir.v1.CastStep.$Shape;
+
+            /**
+             * Decodes a CastStep message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.CastStep & minimir.v1.CastStep.$Shape} CastStep
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.CastStep & minimir.v1.CastStep.$Shape;
+
+            /**
+             * Verifies a CastStep message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for CastStep
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace CastStep {
+
+            /** Properties of a CastStep. */
+            interface $Properties {
+
+                /** CastStep scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** CastStep cast_id */
+                cast_id?: (Long|null);
+
+                /** CastStep skill_id */
+                skill_id?: (number|null);
+
+                /** CastStep caster_handle */
+                caster_handle?: (number|null);
+
+                /** CastStep caster_life */
+                caster_life?: (Long|null);
+
+                /** CastStep grid */
+                grid?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** CastStep direction */
+                direction?: (number|null);
+
+                /** CastStep step_index */
+                step_index?: (number|null);
+
+                /** CastStep skill_level */
+                skill_level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a CastStep. */
+            type $Shape = minimir.v1.CastStep.$Properties;
+        }
+
+        /**
          * Properties of a CastAccepted.
          * @deprecated Use minimir.v1.CastAccepted.$Properties instead.
          */
@@ -2779,6 +3409,9 @@ export namespace minimir {
 
             /** CastAccepted target_life. */
             target_life: Long;
+
+            /** CastAccepted skill_level. */
+            skill_level: number;
 
             /**
              * Creates a new CastAccepted instance using the specified properties.
@@ -2879,6 +3512,9 @@ export namespace minimir {
                 /** CastAccepted target_life */
                 target_life?: (Long|null);
 
+                /** CastAccepted skill_level */
+                skill_level?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -2935,6 +3571,15 @@ export namespace minimir {
 
             /** AttackAccepted input_sequence. */
             input_sequence: number;
+
+            /** AttackAccepted skill_id. */
+            skill_id: number;
+
+            /** AttackAccepted skill_level. */
+            skill_level: number;
+
+            /** AttackAccepted caster_life. */
+            caster_life: Long;
 
             /**
              * Creates a new AttackAccepted instance using the specified properties.
@@ -3028,6 +3673,15 @@ export namespace minimir {
 
                 /** AttackAccepted input_sequence */
                 input_sequence?: (number|null);
+
+                /** AttackAccepted skill_id */
+                skill_id?: (number|null);
+
+                /** AttackAccepted skill_level */
+                skill_level?: (number|null);
+
+                /** AttackAccepted caster_life */
+                caster_life?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
