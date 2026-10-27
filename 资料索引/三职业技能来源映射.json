@@ -115,6 +115,12 @@
         519
       ],
       "role": "仅默认抵抗权重和配置覆盖的源码定位；不复制完整运维域，不读取来源服配置实值"
+    },
+    "crystal_map": {
+      "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "local_reference_path": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "read_only": true
     }
   },
   "skills": [
@@ -163,7 +169,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；上一获取升级阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -248,7 +254,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；上一获取升级阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -345,7 +351,7 @@
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
       "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；本阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
+      "project_implementation_status": "已实现开发候选：owner原书学习、基础行为及原生rank0–3材料升级；上一获取升级阶段自动/真实Mongo/最终构建和限定范围本机浏览器通过，0→3与拆书以隔离预置道士验证，最终列表/取消/持久另复核；不代表目标1.80认证或完整职业技能交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
@@ -417,12 +423,25 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "精确默认值与完整路径已定位；自动、真实构建、真实集成和限定范围浏览器验收分别记录于范围技能阶段报告",
+      "project_implementation_status": "已实现并通过限定开发阶段验收：owner原书学习、原生rank0–3材料升级与本技能基础路径；最终153JS/23Python、116.84秒Creator、96条真实Mongo/WS race及法师/道士限定范围浏览器通过；不代表目标1.80认证或完整职业交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/范围技能与战斗时序实施边界.md",
+      "implementation_config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "implementation_rule_version": 5,
+      "project_implementation_acceptance_reference": "docs/范围技能阶段验收.json",
+      "acceptance_evidence_status": "finalized_limited_development_stage",
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 2296,
+          "end_line": 2315,
+          "purpose": "精神力逐阶准确被动"
+        }
+      ]
     },
     {
       "candidate_key": "myf_magic_5",
@@ -468,12 +487,31 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "精确默认值与完整路径已定位；自动、真实构建、真实集成和限定范围浏览器验收分别记录于范围技能阶段报告",
+      "project_implementation_status": "已实现并通过限定开发阶段验收：owner原书学习、原生rank0–3材料升级与本技能基础路径；最终153JS/23Python、116.84秒Creator、96条真实Mongo/WS race及法师/道士限定范围浏览器通过；不代表目标1.80认证或完整职业交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/范围技能与战斗时序实施边界.md",
+      "implementation_config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "implementation_rule_version": 5,
+      "project_implementation_acceptance_reference": "docs/范围技能阶段验收.json",
+      "acceptance_evidence_status": "finalized_limited_development_stage",
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 3939,
+          "end_line": 3951,
+          "purpose": "大火球MC、CanFly与距离延迟"
+        },
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 5916,
+          "end_line": 5929,
+          "purpose": "原目标点容差与MAC"
+        }
+      ]
     },
     {
       "candidate_key": "myf_magic_6",
@@ -773,12 +811,31 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "精确默认值与完整路径已定位；自动、真实构建、真实集成和限定范围浏览器验收分别记录于范围技能阶段报告",
+      "project_implementation_status": "已实现并通过限定开发阶段验收：owner原书学习、原生rank0–3材料升级与本技能基础路径；最终153JS/23Python、116.84秒Creator、96条真实Mongo/WS race及法师/道士限定范围浏览器通过；不代表目标1.80认证或完整职业交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/范围技能与战斗时序实施边界.md",
+      "implementation_config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "implementation_rule_version": 5,
+      "project_implementation_acceptance_reference": "docs/范围技能阶段验收.json",
+      "acceptance_evidence_status": "finalized_limited_development_stage",
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 4120,
+          "end_line": 4130,
+          "purpose": "雷电MC、不死目标1.5F与500ms延迟"
+        },
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 5916,
+          "end_line": 5929,
+          "purpose": "原目标点容差与MAC"
+        }
+      ]
     },
     {
       "candidate_key": "myf_magic_12",
@@ -1382,12 +1439,31 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "精确默认值与完整路径已定位；自动、真实构建、真实集成和限定范围浏览器验收分别记录于范围技能阶段报告",
+      "project_implementation_status": "已实现并通过限定开发阶段验收：owner原书学习、原生rank0–3材料升级与本技能基础路径；最终153JS/23Python、116.84秒Creator、96条真实Mongo/WS race及法师/道士限定范围浏览器通过；不代表目标1.80认证或完整职业交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/范围技能与战斗时序实施边界.md",
+      "implementation_config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "implementation_rule_version": 5,
+      "project_implementation_acceptance_reference": "docs/范围技能阶段验收.json",
+      "acceptance_evidence_status": "finalized_limited_development_stage",
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 4142,
+          "end_line": 4147,
+          "purpose": "一次MC抽值与500ms地面事件"
+        },
+        {
+          "source_file_id": "crystal_map",
+          "start_line": 949,
+          "end_line": 991,
+          "purpose": "到期3×3有效格与敌方MAC"
+        }
+      ]
     },
     {
       "candidate_key": "myf_magic_24",
@@ -1689,12 +1765,31 @@
         }
       ],
       "mapping_status": "人工语义候选对照，来源ID不等价；不是恢复历史gxx原映射",
-      "implementation_reference_status": "已定位Crystal默认值与case参考，完整行为对照仍待执行",
-      "project_implementation_status": "待本阶段代码、测试与表现证据分别登记",
+      "implementation_reference_status": "精确默认值与完整路径已定位；自动、真实构建、真实集成和限定范围浏览器验收分别记录于范围技能阶段报告",
+      "project_implementation_status": "已实现并通过限定开发阶段验收：owner原书学习、原生rank0–3材料升级与本技能基础路径；最终153JS/23Python、116.84秒Creator、96条真实Mongo/WS race及法师/道士限定范围浏览器通过；不代表目标1.80认证或完整职业交付",
       "target_version": "传奇2 1.80",
       "target_version_status": "unverified",
       "target_180_verified": false,
-      "enabled_for_formal_runtime": false
+      "enabled_for_formal_runtime": false,
+      "project_implementation_reference": "docs/范围技能与战斗时序实施边界.md",
+      "implementation_config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+      "implementation_rule_version": 5,
+      "project_implementation_acceptance_reference": "docs/范围技能阶段验收.json",
+      "acceptance_evidence_status": "finalized_limited_development_stage",
+      "additional_implementation_references": [
+        {
+          "source_file_id": "crystal_human",
+          "start_line": 4526,
+          "end_line": 4531,
+          "purpose": "一次SC抽值与500ms地面事件"
+        },
+        {
+          "source_file_id": "crystal_map",
+          "start_line": 1253,
+          "end_line": 1297,
+          "purpose": "到期3×3友方、满血跳过及治疗队列"
+        }
+      ]
     },
     {
       "candidate_key": "myf_magic_30",
@@ -2139,5 +2234,26 @@
       "inclusion_decision": "本次33项交叉映射以外候选；不自动纳入或排除目标1.80"
     }
   ],
-  "further_evidence": "docs/技能来源核验与实施清单.md"
+  "further_evidence": "docs/技能来源核验与实施清单.md",
+  "development_implementation_summary": {
+    "config_version": "dev-combat-area-v0.5-ddfb248d01b3",
+    "rule_version": 5,
+    "implemented_skill_ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      11,
+      23,
+      29
+    ],
+    "new_five_auto_and_creator_passed": true,
+    "new_five_real_integration_and_browser_finalized": true,
+    "formal_runtime_enabled": false,
+    "new_five_real_integration_passed": true,
+    "new_five_real_integration_test_count": 96,
+    "new_five_browser_status": "passed_limited_stage",
+    "browser_scope_notice": "群疗HP263→273为受击期间净变化；受伤宠双目标由真实集成覆盖；旧Auto观察保持未归因。"
+  }
 }

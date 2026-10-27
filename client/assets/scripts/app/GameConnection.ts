@@ -15,6 +15,7 @@ const codecs: Record<number, MessageType> = {
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
+    30007: pb.AttackAccepted, 30008: pb.CombatImpact,
     40001: pb.EquipRequest, 40002: pb.RecycleRequest, 40003: pb.InventoryResult,
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,

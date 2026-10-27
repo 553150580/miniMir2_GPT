@@ -3,6 +3,7 @@ package persistence
 import (
 	"context"
 	"errors"
+	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"math"
@@ -302,6 +303,10 @@ type Settlement struct {
 	HostSeconds      int64
 	HostingSession   string
 	StopReason       uint32
+	EventAt          time.Time
+	TargetHandle     uint32
+	TargetLife       uint64
+	CasterHandle     uint32
 }
 
 func (s *Store) Settle(ctx context.Context, a Auth, q Settlement) (domain.Role, error) {
@@ -394,6 +399,13 @@ func (s *Store) Settle(ctx context.Context, a Auth, q Settlement) (domain.Role, 
 		}
 		r.Revision++
 		if e = s.replace(tc, r, before); e != nil {
+			return e
+		}
+		eventAt := q.EventAt
+		if eventAt.IsZero() {
+			eventAt = time.Now()
+		}
+		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, bson.M{"_id": fmt.Sprintf("settle:%s:%d", r.ID, q.SourceSeq), "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": s.Cfg.Fixture.RuleVersion, "config_hash": s.Cfg.Fixture.Hash, "at": time.Now()}); e != nil {
 			return e
 		}
 		out = r

@@ -35,8 +35,8 @@
     "runtime_ready": false,
     "source_unchanged": true,
     "copied_by_prepare_local": false,
-    "creator_scene_sha256": "88d17d7e81d406ca0a578e90cda1d777b5bb6dcd98998a1249b73e901a7cd9fc",
-    "creator_scene_bytes": 532118,
+    "creator_scene_sha256": "112fa95d2957d750c901b2c6afe8bba3ccb5f8f60442926cebbe122ab8dc2249",
+    "creator_scene_bytes": 546425,
     "creator_scene_probe_basis": "仅只读确认文件存在及原字节SHA-256，未由索引生成器执行视觉/交互/真机验收",
     "status": "可编辑场景已保存；视觉/交互与真机验收以独立阶段报告为准",
     "integrity_verified": true
@@ -283,8 +283,8 @@
       "runtime_ready": false,
       "source_unchanged": true,
       "copied_by_prepare_local": false,
-      "creator_scene_sha256": "88d17d7e81d406ca0a578e90cda1d777b5bb6dcd98998a1249b73e901a7cd9fc",
-      "creator_scene_bytes": 532118,
+      "creator_scene_sha256": "112fa95d2957d750c901b2c6afe8bba3ccb5f8f60442926cebbe122ab8dc2249",
+      "creator_scene_bytes": 546425,
       "creator_scene_probe_basis": "仅只读确认文件存在及原字节SHA-256，未由索引生成器执行视觉/交互/真机验收",
       "status": "可编辑场景已保存；视觉/交互与真机验收以独立阶段报告为准",
       "integrity_verified": true

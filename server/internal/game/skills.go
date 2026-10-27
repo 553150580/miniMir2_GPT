@@ -3,20 +3,24 @@ package game
 import (
 	"math"
 	"math/big"
-	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
-	p "minimir/internal/protocol"
 	"time"
 )
 
 type pendingCast struct {
-	Scene       uint64
-	Skill       devconfig.Skill
-	Target      uint32
-	TargetLife  uint64
-	TargetPoint devconfig.Point
-	Due         time.Time
-	Amount      int64
+	Scene             uint64
+	Skill             devconfig.Skill
+	Target            uint32
+	TargetLife        uint64
+	TargetPoint       devconfig.Point
+	Due               time.Time
+	Amount            int64
+	Caster            actorRef
+	ID                uint64
+	Order             uint64
+	HostSession       string
+	PrivilegeUntil    time.Time
+	PrivilegeCaptured bool
 }
 
 func acceptInput(r *room, sequence uint32) bool {
@@ -143,99 +147,6 @@ func (w *worker) lineOfSight(from, to devconfig.Point) bool {
 	return true
 }
 
-func (w *worker) cast(r *room, id, targetHandle, input uint32, now time.Time) uint32 {
-	s, exists := w.e.Store.Cfg.Fixture.Skill(id)
-	level, learned := r.Role.Skill(id)
-	if !exists || !learned || s.JobID != r.Role.Job || level < s.LearnedLevel || level > s.MaxLevel {
-		return p.CodeSkillNotLearned
-	}
-	if s.Behavior == "fencing" || r.Pending || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || len(r.Casts) >= 64 {
-		return p.CodeSkillStateBlocked
-	}
-	if now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[id]) {
-		return p.CodeSkillCooldown
-	}
-	target := w.skillTarget(r, s, targetHandle)
-	if target == nil || distance(r.Player.Pos, target.Pos) > s.RangeCells {
-		return p.CodeSkillTarget
-	}
-	if s.Behavior == "fireball" && !w.lineOfSight(r.Player.Pos, target.Pos) {
-		return p.CodeSkillTarget
-	}
-	cost := s.MPBaseCost + int64(level)*s.MPLevelCost
-	if r.Player.MP < cost {
-		return p.CodeSkillResource
-	}
-	stats := w.fighter(r, &r.Player)
-	amount := int64(0)
-	if s.Behavior == "fireball" {
-		amount = w.magicAmount(s, level, w.interval(stats.MagicMin, stats.MagicMax))
-	} else {
-		amount = w.magicAmount(s, level, w.interval(stats.TaoMin, stats.TaoMax)*2) + int64(r.Role.Level)
-	}
-	delay := s.DelayBaseMS + int64(distance(r.Player.Pos, target.Pos))*s.ProjectileMSPerCell
-	if delay > math.MaxUint32 || r.CastID == math.MaxUint64 {
-		return p.CodeSkillStateBlocked
-	}
-	r.Player.MP -= cost
-	r.Player.Action = 5
-	r.Player.ActionUntil = now.Add(time.Duration(s.ActionMS) * time.Millisecond)
-	r.Player.NextMove = r.Player.ActionUntil
-	r.Player.NextAttack = r.Player.ActionUntil
-	r.Player.CastSequence++
-	r.Player.CastSkillID = id
-	r.CastID++
-	for i, d := range directions {
-		dx, dy := target.Pos.X-r.Player.Pos.X, target.Pos.Y-r.Player.Pos.Y
-		if (dx == 0 && d.X == 0 || dx > 0 && d.X > 0 || dx < 0 && d.X < 0) && (dy == 0 && d.Y == 0 || dy > 0 && d.Y > 0 || dy < 0 && d.Y < 0) {
-			r.Player.Direction = uint32(i)
-			break
-		}
-	}
-	r.NextSpell = now.Add(time.Duration(s.GlobalSpellMS) * time.Millisecond)
-	if r.SkillCooldowns == nil {
-		r.SkillCooldowns = map[uint32]time.Time{}
-	}
-	r.SkillCooldowns[id] = now.Add(time.Duration(s.CooldownBaseMS-int64(level)*s.CooldownReductionMS) * time.Millisecond)
-	r.Casts = append(r.Casts, pendingCast{Scene: r.Scene, Skill: s, Target: target.Handle, TargetLife: target.Life, TargetPoint: target.Pos, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount})
-	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: target.Handle, Origin: pointPB(r.Player.Pos), TargetGrid: pointPB(target.Pos), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input})
-	w.snapshot(r)
-	return 0
-}
-
-func (w *worker) advanceCasts(r *room, now time.Time) {
-	remaining := r.Casts[:0]
-	for i, c := range r.Casts {
-		if r.Pending {
-			remaining = append(remaining, r.Casts[i:]...)
-			break
-		}
-		if now.Before(c.Due) {
-			remaining = append(remaining, c)
-			continue
-		}
-		if c.Scene != r.Scene {
-			continue
-		}
-		target := w.skillTarget(r, c.Skill, c.Target)
-		if target == nil || target.Life != c.TargetLife {
-			continue
-		}
-		if c.Skill.Behavior == "fireball" {
-			if distance(target.Pos, c.TargetPoint) > c.Skill.TargetMoveToleranceCells {
-				continue
-			}
-			damage := w.magicDamage(r, target, c.Amount)
-			if damage > 0 {
-				w.applyDamage(r, &r.Player, target, damage, now)
-			}
-		} else if target.HP < target.MaxHP {
-			target.HealAmount = queueAdd(target.HealAmount, c.Amount, w.e.Store.Cfg.Fixture.Healing.QueueCap)
-		}
-	}
-	r.Casts = remaining
-}
-
 func (w *worker) tickHealing(r *room, now time.Time) bool {
 	h := w.e.Store.Cfg.Fixture.Healing
 	if h.TickMS <= 0 || h.LevelsPerStep <= 0 || h.QueueFractionDivisor <= 0 {
@@ -261,34 +172,4 @@ func (w *worker) tickHealing(r *room, now time.Time) bool {
 		changed = changed || before != e.HP
 	}
 	return changed
-}
-
-func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
-	for _, s := range w.e.Store.Cfg.Fixture.Skills {
-		if s.JobID != r.Role.Job {
-			continue
-		}
-		if _, ok := r.Role.Skill(s.ID); !ok {
-			continue
-		}
-		if s.Behavior == "healing" {
-			target := &r.Player
-			if target.HP >= target.MaxHP && r.Pet != nil && r.Pet.HP > 0 && r.Pet.HP < r.Pet.MaxHP {
-				target = r.Pet
-			}
-			if target.HP < target.MaxHP && target.HealAmount == 0 && w.cast(r, s.ID, target.Handle, 0, now) == 0 {
-				return nil, true
-			}
-		} else if s.Behavior == "fireball" {
-			target := w.nearest(r, &r.Player)
-			if target == nil {
-				return nil, true
-			}
-			if w.cast(r, s.ID, target.Handle, 0, now) == 0 {
-				return nil, true
-			}
-			return target, true
-		}
-	}
-	return nil, false
 }

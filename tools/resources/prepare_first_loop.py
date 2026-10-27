@@ -161,7 +161,11 @@ def potion_rules(profile,items):
         seen.add(item_id)
     return deepcopy(settings)
 
-SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm'.split()
+SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets'.split()
+SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing']
+SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid']
+COMBAT_TIMING_FIELDS='player_attack_base_ms player_attack_speed_step_ms player_attack_level_step_ms player_attack_level_cap_ms player_attack_min_ms player_attack_action_ms player_attack_impact_ms event_capacity kill_queue_capacity'.split()
 HEALING_FIELDS='tick_ms base_per_tick pet_base_per_tick levels_per_step queue_fraction_divisor queue_cap'.split()
 GROWTH_FIELDS='hp_gain hp_gain_rate mp_gain mp_gain_rate attack_divisor defence_max_divisor magic_divisor tao_divisor magic_defence_min_divisor magic_defence_max_divisor'.split()
 
@@ -177,10 +181,11 @@ def skill_definitions(tables,profile):
             result.append({'id':id,'name':row['display_name'],'job_id':row['class_id'],'book_item_id':row['book_item_id'],
                 'learn_level':row['learn_level'],'learned_level':row['native_start_level'],'max_level':row['native_max_level'],
                 'behavior':row['behavior_id'],'cooldown_base_ms':row['cooldown_ms'],
-                **{k:row['target_rule'][k] for k in ['range_cells','target_move_tolerance_cells']},
+                'target_kind':row['target_rule']['kind'],
+                **{k:row['target_rule'][k] for k in ['range_cells','target_move_tolerance_cells','area_radius','require_line_of_sight','auto_priority','auto_min_targets']},
                 **{k:row['cast_timing'][k] for k in ['cooldown_reduction_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell']},
                 **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost']},
-                **{k:row['damage_parameters'][k] for k in ['accuracy_per_level','power_base','power_bonus','mpower_base','mpower_bonus','multiplier_base_ppm','multiplier_bonus_ppm']}})
+                **{k:row['damage_parameters'][k] for k in ['accuracy_per_level','power_base','power_bonus','mpower_base','mpower_bonus','multiplier_base_ppm','multiplier_bonus_ppm','accuracy_by_level','healing_stat_multiplier','add_caster_level','undead_multiplier_ppm']}})
         except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
     return result
 
@@ -190,15 +195,28 @@ def validate_skills(profile,skills):
     if not isinstance(skills,list) or not skills:raise ValueError('开发夹具缺少技能定义')
     ids=set();books=set();behaviors=set()
     for skill in skills:
-        if not isinstance(skill,dict) or set(skill)!=set(SKILL_INT_FIELDS)|{'name','behavior'}:raise ValueError('技能字段不完整')
+        if not isinstance(skill,dict) or set(skill)!=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|{'name','behavior','target_kind','accuracy_by_level'}:raise ValueError('技能字段不完整')
         if any(type(skill[k]) is not int or skill[k]<0 or skill[k]>2**32-1 for k in SKILL_INT_FIELDS):raise ValueError('技能字段须为有界非负整数')
-        if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in ['fencing','fireball','healing']:raise ValueError('技能名称/行为不合法')
+        if any(type(skill[k]) is not bool for k in SKILL_BOOL_FIELDS):raise ValueError('技能开关必须是明确布尔值')
+        if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in SKILL_BEHAVIORS or skill['target_kind'] not in SKILL_TARGETS:raise ValueError('技能名称/行为/目标类型不合法')
         if not skill['id'] or skill['id'] in ids or not skill['book_item_id'] or skill['book_item_id'] in books or skill['job_id']>2 or not skill['learn_level']:
             raise ValueError('技能身份、职业、学习条件或技能书重复/缺失')
         if skill['max_level']<skill['learned_level'] or skill['max_level']>255:raise ValueError('技能开放等级域不合法')
-        if skill['behavior']!='fencing' and any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','range_cells','delay_base_ms']):raise ValueError('主动技能时序与射程必须完整')
+        if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
+        passive=skill['behavior'] in ['fencing','spirit_sword']
+        if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
+        targets={'fencing':'passive','spirit_sword':'passive','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid'}
+        if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
+        if not passive and any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','range_cells','delay_base_ms','auto_min_targets']):raise ValueError('主动技能时序与射程必须完整')
+        if skill['area_radius']>16 or (skill['target_kind'].endswith('_grid'))!=(skill['area_radius']>0):raise ValueError('区域半径与目标类型不匹配')
+        accuracy=skill['accuracy_by_level']
+        if not isinstance(accuracy,list) or len(accuracy)!=skill['max_level']+1 or any(type(v) is not int or v<0 or v>2**31-1 for v in accuracy):raise ValueError('被动逐阶准确数组缺失或越界')
         ids.add(skill['id']);books.add(skill['book_item_id']);behaviors.add(skill['behavior'])
-    if behaviors!={'fencing','fireball','healing'}:raise ValueError('首组三职业候选技能不完整')
+    if not {'fencing','fireball','healing'}.issubset(behaviors):raise ValueError('首组三职业候选技能不完整')
+    timing=profile.get('combat_timing')
+    if not isinstance(timing,dict) or set(timing)!=set(COMBAT_TIMING_FIELDS) or any(type(v) is not int or v<=0 or v>2**31-1 for v in timing.values()):raise ValueError('战斗时钟与队列预算缺失或无效')
+    if timing['player_attack_min_ms']>timing['player_attack_base_ms']:raise ValueError('攻击最短间隔大于基础间隔')
+    if timing['event_capacity']>4096 or timing['kill_queue_capacity']>4096:raise ValueError('事件或逐杀队列超过受控预算上限')
     healing=profile.get('healing')
     if not isinstance(healing,dict) or set(healing)!=set(HEALING_FIELDS) or any(type(healing[k]) is not int or healing[k]<=0 for k in HEALING_FIELDS):raise ValueError('治疗队列参数不完整')
     players=profile.get('players');growth=profile.get('player_growth');initial=profile.get('initial_skill_books')
@@ -209,7 +227,7 @@ def validate_skills(profile,skills):
         if any(type(g[k]) not in [int,float] or not math.isfinite(g[k]) or g[k]<0 for k in GROWTH_FIELDS):raise ValueError('职业成长系数不合法')
         if any(type(g[k]) is not int or g[k]<=0 for k in ['hp_base','mp_base']) or g['hp_gain']<=0 or g['mp_gain']<=0:raise ValueError('职业成长基数/除数不合法')
     expected={(s['job_id'],s['book_item_id']) for s in skills}
-    if not isinstance(initial,list) or len(initial)!=len(expected) or {(r['job_id'],r['item_id']) for r in initial}!=expected:raise ValueError('初始书必须逐项引用当前职业技能书')
+    if not isinstance(initial,list) or len(initial)!=len(players) or {r['job_id'] for r in initial}!={p['job_id'] for p in players} or any((r['job_id'],r['item_id']) not in expected for r in initial):raise ValueError('每职业仅赠一本所选同职业技能书，不随开放技能增加赠书')
 
 def skill_economy(tables,profile,skills,items):
     """书价、页价、分解页数与逐技能消耗分别读取其唯一表，不回填测试缺省。"""
@@ -252,6 +270,7 @@ def fixture_from_rows(tables):
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',1);collision=one('game_map_collisions',m['collision_id'])
     geo=read(ASSETS/'maps/first-map.json');monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
     skills=skill_definitions(tables,profile);validate_skills(profile,skills)
+    if profile['combat_timing']['kill_queue_capacity']<sum(r['map_id']==m['id'] for r in tables['game_monster_spawns'])+1:raise ValueError('逐杀队列必须覆盖本地图全部怪物槽及后续结算边界')
     healing=deepcopy(profile['healing']);growth=deepcopy(profile['player_growth'])
     resist_weights={row['magic_resist_weight'] for row in profile['players']}
     if len(resist_weights)!=1:raise ValueError('当前开发子集使用同一有来源的魔法闪避权重')
@@ -263,7 +282,7 @@ def fixture_from_rows(tables):
         'magic_defence_max':r['attributes']['magic_defence'],'magic_min':0,'magic_max':0,'tao_min':0,'tao_max':0,
         'accuracy':r['attributes']['accuracy'],'agility':r['attributes']['agility'],
         'magic_resist':0,'magic_resist_weight':resist_weight,
-        'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms']}
+        'attack_speed':0,'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms'],'undead':r['attributes']['undead']}
     items=[]
     for r in tables['game_items']:
         if r['id'] not in [35,36,193,218]:continue
@@ -273,6 +292,7 @@ def fixture_from_rows(tables):
                       'attack_max_bonus':attrs.get('physical_attack_max',0),'defence_bonus':attrs.get('physical_defence_min',0),
                       'defence_min_bonus':attrs.get('physical_defence_min',0),'defence_max_bonus':attrs.get('physical_defence_max',0),
                       'magic_defence_min_bonus':attrs.get('magic_defence_min',0),'magic_defence_max_bonus':attrs.get('magic_defence_max',0),
+                      'attack_speed_bonus':attrs['attack_speed'] if eq else 0,
                       'recycle_gold':profile['recycle_test_gold_by_item'][str(r['id'])],'stackable':eq is None,
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2]})
     for skill in skills:
@@ -291,7 +311,7 @@ def fixture_from_rows(tables):
     potions=potion_rules(profile,items)
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
-        'potions':potions,'skills':skills,'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
+        'potions':potions,'skills':skills,'combat_timing':deepcopy(profile['combat_timing']),'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
         'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':collision['blocked_cells'],
                'player_spawn':m['spawn_cell'],'pet_spawn':geo['pet_spawn'],'monster_spawns':[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
@@ -317,10 +337,10 @@ def fixture_from_rows(tables):
                                 'automatic_use_enabled':False,
                                 'formal_scope':'正式game_items堆叠上限及effect_list_id仍待核验；未开放完整正式效果表。'},
                             'skills':{'status':'candidate','target_180_verified':False,
-                                'reference_document':'docs/技能来源核验与实施清单.md',
+                                'reference_document':'docs/范围技能与战斗时序实施边界.md',
                                 'parameters_source':'唯一玩法Excel：技能基础定义、技能逐级扩展、商城商品候选、技能书分解候选；开发夹具仅引用ID与技术预算',
-                                'scope':'首组三技能原生0至3阶、原书/书页升级、NPC购书与掉落书拆页；其余完整技能仍待实现',
-                                'learning_adaptation':'7级学习资格、新角色按职业1本绑定书属于development候选；原生初学等级0，未学由列表缺项表示',
+                                'scope':'八项技能原生0至3阶、单体/3×3伤害与治疗、原书/书页升级、NPC购书与掉落书拆页；完整目标版本与其余技能仍待实现',
+                                'learning_adaptation':'学习取各自Crystal Level1为本作开发适配；新角色仍按首组三职业1本绑定书，原生初学0，未学由列表缺项表示',
                                 'attribute_scope':'三职默认成长与DC/MC/SC/AC/MAC、准确敏捷；不含元素/幸运/完整Buff，来源默认不是源服实库',
                                 'monster_resist_scope':'本轮开发怪物/宠物不配置魔法闪避加成（0）；权重从唯一Excel中共同的源码默认候选权重取得',
                                 'formal_skill_and_upgrade_tables_populated':True,
@@ -341,11 +361,12 @@ def public_gameplay(fixture):
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)
     skills=[{'id':s['id'],'name':s['name'],'job_id':s['job_id'],'book_item_id':s['book_item_id'],
-             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['behavior']!='fencing',
+             'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['behavior'] not in ['fencing','spirit_sword'],
+             'target_kind':s['target_kind'],'area_radius':s['area_radius'],'require_line_of_sight':s['require_line_of_sight'],
              'range':s['range_cells'],'base_cost':s['mp_base_cost'],'level_cost':s['mp_level_cost'],
              'cast_ms':s['action_ms'],'delay_base_ms':s['cooldown_base_ms'],'delay_reduction_ms':s['cooldown_reduction_ms'],
              'impact_base_ms':s['delay_base_ms'],'projectile_ms_per_cell':s['projectile_ms_per_cell'],
-             'accuracy_per_level':s['accuracy_per_level'],
+             'accuracy_per_level':s['accuracy_per_level'],'accuracy_by_level':deepcopy(s['accuracy_by_level']),
              'source_status':'candidate','target_180_verified':False} for s in fixture['skills']]
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
             'skills':skills,'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),

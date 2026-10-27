@@ -241,12 +241,7 @@ func TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth(t *testing.T) {
 	now := time.Unix(1800000000, 0)
 	for _, job := range []uint32{0, 1, 2} {
 		w, r, _ := skillWorker(t, job)
-		s := w.e.Store.Cfg.Fixture.Skills[0]
-		for _, candidate := range w.e.Store.Cfg.Fixture.Skills {
-			if candidate.JobID == job {
-				s = candidate
-			}
-		}
+		s, _ := w.e.Store.Cfg.Fixture.Skill(map[uint32]uint32{0: 3, 1: 1, 2: 2}[job])
 		for rank := s.LearnedLevel; rank <= s.MaxLevel; rank++ {
 			r.Role.Skills[0].Level = rank
 			if job == 0 {
@@ -258,6 +253,7 @@ func TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth(t *testing.T) {
 			}
 			r.Player.MP = r.Player.MaxMP
 			r.Player.NextMove = time.Time{}
+			r.Player.ActionReadyAt = time.Time{}
 			r.NextSpell = time.Time{}
 			r.SkillCooldowns = nil
 			r.Casts = nil

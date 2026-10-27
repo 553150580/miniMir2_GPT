@@ -1,7 +1,7 @@
 import { Button, isValid, Label, Node } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { SkillRow, SkillSnapshot, skillAccuracy, skillRows } from './SkillModel';
+import { isGroundSkill, SkillRow, SkillSnapshot, skillAccuracy, skillRows } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -11,6 +11,7 @@ export class GameSkills {
     private rows: SkillRow[] = [];
     private input: SkillSnapshot | null = null;
     private key = '';
+    private quickSkillId = 0;
 
     constructor(safe: Node, private readonly popup: PopupView) {
         const panel = safe.getChildByPath('UIMgr/Panels/Skills');
@@ -22,10 +23,11 @@ export class GameSkills {
 
     get selected(): SkillRow | null { return this.rows.find(row => row.definition.id === this.selectedId) ?? null; }
 
-    refresh(input: SkillSnapshot): void {
+    refresh(input: SkillSnapshot, quickSkillId = this.quickSkillId): void {
+        this.quickSkillId = quickSkillId;
         this.input = input; this.rows = skillRows(input);
         if (!this.rows.some(row => row.definition.id === this.selectedId)) this.selectedId = this.rows[0]?.definition.id ?? 0;
-        const key = JSON.stringify({ ready: input.ready, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn]), selected: this.selectedId });
+        const key = JSON.stringify({ ready: input.ready, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn]), selected: this.selectedId, quick: quickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
@@ -41,6 +43,8 @@ export class GameSkills {
         const use = this.saved('Use').getComponent(Button)!;
         learn.interactable = !!selected?.canLearn;
         use.interactable = !!(input.ready && selected?.learned && selected.definition.active);
+        this.saved('BindQuick').getComponent(Button)!.interactable = !!(selected?.learned && selected.definition.active);
+        this.text('BindQuick/Label', selected?.definition.id === quickSkillId ? '当前快捷' : '设为快捷');
         this.text('Learn/Label', selected?.learned ? '已学会' : '学习');
         this.text('Use/Label', selected && !selected.definition.active ? selected.learned ? '被动生效' : '被动技能' : '施放');
     }
@@ -54,7 +58,7 @@ export class GameSkills {
         this.selectedId = row.definition.id;
         if (this.input) this.refresh(this.input);
         this.popup.show('Details', { title: row.definition.name,
-            message: `${row.status}\n${row.definition.active ? `消耗魔法 ${row.cost}\n射程 ${row.definition.range}格` : `被动技能，无需主动施放\n当前准确 +${skillAccuracy(row)}`}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
+            message: `${row.status}\n${row.definition.active ? `消耗魔法 ${row.cost}\n射程 ${row.definition.range}格${isGroundSkill(row.definition) ? ` · 地面范围${row.definition.area_radius ?? 0}格` : ''}` : `被动技能，无需主动施放\n当前准确 +${skillAccuracy(row)}`}\n${row.definition.learn_level}级可使用对应技能书学习\n升级需选择书本与书页，先查看报价` });
     }
     private saved(path: string): Node {
         const node = this.panel.getChildByPath(path); if (!node) throw new Error(`技能面板缺少保存节点：${path}`); return node;

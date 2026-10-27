@@ -100,7 +100,7 @@
     "creator": "3.8.8",
     "platform": "web-mobile",
     "exit_code": 36,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "saved_layouts": 7,
     "layout_scope": "构建前后七份保存布局未被工具覆盖；原HUD733对象保留，技能列表为新增按钮明确调整",
     "layout_review": {
@@ -120,7 +120,7 @@
     "race": true,
     "passed_test_records": 64,
     "skipped": 0,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "covered": [
       "三技能各阶精确费用、前置等级与成长数值",
       "两金币分摊与独立元宝选项",
@@ -278,5 +278,8 @@
     "正式渠道、自然可达性、价格/页数与经济平衡",
     "幸运/元素/完整Buff、完整装备属性与源普攻550ms互锁",
     "聊天、其它P0系统、手机真机、容量与真实提交未知故障注入"
-  ]
+  ],
+  "historical_stage": true,
+  "source_commit": "d1207bcdfb49ee075c589ddcc99d9b32a72f31eb",
+  "current_work_note": "范围技能阶段改变配置、协议与源码；本报告只证明d1207bc对应子集，不能视为当前完整通过。"
 }

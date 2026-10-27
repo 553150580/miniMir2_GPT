@@ -45,6 +45,17 @@ test('物品来源品质与技能报价字段精确往返，未知旧来源保�
     const commit=decodePacket(encodePacket(40013,20,Long.UONE,{previewId,operation:{opId:new Uint8Array(16).fill(8),commandSeq:Long.UONE,expectedRevision:preview.roleRevision,expectedRuleVersion:preview.ruleVersion}})).value;
     assert.deepEqual(commit.previewId,previewId);assert.equal(commit.operation.expectedRevision.toString(),'9007199254740993');
 });
+test('攻击受理、命中与出生代次保留Long精度，治疗入队不被改成直接回血数值',()=>{
+    const large=Long.fromString('9007199254740993',true);
+    const cast=decodePacket(encodePacket(30006,0,Long.UONE,{sceneEpoch:Long.UONE,castId:large,skillId:11,casterLife:large,targetLife:large})).value;
+    assert.equal(cast.casterLife.toString(),large.toString());assert.equal(cast.targetLife.toString(),large.toString());
+    const attack=decodePacket(encodePacket(30007,0,Long.UONE,{sceneEpoch:Long.UONE,eventId:large,casterHandle:1,targetHandle:3,attackSequence:4294967295,inputSequence:9,delayMs:500})).value;
+    assert.equal(attack.eventId.toString(),large.toString());assert.equal(attack.attackSequence,4294967295);
+    const impact=decodePacket(encodePacket(30008,0,Long.UONE,{sceneEpoch:Long.UONE,eventId:large,castId:large,skillId:29,targetHandle:1,targetLife:large,amount:Long.MAX_VALUE,outcome:4,healing:true})).value;
+    assert.equal(impact.castId.toString(),large.toString());assert.equal(impact.targetLife.toString(),large.toString());assert.equal(impact.amount.toString(),'9223372036854775807');assert.equal(impact.outcome,4);assert.equal(impact.healing,true);
+    const entity=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:1,life:large,attackIntervalMs:1386}]})).value.entities[0];
+    assert.equal(entity.life.toString(),large.toString());assert.equal(entity.attackIntervalMs,1386);
+});
 
 test('学习0级状态、原书学习请求及施法事件大ID按新PB定义精确往返',()=>{
     const instance=new Uint8Array(16).fill(7),opId=new Uint8Array(16).fill(8);

@@ -314,6 +314,42 @@
       "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
     },
     {
+      "value": 30006,
+      "name": "MsgS2CCastAccepted",
+      "proto_message": "CastAccepted",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:4.8；2026-10-27有来源候选技能开发"
+    },
+    {
+      "value": 30007,
+      "name": "MsgS2CAttackAccepted",
+      "proto_message": "AttackAccepted",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27范围技能与战斗时序：普通攻击受理和权威命中观察，尚未正式发布"
+    },
+    {
+      "value": 30008,
+      "name": "MsgS2CCombatImpact",
+      "proto_message": "CombatImpact",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-27范围技能与战斗时序：普通攻击受理和权威命中观察，尚未正式发布"
+    },
+    {
       "value": 40001,
       "name": "MsgC2SEquip",
       "proto_message": "EquipRequest",
@@ -420,18 +456,6 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案.md:294；药品开发消费阶段新分配编号，尚未发布"
-    },
-    {
-      "value": 30006,
-      "name": "MsgS2CCastAccepted",
-      "proto_message": "CastAccepted",
-      "direction": "s2c",
-      "binding_required": true,
-      "scene_required": true,
-      "economic": false,
-      "status": "draft",
-      "assignment_source": "development_contract",
-      "source_ref": "最终策划案.md:4.8；2026-10-27有来源候选技能开发"
     },
     {
       "value": 40010,

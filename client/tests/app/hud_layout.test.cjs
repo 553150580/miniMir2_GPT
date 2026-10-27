@@ -240,3 +240,10 @@ test('用户确认HUD的首733对象保持，普通与覆盖面板仅允许追�
     for(const value of saved)if(value._children)value._children=value._children.filter(reference=>reference.__id__<733);
     assert.equal(createHash('sha256').update(JSON.stringify(saved)).digest('hex'),'6063336aad1501a1e8364dd500f3c6aab74f9586a49ed81ad9571f04cdda258e');
 });
+test('多技能快捷与瞄准提示取消保存为原生组件，地图目标Sprite不使用Widget',()=>{
+    component(node('UIMgr/Panels/Skills/BindQuick'),'cc.Button');
+    component(node('MapViewport/Aiming'),'cc.Sprite');component(node('MapViewport/Aiming'),'cc.Widget');component(node('MapViewport/Aiming'),'cc.BlockInputEvents');
+    component(node('MapViewport/Aiming/Text'),'cc.Label');component(node('MapViewport/Aiming/Cancel'),'cc.Button');
+    component(node('MapViewport/World/TargetMarker'),'cc.Sprite');assert.equal(node('MapViewport/World/TargetMarker')._active,false);
+    assert(!components(node('MapViewport/World/TargetMarker')).some(value=>value.__type__==='cc.Widget'));
+});

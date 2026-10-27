@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 47,
+  "message_count": 49,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -31,6 +31,8 @@
     "MoveIntent",
     "CastIntent",
     "CastAccepted",
+    "AttackAccepted",
+    "CombatImpact",
     "AutoBattleIntent",
     "HostingState",
     "DeathNotice",
@@ -54,8 +56,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 69,
-  "int64_boundary_cases": 227,
+  "int64_field_count": 79,
+  "int64_boundary_cases": 258,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -250,6 +252,12 @@
       "cases": 4
     },
     {
+      "message": "EntityState",
+      "field": "life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "SceneBaselineChunk",
       "field": "scene_epoch",
       "type": "uint64",
@@ -287,6 +295,60 @@
     },
     {
       "message": "CastAccepted",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "target_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "event_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "event_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "target_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "amount",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatImpact",
       "field": "cast_id",
       "type": "uint64",
       "cases": 3
@@ -574,7 +636,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "d6f102ea9477e2b7ae682435ce9d2f79728fa22f1f6f664261164bcd1e80256f"
+      "sha256": "a956068695740174bde1a58063196cdbff56156cfaf7e993b4a44a00facf9a2c"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -584,13 +646,13 @@
   "generated_files": [
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "f23e70418bffed4bde7a11afeef4f3ceb60f45175c58c69cdcffe7a31328e223",
-      "bytes": 682969
+      "sha256": "a6b2b92f0b3b035bc7549234e82ab182517319c04a1ca8ebe8413311ccb6d517",
+      "bytes": 734382
     },
     {
       "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "bd68399d642e55ed9f11efbe75cbada41f22c14937c2bca7455d9f0d9b2480dc",
-      "bytes": 235054
+      "sha256": "4ae18ee2a68289721b07f0aa81c0efe0db896af30f69af351e799dbfba3a943f",
+      "bytes": 248031
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

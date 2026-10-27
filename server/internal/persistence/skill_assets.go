@@ -364,7 +364,7 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 		s, _ := f.Skill(p.SkillID)
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		afterMin, afterMax := powerBounds(s, p.To)
-		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: int64(p.From) * s.AccuracyPerLevel, BeforeMax: int64(p.From) * s.AccuracyPerLevel, AfterMin: int64(p.To) * s.AccuracyPerLevel, AfterMax: int64(p.To) * s.AccuracyPerLevel}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}
+		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: s.AccuracyBonus(p.From), BeforeMax: s.AccuracyBonus(p.From), AfterMin: s.AccuracyBonus(p.To), AfterMax: s.AccuracyBonus(p.To)}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}
 	}
 	return out
 }

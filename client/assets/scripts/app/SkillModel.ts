@@ -2,7 +2,9 @@ import { PotionInteger, PotionItem } from './PotionModel';
 
 export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
-    kind: 'fireball' | 'healing' | 'fencing'; active: boolean; range: number;
+    kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'; active: boolean; range: number;
+    target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid';
+    area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[];
     base_cost: number; level_cost: number; cast_ms: number; impact_base_ms: number; projectile_ms_per_cell: number; accuracy_per_level: number;
 }
 export interface SkillInventory {
@@ -41,9 +43,11 @@ export function skillCost(definition: SkillDefinition, level: number): number {
     return result;
 }
 export function skillAccuracy(row: SkillRow): number {
-    const result = row.level * row.definition.accuracy_per_level;
+    if (!row.learned) return 0;
+    const result = row.definition.accuracy_by_level ? row.definition.accuracy_by_level[row.level]
+        : row.definition.kind === 'spirit_sword' ? NaN : row.level * row.definition.accuracy_per_level;
     if (!Number.isSafeInteger(result) || result < 0) throw new Error('技能准确加成配置无效');
-    return row.learned ? result : 0;
+    return result;
 }
 export function skillRows(snapshot: SkillSnapshot): SkillRow[] {
     return snapshot.definitions.filter(definition => definition.job_id === snapshot.job).map(definition => {
@@ -57,8 +61,22 @@ export function skillRows(snapshot: SkillSnapshot): SkillRow[] {
                 : !eligible ? `${definition.learn_level}级可学习` : hasBook ? '拥有技能书 · 可学习' : '缺少对应技能书' };
     }).sort((a, b) => a.definition.id - b.definition.id);
 }
-export function primarySkill(snapshot: SkillSnapshot): SkillRow | null {
-    return skillRows(snapshot).find(row => row.definition.active) ?? null;
+export function primarySkill(snapshot: SkillSnapshot, preferredId = 0): SkillRow | null {
+    const rows = skillRows(snapshot);
+    return rows.find(row => row.definition.id === preferredId && row.definition.active && row.learned)
+        ?? rows.find(row => row.definition.active && row.learned) ?? rows.find(row => row.definition.active) ?? null;
+}
+export function skillTargetKind(definition: SkillDefinition): NonNullable<SkillDefinition['target_kind']> {
+    if (definition.target_kind) return definition.target_kind;
+    if (definition.kind === 'healing') return 'friendly_entity';
+    if (definition.kind === 'fencing' || definition.kind === 'spirit_sword') return 'passive';
+    if (definition.kind === 'fireball') return 'enemy_entity';
+    throw new Error('技能缺少明确的目标规则');
+}
+export function isGroundSkill(definition: SkillDefinition): boolean { return ['enemy_grid', 'friendly_grid'].includes(skillTargetKind(definition)); }
+// 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
+export function skillQuickLabel(definition: SkillDefinition): string {
+    return definition.kind === 'firebang' ? '爆裂' : definition.kind === 'mass_healing' ? '群疗' : definition.name;
 }
 export function createSkillLearnPreview(snapshot: SkillSnapshot, skillId: number): SkillLearnPreview {
     if (!snapshot.ready || !snapshot.inventory || !snapshot.roleIdentity) throw new Error('角色与背包尚未同步');
@@ -92,21 +110,37 @@ export function gridDirection(origin: { x: number; y: number }, target: { x: num
     return (Math.round(Math.atan2(dx, -dy) * count / (2 * Math.PI)) + count) % count;
 }
 export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[], selectedHandle: number | null): SkillEntity {
+    const player = validateCaster(row, entities), targetKind = skillTargetKind(row.definition);
+    if (targetKind !== 'enemy_entity' && targetKind !== 'friendly_entity') throw new Error('该技能需要选择地面位置');
+    const friendly = targetKind === 'friendly_entity';
+    const distance = (target: SkillEntity): number => Math.max(Math.abs(target.position.x - player.position.x), Math.abs(target.position.y - player.position.y));
+    const legal = (target: SkillEntity): boolean => integer(target.hp) > 0n
+        && (friendly ? target.entityKind === 1 || target.entityKind === 2 : target.entityKind === 3);
+    const selected = entities.find(entity => entity.entityHandle === selectedHandle);
+    if (selected && integer(selected.hp) === 0n && (friendly
+        ? selected.entityKind === 1 || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
+    let target = selected && legal(selected) ? selected : undefined;
+    if (!target && friendly) target = player;
+    if (!target) target = entities.filter(legal).slice().sort((a, b) => distance(a) - distance(b) || a.entityHandle - b.entityHandle)[0];
+    if (!target) throw new Error('没有可施放的目标');
+    if (distance(target) > row.definition.range) throw new Error('目标超出技能射程，请靠近后施放');
+    return target;
+}
+export function validateGroundTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }): { x: number; y: number } {
+    const player = validateCaster(row, entities);
+    if (!isGroundSkill(row.definition)) throw new Error('该技能需要选择实体目标');
+    // 范围中心允许阻挡格；命中格逐格是否可作用由服务端裁定，不复用移动可行走条件。
+    if (![bounds.width, bounds.height].every(value => Number.isSafeInteger(value) && value > 0)
+        || ![grid.x, grid.y].every(value => Number.isSafeInteger(value) && value >= 0)
+        || grid.x >= bounds.width || grid.y >= bounds.height) throw new Error('地面目标无效或超出地图边界');
+    if (Math.max(Math.abs(grid.x - player.position.x), Math.abs(grid.y - player.position.y)) > row.definition.range) throw new Error('目标超出技能射程，请重新选择地面');
+    return { x: grid.x, y: grid.y };
+}
+function validateCaster(row: SkillRow, entities: readonly SkillEntity[]): SkillEntity {
     if (!row.learned) throw new Error('尚未学会该技能');
     if (!row.definition.active) throw new Error('该技能为被动技能，无需主动施放');
     const player = entities.find(entity => entity.entityKind === 1);
     if (!player || integer(player.hp) === 0n) throw new Error('角色已倒下，不能施放技能');
     if (integer(player.mp ?? 0) < BigInt(row.cost)) throw new Error('魔法不足');
-    const distance = (target: SkillEntity): number => Math.max(Math.abs(target.position.x - player.position.x), Math.abs(target.position.y - player.position.y));
-    const legal = (target: SkillEntity): boolean => integer(target.hp) > 0n
-        && (row.definition.kind === 'healing' ? target.entityKind === 1 || target.entityKind === 2 : target.entityKind === 3);
-    const selected = entities.find(entity => entity.entityHandle === selectedHandle);
-    if (selected && integer(selected.hp) === 0n && (row.definition.kind === 'healing'
-        ? selected.entityKind === 1 || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
-    let target = selected && legal(selected) ? selected : undefined;
-    if (!target && row.definition.kind === 'healing') target = player;
-    if (!target) target = entities.filter(legal).slice().sort((a, b) => distance(a) - distance(b) || a.entityHandle - b.entityHandle)[0];
-    if (!target) throw new Error('没有可施放的目标');
-    if (distance(target) > row.definition.range) throw new Error('目标超出技能射程，请靠近后施放');
-    return target;
+    return player;
 }

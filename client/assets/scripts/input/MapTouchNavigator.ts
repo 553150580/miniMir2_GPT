@@ -11,14 +11,17 @@ export class MapTouchNavigator extends Component {
     @property maxTapSeconds = 0.45;
     private navigation?: NavigationIntent;
     private screenToGrid?: ScreenToGrid;
+    private consumeTap?: (target: GridPoint) => boolean;
+    private previewTap?: (target: GridPoint) => void;
     private touchId: number | null = null;
     private startPoint = new Vec2();
     private startTime = 0;
     private moved = false;
 
-    bind(navigation: NavigationIntent, screenToGrid: ScreenToGrid): void {
+    bind(navigation: NavigationIntent, screenToGrid: ScreenToGrid, consumeTap?: (target: GridPoint) => boolean, previewTap?: (target: GridPoint) => void): void {
         this.navigation = navigation;
         this.screenToGrid = screenToGrid;
+        this.consumeTap = consumeTap; this.previewTap = previewTap;
     }
 
     protected onEnable(): void {
@@ -51,12 +54,14 @@ export class MapTouchNavigator extends Component {
         this.startPoint.set(event.getUILocation());
         this.startTime = game.totalTime;
         this.moved = false;
+        this.preview(event);
         event.propagationStopped = true;
     }
 
     private onMove(event: EventTouch): void {
         if (event.getID() !== this.touchId || this.touchId === null) return;
         if (Vec2.distance(this.startPoint, event.getUILocation()) > Math.max(0, this.tapSlop)) this.moved = true;
+        this.preview(event);
         event.propagationStopped = true;
     }
 
@@ -69,9 +74,14 @@ export class MapTouchNavigator extends Component {
         if (!valid || !this.navigation || !this.screenToGrid) return;
         try {
             const target = this.screenToGrid(event.getUILocation());
+            if (target && this.consumeTap?.(target)) return;
             if (target && this.navigation.setGroundTarget(target)) this.node.emit(MapTouchNavigator.EVENT_GROUND_TARGET, target);
         } catch (error) { warn('地图坐标转换失败，保留原导航目标', error); }
     }
 
     private resetTouch(): void { this.touchId = null; this.moved = false; }
+    private preview(event: EventTouch): void {
+        if (!this.previewTap || !this.screenToGrid) return;
+        const target = this.screenToGrid(event.getUILocation()); if (target) this.previewTap(target);
+    }
 }

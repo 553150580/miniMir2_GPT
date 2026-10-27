@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-skill-growth-v0.4-d9101bd94921",
+  "config_version": "dev-combat-area-v0.5-ddfb248d01b3",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

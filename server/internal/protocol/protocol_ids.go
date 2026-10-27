@@ -26,6 +26,9 @@ const (
 	MsgC2SCastIntent uint16 = 30003
 	MsgC2SAutoBattle uint16 = 30004
 	MsgS2CHostingState uint16 = 30005
+	MsgS2CCastAccepted uint16 = 30006
+	MsgS2CAttackAccepted uint16 = 30007
+	MsgS2CCombatImpact uint16 = 30008
 	MsgC2SEquip uint16 = 40001
 	MsgC2SRecycle uint16 = 40002
 	MsgS2CInventory uint16 = 40003
@@ -35,7 +38,6 @@ const (
 	MsgC2SBuyHostingTime uint16 = 40007
 	MsgS2CHostingReport uint16 = 40008
 	MsgC2SUseItem uint16 = 40009
-	MsgS2CCastAccepted uint16 = 30006
 	MsgC2SLearnSkill uint16 = 40010
 	MsgC2SSkillAssetPreview uint16 = 40011
 	MsgS2CSkillAssetPreview uint16 = 40012

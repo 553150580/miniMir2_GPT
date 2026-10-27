@@ -5,7 +5,7 @@ import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
-import type { CastEvent } from './CastPlayback';
+import type { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
 const assembler = new BaselineAssembler();
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
@@ -28,6 +28,9 @@ export const session = {
     lastError: '',
     update: new Set<() => void>(),
     casts: new Set<(event: CastEvent) => void>(),
+    attacks: new Set<(event: AttackEvent) => void>(),
+    impacts: new Set<(event: ImpactEvent) => void>(),
+    quickSkills: new Map<string, number>(),
 };
 session.connection.subscribe((packet: Packet) => {
     if (packet.error) { session.lastError = protocolErrorMessage(packet.id, packet.error); }
@@ -54,6 +57,16 @@ session.connection.subscribe((packet: Packet) => {
         case 30006:
             if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
                 for (const listener of Array.from(session.casts)) listener(packet.value);
+            }
+            break;
+        case 30007:
+            if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
+                for (const listener of Array.from(session.attacks)) listener(packet.value);
+            }
+            break;
+        case 30008:
+            if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
+                for (const listener of Array.from(session.impacts)) listener(packet.value);
             }
             break;
         case 40008: session.report = packet.value; break;

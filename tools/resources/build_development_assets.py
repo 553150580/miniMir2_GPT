@@ -179,13 +179,19 @@ def main():
             profile['layers'].append(layer)
         profiles[name]=profile
     # Magic原图含用于加色混合的暗色像素；保持原像素，由保存的特效Sprite选择加色混合。
-    def effect(start,count,duration):
-        return {'frames':[importer.frame('Magic',start+i) for i in range(count)],'duration_ms':duration,'blend':'additive'}
+    def effect(start,count,duration,package='Magic'):
+        return {'frames':[importer.frame(package,start+i) for i in range(count)],'duration_ms':duration,'blend':'additive'}
     effects={
         '1':{'kind':'fireball','cast':effect(0,10,600),'hit':effect(170,10,600),
              'projectile':{'directions':[[importer.frame('Magic',10+d*10+i) for i in range(6)] for d in range(16)],
                            'frame_ms':30,'blend':'additive'}},
         '2':{'kind':'healing','cast':effect(200,10,600),'hit':effect(370,10,800)},
+        '5':{'kind':'great_fireball','cast':effect(400,10,600),'hit':effect(570,10,600),
+             'projectile':{'directions':[[importer.frame('Magic',410+d*10+i) for i in range(6)] for d in range(16)],
+                           'frame_ms':30,'blend':'additive'}},
+        '11':{'kind':'thunderbolt','cast':effect(20,3,300,'Magic2'),'hit':effect(10,5,400,'Magic2')},
+        '23':{'kind':'firebang','cast':effect(1650,10,600),'hit':effect(1660,10,1000),'hit_anchor':'grid'},
+        '29':{'kind':'mass_healing','cast':effect(1790,10,600),'hit':effect(1800,10,1000),'hit_anchor':'grid'},
     }
     manifest={'schema_version':1,'purpose':'first_loop_development_candidates','development_only':True,'runtime_ready':False,
               'status':'candidate','official_180_restoration_verified':False,'pillow_version':PILLOW_VERSION,
@@ -197,6 +203,12 @@ def main():
                           evidence('资料参考/crystal/Client/MirObjects/Frames.cs',153,168,'player compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1643,1657,'fireball/healing cast Magic frame groups'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2837,2883,'fireball projectile/hit and healing target effects'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1688,1710,'great-fireball and thunderbolt caster effects'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1791,1796,'firebang caster effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1971,1976,'mass-healing caster effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2954,2964,'thunderbolt target effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2997,3003,'firebang ground effect'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',3073,3079,'mass-healing ground effect'),
                           evidence('资料参考/crystal/Client/MirObjects/Effect.cs',152,216,'16-direction projectile frames and additive rendering'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',4887,4919,'weapon/body/hair order by direction'),
                           evidence('资料参考/crystal/Client/MirObjects/MapCode.cs',226,259,'v0 layers, 1-based images, column-major cells'),

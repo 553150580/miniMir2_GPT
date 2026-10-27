@@ -32,6 +32,12 @@ test('健康重连的历史施法序号不补播，仍在施法的首次快照�
     active.observe(state({castSequence:100,action:5,direction:7}),1000);
     assert.deepEqual(active.sample(1000,idle),{action:'casting',direction:7,frame:0});
 });
+test('权威AttackAccepted可立即排队身体动作，后续同序号基线不再重播',()=>{
+    const value=controller();value.acceptAttack(1,6);assert.deepEqual(value.sample(100,idle),{action:'attack',direction:6,frame:0});
+    value.observe(state({attackSequence:1,direction:2}),300);assert.deepEqual(value.sample(300,idle),{action:'attack',direction:6,frame:2});
+    value.acceptAttack(1,2);assert.equal(value.sample(700,idle).action,'standing');
+    value.observe(state({attackSequence:1,dead:true}),800);value.acceptAttack(2,2);assert.equal(value.sample(800,idle).action,'die');
+});
 
 test('攻击独立序号能看见同快照被受击覆盖的攻击，后续idle不会截断六帧',()=>{
     const value=controller();value.observe(state({action:3,attackSequence:1,injured:true}),100);

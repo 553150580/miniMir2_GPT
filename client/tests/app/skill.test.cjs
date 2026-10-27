@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { skillRows, primarySkill, skillAccuracy, createSkillLearnPreview, validateSkillLearnPreview, skillBookInstance, selectSkillTarget, gridDirection } = require('../../../.work/ui-tests/app/SkillModel.js');
+const { skillRows, primarySkill, skillAccuracy, skillQuickLabel, createSkillLearnPreview, validateSkillLearnPreview, skillBookInstance, selectSkillTarget, validateGroundTarget, gridDirection } = require('../../../.work/ui-tests/app/SkillModel.js');
 const { CastPlayback, effectPoses } = require('../../../.work/ui-tests/app/CastPlayback.js');
 const id = value => new Uint8Array(16).fill(value);
 const definition = changes => ({ id: 1, name: '火球术', job_id: 1, book_item_id: 7, learn_level: 7, initial_level: 0,
@@ -92,20 +92,86 @@ test('施法瞬时事件在本场景防重和有界，忽略旧场景、旧ID，
     value.clear(); assert.equal(value.accept(event(), definition(), 10100), false);
     value.bind('2'); assert.equal(value.casts.length, 0);
 });
-test('火球500毫秒开始飞行，与600毫秒动作重叠；服务端delay决定命中而非本地距离', () => {
+const impact=changes=>({sceneEpoch:'9007199254740993',eventId:'9007199254740996',skillId:1,casterHandle:1,targetHandle:3,targetLife:'1',targetGrid:{x:6,y:2},amount:'5',outcome:1,healing:false,castId:'9007199254740995',attackSequence:0,...changes});
+test('火球500毫秒开始飞行，与600毫秒动作重叠；仅真实Impact开始命中效果', () => {
     const value = playback(); value.accept(event(), definition(), 100);
     assert.deepEqual(effectPoses(value.casts[0], 599).map(p=>p.kind), ['cast']);
     const concurrent = effectPoses(value.casts[0], 650);
     assert.deepEqual(concurrent.map(p=>p.kind), ['cast','projectile']); assert.equal(concurrent[1].fraction, .25); assert.equal(concurrent[1].direction, 4);
     assert.deepEqual(effectPoses(value.casts[0], 799).map(p=>p.kind), ['projectile']);
+    assert.deepEqual(effectPoses(value.casts[0], 800).map(p=>p.kind), []);
+    value.impact(impact(),800);
     assert.deepEqual(effectPoses(value.casts[0], 800).map(p=>p.kind), ['hit']);
     assert.equal(effectPoses(value.casts[0], 800)[0].elapsed, 0);
     value.expire(1399, () => 600); assert.equal(value.casts.length, 1);
     value.expire(1400, () => 600); assert.equal(value.casts.length, 0);
 });
-test('治愈在服务端500毫秒命中，没有伪造飞弹；后台长暂停后旧特效到期', () => {
+test('治愈只在服务端确认加入治疗队列后显示命中特效，未声称立即加血', () => {
     const value = playback(); value.accept(event({ skillId: 2, delayMs: 500 }), definition({ id: 2, kind: 'healing' }), 0);
+    assert.deepEqual(effectPoses(value.casts[0], 500).map(p=>p.kind), ['cast']);
+    value.impact(impact({skillId:2,outcome:4,healing:true}),500);
     assert.deepEqual(effectPoses(value.casts[0], 500).map(p=>p.kind), ['cast','hit']);
     assert.deepEqual(effectPoses(value.casts[0], 600).map(p=>p.kind), ['hit']);
     value.expire(10000, () => 800); assert.equal(value.casts.length, 0);
+});
+
+test('精神力读取独立准确阶表，等级2为5；快捷选择可绑定第二主动技能且角色间不串技能',()=>{
+    const input=snapshot();input.definitions.push(definition({id:11,name:'雷电术',kind:'thunderbolt',target_kind:'enemy_entity'}));
+    input.inventory.learnedSkills=[{skillId:1,level:0},{skillId:11,level:0}];assert.equal(primarySkill(input,11).definition.id,11);
+    assert.equal(primarySkill(input,999).definition.id,1);input.job=0;assert.equal(primarySkill(input,11),null);
+    const spirit={...learned({kind:'spirit_sword',active:false,accuracy_by_level:[0,3,5,8]}),level:2};
+    assert.equal(skillAccuracy(spirit),5);spirit.level=0;assert.equal(skillAccuracy(spirit),0);
+    assert.throws(()=>skillAccuracy({...spirit,level:4}),/准确加成/);
+});
+test('地面技能必须明确选择合法范围格，不误用实体选取，也不修改实体或导航输入',()=>{
+    const entities=[entity(1,1,2,2),entity(3,3,4,4)],grid={x:4,y:4};
+    const skill=learned({kind:'firebang',target_kind:'enemy_grid',area_radius:1,range:9});
+    const bounds={width:16,height:16};
+    const before=JSON.stringify(entities);assert.deepEqual(validateGroundTarget(skill,entities,grid,bounds),grid);assert.equal(JSON.stringify(entities),before);
+    assert.throws(()=>selectSkillTarget(skill,entities,3),/地面位置/);
+    assert.throws(()=>validateGroundTarget(skill,entities,{x:12,y:4},bounds),/超出技能射程/);assert.throws(()=>validateGroundTarget(skill,entities,{x:-1,y:4},bounds),/无效/);
+    assert.throws(()=>validateGroundTarget(learned(),entities,grid,bounds),/实体目标/);
+    assert.deepEqual(validateGroundTarget(learned({kind:'mass_healing',target_kind:'friendly_grid'}),entities,grid,bounds),grid);
+});
+test('爆裂和群疗只按逻辑地图边界与射程验中心，不检查center是否可走',()=>{
+    const entities=[entity(1,1,2,2)];
+    const bounds={width:4,height:4,cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
+    for(const [kind,target_kind]of [['firebang','enemy_grid'],['mass_healing','friendly_grid']]){
+        const skill=learned({kind,target_kind,range:9});
+        assert.deepEqual(validateGroundTarget(skill,entities,{x:1,y:1},bounds),{x:1,y:1});
+        assert.throws(()=>validateGroundTarget(skill,entities,{x:4,y:1},bounds),/地图边界/);
+        assert.throws(()=>validateGroundTarget(skill,entities,{x:1,y:4},bounds),/地图边界/);
+    }
+});
+test('雷电300ms起手结束后不保持末帧，命中闪光由权威结果驱动；抵抗和失效不伪造命中',()=>{
+    for(const outcome of [1,2,3]){
+        const value=playback();value.accept(event({skillId:11,delayMs:500,targetLife:'2'}),definition({id:11,kind:'thunderbolt',target_kind:'enemy_entity'}),0);
+        assert.deepEqual(effectPoses(value.casts[0],299,300).map(p=>p.kind),['cast']);assert.deepEqual(effectPoses(value.casts[0],300,300),[]);
+        assert.equal(value.impact(impact({skillId:11,targetLife:'1',outcome}),500),false);
+        assert.equal(value.impact(impact({skillId:11,targetLife:'2',eventId:'9007199254740997',outcome}),500),true);
+        assert.deepEqual(effectPoses(value.casts[0],500,300).map(p=>p.kind),outcome===1?['hit']:[]);
+        assert.equal(value.impact(impact({skillId:11,targetLife:'2',eventId:'9007199254740997',outcome}),501),false);
+    }
+});
+test('爆裂与群疗一次受理只在原地面播放一次范围效果，不按各目标Impact重播',()=>{
+    for(const kind of ['firebang','mass_healing']){
+        const value=playback();value.accept(event({skillId:23,targetHandle:0,delayMs:500}),definition({id:23,kind,target_kind:kind==='firebang'?'enemy_grid':'friendly_grid'}),0);
+        assert.equal(value.impact(impact({skillId:23,targetHandle:3}),500),false);
+        assert.equal(value.impact(impact({skillId:23,targetHandle:4,eventId:'9007199254740997'}),510),false);
+        const poses=effectPoses(value.casts[0],600,600);assert.deepEqual(poses.map(p=>p.kind),['hit']);assert.equal(poses[0].elapsed,100);
+        value.expire(1500,()=>1000,()=>600);assert.equal(value.casts.length,0);
+    }
+});
+test('大火球沿16方向飞行，未收到结算只清理超时表现而不制造命中',()=>{
+    const value=playback();value.accept(event({skillId:5,delayMs:700}),definition({id:5,kind:'great_fireball',target_kind:'enemy_entity'}),0);
+    assert.equal(effectPoses(value.casts[0],550,600).find(p=>p.kind==='projectile').direction,4);
+    assert.deepEqual(effectPoses(value.casts[0],800,600),[]);
+    value.expire(5700,()=>600,()=>600);assert.equal(value.casts.length,0);
+});
+test('固定74像素快捷槽使用明确短标签，保留原字号、完整技能名与其他全名',()=>{
+    const bang=definition({kind:'firebang',name:'爆裂火焰'}),mass=definition({kind:'mass_healing',name:'群体治疗术'});
+    assert.equal(skillQuickLabel(bang),'爆裂');assert.equal(skillQuickLabel(mass),'群疗');assert.equal(bang.name,'爆裂火焰');assert.equal(mass.name,'群体治疗术');
+    for(const [kind,name]of [['fireball','火球术'],['healing','治愈术'],['great_fireball','大火球'],['thunderbolt','雷电术']]){
+        assert.equal(skillQuickLabel(definition({kind,name})),name);assert(Array.from(skillQuickLabel(definition({kind,name}))).length<=3);
+    }
 });

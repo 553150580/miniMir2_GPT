@@ -3,7 +3,7 @@ import { EntityAnimation } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
 import { CombatEffects } from './CombatEffects';
-import { CastEvent } from './CastPlayback';
+import { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
 
 interface Visual {
     node: Node;
@@ -23,6 +23,7 @@ export class GameWorldView {
     gameplay: any;
     private assets?: WorldAssets;
     private effects?: CombatEffects;
+    private lastAttackId = 0n;
     private visuals = new Map<number, Visual>();
     private disposed = false;
     private selected: (entity: any) => void = () => {};
@@ -45,18 +46,31 @@ export class GameWorldView {
         sprite.spriteFrame = assets.background; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         const effects = this.world.getChildByName('Effects');
         if (!effects) throw new Error('场景尚未保存游戏特效容器');
-        this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null);
+        this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null,
+            handle => this.visuals.get(handle)?.state.life?.toString() ?? null);
     }
 
     acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
+    acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
+    acceptAttack(event: AttackEvent): void {
+        if (this.disposed || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;
+        const id = BigInt(event.eventId.toString()); if (id <= this.lastAttackId) return; this.lastAttackId = id;
+        this.visuals.get(event.casterHandle)?.animation?.acceptAttack(event.attackSequence, event.direction);
+    }
 
     grid(x: number, y: number): Vec3 { return new Vec3((x + .5) * 48 - this.map.width * 24, (this.map.height - y - .5) * 32 - this.map.height * 16); }
 
-    screenToGrid(point: Vec2): { x: number; y: number } | null {
+    showAim(grid: { x: number; y: number } | null): void {
+        const marker = this.world.getChildByName('TargetMarker');
+        if (!marker) throw new Error('场景尚未保存地面目标标记');
+        marker.active = !!grid; if (grid) marker.setPosition(this.grid(grid.x, grid.y));
+    }
+
+    screenToGrid(point: Vec2, requireWalkable = true): { x: number; y: number } | null {
         if (!this.map) return null;
         const local = this.world.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(point.x, point.y));
         const x = Math.floor((local.x + this.map.width * 24) / 48), y = Math.floor((this.map.height * 16 - local.y) / 32);
-        return x >= 0 && y >= 0 && x < this.map.width && y < this.map.height && !this.map.cells[y][x].blocked ? { x, y } : null;
+        return x >= 0 && y >= 0 && x < this.map.width && y < this.map.height && (!requireWalkable || !this.map.cells[y][x].blocked) ? { x, y } : null;
     }
 
     apply(baseline: any): void {

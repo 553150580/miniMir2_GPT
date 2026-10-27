@@ -139,6 +139,7 @@ func TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting(t *testing.T) {
 	clock, delay := r.Potions.NextTick, r.Potions.NextUse
 	r.Conn = conn
 	r.Ready = false
+	r.Monsters[0].HP = 0 // ACK仅门禁观察，恢复测试不混入仍在推进的普通战斗。
 	w.step(r, now.Add(4*time.Millisecond))
 	if r.Player.HP != 14 || !r.Potions.NextTick.Equal(clock) || !r.Potions.NextUse.Equal(delay) {
 		t.Fatal("重新绑定等待ACK时重置或额外推进了药效时钟")

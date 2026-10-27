@@ -21,6 +21,11 @@ export function inputTraceMessage(direction: 'send' | 'receive', id: number, seq
             field('skill_id', value?.skillId); field('input_sequence', value?.inputSequence);
             const cast = value?.castId?.toString();
             if (typeof cast === 'string' && /^(?:0|[1-9]\d{0,19})$/.test(cast)) row.cast_id = cast;
+        } else if (id === 30007 || id === 30008) {
+            field('attack_sequence', value?.attackSequence); field('skill_id', value?.skillId); field('outcome', value?.outcome);
+            for (const [name, source] of [['event_id', value?.eventId], ['cast_id', value?.castId]] as const) {
+                const number = source?.toString(); if (typeof number === 'string' && /^(?:0|[1-9]\d{0,19})$/.test(number)) row[name] = number;
+            }
         } else return null;
     }
     return row;

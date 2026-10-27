@@ -12,7 +12,7 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (errorCode === CodeSkillStateBlocked) return '角色倒下或当前状态不能施放技能';
     if (errorCode === CodeSkillCooldown) return '技能尚未冷却，请稍后再试';
     if (errorCode === CodeSkillResource) return '魔法不足，不能施放技能';
-    if (errorCode === CodeSkillTarget) return '目标已失效或超出技能射程';
+    if (errorCode === CodeSkillTarget) return '目标已失效、被阻挡或超出技能射程';
     if (errorCode === CodeSkillPreviewStale) return '报价已过期或资产发生变化，请重新预览';
     if (errorCode === CodeSkillMaterials) return '材料不足或原实例数量、版本不匹配，请重新选择';
     if (errorCode === CodeSkillUpgradeBlocked) return '当前等级或技能状态不能升级';

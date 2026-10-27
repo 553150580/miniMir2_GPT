@@ -32,6 +32,7 @@ type command struct {
 	ticket     string
 	done       func(*worker)
 	tick       time.Time
+	at         time.Time
 	disconnect bool
 }
 type job struct {
@@ -71,6 +72,7 @@ type entity struct {
 	ActionUntil    time.Time
 	NextMove       time.Time
 	NextAttack     time.Time
+	ActionReadyAt  time.Time
 	RespawnAt      time.Time
 	Monster        *devconfig.Monster
 	CastSequence   uint32
@@ -115,6 +117,13 @@ type room struct {
 	SkillCooldowns     map[uint32]time.Time
 	Casts              []pendingCast
 	CastID             uint64
+	Attacks            []pendingAttack
+	EventID            uint64
+	ScheduleID         uint64
+	KillFacts          []killFact
+	PreviewInFlight    bool
+	PreviewGeneration  uint64
+	Isolated           bool
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -215,7 +224,7 @@ func (e *Engine) Handle(c Connection, f wire.Frame) {
 func (e *Engine) Disconnect(c Connection) {
 	if id := c.RoleID(); id != "" {
 		select {
-		case e.worker(id).control <- command{role: id, conn: c, disconnect: true}:
+		case e.worker(id).control <- command{role: id, conn: c, disconnect: true, at: time.Now()}:
 		case <-e.ctx.Done():
 		}
 	}
@@ -282,6 +291,11 @@ func (w *worker) submit(j job) bool {
 func (w *worker) command(c command) {
 	r := w.rooms[c.role]
 	if c.ticket != "" {
+		if r != nil && r.Isolated {
+			c.conn.Deliver(wire.Frame{ID: p.MsgS2CEnterLine, Request: c.frame.Request, Error: p.CodeLineRecovering})
+			c.conn.Close("room authority isolated")
+			return
+		}
 		if !c.conn.Alive() {
 			return
 		}
@@ -307,13 +321,32 @@ func (w *worker) command(c command) {
 	if r == nil {
 		return
 	}
+	if r.Isolated {
+		if c.disconnect {
+			if r.Conn == c.conn {
+				r.Conn = nil
+			}
+			return
+		}
+		if c.conn != nil {
+			c.conn.Close("room authority isolated")
+		}
+		return
+	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			r.PreviewGeneration++
+			r.PreviewInFlight = false
 			r.Conn = nil
 			r.Ready = false
 			r.Manual = false
 			r.LastTick = time.Now()
 			r.HostSession = domain.ID()
+			at := c.at
+			if at.IsZero() {
+				at = time.Now()
+			}
+			transitionEventHosting(r, at, r.HostSession)
 			r.HostMS = 0
 		}
 		return
@@ -410,14 +443,14 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.SkillId != 0 {
-			if code := w.cast(r, q.SkillId, q.TargetHandle, q.InputSequence, time.Now()); code != 0 {
+			if code := w.cast(r, q.SkillId, q.TargetHandle, q.InputSequence, time.Now(), q.TargetGrid); code != 0 {
 				w.failure(r, c.frame, code)
 			}
 			return
 		}
 		for _, m := range r.Monsters[:r.MonsterCount] {
 			if m.Handle == q.TargetHandle && m.HP > 0 {
-				w.attack(r, &r.Player, m, time.Now())
+				w.attack(r, &r.Player, m, time.Now(), q.InputSequence)
 				break
 			}
 		}
@@ -428,6 +461,8 @@ func (w *worker) command(c command) {
 	}
 }
 func (w *worker) join(r *room, c command) {
+	r.PreviewGeneration++
+	r.PreviewInFlight = false
 	r.Pending = true
 	fresh := r.Scene == 0
 	j := job{target: w, run: func() func(*worker) {
@@ -455,6 +490,7 @@ func (w *worker) join(r *room, c command) {
 			}
 			r.Role = role
 			r.Auth = auth
+			transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
 			r.InputSequence = 0
 			r.Manual = false
 			r.Conn = c.conn
@@ -467,9 +503,11 @@ func (w *worker) join(r *room, c command) {
 			if !c.conn.Alive() {
 				r.Conn = nil
 				r.HostSession = domain.ID()
+				transitionEventHosting(r, time.Now(), r.HostSession)
 				w.after(r)
 				return
 			}
+			transitionEventHosting(r, time.Now(), "")
 			c.conn.SetBinding(uint64(auth.SessionEpoch))
 			w.send(r, p.MsgS2CEnterLine, c.frame.Request, &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(role.EconomicSeq + 1)})
 			w.baseline(r)
@@ -505,13 +543,19 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	}
 }
 func (w *worker) after(r *room) {
-	for len(r.Waiting) > 0 && !r.Pending {
+	for len(r.Waiting) > 0 && !r.Pending && !r.Isolated {
 		c := r.Waiting[0]
 		r.Waiting = r.Waiting[1:]
 		w.command(c)
 	}
 }
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
+	if !r.Ready {
+		switch id {
+		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CDeathNotice:
+			return
+		}
+	}
 	if r.Conn != nil {
 		r.Conn.Deliver(wire.Message(id, request, uint64(r.Auth.SessionEpoch), msg))
 	}
@@ -559,10 +603,13 @@ func (w *worker) baseline(r *room) {
 	entities = append(entities, r.Loot...)
 	for _, e := range entities {
 		moveMS := uint32(0)
+		attackMS := uint32(0)
 		if e.Kind >= 1 && e.Kind <= 3 {
-			moveMS = uint32(w.fighter(r, e).MoveMS)
+			stats := w.fighter(r, e)
+			moveMS = uint32(stats.MoveMS)
+			attackMS = uint32(stats.AttackMS)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS})
 	}
 	w.send(r, p.MsgS2CSceneBaseline, 0, out)
 }
@@ -678,6 +725,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 			r.PendingFingerprint = ""
 			if err == nil && role.Revision >= r.Role.Revision {
 				r.Role = role
+				transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
 				w.refreshPlayerStats(r)
 			}
 			if err != nil {

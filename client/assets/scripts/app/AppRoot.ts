@@ -19,8 +19,8 @@ import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
-import { createSkillLearnPreview, primarySkill, selectSkillTarget, SkillRow, SkillSnapshot, skillBookInstance, validateSkillLearnPreview } from './SkillModel';
-import type { CastEvent } from './CastPlayback';
+import { createSkillLearnPreview, gridDirection, isGroundSkill, primarySkill, selectSkillTarget, skillQuickLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
+import type { AttackEvent, CastEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
 import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
@@ -45,6 +45,7 @@ export class AppRoot extends Component {
     private selectedJob = 0;
     private selectedItem: any = null;
     private selectedTarget: number | null = null;
+    private aim: { skillId: number; role: string; scene: string; rule: string } | null = null;
     private inputSequence = 0;
     private auto = true;
     private count = 1;
@@ -181,6 +182,7 @@ export class AppRoot extends Component {
         session.preparedWorld = null;
         this.hud.setMapFrame(prepared.background);
         this.world.prepare(prepared, entity => {
+            if (this.consumeGround(entity.position)) return;
             this.selectedTarget = entity.entityHandle;
             this.popup!.show('Details', { title: '实体详情', message: `类型：${entity.entityKind}\n位置：${entity.position.x}, ${entity.position.y}\n生命：${entity.hp.toString()} / ${entity.hpMax.toString()}` });
         });
@@ -190,8 +192,13 @@ export class AppRoot extends Component {
         this.cleanups.push(() => this.skillAssets?.dispose());
         const cast = (event: CastEvent): void => this.world?.acceptCast(event);
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
+        const attack = (event: AttackEvent): void => this.world?.acceptAttack(event);
+        session.attacks.add(attack); this.cleanups.push(() => session.attacks.delete(attack));
+        const impact = (event: ImpactEvent): void => this.world?.acceptImpact(event);
+        session.impacts.add(impact); this.cleanups.push(() => session.impacts.delete(impact));
         if (this.disposed) return;
-        viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.world!.screenToGrid(point));
+        viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.world!.screenToGrid(point, !this.aim),
+            grid => this.consumeGround(grid), grid => { if (this.aim) this.world!.showAim(grid); });
         this.joystick = this.find('MapViewport/Joystick').getComponent(TouchJoystick)!;
         this.joystick.bind(this.nav);
         game.on(Game.EVENT_HIDE, this.releaseInput, this);
@@ -230,7 +237,7 @@ export class AppRoot extends Component {
         this.button('MapViewport/Actions/Attack', () => this.basicAttack());
         this.button('BottomHUD/Skills/BasicAttack', () => {
             if (session.baseline?.entities.find((entity: any) => entity.entityKind === 1)?.hp.isZero()) return this.basicAttack();
-            const skill = primarySkill(this.skillSnapshot());
+            const skill = this.quickSkill();
             if (!skill) return this.basicAttack();
             if (!skill.learned) { this.ui!.open('Skills'); this.refreshGame(); return; }
             this.castSkill(skill);
@@ -241,6 +248,12 @@ export class AppRoot extends Component {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             this.castSkill(skill);
         });
+        this.button('UIMgr/Panels/Skills/BindQuick', () => {
+            const selected = this.skills?.selected;
+            if (!selected?.learned || !selected.definition.active) throw new Error('请选择已学会的主动技能');
+            session.quickSkills.set(roleIdentity(), selected.definition.id); this.refreshGame();
+        });
+        this.button('MapViewport/Aiming/Cancel', () => this.cancelAim());
         for (const [path, kind] of [['Shop', 1], ['Upgrade', 2], ['Salvage', 3]] as const) this.button(`UIMgr/Panels/Skills/${path}`, () => {
             const selected = this.skills?.selected;
             if (kind === 2 && !selected?.learned) throw new Error('先学会并选择要升级的技能');
@@ -289,12 +302,14 @@ export class AppRoot extends Component {
                 this.nav.completeGroundTarget(player.position);
             }
         }
+        const quick = this.quickSkill();
         const presentation = { role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
-            quickSkillLabel: primarySkill(this.skillSnapshot())?.definition.name };
+            quickSkillLabel: quick ? skillQuickLabel(quick.definition) : undefined };
         this.hud?.refresh(presentation);
-        this.skills?.refresh(this.skillSnapshot());
+        this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
+        this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
@@ -370,11 +385,38 @@ export class AppRoot extends Component {
 
     private castSkill(skill: SkillRow): void {
         if (!session.ready) throw new Error('场景尚未就绪');
-        const current = primarySkill(this.skillSnapshot());
-        if (!current || current.definition.id !== skill.definition.id) throw new Error('技能状态已变化，请重新选择');
+        const current = skillRows(this.skillSnapshot()).find(row => row.definition.id === skill.definition.id);
+        if (!current) throw new Error('技能状态已变化，请重新选择');
+        if (isGroundSkill(current.definition)) {
+            const player = session.baseline?.entities.find((entity: any) => entity.entityKind === 1);
+            validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map);
+            this.aim = { skillId: current.definition.id, role: roleIdentity(), scene: session.entry.sceneEpoch.toString(), rule: session.entry.resourceVersion.toString() };
+            this.text('MapViewport/Aiming/Text', `${current.definition.name}：轻触地面施放`);
+            this.find('MapViewport/Aiming').active = true; this.world!.showAim(player.position);
+            if (this.ui?.top?.name === 'Skills') this.ui.back();
+            return;
+        }
         const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedTarget);
         session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
             skillId: current.definition.id, targetHandle: target.entityHandle, targetGrid: target.position });
+    }
+
+    private quickSkill(): SkillRow | null { return primarySkill(this.skillSnapshot(), session.role ? session.quickSkills.get(roleIdentity()) ?? 0 : 0); }
+    private cancelAim(): void { this.aim = null; this.find('MapViewport/Aiming').active = false; this.world?.showAim(null); }
+    private consumeGround(grid: { x: number; y: number }): boolean {
+        if (!this.aim) return false;
+        try {
+            if (!session.ready || this.aim.role !== roleIdentity() || this.aim.scene !== session.entry?.sceneEpoch.toString()
+                || this.aim.rule !== session.entry?.resourceVersion.toString()) throw new Error('瞄准状态已变化，请重新选择技能');
+            const row = skillRows(this.skillSnapshot()).find(value => value.definition.id === this.aim!.skillId);
+            if (!row) throw new Error('技能状态已变化，请重新选择');
+            const target = validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map);
+            const player = session.baseline.entities.find((entity: any) => entity.entityKind === 1);
+            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+                skillId: row.definition.id, targetHandle: 0, targetGrid: target, direction: gridDirection(player.position, target, player.direction) });
+            this.cancelAim();
+        } catch (error) { this.error(error); }
+        return true;
     }
 
     private async basicAttack(): Promise<void> {

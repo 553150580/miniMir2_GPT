@@ -1,0 +1,227 @@
+{
+  "base_commit": "d1207bcdfb49ee075c589ddcc99d9b32a72f31eb",
+  "old_objects": 938,
+  "new_objects": 963,
+  "changes_to_existing_objects": [
+    {
+      "index": 21,
+      "name": "MapViewport",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 26
+        },
+        {
+          "__id__": 60
+        },
+        {
+          "__id__": 66
+        },
+        {
+          "__id__": 74
+        }
+      ],
+      "after": [
+        {
+          "__id__": 26
+        },
+        {
+          "__id__": 60
+        },
+        {
+          "__id__": 66
+        },
+        {
+          "__id__": 74
+        },
+        {
+          "__id__": 945
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "name": "World",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 30
+        },
+        {
+          "__id__": 777
+        }
+      ],
+      "after": [
+        {
+          "__id__": 960
+        },
+        {
+          "__id__": 30
+        },
+        {
+          "__id__": 777
+        }
+      ]
+    },
+    {
+      "index": 733,
+      "name": "Skills",
+      "field": "_children",
+      "before": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        },
+        {
+          "__id__": 779
+        },
+        {
+          "__id__": 786
+        },
+        {
+          "__id__": 793
+        }
+      ],
+      "after": [
+        {
+          "__id__": 737
+        },
+        {
+          "__id__": 740
+        },
+        {
+          "__id__": 743
+        },
+        {
+          "__id__": 760
+        },
+        {
+          "__id__": 767
+        },
+        {
+          "__id__": 774
+        },
+        {
+          "__id__": 779
+        },
+        {
+          "__id__": 786
+        },
+        {
+          "__id__": 793
+        },
+        {
+          "__id__": 938
+        }
+      ]
+    },
+    {
+      "index": 760,
+      "name": "Learn",
+      "field": "_lpos",
+      "before": {
+        "__type__": "cc.Vec3",
+        "x": -145,
+        "y": -325,
+        "z": 0
+      },
+      "after": {
+        "__type__": "cc.Vec3",
+        "x": -200,
+        "y": -325,
+        "z": 0
+      }
+    },
+    {
+      "index": 761,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 260,
+        "height": 60
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 180,
+        "height": 60
+      }
+    },
+    {
+      "index": 765,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 252,
+        "height": 56
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 172,
+        "height": 56
+      }
+    },
+    {
+      "index": 767,
+      "name": "Use",
+      "field": "_lpos",
+      "before": {
+        "__type__": "cc.Vec3",
+        "x": 145,
+        "y": -325,
+        "z": 0
+      },
+      "after": {
+        "__type__": "cc.Vec3",
+        "x": 0,
+        "y": -325,
+        "z": 0
+      }
+    },
+    {
+      "index": 768,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 260,
+        "height": 60
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 180,
+        "height": 60
+      }
+    },
+    {
+      "index": 772,
+      "name": "",
+      "field": "_contentSize",
+      "before": {
+        "__type__": "cc.Size",
+        "width": 252,
+        "height": 56
+      },
+      "after": {
+        "__type__": "cc.Size",
+        "width": 172,
+        "height": 56
+      }
+    }
+  ]
+}

@@ -5296,6 +5296,8 @@ $root.minimir = (function() {
              * @property {number|null} [attack_sequence] EntityState attack_sequence
              * @property {number|null} [cast_sequence] EntityState cast_sequence
              * @property {number|null} [cast_skill_id] EntityState cast_skill_id
+             * @property {Long|null} [life] EntityState life
+             * @property {number|null} [attack_interval_ms] EntityState attack_interval_ms
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5440,6 +5442,22 @@ $root.minimir = (function() {
             EntityState.prototype.cast_skill_id = 0;
 
             /**
+             * EntityState life.
+             * @member {Long} life
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityState attack_interval_ms.
+             * @member {number} attack_interval_ms
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.attack_interval_ms = 0;
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -5499,6 +5517,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.cast_sequence);
                 if (message.cast_skill_id != null && $Object.hasOwnProperty.call(message, "cast_skill_id") && message.cast_skill_id !== 0)
                     writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.cast_skill_id);
+                if (message.life != null && $Object.hasOwnProperty.call(message, "life") && (typeof message.life === "object" ? message.life.low || message.life.high : message.life !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.life);
+                if (message.attack_interval_ms != null && $Object.hasOwnProperty.call(message, "attack_interval_ms") && message.attack_interval_ms !== 0)
+                    writer.uint32(/* id 16, wireType 0 =*/128).uint32(message.attack_interval_ms);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5679,6 +5701,24 @@ $root.minimir = (function() {
                                 delete message.cast_skill_id;
                             continue;
                         }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.life = value;
+                            else
+                                delete message.life;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_interval_ms = value;
+                            else
+                                delete message.attack_interval_ms;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5771,6 +5811,12 @@ $root.minimir = (function() {
                 if (message.cast_skill_id != null && $Object.hasOwnProperty.call(message, "cast_skill_id"))
                     if (!$util.isInteger(message.cast_skill_id))
                         return "cast_skill_id: integer expected";
+                if (message.life != null && $Object.hasOwnProperty.call(message, "life"))
+                    if (!$util.isInteger(message.life) && !(message.life && $util.isInteger(message.life.low) && $util.isInteger(message.life.high)))
+                        return "life: integer|Long expected";
+                if (message.attack_interval_ms != null && $Object.hasOwnProperty.call(message, "attack_interval_ms"))
+                    if (!$util.isInteger(message.attack_interval_ms))
+                        return "attack_interval_ms: integer expected";
                 return null;
             };
 
@@ -6781,6 +6827,8 @@ $root.minimir = (function() {
              * @property {number|null} [direction] CastAccepted direction
              * @property {number|null} [delay_ms] CastAccepted delay_ms
              * @property {number|null} [input_sequence] CastAccepted input_sequence
+             * @property {Long|null} [caster_life] CastAccepted caster_life
+             * @property {Long|null} [target_life] CastAccepted target_life
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -6893,6 +6941,22 @@ $root.minimir = (function() {
             CastAccepted.prototype.input_sequence = 0;
 
             /**
+             * CastAccepted caster_life.
+             * @member {Long} caster_life
+             * @memberof minimir.v1.CastAccepted
+             * @instance
+             */
+            CastAccepted.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CastAccepted target_life.
+             * @member {Long} target_life
+             * @memberof minimir.v1.CastAccepted
+             * @instance
+             */
+            CastAccepted.prototype.target_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new CastAccepted instance using the specified properties.
              * @function create
              * @memberof minimir.v1.CastAccepted
@@ -6944,6 +7008,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.delay_ms);
                 if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.input_sequence);
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.caster_life);
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life") && (typeof message.target_life === "object" ? message.target_life.low || message.target_life.high : message.target_life !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.target_life);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7085,6 +7153,24 @@ $root.minimir = (function() {
                                 delete message.input_sequence;
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.caster_life = value;
+                            else
+                                delete message.caster_life;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_life = value;
+                            else
+                                delete message.target_life;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7167,6 +7253,12 @@ $root.minimir = (function() {
                 if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
                     if (!$util.isInteger(message.input_sequence))
                         return "input_sequence: integer expected";
+                if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
+                    if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
+                        return "caster_life: integer|Long expected";
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life"))
+                    if (!$util.isInteger(message.target_life) && !(message.target_life && $util.isInteger(message.target_life.low) && $util.isInteger(message.target_life.high)))
+                        return "target_life: integer|Long expected";
                 return null;
             };
 
@@ -7185,6 +7277,895 @@ $root.minimir = (function() {
             };
 
             return CastAccepted;
+        })();
+
+        v1.AttackAccepted = (function() {
+
+            /**
+             * Properties of an AttackAccepted.
+             * @typedef {Object} minimir.v1.AttackAccepted.$Properties
+             * @property {Long|null} [scene_epoch] AttackAccepted scene_epoch
+             * @property {Long|null} [event_id] AttackAccepted event_id
+             * @property {number|null} [caster_handle] AttackAccepted caster_handle
+             * @property {number|null} [target_handle] AttackAccepted target_handle
+             * @property {minimir.v1.GridPoint.$Properties|null} [origin] AttackAccepted origin
+             * @property {minimir.v1.GridPoint.$Properties|null} [target_grid] AttackAccepted target_grid
+             * @property {number|null} [direction] AttackAccepted direction
+             * @property {number|null} [delay_ms] AttackAccepted delay_ms
+             * @property {number|null} [attack_sequence] AttackAccepted attack_sequence
+             * @property {number|null} [input_sequence] AttackAccepted input_sequence
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AttackAccepted.
+             * @memberof minimir.v1
+             * @interface IAttackAccepted
+             * @augments minimir.v1.AttackAccepted.$Properties
+             * @deprecated Use minimir.v1.AttackAccepted.$Properties instead.
+             */
+
+            /**
+             * Shape of an AttackAccepted.
+             * @typedef {minimir.v1.AttackAccepted.$Properties} minimir.v1.AttackAccepted.$Shape
+             */
+
+            /**
+             * Constructs a new AttackAccepted.
+             * @memberof minimir.v1
+             * @classdesc Represents an AttackAccepted.
+             * @constructor
+             * @param {minimir.v1.AttackAccepted.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var AttackAccepted = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AttackAccepted scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * AttackAccepted event_id.
+             * @member {Long} event_id
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.event_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * AttackAccepted caster_handle.
+             * @member {number} caster_handle
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.caster_handle = 0;
+
+            /**
+             * AttackAccepted target_handle.
+             * @member {number} target_handle
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.target_handle = 0;
+
+            /**
+             * AttackAccepted origin.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} origin
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.origin = null;
+
+            /**
+             * AttackAccepted target_grid.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} target_grid
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.target_grid = null;
+
+            /**
+             * AttackAccepted direction.
+             * @member {number} direction
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.direction = 0;
+
+            /**
+             * AttackAccepted delay_ms.
+             * @member {number} delay_ms
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.delay_ms = 0;
+
+            /**
+             * AttackAccepted attack_sequence.
+             * @member {number} attack_sequence
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.attack_sequence = 0;
+
+            /**
+             * AttackAccepted input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.AttackAccepted
+             * @instance
+             */
+            AttackAccepted.prototype.input_sequence = 0;
+
+            /**
+             * Creates a new AttackAccepted instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {minimir.v1.AttackAccepted.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.AttackAccepted} AttackAccepted instance
+             * @type {{
+             *   (properties: minimir.v1.AttackAccepted.$Shape): minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape;
+             *   (properties?: minimir.v1.AttackAccepted.$Properties): minimir.v1.AttackAccepted;
+             * }}
+             */
+            AttackAccepted.create = function(properties) {
+                return new AttackAccepted(properties);
+            };
+
+            /**
+             * Encodes the specified AttackAccepted message. Does not implicitly {@link minimir.v1.AttackAccepted.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {minimir.v1.AttackAccepted.$Properties} message AttackAccepted message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AttackAccepted.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.event_id != null && $Object.hasOwnProperty.call(message, "event_id") && (typeof message.event_id === "object" ? message.event_id.low || message.event_id.high : message.event_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.event_id);
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle") && message.caster_handle !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.caster_handle);
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle") && message.target_handle !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.target_handle);
+                if (message.origin != null && $Object.hasOwnProperty.call(message, "origin"))
+                    $root.minimir.v1.GridPoint.encode(message.origin, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid"))
+                    $root.minimir.v1.GridPoint.encode(message.target_grid, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction") && message.direction !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.direction);
+                if (message.delay_ms != null && $Object.hasOwnProperty.call(message, "delay_ms") && message.delay_ms !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.delay_ms);
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence") && message.attack_sequence !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.attack_sequence);
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.input_sequence);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AttackAccepted message, length delimited. Does not implicitly {@link minimir.v1.AttackAccepted.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {minimir.v1.AttackAccepted.$Properties} message AttackAccepted message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AttackAccepted.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AttackAccepted message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape} AttackAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AttackAccepted.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.AttackAccepted();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.event_id = value;
+                            else
+                                delete message.event_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.caster_handle = value;
+                            else
+                                delete message.caster_handle;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_handle = value;
+                            else
+                                delete message.target_handle;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.origin = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.origin);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.target_grid = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.target_grid);
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.direction = value;
+                            else
+                                delete message.direction;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.delay_ms = value;
+                            else
+                                delete message.delay_ms;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_sequence = value;
+                            else
+                                delete message.attack_sequence;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AttackAccepted message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape} AttackAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AttackAccepted.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an AttackAccepted message.
+             * @function verify
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AttackAccepted.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.event_id != null && $Object.hasOwnProperty.call(message, "event_id"))
+                    if (!$util.isInteger(message.event_id) && !(message.event_id && $util.isInteger(message.event_id.low) && $util.isInteger(message.event_id.high)))
+                        return "event_id: integer|Long expected";
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle"))
+                    if (!$util.isInteger(message.caster_handle))
+                        return "caster_handle: integer expected";
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle"))
+                    if (!$util.isInteger(message.target_handle))
+                        return "target_handle: integer expected";
+                if (message.origin != null && $Object.hasOwnProperty.call(message, "origin")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.origin, _depth + 1);
+                    if (error)
+                        return "origin." + error;
+                }
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.target_grid, _depth + 1);
+                    if (error)
+                        return "target_grid." + error;
+                }
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction"))
+                    if (!$util.isInteger(message.direction))
+                        return "direction: integer expected";
+                if (message.delay_ms != null && $Object.hasOwnProperty.call(message, "delay_ms"))
+                    if (!$util.isInteger(message.delay_ms))
+                        return "delay_ms: integer expected";
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence"))
+                    if (!$util.isInteger(message.attack_sequence))
+                        return "attack_sequence: integer expected";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for AttackAccepted
+             * @function getTypeUrl
+             * @memberof minimir.v1.AttackAccepted
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AttackAccepted.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.AttackAccepted";
+            };
+
+            return AttackAccepted;
+        })();
+
+        v1.CombatImpact = (function() {
+
+            /**
+             * Properties of a CombatImpact.
+             * @typedef {Object} minimir.v1.CombatImpact.$Properties
+             * @property {Long|null} [scene_epoch] CombatImpact scene_epoch
+             * @property {Long|null} [event_id] CombatImpact event_id
+             * @property {number|null} [skill_id] CombatImpact skill_id
+             * @property {number|null} [caster_handle] CombatImpact caster_handle
+             * @property {number|null} [target_handle] CombatImpact target_handle
+             * @property {Long|null} [target_life] CombatImpact target_life
+             * @property {minimir.v1.GridPoint.$Properties|null} [target_grid] CombatImpact target_grid
+             * @property {Long|null} [amount] CombatImpact amount
+             * @property {number|null} [outcome] CombatImpact outcome
+             * @property {boolean|null} [healing] CombatImpact healing
+             * @property {Long|null} [cast_id] CombatImpact cast_id
+             * @property {number|null} [attack_sequence] CombatImpact attack_sequence
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a CombatImpact.
+             * @memberof minimir.v1
+             * @interface ICombatImpact
+             * @augments minimir.v1.CombatImpact.$Properties
+             * @deprecated Use minimir.v1.CombatImpact.$Properties instead.
+             */
+
+            /**
+             * Shape of a CombatImpact.
+             * @typedef {minimir.v1.CombatImpact.$Properties} minimir.v1.CombatImpact.$Shape
+             */
+
+            /**
+             * Constructs a new CombatImpact.
+             * @memberof minimir.v1
+             * @classdesc Represents a CombatImpact.
+             * @constructor
+             * @param {minimir.v1.CombatImpact.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var CombatImpact = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * CombatImpact scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CombatImpact event_id.
+             * @member {Long} event_id
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.event_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CombatImpact skill_id.
+             * @member {number} skill_id
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.skill_id = 0;
+
+            /**
+             * CombatImpact caster_handle.
+             * @member {number} caster_handle
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.caster_handle = 0;
+
+            /**
+             * CombatImpact target_handle.
+             * @member {number} target_handle
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.target_handle = 0;
+
+            /**
+             * CombatImpact target_life.
+             * @member {Long} target_life
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.target_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CombatImpact target_grid.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} target_grid
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.target_grid = null;
+
+            /**
+             * CombatImpact amount.
+             * @member {Long} amount
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.amount = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * CombatImpact outcome.
+             * @member {number} outcome
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.outcome = 0;
+
+            /**
+             * CombatImpact healing.
+             * @member {boolean} healing
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.healing = false;
+
+            /**
+             * CombatImpact cast_id.
+             * @member {Long} cast_id
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.cast_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * CombatImpact attack_sequence.
+             * @member {number} attack_sequence
+             * @memberof minimir.v1.CombatImpact
+             * @instance
+             */
+            CombatImpact.prototype.attack_sequence = 0;
+
+            /**
+             * Creates a new CombatImpact instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {minimir.v1.CombatImpact.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.CombatImpact} CombatImpact instance
+             * @type {{
+             *   (properties: minimir.v1.CombatImpact.$Shape): minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape;
+             *   (properties?: minimir.v1.CombatImpact.$Properties): minimir.v1.CombatImpact;
+             * }}
+             */
+            CombatImpact.create = function(properties) {
+                return new CombatImpact(properties);
+            };
+
+            /**
+             * Encodes the specified CombatImpact message. Does not implicitly {@link minimir.v1.CombatImpact.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {minimir.v1.CombatImpact.$Properties} message CombatImpact message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CombatImpact.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.event_id != null && $Object.hasOwnProperty.call(message, "event_id") && (typeof message.event_id === "object" ? message.event_id.low || message.event_id.high : message.event_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.event_id);
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id") && message.skill_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.skill_id);
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle") && message.caster_handle !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.caster_handle);
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle") && message.target_handle !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.target_handle);
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life") && (typeof message.target_life === "object" ? message.target_life.low || message.target_life.high : message.target_life !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.target_life);
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid"))
+                    $root.minimir.v1.GridPoint.encode(message.target_grid, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount") && (typeof message.amount === "object" ? message.amount.low || message.amount.high : message.amount !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.amount);
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome") && message.outcome !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.outcome);
+                if (message.healing != null && $Object.hasOwnProperty.call(message, "healing") && message.healing !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.healing);
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id") && (typeof message.cast_id === "object" ? message.cast_id.low || message.cast_id.high : message.cast_id !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.cast_id);
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence") && message.attack_sequence !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.attack_sequence);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified CombatImpact message, length delimited. Does not implicitly {@link minimir.v1.CombatImpact.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {minimir.v1.CombatImpact.$Properties} message CombatImpact message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            CombatImpact.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a CombatImpact message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape} CombatImpact
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CombatImpact.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.CombatImpact();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.event_id = value;
+                            else
+                                delete message.event_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.skill_id = value;
+                            else
+                                delete message.skill_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.caster_handle = value;
+                            else
+                                delete message.caster_handle;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_handle = value;
+                            else
+                                delete message.target_handle;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_life = value;
+                            else
+                                delete message.target_life;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.target_grid = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.target_grid);
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.amount = value;
+                            else
+                                delete message.amount;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.outcome = value;
+                            else
+                                delete message.outcome;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.healing = value;
+                            else
+                                delete message.healing;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.cast_id = value;
+                            else
+                                delete message.cast_id;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_sequence = value;
+                            else
+                                delete message.attack_sequence;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a CombatImpact message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape} CombatImpact
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            CombatImpact.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a CombatImpact message.
+             * @function verify
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            CombatImpact.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.event_id != null && $Object.hasOwnProperty.call(message, "event_id"))
+                    if (!$util.isInteger(message.event_id) && !(message.event_id && $util.isInteger(message.event_id.low) && $util.isInteger(message.event_id.high)))
+                        return "event_id: integer|Long expected";
+                if (message.skill_id != null && $Object.hasOwnProperty.call(message, "skill_id"))
+                    if (!$util.isInteger(message.skill_id))
+                        return "skill_id: integer expected";
+                if (message.caster_handle != null && $Object.hasOwnProperty.call(message, "caster_handle"))
+                    if (!$util.isInteger(message.caster_handle))
+                        return "caster_handle: integer expected";
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle"))
+                    if (!$util.isInteger(message.target_handle))
+                        return "target_handle: integer expected";
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life"))
+                    if (!$util.isInteger(message.target_life) && !(message.target_life && $util.isInteger(message.target_life.low) && $util.isInteger(message.target_life.high)))
+                        return "target_life: integer|Long expected";
+                if (message.target_grid != null && $Object.hasOwnProperty.call(message, "target_grid")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.target_grid, _depth + 1);
+                    if (error)
+                        return "target_grid." + error;
+                }
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount"))
+                    if (!$util.isInteger(message.amount) && !(message.amount && $util.isInteger(message.amount.low) && $util.isInteger(message.amount.high)))
+                        return "amount: integer|Long expected";
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome"))
+                    if (!$util.isInteger(message.outcome))
+                        return "outcome: integer expected";
+                if (message.healing != null && $Object.hasOwnProperty.call(message, "healing"))
+                    if (typeof message.healing !== "boolean")
+                        return "healing: boolean expected";
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id"))
+                    if (!$util.isInteger(message.cast_id) && !(message.cast_id && $util.isInteger(message.cast_id.low) && $util.isInteger(message.cast_id.high)))
+                        return "cast_id: integer|Long expected";
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence"))
+                    if (!$util.isInteger(message.attack_sequence))
+                        return "attack_sequence: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for CombatImpact
+             * @function getTypeUrl
+             * @memberof minimir.v1.CombatImpact
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            CombatImpact.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.CombatImpact";
+            };
+
+            return CombatImpact;
         })();
 
         v1.AutoBattleIntent = (function() {

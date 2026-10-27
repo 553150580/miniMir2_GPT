@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-27",
+  "recorded_at_utc": "2026-10-27T10:51:24.594468+00:00",
+  "stage": "范围技能、统一战斗时序与逐杀结算",
+  "status": "限定development候选范围自动、真实Mongo/WS、构建及浏览器通过",
+  "scope": {
+    "new_skills": [
+      "精神力战法",
+      "大火球",
+      "雷电术",
+      "爆裂火焰",
+      "群体治疗术"
+    ],
+    "candidate_runtime_skill_count": 8,
+    "upgrade_rows": 24,
+    "shop_offers": 10,
+    "book_recycle_projections": 32,
+    "starting_book_count": 3,
+    "starting_book_policy": "仍每职业一本首组书，不随技能增加赠送全部书",
+    "all_p0_complete": false,
+    "complete_target_180_skills": false,
+    "formal_balance_verified": false,
+    "physical_mobile_verified": false,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "configuration": {
+    "version": "dev-combat-area-v0.5-ddfb248d01b3",
+    "rule_version": 5,
+    "fixture": {
+      "path": "config/development/first-loop.json",
+      "sha256": "b3a01f3bc57febc875ae72b77dbfa65ec8d30c5acd2a816b4266e771c850f27a"
+    },
+    "workbook": {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256": "c308be0aad9dd7bbc2c109fdf35f3811a34241949bffc7202ea5f4483f62db10"
+    },
+    "unique_numeric_maintenance": "两本唯一Excel；JSON、源码索引与生成快照不是并行数值维护源",
+    "tables": 98,
+    "records": 841,
+    "status_counts": {
+      "candidate": 343,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69
+    },
+    "required_empty_tables": 26,
+    "release_blockers": 565,
+    "candidate_new_book_gold_prices": {
+      "精神力战法": 600,
+      "大火球": 2000,
+      "雷电术": 1600,
+      "爆裂火焰": 3000,
+      "群体治疗术": 15000
+    },
+    "book_costs_confirmed_by_user": [
+      2,
+      3,
+      4
+    ],
+    "candidate_page_costs": [
+      5,
+      10,
+      20
+    ],
+    "learning_gates": "取各自Crystal Level1为development适配；不是已核验来源读书门槛",
+    "auto_strategy": "优先与目标数来自唯一Excel候选，不冒充来源AI；公共冷却/缺蓝时依次尝试其它合法技能",
+    "technical_budgets": {
+      "event_capacity": 128,
+      "kill_queue_capacity": 16,
+      "capacity_verified": false
+    },
+    "workbook_preservation": {
+      "path": "outputs/development-combat-area-20261027/工作簿保留核对.json",
+      "sha256": "549b52609839ba0beb9436c410185b0d94a741014d29d4f347e5bde04e06107e"
+    },
+    "workbook_scoped_cells": 503,
+    "worksheets": 95,
+    "unexpected_changes": 0,
+    "visual_review": "七个变更工作表已渲染查看；新增行继承原表结构，无关公式/样式/控件保留"
+  },
+  "source_review": {
+    "document": {
+      "path": "docs/范围技能与战斗时序实施边界.md",
+      "sha256": "fb0fb38e4f5526175b2a78e3b9278d2de47e78ffcb9d1db68c97aa47a056876a"
+    },
+    "target_version_verified": false,
+    "key_distinctions": [
+      "精神力准确按0/3/5/8数组，不用统一线性倍率",
+      "大火球检查CanFly；雷电不检查，使用随机MPower及不死倍率",
+      "爆裂与群疗500ms到期按中心±1的有效格枚举；中心允许阻挡，只查地图边界与射程",
+      "单疗为2SC+威力+施法者等级；群疗为SC+自身威力，沿各目标治疗队列",
+      "人类550ms动作锁、300ms普通前格命中、按等级/攻速计算攻击间隔，与视觉时钟分开"
+    ]
+  },
+  "automatic": {
+    "make_test": "passed",
+    "make_check": "passed",
+    "development_resources_check": "passed",
+    "javascript": 153,
+    "scene": 16,
+    "ui_app": 137,
+    "python_configuration": 23,
+    "protobuf_messages": 49,
+    "long_fields": 79,
+    "pb_boundary_cases": 258,
+    "message_ids": 40,
+    "error_codes": 29,
+    "strict_creator_typescript": "passed",
+    "test_log": {
+      "path": "outputs/development-combat-area-20261027/自动回归日志.txt",
+      "sha256": "2a29f747eac4a345569e47b4f9078c7c90f26e0b62573f1cddac912e6fe4c77a"
+    },
+    "release_check": "按预期拒绝，exit2，565项阻断",
+    "release_report": {
+      "path": "outputs/development-combat-area-20261027/正式发布门禁检查.json",
+      "sha256": "8e83d0ad0aa76b7b14145c337dafe82b045aa78255572dd2757df4d5d159c9be"
+    }
+  },
+  "creator_build": {
+    "report": {
+      "path": "outputs/development-combat-area-20261027/Creator最终构建检查.json",
+      "sha256": "8afc29b622548ca2def2098ed17ed0261c7f8de3c5326c329444d218bf9b1fb8"
+    },
+    "creator": "3.8.8",
+    "platform": "web-mobile",
+    "seconds": 116.84,
+    "exit_code": 36,
+    "source_stable_during_build": true,
+    "current_sources_match": true,
+    "saved_scene_prefab_count": 7,
+    "build_did_not_overwrite_saved_layouts": true,
+    "intentional_layout_changes": "保存快捷按钮、瞄准提示/取消及地图目标Sprite；技能学习/施放按钮缩窄让出第三入口。原HUD尺寸/位置不改。",
+    "layout_review": {
+      "path": "outputs/development-combat-area-20261027/既有界面布局核对.json",
+      "sha256": "5a28112f7c5a19fc4c642f294be08e76a4ca9daef3fb7843cc2ceb9632c6e1b7"
+    },
+    "initial_build_scope": "206.33秒为中心边界预检修复前初版，只作历史，不代替最终构建"
+  },
+  "server": {
+    "report": {
+      "path": "outputs/development-combat-area-20261027/服务端真实集成检查.json",
+      "sha256": "bd4128282dab9d1e913ac5430dd716f28d65c46b674fcaffe52817922f12fc01"
+    },
+    "events": {
+      "path": "outputs/development-combat-area-20261027/服务端真实集成事件.jsonl",
+      "sha256": "e650c54e5c687f37d8011c28c45340e253b5647da301d0e9caace37980e1ecb0"
+    },
+    "race": true,
+    "passed_test_records": 96,
+    "skipped": 0,
+    "current_sources_match": true,
+    "covered": [
+      "550ms动作门槛、300ms人类命中、等级攻速和独立视觉时钟",
+      "ActorRef及原出生代次、统一Due/受理次序、防旧目标和旧瞬时重放",
+      "八方向3×3、阻挡中心、边缘裁切、到期位置、友敌和未激活槽过滤",
+      "单次范围共享MC/SC抽值、雷电随机与Undead、精神力非线性、群疗分池",
+      "NPC购书学习五项、同帧八杀逐序收益与19杀保底边界、审计/重连",
+      "KillFact冻结随机候选与真实Due时刻、卡到期/续期不回溯和托管区段",
+      "未知/忙沿原job重试，硬失败隔离；预算不静默丢已确认击杀",
+      "等待Ready仅门禁观察/输入，报价独立inflight不暂停世界或解除永久Pending"
+    ],
+    "real_network_unknown_commit_fault_injection": false
+  },
+  "resources": {
+    "pngs": 2181,
+    "new_frames": 164,
+    "previous_frames_preserved": 2017,
+    "manifest": {
+      "path": "client/assets/resources/development/manifest.json",
+      "sha256": "b4184d0ed5e8b6a336721a484ab116aff0c9a46b225f691db44a72e9c605d187"
+    },
+    "converter": {
+      "path": "tools/resources/build_development_assets.py",
+      "sha256": "c5964e3ead26de7e1957a3a9ac21c1802110133b082f9a15f096b3c3eade7da4"
+    },
+    "pixel_roundtrip_check": "passed",
+    "contact_sheet_review": "五项实际资源接触图已查看；精神力为被动，不伪造主动特效",
+    "lightning_geometry": "保持原958–997px高及原始偏移，由地图Mask裁剪，未缩扁或裁原PNG",
+    "formal_180_art_verified": false
+  },
+  "browser": {
+    "passed": true,
+    "url": "http://127.0.0.1:18080/?renderQA=1",
+    "device": "IAB 720×1280竖屏，结束恢复用户默认窗口",
+    "prepared_inputs": "新隔离QA账号三职业36级与测试钱包；正常建角初始书保留，没有预学技能或预装五项新书。技能书与书页均由实际书店购买。",
+    "natural_leveling_or_formal_acquisition_verified": false,
+    "operator_intervals": {
+      "path": "outputs/development-combat-area-20261027/浏览器操作区间.json",
+      "sha256": "88c7e6b39e125f30169b9ff0bfd493d8d3b74edb6c3362364bc054c7f4d04b8e"
+    },
+    "exclusive_started_at": "2026-10-27T10:10:38.002Z",
+    "mixed_interval": "用户确认此前正在操作，额外快捷/移动/红药点击按人工混合区间保留；不用于独立请求次数归因。随后用户明确不操作，重新独立验收。",
+    "observed": [
+      "法师四项、道士三项按正确原书学习；新增五书价格各自明示",
+      "独立大火球714→709，命中结果1；雷电快捷/9点耗蓝及原像素闪电可见，早段含人工输入不作独立次数归因",
+      "独立爆裂一次741→727，cast6收到3个命中结果，经验375→420；视觉不按每实体重复播放地面效果",
+      "地面瞄准/取消不额外扣蓝，原行进可继续；精确导航不清理另由真实AppRoot回归核验",
+      "受伤道士群疗369→341，cast1有治疗入队outcome4与满血宠outcome2；连续观察生命263→273，期间仍受击，不以净变化反推总治疗量",
+      "精神力0→1/1→2/2→3分别消耗2书5页/3书10页/4书20页，预览与实际准确0→3→5→8",
+      "精神力升级使用九书5400金币、35页350绑定元宝；重入后阶3/准确8/魔法341/绑元650保留",
+      "最后显式开启测试角色自动战斗；没有把后台自动施法当作额外人工请求"
+    ],
+    "wounded_player_mass_healing_live_verified": true,
+    "wounded_pet_mass_healing_live_verified": false,
+    "wounded_pet_verified_by": "真实Mongo/WS固定受伤前态集成，非本次自然受伤宠浏览器样本",
+    "console_warn_error": [],
+    "historical_untraced_auto_observation": "421ce1c前阶段仍未归因；本阶段用户人工操作说明不追溯改写旧结论",
+    "trace_scope": "限额读取、按职业和步骤归档的追踪，不宣称完整无损日志"
+  },
+  "screenshots": [
+    {
+      "path": "outputs/development-combat-area-20261027/九本精神力技能书5400金币.jpg",
+      "sha256": "8ab11a6b44f185132a5ccbf7a3a1a0d51bdb58f437a39b46857fd4b972aa1e1d"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/取消瞄准后仍在赴远目标.jpg",
+      "sha256": "202c6032122e1295baca91d09b1f0cea2d213964dee86036c9369e7c12f3d936"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/受伤道士群疗施放前.jpg",
+      "sha256": "c49361ff3f5b47a2e7300e03170227050781fe0385535982f08a3303d503c6b6"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/复活后八怪爆裂命中.jpg",
+      "sha256": "c0b9f8df83107458dd27a833efe177c0fc6d9c88f27d50a69222613e66e8388f"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/大火球购书预览.jpg",
+      "sha256": "65112e43996d7e1d38fa0b2a18fd25b87d24b61949c2b38c7fdb950942411491"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/新增书籍各自金币报价.jpg",
+      "sha256": "80d23b0e7f32534e56df5b24671d003e223beaf7dac7ebec89c54e9e2ba41d7d"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/法师四技能与未学状态.jpg",
+      "sha256": "7897039376357ed9fb5cf0d1574c876b207e8b49b070afa1dbaa7a500a8d3d72"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/法师四技能原书学习完成.jpg",
+      "sha256": "4a0a72addb1b0e36edb4c1830596b065f4c05b27c60cf473f304d9837b6abc65"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/爆裂地面瞄准提示与短标签.jpg",
+      "sha256": "630655edfd23a0c0ff4c03344d44780d2de719d04149e5ce7e1df1c1d8895b8c"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/爆裂技能详情与地面范围.jpg",
+      "sha256": "33f675ddaf338a832efb2454565ba5b39254f5cd9bbe300282d8bd5dfdcfeacb"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/爆裂范围结算后.jpg",
+      "sha256": "e03446fca4c1a5c26c96abc057645009425a925970641d828bf82be56e870b05"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/爆裂释放效果观察.jpg",
+      "sha256": "73867b289d13277a508c51eaf2e2f8f291870ae2bea8f3c747ea02e2004f3a50"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/独立取消瞄准后继续行进.jpg",
+      "sha256": "a89ba8cd57bea872aebc8f2615986e0a9825f468de5cba0d2818cb791dc2c0ed"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/独立大火球耗蓝5.jpg",
+      "sha256": "999d31dbbc26699727bf71e27098f8338acdbe097dfbcce1fda47df50c17c3f9"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/独立行进中进入瞄准.jpg",
+      "sha256": "f2b49c90ce1c719a92ff17e9bea0116202e4e5631916c1bf24927fb62b66cb16"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/精神力一到二准确3到5预览.jpg",
+      "sha256": "5b00fe3d9bf5c1c62faaa37c9b0bf3d78e97a8e7814d56f0a20d1c9bbfd52fc4"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/精神力三阶准确8实际完成.jpg",
+      "sha256": "a0613b859a049f241fd86ddefade57521d16988e2b4cc330c689af1bef31019f"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/精神力二到三准确5到8预览.jpg",
+      "sha256": "cb6cc89d5d09ef0722d939b348b5a7be263b546c9cc60d6763e9029acec50f64"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/精神力初学被动准确零.jpg",
+      "sha256": "479883d0d32ab68faf5ea1d55d8233b4ac0e0431ed3f447b7b3368d0932fa8ca"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/精神力零到一准确0到3预览.jpg",
+      "sha256": "1dc586d1d22f74369ce39f231f6246959e49f09c7dd9f80867710dd2f1790967"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/群疗书15000金币报价.jpg",
+      "sha256": "454cecab655a9670887ef9c1e8ec38a709575c6c51c2ca33bf1f6a532633a1cf"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/群疗分跳后的受伤生命.jpg",
+      "sha256": "9223b9228408c66baef6deeb62898b25c727068d25a6d01cb9617f850bff7324"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/群疗地面效果观察.jpg",
+      "sha256": "5f4013a2cedb45fdf43ea5e1ae36eb24f84267db20ebc4c022feb5807e887362"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/道士三技能学习完成.jpg",
+      "sha256": "0155d6174ef0728232c3212e967c84ec794e6d829f8da89e7ab8d3ec8c5fb952"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/道士三技能来源书可学习.jpg",
+      "sha256": "c610183b3183f9ce511291caaf894048885fcb5c090531bf11c67c304d6eec48"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/重入后精神力三阶与341MP保留.jpg",
+      "sha256": "6ac14a0d3357ffb740b5dbe2e49a3e17d49e208482ae5567beca136b3db378ac"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/雷电命中观察.jpg",
+      "sha256": "a79e0a48a1ff1d8e5365fe6f94e6008a99a1e728b9f133d7aaa1311f23367dbc"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/雷电术快捷与单次耗蓝.jpg",
+      "sha256": "171bdd1fd97b8873eea38074db238ba6697bb427685b99b0ec5d42b22de42430"
+    },
+    {
+      "path": "outputs/development-combat-area-20261027/雷电起手观察.jpg",
+      "sha256": "5e625a955def1d2d408b07df2a133c3d201919061b252de3e0c8da3e20f95284"
+    }
+  ],
+  "remaining": [
+    "完整三职业技能与目标1.80全集/行为认证",
+    "攻杀/刺杀/半月/烈火、直线与其它范围，永久符粉消耗/Buff/毒/火墙，召唤/诱惑/控制/位移",
+    "完整装备/幸运/元素、正式渠道与经济平衡、自然升级可达性",
+    "双市场/权益仓库/挑战养成任务等其它P0、手机真机、容量与真实网络提交未知故障注入"
+  ]
+}

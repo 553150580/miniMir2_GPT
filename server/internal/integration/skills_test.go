@@ -90,12 +90,7 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 			roleID := domain.Hex(role.Key.RoleId)
 			persisted, err := inspection.Role(ctx, roleID)
 			must(t, err)
-			var skill devconfig.Skill
-			for _, s := range cfg.Fixture.Skills {
-				if s.JobID == job {
-					skill = s
-				}
-			}
+			skill, _ := cfg.Fixture.Skill(map[uint32]uint32{0: 3, 1: 1, 2: 2}[job])
 			var book domain.Item
 			bookCount := 0
 			for _, item := range persisted.Items {

@@ -40,7 +40,7 @@ func distance(a, b devconfig.Point) int {
 }
 func (w *worker) walkable(q devconfig.Point) bool {
 	f := &w.e.Store.Cfg.Fixture
-	if q.X < 0 || q.Y < 0 || q.X >= f.Map.Width || q.Y >= f.Map.Height {
+	if !w.inBounds(q) {
 		return false
 	}
 	for _, blocked := range f.Map.Blocked {
@@ -49,6 +49,11 @@ func (w *worker) walkable(q devconfig.Point) bool {
 		}
 	}
 	return true
+}
+
+func (w *worker) inBounds(q devconfig.Point) bool {
+	f := w.e.Store.Cfg.Fixture
+	return q.X >= 0 && q.Y >= 0 && q.X < f.Map.Width && q.Y < f.Map.Height
 }
 func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
 	if !w.walkable(q) {
@@ -79,7 +84,7 @@ func (w *worker) neighbor(r *room, from, to devconfig.Point, self *entity) bool 
 	return true
 }
 func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time, interval int64) {
-	if now.Before(e.NextMove) || e.HP <= 0 || e.Pos == target {
+	if now.Before(e.NextMove) || now.Before(e.ActionReadyAt) || e.HP <= 0 || e.Pos == target {
 		return
 	}
 	start := e.Pos
@@ -125,6 +130,9 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 	e.Action = 1
 	e.ActionUntil = now.Add(200 * time.Millisecond)
 	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)
+	if e.Kind == 1 {
+		e.ActionReadyAt = e.NextMove
+	}
 }
 func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	f := &w.e.Store.Cfg.Fixture
@@ -134,6 +142,7 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 			def, _ := f.Item(item.Item.ItemID)
 			a.AttackMin += def.AttackBonus + def.AttackMinBonus
 			a.AttackMax += def.AttackBonus + def.AttackMaxBonus
+			a.AttackSpeed += def.AttackSpeedBonus
 			a.Defence += def.DefenceBonus
 			a.DefenceMin += def.DefenceMinBonus
 			a.DefenceMax += def.DefenceMaxBonus
@@ -141,9 +150,12 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 			a.MagicDefenceMax += def.MagicDefenceMaxBonus
 		}
 		for _, skill := range f.Skills {
-			if level, learned := r.Role.Skill(skill.ID); learned && skill.Behavior == "fencing" && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
-				a.Accuracy += int64(level) * skill.AccuracyPerLevel
+			if level, learned := r.Role.Skill(skill.ID); learned && (skill.Behavior == "fencing" || skill.Behavior == "spirit_sword") && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
+				a.Accuracy += skill.AccuracyBonus(level)
 			}
+		}
+		if w.sourceTimeline() {
+			a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 		}
 		return a
 	}
@@ -161,8 +173,8 @@ func (w *worker) nearest(r *room, from *entity) *entity {
 	}
 	return best
 }
-func (w *worker) attack(r *room, from, target *entity, now time.Time) {
-	if r.Pending || from.HP <= 0 || target.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.NextMove) || distance(from.Pos, target.Pos) > 1 {
+func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...uint32) {
+	if r.Pending || from.HP <= 0 || target.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.NextMove) || now.Before(from.ActionReadyAt) || distance(from.Pos, target.Pos) > 1 {
 		return
 	}
 	dx, dy := target.Pos.X-from.Pos.X, target.Pos.Y-from.Pos.Y
@@ -170,6 +182,29 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time) {
 		return
 	}
 	a, b := w.fighter(r, from), w.fighter(r, target)
+	if from.Kind == 1 && w.sourceTimeline() {
+		if len(r.Attacks)+len(r.Casts) >= w.e.Store.Cfg.Fixture.CombatTiming.EventCapacity || !w.killBudgetAvailable(r) {
+			return
+		}
+		from.AttackSequence++
+		r.ScheduleID++
+		from.NextAttack = now.Add(time.Duration(a.AttackMS) * time.Millisecond)
+		from.ActionReadyAt = now.Add(time.Duration(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackActionMS) * time.Millisecond)
+		from.Action = 2
+		from.ActionUntil = now.Add(200 * time.Millisecond)
+		from.Direction = facing(from.Pos, target.Pos, from.Direction)
+		r.Attacks = append(r.Attacks, pendingAttack{Caster: reference(r, from), Target: reference(r, target), Due: now.Add(time.Duration(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS) * time.Millisecond), Amount: w.interval(a.AttackMin, a.AttackMax), Sequence: from.AttackSequence, Order: r.ScheduleID, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true})
+		if r.Conn == nil {
+			r.Attacks[len(r.Attacks)-1].HostSession = r.HostSession
+		}
+		sequence := uint32(0)
+		if len(input) > 0 {
+			sequence = input[0]
+		}
+		w.send(r, p.MsgS2CAttackAccepted, 0, &pb.AttackAccepted{SceneEpoch: r.Scene, EventId: w.nextEvent(r), CasterHandle: from.Handle, TargetHandle: target.Handle, Origin: pointPB(from.Pos), TargetGrid: pointPB(target.Pos), Direction: from.Direction, DelayMs: uint32(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackImpactMS), AttackSequence: from.AttackSequence, InputSequence: sequence})
+		w.snapshot(r)
+		return
+	}
 	damage := w.physicalDamage(r, from, target)
 	if w.e.Store.Cfg.Fixture.DamageFormula != "development_source_combat" {
 		damage = w.interval(a.AttackMin, a.AttackMax) - b.Defence
@@ -189,7 +224,7 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time) {
 	}
 	w.applyDamage(r, from, target, damage, now)
 }
-func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now time.Time) {
+func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now time.Time, context ...hitContext) {
 	if damage <= 0 || target.HP <= 0 {
 		return
 	}
@@ -203,12 +238,24 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 		target.Action = 4
 		if target.Kind == 3 {
 			target.RespawnAt = now.Add(10 * time.Second)
-			w.kill(r, target, now)
+			if len(context) > 0 && w.sourceTimeline() {
+				until := r.Role.PrivilegeUntil
+				if context[0].PrivilegeCaptured {
+					until = context[0].PrivilegeUntil
+				}
+				w.enqueueKillFact(r, target, context[0].At, from, context[0].HostSession, until)
+			} else {
+				w.kill(r, target, now, from)
+			}
 		} else if target.Kind == 1 {
 			r.DeathID = domain.ID()
 			w.deathNotice(r)
 			if r.Conn == nil {
-				w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostingSession: r.HostSession, StopReason: 2})
+				if w.sourceTimeline() {
+					r.KillFacts = append(r.KillFacts, killFact{At: now, HostSession: r.HostSession, StopReason: 2})
+				} else {
+					w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostingSession: r.HostSession, StopReason: 2})
+				}
 			}
 		}
 		// 致死HP/动作属于临时现场，立即同步；奖励仍只在资产事务提交后推送。
@@ -217,7 +264,7 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 	}
 }
 func (w *worker) step(r *room, now time.Time) {
-	if w.e.stopped.Load() {
+	if w.e.stopped.Load() || r.Isolated {
 		return
 	}
 	if r.Scene == 0 {
@@ -227,7 +274,6 @@ func (w *worker) step(r *room, now time.Time) {
 		if now.After(r.AwaitUntil) {
 			r.Conn.Close("baseline acknowledgement timeout")
 		}
-		return
 	}
 	if r.LastTick.IsZero() {
 		r.LastTick = now
@@ -249,8 +295,13 @@ func (w *worker) step(r *room, now time.Time) {
 		}
 		return
 	}
+	w.flushKillFacts(r)
+	if r.Pending || len(r.KillFacts) > 0 {
+		return
+	}
 	// 已经释放的法术与恢复队列不属于后续离线战斗授权；未知事务仍在上方冻结。
-	w.advanceCasts(r, now)
+	w.advanceEvents(r, now)
+	w.flushKillFacts(r)
 	if r.Pending {
 		return
 	}
@@ -305,12 +356,13 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Manual {
 		d := directions[r.ManualDirection]
 		target := devconfig.Point{X: r.Player.Pos.X + d.X, Y: r.Player.Pos.Y + d.Y}
-		if w.neighbor(r, r.Player.Pos, target, &r.Player) && !now.Before(r.Player.NextMove) {
+		if w.neighbor(r, r.Player.Pos, target, &r.Player) && !now.Before(r.Player.NextMove) && !now.Before(r.Player.ActionReadyAt) {
 			r.Player.Direction = r.ManualDirection
 			r.Player.Pos = target
 			r.Player.Action = 1
 			r.Player.ActionUntil = now.Add(200 * time.Millisecond)
 			r.Player.NextMove = now.Add(time.Duration(a.MoveMS) * time.Millisecond)
+			r.Player.ActionReadyAt = r.Player.NextMove
 		}
 	} else if r.Destination != nil {
 		if r.Player.Pos == *r.Destination {
@@ -321,13 +373,7 @@ func (w *worker) step(r *room, now time.Time) {
 	} else if r.Auto {
 		if target, handled := w.autoSkill(r, now); handled {
 			if target != nil {
-				// 法师使用同一套施法规则；缺蓝或冷却不会绕过规则改为普攻。
-				for _, skill := range w.e.Store.Cfg.Fixture.Skills {
-					if skill.Behavior == "fireball" && skill.JobID == r.Role.Job && (distance(r.Player.Pos, target.Pos) > skill.RangeCells || !w.lineOfSight(r.Player.Pos, target.Pos)) {
-						w.move(r, &r.Player, target.Pos, now, a.MoveMS)
-						break
-					}
-				}
+				w.move(r, &r.Player, target.Pos, now, a.MoveMS)
 			}
 		} else if target := w.nearest(r, &r.Player); target != nil {
 			if distance(r.Player.Pos, target.Pos) <= 1 {
@@ -377,8 +423,9 @@ func (w *worker) step(r *room, now time.Time) {
 		r.LastBroadcast = now
 		w.snapshot(r)
 	}
+	w.flushKillFacts(r)
 }
-func (w *worker) kill(r *room, m *entity, now time.Time) {
+func (w *worker) legacyKill(r *room, m *entity, now time.Time) {
 	f := &w.e.Store.Cfg.Fixture
 	bound := !r.Role.PrivilegeUntil.After(now)
 	q := persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, Kills: 1, Experience: m.Monster.Exp, Bound: bound, NoEquipmentKills: r.Role.NoEquipmentKills + 1}
@@ -407,30 +454,30 @@ func (w *worker) kill(r *room, m *entity, now time.Time) {
 	}
 	w.settle(r, q)
 }
-func (w *worker) settle(r *room, q persistence.Settlement) {
+func (w *worker) settle(r *room, q persistence.Settlement, finished ...func()) {
 	r.Pending = true
 	auth := r.Auth
 	var j job
 	j = job{target: w, run: func() func(*worker) {
 		role, err := w.e.Store.Settle(context.Background(), auth, q)
 		return func(w *worker) {
-			if err != nil && persistence.Code(err) == p.CodeOperationPending {
+			if err != nil && (persistence.Code(err) == p.CodeOperationPending || persistence.Code(err) == p.CodeServerBusy) {
 				r.PendingRetry = &j
 				r.RetryAt = time.Now().Add(500 * time.Millisecond)
 				return
 			}
 			r.Pending = false
 			if err != nil {
-				r.Auto = false
-				if r.Conn != nil {
-					r.Conn.Close("authority unavailable")
-				}
-				w.after(r)
+				w.isolateRoom(r)
 				return
 			}
 			if role.Revision >= r.Role.Revision {
 				r.Role = role
+				transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
 				w.refreshPlayerStats(r)
+			}
+			if len(finished) > 0 {
+				finished[0]()
 			}
 			if r.Role.PickupStopped {
 				r.Auto = false
@@ -441,6 +488,7 @@ func (w *worker) settle(r *room, q persistence.Settlement) {
 			}
 			w.assets(r)
 			w.snapshot(r)
+			w.flushKillFacts(r)
 			w.after(r)
 		}
 	}}

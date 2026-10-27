@@ -1,0 +1,7 @@
+{
+  "started": "2026-10-27T09:49:56.989Z",
+  "exclusiveStarted": "2026-10-27T10:10:38.002Z",
+  "userConfirmedOperatingBefore": true,
+  "userConfirmedNoOperationFromNow": true,
+  "note": "此前混合人工操作区间不用于独立请求次数归因；旧阶段未归因Auto观察不据此改写。"
+}

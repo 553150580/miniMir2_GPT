@@ -6,31 +6,40 @@ import (
 )
 
 type Skill struct {
-	ID                       uint32 `json:"id"`
-	Name                     string `json:"name"`
-	JobID                    uint32 `json:"job_id"`
-	BookItemID               uint32 `json:"book_item_id"`
-	LearnLevel               uint32 `json:"learn_level"`
-	LearnedLevel             uint32 `json:"learned_level"`
-	MaxLevel                 uint32 `json:"max_level"`
-	Behavior                 string `json:"behavior"`
-	MPBaseCost               int64  `json:"mp_base_cost"`
-	MPLevelCost              int64  `json:"mp_level_cost"`
-	CooldownBaseMS           int64  `json:"cooldown_base_ms"`
-	CooldownReductionMS      int64  `json:"cooldown_reduction_ms"`
-	GlobalSpellMS            int64  `json:"global_spell_ms"`
-	ActionMS                 int64  `json:"action_ms"`
-	RangeCells               int    `json:"range_cells"`
-	DelayBaseMS              int64  `json:"delay_base_ms"`
-	ProjectileMSPerCell      int64  `json:"projectile_ms_per_cell"`
-	TargetMoveToleranceCells int    `json:"target_move_tolerance_cells"`
-	AccuracyPerLevel         int64  `json:"accuracy_per_level"`
-	PowerBase                int64  `json:"power_base"`
-	PowerBonus               int64  `json:"power_bonus"`
-	MPowerBase               int64  `json:"mpower_base"`
-	MPowerBonus              int64  `json:"mpower_bonus"`
-	MultiplierBasePPM        int64  `json:"multiplier_base_ppm"`
-	MultiplierBonusPPM       int64  `json:"multiplier_bonus_ppm"`
+	ID                       uint32  `json:"id"`
+	Name                     string  `json:"name"`
+	JobID                    uint32  `json:"job_id"`
+	BookItemID               uint32  `json:"book_item_id"`
+	LearnLevel               uint32  `json:"learn_level"`
+	LearnedLevel             uint32  `json:"learned_level"`
+	MaxLevel                 uint32  `json:"max_level"`
+	Behavior                 string  `json:"behavior"`
+	MPBaseCost               int64   `json:"mp_base_cost"`
+	MPLevelCost              int64   `json:"mp_level_cost"`
+	CooldownBaseMS           int64   `json:"cooldown_base_ms"`
+	CooldownReductionMS      int64   `json:"cooldown_reduction_ms"`
+	GlobalSpellMS            int64   `json:"global_spell_ms"`
+	ActionMS                 int64   `json:"action_ms"`
+	RangeCells               int     `json:"range_cells"`
+	DelayBaseMS              int64   `json:"delay_base_ms"`
+	ProjectileMSPerCell      int64   `json:"projectile_ms_per_cell"`
+	TargetMoveToleranceCells int     `json:"target_move_tolerance_cells"`
+	AccuracyPerLevel         int64   `json:"accuracy_per_level"`
+	AccuracyByLevel          []int64 `json:"accuracy_by_level"`
+	TargetKind               string  `json:"target_kind"`
+	AreaRadius               int     `json:"area_radius"`
+	RequireLineOfSight       bool    `json:"require_line_of_sight"`
+	HealingStatMultiplier    int64   `json:"healing_stat_multiplier"`
+	AddCasterLevel           bool    `json:"add_caster_level"`
+	UndeadMultiplierPPM      int64   `json:"undead_multiplier_ppm"`
+	AutoPriority             int     `json:"auto_priority"`
+	AutoMinTargets           int     `json:"auto_min_targets"`
+	PowerBase                int64   `json:"power_base"`
+	PowerBonus               int64   `json:"power_bonus"`
+	MPowerBase               int64   `json:"mpower_base"`
+	MPowerBonus              int64   `json:"mpower_bonus"`
+	MultiplierBasePPM        int64   `json:"multiplier_base_ppm"`
+	MultiplierBonusPPM       int64   `json:"multiplier_bonus_ppm"`
 }
 type HealingRules struct {
 	TickMS               int64 `json:"tick_ms"`
@@ -120,7 +129,7 @@ func (f *Fixture) ValidateSkills() error {
 		if s.ID == 0 || seen[s.ID] || s.Name == "" || s.JobID > 2 || !ok || book.BookSkillID != s.ID || s.LearnedLevel > 255 || s.RangeCells < 0 || s.RangeCells > f.Map.Width || s.TargetMoveToleranceCells < 0 || s.TargetMoveToleranceCells > f.Map.Width {
 			return errors.New("技能身份、职业、书或范围缺失")
 		}
-		if s.Behavior != "fencing" && s.Behavior != "fireball" && s.Behavior != "healing" {
+		if s.Behavior != "fencing" && s.Behavior != "spirit_sword" && s.Behavior != "fireball" && s.Behavior != "great_fireball" && s.Behavior != "thunderbolt" && s.Behavior != "firebang" && s.Behavior != "healing" && s.Behavior != "mass_healing" {
 			return errors.New("当前候选不支持此技能行为")
 		}
 		for _, v := range []int64{s.MPBaseCost, s.MPLevelCost, s.CooldownBaseMS, s.CooldownReductionMS, s.GlobalSpellMS, s.ActionMS, s.DelayBaseMS, s.ProjectileMSPerCell, s.AccuracyPerLevel, s.PowerBase, s.PowerBonus, s.MPowerBase, s.MPowerBonus, s.MultiplierBasePPM, s.MultiplierBonusPPM} {
@@ -165,6 +174,11 @@ func (f *Fixture) ValidateSkills() error {
 		}
 	}
 	upgradesEnabled := len(f.SkillUpgrades) > 0 || len(f.SkillShop) > 0 || f.SkillEconomy.PageItemID != 0
+	if f.CombatTiming.PlayerAttackBaseMS > 0 {
+		if err := f.ValidateCombat(); err != nil {
+			return err
+		}
+	}
 	for _, s := range f.Skills {
 		upgradesEnabled = upgradesEnabled || s.MaxLevel > s.LearnedLevel
 	}

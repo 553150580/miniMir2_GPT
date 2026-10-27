@@ -24,6 +24,11 @@ export class EntityAnimation {
 
     constructor(private readonly definitions: AnimationDefinitions) {}
 
+    acceptAttack(sequence: number, direction: number): void {
+        if (this.dead || sequence === this.attackSequence) return;
+        this.attackSequence = sequence; this.pendingAttack = true; this.pendingAttackDirection = direction;
+    }
+
     get playbackUntil(): number {
         const definition = this.definitions[this.action];
         return definition && (this.action === 'attack' || this.action === 'struck' || this.action === 'casting')

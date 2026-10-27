@@ -17,6 +17,9 @@ test('输入追踪只投影指定消息及字段，Long施法ID保持原精度�
         ['send',40010,{...secrets,skillId:2},{skill_id:2}],
         ['receive',30005,{...secrets,autoBattleEnabled:true},{enabled:true}],
         ['receive',30006,{...secrets,skillId:1,inputSequence:99,castId:{toString:()=> '9007199254740993'}},{skill_id:1,input_sequence:99,cast_id:'9007199254740993'}],
+        ['receive',30007,{...secrets,attackSequence:9,eventId:{toString:()=> '9007199254740994'}},{attack_sequence:9,event_id:'9007199254740994'}],
+        ['receive',30008,{...secrets,skillId:11,attackSequence:0,outcome:1,eventId:{toString:()=> '9007199254740995'},castId:{toString:()=> '9007199254740993'}},
+            {attack_sequence:0,skill_id:11,outcome:1,event_id:'9007199254740995',cast_id:'9007199254740993'}],
     ];
     for(const [direction,id,value,fields]of cases)assert.deepEqual(inputTraceMessage(direction,id,8,value),{event:direction,message_id:id,packet_seq:8,...fields});
     assert.equal(inputTraceMessage('send',10001,1,secrets),null);

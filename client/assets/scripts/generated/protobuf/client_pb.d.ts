@@ -2228,6 +2228,12 @@ export namespace minimir {
             /** EntityState cast_skill_id. */
             cast_skill_id: number;
 
+            /** EntityState life. */
+            life: Long;
+
+            /** EntityState attack_interval_ms. */
+            attack_interval_ms: number;
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -2332,6 +2338,12 @@ export namespace minimir {
 
                 /** EntityState cast_skill_id */
                 cast_skill_id?: (number|null);
+
+                /** EntityState life */
+                life?: (Long|null);
+
+                /** EntityState attack_interval_ms */
+                attack_interval_ms?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -2762,6 +2774,12 @@ export namespace minimir {
             /** CastAccepted input_sequence. */
             input_sequence: number;
 
+            /** CastAccepted caster_life. */
+            caster_life: Long;
+
+            /** CastAccepted target_life. */
+            target_life: Long;
+
             /**
              * Creates a new CastAccepted instance using the specified properties.
              * @param [properties] Properties to set
@@ -2855,12 +2873,330 @@ export namespace minimir {
                 /** CastAccepted input_sequence */
                 input_sequence?: (number|null);
 
+                /** CastAccepted caster_life */
+                caster_life?: (Long|null);
+
+                /** CastAccepted target_life */
+                target_life?: (Long|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of a CastAccepted. */
             type $Shape = minimir.v1.CastAccepted.$Properties;
+        }
+
+        /**
+         * Properties of an AttackAccepted.
+         * @deprecated Use minimir.v1.AttackAccepted.$Properties instead.
+         */
+        interface IAttackAccepted extends minimir.v1.AttackAccepted.$Properties {
+        }
+
+        /** Represents an AttackAccepted. */
+        class AttackAccepted {
+
+            /**
+             * Constructs a new AttackAccepted.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.AttackAccepted.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** AttackAccepted scene_epoch. */
+            scene_epoch: Long;
+
+            /** AttackAccepted event_id. */
+            event_id: Long;
+
+            /** AttackAccepted caster_handle. */
+            caster_handle: number;
+
+            /** AttackAccepted target_handle. */
+            target_handle: number;
+
+            /** AttackAccepted origin. */
+            origin?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** AttackAccepted target_grid. */
+            target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** AttackAccepted direction. */
+            direction: number;
+
+            /** AttackAccepted delay_ms. */
+            delay_ms: number;
+
+            /** AttackAccepted attack_sequence. */
+            attack_sequence: number;
+
+            /** AttackAccepted input_sequence. */
+            input_sequence: number;
+
+            /**
+             * Creates a new AttackAccepted instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns AttackAccepted instance
+             */
+            static create(properties: minimir.v1.AttackAccepted.$Shape): minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape;
+            static create(properties?: minimir.v1.AttackAccepted.$Properties): minimir.v1.AttackAccepted;
+
+            /**
+             * Encodes the specified AttackAccepted message. Does not implicitly {@link minimir.v1.AttackAccepted.verify|verify} messages.
+             * @param message AttackAccepted message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.AttackAccepted.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified AttackAccepted message, length delimited. Does not implicitly {@link minimir.v1.AttackAccepted.verify|verify} messages.
+             * @param message AttackAccepted message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.AttackAccepted.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an AttackAccepted message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape} AttackAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape;
+
+            /**
+             * Decodes an AttackAccepted message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape} AttackAccepted
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.AttackAccepted & minimir.v1.AttackAccepted.$Shape;
+
+            /**
+             * Verifies an AttackAccepted message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for AttackAccepted
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace AttackAccepted {
+
+            /** Properties of an AttackAccepted. */
+            interface $Properties {
+
+                /** AttackAccepted scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** AttackAccepted event_id */
+                event_id?: (Long|null);
+
+                /** AttackAccepted caster_handle */
+                caster_handle?: (number|null);
+
+                /** AttackAccepted target_handle */
+                target_handle?: (number|null);
+
+                /** AttackAccepted origin */
+                origin?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** AttackAccepted target_grid */
+                target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** AttackAccepted direction */
+                direction?: (number|null);
+
+                /** AttackAccepted delay_ms */
+                delay_ms?: (number|null);
+
+                /** AttackAccepted attack_sequence */
+                attack_sequence?: (number|null);
+
+                /** AttackAccepted input_sequence */
+                input_sequence?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an AttackAccepted. */
+            type $Shape = minimir.v1.AttackAccepted.$Properties;
+        }
+
+        /**
+         * Properties of a CombatImpact.
+         * @deprecated Use minimir.v1.CombatImpact.$Properties instead.
+         */
+        interface ICombatImpact extends minimir.v1.CombatImpact.$Properties {
+        }
+
+        /** Represents a CombatImpact. */
+        class CombatImpact {
+
+            /**
+             * Constructs a new CombatImpact.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.CombatImpact.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** CombatImpact scene_epoch. */
+            scene_epoch: Long;
+
+            /** CombatImpact event_id. */
+            event_id: Long;
+
+            /** CombatImpact skill_id. */
+            skill_id: number;
+
+            /** CombatImpact caster_handle. */
+            caster_handle: number;
+
+            /** CombatImpact target_handle. */
+            target_handle: number;
+
+            /** CombatImpact target_life. */
+            target_life: Long;
+
+            /** CombatImpact target_grid. */
+            target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** CombatImpact amount. */
+            amount: Long;
+
+            /** CombatImpact outcome. */
+            outcome: number;
+
+            /** CombatImpact healing. */
+            healing: boolean;
+
+            /** CombatImpact cast_id. */
+            cast_id: Long;
+
+            /** CombatImpact attack_sequence. */
+            attack_sequence: number;
+
+            /**
+             * Creates a new CombatImpact instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns CombatImpact instance
+             */
+            static create(properties: minimir.v1.CombatImpact.$Shape): minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape;
+            static create(properties?: minimir.v1.CombatImpact.$Properties): minimir.v1.CombatImpact;
+
+            /**
+             * Encodes the specified CombatImpact message. Does not implicitly {@link minimir.v1.CombatImpact.verify|verify} messages.
+             * @param message CombatImpact message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.CombatImpact.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified CombatImpact message, length delimited. Does not implicitly {@link minimir.v1.CombatImpact.verify|verify} messages.
+             * @param message CombatImpact message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.CombatImpact.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a CombatImpact message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape} CombatImpact
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape;
+
+            /**
+             * Decodes a CombatImpact message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape} CombatImpact
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.CombatImpact & minimir.v1.CombatImpact.$Shape;
+
+            /**
+             * Verifies a CombatImpact message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for CombatImpact
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace CombatImpact {
+
+            /** Properties of a CombatImpact. */
+            interface $Properties {
+
+                /** CombatImpact scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** CombatImpact event_id */
+                event_id?: (Long|null);
+
+                /** CombatImpact skill_id */
+                skill_id?: (number|null);
+
+                /** CombatImpact caster_handle */
+                caster_handle?: (number|null);
+
+                /** CombatImpact target_handle */
+                target_handle?: (number|null);
+
+                /** CombatImpact target_life */
+                target_life?: (Long|null);
+
+                /** CombatImpact target_grid */
+                target_grid?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** CombatImpact amount */
+                amount?: (Long|null);
+
+                /** CombatImpact outcome */
+                outcome?: (number|null);
+
+                /** CombatImpact healing */
+                healing?: (boolean|null);
+
+                /** CombatImpact cast_id */
+                cast_id?: (Long|null);
+
+                /** CombatImpact attack_sequence */
+                attack_sequence?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a CombatImpact. */
+            type $Shape = minimir.v1.CombatImpact.$Properties;
         }
 
         /**

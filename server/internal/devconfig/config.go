@@ -28,6 +28,7 @@ type Fighter struct {
 	AttackMax         int64  `json:"attack_max"`
 	Defence           int64  `json:"defence"`
 	AttackMS          int64  `json:"attack_ms"`
+	AttackSpeed       int64  `json:"attack_speed"`
 	MoveMS            int64  `json:"move_ms"`
 	MagicMin          int64  `json:"magic_min"`
 	MagicMax          int64  `json:"magic_max"`
@@ -49,6 +50,7 @@ type Monster struct {
 	GoldMin   int64  `json:"gold_min"`
 	GoldMax   int64  `json:"gold_max"`
 	RespawnMS int64  `json:"respawn_ms"`
+	Undead    bool   `json:"undead"`
 }
 type Item struct {
 	ID                   uint32   `json:"id"`
@@ -58,6 +60,7 @@ type Item struct {
 	AttackBonus          int64    `json:"attack_bonus"`
 	AttackMinBonus       int64    `json:"attack_min_bonus"`
 	AttackMaxBonus       int64    `json:"attack_max_bonus"`
+	AttackSpeedBonus     int64    `json:"attack_speed_bonus"`
 	DefenceBonus         int64    `json:"defence_bonus"`
 	RecycleGold          int64    `json:"recycle_gold"`
 	Stackable            bool     `json:"stackable"`
@@ -123,6 +126,7 @@ type Fixture struct {
 	SkillShop         []SkillShop        `json:"skill_shop"`
 	SkillBookRecycle  []SkillBookRecycle `json:"skill_book_recycle"`
 	SkillEconomy      SkillEconomy       `json:"skill_economy"`
+	CombatTiming      CombatTiming       `json:"combat_timing"`
 	Drops             struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`

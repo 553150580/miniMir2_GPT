@@ -34,6 +34,9 @@ message EntityState {
   uint32 attack_sequence = 12;
   uint32 cast_sequence = 13;
   uint32 cast_skill_id = 14;
+  // 出生代次和当前实际攻击间隔只用于观察，不能由客户端授予。
+  uint64 life = 15;
+  uint32 attack_interval_ms = 16;
 }
 message SceneBaselineChunk {
   uint64 scene_epoch = 1;
@@ -57,6 +60,36 @@ message CastAccepted {
   uint32 direction = 8;
   uint32 delay_ms = 9;
   uint32 input_sequence = 10;
+  uint64 caster_life = 11;
+  uint64 target_life = 12;
+}
+// 普通攻击受理与到期结算分开，身体动作不代替实际命中结果。
+message AttackAccepted {
+  uint64 scene_epoch = 1;
+  uint64 event_id = 2;
+  uint32 caster_handle = 3;
+  uint32 target_handle = 4;
+  GridPoint origin = 5;
+  GridPoint target_grid = 6;
+  uint32 direction = 7;
+  uint32 delay_ms = 8;
+  uint32 attack_sequence = 9;
+  uint32 input_sequence = 10;
+}
+// outcome：1命中、2闪避或抵抗、3原目标失效、4加入治疗队列；4不是立即恢复HP。
+message CombatImpact {
+  uint64 scene_epoch = 1;
+  uint64 event_id = 2;
+  uint32 skill_id = 3;
+  uint32 caster_handle = 4;
+  uint32 target_handle = 5;
+  uint64 target_life = 6;
+  GridPoint target_grid = 7;
+  int64 amount = 8;
+  uint32 outcome = 9;
+  bool healing = 10;
+  uint64 cast_id = 11;
+  uint32 attack_sequence = 12;
 }
 message AutoBattleIntent { uint64 scene_epoch = 1; bool enabled = 2; uint32 monster_count = 3; }
 message HostingState { uint32 remain_hosting_sec = 1; bool auto_battle_enabled = 2; uint64 state_revision = 3; }
