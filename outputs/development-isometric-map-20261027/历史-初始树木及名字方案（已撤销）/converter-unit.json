@@ -1,0 +1,18 @@
+{
+  "scope": "converter_function_checks_not_game_acceptance",
+  "converter_sha256": "94903c46e994238bd400bf728047bacaa53bbc5ad7aea7a5720650c4579f9621",
+  "source17_sha256": "fda9349d351ed340e7c4201bd3eedfaa3516d5a4e00e60362b6772c9081d50e6",
+  "checks": {
+    "python_syntax": true,
+    "synthetic_rectangular_floor_uv_centers": 6,
+    "center_mismatches": 0,
+    "transparent_outer_corners": true,
+    "front_objects_excluded_from_floor_input": true,
+    "native_frame_write_skips_identical_rgba": true,
+    "native_png_identical_rgba_preserves_exact_bytes": true,
+    "check_mode_rejects_changed_pixels_without_writing": true,
+    "source_verified_five_prop_groups_original_pixel_deltas": true,
+    "original_2909_complete_frame_metadata_and_png_bytes_preserved": true
+  },
+  "actual_excel_generation": "completed_unique_workbook_rule7"
+}

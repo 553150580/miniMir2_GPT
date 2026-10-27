@@ -2,6 +2,8 @@ import { instantiate, isValid, Node, Sprite, UITransform, Vec3 } from 'cc';
 import { AttackEvent, CastEvent, CastPlayback, CastStepEvent, CastStepPlayback, effectPoses, ImpactEvent, MeleePlayback, MeleeSample } from './CastPlayback';
 import { effectFrameKeys, WorldAssets } from './WorldAssets';
 import { isGroundSkill } from './SkillModel';
+import type { GridProjection } from './GridProjection';
+import { beamGeometry } from './BeamGeometry';
 
 interface EffectNode { node: Node; sprite: Sprite; frame: string; }
 
@@ -14,7 +16,8 @@ export class CombatEffects {
 
     constructor(private readonly assets: WorldAssets, private readonly parent: Node, sceneEpoch: { toString(): string },
         private readonly grid: (x: number, y: number) => Vec3, private readonly position: (handle: number) => Vec3 | null,
-        private readonly life: (handle: number) => string | null, private readonly attackSample: (handle: number) => MeleeSample | null = () => null) {
+        private readonly life: (handle: number) => string | null, private readonly attackSample: (handle: number) => MeleeSample | null = () => null,
+        private readonly projection?: GridProjection) {
         this.playback.bind(sceneEpoch); this.melee.bind(sceneEpoch); this.steps.bind(sceneEpoch);
     }
 
@@ -55,7 +58,9 @@ export class CombatEffects {
             for (const pose of effectPoses(cast, now, resource.cast?.duration_ms ?? 0, resource.beam?.duration_ms ?? 0)) {
                 const part = resource[pose.kind];
                 if (!part || (pose.kind === 'hit' && pose.elapsed >= part.duration_ms)) continue;
-                const frames: string[] = pose.kind === 'projectile' || pose.kind === 'beam' ? part.directions[pose.direction] : part.frames;
+                const direction = pose.kind === 'projectile' ? this.projection?.visualDirectionBetween(cast.event.origin, cast.event.targetGrid, 16, cast.event.direction) ?? pose.direction
+                    : pose.kind === 'beam' ? this.projection?.visualDirection(pose.direction) ?? pose.direction : pose.direction;
+                const frames: string[] = pose.kind === 'projectile' || pose.kind === 'beam' ? part.directions[direction] : part.frames;
                 const index = pose.kind === 'projectile' ? Math.floor(pose.elapsed / part.frame_ms) % frames.length
                     : Math.min(frames.length - 1, Math.floor(pose.elapsed * frames.length / part.duration_ms));
                 const key = frames[index], definition = this.assets.manifest.frames[key], frame = this.assets.frames.get(key);
@@ -68,7 +73,11 @@ export class CombatEffects {
                     : cast.event.targetLife != null && this.life(cast.event.targetHandle) !== cast.event.targetLife.toString()
                         ? null : this.position(cast.event.targetHandle) ?? target;
                 else point = new Vec3(origin.x + (target.x - origin.x) * pose.fraction, origin.y + (target.y - origin.y) * pose.fraction);
-                if (point) { active.add(pose.key); this.draw(pose.key, key, point); }
+                if (point) {
+                    active.add(pose.key);
+                    if (pose.kind === 'beam' && this.projection) this.drawBeam(pose.key, key, point, cast.event, resource);
+                    else this.draw(pose.key, key, point);
+                }
             }
         }
         for (const step of this.steps.active(now, this.assets.manifest.effects['9']?.step?.duration_ms ?? 0)) {
@@ -87,6 +96,24 @@ export class CombatEffects {
             active.add(pose.key); this.draw(pose.key, key, point);
         }
         for (const [key, visual] of this.nodes) if (!active.has(key)) { visual.node.destroy(); this.nodes.delete(key); }
+    }
+
+    private drawBeam(id: string, key: string, origin: Vec3, event: CastEvent, resource: any): void {
+        const definition = this.assets.gameplay.skills.find((row: any) => row.id === event.skillId);
+        const frames = resource.beam.directions[this.projection!.visualDirection(event.direction)].map((name: string) => this.assets.manifest.frames[name]);
+        const layout = beamGeometry(this.projection!, event.direction, definition.line_cells, resource.beam_native_direction_vectors, frames);
+        const frame = this.assets.manifest.frames[key], texture = this.assets.frames.get(key); if (!texture) return;
+        let visual = this.nodes.get(id);
+        if (!visual) {
+            const node = instantiate(this.assets.beamPrefab); node.parent = this.parent;
+            visual = { node, sprite: node.getChildByName('Sprite')!.getComponent(Sprite)!, frame: '' }; this.nodes.set(id, visual);
+        }
+        visual.node.setPosition(origin); visual.node.angle = layout.angleDegrees;
+        visual.node.getComponent(UITransform)!.setContentSize(layout.length, layout.height);
+        const position = layout.position(frame); visual.sprite.node.setPosition(position.x, position.y); visual.sprite.node.angle = layout.spriteAngleDegrees;
+        if (visual.frame === key) return;
+        visual.sprite.spriteFrame = texture; visual.sprite.trim = false; visual.sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        visual.sprite.node.getComponent(UITransform)!.setContentSize(frame.width, frame.height); visual.frame = key;
     }
 
     private draw(id: string, key: string, point: Vec3): void {

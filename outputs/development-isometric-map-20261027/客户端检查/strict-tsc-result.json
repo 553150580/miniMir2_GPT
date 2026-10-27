@@ -1,0 +1,15 @@
+{
+  "command": [
+    "./tools/dev",
+    "node",
+    "/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript/lib/tsc.js",
+    "--noEmit",
+    "-p",
+    "client/tsconfig.json"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "completed_at": "2026-10-27T16:19:41.918128+00:00",
+  "scope": "rule8生成类型同步后的全Creator声明严格复验"
+}

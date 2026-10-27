@@ -1,0 +1,121 @@
+{
+  "frozen_at": "2026-10-27T16:11:07.547Z",
+  "client_tests": {
+    "total": 193,
+    "passed": 193,
+    "failed": 0,
+    "log": ".work/map-isometric/client/client-tests.log"
+  },
+  "strict_tsc_exit": 0,
+  "strict_tsc_result": ".work/map-isometric/client/strict-tsc-result.json",
+  "source_hashes": ".work/map-isometric/client/source-hashes.json",
+  "layout_preservation": ".work/map-isometric/client-layout-preservation.json",
+  "saved_asset_hashes": [
+    {
+      "path": "client/assets/resources/prefabs/Beam.prefab",
+      "sha256": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+      "status": "new"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Effect.prefab",
+      "sha256": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Entity.prefab",
+      "sha256": "bdd25266397d947596ba312b3cb6f2a604dc417f68453da59feecffec864e7ca",
+      "status": "intentional_entity_head_labels"
+    },
+    {
+      "path": "client/assets/resources/prefabs/ListItem.prefab",
+      "sha256": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/resources/prefabs/MapProp.prefab",
+      "sha256": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+      "status": "new"
+    },
+    {
+      "path": "client/assets/scenes/Boot.scene",
+      "sha256": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/scenes/Game.scene",
+      "sha256": "ab015be00e79cfc24578341143df1c706fc09407bb35f578615815026639f8c2",
+      "status": "intentional_map_edit"
+    },
+    {
+      "path": "client/assets/scenes/Login.scene",
+      "sha256": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/scenes/RoleSelect.scene",
+      "sha256": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+      "status": "unchanged"
+    }
+  ],
+  "resource_manifest_sha256": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6",
+  "map_sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb",
+  "geometry": {
+    "projection": "isometric_diamond",
+    "width": 17,
+    "height": 17,
+    "tile_width": 64,
+    "tile_height": 32,
+    "surface_width": 1088,
+    "surface_height": 544,
+    "world_height": 592,
+    "soil_thickness_px": 48,
+    "background_offset_y": 24
+  },
+  "frames": 2914,
+  "prop_count": 4,
+  "prop_groups": 4,
+  "runtime_blocked": 4,
+  "connected_walkable": 285,
+  "source_blocked_evidence": 17,
+  "source_props_evidence": 19,
+  "collision_basis": "authored_edge_decorations",
+  "visual_adaptations": [
+    "World固定原像素1倍，地板1088x544+土层48，bbox1088x592",
+    "保存Soil/Surface/GridLines/Diamond，Graphics只画地图",
+    "小地图Surface136x68居中，旧容器和PlayerDot几何保持",
+    "MapProp原生Sprite保留原图尺寸：只显示边缘4独立小物，无大树及树透明运行分支",
+    "运行阻挡4格与小装饰一一对应，原17阻挡及19来源片只保留历史证据",
+    "Beam保存原生Mask：原图及原偏移刚体旋转、按六格投影端点裁长，无缩放",
+    "用户最新Name约定优先：font24、scale0.7、宽320、禁折行；模板头顶48、HP58、Name78，运行时按站立/行走身体与头发静态头顶一次绑定，不取武器、攻击、施法或倒地帧"
+  ],
+  "entity_head_labels": {
+    "font_size": 24,
+    "scale": {
+      "x": 0.7,
+      "y": 0.7
+    },
+    "width": 320,
+    "height": 32,
+    "line_height": 30,
+    "wrap": false,
+    "saved_reference_head": 48,
+    "saved_hp_y": 58,
+    "saved_name_y": 78,
+    "hp_above_head": 10,
+    "name_above_head": 30,
+    "profile_head_tops": {
+      "player_male": 66,
+      "player_female": 65,
+      "monster_scarecrow": 75,
+      "pet_skeleton": 68
+    },
+    "source_actions": [
+      "standing",
+      "walking"
+    ],
+    "excluded_package": "Weapon",
+    "runtime_binding": "每个实体首次实例化时绑定，不逐帧重算",
+    "chinese_names": "角色名、稻草人、变异骷髅",
+    "all_other_entity_objects_and_fields_unchanged": true
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "status": "generated_and_function_checked_browser_not_claimed",
+  "original_frames_compared": 2909,
+  "original_frame_byte_or_rgba_mismatches": [],
+  "original_complete_frame_metadata_mismatches_vs_committed_B": [],
+  "added_frames": [
+    "Tiles:1461"
+  ],
+  "total_frames": 2910,
+  "cells": 289,
+  "blocked": 17,
+  "props": 19,
+  "prop_groups": 5,
+  "connected_walkable": 272,
+  "surface": [
+    1088,
+    544
+  ],
+  "world_height": 592,
+  "geometry_manifest_matches_map": true,
+  "group_original_rectangular_pixel_deltas_preserved": true,
+  "group_stable_part_indices": true,
+  "visual_review": {
+    "source_rectangular": "source-rectangular-props.png",
+    "broken_per_cell_initial": "first-props-composite.png",
+    "final_grouped_with_native_player_at_8_8": "grouped-props-composite.png",
+    "result": "grouped_tree_rock_shrub_slices_remain_continuous; source_crop_edge_truncation_retained; right_tree_can_occlude_initial_player_upper_body_no_spawn_moved",
+    "browser_acceptance": false
+  },
+  "groups": [
+    {
+      "id": "objects_tree_1376_124_130",
+      "display_x": 2.0,
+      "display_y": 5.5,
+      "source_origin": {
+        "x": 124,
+        "y": 130
+      },
+      "parts": [
+        {
+          "x": 2,
+          "y": 4,
+          "frame": "Objects:1382",
+          "part_index": 0
+        },
+        {
+          "x": 3,
+          "y": 4,
+          "frame": "Objects:1383",
+          "part_index": 1
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "frame": "Objects:1384",
+          "part_index": 2
+        },
+        {
+          "x": 0,
+          "y": 5,
+          "frame": "Objects:1380",
+          "part_index": 3
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "frame": "Objects:1381",
+          "part_index": 4
+        }
+      ]
+    },
+    {
+      "id": "objects_rock_1082_135_132",
+      "display_x": 7.5,
+      "display_y": 4.5,
+      "source_origin": {
+        "x": 135,
+        "y": 132
+      },
+      "parts": [
+        {
+          "x": 7,
+          "y": 4,
+          "frame": "Objects:1082",
+          "part_index": 0
+        },
+        {
+          "x": 8,
+          "y": 4,
+          "frame": "Objects:1083",
+          "part_index": 1
+        }
+      ]
+    },
+    {
+      "id": "single_prop_0_7",
+      "display_x": 0.0,
+      "display_y": 7.5,
+      "source_origin": {
+        "x": 128,
+        "y": 135
+      },
+      "parts": [
+        {
+          "x": 0,
+          "y": 7,
+          "frame": "Objects:1374",
+          "part_index": 0
+        }
+      ]
+    },
+    {
+      "id": "objects_tree_1376_137_135",
+      "display_x": 12.5,
+      "display_y": 10.5,
+      "source_origin": {
+        "x": 137,
+        "y": 135
+      },
+      "parts": [
+        {
+          "x": 9,
+          "y": 7,
+          "frame": "Objects:1376",
+          "part_index": 0
+        },
+        {
+          "x": 15,
+          "y": 9,
+          "frame": "Objects:1382",
+          "part_index": 1
+        },
+        {
+          "x": 16,
+          "y": 9,
+          "frame": "Objects:1383",
+          "part_index": 2
+        },
+        {
+          "x": 10,
+          "y": 10,
+          "frame": "Objects:1377",
+          "part_index": 3
+        },
+        {
+          "x": 11,
+          "y": 10,
+          "frame": "Objects:1378",
+          "part_index": 4
+        },
+        {
+          "x": 12,
+          "y": 10,
+          "frame": "Objects:1379",
+          "part_index": 5
+        },
+        {
+          "x": 13,
+          "y": 10,
+          "frame": "Objects:1380",
+          "part_index": 6
+        },
+        {
+          "x": 14,
+          "y": 10,
+          "frame": "Objects:1381",
+          "part_index": 7
+        }
+      ]
+    },
+    {
+      "id": "objects_tree_4132_128_136",
+      "display_x": 1.0,
+      "display_y": 8.5,
+      "source_origin": {
+        "x": 128,
+        "y": 136
+      },
+      "parts": [
+        {
+          "x": 0,
+          "y": 8,
+          "frame": "Objects:4132",
+          "part_index": 0
+        },
+        {
+          "x": 1,
+          "y": 8,
+          "frame": "Objects:4133",
+          "part_index": 1
+        },
+        {
+          "x": 2,
+          "y": 8,
+          "frame": "Objects:4134",
+          "part_index": 2
+        }
+      ]
+    }
+  ],
+  "hashes": {
+    "tools/resources/build_development_assets.py": "94903c46e994238bd400bf728047bacaa53bbc5ad7aea7a5720650c4579f9621",
+    "client/assets/resources/development/manifest.json": "ee4aaa0e2fc5265cc8b0d3104b7110a853cba9fc9802080b8e840b9d06724e0e",
+    "client/assets/resources/development/maps/first-map.json": "96f152a542c9799566bf1985211684deb04f3970436760258c44f9400a9a27b3",
+    "client/assets/resources/development/maps/first-map.png": "4d496800640463f6ac1bb50f0dac08d8433d623d32b74439544b337812a1debc"
+  },
+  "reproduction_check": {
+    "command": "./tools/dev python tools/resources/build_development_assets.py --check",
+    "exit_code": 0,
+    "status": "checked",
+    "manifest_sha256": "ee4aaa0e2fc5265cc8b0d3104b7110a853cba9fc9802080b8e840b9d06724e0e"
+  },
+  "resource_scope_frozen": true
+}

@@ -20,6 +20,7 @@ test('真实地图轻触拦截只提交瞄准回调，原地面导航不变；�
     navigator.onStart(event);game.totalTime=200;navigator.onEnd(event);
     assert.equal(casts,1);assert.equal(previews,1);assert.deepEqual(nav.state.target,{x:9,y:8});
     aiming=false;navigator.onStart(event);game.totalTime=250;navigator.onEnd(event);assert.deepEqual(nav.state.target,{x:4,y:4});
+    nav.setGroundTarget({x:9,y:8});navigator.bind(nav,()=>null);navigator.onStart(event);game.totalTime=300;navigator.onEnd(event);assert.deepEqual(nav.state.target,{x:9,y:8});
 });
 
 function app(){
@@ -59,11 +60,12 @@ test('真实AppRoot可提交blocked center，越界但仍在射程内也必须�
 });
 test('真实世界坐标转换：普通导航拒绝阻挡中心，瞄准允许同格；地图外两种模式均拒绝',()=>{
     class Vec3{constructor(x=0,y=0,z=0){this.x=x;this.y=y;this.z=z;}}
-    const {GameWorldView}=load(path.join(root,'client/assets/scripts/app/GameWorldView.ts'),id=>id==='cc'?{Vec3,UITransform:class{},isValid:()=>false}:{});
+    const {GameWorldView}=load(path.join(root,'client/assets/scripts/app/GameWorldView.ts'),id=>id==='cc'?{Vec3,UITransform:class{},isValid:()=>false}:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):{});
     const world=new GameWorldView({}, {getComponent:()=>({convertToNodeSpaceAR:point=>point})}, {}, '',1,'1');
-    world.map={width:4,height:4,cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
+    world.map={width:4,height:4,tile_width:64,tile_height:32,soil_thickness_px:48,projection:'isometric_diamond',blocked:Array.from({length:4},(_,y)=>Array.from({length:4},(_,x)=>({x,y}))).flat(),cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
     const point=world.grid(1,1);assert.equal(world.screenToGrid(point),null);assert.deepEqual(world.screenToGrid(point,false),{x:1,y:1});
     const outside=world.grid(4,1);assert.equal(world.screenToGrid(outside),null);assert.equal(world.screenToGrid(outside,false),null);
+    world.map.blocked=[];assert.deepEqual(world.screenToGrid(point),{x:1,y:1},'旧来源cells位不覆盖新的运行阻挡');
 });
 test('真实AppRoot方向瞄准不选替代怪、不限制点击到近端、拒绝原地，原地雷光直接提交且导航保持',()=>{
     const {instance,session,sent,row,definitions,definition}=app(),errors=[];
@@ -93,4 +95,11 @@ test('真实AppRoot普通攻击只发送朝向AttackIntent，空挥同样可操�
     const {instance,session,sent}=app();for(const entity of session.baseline.entities)entity.hp={isZero:()=>false,toString:()=> '100'};
     instance.nav.setGroundTarget({x:9,y:8});await instance.basicAttack();assert.equal(sent[0].id,30011);assert.equal(sent[0].value.skillId,0);assert.equal(sent[0].value.direction,3);
     session.baseline.entities.splice(1);await instance.basicAttack();assert.equal(sent[1].id,30011);assert.equal(sent[1].value.direction,4);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+});
+test('真实AppRoot将屏幕摇杆八方向转成逻辑方向发送，原生摇杆向量不被地图旋转修改',()=>{
+    const {instance,session,sent}=app(),{GridProjection}=require('../../../.work/ui-tests/app/GridProjection.js');
+    const projection=new GridProjection({width:17,height:17,tile_width:64,tile_height:32,soil_thickness_px:48});
+    instance.world.logicalDirection=(x,y)=>projection.logicalDirectionFromScreen(x,y);instance.world.update=()=>{};
+    const screens=[[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
+    screens.forEach(([x,y],index)=>{instance.nav.setJoystick({x,y});instance.update(.2);assert.equal(sent[index].id,20006);assert.equal(sent[index].value.direction,(index+7)%8);assert.deepEqual(instance.nav.state.direction,{x,y});});
 });

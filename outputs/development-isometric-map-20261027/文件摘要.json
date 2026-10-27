@@ -1,0 +1,632 @@
+[
+  {
+    "path": "outputs/development-isometric-map-20261027/01-最新开阔战场与头顶显示.jpg",
+    "sha256": "55520b8d7ec53f3004573d2d3122785e8508cd70fe452e7870c9816f0946afb4",
+    "bytes": 170495
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/02-移除旧阻挡后的导航与背包.jpg",
+    "sha256": "f28628d5cf5a7877cea62896c91bad91ab308cc665fcf4d81e1642d62a639721",
+    "bytes": 125525
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/03-加高窗口仍抵达旧树阻挡格.jpg",
+    "sha256": "c86ac9f64210d6e297df4d019c20efecb6584da6d1d0d3e5c673165fcaacd128",
+    "bytes": 107967
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/04-720x1600四周小物与头顶.jpg",
+    "sha256": "c10099fff639bd7b907f314754e74232b5cc26016d9467900a26005cf0db5e6a",
+    "bytes": 171733
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/05-宽屏开阔地图与三类实体.jpg",
+    "sha256": "0f0e823fda2ac9787150813c16ed8bfcdd30cc6f685a5be74e18896b9c055287",
+    "bytes": 196229
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/06-八怪与宝宝头顶显示.jpg",
+    "sha256": "82153d0a3e4ce583174b6365d12f94c6b3b7a73ed5f726496f7a8ef8630def48",
+    "bytes": 202374
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/07-还原窗口后的最终效果.jpg",
+    "sha256": "a4f739e2408db058c4bd4e8c5caf3ab013e7620196f517368c099e121e8aa65b",
+    "bytes": 114767
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/08-最终摇杆上移与头顶跟随.jpg",
+    "sha256": "a5c7fbeb0b88d12d3a5491f0d3bf5222717da5a650c6a0dfae061937b9c18235",
+    "bytes": 114726
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/Creator构建检查.json",
+    "sha256": "c2e0e428fb88f54f1b6501b736c6c587e3528419ad7e84d6db1ad00e3c6b3dfe",
+    "bytes": 6713
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/check.log",
+    "sha256": "f11b2ab40d73ab583dea9d26adf008020e757d3884f6051b9fab42070e4c8cc6",
+    "bytes": 1036
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/client-freeze.json",
+    "sha256": "3f666e6619b8f14dd995c6e23168bad88ea8575a22ffdde52877610c5337d6c5",
+    "bytes": 4338
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/client-layout-preservation.json",
+    "sha256": "42db23e52b9080f00d36e06a62037095961c79ffe2c7e46d0dbd34c4cde1476b",
+    "bytes": 8331
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/creator-build.log",
+    "sha256": "9e0131d11320398652e2a03ed7eafca2431093cdb25d7a348422b9f04c4b5244",
+    "bytes": 314
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/fireball-diagnosis.log",
+    "sha256": "107e67a733b4d26a11b286fc00482811ba16a6455573c6f4de60c7fa02619b88",
+    "bytes": 1016
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/first-failed-latest.json",
+    "sha256": "fd1d66bc65e2669566923e353f73c29c51e5ecf40aa7eeac0ecdcab9d45c6a24",
+    "bytes": 40969
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/reference-regeneration.log",
+    "sha256": "b1797fa6dce06543e571fa8e32392fb680474dc89b1f89a3d3777c1c2a6b2339",
+    "bytes": 242
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/release-check.json",
+    "sha256": "68ba5227c226ef6956ab8e26c12073c423d323f4c65ee9457560f88922b0f1fd",
+    "bytes": 36252
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/resources-check.log",
+    "sha256": "7b4dd7d273f6a27c756a2c6ee3dd3c4a39b042506b1fbb540ae36af1b421eee2",
+    "bytes": 1098
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/runtime-health.json",
+    "sha256": "5db36203d2722fc73b149c4adedc1cba682139a4cc63ecf8f29dd30211c6ab34",
+    "bytes": 1052
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/server-first-failed.log",
+    "sha256": "fd75cdcdbda97a9f561386296e9227b274e22a961bfaf855e1d69bc3ba6c6440",
+    "bytes": 222070
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/server-full.log",
+    "sha256": "bc5f6a48c1ac1d71ba053318fbcd5c8d4338caa958b60cf9b3481b26bb1adf5a",
+    "bytes": 26476
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/skill-prestate-regression.log",
+    "sha256": "11ec46d8df5ed91dba1aeeacc5baaa9bb79730df2f2bbe66682391187798e2fd",
+    "bytes": 3004
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/source17.json",
+    "sha256": "fda9349d351ed340e7c4201bd3eedfaa3516d5a4e00e60362b6772c9081d50e6",
+    "bytes": 95279
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/test.log",
+    "sha256": "17e66ced07bb9ca43ec86881458b3e1f59cd92c3b5a28be73cdd9464ed94f9a8",
+    "bytes": 22528
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/01-最新构建入场前.jpg",
+    "sha256": "f69e9e0079ceae63e52f8deb09b19b6d537fc07607ae1a6bc81c5bcefa9b1b8e",
+    "bytes": 22013
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/02-角色选择.jpg",
+    "sha256": "820a8549cfd1441dcfa845a5064c15820ed2c00be839e984011f328a233a5059",
+    "bytes": 45084
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/03-720x1280菱形地图与土层.jpg",
+    "sha256": "6bb59435720d197eae914c2cbefd148e388e7795b40cfc1c8ea27f6c9c1e6cad",
+    "bytes": 44314
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/04-实际地图首入.jpg",
+    "sha256": "7feb293d5b1e8a3537de6b533f10262bf6f9259dac251ade9617760031d76f0c",
+    "bytes": 44485
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/05-720x1280地图与土层.jpg",
+    "sha256": "8cb812a7327beee731849e14f5ba2e710998e9603b0b15c26439608be09c6678",
+    "bytes": 184641
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/06-停止自动观察地板.jpg",
+    "sha256": "2214ec55d483b421f11ef8e29b72f6398f7f79106e99cde470c129a8c709f77d",
+    "bytes": 185267
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/07-导航中打开背包.jpg",
+    "sha256": "add1cd664a637b56ff7b03ddce8f9fae6f3603565cb5403211340bdd8d795b92",
+    "bytes": 128447
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/08-720x1600导航与固定面板.jpg",
+    "sha256": "95552defe75cd014cd2ff1d92f18f6f6cfe90d8c4ad6c5f37f5b5f493015c520",
+    "bytes": 151613
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/09-720x1600加高战斗视野.jpg",
+    "sha256": "a6be320a74f4dbbcc396852b6e7c3d28fa1b839bf8d4fc1e512600b622f7c3ad",
+    "bytes": 223856
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/10-导航中点击土层.jpg",
+    "sha256": "d58f8f62fe1f02f0fce5562755bc0ed90fd5f71b6e2dedb26369a7b037179ff7",
+    "bytes": 223942
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/11-到达17边界格.jpg",
+    "sha256": "1fbf14b87dbb9adcbaa8ed6f1358cfc3ff57aec2b5739c2a4cf1aa6ec90a4256",
+    "bytes": 225174
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/12-960x1280宽屏视口.jpg",
+    "sha256": "26cc3562a6565a230f0185668b45881c10c3b69c71a214e4551fda31646ac49d",
+    "bytes": 228732
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/13-摇杆向上移动.jpg",
+    "sha256": "79fa7f0f37ac22d56f38fee1bd831dba259106177b4889c6e75295ff57694195",
+    "bytes": 228756
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/14-道士与宝宝首入.jpg",
+    "sha256": "99015b1dcd41c8bc1a16fe9cc99f622e6b1c524bb7894c89a6ef683db9900b6b",
+    "bytes": 184816
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/15-道士宝宝八怪移动中.jpg",
+    "sha256": "aac17a3ac9c9113b504a5732bbe8b57ad4925872b4e33f971284f843afbcf77e",
+    "bytes": 184457
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/16-宝宝跟随前进.jpg",
+    "sha256": "3acf44b8b06a2aeee64bdbab160611c079958e4e5a2865f39958a577d92c51ce",
+    "bytes": 199838
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/17-菱形地面方向瞄准.jpg",
+    "sha256": "b50a9a8e60b438d4da5aa4817368c0e3717a27091c26a11ee16f2b2482c38dcb",
+    "bytes": 185302
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/18-菱形方向地狱火施放.jpg",
+    "sha256": "0a9d33916ea3441766ac4eee0f8d98540b21a1c56daa6f2d468a4695dfe79c7d",
+    "bytes": 200337
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/19-地狱火受理.jpg",
+    "sha256": "bfc8704bd86a1c2d7be2b24d9f273c250e06d4e46c44117966de2bf6e9177982",
+    "bytes": 200023
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/20-地狱火逐格原帧.jpg",
+    "sha256": "4b0f8eedf76c215d77fcef16ddb3038529bb08561916a19bdacacbfad1e8d4d9",
+    "bytes": 200523
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/21-疾光电影菱形方向瞄准.jpg",
+    "sha256": "d446a4c5218c9cf1caef875d19e9e99c1fc42aa1292ae656a51a52a4ed320ea3",
+    "bytes": 196589
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/22-疾光受理.jpg",
+    "sha256": "e11901fe73b5ea6457a788fb14e41950922b117e16b1a44d7b503b86ae5d2d41",
+    "bytes": 199725
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/23-疾光方向梁.jpg",
+    "sha256": "f58b66de881f99ec4b3414a75fad284eedc5a09fdf51882e3d9ce7452e302bb4",
+    "bytes": 199686
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/24-疾光裁剪原帧.jpg",
+    "sha256": "99e15282855d9df17bd9293abb06112c64233f26678e7f7b72e173a642b34a31",
+    "bytes": 199696
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/25-疾光结束.jpg",
+    "sha256": "de6ff6a222513658597e201d27b250c1e9a8c88916f58263d7e62ce472ef1f77",
+    "bytes": 200016
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/26-0-地狱火地图内四格.jpg",
+    "sha256": "d32145db605bec208ce6b1f2f0c6db0d1a697ecd01be131d090e5846ace93f28",
+    "bytes": 199479
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/26-1-地狱火地图内四格.jpg",
+    "sha256": "907f2708ba4f7032130a23b8e9b22f1b364ba6413ed72e225648bdd2a475d6c1",
+    "bytes": 200011
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/26-2-地狱火地图内四格.jpg",
+    "sha256": "3d93260769edea9db441ef2b2701bc6064b99003414437fa2c03fedc82ed3220",
+    "bytes": 199905
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/26-3-地狱火地图内四格.jpg",
+    "sha256": "7719c3f015fba6e899df5d718a13d13758d31e4bba7b1ed32603d5401085cd96",
+    "bytes": 199522
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/26-4-地狱火地图内四格.jpg",
+    "sha256": "43b7e35a3668198948c87db18527604650c9781da94f7d4c954383f59c237ac6",
+    "bytes": 199660
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/27-中间构建资源加载.jpg",
+    "sha256": "7df0533f9a29053333eaa98cf3f70ef54c806e3980825598c882e6d32c3619c6",
+    "bytes": 44410
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/28-中间构建名字折行裁切.jpg",
+    "sha256": "97c364b666f492ee07a3511c2a982a244aa7dd3ff2b7010d533d4cca7eda9ebb",
+    "bytes": 201550
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/29-中间构建宽屏名字裁切.jpg",
+    "sha256": "353a7f7db5eaae92d0596a15fe1b2a8cfd5d1899d85c51304afacc4544c5b7ee",
+    "bytes": 228279
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/converter-unit.json",
+    "sha256": "37042262c7efc21b82f6c3703475ad6fcf4047b8e8992ff69a11bcf55ff236b2",
+    "bytes": 840
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/first-props-composite.png",
+    "sha256": "d130033dbe9fa4902a0bbc191cb4dfc5ec72f32a1ae9e5d50416ccafa0d553ee",
+    "bytes": 927051
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/grouped-props-composite.png",
+    "sha256": "26a82d3ded7a2fa81926b9d531bbbd8c77418bbfd2e9554c90eddee0359430ab",
+    "bytes": 961866
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/independent-review.json",
+    "sha256": "1e6141c145c079379001a858044c29b50b0db28131feae4089a877dd3fd12ccc",
+    "bytes": 983
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/preservation-check.json",
+    "sha256": "48d58c5831e167e7f4e0da89ae9c86b6f26dfb66be186ec96d480662e846a2d5",
+    "bytes": 1855
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/resource-check.json",
+    "sha256": "cd5d5ce77ce184c01b7e05ceafb9211c542e7fcbd2d4bb7909648ab61324b0c1",
+    "bytes": 5057
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/server-rule7-full.log",
+    "sha256": "0bf9eab3ec6c1271f0f75a77a6f0512941264a586ce0754f71b1684512962f9e",
+    "bytes": 26476
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/server-rule7-report.json",
+    "sha256": "1d6d6e0248b65cdcde14bcb640ac143c790648b64c8428337802ffc907fcc245",
+    "bytes": 41203
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/source-rectangular-props.png",
+    "sha256": "2308f58c3c1d8458399eb478b0ca1a239056eaf4af248ec28c8a3a2723651e40",
+    "bytes": 340235
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/tree_left-source.png",
+    "sha256": "b7c9c5f2b6c8a184ea0bad9575dd3cf07dba418f4ea534b4c19a08abac8f30df",
+    "bytes": 107484
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/tree_right-source.png",
+    "sha256": "5e6ee5cfe1c6149847b0b7d970316ca4737c5c0ba384ae534c4c5e6a6eb7cd46",
+    "bytes": 184011
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/workbook-qa.json",
+    "sha256": "4d045c93a77580e0b85fc7589e6369bc6b5b05fbeb1a99e5bd9b13b0cb0af9c2",
+    "bytes": 909
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/原八槽位保留.png",
+    "sha256": "f1b90faac4b48df48a927b23fa5b7320fd89a9c68671224d3392a8e17169ee11",
+    "bytes": 106509
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/地图定义修改前.png",
+    "sha256": "5c89635ac49045f3238912098f309b202c42353b12981edda2a0783df58db103",
+    "bytes": 44663
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/地图定义修改后.png",
+    "sha256": "e746e9a3096d90c4f747e072916a357a0667eb358a6f159ec087f7e3d9d3b52f",
+    "bytes": 45251
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/地图投影与土层参数.png",
+    "sha256": "6e2fc912719df7f151d8fbc3c165f3e579bd1d825eefdc97aea0c2b3c7c59beb",
+    "bytes": 102573
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/完整碰撞与几何引用.png",
+    "sha256": "7cd364db0d086733b9de25df3caa6a9a4464c7d1780fcaca68e8dab121fa2e75",
+    "bytes": 69935
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/浏览器输入追踪.json",
+    "sha256": "8f839a49e9d0d03bbd7d20f254c1926f8aba08e6e8554a8ad579813e44c03ded",
+    "bytes": 66054
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/碰撞定义修改前.png",
+    "sha256": "84e034d5669272695e20d7a42f26a2db676979eda23f7fca9d3b33c84d5ba9e2",
+    "bytes": 69370
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/历史-初始树木及名字方案（已撤销）/表现采样.json",
+    "sha256": "fe3473d4b434d3937dd07b0f17f398e781967aa8d09a28d3e484b4a560c72db9",
+    "bytes": 1826
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/client-tests.log",
+    "sha256": "4414a3bc4d5ba0adb50e9394fe19670c38e724af7c1838dcecc2a7d7f4a3ffb1",
+    "bytes": 20574
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/head-source-alpha.json",
+    "sha256": "5adf4231040a9a38132023681d04d05c8c23a8d899cba1d2afe5b7f704641b60",
+    "bytes": 1572
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/head-targeted.log",
+    "sha256": "d99cff6ef2a2d9d8e7672c02311fca7256313d22d14721fd1b753012e2b4b356",
+    "bytes": 3993
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/source-hashes.json",
+    "sha256": "700868efd345bd5f6fd7a3e59fff2372da806d696a1cf52440814de6338f5903",
+    "bytes": 5244
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/strict-tsc-result.json",
+    "sha256": "1f12aea4cd3d041be0d5ee8730f36d01b1785aafeecee11740cd2b4c0b7b4601",
+    "bytes": 413
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/客户端检查/strict-tsc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/9760-neighbors.png",
+    "sha256": "d73761f133f3945b501cb4b57405c95425b95087468edf6b6efc7610c0d53755",
+    "bytes": 22320
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-1127.png",
+    "sha256": "6ade8a8016d8717f97cefdc7c6c7786e66a9f17a0feff9290887ba16ec2eca52",
+    "bytes": 2233
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-2733.png",
+    "sha256": "b10038125212b95c204a0f77adad03eb400997178bcc7534fb0976d3e190840b",
+    "bytes": 11491
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-7092.png",
+    "sha256": "b78e803ca25dde82cd6f43e2b6096e794c77b2a5c733ff491665c27efccbbbf5",
+    "bytes": 2748
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-7094.png",
+    "sha256": "6401800b8198a8fae6158405822bcaf20b33f51d0063c23ef490a30ef92c677c",
+    "bytes": 2946
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-8898.png",
+    "sha256": "a8d8ab7babd104c8f109a24dfce2ee37277d096ffe107756b5693b65112d4b3a",
+    "bytes": 1490
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/Objects-9760.png",
+    "sha256": "13debd0f62833feb0f6938623a40fe793b59f97db50e2c12357713c0df7dd4de",
+    "bytes": 3410
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/candidate-index.json",
+    "sha256": "c57fb55f6a48f55d688f0311c6c866162c5950d406db64f3f7857393adf8a8f8",
+    "bytes": 673612
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/final-small-decoration-composite.png",
+    "sha256": "e37855f4ab63a9dfc084a5cebc36ab53205b0d2e5c0ae9e96531a9aa046e438f",
+    "bytes": 696090
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/isolated-candidates.json",
+    "sha256": "b5cb64d90a98e42c32c0aca4096be35f15588b11a291c3c9d69ab9f763614a79",
+    "bytes": 6251
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/isolated48-1.png",
+    "sha256": "9f503322b709359dcca3bbca4b34649fd24e667eee5b8619de007a6843ecc467",
+    "bytes": 26585
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/non48-1.png",
+    "sha256": "4f5da80b60b7a29d5dace67e0ef975294f2c69953a0b46cd2197003184beac4a",
+    "bytes": 247646
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/preservation-check.json",
+    "sha256": "29bb7c42dacb7b13beb0ba76e25af2d5bf4e1eb5893e46cde2a6ab41d89f4212",
+    "bytes": 860
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/previous-2910-frames.json",
+    "sha256": "ec819a92ecbdc3917ff3af0291eb6f878e551d70468d836e23c33672113a9db5",
+    "bytes": 1423866
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/resource-check.json",
+    "sha256": "7061a6a2c29a1e586b9b339a33eb018b3769c0b2f62b82933d0a8efd7fa99161",
+    "bytes": 2422
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/selected-four-native.png",
+    "sha256": "8e17228b9d4e688f7d90e44c60115513e61321fd32fbd5aaabcf6663346c7423",
+    "bytes": 18701
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-01.png",
+    "sha256": "8c372e53af5336c41518f7288537ac1d91b9aec7f8b67d613a5bff57443508d8",
+    "bytes": 699484
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-02.png",
+    "sha256": "b09202a72f51bb5abbf1f561559080a46f3c9e4b9c132f0ca84302be27814e1f",
+    "bytes": 545873
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-03.png",
+    "sha256": "7df03d872543e4a018ba8e84817c9d98211510d00058e23c06c91ae894306264",
+    "bytes": 537509
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-04.png",
+    "sha256": "d7d8ed29fe5dabbd13f69878dd05e36728005431092201e998e5220c7b8ced79",
+    "bytes": 423150
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-05.png",
+    "sha256": "13d438c9e52e989bdda5b2976cfa3ec826705eb3f20f92bcb4934e3a55bd08c9",
+    "bytes": 585175
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-06.png",
+    "sha256": "aa7ea05f2d75e476a7dccdca2459f3108fd8660596099363ecf3b777e0ce9071",
+    "bytes": 537515
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-07.png",
+    "sha256": "6cd7b6bb44e627a4ff7fa73202651bfca6fbedb693aea14363c1201255c50a1c",
+    "bytes": 589923
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-08.png",
+    "sha256": "acacc8c68a0c69e64918e0076cd1d753a4e1c7462f2a3e03d1f4010808dd9e0a",
+    "bytes": 495325
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-09.png",
+    "sha256": "50cf8cffc922da80b1e0003ef2653b93251c9f56fcec27c3e0b76ffb6b0cd346",
+    "bytes": 532075
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-10.png",
+    "sha256": "7eff82eb9b83bfa316711769cc533096cb24131467905613a2ea1586515aa77f",
+    "bytes": 504374
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-11.png",
+    "sha256": "f3cb63ca0badf1b3ee965a69d602a83d1dd3ffe6a10b3689c1a7d534cdf20b8b",
+    "bytes": 496124
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-12.png",
+    "sha256": "0bc2a2d7d5c71add9eed2df413d6651cf6cd9c011a938ad2b0beaac98ae10c4c",
+    "bytes": 468027
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-13.png",
+    "sha256": "287f661e7978c722d29084aa3a2c1dbb12698f83d946c4cc674e0474e92e64cc",
+    "bytes": 427242
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/small48-14.png",
+    "sha256": "1ad0b5e93e3722b5e9d4c85caf9db2c9df65a96a6ca7c2b30617fdb9497dbd85",
+    "bytes": 328238
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/workbook-qa.json",
+    "sha256": "e8d1fb4a2d14f702123622bd2576696ac8f8433f557d50594aefa784cf21d751",
+    "bytes": 728
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/四周小型装饰唯一配置.png",
+    "sha256": "b489a5d1dd14131276a72b9bdab73f56e13535f4c62982fd8961ce105bb11ea7",
+    "bytes": 41073
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/完整碰撞与几何引用.png",
+    "sha256": "7dd4969fa945b2c09acf2f488ebdcb7fdfc995e6ea2164e181645e385c9cb979",
+    "bytes": 61640
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/碰撞定义修改前.png",
+    "sha256": "7cd364db0d086733b9de25df3caa6a9a4464c7d1780fcaca68e8dab121fa2e75",
+    "bytes": 69935
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/小型场边装饰/追加字段样式参考.png",
+    "sha256": "622583f8702a3a6d1bc9b5be90e3866cda4ed220384efc393290d2be152e983f",
+    "bytes": 26407
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/最终只读复核.json",
+    "sha256": "aac6af83aded1f16e9b544b0a9ea50744d91b511771ff8c75c7967262f854dd8",
+    "bytes": 1022
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/服务端真实集成检查.json",
+    "sha256": "c838843ddb6499132a15e0e9b6fb35b8ef1b64384020d7650085b0a25c458ba8",
+    "bytes": 41203
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/浏览器警告与错误.json",
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "bytes": 2
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/浏览器输入追踪.json",
+    "sha256": "dbf069be7f4ee5c82e1d4e191e226e737423f7fc94f551829cf3346512be492d",
+    "bytes": 16998
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/浏览器验收观察.json",
+    "sha256": "74d48e8ed3154c3697824f7eb1a56aadbf96376cb10550956b61052bdad6580a",
+    "bytes": 2946
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/表现采样.json",
+    "sha256": "940c26516d63cd68e14a5e7c841fb33d229dcf8507ceabbadca0ae2056dfa338",
+    "bytes": 921
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/配置校验报告.json",
+    "sha256": "6f41eb940f5a59c7f8afbe24d68456c8b5334f60e3202c1878144fe931e96e71",
+    "bytes": 36252
+  },
+  {
+    "path": "outputs/development-isometric-map-20261027/阶段验收.json",
+    "sha256": "b6e15ad95af0c6d5b7f0f1ada7354462d9df8fba0c0ccaa19cbc11578950b843",
+    "bytes": 4497
+  }
+]

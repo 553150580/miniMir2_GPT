@@ -1,0 +1,69 @@
+{
+  "basis": "原PNG实际alpha顶边；body/hair standing+walking，不采样Weapon/攻击/施法/倒地",
+  "profiles": [
+    {
+      "profile": "player_male",
+      "unique_body_hair_frames_checked": 160,
+      "all_alpha_top_padding_zero": true,
+      "stable_head_top": 66,
+      "top_frames": [
+        "Hair:1208",
+        "Hair:1209",
+        "Hair:1210",
+        "Hair:1211",
+        "Hair:1216",
+        "Hair:1217",
+        "Hair:1218",
+        "Hair:1219",
+        "Hair:1266",
+        "Hair:1272",
+        "Hair:1274",
+        "Hair:1277",
+        "Hair:1282",
+        "Hair:1285"
+      ]
+    },
+    {
+      "profile": "player_female",
+      "unique_body_hair_frames_checked": 160,
+      "all_alpha_top_padding_zero": true,
+      "stable_head_top": 65,
+      "top_frames": [
+        "Hair:1800",
+        "Hair:1801",
+        "Hair:1802",
+        "Hair:1803",
+        "Hair:1865",
+        "Hair:1866",
+        "Hair:1868",
+        "Hair:1869",
+        "Hair:1874"
+      ]
+    },
+    {
+      "profile": "monster_scarecrow",
+      "unique_body_hair_frames_checked": 80,
+      "all_alpha_top_padding_zero": true,
+      "stable_head_top": 75,
+      "top_frames": [
+        "Mon3:2530",
+        "Mon3:2590",
+        "Mon3:2591",
+        "Mon3:2592",
+        "Mon3:2613",
+        "Mon3:2615"
+      ]
+    },
+    {
+      "profile": "pet_skeleton",
+      "unique_body_hair_frames_checked": 80,
+      "all_alpha_top_padding_zero": true,
+      "stable_head_top": 68,
+      "top_frames": [
+        "Mon4:2602",
+        "Mon4:2603",
+        "Mon4:2605"
+      ]
+    }
+  ]
+}

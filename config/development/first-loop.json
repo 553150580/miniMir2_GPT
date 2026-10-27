@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 6,
+  "rule_version": 8,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -2514,72 +2514,20 @@
   ],
   "map": {
     "id": 1,
-    "width": 16,
-    "height": 16,
+    "width": 17,
+    "height": 17,
     "blocked": [
       {
-        "x": 0,
-        "y": 0
-      },
-      {
-        "x": 7,
-        "y": 3
-      },
-      {
-        "x": 8,
-        "y": 3
-      },
-      {
-        "x": 7,
-        "y": 4
-      },
-      {
-        "x": 8,
-        "y": 4
-      },
-      {
-        "x": 12,
-        "y": 4
-      },
-      {
-        "x": 13,
-        "y": 4
-      },
-      {
-        "x": 12,
-        "y": 5
-      },
-      {
-        "x": 13,
-        "y": 5
-      },
-      {
-        "x": 0,
-        "y": 7
-      },
-      {
         "x": 1,
         "y": 7
       },
       {
-        "x": 2,
-        "y": 7
-      },
-      {
-        "x": 0,
-        "y": 8
-      },
-      {
-        "x": 1,
-        "y": 8
-      },
-      {
-        "x": 2,
-        "y": 8
-      },
-      {
         "x": 7,
-        "y": 14
+        "y": 1
+      },
+      {
+        "x": 15,
+        "y": 9
       },
       {
         "x": 7,
@@ -3419,15 +3367,15 @@
       "game_maps": [
         {
           "id": 1,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27新要求：中央无大型遮挡物，四周少量小型代表性设施与装饰；原0.map只提供地板来源，原树阻挡不继续沿用；docs/17x17菱形地图实施边界.md",
+          "note": "17×17及菱形/土层保持；用户最新要求无大型遮挡，场边4件原尺寸独立小物。decorations只通过collision_cell_index引用唯一碰撞位置，不维护第二份摆放坐标。木制设施外观似井台，不认证原游戏正式名称；火盆本轮静态原帧。"
         }
       ],
       "game_map_collisions": [
         {
           "id": 1,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27新要求：中央无大型遮挡物，四周少量小型代表性设施与装饰；原0.map只提供地板来源，原树阻挡不继续沿用；docs/17x17菱形地图实施边界.md",
+          "note": "用户审定开阔战场：4格仅对应四周小物；原图289格及原17阻挡作为source_blocked证据保存，runtime blocked明确来自此表，不再宣称直接采用原碰撞位。中央无大树及空气阻挡，285可走格静态连通；原出生不变。"
         }
       ],
       "game_map_regions": [
@@ -3440,43 +3388,43 @@
       "game_monster_spawns": [
         {
           "id": 1,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 2,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 3,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 4,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 5,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 6,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 7,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         },
         {
           "id": 8,
-          "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格；最终策划案.md:普通怪10秒复活",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+          "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md；最终策划普通怪10秒复活",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 原8槽不变，按17×17源格重新核验静态可达。"
         }
       ],
       "game_pet_templates": [
@@ -4180,8 +4128,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格",
-          "note": "仅development候选；16技能，地狱火所有阶正前4格为用户已审定适配。书本目标阶+1已定，页/门槛/书价候选；唯一数字只维护本工作簿。"
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离",
+          "note": "仅development：17×17菱形与土层保持，中央开阔，四周4件小物；源17旧阻挡仅保留证据，runtime碰撞来自4件小物位置。名字字号24、预制体0.7并与血条置头顶；技能和经济不变。"
         }
       ],
       "game_drop_categories": [
@@ -4208,7 +4156,7 @@
       ]
     },
     "player_stats": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。",
-    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；首组三本7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。 本轮逐阶书本按用户目标rank+1；页5/10/20、首组三本NPC书500金币与普通道具子集新增精良职业书均为显式开发候选。商店与赠书禁拆页；旧未知来源不补推掉落。 本轮事件容量128和逐杀队列16是development技术预算；不证明承载量。人类攻击动作550/命中300/等级攻速公式与视觉动画时钟分离，首组装备尚无攻速词条按0适配。 新五本学习采用各自Crystal Level1适配，价格候选按MYF原字段分别600/2000/1600/3000/15000金币；不声称来源服实际报价。 战士持续模式与烈火充能为临时内存；健康离线沿绝对截止推进，不写永久聚合。 地狱火每个有效传播格发送权威CastStep，首格500ms；后格按实际处理时钟+100ms，不按客户端计时或一帧追赶。",
+    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；首组三本7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。 本轮逐阶书本按用户目标rank+1；页5/10/20、首组三本NPC书500金币与普通道具子集新增精良职业书均为显式开发候选。商店与赠书禁拆页；旧未知来源不补推掉落。 本轮事件容量128和逐杀队列16是development技术预算；不证明承载量。人类攻击动作550/命中300/等级攻速公式与视觉动画时钟分离，首组装备尚无攻速词条按0适配。 新五本学习采用各自Crystal Level1适配，价格候选按MYF原字段分别600/2000/1600/3000/15000金币；不声称来源服实际报价。 战士持续模式与烈火充能为临时内存；健康离线沿绝对截止推进，不写永久聚合。 地狱火每个有效传播格发送权威CastStep，首格500ms；后格按实际处理时钟+100ms，不按客户端计时或一帧追赶。 用户2026-10-27审定地图17×17及菱形2.5D；64×32地格/48像素土层是本轮美术候选。宠物出生8,7从既有开发资产显式迁入本Excel，不再回读生成地图作数值源；界内与连通性逐项校验。 用户后续确认移除大遮挡物，场边4件小物；出生保持，碰撞仅取小物对应4格。名字24字号、预制体0.7缩放并与血条位于头顶。",
     "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
     "potion_effects": {
@@ -4284,11 +4232,11 @@
       },
       {
         "path": "client/assets/resources/development/manifest.json",
-        "sha256": "1628ec86c748974432fa4ad9ebcede16dfbd2e6f3cb9989bf5808684d64d82bc"
+        "sha256": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6"
       },
       {
         "path": "client/assets/resources/development/maps/first-map.json",
-        "sha256": "df28f45ebdcfcbe6aadc990a46a5fbd3f3c7f0b82bd9dd500fd009d99c4e350c"
+        "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
       },
       {
         "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
@@ -4297,8 +4245,8 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "98ce110cae765561c95efe88924717d250b34df08f954932000635ae16c4d7be"
+      "sha256": "303d1067c5c8a61849aff4d55ad2f54b85951c1c5fc679425141b1025905f99e"
     },
-    "exporter_sha256": "2517828c04b42caaf61f1d12ecacd7896cfdf909371f3ccc960d02ff62b05890"
+    "exporter_sha256": "db38735c0b6320385c230085418316dca5da3a075b6c034ed64d3dd8ce6fe0fa"
   }
 }

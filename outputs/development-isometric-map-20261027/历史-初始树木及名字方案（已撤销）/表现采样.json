@@ -1,0 +1,26 @@
+[
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5007,\"updates\":225,\"mean_update_ms\":22.35401785706303,\"max_update_ms\":133.69999998807907,\"intermediate_grid_samples\":{\"player\":54,\"pet\":0,\"monster\":77},\"changed_animation_frames\":89,\"preloaded_frames\":1559}",
+    "timestamp": "2026-10-27T15:14:44.790Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5010,\"updates\":236,\"mean_update_ms\":21.317021276595746,\"max_update_ms\":39.099999994039536,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":24,\"preloaded_frames\":1559}",
+    "timestamp": "2026-10-27T15:14:49.799Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"initial\",\"duration_ms\":5023,\"updates\":230,\"mean_update_ms\":21.934934497920707,\"max_update_ms\":92.59999999403954,\"intermediate_grid_samples\":{\"player\":98,\"pet\":177,\"monster\":129},\"changed_animation_frames\":123,\"preloaded_frames\":1199}",
+    "timestamp": "2026-10-27T15:20:35.801Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  },
+  {
+    "level": "info",
+    "message": "表现验收 {\"scope\":\"development_render\",\"stage\":\"steady\",\"duration_ms\":5013,\"updates\":237,\"mean_update_ms\":21.239406779661017,\"max_update_ms\":52,\"intermediate_grid_samples\":{\"player\":0,\"pet\":0,\"monster\":0},\"changed_animation_frames\":32,\"preloaded_frames\":1199}",
+    "timestamp": "2026-10-27T15:20:40.810Z",
+    "url": "http://127.0.0.1:18080/assets/main/index.js"
+  }
+]

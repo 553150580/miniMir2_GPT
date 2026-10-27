@@ -134,7 +134,7 @@
     "seconds": 314.29,
     "exit_code": 36,
     "source_stable_during_build": true,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "saved_scene_prefab_count": 7,
     "build_did_not_overwrite_saved_layouts": true,
     "intentional_layout_changes": "963→973，仅追加保存的ModeToggle；原963对象只Skills子列表追加引用，其余完全相等",
@@ -155,7 +155,7 @@
     "race": true,
     "passed_test_records": 172,
     "skipped": 0,
-    "current_sources_match": true,
+    "current_sources_match": false,
     "covered": [
       "八项真实购书/学习/权威施放",
       "四战士八方向/0ms旁格与300ms前格/多杀",
@@ -356,5 +356,6 @@
     "正式数值平衡、完整P0、手机真机、容量/长稳及全故障",
     "新增地图17×17/2.5D菱形/土层为用户下一独立阶段，当前本报告仍16×16逻辑地图",
     "NPC来源书不拆页；页面与升级门槛继续candidate"
-  ]
+  ],
+  "superseded_by_map_stage": "本报告保留0b87676阶段B历史证据；后续17×17地图阶段改变源码、配置和保存资产，当前验收另见17x17菱形地图阶段验收.json。"
 }

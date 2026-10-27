@@ -50,6 +50,10 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 			cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 			// 仅隔离测试实例调整交战位置/耐久，以确定性观察延迟和宠物恢复；配置文件未修改。
 			cfg.Fixture.Map.MonsterSpawns[0] = devconfig.Point{X: 4, Y: 8}
+			if job == 1 {
+				// 本例核学习/投射命中，不用法师在资产RPC期间被怪物击杀来决定施法前态。
+				cfg.Fixture.Monsters[0].AttackMin, cfg.Fixture.Monsters[0].AttackMax = 0, 0
+			}
 			if job == 2 {
 				cfg.Fixture.Map.MonsterSpawns[0] = devconfig.Point{X: 8, Y: 6}
 				cfg.Fixture.Monsters[0].HP = cfg.Fixture.Pet.AttackMax * 10
@@ -108,6 +112,8 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 			c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
 			defer func() { c.close() }()
 			c.auto(false, 1)
+			// 关闭自动不取消已受理移动；按协议实际间隔等待首入动作结束，保留服务端门禁。
+			time.Sleep(time.Duration(c.player().MoveIntervalMs) * time.Millisecond)
 			use := func(q *pb.LearnSkillRequest) *pb.OperationResult {
 				result := c.asset(p.MsgC2SLearnSkill, q)
 				c.inventoryAt(result.NewRevision)

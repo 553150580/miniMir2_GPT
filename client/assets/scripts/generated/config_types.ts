@@ -461,6 +461,8 @@ export interface GameMaps {
   spawn_cell: unknown | null;
   tile_resource_key: string | null;
   map_version: string | null;
+  visual_geometry: unknown | null;
+  decorations: unknown | null;
 }
 
 export interface GameMapCollisions {

@@ -213,8 +213,8 @@ func (f *Fixture) Validate() error {
 	if f.SchemaVersion != 1 || !f.DevelopmentOnly || f.RuntimeReady || f.RuleVersion == 0 || f.SourceStatus != "candidate" || (f.DamageFormula != "development_range_minus_defence" && f.DamageFormula != "development_source_combat") {
 		return errors.New("必须显式启用有来源的candidate开发fixture；不冒充1.80正式数值")
 	}
-	if f.Map.Width != 16 || f.Map.Height != 16 || len(f.Map.MonsterSpawns) < 8 || f.Map.ID == 0 {
-		return errors.New("首场景必须16×16并提供8个可达怪物槽位")
+	if err := f.ValidateMap(); err != nil {
+		return err
 	}
 	if f.InventoryCapacity < 1 || f.InventoryCapacity > 100 || f.InitialBoundGold < 0 {
 		return errors.New("开发背包容量/初始资金不合法")

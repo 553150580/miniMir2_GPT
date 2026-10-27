@@ -542,7 +542,7 @@ func (c *client) send(id uint16, q proto.Message) uint32 {
 func (c *client) read() wire.Frame {
 	f := c.readFrame()
 	if f.Error != 0 {
-		c.t.Fatalf("WS %d error%d", f.ID, f.Error)
+		c.t.Fatalf("WS %d error%d；最近玩家状态=%v，已收到死亡通知=%t", f.ID, f.Error, c.player(), c.death != nil)
 	}
 	return f
 }

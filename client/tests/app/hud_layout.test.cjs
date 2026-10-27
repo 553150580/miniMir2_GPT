@@ -33,14 +33,42 @@ function component(node, type) {
 const transform = node => component(node, 'cc.UITransform');
 const children = node => (node._children ?? []).map(reference => scene[reference.__id__]);
 function descendants(node) { return children(node).flatMap(child => [child, ...descendants(child)]); }
+test('最新名字约定保存字号24和缩放0.7，World与实体根保持1倍不额外缩小',()=>{
+    const prefab=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Entity.prefab'),'utf8'));
+    const name=prefab.find(value=>value.__type__==='cc.Node'&&value._name==='Name');assert(name);
+    const label=name._components.map(ref=>prefab[ref.__id__]).find(value=>value.__type__==='cc.Label');assert(label);
+    const world=node('MapViewport/World');let scaleX=world._lscale.x,scaleY=world._lscale.y,current=name;
+    while(current){scaleX*=current._lscale.x;scaleY*=current._lscale.y;current=current._parent?prefab[current._parent.__id__]:null;}
+    assert.equal(world._lscale.x,1);assert.equal(world._lscale.y,1);assert.equal(name._lscale.x,.7);assert.equal(name._lscale.y,.7);assert.equal(label._fontSize,24);
+    assert(Math.abs(label._fontSize*Math.abs(scaleX)-16.8)<1e-8);assert(Math.abs(label._fontSize*Math.abs(scaleY)-16.8)<1e-8);
+});
+test('实际中文验收名与12汉字名字有足够单行宽度，24字号不折行且30行高装入32高度',()=>{
+    const prefab=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Entity.prefab'),'utf8'));
+    const name=prefab.find(value=>value.__type__==='cc.Node'&&value._name==='Name');
+    const parts=name._components.map(ref=>prefab[ref.__id__]),label=parts.find(value=>value.__type__==='cc.Label'),size=parts.find(value=>value.__type__==='cc.UITransform')._contentSize;
+    assert.equal(size.width,320);assert.equal(size.height,32);assert.equal(label._enableWrapText,false);assert.equal(label._overflow,1);
+    assert.equal(label._fontSize,24);assert.equal(label._lineHeight,30);assert.equal(name._lpos.y,78);assert.equal(name._lscale.x,.7);assert.equal(name._lscale.y,.7);
+    for(const [text,hanCount]of [['模式验收战士',6],['模式验收战士角色姓名测试',12]]){
+        assert.equal(Array.from(text).length,hanCount);const fullWidth=hanCount*label._fontSize;
+        assert(fullWidth<=size.width,`${text}需要${fullWidth}，保存宽度只有${size.width}`);assert(label._lineHeight<=size.height);
+    }
+    assert(6*label._fontSize>140,'保留6汉字超过旧140宽度的真实裁切触发条件');
+});
+function previousLayout(count){
+    const saved=structuredClone(scene.slice(0,count));
+    for(const value of saved)if(value._children)value._children=value._children.filter(ref=>ref.__id__<count);
+    // 本阶段唯一有意调整的旧地图几何：World原像素1倍及菱形+土层包围盒。
+    saved[26]._lscale.x=2;saved[26]._lscale.y=2;saved[27]._contentSize.width=768;saved[27]._contentSize.height=512;
+    return saved;
+}
 test('战士模式开关保存为原生Toggle，与施放按钮共用位置，原963对象仅允许追加子引用',()=>{
     const toggle=node('UIMgr/Panels/Skills/ModeToggle'),use=node('UIMgr/Panels/Skills/Use');
     assert.deepEqual(toggle._lpos,use._lpos);assert.deepEqual(transform(toggle)._contentSize,transform(use)._contentSize);
     const value=component(toggle,'cc.Toggle');assert.equal(value._isChecked,false);assert.equal(toggle._active,false);
     assert.equal(scene[value._checkMark.__id__].__type__,'cc.Sprite');assert.equal(component(node('UIMgr/Panels/Skills/ModeToggle/Label'),'cc.Label')._fontSize,24);
-    const before=scene.slice(0,963).map(row=>{const value=structuredClone(row);if(value._children)value._children=value._children.filter(ref=>ref.__id__<963);return value;});
+    const before=previousLayout(963);
     const hash=require('node:crypto').createHash('sha256').update(JSON.stringify(before)).digest('hex');
-    assert.equal(hash,'a8fdb9fbcd23b9b88f7efad739104b5ffbb6be6be46cc120d960b6693fc30ead');assert.equal(scene.length,973);
+    assert.equal(hash,'a8fdb9fbcd23b9b88f7efad739104b5ffbb6be6be46cc120d960b6693fc30ead');
 });
 function compressedUuid(uuid) {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -105,8 +133,8 @@ test('HUD和消息控制器绑定Safe，头像、小地图、药品及状态均�
     for (let job = 0; job < 3; job++) component(node(`TopHUD/Avatar/Portrait${job}`), 'cc.Sprite');
     component(node('TopHUD/MiniMap/Map'), 'cc.Sprite');
     assert.equal(node('TopHUD/MiniMap/Map/PlayerDot')._parent.__id__, nodes.get(`${safePath}/TopHUD/MiniMap/Map`));
-    const map = transform(node('TopHUD/MiniMap/Map'))._contentSize;
-    const world = transform(node('MapViewport/World'))._contentSize;
+    const map = transform(node('TopHUD/MiniMap/Map/Surface'))._contentSize;
+    const world = transform(node('MapViewport/World/Surface'))._contentSize;
     assert(Math.abs(map.width / map.height - world.width / world.height) < 1e-8, '小地图必须保留真实地图贴图比例');
     for (const color of ['Red', 'Blue']) component(node(`BottomHUD/Skills/${color}Potion/Count`), 'cc.Label');
     component(node('MapViewport/Mission/Text'), 'cc.Label');
@@ -245,9 +273,16 @@ test('技能资产普通列表保存原实例数量按钮，独立报价覆盖�
 
 test('用户确认HUD的首733对象保持，普通与覆盖面板仅允许追加子引用',()=>{
     const {createHash}=require('node:crypto');
-    const saved=JSON.parse(JSON.stringify(scene.slice(0,733)));
-    for(const value of saved)if(value._children)value._children=value._children.filter(reference=>reference.__id__<733);
+    const saved=previousLayout(733);
     assert.equal(createHash('sha256').update(JSON.stringify(saved)).digest('hex'),'6063336aad1501a1e8364dd500f3c6aab74f9586a49ed81ad9571f04cdda258e');
+});
+test('菱形地图图层与物件和疾光模板均保存，旧973对象仅地图白名单改动且HUD原样保留',()=>{
+    assert.equal(require('node:crypto').createHash('sha256').update(JSON.stringify(previousLayout(973))).digest('hex'),'bc4515bef78112721fbc8e68d99b2b96150c112be3591847f8b3b0ad7e321d4c');
+    assert.equal(scene.length,988);assert.equal(node('MapViewport/World')._lscale.x,1);assert.equal(node('MapViewport/World')._lscale.y,1);
+    assert.deepEqual(transform(node('MapViewport/World'))._contentSize,{__type__:'cc.Size',width:1088,height:592});
+    component(node('MapViewport/World/Soil'),'cc.Graphics');component(node('MapViewport/World/GridLines'),'cc.Graphics');component(node('MapViewport/World/TargetMarker/Diamond'),'cc.Graphics');
+    assert.equal(node('MapViewport/World/Surface')._lpos.y,24);assert.deepEqual(transform(node('TopHUD/MiniMap/Map/Surface'))._contentSize,{__type__:'cc.Size',width:136,height:68});
+    for(const name of ['MapProp','Beam']){const prefab=JSON.parse(fs.readFileSync(path.join(root,`client/assets/resources/prefabs/${name}.prefab`),'utf8'));assert(prefab.some(value=>value.__type__==='cc.Sprite'));assert(!prefab.some(value=>value.__type__==='cc.Widget'));if(name==='Beam')assert(prefab.some(value=>value.__type__==='cc.Mask'));else assert(!prefab.some(value=>value.__type__==='cc.UIOpacity'));}
 });
 test('多技能快捷与瞄准提示取消保存为原生组件，地图目标Sprite不使用Widget',()=>{
     component(node('UIMgr/Panels/Skills/BindQuick'),'cc.Button');

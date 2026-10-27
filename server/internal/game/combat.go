@@ -88,13 +88,17 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 		return
 	}
 	start := e.Pos
+	budget := w.e.Store.Cfg.Fixture.GridCellBudget()
+	if budget == 0 || !w.inBounds(start) || !w.inBounds(target) {
+		return
+	}
 	queue := []devconfig.Point{start}
 	seen := map[devconfig.Point]bool{start: true}
 	first := map[devconfig.Point]devconfig.Point{}
 	var next *devconfig.Point
-	for len(queue) > 0 && len(seen) <= 256 {
-		cur := queue[0]
-		queue = queue[1:]
+	// 每个合法格至多发现一次；访问预算随已校验地图格数增长，避免17格绕路被旧256截断。
+	for head := 0; head < len(queue) && head < budget; head++ {
+		cur := queue[head]
 		for _, d := range directions {
 			q := devconfig.Point{X: cur.X + d.X, Y: cur.Y + d.Y}
 			if seen[q] || !w.neighbor(r, cur, q, e) {

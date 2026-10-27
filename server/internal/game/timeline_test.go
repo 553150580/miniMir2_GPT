@@ -428,10 +428,13 @@ func TestBlockedAreaCenterStillAffectsWalkableNeighboursAndClipsMapEdges(t *test
 		}
 	}
 	w, r, _ := stageAWorker(t, 1)
-	r.Player.Pos = devconfig.Point{X: 14, Y: 14}
-	r.Monsters[0].Pos = devconfig.Point{X: 15, Y: 15}
+	f := &w.e.Store.Cfg.Fixture
+	f.Map.Blocked = nil
+	edge := devconfig.Point{X: f.Map.Width - 1, Y: f.Map.Height - 1}
+	r.Player.Pos = devconfig.Point{X: edge.X - 1, Y: edge.Y - 1}
+	r.Monsters[0].Pos = edge
 	now := time.Unix(1800000000, 0)
-	if w.cast(r, 23, 0, 1, now, &pb.GridPoint{X: 15, Y: 15}) != 0 {
+	if w.cast(r, 23, 0, 1, now, pointPB(edge)) != 0 {
 		t.Fatal("地图右下边缘中心被拒绝")
 	}
 	w.advanceEvents(r, r.Casts[0].Due)

@@ -1,3 +1,4 @@
+import { GridProjection, ProjectionGeometry } from './GridProjection';
 // HUD 只投影已同步的数据；金额和数量先用整数处理，避免64位值经Number丢失精度。
 export type HudInteger = bigint | number | string | { toString(): string };
 
@@ -14,7 +15,7 @@ export interface HudInput {
     count: number;
     quickSkillLabel?: string;
     gameplay: { jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
-    map: { name?: string; width: number; height: number } | null;
+    map: ({ name?: string; width: number; height: number } & Partial<ProjectionGeometry>) | null;
 }
 
 export function hudInteger(value: HudInteger): bigint {
@@ -60,12 +61,17 @@ export function hudItemCount(input: HudInput, itemId: number): string {
     return hudAmount(count, 0, true);
 }
 
-export function miniMapPoint(position: { x: number; y: number } | null, map: { width: number; height: number } | null,
+export function miniMapPoint(position: { x: number; y: number } | null, map: ({ width: number; height: number } & Partial<ProjectionGeometry>) | null,
     width: number, height: number, anchorX = .5, anchorY = .5): { x: number; y: number } | null {
     if (!position || !map || ![position.x, position.y, map.width, map.height, width, height, anchorX, anchorY].every(Number.isFinite)
         || map.width <= 0 || map.height <= 0 || width <= 0 || height <= 0) return null;
     const x = Math.max(0, Math.min(map.width - 1, position.x));
     const y = Math.max(0, Math.min(map.height - 1, position.y));
+    if (map.projection === 'isometric_diamond') {
+        const projection = new GridProjection(map as ProjectionGeometry), point = projection.project(x, y);
+        return { x: (point.x / projection.surfaceWidth + .5 - anchorX) * width,
+            y: ((point.y - projection.floorCenterY) / projection.surfaceHeight + .5 - anchorY) * height };
+    }
     return { x: ((x + .5) / map.width - anchorX) * width, y: (1 - (y + .5) / map.height - anchorY) * height };
 }
 

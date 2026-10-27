@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "stage": "17×17菱形开阔战场、土层与实体头顶",
+  "recorded_at_utc": "2026-10-27T16:32:19.154712+00:00",
+  "status": "限定development范围通过配置、自动检查、真实Mongo/WS、Creator实构和最新本机浏览器验收",
+  "configuration": {
+    "version": "dev-isometric-map-v0.8-08f69b00879b",
+    "rule_version": 8,
+    "fixture": {
+      "path": "config/development/first-loop.json",
+      "sha256": "2330dc1260f5ba42a0e445c6501da39527a18b0ce39d92f057fe273062787228"
+    },
+    "workbook": {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256": "303d1067c5c8a61849aff4d55ad2f54b85951c1c5fc679425141b1025905f99e"
+    },
+    "tables": 98,
+    "records": 897,
+    "status_counts": {
+      "candidate": 399,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 69
+    },
+    "release_blockers": 637,
+    "runtime_ready": false
+  },
+  "map": {
+    "width": 17,
+    "height": 17,
+    "tile_width": 64,
+    "tile_height": 32,
+    "soil_thickness_px": 48,
+    "surface_width": 1088,
+    "surface_height": 544,
+    "world_height": 592,
+    "source_origin": {
+      "x": 128,
+      "y": 128
+    },
+    "source_sha256": "8bc3c4db1edfddb3485084e9ca6ada296ad0d401e7d97f79e04d4585a4de7af6",
+    "connected_walkable_count": 285
+  },
+  "resource": {
+    "frames": 2914,
+    "props": 4,
+    "runtime_blocked": 4,
+    "source_blocked_evidence_only": 17,
+    "source_props_evidence_only": 19,
+    "map": {
+      "path": "client/assets/resources/development/maps/first-map.json",
+      "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+    },
+    "manifest": {
+      "path": "client/assets/resources/development/manifest.json",
+      "sha256": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6"
+    }
+  },
+  "server": {
+    "passed": true,
+    "tests": 195,
+    "skipped": 0,
+    "race": true,
+    "source_current": true,
+    "evidence": {
+      "path": "outputs/development-isometric-map-20261027/服务端真实集成检查.json",
+      "sha256": "c838843ddb6499132a15e0e9b6fb35b8ef1b64384020d7650085b0a25c458ba8"
+    }
+  },
+  "creator": {
+    "success": true,
+    "seconds": 194.52,
+    "exit_code": 36,
+    "source_current": true,
+    "saved_assets": 9,
+    "layout_preserved_during_build": true,
+    "evidence": {
+      "path": "outputs/development-isometric-map-20261027/Creator构建检查.json",
+      "sha256": "c2e0e428fb88f54f1b6501b736c6c587e3528419ad7e84d6db1ad00e3c6b3dfe"
+    }
+  },
+  "boundaries": {
+    "all_p0_complete": false,
+    "physical_mobile_verified": false,
+    "production_ready": false,
+    "complete_target_180_verified": false
+  },
+  "automated": {
+    "js_tests": 193,
+    "scene_tests": 16,
+    "ui_app_tests": 177,
+    "python_tests": 29,
+    "protobuf_int64_boundary_cases": 288,
+    "make_test_exit": 0,
+    "make_check_exit": 0,
+    "development_resources_check_exit": 0,
+    "strict_tsc_exit": 0,
+    "formal_release_check_exit": 2,
+    "formal_release_blockers": 637
+  },
+  "browser": {
+    "passed": true,
+    "scope": "最新rule8本机限定浏览器布局、输入与渲染",
+    "evidence": {
+      "path": "outputs/development-isometric-map-20261027/浏览器验收观察.json",
+      "sha256": "74d48e8ed3154c3697824f7eb1a56aadbf96376cb10550956b61052bdad6580a"
+    },
+    "screenshots": 8,
+    "input_trace_records": 57,
+    "warn_errors": 0,
+    "temporary_viewport_reset": true,
+    "historical_large_tree_layout_superseded": true
+  },
+  "actor_head_labels": {
+    "font_size": 24,
+    "saved_prefab_scale": 0.7,
+    "name_above_hp": true,
+    "stable_profile_head_px": {
+      "male": 66,
+      "female": 65,
+      "scarecrow": 75,
+      "skeleton": 68
+    },
+    "relative_to_head": {
+      "hp_y": 10,
+      "name_y": 30
+    },
+    "source_alpha_samples": 480,
+    "fixed_template_in_editor": true
+  },
+  "evidence_scopes": {
+    "current_artifact_directory": "outputs/development-isometric-map-20261027",
+    "current_resource_and_workbook": "小型场边装饰/",
+    "original_map_projection_and_large_tree_intermediate": "历史-初始树木及名字方案（已撤销）/",
+    "legacy_scope": "原始来源与中间方案，已撤销的大树或名字缩放不作为当前显示证明"
+  },
+  "final_readonly_review": {
+    "path": "outputs/development-isometric-map-20261027/最终只读复核.json",
+    "sha256": "aac6af83aded1f16e9b544b0a9ea50744d91b511771ff8c75c7967262f854dd8"
+  }
+}

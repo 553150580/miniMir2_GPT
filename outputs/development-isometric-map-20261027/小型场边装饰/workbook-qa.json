@@ -1,0 +1,51 @@
+{
+  "rule_version": 8,
+  "scopes": [
+    {
+      "sheet": "地图定义",
+      "rows": [
+        4
+      ],
+      "columns": 16
+    },
+    {
+      "sheet": "地图碰撞",
+      "rows": [
+        4
+      ],
+      "columns": 12
+    }
+  ],
+  "formula_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+  "profile_cells": [
+    "C4",
+    "E4",
+    "F4"
+  ],
+  "added_columns": [
+    {
+      "sheet": "地图定义",
+      "column": "P",
+      "rows": [
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "row_height_changes": [
+    {
+      "sheet": "地图定义",
+      "rows": [
+        4
+      ]
+    },
+    {
+      "sheet": "地图碰撞",
+      "rows": [
+        4
+      ]
+    }
+  ]
+}

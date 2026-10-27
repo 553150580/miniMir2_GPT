@@ -287,10 +287,71 @@ def skill_economy(tables,profile,skills,items):
             recycle.append({'item_id':item_id,'book_quality':row['book_quality'],'page_item_id':economy['page_item_id'],'pages_per_book':row['pages'],'allowed_source_kinds':deepcopy(sources)})
     return {'skill_economy':economy,'skill_upgrades':upgrades,'skill_shop':offers,'skill_book_recycle':recycle}
 
+def validate_map_inputs(definition,collision,profile,spawns):
+    """地图/碰撞/宠物出生只读唯一Excel，表现几何不改变逻辑通行规则。"""
+    width,height=definition['width_cells'],definition['height_cells']
+    if any(type(v) is not int or v<=0 for v in [width,height]) or [width,height]!=[collision.get('width_cells'),collision.get('height_cells')]:raise ValueError('地图与碰撞尺寸缺失或不一致')
+    geometry=definition.get('visual_geometry')
+    if not isinstance(geometry,dict) or set(geometry)!={'projection','tile_width','tile_height','soil_thickness_px','source_origin'}:raise ValueError('地图表现几何必须完整来自Excel')
+    if geometry['projection']!='isometric_diamond' or any(type(geometry[k]) is not int or geometry[k]<=0 for k in ['tile_width','tile_height','soil_thickness_px']):raise ValueError('菱形投影或土层尺寸无效')
+    if geometry['tile_width']!=2*geometry['tile_height']:raise ValueError('当前菱形地图采用2:1地格比例')
+    point=lambda p:isinstance(p,dict) and set(p)=={'x','y'} and all(type(v) is int and v>=0 for v in p.values())
+    if not point(geometry['source_origin']):raise ValueError('地图来源裁剪原点无效')
+    if collision.get('client_navigation')!={'geometry_reference':f'game_maps/{definition["id"]}.visual_geometry','collision_basis':'authored_edge_decorations'}:raise ValueError('客户端地图几何须引用唯一基础表，碰撞须明确为本作场边摆放')
+    cells=collision['blocked_cells']
+    if not isinstance(cells,list) or any(not point(p) or p['x']>=width or p['y']>=height for p in cells):raise ValueError('阻挡格坐标越界或格式错误')
+    blocked={(p['x'],p['y']) for p in cells}
+    if len(blocked)!=len(cells):raise ValueError('阻挡格重复')
+    decorations=definition.get('decorations')
+    if not isinstance(decorations,list) or len(decorations)!=len(cells):raise ValueError('场边装饰必须逐项引用唯一碰撞位置')
+    if any(not isinstance(p,dict) or set(p)!={'id','frame','collision_cell_index'} or not isinstance(p['id'],str) or not p['id']
+           or not isinstance(p['frame'],str) or not p['frame'].startswith('Objects:') or not p['frame'][8:].isdigit()
+           or type(p['collision_cell_index']) is not int for p in decorations):raise ValueError('场边装饰身份/原帧/位置引用无效')
+    if len({p['id'] for p in decorations})!=len(decorations) or sorted(p['collision_cell_index'] for p in decorations)!=list(range(len(cells))):raise ValueError('装饰身份或位置引用重复/缺失')
+    if any(min(p['x'],p['y'],width-1-p['x'],height-1-p['y'])>1 for p in cells):raise ValueError('装饰仅放四周，中央保持开阔')
+    locations=[definition['spawn_cell'],profile.get('pet_spawn'),*spawns]
+    if any(not point(p) or p['x']>=width or p['y']>=height or (p['x'],p['y']) in blocked for p in locations):raise ValueError('玩家/宠物/怪物出生必须在地图可走格内')
+    keys=[(p['x'],p['y']) for p in locations]
+    if len(set(keys))!=len(keys):raise ValueError('静态出生槽不能重叠')
+    seen={keys[0]};queue=[keys[0]]
+    for x,y in queue:
+        for dx,dy in [(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1)]:
+            q=(x+dx,y+dy)
+            if q in seen or q in blocked or not(0<=q[0]<width and 0<=q[1]<height):continue
+            if dx and dy and ((x+dx,y) in blocked or (x,y+dy) in blocked):continue
+            seen.add(q);queue.append(q)
+    if any(p not in seen for p in keys):raise ValueError('出生槽存在静态不可达位置')
+    return deepcopy(geometry)
+
+def validate_map_asset(tables):
+    """生成地图只作派生一致性证据，不再反向提供宠物出生或地格数值。"""
+    profile=tables['dev_first_loop_profile'][0]['parameters'];definition=next(x for x in tables['game_maps'] if x['id']==profile['map_id'])
+    collision=next(x for x in tables['game_map_collisions'] if x['id']==definition['collision_id']);geometry=definition['visual_geometry']
+    asset=read(ASSETS/'maps/first-map.json')
+    if (asset['width'],asset['height'])!=(definition['width_cells'],definition['height_cells']):raise ValueError('生成地图与唯一Excel尺寸不一致')
+    if any(asset.get(k)!=v for k,v in geometry.items()):raise ValueError('生成地图投影与唯一Excel不一致')
+    if asset.get('source_sha256')!=collision['source_hash']:raise ValueError('地图来源文件摘要与唯一碰撞表不一致')
+    if asset.get('blocked')!=collision['blocked_cells'] or asset.get('pet_spawn')!=profile['pet_spawn'] or asset.get('player_spawn')!=definition['spawn_cell']:raise ValueError('地图派生碰撞或出生与唯一Excel不一致')
+    spawns=[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==definition['id']]
+    if asset.get('monster_spawns')!=spawns:raise ValueError('地图派生怪物槽位与唯一Excel不一致')
+    cells=asset.get('cells')
+    if not isinstance(cells,list) or len(cells)!=asset['height'] or any(not isinstance(row,list) or len(row)!=asset['width'] for row in cells):raise ValueError('地图必须包含完整格子，不能靠负表缺省扩大')
+    actual={(x,y) for y,row in enumerate(cells) for x,cell in enumerate(row) if cell['blocked']}
+    if actual!={(p['x'],p['y']) for p in collision['blocked_cells']}:raise ValueError('本作运行格碰撞与唯一Excel不一致')
+    if asset.get('collision_basis')!='authored_edge_decorations' or any(type(c.get(k)) is not bool for row in cells for c in row for k in ['source_blocked','blocked']):raise ValueError('原始来源碰撞与本作运行碰撞必须分别记录')
+    source=[{'x':x,'y':y} for y,row in enumerate(cells) for x,c in enumerate(row) if c['source_blocked']]
+    if asset.get('source_blocked')!=source:raise ValueError('原始来源碰撞证据不完整')
+    props=asset.get('props')
+    expected=[{'id':p['id'],'frame':p['frame'],**collision['blocked_cells'][p['collision_cell_index']]} for p in definition['decorations']]
+    if not isinstance(props,list) or [{k:p.get(k) for k in ['id','frame','x','y']} for p in props]!=expected:raise ValueError('运行装饰不得混入未配置的大树或其它物件')
+    return asset
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',1);collision=one('game_map_collisions',m['collision_id'])
-    geo=read(ASSETS/'maps/first-map.json');monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
+    spawns=[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]
+    validate_map_inputs(m,collision,profile,spawns)
+    monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
     skills=skill_definitions(tables,profile);validate_skills(profile,skills)
     if profile['combat_timing']['kill_queue_capacity']<sum(r['map_id']==m['id'] for r in tables['game_monster_spawns'])+1:raise ValueError('逐杀队列必须覆盖本地图全部怪物槽及后续结算边界')
     healing=deepcopy(profile['healing']);growth=deepcopy(profile['player_growth'])
@@ -334,8 +395,8 @@ def fixture_from_rows(tables):
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
         'potions':potions,'skills':skills,'combat_timing':deepcopy(profile['combat_timing']),'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
-        'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':collision['blocked_cells'],
-               'player_spawn':m['spawn_cell'],'pet_spawn':geo['pet_spawn'],'monster_spawns':[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]},
+        'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':deepcopy(collision['blocked_cells']),
+               'player_spawn':deepcopy(m['spawn_cell']),'pet_spawn':deepcopy(profile['pet_spawn']),'monster_spawns':deepcopy(spawns)},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
                     'gold_min':drop_gold['quantity_min'],'gold_max':drop_gold['quantity_max'],'respawn_ms':10000}],
         'items':items,'drops':{'equipment_item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==1],
@@ -415,6 +476,7 @@ def main():
     else:
         schema=config.load_json(ROOT/'config/schema/catalog.json');tables,errors,_,_=config.collect(schema)
         if errors:raise ValueError(errors)
+        validate_map_asset(tables)
         selected={tid:tables[tid] for tid in TABLE_IDS}
         selected['game_drop_categories']=tables['game_drop_categories'];fixture=fixture_from_rows(selected)
         fixture['_source_evidence']['workbook_sync']='exported_from_current_unique_excel'

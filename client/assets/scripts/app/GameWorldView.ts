@@ -4,6 +4,9 @@ import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
 import { CombatEffects } from './CombatEffects';
 import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
+import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
+import { prepareMapSurface } from './MapSurface';
+import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
 
 interface Visual {
     node: Node;
@@ -26,6 +29,8 @@ export class GameWorldView {
     private effects?: CombatEffects;
     private lastAttackId = 0n;
     private visuals = new Map<number, Visual>();
+    private projection?: GridProjection;
+    private readonly props: Array<{ node: Node; foot: Vec3; id: string }> = [];
     private disposed = false;
     private selected: (entity: any) => void = () => {};
     private playerPosition: { x: number; y: number } | null = null;
@@ -42,16 +47,26 @@ export class GameWorldView {
         if (this.disposed) { assets.dispose(); return; }
         this.assets = assets; this.selected = onSelected;
         this.manifest = assets.manifest; this.map = assets.map; this.gameplay = assets.gameplay;
-        this.world.getComponent(UITransform)!.setContentSize(this.map.width * this.map.tile_width, this.map.height * this.map.tile_height);
-        const sprite = this.world.getComponent(Sprite)!;
-        sprite.spriteFrame = assets.background; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        this.projection = new GridProjection(this.map);
+        prepareMapSurface(this.world, assets, this.projection);
+        for (const prop of this.map.props ?? []) {
+            const definition = this.manifest.frames[prop.frame], frame = assets.frames.get(prop.frame);
+            if (!frame || !definition) throw new Error(`地图物件尚未预载：${prop.frame}`);
+            const node = instantiate(assets.propPrefab); node.name = prop.id; node.parent = this.entities;
+            const transform = node.getComponent(UITransform)!; transform.setAnchorPoint(prop.anchor_x, prop.anchor_y); transform.setContentSize(definition.width, definition.height);
+            const sprite = node.getComponent(Sprite)!; sprite.spriteFrame = frame; sprite.trim = false; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+            // 原树/岩石切片按来源证实的共同脚点整体投影；片间保持原矩形像素关系。
+            const foot = this.grid(prop.display_x ?? prop.x, prop.display_y ?? prop.y); node.setPosition(foot.x + prop.pixel_offset_x, foot.y + prop.pixel_offset_y);
+            const id = prop.group_id ? `${prop.group_id}:${String(prop.part_index).padStart(4, '0')}:${prop.id}` : prop.id;
+            this.props.push({ node, foot, id });
+        }
         const effects = this.world.getChildByName('Effects');
         if (!effects) throw new Error('场景尚未保存游戏特效容器');
         this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null,
             handle => this.visuals.get(handle)?.state.life?.toString() ?? null, handle => {
                 const visual = this.visuals.get(handle), pose = visual?.pose;
-                return pose?.action === 'attack' && visual?.animation ? { attackSequence: visual.animation.currentAttackSequence, frame: pose.frame, direction: pose.direction } : null;
-            });
+                return pose?.action === 'attack' && visual?.animation ? { attackSequence: visual.animation.currentAttackSequence, frame: pose.frame, direction: this.projection!.visualDirection(pose.direction) } : null;
+            }, this.projection);
     }
 
     acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
@@ -66,7 +81,8 @@ export class GameWorldView {
         this.effects?.attack(event, game.totalTime);
     }
 
-    grid(x: number, y: number): Vec3 { return new Vec3((x + .5) * 48 - this.map.width * 24, (this.map.height - y - .5) * 32 - this.map.height * 16); }
+    grid(x: number, y: number): Vec3 { const point = (this.projection ??= new GridProjection(this.map)).project(x, y); return new Vec3(point.x, point.y); }
+    logicalDirection(x: number, y: number): number | null { return (this.projection ??= new GridProjection(this.map)).logicalDirectionFromScreen(x, y); }
 
     showAim(grid: { x: number; y: number } | null): void {
         const marker = this.world.getChildByName('TargetMarker');
@@ -77,8 +93,8 @@ export class GameWorldView {
     screenToGrid(point: Vec2, requireWalkable = true): { x: number; y: number } | null {
         if (!this.map) return null;
         const local = this.world.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(point.x, point.y));
-        const x = Math.floor((local.x + this.map.width * 24) / 48), y = Math.floor((this.map.height * 16 - local.y) / 32);
-        return x >= 0 && y >= 0 && x < this.map.width && y < this.map.height && (!requireWalkable || !this.map.cells[y][x].blocked) ? { x, y } : null;
+        const cell = (this.projection ??= new GridProjection(this.map)).cellAt(local);
+        return cell && (!requireWalkable || !this.map.blocked.some((point: { x: number; y: number }) => point.x === cell.x && point.y === cell.y)) ? cell : null;
     }
 
     apply(baseline: any): void {
@@ -92,6 +108,12 @@ export class GameWorldView {
                 const node = instantiate(this.assets.prefab); node.parent = this.entities;
                 const profile = this.assets.profile(state, this.job);
                 const body = node.getChildByName('Body')!;
+                if (profile) {
+                    const name = node.getChildByName('Name')!, hp = node.getChildByName('HP')!, transform = body.getComponent(UITransform)!;
+                    const anchor = entityHeadLabels(profile, this.manifest.frames, { bodyY: body.position.y, bodyHeight: transform.height,
+                        bodyAnchorY: transform.anchorPoint.y, bodyScaleY: body.scale.y, nameY: name.position.y, hpY: hp.position.y });
+                    name.setPosition(name.position.x, anchor.nameY, name.position.z); hp.setPosition(hp.position.x, anchor.hpY, hp.position.z);
+                }
                 const sprites = [body.getComponent(Sprite)!];
                 // 外观层是动态实体内容，沿用已保存的实体层模板。
                 for (let index = 1; index < (profile?.layers.length ?? 1); index++) {
@@ -116,8 +138,9 @@ export class GameWorldView {
                 dead: state.hp.isZero(), injured: state.hp.lessThan(previous.hp) }, now);
             visual.state = state;
             const name = visual.node.getChildByName('Name')!;
-            name.active = state.entityKind === 1 || state.entityKind === 4;
-            name.getComponent(Label)!.string = state.entityKind === 1 ? this.playerName : '掉落';
+            const displayName = entityDisplayName(state.entityKind, state.definitionId, this.playerName, this.job, this.gameplay);
+            name.active = !!displayName;
+            name.getComponent(Label)!.string = displayName;
             const hp = visual.node.getChildByName('HP')!;
             hp.active = state.entityKind !== 4;
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0
@@ -161,16 +184,17 @@ export class GameWorldView {
             if (!pose) { for (const sprite of visual.body) sprite.node.active = false; continue; }
             if (pose.action === 'attack' || pose.action === 'struck' || pose.action === 'casting') visual.motion.holdUntil(visual.animation!.playbackUntil);
             const profile = visual.profile;
-            if (visual.orderDirection !== pose.direction) {
-                const order: string[] = profile.layer_order_by_direction?.[pose.direction] ?? profile.layers.map((layer: any) => layer.package);
+            const visualDirection = this.projection!.visualDirection(pose.direction);
+            if (visual.orderDirection !== visualDirection) {
+                const order: string[] = profile.layer_order_by_direction?.[visualDirection] ?? profile.layers.map((layer: any) => layer.package);
                 visual.body.map((sprite, index) => ({ sprite, rank: order.indexOf(profile.layers[index].package) }))
                     .sort((a, b) => a.rank - b.rank).forEach((entry, index) => entry.sprite.node.setSiblingIndex(index));
-                visual.orderDirection = pose.direction;
+                visual.orderDirection = visualDirection;
             }
             visual.body.forEach((sprite, index) => {
                 const layer = profile.layers[index];
                 const animation = layer.actions[pose.action];
-                const keys: string[] = animation.directions[pose.direction].frames;
+                const keys: string[] = animation.directions[visualDirection].frames;
                 const key = keys[Math.min(keys.length - 1, pose.frame)];
                 const definition = this.manifest.frames[key];
                 const visible = !(layer.package === 'Weapon' && !weaponEquipped) && !definition.declared_empty;
@@ -188,8 +212,9 @@ export class GameWorldView {
             });
         }
         // 依据当帧脚底位置处理遮挡，HUD不参与世界深度排序。
-        Array.from(this.visuals.values()).sort((a, b) => b.node.position.y - a.node.position.y || a.state.entityHandle - b.state.entityHandle)
-            .forEach((visual, index) => { if (visual.node.getSiblingIndex() !== index) visual.node.setSiblingIndex(index); });
+        const depth: Array<ProjectedDepth & { node: Node }> = this.props.map(prop => ({ node: prop.node, x: prop.foot.x, y: prop.foot.y, layer: 0, id: prop.id }));
+        for (const visual of this.visuals.values()) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
+        depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
         this.effects?.update(now);
         this.refitCamera();
         if (audit && now - audit.start >= 5000) {
@@ -202,6 +227,7 @@ export class GameWorldView {
         }
     }
 
+
     dispose(): void {
         if (this.disposed) return;
         this.disposed = true;
@@ -209,5 +235,6 @@ export class GameWorldView {
         this.playerPosition = null;
         for (const visual of this.visuals.values()) if (isValid(visual.node, true)) visual.node.destroy();
         this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.assets?.dispose(); this.assets = undefined;
+        for (const prop of this.props) if (isValid(prop.node, true)) prop.node.destroy(); this.props.length = 0;
     }
 }

@@ -10,7 +10,9 @@ export class GameHUD extends Component {
     private readonly bars = new Map<string, ProgressBar>();
 
     setMapFrame(frame: SpriteFrame): void {
-        const sprite = this.saved('TopHUD/MiniMap/Map').getComponent(Sprite)!;
+        // 小地图旧容器几何保留，菱形地板使用保存的2:1子Sprite等比显示。
+        this.saved('TopHUD/MiniMap/Map').getComponent(Sprite)!.spriteFrame = null;
+        const sprite = this.saved('TopHUD/MiniMap/Map/Surface').getComponent(Sprite)!;
         sprite.type = Sprite.Type.SIMPLE;
         sprite.trim = false;
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
@@ -39,7 +41,7 @@ export class GameHUD extends Component {
         if (auto.isChecked !== input.auto) auto.setIsCheckedWithoutNotify(input.auto);
         for (let job = 0; job < 3; job++) this.saved(`TopHUD/Avatar/Portrait${job}`).active = job === input.role?.job;
         const map = this.saved('TopHUD/MiniMap/Map');
-        const bounds = map.getComponent(UITransform)!;
+        const bounds = this.saved('TopHUD/MiniMap/Map/Surface').getComponent(UITransform)!;
         const point = miniMapPoint(state.playerPosition, input.map, bounds.width, bounds.height, bounds.anchorPoint.x, bounds.anchorPoint.y);
         const dot = map.getChildByName('PlayerDot');
         if (!dot) throw new Error('场景缺少已保存引用：TopHUD/MiniMap/Map/PlayerDot');

@@ -1,0 +1,383 @@
+{
+  "base_commit": "0b876762ddb47d5ac7b8acdbce2850a583ef53b2",
+  "old_object_count": 973,
+  "new_object_count": 988,
+  "old_differences": [
+    {
+      "index": 26,
+      "name": "World",
+      "changed_keys": [
+        "_children",
+        "_lscale"
+      ],
+      "before": {
+        "_children": [
+          {
+            "__id__": 960
+          },
+          {
+            "__id__": 30
+          },
+          {
+            "__id__": 777
+          }
+        ],
+        "_lscale": {
+          "__type__": "cc.Vec3",
+          "x": 2,
+          "y": 2,
+          "z": 1
+        }
+      },
+      "after": {
+        "_children": [
+          {
+            "__id__": 973
+          },
+          {
+            "__id__": 976
+          },
+          {
+            "__id__": 979
+          },
+          {
+            "__id__": 960
+          },
+          {
+            "__id__": 30
+          },
+          {
+            "__id__": 777
+          }
+        ],
+        "_lscale": {
+          "__type__": "cc.Vec3",
+          "x": 1,
+          "y": 1,
+          "z": 1
+        }
+      }
+    },
+    {
+      "index": 27,
+      "name": "",
+      "changed_keys": [
+        "_contentSize"
+      ],
+      "before": {
+        "_contentSize": {
+          "__type__": "cc.Size",
+          "width": 768,
+          "height": 512
+        }
+      },
+      "after": {
+        "_contentSize": {
+          "__type__": "cc.Size",
+          "width": 1088,
+          "height": 592
+        }
+      }
+    },
+    {
+      "index": 565,
+      "name": "Map",
+      "changed_keys": [
+        "_children"
+      ],
+      "before": {
+        "_children": [
+          {
+            "__id__": 568
+          }
+        ]
+      },
+      "after": {
+        "_children": [
+          {
+            "__id__": 983
+          },
+          {
+            "__id__": 568
+          }
+        ]
+      }
+    },
+    {
+      "index": 960,
+      "name": "TargetMarker",
+      "changed_keys": [
+        "_children"
+      ],
+      "before": {
+        "_children": []
+      },
+      "after": {
+        "_children": [
+          {
+            "__id__": 986
+          }
+        ]
+      }
+    }
+  ],
+  "all_old_objects_equal_after_only_allowed_map_geometry_and_appended_refs": true,
+  "appended_objects": [
+    {
+      "index": 973,
+      "type": "cc.Node",
+      "name": "Soil"
+    },
+    {
+      "index": 974,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 975,
+      "type": "cc.Graphics",
+      "name": ""
+    },
+    {
+      "index": 976,
+      "type": "cc.Node",
+      "name": "Surface"
+    },
+    {
+      "index": 977,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 978,
+      "type": "cc.Sprite",
+      "name": ""
+    },
+    {
+      "index": 979,
+      "type": "cc.Node",
+      "name": "GridLines"
+    },
+    {
+      "index": 980,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 981,
+      "type": "cc.Graphics",
+      "name": ""
+    },
+    {
+      "index": 982,
+      "type": "cc.Graphics",
+      "name": ""
+    },
+    {
+      "index": 983,
+      "type": "cc.Node",
+      "name": "Surface"
+    },
+    {
+      "index": 984,
+      "type": "cc.UITransform",
+      "name": ""
+    },
+    {
+      "index": 985,
+      "type": "cc.Sprite",
+      "name": ""
+    },
+    {
+      "index": 986,
+      "type": "cc.Node",
+      "name": "Diamond"
+    },
+    {
+      "index": 987,
+      "type": "cc.UITransform",
+      "name": ""
+    }
+  ],
+  "entity_differences": [
+    {
+      "index": 6,
+      "name": "Name",
+      "changed_keys": [
+        "_lpos",
+        "_lscale"
+      ],
+      "before": {
+        "_lpos": {
+          "__type__": "cc.Vec3",
+          "x": 0,
+          "y": 64,
+          "z": 0
+        },
+        "_lscale": {
+          "__type__": "cc.Vec3",
+          "x": 0.5,
+          "y": 0.5,
+          "z": 1
+        }
+      },
+      "after": {
+        "_lpos": {
+          "__type__": "cc.Vec3",
+          "x": 0,
+          "y": 78,
+          "z": 0
+        },
+        "_lscale": {
+          "__type__": "cc.Vec3",
+          "x": 0.7,
+          "y": 0.7,
+          "z": 1
+        }
+      }
+    },
+    {
+      "index": 7,
+      "name": "",
+      "changed_keys": [
+        "_contentSize"
+      ],
+      "before": {
+        "_contentSize": {
+          "__type__": "cc.Size",
+          "width": 140,
+          "height": 32
+        }
+      },
+      "after": {
+        "_contentSize": {
+          "__type__": "cc.Size",
+          "width": 320,
+          "height": 32
+        }
+      }
+    },
+    {
+      "index": 8,
+      "name": "",
+      "changed_keys": [
+        "_enableWrapText"
+      ],
+      "before": {
+        "_enableWrapText": true
+      },
+      "after": {
+        "_enableWrapText": false
+      }
+    },
+    {
+      "index": 9,
+      "name": "HP",
+      "changed_keys": [
+        "_lpos"
+      ],
+      "before": {
+        "_lpos": {
+          "__type__": "cc.Vec3",
+          "x": 0,
+          "y": 55,
+          "z": 0
+        }
+      },
+      "after": {
+        "_lpos": {
+          "__type__": "cc.Vec3",
+          "x": 0,
+          "y": 58,
+          "z": 0
+        }
+      }
+    }
+  ],
+  "saved_assets": [
+    {
+      "path": "client/assets/resources/prefabs/Beam.prefab",
+      "sha256": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+      "status": "new"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Effect.prefab",
+      "sha256": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/resources/prefabs/Entity.prefab",
+      "sha256": "bdd25266397d947596ba312b3cb6f2a604dc417f68453da59feecffec864e7ca",
+      "status": "intentional_entity_head_labels"
+    },
+    {
+      "path": "client/assets/resources/prefabs/ListItem.prefab",
+      "sha256": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/resources/prefabs/MapProp.prefab",
+      "sha256": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+      "status": "new"
+    },
+    {
+      "path": "client/assets/scenes/Boot.scene",
+      "sha256": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/scenes/Game.scene",
+      "sha256": "ab015be00e79cfc24578341143df1c706fc09407bb35f578615815026639f8c2",
+      "status": "intentional_map_edit"
+    },
+    {
+      "path": "client/assets/scenes/Login.scene",
+      "sha256": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+      "status": "unchanged"
+    },
+    {
+      "path": "client/assets/scenes/RoleSelect.scene",
+      "sha256": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+      "status": "unchanged"
+    }
+  ],
+  "policies": [
+    "World固定原像素1倍，地板1088x544+土层48，bbox1088x592",
+    "保存Soil/Surface/GridLines/Diamond，Graphics只画地图",
+    "小地图Surface136x68居中，旧容器和PlayerDot几何保持",
+    "MapProp原生Sprite保留原图尺寸：只显示边缘4独立小物，无大树及树透明运行分支",
+    "运行阻挡4格与小装饰一一对应，原17阻挡及19来源片只保留历史证据",
+    "Beam保存原生Mask：原图及原偏移刚体旋转、按六格投影端点裁长，无缩放",
+    "用户最新Name约定优先：font24、scale0.7、宽320、禁折行；模板头顶48、HP58、Name78，运行时按站立/行走身体与头发静态头顶一次绑定，不取武器、攻击、施法或倒地帧"
+  ],
+  "entity_head_labels": {
+    "font_size": 24,
+    "scale": {
+      "x": 0.7,
+      "y": 0.7
+    },
+    "width": 320,
+    "height": 32,
+    "line_height": 30,
+    "wrap": false,
+    "saved_reference_head": 48,
+    "saved_hp_y": 58,
+    "saved_name_y": 78,
+    "hp_above_head": 10,
+    "name_above_head": 30,
+    "profile_head_tops": {
+      "player_male": 66,
+      "player_female": 65,
+      "monster_scarecrow": 75,
+      "pet_skeleton": 68
+    },
+    "source_actions": [
+      "standing",
+      "walking"
+    ],
+    "excluded_package": "Weapon",
+    "runtime_binding": "每个实体首次实例化时绑定，不逐帧重算",
+    "chinese_names": "角色名、稻草人、变异骷髅",
+    "all_other_entity_objects_and_fields_unchanged": true
+  }
+}

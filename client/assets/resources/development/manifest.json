@@ -7,21 +7,28 @@
   "official_180_restoration_verified": false,
   "pillow_version": "13.0.0",
   "converter": "tools/resources/build_development_assets.py",
-  "converter_sha256": "6e7c87f02df4514b6c53c66c7754eb3dcd0c450e68b03aa899983e2e792b8ed9",
+  "converter_sha256": "4071fdacda40b14b234eca7f371af80b4c5b381c3d579b45014dac8bd143f112",
   "wil_decoder_sha256": "b46f5ffea9996fd71ea60515d41248b7dd2010faea7411bd7544843cc3dfc17f",
   "map": {
     "id": 1,
-    "path": "maps/first-map.json",
-    "background": "maps/first-map.png",
-    "width": 16,
-    "height": 16,
-    "tile_width": 48,
+    "width": 17,
+    "height": 17,
+    "tile_width": 64,
     "tile_height": 32,
-    "projection": "source_mir_grid_48x32",
+    "projection": "isometric_diamond",
+    "soil_thickness_px": 48,
+    "surface_width": 1088,
+    "surface_height": 544,
+    "world_height": 592,
+    "background_offset_y": 24.0,
     "source_origin": {
       "x": 128,
       "y": 128
-    }
+    },
+    "source_sha256": "8bc3c4db1edfddb3485084e9ca6ada296ad0d401e7d97f79e04d4585a4de7af6",
+    "collision_basis": "authored_edge_decorations",
+    "path": "maps/first-map.json",
+    "background": "maps/first-map.png"
   },
   "direction_names": [
     "up",
@@ -33,7 +40,7 @@
     "left",
     "up_left"
   ],
-  "coordinate_contract": "Source image top-left = entity draw origin + WIL offset_x,offset_y. PNGs remain uncropped and unscaled; y is down in source grid.",
+  "coordinate_contract": "Native frame PNGs remain uncropped and unscaled with original WIL offsets. Entity draw origin uses source offsets; authored small map props place the original image bottom center at their explicit collision cell. Historical source_props are not rendered. Only back/middle floor UVs are projected to the authored diamond; source logical y is down.",
   "sources": [
     {
       "source_id": "client_180_named",
@@ -5590,7 +5597,42 @@
         "duration_ms": 600,
         "blend": "additive"
       },
-      "beam_anchor": "origin"
+      "beam_anchor": "origin",
+      "beam_native_direction_vectors": [
+        [
+          0,
+          32
+        ],
+        [
+          48,
+          32
+        ],
+        [
+          48,
+          0
+        ],
+        [
+          48,
+          -32
+        ],
+        [
+          0,
+          -32
+        ],
+        [
+          -48,
+          -32
+        ],
+        [
+          -48,
+          0
+        ],
+        [
+          -48,
+          32
+        ]
+      ],
+      "beam_alignment": "rigid_rotation_then_forward_range_mask"
     },
     "11": {
       "kind": "thunderbolt",
@@ -6511,6 +6553,21 @@
       "visible_alpha_pixels": 1536,
       "png_roundtrip_verified": true
     },
+    "Tiles:1461": {
+      "package": "Tiles",
+      "raw_frame": 1461,
+      "png": "frames/Tiles/frame_001461.png",
+      "png_sha256": "ada74c10a18c04d376809134d9776899c316b5fe39b47fdf90ccf0b690c28b97",
+      "rgba_sha256": "9e6addffe349c9255273ca1c27139bc7b1d74ffa91fe35e996d757c46c1de708",
+      "width": 96,
+      "height": 64,
+      "offset_x": 7,
+      "offset_y": -44,
+      "source_offset": 7290611,
+      "declared_empty": false,
+      "visible_alpha_pixels": 6144,
+      "png_roundtrip_verified": true
+    },
     "SmTiles:93": {
       "package": "SmTiles",
       "raw_frame": 93,
@@ -7019,6 +7076,66 @@
       "source_offset": 5890749,
       "declared_empty": false,
       "visible_alpha_pixels": 18145,
+      "png_roundtrip_verified": true
+    },
+    "Objects:9760": {
+      "package": "Objects",
+      "raw_frame": 9760,
+      "png": "frames/Objects/frame_009760.png",
+      "png_sha256": "13debd0f62833feb0f6938623a40fe793b59f97db50e2c12357713c0df7dd4de",
+      "rgba_sha256": "cddff84c930b82255135299e2db01b0c39ada4aae25fcb0eea001abeb3e195d9",
+      "width": 60,
+      "height": 57,
+      "offset_x": 7,
+      "offset_y": -44,
+      "source_offset": 57985204,
+      "declared_empty": false,
+      "visible_alpha_pixels": 1794,
+      "png_roundtrip_verified": true
+    },
+    "Objects:1127": {
+      "package": "Objects",
+      "raw_frame": 1127,
+      "png": "frames/Objects/frame_001127.png",
+      "png_sha256": "6ade8a8016d8717f97cefdc7c6c7786e66a9f17a0feff9290887ba16ec2eca52",
+      "rgba_sha256": "b92c73792ce99f8946bada8f72175f595d3ef451cde5752b196c88fa4ef7a4c0",
+      "width": 48,
+      "height": 67,
+      "offset_x": 0,
+      "offset_y": 0,
+      "source_offset": 3777507,
+      "declared_empty": false,
+      "visible_alpha_pixels": 917,
+      "png_roundtrip_verified": true
+    },
+    "Objects:8898": {
+      "package": "Objects",
+      "raw_frame": 8898,
+      "png": "frames/Objects/frame_008898.png",
+      "png_sha256": "a8d8ab7babd104c8f109a24dfce2ee37277d096ffe107756b5693b65112d4b3a",
+      "rgba_sha256": "5c39da015c96744a5bb73dc702ec85282a3763d3f201b6cf9721673297fd656f",
+      "width": 48,
+      "height": 41,
+      "offset_x": 7,
+      "offset_y": -44,
+      "source_offset": 55465804,
+      "declared_empty": false,
+      "visible_alpha_pixels": 577,
+      "png_roundtrip_verified": true
+    },
+    "Objects:7092": {
+      "package": "Objects",
+      "raw_frame": 7092,
+      "png": "frames/Objects/frame_007092.png",
+      "png_sha256": "b78e803ca25dde82cd6f43e2b6096e794c77b2a5c733ff491665c27efccbbbf5",
+      "rgba_sha256": "0082f61ca789a4e50565e3b9d607ce33458d58f71a6c465ed2ba33e208e4e8f9",
+      "width": 48,
+      "height": 47,
+      "offset_x": 7,
+      "offset_y": -44,
+      "source_offset": 44447057,
+      "declared_empty": false,
+      "visible_alpha_pixels": 1063,
       "png_roundtrip_verified": true
     },
     "Hum:1200": {
@@ -50244,7 +50361,9 @@
   ],
   "limitations": [
     "Cross-source action/appearance mapping remains candidate; no official 1.80 behavior acceptance.",
-    "No guessed palette, frame deletion, reindexing, pixel scaling or fallback sprite is used.",
-    "Map crop and connected spawn selection are development fixtures; they are not historical spawn coordinates."
+    "Native frame PNGs use no guessed palette, deletion, reindexing, pixel scaling or fallback sprite. The separate floor composite is intentionally projected to a diamond.",
+    "Map geometry and explicit connected spawn coordinates are read from the unique Excel development fixture; they are not historical spawn coordinates.",
+    "Diamond floor, small authored edge decorations and client-rendered soil are project presentation adaptations, not source 1.80 map projection acceptance.",
+    "Runtime collision is authored with the small decorations. Original map bits, fronts and frame PNGs remain separate source evidence, not runtime obstacles or displayed large trees."
   ]
 }

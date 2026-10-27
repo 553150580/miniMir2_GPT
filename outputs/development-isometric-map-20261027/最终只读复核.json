@@ -1,0 +1,17 @@
+{
+  "scope": "最终只读来源/运行分离及头顶绑定复核，非容量或正式技能认证",
+  "findings": [],
+  "checks": [
+    "原始17阻挡仅证据，运行4格来自唯一Excel",
+    "客户端只实例化4件小物，不渲染历史19前景",
+    "名字Label24、预制体0.7，名字血条在稳定头顶",
+    "最新统计193JS/29Python/195race/194.52秒及9资产保护一致"
+  ],
+  "source_sha256": {
+    "tools/resources/build_development_assets.py": "4071fdacda40b14b234eca7f371af80b4c5b381c3d579b45014dac8bd143f112",
+    "tools/resources/prepare_first_loop.py": "db38735c0b6320385c230085418316dca5da3a075b6c034ed64d3dd8ce6fe0fa",
+    "client/assets/scripts/app/EntityHeadAnchor.ts": "6f812e75693ccf200a39b66271c7e51d9ac4df6bb54de6847f72b94be869bfed",
+    "client/assets/scripts/app/GameWorldView.ts": "8f3116620cba155fbca85fa1138162f8374674300a414045c949223c9d78994f",
+    "client/assets/resources/prefabs/Entity.prefab": "bdd25266397d947596ba312b3cb6f2a604dc417f68453da59feecffec864e7ca"
+  }
+}

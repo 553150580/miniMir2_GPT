@@ -1,0 +1,19 @@
+{
+  "scope": "同任务独立只读源码与几何复核，不替代整体/浏览器验收",
+  "findings": [],
+  "grid_center_roundtrips": 289,
+  "soil_samples_rejected_as_ground": 9504,
+  "checks": [
+    "原始map完整模板核验后分组，原片矩形像素差保持",
+    "统一投影、反投影、触摸和摇杆方向",
+    "原目标不被土层点击清除",
+    "Excel唯一配置无派生数值回流",
+    "同树组透明及恢复，石头小物保持不透明"
+  ],
+  "source_sha256": {
+    "tools/resources/build_development_assets.py": "94903c46e994238bd400bf728047bacaa53bbc5ad7aea7a5720650c4579f9621",
+    "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
+    "client/assets/scripts/app/MapOcclusion.ts": "45b6fb219b9e4140868c3187b8e95fed9a357a182a2ed5f6efad8b68e599bce0",
+    "client/assets/scripts/app/GameWorldView.ts": "cc5cf5fac16491fbb154cf187556849c93c80450e501633e590007a52f90a799"
+  }
+}

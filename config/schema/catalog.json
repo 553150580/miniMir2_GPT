@@ -47,11 +47,11 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "1628ec86c748974432fa4ad9ebcede16dfbd2e6f3cb9989bf5808684d64d82bc"
+      "sha256": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
-      "sha256": "df28f45ebdcfcbe6aadc990a46a5fbd3f3c7f0b82bd9dd500fd009d99c4e350c"
+      "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
     },
     {
       "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
@@ -5142,6 +5142,20 @@
           "type": "string",
           "required": false,
           "target": "none"
+        },
+        {
+          "name": "visual_geometry",
+          "title": "地图投影与土层",
+          "type": "json",
+          "required": true,
+          "target": "client"
+        },
+        {
+          "name": "decorations",
+          "title": "场边小型装饰",
+          "type": "json",
+          "required": true,
+          "target": "client"
         }
       ],
       "workbook_group": "gameplay"
@@ -13362,30 +13376,15 @@
       "shape": {
         "type": "object",
         "properties": {
-          "cell_width": {
-            "type": "int",
-            "minimum": 0
+          "geometry_reference": {
+            "type": "string"
           },
-          "cell_height": {
-            "type": "int",
-            "minimum": 0
-          },
-          "source_origin": {
-            "type": "object",
-            "properties": {
-              "x": {
-                "type": "int",
-                "minimum": 0
-              },
-              "y": {
-                "type": "int",
-                "minimum": 0
-              }
-            }
+          "collision_basis": {
+            "type": "string"
           }
         }
       },
-      "source_ref": "client/assets/resources/development/maps/first-map.json；传奇1.80客户端/Map/0.map裁剪原格"
+      "source_ref": "用户2026-10-27新要求：中央无大型遮挡物，四周少量小型代表性设施与装饰；原0.map只提供地板来源，原树阻挡不继续沿用；docs/17x17菱形地图实施边界.md"
     },
     {
       "table_id": "game_map_regions",
@@ -14196,6 +14195,19 @@
               "kill_queue_capacity": {
                 "type": "int",
                 "minimum": 1
+              }
+            }
+          },
+          "pet_spawn": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
               }
             }
           }
@@ -19274,6 +19286,69 @@
         }
       },
       "source_ref": "用户2026-10-27审定地狱火所有阶固定正前4格；docs/战士攻击模式与方向技能实施边界.md；Crystal HumanObject.cs:4103–4118/Map.cs:875–910默认候选"
+    },
+    {
+      "table_id": "game_maps",
+      "id": 1,
+      "field": "visual_geometry",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "projection": {
+            "type": "string"
+          },
+          "tile_width": {
+            "type": "int",
+            "minimum": 1
+          },
+          "tile_height": {
+            "type": "int",
+            "minimum": 1
+          },
+          "soil_thickness_px": {
+            "type": "int",
+            "minimum": 1
+          },
+          "source_origin": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27：17×17菱形2.5D地图与土层厚度；原Map/0.map(128,128)完整289格；docs/17x17菱形地图实施边界.md"
+    },
+    {
+      "table_id": "game_maps",
+      "id": 1,
+      "field": "decorations",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "frame": {
+              "type": "string"
+            },
+            "collision_cell_index": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-27新要求：中央无大型遮挡物，四周少量小型代表性设施与装饰；原0.map只提供地板来源，原树阻挡不继续沿用；docs/17x17菱形地图实施边界.md"
     }
   ]
 }

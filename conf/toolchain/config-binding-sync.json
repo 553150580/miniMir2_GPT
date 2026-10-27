@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-combat-modes-v0.6a-015eb33fec33",
+  "config_version": "dev-isometric-map-v0.8-08f69b00879b",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

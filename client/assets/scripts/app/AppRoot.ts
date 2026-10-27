@@ -87,9 +87,8 @@ export class AppRoot extends Component {
         this.moveTimer = 0;
         const direction = this.nav.state.direction;
         if (direction.x || direction.y) {
-            const x = direction.x, y = -direction.y;
-            const facing = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]].findIndex(v => v[0] === x && v[1] === y);
-            session.connection.send(20006, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, direction: facing });
+            const facing = this.world.logicalDirection(direction.x, direction.y);
+            if (facing !== null) session.connection.send(20006, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, direction: facing });
         }
     }
 

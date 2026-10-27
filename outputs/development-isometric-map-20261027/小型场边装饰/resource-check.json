@@ -1,0 +1,101 @@
+{
+  "status": "generated_and_pixel_checked_not_browser_acceptance",
+  "original_frames_compared": 2910,
+  "original_frame_metadata_or_byte_mismatches": [],
+  "added_frames": [
+    "Objects:1127",
+    "Objects:7092",
+    "Objects:8898",
+    "Objects:9760"
+  ],
+  "total_frames": 2914,
+  "cells": 289,
+  "runtime_blocked": [
+    {
+      "x": 1,
+      "y": 7
+    },
+    {
+      "x": 7,
+      "y": 1
+    },
+    {
+      "x": 15,
+      "y": 9
+    },
+    {
+      "x": 7,
+      "y": 15
+    }
+  ],
+  "runtime_walkable": 285,
+  "source_blocked_count": 17,
+  "source_props_retained_not_rendered": 19,
+  "props": [
+    {
+      "id": "edge_wood_fixture",
+      "frame": "Objects:9760",
+      "x": 1,
+      "y": 7,
+      "width": 60,
+      "height": 57
+    },
+    {
+      "id": "edge_brazier",
+      "frame": "Objects:1127",
+      "x": 7,
+      "y": 1,
+      "width": 48,
+      "height": 67
+    },
+    {
+      "id": "edge_sign",
+      "frame": "Objects:8898",
+      "x": 15,
+      "y": 9,
+      "width": 48,
+      "height": 41
+    },
+    {
+      "id": "edge_grass_rock",
+      "frame": "Objects:7092",
+      "x": 7,
+      "y": 15,
+      "width": 48,
+      "height": 47
+    }
+  ],
+  "collision_basis": "authored_edge_decorations",
+  "sourcebit_runtime_equivalence_claim": false,
+  "geometry_unchanged": [
+    17,
+    17,
+    64,
+    32,
+    48,
+    1088,
+    544,
+    592,
+    24.0
+  ],
+  "hashes": {
+    "tools/resources/build_development_assets.py": "4071fdacda40b14b234eca7f371af80b4c5b381c3d579b45014dac8bd143f112",
+    "client/assets/resources/development/manifest.json": "f42b8d3ff9ea4f283d8d4c6934abf1cb803620b27086ed54ef2d5faba2aebcc6",
+    "client/assets/resources/development/maps/first-map.json": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb",
+    "client/assets/resources/development/maps/first-map.png": "4d496800640463f6ac1bb50f0dac08d8433d623d32b74439544b337812a1debc"
+  },
+  "reproduction_check": {
+    "command": "./tools/dev python tools/resources/build_development_assets.py --check",
+    "exit_code": 0,
+    "status": "checked"
+  },
+  "visual_review": {
+    "path": "final-small-decoration-composite.png",
+    "native_images_not_scaled": true,
+    "large_source_fronts_not_rendered": true,
+    "center_player_visible": true,
+    "soil_not_in_this_composite": "土层由客户端保存Graphics绘制，实际浏览器另验",
+    "browser_acceptance": false
+  },
+  "resource_scope_frozen": true
+}

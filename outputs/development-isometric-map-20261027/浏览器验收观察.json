@@ -1,0 +1,80 @@
+{
+  "date_local": "2026-10-28",
+  "scope": "rule8限定本机浏览器渲染、输入和布局验收",
+  "started_at_utc": "2026-10-27T16:21:08.056Z",
+  "completed_at_utc": "2026-10-27T16:30:54.583Z",
+  "fixture_sha256": "2330dc1260f5ba42a0e445c6501da39527a18b0ce39d92f057fe273062787228",
+  "source_rule_version": 8,
+  "observations": {
+    "large_obstructions_removed": true,
+    "small_edge_props": 4,
+    "soil_two_faces_visible": true,
+    "actor_names_and_hp_above_heads": [
+      "角色",
+      "稻草人",
+      "变异骷髅"
+    ],
+    "name_font_size": 24,
+    "name_saved_prefab_scale": 0.7,
+    "full_chinese_name_without_clipping": true,
+    "old_source_blocked_8_3_reached": true,
+    "navigation_survives_backpack_and_height_change": true,
+    "next_ground_target_8_8_reached": true,
+    "monster_count_observed": [
+      1,
+      4,
+      8,
+      1
+    ],
+    "joystick_screen_up": {
+      "from": {
+        "x": 8,
+        "y": 8
+      },
+      "to": {
+        "x": 6,
+        "y": 6
+      }
+    },
+    "viewport_cases": [
+      {
+        "width": 720,
+        "height": 1280,
+        "top_hud": 128,
+        "bottom_hud": 344,
+        "battle_height": 808
+      },
+      {
+        "width": 720,
+        "height": 1600,
+        "top_hud": 128,
+        "bottom_hud": 344,
+        "battle_height": 1128
+      },
+      {
+        "width": 960,
+        "height": 1280,
+        "battle_height": 808
+      }
+    ],
+    "uniform_map_ui_scale_preserved": true,
+    "temporary_viewport_reset": true,
+    "final_auto_battle": false
+  },
+  "screenshot_paths": [
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/01-最新开阔战场与头顶显示.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/02-移除旧阻挡后的导航与背包.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/03-加高窗口仍抵达旧树阻挡格.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/04-720x1600四周小物与头顶.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/05-宽屏开阔地图与三类实体.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/06-八怪与宝宝头顶显示.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/07-还原窗口后的最终效果.jpg",
+    "/Users/srf/Miro2/miniMir2_GPT/outputs/development-isometric-map-20261027/08-最终摇杆上移与头顶跟随.jpg"
+  ],
+  "input_trace_count": 57,
+  "new_warn_error_count": 0,
+  "physical_mobile_verified": false,
+  "production_ready": false,
+  "qa_prestate": "沿用前阶段隔离40级QA角色；本阶段未通过界面外注入资产，不认证自然成长或正式平衡",
+  "legacy_scope": "初始大树与先前名字缩放方案已按用户要求撤销，33张中间截图另存历史目录，不作为当前布局证明"
+}

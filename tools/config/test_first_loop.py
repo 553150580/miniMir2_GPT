@@ -23,7 +23,7 @@ def candidate_tables():
     # 故意使用区别于当前Excel的参数，验证导出器没有补入第二套数值。
     players=[{'job_id':i,'magic_resist_weight':17,'attack_speed':0} for i in range(3)]
     profile={'rule_version':9,'map_id':1,'monster_id':1,'pet_id':1,'players':players,
-             'inventory_capacity':4,'initial_inventory':[35,36],'initial_bound_gold':0,
+             'inventory_capacity':4,'initial_inventory':[35,36],'initial_bound_gold':0,'pet_spawn':{'x':1,'y':0},
              'allow_free_dev_revive':True,'damage_formula':'测试结算路径',
              'recycle_test_gold_by_item':{'35':0,'36':0,'193':0,'218':0},
              'player_stats_source':'测试角色来源','technical_parameters_notice':'测试夹具说明',
@@ -56,8 +56,9 @@ def candidate_tables():
                        attack_interval_ms=700,move_interval_ms=500,exp=3)
     tables={
         'dev_first_loop_profile':[source_row(1,parameters=profile)],
-        'game_maps':[source_row(1,collision_id=1,width_cells=2,height_cells=2,spawn_cell={'x':0,'y':0})],
-        'game_map_collisions':[source_row(1,blocked_cells=[])],
+        'game_maps':[source_row(1,collision_id=1,width_cells=2,height_cells=2,spawn_cell={'x':0,'y':0},
+            visual_geometry={'projection':'isometric_diamond','tile_width':70,'tile_height':35,'soil_thickness_px':13,'source_origin':{'x':4,'y':5}},decorations=[])],
+        'game_map_collisions':[source_row(1,width_cells=2,height_cells=2,blocked_cells=[],client_navigation={'geometry_reference':'game_maps/1.visual_geometry','collision_basis':'authored_edge_decorations'})],
         'game_monsters':[fighter],
         'game_pet_templates':[source_row(1,monster_template_id=1)],
         'game_items':[source_row(id,display_name=name,item_type=kind,max_stack=None,effect_list_id=None)
@@ -91,11 +92,77 @@ def candidate_tables():
 
 
 def fixture(tables):
-    with patch.object(first_loop,'read',return_value={'pet_spawn':{'x':1,'y':0}}):
-        return first_loop.fixture_from_rows(tables)
+    return first_loop.fixture_from_rows(tables)
 
 
 class PotionProjectionTests(unittest.TestCase):
+    def test_edge_decoration_position_is_unique_and_source_collision_stays_evidence(self):
+        tables=candidate_tables();definition=tables['game_maps'][0];collision=tables['game_map_collisions'][0]
+        definition['decorations']=[{'id':'small_sign','frame':'Objects:8898','collision_cell_index':0}]
+        collision.update(blocked_cells=[{'x':0,'y':1}],source_hash='测试源摘要')
+        result=fixture(tables)
+        self.assertEqual(result['map']['blocked'],[{'x':0,'y':1}])
+        asset={'width':2,'height':2,**definition['visual_geometry'],'source_sha256':'测试源摘要',
+            'blocked':deepcopy(collision['blocked_cells']),'pet_spawn':{'x':1,'y':0},'player_spawn':{'x':0,'y':0},
+            'monster_spawns':[{'x':1,'y':1}],'collision_basis':'authored_edge_decorations','source_blocked':[{'x':0,'y':0}],
+            'cells':[[{'blocked':False,'source_blocked':True},{'blocked':False,'source_blocked':False}],
+                     [{'blocked':True,'source_blocked':False},{'blocked':False,'source_blocked':False}]],
+            'props':[{'id':'small_sign','frame':'Objects:8898','x':0,'y':1}]}
+        with patch.object(first_loop,'read',return_value=asset):self.assertEqual(first_loop.validate_map_asset(tables),asset)
+        for mutation in ['extra_tree','source_flag','prop_position']:
+            changed=deepcopy(asset)
+            if mutation=='extra_tree':changed['props'].append({'id':'old_tree','frame':'Objects:1380','x':0,'y':0})
+            elif mutation=='source_flag':changed['cells'][0][0]['source_blocked']=False
+            else:changed['props'][0]['x']=1
+            with self.subTest(mutation=mutation),patch.object(first_loop,'read',return_value=changed),self.assertRaises(ValueError):first_loop.validate_map_asset(tables)
+        for key,value in [('collision_cell_index',1),('frame','Hum:1'),('id','')]:
+            changed=deepcopy(tables);changed['game_maps'][0]['decorations'][0][key]=value
+            with self.subTest(key=key),self.assertRaises(ValueError):fixture(changed)
+        collision['blocked_cells'][0]['x']=1
+        self.assertEqual(result['map']['blocked'],[{'x':0,'y':1}])
+
+    def test_map_geometry_and_pet_spawn_are_excel_owned_without_asset_read(self):
+        tables=candidate_tables();before=deepcopy(tables)
+        with patch.object(first_loop,'read',side_effect=AssertionError('禁止反读派生数值')):
+            result=fixture(tables)
+        self.assertEqual(result['map']['pet_spawn'],{'x':1,'y':0})
+        self.assertEqual(result['map']['width'],2)
+        self.assertEqual(tables,before)
+        tables['dev_first_loop_profile'][0]['parameters']['pet_spawn']['x']=0
+        self.assertEqual(result['map']['pet_spawn'],{'x':1,'y':0})
+
+    def test_map_rejects_geometry_drift_invalid_spawns_and_corner_cutting(self):
+        baseline=candidate_tables()
+        changes=[('size',lambda t:t['game_map_collisions'][0].update(width_cells=3)),
+            ('ratio',lambda t:t['game_maps'][0]['visual_geometry'].update(tile_width=69)),
+            ('reference',lambda t:t['game_map_collisions'][0].update(client_navigation={'cell_width':70})),
+            ('pet_missing',lambda t:t['dev_first_loop_profile'][0]['parameters'].pop('pet_spawn')),
+            ('pet_outside',lambda t:t['dev_first_loop_profile'][0]['parameters'].update(pet_spawn={'x':2,'y':0})),
+            ('pet_overlap',lambda t:t['dev_first_loop_profile'][0]['parameters'].update(pet_spawn={'x':0,'y':0})),
+            ('duplicate_block',lambda t:t['game_map_collisions'][0].update(blocked_cells=[{'x':0,'y':1}]*2))]
+        for name,change in changes:
+            rows=deepcopy(baseline);change(rows)
+            with self.subTest(name=name),self.assertRaises(ValueError):fixture(rows)
+        rows=deepcopy(baseline)
+        rows['game_maps'][0].update(width_cells=3,height_cells=3)
+        rows['game_map_collisions'][0].update(width_cells=3,height_cells=3,blocked_cells=[{'x':1,'y':0},{'x':0,'y':1}])
+        rows['game_maps'][0]['decorations']=[{'id':str(i),'frame':'Objects:1127','collision_cell_index':i} for i in range(2)]
+        rows['dev_first_loop_profile'][0]['parameters']['pet_spawn']={'x':2,'y':2}
+        with self.assertRaisesRegex(ValueError,'不可达'):fixture(rows)
+
+    def test_map_asset_requires_complete_source_cells_and_matching_projection(self):
+        tables=candidate_tables();tables['game_map_collisions'][0]['source_hash']='测试摘要'
+        asset={'width':2,'height':2,**tables['game_maps'][0]['visual_geometry'],
+            'source_sha256':'测试摘要','blocked':[],'pet_spawn':{'x':1,'y':0},'player_spawn':{'x':0,'y':0},
+            'monster_spawns':[{'x':1,'y':1}],'cells':[[{'blocked':False,'source_blocked':False}]*2 for _ in range(2)],
+            'collision_basis':'authored_edge_decorations','source_blocked':[],'props':[]}
+        with patch.object(first_loop,'read',return_value=asset):
+            self.assertEqual(first_loop.validate_map_asset(tables),asset)
+        for field,value in [('width',3),('tile_width',64),('source_sha256','旧摘要'),('monster_spawns',[]),
+                            ('cells',[[{'blocked':False}]]),('cells',[[{'blocked':True}]*2 for _ in range(2)])]:
+            changed=deepcopy(asset);changed[field]=value
+            with self.subTest(field=field),patch.object(first_loop,'read',return_value=changed),self.assertRaises(ValueError):first_loop.validate_map_asset(tables)
+
     def test_excel_parameters_are_preserved_and_detached(self):
         tables=candidate_tables();before=deepcopy(tables)
         result=fixture(tables)

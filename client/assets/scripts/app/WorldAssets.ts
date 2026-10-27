@@ -1,4 +1,5 @@
 import { Asset, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
+import { GridProjection } from './GridProjection';
 
 export function effectFrameKeys(value: any): string[] {
     if (!value || typeof value !== 'object') return [];
@@ -17,6 +18,8 @@ export class WorldAssets {
     gameplay: any;
     prefab!: Prefab;
     effectPrefab!: Prefab;
+    propPrefab!: Prefab;
+    beamPrefab!: Prefab;
     background!: SpriteFrame;
     readonly frames = new Map<string, SpriteFrame>();
     private owned = new Set<Asset>();
@@ -32,9 +35,18 @@ export class WorldAssets {
         try {
             result.manifest = result.own(await load<JsonAsset>('development/manifest', JsonAsset)).json;
             result.map = result.own(await load<JsonAsset>('development/maps/first-map', JsonAsset)).json;
+            const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
+            if (result.map.surface_width !== projection.surfaceWidth || result.map.surface_height !== projection.surfaceHeight
+                || result.map.world_height !== projection.worldHeight || result.map.background_offset_y !== projection.floorCenterY
+                || mapInfo?.width !== result.map.width || mapInfo?.height !== result.map.height
+                || mapInfo?.tile_width !== result.map.tile_width || mapInfo?.tile_height !== result.map.tile_height
+                || mapInfo?.projection !== result.map.projection
+                || ['soil_thickness_px', 'surface_width', 'surface_height', 'world_height', 'background_offset_y'].some(key => mapInfo?.[key] !== result.map[key])) throw new Error('地图地板、投影与来源清单不一致，请更新同一份资源');
             result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
             result.prefab = result.own(await load<Prefab>('prefabs/Entity', Prefab));
             result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
+            result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
+            result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
             result.background = result.own(await load<SpriteFrame>('development/maps/first-map/spriteFrame', SpriteFrame));
             const profileIds = new Set<string>();
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
@@ -43,6 +55,11 @@ export class WorldAssets {
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
             for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();
+            for (const prop of result.map.props ?? []) {
+                const frame = result.manifest.frames[prop.frame];
+                if (!frame || frame.declared_empty) throw new Error(`地图物件缺少原始帧：${prop.frame}`);
+                keys.add(prop.frame);
+            }
             for (const id of profileIds) {
                 const profile = result.manifest.profiles[id];
                 if (!profile) throw new Error(`缺少外观资源：${id}`);
