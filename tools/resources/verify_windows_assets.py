@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import argparse
 
 ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / 'client/assets/resources/development'
@@ -15,6 +16,9 @@ def sha(path):
 
 
 def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--report',default='.work/resource-regeneration-check.json')
+    args=parser.parse_args()
     original = json.loads((ASSETS / 'manifest.json').read_text(encoding='utf-8'))
     source = Path(os.environ.get('MINIMIR_CLIENT_180_ROOT', 'D:/Mir2/mir2_gxx/assets/legacy/primary_180'))
     if sha(source / 'Map/0.map') != original['map']['source_sha256']:
@@ -69,7 +73,8 @@ def main():
                   regeneration_cache_reused=cache_valid, map_source_path_remapped_only=True,
                   regeneration_converter_sha256=regenerated['converter_sha256'], original_manifest_preserved=True,
                   source_packages_modified=False, official_180_restoration_verified=False, runtime_ready=False)
-    path = ROOT / 'outputs/windows-adaptation-20261028/resource-regeneration.json'
+    path = (ROOT / args.report).resolve()
+    if not path.is_relative_to(ROOT):raise ValueError('报告必须位于当前项目内')
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print(json.dumps(report, ensure_ascii=False))

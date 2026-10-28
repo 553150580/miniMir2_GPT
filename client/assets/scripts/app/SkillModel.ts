@@ -4,7 +4,8 @@ export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
-        | 'magic_shield' | 'soul_shield' | 'blessed_armour'; active: boolean; range: number;
+        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash'; active: boolean; range: number;
+    displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
     buff_id?: number; material_item_id?: number; material_quantity?: number;
@@ -140,6 +141,11 @@ export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): st
 }
 export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): string[] {
     const definition = row.definition, lines = [row.status, `魔法消耗 ${row.cost}`];
+    if (definition.displacement) {
+        const rules=definition.displacement, low=rules.distance_base_by_level[row.level], high=low+rules.distance_random_bound-1;
+        if (definition.kind==='repulsion') lines.push('尝试推开周围等级较低的敌人', `本阶推开距离 ${low}–${high}格`, '不会对怪物造成伤害');
+        else lines.push('轻触地图选择冲撞方向', `本阶冲撞距离 ${low}–${high}格`, '只推动首格的低等级敌人，结束时造成一次伤害', '冲撞受阻仍消耗魔法与冷却');
+    }
     const status = snapshot.statusDefinitions?.find(value => value.id === definition.buff_id), reduction = status?.attribute_effects.value_by_level[row.level];
     if (definition.kind === 'magic_shield') lines.push('仅对自己施放', reduction === undefined ? '获得伤害减免，实际数值见当前状态' : `当前等级伤害减免 ${reduction}%`, '持续时间受魔法属性与技能等级影响',
         '受到实际伤害会缩短持续时间', '已有魔法盾时重施仍消耗魔法，但不刷新', '角色倒下后魔法盾解除');
@@ -147,7 +153,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
         '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进');
     else if (!definition.active) lines.push(skillPassiveText(row));
-    else lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    else if (!definition.displacement) lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
         lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);

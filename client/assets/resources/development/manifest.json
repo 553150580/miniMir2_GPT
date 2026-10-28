@@ -7,7 +7,7 @@
   "official_180_restoration_verified": false,
   "pillow_version": "13.0.0",
   "converter": "tools/resources/build_development_assets.py",
-  "converter_sha256": "cd0ecaf0b1096605f22ccbb24c878bbfdc2b92efe3572ad4bb0c54d8e451e7be",
+  "converter_sha256": "eb5166e800597e98f92017c335b9c33d1b1d76cff7ceb8e8d0e96b54451f4f40",
   "wil_decoder_sha256": "b46f5ffea9996fd71ea60515d41248b7dd2010faea7411bd7544843cc3dfc17f",
   "map": {
     "id": 1,
@@ -45,8 +45,8 @@
     {
       "source_id": "client_180_named",
       "package": "Tiles",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Tiles.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Tiles.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Tiles.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Tiles.WIX",
       "wil_sha256": "6564d75d35f31249ba471874ae74b392bc6863ee33c1092972782e70170e71e4",
       "wix_sha256": "e11fac073e0229b41812307afbda74a00872e19f41ba30b68803b6bdd4c116e6",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -55,8 +55,8 @@
     {
       "source_id": "client_180_named",
       "package": "SmTiles",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/SmTiles.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/SmTiles.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\SmTiles.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\SmTiles.WIX",
       "wil_sha256": "f87570676bff54457e9b56630a4b557e1129c3f0a5a359047668be40e44a0605",
       "wix_sha256": "16d41274a8c68632a1bd6d4a64d065ff70cb81e468c97fd34021fd772267e0ed",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -65,8 +65,8 @@
     {
       "source_id": "client_180_named",
       "package": "Objects",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Objects.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Objects.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Objects.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Objects.WIX",
       "wil_sha256": "80b27c1be115a19c9d8baac878e90e182c9543ddb0640fda8626b90c636690f0",
       "wix_sha256": "199be3894f277cb4e8ac16e222d7dcda725f2e1fc620d207f432367509afc503",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -75,8 +75,8 @@
     {
       "source_id": "client_180_named",
       "package": "Hum",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Hum.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Hum.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Hum.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Hum.WIX",
       "wil_sha256": "d66f7b4cf1d69d713a8e12f66b5c90e7fa7634be0f6fedb1145a9deae3f24604",
       "wix_sha256": "384f3f1a85b1c1e5c1a68006a5a837a80a742918143d5bfd3bb4ea413099492a",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -85,8 +85,8 @@
     {
       "source_id": "client_180_named",
       "package": "Weapon",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Weapon.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Weapon.wix",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Weapon.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Weapon.wix",
       "wil_sha256": "44b604dac6bf3dd5739bcb37cdce55d72879f09d7576d091c7ac717e63bc0e1e",
       "wix_sha256": "40c9a5384a53ce10aaaeae11e56c78168f64e616a0378c0385cd2df7ab6ff6dd",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -95,8 +95,8 @@
     {
       "source_id": "client_180_named",
       "package": "Hair",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Hair.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Hair.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Hair.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Hair.WIX",
       "wil_sha256": "ae377f1529913d97f0ff9ba25c94352fc348490a99d291adc2e821fbb3180927",
       "wix_sha256": "4efb8372a1338d673941c224a926440106662d18db381e8cd078ab0598d4fed0",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -105,8 +105,8 @@
     {
       "source_id": "client_180_named",
       "package": "Mon3",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Mon3.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Mon3.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Mon3.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Mon3.WIX",
       "wil_sha256": "5af297556364dfaa8fa402e0ec7e4a7a6b6fee48949bbb5be0b30e5ccf98b276",
       "wix_sha256": "bf0d554e7bbca761c0132cf9ce4425c4d9a71640192d15ff56b7de9283aaed0f",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -115,8 +115,8 @@
     {
       "source_id": "client_180_named",
       "package": "Mon4",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Mon4.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Mon4.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Mon4.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Mon4.WIX",
       "wil_sha256": "6a46fc8d8fd093181bde0a8ceca8c25b8d3faf71752dbf47bbbd0a6e5fad5412",
       "wix_sha256": "2b3e4372a0fa013fb972c34c4eec14625680e1fc0a5f037ea4c32284eb97680f",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -125,8 +125,8 @@
     {
       "source_id": "client_180_named",
       "package": "Magic",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Magic.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Magic.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Magic.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Magic.WIX",
       "wil_sha256": "be46a0258349b26db9ba7dba595abac1f0767d52fef11d9f508e704f2f6deaac",
       "wix_sha256": "7f95ff7ba4add42157e10eb0d43ee7c77fd3c5ac3ea1183e39971066a40dfc91",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -135,8 +135,8 @@
     {
       "source_id": "client_180_named",
       "package": "Magic2",
-      "wil_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Magic2.wil",
-      "wix_path": "/Users/srf/Miro2/传奇1.80客户端/Data/Magic2.WIX",
+      "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Magic2.wil",
+      "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Magic2.WIX",
       "wil_sha256": "2bd7b8624c6bf6edb7fd5e66d2f0ca6b6a77c86a1ca108138499faca57a56441",
       "wix_sha256": "ce315ffbbf78e785cda451257367c396901f563f3a8984a95269ea08989551a0",
       "format": "wil_v1_palette256_uncompressed_version0",
@@ -6134,6 +6134,9 @@
         "duration_ms": 600,
         "blend": "additive"
       }
+    },
+    "27": {
+      "kind": "shoulder_dash"
     },
     "9": {
       "kind": "hell_fire",

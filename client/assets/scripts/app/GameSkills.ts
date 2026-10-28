@@ -78,7 +78,9 @@ export class GameSkills {
         if (!row.definition.active) return `${skillPassiveText(row)}${mode ? `\n${mode}` : ''}`;
         if (activation === 'toggle') return `${mode} · 普攻按模式出招`;
         if (activation === 'charge') return `${mode} · 充能消耗魔法 ${row.cost}`;
-        const target = row.definition.target_kind === 'friendly_self' ? '仅自身' : row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`
+        const displacement=row.definition.displacement, low=displacement?.distance_base_by_level[row.level];
+        const target = displacement ? `${row.definition.kind==='repulsion'?'推开':'冲撞'} ${low}–${low!+displacement.distance_random_bound-1}格`
+            : row.definition.target_kind === 'friendly_self' ? '仅自身' : row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`
             : isDirectionalSkill(row.definition) ? `前方${row.definition.line_cells ?? 0}格` : `射程 ${row.definition.range}格`;
         return `魔法消耗 ${row.cost} · ${target}${row.definition.material_quantity ? ` · 护符${row.definition.material_quantity}` : ''}`;
     }

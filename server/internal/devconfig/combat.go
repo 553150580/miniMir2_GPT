@@ -8,7 +8,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour":
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash":
 		return true
 	}
 	return false
@@ -110,9 +110,9 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "attack_mode"
 		case "flaming_sword":
 			wanted = "attack_charge"
-		case "hell_fire", "lightning":
+		case "hell_fire", "lightning", "shoulder_dash":
 			wanted = "enemy_direction"
-		case "thunder_storm":
+		case "thunder_storm", "repulsion":
 			wanted = "enemy_self"
 		case "healing":
 			wanted = "friendly_entity"
@@ -136,6 +136,9 @@ func (f *Fixture) ValidateCombat() error {
 			return errors.New("主动自动目标数必须明确")
 		}
 		if err := f.validateAttackSkill(s); err != nil {
+			return err
+		}
+		if err := f.validateDisplacementSkill(s); err != nil {
 			return err
 		}
 	}

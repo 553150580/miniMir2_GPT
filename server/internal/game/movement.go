@@ -61,7 +61,10 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	if !w.beginMovement(r, e, movementWalk) {
 		return false
 	}
-	e.Pos, e.Direction = point, direction
+	if !w.relocate(r, e, point) {
+		return false
+	}
+	e.Direction = direction
 	e.Action, e.ActionUntil = 1, now.Add(200*time.Millisecond)
 	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)
 	if e.Kind == 1 {
@@ -152,7 +155,10 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 			out.Stop = pushUnavailable
 			return
 		}
-		e.Pos = point
+		if !w.relocate(r, e, point) {
+			out.Stop = pushUnavailable
+			return
+		}
 		e.Direction = (direction + uint32(len(directions))/2) % uint32(len(directions))
 		path = append(path, point)
 		out.Steps++

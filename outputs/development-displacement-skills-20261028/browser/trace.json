@@ -1,0 +1,60 @@
+[
+  {
+    "kind": "cast",
+    "skill": 8,
+    "rank": 0,
+    "cast": "1",
+    "input": 1
+  },
+  {
+    "kind": "movement",
+    "skill": 8,
+    "cast": "1",
+    "entity": 10,
+    "movement": 2,
+    "revision": "6",
+    "origin": {
+      "x": 6,
+      "y": 6
+    },
+    "path": [
+      {
+        "x": 5,
+        "y": 5
+      }
+    ]
+  },
+  {
+    "kind": "cast",
+    "skill": 27,
+    "rank": 0,
+    "cast": "1",
+    "input": 1
+  },
+  {
+    "kind": "movement",
+    "skill": 27,
+    "cast": "1",
+    "entity": 1,
+    "movement": 3,
+    "revision": "1",
+    "origin": {
+      "x": 8,
+      "y": 8
+    },
+    "path": [
+      {
+        "x": 9,
+        "y": 8
+      },
+      {
+        "x": 10,
+        "y": 8
+      },
+      {
+        "x": 11,
+        "y": 8
+      }
+    ]
+  }
+]

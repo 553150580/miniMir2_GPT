@@ -1,0 +1,14 @@
+{
+  "task": "client-test",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/ui/*.test.cjs",
+    "client/tests/app/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T14:57:32.101545+00:00",
+  "finished_at": "2026-10-28T14:57:33.645607+00:00",
+  "output": ".work/displacement-skills-20261028/checks/client-test-1.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

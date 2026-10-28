@@ -4,7 +4,12 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT,'browser-tools/node_modules/playwright-core'));
 const pb=require('../../client/assets/scripts/generated/protobuf/client_pb.js').minimir.v1;
-const out='outputs/windows-adaptation-20261028/browser';fs.mkdirSync(out,{recursive:true});
+const reportFlag=process.argv.indexOf('--report-dir');
+const out=reportFlag>=0?process.argv[reportFlag+1]:'.work/browser-ui-smoke';
+assert(out&&path.resolve(out).startsWith(process.cwd()+path.sep),'报告目录必须位于项目内');
+const fixture=JSON.parse(fs.readFileSync('config/development/first-loop.json','utf8'));
+const ruleVersion=fixture.rule_version;
+fs.mkdirSync(out,{recursive:true});
 // 仅使用正常注册、创角及触摸入口；协议观察只记录导航元数据，不保存凭据或票据。
 const build=JSON.parse(fs.readFileSync('docs/客户端构建检查.json','utf8'));
 assert(build.success&&build.scene_prefab_layout_preserved&&build.source_stable_during_build,'需要通过当前Creator实构');
@@ -34,7 +39,7 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
  try{
   for(const port of [18100,18101,18102]){
    const response=await fetch(`http://127.0.0.1:${port}/healthz`,{signal:AbortSignal.timeout(3000)}),health=await response.json();
-   assert(response.ok&&health.status==='ok'&&health.development_only&&health.rule_version===10,`开发节点${port}未就绪或不是当前rule10`);
+   assert(response.ok&&health.status==='ok'&&health.development_only&&health.rule_version===ruleVersion,`开发节点${port}未就绪或不是当前rule${ruleVersion}`);
   }
   await page.goto('http://127.0.0.1:18080/?renderQA=1');await scene('Login');
   await page.screenshot({path:path.join(out,'01-login.png')});
@@ -43,7 +48,7 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
   await edit('Name','Win'+crypto.randomBytes(3).toString('hex'));await tap('Create');
   await page.waitForFunction(()=>cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(x=>x.string.includes('Win')),{timeout:20000});
   await tap('Enter');await scene('Game');await page.waitForFunction(()=>!!cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.reconciliationStarted,null,{timeout:30000});
-  await page.screenshot({path:path.join(out,'02-game.png')});checks.push('通过正常注册和创建角色进入rule10；没有数据库预置');
+  await page.screenshot({path:path.join(out,'02-game.png')});checks.push(`通过正常注册和创建角色进入rule${ruleVersion}；没有数据库预置`);
   const auto=await page.evaluate(()=>cc.find('Canvas/Safe/MapViewport/Actions/Auto').getComponent(cc.Toggle).isChecked);
   if(auto)await tap('MapViewport/Actions/Auto');
   await ground(1,10);const initial=await nav();
@@ -64,7 +69,7 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
   assert.equal((await nav()).target,null);checks.push('健康重入恢复取消状态，没有重新提交旧地面目标');
   await page.screenshot({path:path.join(out,'05-healthy-reentry.png')});
   assert.equal(errors.length,0,errors.join('\n'));
-  fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({passed:true,checks,errors,warnings,viewportCases:[[720,1280],[720,1440]],touchInput:true,physicalMobileVerified:false,forcedMovementSkillsOpened:false,scope:'正常账号/角色、导航、面板、加高和退出确认；不作为完整技能、真机或容量验收'},null,2));
+  fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({passed:true,ruleVersion,checks,errors,warnings,viewportCases:[[720,1280],[720,1440]],touchInput:true,physicalMobileVerified:false,forcedMovementSkillsVerified:false,scope:'正常账号/角色、导航、面板、加高和退出确认；不作为完整技能、真机或容量验收'},null,2));
   console.log(JSON.stringify({passed:true,checks:checks.length,errors:errors.length,warnings:warnings.length}));
  }catch(error){fs.writeFileSync(path.join(out,'report.json'),JSON.stringify({passed:false,checks,errors,warnings,error:error.message},null,2));await page.screenshot({path:path.join(out,'failure.png')});throw error}
  finally{fs.writeFileSync(path.join(out,'navigation-trace.json'),JSON.stringify(traces,null,2));await browser.close()}

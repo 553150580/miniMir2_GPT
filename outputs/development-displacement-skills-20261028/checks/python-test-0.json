@@ -1,0 +1,18 @@
+{
+  "task": "python-test",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T14:57:33.645997+00:00",
+  "finished_at": "2026-10-28T14:57:34.219076+00:00",
+  "output": ".work/displacement-skills-20261028/checks/python-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

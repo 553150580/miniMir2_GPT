@@ -1,0 +1,410 @@
+[
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "0",
+      "input": 0,
+      "status": 0,
+      "destination": null
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "0",
+      "input": 0,
+      "status": 0,
+      "destination": null
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "0",
+      "input": 0,
+      "status": 0,
+      "destination": null
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "0",
+      "input": 0,
+      "status": 0,
+      "destination": null
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "0",
+      "input": 0,
+      "status": 0,
+      "destination": null
+    }
+  },
+  {
+    "direction": "send",
+    "id": 20006,
+    "seq": 9,
+    "input": 1,
+    "cancel": false,
+    "release": false,
+    "destination": {
+      "x": 1,
+      "y": 10
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 1,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "1",
+      "input": 1,
+      "status": 2,
+      "destination": {
+        "x": 1,
+        "y": 10
+      }
+    }
+  },
+  {
+    "direction": "send",
+    "id": 20006,
+    "seq": 10,
+    "input": 2,
+    "cancel": false,
+    "release": false,
+    "destination": {
+      "x": 8,
+      "y": 8
+    }
+  },
+  {
+    "direction": "send",
+    "id": 20006,
+    "seq": 11,
+    "input": 3,
+    "cancel": true,
+    "release": false,
+    "destination": null
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 11,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "2",
+      "input": 2,
+      "status": 4,
+      "destination": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "2",
+      "input": 2,
+      "status": 4,
+      "destination": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "2",
+      "input": 2,
+      "status": 4,
+      "destination": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "2",
+      "input": 2,
+      "status": 4,
+      "destination": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  },
+  {
+    "direction": "receive",
+    "id": 5,
+    "seq": 0,
+    "scene": "4489403711815287606",
+    "navigation": {
+      "revision": "2",
+      "input": 2,
+      "status": 4,
+      "destination": {
+        "x": 8,
+        "y": 8
+      }
+    }
+  }
+]

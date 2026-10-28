@@ -1,0 +1,1 @@
+{"valid": true, "messages": 47, "error_codes": 31, "proto_source_lint": "passed", "protoc_compile": "verified_generated_sources_current", "game_business": "not_verified_by_generator"}

@@ -88,7 +88,7 @@ class Importer:
         path=OUTPUT/relative;expected=canonical(data)
         if self.check:
             if path.read_text(encoding='utf-8')!=expected:raise ValueError('metadata outdated '+relative)
-        else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(expected,encoding='utf-8')
+        else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(expected,encoding='utf-8',newline='\n')
 
 def parse_map():
     data=MAP_SOURCE.read_bytes();width,height=struct.unpack_from('<HH',data)
@@ -335,6 +335,7 @@ def main():
                            'frame_ms':30,'blend':'additive'}},
         '7':{'kind':'slaying','attack':ranked_attack(1820)},
         '8':{'kind':'repulsion','cast':effect(900,6,600)},
+        '27':{'kind':'shoulder_dash'},
         '9':{'kind':'hell_fire','cast':effect(920,10,600),'cast_anchor':'origin','step':effect(930,6,500),
              'step_anchor':'grid','step_trigger':'authoritative_cast_step',
              'visual_adaptation':'User-approved fixed forward line for every rank; source rank3 side lines are not displayed.'},

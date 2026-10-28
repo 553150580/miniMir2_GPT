@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 10,
+  "rule_version": 11,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -1304,6 +1304,166 @@
         0
       ],
       "non_undead_divisor": 1
+    },
+    {
+      "id": 8,
+      "name": "抗拒火环",
+      "job_id": 1,
+      "book_item_id": 8,
+      "learn_level": 12,
+      "learned_level": 0,
+      "max_level": 3,
+      "behavior": "repulsion",
+      "cooldown_base_ms": 1800,
+      "target_kind": "enemy_self",
+      "range_cells": 0,
+      "target_move_tolerance_cells": 0,
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "auto_priority": 0,
+      "auto_min_targets": 1,
+      "auto_enabled": false,
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_stop_on_blocked": false,
+      "activation_kind": "cast",
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "delay_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "secondary_impact_ms": 0,
+      "charge_window_ms": 0,
+      "line_step_ms": 0,
+      "buff_id": 0,
+      "mp_base_cost": 2,
+      "mp_level_cost": 2,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "accuracy_per_level": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "mpower_base": 4,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "healing_stat_multiplier": 0,
+      "add_caster_level": false,
+      "undead_multiplier_ppm": 1000000,
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "ready_proc_denominator": 0,
+      "ready_proc_numerators": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "non_undead_divisor": 1,
+      "displacement": {
+        "distance_base_by_level": [
+          1,
+          1,
+          2,
+          3
+        ],
+        "distance_random_bound": 2,
+        "success_denominator": 20,
+        "success_base": 6,
+        "success_per_level": 3,
+        "step_display_ms": 300
+      }
+    },
+    {
+      "id": 27,
+      "name": "野蛮冲撞",
+      "job_id": 0,
+      "book_item_id": 5,
+      "learn_level": 30,
+      "learned_level": 0,
+      "max_level": 3,
+      "behavior": "shoulder_dash",
+      "cooldown_base_ms": 2500,
+      "target_kind": "enemy_direction",
+      "range_cells": 0,
+      "target_move_tolerance_cells": 0,
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "auto_priority": 0,
+      "auto_min_targets": 1,
+      "auto_enabled": false,
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_stop_on_blocked": false,
+      "activation_kind": "cast",
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "delay_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "secondary_impact_ms": 0,
+      "charge_window_ms": 0,
+      "line_step_ms": 0,
+      "buff_id": 0,
+      "mp_base_cost": 4,
+      "mp_level_cost": 4,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "accuracy_per_level": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "mpower_base": 4,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "healing_stat_multiplier": 0,
+      "add_caster_level": false,
+      "undead_multiplier_ppm": 1000000,
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "ready_proc_denominator": 0,
+      "ready_proc_numerators": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "non_undead_divisor": 1,
+      "displacement": {
+        "distance_base_by_level": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "distance_random_bound": 2,
+        "success_denominator": 0,
+        "success_base": 0,
+        "success_per_level": 0,
+        "step_display_ms": 300
+      }
     }
   ],
   "buffs": [
@@ -2223,6 +2383,84 @@
       ],
       "page_item_id": 900001,
       "page_cost": 20
+    },
+    {
+      "skill_id": 8,
+      "level": 1,
+      "required_role_level": 12,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 8,
+      "level": 2,
+      "required_role_level": 15,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 8,
+      "level": 3,
+      "required_role_level": 19,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 27,
+      "level": 1,
+      "required_role_level": 30,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 27,
+      "level": 2,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 27,
+      "level": 3,
+      "required_role_level": 34,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
     }
   ],
   "skill_shop": [
@@ -2432,6 +2670,26 @@
       "quantity": 1,
       "currency": "gold",
       "price_units": 15000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32
+    },
+    {
+      "id": 25,
+      "item_id": 8,
+      "quantity": 1,
+      "currency": "gold",
+      "price_units": 800,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32
+    },
+    {
+      "id": 26,
+      "item_id": 5,
+      "quantity": 1,
+      "currency": "gold",
+      "price_units": 12000,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32
@@ -3115,6 +3373,78 @@
     },
     {
       "item_id": 18,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
       "book_quality": 4,
       "page_item_id": 900001,
       "pages_per_book": 50,
@@ -3834,6 +4164,50 @@
       ]
     },
     {
+      "id": 8,
+      "name": "《抗拒火环》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 8,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "max_stack": 1,
+      "drop_quality": 1,
+      "allowed_jobs": [
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "name": "《野蛮冲撞》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 27,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "max_stack": 1,
+      "drop_quality": 1,
+      "allowed_jobs": [
+        0
+      ]
+    },
+    {
       "id": 900001,
       "name": "书页",
       "equipment_slot": 0,
@@ -4083,6 +4457,16 @@
           "id": 187,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:189；Crystal HumanObject.cs:6859-6868,1346-1375",
           "note": "MYF Shape5/DuraMax1000不证明Crystal Shape0/Count1000。max_stack留空，casting_supply.enabled=false；未创建NPC护符商品，不能以0充当可用堆叠。"
+        },
+        {
+          "id": 8,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "原始书身份候选；原像素图标尚待映射。NPC品质0、开发掉落品质另配为1，来源不由绑定推断。"
+        },
+        {
+          "id": 5,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "原始书身份候选；原像素图标尚待映射。NPC品质0、开发掉落品质另配为1，来源不由绑定推断。"
         }
       ],
       "game_equipment": [
@@ -4493,6 +4877,16 @@
           "id": 31,
           "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
           "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+        },
+        {
+          "id": 8,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "逐阶距离已由用户选择；其余数值为源码开发候选。手动施放，自动显式关闭；怪物抗拒不受伤，野蛮只在结束时对首目标一次Defence.None；不启用练功、PK或来源账号数据。"
+        },
+        {
+          "id": 27,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "逐阶距离已由用户选择；其余数值为源码开发候选。手动施放，自动显式关闭；怪物抗拒不受伤，野蛮只在结束时对首目标一次Defence.None；不启用练功、PK或来源账号数据。"
         }
       ],
       "game_buffs": [
@@ -4814,6 +5208,36 @@
           "id": 313,
           "source_ref": "用户2026-10-27目标阶+1书本；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
           "note": "书本公式为用户确定；页数与等级门槛候选，保留源GetPower/耗蓝/准确差异，不改射程/目标/动作。"
+        },
+        {
+          "id": 81,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
+        },
+        {
+          "id": 82,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
+        },
+        {
+          "id": 83,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
+        },
+        {
+          "id": 271,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
+        },
+        {
+          "id": 272,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
+        },
+        {
+          "id": 273,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "书本目标阶+1为用户已定；页数与学习门槛为开发候选。距离随原生阶变化已获用户明确审定，其余行为形状保持。"
         }
       ],
       "game_shop_prices": [
@@ -4936,6 +5360,16 @@
           "id": 24,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:20 Price；本作首测开发候选",
           "note": "MYF原Price仅为开发报价候选；NPC购入来源禁拆书页，不认证来源服实际价格。"
+        },
+        {
+          "id": 25,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "MYF原Price仅为开发报价候选；NPC购入来源禁拆书页，不认证来源服实际价格。"
+        },
+        {
+          "id": 26,
+          "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "MYF原Price仅为开发报价候选；NPC购入来源禁拆书页，不认证来源服实际价格。"
         }
       ],
       "game_book_recycle": [
@@ -4970,8 +5404,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证；资料参考/crystal/Server/MirObjects/HumanObject.cs:2649-2724；MonsterObject.cs:1035-1093；资料参考/crystal/Client/MirObjects/PlayerObject.cs:1037-1041,1493-1497,2384-2401；Frames.cs:158（Pushed六帧按步长2倒放、100ms帧间隔的300ms开发表现）",
-          "note": "rule9防御状态和材料协议开发候选；护符单位未定，入口关闭；既有17×17小型场边装饰及头顶布局保持。；rule10仅位移共用底座：Human无Info.CanPush门槛；玩家推后动作500ms、怪物每推格动作300ms/移动500ms、推步表现300ms独立候选，不借用攻击命中时长。8/27/21仍未选入；推距、绑定目的地与护符单位未填。"
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证；资料参考/crystal/Server/MirObjects/HumanObject.cs:2649-2724；MonsterObject.cs:1035-1093；资料参考/crystal/Client/MirObjects/PlayerObject.cs:1037-1041,1493-1497,2384-2401；Frames.cs:158（Pushed六帧按步长2倒放、100ms帧间隔的300ms开发表现）；用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证",
+          "note": "rule9防御状态和材料协议开发候选；护符单位未定，入口关闭；既有17×17小型场边装饰及头顶布局保持。；rule10仅位移共用底座：Human无Info.CanPush门槛；玩家推后动作500ms、怪物每推格动作300ms/移动500ms、推步表现300ms独立候选，不借用攻击命中时长。8/27/21仍未选入；推距、绑定目的地与护符单位未填。；rule11两项位移技能按用户已审定范围接入；绑定点与21不以同图随机格替代。"
         }
       ],
       "game_drop_categories": [
@@ -4998,7 +5432,7 @@
       ]
     },
     "player_stats": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。",
-    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；首组三本7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。 本轮逐阶书本按用户目标rank+1；页5/10/20、首组三本NPC书500金币与普通道具子集新增精良职业书均为显式开发候选。商店与赠书禁拆页；旧未知来源不补推掉落。 本轮事件容量128和逐杀队列16是development技术预算；不证明承载量。人类攻击动作550/命中300/等级攻速公式与视觉动画时钟分离，首组装备尚无攻速词条按0适配。 新五本学习采用各自Crystal Level1适配，价格候选按MYF原字段分别600/2000/1600/3000/15000金币；不声称来源服实际报价。 战士持续模式与烈火充能为临时内存；健康离线沿绝对截止推进，不写永久聚合。 地狱火每个有效传播格发送权威CastStep，首格500ms；后格按实际处理时钟+100ms，不按客户端计时或一帧追赶。 用户2026-10-27审定地图17×17及菱形2.5D；64×32地格/48像素土层是本轮美术候选。宠物出生8,7从既有开发资产显式迁入本Excel，不再回读生成地图作数值源；界内与连通性逐项校验。 用户后续确认移除大遮挡物，场边4件小物；出生保持，碰撞仅取小物对应4格。名字24字号、预制体0.7缩放并与血条位于头顶。 本轮防御状态31/14/15为源码候选；独立材料槽100不占10个强化装备位。护符包数量未审定，入口关闭，不从DuraMax猜数量。",
+    "technical_parameters": "32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；首组三本7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。 本轮逐阶书本按用户目标rank+1；页5/10/20、首组三本NPC书500金币与普通道具子集新增精良职业书均为显式开发候选。商店与赠书禁拆页；旧未知来源不补推掉落。 本轮事件容量128和逐杀队列16是development技术预算；不证明承载量。人类攻击动作550/命中300/等级攻速公式与视觉动画时钟分离，首组装备尚无攻速词条按0适配。 新五本学习采用各自Crystal Level1适配，价格候选按MYF原字段分别600/2000/1600/3000/15000金币；不声称来源服实际报价。 战士持续模式与烈火充能为临时内存；健康离线沿绝对截止推进，不写永久聚合。 地狱火每个有效传播格发送权威CastStep，首格500ms；后格按实际处理时钟+100ms，不按客户端计时或一帧追赶。 用户2026-10-27审定地图17×17及菱形2.5D；64×32地格/48像素土层是本轮美术候选。宠物出生8,7从既有开发资产显式迁入本Excel，不再回读生成地图作数值源；界内与连通性逐项校验。 用户后续确认移除大遮挡物，场边4件小物；出生保持，碰撞仅取小物对应4格。名字24字号、预制体0.7缩放并与血条位于头顶。 本轮防御状态31/14/15为源码候选；独立材料槽100不占10个强化装备位。护符包数量未审定，入口关闭，不从DuraMax猜数量。 用户2026-10-28审定抗拒/野蛮原生逐阶距离，rule11选入8/27但自动显式关闭；21按已选绑定点路线后续实现。",
     "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
     "potion_effects": {
@@ -5074,11 +5508,11 @@
       },
       {
         "path": "client/assets/resources/development/manifest.json",
-        "sha256": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536"
+        "sha256": "8d1ae5ba80c3d0ae09b839789a2e5e4a7dc1f912a181e3633780e7f75f38d7d6"
       },
       {
         "path": "client/assets/resources/development/maps/first-map.json",
-        "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+        "sha256": "dac257c2a23b2c1f61da4d80fd8c0a61089bac1ffd6a1e826cf430457dd40bd8"
       },
       {
         "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
@@ -5099,12 +5533,16 @@
       {
         "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
         "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+      },
+      {
+        "path": "docs/抗拒火环与野蛮冲撞实施边界.md",
+        "sha256": "64c80a97a8c07a46549ed0d9ac5c0835d0e995c5f6c3252a634e9806f9b6b85d"
       }
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894"
+      "sha256": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74"
     },
-    "exporter_sha256": "cb448b7b7ddb58788561d0cb70aa7429f43ad194da3b9fbedbe8ceffbc83efdb"
+    "exporter_sha256": "5c133f99713d0d67d3bec0724d09e1400e4c4c514860aecc3b4f14a45aeca893"
   }
 }

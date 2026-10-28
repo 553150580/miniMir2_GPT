@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "recorded_at_utc": "2026-10-28T14:59:17.601549+00:00",
+  "stage": "抗拒火环与野蛮冲撞开发子集",
+  "status": "限定开发验收通过",
+  "configuration": {
+    "version": "dev-displacement-skills-v0.11b-88c1414ae0f8",
+    "rule_version": 11,
+    "fixture_sha256": "92e39cb378057b2aa4c11da4d0b64bcd82a56d9359d3ef0af9fd3cc2d27b4176",
+    "workbook_hashes": {
+      "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+      "gameplay": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74"
+    },
+    "table_count": 98,
+    "record_count": 934,
+    "record_states": {
+      "candidate": 435,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 70
+    },
+    "skills": 21,
+    "upgrades": 63,
+    "release_blockers": 684,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "implementation": {
+    "opened_skill_ids": [
+      8,
+      27
+    ],
+    "automatic_for_new_skills": false,
+    "source_ordered_mutable_cells": true,
+    "repulsion_monster_damage": 0,
+    "dash_damage_once": true,
+    "dash_zero_steps_paid_without_extra_lock": true,
+    "movement_before_final_baseline": true,
+    "ground_destination_preserved": true,
+    "teleport21_opened": false,
+    "saved_layouts_changed": false
+  },
+  "checks": {
+    "javascript": {
+      "passed": 242,
+      "scene": 16,
+      "ui_app": 226,
+      "skipped": 0
+    },
+    "python_config": {
+      "passed": 41
+    },
+    "windows_host": {
+      "passed": 4
+    },
+    "protobuf": {
+      "messages": 60,
+      "int64_fields": 114,
+      "boundary_cases": 377,
+      "message_ids": 47,
+      "error_codes": 31
+    },
+    "dotnet_source_vectors": {
+      "passed": 6400,
+      "scope": "逐字Repulsion/ShoulderDash/Pushed与MagicInfo/默认值；无PK、安全区、Spell、额外伤害属性；比较每实体真实路径和时钟，不认证通知跨实体墙钟顺序",
+      "go_fixture_sha256": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27"
+    },
+    "go": {
+      "passed_including_subtests": 403,
+      "skipped": 0,
+      "mongo_ws": true,
+      "race": true,
+      "source_files": 89,
+      "source_stable_during_test": true,
+      "report_sha256": "8fcf5d43b29ba758c61144f5df8adb4fce0ebd41d61a66525981414e56c16783",
+      "events_sha256": "220af062bce558efdde7bf4012c91bea2089568ae7b316c7c830c64f7f74e0c7"
+    },
+    "strict_creator_types": true,
+    "resources": {
+      "verified_pngs": 3332,
+      "source_packages_modified": false
+    }
+  },
+  "creator": {
+    "version": "3.8.8",
+    "platform": "web-mobile",
+    "success": true,
+    "seconds": 80.56,
+    "exit_code": 36,
+    "saved_assets": 10,
+    "layouts_preserved": true,
+    "source_stable": true
+  },
+  "browser": {
+    "skill_checks": 5,
+    "skill_screenshots": 6,
+    "javascript_errors": 0,
+    "warnings": [],
+    "generic_ui_checks": 6,
+    "generic_screenshots": 5,
+    "generic_warnings": [
+      {
+        "type": "warning",
+        "text": "Unexpected screen orientation: 13"
+      }
+    ],
+    "touch_input": true,
+    "physical_mobile_verified": false,
+    "isolated_preconditions": {
+      "passed": true,
+      "isolated_qa_preconditions": true,
+      "natural_progression_verified": false,
+      "roles": [
+        {
+          "name": "DMd2755422",
+          "role_id_sha256": "e975b161a4ca0ebb0586549d55394c450df140127eb94292e214fba77399a1ae",
+          "initial_level": 1,
+          "qa_level": 40,
+          "learned_skills_seeded": false,
+          "books_seeded": false,
+          "items_seeded": false
+        },
+        {
+          "name": "DWe445a7d2",
+          "role_id_sha256": "a70d3619685e7cbf6524726ae6a683b5824415ad853cae722a9c2bad45d8033b",
+          "initial_level": 1,
+          "qa_level": 40,
+          "learned_skills_seeded": false,
+          "books_seeded": false,
+          "items_seeded": false
+        }
+      ],
+      "scope": "只为本次新角色提供等级及余额，后续购书、原书学习和施放均走正常UI/owner链路"
+    },
+    "scope": "限定本机两项新技能正常购书/学习/施放；等级和余额是明确隔离QA前态，不证明自然养成、全阶GUI或真机"
+  },
+  "historical_failures": {
+    "preserved": true,
+    "first_full": "historical-first-full",
+    "second_full": "historical-second-full",
+    "fixes": [
+      "去除旧测试夹具把rule11降为10",
+      "旧材料测试纳入首入真实动作锁拒绝并校验同输入不能重放",
+      "治愈测试隔离站位保证宠物比玩家更近，避免等待不存在的受伤前态"
+    ],
+    "business_deadlines_relaxed": false
+  },
+  "limits": [
+    "瞬息移动21尚未实现；用户已确认先角色绑定点再来源瞬移",
+    "当前无Concentration、持续地面Spell及安全区；对拍不证明这些分支或源完整对象调度",
+    "每实体路径合并，不宣称跨实体原始通知交错顺序与源相同",
+    "浏览器等级40及余额为明确隔离QA前态；购书/学习/施放真实，非自然养成或全阶GUI证明",
+    "未执行真实未知提交网络故障注入、手机真机、容量、完整P0或目标1.80完整认证",
+    "开发服务曾在本机数据库续租超时后安全隔离；受控重启及后续短回归通过，不证明长期稳定或已定位超时根因",
+    "runtime_ready=false、684项正式配置阻断保留，不作为生产发布验收"
+  ],
+  "evidence_sha256": {
+    "outputs/development-displacement-skills-20261028/baseline-rule10/latest.events.jsonl": "df0b4f910147f463b72701daa9494ea3c04ad16cf57829752ab568073b67af6f",
+    "outputs/development-displacement-skills-20261028/baseline-rule10/latest.json": "337d929de7bd5efa174297aedbe2d8e7be34f94dbcbc5be51e24ec186696279f",
+    "outputs/development-displacement-skills-20261028/browser/27-01-purchase.png": "86ba700f9564179da28f8692c8ecc2aae303bddb6bcfa2e709845dfbd70e8ad9",
+    "outputs/development-displacement-skills-20261028/browser/27-02-learned.png": "9cceaa39ed2840b1869a34d669b848166f11f4203ac4f817308875d4abdabbb0",
+    "outputs/development-displacement-skills-20261028/browser/27-03-movement.png": "d1f87a1828808c91bfb93b999dd314e741ccb3a04c412233647dad435a4f283d",
+    "outputs/development-displacement-skills-20261028/browser/8-01-purchase.png": "32c8084e71810e0608c93521e3eb71be78003b460aaf5e9a10dbc3c91d2f7caa",
+    "outputs/development-displacement-skills-20261028/browser/8-02-learned.png": "9370a105e0ffd7115a06df649271038c6aaed9cdd06b8787b51b8c58a2689559",
+    "outputs/development-displacement-skills-20261028/browser/8-03-movement.png": "4127cf9ff8377d208251fedbae0270c22c54cbd2c15c9e34255409af28841d06",
+    "outputs/development-displacement-skills-20261028/browser/report.json": "dee7fc10607251088b9f9c449f953110fbe2cf6857fd20975d82b23013125f19",
+    "outputs/development-displacement-skills-20261028/browser/trace.json": "7d6a7fff3c69cf642e8b3ab493bc290a193c1a5941fc9436790e7aa41ddc9527",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/01-login.png": "637c937fec8b8879a3dfc9e214358d5b6cc6f46ccdd1855f05bfcaf6f295d36f",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/02-game.png": "4e56e5679b97ac6aad46f84f7c48947b6c76e1f36f8e40d00729b7dc194f20cd",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/03-navigation-panel.png": "8d5d082353433622939cb251fdc2c9386e5e8488cd8996f692f3d248ea3fd0ea",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/04-taller-viewport.png": "243f12223a01b7f95f54c3e75c1ae6689e62d460a113ed39fb196f8f75ec21bd",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/05-healthy-reentry.png": "31f231f37535add4e7631467a25dbd86635e428d7a1d7761f1563ef23b2fc1a1",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/failure.png": "bf1cd02cf3208d27eec50414ca066929226cdca4d61ef4b84e7bee70d0b8d7f0",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/navigation-trace.json": "a99419ad032ec635a31fccd9e817d8a13394826ef8f3bbe1b2b2251d6c2e8bd1",
+    "outputs/development-displacement-skills-20261028/browser-ui-smoke/report.json": "1bc89b6ead9d71bb3e4333eb74b167fb995f8a7bf1ea02f87c495517c185e018",
+    "outputs/development-displacement-skills-20261028/checks/check-0.json": "521c1262c44ad077e24a8172cd1027ed282fd51c1c98ab1158719fb9e8484891",
+    "outputs/development-displacement-skills-20261028/checks/check-0.txt": "dc36c5069458a5771927d78909a7920f502cf8010a9047f6e105c8bb31757693",
+    "outputs/development-displacement-skills-20261028/checks/check-1.json": "42077e2fcb677b1cd69e86be74d9e1009f21d138eb5055839c755503fcd41207",
+    "outputs/development-displacement-skills-20261028/checks/check-1.txt": "3c351442768a2bb0a70f4dcb8ebcb03e9bbd2c669c94560e13f5c56f0e044c26",
+    "outputs/development-displacement-skills-20261028/checks/check-2.json": "21b8bb9fd740213fbb8162b0889dfde86cec6ed7770897e50439a1d6b57a99eb",
+    "outputs/development-displacement-skills-20261028/checks/check-2.txt": "a9e1a081382b7f84611f824069d77a751039eb9beaab20db67cad3bedfa095a4",
+    "outputs/development-displacement-skills-20261028/checks/client-build-0.json": "b1d8df9e69ea355be3f310f064df99cd105a08e23b8df441bc829e88ff10ded5",
+    "outputs/development-displacement-skills-20261028/checks/client-build-0.txt": "8550226f58df429d808dc2c822694245f35d6c5e2647d53b281822b4d43ba30f",
+    "outputs/development-displacement-skills-20261028/checks/client-scene-test-0.json": "357528be191cde161b9c924013031efff253ad363b7429639dcea040e3baddff",
+    "outputs/development-displacement-skills-20261028/checks/client-scene-test-0.txt": "da70292a8e96a7662d91ca8936ada79495bdd094f0467dce2e47accdb6786728",
+    "outputs/development-displacement-skills-20261028/checks/client-scene-test-1.json": "81347559c75dba47171959d29b4970dbdac9a73925962492a06b083e0a1e9524",
+    "outputs/development-displacement-skills-20261028/checks/client-scene-test-1.txt": "265617f8bd497a801074c524f69e2d1693acf0961f101fbeded636322ce69531",
+    "outputs/development-displacement-skills-20261028/checks/client-test-0.json": "c44d43044762553aec01a5dc03f104883d4c3f6a21e7ef26723c60d2eae93c1a",
+    "outputs/development-displacement-skills-20261028/checks/client-test-0.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "outputs/development-displacement-skills-20261028/checks/client-test-1.json": "0219578f9b37b941241f126077675c343c67d7f6ebffbd8a5b5b6f007db1787e",
+    "outputs/development-displacement-skills-20261028/checks/client-test-1.txt": "72c038180c00ea579443ec5c8b1741c2468fb990d5f6983ec46bc2a4def682f7",
+    "outputs/development-displacement-skills-20261028/checks/client-typecheck-0.json": "672ff08aa6eee6b963bfea5024bc7008579c8ac616412b58fd116758b5f650c7",
+    "outputs/development-displacement-skills-20261028/checks/client-typecheck-0.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "outputs/development-displacement-skills-20261028/checks/development-resources-check-0.json": "fe558395907baccabbd05944e8a5bf4d155b9cd320a6ef13c9af2eea3bb3ad7f",
+    "outputs/development-displacement-skills-20261028/checks/development-resources-check-0.txt": "a6f64f9a166e2ea69e8890c6a0a52f739af1fcd0ba502ca8fa72000edf625e1a",
+    "outputs/development-displacement-skills-20261028/checks/development-resources-check-1.json": "03987ad033e062db03bacc41c63cf957e240ce4ede13d9a1d6a9a8ab7f934a63",
+    "outputs/development-displacement-skills-20261028/checks/development-resources-check-1.txt": "36b95403a82e6b85d386661f68cda0ea5dae4acf73aee048316121b8d733fec5",
+    "outputs/development-displacement-skills-20261028/checks/go-test-0.json": "b5b4ccf0b668fbf9ae53071f65a348c2e0128264ed26d2da4c79868689ade18c",
+    "outputs/development-displacement-skills-20261028/checks/go-test-0.txt": "ea99e24b5cafc13908ca0221c108bb886ddbf8f4edbae5f4f87da9a43f832b17",
+    "outputs/development-displacement-skills-20261028/checks/host-test-0.json": "c284f9ff3735bc28de2666641f1bf9df4c5c60887fc6691aa8045c01f2e7bf0b",
+    "outputs/development-displacement-skills-20261028/checks/host-test-0.txt": "977f52b022be0cd9772c8a81c1ee684fe8112a479cd99d0cf698f078b14e0748",
+    "outputs/development-displacement-skills-20261028/checks/protocol-check-0.json": "c6c5eaa2f26598ceb42341c16ab72c4e62715cedc6157261f8a58e80368c13b7",
+    "outputs/development-displacement-skills-20261028/checks/protocol-check-0.txt": "18d973e686edcae4887c523044d4c43e92186596957fd73ca27cfe30bdf21e3a",
+    "outputs/development-displacement-skills-20261028/checks/protocol-check-1.json": "e4eb0fb01735b27800eaa94f00e37ede32ff923d89c7c35da071dff922fc96d8",
+    "outputs/development-displacement-skills-20261028/checks/protocol-check-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "outputs/development-displacement-skills-20261028/checks/python-test-0.json": "65fe663c01207adb8b47d7c6363c097d30bc3f9d9616aeda2a6caceba9f16f1f",
+    "outputs/development-displacement-skills-20261028/checks/python-test-0.txt": "0ecc28f0c4d2cfd124109fd54cf33bbdb181fbdcc2e018b1b74383c0d3b57300",
+    "outputs/development-displacement-skills-20261028/checks/server-integration-test-0.json": "84421d9abc73929f72287cf57761bb118efbd3abe41b3e2880a7a3467f52fd3c",
+    "outputs/development-displacement-skills-20261028/checks/server-integration-test-0.txt": "6725dac3ac328ab3244b9b6dd7857b4c61d5fcd31d1cecf109b6c58dd0a84d00",
+    "outputs/development-displacement-skills-20261028/creator/build.json": "dc33c7744d24e8755db1b16446dd2c4d91b0dc4e826bd618f6c1a0670718bb7a",
+    "outputs/development-displacement-skills-20261028/creator/build.log": "e5887cbf67972ff87d0d31e8157f0bd346df9ae1982cbb7bd194ae14ced49ae9",
+    "outputs/development-displacement-skills-20261028/historical-browser/context.json": "1d7ebe5ea8fd8c881bc7959596c3bf0646b9992d9db23e67917600a90c16101e",
+    "outputs/development-displacement-skills-20261028/historical-browser/failure.png": "db352286193827d37e43b416699ccc037feea07d545e7d99534192cff58baeb2",
+    "outputs/development-displacement-skills-20261028/historical-dev-lease/browser-failed.json": "eb4faef6d358c786a32758eea56c034e24dee2288f09ee8ad52c1ea4758855b3",
+    "outputs/development-displacement-skills-20261028/historical-dev-lease/context.json": "3dd99b2f76982061580a3ffd7be9300b8ed30c4507880b70ff8f3d758a15db11",
+    "outputs/development-displacement-skills-20261028/historical-dev-lease/failure.png": "eb6932b2d8862a7465403a5fa00060cecbcaf1cfddc15612718e5b0523328d54",
+    "outputs/development-displacement-skills-20261028/historical-dev-lease/server.txt": "d0334641e0fa7e0d5df8599ef6fe77a16943431a83456b52b5c99dbbed2b35ae",
+    "outputs/development-displacement-skills-20261028/historical-first-full/latest.events.jsonl": "35b56ee6ce8ae6cbc9bb91c153e2c140f4751320099ec5de49626a68d952ac95",
+    "outputs/development-displacement-skills-20261028/historical-first-full/latest.json": "9693f9fff356427e690500ed0d346d3da56c24117c76735aef62a34b88e32389",
+    "outputs/development-displacement-skills-20261028/historical-second-full/latest.events.jsonl": "eb11098be4451eb403f6789393140da2561e10f151f6ccd13d3727779c4b45ec",
+    "outputs/development-displacement-skills-20261028/historical-second-full/latest.json": "46f8eb74547449fc43bd2727deedc77e42b17598203f7d431cbf80835b2638bd",
+    "outputs/development-displacement-skills-20261028/oracle/Driver.cs": "b0d245ba5edc21a13dffdf5fd911a963fc647ae9e10925ad48a7ecbdaa59da9f",
+    "outputs/development-displacement-skills-20261028/oracle/execution.log": "d34c368fd395c6611abacece2b628e7f64a109321bc22c0d3b5d55be2118c4c1",
+    "outputs/development-displacement-skills-20261028/oracle/global.json": "6e0770b2ba0441ab46cccab89febfa2cef6830df7a2aab62c025b4718a18999b",
+    "outputs/development-displacement-skills-20261028/oracle/Oracle.csproj": "5500354786e3863d0990ac6092d8373c56e1220912384c8e2b77cc2a456d9b41",
+    "outputs/development-displacement-skills-20261028/oracle/report.json": "72d0d6f6b2a376f8ab82ea4f912662a976af346bceacc916d5df4199c0d23b7f",
+    "outputs/development-displacement-skills-20261028/oracle/Source.cs": "58a9e824be11735e6ef155e1ee19959c810572ca9bfbfcbd078a5a9e123c2bdb",
+    "outputs/development-displacement-skills-20261028/resource-regeneration.json": "7b2f54c7145654e0f1879cd2331d269ecc34178b9cf739b6318d870e7e221244",
+    "outputs/development-displacement-skills-20261028/server/latest.events.jsonl": "220af062bce558efdde7bf4012c91bea2089568ae7b316c7c830c64f7f74e0c7",
+    "outputs/development-displacement-skills-20261028/server/latest.json": "8fcf5d43b29ba758c61144f5df8adb4fce0ebd41d61a66525981414e56c16783",
+    "outputs/development-displacement-skills-20261028/workbook-edit-review.json": "b3eddb654d3d1dc2f4800ca464a0eca978bebc76c1a793e34d68e8999362d548",
+    "outputs/development-displacement-skills-20261028/workbook-preservation.json": "01e9fed2a7053fb5a4a17f2c497b0df4658fccc12194ae55f6d9344d5dfaf358"
+  }
+}

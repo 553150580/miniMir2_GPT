@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "checks": [],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    }
+  ],
+  "preconditions": null,
+  "error": "page.waitForFunction: Timeout 45000ms exceeded.\n    at scene (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_displacement_browser.cjs:26:40)\n    at D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_displacement_browser.cjs:48:93"
+}

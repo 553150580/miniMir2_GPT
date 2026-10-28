@@ -47,11 +47,11 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536"
+      "sha256": "8d1ae5ba80c3d0ae09b839789a2e5e4a7dc1f912a181e3633780e7f75f38d7d6"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
-      "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+      "sha256": "dac257c2a23b2c1f61da4d80fd8c0a61089bac1ffd6a1e826cf430457dd40bd8"
     },
     {
       "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
@@ -72,6 +72,10 @@
     {
       "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
       "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    },
+    {
+      "path": "docs/抗拒火环与野蛮冲撞实施边界.md",
+      "sha256": "64c80a97a8c07a46549ed0d9ac5c0835d0e995c5f6c3252a634e9806f9b6b85d"
     }
   ],
   "workbooks": [
@@ -21034,6 +21038,726 @@
         }
       },
       "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 8,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": -7
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          },
+          "displacement": {
+            "type": "object",
+            "properties": {
+              "distance_base_by_level": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 1
+                }
+              },
+              "distance_random_bound": {
+                "type": "int",
+                "minimum": 1
+              },
+              "success_denominator": {
+                "type": "int",
+                "minimum": 0
+              },
+              "success_base": {
+                "type": "int",
+                "minimum": 0
+              },
+              "success_per_level": {
+                "type": "int",
+                "minimum": 0
+              },
+              "step_display_ms": {
+                "type": "int",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 8,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 8,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 8,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 81,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 81,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 82,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 82,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 83,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 83,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 27,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": -7
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          },
+          "displacement": {
+            "type": "object",
+            "properties": {
+              "distance_base_by_level": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 1
+                }
+              },
+              "distance_random_bound": {
+                "type": "int",
+                "minimum": 1
+              },
+              "success_denominator": {
+                "type": "int",
+                "minimum": 0
+              },
+              "success_base": {
+                "type": "int",
+                "minimum": 0
+              },
+              "success_per_level": {
+                "type": "int",
+                "minimum": 0
+              },
+              "step_display_ms": {
+                "type": "int",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 27,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 27,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 27,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 271,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 271,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 272,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 272,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 273,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 273,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
     }
   ]
 }

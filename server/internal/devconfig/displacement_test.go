@@ -17,7 +17,7 @@ func displacementFixtureJSON(t *testing.T) map[string]any {
 	if err := json.Unmarshal(data, &raw); err != nil {
 		t.Fatal(err)
 	}
-	raw["rule_version"] = 10
+	// 沿当前版本核验rule10引入的基础约束，避免强退版本使后续合法技能变成非法前态。
 	for _, actor := range raw["players"].([]any) {
 		actor.(map[string]any)["can_push"] = false
 	}
@@ -120,8 +120,8 @@ func TestDisplacementFoundationFalseAndDistinctTimingArePreserved(t *testing.T) 
 		t.Fatal("四种推挤时钟被合并或回退到攻击时钟")
 	}
 	for _, skill := range f.Skills {
-		if skill.ID == 8 || skill.ID == 27 || skill.ID == 21 {
-			t.Fatal("本轮不能开放三个位移技能")
+		if skill.ID == 21 {
+			t.Fatal("尚未建立绑定点前不能开启瞬息移动")
 		}
 	}
 	first := raw["skills"].([]any)[0].(map[string]any)

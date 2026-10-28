@@ -23,7 +23,7 @@ test('雷电巨大原始纵向帧保留997像素与WIL偏移，动作与旧资�
 });
 test('实际public投影的主动技能均有同kind完整资源，被动精神力读取独立准确阶表',()=>{
     const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
-    assert.equal(gameplay.skills.length,19);
+    assert.equal(gameplay.skills.length,21);
     for(const skill of gameplay.skills){
         if(skill.active){assert.equal(manifest.effects[String(skill.id)]?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(manifest.effects[String(skill.id)].hit_anchor,'grid');}
     }
@@ -32,6 +32,8 @@ test('实际public投影的主动技能均有同kind完整资源，被动精神�
         const row=gameplay.skills.find(skill=>skill.id===id);assert.equal(row.activation_kind,activation);assert.equal(row.target_kind,target);assert.equal(manifest.effects[String(id)].kind,row.kind);
     }
     assert.equal(gameplay.skills.find(skill=>skill.id===9).line_cells,4);
+    for(const id of [8,27])assert.equal(gameplay.skills.find(skill=>skill.id===id).auto_enabled,false);
+    assert.equal(gameplay.skills.some(skill=>skill.id===21),false);
 });
 test('四种战士刀光按原方向及阶数组取原WIL帧，身体仍六帧Attack1，未把紧凑索引当原帧',()=>{
     for(const [id,start]of [[7,1820],[12,2190],[25,2560]])for(let rank=0;rank<4;rank++)for(let direction=0;direction<8;direction++){

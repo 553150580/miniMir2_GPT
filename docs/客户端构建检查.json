@@ -36,7 +36,7 @@
     "client/assets/scripts/app/GameMessages.ts": "d9fc7d602eb71604d6eafd091517c4b834ebb553875926500d4b67dcd8c29b8b",
     "client/assets/scripts/app/GameSession.ts": "6935691f238f42a7e27aad4da5c5887bb174f8401dc73391f138c163e6c011e1",
     "client/assets/scripts/app/GameSkillAssets.ts": "232292e052fae3c28842224f1dfeab4cea51b846d8fe1218748ba3632eaa0b33",
-    "client/assets/scripts/app/GameSkills.ts": "ef667f54109dec617eb8e63eb3d69b2eaa62468c7ac16b3a02a3d79a88693111",
+    "client/assets/scripts/app/GameSkills.ts": "e273f5a97837ba6371200dd13379067052fb6eb17a5de441f4ca31605987aacc",
     "client/assets/scripts/app/GameWorldView.ts": "143e9ddda8e7b49fc7fe9f88b921e5b66b08a90bb83f022df25b92d5cfa20e3d",
     "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
     "client/assets/scripts/app/HudModel.ts": "ac8517466988ea5a6d7eefaf75ff7589515d88287791479bd9a9fdfa5e656be5",
@@ -44,8 +44,8 @@
     "client/assets/scripts/app/MapSurface.ts": "33474beb2021090df2d41e2f80190f30ec62edfb0b248e1aff6766719bc0270c",
     "client/assets/scripts/app/PendingOperations.ts": "6f1e2c78c6ca8469d81eccc571a910c1d55cf0b7a34a83130f6afabfbf47c79a",
     "client/assets/scripts/app/PotionModel.ts": "e5653b4d17a9698bef14449e81f2e8de8cb8e1fdc7ef72c12c6cc80643241670",
-    "client/assets/scripts/app/SkillAssetsModel.ts": "9937fb0132508795e65e4427eb572eb09991853eaff5f05371ed225fa171c24f",
-    "client/assets/scripts/app/SkillModel.ts": "fc78d5380a1e3ab0274dea9b1916a49bbc76a551eca69f44e2a2cd8541c3ecf8",
+    "client/assets/scripts/app/SkillAssetsModel.ts": "f1a6b9ba109a7b73168d6670cddc05949165373bd75ac28d7af019a149f9f53a",
+    "client/assets/scripts/app/SkillModel.ts": "092228209ef6197037eeff97f01cbf59d3751d0478137b9c3e02cb58476d549b",
     "client/assets/scripts/app/StatusEffects.ts": "d3a90d81eb468a0d896082c31d30a69d2282cf521129834cd65c098bee7fc134",
     "client/assets/scripts/app/StatusPlayback.ts": "28adbbba05f3a5777203b532170c9ea79121b39e48648c1743ce844c0d6ab940",
     "client/assets/scripts/app/SystemMessageLog.ts": "c2960d68c82e7a2a11e85081d9c2336928a6a7750e93ae70da0896707bc958d0",
@@ -70,7 +70,7 @@
     "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
     "client/assets/scripts/generated/protobuf/client_pb.js": "303b0f2656971f3626eb9566bc9f0693744b172df24295a49aecd239395e139a"
   },
-  "seconds": 171.48,
+  "seconds": 80.56,
   "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log",
   "physical_mobile_verified": false
 }

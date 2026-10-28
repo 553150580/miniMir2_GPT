@@ -86,55 +86,58 @@ type entity struct {
 	Statuses         map[uint32]*combatStatus
 	MovementRevision uint64
 	MovementKind     uint32
+	CellEntry        uint64
 }
 type room struct {
-	Role                domain.Role
-	Auth                persistence.Auth
-	Conn                Connection
-	Ready               bool
-	Scene               uint64
-	Baseline            uint64
-	Sequence            uint64
-	Player              entity
-	Pet                 *entity
-	Monsters            []*entity
-	MonsterCount        int
-	Auto                bool
-	Manual              bool
-	ManualDirection     uint32
-	Destination         *devconfig.Point
-	Navigation          navigationState
-	Pending             bool
-	PendingRetry        *job
-	RetryAt             time.Time
-	Waiting             []command
-	LastTick            time.Time
-	HostMS              int64
-	HostSession         string
-	DeathID             string
-	AwaitUntil          time.Time
-	LastBroadcast       time.Time
-	Loot                []*entity
-	LootUntil           time.Time
-	Potions             potionState
-	PendingOperationID  string
-	PendingFingerprint  string
-	InputSequence       uint32
-	NextSpell           time.Time
-	SkillCooldowns      map[uint32]time.Time
-	Casts               []pendingCast
-	CastID              uint64
-	Attacks             []pendingAttack
-	EventID             uint64
-	ScheduleID          uint64
-	KillFacts           []killFact
-	PreviewInFlight     bool
-	PreviewGeneration   uint64
-	Isolated            bool
-	MaterialEconomicSeq int64
-	MaterialSourceSeq   int64
-	MaterialGeneration  uint64
-	Melee               meleeState
+	Role                  domain.Role
+	Auth                  persistence.Auth
+	Conn                  Connection
+	Ready                 bool
+	Scene                 uint64
+	Baseline              uint64
+	Sequence              uint64
+	Player                entity
+	Pet                   *entity
+	Monsters              []*entity
+	MonsterCount          int
+	Auto                  bool
+	Manual                bool
+	ManualDirection       uint32
+	Destination           *devconfig.Point
+	Navigation            navigationState
+	Pending               bool
+	PendingRetry          *job
+	RetryAt               time.Time
+	Waiting               []command
+	LastTick              time.Time
+	HostMS                int64
+	HostSession           string
+	DeathID               string
+	AwaitUntil            time.Time
+	LastBroadcast         time.Time
+	Loot                  []*entity
+	LootUntil             time.Time
+	Potions               potionState
+	PendingOperationID    string
+	PendingFingerprint    string
+	InputSequence         uint32
+	NextSpell             time.Time
+	SkillCooldowns        map[uint32]time.Time
+	Casts                 []pendingCast
+	CastID                uint64
+	Attacks               []pendingAttack
+	EventID               uint64
+	ScheduleID            uint64
+	KillFacts             []killFact
+	PreviewInFlight       bool
+	PreviewGeneration     uint64
+	Isolated              bool
+	MaterialEconomicSeq   int64
+	MaterialSourceSeq     int64
+	MaterialGeneration    uint64
+	Melee                 meleeState
+	CellEntrySequence     uint64
+	DeferMovementSnapshot bool
 }
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
@@ -637,7 +640,9 @@ func (w *worker) revivePlayer(r *room) {
 	r.Melee.Revision++
 	r.Player.HP = r.Player.MaxHP
 	r.Player.MP = r.Player.MaxMP
-	r.Player.Pos = w.e.Store.Cfg.Fixture.Map.PlayerSpawn
+	if !w.relocate(r, &r.Player, w.e.Store.Cfg.Fixture.Map.PlayerSpawn) {
+		return
+	}
 	r.Player.Action = 0
 	r.DeathID = ""
 	// 同图复活仅释放摇杆，原地面导航目标保留并从新脚点继续规划。
@@ -680,7 +685,7 @@ func (w *worker) hosting(r *room, request uint32) {
 	w.send(r, p.MsgS2CHostingState, request, &pb.HostingState{RemainHostingSec: uint32(r.Role.HostingSeconds), AutoBattleEnabled: r.Auto, StateRevision: uint64(r.Role.Revision)})
 }
 func (w *worker) snapshot(r *room) {
-	if !r.Ready || r.Isolated {
+	if !r.Ready || r.Isolated || r.DeferMovementSnapshot {
 		return
 	}
 	w.baseline(r)

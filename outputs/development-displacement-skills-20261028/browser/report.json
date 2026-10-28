@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "checks": [
+    "正常注册账号，分别在保存的选角场景创建法师与战士",
+    "技能8经真实书店、报价确认和原书学习；没有预置技能书或技能等级",
+    "技能8真实触摸施放、MP只扣一次，并消费对应cast的权威位移路径",
+    "技能27经真实书店、报价确认和原书学习；没有预置技能书或技能等级",
+    "技能27真实触摸施放、MP只扣一次，并消费对应cast的权威位移路径"
+  ],
+  "errors": [],
+  "warnings": [],
+  "preconditions": {
+    "passed": true,
+    "isolated_qa_preconditions": true,
+    "natural_progression_verified": false,
+    "roles": [
+      {
+        "name": "DMd2755422",
+        "role_id_sha256": "e975b161a4ca0ebb0586549d55394c450df140127eb94292e214fba77399a1ae",
+        "initial_level": 1,
+        "qa_level": 40,
+        "learned_skills_seeded": false,
+        "books_seeded": false,
+        "items_seeded": false
+      },
+      {
+        "name": "DWe445a7d2",
+        "role_id_sha256": "a70d3619685e7cbf6524726ae6a683b5824415ad853cae722a9c2bad45d8033b",
+        "initial_level": 1,
+        "qa_level": 40,
+        "learned_skills_seeded": false,
+        "books_seeded": false,
+        "items_seeded": false
+      }
+    ],
+    "scope": "只为本次新角色提供等级及余额，后续购书、原书学习和施放均走正常UI/owner链路"
+  },
+  "touchInput": true,
+  "physicalMobileVerified": false,
+  "scope": "限定本机两项新技能正常购书/学习/施放；等级和余额是明确隔离QA前态，不证明自然养成、全阶GUI或真机"
+}

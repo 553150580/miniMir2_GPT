@@ -1,0 +1,10 @@
+{
+  "status": "observed_safe_isolation",
+  "at_local": "2026-10-28T22:45:48+08:00",
+  "observation": "account/game/gm在原有续租deadline内遇Mongo读/写关注超时，均隔离并退出；保留原日志，不放宽时限",
+  "root_cause_verified": false,
+  "capacity_verified": false,
+  "long_running_stability_verified": false,
+  "controlled_restart": true,
+  "final_browser_report": "../browser/report.json"
+}

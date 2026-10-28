@@ -21,7 +21,7 @@ def main():
         target.parent.mkdir(parents=True,exist_ok=True)
         temp=target.with_suffix(target.suffix+'.tmp');temp.write_bytes(data);os.replace(temp,target)
     record={'config_version':manifest['version'],'server':'server/internal/configtypes/config_types.go','client':'client/assets/scripts/generated/config_types.ts','runtime_ready':manifest['runtime_ready'],'generated_only':True}
-    (ROOT/'conf/toolchain/config-binding-sync.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    (ROOT/'conf/toolchain/config-binding-sync.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps(record,ensure_ascii=False))
 
 

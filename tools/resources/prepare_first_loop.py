@@ -167,7 +167,7 @@ SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpowe
 SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator buff_id material_item_id material_quantity'.split()
 SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked','auto_enabled']
 SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
-SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour','repulsion','shoulder_dash']
 SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self','friendly_self']
 BUFF_BEHAVIORS={'magic_shield':'magic_shield','soul_shield':'max_magic_defence','blessed_armour':'max_physical_defence'}
 BUFF_ATTRIBUTE_FIELDS='kind value_by_level target_level_divisor target_level_add hit_duration_loss_ms_per_hp'.split()
@@ -205,7 +205,8 @@ def skill_definitions(tables,profile):
                 **{k:row['cast_timing'][k] for k in SKILL_CAST_FIELDS},
                 'buff_id':buff_id,
                 **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost','material_item_id','material_quantity']},
-                **{k:row['damage_parameters'][k] for k in SKILL_DAMAGE_FIELDS}})
+                **{k:row['damage_parameters'][k] for k in SKILL_DAMAGE_FIELDS},
+                **({'displacement':deepcopy(row['target_rule']['displacement'])} if row['behavior_id'] in ['repulsion','shoulder_dash'] else {})})
         except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
     return result
 
@@ -257,13 +258,30 @@ def buff_definitions(tables,skills,supply):
         result.append(flat);names[str(id)]={'name':row['display_name'],'short_name':row['short_name']}
     return result,names
 
+def validate_displacement_skill(skill,profile):
+    if profile['rule_version']<11:raise ValueError('位移技能必须使用rule11及后续配置合同')
+    rules=skill['displacement'];keys={'distance_base_by_level','distance_random_bound','success_denominator','success_base','success_per_level','step_display_ms'}
+    if not isinstance(rules,dict) or set(rules)!=keys:raise ValueError('位移必须提供完整有类型参数')
+    bases=rules['distance_base_by_level']
+    if not isinstance(bases,list) or len(bases)!=skill['max_level']+1 or any(type(v) is not int or not 1<=v<=255 for v in bases):raise ValueError('位移每阶距离必须显式且有界')
+    for key in keys-{'distance_base_by_level'}:
+        if type(rules[key]) is not int or not 0<=rules[key]<=1000000:raise ValueError('位移参数必须是有界整数')
+    if rules['distance_random_bound']<1 or not 1<=rules['step_display_ms']<=30000 or skill['auto_enabled'] or skill['delay_base_ms'] or skill['projectile_ms_per_cell'] or skill['range_cells'] or skill['max_level']!=3:raise ValueError('当前位移仅手动、即时、原生0至3阶')
+    if skill['behavior']=='repulsion':
+        if rules['success_denominator']<1 or skill['area_radius']!=1:raise ValueError('抗拒需要中心及一圈和显式概率')
+    elif any(rules[k] for k in ['success_denominator','success_base','success_per_level']):raise ValueError('野蛮不使用抗拒概率')
+
 def validate_skills(profile,skills):
     """技能参数必须来自当前Excel，不按技能名或来源表临时填运行数值。"""
     import math
     if not isinstance(skills,list) or not skills:raise ValueError('开发夹具缺少技能定义')
     ids=set();books=set();behaviors=set()
     for skill in skills:
-        if not isinstance(skill,dict) or set(skill)!=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|set(SKILL_ARRAY_FIELDS)|{'name','behavior','target_kind','activation_kind'}:raise ValueError('技能字段不完整')
+        if not isinstance(skill,dict):raise ValueError('技能必须是有类型对象')
+        displacement=skill.get('behavior') in ['repulsion','shoulder_dash']
+        expected=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|set(SKILL_ARRAY_FIELDS)|{'name','behavior','target_kind','activation_kind'}|({'displacement'} if displacement else set())
+        if not isinstance(skill,dict) or set(skill)!=expected:raise ValueError('技能字段不完整')
+        if displacement:validate_displacement_skill(skill,profile)
         if any(type(skill[k]) is not int or skill[k]<0 or skill[k]>2**32-1 for k in SKILL_INT_FIELDS):raise ValueError('技能字段须为有界非负整数')
         if any(type(skill[k]) is not bool for k in SKILL_BOOL_FIELDS):raise ValueError('技能开关必须是明确布尔值')
         if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in SKILL_BEHAVIORS or skill['target_kind'] not in SKILL_TARGETS:raise ValueError('技能名称/行为/目标类型不合法')
@@ -273,12 +291,12 @@ def validate_skills(profile,skills):
         if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
         passive=skill['behavior'] in ['fencing','spirit_sword','slaying']
         if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
-        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid'}
+        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid','repulsion':'enemy_self','shoulder_dash':'enemy_direction'}
         if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
         activation={'fencing':'passive','spirit_sword':'passive','slaying':'passive_proc','thrusting':'toggle','half_moon':'toggle','flaming_sword':'charge'}.get(skill['behavior'],'cast')
         if skill['activation_kind']!=activation:raise ValueError('技能激活方式与执行管线不一致')
         if activation=='cast':
-            if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','auto_min_targets']):raise ValueError('施法时序或自动策略缺失')
+            if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','auto_min_targets']+([] if displacement else ['delay_base_ms'])):raise ValueError('施法时序或自动策略缺失')
             if skill['target_kind'] not in ['enemy_direction','enemy_self','friendly_self'] and skill['range_cells']<=0:raise ValueError('锁定或地面施法缺少射程')
             if skill['target_kind']=='friendly_self' and skill['range_cells']!=0:raise ValueError('自身技能不得附加射程')
         elif activation in ['toggle','charge','passive_proc'] and any(skill[k] for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell','auto_priority','auto_min_targets']):raise ValueError('近战模式不得复用施法时钟或自动施法策略')
@@ -291,7 +309,7 @@ def validate_skills(profile,skills):
         if len({v%8 for v in offsets})!=len(offsets) or (skill['secondary_distance_cells']==1 and 0 in offsets):raise ValueError('近战旁格重复或覆盖前格')
         if (activation=='toggle')!=bool(offsets) or bool(offsets)!=(skill['secondary_distance_cells']>0):raise ValueError('近战旁格范围与模式不一致')
         if (activation=='charge')!=(skill['charge_window_ms']>0):raise ValueError('充能截止与技能方式不一致')
-        if (skill['target_kind']=='enemy_direction')!=(skill['line_cells']>0) or skill['line_cells']>16:raise ValueError('方向技能直线格数无效')
+        if (skill['target_kind']=='enemy_direction' and not displacement)!=(skill['line_cells']>0) or skill['line_cells']>16:raise ValueError('方向技能直线格数无效')
         if skill['behavior']=='hell_fire' and (skill['line_cells']!=4 or not skill['line_stop_on_blocked'] or skill['line_step_ms']<=0):raise ValueError('地狱火必须遵守用户已审定的固定四格与逐格阻挡管线')
         if skill['target_kind']!='enemy_direction' and (skill['line_step_ms'] or skill['line_stop_on_blocked']):raise ValueError('非方向技能不得附加分格传播')
         if skill['non_undead_divisor']<1:raise ValueError('非亡灵除数必须为正整数')
@@ -531,7 +549,8 @@ def public_gameplay(fixture):
              'max_attack_bonus_by_level':deepcopy(s['max_attack_bonus_by_level']),
              'secondary_direction_offsets':deepcopy(s['secondary_direction_offsets']),'secondary_distance_cells':s['secondary_distance_cells'],
              'line_cells':s['line_cells'],'line_step_ms':s['line_step_ms'],'charge_window_ms':s['charge_window_ms'],
-             'source_status':'candidate','target_180_verified':False} for s in fixture['skills']]
+            'source_status':'candidate','target_180_verified':False,
+            **({'displacement':{k:deepcopy(s['displacement'][k]) for k in ['distance_base_by_level','distance_random_bound','step_display_ms']}} if 'displacement' in s else {})} for s in fixture['skills']]
     statuses=[]
     for buff in fixture['buffs']:
         names=fixture['_source_evidence']['buff_names'][str(buff['id'])]

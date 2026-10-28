@@ -1,0 +1,11 @@
+{
+  "status": "historical_failed_harness",
+  "reasons": [
+    "按钮定位与详情Popup名先后修正",
+    "技能受理误读30007，改为协议30006",
+    "首次怪物未进入半径1，改为观察真实活怪邻接后施放"
+  ],
+  "archived_screenshot": "failure.png",
+  "original_failed_reports_retained": false,
+  "note": "保留最后失败图和已知原因，不把已覆盖的旧报告重建成原始证据；最终通过另见browser/report.json"
+}

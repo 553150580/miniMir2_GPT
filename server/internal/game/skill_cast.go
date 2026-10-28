@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status bool }
+type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status, Displacement bool }
 
 type preparedCast struct {
 	Skill                                 devconfig.Skill
@@ -28,6 +28,7 @@ var skillHandlers = map[string]skillHandler{
 	"magic_shield": {Status: true}, "soul_shield": {Status: true, Area: true}, "blessed_armour": {Status: true, Area: true},
 	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
 	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
+	"repulsion": {SelfArea: true, Displacement: true}, "shoulder_dash": {Direction: true, Displacement: true},
 }
 
 func targetKind(s devconfig.Skill) string {
@@ -184,6 +185,14 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 			return nil, p.CodeSkillStateBlocked
 		}
 		duration *= int64(time.Second / time.Millisecond)
+	} else if handler.Displacement {
+		if s.Displacement == nil {
+			return nil, p.CodeSkillStateBlocked
+		}
+		// 野蛮只以0进入源技能公式，不抽职业DC/MC；抗拒怪物分支没有伤害计算。
+		if s.Behavior == "shoulder_dash" {
+			amount = w.magicAmount(s, level, 0)
+		}
 	} else if handler.Healing {
 		multiplier := s.HealingStatMultiplier
 		addLevel := s.AddCasterLevel
@@ -248,8 +257,14 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	if r.Conn == nil {
 		event.HostSession = r.HostSession
 	}
-	r.Casts = append(r.Casts, event)
+	if !skillHandlers[s.Behavior].Displacement {
+		r.Casts = append(r.Casts, event)
+	}
 	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(plan.Origin), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
+	if skillHandlers[s.Behavior].Displacement {
+		w.resolveDisplacementSkill(r, event, now)
+		return 0
+	}
 	w.snapshot(r)
 	return 0
 }

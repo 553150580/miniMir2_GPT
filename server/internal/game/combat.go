@@ -347,7 +347,9 @@ func (w *worker) step(r *room, now time.Time) {
 			m.HP = m.MaxHP
 			m.Life++
 			m.Statuses = nil
-			m.Pos = w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]
+			if !w.relocate(r, m, w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]) {
+				return
+			}
 			m.MovementRevision, m.MovementKind = 0, movementInitial
 			m.RespawnAt = time.Time{}
 			m.Action = 0

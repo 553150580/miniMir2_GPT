@@ -55,6 +55,8 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				cfg.Fixture.Monsters[0].AttackMin, cfg.Fixture.Monsters[0].AttackMax = 0, 0
 			}
 			if job == 2 {
+				// 首入自动的一步也不能使玩家与宠物同距；否则怪物会转打玩家，受伤宠物前态永远不成立。
+				cfg.Fixture.Map.PlayerSpawn = devconfig.Point{X: 8, Y: 10}
 				cfg.Fixture.Map.MonsterSpawns[0] = devconfig.Point{X: 8, Y: 6}
 				cfg.Fixture.Monsters[0].HP = cfg.Fixture.Pet.AttackMax * 10
 				cfg.Fixture.Monsters[0].AttackMin = cfg.Fixture.Pet.DefenceMax + cfg.Fixture.Healing.PetBasePerTick*2

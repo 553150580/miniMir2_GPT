@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "vectors": 6400,
+  "compiled_source_sha256": "58a9e824be11735e6ef155e1ee19959c810572ca9bfbfcbd078a5a9e123c2bdb",
+  "go_fixture_sha256": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27",
+  "sources": {
+    "资料参考/crystal/Server/MirObjects/HumanObject.cs": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+    "资料参考/crystal/Server/MirObjects/MonsterObject.cs": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+    "资料参考/crystal/Shared/Functions/Functions.cs": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278",
+    "资料参考/crystal/Shared/Enums.cs": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398",
+    "资料参考/crystal/Server/MirDatabase/MagicInfo.cs": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+    "资料参考/crystal/Server/MirEnvir/Envir.cs": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7"
+  },
+  "scope": "逐字Repulsion/ShoulderDash/Pushed与MagicInfo/默认值；无PK、安全区、Spell、额外伤害属性；比较每实体真实路径和时钟，不认证通知跨实体墙钟顺序",
+  "official_180_verified": false,
+  "runtime_configuration": false
+}

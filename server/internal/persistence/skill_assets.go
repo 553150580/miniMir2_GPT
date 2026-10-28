@@ -360,6 +360,22 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		afterMin, afterMax := powerBounds(s, p.To)
 		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: s.AccuracyBonus(p.From), BeforeMax: s.AccuracyBonus(p.From), AfterMin: s.AccuracyBonus(p.To), AfterMax: s.AccuracyBonus(p.To)}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}
+		if d := s.Displacement; d != nil {
+			cost := out.Stats[2]
+			key := "push_distance"
+			if s.Behavior == "shoulder_dash" {
+				key = "dash_distance"
+			}
+			before, after := int64(d.DistanceBaseByLevel[p.From]), int64(d.DistanceBaseByLevel[p.To])
+			distance := &pb.SkillNumericComparison{Key: key, BeforeMin: before, BeforeMax: before + d.DistanceRandomBound - 1, AfterMin: after, AfterMax: after + d.DistanceRandomBound - 1}
+			if s.Behavior == "repulsion" {
+				beforeChance := (d.SuccessBase + int64(p.From)*d.SuccessPerLevel) * 100 / d.SuccessDenominator
+				afterChance := (d.SuccessBase + int64(p.To)*d.SuccessPerLevel) * 100 / d.SuccessDenominator
+				out.Stats = []*pb.SkillNumericComparison{distance, {Key: "push_base_success_percent", BeforeMin: beforeChance, BeforeMax: beforeChance, AfterMin: afterChance, AfterMax: afterChance}, {Key: "monster_damage"}, cost}
+			} else {
+				out.Stats = []*pb.SkillNumericComparison{distance, out.Stats[0], cost}
+			}
+		}
 		if b, found := f.Buff(s.BuffID); found {
 			comparison := func(key string, before, after int64) *pb.SkillNumericComparison {
 				return &pb.SkillNumericComparison{Key: key, BeforeMin: before, BeforeMax: before, AfterMin: after, AfterMax: after}

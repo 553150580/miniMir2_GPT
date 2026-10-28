@@ -191,11 +191,17 @@ func TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS(t *testing.T
 			for {
 				response := tao.readFrame()
 				if response.Request == requestID && response.Error != 0 {
-					if response.Error != p.CodeSkillCooldown && response.Error != p.CodeSkillMaterialRequired {
+					if response.Error != p.CodeSkillCooldown && response.Error != p.CodeSkillMaterialRequired && response.Error != p.CodeSkillStateBlocked {
 						t.Fatalf("旧高输入污染新窗口：%v", response)
 					}
 					break
 				}
+			}
+			// 重入很快时旧施法动作仍可合法阻挡；同一新输入再次发送必须被水位拒绝，且不产生第二次施法。
+			repeated := tao.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: tao.entry.SceneEpoch, SkillId: 14, TargetGrid: tao.player().Position, InputSequence: tao.input})
+			tao.expectError(repeated, p.CodeStaleInput)
+			if slot().Quantity != 3 || tao.player().CastSequence != castSequence {
+				t.Fatal("新窗口的拒绝或重放仍消耗护符/重复施法")
 			}
 			// 原高输入100没有污染新binding序号；先等公共CD，再由Auto使用独立来源流水补缺失AC状态。
 			time.Sleep(2 * time.Second)

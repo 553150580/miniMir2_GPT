@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 922,
+  "record_count": 934,
   "status_counts": {
-    "candidate": 423,
+    "candidate": 435,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -257,6 +257,8 @@
     "game_shop_prices/22 尚为 candidate",
     "game_shop_prices/23 尚为 candidate",
     "game_shop_prices/24 尚为 candidate",
+    "game_shop_prices/25 尚为 candidate",
+    "game_shop_prices/26 尚为 candidate",
     "game_challenge_rules/3 尚为 candidate",
     "game_challenge_rules 第7行缺少必填 rule_value",
     "game_challenge_rules/4 尚为 unverified",
@@ -397,6 +399,10 @@
     "game_items 第28行缺少必填 max_stack",
     "game_items 第28行缺少必填 icon_resource_key",
     "game_items/187 尚为 unverified",
+    "game_items 第29行缺少必填 icon_resource_key",
+    "game_items/8 尚为 candidate",
+    "game_items 第30行缺少必填 icon_resource_key",
+    "game_items/5 尚为 candidate",
     "game_equipment/218 尚为 candidate",
     "game_equipment/193 尚为 candidate",
     "game_appearance：有效记录 0 条，至少需要 1 条",
@@ -461,6 +467,10 @@
     "game_skills/15 尚为 candidate",
     "game_skills 第23行缺少必填 range_pattern_id",
     "game_skills/31 尚为 candidate",
+    "game_skills 第24行缺少必填 range_pattern_id",
+    "game_skills/8 尚为 candidate",
+    "game_skills 第25行缺少必填 range_pattern_id",
+    "game_skills/27 尚为 candidate",
     "game_skill_upgrades/11 尚为 candidate",
     "game_skill_upgrades/12 尚为 candidate",
     "game_skill_upgrades/13 尚为 candidate",
@@ -518,6 +528,12 @@
     "game_skill_upgrades/311 尚为 candidate",
     "game_skill_upgrades/312 尚为 candidate",
     "game_skill_upgrades/313 尚为 candidate",
+    "game_skill_upgrades/81 尚为 candidate",
+    "game_skill_upgrades/82 尚为 candidate",
+    "game_skill_upgrades/83 尚为 candidate",
+    "game_skill_upgrades/271 尚为 candidate",
+    "game_skill_upgrades/272 尚为 candidate",
+    "game_skill_upgrades/273 尚为 candidate",
     "game_range_patterns：有效记录 0 条，至少需要 1 条",
     "game_buffs/14 尚为 candidate",
     "game_buffs/15 尚为 candidate",
@@ -684,6 +700,6 @@
   ],
   "workbook_hashes": {
     "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
-    "gameplay": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894"
+    "gameplay": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74"
   }
 }

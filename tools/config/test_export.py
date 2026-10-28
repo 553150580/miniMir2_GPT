@@ -97,7 +97,7 @@ class ConfigurationTests(unittest.TestCase):
                 contracts.append((contract['shape'],'can_push'))
             if contract['table_id']=='dev_first_loop_profile' and contract['field']=='parameters':
                 contracts.append((contract['shape']['properties']['players']['items'],'can_push'))
-        self.assertEqual(len(contracts),22)
+        self.assertEqual(len(contracts),len(self.data['dev_first_loop_profile'][0]['parameters']['skill_ids'])+3)
         for shape,key in contracts:
             with self.subTest(field=key):
                 field_shape=shape['properties'][key]

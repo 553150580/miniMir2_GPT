@@ -140,3 +140,27 @@ test('实际disabled护符门禁在Use/快捷共用施法入口和装卸入口�
     assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(14)),'护符未开放');assert.equal(models.skillQuickStateLabel(instance.skillSnapshot(),row(14)),'未开放');
     await assert.rejects(instance.setCastingSupply(false),/施法护符暂未开放/);await assert.rejects(instance.setCastingSupply(true),/施法护符暂未开放/);assert.equal(sent.length,0);
 });
+
+test('实际AppRoot抗拒不锁定宠物，野蛮只选方向，两者均不清理既有地面导航',()=>{
+    const {instance,session,row,definitions,definition,sent}=app();
+    definitions.push({...definition(8,'repulsion','enemy_self'),range:0,area_radius:1}, {...definition(27,'shoulder_dash','enemy_direction'),range:0,line_cells:0});
+    session.inventory.learnedSkills.push({skillId:8,level:0},{skillId:27,level:0});
+    instance.nav.setGroundTarget({x:9,y:8});instance.selectedTarget=3;
+    instance.castSkill(row(8));assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,8);assert.equal(sent[0].value.targetHandle,0);
+    instance.castSkill(row(27));assert.equal(sent.length,1);assert(instance.aim);
+    instance.consumeGround({x:5,y:2});assert.equal(sent.length,2);assert.equal(sent[1].value.skillId,27);assert.equal(sent[1].value.direction,2);assert.equal(sent[1].value.targetHandle,0);
+    assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+});
+
+test('位移技能各阶描述采用实际唯一投影，不把冲撞写成前方零格或抗拒伤害倍率',()=>{
+    const actual=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/development/gameplay.json'),'utf8'));
+    for(const id of [8,27])for(let level=0;level<4;level++){
+        const definition=actual.skills.find(value=>value.id===id),row={definition,level,learned:true,cost:models.skillCost(definition,level),status:'已学'};
+        const text=models.skillDescriptionLines(row,{}).join('\n'),d=definition.displacement,low=d.distance_base_by_level[level];
+        assert(text.includes(`${low}–${low+d.distance_random_bound-1}格`));assert(!text.includes('前方0格'));
+        if(id===8)assert(text.includes('不会对怪物造成伤害'));else assert(text.includes('冲撞受阻仍消耗魔法与冷却'));
+        const {GameSkills}=load(path.join(root,'client/assets/scripts/app/GameSkills.ts'),id=>id==='./SkillModel'?models:{});
+        const summary=GameSkills.prototype.description.call({},row,{sceneEpoch:'1'});
+        assert(summary.includes(`${low}–${low+d.distance_random_bound-1}格`));assert(!summary.includes('前方0格'));
+    }
+});

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 10,
+  "rule_version": 11,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -903,6 +903,120 @@
       "charge_window_ms": 0,
       "source_status": "candidate",
       "target_180_verified": false
+    },
+    {
+      "id": 8,
+      "name": "抗拒火环",
+      "job_id": 1,
+      "book_item_id": 8,
+      "learn_level": 12,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "repulsion",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "target_kind": "enemy_self",
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 2,
+      "level_cost": 2,
+      "cast_ms": 600,
+      "delay_base_ms": 1800,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false,
+      "displacement": {
+        "distance_base_by_level": [
+          1,
+          1,
+          2,
+          3
+        ],
+        "distance_random_bound": 2,
+        "step_display_ms": 300
+      }
+    },
+    {
+      "id": 27,
+      "name": "野蛮冲撞",
+      "job_id": 0,
+      "book_item_id": 5,
+      "learn_level": 30,
+      "initial_level": 0,
+      "max_level": 3,
+      "kind": "shoulder_dash",
+      "active": true,
+      "activation_kind": "cast",
+      "auto_enabled": false,
+      "buff_id": 0,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "target_kind": "enemy_direction",
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "range": 0,
+      "base_cost": 4,
+      "level_cost": 4,
+      "cast_ms": 600,
+      "delay_base_ms": 2500,
+      "delay_reduction_ms": 0,
+      "impact_base_ms": 0,
+      "projectile_ms_per_cell": 0,
+      "accuracy_per_level": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_step_ms": 0,
+      "charge_window_ms": 0,
+      "source_status": "candidate",
+      "target_180_verified": false,
+      "displacement": {
+        "distance_base_by_level": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "distance_random_bound": 2,
+        "step_display_ms": 300
+      }
     }
   ],
   "statuses": [
@@ -1751,6 +1865,84 @@
       ],
       "page_item_id": 900001,
       "page_cost": 20
+    },
+    {
+      "skill_id": 8,
+      "level": 1,
+      "required_role_level": 12,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 8,
+      "level": 2,
+      "required_role_level": 15,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 8,
+      "level": 3,
+      "required_role_level": 19,
+      "book_costs": [
+        {
+          "item_id": 8,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 27,
+      "level": 1,
+      "required_role_level": 30,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 27,
+      "level": 2,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 27,
+      "level": 3,
+      "required_role_level": 34,
+      "book_costs": [
+        {
+          "item_id": 5,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
     }
   ],
   "skill_book_recycle": [
@@ -2437,6 +2629,78 @@
       "allowed_source_kinds": [
         "monster_drop"
       ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 8,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 5,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
     }
   ],
   "shop_offers": [
@@ -2687,6 +2951,30 @@
       "quantity": 1,
       "currency_kind": "gold",
       "price_units": 15000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 25,
+      "item_id": 8,
+      "name": "《抗拒火环》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 800,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32,
+      "source_status": "candidate"
+    },
+    {
+      "offer_id": 26,
+      "item_id": 5,
+      "name": "《野蛮冲撞》",
+      "quantity": 1,
+      "currency_kind": "gold",
+      "price_units": 12000,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32,
@@ -2947,6 +3235,26 @@
       ],
       "use_enabled": false,
       "skill_id": 31
+    },
+    {
+      "item_id": 8,
+      "name": "《抗拒火环》",
+      "kind": "book",
+      "allowed_jobs": [
+        1
+      ],
+      "use_enabled": false,
+      "skill_id": 8
+    },
+    {
+      "item_id": 5,
+      "name": "《野蛮冲撞》",
+      "kind": "book",
+      "allowed_jobs": [
+        0
+      ],
+      "use_enabled": false,
+      "skill_id": 27
     },
     {
       "item_id": 900001,
