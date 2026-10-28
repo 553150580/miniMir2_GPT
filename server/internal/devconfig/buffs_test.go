@@ -15,7 +15,7 @@ func TestStatusFixtureExplicitContractAndUnknownSupplyClosed(t *testing.T) {
 	if err = json.Unmarshal(data, &fixture); err != nil {
 		t.Fatal(err)
 	}
-	if len(fixture.Buffs) != 3 || fixture.CastingSupply.Enabled || len(fixture.CastingSupply.ItemIDs) != 1 || fixture.CastingSupply.ItemIDs[0] != 187 {
+	if len(fixture.Buffs) != 4 || fixture.CastingSupply.Enabled || len(fixture.CastingSupply.ItemIDs) != 1 || fixture.CastingSupply.ItemIDs[0] != 187 {
 		t.Fatal("当前阶段护符未定单位必须关闭且只选187")
 	}
 	item, _ := fixture.Item(187)

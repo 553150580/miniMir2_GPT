@@ -15,6 +15,7 @@ type BuffDefinition struct {
 	TargetLevelDivisor     int64   `json:"target_level_divisor"`
 	TargetLevelAdd         int64   `json:"target_level_add"`
 	DurationKind           string  `json:"duration_kind"`
+	DurationMS             int64   `json:"duration_ms,omitempty"`
 	StatAdd                int64   `json:"stat_add"`
 	StatMultiplier         int64   `json:"stat_multiplier"`
 	DurationSecondsByLevel []int64 `json:"duration_seconds_by_level"`
@@ -133,12 +134,21 @@ func (f *Fixture) ValidateBuffs() error {
 		}
 		seen[b.ID] = true
 		kinds[b.Kind] = true
-		for _, value := range append(append([]int64{b.TargetLevelDivisor, b.TargetLevelAdd, b.StatAdd, b.StatMultiplier, b.HitDurationLossMSPerHP}, b.ValueByLevel...), b.DurationSecondsByLevel...) {
+		for _, value := range append(append([]int64{b.TargetLevelDivisor, b.TargetLevelAdd, b.StatAdd, b.StatMultiplier, b.HitDurationLossMSPerHP, b.DurationMS}, b.ValueByLevel...), b.DurationSecondsByLevel...) {
 			if value < 0 || value > math.MaxInt32 {
 				return errors.New("状态数值必须为有界非负整数")
 			}
 		}
 		switch b.Kind {
+		case "teleport_mana_penalty":
+			if f.RuleVersion < 15 || b.DurationKind != "fixed_ms" || b.DurationMS <= 0 || !b.present["duration_ms"] || b.StackPolicy != "refresh_duration_keep_values" || b.RemoveOnPlayerDeath || !b.AllowDeadTargets || len(b.DurationSecondsByLevel) != 0 || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.StatAdd != 0 || b.StatMultiplier != 0 || b.HitDurationLossMSPerHP != 0 {
+				return errors.New("传送耗蓝惩罚须明确单一固定时长、尸体及重施保留规则")
+			}
+			for _, value := range b.ValueByLevel {
+				if value > 100 {
+					return errors.New("传送耗蓝惩罚百分比越界")
+				}
+			}
 		case "magic_shield":
 			if b.DurationKind != "mc_source_power" || b.StackPolicy != "ignore_present_on_impact" || !b.RemoveOnPlayerDeath || b.AllowDeadTargets || b.HitDurationLossMSPerHP <= 0 || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.StatMultiplier != 0 {
 				return errors.New("魔法盾的生效、重施、死亡与削时管线不完整")
@@ -165,6 +175,9 @@ func (f *Fixture) ValidateBuffs() error {
 		default:
 			return errors.New("当前状态子集不支持该状态类型")
 		}
+		if b.Kind != "teleport_mana_penalty" && b.DurationMS != 0 {
+			return errors.New("动态时长状态不能另带未使用的固定毫秒值")
+		}
 	}
 	used := map[uint32]bool{}
 	for _, s := range f.Skills {
@@ -182,12 +195,13 @@ func (f *Fixture) ValidateBuffs() error {
 			continue
 		}
 		b, ok := f.Buff(s.BuffID)
-		if !ok || used[b.ID] || len(b.ValueByLevel) != int(s.MaxLevel)+1 || len(b.DurationSecondsByLevel) != int(s.MaxLevel)+1 {
+		if !ok || used[b.ID] || len(b.ValueByLevel) != int(s.MaxLevel)+1 || b.Kind != "teleport_mana_penalty" && len(b.DurationSecondsByLevel) != int(s.MaxLevel)+1 {
 			return errors.New("技能状态引用或逐阶状态参数不完整")
 		}
 		used[b.ID] = true
-		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence"}[s.Behavior]
-		if b.Kind != wanted || b.Kind == "magic_shield" && (s.MaterialItemID != 0 || s.MaterialQuantity != 0) || b.Kind != "magic_shield" && (!supplies[s.MaterialItemID] || s.MaterialQuantity <= 0) {
+		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence", "teleport": "teleport_mana_penalty"}[s.Behavior]
+		withoutMaterial := b.Kind == "magic_shield" || b.Kind == "teleport_mana_penalty"
+		if b.Kind != wanted || withoutMaterial && (s.MaterialItemID != 0 || s.MaterialQuantity != 0) || !withoutMaterial && (!supplies[s.MaterialItemID] || s.MaterialQuantity <= 0) {
 			return errors.New("状态技能行为与永久耗材引用不一致")
 		}
 	}

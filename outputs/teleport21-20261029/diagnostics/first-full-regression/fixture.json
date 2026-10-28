@@ -1,0 +1,14 @@
+{
+  "task": "fixture",
+  "command": [
+    "python3",
+    "tools/resources/prepare_first_loop.py",
+    "--check"
+  ],
+  "exit_code": 1,
+  "started_at": "2026-10-28T21:22:30.258277+00:00",
+  "finished_at": "2026-10-28T21:22:31.393759+00:00",
+  "output": ".work/teleport21-20261029/checks/fixture.txt",
+  "output_sha256": "ca920e78c92a01c0eafd64284d83f3e357ee93e6ca0a323d12efa65dc2019dfd",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

@@ -1,6 +1,8 @@
 import { normalizeGameErrorMessage } from './GameErrors';
 import { roleBindingMapName } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
+import { teleportFailureText } from './TeleportModel';
+import type { TeleportObservation } from './TeleportModel';
 
 export type MessageInteger = string | number | bigint | { toString(): string };
 
@@ -20,6 +22,7 @@ export interface MessageSnapshot {
     roleIdentity: string;
     bindingState?: RoleBindingObservation | null;
     bindingNotice?: RoleBindingObservation | null;
+    teleportNotice?: TeleportObservation | null;
     role?: { name?: string; level?: number } | null;
     inventory?: {
         level?: number;
@@ -28,7 +31,7 @@ export interface MessageSnapshot {
         equipped?: readonly { item?: ItemObservation | null }[];
     } | null;
     wallet?: Partial<Record<'gold' | 'boundGold' | 'yuanbaoUnits' | 'boundYuanbaoUnits', MessageInteger>> | null;
-    baseline?: { entities?: readonly { entityHandle: number; entityKind: number; hp?: MessageInteger }[] } | null;
+    baseline?: { entities?: readonly { entityHandle: number; entityKind: number; hp?: MessageInteger; life?: MessageInteger }[] } | null;
     hosting?: { remainHostingSec?: MessageInteger; autoBattleEnabled?: boolean } | null;
     report?: {
         hostingSessionId?: Uint8Array;
@@ -87,6 +90,7 @@ export class SystemMessageLog {
     private previousDead: boolean | null = null;
     private previousHosting: { seconds: bigint; auto: boolean } | null = null;
     private readonly seenReports = new Set<string>();
+    private readonly seenTeleportResults = new Set<string>();
     private readonly seenBindingReceipts = new Set<string>();
     private lastBindingNotice = '';
     private change = 0;
@@ -115,7 +119,7 @@ export class SystemMessageLog {
             this.role = snapshot.roleIdentity; this.entries = []; this.change++;
             this.binding = ''; this.entered = false; this.wasReady = false; this.lastError = ''; this.lastNavigationNotice = '';
             this.seenReports.clear(); this.resetObservations();
-            this.seenBindingReceipts.clear(); this.lastBindingNotice = '';
+            this.seenBindingReceipts.clear(); this.lastBindingNotice = ''; this.seenTeleportResults.clear();
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';
         if (binding && binding !== this.binding) {
@@ -137,6 +141,7 @@ export class SystemMessageLog {
         }
         this.observeInventory(snapshot);
         this.observeBinding(snapshot);
+        this.observeTeleport(snapshot);
         this.observeWallet(snapshot);
         const player = snapshot.entry?.playerHandle ? snapshot.baseline?.entities?.find(entity => entity.entityHandle === snapshot.entry!.playerHandle) : undefined;
         if (player) {
@@ -223,6 +228,18 @@ export class SystemMessageLog {
         if (key === this.lastBindingNotice) return;
         this.lastBindingNotice = key;
         this.append('绑定已确认', `已绑定至${roleBindingMapName(notice, snapshot.gameplay?.map_catalog)} (${center.x},${center.y})`);
+    }
+
+    private observeTeleport(snapshot: MessageSnapshot): void {
+        const notice = snapshot.teleportNotice;
+        const player = snapshot.baseline?.entities?.find(entity => entity.entityHandle === snapshot.entry?.playerHandle);
+        if (!notice || notice.role !== snapshot.roleIdentity || notice.fromSceneEpoch !== snapshot.entry?.sceneEpoch?.toString()
+            || player?.life?.toString() !== notice.playerLife || notice.outcome === 1) return;
+        const message = teleportFailureText(notice.outcome), receipt = `${notice.role}:${notice.fromSceneEpoch}:${notice.playerLife}:${notice.castId}`;
+        if (!message || this.seenTeleportResults.has(receipt)) return;
+        this.seenTeleportResults.add(receipt);
+        if (this.seenTeleportResults.size > this.capacity) this.seenTeleportResults.delete(this.seenTeleportResults.values().next().value!);
+        this.append('瞬移未完成', message);
     }
 
     private append(title: string, message: string): void {

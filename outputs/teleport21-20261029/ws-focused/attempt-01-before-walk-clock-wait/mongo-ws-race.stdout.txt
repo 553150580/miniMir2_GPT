@@ -1,0 +1,9 @@
+=== RUN   TestTeleport21LearningBindingAndHealthyColdEntryMongoWS
+2026/10/29 05:09:40 INFO 开发节点就绪 mode=gm address=127.0.0.1:62233 database=minimir_dev_game_test_teleport_ef6aaca8c62dd674d1fe9e7e71684479 instance=6e9147584dc4305e78d2c2b043d9fcf6 runtime_ready=false
+2026/10/29 05:09:40 INFO 开发节点就绪 mode=account address=127.0.0.1:62231 database=minimir_dev_game_test_teleport_ef6aaca8c62dd674d1fe9e7e71684479 instance=7e3f23574a8f284b0aea191eb05b8e65 runtime_ready=false
+2026/10/29 05:09:41 INFO 开发节点就绪 mode=game address=127.0.0.1:62232 database=minimir_dev_game_test_teleport_ef6aaca8c62dd674d1fe9e7e71684479 instance=6d5cd59a6a167f3e043c0ab0f3c780e2 runtime_ready=false
+    first_loop_test.go:552: WS 30003 error3202；最近玩家状态=entity_handle:1 entity_kind:1 definition_id:1 position:{x:8 y:8} direction:3 hp:72 hp_max:72 action:1 mp:255 mp_max:255 move_interval_ms:600 attack_interval_ms:1134 combat_attributes:{physical_attack_min:2 physical_attack_max:2 magic_attack_min:2 magic_attack_max:2 accuracy:5 agility:15} movement_revision:20 movement_kind:4，已收到死亡通知=false
+--- FAIL: TestTeleport21LearningBindingAndHealthyColdEntryMongoWS (12.74s)
+FAIL
+FAIL	minimir/internal/integration	16.099s
+FAIL

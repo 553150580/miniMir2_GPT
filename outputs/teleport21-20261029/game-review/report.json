@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-29",
+  "scope": "只新增server/internal/game/teleport21_test.go；生产21由root实现，原core/既有tests未改",
+  "frozen": true,
+  "final_race": {
+    "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run '^TestTeleport21' -count=1 -v",
+    "tool_session": 57041,
+    "exit_code": 0,
+    "package_seconds": 6.608,
+    "top_level_tests": 20,
+    "input_files": 48,
+    "changed": [],
+    "stdout": "race-final.stdout.txt",
+    "result_and_input_hashes": "race-final.result.json",
+    "scope": "完整20组（含门格修复）实际通过；前19组历史结果保留于prior_19_group_race"
+  },
+  "additional_negative_probe": {
+    "test": "TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation",
+    "command": ".\\tools\\dev.ps1 go test ./internal/game -run '^TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation$' -count=1 -v",
+    "exit_code": 1,
+    "package_seconds": 4.737,
+    "stdout": "door-navigation-before.stdout.txt",
+    "finding": "实际来源合法闭门落点405,221后，正常点地406,221经过8轮真实step+Town预算仍在原格且status1；已报root受控修生产，未放宽随机落点或把门全局改可走",
+    "status": "root修复后同一断言已在最终20组race6.608s反向PASS；原FAIL完整保留，不裁掉合法落点、不开放全局门通行"
+  },
+  "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run '^TestTeleport21' -count=1 -v",
+  "tool_session": 57041,
+  "exit_code": 0,
+  "package_seconds": 6.608,
+  "top_level_tests": 20,
+  "stdout": "race-final.stdout.txt",
+  "capture": "同一subprocess完整stdout+stderr原始字节已归档",
+  "prior_19_group_race": {
+    "tool_session": 44518,
+    "exit_code": 0,
+    "package_seconds": 6.213,
+    "top_level_tests": 19,
+    "stdout_tail": "race.stdout-tail.txt",
+    "report_snapshot": "report-before-door-navigation.json"
+  },
+  "coverage": [
+    "真实rule15 Skill21输入、可信role缓存仅内存模型；无nil/legacy/无Zone/未知地图资格不付费、不抽伤害RNG",
+    "一次MP/200ms到期、独立轴半开上界和13x9非方rank0..3；200重复越界照计/第200次可成功",
+    "Due当前NoTeleport和当前Binding/rank，目的图NoTeleport不误拦；资格失效不退款/不新cast重试",
+    "同Life尸体已受理成功，新死人cast拒绝；同World场景不变/30013，跨World30014与Entry transition严格配对",
+    "实际来源闭门静态可落与动态占格独立模型；真实21节点在本批首中末不丢旧World HellFire后缀，旧角色火球按同图条件失效",
+    "整数MP惩罚只加传送、溢出拒绝、成功后30秒Flux、刷新重置时钟不叠惩罚、旧期限不误清、固定期限在NextProcess之前精确清除",
+    "100ms权威推移后同图位移Origin使用到期真实脚点",
+    "真实21落新Zone生成未排号candidate并保留到期OriginBindingSourceSeq7，前缀原World实际kill先占永久slot"
+  ],
+  "limits": [
+    "不是本阶段真实Mongo/WS证明；未预置operations/角色绑定，真实WS另测",
+    "矩形地图/动态额外居民/局部批组合是明确纯模型，不冒称新增来源城镇或正常按钮同时施放时序认证",
+    "无容量、真机或完整P0声明；全阶段最终冻结输入与全包由root统一验收"
+  ]
+}

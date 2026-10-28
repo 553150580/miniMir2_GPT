@@ -15,6 +15,8 @@ message EnterLineResult {
   uint64 next_economic_command_seq = 8;
   // 当前附着角色的实体句柄；客户端不能把所有玩家种类或固定句柄猜成本人。
   uint32 player_handle = 9;
+  // 非空时须与先到的服务端瞬移结果配对；普通入场、健康重入及手动旅行为空。
+  string server_transition_id = 10;
 }
 message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
@@ -51,6 +53,20 @@ message BindingState {
   uint32 cause = 6;
   uint64 safe_zone_id = 7;
   bool trusted = 8;
+}
+// 纯已执行结果，不接收客户端落点。跨图成功后才发送带同transition_id的新入场。
+message TeleportResult {
+  RoleKey role = 1;
+  uint64 from_scene_epoch = 2;
+  uint64 scene_epoch = 3;
+  uint64 cast_id = 4;
+  uint64 player_life = 5;
+  uint64 target_map_id = 6;
+  GridPoint position = 7;
+  uint64 movement_revision = 8;
+  // 1成功、2源图禁传、3尝试耗尽、4绑定资格失效、5原施法者失效、6迁移不可用。
+  uint32 outcome = 9;
+  string transition_id = 10;
 }
 message EntityState {
   uint32 entity_handle = 1;
@@ -121,6 +137,8 @@ message EntityStatusState {
   uint32 damage_reduction_percent = 7;
   uint32 caster_handle = 8;
   uint64 caster_life = 9;
+  // 对后续传送类施法生效的服务器实际百分比，不影响一般技能耗蓝。
+  uint32 teleport_mana_penalty_percent = 10;
 }
 // 纯观察值：含已生效临时状态，客户端不据此重新计算命中或修改伤害。
 message CombatAttributes {

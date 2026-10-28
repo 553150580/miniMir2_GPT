@@ -1,0 +1,1356 @@
+{
+  "passed": true,
+  "scope": "受控新法师只预置等级/余额；正常保存UI购书/原书学习、Walk可信绑定、同图及跨图21观察。后端200ms精确时点由独立服务端测试验收，不将网络观察冒充时钟证明；非自然养成/冷重建/真机/容量",
+  "expectedRuleVersion": "15",
+  "preconditions": {
+    "passed": true,
+    "isolated_qa_preconditions": true,
+    "natural_progression_verified": false,
+    "role": {
+      "role_id_sha256": "9abfd0606d4b208d6e17b2240abda7c158b354ef9a2335007642373ee9c38d05",
+      "initial_level": 1,
+      "qa_level": 19,
+      "books_seeded": false,
+      "skills_seeded": false,
+      "binding_seeded": false,
+      "position_seeded": false,
+      "other_role_fields_preserved": true
+    },
+    "scope": "仅隔离角色等级/余额前态；购书、原书学习、Walk绑定和21施放均走正常保存UI与owner链路"
+  },
+  "checks": [
+    "正常注册新法师；停服务后仅设置等级/余额，初始没有21原书、技能或绑定",
+    "真实书店报价确认购买原书13，使用原书学习21初学0级；没有预置书或技能",
+    "未绑定21明确拒绝受理，未扣MP或产生CastAccepted",
+    "正常Map确认进Town，真实地面轻触Walk到访安全区并等待可信提交，然后返回原个人图",
+    "21上行无目标/地图/坐标；跨图30014先于同IDEntry，真实目标资源/首视口完成后ACK，同Life/MP保持且只播入场光",
+    "Town同图成功保留scene且无新Entry/ACK，30013即时位移；Flux只加价传送并刷新30秒，非叠加",
+    "保存文字状态徽章/滚动详情明确显示传送耗蓝+30%，快捷槽显示瞬移；未增加固定布局或未核验美术",
+    "正常换角新票健康重入保留Town落点/Life/MP/可信绑定与Flux；空迁移ID不补播跨图光",
+    "正常返回保留的个人现场，可信Town绑定仍在；不是重建个人战斗或客户端改位置"
+  ],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "time": 1793222059742,
+      "scene": "12811381193842506748",
+      "baseline": "1",
+      "player": 1,
+      "map": "1",
+      "position": {
+        "x": 8,
+        "y": 8
+      },
+      "transitionId": "",
+      "resourceVersion": "15"
+    },
+    {
+      "time": 1793222067099,
+      "scene": "12811381193842506749",
+      "baseline": "2",
+      "player": 1,
+      "map": "2",
+      "position": {
+        "x": 633,
+        "y": 613
+      },
+      "transitionId": "",
+      "resourceVersion": "15"
+    },
+    {
+      "time": 1793222081729,
+      "scene": "12811381193842506750",
+      "baseline": "3",
+      "player": 1,
+      "map": "1",
+      "position": {
+        "x": 8,
+        "y": 8
+      },
+      "transitionId": "",
+      "resourceVersion": "15"
+    },
+    {
+      "time": 1793222082469,
+      "scene": "12811381193842506751",
+      "baseline": "4",
+      "player": 1,
+      "map": "2",
+      "position": {
+        "x": 624,
+        "y": 392
+      },
+      "transitionId": "846490579bac6cda74c15631663a1441",
+      "resourceVersion": "15"
+    },
+    {
+      "time": 1793222093822,
+      "scene": "12811381193842506751",
+      "baseline": "5",
+      "player": 1,
+      "map": "2",
+      "position": {
+        "x": 435,
+        "y": 517
+      },
+      "transitionId": "",
+      "resourceVersion": "15"
+    },
+    {
+      "time": 1793222099239,
+      "scene": "12811381193842506752",
+      "baseline": "6",
+      "player": 1,
+      "map": "1",
+      "position": {
+        "x": 8,
+        "y": 8
+      },
+      "transitionId": "",
+      "resourceVersion": "15"
+    }
+  ],
+  "acks": [
+    {
+      "time": 1793222060071,
+      "scene": "12811381193842506748",
+      "baseline": "1"
+    },
+    {
+      "time": 1793222067126,
+      "scene": "12811381193842506749",
+      "baseline": "2"
+    },
+    {
+      "time": 1793222081740,
+      "scene": "12811381193842506750",
+      "baseline": "3"
+    },
+    {
+      "time": 1793222085165,
+      "scene": "12811381193842506751",
+      "baseline": "4"
+    },
+    {
+      "time": 1793222096053,
+      "scene": "12811381193842506751",
+      "baseline": "5"
+    },
+    {
+      "time": 1793222099247,
+      "scene": "12811381193842506752",
+      "baseline": "6"
+    }
+  ],
+  "casts": [
+    {
+      "time": 1793222082197,
+      "scene": "12811381193842506750",
+      "cast": "1",
+      "life": "0",
+      "origin": {
+        "x": 8,
+        "y": 8
+      },
+      "input": 5,
+      "rank": 0
+    },
+    {
+      "time": 1793222086157,
+      "scene": "12811381193842506751",
+      "cast": "2",
+      "life": "0",
+      "origin": {
+        "x": 624,
+        "y": 392
+      },
+      "input": 6,
+      "rank": 0
+    }
+  ],
+  "results": [
+    {
+      "time": 1793222082468,
+      "fromScene": "12811381193842506750",
+      "scene": "12811381193842506751",
+      "cast": "1",
+      "life": "0",
+      "map": "2",
+      "position": {
+        "x": 624,
+        "y": 392
+      },
+      "revision": "21",
+      "outcome": 1,
+      "transitionId": "846490579bac6cda74c15631663a1441"
+    },
+    {
+      "time": 1793222086368,
+      "fromScene": "12811381193842506751",
+      "scene": "12811381193842506751",
+      "cast": "2",
+      "life": "0",
+      "map": "2",
+      "position": {
+        "x": 435,
+        "y": 517
+      },
+      "revision": "22",
+      "outcome": 1,
+      "transitionId": ""
+    }
+  ],
+  "displacements": [
+    {
+      "time": 1793222086375,
+      "scene": "12811381193842506751",
+      "cast": "2",
+      "life": "0",
+      "revision": "22",
+      "kind": 4,
+      "path": [
+        {
+          "x": 435,
+          "y": 517
+        }
+      ]
+    }
+  ],
+  "authority": [
+    {
+      "time": 1793222082471,
+      "scene": "12811381193842506751",
+      "sequence": "125",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 30000,
+      "percent": 30
+    },
+    {
+      "time": 1793222085166,
+      "scene": "12811381193842506751",
+      "sequence": "126",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 27303,
+      "percent": 30
+    },
+    {
+      "time": 1793222085173,
+      "scene": "12811381193842506751",
+      "sequence": "127",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 27300,
+      "percent": 30
+    },
+    {
+      "time": 1793222085549,
+      "scene": "12811381193842506751",
+      "sequence": "128",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 27100,
+      "percent": 30
+    },
+    {
+      "time": 1793222085550,
+      "scene": "12811381193842506751",
+      "sequence": "129",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 27000,
+      "percent": 30
+    },
+    {
+      "time": 1793222085570,
+      "scene": "12811381193842506751",
+      "sequence": "130",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 26900,
+      "percent": 30
+    },
+    {
+      "time": 1793222085767,
+      "scene": "12811381193842506751",
+      "sequence": "131",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 26700,
+      "percent": 30
+    },
+    {
+      "time": 1793222085977,
+      "scene": "12811381193842506751",
+      "sequence": "132",
+      "life": "0",
+      "revision": "21",
+      "mp": "245",
+      "remainingMs": 26500,
+      "percent": 30
+    },
+    {
+      "time": 1793222086159,
+      "scene": "12811381193842506751",
+      "sequence": "133",
+      "life": "0",
+      "revision": "21",
+      "mp": "232",
+      "remainingMs": 26323,
+      "percent": 30
+    },
+    {
+      "time": 1793222086167,
+      "scene": "12811381193842506751",
+      "sequence": "134",
+      "life": "0",
+      "revision": "21",
+      "mp": "232",
+      "remainingMs": 26300,
+      "percent": 30
+    },
+    {
+      "time": 1793222086376,
+      "scene": "12811381193842506751",
+      "sequence": "135",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 30000,
+      "percent": 30
+    },
+    {
+      "time": 1793222086377,
+      "scene": "12811381193842506751",
+      "sequence": "136",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 30000,
+      "percent": 30
+    },
+    {
+      "time": 1793222086377,
+      "scene": "12811381193842506751",
+      "sequence": "137",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 30000,
+      "percent": 30
+    },
+    {
+      "time": 1793222086567,
+      "scene": "12811381193842506751",
+      "sequence": "138",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29800,
+      "percent": 30
+    },
+    {
+      "time": 1793222086999,
+      "scene": "12811381193842506751",
+      "sequence": "139",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29600,
+      "percent": 30
+    },
+    {
+      "time": 1793222086999,
+      "scene": "12811381193842506751",
+      "sequence": "140",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29400,
+      "percent": 30
+    },
+    {
+      "time": 1793222087484,
+      "scene": "12811381193842506751",
+      "sequence": "141",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29200,
+      "percent": 30
+    },
+    {
+      "time": 1793222087484,
+      "scene": "12811381193842506751",
+      "sequence": "142",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29000,
+      "percent": 30
+    },
+    {
+      "time": 1793222087485,
+      "scene": "12811381193842506751",
+      "sequence": "143",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 29000,
+      "percent": 30
+    },
+    {
+      "time": 1793222087567,
+      "scene": "12811381193842506751",
+      "sequence": "144",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 28800,
+      "percent": 30
+    },
+    {
+      "time": 1793222087799,
+      "scene": "12811381193842506751",
+      "sequence": "145",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 28600,
+      "percent": 30
+    },
+    {
+      "time": 1793222087967,
+      "scene": "12811381193842506751",
+      "sequence": "146",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 28400,
+      "percent": 30
+    },
+    {
+      "time": 1793222088045,
+      "scene": "12811381193842506751",
+      "sequence": "147",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 28339,
+      "percent": 30
+    },
+    {
+      "time": 1793222093823,
+      "scene": "12811381193842506751",
+      "sequence": "148",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 22544,
+      "percent": 30
+    },
+    {
+      "time": 1793222096056,
+      "scene": "12811381193842506751",
+      "sequence": "149",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 20320,
+      "percent": 30
+    },
+    {
+      "time": 1793222096086,
+      "scene": "12811381193842506751",
+      "sequence": "150",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 20300,
+      "percent": 30
+    },
+    {
+      "time": 1793222096417,
+      "scene": "12811381193842506751",
+      "sequence": "151",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 20100,
+      "percent": 30
+    },
+    {
+      "time": 1793222096417,
+      "scene": "12811381193842506751",
+      "sequence": "152",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 20000,
+      "percent": 30
+    },
+    {
+      "time": 1793222096468,
+      "scene": "12811381193842506751",
+      "sequence": "153",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19900,
+      "percent": 30
+    },
+    {
+      "time": 1793222096670,
+      "scene": "12811381193842506751",
+      "sequence": "154",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19700,
+      "percent": 30
+    },
+    {
+      "time": 1793222096867,
+      "scene": "12811381193842506751",
+      "sequence": "155",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19500,
+      "percent": 30
+    },
+    {
+      "time": 1793222097067,
+      "scene": "12811381193842506751",
+      "sequence": "156",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19300,
+      "percent": 30
+    },
+    {
+      "time": 1793222097271,
+      "scene": "12811381193842506751",
+      "sequence": "157",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19100,
+      "percent": 30
+    },
+    {
+      "time": 1793222097367,
+      "scene": "12811381193842506751",
+      "sequence": "158",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 19000,
+      "percent": 30
+    },
+    {
+      "time": 1793222097467,
+      "scene": "12811381193842506751",
+      "sequence": "159",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18900,
+      "percent": 30
+    },
+    {
+      "time": 1793222097667,
+      "scene": "12811381193842506751",
+      "sequence": "160",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18700,
+      "percent": 30
+    },
+    {
+      "time": 1793222097867,
+      "scene": "12811381193842506751",
+      "sequence": "161",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18500,
+      "percent": 30
+    },
+    {
+      "time": 1793222098067,
+      "scene": "12811381193842506751",
+      "sequence": "162",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18300,
+      "percent": 30
+    },
+    {
+      "time": 1793222098268,
+      "scene": "12811381193842506751",
+      "sequence": "163",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18100,
+      "percent": 30
+    },
+    {
+      "time": 1793222098367,
+      "scene": "12811381193842506751",
+      "sequence": "164",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 18000,
+      "percent": 30
+    },
+    {
+      "time": 1793222098467,
+      "scene": "12811381193842506751",
+      "sequence": "165",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 17900,
+      "percent": 30
+    },
+    {
+      "time": 1793222098667,
+      "scene": "12811381193842506751",
+      "sequence": "166",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 17700,
+      "percent": 30
+    },
+    {
+      "time": 1793222098868,
+      "scene": "12811381193842506751",
+      "sequence": "167",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 17500,
+      "percent": 30
+    },
+    {
+      "time": 1793222099067,
+      "scene": "12811381193842506751",
+      "sequence": "168",
+      "life": "0",
+      "revision": "22",
+      "mp": "232",
+      "remainingMs": 17300,
+      "percent": 30
+    },
+    {
+      "time": 1793222099247,
+      "scene": "12811381193842506752",
+      "sequence": "169",
+      "life": "0",
+      "revision": "23",
+      "mp": "232",
+      "remainingMs": 17150,
+      "percent": 30
+    },
+    {
+      "time": 1793222099248,
+      "scene": "12811381193842506752",
+      "sequence": "170",
+      "life": "0",
+      "revision": "23",
+      "mp": "232",
+      "remainingMs": 17119,
+      "percent": 30
+    },
+    {
+      "time": 1793222099553,
+      "scene": "12811381193842506752",
+      "sequence": "171",
+      "life": "0",
+      "revision": "23",
+      "mp": "232",
+      "remainingMs": 17000,
+      "percent": 30
+    },
+    {
+      "time": 1793222099553,
+      "scene": "12811381193842506752",
+      "sequence": "172",
+      "life": "0",
+      "revision": "23",
+      "mp": "232",
+      "remainingMs": 16900,
+      "percent": 30
+    }
+  ],
+  "inputs": [
+    {
+      "time": 1793222062640,
+      "scene": "12811381193842506748",
+      "input": 1,
+      "skill": 21,
+      "targetGrid": null,
+      "targetHandle": 0
+    },
+    {
+      "time": 1793222082192,
+      "scene": "12811381193842506750",
+      "input": 5,
+      "skill": 21,
+      "targetGrid": null,
+      "targetHandle": 0
+    },
+    {
+      "time": 1793222086143,
+      "scene": "12811381193842506751",
+      "input": 6,
+      "skill": 21,
+      "targetGrid": null,
+      "targetHandle": 0
+    }
+  ],
+  "protocolErrors": [
+    {
+      "time": 1793222062664,
+      "id": 30003,
+      "code": 3202
+    }
+  ],
+  "moves": [
+    {
+      "x": 639,
+      "y": 619
+    },
+    {
+      "x": 645,
+      "y": 625
+    },
+    {
+      "x": 650,
+      "y": 631
+    }
+  ],
+  "groundChecks": [
+    {
+      "point": {
+        "x": 639,
+        "y": 619
+      },
+      "x": 648,
+      "y": 724,
+      "world": {
+        "x": -30408,
+        "y": 19632
+      },
+      "projected": {
+        "x": 30696,
+        "y": -19824
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "0",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 645,
+        "y": 625
+      },
+      "x": 648,
+      "y": 724,
+      "world": {
+        "x": -30696,
+        "y": 19824
+      },
+      "projected": {
+        "x": 30984,
+        "y": -20016
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 650,
+        "y": 631
+      },
+      "x": 600,
+      "y": 724,
+      "world": {
+        "x": -30984,
+        "y": 20016
+      },
+      "projected": {
+        "x": 31224,
+        "y": -20208
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    }
+  ],
+  "readyRuleChecks": [
+    {
+      "map": "1",
+      "scene": "12811381193842506748",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "2",
+      "scene": "12811381193842506749",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "1",
+      "scene": "12811381193842506750",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "2",
+      "scene": "12811381193842506751",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "2",
+      "scene": "12811381193842506751",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "2",
+      "scene": "12811381193842506751",
+      "resourceVersion": "15"
+    },
+    {
+      "map": "1",
+      "scene": "12811381193842506752",
+      "resourceVersion": "15"
+    }
+  ],
+  "clientResultPackets": 0,
+  "naturalProgressionVerified": false,
+  "physicalMobileVerified": false,
+  "initial": {
+    "map": "1",
+    "scene": "12811381193842506748",
+    "baseline": "1",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "revision": "0",
+    "hp": "72",
+    "mp": "255",
+    "level": 19,
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506748",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "火球术"
+    ],
+    "lastError": ""
+  },
+  "learned": {
+    "map": "1",
+    "scene": "12811381193842506748",
+    "baseline": "1",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "revision": "0",
+    "hp": "72",
+    "mp": "255",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506748",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "expectedQualificationRejection": {
+    "time": 1793222062664,
+    "id": 30003,
+    "code": 3202
+  },
+  "safe": {
+    "map": "2",
+    "scene": "12811381193842506749",
+    "baseline": "2",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "revision": "19",
+    "hp": "72",
+    "mp": "255",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506749",
+      "roleRevision": "5",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "personalBefore": {
+    "map": "1",
+    "scene": "12811381193842506750",
+    "baseline": "3",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "revision": "20",
+    "hp": "72",
+    "mp": "255",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506750",
+      "roleRevision": "5",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "cross": {
+    "map": "2",
+    "scene": "12811381193842506751",
+    "baseline": "4",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 624,
+      "y": 392
+    },
+    "life": "0",
+    "revision": "21",
+    "hp": "72",
+    "mp": "245",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506751",
+      "roleRevision": "5",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "complete",
+    "transitionId": "846490579bac6cda74c15631663a1441",
+    "render": true,
+    "auto": false,
+    "statuses": [
+      {
+        "id": 21,
+        "remainingMs": 27300,
+        "percent": 30
+      }
+    ],
+    "arrivalNodes": [
+      "arrival:846490579bac6cda74c15631663a1441:in"
+    ],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "crossObservedDelayMs": 271,
+  "same": {
+    "map": "2",
+    "scene": "12811381193842506751",
+    "baseline": "4",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 435,
+      "y": 517
+    },
+    "life": "0",
+    "revision": "22",
+    "hp": "72",
+    "mp": "232",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506751",
+      "roleRevision": "5",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "846490579bac6cda74c15631663a1441",
+    "render": true,
+    "auto": false,
+    "statuses": [
+      {
+        "id": 21,
+        "remainingMs": 29800,
+        "percent": 30
+      }
+    ],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "fluxRefresh": {
+    "time": 1793222086376,
+    "scene": "12811381193842506751",
+    "sequence": "135",
+    "life": "0",
+    "revision": "22",
+    "mp": "232",
+    "remainingMs": 30000,
+    "percent": 30
+  },
+  "status": {
+    "map": "2",
+    "scene": "12811381193842506751",
+    "baseline": "4",
+    "resourceVersion": "15",
+    "binding": "1",
+    "position": {
+      "x": 435,
+      "y": 517
+    },
+    "life": "0",
+    "revision": "22",
+    "hp": "72",
+    "mp": "232",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506751",
+      "roleRevision": "5",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "846490579bac6cda74c15631663a1441",
+    "render": true,
+    "auto": false,
+    "statuses": [
+      {
+        "id": 21,
+        "remainingMs": 29400,
+        "percent": 30
+      }
+    ],
+    "arrivalNodes": [],
+    "statusDetail": [
+      "时空波动",
+      "技能等级 0",
+      "剩余 30 秒",
+      "传送技能魔法消耗 +30%",
+      "仅影响传送技能，成功传送刷新持续时间"
+    ],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "health": {
+    "map": "2",
+    "scene": "12811381193842506751",
+    "baseline": "5",
+    "resourceVersion": "15",
+    "binding": "2",
+    "position": {
+      "x": 435,
+      "y": 517
+    },
+    "life": "0",
+    "revision": "22",
+    "hp": "72",
+    "mp": "232",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506751",
+      "roleRevision": "6",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [
+      {
+        "id": 21,
+        "remainingMs": 20300,
+        "percent": 30
+      }
+    ],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  },
+  "healthFlux": {
+    "remainingBefore": 28400,
+    "elapsedMs": 8411,
+    "activeAfter": true
+  },
+  "returned": {
+    "map": "1",
+    "scene": "12811381193842506752",
+    "baseline": "6",
+    "resourceVersion": "15",
+    "binding": "2",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "revision": "23",
+    "hp": "72",
+    "mp": "232",
+    "level": 19,
+    "learned": {
+      "id": 21,
+      "level": 0
+    },
+    "books": [],
+    "roleBinding": {
+      "role": "1:fdf035531f75a98660b512db2b4df395",
+      "sceneEpoch": "12811381193842506752",
+      "roleRevision": "6",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "ready": true,
+    "teleportPhase": "idle",
+    "transitionId": "",
+    "render": true,
+    "auto": false,
+    "statuses": [
+      {
+        "id": 21,
+        "remainingMs": 17119,
+        "percent": 30
+      }
+    ],
+    "arrivalNodes": [],
+    "statusDetail": [],
+    "quickLabel": [
+      "瞬移"
+    ],
+    "lastError": ""
+  }
+}

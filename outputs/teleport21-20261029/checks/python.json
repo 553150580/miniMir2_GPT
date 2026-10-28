@@ -1,0 +1,19 @@
+{
+  "task": "python",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T21:38:09.571945+00:00",
+  "finished_at": "2026-10-28T21:38:34.238928+00:00",
+  "output": ".work/teleport21-20261029/checks/python.txt",
+  "output_sha256": "3548cfde938f149010b419cae540d01ae1af4f8fd4c9f18e8f7c372664f48dbf",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

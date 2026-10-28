@@ -1,0 +1,30 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "./internal/persistence",
+    "-count=1",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 10.258776903152466,
+  "inputs_before": {
+    "server\\internal\\persistence\\skill_assets.go": "2e9182c61e368e1e38e33cca9ff411855bb34078db20e43c2f04b0ef5070ead8",
+    "server\\internal\\persistence\\skill_assets_test.go": "1c5441a13154dd81ff8bcda760b52d6adc6cc3b5b919bf7bf13807877f2260e3",
+    "config\\development\\first-loop.json": "17819f767b54c8b3b27529dd9edc44c76a0aeb49cca76cb75f74369525d7f0b0"
+  },
+  "inputs_after": {
+    "server\\internal\\persistence\\skill_assets.go": "2e9182c61e368e1e38e33cca9ff411855bb34078db20e43c2f04b0ef5070ead8",
+    "server\\internal\\persistence\\skill_assets_test.go": "1c5441a13154dd81ff8bcda760b52d6adc6cc3b5b919bf7bf13807877f2260e3",
+    "config\\development\\first-loop.json": "17819f767b54c8b3b27529dd9edc44c76a0aeb49cca76cb75f74369525d7f0b0"
+  },
+  "inputs_stable": true,
+  "scope": "仅正式纯单元quote.Proto；无Mongo、无全包"
+}

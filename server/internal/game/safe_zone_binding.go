@@ -20,6 +20,8 @@ type safeZoneBindingFact struct {
 	room                *room
 	conn                Connection
 	actor               actorRef
+	scene               uint64
+	order               uint64
 	movement, cellEntry uint64
 	center              domain.RoleBinding
 	zoneID              uint64
@@ -59,13 +61,15 @@ func (w *worker) prepareSafeZoneWalk(r *room, e *entity, point devconfig.Point) 
 	if err != nil {
 		return nil, false
 	}
-	return &safeZoneBindingFact{request: q, auth: r.Auth, room: r, conn: r.Conn, center: center, zoneID: zone.ID, fingerprint: persistence.Hash(raw)}, true
+	return &safeZoneBindingFact{request: q, auth: r.Auth, room: r, conn: r.Conn, scene: r.Scene, center: center, zoneID: zone.ID, fingerprint: persistence.Hash(raw)}, true
 }
 
 func (w *worker) submitSafeZoneBinding(r *room, fact *safeZoneBindingFact, now time.Time) {
 	// 调用点已完成本次walk和独立时钟。此后既有Pending屏障停止本tick的宠物/怪物新动作。
-	fact.actor = reference(r, &r.Player)
-	fact.movement, fact.cellEntry = r.Player.MovementRevision, r.Player.CellEntry
+	if fact.actor.World == (worldRef{}) {
+		fact.actor = reference(r, &r.Player)
+		fact.movement, fact.cellEntry = r.Player.MovementRevision, r.Player.CellEntry
+	}
 	r.PendingBinding = fact
 	r.Pending = true
 	r.PendingOperationID = fact.request.EventID
@@ -84,7 +88,44 @@ func (w *worker) submitSafeZoneBinding(r *room, fact *safeZoneBindingFact, now t
 func bindingReceiptMatches(fact *safeZoneBindingFact, role domain.Role, receipt persistence.Operation) bool {
 	b := receipt.Binding
 	return role.ID == fact.auth.RoleID && role.Revision > fact.request.ExpectedRevision && role.SourceSeq >= fact.request.SourceSeq && role.BindingSourceSeq >= fact.request.SourceSeq && role.Binding != nil && role.BindingSafeZoneID > 0 &&
-		receipt.ID == fmt.Sprintf("binding:%s:%d", fact.auth.RoleID, fact.request.SourceSeq) && receipt.RoleID == fact.auth.RoleID && receipt.Kind == "safe_zone_binding" && receipt.Code == 0 && receipt.SourceSeq == fact.request.SourceSeq && receipt.Digest == fact.fingerprint && b != nil && b.EventID == fact.request.EventID && b.Action == "walk" && b.Point == fact.center && b.ZoneID == fact.zoneID && b.RuleVersion == fact.request.ExpectedRuleVersion && b.ConfigHash == fact.request.ExpectedConfigHash
+		receipt.ID == fmt.Sprintf("binding:%s:%d", fact.auth.RoleID, fact.request.SourceSeq) && receipt.RoleID == fact.auth.RoleID && receipt.Kind == "safe_zone_binding" && receipt.Code == 0 && receipt.SourceSeq == fact.request.SourceSeq && receipt.Digest == fact.fingerprint && b != nil && b.EventID == fact.request.EventID && b.Action == fact.request.Action && b.Point == fact.center && b.ZoneID == fact.zoneID && b.RuleVersion == fact.request.ExpectedRuleVersion && b.ConfigHash == fact.request.ExpectedConfigHash
+}
+
+// 已成功动作的候选先占唯一未排号槽；SourceSeq/Revision只在owner事实队首冻结。
+func (w *worker) queueBindingCandidate(r *room, fact *safeZoneBindingFact) bool {
+	if fact == nil || r.BindingCandidate != nil || r.PendingBinding != nil || r.FactOrder == math.MaxUint64 || r.Isolated {
+		return false
+	}
+	if cap := w.e.Store.Cfg.Fixture.CombatTiming.KillQueueCapacity; cap > 0 && len(r.KillFacts)+1 > cap {
+		return false
+	}
+	r.FactOrder++
+	fact.order, fact.room, fact.auth, fact.conn, fact.scene = r.FactOrder, r, r.Auth, r.Conn, r.Scene
+	fact.actor = reference(r, &r.Player)
+	fact.movement, fact.cellEntry = r.Player.MovementRevision, r.Player.CellEntry
+	fact.request.SourceSeq, fact.request.ExpectedRevision = 0, 0
+	r.BindingCandidate = fact
+	return true
+}
+
+func (w *worker) admitBindingCandidate(r *room, now time.Time) {
+	fact := r.BindingCandidate
+	if fact == nil || r.Pending || r.Isolated {
+		return
+	}
+	if fact.auth != r.Auth || fact.room != r || r.Role.SourceSeq == math.MaxInt64 || r.Role.Revision == math.MaxInt64 {
+		w.isolateRoom(r)
+		return
+	}
+	fact.request.SourceSeq, fact.request.ExpectedRevision = r.Role.SourceSeq+1, r.Role.Revision
+	raw, err := json.Marshal(fact.request)
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	fact.fingerprint = persistence.Hash(raw)
+	r.BindingCandidate = nil
+	w.submitSafeZoneBinding(r, fact, now)
 }
 
 func (w *worker) finishSafeZoneBinding(fact *safeZoneBindingFact, role domain.Role, receipt persistence.Operation, err error, retry *job) {
@@ -115,7 +156,7 @@ func (w *worker) finishSafeZoneBinding(fact *safeZoneBindingFact, role domain.Ro
 	// 绑定不改HP/MP/CD/Buff/药效，也不更改客户端economic command游标。
 	w.assets(r)
 	cause := uint32(1)
-	if r.Conn == fact.conn && r.Auth == fact.auth && r.Scene == fact.actor.Scene && r.Player.Life == fact.actor.Life && r.Role.BindingSourceSeq == fact.request.SourceSeq && r.Role.Binding != nil && *r.Role.Binding == fact.center && r.Role.BindingSafeZoneID == fact.zoneID {
+	if r.Conn == fact.conn && r.Auth == fact.auth && r.Scene == fact.scene && r.Player.Life == fact.actor.Life && r.Role.BindingSourceSeq == fact.request.SourceSeq && r.Role.Binding != nil && *r.Role.Binding == fact.center && r.Role.BindingSafeZoneID == fact.zoneID {
 		cause = 2
 	}
 	w.bindingState(r, cause)

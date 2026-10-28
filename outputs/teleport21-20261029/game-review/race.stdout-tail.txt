@@ -1,0 +1,2 @@
+PASS
+ok  	minimir/internal/game	6.213s

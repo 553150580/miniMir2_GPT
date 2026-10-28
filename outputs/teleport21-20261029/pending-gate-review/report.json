@@ -1,0 +1,33 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run ^TestTeleport21PriorTickKillPending -count=1 -v",
+  "exit_code": 0,
+  "seconds": 11.64,
+  "input_files": 93,
+  "changed": [],
+  "stdout_sha256": "735aa673f78dc3c38b4ac26b7a868a09f289835e585f69866f1c0e37eea4f0be",
+  "scope": "真实rule15已受理Hellfire/21及实际kill slot/job的受控回调纯组件race；不是真实Mongo或网络unknown注入",
+  "finished_utc": "2026-10-28T21:40:02.614762+00:00",
+  "passed": true,
+  "top_level_tests": 1,
+  "subcases": [
+    "inflight_kill",
+    "operation_pending_callback"
+  ],
+  "package_seconds": 5.016,
+  "test_file": "server/internal/game/teleport21_pending_test.go",
+  "test_sha256": "1cfe5842faa7e7c68e3af1510a067a8e05f02fa425526ed9c7f14c23892498e0",
+  "fixture_sha256": "0edbe0d5e7bb8f5ac71592469fbced1b37ac896e5c572380f76f53f5631456d6",
+  "evidence": "attempt-01/",
+  "decision": "保留原A28永久Pending/unknown冻结；200ms为原Due，不是硬实时上限",
+  "coverage": [
+    "原配置500ms首格/100ms后继/1800ms间隔，首kill受控慢回调后正常受理21",
+    "下一tick实际Hellfire child再kill产生真实Pending slot/job；非手填Pending",
+    "200/400ms及事件入口保持原Due/cast/order/slot/fingerprint/job，未扣第二次MP或随机选点",
+    "operation_pending受控回调不接纳out Role、保留原retry；不冒充网络unknown故障",
+    "原job成功后首次650ms模型tick一次迁移，Flux从实际执行now开始，后续不重播"
+  ],
+  "limits": [
+    "受控组件回调，不是真实Mongo慢提交或完整网络UnknownTransactionCommitResult注入",
+    "不改变任何生产Go/TS或技能数值；实际服务器/客户端最终全包与实构由Root负责"
+  ]
+}

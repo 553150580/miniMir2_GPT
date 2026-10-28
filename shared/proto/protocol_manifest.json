@@ -410,6 +410,18 @@
       "source_ref": "2026-10-28位移共用底座：真实路径、运动水位及身体动作隔离；非新技能开放"
     },
     {
+      "value": 30014,
+      "name": "MsgS2CTeleportResult",
+      "proto_message": "TeleportResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "docs/瞬息移动与世界执行身份实施边界.md；200ms已执行结果，跨图结果与真实入场配对，不接客户端指定坐标"
+    },
+    {
       "value": 40001,
       "name": "MsgC2SEquip",
       "proto_message": "EquipRequest",

@@ -93,11 +93,21 @@ type entity struct {
 	CellEntry        uint64
 }
 type room struct {
+	*worldState
+	PersonalWorld         *worldState
+	TownWorld             *worldState
+	ExecutionEpoch        uint64
+	WorldSequence         uint64
+	InflightEvents        int
+	EventBatch            []dueEvent
+	AdvancingEvents       bool
+	FactOrder             uint64
+	BindingCandidate      *safeZoneBindingFact
+	SettlementGeneration  uint64
 	Role                  domain.Role
 	Auth                  persistence.Auth
 	Conn                  Connection
 	Ready                 bool
-	MapID                 uint64
 	Travel                *mapTravelPlan
 	TravelHistory         *mapTravelHistory
 	SavedPersonal         *personalWorld
@@ -107,13 +117,8 @@ type room struct {
 	Sequence              uint64
 	Player                entity
 	Pet                   *entity
-	Monsters              []*entity
-	MonsterCount          int
-	Auto                  bool
 	Manual                bool
 	ManualDirection       uint32
-	Destination           *devconfig.Point
-	Navigation            navigationState
 	Pending               bool
 	PendingRetry          *job
 	PendingBinding        *safeZoneBindingFact
@@ -125,17 +130,13 @@ type room struct {
 	DeathID               string
 	AwaitUntil            time.Time
 	LastBroadcast         time.Time
-	Loot                  []*entity
-	LootUntil             time.Time
 	Potions               potionState
 	PendingOperationID    string
 	PendingFingerprint    string
 	InputSequence         uint32
 	NextSpell             time.Time
 	SkillCooldowns        map[uint32]time.Time
-	Casts                 []pendingCast
 	CastID                uint64
-	Attacks               []pendingAttack
 	EventID               uint64
 	ScheduleID            uint64
 	KillFacts             []killFact
@@ -346,7 +347,7 @@ func (w *worker) command(c command) {
 				c.conn.Close("development room budget")
 				return
 			}
-			r = &room{Role: domain.Role{ID: c.role}}
+			r = &room{Role: domain.Role{ID: c.role}, worldState: &worldState{}}
 			w.rooms[c.role] = r
 		}
 		w.join(r, c)
@@ -660,10 +661,14 @@ func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
 func (w *worker) initialize(r *room, role domain.Role) {
 	w.cancelTownNavigation(r)
 	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
+	r.worldState = &worldState{}
+	r.PersonalWorld, r.TownWorld = nil, nil
+	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
 	f := &w.e.Store.Cfg.Fixture
 	r.MapID = f.Map.ID
 	player, _ := f.Player(role.Job)
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
+	r.PersonalWorld = r.currentWorld()
 	r.Role = role
 	r.Potions.LastAppliedSeq = role.EconomicSeq
 	r.Navigation = navigationState{}

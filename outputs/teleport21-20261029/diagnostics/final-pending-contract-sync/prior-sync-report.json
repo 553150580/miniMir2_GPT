@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "fixture_before_sha256": "8ab87252900b09cf8c6852c6cb65c55ece665af11dd9f0b350f9b8dce0aa7892",
+  "fixture_after_sha256": "17819f767b54c8b3b27529dd9edc44c76a0aeb49cca76cb75f74369525d7f0b0",
+  "runtime_fields_byte_semantics_unchanged": true,
+  "changed_source_evidence_fields": [
+    "source_locks"
+  ],
+  "public_bytes_unchanged": true,
+  "public_sha256": "91fd231920d3ffae7c5078e18f3aa09af9f8fae99380af3a855dcd1aef237041",
+  "reason": "边界文档增加导航保持及来源静态落点离开说明后，source_locks摘要同步；运行数值和客户端资源不变。",
+  "earlier_ws_gui_scope": "此前真实WS及浏览器对应旧夹具摘要；本报告证明运行字段完全相同，最终全包使用新摘要。"
+}

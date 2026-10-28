@@ -1,0 +1,8 @@
+=== RUN   TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease
+=== RUN   TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease/inflight_kill
+=== RUN   TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease/operation_pending_callback
+--- PASS: TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease (0.10s)
+    --- PASS: TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease/inflight_kill (0.06s)
+    --- PASS: TestTeleport21PriorTickKillPendingRetainsDueAndExecutesOnlyAfterRelease/operation_pending_callback (0.04s)
+PASS
+ok  	minimir/internal/game	5.016s

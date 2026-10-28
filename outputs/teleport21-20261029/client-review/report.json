@@ -1,0 +1,40 @@
+{
+  "completed_utc": "2026-10-28T20:56:26.000413+00:00",
+  "client_model_tests_passed": 329,
+  "client_model_tests_failed": 0,
+  "creator_declaration_typecheck_passed": true,
+  "production_ts_frozen_before_final_tests": true,
+  "final_185_input_hashes_still_match": false,
+  "creator_build_verified_by_this_agent": false,
+  "browser_executed_by_this_agent": false,
+  "services_started_by_this_agent": false,
+  "database_written_by_this_agent": false,
+  "evidence": [
+    {
+      "path": ".work/teleport21-20261029/client-review/final-rule15/report.json",
+      "sha256": "1bb2c2d390ef3b1d8c08c356cfee06b445141f347cdee0238ac9e7627d42bf3a"
+    },
+    {
+      "path": ".work/teleport21-20261029/client-review/gui-tool-check/report.json",
+      "sha256": "0fddcab0d14f95ee5133f426b6a1fde680fd894e3b3bde50c3ef58c4b4cf477f"
+    },
+    {
+      "path": ".work/teleport21-20261029/client-review/final-preview-fix/report.json",
+      "sha256": "f4a01308bc45dbd9553b1084744dfec25ea29dac22f13207e495e72fc348d810"
+    }
+  ],
+  "gui_command": ".\\tools\\dev.ps1 node tools/client/verify_teleport_browser.cjs --report-dir .work/teleport21-20261029/browser-final",
+  "gui_tool_sha256": {
+    "tools/client/prepare_teleport_qa.py": "3b7a10f8f42c9cbdac2afae4698cc37f06c325aba53b9c21bd4d5fefacec88e1",
+    "tools/client/verify_teleport_browser.cjs": "f52e0dcd180e08b01f127f83b4a24ced0e4b7a6a371b99850a85b241b86718c4"
+  },
+  "scope": "客户端329模型/类型与只读证据终审；Pending gate为受控组件race。旧328实构/GUI保持历史，新报价修复实构/最终全包由Root另证。",
+  "post_test_drift": [
+    "config/development/first-loop.json"
+  ],
+  "source_lock_only_sync_evidence": ".work/teleport21-20261029/fixture-source-lock-sync.json",
+  "current_client_and_tests_match_preview_fix": true,
+  "pending_gate_report": ".work/teleport21-20261029/pending-gate-review/report.json",
+  "readonly_review": ".work/teleport21-20261029/client-review/final-readonly-review.md",
+  "updated_utc": "2026-10-28T21:44:19.637034+00:00"
+}

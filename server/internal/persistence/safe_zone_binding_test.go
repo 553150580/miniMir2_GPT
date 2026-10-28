@@ -1,7 +1,9 @@
 package persistence
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"math"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -12,6 +14,12 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
+
+func enableTeleportBindingFixture(s *Store) {
+	s.Cfg.Fixture.RuleVersion = 15
+	s.Cfg.Fixture.Skills = []devconfig.Skill{{ID: 21, JobID: 1, Behavior: "teleport", LearnedLevel: 0, MaxLevel: 3}}
+	s.Cfg.Fixture.Maps[0].SourceStaticBits = make([]byte, len(s.Cfg.Fixture.Maps[0].CollisionBits))
+}
 
 func safeBindingFixture() (*Store, domain.Role, SafeZoneBindingRequest) {
 	enabled := true
@@ -235,5 +243,117 @@ func TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState(t *tes
 				t.Fatal("非整数、缺字段、重复或夹带临时状态的证明被接受", err)
 			}
 		})
+	}
+}
+
+func TestTeleportBindingRule15PreservesOldWalkDigestAndProof(t *testing.T) {
+	s, role, q := safeBindingFixture()
+	oldRequest := struct {
+		SourceSeq, ExpectedRevision int64
+		ExpectedRuleVersion         uint64
+		ExpectedConfigHash          string
+		MapID                       uint64
+		Position                    devconfig.Point
+		Action, EventID             string
+	}{q.SourceSeq, q.ExpectedRevision, q.ExpectedRuleVersion, q.ExpectedConfigHash, q.MapID, q.Position, q.Action, q.EventID}
+	oldJSON, _ := json.Marshal(oldRequest)
+	newJSON, _ := json.Marshal(q)
+	if !bytes.Equal(oldJSON, newJSON) {
+		t.Fatal("新增可选origin字段改变旧walk摘要", string(oldJSON), string(newJSON))
+	}
+	_, role, old := safeBindingOperation(t)
+	enableTeleportBindingFixture(s)
+	if err := s.validateBindingOperation(role, old); err != nil {
+		t.Fatal("rule15不能冷验原walk14证明", err)
+	}
+	old.Binding.Action = "teleport"
+	if err := s.validateBindingOperation(role, old); Code(err) != p.CodeLineForbidden {
+		t.Fatal("rule14回执被改标签后获得teleport资格", err)
+	}
+	old.Binding.RuleVersion = 15
+	if err := s.validateBindingOperation(role, old); err != nil {
+		t.Fatal("rule15 typed teleport证明无法冷验", err)
+	}
+	// 后续关闭技能不撤销已经签发的永久绑定；fresh提交仍单独检查当前功能及已学资格。
+	s.Cfg.Fixture.Skills = nil
+	if err := s.validateBindingOperation(role, old); err != nil {
+		t.Fatal("当前技能目录变化错误撤销已提交来源证明", err)
+	}
+}
+
+func TestTeleportBindingRequiresSelectedLearnedSkillAndVerifiedOrigin(t *testing.T) {
+	for _, change := range []string{"valid", "rule14", "not_selected", "wrong_behavior", "not_learned", "wrong_job", "rank", "nil_binding", "unproved_same_center", "missing_zone", "missing_origin", "stale_origin", "wrong_map"} {
+		t.Run(change, func(t *testing.T) {
+			s, role, old := safeBindingOperation(t)
+			enableTeleportBindingFixture(s)
+			role.Job, role.Skills, role.BindingSafeZoneID = 1, []domain.LearnedSkill{{SkillID: 21, Level: 1}}, old.Binding.ZoneID
+			q := SafeZoneBindingRequest{SourceSeq: role.SourceSeq + 1, ExpectedRevision: role.Revision, ExpectedRuleVersion: 15, ExpectedConfigHash: s.Cfg.Fixture.Hash, MapID: role.Binding.MapID, Position: devconfig.Point{X: 4, Y: 2}, Action: "teleport", EventID: strings.Repeat("e", 32), OriginBindingSourceSeq: role.BindingSourceSeq}
+			switch change {
+			case "rule14":
+				s.Cfg.Fixture.RuleVersion = 14
+			case "not_selected":
+				s.Cfg.Fixture.Skills = nil
+			case "wrong_behavior":
+				s.Cfg.Fixture.Skills[0].Behavior = "fireball"
+			case "not_learned":
+				role.Skills = nil
+			case "wrong_job":
+				role.Job = 0
+			case "rank":
+				role.Skills[0].Level = 4
+			case "nil_binding":
+				role.Binding = nil
+			case "unproved_same_center":
+				role.BindingSourceSeq = 0
+			case "missing_zone":
+				role.BindingSafeZoneID = 0
+			case "missing_origin":
+				q.OriginBindingSourceSeq = 0
+			case "stale_origin":
+				q.OriginBindingSourceSeq--
+			case "wrong_map":
+				q.MapID = 1
+			}
+			err := s.validateBindingOrigin(role, q)
+			if change == "valid" {
+				if err != nil {
+					t.Fatal("合法21来源资格被拒", err)
+				}
+			} else if err == nil {
+				t.Fatal("未验证的坐标或非21来源取得teleport资格")
+			}
+		})
+	}
+}
+
+func TestTeleportBindingUsesSourceStaticLandingAndStrictActionOrigin(t *testing.T) {
+	s, _, q := safeBindingFixture()
+	enableTeleportBindingFixture(s)
+	q.ExpectedRuleVersion, q.Action, q.OriginBindingSourceSeq = 15, "teleport", 1
+	m := &s.Cfg.Fixture.Maps[0]
+	index := q.Position.Y*m.Width + q.Position.X
+	m.CollisionBits[index/8] |= 1 << uint(index%8) // 本作开发闭门位；原静态位仍为Walk。
+	binding, _, err := s.prepareSafeZoneBinding(q)
+	if err != nil || binding.Point != (domain.RoleBinding{MapID: 2, X: 3, Y: 2}) {
+		t.Fatal("21落点被额外闭门过滤，或未写首匹配中心", binding, err)
+	}
+	m.SourceStaticBits[index/8] |= 1 << uint(index%8)
+	if _, _, err = s.prepareSafeZoneBinding(q); Code(err) != p.CodeLineForbidden {
+		t.Fatal("21穿过来源静态墙", err)
+	}
+	m.SourceStaticBits[index/8] = 0
+	for _, change := range []string{"teleport14", "teleport_no_origin", "walk_with_origin"} {
+		bad := q
+		switch change {
+		case "teleport14":
+			bad.ExpectedRuleVersion = 14
+		case "teleport_no_origin":
+			bad.OriginBindingSourceSeq = 0
+		case "walk_with_origin":
+			bad.Action = "walk"
+		}
+		if _, _, err := s.prepareSafeZoneBinding(bad); err == nil {
+			t.Fatal("动作版本或origin字段不完整仍通过", change)
+		}
 	}
 }

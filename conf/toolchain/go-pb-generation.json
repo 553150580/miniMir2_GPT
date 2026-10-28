@@ -5,13 +5,13 @@
     "account.proto": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964",
     "assets.proto": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23",
     "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
-    "world.proto": "8bad9283f774dc93606a10607c63202e5dcc4fa5000d2492583dab1295ed1f31"
+    "world.proto": "e82932ce6413edbe3844a1987d438e52f8f10016debbd61b52bfae2f669c6926"
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
-    "server/api/generated/minimirv1/world.pb.go": "034bb026ae044cf58b03269a72fe777d0e740983c43d19bea7b335790535ecba"
+    "server/api/generated/minimirv1/world.pb.go": "f687d9c888779d7331d517126f9cbff1880d5c30d7b819c4a053af0db91691af"
   },
   "business_implemented": false
 }

@@ -26,19 +26,7 @@ const (
 )
 
 // 只保存一个休眠个人现场，不复制角色、钱包、宠物或永久提交所有者。
-type personalWorld struct {
-	MapID          uint64
-	PlayerPosition devconfig.Point
-	PetPosition    devconfig.Point
-	HasPet         bool
-	Monsters       []*entity
-	MonsterCount   int
-	Auto           bool
-	Destination    *devconfig.Point
-	Navigation     navigationState
-	Loot           []*entity
-	LootUntil      time.Time
-}
+type personalWorld = worldState
 
 // 只保存已接受ID的墓碑。满时拒新计划，不能遗忘旧取消/到期ID再让迟到确认复活。
 // 命名空间由连接、真实会话代次和原scene共同限定，不因取消或超时自行重置。
@@ -327,7 +315,7 @@ func (w *worker) progressMapTravel(r *room, now time.Time) bool {
 	if plan.Phase != travelQuiescing {
 		return false
 	}
-	if r.Pending || r.PendingRetry != nil || len(r.KillFacts) != 0 || len(r.Waiting) != 0 || len(r.Casts) != 0 || len(r.Attacks) != 0 {
+	if r.Pending || r.PendingRetry != nil || len(r.KillFacts) != 0 || len(r.Waiting) != 0 || r.eventCount() != 0 {
 		return true
 	}
 	return w.finishMapTravel(r, plan, now)
@@ -424,36 +412,37 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		w.sendTravelState(r, plan, plan.Request)
 		return false
 	}
-	w.cancelTownNavigation(r)
+	var destinationWorld *worldState
 	if plan.Destination == travelToTown {
-		saved := &personalWorld{MapID: r.MapID, PlayerPosition: r.Player.Pos, Monsters: r.Monsters, MonsterCount: r.MonsterCount,
-			Auto: r.Auto, Destination: r.Destination, Navigation: r.Navigation, Loot: r.Loot, LootUntil: r.LootUntil}
-		if r.Pet != nil {
-			saved.HasPet, saved.PetPosition = true, r.Pet.Pos
+		r.PersonalWorld, r.SavedPersonal = r.currentWorld(), r.currentWorld()
+		if r.TownWorld == nil {
+			r.TownWorld = r.newWorld(plan.TargetMapID)
 		}
-		r.SavedPersonal = saved
-		r.Monsters, r.MonsterCount, r.Loot = nil, 0, nil
-		r.LootUntil = time.Time{}
-		r.Auto, r.Destination, r.Navigation = false, nil, navigationState{}
+		destinationWorld = r.TownWorld
+		if destinationWorld == nil || destinationWorld.MapID != plan.TargetMapID {
+			plan.Phase = travelCancelled
+			w.sendTravelState(r, plan, plan.Request)
+			return false
+		}
+		destinationWorld.Auto, destinationWorld.Destination, destinationWorld.Navigation = false, nil, navigationState{}
 	} else {
-		saved := r.SavedPersonal
-		r.Monsters, r.MonsterCount, r.Loot, r.LootUntil = saved.Monsters, saved.MonsterCount, saved.Loot, saved.LootUntil
-		r.Auto, r.Destination, r.Navigation = saved.Auto, saved.Destination, saved.Navigation
-		r.SavedPersonal = nil
+		destinationWorld = r.SavedPersonal
 		// 原复活/掉落截止原样恢复，由正常step按当前时钟处理一次；不回放休眠期攻击或收益。
 	}
-	r.MapID, r.Scene, r.Baseline = plan.TargetMapID, r.Scene+1, baseline
+	if !w.activateWorld(r, destinationWorld, plan.Position, &petPosition) {
+		plan.Phase = travelCancelled
+		w.sendTravelState(r, plan, plan.Request)
+		return false
+	}
+	if plan.Destination == travelToPersonal {
+		r.SavedPersonal = nil
+	}
+	r.Scene, r.Baseline = r.Scene+1, baseline
 	r.TravelHistory = nil                // 实际换scene后，旧scene请求已有身份门禁；当前终态plan仍可查询。
 	r.Manual, r.InputSequence = false, 0 // 摇杆属于连接输入，不在新图自动恢复按住状态。
 	r.PreviewInFlight = false
 	if r.PreviewGeneration < math.MaxUint64 {
 		r.PreviewGeneration++
-	}
-	w.beginMovement(r, &r.Player, movementTeleport)
-	w.relocate(r, &r.Player, plan.Position)
-	if r.Pet != nil {
-		w.beginMovement(r, r.Pet, movementTeleport)
-		w.relocate(r, r.Pet, petPosition)
 	}
 	r.Ready, r.LastTick, r.LastBroadcast = false, now, now
 	plan.Phase, plan.TargetScene, plan.TargetBaseline = travelCommitted, r.Scene, r.Baseline

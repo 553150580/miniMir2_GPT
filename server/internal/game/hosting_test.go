@@ -25,7 +25,7 @@ func (c *capturedConnection) Binding() uint64           { return 3 }
 
 func TestFullBagAutoRejectPushesActualHosting(t *testing.T) {
 	conn := &capturedConnection{}
-	r := &room{Conn: conn, Ready: true, Scene: 20, MonsterCount: 1, Auto: false, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{PickupStopped: true, HostingSeconds: 42, Revision: 7}}
+	r := &room{Conn: conn, Ready: true, Scene: 20, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{PickupStopped: true, HostingSeconds: 42, Revision: 7}, worldState: &worldState{MonsterCount: 1, Auto: false}}
 	w := &worker{rooms: map[string]*room{"role": r}}
 	f := wire.Message(p.MsgC2SAutoBattle, 9, 3, &pb.AutoBattleIntent{SceneEpoch: 20, Enabled: true, MonsterCount: 8})
 	w.command(command{role: "role", conn: conn, frame: f})
@@ -48,9 +48,10 @@ func TestFullBagAutoRejectPushesActualHosting(t *testing.T) {
 func TestDeadPlayerCountChangePushesSnapshotWithoutReset(t *testing.T) {
 	conn := &capturedConnection{}
 	stamp := time.Unix(1800000000, 0)
-	r := &room{Conn: conn, Ready: true, Scene: 20, Baseline: 30, MonsterCount: 1, Auto: false, DeathID: "original-death", Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{HostingSeconds: 42, Revision: 7},
+	r := &room{Conn: conn, Ready: true, Scene: 20, Baseline: 30, DeathID: "original-death", Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{HostingSeconds: 42, Revision: 7},
 		Player: entity{Handle: 1, Kind: 1, HP: 0, MaxHP: 18, MP: 6, MaxMP: 14, Action: 4, Pos: devconfig.Point{X: 8, Y: 8}, NextMove: stamp.Add(time.Second), NextAttack: stamp.Add(2 * time.Second)},
-		Pet:    &entity{Handle: 2, Kind: 2, HP: 29, MaxHP: 60, Pos: devconfig.Point{X: 8, Y: 7}, NextMove: stamp.Add(3 * time.Second), NextAttack: stamp.Add(4 * time.Second)}}
+		Pet:    &entity{Handle: 2, Kind: 2, HP: 29, MaxHP: 60, Pos: devconfig.Point{X: 8, Y: 7}, NextMove: stamp.Add(3 * time.Second), NextAttack: stamp.Add(4 * time.Second)}, worldState: &worldState{MonsterCount: 1, Auto: false},
+	}
 	for i := 0; i < 8; i++ {
 		r.Monsters = append(r.Monsters, &entity{Handle: uint32(10 + i), Kind: 3, Def: 1, HP: int64(i), MaxHP: 15, Pos: devconfig.Point{X: i + 1, Y: 5}, Action: 3, NextMove: stamp.Add(time.Duration(i+5) * time.Second), NextAttack: stamp.Add(time.Duration(i+15) * time.Second), RespawnAt: stamp.Add(time.Duration(i+25) * time.Second)})
 	}

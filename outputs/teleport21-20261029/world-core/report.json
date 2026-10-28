@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-29",
+  "stage": "World执行身份与attachment分离核心交接，不是21业务验收",
+  "core_handoff_frozen": true,
+  "next_game_owner": "root接入21节点/配置/协议，之后统一最终全包验证；本agent不再修改Go",
+  "api": "API.md",
+  "tests": [
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -count=1",
+      "tool_session": 82174,
+      "exit_code": 1,
+      "package_seconds": 54.401,
+      "stdout": "full-game-first-attempt.stdout.txt",
+      "resolution": "3组材料pure fixture手造preparedCast未填新增独立Scene，保持生产门禁并补Scene:r.Scene"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run 'Test(World|Material)' -count=1",
+      "tool_session": 5231,
+      "exit_code": 0,
+      "package_seconds": 5.991
+    },
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -count=1",
+      "tool_session": 11245,
+      "exit_code": 0,
+      "package_seconds": 53.952,
+      "stdout": "full-game-race.stdout.txt",
+      "input_note": "完整World核心和所有测试helper修正后；早于最后一条Town World nil/MapID错误fail-closed守卫"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run 'Test(World|MapTravel|TravelReturn)' -count=1",
+      "tool_session": 32424,
+      "exit_code": 0,
+      "package_seconds": 6.676,
+      "stdout": "focused-final-race.stdout.txt",
+      "input_note": "包含最终Town World守卫；此后core未再修改Go"
+    },
+    {
+      "command": "git diff --check -- server/internal/game",
+      "exit_code": 0
+    }
+  ],
+  "capture": "stdout是同一真实工具会话终态输出归档；未用未捕获的Tee声称保存日志",
+  "world_top_level_tests": 10,
+  "coverage": [
+    "唯一Player地址/Pet指针，已受理同Life尸体移交保留，新cast仍拒死人",
+    "World目标居民与跨图原信用分离，没有旧图可受击幽灵角色",
+    "移交在局部Due批首/中/末，原后缀按同now执行，Pending原样退回，两个World合并Due/Order",
+    "原图HellFire地形/目标继续、旧Life复活后信用失效、不向新Scene发旧CastStep/Impact",
+    "inactive队列和局部批占共享owner容量，不能换图重获事件预算",
+    "OriginWorld Loot/原截止、unknown原job、新slot/Auth/owner回调隔离",
+    "Dormant原首屏/ACK语义，Reactive必要怪物期限，无ACK的新技能附着不启动新移动",
+    "未排号bindingCandidate与前后原World kill按实际owner事实order排号，不让200ms移交等旧kill事实",
+    "TeleportManaPenaltyPercent临时字段及PB10序列化；应用/成本由root21模块另测"
+  ],
+  "limits": [
+    "未运行本次World重构最终真实Mongo/WS，未声明21随机/NoTeleport/200ms/TemporalFlux/落区teleport绑定业务完成",
+    "root后续接管game并修改新21节点，最终root输入manifest/全包报告是阶段权威",
+    "不复制World永久现场；没有容量或真机验收"
+  ]
+}

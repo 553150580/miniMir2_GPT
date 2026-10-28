@@ -1,5 +1,11 @@
 # 共享协议实现状态
 
+当前rule15协议67个PB数据消息、53个消息号、31个错误码、134个64位字段及438个Long边界案例，仍属draft开发合同。新增纯S2C 30014 `TeleportResult`，含RoleKey、原/新scene、cast、Life、实际地图/落点/运动水位、outcome及transition_id；客户端不上传传送目的点。
+
+`EnterLineResult.server_transition_id`与跨图成功结果严格配对，正常健康票为空且不补播历史。`EntityStatusState.teleport_mana_penalty_percent`为权威传送耗蓝加成，同图仍用30013；64位保持Long/BigInt。绑定沿20011观察已提交永久事实，原经济command/Pending合同保持。跨图资源/首视口、ACK、SyncReady逐项门禁，见[瞬移阶段验收](../../docs/瞬息移动与世界执行身份阶段验收.json)。
+
+以下rule14及更早协议段落保留历史范围，当前以rule15和唯一protocol_manifest为准。
+
 当前rule14协议共66个PB数据消息、52个消息号、31个错误码、128个64位字段及420个Long边界案例，均为draft开发合同。新增20011 `BindingState`及`RoleBindingPoint`只观察已提交永久绑定：RoleKey、scene、role_revision、原绑定receipt的source_seq、可空中心、cause、原安全区ID和trusted。cause1静默恢复，cause2仅已提交新事实；64位保持Long/BigInt，不新增设置绑定坐标的C2S入口。
 
 绑定成功先发送同一Role的完整Inventory，再发BindingState。客户端经济操作继续以Inventory.revision和原command构造，绑定不改Pending或经济水位。来源实时安全区观察仍用baseline.safe_zone_id，与绑定证明来源区分开。20007–20010沿rule13同owner旅行合同保持；21仍关闭。见[绑定阶段验收](../../docs/安全区永久绑定阶段验收.json)。

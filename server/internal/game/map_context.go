@@ -7,11 +7,7 @@ func (w *worker) currentMap(r *room) (*devconfig.MapTemplate, bool) {
 	if r == nil {
 		return nil, false
 	}
-	f := &w.e.Store.Cfg.Fixture
-	if r.MapID == 0 {
-		return &f.Map, true
-	}
-	return f.MapByID(r.MapID)
+	return w.worldMap(r.currentWorld())
 }
 
 func (w *worker) mapCellBudget(r *room) int {

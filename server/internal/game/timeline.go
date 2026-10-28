@@ -13,11 +13,12 @@ import (
 )
 
 type actorRef struct {
-	Scene  uint64
+	World  worldRef
 	Handle uint32
 	Life   uint64
 }
 type pendingAttack struct {
+	Scene             uint64 // 仅观察身份，不参与World执行解析。
 	Caster, Target    actorRef
 	Due               time.Time
 	Amount            int64
@@ -31,6 +32,9 @@ type pendingAttack struct {
 	Defence           physicalDefence
 }
 type killFact struct {
+	World               worldRef
+	Order               uint64
+	DropPoint           devconfig.Point
 	ID                  string
 	Target              actorRef
 	Caster              actorRef
@@ -59,30 +63,54 @@ type hitContext struct {
 
 // 权限变更只更新尚未到期的事件；已经发生的事件不借迟处理、重连或续卡改绑。
 func transitionEventPrivilege(r *room, at, until time.Time) {
-	for i := range r.Attacks {
-		if !r.Attacks[i].Due.Before(at) {
-			r.Attacks[i].PrivilegeUntil = until
-			r.Attacks[i].PrivilegeCaptured = true
+	for _, world := range r.worlds() {
+		for i := range world.Attacks {
+			if !world.Attacks[i].Due.Before(at) {
+				world.Attacks[i].PrivilegeUntil = until
+				world.Attacks[i].PrivilegeCaptured = true
+			}
+		}
+		for i := range world.Casts {
+			if !world.Casts[i].Due.Before(at) {
+				world.Casts[i].PrivilegeUntil = until
+				world.Casts[i].PrivilegeCaptured = true
+			}
 		}
 	}
-	for i := range r.Casts {
-		if !r.Casts[i].Due.Before(at) {
-			r.Casts[i].PrivilegeUntil = until
-			r.Casts[i].PrivilegeCaptured = true
+	for _, event := range r.EventBatch {
+		if !event.At.Before(at) {
+			if event.Attack != nil {
+				event.Attack.PrivilegeUntil, event.Attack.PrivilegeCaptured = until, true
+			}
+			if event.Cast != nil {
+				event.Cast.PrivilegeUntil, event.Cast.PrivilegeCaptured = until, true
+			}
 		}
 	}
 }
 
 // 只更新转换时尚未到期的事件；晚处理的事件保留其事件时刻所在的在线/托管区段。
 func transitionEventHosting(r *room, at time.Time, session string) {
-	for i := range r.Attacks {
-		if !r.Attacks[i].Due.Before(at) {
-			r.Attacks[i].HostSession = session
+	for _, world := range r.worlds() {
+		for i := range world.Attacks {
+			if !world.Attacks[i].Due.Before(at) {
+				world.Attacks[i].HostSession = session
+			}
+		}
+		for i := range world.Casts {
+			if !world.Casts[i].Due.Before(at) {
+				world.Casts[i].HostSession = session
+			}
 		}
 	}
-	for i := range r.Casts {
-		if !r.Casts[i].Due.Before(at) {
-			r.Casts[i].HostSession = session
+	for _, event := range r.EventBatch {
+		if !event.At.Before(at) {
+			if event.Attack != nil {
+				event.Attack.HostSession = session
+			}
+			if event.Cast != nil {
+				event.Cast.HostSession = session
+			}
 		}
 	}
 }
@@ -109,6 +137,7 @@ func (w *worker) isolateRoom(r *room) {
 }
 
 type dueEvent struct {
+	World  *worldState
 	At     time.Time
 	Order  uint64
 	Attack *pendingAttack
@@ -117,47 +146,74 @@ type dueEvent struct {
 
 // 全部临时到期事件按统一时钟与受理次序结算，不以消息种类改变同帧命中顺序。
 func (w *worker) advanceEvents(r *room, now time.Time) {
+	w.advanceEventsUsing(r, now, w.resolveDueEvent)
+}
+
+func (w *worker) resolveDueEvent(r *room, e dueEvent, now time.Time) *worldTransfer {
+	if e.Cast != nil && e.Cast.Skill.Behavior == "teleport" {
+		return w.resolveTeleport21(r, e.World, *e.Cast, now)
+	}
+	if e.Attack != nil {
+		w.resolveAttackInWorld(r, e.World, *e.Attack, now)
+	} else {
+		w.resolveCastInWorld(r, e.World, *e.Cast, now)
+	}
+	return nil
+}
+
+// 整个owner只有一个到期批；从队列摘取到局部批不归还共享容量。
+func (w *worker) advanceEventsUsing(r *room, now time.Time, resolve func(*room, dueEvent, time.Time) *worldTransfer) {
+	if r.AdvancingEvents || r.Pending || r.Isolated {
+		return
+	}
+	r.AdvancingEvents = true
+	defer func() { r.AdvancingEvents = false; r.EventBatch = nil }()
 	events := []dueEvent{}
-	attacks := r.Attacks[:0]
-	casts := r.Casts[:0]
-	for _, a := range r.Attacks {
-		if now.Before(a.Due) {
-			attacks = append(attacks, a)
-		} else {
-			copy := a
-			events = append(events, dueEvent{At: a.Due, Order: a.Order, Attack: &copy})
+	for _, world := range r.worlds() {
+		attacks := world.Attacks[:0]
+		casts := world.Casts[:0]
+		for _, a := range world.Attacks {
+			if now.Before(a.Due) {
+				attacks = append(attacks, a)
+			} else {
+				copy := a
+				events = append(events, dueEvent{World: world, At: a.Due, Order: a.Order, Attack: &copy})
+			}
 		}
-	}
-	for _, c := range r.Casts {
-		if now.Before(c.Due) {
-			casts = append(casts, c)
-		} else {
-			copy := c
-			events = append(events, dueEvent{At: c.Due, Order: c.Order, Cast: &copy})
+		for _, c := range world.Casts {
+			if now.Before(c.Due) {
+				casts = append(casts, c)
+			} else {
+				copy := c
+				events = append(events, dueEvent{World: world, At: c.Due, Order: c.Order, Cast: &copy})
+			}
 		}
+		world.Attacks, world.Casts = attacks, casts
 	}
-	r.Attacks, r.Casts = attacks, casts
 	sort.SliceStable(events, func(i, j int) bool {
 		if events[i].At.Equal(events[j].At) {
 			return events[i].Order < events[j].Order
 		}
 		return events[i].At.Before(events[j].At)
 	})
+	r.InflightEvents += len(events)
 	for i, e := range events {
+		r.EventBatch = events[i:]
 		if r.Pending || r.Isolated {
 			for _, waiting := range events[i:] {
 				if waiting.Attack != nil {
-					r.Attacks = append(r.Attacks, *waiting.Attack)
+					waiting.World.Attacks = append(waiting.World.Attacks, *waiting.Attack)
 				} else {
-					r.Casts = append(r.Casts, *waiting.Cast)
+					waiting.World.Casts = append(waiting.World.Casts, *waiting.Cast)
 				}
+				r.InflightEvents--
 			}
 			break
 		}
-		if e.Attack != nil {
-			w.resolveAttack(r, *e.Attack, now)
-		} else {
-			w.resolveCast(r, *e.Cast, now)
+		r.InflightEvents-- // 当前slot可转交给同一地图动作下一子格。
+		r.EventBatch = events[i+1:]
+		if transfer := resolve(r, e, now); transfer != nil {
+			w.commitWorldTransfer(r, transfer, now)
 		}
 	}
 	if len(events) > 0 {
@@ -171,26 +227,21 @@ func (w *worker) killBudgetAvailable(r *room) bool {
 		return true
 	}
 	possible := len(r.KillFacts) + 1
-	for _, m := range r.Monsters[:r.MonsterCount] {
-		if m.HP > 0 {
-			possible++
+	if r.BindingCandidate != nil {
+		possible++
+	}
+	for _, world := range r.worlds() {
+		for _, m := range world.Monsters[:world.MonsterCount] {
+			if m.HP > 0 {
+				possible++
+			}
 		}
 	}
 	return possible <= cap
 }
-func reference(r *room, e *entity) actorRef { return actorRef{r.Scene, e.Handle, e.Life} }
+func reference(r *room, e *entity) actorRef { return referenceIn(r.currentWorld(), e) }
 func (w *worker) resolve(r *room, ref actorRef) *entity {
-	if ref.Scene != r.Scene {
-		return nil
-	}
-	all := []*entity{&r.Player, r.Pet}
-	all = append(all, r.Monsters[:r.MonsterCount]...)
-	for _, e := range all {
-		if e != nil && e.Handle == ref.Handle && e.Life == ref.Life {
-			return e
-		}
-	}
-	return nil
+	return w.resolveInWorld(r, r.currentWorld(), ref)
 }
 func facing(from, to devconfig.Point, fallback uint32) uint32 {
 	dx, dy := to.X-from.X, to.Y-from.Y
@@ -210,19 +261,30 @@ func (w *worker) nextEvent(r *room) uint64 {
 func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32) {
 	w.send(r, p.MsgS2CCombatImpact, 0, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster, TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing, CastId: cast, AttackSequence: attack})
 }
+func (w *worker) impactInWorld(r *room, world *worldState, scene uint64, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32) {
+	if r.observesWorld(world, scene) {
+		w.impact(r, skill, caster, target, life, grid, amount, outcome, healing, cast, attack)
+	}
+}
 func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
-	if a.Target.Scene != r.Scene || a.Caster.Scene != r.Scene || w.mapCellBudget(r) == 0 {
+	w.resolveAttackInWorld(r, r.world(a.Caster.World), a, now)
+}
+func (w *worker) resolveAttackInWorld(r *room, world *worldState, a pendingAttack, now time.Time) {
+	if world == nil || a.Target.World != world.Ref || a.Caster.World != world.Ref {
 		return
 	}
-	target := w.resolve(r, a.Target)
+	if _, known := w.worldMap(world); !known {
+		return
+	}
+	target := w.resolveInWorld(r, world, a.Target)
 	if target == nil || target.HP <= 0 {
-		w.impact(r, a.SkillID, a.Caster.Handle, a.Target.Handle, a.Target.Life, devconfig.Point{}, 0, 3, false, 0, a.Sequence)
+		w.impactInWorld(r, world, a.Scene, a.SkillID, a.Caster.Handle, a.Target.Handle, a.Target.Life, devconfig.Point{}, 0, 3, false, 0, a.Sequence)
 		return
 	}
 	// 来源CompleteAttack不要求施法者仍存活；伤害/防御在到期时结算，坐标不重新限制近战。
-	caster := w.resolve(r, a.Caster)
+	caster := w.resolveInWorld(r, world, a.Caster)
 	if caster == nil {
-		w.impact(r, a.SkillID, a.Caster.Handle, target.Handle, target.Life, target.Pos, 0, 3, false, 0, a.Sequence)
+		w.impactInWorld(r, world, a.Scene, a.SkillID, a.Caster.Handle, target.Handle, target.Life, target.Pos, 0, 3, false, 0, a.Sequence)
 		return
 	}
 	attacker, defender := w.fighter(r, caster), w.fighter(r, target)
@@ -238,31 +300,14 @@ func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
 		damage = 0
 	}
 	before := target.HP
-	w.applyDamage(r, caster, target, damage, now, hitContext{At: a.Due, HostSession: a.HostSession, PrivilegeUntil: a.PrivilegeUntil, PrivilegeCaptured: a.PrivilegeCaptured})
+	w.applyDamageInWorld(r, world, caster, target, damage, now, hitContext{At: a.Due, HostSession: a.HostSession, PrivilegeUntil: a.PrivilegeUntil, PrivilegeCaptured: a.PrivilegeCaptured})
 	actual := before - target.HP
 	outcome := uint32(1)
 	if actual == 0 {
 		outcome = 2
 	}
-	w.impact(r, a.SkillID, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence)
+	w.impactInWorld(r, world, a.Scene, a.SkillID, caster.Handle, target.Handle, target.Life, target.Pos, actual, outcome, false, 0, a.Sequence)
 }
-func (w *worker) advanceAttacks(r *room, now time.Time) {
-	remaining := r.Attacks[:0]
-	resolved := false
-	for _, a := range r.Attacks {
-		if now.Before(a.Due) {
-			remaining = append(remaining, a)
-			continue
-		}
-		w.resolveAttack(r, a, now)
-		resolved = true
-	}
-	r.Attacks = remaining
-	if resolved {
-		w.snapshot(r)
-	}
-}
-
 func (w *worker) kill(r *room, m *entity, now time.Time, from ...*entity) {
 	if !w.sourceTimeline() {
 		w.legacyKill(r, m, now)
@@ -280,8 +325,16 @@ func (w *worker) kill(r *room, m *entity, now time.Time, from ...*entity) {
 }
 
 func (w *worker) enqueueKillFact(r *room, m *entity, at time.Time, caster *entity, session string, privilegeUntil time.Time) {
+	w.enqueueKillFactInWorld(r, r.currentWorld(), m, at, caster, session, privilegeUntil)
+}
+func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, at time.Time, caster *entity, session string, privilegeUntil time.Time) {
 	f := w.e.Store.Cfg.Fixture
-	fact := killFact{ID: domain.ID(), Target: reference(r, m), Caster: reference(r, caster), Monster: *m.Monster, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
+	r.FactOrder++
+	point := world.PlayerPosition
+	if world == r.currentWorld() {
+		point = r.Player.Pos
+	}
+	fact := killFact{ID: domain.ID(), World: world.Ref, Order: r.FactOrder, DropPoint: point, Target: referenceIn(world, m), Caster: referenceIn(world, caster), Monster: *m.Monster, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
 	if len(f.Drops.EquipmentItemIDs) > 0 {
 		fact.EquipmentID = f.Drops.EquipmentItemIDs[w.draw(int64(len(f.Drops.EquipmentItemIDs)))]
 	}
@@ -293,14 +346,29 @@ func (w *worker) enqueueKillFact(r *room, m *entity, at time.Time, caster *entit
 }
 
 func (w *worker) flushKillFacts(r *room) {
-	if r.Pending || r.Isolated || len(r.KillFacts) == 0 || r.KillFacts[0].Prepared {
+	if r.Pending || r.Isolated {
+		return
+	}
+	if candidate := r.BindingCandidate; candidate != nil && (len(r.KillFacts) == 0 || candidate.order < r.KillFacts[0].Order) {
+		w.admitBindingCandidate(r, time.Now())
+		return
+	}
+	if len(r.KillFacts) == 0 || r.KillFacts[0].Prepared {
 		return
 	}
 	head := &r.KillFacts[0]
 	head.Prepared = true
 	fact := *head
 	q := w.killSettlement(r, fact)
-	w.settle(r, q, func() {
+	world := r.world(fact.World)
+	if world == nil && fact.World == (worldRef{}) {
+		world = r.currentWorld()
+	} // 仅兼容旧手造killFact，正式捕获必有原World。
+	if world == nil {
+		w.isolateRoom(r)
+		return
+	}
+	w.settleInWorld(r, world, fact.DropPoint, q, func() {
 		if len(r.KillFacts) > 0 && r.KillFacts[0].ID == fact.ID {
 			r.KillFacts = r.KillFacts[1:]
 		}

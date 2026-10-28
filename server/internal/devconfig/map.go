@@ -15,19 +15,21 @@ const (
 
 // 地图模板只有静态地形与来源信息，不保存实例、角色位置或战斗现场。
 type MapTemplate struct {
-	ID            uint64             `json:"id"`
-	DisplayName   string             `json:"display_name,omitempty"`
-	ResourceKey   string             `json:"resource_key,omitempty"`
-	Width         int                `json:"width"`
-	Height        int                `json:"height"`
-	SceneKind     uint32             `json:"scene_kind,omitempty"`
-	Blocked       []Point            `json:"blocked,omitempty"`
-	CollisionBits []byte             `json:"collision_bits,omitempty"`
-	PlayerSpawn   Point              `json:"player_spawn"`
-	PetSpawn      Point              `json:"pet_spawn"`
-	MonsterSpawns []Point            `json:"monster_spawns,omitempty"`
-	SafeZones     []SafeZone         `json:"safe_zones,omitempty"`
-	Source        *SourceMapIdentity `json:"source,omitempty"`
+	ID               uint64             `json:"id"`
+	DisplayName      string             `json:"display_name,omitempty"`
+	ResourceKey      string             `json:"resource_key,omitempty"`
+	Width            int                `json:"width"`
+	Height           int                `json:"height"`
+	SceneKind        uint32             `json:"scene_kind,omitempty"`
+	Blocked          []Point            `json:"blocked,omitempty"`
+	CollisionBits    []byte             `json:"collision_bits,omitempty"`
+	SourceStaticBits []byte             `json:"source_static_bits,omitempty"`
+	NoTeleport       *bool              `json:"no_teleport,omitempty"`
+	PlayerSpawn      Point              `json:"player_spawn"`
+	PetSpawn         Point              `json:"pet_spawn"`
+	MonsterSpawns    []Point            `json:"monster_spawns,omitempty"`
+	SafeZones        []SafeZone         `json:"safe_zones,omitempty"`
+	Source           *SourceMapIdentity `json:"source,omitempty"`
 }
 
 // 完整来源尺寸与运行目录尺寸相等；裁剪窗口不能借同一来源声明冒充完整地图。
@@ -93,6 +95,21 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		}
 	}
 	return true
+}
+
+// 瞬移只核原图静态Walk位；闭门及动态占格不能混入此来源判定。
+func (m *MapTemplate) TeleportWalkable(p Point) bool {
+	if !m.Contains(p) {
+		return false
+	}
+	if m.SceneKindValue() == SceneKindPersonal {
+		return m.Walkable(p)
+	}
+	if m.SceneKindValue() != SceneKindTown || m.Source == nil || len(m.SourceStaticBits) != collisionByteCount(m.CellBudget()) {
+		return false
+	}
+	cell := p.Y*m.Width + p.X
+	return m.SourceStaticBits[cell/8]&(1<<uint(cell%8)) == 0
 }
 
 // 来源按配置顺序取首个包含当前格子的安全区，方形范围包含边界。

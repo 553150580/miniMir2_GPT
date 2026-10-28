@@ -1,0 +1,11 @@
+=== RUN   TestTeleport21LearningBindingAndHealthyColdEntryMongoWS
+2026/10/29 05:40:31 INFO 开发节点就绪 mode=account address=127.0.0.1:53168 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=1c971806c5c50b1554b5a5481bd6c9fc runtime_ready=false
+2026/10/29 05:40:31 INFO 开发节点就绪 mode=gm address=127.0.0.1:53170 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=5ed7f352880d1b36213012d50bf1a8c6 runtime_ready=false
+2026/10/29 05:40:32 INFO 开发节点就绪 mode=game address=127.0.0.1:53169 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=6ab6a40a071d9731e2489b8ce9b719a7 runtime_ready=false
+2026/10/29 05:40:47 INFO 开发节点就绪 mode=gm address=127.0.0.1:53170 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=d47be30f1d2011fb184cecf8222abbbc runtime_ready=false
+2026/10/29 05:40:47 INFO 开发节点就绪 mode=account address=127.0.0.1:53168 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=1cb49a748142d011d61025be7f0e76d0 runtime_ready=false
+2026/10/29 05:40:49 INFO 开发节点就绪 mode=game address=127.0.0.1:53169 database=minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144 instance=ed7d4838aed100bc00c4469b5da8120c runtime_ready=false
+    teleport21_test.go:224: 通过: 随机库minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144，正常注册Mage/买原书13/学习21、真实升级Preview的MP10→13/时长30000→30000/惩罚30→30且未升级、nil proof拒付、真实Town Walk证明、MP10与Delay200、30014/Entry/ACK、同图30013/Flux费用13、健康保持与冷proof；旧World付费事件及SourceSeq争用另由game/Store专项，不冒称本WS实际发生
+--- PASS: TestTeleport21LearningBindingAndHealthyColdEntryMongoWS (18.48s)
+PASS
+ok  	minimir/internal/integration	23.848s

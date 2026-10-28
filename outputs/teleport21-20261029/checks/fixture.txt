@@ -1,0 +1,1 @@
+{"status": "checked", "path": "D:\\A_Claude\\miniMir2_GPT\\config\\development\\first-loop.json", "sha256": "0edbe0d5e7bb8f5ac71592469fbced1b37ac896e5c572380f76f53f5631456d6", "development_only": true, "runtime_ready": false}

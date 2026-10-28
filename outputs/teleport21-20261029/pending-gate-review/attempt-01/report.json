@@ -1,0 +1,10 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run ^TestTeleport21PriorTickKillPending -count=1 -v",
+  "exit_code": 0,
+  "seconds": 11.64,
+  "input_files": 93,
+  "changed": [],
+  "stdout_sha256": "735aa673f78dc3c38b4ac26b7a868a09f289835e585f69866f1c0e37eea4f0be",
+  "scope": "真实rule15已受理Hellfire/21及实际kill slot/job的受控回调纯组件race；不是真实Mongo或网络unknown注入",
+  "finished_utc": "2026-10-28T21:40:02.614762+00:00"
+}

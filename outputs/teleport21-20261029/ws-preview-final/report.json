@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-29",
+  "status": "最终真实升级Preview与完整21流程定向MongoWS race通过；代码冻结",
+  "code_file": "server/internal/integration/teleport21_test.go",
+  "production_modified_by_this_task": false,
+  "command": ".\\tools\\dev.ps1 go test -race -count=1 ./internal/integration -run '^TestTeleport21LearningBindingAndHealthyColdEntryMongoWS$' -v",
+  "environment": {"MINIMIR_MONGO_E2E": "1"},
+  "tool_session": 50813,
+  "exit_code": 0,
+  "case_seconds": 18.48,
+  "package_seconds": 23.848,
+  "passed": 1,
+  "skipped": 0,
+  "race_reported": false,
+  "fixture_sha256": "0edbe0d5e7bb8f5ac71592469fbced1b37ac896e5c572380f76f53f5631456d6",
+  "random_database": "minimir_dev_game_test_teleport_e57b6c55b47b830b8b82ab3c65c50144",
+  "cleanup": "节点停止并等待退出后Drop随机专属库/Close；日志无清理错误",
+  "ownership": "mongo-ownership.stdout.json",
+  "ownership_pid": 5640,
+  "ownership_version": "8.0.34",
+  "ownership_port": 27119,
+  "ownership_replica_set": "minimirWinDev",
+  "ownership_verified": true,
+  "mongodb_restarted": false,
+  "stdout": "mongo-ws-race.stdout.txt",
+  "process_result": "result.json",
+  "source_before": "inputs-before.json",
+  "source_after": "inputs-after.json",
+  "recorded_input_files": 54,
+  "changed_during_job": [],
+  "input_scope": "runner记录game/townnav与本case/关键Store/PB/fixture；不是全仓输入manifest，最终root全包会核所有生产输入",
+  "capture": "同一subprocess直接保存stdout+stderr原始字节；成功后未重跑",
+  "new_preview_coverage": [
+    "正常注册Mage并正常购买原书13/学习21后，正常按现有offer27/gold购买两本原书13，按offer3/ingot单价50正常买五页900001",
+    "通过真实WS PreviewUpgrade Kind2显式选择原实例/Version/数量，当前rank0目标rank1",
+    "PB stats严格只有mp_cost(10/10→13/13)、duration_ms(30000/30000→30000/30000)、teleport_mana_penalty_percent(30/30→30/30)",
+    "没有base_power、accuracy_bonus、base_duration_seconds或material_quantity比较；真实原书/书页仍列为升级材料",
+    "不提交升级，Preview前后永久Role深等，仍为rank0，后续MP10/13施放验收未被升级掩盖"
+  ],
+  "existing_flow_revalidated": [
+    "首次Enter前仅允许的level19/钱包前态，无预置书/技能/binding/临时站位；未绑定21拒付",
+    "正常Town旅行与owner tick Walk到650631产生正式可信proof；回个人后等待保留的Walk动作时钟自然释放",
+    "受理即时MP10/协议Delay200，30014与Entry严格同transition/scene/map/point，错ACK和ACK前经济floor拒绝，再实际ACK",
+    "Town同图第二次MP13、30013与权威落点配对，TemporalFlux30%且不换scene，状态自然计时",
+    "正常恢复满HP前态的健康票保持Town/Life/HPMP/位置/状态，完整stop-launch冷个人世界保留所学21与当前proof而不持久恢复Flux",
+    "钱包/EconomicSeq/物品/技能/经验保持；SourceSeq只随实际新landing绑定，Revision另精确计入一次健康Enter"
+  ],
+  "preserved_failure": {
+    "path": "attempt-01-no-gold-page-offer",
+    "tool_session": 24680,
+    "exit_code": 1,
+    "case_seconds": 1.98,
+    "package_seconds": 6.250,
+    "reason": "测试误假设书页存在金币报价；已只读确认实际只有ingot/bound_ingot，改为明确选择既有ingot报价正常购买，不改生产、不预置材料"
+  },
+  "limits": [
+    "严格验证Delay200字段和即时MP先于结果，不把网络接收间隔或永久Pending等待冒称hard wall clock200ms；原A28 Pending gate保持",
+    "随机落点未人为操纵，不保证本WS落另一个安全区；新teleport永久绑定与旧World付费事件/SourceSeq争用另由game/Store专项证明",
+    "永久未知提交无真实网络故障注入；无容量、完整P0或手机真机声明",
+    "最终来源锁同步后的全包/全输入稳定由root统一报告，本定向记录不抢先宣布全阶段完成"
+  ]
+}

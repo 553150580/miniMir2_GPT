@@ -150,7 +150,7 @@ export function validateQuotedMaterials(quote: SkillAssetQuote, choices: readonl
 
 const STAT_NAMES: Record<string, string> = { accuracy_bonus: '准确加成', base_power: '技能基础威力', mp_cost: '魔法消耗', max_attack_bonus: '攻击上限加成',
     push_distance:'推开距离（格）',dash_distance:'冲撞距离（格）',push_base_success_percent:'基础成功率（%，另加等级差）',monster_damage:'对怪物伤害',
-    damage_reduction_percent: '伤害减免（%）', duration_rank_factor: '持续时间阶数系数（非秒数）', base_duration_seconds: '基础持续时间（秒，另加道术项）', material_quantity: '每次施法护符用量' };
+    duration_ms: '持续时间(毫秒)', teleport_mana_penalty_percent: '传送耗蓝加成(%)', damage_reduction_percent: '伤害减免（%）', duration_rank_factor: '持续时间阶数系数（非秒数）', base_duration_seconds: '基础持续时间（秒，另加道术项）', material_quantity: '每次施法护符用量' };
 export function skillQuoteLines(quote: SkillAssetQuote, definitions: readonly SkillAssetDefinition[]): string[] {
     const name = (id: number): string => definitions.find(row => row.item_id === id)?.name ?? `物品${id}`;
     const lines: string[] = [];

@@ -1,0 +1,12 @@
+--- FAIL: TestMaterialReceiptOneEffectOriginalWatermarkAndSceneLife (0.04s)
+    combat_status_test.go:330: 原消耗回执重复生成施法
+--- FAIL: TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect (0.32s)
+    --- FAIL: TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/healthy_disconnect (0.04s)
+        combat_status_test.go:398: 临时施法隔离错误:0
+    --- FAIL: TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_connection (0.04s)
+        combat_status_test.go:398: 临时施法隔离错误:0
+--- FAIL: TestMaterialUnknownKeepsOriginalJobAndRandomPlanUntilKnownOnce (0.04s)
+    combat_status_test.go:457: 已知原回执没有保留首次随机持续时长或重复应用
+FAIL
+FAIL	minimir/internal/game	54.401s
+FAIL

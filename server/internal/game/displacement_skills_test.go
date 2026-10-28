@@ -77,7 +77,7 @@ func TestSourceDisplacementSkills6400Vectors(t *testing.T) {
 		configuration := cfg
 		configuration.Fixture.Map.Blocked = input.Blocked
 		conn := &capturedConnection{}
-		r := &room{Scene: 1, Ready: true, Conn: conn, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{Level: input.CasterLevel}, CellEntrySequence: uint64(len(input.Actors))}
+		r := &room{Scene: 1, Ready: true, Conn: conn, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{Level: input.CasterLevel}, CellEntrySequence: uint64(len(input.Actors)), worldState: &worldState{}}
 		r.Player = entity{Handle: 1, Kind: 1, Pos: input.Origin, Direction: input.Direction, HP: 100, MaxHP: 100, ActionReadyAt: time.UnixMilli(0), NextMove: time.UnixMilli(19000), NextAttack: time.UnixMilli(23000)}
 		entities := map[uint32]*entity{1: &r.Player}
 		for i, initial := range input.Actors {

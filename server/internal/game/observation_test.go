@@ -27,7 +27,7 @@ func observedWorker(t *testing.T, r *room) *worker {
 }
 func observedRoom() (*room, *capturedConnection) {
 	c := &capturedConnection{}
-	r := &room{Conn: c, Ready: true, Scene: 20, Baseline: 30, MonsterCount: 1, Auth: persistence.Auth{SessionEpoch: 3}, Player: entity{Handle: 1, Kind: 1, HP: 100, MaxHP: 100, Pos: devconfig.Point{X: 8, Y: 8}}, Pet: &entity{Handle: 2, Kind: 2, HP: 60, MaxHP: 60, Pos: devconfig.Point{X: 7, Y: 8}}, Monsters: []*entity{{Handle: 10, Kind: 3, Def: 1, HP: 100, MaxHP: 100, Pos: devconfig.Point{X: 8, Y: 9}}}}
+	r := &room{Conn: c, Ready: true, Scene: 20, Baseline: 30, Auth: persistence.Auth{SessionEpoch: 3}, Player: entity{Handle: 1, Kind: 1, HP: 100, MaxHP: 100, Pos: devconfig.Point{X: 8, Y: 8}}, Pet: &entity{Handle: 2, Kind: 2, HP: 60, MaxHP: 60, Pos: devconfig.Point{X: 7, Y: 8}}, worldState: &worldState{MonsterCount: 1, Monsters: []*entity{{Handle: 10, Kind: 3, Def: 1, HP: 100, MaxHP: 100, Pos: devconfig.Point{X: 8, Y: 9}}}}}
 	return r, c
 }
 func TestAttackObservationSurvivesStruckAndCooldownReject(t *testing.T) {

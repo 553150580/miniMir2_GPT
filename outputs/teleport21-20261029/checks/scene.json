@@ -1,0 +1,14 @@
+{
+  "task": "scene",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/scene/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T21:29:27.841012+00:00",
+  "finished_at": "2026-10-28T21:29:28.032262+00:00",
+  "output": ".work/teleport21-20261029/checks/scene.txt",
+  "output_sha256": "413e931879aa4c7e5de74a256077e966de03682e71a4cad2e845ef9fbec5ab88",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

@@ -25,14 +25,14 @@ func testGridEightDirectionsAndCornerBlocking(t *testing.T, size int) {
 	e := &Engine{Store: &persistence.Store{Cfg: devconfig.Config{Fixture: f}}}
 	w := &worker{e: e}
 	for i, d := range directions {
-		r := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}}
+		r := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}, worldState: &worldState{}}
 		to := devconfig.Point{X: 8 + d.X, Y: 8 + d.Y}
 		if !w.neighbor(r, r.Player.Pos, to, &r.Player) {
 			t.Errorf("方向%d被空地图错误阻挡", i)
 		}
 	}
 	e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{{X: 9, Y: 8}}
-	r := &room{Role: domain.Role{}, Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}}
+	r := &room{Role: domain.Role{}, Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}, worldState: &worldState{}}
 	if w.neighbor(r, r.Player.Pos, devconfig.Point{X: 9, Y: 9}, &r.Player) {
 		t.Fatal("斜向移动穿过墙角")
 	}
@@ -53,7 +53,7 @@ func TestSeventeenGridCanRouteThroughMoreThanOld256VisitedNodes(t *testing.T) {
 		f.Map.Blocked = append(f.Map.Blocked, devconfig.Point{X: 14, Y: y})
 	}
 	w := &worker{e: &Engine{Store: &persistence.Store{Cfg: devconfig.Config{Fixture: f}}}}
-	r := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 0, Y: 16}}}
+	r := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 0, Y: 16}}, worldState: &worldState{}}
 	target := devconfig.Point{X: 16, Y: 16}
 	now := time.Now()
 	for step := 0; step < f.GridCellBudget() && r.Player.Pos != target; step++ {

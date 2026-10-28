@@ -1,0 +1,7 @@
+=== RUN   TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS
+2026/10/29 05:35:39 INFO 开发节点就绪 mode=account address=127.0.0.1:49240 database=minimir_dev_game_test_b92b05eaa6157e613837d900ed618580 instance=27059c21dbd1131904b8f67afe15f389 runtime_ready=false
+2026/10/29 05:35:39 INFO 开发节点就绪 mode=gm address=127.0.0.1:49242 database=minimir_dev_game_test_b92b05eaa6157e613837d900ed618580 instance=7024afc67f6b2e5796c0ae658a62c6d8 runtime_ready=false
+2026/10/29 05:35:39 INFO 开发节点就绪 mode=game address=127.0.0.1:49241 database=minimir_dev_game_test_b92b05eaa6157e613837d900ed618580 instance=5eb4ba26d71744b8007efeda8405dfa3 runtime_ready=false
+--- PASS: TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS (2.20s)
+PASS
+ok  	minimir/internal/integration	6.091s

@@ -19,7 +19,7 @@ import (
 
 const safeZoneBindingKind = "safe_zone_binding"
 
-// 只由权威行走成功后的owner构造；Position仅供本次来源校验，不写入任何永久文档。
+// 只由权威walk/21成功后置的owner构造；Position仅供本次来源校验，不写入永久文档。
 // Pending重试必须保留整个请求，不能换来源序号、事件ID、revision或配置身份。
 type SafeZoneBindingRequest struct {
 	SourceSeq           int64
@@ -30,6 +30,8 @@ type SafeZoneBindingRequest struct {
 	Position            devconfig.Point
 	Action              string
 	EventID             string
+	// 仅teleport携带；旧walk请求省略此字段，保留原JSON摘要与原请求重试身份。
+	OriginBindingSourceSeq int64 `json:",omitempty"`
 }
 
 // 回执只保存已发生的永久绑定事实及来源身份，不保存角色当前位置或临时世界。
@@ -54,6 +56,30 @@ func lowerHex(value string, bytes int) bool {
 
 func bindingOperationID(roleID string, sourceSeq int64) string {
 	return fmt.Sprintf("binding:%s:%d", roleID, sourceSeq)
+}
+
+func bindingActionSupported(action string, rule uint64) bool {
+	return action == "walk" && rule >= 14 || action == "teleport" && rule >= 15
+}
+
+func (s *Store) validateBindingOrigin(role domain.Role, q SafeZoneBindingRequest) error {
+	if q.Action != "teleport" {
+		return nil
+	}
+	f := &s.Cfg.Fixture
+	skill, selected := f.Skill(21)
+	rank, learned := role.Skill(21)
+	if f.RuleVersion < 15 || !selected || skill.Behavior != "teleport" || !learned || skill.JobID != role.Job || rank < skill.LearnedLevel || rank > skill.MaxLevel {
+		return Fail(p.CodeLineForbidden, "传送绑定仅接受本阶段已学21的成功来源后置")
+	}
+	// role由同一事务的Role读取完成证明核验；请求字段本身不构成资格。
+	if role.Binding == nil || role.BindingSourceSeq <= 0 || role.BindingSafeZoneID == 0 || q.OriginBindingSourceSeq <= 0 || q.MapID != role.Binding.MapID {
+		return Fail(p.CodeLineForbidden, "传送绑定缺少原可信绑定地图资格")
+	}
+	if q.OriginBindingSourceSeq != role.BindingSourceSeq {
+		return Fail(p.CodeOperationConflict, "传送原绑定证明已变化，不能更换原事件资格")
+	}
+	return nil
 }
 
 func checkBindingSourceDocument(raw bson.Raw) error {
@@ -109,14 +135,21 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 	if !f.SafeZoneBindingEnabled() {
 		return nil, "", Fail(p.CodeLineForbidden, "来源安全区绑定入口未启用")
 	}
-	if q.SourceSeq <= 0 || q.ExpectedRevision <= 0 || q.ExpectedRuleVersion == 0 || q.ExpectedRuleVersion > math.MaxInt64 || !lowerHex(q.ExpectedConfigHash, 32) || q.MapID == 0 || q.MapID > math.MaxInt64 || q.Action != "walk" || !lowerHex(q.EventID, 16) {
-		return nil, "", Fail(p.CodeInvalidArgument, "来源绑定缺少权威行走事件及完整身份")
+	if q.SourceSeq <= 0 || q.ExpectedRevision <= 0 || q.ExpectedRuleVersion == 0 || q.ExpectedRuleVersion > math.MaxInt64 || !lowerHex(q.ExpectedConfigHash, 32) || q.MapID == 0 || q.MapID > math.MaxInt64 || !bindingActionSupported(q.Action, q.ExpectedRuleVersion) || !lowerHex(q.EventID, 16) || q.Action == "walk" && q.OriginBindingSourceSeq != 0 || q.Action == "teleport" && q.OriginBindingSourceSeq <= 0 {
+		return nil, "", Fail(p.CodeInvalidArgument, "来源绑定缺少支持的动作事件及完整身份")
 	}
 	if q.ExpectedRuleVersion != f.RuleVersion || q.ExpectedConfigHash != f.Hash {
 		return nil, "", Fail(p.CodeOperationConflict, "绑定规则身份已变化")
 	}
 	m, ok := f.MapByID(q.MapID)
-	if !ok || !m.Walkable(q.Position) {
+	if !ok {
+		return nil, "", Fail(p.CodeLineForbidden, "绑定动作不在来源城镇目录")
+	}
+	walkable := m.Walkable(q.Position)
+	if q.Action == "teleport" {
+		walkable = m.TeleportWalkable(q.Position)
+	}
+	if !walkable {
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作不在来源城镇可走格")
 	}
 	zoneHash, err := bindingZoneSetHash(m)
@@ -172,7 +205,7 @@ func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
 	if op.SourceSeq != role.BindingSourceSeq || op.SourceSeq <= 0 || op.SourceSeq > role.SourceSeq || op.SourceSeq > op.Revision || op.CommandSeq < 0 || op.CommandSeq > role.EconomicSeq || op.Revision <= 0 || op.Revision > role.Revision {
 		return Fail(p.CodeLineForbidden, "绑定来源回执水位超过角色聚合")
 	}
-	if op.Code != 0 || op.Potion != nil || op.Casting != nil || !lowerHex(op.Digest, 32) || b.Action != "walk" || !lowerHex(b.EventID, 16) || b.RuleVersion < 14 || b.RuleVersion > s.Cfg.Fixture.RuleVersion || b.RuleVersion > math.MaxInt64 || !lowerHex(b.ConfigHash, 32) || b.Point != *role.Binding {
+	if op.Code != 0 || op.Potion != nil || op.Casting != nil || !lowerHex(op.Digest, 32) || !bindingActionSupported(b.Action, b.RuleVersion) || !lowerHex(b.EventID, 16) || b.RuleVersion > s.Cfg.Fixture.RuleVersion || b.RuleVersion > math.MaxInt64 || !lowerHex(b.ConfigHash, 32) || b.Point != *role.Binding {
 		return Fail(p.CodeLineForbidden, "绑定来源回执身份或已提交中心不一致")
 	}
 	m, ok := s.Cfg.Fixture.MapByID(b.Point.MapID)
@@ -333,6 +366,9 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if fingerprint != digest {
 			return Fail(p.CodeOperationConflict, "绑定请求身份不一致")
 		}
+		if err = s.validateBindingOrigin(role, q); err != nil {
+			return err
+		}
 		before := role.Revision
 		point := binding.Point
 		role.Binding, role.BindingSourceSeq = &point, q.SourceSeq
@@ -345,7 +381,11 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if _, err = s.DB.Collection("operations").InsertOne(tc, op); err != nil {
 			return err
 		}
-		if _, err = s.DB.Collection("audit_outbox").InsertOne(tc, bson.M{"_id": opID, "kind": safeZoneBindingKind, "role_id": role.ID, "account_id": auth.AccountID, "source_seq": q.SourceSeq, "revision": role.Revision, "binding_use": binding, "at": op.Created}); err != nil {
+		audit := bson.M{"_id": opID, "kind": safeZoneBindingKind, "role_id": role.ID, "account_id": auth.AccountID, "source_seq": q.SourceSeq, "revision": role.Revision, "binding_use": binding, "at": op.Created}
+		if q.Action == "teleport" {
+			audit["origin_binding_source_seq"] = q.OriginBindingSourceSeq
+		}
+		if _, err = s.DB.Collection("audit_outbox").InsertOne(tc, audit); err != nil {
 			return err
 		}
 		out, receipt = role, op

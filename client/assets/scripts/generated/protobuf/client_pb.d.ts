@@ -1865,6 +1865,9 @@ export namespace minimir {
             /** EnterLineResult player_handle. */
             player_handle: number;
 
+            /** EnterLineResult server_transition_id. */
+            server_transition_id: string;
+
             /**
              * Creates a new EnterLineResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -1954,6 +1957,9 @@ export namespace minimir {
 
                 /** EnterLineResult player_handle */
                 player_handle?: (number|null);
+
+                /** EnterLineResult server_transition_id */
+                server_transition_id?: (string|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -2876,6 +2882,156 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a TeleportResult.
+         * @deprecated Use minimir.v1.TeleportResult.$Properties instead.
+         */
+        interface ITeleportResult extends minimir.v1.TeleportResult.$Properties {
+        }
+
+        /** Represents a TeleportResult. */
+        class TeleportResult {
+
+            /**
+             * Constructs a new TeleportResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TeleportResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** TeleportResult role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** TeleportResult from_scene_epoch. */
+            from_scene_epoch: Long;
+
+            /** TeleportResult scene_epoch. */
+            scene_epoch: Long;
+
+            /** TeleportResult cast_id. */
+            cast_id: Long;
+
+            /** TeleportResult player_life. */
+            player_life: Long;
+
+            /** TeleportResult target_map_id. */
+            target_map_id: Long;
+
+            /** TeleportResult position. */
+            position?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** TeleportResult movement_revision. */
+            movement_revision: Long;
+
+            /** TeleportResult outcome. */
+            outcome: number;
+
+            /** TeleportResult transition_id. */
+            transition_id: string;
+
+            /**
+             * Creates a new TeleportResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TeleportResult instance
+             */
+            static create(properties: minimir.v1.TeleportResult.$Shape): minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape;
+            static create(properties?: minimir.v1.TeleportResult.$Properties): minimir.v1.TeleportResult;
+
+            /**
+             * Encodes the specified TeleportResult message. Does not implicitly {@link minimir.v1.TeleportResult.verify|verify} messages.
+             * @param message TeleportResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TeleportResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TeleportResult message, length delimited. Does not implicitly {@link minimir.v1.TeleportResult.verify|verify} messages.
+             * @param message TeleportResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TeleportResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TeleportResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape} TeleportResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape;
+
+            /**
+             * Decodes a TeleportResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape} TeleportResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape;
+
+            /**
+             * Verifies a TeleportResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TeleportResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TeleportResult {
+
+            /** Properties of a TeleportResult. */
+            interface $Properties {
+
+                /** TeleportResult role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** TeleportResult from_scene_epoch */
+                from_scene_epoch?: (Long|null);
+
+                /** TeleportResult scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** TeleportResult cast_id */
+                cast_id?: (Long|null);
+
+                /** TeleportResult player_life */
+                player_life?: (Long|null);
+
+                /** TeleportResult target_map_id */
+                target_map_id?: (Long|null);
+
+                /** TeleportResult position */
+                position?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** TeleportResult movement_revision */
+                movement_revision?: (Long|null);
+
+                /** TeleportResult outcome */
+                outcome?: (number|null);
+
+                /** TeleportResult transition_id */
+                transition_id?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TeleportResult. */
+            type $Shape = minimir.v1.TeleportResult.$Properties;
+        }
+
+        /**
          * Properties of an EntityState.
          * @deprecated Use minimir.v1.EntityState.$Properties instead.
          */
@@ -3431,6 +3587,9 @@ export namespace minimir {
             /** EntityStatusState caster_life. */
             caster_life: Long;
 
+            /** EntityStatusState teleport_mana_penalty_percent. */
+            teleport_mana_penalty_percent: number;
+
             /**
              * Creates a new EntityStatusState instance using the specified properties.
              * @param [properties] Properties to set
@@ -3520,6 +3679,9 @@ export namespace minimir {
 
                 /** EntityStatusState caster_life */
                 caster_life?: (Long|null);
+
+                /** EntityStatusState teleport_mana_penalty_percent */
+                teleport_mana_penalty_percent?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

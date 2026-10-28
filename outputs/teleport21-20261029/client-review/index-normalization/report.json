@@ -1,0 +1,43 @@
+{
+  "started_utc": "2026-10-28T21:49:10.057557+00:00",
+  "scope": "仅3份既有meta CRLF转LF，保留全部其它字节及JSON语义",
+  "files": [
+    {
+      "path": "client/assets/scripts/app/MapAttachmentCoordinator.ts.meta",
+      "before_sha256": "806512bef3619773143929a662f6aae15c402e0b906bc3bbb13d65815da86373",
+      "after_sha256": "43502ae59d7b38d7af15ac43402f9b6da32a7c58126afc178a036352b9aee3c2",
+      "before_bytes": 180,
+      "after_bytes": 171,
+      "crlf_removed": 9,
+      "other_bytes_preserved": true,
+      "json_semantics_equal": true,
+      "index_blob_id": "c790526d3de87bb00d24e923759631141b8d4034",
+      "normalized_bytes_match_index": true
+    },
+    {
+      "path": "client/assets/scripts/app/MapTravelModel.ts.meta",
+      "before_sha256": "cdd51d269fb434b2bb66f63aa3934a0e4a09d17ea1b045e99df86eddac6af18f",
+      "after_sha256": "17baf495e2b025d5daa011b1912bfe7e8e3025cf758507789e2a43199a64ab77",
+      "before_bytes": 180,
+      "after_bytes": 171,
+      "crlf_removed": 9,
+      "other_bytes_preserved": true,
+      "json_semantics_equal": true,
+      "index_blob_id": "38fc91348594c3537af79a01cd7ec0d7424ca930",
+      "normalized_bytes_match_index": true
+    },
+    {
+      "path": "client/assets/scripts/app/MapViewportPreparation.ts.meta",
+      "before_sha256": "755c09188cfcad02c99ff45d0ca166ae84caa32c8c4ce8a700eac1ed179f9d9c",
+      "after_sha256": "cdb64e3b76f6b3b8ddd71367fecbed75ba9fa64118560759d4d9659a8a2387dd",
+      "before_bytes": 180,
+      "after_bytes": 171,
+      "crlf_removed": 9,
+      "other_bytes_preserved": true,
+      "json_semantics_equal": true,
+      "index_blob_id": "c9e8fdeb706678cf38f2f83a499130d9c098665d",
+      "normalized_bytes_match_index": true
+    }
+  ],
+  "passed": true
+}

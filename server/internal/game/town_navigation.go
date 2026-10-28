@@ -323,17 +323,29 @@ func (w *worker) admitTownRequests() {
 		cfg := w.e.Store.Cfg.Fixture.TownNavigation
 		limits := townnav.Limits{MaxExpanded: cfg.MaxExpanded, MaxFrontier: min(cfg.MaxFrontier, q.grid.Cells()), MaxRouteCells: min(cfg.MaxRouteCells, q.grid.Cells()), MaxReplans: cfg.MaxReplans, MaxDynamicCells: min(cfg.MaxDynamicCells, q.grid.Cells())}
 		var err error
+		m, known := w.currentMap(q.room)
+		blockedStart := known && !m.Walkable(q.actor.Pos) && m.TeleportWalkable(q.actor.Pos)
 		if q.task == nil {
 			q.adjacent = townBlocked(q, q.target)
 			create := townnav.NewTask
 			if q.adjacent {
 				create = townnav.NewAdjacentTask
 			}
+			if blockedStart {
+				create = townnav.NewTaskFromBlockedStart
+				if q.adjacent {
+					create = townnav.NewAdjacentTaskFromBlockedStart
+				}
+			}
 			q.task, err = create(q.grid, workspace, q.storage, q.key, townPoint(q.actor.Pos), townPoint(q.target), q.dynamic, limits)
 		} else {
 			err = q.task.AttachRouteStorage(q.storage)
 			if err == nil {
-				err = q.task.Replan(workspace, q.key, townPoint(q.actor.Pos), q.dynamic)
+				if blockedStart {
+					err = q.task.ReplanFromBlockedStart(workspace, q.key, townPoint(q.actor.Pos), q.dynamic)
+				} else {
+					err = q.task.Replan(workspace, q.key, townPoint(q.actor.Pos), q.dynamic)
+				}
 			}
 		}
 		if err != nil {
@@ -476,7 +488,7 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 		w.suspendTownRequest(q)
 		return true
 	}
-	if r.Isolated || e.HP <= 0 || !m.Walkable(e.Pos) || !m.Walkable(target) {
+	if r.Isolated || e.HP <= 0 || !m.Walkable(e.Pos) && !m.TeleportWalkable(e.Pos) || !m.Walkable(target) {
 		return true
 	}
 	if q == nil {

@@ -1,0 +1,6 @@
+=== RUN   TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation
+    teleport21_test.go:639: 合法源21落闭门{405 221}后正常点地无法走向相邻合法出口{406 221}，实际{405 221}、导航{Revision:1 InputSequence:2 Destination:0x336c22222130 Status:1}
+--- FAIL: TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation (0.02s)
+FAIL
+FAIL	minimir/internal/game	4.737s
+FAIL

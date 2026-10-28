@@ -1,0 +1,19 @@
+{
+  "task": "host",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/environment",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T21:21:59.107795+00:00",
+  "finished_at": "2026-10-28T21:22:03.074681+00:00",
+  "output": ".work/teleport21-20261029/checks/host.txt",
+  "output_sha256": "475c7b91653be620c2c75de0464b54a4e0233bf1b2b82d9bf2b9d0cd6b5b7ffe",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

@@ -84,12 +84,12 @@ func TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage(t *testing.T
 	}
 	hp := m.HP
 	due := r.Casts[0].Due
-	w.advanceCasts(r, due.Add(-time.Nanosecond))
+	w.advanceEvents(r, due.Add(-time.Nanosecond))
 	if m.HP != hp {
 		t.Fatal("火球提前命中")
 	}
 	r.Player.HP = 0
-	w.advanceCasts(r, due)
+	w.advanceEvents(r, due)
 	if m.HP >= hp || len(r.Casts) != 0 {
 		t.Fatal("已发出火球被施法者死亡取消或没有延迟命中")
 	}
@@ -102,7 +102,7 @@ func TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage(t *testing.T
 	}
 	m.Life++
 	hp = m.HP
-	w.advanceCasts(r, r.Casts[0].Due)
+	w.advanceEvents(r, r.Casts[0].Due)
 	if hp != m.HP {
 		t.Fatal("旧投射物命中了目标的新生命")
 	}
@@ -167,11 +167,11 @@ func TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline(t *testi
 		t.Fatal(code)
 	}
 	due := r.Casts[0].Due
-	w.advanceCasts(r, due.Add(-time.Nanosecond))
+	w.advanceEvents(r, due.Add(-time.Nanosecond))
 	if r.Pet.HealAmount != 0 {
 		t.Fatal("治愈提前入队")
 	}
-	w.advanceCasts(r, due)
+	w.advanceEvents(r, due)
 	r.Player.HealAmount = 20
 	h := w.e.Store.Cfg.Fixture.Healing
 	beforePet := r.Pet.HP

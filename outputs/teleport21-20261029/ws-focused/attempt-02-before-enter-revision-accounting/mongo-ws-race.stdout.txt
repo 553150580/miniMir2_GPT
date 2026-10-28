@@ -1,0 +1,9 @@
+=== RUN   TestTeleport21LearningBindingAndHealthyColdEntryMongoWS
+2026/10/29 05:11:34 INFO 开发节点就绪 mode=account address=127.0.0.1:53537 database=minimir_dev_game_test_teleport_1b3acf8386f13071f27f4686d5ab80ed instance=1856af36405544e9d8fa7f53539e6131 runtime_ready=false
+2026/10/29 05:11:34 INFO 开发节点就绪 mode=gm address=127.0.0.1:53539 database=minimir_dev_game_test_teleport_1b3acf8386f13071f27f4686d5ab80ed instance=b9a255628359bd085d0d798ceb1eaf73 runtime_ready=false
+2026/10/29 05:11:35 INFO 开发节点就绪 mode=game address=127.0.0.1:53538 database=minimir_dev_game_test_teleport_1b3acf8386f13071f27f4686d5ab80ed instance=b9cf780b7bd8287267289b4f0a024636 runtime_ready=false
+    teleport21_test.go:194: 21产生了落区绑定以外的永久来源/费用
+--- FAIL: TestTeleport21LearningBindingAndHealthyColdEntryMongoWS (15.75s)
+FAIL
+FAIL	minimir/internal/integration	20.167s
+FAIL

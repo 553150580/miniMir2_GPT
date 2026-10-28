@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-safe-zone-binding-v0.14-3d104a3248b1",
+  "config_version": "dev-teleport-v0.15-89a2e772a9e8",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

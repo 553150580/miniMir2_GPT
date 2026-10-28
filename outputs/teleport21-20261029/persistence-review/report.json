@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "name": "binding-compat-pure-race",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "go",
+        "test",
+        "-race",
+        "./internal/persistence",
+        "-run",
+        "^Test(SafeZoneBinding|TeleportBinding|BindingProof|BindingSourceDocument|BindingDocument|LegacyBinding|BindingReceipt)",
+        "-count=1",
+        "-v"
+      ],
+      "environment": {
+        "MINIMIR_MONGO_E2E": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 14.145,
+      "log": "binding-compat-pure-race.txt"
+    },
+    {
+      "name": "binding-compat-mongo-race",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "go",
+        "test",
+        "-race",
+        "./internal/integration",
+        "-run",
+        "^TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo$",
+        "-count=1",
+        "-v"
+      ],
+      "environment": {
+        "MINIMIR_MONGO_E2E": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 15.05,
+      "log": "binding-compat-mongo-race.txt"
+    }
+  ],
+  "input_sha256": {
+    "server/internal/persistence/safe_zone_binding.go": "f5e6ed271bc20dd6bb49b28b348d4b3f83bdd7202442ab11a0110904cfb0ebf0",
+    "server/internal/persistence/safe_zone_binding_test.go": "1543eda8e4f1c68da3db2550b4a4b54bc702f8c824067a864b465bac3554c762",
+    "server/internal/integration/safe_zone_binding_test.go": "cd215f33dfe6fad130c799d85d856e9ba21c404e5c8a96f999e7eaa438e5cef4"
+  },
+  "scoped_inputs_stable": true,
+  "scope": "仅rule15 Store兼容纯专项与真实Mongo事务；game并行重构，非全包/WS/实际21施放/容量验收；仅提交响应丢弃后原q重试，无真实UnknownTransaction网络注入"
+}

@@ -165,7 +165,7 @@ func TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence(t *testing.T)
 	f.Pet.JobID = 2
 	f.Monsters = []devconfig.Monster{{ID: 1, Fighter: devconfig.Fighter{HP: 10}}}
 	f.Map.MonsterSpawns = make([]devconfig.Point, 8)
-	r := &room{}
+	r := &room{worldState: &worldState{}}
 	w.initialize(r, domain.Role{Job: 0, EconomicSeq: 50})
 	if r.Potions.LastAppliedSeq != 50 || r.Potions.HP != 0 || r.Potions.MP != 0 {
 		t.Fatal("新世界没有从永久经济水位初始化药效屏障")

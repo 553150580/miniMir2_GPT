@@ -22,7 +22,7 @@ const codecs: Record<number, MessageType> = {
     20011: pb.BindingState,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
-    30012: pb.CastStep, 30013: pb.EntityDisplacement,
+    30012: pb.CastStep, 30013: pb.EntityDisplacement, 30014: pb.TeleportResult,
     40001: pb.EquipRequest, 40002: pb.RecycleRequest, 40003: pb.InventoryResult,
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,

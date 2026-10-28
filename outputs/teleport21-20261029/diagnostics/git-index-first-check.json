@@ -1,0 +1,13 @@
+{
+  "passed": false,
+  "command": ".\\tools\\dev.ps1 python3 .work/teleport21-20261029/verify_index.py",
+  "exit_code": 1,
+  "finding": "3份既有Creator导入meta磁盘CRLF与Git索引LF不同，LF规范化后摘要一致；内容与JSON值没有差异。未绕过保护，随后统一LF并重新执行客户端冻结检查。",
+  "paths": [
+    "client/assets/scripts/app/MapAttachmentCoordinator.ts.meta",
+    "client/assets/scripts/app/MapTravelModel.ts.meta",
+    "client/assets/scripts/app/MapViewportPreparation.ts.meta"
+  ],
+  "lf_normalization_matches_index_for_all": true,
+  "followup": "client-review/index-normalization/、client-review/final-index-normalization/及最终Git索引核对"
+}

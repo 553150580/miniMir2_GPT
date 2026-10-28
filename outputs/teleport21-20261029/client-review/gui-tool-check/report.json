@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "scope": "仅QA工具语法、异步等待模型、静态写白名单；未启动服务/构建/浏览器，未连接数据库",
+  "browser_executed": false,
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_teleport_browser.cjs",
+      "exit_code": 0,
+      "log": ".work/teleport21-20261029/client-review/gui-tool-check/syntax.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node .work/teleport21-20261029/client-review/gui-tool-static.cjs",
+      "exit_code": 0,
+      "log": ".work/teleport21-20261029/client-review/gui-tool-check/wait-model.txt",
+      "sha256": "c90528d1a4ff5978a32c72e0783c8b0eeb04f648ab7b939e4446652a7d77d010"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python .work/teleport21-20261029/client-review/gui-fixture-static.py",
+      "exit_code": 0,
+      "log": ".work/teleport21-20261029/client-review/gui-tool-check/fixture-static.txt",
+      "sha256": "1582b415842b4939f9fca39b00405d7a868cc4ea12f058ce411f4773144f2988"
+    }
+  ],
+  "tools_sha256": {
+    "tools/client/prepare_teleport_qa.py": "3b7a10f8f42c9cbdac2afae4698cc37f06c325aba53b9c21bd4d5fefacec88e1",
+    "tools/client/verify_teleport_browser.cjs": "f52e0dcd180e08b01f127f83b4a24ced0e4b7a6a371b99850a85b241b86718c4"
+  },
+  "lf_preserved": true
+}

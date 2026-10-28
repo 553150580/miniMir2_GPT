@@ -1,0 +1,1 @@
+{"typescript":"Version 5.8.2","compiler":"creator_3.8.8","files":["client\\assets\\scripts\\generated\\protocol_ids.ts","client\\assets\\scripts\\generated\\config_types.ts","client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts"],"typecheck":"passed","creator_build":"not_run"}

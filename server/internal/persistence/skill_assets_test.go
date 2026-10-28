@@ -47,10 +47,52 @@ func TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(t *testing.T) {
 		if len(preview.Stats) != want {
 			t.Fatalf("技能%d无意义中性数组污染预览:%d/%d", skill.ID, len(preview.Stats), want)
 		}
+		for _, stat := range preview.Stats {
+			if stat.Key == "max_attack_bonus" && skill.Behavior != "slaying" {
+				t.Fatalf("技能%d混入仅攻杀使用的攻击上限预览", skill.ID)
+			}
+		}
 		if skill.Behavior == "slaying" {
 			bonus := preview.Stats[3]
 			if bonus.Key != "max_attack_bonus" || bonus.BeforeMin != 5 || bonus.AfterMin != 6 || bonus.BeforeMax != bonus.BeforeMin || bonus.AfterMax != bonus.AfterMin {
 				t.Fatal("攻杀预览未反映真实永久最大DC成长")
+			}
+		}
+	}
+}
+
+func TestSkillPreviewTeleportFixedDurationAndManaPenaltyFromCurrentFixture(t *testing.T) {
+	_, f := skillEconomyFixture(t)
+	skill, found := f.Skill(21)
+	if !found || skill.Behavior != "teleport" {
+		t.Fatal("本组测试须使用已选21的当前唯一配置")
+	}
+	index := -1
+	for i := range f.Buffs {
+		if f.Buffs[i].ID == skill.BuffID {
+			index = i
+		}
+	}
+	if index < 0 || f.Buffs[index].DurationKind != "fixed_ms" || len(f.Buffs[index].DurationSecondsByLevel) != 0 {
+		t.Fatal("Flux须为固定毫秒时长且无道士逐阶秒数数组")
+	}
+	// 测试值区别当前候选，证明预览读取原Buff字段而不填造30秒/30%。
+	f.Buffs[index].DurationMS = 41007
+	f.Buffs[index].ValueByLevel = []int64{11, 23, 37, 53}
+	for from := uint32(0); from < skill.MaxLevel; from++ {
+		preview := (skillQuote{Plan: skillPlan{Kind: 2, SkillID: 21, From: from, To: from + 1}}).Proto(f)
+		keys := []string{}
+		for _, stat := range preview.Stats {
+			keys = append(keys, stat.Key)
+		}
+		if !reflect.DeepEqual(keys, []string{"mp_cost", "duration_ms", "teleport_mana_penalty_percent"}) {
+			t.Fatalf("21预览混入伤害/道士/材料或缺少固定时长:%v", keys)
+		}
+		wantBefore := []int64{skill.MPBaseCost + int64(from)*skill.MPLevelCost, 41007, f.Buffs[index].ValueByLevel[from]}
+		wantAfter := []int64{skill.MPBaseCost + int64(from+1)*skill.MPLevelCost, 41007, f.Buffs[index].ValueByLevel[from+1]}
+		for i, stat := range preview.Stats {
+			if stat.BeforeMin != wantBefore[i] || stat.BeforeMax != wantBefore[i] || stat.AfterMin != wantAfter[i] || stat.AfterMax != wantAfter[i] {
+				t.Fatalf("21阶%d字段%s未反映原永久数值:%+v", from, stat.Key, stat)
 			}
 		}
 	}

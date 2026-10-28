@@ -15,6 +15,7 @@ import (
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
 	"os"
+	"slices"
 	"sync"
 	"testing"
 	"time"
@@ -29,7 +30,7 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 	// 仅随机测试库启用未审定运行起点的业务合同；(0,0)故意与角色出生点不同。
-	cfg.Fixture.RuleVersion = 12
+	cfg.Fixture = bindingInitializationRule12Fixture(cfg.Fixture)
 	cfg.Fixture.Binding = &devconfig.BindingRules{Enabled: true, StartPoints: []devconfig.BindingPoint{{MapID: cfg.Fixture.Map.ID, X: 0, Y: 0}}}
 	must(t, cfg.Fixture.Validate())
 	ctx, cancel := context.WithCancel(context.Background())
@@ -147,4 +148,32 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 			t.Fatal("健康重连覆盖永久绑定")
 		}
 	}
+}
+
+// 从当前唯一输入派生受测的rule12合同，不把后来的瞬移/城镇运行字段带回旧版本。
+// 只改变本例随机库夹具；生产Validate及唯一Excel保持原样。
+func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
+	teleport, _ := f.Skill(21)
+	bookID, buffID := teleport.BookItemID, teleport.BuffID
+	f.RuleVersion = 12
+	if f.Binding != nil {
+		binding := *f.Binding
+		binding.SafeZoneEnabled = nil
+		f.Binding = &binding
+	}
+	f.TownTravel, f.TownNavigation = nil, nil
+	f.Map.NoTeleport, f.Map.SourceStaticBits = nil, nil
+	for i := range f.Maps {
+		f.Maps[i].NoTeleport, f.Maps[i].SourceStaticBits = nil, nil
+	}
+	f.Skills = slices.DeleteFunc(f.Skills, func(s devconfig.Skill) bool { return s.ID == 21 })
+	f.Buffs = slices.DeleteFunc(f.Buffs, func(b devconfig.BuffDefinition) bool { return b.ID == buffID || b.Kind == "teleport_mana_penalty" })
+	f.Items = slices.DeleteFunc(f.Items, func(item devconfig.Item) bool { return item.ID == bookID || item.BookSkillID == 21 })
+	f.SkillUpgrades = slices.DeleteFunc(f.SkillUpgrades, func(row devconfig.SkillUpgrade) bool { return row.SkillID == 21 })
+	f.SkillShop = slices.DeleteFunc(f.SkillShop, func(row devconfig.SkillShop) bool { return row.ItemID == bookID })
+	f.SkillBookRecycle = slices.DeleteFunc(f.SkillBookRecycle, func(row devconfig.SkillBookRecycle) bool { return row.ItemID == bookID })
+	f.InitialSkillBooks = slices.DeleteFunc(f.InitialSkillBooks, func(row devconfig.InitialSkillBook) bool { return row.ItemID == bookID })
+	f.InitialInventory = slices.DeleteFunc(f.InitialInventory, func(id uint32) bool { return id == bookID })
+	f.Drops.ItemIDs = slices.DeleteFunc(f.Drops.ItemIDs, func(id uint32) bool { return id == bookID })
+	return f
 }

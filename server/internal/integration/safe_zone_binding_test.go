@@ -2,6 +2,7 @@ package integration
 
 import (
 	"context"
+	"encoding/binary"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
@@ -61,8 +62,8 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 	must(t, err)
 	account, err := authority.Authenticate(ctx, registered.AccountToken)
 	must(t, err)
-	create := func(slot uint32) *pb.RoleSummary {
-		role, err := authority.CreateRole(ctx, account, &pb.CreateRoleRequest{OriginServerId: 1, Slot: slot, Job: 0, Name: "源绑定" + domain.ID()[:7], OpId: domain.Bytes(domain.ID())})
+	create := func(slot, job uint32) *pb.RoleSummary {
+		role, err := authority.CreateRole(ctx, account, &pb.CreateRoleRequest{OriginServerId: 1, Slot: slot, Job: job, Name: "源绑定" + domain.ID()[:7], OpId: domain.Bytes(domain.ID())})
 		must(t, err)
 		return role
 	}
@@ -85,7 +86,7 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 			t.Fatal("绑定事务改变经济序号、钱包、背包或其它永久资产", before, after)
 		}
 	}
-	summary := create(1)
+	summary := create(1, 0)
 	before, auth := enter(game, summary.Key)
 	if before.Binding != nil || before.BindingSourceSeq != 0 || before.BindingSafeZoneID != 0 {
 		t.Fatal("随机新生池关闭时新角色被补造绑定")
@@ -125,7 +126,16 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 	if _, _, err = game.BindSafeZoneWithReceipt(ctx, auth, withoutReceipt); persistence.Code(err) != p.CodeOperationConflict {
 		t.Fatal("旧SourceSeq无绑定回执仍被当成功", err)
 	}
-	secondPoint := m.SafeZones[1].Center
+	secondPoint := point
+	for _, candidate := range m.SafeZones {
+		if candidate.Center != point {
+			secondPoint = candidate.Center
+			break
+		}
+	}
+	if secondPoint == point {
+		t.Fatal("测试必须区分来源重复行与另一个真实中心")
+	}
 	second := request(advanced, secondPoint)
 	latest, latestReceipt, err := game.BindSafeZoneWithReceipt(ctx, auth, second)
 	must(t, err)
@@ -142,7 +152,7 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 	if !trusted || cold.BindingSafeZoneID != latestReceipt.Binding.ZoneID {
 		t.Fatal("冷读取无法恢复原已核安全区身份")
 	}
-	legacySummary := create(2)
+	legacySummary := create(2, 0)
 	legacyID := domain.Hex(legacySummary.Key.RoleId)
 	_, err = authority.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": legacyID}, bson.M{"$set": bson.M{"binding": latestReceipt.Binding.Point}})
 	must(t, err)
@@ -210,6 +220,84 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 				t.Fatal("恢复后未沿原回执恢复安全区身份")
 			}
 		})
+	}
+	// 同库按rule15读取旧walk14证明；只补本Store事务专项需要的21候选与真实静态位。
+	// 此处QA预置已学21不代表购书/升级流程验收，正常业务由独立WS测试覆盖。
+	cfg.Fixture.RuleVersion = 15
+	cfg.Fixture.Hash = persistence.Hash([]byte(cfg.Fixture.Hash + ":teleport-proof-v15"))
+	selected := false
+	for _, skill := range cfg.Fixture.Skills {
+		selected = selected || skill.ID == 21
+	}
+	if !selected {
+		cfg.Fixture.Skills = append(cfg.Fixture.Skills, devconfig.Skill{ID: 21, JobID: 1, Behavior: "teleport", LearnedLevel: 0, MaxLevel: 3})
+	}
+	source, err := os.ReadFile("../../../资料参考/myf/Mir200/Map/0.map")
+	must(t, err)
+	if m.Source == nil || persistence.Hash(source) != m.Source.SHA256 || len(source) != 52+m.Width*m.Height*12 {
+		t.Fatal("静态落点测试不接受来源换版或裁图")
+	}
+	m.SourceStaticBits = make([]byte, (m.Width*m.Height+7)/8)
+	for x := 0; x < m.Width; x++ {
+		for y := 0; y < m.Height; y++ {
+			offset := 52 + (x*m.Height+y)*12
+			if (binary.LittleEndian.Uint16(source[offset:])|binary.LittleEndian.Uint16(source[offset+2:])|binary.LittleEndian.Uint16(source[offset+4:]))&0x8000 != 0 {
+				index := y*m.Width + x
+				m.SourceStaticBits[index/8] |= 1 << uint(index%8)
+			}
+		}
+	}
+	for _, store := range []*persistence.Store{authority, game, next} {
+		store.Cfg.Fixture = cfg.Fixture
+	}
+	must(t, authority.Renew(ctx, "account"))
+	must(t, game.Renew(ctx, "game"))
+	oldProof, err := game.Role(ctx, latest.ID)
+	must(t, err)
+	if oldProof.BindingSourceSeq != latest.BindingSourceSeq || oldProof.BindingSafeZoneID != latest.BindingSafeZoneID {
+		t.Fatal("rule15废弃了原walk14证明")
+	}
+	oldReplay, oldOperation, err := game.BindSafeZoneWithReceipt(ctx, auth, q)
+	must(t, err)
+	if oldReplay.BindingSourceSeq != latest.BindingSourceSeq || oldOperation.ID != receipt.ID {
+		t.Fatal("rule15无法沿旧walk14原摘要对账")
+	}
+	wizardSummary := create(3, 1)
+	wizardID := domain.Hex(wizardSummary.Key.RoleId)
+	_, err = game.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": wizardID}, bson.M{"$set": bson.M{"learned_skills": []domain.LearnedSkill{{SkillID: 21, Level: 1}}, "level": uint32(19)}})
+	must(t, err)
+	wizard, wizardAuth := enter(game, wizardSummary.Key)
+	unprovedTeleport := request(wizard, secondPoint)
+	unprovedTeleport.Action, unprovedTeleport.OriginBindingSourceSeq = "teleport", 1
+	if _, _, err = game.BindSafeZoneWithReceipt(ctx, wizardAuth, unprovedTeleport); persistence.Code(err) != p.CodeLineForbidden {
+		t.Fatal("已学21但无原可信绑定仍能凭传送标签造证明", err)
+	}
+	wizardBound, _, err := game.BindSafeZoneWithReceipt(ctx, wizardAuth, request(wizard, point))
+	must(t, err)
+	assertOnlyBindingChanged(wizard, wizardBound)
+	teleport := request(wizardBound, secondPoint)
+	teleport.Action, teleport.OriginBindingSourceSeq = "teleport", wizardBound.BindingSourceSeq
+	teleported, teleportReceipt, err := game.BindSafeZoneWithReceipt(ctx, wizardAuth, teleport)
+	must(t, err)
+	assertOnlyBindingChanged(wizardBound, teleported)
+	if teleportReceipt.Binding == nil || teleportReceipt.Binding.Action != "teleport" || teleported.Binding == nil || *teleported.Binding == *wizardBound.Binding || teleported.BindingSafeZoneID == 0 {
+		t.Fatal("成功传送来源未提交另一个首匹配中心")
+	}
+	// 当前来源已变为新seq；原请求必须先查回执，不能被旧origin资格检查误拒。
+	teleportReplay, replayReceipt, err := game.BindSafeZoneWithReceipt(ctx, wizardAuth, teleport)
+	must(t, err)
+	if !reflect.DeepEqual(teleportReplay, teleported) || replayReceipt.ID != teleportReceipt.ID {
+		t.Fatal("teleport原q重试重复提交或被已更新origin误拒")
+	}
+	staleOrigin := request(teleported, point)
+	staleOrigin.Action, staleOrigin.OriginBindingSourceSeq = "teleport", wizardBound.BindingSourceSeq
+	if _, _, err = game.BindSafeZoneWithReceipt(ctx, wizardAuth, staleOrigin); persistence.Code(err) != p.CodeOperationConflict {
+		t.Fatal("新teleport事件采用旧来源资格", err)
+	}
+	coldTeleport, err := next.Role(ctx, wizardID)
+	must(t, err)
+	if coldTeleport.BindingSourceSeq != teleported.BindingSourceSeq || coldTeleport.BindingSafeZoneID != teleportReceipt.Binding.ZoneID {
+		t.Fatal("冷读未恢复teleport15 typed证明")
 	}
 	oldAuth := auth
 	stale := request(latest, point)

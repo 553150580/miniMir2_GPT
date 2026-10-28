@@ -231,7 +231,7 @@ func TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks(t *testing.T) {
 			case "old_life":
 				ref.Life++
 			case "old_scene":
-				ref.Scene++
+				ref.World.ID++
 			case "pending":
 				r.Pending = true
 			case "invalid_direction":
@@ -661,7 +661,7 @@ func TestNavigationOverflowPreservesOriginalTargetAndNewWorldClears(t *testing.T
 	if !r.Isolated || !proto.Equal(old, r.Navigation.Proto()) || r.Destination == nil || *r.Destination != goal {
 		t.Fatal("目标身份溢出回绕/覆盖旧目标")
 	}
-	fresh := &room{Destination: &goal, Navigation: r.Navigation, Manual: true}
+	fresh := &room{Manual: true, worldState: &worldState{Destination: &goal, Navigation: r.Navigation}}
 	w.initialize(fresh, r.Role)
 	if fresh.Navigation.Revision != 0 || fresh.Navigation.Status != navigationNone || fresh.Destination != nil || fresh.Manual || fresh.Player.MovementRevision != 0 {
 		t.Fatal("新世界继承旧导航/移动身份")

@@ -323,7 +323,7 @@ export class AppRoot extends Component {
         if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
             void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
         }
-        this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput);
+        this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput || session.teleport.blocksInput);
         this.refreshGame();
     }
 
@@ -395,6 +395,7 @@ export class AppRoot extends Component {
                 if (!isCurrentEntry(identity) || session.entry !== entry || this.world !== view || !view.isMapReady
                     || session.baseline?.sceneEpoch.toString() !== identity.scene.toString() || session.baseline?.baselineId.toString() !== identity.baseline.toString()) throw new StaleMapAttachmentError('旧地图准备不得确认新场景');
                 if (identity.travelId && !session.travel.acknowledge(identity)) throw new StaleMapAttachmentError('旅行附着确认代次已经变化');
+                if (identity.serverTransitionId && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
                 session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId });
             },
         });
@@ -444,7 +445,7 @@ export class AppRoot extends Component {
         });
     }
     private isWorldCurrent(): boolean { return !!this.attached && !!this.world && isCurrentEntry(this.attached) && this.world.sceneEpoch.toString() === this.attached.scene.toString(); }
-    private canSendInput(): boolean { return !this.disposed && !this.leaving && !this.attaching && !this.inputBarrier && session.ready && !session.travel?.blocksInput && this.isWorldCurrent(); }
+    private canSendInput(): boolean { return !this.disposed && !this.leaving && !this.attaching && !this.inputBarrier && session.ready && !session.travel?.blocksInput && !session.teleport?.blocksInput && this.isWorldCurrent(); }
     private eventMatchesWorld(scene: { toString(): string }): boolean { return this.isWorldCurrent() && this.attached!.scene.toString() === scene.toString(); }
     private setInputBarrier(blocked: boolean): void {
         this.nav.setInputBlocked(blocked || this.leaving);
@@ -523,7 +524,7 @@ export class AppRoot extends Component {
             throw error;
         } finally {
             if (prepared && (!current() || !session.travel.blocksInput)) this.releasePreparedTravel(prepared);
-            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput); this.refreshGame(); }
+            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput || session.teleport.blocksInput); this.refreshGame(); }
         }
     }
     private async cancelTravel(id: string, source: TravelContext): Promise<void> {
@@ -557,7 +558,7 @@ export class AppRoot extends Component {
             throw error;
         } finally {
             if (prepared && (!current() || !session.travel.blocksInput)) this.releasePreparedTravel(prepared);
-            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput); this.refreshGame(); }
+            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput || session.teleport.blocksInput); this.refreshGame(); }
         }
     }
     private waitTravel(id: string, source: TravelContext): Promise<void> {
@@ -591,7 +592,7 @@ export class AppRoot extends Component {
         }
         const quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
-            bindingState: session.bindingState, bindingNotice: session.bindingNotice,
+            bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
@@ -604,6 +605,10 @@ export class AppRoot extends Component {
         this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
         this.combatStatus?.refresh(baseline, session.ready);
         const player = baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
+        if (session.ready && player && this.attached && this.world.isMapReady) {
+            const arrival = session.teleport.takeArrival(this.attached, player.life, player.movementRevision);
+            if (arrival) this.world.presentTeleportArrival(arrival);
+        }
         const materialDisabled = !!quick?.definition.material_quantity && this.world.gameplay.casting_supply?.enabled === false;
         this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready && (!materialDisabled || player?.hp.isZero()));
         const supply = session.inventory?.equipped?.find((entry: any) => entry.slot === this.world!.gameplay.casting_supply?.slot)?.item;
@@ -682,7 +687,8 @@ export class AppRoot extends Component {
         const supplyName = this.world?.gameplay.items?.find((item: any) => item.item_id === supply?.itemId)?.name;
         return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
             sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
-            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], modes, modesReceivedAt: session.skillModesReceivedAt,
+            inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], playerStatuses: player?.statuses,
+            mapNoTeleport: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_teleport, modes, modesReceivedAt: session.skillModesReceivedAt,
             castingSupply: supply ? { name: supplyName ?? '施法护符', quantity: supply.quantity.toString() } : null,
             castingSupplyEnabled: this.world?.gameplay.casting_supply?.enabled, statusDefinitions: this.world?.gameplay.statuses };
     }
@@ -718,6 +724,9 @@ export class AppRoot extends Component {
     }
     private submitCast(row: SkillRow, targetHandle: number, targetGrid: { x: number; y: number }, direction: number, originalSupply?: SupplySelection): void | Promise<void> {
         this.ensureNotLeaving();
+        if (row.definition.kind === 'teleport') {
+            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id }); return;
+        }
         const intent = { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id,
             targetHandle, targetGrid: { x: targetGrid.x, y: targetGrid.y }, direction };
         if (!row.definition.material_quantity) { session.connection.send(30003, intent); return; }
@@ -754,7 +763,7 @@ export class AppRoot extends Component {
             if (this.ui?.top?.name === 'Skills') this.ui.back();
             return;
         }
-        if (current.definition.target_kind === 'enemy_self' || current.definition.target_kind === 'friendly_self') {
+        if (current.definition.target_kind === 'enemy_self' || current.definition.target_kind === 'friendly_self' || current.definition.kind === 'teleport') {
             const player = validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle);
             return this.submitCast(current, 0, player.position, player.direction);
         }

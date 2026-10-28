@@ -8,7 +8,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash":
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport":
 		return true
 	}
 	return false
@@ -120,7 +120,7 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "friendly_grid"
 		case "soul_shield", "blessed_armour":
 			wanted = "friendly_grid"
-		case "magic_shield":
+		case "magic_shield", "teleport":
 			wanted = "friendly_self"
 		case "firebang", "ice_storm":
 			wanted = "enemy_grid"

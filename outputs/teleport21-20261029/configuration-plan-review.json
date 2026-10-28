@@ -1,0 +1,34 @@
+{
+  "status": "只生成可审查候选，不执行editor、不替换唯一Excel/schema/fixture",
+  "input_workbook_sha256": "da1041dd267f0aca74b6c48b47e912ebc5d8141043681110cdea619c8a7dad24",
+  "input_schema_sha256": "fff4ad3211ad9ad0a9114763940dfbcf05f08d478ac982daa08952d22db62222",
+  "source_inputs_unchanged": true,
+  "append_rows": 10,
+  "profile_update_fields": [
+    "parameters",
+    "source_ref",
+    "note"
+  ],
+  "json_contracts_added": 24,
+  "json_contracts_updated": 1,
+  "table_field_enums_updated": 2,
+  "in_memory_json_and_semantic_checks": "PASS",
+  "initial_grants_and_initializer_preserved": true,
+  "safe_zone_rows_preserved": true,
+  "teleport_damage_parameters_explicit_neutral": true,
+  "map_policy_ids": [
+    201,
+    202
+  ],
+  "upgrade_ids": [
+    211,
+    212,
+    213
+  ],
+  "remaining_root_steps": [
+    "审查后用受控编辑器生成候选Excel并逐格验证未请求单元格",
+    "审查/应用schema patch后再替换唯一book",
+    "来源契约/MapInfo白名单事实登记",
+    "生成并校验fixture/public，类型/业务/资源分别验收"
+  ]
+}

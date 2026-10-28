@@ -1,0 +1,1 @@
+{"passed":true,"checks":4,"scope":"仅工具异步等待与LF检查；没有浏览器业务执行"}

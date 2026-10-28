@@ -1,0 +1,10 @@
+{
+  "scope": "仅QA重新登录及健康重入显式选择Role0；未修改生产TS、未重跑328、未执行浏览器/服务",
+  "command": ".\\tools\\dev.ps1 node --check tools/client/verify_teleport_browser.cjs",
+  "exit_code": 0,
+  "log": ".work/teleport21-20261029/client-review/gui-tool-check/role-selection-syntax.txt",
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "script_sha256": "7727ce98a70b42087e040fb1850d62cbea5ec9ba74212fd89c926a759cd776a1",
+  "lf": true,
+  "preserved_failure": ".work/teleport21-20261029/diagnostics/first-login-selection"
+}

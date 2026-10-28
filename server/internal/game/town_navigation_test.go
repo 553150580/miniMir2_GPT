@@ -29,7 +29,7 @@ func navigationTownWorker(t *testing.T, width, height, quantum, total, workspace
 }
 
 func addNavigationTownRoom(w *worker, id string, pos devconfig.Point) *room {
-	r := &room{Role: domain.Role{ID: id}, Conn: &capturedConnection{}, Ready: true, MapID: 2, Scene: 1, Player: entity{Handle: 1, Kind: 1, HP: 10, MaxHP: 10, Pos: pos}}
+	r := &room{Role: domain.Role{ID: id}, Conn: &capturedConnection{}, Ready: true, Scene: 1, Player: entity{Handle: 1, Kind: 1, HP: 10, MaxHP: 10, Pos: pos}, worldState: &worldState{MapID: 2}}
 	w.rooms[id] = r
 	return r
 }

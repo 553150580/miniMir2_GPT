@@ -1,0 +1,53 @@
+["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1", "go", "test", "-race", "-overlay", "D:\\A_Claude\\miniMir2_GPT\\.work\\teleport21-20261029\\world-core\\peer-review-overlay.json", "./internal/game", "-run", "^Test(PeerWorld|World)", "-count=1", "-v"]
+
+=== RUN   TestWorldTransferKeepsUniqueTravellerAndDeadAcceptedAction
+--- PASS: TestWorldTransferKeepsUniqueTravellerAndDeadAcceptedAction (0.05s)
+=== RUN   TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix
+=== RUN   TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/first
+=== RUN   TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/middle
+=== RUN   TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/last
+--- PASS: TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix (0.14s)
+    --- PASS: TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/first (0.05s)
+    --- PASS: TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/middle (0.04s)
+    --- PASS: TestWorldTimelineTransferAtFirstMiddleLastPreservesDueSuffix/last (0.05s)
+=== RUN   TestWorldTimelineRestoresPendingSuffixWithOriginalWorldAndBudget
+--- PASS: TestWorldTimelineRestoresPendingSuffixWithOriginalWorldAndBudget (0.05s)
+=== RUN   TestWorldTimelineMergesBothWorldsByDueAndOwnerOrder
+--- PASS: TestWorldTimelineMergesBothWorldsByDueAndOwnerOrder (0.04s)
+=== RUN   TestWorldHellFireContinuesOriginalMapWithoutGhostOrNewSceneFrames
+--- PASS: TestWorldHellFireContinuesOriginalMapWithoutGhostOrNewSceneFrames (0.04s)
+=== RUN   TestWorldEventCapacityIncludesInactiveWorldBeforeCosts
+--- PASS: TestWorldEventCapacityIncludesInactiveWorldBeforeCosts (0.05s)
+=== RUN   TestWorldSettlementWritesOnlyOriginLootAndRetainsUnknownOwnerJob
+--- PASS: TestWorldSettlementWritesOnlyOriginLootAndRetainsUnknownOwnerJob (0.04s)
+=== RUN   TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff
+=== RUN   TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff/dormant
+=== RUN   TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff/map_action
+--- PASS: TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff (0.09s)
+    --- PASS: TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff/dormant (0.04s)
+    --- PASS: TestWorldDormantDeadlinesStayParkedButReleasedMapWorkAdvancesOriginalCutoff/map_action (0.04s)
+=== RUN   TestWorldBindingCandidateSharesOwnerOrderWithoutDelayingTransferForOldKills
+--- PASS: TestWorldBindingCandidateSharesOwnerOrderWithoutDelayingTransferForOldKills (0.05s)
+=== RUN   TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending
+=== RUN   TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/pending
+=== RUN   TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/auth
+=== RUN   TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/owner
+--- PASS: TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending (0.14s)
+    --- PASS: TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/pending (0.04s)
+    --- PASS: TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/auth (0.04s)
+    --- PASS: TestWorldSettlementOldSlotAndNewOwnerNeverReleaseCurrentPending/owner (0.05s)
+=== RUN   TestPeerWorldOrderedFactsUnknownAndLateCallbacks
+--- PASS: TestPeerWorldOrderedFactsUnknownAndLateCallbacks (0.04s)
+=== RUN   TestPeerWorldOriginLootDeadlineStableAcrossUnknownAndReplay
+--- PASS: TestPeerWorldOriginLootDeadlineStableAcrossUnknownAndReplay (0.05s)
+=== RUN   TestPeerWorldOldAuthUnknownCannotClaimNewPending
+=== RUN   TestPeerWorldOldAuthUnknownCannotClaimNewPending/success
+=== RUN   TestPeerWorldOldAuthUnknownCannotClaimNewPending/unknown
+--- PASS: TestPeerWorldOldAuthUnknownCannotClaimNewPending (0.09s)
+    --- PASS: TestPeerWorldOldAuthUnknownCannotClaimNewPending/success (0.05s)
+    --- PASS: TestPeerWorldOldAuthUnknownCannotClaimNewPending/unknown (0.05s)
+PASS
+ok  	minimir/internal/game	5.714s
+
+exit_code=0
+elapsed_seconds=12.451

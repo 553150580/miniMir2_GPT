@@ -1,0 +1,1 @@
+fixture语法及唯一level/wallet写白名单通过；未连接数据库

@@ -265,3 +265,14 @@ test('旧socket迟到open不能在新连接发送旧票；同步发送失败立�
         sockets[1].failSend=true;await assert.rejects(connection.request(20007,{sceneEpoch:Long.UONE,travelId:'01'.repeat(16),destination:1}),/同步发送失败/);assert.equal(connection.pending.size,0);
     }finally{connection.close();global.WebSocket=original;global.location=oldLocation;}
 });
+
+test('纯S2C瞬移结果与Entry独立迁移ID保留全部uint64，不上传落点',()=>{
+ const large=Long.MAX_UNSIGNED_VALUE,transitionId='ab'.repeat(16),role={originServerId:large,roleId:new Uint8Array(16).fill(9)};
+ const result=decodePacket(encodePacket(30014,0,Long.UONE,{role,fromSceneEpoch:large,sceneEpoch:large,castId:large,playerLife:large,targetMapId:large,position:{x:699,y:699},movementRevision:large,outcome:1,transitionId})).value;
+ for(const name of ['fromSceneEpoch','sceneEpoch','castId','playerLife','targetMapId','movementRevision'])assert.equal(result[name].toString(),large.toString());assert.equal(result.role.originServerId.toString(),large.toString());assert.deepEqual(result.position,{x:699,y:699});assert.equal(result.transitionId,transitionId);
+ const e=decodePacket(encodePacket(20002,0,Long.UONE,{sceneEpoch:large,serverTransitionId:transitionId})).value;assert.equal(e.serverTransitionId,transitionId);assert.equal(decodePacket(encodePacket(20002,0,Long.UONE,{})).value.serverTransitionId,'');
+});
+
+test('TemporalFlux实际传送耗蓝字段独立于减伤，不混用战斗属性',()=>{
+ const value=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:7,statuses:[{statusId:21,remainingMs:30000,teleportManaPenaltyPercent:30,damageReductionPercent:0,casterLife:Long.MAX_UNSIGNED_VALUE}]}]})).value.entities[0].statuses[0];assert.equal(value.teleportManaPenaltyPercent,30);assert.equal(value.damageReductionPercent,0);assert.equal(value.casterLife.toString(),Long.MAX_UNSIGNED_VALUE.toString());
+});

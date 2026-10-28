@@ -3,6 +3,7 @@ package game
 import (
 	"context"
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"math/big"
 	pb "minimir/api/generated/minimirv1"
@@ -209,6 +210,9 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 	w.applyDamage(r, from, target, damage, now)
 }
 func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now time.Time, context ...hitContext) {
+	w.applyDamageInWorld(r, r.currentWorld(), from, target, damage, now, context...)
+}
+func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
 	if damage <= 0 || target.HP <= 0 {
 		return
 	}
@@ -229,7 +233,7 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 				if context[0].PrivilegeCaptured {
 					until = context[0].PrivilegeUntil
 				}
-				w.enqueueKillFact(r, target, context[0].At, from, context[0].HostSession, until)
+				w.enqueueKillFactInWorld(r, world, target, context[0].At, from, context[0].HostSession, until)
 			} else {
 				w.kill(r, target, now, from)
 			}
@@ -246,7 +250,9 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 		}
 		// 致死HP/动作属于临时现场，立即同步；奖励仍只在资产事务提交后推送。
 		r.LastBroadcast = now
-		w.snapshot(r)
+		if world == r.currentWorld() {
+			w.snapshot(r)
+		}
 	}
 }
 func (w *worker) step(r *room, now time.Time) {
@@ -297,9 +303,30 @@ func (w *worker) step(r *room, now time.Time) {
 		return
 	}
 	// 已经释放的法术与恢复队列不属于后续离线战斗授权；未知事务仍在上方冻结。
+	activeBeforeEvents, sceneBeforeEvents := r.currentWorld(), r.Scene
+	reactive := w.reactiveWorlds(r)
 	w.advanceEvents(r, now)
+	for _, world := range w.reactiveWorlds(r) {
+		found := false
+		for _, earlier := range reactive {
+			if earlier == world {
+				found = true
+			}
+		}
+		if !found {
+			reactive = append(reactive, world)
+		}
+	}
+	for _, world := range reactive {
+		if !r.Pending && !r.Isolated {
+			w.worldDeadlines(r, world, now)
+		}
+	}
 	w.flushKillFacts(r)
 	if r.Pending || r.Isolated {
+		return
+	}
+	if r.currentWorld() != activeBeforeEvents || r.Scene != sceneBeforeEvents {
 		return
 	}
 	if w.tickHealing(r, now) {
@@ -348,28 +375,12 @@ func (w *worker) step(r *room, now time.Time) {
 			e.Action = 0
 		}
 	}
-	if !r.LootUntil.IsZero() && !now.Before(r.LootUntil) {
-		r.Loot = nil
-	}
-	for i, m := range r.Monsters {
-		if m.HP == 0 && !m.RespawnAt.IsZero() && !now.Before(m.RespawnAt) {
-			if i >= len(mapTemplate.MonsterSpawns) || !mapTemplate.Walkable(mapTemplate.MonsterSpawns[i]) {
-				w.isolateRoom(r)
-				return
-			}
-			m.HP = m.MaxHP
-			m.Life++
-			m.Statuses = nil
-			if !w.relocate(r, m, mapTemplate.MonsterSpawns[i]) {
-				return
-			}
-			m.MovementRevision, m.MovementKind = 0, movementInitial
-			m.RespawnAt = time.Time{}
-			m.Action = 0
-		}
+	w.worldDeadlines(r, r.currentWorld(), now)
+	if r.Isolated {
+		return
 	}
 	// 原截止和恢复照常推进；新地图必须先收到匹配ACK才允许新增移动/AI/攻击。
-	if r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
+	if r.Conn != nil && !r.Ready || r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
 		return
 	}
 	a := w.fighter(r, &r.Player)
@@ -474,47 +485,85 @@ func (w *worker) legacyKill(r *room, m *entity, now time.Time) {
 	w.settle(r, q)
 }
 func (w *worker) settle(r *room, q persistence.Settlement, finished ...func()) {
+	w.settleInWorld(r, r.currentWorld(), r.Player.Pos, q, finished...)
+}
+
+type settlementBinding struct {
+	room            *room
+	auth            persistence.Auth
+	world           worldRef
+	point           devconfig.Point
+	generation      uint64
+	id, fingerprint string
+}
+
+func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, finished ...func()) {
+	r.SettlementGeneration++
+	raw, err := json.Marshal(q)
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	binding := settlementBinding{room: r, auth: r.Auth, world: world.Ref, point: point, generation: r.SettlementGeneration, id: fmt.Sprintf("settle:%d", q.SourceSeq), fingerprint: persistence.Hash(raw)}
 	r.Pending = true
+	r.PendingOperationID, r.PendingFingerprint = binding.id, binding.fingerprint
 	auth := r.Auth
 	var j job
 	j = job{target: w, run: func() func(*worker) {
 		role, err := w.e.Store.Settle(context.Background(), auth, q)
 		return func(w *worker) {
-			if err != nil && (persistence.Code(err) == p.CodeOperationPending || persistence.Code(err) == p.CodeServerBusy) {
-				r.PendingRetry = &j
-				r.RetryAt = time.Now().Add(500 * time.Millisecond)
-				return
-			}
-			r.Pending = false
-			if err != nil {
-				w.isolateRoom(r)
-				return
-			}
-			if role.Revision >= r.Role.Revision {
-				r.Role = role
-				transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
-				w.refreshPlayerStats(r)
-			}
-			if len(finished) > 0 {
-				finished[0]()
-			}
-			if r.Role.PickupStopped {
-				r.Auto = false
-			}
-			if q.Item != nil {
-				r.Loot = []*entity{{Handle: 1000, Kind: 4, Def: q.Item.ItemID, Pos: r.Player.Pos, HP: 1, MaxHP: 1}}
-				r.LootUntil = time.Now().Add(500 * time.Millisecond)
-			}
-			w.assets(r)
-			w.snapshot(r)
-			w.flushKillFacts(r)
-			w.after(r)
+			w.finishSettlement(binding, q, role, err, &j, finished...)
 		}
 	}}
 	if !w.submit(j) {
 		r.PendingRetry = &j
 		r.RetryAt = time.Now().Add(100 * time.Millisecond)
 	}
+}
+
+func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settlement, role domain.Role, err error, retry *job, finished ...func()) {
+	r := binding.room
+	if w.rooms[binding.auth.RoleID] != r || r.Auth != binding.auth || r.Isolated || !r.Pending || r.SettlementGeneration != binding.generation || r.PendingOperationID != binding.id || r.PendingFingerprint != binding.fingerprint {
+		return
+	}
+	if err != nil && (persistence.Code(err) == p.CodeOperationPending || persistence.Code(err) == p.CodeServerBusy) {
+		r.PendingRetry = retry
+		r.RetryAt = time.Now().Add(500 * time.Millisecond)
+		return
+	}
+	r.Pending = false
+	r.PendingRetry = nil
+	r.PendingOperationID, r.PendingFingerprint = "", ""
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	if role.Revision >= r.Role.Revision {
+		r.Role = role
+		transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
+		w.refreshPlayerStats(r)
+	}
+	if len(finished) > 0 {
+		finished[0]()
+	}
+	if r.Role.PickupStopped {
+		for _, world := range r.worlds() {
+			world.Auto = false
+		}
+	}
+	if q.Item != nil {
+		world := r.world(binding.world)
+		if world == nil {
+			w.isolateRoom(r)
+			return
+		}
+		world.Loot = []*entity{{Handle: 1000, Kind: 4, Def: q.Item.ItemID, Pos: binding.point, HP: 1, MaxHP: 1}}
+		world.LootUntil = time.Now().Add(500 * time.Millisecond)
+	}
+	w.assets(r)
+	w.snapshot(r)
+	w.flushKillFacts(r)
+	w.after(r)
 }
 
 func (w *worker) deathNotice(r *room) {

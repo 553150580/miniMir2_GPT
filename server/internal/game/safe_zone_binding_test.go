@@ -91,7 +91,7 @@ func TestSafeZoneBindingWalkCapturesOneFrozenFactAndLegacyNeedsReceipt(t *testin
 		t.Fatal("来源合法walk被拒绝")
 	}
 	fact := r.PendingBinding
-	if !r.Pending || fact == nil || len(w.e.jobs) != 1 || fact.request.SourceSeq != 8 || fact.request.ExpectedRevision != r.Role.Revision || fact.request.Position != goal || fact.request.MapID != 2 || fact.request.Action != "walk" || len(fact.request.EventID) != 32 || fact.zoneID != 106 || fact.actor != (actorRef{r.Scene, r.Player.Handle, r.Player.Life}) || fact.movement != r.Player.MovementRevision || fact.cellEntry != r.Player.CellEntry {
+	if !r.Pending || fact == nil || len(w.e.jobs) != 1 || fact.request.SourceSeq != 8 || fact.request.ExpectedRevision != r.Role.Revision || fact.request.Position != goal || fact.request.MapID != 2 || fact.request.Action != "walk" || len(fact.request.EventID) != 32 || fact.zoneID != 106 || fact.actor != reference(r, &r.Player) || fact.movement != r.Player.MovementRevision || fact.cellEntry != r.Player.CellEntry {
 		t.Fatal("walk后未捕获完整一次来源事实")
 	}
 	if r.Role.BindingSourceSeq != 0 || r.Role.SourceSeq != 7 || r.Role.Revision != fact.request.ExpectedRevision || r.Player.Pos != goal || !r.Player.NextMove.Equal(now.Add(600*time.Millisecond)) {
@@ -284,7 +284,7 @@ func TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending(
 			case "new_auth":
 				r.Auth.SessionEpoch++
 			case "new_room":
-				fresh := &room{Role: r.Role, Auth: r.Auth, Pending: true}
+				fresh := &room{Role: r.Role, Auth: r.Auth, Pending: true, worldState: &worldState{}}
 				w.rooms[r.Role.ID] = fresh
 			case "later_binding":
 				later := domain.RoleBinding{MapID: 2, X: 331, Y: 267}

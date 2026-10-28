@@ -1,0 +1,9 @@
+=== RUN   TestTeleport21LearningBindingAndHealthyColdEntryMongoWS
+2026/10/29 05:38:31 INFO 开发节点就绪 mode=gm address=127.0.0.1:64024 database=minimir_dev_game_test_teleport_be151394d7a26477b00d0d8ca5ecff84 instance=2d2640be3ebfead9ce948d6f8261cdfc runtime_ready=false
+2026/10/29 05:38:31 INFO 开发节点就绪 mode=account address=127.0.0.1:64022 database=minimir_dev_game_test_teleport_be151394d7a26477b00d0d8ca5ecff84 instance=911a2305c5d00cf881631ff8c2bc7f5e runtime_ready=false
+2026/10/29 05:38:32 INFO 开发节点就绪 mode=game address=127.0.0.1:64023 database=minimir_dev_game_test_teleport_be151394d7a26477b00d0d8ca5ecff84 instance=d7943eca6484b8a41dae15a6335ec6fa runtime_ready=false
+    teleport21_test.go:87: 升级预览须正常购买所选原书/书页，不能预置材料 900001
+--- FAIL: TestTeleport21LearningBindingAndHealthyColdEntryMongoWS (1.98s)
+FAIL
+FAIL	minimir/internal/integration	6.250s
+FAIL

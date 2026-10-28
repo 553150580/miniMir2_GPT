@@ -54,7 +54,7 @@ func TestSourcePushedMatchesIndependentCSharpOracle(t *testing.T) {
 		cfg.Fixture.Map.Width, cfg.Fixture.Map.Height = vector.Width, vector.Height
 		cfg.Fixture.Map.Blocked = append([]devconfig.Point(nil), vector.Blocked...)
 		c := &capturedConnection{}
-		r := &room{Conn: c, Ready: true, Scene: 20, Role: domain.Role{Job: 0, Level: 7}}
+		r := &room{Conn: c, Ready: true, Scene: 20, Role: domain.Role{Job: 0, Level: 7}, worldState: &worldState{}}
 		definition := cfg.Fixture.Monsters[0]
 		definition.CanPush = vector.CanPush
 		target := &entity{Handle: 10, Kind: 3, Life: 1, Pos: vector.Origin, HP: 10, MaxHP: 10, Direction: 4, Monster: &definition, ActionReadyAt: time.UnixMilli(vector.InitialAction), NextMove: time.UnixMilli(vector.InitialMove), NextAttack: time.UnixMilli(vector.InitialAttack)}

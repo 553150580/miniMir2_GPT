@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "full_config_tests": 75,
+  "new_teleport_methods": 11,
+  "unknown_or_ws_claimed": false,
+  "production_generator_modified_by_this_task": false,
+  "evidence": [
+    "before.txt",
+    "focused.txt",
+    "final.txt"
+  ],
+  "changed_test_files": {
+    "tools\\config\\test_teleport.py": "5a3b02ed1366289a7980f470e1d559f5d6696e88d495efc3fe8e75493dcc47bd",
+    "tools\\config\\test_safe_zone_binding.py": "2869e0213051aac0e82c42a763dcc6199e0461115080350e09dc40c947f64219",
+    "tools\\config\\test_source_map_projection.py": "b3bdd1449496665e040a120097a35c0e30b25c08eff1ec06e5d9e70e76bd7954",
+    "tools\\config\\test_town_runtime.py": "2556f14b190d40c0ccb09d1d837d217b67b355e5c24a92d327095d095715136c"
+  },
+  "scope": [
+    "每图唯一完整显式NoTeleport政策",
+    "原5区顺序/ZoneSetHash保持",
+    "源静态162653与普通闭门162741/88格差异",
+    "200尝试及rank+1轴规则enum/严格布尔，无运行默认",
+    "固定duration_ms唯一/尸体状态/无材料",
+    "仅成功后置effect及public白名单"
+  ],
+  "boundary": "配置结构及来源派生验收，不宣称随机采样业务、真实21施法、网络故障注入或容量验收"
+}

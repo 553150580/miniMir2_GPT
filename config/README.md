@@ -17,9 +17,15 @@
 
 每条记录均保留 `source_ref` 和 `note`；导出时剔除它们和其它 `target=none` 字段。来源是既有文档章节/行号、用户已确认规则或提取记录，状态不能代替来源证据。参数修改需要同步其证据；关闭发布缺口需要填写具体报告或批准变更引用。
 
-## 当前rule14安全区永久绑定
+## 当前rule15瞬息移动与世界执行身份
 
-当前预览为`dev-safe-zone-binding-v0.14-3d104a3248b1`。唯一Excel开发profile显式配置`binding.enabled=false`、`start_points=[]`、`safe_zone_enabled=true`；前两项只控制初始随机池，后一项独立控制正常Walk来源更新。rule14缺少/null/非布尔开关及旧版本混入新字段均拒绝，未认证的初始化起点仍不能导出。
+当前预览`dev-teleport-v0.15-89a2e772a9e8`，98表951记录、703项正式阻断，22项技能与4项状态；结构通过不等于正式发布。唯一Excel增加书13/技能21/成功后置效果21/固定Flux21、商店27/三阶升级及分解选择。初始赠书与随机池保持原门禁，`binding.enabled=false/start_points=[]/safe_zone_enabled=true`。
+
+每图唯一完整map_policy显式提供NoTeleport；安全区5行及其证明摘要不混入地图政策。Teleport六项严格合同、最多200次独立半开轴与源静态Walk派生、成功后固定duration_ms30000/逐阶百分比30均不另建数值源。公开配置只投影客户端所需字段，schema来源锁与唯一工作簿摘要可复核。运行规则、组件测试、真实WS及本机GUI分开记录，见[瞬移阶段验收](../docs/瞬息移动与世界执行身份阶段验收.json)。
+
+## rule14安全区永久绑定：历史验收
+
+当时预览为`dev-safe-zone-binding-v0.14-3d104a3248b1`。唯一Excel开发profile显式配置`binding.enabled=false`、`start_points=[]`、`safe_zone_enabled=true`；前两项只控制初始随机池，后一项独立控制正常Walk来源更新。rule14缺少/null/非布尔开关及旧版本混入新字段均拒绝，未认证的初始化起点仍不能导出。
 
 安全区数值沿唯一目录及原始来源行对拍；中心、原图与有序安全区摘要只作派生证明，不另维护数值源。SourceSeq/revision与永久回执同事务推进，EconomicSeq保持；BindingState仅S2C观察。98表941记录、691项正式阻断保持，21未列入运行技能，见[绑定阶段验收](../docs/安全区永久绑定阶段验收.json)。
 

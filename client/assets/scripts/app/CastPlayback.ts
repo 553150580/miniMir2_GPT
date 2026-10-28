@@ -37,9 +37,10 @@ export class CastPlayback {
         if (!definition || !definition.active || event.sceneEpoch.toString() !== this.scene || !Number.isFinite(now)
             || !Number.isSafeInteger(event.delayMs) || event.delayMs < 0 || event.delayMs > 30000) return false;
         let id: bigint; try { id = BigInt(event.castId.toString()); } catch { return false; }
-        if (id <= this.lastId || ![event.origin.x, event.origin.y, event.targetGrid.x, event.targetGrid.y].every(Number.isFinite)) return false;
+        const target = event.targetGrid ?? (definition.kind === 'teleport' ? event.origin : null);
+        if (id <= this.lastId || !event.origin || !target || ![event.origin.x, event.origin.y, target.x, target.y].every(Number.isFinite)) return false;
         this.lastId = id;
-        this.values.push({ event: { ...event, origin: { ...event.origin }, targetGrid: { ...event.targetGrid } }, definition, started: now });
+        this.values.push({ event: { ...event, origin: { ...event.origin }, targetGrid: { ...target } }, definition, started: now });
         if (this.values.length > this.capacity) this.values.shift();
         return true;
     }

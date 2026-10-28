@@ -1,0 +1,30 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "./internal/persistence",
+    "-run",
+    "^TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying$",
+    "-count=1",
+    "-v"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 8.636528730392456,
+  "inputs_before": {
+    "server\\internal\\persistence\\skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
+    "server\\internal\\persistence\\skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687"
+  },
+  "inputs_after": {
+    "server\\internal\\persistence\\skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
+    "server\\internal\\persistence\\skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687"
+  },
+  "inputs_stable": true,
+  "scope": "仅正式纯单元quote.Proto；无Mongo、无全包"
+}

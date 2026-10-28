@@ -12,6 +12,7 @@ import { MapTravelModel, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
 import { RoleBindingModel } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
+import { TeleportModel } from './TeleportModel';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
@@ -29,6 +30,8 @@ export const session = {
     entryConnection: 0,
     entryRole: '',
     entryTravelId: '',
+    entryServerTransitionId: '',
+    teleport: new TeleportModel(),
     travel: new MapTravelModel(),
     travelState: null as any,
     bindingState: null as RoleBindingObservation | null,
@@ -70,12 +73,14 @@ session.connection.subscribe((packet: Packet) => {
             break;
         case 6:
             if (session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch) && packet.value.baselineId.equals(session.entry.baselineId)
-                && (!session.travel.blocksInput || (!!session.entryTravelId && session.travel.phase === 'awaiting_ready'))) {
+                && (!session.travel.blocksInput || (!!session.entryTravelId && session.travel.phase === 'awaiting_ready'))
+                && (!session.teleport.blocksInput || (!!session.entryServerTransitionId && session.teleport.phase === 'awaiting_ready'))) {
                 session.ready = true;
                 const next = packet.value.nextEconomicCommandSeq;
                 if (next.greaterThan(confirmedCommand)) confirmedCommand = next;
                 if (confirmedCommand.greaterThan(session.command)) session.command = confirmedCommand;
                 const identity = currentEntryIdentity(); if (identity && session.entryTravelId) session.travel.ready(identity);
+                if (identity && session.entryServerTransitionId) session.teleport.ready(identity);
             }
             break;
         case 20010:
@@ -131,12 +136,23 @@ session.connection.subscribe((packet: Packet) => {
                 for (const listener of Array.from(session.displacements)) listener(packet.value);
             }
             break;
+        case 30014: {
+            const identity = currentEntryIdentity();
+            const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
+            if (session.role && identity && player && isCurrentEntry(identity) && session.teleport.accept(packet.value, identity, packet.binding, player.life)) {
+                if (session.teleport.blocksInput) {
+                    // 迁移已由服务端提交；旧手动旅行及其异步预备资源不能升级成此次授权。
+                    session.travel.reset(); session.travelState = null; session.ready = false; quiescingReady = null;
+                }
+            }
+            break;
+        }
         case 40008: session.report = packet.value; break;
         case 40005: acceptOperationReceipt(packet); break;
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
@@ -148,13 +164,22 @@ function acceptEntry(packet: Packet): void {
             // 同连接已附着的场景不能由重复或迟到Enter回执退回；也不撤销新场景Ready。
             return;
         }
-        const identity: AttachmentIdentity = { connection: session.connection.generation, binding: packet.binding, role: roleIdentity(), scene: value.sceneEpoch, baseline: value.baselineId, map: value.roomId, travelId: session.travel.id };
-        const travelling = session.travel.acceptsEntry(identity);
-        if (sameConnection && session.travel.active && !travelling) throw new Error('新地图入场不匹配旅行提交身份');
+        const transitionId = value.serverTransitionId ?? '';
+        if (typeof transitionId !== 'string' || (transitionId && !/^[0-9a-f]{32}$/.test(transitionId))) throw new Error('入场服务端迁移身份无效');
+        const identity: AttachmentIdentity = { connection: session.connection.generation, binding: packet.binding, role: roleIdentity(), scene: value.sceneEpoch,
+            baseline: value.baselineId, map: value.roomId, travelId: transitionId ? '' : session.travel.id, serverTransitionId: transitionId };
+        const forced = !!transitionId && session.teleport.matchesEntry(identity, value.position);
+        if (transitionId && !forced) throw new Error('新地图入场缺少匹配的服务端瞬移结果');
+        if (sameConnection && session.teleport.blocksInput && !forced) throw new Error('新地图入场不匹配服务端瞬移身份');
+        const travelling = !forced && session.travel.acceptsEntry(identity);
+        if (sameConnection && session.travel.active && !travelling && !forced) throw new Error('新地图入场不匹配旅行提交身份');
         if (travelling && value.sceneKind !== session.travel.plan?.targetSceneKind) throw new Error('新地图入场类型不匹配旅行计划');
+        if (forced) session.teleport.attach(identity, value.position);
         if (travelling) session.travel.attach(identity); else session.travel.reset();
         assembler.reset(); session.entry = value; session.baseline = null; session.ready = false; quiescingReady = null;
         session.entryBinding = packet.binding.toString(); session.entryConnection = session.connection.generation; session.entryRole = identity.role; session.entryTravelId = travelling ? identity.travelId : '';
+        session.entryServerTransitionId = transitionId;
+        if (!forced) session.teleport.bind(currentEntryIdentity()!);
         bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
@@ -163,14 +188,15 @@ function acceptEntry(packet: Packet): void {
 export function currentEntryIdentity(): AttachmentIdentity | null {
     const entry = session.entry; if (!entry) return null;
     return { connection: session.entryConnection, binding: session.entryBinding, role: session.entryRole,
-        scene: entry.sceneEpoch, baseline: entry.baselineId, map: entry.roomId, travelId: session.entryTravelId };
+        scene: entry.sceneEpoch, baseline: entry.baselineId, map: entry.roomId, travelId: session.entryTravelId, serverTransitionId: session.entryServerTransitionId };
 }
 export function isCurrentEntry(identity: AttachmentIdentity): boolean {
     const current = currentEntryIdentity();
     return !!current && session.connection.generation === identity.connection && session.connection.binding.toString() === identity.binding.toString()
         && roleIdentity() === identity.role && current.connection === identity.connection && current.binding.toString() === identity.binding.toString()
         && current.scene.toString() === identity.scene.toString() && current.baseline.toString() === identity.baseline.toString()
-        && current.map.toString() === identity.map.toString() && current.travelId === identity.travelId;
+        && current.map.toString() === identity.map.toString() && current.travelId === identity.travelId
+        && (current.serverTransitionId ?? '') === (identity.serverTransitionId ?? '');
 }
 
 function notify(): void { for (const update of Array.from(session.update)) { try { update(); } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); } } }

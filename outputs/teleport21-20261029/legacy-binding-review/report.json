@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-29",
+  "status": "合法legacy rule12夹具已修复、真实MongoWS定向race通过、代码文件冻结",
+  "code_file": "server/internal/integration/binding_test.go",
+  "production_modified": false,
+  "production_validation_relaxed": false,
+  "runtime_excel_or_fixture_file_modified": false,
+  "change": "从当前唯一输入仅派生本例受测rule12合同：移除Map.NoTeleport/SourceStaticBits、14安全区门禁、13旅行/导航指针、15的21技能/Buff21/原书13及shop/upgrade/recycle/初始或掉落引用；保留完整Fixture.Validate和原初始化/旧角色断言",
+  "before": {
+    "source": ".work/teleport21-20261029/checks/go.txt的root完整失败作业",
+    "test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS",
+    "case_seconds": 0.05,
+    "failure": "原图静态瞬移及禁传合同须使用rule15及后续版本",
+    "stdout": "before.stdout.txt",
+    "events": "before.events.json",
+    "source_reference": "before-source.json",
+    "code_snapshot": "binding_test.go.before.txt"
+  },
+  "after": {
+    "command": ".\\tools\\dev.ps1 go test -race -count=1 ./internal/integration -run '^TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS$' -v",
+    "environment": {"MINIMIR_MONGO_E2E": "1"},
+    "tool_session": 13448,
+    "exit_code": 0,
+    "case_seconds": 2.20,
+    "package_seconds": 6.091,
+    "passed": 1,
+    "skipped": 0,
+    "random_database": "minimir_dev_game_test_b92b05eaa6157e613837d900ed618580",
+    "stdout": "after.stdout.txt",
+    "result_and_input_hashes": "result.json",
+    "changed_during_job": []
+  },
+  "ownership": {
+    "raw": "mongo-ownership.json",
+    "exit_code": 0,
+    "pid": 5640,
+    "version": "8.0.34",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "verified": true,
+    "restarted": false
+  },
+  "coverage": [
+    "绑定随角色原子创建，建角原op重试不新建/不推进流水",
+    "旧缺失binding在围栏Enter事务补齐，已有合法2,2绑定不被默认起点覆盖",
+    "未知地图拒绝且不消耗票据、不接管SessionEpoch/Revision",
+    "健康重入不重建scene/Life、不覆盖永久绑定，临时位置/HPMP/施法队列不持久化"
+  ],
+  "limits": [
+    "Enabled初始出生点仅用于该随机测试库历史合同，当前唯一运行Excel初始池仍关闭，不将本例冒充新生池认证",
+    "该narrow记录当时输入；后续root只同步_source_evidence元数据，最终全包将核最终统一字节",
+    "没有修改其它Go文件或重跑完整全包"
+  ]
+}

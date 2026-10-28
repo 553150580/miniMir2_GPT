@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\A_Claude\miniMir2_GPT\tools\resources\prepare_first_loop.py", line 782, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "D:\A_Claude\miniMir2_GPT\tools\resources\prepare_first_loop.py", line 774, in main
+    if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: development fixture outdated; export it from Excel

@@ -3,7 +3,7 @@ import { PotionInteger } from './PotionModel';
 export interface EntityStatusState {
     statusId: number; sourceSkillId: number; skillLevel: number; remainingMs: number;
     maxPhysicalDefenceBonus: PotionInteger; maxMagicDefenceBonus: PotionInteger;
-    damageReductionPercent: number; casterHandle: number; casterLife: PotionInteger;
+    damageReductionPercent: number; teleportManaPenaltyPercent?: number; casterHandle: number; casterLife: PotionInteger;
 }
 export interface CombatAttributes {
     physicalAttackMin: PotionInteger; physicalAttackMax: PotionInteger; physicalDefenceMin: PotionInteger; physicalDefenceMax: PotionInteger;
@@ -29,6 +29,7 @@ export function statusLines(status: EntityStatusState, receivedAt: number, now: 
     const lines = [statusName(status.statusId, definitions), `技能等级 ${status.skillLevel}`, seconds ? `剩余 ${seconds} 秒` : '剩余0秒 · 等待状态更新'];
     if (BigInt(status.maxPhysicalDefenceBonus.toString())) lines.push(`物理防御上限 +${status.maxPhysicalDefenceBonus}`);
     if (BigInt(status.maxMagicDefenceBonus.toString())) lines.push(`魔法防御上限 +${status.maxMagicDefenceBonus}`);
+    if (status.teleportManaPenaltyPercent) lines.push(`传送技能魔法消耗 +${status.teleportManaPenaltyPercent}%`, '仅影响传送技能，成功传送刷新持续时间');
     if (status.damageReductionPercent) lines.push(`伤害减免 ${status.damageReductionPercent}%`);
     if (status.statusId === 31) lines.push('受伤会缩短持续时间', '已有魔法盾时重施不刷新');
     return lines;

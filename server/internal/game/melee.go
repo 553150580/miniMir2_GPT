@@ -138,11 +138,14 @@ func stepPoint(origin devconfig.Point, direction uint32, distance int) devconfig
 
 // 本阶段只允许活跃怪物为敌；每格以稳定句柄选第一个合法敌人，不把宠物算作敌人。
 func (w *worker) enemyAt(r *room, point devconfig.Point) *entity {
-	if !w.walkable(r, point) {
+	return w.enemyAtInWorld(r.currentWorld(), point)
+}
+func (w *worker) enemyAtInWorld(world *worldState, point devconfig.Point) *entity {
+	if !w.worldWalkable(world, point) {
 		return nil
 	}
 	var found *entity
-	for _, e := range r.Monsters[:r.MonsterCount] {
+	for _, e := range world.Monsters[:world.MonsterCount] {
 		if e.HP > 0 && e.Pos == point && (found == nil || e.Handle < found.Handle) {
 			found = e
 		}
@@ -198,7 +201,7 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 	if front != nil {
 		needed++
 	}
-	if len(r.Attacks)+len(r.Casts)+needed > w.eventCapacity() || from.AttackSequence == math.MaxUint32 {
+	if r.eventCount()+needed > w.eventCapacity() || from.AttackSequence == math.MaxUint32 {
 		return p.CodeSkillStateBlocked
 	}
 	stats := w.fighter(r, from)
@@ -235,7 +238,7 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 	from.Action, from.ActionUntil, from.Direction = 2, now.Add(200*time.Millisecond), direction
 	queue := func(target *entity, amount int64, defence physicalDefence, delay int64) {
 		r.ScheduleID++
-		a := pendingAttack{Caster: reference(r, from), Target: reference(r, target), Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Defence: defence, SkillID: s.ID, SkillLevel: rank, Sequence: from.AttackSequence, Order: r.ScheduleID, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true}
+		a := pendingAttack{Scene: r.Scene, Caster: reference(r, from), Target: reference(r, target), Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Defence: defence, SkillID: s.ID, SkillLevel: rank, Sequence: from.AttackSequence, Order: r.ScheduleID, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true}
 		if r.Conn == nil {
 			a.HostSession = r.HostSession
 		}

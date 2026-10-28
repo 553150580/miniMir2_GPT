@@ -15,6 +15,7 @@ export interface TravelState {
 export interface AttachmentIdentity {
     readonly connection: number; readonly binding: TravelInteger; readonly role: string;
     readonly scene: TravelInteger; readonly baseline: TravelInteger; readonly map: TravelInteger; readonly travelId: string;
+    readonly serverTransitionId?: string;
 }
 export type TravelPhase = 'idle' | 'planning' | 'preparing' | 'confirming' | 'commit_sent' | 'quiescing' | 'committed' | 'attaching' | 'awaiting_ready' | 'complete' | 'cancelling' | 'cancelled' | 'expired' | 'uncertain';
 export function travelInteger(value: TravelInteger, positive = false): string {
@@ -25,7 +26,7 @@ export function travelInteger(value: TravelInteger, positive = false): string {
 }
 export function attachmentKey(value: AttachmentIdentity): string {
     if (!Number.isSafeInteger(value.connection) || value.connection < 0 || !value.role) throw new Error('地图附着连接身份无效');
-    return JSON.stringify([value.connection, travelInteger(value.binding, true), value.role, travelInteger(value.scene, true), travelInteger(value.baseline, true), travelInteger(value.map, true), value.travelId]);
+    return JSON.stringify([value.connection, travelInteger(value.binding, true), value.role, travelInteger(value.scene, true), travelInteger(value.baseline, true), travelInteger(value.map, true), value.travelId, value.serverTransitionId ?? '']);
 }
 function context(value: TravelContext): TravelContext {
     if (!Number.isSafeInteger(value.connection) || value.connection < 0 || !value.role) throw new Error('旅行连接身份无效');
@@ -89,7 +90,7 @@ export class MapTravelModel {
         this.phase = value.phase === 3 ? 'cancelled' : 'expired'; return true;
     }
     acceptsEntry(value: AttachmentIdentity): boolean {
-        return !!this.committedScene && !!this.preparedPlan && this.sameConnection(value) && value.travelId === this.identifier
+        return !value.serverTransitionId && !!this.committedScene && !!this.preparedPlan && this.sameConnection(value) && value.travelId === this.identifier
             && travelInteger(value.scene) === this.committedScene && travelInteger(value.map) === this.preparedPlan.targetMapId;
     }
     attach(value: AttachmentIdentity): void { if (!this.acceptsEntry(value)) throw new Error('新地图附着不属于已提交旅行'); this.attached = attachmentKey(value); this.phase = 'attaching'; }

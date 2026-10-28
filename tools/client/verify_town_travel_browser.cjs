@@ -1,4 +1,4 @@
-// 真实保存UI、正常道士、触屏到访安全区与永久绑定观察；不预置数据库或改写权威位置，21仍关闭。
+// 真实保存UI、正常道士、触屏到访安全区与永久绑定观察；不预置数据库或改写权威位置，本脚本不验收21。
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT,'browser-tools/node_modules/playwright-core'));
 const root=path.resolve(__dirname,'../..'),flag=process.argv.indexOf('--report-dir'),out=path.resolve(root,flag<0?'.work/safe-zone-binding-20261029/browser-town-ground-fixed':process.argv[flag+1]);
@@ -19,7 +19,7 @@ function packet(value){const b=Buffer.from(value);if(b.length<6)return null;let 
 (async()=>{
  const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
  const context=await browser.newContext({viewport:{width:720,height:1280},hasTouch:true,isMobile:true,deviceScaleFactor:1}),page=await context.newPage();
- const report={passed:false,scope:'真实Creator、正常WS道士触屏安全区绑定提交显示与健康重入；不预置角色数值或改权威坐标；21继续关闭，冷重建由独立WS验收，不作真机/容量认证',expectedRuleVersion,readyRuleChecks:[],checks:[],errors:[],warnings:[],entries:[],travel:[],moves:[],groundChecks:[],bindingStates:[],clientBindingPackets:0,physicalMobileVerified:false,bindingVerified:false,coldRebuildVerified:false,teleport21Verified:false};
+ const report={passed:false,scope:'真实Creator、正常WS道士触屏安全区绑定提交显示与健康重入；不预置角色数值或改权威坐标；本脚本不验收21，冷重建由独立WS验收，不作真机/容量认证',expectedRuleVersion,readyRuleChecks:[],checks:[],errors:[],warnings:[],entries:[],travel:[],moves:[],groundChecks:[],bindingStates:[],clientBindingPackets:0,physicalMobileVerified:false,bindingVerified:false,coldRebuildVerified:false,teleport21Verified:false};
  page.on('pageerror',e=>report.errors.push(e.stack||e.message));page.on('console',m=>{if(['warning','error'].includes(m.type()))report.warnings.push({type:m.type(),text:m.text().slice(0,700)});});
  page.on('websocket',socket=>{
   socket.on('framesent',event=>{try{if(packet(event.payload)?.id===20011)report.clientBindingPackets++;}catch(e){report.errors.push('QA发送观察：'+e.message);}});

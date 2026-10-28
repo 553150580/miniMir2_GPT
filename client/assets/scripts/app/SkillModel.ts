@@ -4,7 +4,7 @@ export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
-        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash'; active: boolean; range: number;
+        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport'; active: boolean; range: number;
     displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
@@ -22,7 +22,9 @@ export interface SkillSnapshot {
     inventory: SkillInventory | null; definitions: readonly SkillDefinition[]; modes?: SkillModeState | null; modesReceivedAt?: number;
     castingSupply?: { name: string; quantity: string } | null;
     castingSupplyEnabled?: boolean;
-    statusDefinitions?: readonly { id: number; duration_rule?: { stat_multiplier: number; seconds_by_level: readonly number[] };
+    playerStatuses?: readonly { teleportManaPenaltyPercent?: number }[];
+    mapNoTeleport?: boolean;
+    statusDefinitions?: readonly { id: number; duration_rule?: { kind?: string; duration_ms?: number; stat_multiplier: number; seconds_by_level: readonly number[] };
         attribute_effects: { value_by_level: readonly number[]; target_level_divisor?: number; target_level_add?: number } }[];
 }
 export interface SkillModeEntry { skillId: number; enabled: boolean; ready: boolean; remainingMs: number; cooldownRemainingMs: number; }
@@ -64,10 +66,14 @@ function hex(value: Uint8Array): string {
     if (!(value instanceof Uint8Array) || value.length !== 16) throw new Error('技能书实例标识无效');
     return Array.from(value, byte => byte.toString(16).padStart(2, '0')).join('');
 }
-export function skillCost(definition: SkillDefinition, level: number): number {
+export function skillCost(definition: SkillDefinition, level: number, teleportPenaltyPercent = 0): number {
     const result = definition.base_cost + definition.level_cost * level;
     if (!Number.isSafeInteger(level) || level < 0 || !Number.isSafeInteger(result) || result < 0) throw new Error('技能消耗配置无效');
-    return result;
+    if (definition.kind !== 'teleport') return result;
+    if (!Number.isSafeInteger(teleportPenaltyPercent) || teleportPenaltyPercent < 0 || teleportPenaltyPercent > 0xffffffff) throw new Error('传送耗蓝状态无效');
+    const cost = BigInt(result) + BigInt(result) * BigInt(teleportPenaltyPercent) / 100n;
+    if (cost > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error('传送耗蓝超出精确范围');
+    return Number(cost);
 }
 export function skillAccuracy(row: SkillRow): number {
     if (!row.learned) return 0;
@@ -77,12 +83,13 @@ export function skillAccuracy(row: SkillRow): number {
     return result;
 }
 export function skillRows(snapshot: SkillSnapshot): SkillRow[] {
+    const teleportPenalty = Math.max(0, ...(snapshot.playerStatuses ?? []).map(status => status.teleportManaPenaltyPercent ?? 0));
     return snapshot.definitions.filter(definition => definition.job_id === snapshot.job).map(definition => {
         const learned = snapshot.inventory?.learnedSkills?.find(skill => skill.skillId === definition.id);
         const hasBook = snapshot.inventory?.items.some(item => item.itemId === definition.book_item_id && integer(item.quantity) > 0n) ?? false;
         const eligible = (snapshot.inventory?.level ?? 0) >= definition.learn_level;
         return { definition, learned: learned !== undefined, level: learned?.level ?? definition.initial_level,
-            cost: skillCost(definition, learned?.level ?? definition.initial_level),
+            cost: skillCost(definition, learned?.level ?? definition.initial_level, teleportPenalty),
             canLearn: snapshot.ready && !learned && eligible && hasBook,
             status: learned ? learned.level === 0 ? '已学 · 初学（等级0）' : `已学 · 等级${learned.level}`
                 : !eligible ? `${definition.learn_level}级可学习` : hasBook ? '拥有技能书 · 可学习' : '缺少对应技能书' };
@@ -132,7 +139,7 @@ export function skillPassiveText(row: SkillRow): string {
 }
 // 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
 export function skillQuickLabel(definition: SkillDefinition): string {
-    return ({ firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
+    return ({ teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
 }
 export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
     if (row.definition.material_quantity && snapshot.castingSupplyEnabled === false) return '未开放';
@@ -153,7 +160,13 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
         '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进');
     else if (!definition.active) lines.push(skillPassiveText(row));
-    else if (!definition.displacement) lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    else if (!definition.displacement && definition.kind !== 'teleport') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    if (definition.kind === 'teleport') {
+        lines.push('无需选择目标位置，随机移动至绑定地图内', '施法生效时检查当前地图，失败不返还已消耗魔法');
+        if (snapshot.mapNoTeleport) lines.push('当前地图禁止传送');
+        if (status?.duration_rule?.kind === 'fixed_ms') lines.push(`成功后获得${Math.ceil((status.duration_rule.duration_ms ?? 0) / 1000)}秒传送耗蓝状态`);
+        if (reduction !== undefined) lines.push(`状态期间仅传送技能的魔法消耗增加${reduction}%`, '再次成功刷新持续时间');
+    }
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
         lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);

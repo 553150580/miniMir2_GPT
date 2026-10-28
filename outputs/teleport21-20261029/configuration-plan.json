@@ -1,0 +1,805 @@
+{
+  "workbook": "outputs/development-prep-20261026/玩法配置.xlsx",
+  "group": "gameplay",
+  "input_workbook_sha256": "da1041dd267f0aca74b6c48b47e912ebc5d8141043681110cdea619c8a7dad24",
+  "operations": [
+    {
+      "kind": "append",
+      "table_id": "game_items",
+      "id": 13,
+      "values": {
+        "id": 13,
+        "item_key": "skill_book_21",
+        "display_name": "《瞬息移动》",
+        "item_type": "skill_book",
+        "max_stack": 1,
+        "effect_list_id": null,
+        "weight": 1,
+        "quality": 0,
+        "description": "学习与升级瞬息移动；实例来源/品质沿既有规则，NPC及初始赠书不得拆页",
+        "icon_resource_key": null,
+        "record_status": "candidate",
+        "source_ref": "MYF Mud2/DB/ApexM2_stditems.csv:1,15（Idx13、Stdmode4、原名瞬息移动、Price2000）；仅开发来源候选，非原服实际成交认证",
+        "note": "书13原身份候选，Price仅写商城独立价格行；不新增初始赠书，不把技能MP写成永久资产收费。"
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_buffs",
+      "id": 21,
+      "values": {
+        "id": 21,
+        "buff_key": "temporal_flux",
+        "attribute_effects": {
+          "kind": "teleport_mana_penalty",
+          "value_by_level": [
+            30,
+            30,
+            30,
+            30
+          ],
+          "target_level_divisor": 0,
+          "target_level_add": 0,
+          "hit_duration_loss_ms_per_hp": 0
+        },
+        "duration_ms": 30000,
+        "tick_ms": 1000,
+        "stack_policy": "refresh_duration_keep_values",
+        "remove_events": [
+          "despawn",
+          "world_dispose"
+        ],
+        "immunity_rules": {
+          "allow_dead_targets": true,
+          "friendly_only": true
+        },
+        "budget_group": "source_teleport_candidate",
+        "record_status": "candidate",
+        "source_ref": "Crystal Server/MirObjects/HumanObject.cs:6096–6107,397–450；MirObjects/MapObject.cs:570–595；MirDatabase/BuffInfo.cs:19；PlayerObject.cs:578–667；TemporalFlux仅成功后添加、重置时长、不随死亡或安全区暂停",
+        "note": "唯一固定时长在duration_ms，秒数数组保持空；百分比只在attribute_effects逐阶数组。成功传送后添加，允许已受理尸体到期成功；健康跨图/重连不移除、不退款、不复活。",
+        "duration_rule": {
+          "kind": "fixed_ms",
+          "stat_add": 0,
+          "stat_multiplier": 0,
+          "seconds_by_level": []
+        },
+        "display_name": "时空波动",
+        "short_name": "时空"
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_effects",
+      "id": 21,
+      "values": {
+        "id": 21,
+        "effect_key": "apply_temporal_flux_after_teleport",
+        "effect_type": "teleport_success_buff",
+        "parameters": {
+          "buff_id": 21
+        },
+        "trigger_phase": "teleport_success",
+        "target_rule": {
+          "kind": "friendly_self"
+        },
+        "proc_limit": {
+          "per_cast": 1
+        },
+        "recursive_trigger_allowed": false,
+        "record_status": "candidate",
+        "source_ref": "Crystal Server/MirObjects/HumanObject.cs:6096–6107,397–450；MirObjects/MapObject.cs:570–595；MirDatabase/BuffInfo.cs:19；PlayerObject.cs:578–667；TemporalFlux仅成功后添加、重置时长、不随死亡或安全区暂停",
+        "note": "独立传送成功后置；NoTeleport/200次尝试失败或取消不触发，不能套cast_impact；每次cast至多一次，不递归，也不复活尸体。"
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_skills",
+      "id": 21,
+      "values": {
+        "id": 21,
+        "skill_key": "source_teleport",
+        "display_name": "瞬息移动",
+        "class_id": 1,
+        "learn_level": 19,
+        "behavior_id": "teleport",
+        "target_rule": {
+          "kind": "friendly_self",
+          "range_cells": 0,
+          "target_move_tolerance_cells": 0,
+          "area_radius": 0,
+          "require_line_of_sight": false,
+          "auto_priority": 0,
+          "auto_min_targets": 1,
+          "secondary_direction_offsets": [],
+          "secondary_distance_cells": 0,
+          "line_cells": 0,
+          "line_stop_on_blocked": false,
+          "activation_kind": "cast",
+          "auto_enabled": false,
+          "teleport": {
+            "max_attempts": 200,
+            "axis_rule": "map_dimension_divided_by_rank_plus_one",
+            "landing_rule": "source_static_walk",
+            "allow_occupied": true,
+            "allow_accepted_dead": true,
+            "check_source_map_at_due": true
+          }
+        },
+        "range_pattern_id": null,
+        "cooldown_ms": 1800,
+        "cast_timing": {
+          "cooldown_reduction_ms": 0,
+          "global_spell_ms": 1800,
+          "action_ms": 600,
+          "delay_base_ms": 200,
+          "projectile_ms_per_cell": 0,
+          "secondary_impact_ms": 0,
+          "charge_window_ms": 0,
+          "line_step_ms": 0
+        },
+        "resource_costs": {
+          "mp_base_cost": 10,
+          "mp_level_cost": 3,
+          "items": [],
+          "material_item_id": 0,
+          "material_quantity": 0
+        },
+        "damage_or_heal_path": "teleport",
+        "effect_ids": [
+          21
+        ],
+        "action_resource_key": "player_female.casting",
+        "reference_evidence_id": "source_teleport_21_v1",
+        "target_180_verified": false,
+        "record_status": "candidate",
+        "source_ref": "用户先城镇/安全区与绑定后推进21路线；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证",
+        "note": "绑定地图完整尺寸随机，200ms到期200次独立尝试；静态Walk允许动态占格且不额外关门。仅手动；新施法死者拒绝，已受理同Life未Despawn者可尸体成功传送且保持HP0。失败不退MP、不加Flux。目标1.80仍未认证。",
+        "book_item_id": 13,
+        "native_start_level": 0,
+        "native_max_level": 3,
+        "damage_parameters": {
+          "accuracy_per_level": 0,
+          "power_base": 0,
+          "power_bonus": 0,
+          "mpower_base": 0,
+          "mpower_bonus": 0,
+          "multiplier_base_ppm": 1000000,
+          "multiplier_bonus_ppm": 0,
+          "accuracy_by_level": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "healing_stat_multiplier": 0,
+          "add_caster_level": false,
+          "undead_multiplier_ppm": 1000000,
+          "max_attack_bonus_by_level": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "ready_proc_denominator": 0,
+          "ready_proc_numerators": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "non_undead_divisor": 1
+        }
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_shop_prices",
+      "id": 27,
+      "values": {
+        "id": 27,
+        "product_key": "skill_book_21",
+        "display_name": "《瞬息移动》",
+        "payment_currency": "gold",
+        "price_u": null,
+        "quantity": 1,
+        "purchased_bound": true,
+        "daily_limit": null,
+        "record_status": "candidate",
+        "source_ref": "MYF Mud2/DB/ApexM2_stditems.csv:1,15（Idx13、Stdmode4、原名瞬息移动、Price2000）；仅开发来源候选，非原服实际成交认证",
+        "note": "沿既有金币绑定优先、产物绑定及NPC品质0禁拆页；此候选不认证原服实际成交。",
+        "price_gold": 2000
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_skill_upgrades",
+      "id": 211,
+      "values": {
+        "id": 211,
+        "skill_id": 21,
+        "level": 1,
+        "book_cost": [
+          {
+            "item_id": 13,
+            "quantity": 2
+          }
+        ],
+        "page_cost": 5,
+        "allowed_numeric_changes": {
+          "native_rank": 1
+        },
+        "preserve_behavior_shape": true,
+        "record_status": "candidate",
+        "source_ref": "用户先城镇/安全区与绑定后推进21路线；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；用户已定目标阶+1本，页数沿既有逐阶开发候选",
+        "note": "仅native_rank改变MP和原生随机轴除数；书本2/3/4为用户既定公式，页数5/10/20候选保留，不启用随机练功。",
+        "required_role_level": 19,
+        "page_item_id": 900001
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_skill_upgrades",
+      "id": 212,
+      "values": {
+        "id": 212,
+        "skill_id": 21,
+        "level": 2,
+        "book_cost": [
+          {
+            "item_id": 13,
+            "quantity": 3
+          }
+        ],
+        "page_cost": 10,
+        "allowed_numeric_changes": {
+          "native_rank": 2
+        },
+        "preserve_behavior_shape": true,
+        "record_status": "candidate",
+        "source_ref": "用户先城镇/安全区与绑定后推进21路线；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；用户已定目标阶+1本，页数沿既有逐阶开发候选",
+        "note": "仅native_rank改变MP和原生随机轴除数；书本2/3/4为用户既定公式，页数5/10/20候选保留，不启用随机练功。",
+        "required_role_level": 22,
+        "page_item_id": 900001
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_skill_upgrades",
+      "id": 213,
+      "values": {
+        "id": 213,
+        "skill_id": 21,
+        "level": 3,
+        "book_cost": [
+          {
+            "item_id": 13,
+            "quantity": 4
+          }
+        ],
+        "page_cost": 20,
+        "allowed_numeric_changes": {
+          "native_rank": 3
+        },
+        "preserve_behavior_shape": true,
+        "record_status": "candidate",
+        "source_ref": "用户先城镇/安全区与绑定后推进21路线；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；用户已定目标阶+1本，页数沿既有逐阶开发候选",
+        "note": "仅native_rank改变MP和原生随机轴除数；书本2/3/4为用户既定公式，页数5/10/20候选保留，不启用随机练功。",
+        "required_role_level": 25,
+        "page_item_id": 900001
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_map_regions",
+      "id": 201,
+      "values": {
+        "id": 201,
+        "map_id": 1,
+        "region_key": "map_1_policy",
+        "region_cells": {
+          "min_x": 0,
+          "min_y": 0,
+          "max_x": 16,
+          "max_y": 16
+        },
+        "npc_id": null,
+        "monster_pool": [],
+        "entry_rules": {
+          "region_kind": "map_policy",
+          "no_teleport": false
+        },
+        "record_status": "candidate",
+        "source_ref": "本作17×17个人图开发候选，rule15显式NoTeleport=false；非来源城镇、新生或复活规则",
+        "note": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。"
+      }
+    },
+    {
+      "kind": "append",
+      "table_id": "game_map_regions",
+      "id": 202,
+      "values": {
+        "id": 202,
+        "map_id": 2,
+        "region_key": "map_2_policy",
+        "region_cells": {
+          "min_x": 0,
+          "min_y": 0,
+          "max_x": 699,
+          "max_y": 699
+        },
+        "npc_id": null,
+        "monster_pool": [],
+        "entry_rules": {
+          "region_kind": "map_policy",
+          "no_teleport": false
+        },
+        "record_status": "candidate",
+        "source_ref": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价",
+        "note": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。"
+      }
+    },
+    {
+      "kind": "update",
+      "table_id": "dev_first_loop_profile",
+      "id": 1,
+      "values": {
+        "parameters": {
+          "rule_version": 15,
+          "map_id": 1,
+          "monster_id": 1,
+          "pet_id": 1,
+          "players": [
+            {
+              "job_id": 0,
+              "definition_id": 0,
+              "hp": 18,
+              "mp": 14,
+              "attack_min": 0,
+              "attack_max": 0,
+              "defence": 0,
+              "attack_ms": 1386,
+              "move_ms": 600,
+              "magic_min": 0,
+              "magic_max": 0,
+              "tao_min": 0,
+              "tao_max": 0,
+              "defence_min": 0,
+              "defence_max": 0,
+              "magic_defence_min": 0,
+              "magic_defence_max": 0,
+              "accuracy": 5,
+              "agility": 15,
+              "magic_resist": 0,
+              "magic_resist_weight": 10,
+              "attack_speed": 0,
+              "can_push": true
+            },
+            {
+              "job_id": 1,
+              "definition_id": 1,
+              "hp": 15,
+              "mp": 17,
+              "attack_min": 0,
+              "attack_max": 0,
+              "defence": 0,
+              "attack_ms": 1386,
+              "move_ms": 600,
+              "magic_min": 0,
+              "magic_max": 0,
+              "tao_min": 0,
+              "tao_max": 0,
+              "defence_min": 0,
+              "defence_max": 0,
+              "magic_defence_min": 0,
+              "magic_defence_max": 0,
+              "accuracy": 5,
+              "agility": 15,
+              "magic_resist": 0,
+              "magic_resist_weight": 10,
+              "attack_speed": 0,
+              "can_push": true
+            },
+            {
+              "job_id": 2,
+              "definition_id": 2,
+              "hp": 16,
+              "mp": 13,
+              "attack_min": 0,
+              "attack_max": 0,
+              "defence": 0,
+              "attack_ms": 1386,
+              "move_ms": 600,
+              "magic_min": 0,
+              "magic_max": 0,
+              "tao_min": 0,
+              "tao_max": 0,
+              "defence_min": 0,
+              "defence_max": 0,
+              "magic_defence_min": 0,
+              "magic_defence_max": 0,
+              "accuracy": 5,
+              "agility": 18,
+              "magic_resist": 0,
+              "magic_resist_weight": 10,
+              "attack_speed": 0,
+              "can_push": true
+            }
+          ],
+          "inventory_capacity": 32,
+          "initial_inventory": [
+            218,
+            218,
+            193,
+            35,
+            36
+          ],
+          "initial_bound_gold": 0,
+          "allow_free_dev_revive": true,
+          "damage_formula": "development_source_combat",
+          "recycle_test_gold_by_item": {
+            "35": 0,
+            "36": 0,
+            "193": 400,
+            "218": 50
+          },
+          "technical_parameters_notice": "rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。",
+          "player_stats_source": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。",
+          "damage_scope_notice": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。",
+          "revive_notice": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
+          "potions": {
+            "tick_ms": 200,
+            "base_per_tick": 5,
+            "levels_per_step": 10,
+            "use_delay_ms": 300,
+            "queue_cap": 65535,
+            "effects": [
+              {
+                "item_id": 35,
+                "hp": 20,
+                "mp": 0
+              },
+              {
+                "item_id": 36,
+                "hp": 0,
+                "mp": 30
+              }
+            ]
+          },
+          "player_growth": [
+            {
+              "job_id": 0,
+              "hp_base": 14,
+              "mp_base": 11,
+              "hp_gain": 4,
+              "hp_gain_rate": 4.5,
+              "mp_gain": 3.5,
+              "mp_gain_rate": 0,
+              "attack_divisor": 5,
+              "defence_max_divisor": 7,
+              "magic_divisor": 0,
+              "tao_divisor": 0,
+              "magic_defence_min_divisor": 0,
+              "magic_defence_max_divisor": 0
+            },
+            {
+              "job_id": 1,
+              "hp_base": 14,
+              "mp_base": 13,
+              "hp_gain": 15,
+              "hp_gain_rate": 1.8,
+              "mp_gain": 5,
+              "mp_gain_rate": 0,
+              "attack_divisor": 7,
+              "defence_max_divisor": 0,
+              "magic_divisor": 7,
+              "tao_divisor": 0,
+              "magic_defence_min_divisor": 0,
+              "magic_defence_max_divisor": 0
+            },
+            {
+              "job_id": 2,
+              "hp_base": 14,
+              "mp_base": 13,
+              "hp_gain": 6,
+              "hp_gain_rate": 2.5,
+              "mp_gain": 8,
+              "mp_gain_rate": 0,
+              "attack_divisor": 7,
+              "defence_max_divisor": 0,
+              "magic_divisor": 0,
+              "tao_divisor": 7,
+              "magic_defence_min_divisor": 12,
+              "magic_defence_max_divisor": 6
+            }
+          ],
+          "healing": {
+            "tick_ms": 600,
+            "base_per_tick": 5,
+            "pet_base_per_tick": 5,
+            "levels_per_step": 10,
+            "queue_fraction_divisor": 10,
+            "queue_cap": 65535
+          },
+          "initial_skill_books": [
+            {
+              "job_id": 1,
+              "item_id": 7
+            },
+            {
+              "job_id": 2,
+              "item_id": 21
+            },
+            {
+              "job_id": 0,
+              "item_id": 1
+            }
+          ],
+          "skill_ids": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            11,
+            23,
+            29,
+            7,
+            12,
+            25,
+            26,
+            10,
+            33,
+            24,
+            9,
+            14,
+            15,
+            31,
+            8,
+            27,
+            21
+          ],
+          "skill_economy": {
+            "page_item_id": 900001,
+            "preview_ttl_ms": 120000,
+            "preview_material_limit": 32
+          },
+          "skill_shop_entries": [
+            {
+              "offer_id": 6,
+              "item_id": 7,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 7,
+              "item_id": 21,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 8,
+              "item_id": 1,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 3,
+              "item_id": 900001,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 4,
+              "item_id": 900001,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 9,
+              "item_id": 22,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 10,
+              "item_id": 12,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 11,
+              "item_id": 11,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 12,
+              "item_id": 14,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 13,
+              "item_id": 32,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 14,
+              "item_id": 2,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 15,
+              "item_id": 3,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 16,
+              "item_id": 4,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 17,
+              "item_id": 6,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 18,
+              "item_id": 16,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 19,
+              "item_id": 20,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 20,
+              "item_id": 17,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 21,
+              "item_id": 10,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 22,
+              "item_id": 28,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 23,
+              "item_id": 29,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 24,
+              "item_id": 18,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 25,
+              "item_id": 8,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 26,
+              "item_id": 5,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            },
+            {
+              "offer_id": 27,
+              "item_id": 13,
+              "required_role_level": 1,
+              "max_purchase_quantity": 32
+            }
+          ],
+          "recyclable_book_ids": [
+            7,
+            21,
+            1,
+            22,
+            12,
+            11,
+            14,
+            32,
+            2,
+            3,
+            4,
+            6,
+            16,
+            20,
+            17,
+            10,
+            28,
+            29,
+            18,
+            8,
+            5,
+            13
+          ],
+          "recycle_source_kinds": [
+            "monster_drop"
+          ],
+          "skill_book_drop_quality": 1,
+          "combat_timing": {
+            "player_attack_base_ms": 1400,
+            "player_attack_speed_step_ms": 60,
+            "player_attack_level_step_ms": 14,
+            "player_attack_level_cap_ms": 370,
+            "player_attack_min_ms": 550,
+            "player_attack_action_ms": 550,
+            "player_attack_impact_ms": 300,
+            "event_capacity": 128,
+            "kill_queue_capacity": 16,
+            "player_push_action_ms": 500,
+            "monster_push_action_ms_per_step": 300,
+            "monster_push_move_ms_per_step": 500,
+            "pushed_step_display_ms": 300
+          },
+          "pet_spawn": {
+            "x": 8,
+            "y": 7
+          },
+          "casting_supply": {
+            "enabled": false,
+            "slot": 100,
+            "item_ids": [
+              187
+            ]
+          },
+          "map_catalog_ids": [
+            2
+          ],
+          "binding": {
+            "enabled": false,
+            "start_points": [],
+            "safe_zone_enabled": true
+          },
+          "source_map_streaming": {
+            "load_concurrency": 4,
+            "cache_capacity": 49
+          },
+          "town_travel": {
+            "enabled": true,
+            "town_map_id": 2,
+            "plan_ttl_ms": 120000,
+            "quiesce_ttl_ms": 10000,
+            "ack_ttl_ms": 120000,
+            "max_plans_per_scene": 256
+          },
+          "town_navigation": {
+            "enabled": true,
+            "work_per_task": 1024,
+            "work_per_worker_tick": 8192,
+            "workspaces_per_worker": 1,
+            "queue_per_worker": 64,
+            "max_expanded": 490000,
+            "max_frontier": 65536,
+            "max_route_cells": 4096,
+            "max_replans": 3,
+            "max_dynamic_cells": 2,
+            "max_memory_bytes_per_worker": 33554432
+          }
+        },
+        "source_ref": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选",
+        "note": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。"
+      }
+    }
+  ]
+}

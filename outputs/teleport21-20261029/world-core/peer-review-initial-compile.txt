@@ -1,0 +1,9 @@
+["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1", "go", "test", "-race", "-overlay", "D:\\A_Claude\\miniMir2_GPT\\.work\\teleport21-20261029\\world-core\\peer-review-overlay.json", "./internal/game", "-run", "^Test(PeerWorld|World)", "-count=1", "-v"]
+
+# minimir/internal/game [minimir/internal/game.test]
+..\.work\teleport21-20261029\world-core\peer_review_test.go:10:2: "time" imported and not used
+FAIL	minimir/internal/game [build failed]
+FAIL
+
+exit_code=1
+elapsed_seconds=0.647

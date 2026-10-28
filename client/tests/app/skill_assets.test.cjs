@@ -83,3 +83,16 @@ test('滚动报价列出四钱包、逐技能数值、原材料绑定来源和�
     assert.match(text,/攻击上限加成\n当前值 5\n下一阶 6/);
     assert.equal(assetId(input.inventory.items[0].instanceId),'01'.repeat(16));
 });
+
+test('瞬移升级报价明确毫秒时长与传送耗蓝百分比，不回退泛化数值或道术时长说明',()=>{
+    const input=snapshot(),preview=quote(input);preview.skillId=21;
+    preview.stats=[{key:'mp_cost',beforeMin:'10',beforeMax:'10',afterMin:'13',afterMax:'13'},
+        {key:'duration_ms',beforeMin:'30000',beforeMax:'30000',afterMin:'30000',afterMax:'30000'},
+        {key:'teleport_mana_penalty_percent',beforeMin:'30',beforeMax:'30',afterMin:'30',afterMax:'30'}];
+    const text=skillQuoteLines(preview,input.definitions).join('\n');
+    assert.match(text,/魔法消耗\n当前值 10\n下一阶 13/);
+    assert.match(text,/持续时间\(毫秒\)\n当前值 30000\n下一阶 30000/);
+    assert.match(text,/传送耗蓝加成\(%\)\n当前值 30\n下一阶 30/);
+    assert.doesNotMatch(text,/数值对照|道术|持续时间阶数|基础持续时间|伤害减免/);
+    assert.deepEqual(preview.stats.map(row=>row.key),['mp_cost','duration_ms','teleport_mana_penalty_percent']);
+});

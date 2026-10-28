@@ -23,7 +23,7 @@ test('雷电巨大原始纵向帧保留997像素与WIL偏移，动作与旧资�
 });
 test('实际public投影的主动技能均有同kind完整资源，被动精神力读取独立准确阶表',()=>{
     const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
-    assert.equal(gameplay.skills.length,21);
+    assert.equal(gameplay.skills.length,22);
     for(const skill of gameplay.skills){
         if(skill.active){assert.equal(manifest.effects[String(skill.id)]?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(manifest.effects[String(skill.id)].hit_anchor,'grid');}
     }
@@ -32,8 +32,8 @@ test('实际public投影的主动技能均有同kind完整资源，被动精神�
         const row=gameplay.skills.find(skill=>skill.id===id);assert.equal(row.activation_kind,activation);assert.equal(row.target_kind,target);assert.equal(manifest.effects[String(id)].kind,row.kind);
     }
     assert.equal(gameplay.skills.find(skill=>skill.id===9).line_cells,4);
-    for(const id of [8,27])assert.equal(gameplay.skills.find(skill=>skill.id===id).auto_enabled,false);
-    assert.equal(gameplay.skills.some(skill=>skill.id===21),false);
+    for(const id of [8,21,27])assert.equal(gameplay.skills.find(skill=>skill.id===id).auto_enabled,false);
+    assert.equal(gameplay.skills.find(skill=>skill.id===21).target_kind,'friendly_self');
 });
 test('四种战士刀光按原方向及阶数组取原WIL帧，身体仍六帧Attack1，未把紧凑索引当原帧',()=>{
     for(const [id,start]of [[7,1820],[12,2190],[25,2560]])for(let rank=0;rank<4;rank++)for(let direction=0;direction<8;direction++){
@@ -67,7 +67,7 @@ test('实际三防御技能19项投影与94原WIL帧对齐，常驻盾独立于�
         const skill=gameplay.skills.find(row=>row.id===id);assert.equal(skill.kind,kind);assert.equal(skill.target_kind,target);assert.equal(skill.activation_kind,'cast');assert.equal(skill.buff_id,id);
         if(id!==31){assert.equal(skill.area_radius,3);assert.equal(skill.material_item_id,187);assert.equal(skill.material_quantity,1);assert.equal(manifest.effects[id].hit_anchor,'grid');}else{assert.equal(skill.material_item_id,0);assert.equal(skill.material_quantity,0);}
     }
-    assert.equal(gameplay.statuses.length,3);for(const status of gameplay.statuses){assert(status.name&&status.short_name);assert(Array.from(status.short_name).length*24<=88);assert.equal(status.attribute_effects.value_by_level.length,4);assert.equal(status.duration_rule.seconds_by_level.length,4);}
+    assert.equal(gameplay.statuses.length,4);for(const status of gameplay.statuses){assert(status.name&&status.short_name);assert(Array.from(status.short_name).length*24<=88);assert.equal(status.attribute_effects.value_by_level.length,4);if(status.duration_rule.kind==='fixed_ms'){assert.equal(status.id,21);assert.equal(status.duration_rule.duration_ms,30000);assert.deepEqual(status.duration_rule.seconds_by_level,[]);}else assert.equal(status.duration_rule.seconds_by_level.length,4);}
     assert.equal(gameplay.casting_supply.slot,100);assert(gameplay.casting_supply.item_ids.includes(187));const item=gameplay.items.find(row=>row.item_id===187);assert.equal(item.kind,'casting_supply');assert.equal(item.equip_slot,100);assert.notEqual(item.is_equipment,true);
     assert.deepEqual(manifest.effects['31'].cast.frames,Array.from({length:10},(_,i)=>`Magic:${3880+i}`));assert.equal(manifest.effects['31'].cast.duration_ms,600);
     const persistent=manifest.statuses['31'];assert.deepEqual(persistent.idle.frames,['Magic:3890','Magic:3891','Magic:3892']);assert.deepEqual(persistent.struck.frames,['Magic:3900','Magic:3901','Magic:3902']);assert.equal(persistent.idle.duration_ms,600);assert.equal(persistent.struck.duration_ms,600);
@@ -78,4 +78,12 @@ test('实际三防御技能19项投影与94原WIL帧对齐，常驻盾独立于�
     }
     assert.equal(keys.size,94);for(const key of keys){const frame=manifest.frames[key];assert(frame&&!frame.declared_empty&&frame.visible_alpha_pixels>0);const image=fs.readFileSync(path.join(base,frame.png));assert.equal(crypto.createHash('sha256').update(image).digest('hex'),frame.png_sha256);assert.equal(image.readUInt32BE(16),frame.width);assert.equal(image.readUInt32BE(20),frame.height);}
     assert.equal(manifest.frames['Magic:3890'].width,92);assert.equal(manifest.frames['Magic:3890'].height,110);assert.equal(manifest.frames['Magic:3890'].offset_y,-78);
+});
+
+test('rule15瞬移书与Flux实际public同源投影，三十张既有WIL原帧逐文件核摘要及尺寸',()=>{
+ const crypto=require('node:crypto'),gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));assert(BigInt(gameplay.rule_version)>=15n);const skill=gameplay.skills.find(row=>row.id===21),book=gameplay.items.find(row=>row.item_id===13),flux=gameplay.statuses.find(row=>row.id===21);
+ assert.equal(skill.kind,'teleport');assert.equal(skill.book_item_id,13);assert.equal(skill.learn_level,19);assert.equal(skill.job_id,1);assert.equal(skill.activation_kind,'cast');assert.equal(skill.buff_id,21);assert.equal(skill.auto_enabled,false);assert.equal(skill.material_quantity,0);assert.equal(book.kind,'book');assert.equal(skill.teleport.max_attempts,200);assert(skill.teleport.axis_rule&&skill.teleport.landing_rule);
+ assert.equal(flux.kind,'teleport_mana_penalty');assert.equal(flux.stack_policy,'refresh_duration_keep_values');assert.equal(flux.remove_on_player_death,false);assert.equal(flux.duration_rule.kind,'fixed_ms');assert.equal(flux.duration_rule.duration_ms,30000);assert.deepEqual(flux.attribute_effects.value_by_level,[30,30,30,30]);assert.equal(manifest.statuses['21'],undefined);for(const map of gameplay.map_catalog)assert.equal(typeof map.no_teleport,'boolean');
+ assert.deepEqual(manifest.effects['21'].cast.frames,Array.from({length:10},(_,i)=>`Magic:${1590+i}`));assert.equal(manifest.effects['21'].cast.duration_ms,600);assert.deepEqual(manifest.teleport.out.frames,Array.from({length:10},(_,i)=>`Magic:${250+i}`));assert.deepEqual(manifest.teleport.in.frames,Array.from({length:10},(_,i)=>`Magic:${260+i}`));assert.equal(manifest.teleport.owner_plays_out,false);
+ for(const key of [...manifest.effects['21'].cast.frames,...manifest.teleport.out.frames,...manifest.teleport.in.frames]){const frame=manifest.frames[key],png=fs.readFileSync(path.join(base,frame.png));assert(!frame.declared_empty);assert.equal(png.readUInt32BE(16),frame.width);assert.equal(png.readUInt32BE(20),frame.height);assert.equal(crypto.createHash('sha256').update(png).digest('hex'),frame.png_sha256);}
 });

@@ -42,7 +42,7 @@ func (w *worker) materialCast(r *room, frame wire.Frame) {
 }
 
 func (w *worker) applyMaterialReceipt(r *room, receipt persistence.Operation, plan *preparedCast, input uint32, now time.Time) bool {
-	if receipt.Kind != "cast_material" || receipt.Code != 0 || receipt.Casting == nil || plan == nil || plan.Caster.Scene != r.Scene || plan.Caster.Life != r.Player.Life || receipt.Casting.SkillID != plan.Skill.ID {
+	if receipt.Kind != "cast_material" || receipt.Code != 0 || receipt.Casting == nil || plan == nil || plan.Scene != r.Scene || plan.Caster.World != r.currentWorld().Ref || plan.Caster.Life != r.Player.Life || receipt.Casting.SkillID != plan.Skill.ID {
 		return false
 	}
 	watermark := &r.MaterialEconomicSeq

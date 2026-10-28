@@ -120,8 +120,8 @@ func TestDisplacementFoundationFalseAndDistinctTimingArePreserved(t *testing.T) 
 		t.Fatal("四种推挤时钟被合并或回退到攻击时钟")
 	}
 	for _, skill := range f.Skills {
-		if skill.ID == 21 {
-			t.Fatal("尚未建立绑定点前不能开启瞬息移动")
+		if skill.ID == 21 && (f.RuleVersion < 15 || !f.SafeZoneBindingEnabled() || skill.Teleport == nil) {
+			t.Fatal("瞬移须在来源城镇及可信绑定之后以完整rule15合同选择")
 		}
 	}
 	first := raw["skills"].([]any)[0].(map[string]any)

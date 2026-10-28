@@ -29,7 +29,7 @@ class SourceMapProjectionTests(unittest.TestCase):
         self.assertEqual((len(bits),sum(byte.bit_count() for byte in bits)),(61250,162741))
         self.assertEqual([zone['id'] for zone in town['safe_zones']],[106,107,108,113,117])
         self.assertEqual(fixture['binding'],{'enabled':False,'start_points':[],'safe_zone_enabled':True})
-        self.assertFalse(any(skill['id']==21 for skill in fixture['skills']))
+        self.assertTrue(any(skill['id']==21 and skill['behavior']=='teleport' for skill in fixture['skills']))
         self.assertEqual(self.tables,before)
 
     def test_catalog_cannot_alias_personal_map_or_repeat_ids(self):
@@ -95,7 +95,7 @@ class SourceMapProjectionTests(unittest.TestCase):
         self.assertEqual(public['map_catalog'][1]['resource_key'],'source-maps/map-2/manifest')
         self.assertEqual(public['source_map_streaming'],{'load_concurrency':4,'cache_capacity':49})
         for row in public['map_catalog']:
-            self.assertEqual(set(row),{'id','name','resource_key','width','height','scene_kind','safe_zones'})
+            self.assertEqual(set(row),{'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport'})
             for key in ['source_ref','source','collision_bits','source_sha256','manifest_sha256','initial_binding_pool_verified']:
                 self.assertNotIn(key,row)
 

@@ -88,7 +88,13 @@ func (w *worker) magicAmount(s devconfig.Skill, level uint32, base int64) int64 
 }
 
 func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity {
+	return w.skillTargetInWorld(r, r.currentWorld(), s, handle)
+}
+func (w *worker) skillTargetInWorld(r *room, world *worldState, s devconfig.Skill, handle uint32) *entity {
 	if s.Behavior == "healing" {
+		if world != r.currentWorld() {
+			return nil
+		}
 		if handle == 0 || handle == r.Player.Handle {
 			if r.Player.HP > 0 {
 				return &r.Player
@@ -100,7 +106,7 @@ func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity 
 		}
 		return nil
 	}
-	for _, m := range r.Monsters[:r.MonsterCount] {
+	for _, m := range world.Monsters[:world.MonsterCount] {
 		if m.Handle == handle && m.HP > 0 {
 			return m
 		}

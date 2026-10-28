@@ -215,7 +215,7 @@ func TestMapTravelMongoWS(t *testing.T) {
 		t.Fatal("冷重建未按个人初始世界创建，或把永久绑定当作瞬移入口", c.entry, c.player())
 	}
 	travelAssertBindingSnapshot(t, c, committed)
-	t.Logf("通过: 随机库%s，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、Walk一次可信绑定/同中心幂等/区外保持、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复、完整停止后冷建仍保留永久绑定且21关闭", cfg.Database)
+	t.Logf("通过: 随机库%s，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、Walk一次可信绑定/同中心幂等/区外保持、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复、完整停止后冷建仍保留永久绑定；本用例不施放21", cfg.Database)
 }
 
 func travelAssertBindingSnapshot(t *testing.T, c *client, committed *pb.BindingState) {

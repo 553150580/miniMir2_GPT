@@ -1,0 +1,39 @@
+[
+  {
+    "Time": "2026-10-29T05:22:42.2628783+08:00",
+    "Action": "run",
+    "Package": "minimir/internal/integration",
+    "Test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS"
+  },
+  {
+    "Time": "2026-10-29T05:22:42.2628783+08:00",
+    "Action": "output",
+    "Package": "minimir/internal/integration",
+    "Test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS",
+    "Output": "=== RUN   TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS\n",
+    "OutputType": "frame"
+  },
+  {
+    "Time": "2026-10-29T05:22:42.3123752+08:00",
+    "Action": "output",
+    "Package": "minimir/internal/integration",
+    "Test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS",
+    "Output": "    binding_test.go:34: 原图静态瞬移及禁传合同须使用rule15及后续版本\n",
+    "OutputType": "error"
+  },
+  {
+    "Time": "2026-10-29T05:22:42.3123752+08:00",
+    "Action": "output",
+    "Package": "minimir/internal/integration",
+    "Test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS",
+    "Output": "--- FAIL: TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS (0.05s)\n",
+    "OutputType": "frame"
+  },
+  {
+    "Time": "2026-10-29T05:22:42.3123752+08:00",
+    "Action": "fail",
+    "Package": "minimir/internal/integration",
+    "Test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS",
+    "Elapsed": 0.05
+  }
+]

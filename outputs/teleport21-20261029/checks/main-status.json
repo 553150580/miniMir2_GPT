@@ -1,0 +1,14 @@
+{
+  "task": "main-status",
+  "command": [
+    "python3",
+    "tools/server/dev.py",
+    "status"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T21:41:43.677136+00:00",
+  "finished_at": "2026-10-28T21:41:43.886743+00:00",
+  "output": ".work/teleport21-20261029/checks/main-status.txt",
+  "output_sha256": "38baeaf55e0462b90dbc6d5bad37c1d05c12cfdde7b944f4314fcd69230812b0",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

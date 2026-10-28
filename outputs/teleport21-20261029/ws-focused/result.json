@@ -1,0 +1,30 @@
+{
+  "started_at_utc": "2026-10-28T21:13:17.538434+00:00",
+  "finished_at_utc": "2026-10-28T21:13:48.222162+00:00",
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "-count=1",
+    "./internal/integration",
+    "-run",
+    "^TestTeleport21LearningBindingAndHealthyColdEntryMongoWS$",
+    "-v"
+  ],
+  "environment": {
+    "MINIMIR_MONGO_E2E": "1"
+  },
+  "exit_code": 0,
+  "wall_seconds": 30.683,
+  "input_files": 52,
+  "source_changed": [],
+  "ownership_exit_code": 0,
+  "capture": "subprocess保存同一作业stdout+stderr原始字节；非PowerShell Tee",
+  "scope": "定向真实注册/购书/Walk绑定/21/ACK/冷热入场；最终全包以root统一冻结manifest为准"
+}

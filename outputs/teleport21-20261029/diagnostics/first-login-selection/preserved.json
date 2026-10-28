@@ -1,0 +1,11 @@
+{
+  "preserved_utc": "2026-10-28T21:13:07.827842+00:00",
+  "reason": "首次工具重新Login后未选择Role0而直接Enter；非生产TS缺陷",
+  "source": ".work/teleport21-20261029/browser-final",
+  "files": {
+    "failure.png": "f38c449060e4f396977d26d38acce5f84be21d1ede0c4ba3e2eed56330b70c5a",
+    "prepare_teleport_qa.before.py": "3b7a10f8f42c9cbdac2afae4698cc37f06c325aba53b9c21bd4d5fefacec88e1",
+    "report.json": "4be2daf5cd029818f79af31e4ef41f027030c81d6d26e6f71b344126dd4229b5",
+    "verify_teleport_browser.before.cjs": "f52e0dcd180e08b01f127f83b4a24ced0e4b7a6a371b99850a85b241b86718c4"
+  }
+}

@@ -4414,6 +4414,7 @@ $root.minimir = (function() {
              * @property {number|null} [scene_kind] EnterLineResult scene_kind
              * @property {Long|null} [next_economic_command_seq] EnterLineResult next_economic_command_seq
              * @property {number|null} [player_handle] EnterLineResult player_handle
+             * @property {string|null} [server_transition_id] EnterLineResult server_transition_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -4518,6 +4519,14 @@ $root.minimir = (function() {
             EnterLineResult.prototype.player_handle = 0;
 
             /**
+             * EnterLineResult server_transition_id.
+             * @member {string} server_transition_id
+             * @memberof minimir.v1.EnterLineResult
+             * @instance
+             */
+            EnterLineResult.prototype.server_transition_id = "";
+
+            /**
              * Creates a new EnterLineResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EnterLineResult
@@ -4567,6 +4576,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.next_economic_command_seq);
                 if (message.player_handle != null && $Object.hasOwnProperty.call(message, "player_handle") && message.player_handle !== 0)
                     writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.player_handle);
+                if (message.server_transition_id != null && $Object.hasOwnProperty.call(message, "server_transition_id") && message.server_transition_id !== "")
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.server_transition_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4702,6 +4713,15 @@ $root.minimir = (function() {
                                 delete message.player_handle;
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.server_transition_id = value;
+                            else
+                                delete message.server_transition_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -4779,6 +4799,9 @@ $root.minimir = (function() {
                 if (message.player_handle != null && $Object.hasOwnProperty.call(message, "player_handle"))
                     if (!$util.isInteger(message.player_handle))
                         return "player_handle: integer expected";
+                if (message.server_transition_id != null && $Object.hasOwnProperty.call(message, "server_transition_id"))
+                    if (!$util.isString(message.server_transition_id))
+                        return "server_transition_id: string expected";
                 return null;
             };
 
@@ -7075,6 +7098,427 @@ $root.minimir = (function() {
             return BindingState;
         })();
 
+        v1.TeleportResult = (function() {
+
+            /**
+             * Properties of a TeleportResult.
+             * @typedef {Object} minimir.v1.TeleportResult.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] TeleportResult role
+             * @property {Long|null} [from_scene_epoch] TeleportResult from_scene_epoch
+             * @property {Long|null} [scene_epoch] TeleportResult scene_epoch
+             * @property {Long|null} [cast_id] TeleportResult cast_id
+             * @property {Long|null} [player_life] TeleportResult player_life
+             * @property {Long|null} [target_map_id] TeleportResult target_map_id
+             * @property {minimir.v1.GridPoint.$Properties|null} [position] TeleportResult position
+             * @property {Long|null} [movement_revision] TeleportResult movement_revision
+             * @property {number|null} [outcome] TeleportResult outcome
+             * @property {string|null} [transition_id] TeleportResult transition_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TeleportResult.
+             * @memberof minimir.v1
+             * @interface ITeleportResult
+             * @augments minimir.v1.TeleportResult.$Properties
+             * @deprecated Use minimir.v1.TeleportResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a TeleportResult.
+             * @typedef {minimir.v1.TeleportResult.$Properties} minimir.v1.TeleportResult.$Shape
+             */
+
+            /**
+             * Constructs a new TeleportResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a TeleportResult.
+             * @constructor
+             * @param {minimir.v1.TeleportResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TeleportResult = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TeleportResult role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.role = null;
+
+            /**
+             * TeleportResult from_scene_epoch.
+             * @member {Long} from_scene_epoch
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.from_scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult cast_id.
+             * @member {Long} cast_id
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.cast_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult player_life.
+             * @member {Long} player_life
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.player_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult target_map_id.
+             * @member {Long} target_map_id
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.target_map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult position.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} position
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.position = null;
+
+            /**
+             * TeleportResult movement_revision.
+             * @member {Long} movement_revision
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.movement_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TeleportResult outcome.
+             * @member {number} outcome
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.outcome = 0;
+
+            /**
+             * TeleportResult transition_id.
+             * @member {string} transition_id
+             * @memberof minimir.v1.TeleportResult
+             * @instance
+             */
+            TeleportResult.prototype.transition_id = "";
+
+            /**
+             * Creates a new TeleportResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {minimir.v1.TeleportResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TeleportResult} TeleportResult instance
+             * @type {{
+             *   (properties: minimir.v1.TeleportResult.$Shape): minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape;
+             *   (properties?: minimir.v1.TeleportResult.$Properties): minimir.v1.TeleportResult;
+             * }}
+             */
+            TeleportResult.create = function(properties) {
+                return new TeleportResult(properties);
+            };
+
+            /**
+             * Encodes the specified TeleportResult message. Does not implicitly {@link minimir.v1.TeleportResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {minimir.v1.TeleportResult.$Properties} message TeleportResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TeleportResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch") && (typeof message.from_scene_epoch === "object" ? message.from_scene_epoch.low || message.from_scene_epoch.high : message.from_scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.from_scene_epoch);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.scene_epoch);
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id") && (typeof message.cast_id === "object" ? message.cast_id.low || message.cast_id.high : message.cast_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.cast_id);
+                if (message.player_life != null && $Object.hasOwnProperty.call(message, "player_life") && (typeof message.player_life === "object" ? message.player_life.low || message.player_life.high : message.player_life !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.player_life);
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id") && (typeof message.target_map_id === "object" ? message.target_map_id.low || message.target_map_id.high : message.target_map_id !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.target_map_id);
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position"))
+                    $root.minimir.v1.GridPoint.encode(message.position, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision") && (typeof message.movement_revision === "object" ? message.movement_revision.low || message.movement_revision.high : message.movement_revision !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.movement_revision);
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome") && message.outcome !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.outcome);
+                if (message.transition_id != null && $Object.hasOwnProperty.call(message, "transition_id") && message.transition_id !== "")
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.transition_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TeleportResult message, length delimited. Does not implicitly {@link minimir.v1.TeleportResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {minimir.v1.TeleportResult.$Properties} message TeleportResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TeleportResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TeleportResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape} TeleportResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TeleportResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TeleportResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.from_scene_epoch = value;
+                            else
+                                delete message.from_scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.cast_id = value;
+                            else
+                                delete message.cast_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.player_life = value;
+                            else
+                                delete message.player_life;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_map_id = value;
+                            else
+                                delete message.target_map_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.position = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.position);
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.movement_revision = value;
+                            else
+                                delete message.movement_revision;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.outcome = value;
+                            else
+                                delete message.outcome;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.transition_id = value;
+                            else
+                                delete message.transition_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TeleportResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TeleportResult & minimir.v1.TeleportResult.$Shape} TeleportResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TeleportResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TeleportResult message.
+             * @function verify
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TeleportResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch"))
+                    if (!$util.isInteger(message.from_scene_epoch) && !(message.from_scene_epoch && $util.isInteger(message.from_scene_epoch.low) && $util.isInteger(message.from_scene_epoch.high)))
+                        return "from_scene_epoch: integer|Long expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id"))
+                    if (!$util.isInteger(message.cast_id) && !(message.cast_id && $util.isInteger(message.cast_id.low) && $util.isInteger(message.cast_id.high)))
+                        return "cast_id: integer|Long expected";
+                if (message.player_life != null && $Object.hasOwnProperty.call(message, "player_life"))
+                    if (!$util.isInteger(message.player_life) && !(message.player_life && $util.isInteger(message.player_life.low) && $util.isInteger(message.player_life.high)))
+                        return "player_life: integer|Long expected";
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id"))
+                    if (!$util.isInteger(message.target_map_id) && !(message.target_map_id && $util.isInteger(message.target_map_id.low) && $util.isInteger(message.target_map_id.high)))
+                        return "target_map_id: integer|Long expected";
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.position, _depth + 1);
+                    if (error)
+                        return "position." + error;
+                }
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision"))
+                    if (!$util.isInteger(message.movement_revision) && !(message.movement_revision && $util.isInteger(message.movement_revision.low) && $util.isInteger(message.movement_revision.high)))
+                        return "movement_revision: integer|Long expected";
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome"))
+                    if (!$util.isInteger(message.outcome))
+                        return "outcome: integer expected";
+                if (message.transition_id != null && $Object.hasOwnProperty.call(message, "transition_id"))
+                    if (!$util.isString(message.transition_id))
+                        return "transition_id: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for TeleportResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.TeleportResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TeleportResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TeleportResult";
+            };
+
+            return TeleportResult;
+        })();
+
         v1.EntityState = (function() {
 
             /**
@@ -8598,6 +9042,7 @@ $root.minimir = (function() {
              * @property {number|null} [damage_reduction_percent] EntityStatusState damage_reduction_percent
              * @property {number|null} [caster_handle] EntityStatusState caster_handle
              * @property {Long|null} [caster_life] EntityStatusState caster_life
+             * @property {number|null} [teleport_mana_penalty_percent] EntityStatusState teleport_mana_penalty_percent
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -8702,6 +9147,14 @@ $root.minimir = (function() {
             EntityStatusState.prototype.caster_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * EntityStatusState teleport_mana_penalty_percent.
+             * @member {number} teleport_mana_penalty_percent
+             * @memberof minimir.v1.EntityStatusState
+             * @instance
+             */
+            EntityStatusState.prototype.teleport_mana_penalty_percent = 0;
+
+            /**
              * Creates a new EntityStatusState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityStatusState
@@ -8751,6 +9204,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.caster_handle);
                 if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life") && (typeof message.caster_life === "object" ? message.caster_life.low || message.caster_life.high : message.caster_life !== 0))
                     writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.caster_life);
+                if (message.teleport_mana_penalty_percent != null && $Object.hasOwnProperty.call(message, "teleport_mana_penalty_percent") && message.teleport_mana_penalty_percent !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.teleport_mana_penalty_percent);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -8889,6 +9344,15 @@ $root.minimir = (function() {
                                 delete message.caster_life;
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.teleport_mana_penalty_percent = value;
+                            else
+                                delete message.teleport_mana_penalty_percent;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -8964,6 +9428,9 @@ $root.minimir = (function() {
                 if (message.caster_life != null && $Object.hasOwnProperty.call(message, "caster_life"))
                     if (!$util.isInteger(message.caster_life) && !(message.caster_life && $util.isInteger(message.caster_life.low) && $util.isInteger(message.caster_life.high)))
                         return "caster_life: integer|Long expected";
+                if (message.teleport_mana_penalty_percent != null && $Object.hasOwnProperty.call(message, "teleport_mana_penalty_percent"))
+                    if (!$util.isInteger(message.teleport_mana_penalty_percent))
+                        return "teleport_mana_penalty_percent: integer expected";
                 return null;
             };
 

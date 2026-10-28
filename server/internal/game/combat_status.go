@@ -10,21 +10,22 @@ import (
 
 // 状态只属于当前实体现场；施法者引用保留来源，施法者后续死亡不撤销已经生效的状态。
 type combatStatus struct {
-	ID                      uint32
-	Kind                    string
-	SourceSkillID           uint32
-	SkillLevel              uint32
-	Caster                  actorRef
-	TargetLife              uint64
-	RemainingMS             int64
-	LastProcess             time.Time
-	NextProcess             time.Time
-	TickMS                  int64
-	MaxPhysicalDefenceBonus int64
-	MaxMagicDefenceBonus    int64
-	DamageReductionPercent  int64
-	DamageWearMS            int64
-	RemoveOnDeath           bool
+	TeleportManaPenaltyPercent int64
+	ID                         uint32
+	Kind                       string
+	SourceSkillID              uint32
+	SkillLevel                 uint32
+	Caster                     actorRef
+	TargetLife                 uint64
+	RemainingMS                int64
+	LastProcess                time.Time
+	NextProcess                time.Time
+	TickMS                     int64
+	MaxPhysicalDefenceBonus    int64
+	MaxMagicDefenceBonus       int64
+	DamageReductionPercent     int64
+	DamageWearMS               int64
+	RemoveOnDeath              bool
 }
 
 func buffDurationSeconds(skill devconfig.Skill, definition devconfig.BuffDefinition, rank uint32, stat, power int64) int64 {
@@ -102,14 +103,27 @@ func removeDeathStatuses(e *entity) {
 }
 
 func (w *worker) tickStatuses(r *room, now time.Time) bool {
-	changed := false
 	all := append([]*entity{&r.Player, r.Pet}, r.Monsters...)
+	for _, world := range w.reactiveWorlds(r) {
+		all = append(all, world.Monsters...)
+	}
+	return tickEntityStatuses(all, now)
+}
+
+func tickEntityStatuses(all []*entity, now time.Time) bool {
+	changed := false
 	for _, e := range all {
 		if e == nil {
 			continue
 		}
 		for id, status := range e.Statuses {
 			if status.TargetLife != e.Life {
+				delete(e.Statuses, id)
+				changed = true
+				continue
+			}
+			// 固定传送状态在实际到期帧移除，不用数值tick节拍延长耗蓝惩罚。
+			if status.Kind == "teleport_mana_penalty" && now.Sub(status.LastProcess).Milliseconds() >= status.RemainingMS {
 				delete(e.Statuses, id)
 				changed = true
 				continue
@@ -147,6 +161,10 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 		}
 		// 来源刷新仅替换剩余时长；首次数值、来源施法者以及Last/Next时钟全部保留。
 		old.RemainingMS = c.BuffDurationMS
+		if definition.DurationKind == "fixed_ms" {
+			old.LastProcess = now
+			old.NextProcess = now.Add(time.Duration(definition.TickMS) * time.Millisecond)
+		}
 		return true
 	}
 	if len(target.Statuses) >= len(w.e.Store.Cfg.Fixture.Buffs) {
@@ -162,6 +180,9 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 		status.MaxPhysicalDefenceBonus = statusTargetBonus(w.fighter(r, target).Level, definition)
 	case "max_magic_defence":
 		status.MaxMagicDefenceBonus = statusTargetBonus(w.fighter(r, target).Level, definition)
+	case "teleport_mana_penalty":
+		status.TeleportManaPenaltyPercent = definition.ValueByLevel[c.SkillLevel]
+		status.NextProcess = now.Add(time.Duration(definition.TickMS) * time.Millisecond)
 	}
 	if target.Statuses == nil {
 		target.Statuses = map[uint32]*combatStatus{}
@@ -216,7 +237,7 @@ func statusesPB(e *entity, now time.Time) []*pb.EntityStatusState {
 		}
 		out = append(out, &pb.EntityStatusState{StatusId: id, SourceSkillId: status.SourceSkillID, SkillLevel: status.SkillLevel, RemainingMs: uint32(remaining),
 			MaxPhysicalDefenceBonus: status.MaxPhysicalDefenceBonus, MaxMagicDefenceBonus: status.MaxMagicDefenceBonus, DamageReductionPercent: uint32(status.DamageReductionPercent),
-			CasterHandle: status.Caster.Handle, CasterLife: status.Caster.Life})
+			CasterHandle: status.Caster.Handle, CasterLife: status.Caster.Life, TeleportManaPenaltyPercent: uint32(status.TeleportManaPenaltyPercent)})
 	}
 	return out
 }

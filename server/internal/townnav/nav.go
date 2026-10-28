@@ -116,6 +116,14 @@ func (g *Grid) StepAllowed(from, to Point) bool {
 	if !g.Walkable(from) || !g.Walkable(to) {
 		return false
 	}
+	return g.exitStepAllowed(from, to)
+}
+
+// 仅供已获调用方授权的被占起点离开；目的点及斜向两侧仍按普通阻挡检查。
+func (g *Grid) exitStepAllowed(from, to Point) bool {
+	if !g.Contains(from) || !g.Walkable(to) {
+		return false
+	}
 	dx, dy := to.X-from.X, to.Y-from.Y
 	if abs(dx) > 1 || abs(dy) > 1 || dx == 0 && dy == 0 {
 		return false
@@ -179,6 +187,7 @@ type Task struct {
 	goalRadius                                            int
 	dynamic                                               Dynamic
 	suspended                                             bool
+	allowBlockedStart                                     bool
 	route                                                 []Point // 调用方独占缓冲，按目标到起点顺序保存，读取时不做全量反转。
 	cursor, buildAt, totalExpanded, replans, peakFrontier int
 }
@@ -216,16 +225,24 @@ func blocked(points []Point, p Point) bool {
 }
 
 func NewTask(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits) (*Task, error) {
-	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 0)
+	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 0, false)
 }
 
 // NewAdjacentTask只要求收敛到目标的八向邻格，用于不能进入主人占格的宠物跟随。
 func NewAdjacentTask(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits) (*Task, error) {
-	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 1)
+	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 1, false)
 }
 
-func newTask(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits, radius int) (*Task, error) {
-	if grid == nil || !validKey(key, grid) || !grid.Walkable(start) || !grid.Walkable(goal) {
+// 调用方必须先核对实体真实站在来源静态可走格；只豁免起脚，不开放中途阻挡或目标格。
+func NewTaskFromBlockedStart(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits) (*Task, error) {
+	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 0, true)
+}
+func NewAdjacentTaskFromBlockedStart(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits) (*Task, error) {
+	return newTask(grid, workspace, storage, key, start, goal, dynamic, limits, 1, true)
+}
+
+func newTask(grid *Grid, workspace *Workspace, storage []Point, key Key, start, goal Point, dynamic Dynamic, limits Limits, radius int, allowBlockedStart bool) (*Task, error) {
+	if grid == nil || !validKey(key, grid) || !grid.Contains(start) || !grid.Walkable(start) && !allowBlockedStart || !grid.Walkable(goal) {
 		return nil, errors.New("导航地图/请求身份或起终点无效")
 	}
 	if err := validateLimits(limits, workspace, grid, storage); err != nil {
@@ -234,7 +251,7 @@ func newTask(grid *Grid, workspace *Workspace, storage []Point, key Key, start, 
 	if err := validateDynamic(grid, dynamic, limits.MaxDynamicCells); err != nil {
 		return nil, err
 	}
-	t := &Task{grid: grid, key: key, limits: limits, start: start, goal: goal, expected: start, goalRadius: radius, route: storage[:0], cursor: -1}
+	t := &Task{grid: grid, key: key, limits: limits, start: start, goal: goal, expected: start, goalRadius: radius, route: storage[:0], cursor: -1, allowBlockedStart: allowBlockedStart}
 	if err := t.begin(workspace, dynamic); err != nil {
 		return nil, err
 	}
@@ -280,12 +297,30 @@ func (t *Task) connectedGoal() bool {
 	for y := t.goal.Y - t.goalRadius; y <= t.goal.Y+t.goalRadius; y++ {
 		for x := t.goal.X - t.goalRadius; x <= t.goal.X+t.goalRadius; x++ {
 			p := Point{x, y}
-			if t.grid.Walkable(p) && t.grid.component[t.grid.index(p)] == component {
-				return true
+			if t.grid.Walkable(p) {
+				goalComponent := t.grid.component[t.grid.index(p)]
+				if component != 0 && goalComponent == component {
+					return true
+				}
+				if component == 0 && t.allowBlockedStart {
+					for _, d := range directions {
+						exit := Point{t.start.X + d.X, t.start.Y + d.Y}
+						if t.stepAllowed(t.start, exit) && t.grid.component[t.grid.index(exit)] == goalComponent {
+							return true
+						}
+					}
+				}
 			}
 		}
 	}
 	return false
+}
+
+func (t *Task) stepAllowed(from, to Point) bool {
+	if t.allowBlockedStart && from == t.start && !t.grid.Walkable(from) {
+		return t.grid.exitStepAllowed(from, to)
+	}
+	return t.grid.StepAllowed(from, to)
 }
 
 // ResumeExactGoal在占格对象离开后恢复原地面目标，不清累计展开/重规划预算。
@@ -413,7 +448,7 @@ func (t *Task) Advance(key Key, budget int) (Progress, error) {
 		from := t.grid.point(cur)
 		for _, d := range directions {
 			to := Point{from.X + d.X, from.Y + d.Y}
-			if !t.grid.StepAllowed(from, to) || blocked(t.dynamic.Blocked, to) {
+			if !t.stepAllowed(from, to) || blocked(t.dynamic.Blocked, to) {
 				continue
 			}
 			next := t.grid.index(to)
@@ -467,7 +502,7 @@ func (t *Task) Next(key Key, position Point, dynamic Dynamic) (Point, bool, erro
 		return Point{}, false, nil
 	}
 	next := t.route[t.cursor]
-	if !t.grid.StepAllowed(position, next) || blocked(dynamic.Blocked, next) {
+	if !t.stepAllowed(position, next) || blocked(dynamic.Blocked, next) {
 		t.state = NeedsReplan
 		t.reason = "路径下一格已被占用或失效"
 		return Point{}, false, nil
@@ -493,6 +528,12 @@ func (t *Task) CommitStep(key Key, from, to Point) error {
 // Replan不会隐式分配工作区；纯暂停且起脚/占格未变时只恢复共享资源。
 // 任何实际变化仍消耗重规划次数，两条路径均保留同一请求的累计展开预算。
 func (t *Task) Replan(workspace *Workspace, key Key, position Point, dynamic Dynamic) error {
+	return t.replan(workspace, key, position, dynamic, false)
+}
+func (t *Task) ReplanFromBlockedStart(workspace *Workspace, key Key, position Point, dynamic Dynamic) error {
+	return t.replan(workspace, key, position, dynamic, true)
+}
+func (t *Task) replan(workspace *Workspace, key Key, position Point, dynamic Dynamic, allowBlockedStart bool) error {
 	if !t.sync(key) {
 		return errors.New("导航身份已经失效")
 	}
@@ -505,7 +546,7 @@ func (t *Task) Replan(workspace *Workspace, key Key, position Point, dynamic Dyn
 	if err := validateDynamic(t.grid, dynamic, t.limits.MaxDynamicCells); err != nil {
 		return err
 	}
-	if !t.grid.Walkable(position) {
+	if !t.grid.Contains(position) || !t.grid.Walkable(position) && !allowBlockedStart {
 		return errors.New("重新规划起点不可走")
 	}
 	if workspace.busy {
@@ -524,6 +565,7 @@ func (t *Task) Replan(workspace *Workspace, key Key, position Point, dynamic Dyn
 		t.replans++
 	}
 	t.start = position
+	t.allowBlockedStart = allowBlockedStart
 	return t.begin(workspace, dynamic)
 }
 

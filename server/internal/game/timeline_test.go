@@ -73,11 +73,11 @@ func TestHumanAttackActionImpactAndLevelSpeedAreIndependent(t *testing.T) {
 	if r.Player.Pos != pos {
 		t.Fatal("普攻动作锁内仍可移动")
 	}
-	w.advanceAttacks(r, r.Attacks[0].Due.Add(-time.Nanosecond))
+	w.advanceEvents(r, r.Attacks[0].Due.Add(-time.Nanosecond))
 	if m.HP != 1000 {
 		t.Fatal("普通攻击早于300ms命中")
 	}
-	w.advanceAttacks(r, r.Attacks[0].Due)
+	w.advanceEvents(r, r.Attacks[0].Due)
 	if m.HP >= 1000 {
 		t.Fatal("普通攻击到期未造成伤害")
 	}
@@ -86,24 +86,26 @@ func TestHumanAttackActionImpactAndLevelSpeedAreIndependent(t *testing.T) {
 	}
 }
 
-func TestAttackActorRefBlocksNewLifeAndOldScene(t *testing.T) {
-	for _, newScene := range []bool{false, true} {
+func TestAttackActorRefBlocksNewLifeAndWorldButAttachmentSceneOnlyGatesObservation(t *testing.T) {
+	for _, change := range []string{"life", "world", "scene"} {
 		w, r, c := stageAWorker(t, 1)
 		r.Role.Equipped = []domain.Equipped{{Item: domain.Item{ItemID: 218}}}
 		now := time.Unix(1800000000, 0)
 		w.attack(r, &r.Player, r.Monsters[0], now)
 		due := r.Attacks[0].Due
-		if newScene {
+		if change == "scene" {
 			r.Scene++
+		} else if change == "world" {
+			r.currentWorld().Ref.ID++
 		} else {
 			r.Monsters[0].Life++
 		}
 		c.frames = nil
-		w.advanceAttacks(r, due)
-		if r.Monsters[0].HP != 1000 {
-			t.Fatal("旧普通攻击命中新生命/新场景")
+		w.advanceEvents(r, due)
+		if change == "scene" && r.Monsters[0].HP >= 1000 || change != "scene" && r.Monsters[0].HP != 1000 {
+			t.Fatal("执行引用未隔离新生命/新World，或连接Scene错误取消了原World动作")
 		}
-		if newScene {
+		if change == "scene" {
 			for _, f := range c.frames {
 				if f.ID == p.MsgS2CCombatImpact {
 					t.Fatal("旧场景命中特效泄漏到新场景")

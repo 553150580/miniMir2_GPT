@@ -7,6 +7,7 @@ import { beamGeometry } from './BeamGeometry';
 import type { DisplacementEvent } from './EntityDisplacement';
 
 interface EffectNode { node: Node; sprite: Sprite; frame: string; }
+interface TeleportVisual { handle: number; life: string; origin: { x: number; y: number }; destination: { x: number; y: number }; started: number; owner: boolean; }
 
 // 只实例化已保存的游戏特效预制体；所有帧在入场前持有，退场统一释放。
 export class CombatEffects {
@@ -14,7 +15,7 @@ export class CombatEffects {
     private readonly melee = new MeleePlayback();
     private readonly steps = new CastStepPlayback();
     private readonly nodes = new Map<string, EffectNode>();
-    private readonly teleports = new Map<string, { event: DisplacementEvent; started: number; owner: boolean }>();
+    private readonly teleports = new Map<string, TeleportVisual>();
 
     constructor(private readonly assets: WorldAssets, private readonly parent: Node, sceneEpoch: { toString(): string },
         private readonly grid: (x: number, y: number) => Vec3, private readonly position: (handle: number) => Vec3 | null,
@@ -35,7 +36,15 @@ export class CombatEffects {
     displacement(event: DisplacementEvent, now: number, owner: boolean): void {
         if (event.kind !== 4 || !this.assets.manifest.teleport) return;
         const key = `teleport:${event.entityHandle}:${event.entityLife}:${event.movementRevision}`;
-        this.teleports.set(key, { event, started: now, owner });
+        this.teleports.set(key, { handle: event.entityHandle, life: event.entityLife.toString(), origin: event.origin, destination: event.path[0], started: now, owner });
+        if (this.teleports.size > 64) this.teleports.delete(this.teleports.keys().next().value!);
+    }
+    // 跨图入场由已配对结果触发一次表现，不伪造新位移或从普通健康基线重放。
+    arrival(transitionId: string, handle: number, life: string, position: { x: number; y: number }, now: number): void {
+        if (!/^[0-9a-f]{32}$/.test(transitionId) || this.life(handle) !== life || !this.assets.manifest.teleport) return;
+        const key = `arrival:${transitionId}`;
+        if (this.teleports.has(key)) return;
+        this.teleports.set(key, { handle, life, origin: position, destination: position, started: now, owner: true });
         if (this.teleports.size > 64) this.teleports.delete(this.teleports.keys().next().value!);
     }
     attack(event: AttackEvent, now: number): void {
@@ -66,10 +75,10 @@ export class CombatEffects {
             if (elapsed >= Math.max(resource.out.duration_ms, resource.in.duration_ms)) { this.teleports.delete(id); continue; }
             for (const kind of visual.owner ? ['in'] : ['out', 'in']) {
                 const part = resource[kind]; if (elapsed >= part.duration_ms) continue;
-                if (kind === 'in' && this.life(visual.event.entityHandle) !== visual.event.entityLife.toString()) continue;
-                const end = visual.event.path[0];
-                const position = kind === 'out' ? this.grid(visual.event.origin.x, visual.event.origin.y)
-                    : this.position(visual.event.entityHandle) ?? this.grid(end.x, end.y);
+                if (kind === 'in' && this.life(visual.handle) !== visual.life) continue;
+                const end = visual.destination;
+                const position = kind === 'out' ? this.grid(visual.origin.x, visual.origin.y)
+                    : this.position(visual.handle) ?? this.grid(end.x, end.y);
                 const key = part.frames[Math.min(part.frames.length - 1, Math.floor(elapsed * part.frames.length / part.duration_ms))];
                 active.add(`${id}:${kind}`); this.draw(`${id}:${kind}`, key, position);
             }

@@ -1,0 +1,22 @@
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_receipt
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_kind
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_role
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/fraction_zone
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/source_hash
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/binding_changed
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_source_receipt
+=== RUN   TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/zero_source
+=== NAME  TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo
+    safe_zone_binding_test.go:322: 通过：nil/legacy保留、正式来源证明、重复/冲突、无回执旧游标拒绝、历史回执不回滚、冷验/票据回滚、旧owner/session隔离
+--- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo (1.12s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_receipt (0.05s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_kind (0.04s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_role (0.04s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/fraction_zone (0.04s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/source_hash (0.04s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/binding_changed (0.05s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_source_receipt (0.04s)
+    --- PASS: TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/zero_source (0.04s)
+PASS
+ok  	minimir/internal/integration	6.463s

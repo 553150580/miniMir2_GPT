@@ -13,6 +13,7 @@ import { SourceProjection } from './SourceProjection';
 import { SourceMapView } from './SourceMapView';
 import type { SourceMapEntityOrder } from './SourceMapView';
 import type { SourceRect } from './SourceMapModel';
+import type { TeleportObservation } from './TeleportModel';
 
 interface Visual {
     node: Node;
@@ -139,6 +140,14 @@ export class GameWorldView {
             movementRevision: event.movementRevision, movementKind: event.kind };
         this.effects?.displacement(event, now, event.entityHandle === this.playerHandle);
         this.update(0, this.job, this.weaponEquipped);
+    }
+    presentTeleportArrival(result: TeleportObservation): void {
+        const player = this.visuals.get(this.playerHandle);
+        if (this.disposed || !this.isMapReady || result.outcome !== 1 || !result.transitionId || result.sceneEpoch !== this.sceneEpoch.toString()
+            || result.targetMapId !== this.assets?.mapId || !player || player.state.life.toString() !== result.playerLife
+            || player.state.movementRevision?.toString() !== result.movementRevision || !result.position
+            || player.state.position.x !== result.position.x || player.state.position.y !== result.position.y) return;
+        this.effects?.arrival(result.transitionId, this.playerHandle, result.playerLife, result.position, game.totalTime);
     }
     acceptAttack(event: AttackEvent): void {
         if (this.disposed || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;

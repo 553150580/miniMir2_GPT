@@ -1,0 +1,14 @@
+{
+  "task": "config",
+  "command": [
+    "python3",
+    "tools/config/export_configs.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T21:38:07.421627+00:00",
+  "finished_at": "2026-10-28T21:38:08.028645+00:00",
+  "output": ".work/teleport21-20261029/checks/config.txt",
+  "output_sha256": "89888e8ab9cc7fe59357a279032af3aa5ca1224e3bc866605359c8df889f35aa",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

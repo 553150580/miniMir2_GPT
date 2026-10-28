@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-29",
+  "test": "TestTeleport21LearningBindingAndHealthyColdEntryMongoWS",
+  "status": "定向真实Mongo/WS race通过；新Go测试文件均已冻结",
+  "command": ".\\tools\\dev.ps1 go test -race -count=1 ./internal/integration -run '^TestTeleport21LearningBindingAndHealthyColdEntryMongoWS$' -v",
+  "runner": "run.py",
+  "environment": {"MINIMIR_MONGO_E2E": "1"},
+  "tool_session": 29034,
+  "exit_code": 0,
+  "case_seconds": 18.46,
+  "package_seconds": 23.812,
+  "passed": 1,
+  "skipped": 0,
+  "race_reported": false,
+  "random_database": "minimir_dev_game_test_teleport_531a0877ed83964f11459bba1c89ffdc",
+  "cleanup": "完整停止节点/等待退出后Drop专属随机库/Close，日志无清理错误；未连接来源服或已有用户库",
+  "ownership": "mongo-ownership.stdout.json",
+  "ownership_command": ".\\tools\\dev.ps1 python tools/environment/mongodb_windows.py status",
+  "ownership_pid": 5640,
+  "ownership_version": "8.0.34",
+  "ownership_port": 27119,
+  "ownership_replica_set": "minimirWinDev",
+  "ownership_verified": true,
+  "mongodb_restarted": false,
+  "stdout": "mongo-ws-race.stdout.txt",
+  "actual_process_result": "result.json",
+  "source_before": "inputs-before.json",
+  "source_after": "inputs-after.json",
+  "input_files": 52,
+  "changed": [],
+  "capture": "同一次锁定Python subprocess直接保存stdout+stderr原始字节，非Tee；成功用例未重跑",
+  "coverage": [
+    "正常注册法师/创角，首次Enter之前只在隔离新库设置已授权level19/钱包；未预置书/技能/绑定/临时站位",
+    "正常NPC购买原书13并学习21；nil proof拒绝不扣MP、不新增SourceSeq",
+    "手动Prepare/Commit进完整Town，再由正常MoveIntent/owner tick走入650631，产生正式Walk永久receipt/可信Zone106",
+    "返回原个人World，按权威MoveInterval等待保留的最后Walk时钟自然释放；21受理即时MP10、协议Delay200，30014后严格同transition Entry/首基线",
+    "旧ACK/新场景ACK前移动与经济拒绝且floor不变，真ACK/SyncReady后接入Town；无怪，无角色Life/MP初始化",
+    "Town同World第二21仅真实等待冷却，MP13，30014/30013与权威落点匹配，不换scene/资源入场；成功TemporalFlux观察30%且剩余不超过30秒",
+    "在正常恢复达到满HP的稳定前态后，新票健康重入同Town/scene/Life/HP/MP/位置，状态保留，当前可信绑定静默恢复",
+    "完整stop/launch冷建个人初始World，正常学习的21与当前永久proof保留，TemporalFlux不作为永久现场恢复",
+    "钱包/EconomicSeq/物品/技能/等级经验保持；SourceSeq只允许实际landing新增binding数，Revision严格加该数和一次健康Enter，SessionEpoch恰+1"
+  ],
+  "preserved_failures": [
+    {
+      "path": "attempt-01-before-walk-clock-wait",
+      "exit_code": 1,
+      "case_seconds": 12.74,
+      "package_seconds": 16.099,
+      "reason": "测试返个人后立刻cast，正确保留的最后Walk NextMove/ActionReadyAt尚未释放，3202；仅测试按权威步间隔等待，不清生产时钟"
+    },
+    {
+      "path": "attempt-02-before-enter-revision-accounting",
+      "exit_code": 1,
+      "case_seconds": 15.75,
+      "package_seconds": 20.167,
+      "reason": "测试漏算既有Store.Enter每新票SessionEpoch+1/Revision+1，造成费用假阳性；改为精确加一次Enter，不放宽SourceSeq/钱包断言"
+    }
+  ],
+  "limits": [
+    "网络端只核Delay200字段与即时MP先于结果，精确Due=accepted+200ms由纯game源码/专项证明，不把网络接收间隔冒称精确200ms",
+    "随机落点未人为操纵且日志未单列新增teleport绑定数，不保证本case走到另一个安全区写新证明分支；该分支由实际21 game landing/candidate与Store Mongo另证",
+    "旧World已付费批次和SourceSeq争用由game/core/Store专项覆盖，本WS未篡改delay或站位伪造该分支",
+    "该case Hosting初值0，仅核字段保持；正余额Town不扣沿既有真实MapTravel用例另证",
+    "无真实UnknownTransactionCommitResult网络注入、容量或手机真机声明；最终全包及统一输入manifest由root验收"
+  ]
+}

@@ -1,0 +1,3 @@
+=== RUN   TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS
+    binding_test.go:34: 原图静态瞬移及禁传合同须使用rule15及后续版本
+--- FAIL: TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS (0.05s)

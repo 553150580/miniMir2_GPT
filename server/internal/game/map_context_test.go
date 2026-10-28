@@ -26,7 +26,7 @@ func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
 	w, personal, _ := stageBWorker(t, 1, 1)
 	installContextTown(w, devconfig.Point{X: 9, Y: 8})
 	w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{{X: 8, Y: 7}}
-	town := &room{MapID: 2, Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}}
+	town := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}, worldState: &worldState{MapID: 2}}
 	for _, personalID := range []uint64{0, 1} {
 		personal.MapID = personalID
 		if w.walkable(personal, devconfig.Point{X: 8, Y: 7}) || !w.walkable(town, devconfig.Point{X: 8, Y: 7}) || !w.walkable(personal, devconfig.Point{X: 9, Y: 8}) || w.walkable(town, devconfig.Point{X: 9, Y: 8}) {
@@ -178,7 +178,7 @@ func TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback(t *testing.T) {
 func TestRoomMapContextColdInitializationAndRespawnUseCorrectTemplate(t *testing.T) {
 	w, r, _ := stageBWorker(t, 1, 1)
 	installContextTown(w)
-	fresh := &room{MapID: 2}
+	fresh := &room{worldState: &worldState{MapID: 2}}
 	w.initialize(fresh, r.Role)
 	if fresh.MapID != 1 || fresh.Player.Pos != w.e.Store.Cfg.Fixture.Map.PlayerSpawn || len(fresh.Monsters) != 8 {
 		t.Fatal("冷初始化没有明确创建原个人地图")

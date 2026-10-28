@@ -15,13 +15,13 @@ class SafeZoneBindingProjectionTests(unittest.TestCase):
         cls.tables,errors,_,_=config.collect(config.load_json(ROOT/'config/schema/catalog.json'))
         assert not errors,errors
 
-    def test_visit_gate_is_independent_and_teleport_stays_closed(self):
+    def test_visit_gate_is_independent_of_initializer_and_required_by_teleport(self):
         fixture=module.fixture_from_rows(self.tables)
-        self.assertEqual(fixture['rule_version'],14)
+        self.assertEqual(fixture['rule_version'],15)
         self.assertEqual(fixture['binding'],{'enabled':False,'start_points':[],'safe_zone_enabled':True})
-        self.assertFalse(any(skill['id']==21 for skill in fixture['skills']))
+        self.assertTrue(any(skill['id']==21 for skill in fixture['skills']))
         tables=copy.deepcopy(self.tables);tables['dev_first_loop_profile'][0]['parameters']['binding']['safe_zone_enabled']=False
-        self.assertFalse(module.fixture_from_rows(tables)['binding']['safe_zone_enabled'])
+        with self.assertRaisesRegex(ValueError,'可信来源安全区绑定'):module.fixture_from_rows(tables)
 
     def test_missing_null_and_untyped_visit_gate_are_rejected(self):
         for value in [None,0,1,'true',[],{}]:
@@ -35,7 +35,14 @@ class SafeZoneBindingProjectionTests(unittest.TestCase):
         tables=copy.deepcopy(self.tables);p=tables['dev_first_loop_profile'][0]['parameters'];p['rule_version']=13
         with self.assertRaises(ValueError):module.fixture_from_rows(tables)
         del p['binding']['safe_zone_enabled']
-        self.assertEqual(module.fixture_from_rows(tables)['binding'],{'enabled':False,'start_points':[]})
+        # 仅删除新gate也不能把当前21/NoTeleport配置伪装成旧版本合法输入。
+        with self.assertRaisesRegex(ValueError,'rule15'):module.fixture_from_rows(tables)
+        # 独立旧地图投影只验证历史二字段binding合同；明确不投影未来技能和地图政策。
+        legacy=copy.deepcopy(self.tables)
+        legacy['game_map_regions']=[row for row in legacy['game_map_regions'] if row['entry_rules'].get('region_kind')!='map_policy']
+        maps,_=module.source_map_catalog(legacy,p)
+        self.assertEqual(len(maps),1)
+        self.assertNotIn('no_teleport',maps[0]);self.assertNotIn('source_static_bits',maps[0])
 
     def test_unknown_fields_and_initialization_pool_stay_rejected(self):
         for change in [{'unknown':True},{'enabled':True},{'start_points':[{'map_id':2,'x':650,'y':631}]}]:

@@ -1,0 +1,32 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 28.457745790481567,
+  "inputs_before": {
+    "tools\\resources\\prepare_first_loop.py": "893b9b3570bd0d78b3b5f4a3c5f6835f415b19df671a958253b5e0608e19f337",
+    "config\\schema\\catalog.json": "e5d0ea8a2341b564fec9f17c15ca62970bc06ef959f821eb6115d7a57cf58827",
+    "outputs\\development-prep-20261026\\玩法配置.xlsx": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
+  },
+  "inputs_after": {
+    "tools\\resources\\prepare_first_loop.py": "893b9b3570bd0d78b3b5f4a3c5f6835f415b19df671a958253b5e0608e19f337",
+    "config\\schema\\catalog.json": "e5d0ea8a2341b564fec9f17c15ca62970bc06ef959f821eb6115d7a57cf58827",
+    "outputs\\development-prep-20261026\\玩法配置.xlsx": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
+  },
+  "inputs_stable": true
+}

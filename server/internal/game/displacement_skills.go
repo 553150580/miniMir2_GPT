@@ -14,6 +14,11 @@ func (w *worker) relocate(r *room, e *entity, point devconfig.Point) bool {
 	if !w.walkable(r, point) {
 		return false
 	}
+	return w.commitRelocation(r, e, point)
+}
+
+// 仅供已完成各自来源地形校验的受信动作使用，不把Teleport规则混进普通walk/pushed。
+func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) bool {
 	if r.CellEntrySequence == math.MaxUint64 {
 		w.isolateRoom(r)
 		return false

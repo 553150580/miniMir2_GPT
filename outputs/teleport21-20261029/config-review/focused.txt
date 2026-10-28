@@ -1,0 +1,21 @@
+["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1", "python3", "-m", "unittest", "discover", "-s", "tools/config", "-p", "test_teleport.py", "-v"]
+
+test_current_21_values_and_initializer_are_explicit_source_candidates (test_teleport.TeleportProjectionTests.test_current_21_values_and_initializer_are_explicit_source_candidates) ... ok
+test_each_map_requires_one_complete_explicit_no_teleport_policy (test_teleport.TeleportProjectionTests.test_each_map_requires_one_complete_explicit_no_teleport_policy) ... ok
+test_flux_fixed_duration_is_single_source_and_survives_death (test_teleport.TeleportProjectionTests.test_flux_fixed_duration_is_single_source_and_survives_death) ... ok
+test_locked_source_static_bits_differ_from_closed_door_walk_bits (test_teleport.TeleportProjectionTests.test_locked_source_static_bits_differ_from_closed_door_walk_bits) ... ok
+test_map_policies_do_not_change_ordered_five_zone_proof_identity (test_teleport.TeleportProjectionTests.test_map_policies_do_not_change_ordered_five_zone_proof_identity) ... ok
+test_numeric_changes_are_projected_without_hidden_source_values (test_teleport.TeleportProjectionTests.test_numeric_changes_are_projected_without_hidden_source_values) ... ok
+test_public_teleport_and_source_flags_are_strict_display_whitelists (test_teleport.TeleportProjectionTests.test_public_teleport_and_source_flags_are_strict_display_whitelists) ... ok
+test_success_effect_is_separate_from_cast_impact_and_nonrecursive (test_teleport.TeleportProjectionTests.test_success_effect_is_separate_from_cast_impact_and_nonrecursive) ... ok
+test_teleport_cannot_be_downgraded_to_old_rule_or_initial_binding_gate (test_teleport.TeleportProjectionTests.test_teleport_cannot_be_downgraded_to_old_rule_or_initial_binding_gate) ... ok
+test_teleport_contract_has_no_missing_defaults_or_alternative_axis_rules (test_teleport.TeleportProjectionTests.test_teleport_contract_has_no_missing_defaults_or_alternative_axis_rules) ... ok
+test_teleport_has_explicit_neutral_damage_and_no_material_cost (test_teleport.TeleportProjectionTests.test_teleport_has_explicit_neutral_damage_and_no_material_cost) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.634s
+
+OK
+
+exit_code=0
+elapsed_seconds=1.176

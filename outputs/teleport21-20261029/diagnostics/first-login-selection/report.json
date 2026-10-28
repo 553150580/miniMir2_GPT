@@ -1,0 +1,39 @@
+{
+  "passed": false,
+  "scope": "受控新法师只预置等级/余额；正常保存UI购书/原书学习、Walk可信绑定、同图及跨图21观察。后端200ms精确时点由独立服务端测试验收，不将网络观察冒充时钟证明；非自然养成/冷重建/真机/容量",
+  "expectedRuleVersion": "15",
+  "preconditions": {
+    "passed": true,
+    "isolated_qa_preconditions": true,
+    "natural_progression_verified": false,
+    "role": {
+      "role_id_sha256": "d58a3f7455af6b5a485bada10bcce16b97a4c21918730662b8474ada0f212e04",
+      "initial_level": 1,
+      "qa_level": 19,
+      "books_seeded": false,
+      "skills_seeded": false,
+      "binding_seeded": false,
+      "position_seeded": false,
+      "other_role_fields_preserved": true
+    },
+    "scope": "仅隔离角色等级/余额前态；购书、原书学习、Walk绑定和21施放均走正常保存UI与owner链路"
+  },
+  "checks": [],
+  "errors": [],
+  "warnings": [],
+  "entries": [],
+  "acks": [],
+  "casts": [],
+  "results": [],
+  "displacements": [],
+  "authority": [],
+  "inputs": [],
+  "protocolErrors": [],
+  "moves": [],
+  "groundChecks": [],
+  "readyRuleChecks": [],
+  "clientResultPackets": 0,
+  "naturalProgressionVerified": false,
+  "physicalMobileVerified": false,
+  "error": "page.waitForFunction: Timeout 60000ms exceeded.\n    at scene (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_teleport_browser.cjs:45:40)\n    at D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_teleport_browser.cjs:89:189"
+}

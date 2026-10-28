@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "fixture_original_sha256": "8ab87252900b09cf8c6852c6cb65c55ece665af11dd9f0b350f9b8dce0aa7892",
+  "fixture_before_sha256": "17819f767b54c8b3b27529dd9edc44c76a0aeb49cca76cb75f74369525d7f0b0",
+  "fixture_after_sha256": "0edbe0d5e7bb8f5ac71592469fbced1b37ac896e5c572380f76f53f5631456d6",
+  "runtime_fields_byte_semantics_unchanged": true,
+  "changed_source_evidence_fields": [
+    "source_locks"
+  ],
+  "public_bytes_unchanged": true,
+  "public_sha256": "91fd231920d3ffae7c5078e18f3aa09af9f8fae99380af3a855dcd1aef237041",
+  "reason": "来源边界文档补充导航/门格与既有永久Pending冻结适配；两次同步仅来源摘要变化。",
+  "earlier_ws_gui_scope": "此前8ab/178夹具与当前运行字段完全相同；客户端公开资源与构建脚本字节未变，最终Go/WS将使用当前夹具。"
+}

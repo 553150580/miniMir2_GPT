@@ -233,7 +233,7 @@ func TestStatusCorpseBuffReviveMigrationPetReplacementAndFaultReset(t *testing.T
 	if len(r.Pet.Statuses) != 0 {
 		t.Fatal("新召唤继承旧对象状态")
 	}
-	fresh := &room{}
+	fresh := &room{worldState: &worldState{}}
 	w.initialize(fresh, r.Role)
 	if len(fresh.Player.Statuses) != 0 || fresh.Pet != nil && len(fresh.Pet.Statuses) != 0 {
 		t.Fatal("故障新现场恢复了临时状态")
@@ -324,7 +324,7 @@ func TestMaterialReceiptOneEffectOriginalWatermarkAndSceneLife(t *testing.T) {
 	w, r, _ := statusWorker(t, 2)
 	now := time.Now()
 	skill, _ := w.e.Store.Cfg.Fixture.Skill(14)
-	plan := &preparedCast{Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, Origin: r.Player.Pos, BuffDurationMS: 50000, DelayMS: 500}
+	plan := &preparedCast{Scene: r.Scene, Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, Origin: r.Player.Pos, BuffDurationMS: 50000, DelayMS: 500}
 	receipt := persistence.Operation{Kind: "cast_material", CommandSeq: 4, Casting: &persistence.CastingReceipt{Scope: "manual", SkillID: 14}}
 	if !w.applyMaterialReceipt(r, receipt, plan, 123, now) || w.applyMaterialReceipt(r, receipt, plan, 123, now) || len(r.Casts) != 1 {
 		t.Fatal("原消耗回执重复生成施法")
@@ -356,7 +356,7 @@ func TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect(t *testing.T
 			w.e.jobs = make(chan job, 1)
 			q := persistence.AssetRequest{Kind: "cast_material", Fingerprint: "original", Context: &pb.OperationContext{OpId: domain.Bytes(domain.ID())}}
 			skill, _ := w.e.Store.Cfg.Fixture.Skill(14)
-			plan := &preparedCast{Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, BuffDurationMS: 50000}
+			plan := &preparedCast{Scene: r.Scene, Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, BuffDurationMS: 50000}
 			frame := wire.Frame{Request: 77}
 			w.submitMaterialCast(r, q, plan, 1, &frame)
 			binding := materialCommitBinding{roleID: "role", room: r, auth: r.Auth, scene: r.Scene, life: r.Player.Life, generation: r.MaterialGeneration, conn: c}
@@ -438,7 +438,7 @@ func TestMaterialUnknownKeepsOriginalJobAndRandomPlanUntilKnownOnce(t *testing.T
 	r.PendingOperationID = domain.Hex(q.Context.OpId)
 	r.PendingFingerprint = q.Fingerprint
 	skill, _ := w.e.Store.Cfg.Fixture.Skill(14)
-	plan := &preparedCast{Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, BuffDurationMS: 51000}
+	plan := &preparedCast{Scene: r.Scene, Skill: skill, Caster: reference(r, &r.Player), Point: r.Player.Pos, BuffDurationMS: 51000}
 	binding := materialCommitBinding{roleID: "role", room: r, auth: r.Auth, scene: r.Scene, life: r.Player.Life, generation: 1, conn: c}
 	retry := &job{}
 	frame := wire.Frame{Request: 7}

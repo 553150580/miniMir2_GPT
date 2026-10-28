@@ -1,0 +1,68 @@
+=== RUN   TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness
+=== RUN   TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/nil
+=== RUN   TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/legacy_center
+=== RUN   TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/missing_zone
+=== RUN   TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/unknown_map
+--- PASS: TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness (0.19s)
+    --- PASS: TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/nil (0.05s)
+    --- PASS: TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/legacy_center (0.05s)
+    --- PASS: TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/missing_zone (0.05s)
+    --- PASS: TestTeleport21RejectsUnprovedCacheBeforeCostOrDamageRandomness/unknown_map (0.04s)
+=== RUN   TestTeleport21AcceptedOncePaysMPAndCrossesAt200Milliseconds
+--- PASS: TestTeleport21AcceptedOncePaysMPAndCrossesAt200Milliseconds (0.05s)
+=== RUN   TestTeleport21CurrentSourceNoTeleportAtDueFailsWithoutRefund
+--- PASS: TestTeleport21CurrentSourceNoTeleportAtDueFailsWithoutRefund (0.05s)
+=== RUN   TestTeleport21DoesNotMistakeDestinationNoTeleportForCurrentMap
+--- PASS: TestTeleport21DoesNotMistakeDestinationNoTeleportForCurrentMap (0.05s)
+=== RUN   TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks
+=== RUN   TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/0
+=== RUN   TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/1
+=== RUN   TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/2
+=== RUN   TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/3
+--- PASS: TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks (0.18s)
+    --- PASS: TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/0 (0.04s)
+    --- PASS: TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/1 (0.05s)
+    --- PASS: TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/2 (0.04s)
+    --- PASS: TestTeleport21HalfOpenIndependentAxesUseNonSquareDimensionsAllRanks/3 (0.05s)
+=== RUN   TestTeleport21TwoHundredInvalidRepeatedSamplesAreNotClippedOrDeduplicated
+--- PASS: TestTeleport21TwoHundredInvalidRepeatedSamplesAreNotClippedOrDeduplicated (0.04s)
+=== RUN   TestTeleport21ReadsCurrentBindingAndCurrentRankAtDue
+--- PASS: TestTeleport21ReadsCurrentBindingAndCurrentRankAtDue (0.05s)
+=== RUN   TestTeleport21AcceptedSameLifeDeadExecutesButNewDeadCastIsRejected
+--- PASS: TestTeleport21AcceptedSameLifeDeadExecutesButNewDeadCastIsRejected (0.05s)
+=== RUN   TestTeleport21SameWorldKeepsSceneAndUsesAuthoritativeDisplacement
+--- PASS: TestTeleport21SameWorldKeepsSceneAndUsesAuthoritativeDisplacement (0.04s)
+=== RUN   TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings
+=== RUN   TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings/closed_source_door
+=== RUN   TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings/occupied
+--- PASS: TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings (0.11s)
+    --- PASS: TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings/closed_source_door (0.07s)
+    --- PASS: TestTeleport21StaticDoorAndOccupiedCellRemainLegalSourceLandings/occupied (0.04s)
+=== RUN   TestTeleport21CurrentMapAtDueIsIndependentOfAcceptanceWorld
+--- PASS: TestTeleport21CurrentMapAtDueIsIndependentOfAcceptanceWorld (0.04s)
+=== RUN   TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix
+=== RUN   TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/first
+=== RUN   TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/middle
+=== RUN   TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/last
+--- PASS: TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix (0.14s)
+    --- PASS: TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/first (0.05s)
+    --- PASS: TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/middle (0.05s)
+    --- PASS: TestTeleport21ActualDueNodeAtFirstMiddleLastDoesNotLoseOldWorldSuffix/last (0.04s)
+=== RUN   TestTeleport21ManaCostUsesIntegerPenaltyOnlyForTeleportAndRejectsOverflow
+--- PASS: TestTeleport21ManaCostUsesIntegerPenaltyOnlyForTeleportAndRejectsOverflow (0.04s)
+=== RUN   TestTeleport21FluxRefreshRestartsThirtySecondsWithoutStackingPenalty
+--- PASS: TestTeleport21FluxRefreshRestartsThirtySecondsWithoutStackingPenalty (0.05s)
+=== RUN   TestTeleport21SameWorldDisplacementStartsAtActualDuePositionAfterPush
+--- PASS: TestTeleport21SameWorldDisplacementStartsAtActualDuePositionAfterPush (0.05s)
+=== RUN   TestTeleport21TwoHundredthAttemptCanSucceedAndStopsImmediately
+--- PASS: TestTeleport21TwoHundredthAttemptCanSucceedAndStopsImmediately (0.05s)
+=== RUN   TestTeleport21ProofLostAtDueDoesNotRefundOrRetryAsNewCast
+--- PASS: TestTeleport21ProofLostAtDueDoesNotRefundOrRetryAsNewCast (0.05s)
+=== RUN   TestTeleport21LandingBindingKeepsSelectedProofAndQueuesAfterEarlierOldMapKill
+--- PASS: TestTeleport21LandingBindingKeepsSelectedProofAndQueuesAfterEarlierOldMapKill (0.05s)
+=== RUN   TestTeleport21FixedPenaltyExpiresAtDeadlineBeforeItsNextStatusTick
+--- PASS: TestTeleport21FixedPenaltyExpiresAtDeadlineBeforeItsNextStatusTick (0.05s)
+=== RUN   TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation
+--- PASS: TestTeleport21SourceDoorLandingCanLeaveByNormalGroundNavigation (0.37s)
+PASS
+ok  	minimir/internal/game	6.608s

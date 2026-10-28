@@ -381,7 +381,10 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 				return &pb.SkillNumericComparison{Key: key, BeforeMin: before, BeforeMax: before, AfterMin: after, AfterMax: after}
 			}
 			out.Stats = []*pb.SkillNumericComparison{comparison("mp_cost", s.MPBaseCost+int64(p.From)*s.MPLevelCost, s.MPBaseCost+int64(p.To)*s.MPLevelCost)}
-			if b.Kind == "magic_shield" {
+			if b.Kind == "teleport_mana_penalty" {
+				// Flux固定时长不使用道士逐阶秒数，也不附加伤害或护符比较项。
+				out.Stats = append(out.Stats, comparison("duration_ms", b.DurationMS, b.DurationMS), comparison("teleport_mana_penalty_percent", b.ValueByLevel[p.From], b.ValueByLevel[p.To]))
+			} else if b.Kind == "magic_shield" {
 				out.Stats = append(out.Stats, comparison("damage_reduction_percent", b.ValueByLevel[p.From], b.ValueByLevel[p.To]), comparison("duration_rank_factor", int64(p.From)+1, int64(p.To)+1))
 			} else {
 				out.Stats = append(out.Stats, comparison("base_duration_seconds", b.DurationSecondsByLevel[p.From], b.DurationSecondsByLevel[p.To]), comparison("material_quantity", s.MaterialQuantity, s.MaterialQuantity))

@@ -1,0 +1,11 @@
+["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1", "go", "test", "-race", "./internal/persistence", "-run", "^TestSkillPreview(ShowsMaximumAttackGrowthOnlyForSlaying|TeleportFixedDurationAndManaPenaltyFromCurrentFixture)$", "-count=1", "-v"]
+
+=== RUN   TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying
+--- PASS: TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying (0.05s)
+=== RUN   TestSkillPreviewTeleportFixedDurationAndManaPenaltyFromCurrentFixture
+--- PASS: TestSkillPreviewTeleportFixedDurationAndManaPenaltyFromCurrentFixture (0.05s)
+PASS
+ok  	minimir/internal/persistence	4.643s
+
+exit_code=0
+elapsed_seconds=10.215

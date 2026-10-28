@@ -1,0 +1,16 @@
+{
+  "backend": "windows_native",
+  "running": true,
+  "listener_verified": true,
+  "ownership_verified": true,
+  "pid": 5640,
+  "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+  "version": "8.0.34",
+  "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+  "project_key": "1e81949e1d3b",
+  "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+  "port": 27119,
+  "replica_set": "minimirWinDev",
+  "endpoint_verified": true,
+  "production_ready": false
+}

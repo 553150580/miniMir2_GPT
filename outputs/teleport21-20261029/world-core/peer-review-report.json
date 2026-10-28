@@ -1,0 +1,37 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "-overlay",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\teleport21-20261029\\world-core\\peer-review-overlay.json",
+    "./internal/game",
+    "-run",
+    "^Test(PeerWorld|World)",
+    "-count=1",
+    "-v"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 12.45064401626587,
+  "inputs_before": {
+    "combat.go": "11215e6a6b81665fdda526c6b6d64eaa470ea62a95c6e82596e8fb74816f31b6",
+    "timeline.go": "f42a313917dc3a860a15f1532fac30e034a7909c4760c762b7711ecfa8d2f243",
+    "safe_zone_binding.go": "3bd36a7a3e7f31c5c4d210c00a9897e731dbbe4f5c0ac2760d7db132e8d38e6d",
+    "world_context.go": "2d27aea9e04a7e6d1d0c25bb96cafbdad4cded83ca95b080bf11808e351ff289"
+  },
+  "inputs_after": {
+    "combat.go": "11215e6a6b81665fdda526c6b6d64eaa470ea62a95c6e82596e8fb74816f31b6",
+    "timeline.go": "f42a313917dc3a860a15f1532fac30e034a7909c4760c762b7711ecfa8d2f243",
+    "safe_zone_binding.go": "3bd36a7a3e7f31c5c4d210c00a9897e731dbbe4f5c0ac2760d7db132e8d38e6d",
+    "world_context.go": "2d27aea9e04a7e6d1d0c25bb96cafbdad4cded83ca95b080bf11808e351ff289"
+  },
+  "reviewed_core_inputs_stable": true,
+  "scope": "永久回调原World/unknown原job/SourceCandidate与两侧kill的顺序；临时overlay及既有World纯测试",
+  "boundary": "unknown由回调错误模拟，不是真实网络或UnknownTransaction故障注入；不代表21实际业务、WS或容量通过"
+}

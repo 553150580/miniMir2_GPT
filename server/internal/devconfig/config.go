@@ -234,6 +234,9 @@ func (f *Fixture) Validate() error {
 	if err := f.ValidateTownConfiguration(); err != nil {
 		return err
 	}
+	if err := f.ValidateTeleport(); err != nil {
+		return err
+	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {
 		return err
 	}

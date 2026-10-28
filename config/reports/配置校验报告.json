@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 941,
+  "record_count": 951,
   "status_counts": {
-    "candidate": 442,
+    "candidate": 452,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -259,6 +259,7 @@
     "game_shop_prices/24 尚为 candidate",
     "game_shop_prices/25 尚为 candidate",
     "game_shop_prices/26 尚为 candidate",
+    "game_shop_prices/27 尚为 candidate",
     "game_challenge_rules/3 尚为 candidate",
     "game_challenge_rules 第7行缺少必填 rule_value",
     "game_challenge_rules/4 尚为 unverified",
@@ -403,6 +404,8 @@
     "game_items/8 尚为 candidate",
     "game_items 第30行缺少必填 icon_resource_key",
     "game_items/5 尚为 candidate",
+    "game_items 第31行缺少必填 icon_resource_key",
+    "game_items/13 尚为 candidate",
     "game_equipment/218 尚为 candidate",
     "game_equipment/193 尚为 candidate",
     "game_appearance：有效记录 0 条，至少需要 1 条",
@@ -423,6 +426,8 @@
     "game_map_regions/108 尚为 candidate",
     "game_map_regions/113 尚为 candidate",
     "game_map_regions/117 尚为 candidate",
+    "game_map_regions/201 尚为 candidate",
+    "game_map_regions/202 尚为 candidate",
     "game_monster_spawns/1 尚为 candidate",
     "game_monster_spawns/2 尚为 candidate",
     "game_monster_spawns/3 尚为 candidate",
@@ -478,6 +483,8 @@
     "game_skills/8 尚为 candidate",
     "game_skills 第25行缺少必填 range_pattern_id",
     "game_skills/27 尚为 candidate",
+    "game_skills 第26行缺少必填 range_pattern_id",
+    "game_skills/21 尚为 candidate",
     "game_skill_upgrades/11 尚为 candidate",
     "game_skill_upgrades/12 尚为 candidate",
     "game_skill_upgrades/13 尚为 candidate",
@@ -541,13 +548,18 @@
     "game_skill_upgrades/271 尚为 candidate",
     "game_skill_upgrades/272 尚为 candidate",
     "game_skill_upgrades/273 尚为 candidate",
+    "game_skill_upgrades/211 尚为 candidate",
+    "game_skill_upgrades/212 尚为 candidate",
+    "game_skill_upgrades/213 尚为 candidate",
     "game_range_patterns：有效记录 0 条，至少需要 1 条",
     "game_buffs/14 尚为 candidate",
     "game_buffs/15 尚为 candidate",
     "game_buffs/31 尚为 candidate",
+    "game_buffs/21 尚为 candidate",
     "game_effects/14 尚为 candidate",
     "game_effects/15 尚为 candidate",
     "game_effects/31 尚为 candidate",
+    "game_effects/21 尚为 candidate",
     "game_pet_templates 第4行缺少必填 summon_skill_id",
     "game_pet_templates 第4行缺少必填 follow_and_return",
     "game_pet_templates 第4行缺少必填 lifetime_and_betrayal",
@@ -707,6 +719,6 @@
   ],
   "workbook_hashes": {
     "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
-    "gameplay": "da1041dd267f0aca74b6c48b47e912ebc5d8141043681110cdea619c8a7dad24"
+    "gameplay": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
   }
 }

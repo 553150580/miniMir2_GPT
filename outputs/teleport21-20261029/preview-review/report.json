@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "production_fix_authorized_by_root": true,
+  "files": [
+    "server/internal/persistence/skill_assets.go",
+    "server/internal/persistence/skill_assets_test.go"
+  ],
+  "sha256": {
+    "server/internal/persistence/skill_assets.go": "2e9182c61e368e1e38e33cca9ff411855bb34078db20e43c2f04b0ef5070ead8",
+    "server/internal/persistence/skill_assets_test.go": "1c5441a13154dd81ff8bcda760b52d6adc6cc3b5b919bf7bf13807877f2260e3",
+    "config/development/first-loop.json": "17819f767b54c8b3b27529dd9edc44c76a0aeb49cca76cb75f74369525d7f0b0"
+  },
+  "pure_persistence_methods": 27,
+  "pure_persistence_nodes": 114,
+  "mongo_started": false,
+  "full_go_run": false,
+  "frozen": true,
+  "client_labels_assigned_to_client_owner": true
+}

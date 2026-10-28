@@ -1,0 +1,26 @@
+["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1", "go", "test", "-race", "./internal/persistence", "-run", "^TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying$", "-count=1", "-v"]
+
+=== RUN   TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying
+--- FAIL: TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying (0.05s)
+panic: runtime error: index out of range [0] with length 0 [recovered, repanicked]
+
+goroutine 8 [running]:
+testing.tRunner.func1.2({0x140f09de0, 0xc000310e40})
+	C:/Users/55315/AppData/Local/minimir-toolchain/windows-amd64/go/1.27.3/go/src/testing/testing.go:2125 +0x3f7
+testing.tRunner.func1()
+	C:/Users/55315/AppData/Local/minimir-toolchain/windows-amd64/go/1.27.3/go/src/testing/testing.go:2128 +0x65f
+panic({0x140f09de0?, 0xc000310e40?})
+	C:/Users/55315/AppData/Local/minimir-toolchain/windows-amd64/go/1.27.3/go/src/runtime/panic.go:859 +0x125
+minimir/internal/persistence.skillQuote.Proto({{0x0, 0x0}, {0x0, 0x0}, 0x0, 0x0, {0x0, 0x0}, {0x0, 0x0, ...}, ...}, ...)
+	D:/A_Claude/miniMir2_GPT/server/internal/persistence/skill_assets.go:387 +0x3271
+minimir/internal/persistence.TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(0xc000002400)
+	D:/A_Claude/miniMir2_GPT/server/internal/persistence/skill_assets_test.go:42 +0x309
+testing.tRunner(0xc000002400, 0x140f3eea8)
+	C:/Users/55315/AppData/Local/minimir-toolchain/windows-amd64/go/1.27.3/go/src/testing/testing.go:2195 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Users/55315/AppData/Local/minimir-toolchain/windows-amd64/go/1.27.3/go/src/testing/testing.go:2260 +0xb2b
+FAIL	minimir/internal/persistence	3.625s
+FAIL
+
+exit_code=1
+elapsed_seconds=8.637
