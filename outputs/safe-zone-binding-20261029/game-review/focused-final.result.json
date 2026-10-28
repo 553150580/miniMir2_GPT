@@ -1,0 +1,22 @@
+{
+  "started_at_utc": "2026-10-28T19:50:26.839575+00:00",
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "./internal/game",
+    "-run",
+    "Test(SafeZoneBinding|ShoulderDashSourceSafeZone|SourcePushedCanEnter)",
+    "-count=1"
+  ],
+  "exit_code": 0,
+  "wall_seconds": 11.402,
+  "capture": "subprocess stdout+stderr bytes",
+  "production_mutated": false
+}

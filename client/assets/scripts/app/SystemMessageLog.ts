@@ -1,4 +1,6 @@
 import { normalizeGameErrorMessage } from './GameErrors';
+import { roleBindingMapName } from './RoleBindingModel';
+import type { RoleBindingObservation } from './RoleBindingModel';
 
 export type MessageInteger = string | number | bigint | { toString(): string };
 
@@ -16,6 +18,8 @@ interface ItemObservation {
 
 export interface MessageSnapshot {
     roleIdentity: string;
+    bindingState?: RoleBindingObservation | null;
+    bindingNotice?: RoleBindingObservation | null;
     role?: { name?: string; level?: number } | null;
     inventory?: {
         level?: number;
@@ -35,7 +39,7 @@ export interface MessageSnapshot {
         drops?: readonly ItemObservation[];
     } | null;
     entry?: { sceneEpoch?: MessageInteger; baselineId?: MessageInteger; playerHandle?: number } | null;
-    gameplay?: { items?: readonly { item_id: number; name: string }[] } | null;
+    gameplay?: { items?: readonly { item_id: number; name: string }[]; map_catalog?: readonly { id: string; name?: string }[] } | null;
     map?: { name?: string } | null;
     ready: boolean;
     lastError?: string;
@@ -83,6 +87,8 @@ export class SystemMessageLog {
     private previousDead: boolean | null = null;
     private previousHosting: { seconds: bigint; auto: boolean } | null = null;
     private readonly seenReports = new Set<string>();
+    private readonly seenBindingReceipts = new Set<string>();
+    private lastBindingNotice = '';
     private change = 0;
     readonly capacity: number;
 
@@ -109,6 +115,7 @@ export class SystemMessageLog {
             this.role = snapshot.roleIdentity; this.entries = []; this.change++;
             this.binding = ''; this.entered = false; this.wasReady = false; this.lastError = ''; this.lastNavigationNotice = '';
             this.seenReports.clear(); this.resetObservations();
+            this.seenBindingReceipts.clear(); this.lastBindingNotice = '';
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';
         if (binding && binding !== this.binding) {
@@ -129,6 +136,7 @@ export class SystemMessageLog {
             this.entered = true; this.wasReady = true;
         }
         this.observeInventory(snapshot);
+        this.observeBinding(snapshot);
         this.observeWallet(snapshot);
         const player = snapshot.entry?.playerHandle ? snapshot.baseline?.entities?.find(entity => entity.entityHandle === snapshot.entry!.playerHandle) : undefined;
         if (player) {
@@ -202,6 +210,19 @@ export class SystemMessageLog {
 
     private resetObservations(): void {
         this.previousInventory = null; this.previousWallet = null; this.previousDead = null; this.previousHosting = null;
+    }
+    private observeBinding(snapshot: MessageSnapshot): void {
+        const notice = snapshot.bindingNotice;
+        if (!notice || notice.role !== snapshot.roleIdentity || notice.sceneEpoch !== snapshot.entry?.sceneEpoch?.toString()
+            || notice.cause !== 2 || !notice.trusted || !notice.binding || BigInt(notice.sourceSeq) <= 0n) return;
+        const receipt = `${notice.role}:${notice.sourceSeq}`;
+        if (this.seenBindingReceipts.has(receipt)) return;
+        this.seenBindingReceipts.add(receipt);
+        if (this.seenBindingReceipts.size > this.capacity) this.seenBindingReceipts.delete(this.seenBindingReceipts.values().next().value!);
+        const { mapId, center } = notice.binding, key = `${mapId}:${center.x},${center.y}`;
+        if (key === this.lastBindingNotice) return;
+        this.lastBindingNotice = key;
+        this.append('绑定已确认', `已绑定至${roleBindingMapName(notice, snapshot.gameplay?.map_catalog)} (${center.x},${center.y})`);
     }
 
     private append(title: string, message: string): void {

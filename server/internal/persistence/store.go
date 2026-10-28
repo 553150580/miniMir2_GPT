@@ -72,6 +72,7 @@ type Operation struct {
 	Created    time.Time       `bson:"created_at"`
 	Potion     *PotionReceipt  `bson:"potion,omitempty"`
 	Casting    *CastingReceipt `bson:"casting_use,omitempty"`
+	Binding    *BindingReceipt `bson:"binding_use,omitempty"`
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -275,6 +276,9 @@ func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 		return r, err
 	}
 	err = bson.Unmarshal(raw, &r)
+	if err == nil {
+		_, err = s.restoreBindingTrust(ctx, &r)
+	}
 	return r, err
 }
 func (s *Store) accountGuard(ctx context.Context, a Auth) error {

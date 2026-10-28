@@ -100,6 +100,10 @@
     {
       "path": "docs/城镇健康往返与有界导航实施边界.md",
       "sha256": "712fda1b218f4b38ea6707a65c682374a4faa8ea18df570368af3ca870a7c310"
+    },
+    {
+      "path": "docs/安全区永久绑定实施边界.md",
+      "sha256": "91c61a1f95415be33b7fd5d241a40f5e3cbb25214308db192c5572b9ddb13b99"
     }
   ],
   "workbooks": [
@@ -14352,6 +14356,9 @@
                     }
                   }
                 }
+              },
+              "safe_zone_enabled": {
+                "type": "boolean"
               }
             }
           },

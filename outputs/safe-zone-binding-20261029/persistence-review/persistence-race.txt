@@ -1,0 +1,195 @@
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/empty
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/missing_x
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/null_y
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/fraction
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/overflow
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/duplicate
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/extra_temporary
+=== RUN   TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/wrong_type
+--- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/empty (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/missing_x (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/null_y (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/fraction (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/overflow (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/duplicate (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/extra_temporary (0.00s)
+    --- PASS: TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/wrong_type (0.00s)
+=== RUN   TestInitialBindingUsesApprovedListAndNeverInfersCurrentSpawn
+--- PASS: TestInitialBindingUsesApprovedListAndNeverInfersCurrentSpawn (0.04s)
+=== RUN   TestCastingSupplySlotMoveSwapAndConsumptionCopyOwnership
+--- PASS: TestCastingSupplySlotMoveSwapAndConsumptionCopyOwnership (0.00s)
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/未开放
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/未学
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/错职业
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/错实例
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/旧版本
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/溢出版本
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/数量不足
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/不等价大符
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/背包不能直用
+=== RUN   TestCastingSupplyRejectedPathsNeverMutateOriginal/旧场景门禁
+--- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/未开放 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/未学 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/错职业 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/错实例 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/旧版本 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/溢出版本 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/数量不足 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/不等价大符 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/背包不能直用 (0.00s)
+    --- PASS: TestCastingSupplyRejectedPathsNeverMutateOriginal/旧场景门禁 (0.00s)
+=== RUN   TestCastingSupplyUnequipFullBagAndDisabledUnknownUnits
+--- PASS: TestCastingSupplyUnequipFullBagAndDisabledUnknownUnits (0.00s)
+=== RUN   TestStatusUpgradeQuoteShowsRealRankParametersWithoutFakeDamage
+--- PASS: TestStatusUpgradeQuoteShowsRealRankParametersWithoutFakeDamage (0.04s)
+=== RUN   TestDisplacementUpgradePreviewShowsApprovedDistanceAndActualDamage
+--- PASS: TestDisplacementUpgradePreviewShowsApprovedDistanceAndActualDamage (0.04s)
+=== RUN   TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding
+--- PASS: TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding (0.00s)
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/数量不足
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/版本溢出
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/无场景
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/死亡
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/共享节流
+=== RUN   TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求
+--- PASS: TestPotionConsumeFailuresDoNotMutateInventory (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/数量不足 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/版本溢出 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/无场景 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/死亡 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/共享节流 (0.00s)
+    --- PASS: TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求 (0.00s)
+=== RUN   TestSafeZoneBindingUsesFirstMatchingActionCellAndPreservesInitializerOff
+--- PASS: TestSafeZoneBindingUsesFirstMatchingActionCellAndPreservesInitializerOff (0.00s)
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/turn
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/run
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/teleport
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/pushed
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/dash
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/spawn
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/revive
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/join
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_seq
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_revision
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/future_rule
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/config
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/event
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/personal
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/outside
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_missing
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_wrong_size
+=== RUN   TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/disabled
+--- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/turn (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/run (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/teleport (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/pushed (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/dash (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/spawn (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/revive (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/join (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_seq (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_revision (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/future_rule (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/config (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/event (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/personal (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/outside (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_missing (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_wrong_size (0.00s)
+    --- PASS: TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/disabled (0.00s)
+=== RUN   TestLegacyBindingNeverBecomesTrustedFromWalkabilityOrMatchingCenter
+--- PASS: TestLegacyBindingNeverBecomesTrustedFromWalkabilityOrMatchingCenter (0.00s)
+=== RUN   TestBindingSourceDocumentRejectsMissingTruncatedOrDuplicatedProof
+--- PASS: TestBindingSourceDocumentRejectsMissingTruncatedOrDuplicatedProof (0.00s)
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/valid
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_kind
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_role
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/sequence
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/command_future
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/revision
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/code
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/digest
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/point
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone_order
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/action
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/event
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/old_rule
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/future_rule
+=== RUN   TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/unrelated_rule_update
+--- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/valid (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_kind (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_role (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/sequence (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/command_future (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/revision (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/code (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/digest (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/point (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone_order (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/action (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/event (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/old_rule (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/future_rule (0.00s)
+    --- PASS: TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/unrelated_rule_update (0.00s)
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/source_float
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_nonzero
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_overflow
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/revision_duplicate
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/point_missing_x
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/rule_float
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/missing_event
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_position
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_economic
+=== RUN   TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_unknown
+--- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/source_float (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_nonzero (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_overflow (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/revision_duplicate (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/point_missing_x (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/rule_float (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/missing_event (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_position (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_economic (0.00s)
+    --- PASS: TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_unknown (0.00s)
+=== RUN   TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying
+--- PASS: TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying (0.04s)
+=== RUN   TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation
+--- PASS: TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation (0.03s)
+=== RUN   TestSkillUpgradeLevelPrerequisiteCapAndExactCost
+--- PASS: TestSkillUpgradeLevelPrerequisiteCapAndExactCost (0.03s)
+=== RUN   TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity
+--- PASS: TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity (0.04s)
+=== RUN   TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding
+--- PASS: TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding (0.04s)
+=== RUN   TestSkillPowerRanksUseSourceToEvenAndFencingGrowth
+--- PASS: TestSkillPowerRanksUseSourceToEvenAndFencingGrowth (0.03s)
+=== RUN   TestLearningConsumesOneBookWithZeroLevelWithoutAliasing
+--- PASS: TestLearningConsumesOneBookWithZeroLevelWithoutAliasing (0.03s)
+=== RUN   TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation
+--- PASS: TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation (0.18s)
+PASS
+ok  	minimir/internal/persistence	5.007s
+?   	minimir/internal/domain	[no test files]

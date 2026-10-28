@@ -636,6 +636,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "用户指定先接来源城镇；同owner健康旅行开发协议，准备不授权移交、基线就绪后才可输入"
+    },
+    {
+      "value": 20011,
+      "name": "MsgS2CBindingState",
+      "proto_message": "BindingState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "docs/安全区永久绑定实施边界.md；纯已提交观察，不授予客户端设置坐标权限"
     }
   ],
   "error_codes": [

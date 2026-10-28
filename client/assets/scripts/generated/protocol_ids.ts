@@ -51,6 +51,7 @@ export const MsgC2SMapTravelPrepare: 20007 = 20007;
 export const MsgS2CMapTravelPlan: 20008 = 20008;
 export const MsgC2SMapTravelCommit: 20009 = 20009;
 export const MsgS2CMapTravelState: 20010 = 20010;
+export const MsgS2CBindingState: 20011 = 20011;
 export const CodeOK: 0 = 0;
 export const CodeInvalidArgument: 1001 = 1001;
 export const CodeUnauthenticated: 1002 = 1002;

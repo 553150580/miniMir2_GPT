@@ -1,0 +1,3089 @@
+{
+  "schema_version": 1,
+  "started_at_utc": "2026-10-28T19:48:12.645966+00:00",
+  "finished_at_utc": "2026-10-28T19:53:15.268134+00:00",
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+    "go",
+    "test",
+    "-json",
+    "-race",
+    "-p",
+    "1",
+    "./...",
+    "-count=1",
+    "-timeout=600s"
+  ],
+  "mongo_e2e_explicit": true,
+  "race_detector": true,
+  "exit_code": 0,
+  "passed": true,
+  "source_changed_during_test": false,
+  "passed_tests": [
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/missing_enabled"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/null_enabled"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/missing_points"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/null_points"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/unknown_rule"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/empty_enabled"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/disabled_with_points"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/missing_map"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/missing_x"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/null_y"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/unknown_point"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/foreign_map"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/zero_map"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/negative"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/outside"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/blocked"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain/overflow"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/missing_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/null_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/integer_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/text_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/old_rule_new_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/old_rule_unchanged"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/both_closed"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/visit_only"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_town"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_source"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_zones"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/blocked_center"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/personal_zone"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/enabled_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/enabled_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/slot_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/slot_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/item_ids_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/item_ids_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/buff_id_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/buff_id_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_item_id_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_item_id_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_quantity_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/material_quantity_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/kind_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/kind_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/value_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/value_by_level_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_divisor_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_divisor_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_add_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/target_level_add_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_kind_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_kind_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_add_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_add_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_multiplier_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stat_multiplier_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_seconds_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/duration_seconds_by_level_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/tick_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/tick_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/hit_duration_loss_ms_per_hp_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/hit_duration_loss_ms_per_hp_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stack_policy_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/stack_policy_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/remove_on_player_death_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/remove_on_player_death_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/allow_dead_targets_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed/allow_dead_targets_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestStatusFixtureExplicitContractAndUnknownSupplyClosed"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/activation_kind_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/activation_kind_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/max_attack_bonus_by_level_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/max_attack_bonus_by_level_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_denominator_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_denominator_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_numerators_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/ready_proc_numerators_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_direction_offsets_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_direction_offsets_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_distance_cells_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_distance_cells_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_impact_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/secondary_impact_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/charge_window_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/charge_window_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_cells_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_cells_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_step_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_step_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_stop_on_blocked_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/line_stop_on_blocked_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/non_undead_divisor_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field/non_undead_divisor_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCombatModesRequireEveryExplicitV6Field"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestHellFireRequiresExplicitSingleRayTimingParameters"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/unknown"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/short_ranks"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/negative_distance"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/auto_enabled"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/delayed"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract/old_rule"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementSkillsRequireTypedCompleteApprovedContract"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/player_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/player_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/player_number"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/player_string"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/pet_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/pet_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/pet_number"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/pet_string"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/monster_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/monster_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/monster_number"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/monster_string"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/skill_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/skill_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/skill_number"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean/skill_string"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationLoadRejectsMissingNullAndWrongBoolean"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationFalseAndDistinctTimingArePreserved"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/player_push_action_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/player_push_action_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/player_push_action_ms_zero"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_action_ms_per_step_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_action_ms_per_step_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_action_ms_per_step_zero"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_move_ms_per_step_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_move_ms_per_step_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/monster_push_move_ms_per_step_zero"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/pushed_step_display_ms_missing"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/pushed_step_display_ms_null"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock/pushed_step_display_ms_zero"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDisplacementFoundationTimingNeverFallsBackToAttackClock"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryPreservesLegacyPersonalMapAndAddsFullTown"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownCollisionBitmapUsesLowBitFirstAcrossRows"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownSafetyZonesUseInclusiveSquareAndSourceOrder"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/未知类型"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺明确类型"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/额外个人图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/尺寸溢出"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源高度不符"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区右边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零宽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/并行阻挡源"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区负半径"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复目录ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图变城镇"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区半径溢出"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区上边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/不可持久ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图扩大"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/伪造怪槽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区零ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源宽度不符"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区下边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/长位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/非法来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区重复ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区左边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图偷偷换位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/负高"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/无来源"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/空来源代码"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复主图ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownBitmapRejectsNonzeroPaddingAndAcceptsOptionalLegacyPetSpawn"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapTemplateJSONRetainsLegacyFormatAndDecodesBase64Collision"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapQueriesFailClosedForInvalidDimensions"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapApprovedDimensionsAndDerivedSearchBudget"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺地图ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡负坐标"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生静态孤岛"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺怪物槽位"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡重复"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/八向连通不得穿角"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapConnectivityChecksBirthCellsWithoutInventingWholeGroundConnectivity"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDevelopmentMongoPlatformEndpoint"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestDevelopmentMongoRejectsForeignEndpoints"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSourcePlayerGrowthThreeJobs"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSkillFixtureRejectsInvalidSourceBounds"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSourceDamageMatchesIndependentCSharpOracle"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/missing_travel"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/missing_navigation"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/personal_target"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/unknown_target"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/disabled_navigation"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/zero_timeout"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/unbounded_quiesce"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/no_tick_budget"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/worker_budget_too_small"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/no_pool"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/no_queue"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/route_exceeds_grid"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/missing_memory_limit"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/no_plan_history"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/unbounded_plan_history"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap/pool_exceeds_memory"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownRulesRequireCompleteExplicitBudgetsAndKnownSourceMap"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestLegacyFixtureDoesNotInheritTownDefaults"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackUsesActionAndAttackClocksIndependentOfMoveThrottle/player_source_attack"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackUsesActionAndAttackClocksIndependentOfMoveThrottle/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackUsesActionAndAttackClocksIndependentOfMoveThrottle/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackUsesActionAndAttackClocksIndependentOfMoveThrottle"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIndependentMoveThrottleStillWaitsUntil500Boundary/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIndependentMoveThrottleStillWaitsUntil500Boundary/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIndependentMoveThrottleStillWaitsUntil500Boundary/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIndependentMoveThrottleStillWaitsUntil500Boundary"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestWalkPreservesLaterAttackDeadlineAndPlayerActionLock/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestWalkPreservesLaterAttackDeadlineAndPlayerActionLock/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestWalkPreservesLaterAttackDeadlineAndPlayerActionLock/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestWalkPreservesLaterAttackDeadlineAndPlayerActionLock"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackCannotReleaseExistingAttackOrSpellDeadlines"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/4"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestIceStormImpactOccupantsAndThunderStormOwnOriginUndeadMAC"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNewMageAutoCannotStallAdjacentOrdinaryFallback"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAllNewCastFailuresKeepManaCooldownAndInputReadyState"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusFormulaMatchesIndependentCSharpOracle"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusDiscreteTickRefreshAndDamageKeepClocksAndValues"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusMagicShieldDeathRecastAndLateSelfPosition"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusCorpseBuffReviveMigrationPetReplacementAndFaultReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusPendingFreezeBeforeEqualImpactAndFullBaseline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusPositiveNetWearBeforeLimitedHPDeathAndMissNoWear"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/2002"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/1002"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/2001"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot/4301"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialManualAuthorityFailureIsolatesButBusinessConflictDoesNot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialReceiptOneEffectOriginalWatermarkAndSceneLife"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/healthy_disconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_generation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_room"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_life"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect/new_connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialCallbackGenerationRoomLifeAuthAndHealthyDisconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialHistoricalRequestNeverPollutesNewBindingInput"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMaterialUnknownKeepsOriginalJobAndRandomPlanUntilKnownOnce"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusAreaFriendlyValidCellsAndCapacityRejectBeforeResources"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestStatusMissingSupplyAutoFallsThroughAndSlotNeverAddsGearStats"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourceDisplacementSkills6400Vectors"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementSkillsAcceptedOnceAndNoDamageFromRepulsion"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/unlearned"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/wrong_job"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/dead"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/action"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/resource"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/foreign_target"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement/direction"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDisplacementRejectsInvalidStateBeforeAnyCostOrMovement"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDashZeroStepConsumesOnceWithoutInventedFailureLock"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRepulsionFailedChanceStillPaysButNeverDamagesOrConsumesDistanceDraw"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking/16"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking/17"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestGridEightDirectionsAndCornerBlocking"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSeventeenGridCanRouteThroughMoreThanOld256VisitedNodes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSeventeenGridIntentsKeepLogicalCoordinatesAndRejectOutsideEdge"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireAllRanksRemainFourCellsAndNeverCatchUpLateFrames"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireEmptyCellsEmitActualStepAndBlockedCellStops"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireCellHitsAllLegalOccupantsAndReadyOnlySuppressesOldSteps"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact/online_to_offline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact/offline_to_online"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireChildUsesNewHostingPrivilegeWhileOverdueParentKeepsOldFact"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHellFireSurvivesDeathButOldChildCannotSurviveReviveLife"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFullBagAutoRejectPushesActualHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextSkillFlightAreaAndLineUseCurrentTerrain"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextGroundIntentAndEntryPreserveSourceCoordinates"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextColdInitializationAndRespawnUseCorrectTemplate"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTravelReturnDoesNotCreateNewCombatBeforeResourceACK"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/retry"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/kills"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/waiting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/casts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork/attacks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelReleasedAttackResolvesOnlyInOriginalScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelReleasedLethalAttackCancelsRatherThanResurrectingInTown"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/death"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/life"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer/configuration"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelPlanAndQuiesceDeadlinesDoNotResetOrReleaseUnknownJob"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelQuiesceHasIndependentDeadlineAndLateCancelKeepsExpiredState"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDuplicateCommitAndLateOldIDCannotMoveTwice"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelCancelledIDsNeverReviveAfterSeveralNewPlans"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelHistoryCapacityRejectsNewIDsWithoutEvictingOldOnes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelExpiredIDsStayRejectedAndNoHistoryBudgetIsInvented"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelHistoryNamespaceChangesOnlyWithRealAttachmentOrScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelCancelOnlyCancelsPlanAndKeepsNavigationAndWorld"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelACKExpiryKeepsCommittedWorldAndHealthyReconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelDeadPetIsMovedWithoutResurrectionAndNoConfiguredTownPetSpawn"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelPetPointDoesNotCrossBlockedDiagonalCorners"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelPersonalDeadlinesKeepOriginalCutoffAndExpireOnceOnReturn"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer/baseline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer/movement"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer/cell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMapTravelRuntimeCommandsReuseEnterACKAndOldSceneCannotActivate"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSlayingPassiveAndNextAttackReadiness"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/4"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestThrustingEightDirectionsSkipsFrontWallAndIgnoresOnlyArmour"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/4"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonExactAsymmetricFourCellsAndSharedSecondaryDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFlamingChargeExactManaAirSwingExpiryAndOriginalCooldown"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestModeSequenceReplayBindingAndNavigationIsolation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHalfMoonSharedDrawAndFourKillFactsKeepActualImpactTimes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackBudgetRejectDoesNotConsumeModesManaOrReadiness"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSameConnectionReviveAdvancesModeRevisionAndRetainsOriginalModes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedKeepsAlreadyReleasedProjectileToleranceAndAttackActorRef"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/4"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/5"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/6"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing/7"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedEightDirectionsPreserveRealPrefixAndReverseFacing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedCornerUsesDestinationOnlyAndNeverChainsDynamicBlocker"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/bounds"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/terrain"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/immune"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/old_life"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/old_scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks/invalid_direction"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedTerrainBoundsImmuneAndStaleKeepOldClocks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedZeroOccupiedPostambleAndHumanClockMapping/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedZeroOccupiedPostambleAndHumanClockMapping/2"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedZeroOccupiedPostambleAndHumanClockMapping/3"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedZeroOccupiedPostambleAndHumanClockMapping"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedPreservesReleasedEventsEconomyAndAllOtherClocks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedRealPrimitiveKeepsAttackAndMoveRecoveryIndependent"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedCorpseDoesNotBlockAndSameLifePrimitiveDoesNotInventDeadGate"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestWalkAndManualUseMonotonicRevisionWithoutForcedPackets"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMovementOverflowStopsRestOfSameOwnerStep"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMovement64BitObservationAndOverflowIsolationBeforeMutation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedNotReadyAndHealthyBaselineNeverReplayOldPath"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationOnlyOwnerStepCompletesCurrentTargetAcrossForcePrefixes"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationSameCoordinateNewInputAndNewBindingKeepDistinctRevision"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects/active"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects/arrived"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects/manual"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects/dead_pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects/no_ground"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationExplicitCancelAcknowledgesOriginalIdentityWithoutCombatSideEffects"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/binding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/stale"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/destination"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/release"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/direction"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget/not_ready"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationCancelRejectsConflictingOrStaleInputWithoutChangingTarget"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationDeathSameMapRevivePreservesGroundAndRejectsOldLifePush"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNavigationOverflowPreservesOriginalTargetAndNewWorldClears"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAutoEnabledFalseAndZeroPriorityAreIndependentFromFlaming"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPushedRealWebSocketObservationAndReentryWithoutPublicTrigger"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackObservationSurvivesStruckAndCooldownReject"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLethalStatePushesBeforeBroadcastWindow"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/player"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster/monster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMoveCompletionGatesAttackForPlayerPetMonster"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReceiptAppliesOriginalSequenceOnceInOriginalScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionTicksIndependentPoolsCapAndNoCatchup"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionDeathAndPendingPauseWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionGateSharedCooldownAndDeadSceneChecks"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPaidPotionOfflineClockDoesNotRunCombatOrChargeHosting"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFreshRoomStartsPotionWatermarkAtPermanentEconomicSequence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionBusyQueueBoundedAndImmutableWithoutFalsePending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionWaitingDrainRejectsStaleBindingsWithoutBlockingOthers"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/1"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/10"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/11"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/0"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending/12"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionFullQueueKeepsHistoricalReceiptReconciliationPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestManualAttackCannotTargetInactiveMonsterSlots"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingWalkCapturesOneFrozenFactAndLegacyNeedsReceipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/trusted"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/outside"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/disabled"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/same_cell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/far_jump"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/snapshot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/relocate"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/revive"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingUnknownAndQueueFullRetainOriginalJobAndRequest"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingPendingStopsPetAndPreservesReleasedEventsUntilReceipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingSuccessPublishesInventoryBeforeFactWithoutChangingCombatOrEconomicSequence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/disconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/life_scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_slot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_room"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/later_binding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/bad_receipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingDoesNotBorrowSourceSequenceAheadOfExistingKills"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk/source"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk/revision"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/first_cell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/after_prefix"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/inclusive_corner"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/leave_origin"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourcePushedCanEnterSafeZoneAndDoesNotPretendThisStageSupportsPushBinding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillCommitPendingRetainsOriginalPreviewAndReceiptReconciliation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewInFlightDoesNotFreezeCombatOrRecovery"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewCompletionPreservesConcurrentPermanentPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/connection"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/session"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/room"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/baseline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/closed"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/binding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration/success"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration/error"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewOldTerminalCannotClearNewGeneration"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewErrorReleasesOnlyPreviewSlot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewQueueBusyAndMalformedLeaveNoPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewDisconnectInvalidatesQueuedCompletion"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourceDamageUsesHitACMACAndZeroFloor"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFireballValidateBeforeSideEffectsAndDelayedLifeBoundDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillCooldownResourceTargetAndProjectileObstruction"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPotionReachesFullBeforeCombatClearsWaitingHealingBalance"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHealingSeparatePlayerAndPetClockSurvivesDeathPendingAndOffline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestInputWatermarkSharedByMoveAndCastAndRejectsOldBinding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestFencingPassiveAndEquipmentMACDoNotDoubleAddLegacyDefence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestUpgradedSkillRanksKeepShapesAndUseSourceNumericGrowth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourcePushedMatchesIndependentCSharpOracle"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHumanAttackActionImpactAndLevelSpeedAreIndependent"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAttackActorRefBlocksNewLifeAndOldScene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestReadyOnlyGatesInputAndObservationNotAuthoritativeWorld"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestNewSingleSkillsUseExactPowerFlightAndUndeadRules"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSpiritSwordUsesNonlinearAccuracyAtEveryRank"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestEnemyGridAreaUsesImpactPositionsAndFiltersFriendsAndInactiveSlots"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestMassHealingUsesIndependentSCPathAndFriendlyQueues"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTimelineOrdersDifferentEventKindsAndFreezesPaidFactsAcrossRetry"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestCombatBudgetsAndInvalidGroundRejectBeforeCosts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestAutomaticSkillPriorityUsesTargetsAndFallsBackWithoutTouchingNavigation"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestLateImpactUsesDueForBothPrivilegeBoundariesAndHostingSegment"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestHardSettlementFailureIsolatesWithoutDiscardingPaidFacts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestPrivilegeRenewalDoesNotRewriteAlreadyDueDamage"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestBlockedAreaCenterStillAffectsWalkableNeighboursAndClipsMapEdges"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownUnreachableTargetEndsMatchingNavigationWithoutClaimingArrival"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSharesWorkerBudgetAndQueuesFairly"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationStaticNoPathMemoReturnsBuffersAndNeverRepeats"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationOccupiedGroundConvergesButRetainsOriginalRequest"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationPetStopsBesideOwnerWithoutEnteringOwnerCell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/map"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/life"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/manual"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/revision"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/removed"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/dead"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing/explicit"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationSceneLifeAndInputChangesCancelBeforeAdvancing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationReadyRouteReleasesWorkspaceForNextRoom"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationUnknownPendingPausesWithoutBlockingOtherOwners"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationRepeatedUnchangedPausesKeepGroundTargetAndBudgets/pending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationRepeatedUnchangedPausesKeepGroundTargetAndBudgets/not_ready"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationRepeatedUnchangedPausesKeepGroundTargetAndBudgets/quiescing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationRepeatedUnchangedPausesKeepGroundTargetAndBudgets"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationQuiescingReturnsPoolWithoutAdmittingOrAdvancing"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationQueueAndMemoryCapsAreExplicit"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationDisabledNeverFallsBackToWholeTownBFS"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationForcedRelocationReconsidersStaticTerminalStart"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationDynamicNextStepCannotBypassReplanCap"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestTownNavigationFullTownCoordinatesRemainWithinPerTickBudget"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatAreaFiveSkillsAndEightKillMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatModesEightSkillsLearningModesCastingAndReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS/runtime_disabled"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS/isolated_material_units"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestCombatStatusThreeSkillsMaterialReceiptsAndReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestDisplacementSkillsLearningUpgradeCastingAndReconnectMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestFirstLoopMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMapTravelMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoOwnershipFence"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestPotionMongoWSReceiptAndFreshSceneReconciliation"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoPermanentReceiptIndexMigration"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestMongoReceiptMigrationFailureRejectsStartup"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_receipt"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_kind"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_role"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/fraction_zone"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/source_hash"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/binding_changed"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_source_receipt"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/zero_source"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillAssetEconomyMongoWS"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fencing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/fireball"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS/healing"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSkillLearningAndCastingMongoWS"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/empty"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/missing_x"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/null_y"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/fraction"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/overflow"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/duplicate"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/extra_temporary"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues/wrong_type"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingDocumentNeverFillsMissingCoordinatesOrTruncatesValues"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestInitialBindingUsesApprovedListAndNeverInfersCurrentSpawn"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplySlotMoveSwapAndConsumptionCopyOwnership"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/未开放"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/未学"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/错职业"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/错实例"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/旧版本"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/溢出版本"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/数量不足"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/不等价大符"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/背包不能直用"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal/旧场景门禁"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyRejectedPathsNeverMutateOriginal"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestCastingSupplyUnequipFullBagAndDisabledUnknownUnits"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestStatusUpgradeQuoteShowsRealRankParametersWithoutFakeDamage"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestDisplacementUpgradePreviewShowsApprovedDistanceAndActualDamage"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeCopiesInventoryAndRetainsOwnershipAndBinding"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/不存在的实例"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/伪造物品类型"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/库存类型与效果不符"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/数量不足"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/版本溢出"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/无场景"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/装备不能作药品"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/死亡"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/共享节流"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory/旧场景新请求"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestPotionConsumeFailuresDoNotMutateInventory"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingUsesFirstMatchingActionCellAndPreservesInitializerOff"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/turn"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/run"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/teleport"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/pushed"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/dash"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/spawn"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/revive"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/join"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_seq"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/future_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/config"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/personal"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/outside"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_missing"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_wrong_size"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/disabled"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLegacyBindingNeverBecomesTrustedFromWalkabilityOrMatchingCenter"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingSourceDocumentRejectsMissingTruncatedOrDuplicatedProof"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/valid"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_kind"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_role"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/sequence"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source_after_receipt_revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/command_future"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/code"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/digest"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/point"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone_order"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/action"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/old_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/future_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/unrelated_rule_update"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/source_float"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_nonzero"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_overflow"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/revision_duplicate"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/point_missing_x"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/rule_float"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/missing_event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_position"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_economic"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_unknown"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradePreviewPinsBoundedConcreteMaterialsWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillUpgradeLevelPrerequisiteCapAndExactCost"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillShopExplicitCurrenciesSplitGoldAndOverflowAndCapacity"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSkillPowerRanksUseSourceToEvenAndFencingGrowth"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningConsumesOneBookWithZeroLevelWithoutAliasing"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLearningRejectsWrongIdentityJobLevelAndBookWithoutMutation"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestAllThreeByThreeAdjacentGoalsPreserveCornersAndOccupiedCell"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspensionReturnsBuffersAndReplanRetainsCumulativeBudget"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestRepeatedUnchangedSuspensionDoesNotSpendReplansButRetainsExpansionLimit"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspendedResumeAfterActualChangeStillSpendsReplans/position"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspendedResumeAfterActualChangeStillSpendsReplans/dynamic_revision"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspendedResumeAfterActualChangeStillSpendsReplans/dynamic_contents"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspendedResumeAfterActualChangeStillSpendsReplans"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSuspendedReadyRouteResumesFromLastCommittedStepAndRejectsOldScene"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestAllThreeByThreeObstacleGraphsMatchIndependentShortestPath"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestExpansionAndRouteReconstructionBothHonorOneUnitBudget"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/map"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/version"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/request"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/life"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/scene"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticUnreachableIsTerminalAndNeverRestartsOnTick"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestDynamicBlockageWaitsForChangeAndReplansWithoutLosingTarget"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestReadyRouteChecksOccupancyAndOnlyCommitsSuccessfulStep"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestReplansFrontierAndRouteCapsHaveExplicitLimitOutcome/frontier"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestReplansFrontierAndRouteCapsHaveExplicitLimitOutcome/route"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestReplansFrontierAndRouteCapsHaveExplicitLimitOutcome/replans"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestReplansFrontierAndRouteCapsHaveExplicitLimitOutcome"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestUnexpectedPoseRequiresReplanAndBusyWorkspaceDoesNotConsumeAttempt"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestBudgetsAndTerrainDoNotAcquireHiddenDefaults"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement/open_diagonal"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement/one_static_side_requires_detour"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement/two_static_sides_forbid_corner_cut"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement/pet_on_side_does_not_become_static_wall"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement/pet_overlapping_start_can_leave"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestStaticCornerRulesAndDynamicPetSideCellsMatchExistingMovement"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestPetOccupyingDestinationWaitsWithoutFalseArrival"
+    }
+  ],
+  "skipped_tests": [],
+  "fixture": {
+    "path": "config/development/first-loop.json",
+    "sha256": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
+    "candidate_only": true,
+    "runtime_ready": false
+  },
+  "source_sha256": {
+    "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
+    "config/development/first-loop.json": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
+    "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+    "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
+    "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+    "server/api/generated/minimirv1/world.pb.go": "034bb026ae044cf58b03269a72fe777d0e740983c43d19bea7b335790535ecba",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "36faf9a8d4fafffaebbd63d640ba140248e040392d89383f3ee2215e00733559",
+    "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
+    "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
+    "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+    "server/internal/devconfig/binding_test.go": "a8fb5ba9014ff9831039ca22a587e73cbb52a165a10847dcc3047ac446016d4f",
+    "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
+    "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
+    "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
+    "server/internal/devconfig/combat_modes_test.go": "53ce7a9fafd52e18acad3d9cdcefad90b956d065ec4a57c2c9b1bb72d924a499",
+    "server/internal/devconfig/config.go": "3ae0a8fe3f23729a2214cefc53df598fce875b4c94c5a3b5046ff7f5e6e15569",
+    "server/internal/devconfig/displacement.go": "b4c5b0bdbf6d1cb17292d8497c3b4b98a5bc971d16bf7f66f0630d20488472b7",
+    "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
+    "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
+    "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
+    "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
+    "server/internal/devconfig/map_catalog_test.go": "4a1c133456b13b368eee57f6d900a2e4502b4d7e4ab441f0dd4b592c0074b9c5",
+    "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
+    "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
+    "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
+    "server/internal/devconfig/skills.go": "39a8c005fba98794d9da58d85153b3e0fedb46480d4c1697ff2ca7f9e005db86",
+    "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
+    "server/internal/devconfig/source_damage_test.go": "08bf73f3cd3cfed3928e002b095710da745816a376d0dd7f0af3818c4b6e55b7",
+    "server/internal/devconfig/testdata/source-damage-vectors.json.gz": "f74443f754ce915a14c10e72fe2f2e77aef4a1cb3fe7ef9aab4b769ba0563062",
+    "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
+    "server/internal/devconfig/town_test.go": "10649ad0c21c40d3e496ffac51bb33430903c0c35ba22ee828376b9a20f077b7",
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
+    "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
+    "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
+    "server/internal/game/combat.go": "b89a0ee798fe63e6871732da5e90bba09aa1b5a9038b7d242d0f722a3e23ef10",
+    "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
+    "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
+    "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
+    "server/internal/game/displacement_skills.go": "72abbf1dd8947bb6ed315357dc5713271a9cd428e1e65bc681601e5c3be8bfae",
+    "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
+    "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
+    "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
+    "server/internal/game/map_context_test.go": "9fe39e297f326b1bb25cf49260385fd42489dfd2fb46cc5f70b17762bdb77b50",
+    "server/internal/game/map_travel.go": "f5966fb053af33fb5797255f5cb99807320d7e0bb05fa01015f69e17200d89d4",
+    "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
+    "server/internal/game/map_travel_test.go": "8ccb3925581a58628790b38e34f6828e6fc88a0bd03d13a968dcd6a0acfb2d4e",
+    "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
+    "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
+    "server/internal/game/movement.go": "caab5cd48c6e5966234db7344099aabd7864586b82b2167da4436dd12a011d03",
+    "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
+    "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
+    "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
+    "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+    "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
+    "server/internal/game/runtime.go": "aad725b735f4ef895800793bbbc867c6d597658cc96a4234f1352f56f396c7ce",
+    "server/internal/game/safe_zone_binding.go": "fff9e57677cfd61ba3e6ef7051bceb3023faec6f40c653349234485092cd968e",
+    "server/internal/game/safe_zone_binding_test.go": "8af09d020c981af68d1be1b7fbba01b73eb6fe447c54247168cb37fca50a067f",
+    "server/internal/game/safe_zone_dash_test.go": "35263334bd8a7ff37b4f85ff49918bf6e3e35d74d7a22796a86b80379ba8d653",
+    "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
+    "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
+    "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
+    "server/internal/game/skill_preview_test.go": "c62f36d36366d9a8d324b43352abd6b037ac4006f98d5f8c4cd8ed01de50fab6",
+    "server/internal/game/skills.go": "4c5fc6e16c97a41f29843aaa234c708e021a94979639b1c346d7b4a80c8418dc",
+    "server/internal/game/skills_test.go": "8886bd0cd266d14af21bb39d086a79b610c3dcfc1d4f3436d1123e52790a851b",
+    "server/internal/game/source_pushed_test.go": "3f62dbad9309c45ac885a399f283e5a6ade55c3aca1b8e5ef77252d930f14b7a",
+    "server/internal/game/testdata/source-displacement-skills-vectors.json.gz": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27",
+    "server/internal/game/testdata/source-pushed-vectors.json.gz": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
+    "server/internal/game/testdata/source-status-vectors.json.gz": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa",
+    "server/internal/game/timeline.go": "e7f59981daae369e6c69515b121d793633e4ed3b5033210834a1ee0e8c6cf805",
+    "server/internal/game/timeline_test.go": "704651e7041542b8fe18298197b633eefe4c535b5fd478591559cb234cb8efd6",
+    "server/internal/game/town_navigation.go": "f91b08890ae5e557fdd4517e3024d672d47f35216da77110a53f33929a48dc10",
+    "server/internal/game/town_navigation_status.go": "4a299ae0becff3533877a9b0a4a9eba331af8055467ba53be2a9705e7a58c807",
+    "server/internal/game/town_navigation_status_test.go": "23db60938cb1fc72ff307a48b2432ebbb4406ea9f05a7d7963111446e83ce3a8",
+    "server/internal/game/town_navigation_test.go": "8a4117343cca517b28227ceba76c68671344d5d9528c8493b53e051fcde308c8",
+    "server/internal/integration/binding_test.go": "6c0521ece015de8f75e658d5a0c9828e69e696220a422c23e3b6f96cbca31904",
+    "server/internal/integration/combat_area_test.go": "65e99d49febaba1d4203fbbb08e412a721ed081080185c35b14a6e68b857ee55",
+    "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
+    "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
+    "server/internal/integration/displacement_skills_test.go": "f92bbf93e8efd12c008300e9eae7fd93b782a3faaee766e55fb118ca3703355e",
+    "server/internal/integration/first_loop_test.go": "019a4fcdf8163924d93d05ccd84eafd229e1a07db4840baa97bf39d5949ffb3d",
+    "server/internal/integration/map_travel_test.go": "4877fd4b828478d65af25222d2ffce6ea90da1f23bf3dc38934a51ea1ad16378",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/receipt_migration_test.go": "574235d914dd233d07cc35b519d274b68a9371edb4aecc8fe2711d61cdf2c12c",
+    "server/internal/integration/safe_zone_binding_test.go": "3037049438830bcc4b65403abef94d4ecbb2663928563bf09df1a62bd234e5e1",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+    "server/internal/integration/skills_test.go": "f641464ef1e474ecbeadbf05d621772c1876a2a58c46d2d2c2a67436120a65aa",
+    "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
+    "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
+    "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
+    "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
+    "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
+    "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/safe_zone_binding.go": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38",
+    "server/internal/persistence/safe_zone_binding_test.go": "ae54f497053caee522e42dcf245e3516cb0038d10f5acc9d973395db8e26fc79",
+    "server/internal/persistence/skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
+    "server/internal/persistence/skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687",
+    "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+    "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/protocol/protocol_ids.go": "b7e7446005733d8b0a06fa1288001e2aef938d316f2864599971b4285020a052",
+    "server/internal/townnav/nav.go": "82a770c2e7260cbeb8fa2d9f2518eeb6e672c2b2db8cd9a5a7fe5ed91c64531b",
+    "server/internal/townnav/nav_test.go": "e1f788ca3c358996dfb604d3ada77ce88fc7c4b4a7c61b496c5f0ff5fe5ad416",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "source_sha256_after": {
+    "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
+    "config/development/first-loop.json": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
+    "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+    "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
+    "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+    "server/api/generated/minimirv1/world.pb.go": "034bb026ae044cf58b03269a72fe777d0e740983c43d19bea7b335790535ecba",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
+    "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
+    "server/internal/bootstrap/app.go": "36faf9a8d4fafffaebbd63d640ba140248e040392d89383f3ee2215e00733559",
+    "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
+    "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
+    "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+    "server/internal/devconfig/binding_test.go": "a8fb5ba9014ff9831039ca22a587e73cbb52a165a10847dcc3047ac446016d4f",
+    "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
+    "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
+    "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
+    "server/internal/devconfig/combat_modes_test.go": "53ce7a9fafd52e18acad3d9cdcefad90b956d065ec4a57c2c9b1bb72d924a499",
+    "server/internal/devconfig/config.go": "3ae0a8fe3f23729a2214cefc53df598fce875b4c94c5a3b5046ff7f5e6e15569",
+    "server/internal/devconfig/displacement.go": "b4c5b0bdbf6d1cb17292d8497c3b4b98a5bc971d16bf7f66f0630d20488472b7",
+    "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
+    "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
+    "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
+    "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
+    "server/internal/devconfig/map_catalog_test.go": "4a1c133456b13b368eee57f6d900a2e4502b4d7e4ab441f0dd4b592c0074b9c5",
+    "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
+    "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
+    "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
+    "server/internal/devconfig/skills.go": "39a8c005fba98794d9da58d85153b3e0fedb46480d4c1697ff2ca7f9e005db86",
+    "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
+    "server/internal/devconfig/source_damage_test.go": "08bf73f3cd3cfed3928e002b095710da745816a376d0dd7f0af3818c4b6e55b7",
+    "server/internal/devconfig/testdata/source-damage-vectors.json.gz": "f74443f754ce915a14c10e72fe2f2e77aef4a1cb3fe7ef9aab4b769ba0563062",
+    "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
+    "server/internal/devconfig/town_test.go": "10649ad0c21c40d3e496ffac51bb33430903c0c35ba22ee828376b9a20f077b7",
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
+    "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
+    "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
+    "server/internal/game/combat.go": "b89a0ee798fe63e6871732da5e90bba09aa1b5a9038b7d242d0f722a3e23ef10",
+    "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
+    "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
+    "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
+    "server/internal/game/displacement_skills.go": "72abbf1dd8947bb6ed315357dc5713271a9cd428e1e65bc681601e5c3be8bfae",
+    "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
+    "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
+    "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
+    "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
+    "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
+    "server/internal/game/map_context_test.go": "9fe39e297f326b1bb25cf49260385fd42489dfd2fb46cc5f70b17762bdb77b50",
+    "server/internal/game/map_travel.go": "f5966fb053af33fb5797255f5cb99807320d7e0bb05fa01015f69e17200d89d4",
+    "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
+    "server/internal/game/map_travel_test.go": "8ccb3925581a58628790b38e34f6828e6fc88a0bd03d13a968dcd6a0acfb2d4e",
+    "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
+    "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
+    "server/internal/game/movement.go": "caab5cd48c6e5966234db7344099aabd7864586b82b2167da4436dd12a011d03",
+    "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
+    "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
+    "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
+    "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+    "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
+    "server/internal/game/runtime.go": "aad725b735f4ef895800793bbbc867c6d597658cc96a4234f1352f56f396c7ce",
+    "server/internal/game/safe_zone_binding.go": "fff9e57677cfd61ba3e6ef7051bceb3023faec6f40c653349234485092cd968e",
+    "server/internal/game/safe_zone_binding_test.go": "8af09d020c981af68d1be1b7fbba01b73eb6fe447c54247168cb37fca50a067f",
+    "server/internal/game/safe_zone_dash_test.go": "35263334bd8a7ff37b4f85ff49918bf6e3e35d74d7a22796a86b80379ba8d653",
+    "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
+    "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
+    "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
+    "server/internal/game/skill_preview_test.go": "c62f36d36366d9a8d324b43352abd6b037ac4006f98d5f8c4cd8ed01de50fab6",
+    "server/internal/game/skills.go": "4c5fc6e16c97a41f29843aaa234c708e021a94979639b1c346d7b4a80c8418dc",
+    "server/internal/game/skills_test.go": "8886bd0cd266d14af21bb39d086a79b610c3dcfc1d4f3436d1123e52790a851b",
+    "server/internal/game/source_pushed_test.go": "3f62dbad9309c45ac885a399f283e5a6ade55c3aca1b8e5ef77252d930f14b7a",
+    "server/internal/game/testdata/source-displacement-skills-vectors.json.gz": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27",
+    "server/internal/game/testdata/source-pushed-vectors.json.gz": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
+    "server/internal/game/testdata/source-status-vectors.json.gz": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa",
+    "server/internal/game/timeline.go": "e7f59981daae369e6c69515b121d793633e4ed3b5033210834a1ee0e8c6cf805",
+    "server/internal/game/timeline_test.go": "704651e7041542b8fe18298197b633eefe4c535b5fd478591559cb234cb8efd6",
+    "server/internal/game/town_navigation.go": "f91b08890ae5e557fdd4517e3024d672d47f35216da77110a53f33929a48dc10",
+    "server/internal/game/town_navigation_status.go": "4a299ae0becff3533877a9b0a4a9eba331af8055467ba53be2a9705e7a58c807",
+    "server/internal/game/town_navigation_status_test.go": "23db60938cb1fc72ff307a48b2432ebbb4406ea9f05a7d7963111446e83ce3a8",
+    "server/internal/game/town_navigation_test.go": "8a4117343cca517b28227ceba76c68671344d5d9528c8493b53e051fcde308c8",
+    "server/internal/integration/binding_test.go": "6c0521ece015de8f75e658d5a0c9828e69e696220a422c23e3b6f96cbca31904",
+    "server/internal/integration/combat_area_test.go": "65e99d49febaba1d4203fbbb08e412a721ed081080185c35b14a6e68b857ee55",
+    "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
+    "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
+    "server/internal/integration/displacement_skills_test.go": "f92bbf93e8efd12c008300e9eae7fd93b782a3faaee766e55fb118ca3703355e",
+    "server/internal/integration/first_loop_test.go": "019a4fcdf8163924d93d05ccd84eafd229e1a07db4840baa97bf39d5949ffb3d",
+    "server/internal/integration/map_travel_test.go": "4877fd4b828478d65af25222d2ffce6ea90da1f23bf3dc38934a51ea1ad16378",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/receipt_migration_test.go": "574235d914dd233d07cc35b519d274b68a9371edb4aecc8fe2711d61cdf2c12c",
+    "server/internal/integration/safe_zone_binding_test.go": "3037049438830bcc4b65403abef94d4ecbb2663928563bf09df1a62bd234e5e1",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+    "server/internal/integration/skills_test.go": "f641464ef1e474ecbeadbf05d621772c1876a2a58c46d2d2c2a67436120a65aa",
+    "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
+    "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
+    "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
+    "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
+    "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
+    "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/safe_zone_binding.go": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38",
+    "server/internal/persistence/safe_zone_binding_test.go": "ae54f497053caee522e42dcf245e3516cb0038d10f5acc9d973395db8e26fc79",
+    "server/internal/persistence/skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
+    "server/internal/persistence/skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687",
+    "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+    "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/protocol/protocol_ids.go": "b7e7446005733d8b0a06fa1288001e2aef938d316f2864599971b4285020a052",
+    "server/internal/townnav/nav.go": "82a770c2e7260cbeb8fa2d9f2518eeb6e672c2b2db8cd9a5a7fe5ed91c64531b",
+    "server/internal/townnav/nav_test.go": "e1f788ca3c358996dfb604d3ada77ce88fc7c4b4a7c61b496c5f0ff5fe5ad416",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "events_sha256": "0b08ae79eb9c176a8f9345ce2d2849ec9205ae106ac7fe4b97d4c42169876a24",
+  "production_ready": false,
+  "failed_tests": [],
+  "package_timeout_seconds": 600,
+  "package_parallelism": 1,
+  "single_rpc_and_business_deadlines_changed": false,
+  "capacity_verified": false
+}

@@ -1,0 +1,63 @@
+{
+  "checks": [
+    {
+      "name": "persistence-race",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "go",
+        "test",
+        "-race",
+        "./internal/persistence",
+        "./internal/domain",
+        "-count=1",
+        "-v"
+      ],
+      "environment": {
+        "MINIMIR_MONGO_E2E": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 10.379,
+      "log": "persistence-race.txt"
+    },
+    {
+      "name": "mongo-binding-race",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "go",
+        "test",
+        "-race",
+        "./internal/integration",
+        "-run",
+        "^TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo$",
+        "-count=1",
+        "-v"
+      ],
+      "environment": {
+        "MINIMIR_MONGO_E2E": "1"
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 13.455,
+      "log": "mongo-binding-race.txt"
+    }
+  ],
+  "input_sha256": {
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
+    "server/internal/persistence/safe_zone_binding.go": "961c19b27097385049854f0263417b7289593c72c82e2db92419c7f1381cfa6c",
+    "server/internal/persistence/safe_zone_binding_test.go": "419cfe05a54405ee78b635b48c490f05c986b33e615b37b87966491ba404245c",
+    "server/internal/integration/safe_zone_binding_test.go": "3037049438830bcc4b65403abef94d4ecbb2663928563bf09df1a62bd234e5e1"
+  },
+  "inputs_stable": true,
+  "scope": "永久事务/回执与冷验；原已提交响应丢弃重试，不宣称真实UnknownTransaction故障注入；不作容量验收"
+}

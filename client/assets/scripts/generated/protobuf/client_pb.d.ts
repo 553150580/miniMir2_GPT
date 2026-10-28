@@ -2636,6 +2636,246 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a RoleBindingPoint.
+         * @deprecated Use minimir.v1.RoleBindingPoint.$Properties instead.
+         */
+        interface IRoleBindingPoint extends minimir.v1.RoleBindingPoint.$Properties {
+        }
+
+        /** Represents a RoleBindingPoint. */
+        class RoleBindingPoint {
+
+            /**
+             * Constructs a new RoleBindingPoint.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.RoleBindingPoint.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** RoleBindingPoint map_id. */
+            map_id: Long;
+
+            /** RoleBindingPoint center. */
+            center?: (minimir.v1.GridPoint.$Properties|null);
+
+            /**
+             * Creates a new RoleBindingPoint instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns RoleBindingPoint instance
+             */
+            static create(properties: minimir.v1.RoleBindingPoint.$Shape): minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape;
+            static create(properties?: minimir.v1.RoleBindingPoint.$Properties): minimir.v1.RoleBindingPoint;
+
+            /**
+             * Encodes the specified RoleBindingPoint message. Does not implicitly {@link minimir.v1.RoleBindingPoint.verify|verify} messages.
+             * @param message RoleBindingPoint message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.RoleBindingPoint.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified RoleBindingPoint message, length delimited. Does not implicitly {@link minimir.v1.RoleBindingPoint.verify|verify} messages.
+             * @param message RoleBindingPoint message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.RoleBindingPoint.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a RoleBindingPoint message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape} RoleBindingPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape;
+
+            /**
+             * Decodes a RoleBindingPoint message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape} RoleBindingPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape;
+
+            /**
+             * Verifies a RoleBindingPoint message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for RoleBindingPoint
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace RoleBindingPoint {
+
+            /** Properties of a RoleBindingPoint. */
+            interface $Properties {
+
+                /** RoleBindingPoint map_id */
+                map_id?: (Long|null);
+
+                /** RoleBindingPoint center */
+                center?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a RoleBindingPoint. */
+            type $Shape = minimir.v1.RoleBindingPoint.$Properties;
+        }
+
+        /**
+         * Properties of a BindingState.
+         * @deprecated Use minimir.v1.BindingState.$Properties instead.
+         */
+        interface IBindingState extends minimir.v1.BindingState.$Properties {
+        }
+
+        /** Represents a BindingState. */
+        class BindingState {
+
+            /**
+             * Constructs a new BindingState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.BindingState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** BindingState role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** BindingState scene_epoch. */
+            scene_epoch: Long;
+
+            /** BindingState role_revision. */
+            role_revision: Long;
+
+            /** BindingState source_seq. */
+            source_seq: Long;
+
+            /** BindingState binding. */
+            binding?: (minimir.v1.RoleBindingPoint.$Properties|null);
+
+            /** BindingState cause. */
+            cause: number;
+
+            /** BindingState safe_zone_id. */
+            safe_zone_id: Long;
+
+            /** BindingState trusted. */
+            trusted: boolean;
+
+            /**
+             * Creates a new BindingState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns BindingState instance
+             */
+            static create(properties: minimir.v1.BindingState.$Shape): minimir.v1.BindingState & minimir.v1.BindingState.$Shape;
+            static create(properties?: minimir.v1.BindingState.$Properties): minimir.v1.BindingState;
+
+            /**
+             * Encodes the specified BindingState message. Does not implicitly {@link minimir.v1.BindingState.verify|verify} messages.
+             * @param message BindingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.BindingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified BindingState message, length delimited. Does not implicitly {@link minimir.v1.BindingState.verify|verify} messages.
+             * @param message BindingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.BindingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a BindingState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.BindingState & minimir.v1.BindingState.$Shape} BindingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.BindingState & minimir.v1.BindingState.$Shape;
+
+            /**
+             * Decodes a BindingState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.BindingState & minimir.v1.BindingState.$Shape} BindingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.BindingState & minimir.v1.BindingState.$Shape;
+
+            /**
+             * Verifies a BindingState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for BindingState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace BindingState {
+
+            /** Properties of a BindingState. */
+            interface $Properties {
+
+                /** BindingState role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** BindingState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** BindingState role_revision */
+                role_revision?: (Long|null);
+
+                /** BindingState source_seq */
+                source_seq?: (Long|null);
+
+                /** BindingState binding */
+                binding?: (minimir.v1.RoleBindingPoint.$Properties|null);
+
+                /** BindingState cause */
+                cause?: (number|null);
+
+                /** BindingState safe_zone_id */
+                safe_zone_id?: (Long|null);
+
+                /** BindingState trusted */
+                trusted?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a BindingState. */
+            type $Shape = minimir.v1.BindingState.$Properties;
+        }
+
+        /**
          * Properties of an EntityState.
          * @deprecated Use minimir.v1.EntityState.$Properties instead.
          */

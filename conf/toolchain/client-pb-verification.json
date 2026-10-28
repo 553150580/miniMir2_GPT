@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 64,
+  "message_count": 66,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -30,6 +30,8 @@
     "MapTravelCommit",
     "MapTravelState",
     "SyncReady",
+    "RoleBindingPoint",
+    "BindingState",
     "EntityState",
     "EntityDisplacement",
     "NavigationState",
@@ -71,8 +73,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 123,
-  "int64_boundary_cases": 405,
+  "int64_field_count": 128,
+  "int64_boundary_cases": 420,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -287,6 +289,36 @@
     {
       "message": "SyncReady",
       "field": "next_economic_command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleBindingPoint",
+      "field": "map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BindingState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BindingState",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BindingState",
+      "field": "source_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "BindingState",
+      "field": "safe_zone_id",
       "type": "uint64",
       "cases": 3
     },
@@ -925,7 +957,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "7b05143b515e0814f9d1daa334c30bb59632c68c181e738fc7530c30139c67ea"
+      "sha256": "8bad9283f774dc93606a10607c63202e5dcc4fa5000d2492583dab1295ed1f31"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -935,13 +967,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "bf2911ff2c96b8125687ce14b2de25cfd635444da7d97f5333dd598c74c79d12",
-      "bytes": 1024113
+      "sha256": "6496adbc297b1b77dfa1e2d9d00359885c104d0276e4f7661ab97ac124d7584a",
+      "bytes": 1055258
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "4628df1f153810bff75c6f21680a639305412fbc27692821dfadeffbf38ca2a4",
-      "bytes": 334014
+      "sha256": "e51863588c7d78efe2575a6ee505e66c7c3a06be87c74ea7240d0499a41429c4",
+      "bytes": 344260
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

@@ -1,0 +1,14 @@
+{
+  "task": "protocol",
+  "command": [
+    "python3",
+    "tools/config/generate_protocol.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:31:49.078371+00:00",
+  "finished_at": "2026-10-28T19:31:49.282793+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/protocol.txt",
+  "output_sha256": "0dd9f0d8ac24cc3502391ac7c9246ca128dbb9e1970560ccc980b83eaa778b21",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

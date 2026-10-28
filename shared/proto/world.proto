@@ -38,6 +38,20 @@ message MapTravelState {
 }
 // 仅在当前场景基线ACK验证成功后发送，客户端据此恢复经济命令序号。
 message SyncReady { uint64 scene_epoch = 1; uint64 baseline_id = 2; uint64 next_economic_command_seq = 3; }
+// 仅观察永久绑定；坐标不能由客户端指定，缺省binding明确表示尚未绑定。
+message RoleBindingPoint { uint64 map_id = 1; GridPoint center = 2; }
+message BindingState {
+  RoleKey role = 1;
+  uint64 scene_epoch = 2;
+  uint64 role_revision = 3;
+  // 此次绑定永久回执的SourceSeq；无来源证明的历史坐标为0。
+  uint64 source_seq = 4;
+  RoleBindingPoint binding = 5;
+  // 1已提交入场快照，2合法动作产生的新提交；重入不重报取得提示。
+  uint32 cause = 6;
+  uint64 safe_zone_id = 7;
+  bool trusted = 8;
+}
 message EntityState {
   uint32 entity_handle = 1;
   uint32 entity_kind = 2;

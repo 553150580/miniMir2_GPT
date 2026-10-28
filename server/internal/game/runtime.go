@@ -116,6 +116,7 @@ type room struct {
 	Navigation            navigationState
 	Pending               bool
 	PendingRetry          *job
+	PendingBinding        *safeZoneBindingFact
 	RetryAt               time.Time
 	Waiting               []command
 	LastTick              time.Time
@@ -635,6 +636,7 @@ func (w *worker) join(r *room, c command) {
 				return
 			}
 			w.send(r, p.MsgS2CEnterLine, c.frame.Request, entry)
+			w.bindingState(r, 1)
 			w.baseline(r)
 			w.after(r)
 		}

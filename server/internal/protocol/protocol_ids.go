@@ -53,6 +53,7 @@ const (
 	MsgS2CMapTravelPlan uint16 = 20008
 	MsgC2SMapTravelCommit uint16 = 20009
 	MsgS2CMapTravelState uint16 = 20010
+	MsgS2CBindingState uint16 = 20011
 )
 
 const (

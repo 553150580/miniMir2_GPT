@@ -58,6 +58,10 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	if r.Pending || !w.walkable(r, point) {
 		return false
 	}
+	binding, allowed := w.prepareSafeZoneWalk(r, e, point)
+	if !allowed {
+		return false
+	}
 	if !w.beginMovement(r, e, movementWalk) {
 		return false
 	}
@@ -72,6 +76,9 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	} else if e.NextAttack.Before(e.NextMove) {
 		// Crystal Monster.Walk:2128–2131：普通行走推进AttackTime；推挤的移动节流不承担攻击门禁。
 		e.NextAttack = e.NextMove
+	}
+	if binding != nil {
+		w.submitSafeZoneBinding(r, binding, now)
 	}
 	return true
 }

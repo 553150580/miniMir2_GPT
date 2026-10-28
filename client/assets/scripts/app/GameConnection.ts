@@ -19,6 +19,7 @@ const codecs: Record<number, MessageType> = {
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
     20007: pb.MapTravelPrepare, 20008: pb.MapTravelPlan, 20009: pb.MapTravelCommit, 20010: pb.MapTravelState,
+    20011: pb.BindingState,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
     30012: pb.CastStep, 30013: pb.EntityDisplacement,

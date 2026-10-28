@@ -1,0 +1,13 @@
+{
+  "task": "protobuf",
+  "command": [
+    "node",
+    "tools/protocol/verify_client_pb.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:31:49.283068+00:00",
+  "finished_at": "2026-10-28T19:31:49.473368+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/protobuf.txt",
+  "output_sha256": "8d295a106d66e79a84e9e66297bdbd8a848e3ba8cc08b66c3a3079e563192060",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

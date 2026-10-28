@@ -31,6 +31,7 @@ import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachme
 import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity, TravelContext } from './MapTravelModel';
 import { MapViewportPreparation } from './MapViewportPreparation';
+import { roleBindingText } from './RoleBindingModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -590,6 +591,7 @@ export class AppRoot extends Component {
         }
         const quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
+            bindingState: session.bindingState, bindingNotice: session.bindingNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
@@ -630,7 +632,8 @@ export class AppRoot extends Component {
         this.lastInventory = session.inventory;
         for (const panel of ['Inventory','Role']) {
             const selected = this.world.gameplay.items.find((row: any) => row.item_id === this.selectedItem?.itemId);
-            this.text(`UIMgr/Panels/${panel}/Message`, this.selectedItem ? `当前选择：${selected?.name ?? '物品'}` : '点击条目查看详情并选择物品');
+            const selection = this.selectedItem ? `当前选择：${selected?.name ?? '物品'}` : '点击条目查看详情并选择物品';
+            this.text(`UIMgr/Panels/${panel}/Message`, selection + (panel === 'Role' ? '\n' + roleBindingText(session.bindingState, this.world.gameplay.map_catalog) : ''));
         }
         this.text('UIMgr/Panels/Hosting/Message', `剩余托管 ${session.hosting?.remainHostingSec ?? 0} 秒\n在线自动战斗不扣托管时间`);
         const report = session.report;

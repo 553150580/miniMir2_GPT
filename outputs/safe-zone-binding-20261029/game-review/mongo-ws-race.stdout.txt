@@ -1,0 +1,11 @@
+=== RUN   TestMapTravelMongoWS
+2026/10/29 03:45:18 INFO 开发节点就绪 mode=account address=127.0.0.1:57434 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=249b79b4e5a7221f8c7f9b060fef69c4 runtime_ready=false
+2026/10/29 03:45:18 INFO 开发节点就绪 mode=gm address=127.0.0.1:57436 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=35d23c00caaa31d536ce79cbf4326399 runtime_ready=false
+2026/10/29 03:45:18 INFO 开发节点就绪 mode=game address=127.0.0.1:57435 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=03b93ed5372152c61d6f7e4e3438eaa9 runtime_ready=false
+2026/10/29 03:46:11 INFO 开发节点就绪 mode=gm address=127.0.0.1:57436 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=95aeda825a9a49b35beba64d5120e690 runtime_ready=false
+2026/10/29 03:46:11 INFO 开发节点就绪 mode=account address=127.0.0.1:57434 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=f9cd3b43382a70bc57f237392a626435 runtime_ready=false
+2026/10/29 03:46:12 INFO 开发节点就绪 mode=game address=127.0.0.1:57435 database=minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497 instance=07c052fef89ae1f000e24400274fb76c runtime_ready=false
+    map_travel_test.go:218: 通过: 随机库minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、Walk一次可信绑定/同中心幂等/区外保持、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复、完整停止后冷建仍保留永久绑定且21关闭
+--- PASS: TestMapTravelMongoWS (55.60s)
+PASS
+ok  	minimir/internal/integration	60.810s

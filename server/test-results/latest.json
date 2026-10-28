@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "started_at_utc": "2026-10-28T18:42:09.983427+00:00",
-  "finished_at_utc": "2026-10-28T18:46:53.214141+00:00",
+  "started_at_utc": "2026-10-28T19:48:12.645966+00:00",
+  "finished_at_utc": "2026-10-28T19:53:15.268134+00:00",
   "command": [
     "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
     "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
@@ -96,6 +96,66 @@
     {
       "package": "minimir/internal/devconfig",
       "test": "TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/missing_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/null_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/integer_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/text_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/old_rule_new_gate"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/old_rule_unchanged"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/both_closed"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization/visit_only"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingGateDoesNotEnableRandomInitialization"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_town"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_source"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/no_zones"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/blocked_center"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter/personal_zone"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestSafeZoneBindingRequiresSourceTownAndWalkableCenter"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -531,23 +591,27 @@
     },
     {
       "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/未知类型"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
       "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺明确类型"
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图变城镇"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/并行阻挡源"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/不可持久ID"
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/额外个人图"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -559,19 +623,87 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/非法来源摘要"
-    },
-    {
-      "package": "minimir/internal/devconfig",
       "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源高度不符"
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区重复ID"
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区右边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零宽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/并行阻挡源"
     },
     {
       "package": "minimir/internal/devconfig",
       "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区负半径"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复目录ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图变城镇"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区半径溢出"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区上边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/不可持久ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图扩大"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/伪造怪槽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区零ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源宽度不符"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区下边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/长位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/非法来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区重复ID"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -583,39 +715,7 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零宽"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心阻挡"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图扩大"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/长位图"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区零ID"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区下边越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复目录ID"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/伪造怪槽"
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/负高"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -623,7 +723,7 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短来源摘要"
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/空来源代码"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -632,46 +732,6 @@
     {
       "package": "minimir/internal/devconfig",
       "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零ID"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/额外个人图"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/负高"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺位图"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/空来源代码"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区半径溢出"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/未知类型"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口阻挡"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源宽度不符"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区上边越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区右边越界"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -699,39 +759,11 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
-    },
-    {
-      "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺地图ID"
     },
     {
       "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡负坐标"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺怪物槽位"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生越界"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -743,6 +775,22 @@
     },
     {
       "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺怪物槽位"
+    },
+    {
+      "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡重复"
     },
     {
@@ -751,15 +799,27 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/八向连通不得穿角"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生阻挡"
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
     },
     {
       "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/八向连通不得穿角"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -1759,6 +1819,134 @@
     },
     {
       "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingWalkCapturesOneFrozenFactAndLegacyNeedsReceipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/trusted"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/outside"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/disabled"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/pet"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/same_cell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/far_jump"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/snapshot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/relocate"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite/revive"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingOnlyTrustedSameCenterSkipsAndOrdinarySnapshotsNeverWrite"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingUnknownAndQueueFullRetainOriginalJobAndRequest"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingPendingStopsPetAndPreservesReleasedEventsUntilReceipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingSuccessPublishesInventoryBeforeFactWithoutChangingCombatOrEconomicSequence"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/disconnect"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/life_scene"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_slot"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_auth"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/new_room"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/later_binding"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending/bad_receipt"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingLateScopeAndNewOwnerDoNotLoseFactsOrClearAnotherPending"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingDoesNotBorrowSourceSequenceAheadOfExistingKills"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk/source"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk/revision"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSafeZoneBindingCounterExhaustionCannotCreateUnreceiptedWalk"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/first_cell"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/after_prefix"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/inclusive_corner"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts/leave_origin"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestShoulderDashSourceSafeZoneGuardStopsAtNextCellWithoutChangingZeroStepCosts"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSourcePushedCanEnterSafeZoneAndDoesNotPretendThisStageSupportsPushBinding"
+    },
+    {
+      "package": "minimir/internal/game",
       "test": "TestSkillCommitPendingRetainsOriginalPreviewAndReceiptReconciliation"
     },
     {
@@ -1768,14 +1956,6 @@
     {
       "package": "minimir/internal/game",
       "test": "TestSkillPreviewCompletionPreservesConcurrentPermanentPending"
-    },
-    {
-      "package": "minimir/internal/game",
-      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/closed"
-    },
-    {
-      "package": "minimir/internal/game",
-      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/binding"
     },
     {
       "package": "minimir/internal/game",
@@ -1800,6 +1980,14 @@
     {
       "package": "minimir/internal/game",
       "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/baseline"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/closed"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestSkillPreviewStaleBindingNeverDeliversToReplacement/binding"
     },
     {
       "package": "minimir/internal/game",
@@ -2079,6 +2267,42 @@
     },
     {
       "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_receipt"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_kind"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/wrong_role"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/fraction_zone"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/source_hash"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/binding_changed"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/missing_source_receipt"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo/zero_source"
+    },
+    {
+      "package": "minimir/internal/integration",
+      "test": "TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo"
+    },
+    {
+      "package": "minimir/internal/integration",
       "test": "TestSkillAssetEconomyMongoWS"
     },
     {
@@ -2247,6 +2471,214 @@
     },
     {
       "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingUsesFirstMatchingActionCellAndPreservesInitializerOff"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/turn"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/run"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/teleport"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/pushed"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/dash"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/spawn"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/revive"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/join"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_seq"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/zero_revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/future_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/config"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/personal"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/outside"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_missing"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/source_wrong_size"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs/disabled"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestSafeZoneBindingRejectsUnsupportedActionsAndUntrustedInputs"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestLegacyBindingNeverBecomesTrustedFromWalkabilityOrMatchingCenter"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingSourceDocumentRejectsMissingTruncatedOrDuplicatedProof"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/valid"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_kind"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/other_role"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/sequence"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source_after_receipt_revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/command_future"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/revision"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/code"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/digest"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/point"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/source"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/zone_order"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/action"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/old_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/future_rule"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog/unrelated_rule_update"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingProofRequiresTypedMatchingReceiptAndSourceCatalog"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/source_float"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_nonzero"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/code_overflow"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/revision_duplicate"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/point_missing_x"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/rule_float"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/missing_event"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_position"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_economic"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState/extra_unknown"
+    },
+    {
+      "package": "minimir/internal/persistence",
+      "test": "TestBindingReceiptBSONCannotHideMissingIntegerFieldsOrTemporaryState"
+    },
+    {
+      "package": "minimir/internal/persistence",
       "test": "TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying"
     },
     {
@@ -2319,10 +2751,6 @@
     },
     {
       "package": "minimir/internal/townnav",
-      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/scene"
-    },
-    {
-      "package": "minimir/internal/townnav",
       "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/map"
     },
     {
@@ -2336,6 +2764,10 @@
     {
       "package": "minimir/internal/townnav",
       "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/life"
+    },
+    {
+      "package": "minimir/internal/townnav",
+      "test": "TestSceneMapVersionRequestAndLifeChangesCancelWithoutOldWork/scene"
     },
     {
       "package": "minimir/internal/townnav",
@@ -2409,17 +2841,17 @@
   "skipped_tests": [],
   "fixture": {
     "path": "config/development/first-loop.json",
-    "sha256": "9e2db0d78cd7dac7bcb79e2d95651a3e8b387525ce2cff016d0ce883408fbb84",
+    "sha256": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
     "candidate_only": true,
     "runtime_ready": false
   },
   "source_sha256": {
     "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
-    "config/development/first-loop.json": "9e2db0d78cd7dac7bcb79e2d95651a3e8b387525ce2cff016d0ce883408fbb84",
+    "config/development/first-loop.json": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
-    "server/api/generated/minimirv1/world.pb.go": "fc76098ac310825ebb18b9a6b270b02edacf5180824d1aa3b6a6597ba3f831f8",
+    "server/api/generated/minimirv1/world.pb.go": "034bb026ae044cf58b03269a72fe777d0e740983c43d19bea7b335790535ecba",
     "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
     "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
     "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
@@ -2427,8 +2859,8 @@
     "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
     "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
     "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
-    "server/internal/devconfig/binding.go": "6b0d6bd5f2d3b790474c3d8319dc58c10425b4b659877573c601ca9ea627c95a",
-    "server/internal/devconfig/binding_test.go": "d9b39d15b42880ba051b00ae0c3883bc1d009a99aebeb8e8324b6e583b71b79d",
+    "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+    "server/internal/devconfig/binding_test.go": "a8fb5ba9014ff9831039ca22a587e73cbb52a165a10847dcc3047ac446016d4f",
     "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
     "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
     "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
@@ -2439,7 +2871,7 @@
     "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
     "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
     "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
-    "server/internal/devconfig/map_catalog_test.go": "c2f435534c67e161ce0b85a1d9c0afa2c5d3145e33b3e90ef481d2f7d45b1d90",
+    "server/internal/devconfig/map_catalog_test.go": "4a1c133456b13b368eee57f6d900a2e4502b4d7e4ab441f0dd4b592c0074b9c5",
     "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
     "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
     "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
@@ -2449,32 +2881,35 @@
     "server/internal/devconfig/testdata/source-damage-vectors.json.gz": "f74443f754ce915a14c10e72fe2f2e77aef4a1cb3fe7ef9aab4b769ba0563062",
     "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
     "server/internal/devconfig/town_test.go": "10649ad0c21c40d3e496ffac51bb33430903c0c35ba22ee828376b9a20f077b7",
-    "server/internal/domain/model.go": "c97e1d982a24ae7d44b93227433867302042fac62c983e60c908f6dd4a567947",
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
     "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
     "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
     "server/internal/game/combat.go": "b89a0ee798fe63e6871732da5e90bba09aa1b5a9038b7d242d0f722a3e23ef10",
     "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
     "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
     "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
-    "server/internal/game/displacement_skills.go": "9a9885c7454e15d40dd6831f72b4db2308edfe6b2f219d6949e4536da53dab77",
+    "server/internal/game/displacement_skills.go": "72abbf1dd8947bb6ed315357dc5713271a9cd428e1e65bc681601e5c3be8bfae",
     "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
     "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
     "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
     "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
     "server/internal/game/map_context_test.go": "9fe39e297f326b1bb25cf49260385fd42489dfd2fb46cc5f70b17762bdb77b50",
-    "server/internal/game/map_travel.go": "f0f801bb33c7845e8b72dec174bba9d094258fd272f3acfee36037779773a8b3",
+    "server/internal/game/map_travel.go": "f5966fb053af33fb5797255f5cb99807320d7e0bb05fa01015f69e17200d89d4",
     "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
     "server/internal/game/map_travel_test.go": "8ccb3925581a58628790b38e34f6828e6fc88a0bd03d13a968dcd6a0acfb2d4e",
     "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
     "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
-    "server/internal/game/movement.go": "8625366ab978ca9bb0a1f2506c1d35d853e7d853b429b8dad4125a81db658e13",
+    "server/internal/game/movement.go": "caab5cd48c6e5966234db7344099aabd7864586b82b2167da4436dd12a011d03",
     "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
     "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
     "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
     "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
-    "server/internal/game/runtime.go": "8a85b1975b257bf50bbe8572d3021af1e2044acade4ec5419733d39f95d07bd8",
+    "server/internal/game/runtime.go": "aad725b735f4ef895800793bbbc867c6d597658cc96a4234f1352f56f396c7ce",
+    "server/internal/game/safe_zone_binding.go": "fff9e57677cfd61ba3e6ef7051bceb3023faec6f40c653349234485092cd968e",
+    "server/internal/game/safe_zone_binding_test.go": "8af09d020c981af68d1be1b7fbba01b73eb6fe447c54247168cb37fca50a067f",
+    "server/internal/game/safe_zone_dash_test.go": "35263334bd8a7ff37b4f85ff49918bf6e3e35d74d7a22796a86b80379ba8d653",
     "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
     "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
     "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
@@ -2496,28 +2931,31 @@
     "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
     "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
     "server/internal/integration/displacement_skills_test.go": "f92bbf93e8efd12c008300e9eae7fd93b782a3faaee766e55fb118ca3703355e",
-    "server/internal/integration/first_loop_test.go": "154495d1caca6f0874c1f5bec7a0e74181658a2d9683c530599ab96dbca2c9f0",
-    "server/internal/integration/map_travel_test.go": "4e91a888b656f2ef2589bb54e69c77f23a6fb8bc38b17bcb2522a11717d83f33",
+    "server/internal/integration/first_loop_test.go": "019a4fcdf8163924d93d05ccd84eafd229e1a07db4840baa97bf39d5949ffb3d",
+    "server/internal/integration/map_travel_test.go": "4877fd4b828478d65af25222d2ffce6ea90da1f23bf3dc38934a51ea1ad16378",
     "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
     "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
     "server/internal/integration/receipt_migration_test.go": "574235d914dd233d07cc35b519d274b68a9371edb4aecc8fe2711d61cdf2c12c",
+    "server/internal/integration/safe_zone_binding_test.go": "3037049438830bcc4b65403abef94d4ecbb2663928563bf09df1a62bd234e5e1",
     "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
     "server/internal/integration/skills_test.go": "f641464ef1e474ecbeadbf05d621772c1876a2a58c46d2d2c2a67436120a65aa",
     "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
     "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
-    "server/internal/persistence/binding.go": "2c501f1bd32ebdd6d63f3cc56c6a996c0a1977808f3f43f224062ad6f5556d0f",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
     "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
     "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
     "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
     "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
     "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
     "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/safe_zone_binding.go": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38",
+    "server/internal/persistence/safe_zone_binding_test.go": "ae54f497053caee522e42dcf245e3516cb0038d10f5acc9d973395db8e26fc79",
     "server/internal/persistence/skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
     "server/internal/persistence/skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687",
     "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
     "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
-    "server/internal/persistence/store.go": "37a6defb780298960fd84190f511b3ea2271951696a82ac98cd0289db58ca587",
-    "server/internal/protocol/protocol_ids.go": "f99bf750de0ed87210dd0b1b7be781b71c8bc9e0e03ebeaf823b12bebebdb169",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/protocol/protocol_ids.go": "b7e7446005733d8b0a06fa1288001e2aef938d316f2864599971b4285020a052",
     "server/internal/townnav/nav.go": "82a770c2e7260cbeb8fa2d9f2518eeb6e672c2b2db8cd9a5a7fe5ed91c64531b",
     "server/internal/townnav/nav_test.go": "e1f788ca3c358996dfb604d3ada77ce88fc7c4b4a7c61b496c5f0ff5fe5ad416",
     "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
@@ -2526,11 +2964,11 @@
   },
   "source_sha256_after": {
     "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
-    "config/development/first-loop.json": "9e2db0d78cd7dac7bcb79e2d95651a3e8b387525ce2cff016d0ce883408fbb84",
+    "config/development/first-loop.json": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
-    "server/api/generated/minimirv1/world.pb.go": "fc76098ac310825ebb18b9a6b270b02edacf5180824d1aa3b6a6597ba3f831f8",
+    "server/api/generated/minimirv1/world.pb.go": "034bb026ae044cf58b03269a72fe777d0e740983c43d19bea7b335790535ecba",
     "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
     "server/go.mod": "9a8da69cae95bf1c2400949d38b202d0deb8121c25aeb4fc9692789c90f48e91",
     "server/go.sum": "6176462fe0b9684fdb5523ce6e5e2350adbeb6b3112ee8926378ae8dd5ce885e",
@@ -2538,8 +2976,8 @@
     "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
     "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
     "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
-    "server/internal/devconfig/binding.go": "6b0d6bd5f2d3b790474c3d8319dc58c10425b4b659877573c601ca9ea627c95a",
-    "server/internal/devconfig/binding_test.go": "d9b39d15b42880ba051b00ae0c3883bc1d009a99aebeb8e8324b6e583b71b79d",
+    "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+    "server/internal/devconfig/binding_test.go": "a8fb5ba9014ff9831039ca22a587e73cbb52a165a10847dcc3047ac446016d4f",
     "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
     "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
     "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
@@ -2550,7 +2988,7 @@
     "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
     "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
     "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
-    "server/internal/devconfig/map_catalog_test.go": "c2f435534c67e161ce0b85a1d9c0afa2c5d3145e33b3e90ef481d2f7d45b1d90",
+    "server/internal/devconfig/map_catalog_test.go": "4a1c133456b13b368eee57f6d900a2e4502b4d7e4ab441f0dd4b592c0074b9c5",
     "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
     "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
     "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
@@ -2560,32 +2998,35 @@
     "server/internal/devconfig/testdata/source-damage-vectors.json.gz": "f74443f754ce915a14c10e72fe2f2e77aef4a1cb3fe7ef9aab4b769ba0563062",
     "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
     "server/internal/devconfig/town_test.go": "10649ad0c21c40d3e496ffac51bb33430903c0c35ba22ee828376b9a20f077b7",
-    "server/internal/domain/model.go": "c97e1d982a24ae7d44b93227433867302042fac62c983e60c908f6dd4a567947",
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
     "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
     "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
     "server/internal/game/combat.go": "b89a0ee798fe63e6871732da5e90bba09aa1b5a9038b7d242d0f722a3e23ef10",
     "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
     "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
     "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
-    "server/internal/game/displacement_skills.go": "9a9885c7454e15d40dd6831f72b4db2308edfe6b2f219d6949e4536da53dab77",
+    "server/internal/game/displacement_skills.go": "72abbf1dd8947bb6ed315357dc5713271a9cd428e1e65bc681601e5c3be8bfae",
     "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
     "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
     "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
     "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
     "server/internal/game/map_context_test.go": "9fe39e297f326b1bb25cf49260385fd42489dfd2fb46cc5f70b17762bdb77b50",
-    "server/internal/game/map_travel.go": "f0f801bb33c7845e8b72dec174bba9d094258fd272f3acfee36037779773a8b3",
+    "server/internal/game/map_travel.go": "f5966fb053af33fb5797255f5cb99807320d7e0bb05fa01015f69e17200d89d4",
     "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
     "server/internal/game/map_travel_test.go": "8ccb3925581a58628790b38e34f6828e6fc88a0bd03d13a968dcd6a0acfb2d4e",
     "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
     "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
-    "server/internal/game/movement.go": "8625366ab978ca9bb0a1f2506c1d35d853e7d853b429b8dad4125a81db658e13",
+    "server/internal/game/movement.go": "caab5cd48c6e5966234db7344099aabd7864586b82b2167da4436dd12a011d03",
     "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
     "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
     "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
     "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
-    "server/internal/game/runtime.go": "8a85b1975b257bf50bbe8572d3021af1e2044acade4ec5419733d39f95d07bd8",
+    "server/internal/game/runtime.go": "aad725b735f4ef895800793bbbc867c6d597658cc96a4234f1352f56f396c7ce",
+    "server/internal/game/safe_zone_binding.go": "fff9e57677cfd61ba3e6ef7051bceb3023faec6f40c653349234485092cd968e",
+    "server/internal/game/safe_zone_binding_test.go": "8af09d020c981af68d1be1b7fbba01b73eb6fe447c54247168cb37fca50a067f",
+    "server/internal/game/safe_zone_dash_test.go": "35263334bd8a7ff37b4f85ff49918bf6e3e35d74d7a22796a86b80379ba8d653",
     "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
     "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
     "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
@@ -2607,35 +3048,38 @@
     "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
     "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
     "server/internal/integration/displacement_skills_test.go": "f92bbf93e8efd12c008300e9eae7fd93b782a3faaee766e55fb118ca3703355e",
-    "server/internal/integration/first_loop_test.go": "154495d1caca6f0874c1f5bec7a0e74181658a2d9683c530599ab96dbca2c9f0",
-    "server/internal/integration/map_travel_test.go": "4e91a888b656f2ef2589bb54e69c77f23a6fb8bc38b17bcb2522a11717d83f33",
+    "server/internal/integration/first_loop_test.go": "019a4fcdf8163924d93d05ccd84eafd229e1a07db4840baa97bf39d5949ffb3d",
+    "server/internal/integration/map_travel_test.go": "4877fd4b828478d65af25222d2ffce6ea90da1f23bf3dc38934a51ea1ad16378",
     "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
     "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
     "server/internal/integration/receipt_migration_test.go": "574235d914dd233d07cc35b519d274b68a9371edb4aecc8fe2711d61cdf2c12c",
+    "server/internal/integration/safe_zone_binding_test.go": "3037049438830bcc4b65403abef94d4ecbb2663928563bf09df1a62bd234e5e1",
     "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
     "server/internal/integration/skills_test.go": "f641464ef1e474ecbeadbf05d621772c1876a2a58c46d2d2c2a67436120a65aa",
     "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
     "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
-    "server/internal/persistence/binding.go": "2c501f1bd32ebdd6d63f3cc56c6a996c0a1977808f3f43f224062ad6f5556d0f",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
     "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
     "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
     "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
     "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
     "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
     "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/safe_zone_binding.go": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38",
+    "server/internal/persistence/safe_zone_binding_test.go": "ae54f497053caee522e42dcf245e3516cb0038d10f5acc9d973395db8e26fc79",
     "server/internal/persistence/skill_assets.go": "5bee490ee0ae2d3046387218e9148f5db1a10cbadfaa00b745307341238f1746",
     "server/internal/persistence/skill_assets_test.go": "29cf4b9c6611c4babe3083bf2c52a2b03e61be60415b19f0937b55b054923687",
     "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
     "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
-    "server/internal/persistence/store.go": "37a6defb780298960fd84190f511b3ea2271951696a82ac98cd0289db58ca587",
-    "server/internal/protocol/protocol_ids.go": "f99bf750de0ed87210dd0b1b7be781b71c8bc9e0e03ebeaf823b12bebebdb169",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/protocol/protocol_ids.go": "b7e7446005733d8b0a06fa1288001e2aef938d316f2864599971b4285020a052",
     "server/internal/townnav/nav.go": "82a770c2e7260cbeb8fa2d9f2518eeb6e672c2b2db8cd9a5a7fe5ed91c64531b",
     "server/internal/townnav/nav_test.go": "e1f788ca3c358996dfb604d3ada77ce88fc7c4b4a7c61b496c5f0ff5fe5ad416",
     "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
     "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
     "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
   },
-  "events_sha256": "6426b56034ca96eff0fee40c68d227d08a87367d2244e077a6ecfc0cd3d76f41",
+  "events_sha256": "0b08ae79eb9c176a8f9345ce2d2849ec9205ae106ac7fe4b97d4c42169876a24",
   "production_ready": false,
   "failed_tests": [],
   "package_timeout_seconds": 600,

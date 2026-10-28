@@ -1,0 +1,35 @@
+{
+  "status": "修正后的纯专项已执行；最终全包以root最终full记录为准",
+  "earlier_checks": {
+    "report": "report-before-source-revision-invariant.json",
+    "note": "此前persistence整包/race与真实Mongo记录均为来源序号不变量修正前，原始日志保留；没有将其冒称修正后全包证据"
+  },
+  "correction": "op.SourceSeq<=op.Revision；纯fixture改为SourceSeq8/EconomicSeq4/Revision15，ExpectedRevision从Role派生；新增不可达证明反例",
+  "check": {
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+      "go",
+      "test",
+      "-race",
+      "./internal/persistence",
+      "-run",
+      "^Test(SafeZoneBinding|LegacyBinding|BindingSourceDocument|BindingProof|BindingReceipt)",
+      "-count=1",
+      "-v"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.256,
+    "log": "source-revision-invariant-pure-race.txt"
+  },
+  "input_sha256": {
+    "server/internal/persistence/safe_zone_binding.go": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38",
+    "server/internal/persistence/safe_zone_binding_test.go": "ae54f497053caee522e42dcf245e3516cb0038d10f5acc9d973395db8e26fc79"
+  },
+  "inputs_stable": true,
+  "scope": "本次只运行有变化的persistence纯专项；未重跑Mongo或全包；21文档仍是只读研究计划"
+}

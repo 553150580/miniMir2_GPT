@@ -10,7 +10,10 @@ import { acceptsSkillModeState, SkillModeState } from './SkillModel';
 import type { DisplacementEvent } from './EntityDisplacement';
 import { MapTravelModel, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
+import { RoleBindingModel } from './RoleBindingModel';
+import type { RoleBindingObservation } from './RoleBindingModel';
 const assembler = new BaselineAssembler();
+const bindingModel = new RoleBindingModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
 let confirmedCommand = Long.UONE;
 let localOperation: { id: string; connection: number; binding: string; role: string; scene: string; baseline: string; next: Long } | null = null;
@@ -28,6 +31,8 @@ export const session = {
     entryTravelId: '',
     travel: new MapTravelModel(),
     travelState: null as any,
+    bindingState: null as RoleBindingObservation | null,
+    bindingNotice: null as RoleBindingObservation | null,
     baseline: null as any,
     inventory: null as any,
     wallet: null as any,
@@ -90,6 +95,13 @@ session.connection.subscribe((packet: Packet) => {
             }
             break;
         case 40003: session.inventory = packet.value; break;
+        case 20011: {
+            const identity = currentEntryIdentity();
+            if (session.role && identity && isCurrentEntry(identity) && bindingModel.accept(packet.value, identity, packet.binding)) {
+                session.bindingState = bindingModel.state; session.bindingNotice = bindingModel.notice;
+            }
+            break;
+        }
         case 40004: session.wallet = packet.value; break;
         case 30005: session.hosting = packet.value; break;
         case 30010: acceptModes(packet.value); break;
@@ -124,7 +136,7 @@ session.connection.subscribe((packet: Packet) => {
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
@@ -143,6 +155,7 @@ function acceptEntry(packet: Packet): void {
         if (travelling) session.travel.attach(identity); else session.travel.reset();
         assembler.reset(); session.entry = value; session.baseline = null; session.ready = false; quiescingReady = null;
         session.entryBinding = packet.binding.toString(); session.entryConnection = session.connection.generation; session.entryRole = identity.role; session.entryTravelId = travelling ? identity.travelId : '';
+        bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
     } catch (error) { session.ready = false; session.lastError = error instanceof Error ? error.message : String(error); }
@@ -174,6 +187,8 @@ export function roleIdentity(): string {
 
 export function operation(): any {
     if (!session.ready) throw new Error('场景基线尚未确认');
+    // 绑定只观察永久修订；新经济操作仍等完整Inventory，不能拿自动SourceSeq或绑定修订改写旧Pending。
+    if (session.bindingState && (!session.inventory || BigInt(session.bindingState.roleRevision) > BigInt(session.inventory.revision.toString()))) throw new Error('角色资料正在同步，请稍后操作');
     const result = { opId: newOperationId(), commandSeq: session.command,
         expectedRevision: session.inventory?.revision ?? Long.UZERO,
         expectedRuleVersion: session.entry?.resourceVersion ?? Long.UONE };

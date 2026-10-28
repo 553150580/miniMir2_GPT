@@ -144,3 +144,21 @@ test('无法到达消息按原导航身份去重，切角清理去重状态，�
     assert.equal(log.messages.at(-1).message,'当前无法到达该位置');assert.equal(log.messages.filter(value=>value.title==='导航').length,1);
     log.observe(state({roleIdentity:'1:role-b'}));assert.equal(log.navigationUnreachable('role:binding:scene:revision:input'),true);
 });
+
+function bindingNotice(changes={}){return{role:'1:role-a',sceneEpoch:'1',roleRevision:'9007199254740993',sourceSeq:'9007199254740993',binding:{mapId:'2',center:{x:650,y:631}},cause:2,safeZoneId:'106',trusted:true,...changes};}
+test('绑定可信提交只在Ready后通知一次，初始/健康重入快照与历史无证明坐标不刷已确认消息',()=>{
+ const log=new SystemMessageLog(),notice=bindingNotice(),gameplay={map_catalog:[{id:'2',name:'比奇省'}]};log.observe(state({ready:false,bindingState:notice,bindingNotice:notice,gameplay}));assert.equal(log.messages.length,0);
+ log.observe(state({bindingState:notice,bindingNotice:notice,gameplay}));for(let n=0;n<20;n++)log.observe(state({bindingState:notice,bindingNotice:notice,gameplay}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,1);assert.equal(log.messages.at(-1).message,'已绑定至比奇省 (650,631)');
+ log.observe(state({entry:{playerHandle:1,sceneEpoch:'2',baselineId:'3'},bindingState:{...notice,cause:1},bindingNotice:null,gameplay}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,1);
+ const fresh=new SystemMessageLog();fresh.observe(state({bindingState:{...notice,cause:1},bindingNotice:null,gameplay}));fresh.observe(state({bindingState:{...notice,trusted:false,sourceSeq:'0'},bindingNotice:{...notice,trusted:false,sourceSeq:'0'},gameplay}));assert.equal(fresh.messages.some(m=>m.title==='绑定已确认'),false);
+});
+test('同中心新的receipt不刷提示，真正换中心再返回可再次提示，旧角色receipt不串到新角色',()=>{
+ const log=new SystemMessageLog(),first=bindingNotice();log.observe(state({bindingNotice:first}));log.observe(state({bindingNotice:{...first,sourceSeq:'9007199254740994'}}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,1);
+ log.observe(state({bindingNotice:{...first,sourceSeq:'9007199254740995',binding:{mapId:'18446744073709551615',center:{x:330,y:330}}}}));log.observe(state({bindingNotice:{...first,sourceSeq:'9007199254740996'}}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,3);
+ log.observe(state({roleIdentity:'1:role-b',bindingNotice:first}));assert.equal(log.messages.some(m=>m.title==='绑定已确认'),false);log.observe(state({roleIdentity:'1:role-b',bindingNotice:{...first,role:'1:role-b'}}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,1);
+});
+
+test('外部传入同角色旧scene的可信notice也不能在当前entry误报或污染当前receipt去重',()=>{
+ const log=new SystemMessageLog(),old=bindingNotice({sceneEpoch:'1'});log.observe(state({entry:{playerHandle:1,sceneEpoch:'2',baselineId:'2'},bindingNotice:old}));assert.equal(log.messages.some(m=>m.title==='绑定已确认'),false);
+ log.observe(state({entry:{playerHandle:1,sceneEpoch:'2',baselineId:'2'},bindingNotice:{...old,sceneEpoch:'2'}}));assert.equal(log.messages.filter(m=>m.title==='绑定已确认').length,1);
+});

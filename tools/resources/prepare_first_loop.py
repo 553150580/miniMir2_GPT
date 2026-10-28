@@ -438,10 +438,13 @@ def source_map_catalog(tables,profile):
     ids=profile.get('map_catalog_ids');binding=profile.get('binding');streaming=profile.get('source_map_streaming')
     if not isinstance(ids,list) or any(type(id) is not int or id<=0 for id in ids) or len(set(ids))!=len(ids) or profile['map_id'] in ids:
         raise ValueError('额外地图目录必须是唯一显式ID且不重复个人地图')
-    if not isinstance(binding,dict) or set(binding)!={'enabled','start_points'} or type(binding['enabled']) is not bool or not isinstance(binding['start_points'],list):
-        raise ValueError('rule12必须显式提供绑定合同，不能默认启用或补出生点')
-    if binding!={'enabled':False,'start_points':[]}:
-        raise ValueError('来源城镇与安全区阶段绑定尚未完成业务验收，运行入口须关闭')
+    binding_fields={'enabled','start_points'}|({'safe_zone_enabled'} if profile['rule_version']>=14 else set())
+    if not isinstance(binding,dict) or set(binding)!=binding_fields or type(binding.get('enabled')) is not bool or not isinstance(binding.get('start_points'),list):
+        raise ValueError('绑定合同必须显式且完整，不能默认启用或补出生点')
+    if binding['enabled'] or binding['start_points']:
+        raise ValueError('来源初始新生池尚未认证，初始化须关闭且起点为空')
+    if profile['rule_version']>=14 and type(binding['safe_zone_enabled']) is not bool:
+        raise ValueError('rule14安全区绑定开关必须为显式布尔值')
     if not isinstance(streaming,dict) or set(streaming)!={'load_concurrency','cache_capacity'} or any(type(n) is not int or n<=0 for n in streaming.values()):
         raise ValueError('来源地图加载并发与缓存容量须由唯一Excel显式维护')
     records=[];evidence=[]
@@ -532,6 +535,8 @@ def source_map_catalog(tables,profile):
             'safe_zones':zones,'source':{'code':geometry['source_map_code'],'sha256':collision['source_hash'],'width':definition['width_cells'],'height':definition['height_cells']}})
         evidence.append({'map_id':str(id),'resource_key':key,'manifest_sha256':config.sha256(asset),'source_sha256':collision['source_hash'],
                          'door_policy':'closed_development_candidate','full_source_map':True,'initial_binding_pool_verified':False})
+    if profile['rule_version']>=14 and binding['safe_zone_enabled'] and not records:
+        raise ValueError('安全区绑定须先接入来源城镇与已核安全区')
     return records,evidence
 
 def town_runtime_rules(profile,maps):

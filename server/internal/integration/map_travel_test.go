@@ -31,28 +31,32 @@ func TestMapTravelMongoWS(t *testing.T) {
 	}
 	cfg.Database = "minimir_dev_game_test_town_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx := context.Background()
 	inspection, err := persistence.Open(ctx, cfg)
 	must(t, err)
-	var group sync.WaitGroup
-	for _, mode := range []string{"account", "game", "gm"} {
-		group.Go(func() {
-			if runErr := bootstrap.Run(ctx, cfg, mode); runErr != nil && ctx.Err() == nil {
-				t.Errorf("%s节点: %v", mode, runErr)
-			}
-		})
+	launch := func() func() {
+		runCtx, cancel := context.WithCancel(context.Background())
+		var group sync.WaitGroup
+		for _, mode := range []string{"account", "game", "gm"} {
+			group.Go(func() {
+				if runErr := bootstrap.Run(runCtx, cfg, mode); runErr != nil && runCtx.Err() == nil {
+					t.Errorf("%s节点: %v", mode, runErr)
+				}
+			})
+		}
+		for _, endpoint := range []string{cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress} {
+			healthy(t, endpoint)
+		}
+		return func() { cancel(); group.Wait() }
 	}
+	stop := launch()
 	t.Cleanup(func() {
-		cancel()
-		group.Wait()
+		stop()
 		cleanup, stop := context.WithTimeout(context.Background(), 10*time.Second)
 		defer stop()
 		must(t, inspection.DB.Drop(cleanup))
 		inspection.Close(cleanup)
 	})
-	for _, endpoint := range []string{cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress} {
-		healthy(t, endpoint)
-	}
 	accountURL := "http://" + cfg.AccountAddress + "/rpc"
 	login := &pb.LoginResult{}
 	rpc(t, accountURL, "", p.MsgC2SLocalRegister, &pb.LocalLoginRequest{Account: "town_" + domain.ID()[:10], Password: "test_123456"}, login, 0)
@@ -64,6 +68,9 @@ func TestMapTravelMongoWS(t *testing.T) {
 	must(t, err)
 	c := join(t, cfg.GameAddress, issue(t, accountURL, login.AccountToken, role.Key))
 	defer func() { c.close() }()
+	if c.roleBinding == nil || c.roleBinding.Binding != nil || c.roleBinding.Trusted || c.roleBinding.SourceSeq != 0 || c.roleBinding.Cause != 1 {
+		t.Fatal("正常新角色未收到明确尚未绑定快照，或随机初始化被隐式开启", c.roleBinding)
+	}
 	c.auto(false, 1)
 	claim := c.asset(p.MsgC2SClaimHostingTime, &pb.ClaimHostingTimeRequest{Operation: c.operation()})
 	if claim.ErrorCode != 0 {
@@ -96,6 +103,9 @@ func TestMapTravelMongoWS(t *testing.T) {
 	if travelSafeZone(t, c.scene) != 0 {
 		t.Fatal("开发入口被误当来源安全区中心")
 	}
+	if c.roleBinding == nil || c.roleBinding.SceneEpoch != c.entry.SceneEpoch || c.roleBinding.Binding != nil || c.roleBinding.Trusted {
+		t.Fatal("健康进城未同步新scene绑定快照，或入城被当作Walk绑定", c.roleBinding)
+	}
 	travelAcknowledge(c, true)
 	oldMove := c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: initialScene, Direction: 2})
 	travelExpectError(c, p.MsgC2SMoveIntent, oldMove, p.CodeInvalidArgument)
@@ -124,6 +134,37 @@ func TestMapTravelMongoWS(t *testing.T) {
 	if travelSafeZone(t, c.scene) != 106 {
 		t.Fatal("正常逐tick走到来源安全区中心，未同步首匹配ID106")
 	}
+	if len(c.bindingCommits) != 1 {
+		t.Fatalf("首次到访应仅产生一次绑定提交，实际%d", len(c.bindingCommits))
+	}
+	committed := proto.Clone(c.bindingCommits[0]).(*pb.BindingState)
+	if !committed.Trusted || committed.Cause != 2 || committed.SafeZoneId != 106 || committed.Binding.GetMapId() != 2 || !proto.Equal(committed.Binding.GetCenter(), target) || committed.SceneEpoch != c.entry.SceneEpoch || domain.Hex(committed.Role.GetRoleId()) != roleID || committed.Role.GetOriginServerId() != 1 {
+		t.Fatal("合法来源Walk没有产生正确的已提交中心/角色/scene证明", committed)
+	}
+	boundRole, err := inspection.Role(ctx, roleID)
+	must(t, err)
+	if boundRole.Binding == nil || *boundRole.Binding != (domain.RoleBinding{MapID: 2, X: 650, Y: 631}) || boundRole.BindingSourceSeq != boundRole.SourceSeq || boundRole.SourceSeq != inTown.SourceSeq+1 || boundRole.Revision != inTown.Revision+1 || boundRole.EconomicSeq != inTown.EconomicSeq || committed.SourceSeq != uint64(boundRole.BindingSourceSeq) || committed.RoleRevision != uint64(boundRole.Revision) {
+		t.Fatal("绑定未独立原子推进一次SourceSeq/revision，或动了EconomicSeq", boundRole, committed)
+	}
+	// 在同安全区继续成功Walk，随后真实走出区外再返回，不重新提交同一可信中心。
+	for _, next := range []*pb.GridPoint{travelNearbyGround(t, townMap, c.scene, target), {X: 633, Y: 613}, target} {
+		c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, Destination: next})
+		travelUntilWithin(c, 18*time.Second, func(f wire.Frame) bool {
+			return f.ID == p.MsgS2CSceneBaseline && proto.Equal(c.player().Position, next) && c.scene.NavigationState.GetStatus() == 2
+		})
+		if next.X == 633 && travelSafeZone(t, c.scene) != 0 {
+			t.Fatal("区外落点错误")
+		}
+	}
+	if len(c.bindingCommits) != 1 {
+		t.Fatal("可信同中心或区外Walk重复提交绑定")
+	}
+	afterWalks, err := inspection.Role(ctx, roleID)
+	must(t, err)
+	travelAssertEconomy(t, boundRole, afterWalks, "同中心及区外Walk")
+	if afterWalks.BindingSourceSeq != boundRole.BindingSourceSeq || afterWalks.Revision != boundRole.Revision {
+		t.Fatal("无新绑定事实仍推进永久版本")
+	}
 	standing := proto.Clone(c.player()).(*pb.EntityState)
 	townScene, townBinding := c.entry.SceneEpoch, c.binding
 	c.close()
@@ -131,11 +172,12 @@ func TestMapTravelMongoWS(t *testing.T) {
 	time.Sleep(11 * time.Second)
 	offline, err := inspection.Role(ctx, roleID)
 	must(t, err)
-	travelAssertEconomy(t, inTown, offline, "Town离线")
+	travelAssertEconomy(t, boundRole, offline, "Town离线")
 	c = join(t, cfg.GameAddress, issue(t, accountURL, login.AccountToken, role.Key))
 	if c.entry.RoomId != 2 || c.entry.SceneKind != 2 || c.entry.SceneEpoch != townScene || c.binding <= townBinding || c.player().Life != standing.Life || c.player().Hp != standing.Hp || c.player().Mp != standing.Mp || !proto.Equal(c.player().Position, standing.Position) || travelCount(c.scene, 3) != 0 {
 		t.Fatalf("新ticket健康重入重建了Town现场: before=%v entry=%v player=%v", standing, c.entry, c.player())
 	}
+	travelAssertBindingSnapshot(t, c, committed)
 	travelToBaseline(c, 2, 1)
 	returnedMonster, returnedDrop := travelEntity(c.scene, 3), travelEntity(c.scene, 4)
 	if c.entry.SceneKind != 1 || !proto.Equal(c.player().Position, personalPlayer.Position) || c.player().Life != personalPlayer.Life {
@@ -155,7 +197,8 @@ func TestMapTravelMongoWS(t *testing.T) {
 	})
 	finalRole, err := inspection.Role(ctx, roleID)
 	must(t, err)
-	travelAssertEconomy(t, inTown, finalRole, "健康往返")
+	travelAssertEconomy(t, boundRole, finalRole, "健康往返")
+	travelAssertBindingSnapshot(t, c, committed)
 	var document bson.M
 	must(t, inspection.DB.Collection("roles").FindOne(ctx, bson.M{"_id": roleID}).Decode(&document))
 	for _, field := range []string{"hp", "mp", "position", "monsters", "cooldowns", "pet", "ground_items", "saved_personal", "town_navigation"} {
@@ -163,7 +206,24 @@ func TestMapTravelMongoWS(t *testing.T) {
 			t.Fatalf("临时现场%s被持久化", field)
 		}
 	}
-	t.Logf("通过: 随机库%s，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复", cfg.Database)
+	// 明确停止并等待旧执行退出后重建；只恢复永久绑定，不把旧Town脚点持久化。
+	c.close()
+	stop()
+	stop = launch()
+	c = join(t, cfg.GameAddress, issue(t, accountURL, login.AccountToken, role.Key))
+	if c.entry.RoomId != cfg.Fixture.Map.ID || c.entry.SceneKind != devconfig.SceneKindPersonal || c.player().Position.X != int32(cfg.Fixture.Map.PlayerSpawn.X) || c.player().Position.Y != int32(cfg.Fixture.Map.PlayerSpawn.Y) {
+		t.Fatal("冷重建未按个人初始世界创建，或把永久绑定当作瞬移入口", c.entry, c.player())
+	}
+	travelAssertBindingSnapshot(t, c, committed)
+	t.Logf("通过: 随机库%s，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、Walk一次可信绑定/同中心幂等/区外保持、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复、完整停止后冷建仍保留永久绑定且21关闭", cfg.Database)
+}
+
+func travelAssertBindingSnapshot(t *testing.T, c *client, committed *pb.BindingState) {
+	t.Helper()
+	state := c.roleBinding
+	if state == nil || !state.Trusted || state.Cause != 1 || state.SceneEpoch != c.entry.SceneEpoch || state.SourceSeq != committed.SourceSeq || state.SafeZoneId != committed.SafeZoneId || !proto.Equal(state.Role, committed.Role) || !proto.Equal(state.Binding, committed.Binding) || len(c.bindingCommits) != 0 {
+		t.Fatal("健康/冷入场或旅行未静默恢复原绑定证明", state, committed)
+	}
 }
 
 func travelEntity(scene *pb.SceneBaselineChunk, kind uint32) *pb.EntityState {

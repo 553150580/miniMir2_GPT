@@ -6462,6 +6462,619 @@ $root.minimir = (function() {
             return SyncReady;
         })();
 
+        v1.RoleBindingPoint = (function() {
+
+            /**
+             * Properties of a RoleBindingPoint.
+             * @typedef {Object} minimir.v1.RoleBindingPoint.$Properties
+             * @property {Long|null} [map_id] RoleBindingPoint map_id
+             * @property {minimir.v1.GridPoint.$Properties|null} [center] RoleBindingPoint center
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a RoleBindingPoint.
+             * @memberof minimir.v1
+             * @interface IRoleBindingPoint
+             * @augments minimir.v1.RoleBindingPoint.$Properties
+             * @deprecated Use minimir.v1.RoleBindingPoint.$Properties instead.
+             */
+
+            /**
+             * Shape of a RoleBindingPoint.
+             * @typedef {minimir.v1.RoleBindingPoint.$Properties} minimir.v1.RoleBindingPoint.$Shape
+             */
+
+            /**
+             * Constructs a new RoleBindingPoint.
+             * @memberof minimir.v1
+             * @classdesc Represents a RoleBindingPoint.
+             * @constructor
+             * @param {minimir.v1.RoleBindingPoint.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var RoleBindingPoint = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * RoleBindingPoint map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.RoleBindingPoint
+             * @instance
+             */
+            RoleBindingPoint.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * RoleBindingPoint center.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} center
+             * @memberof minimir.v1.RoleBindingPoint
+             * @instance
+             */
+            RoleBindingPoint.prototype.center = null;
+
+            /**
+             * Creates a new RoleBindingPoint instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {minimir.v1.RoleBindingPoint.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.RoleBindingPoint} RoleBindingPoint instance
+             * @type {{
+             *   (properties: minimir.v1.RoleBindingPoint.$Shape): minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape;
+             *   (properties?: minimir.v1.RoleBindingPoint.$Properties): minimir.v1.RoleBindingPoint;
+             * }}
+             */
+            RoleBindingPoint.create = function(properties) {
+                return new RoleBindingPoint(properties);
+            };
+
+            /**
+             * Encodes the specified RoleBindingPoint message. Does not implicitly {@link minimir.v1.RoleBindingPoint.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {minimir.v1.RoleBindingPoint.$Properties} message RoleBindingPoint message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleBindingPoint.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.map_id);
+                if (message.center != null && $Object.hasOwnProperty.call(message, "center"))
+                    $root.minimir.v1.GridPoint.encode(message.center, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified RoleBindingPoint message, length delimited. Does not implicitly {@link minimir.v1.RoleBindingPoint.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {minimir.v1.RoleBindingPoint.$Properties} message RoleBindingPoint message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            RoleBindingPoint.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a RoleBindingPoint message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape} RoleBindingPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleBindingPoint.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.RoleBindingPoint();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.center = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.center);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a RoleBindingPoint message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.RoleBindingPoint & minimir.v1.RoleBindingPoint.$Shape} RoleBindingPoint
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            RoleBindingPoint.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a RoleBindingPoint message.
+             * @function verify
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            RoleBindingPoint.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.center != null && $Object.hasOwnProperty.call(message, "center")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.center, _depth + 1);
+                    if (error)
+                        return "center." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for RoleBindingPoint
+             * @function getTypeUrl
+             * @memberof minimir.v1.RoleBindingPoint
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            RoleBindingPoint.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.RoleBindingPoint";
+            };
+
+            return RoleBindingPoint;
+        })();
+
+        v1.BindingState = (function() {
+
+            /**
+             * Properties of a BindingState.
+             * @typedef {Object} minimir.v1.BindingState.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] BindingState role
+             * @property {Long|null} [scene_epoch] BindingState scene_epoch
+             * @property {Long|null} [role_revision] BindingState role_revision
+             * @property {Long|null} [source_seq] BindingState source_seq
+             * @property {minimir.v1.RoleBindingPoint.$Properties|null} [binding] BindingState binding
+             * @property {number|null} [cause] BindingState cause
+             * @property {Long|null} [safe_zone_id] BindingState safe_zone_id
+             * @property {boolean|null} [trusted] BindingState trusted
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a BindingState.
+             * @memberof minimir.v1
+             * @interface IBindingState
+             * @augments minimir.v1.BindingState.$Properties
+             * @deprecated Use minimir.v1.BindingState.$Properties instead.
+             */
+
+            /**
+             * Shape of a BindingState.
+             * @typedef {minimir.v1.BindingState.$Properties} minimir.v1.BindingState.$Shape
+             */
+
+            /**
+             * Constructs a new BindingState.
+             * @memberof minimir.v1
+             * @classdesc Represents a BindingState.
+             * @constructor
+             * @param {minimir.v1.BindingState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var BindingState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * BindingState role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.role = null;
+
+            /**
+             * BindingState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BindingState role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BindingState source_seq.
+             * @member {Long} source_seq
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.source_seq = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BindingState binding.
+             * @member {minimir.v1.RoleBindingPoint.$Properties|null|undefined} binding
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.binding = null;
+
+            /**
+             * BindingState cause.
+             * @member {number} cause
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.cause = 0;
+
+            /**
+             * BindingState safe_zone_id.
+             * @member {Long} safe_zone_id
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.safe_zone_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * BindingState trusted.
+             * @member {boolean} trusted
+             * @memberof minimir.v1.BindingState
+             * @instance
+             */
+            BindingState.prototype.trusted = false;
+
+            /**
+             * Creates a new BindingState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {minimir.v1.BindingState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.BindingState} BindingState instance
+             * @type {{
+             *   (properties: minimir.v1.BindingState.$Shape): minimir.v1.BindingState & minimir.v1.BindingState.$Shape;
+             *   (properties?: minimir.v1.BindingState.$Properties): minimir.v1.BindingState;
+             * }}
+             */
+            BindingState.create = function(properties) {
+                return new BindingState(properties);
+            };
+
+            /**
+             * Encodes the specified BindingState message. Does not implicitly {@link minimir.v1.BindingState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {minimir.v1.BindingState.$Properties} message BindingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BindingState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.role_revision);
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq") && (typeof message.source_seq === "object" ? message.source_seq.low || message.source_seq.high : message.source_seq !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.source_seq);
+                if (message.binding != null && $Object.hasOwnProperty.call(message, "binding"))
+                    $root.minimir.v1.RoleBindingPoint.encode(message.binding, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.cause != null && $Object.hasOwnProperty.call(message, "cause") && message.cause !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.cause);
+                if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id") && (typeof message.safe_zone_id === "object" ? message.safe_zone_id.low || message.safe_zone_id.high : message.safe_zone_id !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.safe_zone_id);
+                if (message.trusted != null && $Object.hasOwnProperty.call(message, "trusted") && message.trusted !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.trusted);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified BindingState message, length delimited. Does not implicitly {@link minimir.v1.BindingState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {minimir.v1.BindingState.$Properties} message BindingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            BindingState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a BindingState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.BindingState & minimir.v1.BindingState.$Shape} BindingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BindingState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.BindingState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.source_seq = value;
+                            else
+                                delete message.source_seq;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.binding = $root.minimir.v1.RoleBindingPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.binding);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.cause = value;
+                            else
+                                delete message.cause;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.safe_zone_id = value;
+                            else
+                                delete message.safe_zone_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.trusted = value;
+                            else
+                                delete message.trusted;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a BindingState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.BindingState & minimir.v1.BindingState.$Shape} BindingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            BindingState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a BindingState message.
+             * @function verify
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            BindingState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq"))
+                    if (!$util.isInteger(message.source_seq) && !(message.source_seq && $util.isInteger(message.source_seq.low) && $util.isInteger(message.source_seq.high)))
+                        return "source_seq: integer|Long expected";
+                if (message.binding != null && $Object.hasOwnProperty.call(message, "binding")) {
+                    var error = $root.minimir.v1.RoleBindingPoint.verify(message.binding, _depth + 1);
+                    if (error)
+                        return "binding." + error;
+                }
+                if (message.cause != null && $Object.hasOwnProperty.call(message, "cause"))
+                    if (!$util.isInteger(message.cause))
+                        return "cause: integer expected";
+                if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id"))
+                    if (!$util.isInteger(message.safe_zone_id) && !(message.safe_zone_id && $util.isInteger(message.safe_zone_id.low) && $util.isInteger(message.safe_zone_id.high)))
+                        return "safe_zone_id: integer|Long expected";
+                if (message.trusted != null && $Object.hasOwnProperty.call(message, "trusted"))
+                    if (typeof message.trusted !== "boolean")
+                        return "trusted: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for BindingState
+             * @function getTypeUrl
+             * @memberof minimir.v1.BindingState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            BindingState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.BindingState";
+            };
+
+            return BindingState;
+        })();
+
         v1.EntityState = (function() {
 
             /**

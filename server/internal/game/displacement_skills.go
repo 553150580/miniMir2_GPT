@@ -98,6 +98,10 @@ func (w *worker) repulsion(r *room, cast pendingCast, now time.Time) {
 }
 
 func (w *worker) shoulderDash(r *room, cast pendingCast, now time.Time) {
+	mapTemplate, known := w.currentMap(r)
+	if !known {
+		return
+	}
 	r.Player.ActionReadyAt = now.Add(time.Duration(cast.Skill.ActionMS) * time.Millisecond)
 	origin := r.Player.Pos
 	rules := cast.Skill.Displacement
@@ -107,6 +111,10 @@ func (w *worker) shoulderDash(r *room, cast pendingCast, now time.Time) {
 	for i := 0; i < length && !r.Isolated; i++ {
 		next := stepPoint(r.Player.Pos, cast.Direction, 1)
 		if !w.walkable(r, next) {
+			break
+		}
+		// Crystal HumanObject.ShoulderDash:5002只检查下一格安全区；不禁止普通walk/pushed。
+		if _, inside := mapTemplate.SafeZoneAt(next); inside {
 			break
 		}
 		if i == 0 {

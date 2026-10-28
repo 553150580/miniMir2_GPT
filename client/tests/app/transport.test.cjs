@@ -51,6 +51,14 @@ test('旅行四消息与导航失败终态保留完整64位身份，Plan过期�
     const state=decodePacket(encodePacket(20010,0,large,{travelId:id,fromSceneEpoch:large,sceneEpoch:Long.MAX_UNSIGNED_VALUE,phase:2,targetMapId:Long.MAX_UNSIGNED_VALUE})).value;assert.equal(state.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(state.fromSceneEpoch.toString(),large.toString());
     const navigation=decodePacket(encodePacket(5,0,large,{navigationState:{inputSequence:9,destination:{x:633,y:613},status:5,revision:Long.MAX_UNSIGNED_VALUE}})).value.navigationState;assert.equal(navigation.status,5);assert.equal(navigation.revision.toString(),Long.MAX_UNSIGNED_VALUE.toString());
 });
+
+test('绑定纯S2C保存完整RoleKey、receipt SourceSeq和地图中心，nil/legacy/trusted状态不混淆',()=>{
+ const large=Long.fromString('9007199254740993',true),role={originServerId:Long.MAX_UNSIGNED_VALUE,roleId:new Uint8Array(16).fill(9)};
+ const trusted=decodePacket(encodePacket(20011,0,large,{role,sceneEpoch:Long.MAX_UNSIGNED_VALUE,roleRevision:large,sourceSeq:large,binding:{mapId:Long.MAX_UNSIGNED_VALUE,center:{x:650,y:631}},cause:2,safeZoneId:Long.MAX_UNSIGNED_VALUE,trusted:true})).value;
+ assert.equal(trusted.role.originServerId.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.deepEqual(trusted.role.roleId,role.roleId);assert.equal(trusted.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(trusted.roleRevision.toString(),large.toString());assert.equal(trusted.sourceSeq.toString(),large.toString());assert.equal(trusted.safeZoneId.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(trusted.binding.mapId.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.deepEqual(trusted.binding.center,{x:650,y:631});assert.equal(trusted.trusted,true);
+ const nil=decodePacket(encodePacket(20011,0,large,{role,sceneEpoch:large,cause:1})).value;assert.equal(nil.binding,null);assert.equal(nil.sourceSeq.toString(),'0');assert.equal(nil.trusted,false);
+ const legacy=decodePacket(encodePacket(20011,0,large,{role,sceneEpoch:large,cause:1,binding:{mapId:Long.fromInt(2,true),center:{x:650,y:631}}})).value;assert(legacy.binding);assert.equal(legacy.sourceSeq.toString(),'0');assert.equal(legacy.trusted,false);
+});
 test('入场显式player_handle保留uint32边界，不由entity_kind推断主人',()=>{
     const value=decodePacket(encodePacket(20002,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,playerHandle:4294967295})).value;
     assert.equal(value.playerHandle,4294967295);assert.equal(value.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());

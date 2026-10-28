@@ -1,0 +1,322 @@
+{
+  "passed": false,
+  "scope": "真实Creator、正常WS道士触屏安全区绑定提交显示与健康重入；不预置角色数值或改权威坐标；21继续关闭，冷重建由独立WS验收，不作真机/容量认证",
+  "expectedRuleVersion": "14",
+  "readyRuleChecks": [
+    {
+      "map": "1",
+      "resourceVersion": "14"
+    },
+    {
+      "map": "2",
+      "resourceVersion": "14"
+    }
+  ],
+  "checks": [
+    "正常注册道士与个人图入场，新角色已提交快照为nil绑定；无随机新生或数据库预置",
+    "保存地图按钮及确认面板进入真实城镇；新scene/首视口/ACK就绪，角色和宠物Life保留",
+    "真实触屏进入安全区106后等待独立可信receipt提交；只报一次绑定确认，不推进经济命令",
+    "保存Role面板原Message显示已确认地图中心，未新建或修改固定布局"
+  ],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "scene": "8544440513722573607",
+      "baseline": "1",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 8,
+      "y": 8,
+      "resourceVersion": "14"
+    },
+    {
+      "scene": "8544440513722573608",
+      "baseline": "2",
+      "map": "2",
+      "kind": 2,
+      "player": 1,
+      "x": 633,
+      "y": 613,
+      "resourceVersion": "14"
+    }
+  ],
+  "travel": [
+    {
+      "id": "3a8ddf608e734fdcfc3564452e233f0c",
+      "from": "8544440513722573607",
+      "scene": "8544440513722573607",
+      "phase": 1,
+      "map": "2"
+    },
+    {
+      "id": "3a8ddf608e734fdcfc3564452e233f0c",
+      "from": "8544440513722573607",
+      "scene": "8544440513722573608",
+      "phase": 2,
+      "map": "2"
+    }
+  ],
+  "moves": [
+    {
+      "x": 639,
+      "y": 619
+    },
+    {
+      "x": 645,
+      "y": 625
+    },
+    {
+      "x": 650,
+      "y": 631
+    }
+  ],
+  "bindingStates": [
+    {
+      "transportBinding": "1",
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "scene": "8544440513722573607",
+      "revision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    {
+      "transportBinding": "1",
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "scene": "8544440513722573608",
+      "revision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    {
+      "transportBinding": "1",
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "scene": "8544440513722573608",
+      "revision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "map": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    }
+  ],
+  "clientBindingPackets": 0,
+  "physicalMobileVerified": false,
+  "bindingVerified": false,
+  "coldRebuildVerified": false,
+  "teleport21Verified": false,
+  "before": {
+    "map": "1",
+    "scene": "8544440513722573607",
+    "baseline": "1",
+    "resourceVersion": "14",
+    "binding": "1",
+    "role": "Townc726b9",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 7,
+      "y": 7
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "sceneEpoch": "8544440513722573607",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "inventoryRevision": "2",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n尚未绑定",
+    "bindingMessages": []
+  },
+  "town": {
+    "map": "2",
+    "scene": "8544440513722573608",
+    "baseline": "2",
+    "resourceVersion": "14",
+    "binding": "1",
+    "role": "Townc726b9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 633,
+      "y": 613
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "sceneEpoch": "8544440513722573608",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "inventoryRevision": "2",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n尚未绑定",
+    "bindingMessages": []
+  },
+  "safe": {
+    "map": "2",
+    "scene": "8544440513722573608",
+    "baseline": "2",
+    "resourceVersion": "14",
+    "binding": "1",
+    "role": "Townc726b9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "sceneEpoch": "8544440513722573608",
+      "roleRevision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "3",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": [
+      "已绑定至比奇省 (650,631)"
+    ]
+  },
+  "rolePanel": {
+    "map": "2",
+    "scene": "8544440513722573608",
+    "baseline": "2",
+    "resourceVersion": "14",
+    "binding": "1",
+    "role": "Townc726b9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:28f5f15c17b5acffb16654af7a77141b",
+      "sceneEpoch": "8544440513722573608",
+      "roleRevision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "3",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": [
+      "已绑定至比奇省 (650,631)"
+    ]
+  },
+  "error": "page.waitForFunction: Timeout 25000ms exceeded.\n    at ground (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_town_travel_browser.cjs:52:14)\n    at async D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_town_travel_browser.cjs:64:135"
+}

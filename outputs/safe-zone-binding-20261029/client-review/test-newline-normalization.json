@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "records": [
+    {
+      "path": "client/tests/app/combat_session.test.cjs",
+      "changed": true,
+      "before_sha256": "d0ee6e53e23690949dfa45d95ba24caf978bea6d6c48dea349d5550ff1da731c",
+      "after_sha256": "a1fae68ce64423ce624ee386bdd79e5e596ee84d36b47a5017b52944e98b79fd",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/tests/app/helpers/session_harness.cjs",
+      "changed": true,
+      "before_sha256": "e83a769c8d87d692a63f63049d46f5a90ada6536f94a29106a20be63023dc9f5",
+      "after_sha256": "c1488d3b366256f75cd5b4005c567946eb69f4f1ca72ae4252b42129cb86d4ec",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/tests/app/map_travel_runtime.test.cjs",
+      "changed": true,
+      "before_sha256": "0cd60638afc2bb99874a87bae1b244363f4898441d90d3797b439d3c5e525c6d",
+      "after_sha256": "2e60b4493efdd1928e537c047d6f35deeb904126b427fba0038f0d1c0b58a48c",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/tests/ui/compile_models.mjs",
+      "changed": true,
+      "before_sha256": "f38b7521ae984941c100719c59b3f3c6bcb4818ee5840656f376c73d470f1255",
+      "after_sha256": "69c972532c74c8dd603006f22ecff06f4a570793d698898e6e0b2056fa0a66b0",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/tests/app/combat_status_ui.test.cjs",
+      "changed": true,
+      "before_sha256": "fef05f39a03d058811895605a27c1411893c6f34b93ef71591fa59af0c5f9501",
+      "after_sha256": "0809ff554923f45609347e9f480b49e82d31c30801283062b5e80e1c276f1de4",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/tests/app/map_runtime.test.cjs",
+      "changed": true,
+      "before_sha256": "6d4cad6af7f3e09cf3735301681e44f040bfc2076c0f6fa28f50c89b705e030b",
+      "after_sha256": "d78e7c983d261e556284b92112cc1cba3b4317c9a6e17ce5370f3d7105c52142",
+      "only_newlines_changed": true
+    },
+    {
+      "path": "client/assets/scripts/app/RoleBindingModel.ts.meta",
+      "changed": true,
+      "before_sha256": "a77564e216b7eac902a3462b4372183318d5adb11e23a1ff87db4604efba3261",
+      "after_sha256": "849c51c0a1241e78c51bd4f0a69a3f445f048c5627e44666432ff81a38353e56",
+      "only_newlines_changed": true
+    }
+  ],
+  "production_typescript_modified": false,
+  "creator_build_script_bytes_unchanged": true,
+  "meta_guid_and_all_fields_unchanged": true
+}

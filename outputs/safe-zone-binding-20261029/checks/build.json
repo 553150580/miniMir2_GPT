@@ -1,0 +1,13 @@
+{
+  "task": "build",
+  "command": [
+    "python3",
+    "tools/client/build.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:34:24.183724+00:00",
+  "finished_at": "2026-10-28T19:36:23.294244+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/build.txt",
+  "output_sha256": "f26a4a160fb83bed97c19fc2a608ca287f5ccb180a24cb6de7bfe0579ffb5ea0",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

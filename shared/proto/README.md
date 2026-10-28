@@ -1,8 +1,14 @@
 # 共享协议实现状态
 
+当前rule14协议共66个PB数据消息、52个消息号、31个错误码、128个64位字段及420个Long边界案例，均为draft开发合同。新增20011 `BindingState`及`RoleBindingPoint`只观察已提交永久绑定：RoleKey、scene、role_revision、原绑定receipt的source_seq、可空中心、cause、原安全区ID和trusted。cause1静默恢复，cause2仅已提交新事实；64位保持Long/BigInt，不新增设置绑定坐标的C2S入口。
+
+绑定成功先发送同一Role的完整Inventory，再发BindingState。客户端经济操作继续以Inventory.revision和原command构造，绑定不改Pending或经济水位。来源实时安全区观察仍用baseline.safe_zone_id，与绑定证明来源区分开。20007–20010沿rule13同owner旅行合同保持；21仍关闭。见[绑定阶段验收](../../docs/安全区永久绑定阶段验收.json)。
+
+以下rule9等旧协议描述为历史范围，当前以上述rule14及唯一protocol_manifest为准。
+
 普通移动与动作时钟修复保持当前协议及rule9配置，211项JS/359个PB边界和289条真实Mongo/WS race另行通过；未新增位移消息或开放位移技能。见[本轮验收](../../docs/普通移动与动作时钟阶段验收.json)。
 
-本目录是双端共用协议源。当前已验收rule9基线包含58个PB数据消息、46个消息号、31个错误码及108个Long字段，边界案例359个；另有3个后置保留消息。已接本地账号、票据/基线、网格输入、永久资产回执、手动药品、owner学习、技能获取升级与19项候选技能及3项防御状态。护符运行入口仍disabled，14/15正向材料路径只作隔离测试；完整职业、双市场、正式兼容与发布仍未完成。
+本目录是双端共用协议源。rule9阶段已验收基线包含58个PB数据消息、46个消息号、31个错误码及108个Long字段，边界案例359个；另有3个后置保留消息。已接本地账号、票据/基线、网格输入、永久资产回执、手动药品、owner学习、技能获取升级与19项候选技能及3项防御状态。护符运行入口仍disabled，14/15正向材料路径只作隔离测试；完整职业、双市场、正式兼容与发布仍未完成。
 
 `EntityState.mp/mp_max`继续使用9/10字段号；`uint32 move_interval_ms=11`和`uint32 attack_sequence=12`是纯观察数据，支撑显示步进时长与攻击播放触发，不改变客户端输入权威。首组技能阶段增加观察字段13 `cast_sequence`和14 `cast_skill_id`，独立施法身份用于动作播放。64位字段继续使用Long/BigInt。
 

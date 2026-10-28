@@ -12,6 +12,9 @@ import (
 
 // 先检查原始存档结构，避免BSON解码把缺少的x/y补为0后当成有效绑定。
 func checkBindingDocument(role bson.Raw) error {
+	if err := checkBindingSourceDocument(role); err != nil {
+		return err
+	}
 	value := role.Lookup("binding")
 	if value.Type == 0 || value.Type == bson.TypeNull {
 		return nil

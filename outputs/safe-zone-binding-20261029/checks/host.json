@@ -1,0 +1,19 @@
+{
+  "task": "host",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/environment",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:32:09.026425+00:00",
+  "finished_at": "2026-10-28T19:32:10.275565+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/host.txt",
+  "output_sha256": "3941e20a03af3a626f2c7d16c16f273a5c1ecbf9882f7822e9caa76e5d21f55e",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

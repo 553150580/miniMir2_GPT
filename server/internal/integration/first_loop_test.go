@@ -446,20 +446,22 @@ func issue(t *testing.T, url, token string, key *pb.RoleKey) string {
 }
 
 type client struct {
-	t         *testing.T
-	ws        *websocket.Conn
-	ctx       context.Context
-	stop      context.CancelFunc
-	binding   uint64
-	request   uint32
-	input     uint32
-	entry     *pb.EnterLineResult
-	inventory *pb.InventoryResult
-	scene     *pb.SceneBaselineChunk
-	report    *pb.HostingReport
-	hosting   *pb.HostingState
-	watermark uint64
-	death     *pb.DeathNotice
+	t              *testing.T
+	ws             *websocket.Conn
+	ctx            context.Context
+	stop           context.CancelFunc
+	binding        uint64
+	request        uint32
+	input          uint32
+	entry          *pb.EnterLineResult
+	inventory      *pb.InventoryResult
+	scene          *pb.SceneBaselineChunk
+	report         *pb.HostingReport
+	hosting        *pb.HostingState
+	watermark      uint64
+	death          *pb.DeathNotice
+	roleBinding    *pb.BindingState
+	bindingCommits []*pb.BindingState
 }
 
 func join(t *testing.T, address, ticket string) *client {
@@ -574,6 +576,15 @@ func (c *client) readFrame() wire.Frame {
 	case p.MsgS2CInventory:
 		c.inventory = &pb.InventoryResult{}
 		must(c.t, proto.Unmarshal(f.Payload, c.inventory))
+	case p.MsgS2CBindingState:
+		c.roleBinding = &pb.BindingState{}
+		must(c.t, proto.Unmarshal(f.Payload, c.roleBinding))
+		if c.roleBinding.Cause == 2 {
+			if c.inventory == nil || c.inventory.Revision < c.roleBinding.RoleRevision {
+				c.t.Fatal("绑定提交观察先于对应完整资产快照")
+			}
+			c.bindingCommits = append(c.bindingCommits, proto.Clone(c.roleBinding).(*pb.BindingState))
+		}
 	case p.MsgS2CSceneBaseline:
 		c.scene = &pb.SceneBaselineChunk{}
 		must(c.t, proto.Unmarshal(f.Payload, c.scene))

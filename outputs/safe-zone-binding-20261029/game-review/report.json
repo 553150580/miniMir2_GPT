@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-29",
+  "stage": "rule14安全区正常walk永久绑定：game冻结与定向证据",
+  "production_game_frozen": true,
+  "final_stage_authority": "root统一全包MINIMIR_MONGO_E2E=1 --mongo --race报告；归档时该作业live89222，尚不将其记为通过",
+  "source_manifest": "frozen-inputs.json",
+  "source_stability": "frozen-inputs-recheck.json",
+  "source_stability_note": "45文件中所有game/fixture/PB/domain稳定；Store safe_zone_binding.go从WS期间961c19b27097385049854f0263417b7289593c72c82e2db92419c7f1381cfa6c变为当前37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38。root已确认这是sourceSeq<=receipt.Revision补强，assets agent报告6专项race通过并冻结后才启动最终89222；最终完整go报告将核before/after/current。定向WS仍明确是Store补强前证据，不据此冒称当前Store字节验收",
+  "source_and_adaptation": "source-and-runtime.md",
+  "mongo_ws": {
+    "command_file": "mongo-ws-command.ps1",
+    "command": ".\\tools\\dev.ps1 go test -race -count=1 ./internal/integration -run '^TestMapTravelMongoWS$' -v",
+    "environment": {"MINIMIR_MONGO_E2E": "1"},
+    "tool_session": 59259,
+    "exit_code": 0,
+    "case_seconds": 55.60,
+    "package_seconds": 60.810,
+    "passed": 1,
+    "skipped": 0,
+    "race_reported": false,
+    "random_database": "minimir_dev_game_test_town_a23604f5b315c5a0535bb6ff92d34497",
+    "cleanup": "harness结束节点并Drop专属随机库、Close；本次无清理错误",
+    "stdout": "mongo-ws-race.stdout.txt",
+    "capture": "同一已完成工具会话的stdout文本归档，未重跑已通过Mongo用例；不声称PowerShell Tee捕获子进程输出",
+    "ownership_command": ".\\tools\\dev.ps1 python tools/environment/mongodb_windows.py status",
+    "ownership_exit_code": 0,
+    "ownership_stdout": "mongo-ownership.json",
+    "ownership_scope": "WS启动前已核验；归档时再核同PID5640/安装ID/端口/副本集，未重启Mongo",
+    "coverage": [
+      "随机新库、正常注册创角、真实击杀与掉落，健康旅行Prepare/Plan/Commit/State/EnterLine/baseline/ACK/SyncReady",
+      "Town700完整源坐标入口633613、无怪；实际tick有界导航至650631来源区域106",
+      "每次入场/旅行scene先cause1绑定快照；合法Walk只产生一次cause2，完整Inventory先于新绑定消息",
+      "同区三步、走出633613再回中心均不新增SourceSeq；旧scene/旧ACK/ACK前经济拒绝",
+      "Town断线11秒不扣Hosting不刷收益；新ticket健康重入同Town、相同Life/HP/MP/位置与绑定proof",
+      "返回原个人怪物/掉落截止及位置不刷新；钱包与EconomicSeq不因旅行改变",
+      "完整节点stop/launch冷建个人世界后永久绑定proof仍在，21关闭"
+    ]
+  },
+  "pure_game": [
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -run 'Test(SafeZoneBinding|ShoulderDashSourceSafeZone|SourcePushedCanEnter)' -count=1",
+      "exit_code": 0,
+      "package_seconds": 5.637,
+      "stdout": "focused-before-helper-adjustment.stdout.txt",
+      "input_note": "早于新unit helper从revision5/source7纠正为revision15/source7；生产实现与最终相同"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 go test -race ./internal/game -count=1",
+      "exit_code": 0,
+      "package_seconds": 52.655,
+      "stdout": "full-game-before-helper-adjustment.stdout.txt",
+      "input_note": "早于上述helper可达性修正，不冒称是最终45文件快照的完整game结果"
+    },
+    {
+      "tool_session": 69498,
+      "status": "未取到终态；不计通过，不据关闭session推断成功"
+    },
+    {
+      "tool_session": 33265,
+      "status": "PASS",
+      "exit_code": 0,
+      "package_seconds": 5.900,
+      "stdout": "focused-final.stdout.txt",
+      "result": "focused-final.result.json",
+      "capture": "锁定Python subprocess直接保存stdout+stderr字节；包含最终可达helper；root通知不再额外跑前本纯game窄job已启动，之后未新增测试"
+    }
+  ],
+  "limits": [
+    "本阶段仅成功普通walk触发永久绑定；Run/Turn未提供入口，Teleport/Pushed绑定延期；初始出生池与技能21仍关闭",
+    "源安全区不被推定统一伤害免疫；ShoulderDash下一格区域guard为本阶段新发现修复，旧6400无区域向量不作为本条已验收证据",
+    "单条真实MongoWS不是容量/真机/全部故障注入验收；unknown与旧回调由纯game/Store专项另行证明",
+    "最终全包由root统一报告；本报告不重复或抢先宣布该job终态"
+  ]
+}

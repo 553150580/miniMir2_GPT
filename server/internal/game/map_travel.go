@@ -462,6 +462,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 	w.sendTravelState(r, plan, plan.Request)
 	if entry := w.enterLineResult(r); entry != nil {
 		w.send(r, p.MsgS2CEnterLine, 0, entry)
+		w.bindingState(r, 1)
 		w.baseline(r)
 	}
 	return true

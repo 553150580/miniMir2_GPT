@@ -28,7 +28,7 @@ class SourceMapProjectionTests(unittest.TestCase):
         bits=base64.b64decode(town['collision_bits'],validate=True)
         self.assertEqual((len(bits),sum(byte.bit_count() for byte in bits)),(61250,162741))
         self.assertEqual([zone['id'] for zone in town['safe_zones']],[106,107,108,113,117])
-        self.assertEqual(fixture['binding'],{'enabled':False,'start_points':[]})
+        self.assertEqual(fixture['binding'],{'enabled':False,'start_points':[],'safe_zone_enabled':True})
         self.assertFalse(any(skill['id']==21 for skill in fixture['skills']))
         self.assertEqual(self.tables,before)
 

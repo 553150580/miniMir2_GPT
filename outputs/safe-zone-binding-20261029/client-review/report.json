@@ -1,0 +1,305 @@
+{
+  "scope": "客户端绑定观察实现与已实际执行的本机模型/UI/app检查；不是Creator/GPU/正常WS绑定或冷重建验收",
+  "recorded_at_utc": "2026-10-28T19:36:56.486167+00:00",
+  "freeze": {
+    "declared_before_full_tests": true,
+    "note": "最新生产TS冻结在启动完整模型编译及全部UI/app测试前已向root声明；之后未编辑生产TS。未采集测试前hash，不补造before/after未变结论。以下只记录本次审查时当前文件指纹。",
+    "before_hashes_collected": false,
+    "byte_stability_during_tests_proven": false
+  },
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 node client/tests/ui/compile_models.mjs",
+      "exit_code": 0,
+      "log": ".work\\safe-zone-binding-20261029\\checks\\client-model-compile.txt",
+      "log_fingerprint": {
+        "sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+        "bytes": 111
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test client/tests/ui/*.test.cjs client/tests/app/*.test.cjs",
+      "exit_code": 0,
+      "log": ".work\\safe-zone-binding-20261029\\checks\\client-all-ui-app-tests.txt",
+      "tests": 305,
+      "passed": 305,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 2550.7535,
+      "log_fingerprint": {
+        "sha256": "6bedf36c991009319cecd1aea5da9816e0eaa2c618804dc0b63a1181f6d2fe68",
+        "bytes": 33566
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node tools/client/typecheck.mjs",
+      "exit_code": 0,
+      "log": ".work\\safe-zone-binding-20261029\\checks\\client-typecheck.txt",
+      "strict_typecheck": true,
+      "creator_build_verified": false,
+      "log_fingerprint": {
+        "sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+        "bytes": 78
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_town_travel_browser.cjs",
+      "exit_code": 0,
+      "log": ".work\\safe-zone-binding-20261029\\client-review\\browser-syntax.stdout.txt",
+      "log_fingerprint": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test client/tests/ui/*.test.cjs client/tests/app/*.test.cjs",
+      "exit_code": 0,
+      "phase": "QA工具等待修复后追加两项工具回归，完整重跑",
+      "log": ".work\\safe-zone-binding-20261029\\checks\\client-all-ui-app-tests-after-browser-wait-fix.txt",
+      "log_fingerprint": {
+        "sha256": "5ccee0ec7a1ffcde91261625aecc5e29817d0546485af707266876cffa011552",
+        "bytes": 33820
+      },
+      "tests": 307,
+      "passed": 307,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_town_travel_browser.cjs",
+      "exit_code": 0,
+      "phase": "QA等待修复后",
+      "log": ".work/safe-zone-binding-20261029/client-review/browser-syntax.stdout.txt",
+      "log_fingerprint": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test client/tests/ui/*.test.cjs client/tests/app/*.test.cjs",
+      "exit_code": 0,
+      "phase": "实际服务规则版本断言与第三项工具回归后最终整套",
+      "log": ".work\\safe-zone-binding-20261029\\checks\\client-all-ui-app-tests-final.txt",
+      "log_fingerprint": {
+        "sha256": "c581c13fcf8fe2c66d4db25eedf7aa3b9c627fc6e7b19b80e565f1f018cabd57",
+        "bytes": 33975
+      },
+      "tests": 308,
+      "passed": 308,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 22963.7414
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_town_travel_browser.cjs",
+      "exit_code": 0,
+      "phase": "规则版本断言补齐后",
+      "log": ".work/safe-zone-binding-20261029/client-review/browser-syntax.stdout.txt",
+      "log_fingerprint": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test client/tests/app/binding_ground_hit.test.cjs client/tests/app/binding_browser_wait.test.cjs",
+      "exit_code": 0,
+      "phase": "真实触屏误击实体的QA路线修复后专项，不替代root最终全套",
+      "log": ".work\\safe-zone-binding-20261029\\checks\\browser-ground-hit-tool-tests.txt",
+      "log_fingerprint": {
+        "sha256": "58d1e4050534cc5e6df5cb49e75a5bc4b7e44019884566634400c220d272cbe1",
+        "bytes": 785
+      },
+      "tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "current_file_fingerprints": {
+    "client/assets/scripts/app/RoleBindingModel.ts": {
+      "sha256": "379f37c59b9984d93808607be956316116a936e6909d33f0d61e308c62443b2f",
+      "bytes": 6005
+    },
+    "client/assets/scripts/app/RoleBindingModel.ts.meta": {
+      "sha256": "a77564e216b7eac902a3462b4372183318d5adb11e23a1ff87db4604efba3261",
+      "bytes": 180
+    },
+    "client/assets/scripts/app/GameSession.ts": {
+      "sha256": "2563c37dffbc4b96fb5dd3656e7ee95b7e2f040c16ca2c1c7b0649684e10ddf8",
+      "bytes": 13980
+    },
+    "client/assets/scripts/app/GameConnection.ts": {
+      "sha256": "bb3cac6478747a6d97ccf4c5a57d673e6fd170476cfbf0459b1e63482109e52f",
+      "bytes": 11101
+    },
+    "client/assets/scripts/app/AppRoot.ts": {
+      "sha256": "2fe7eaaf6044c0d130e9ac3ad902066ccebf43e338fe70497f23671cbc7b0e58",
+      "bytes": 73906
+    },
+    "client/assets/scripts/app/SystemMessageLog.ts": {
+      "sha256": "0f6ea5bbe1cd8bb2fdec9609b814498f968e6629d95fe0faa314ae2e5ac9f0e7",
+      "bytes": 12428
+    },
+    "client/assets/scripts/app/GameMessages.ts": {
+      "sha256": "01aee1c7c86795f3fb91de99835e4df5bfb8cca143afeafbb1873fb3c7b783e4",
+      "bytes": 7223
+    },
+    "client/assets/scripts/app/PendingOperations.ts": {
+      "sha256": "6f1e2c78c6ca8469d81eccc571a910c1d55cf0b7a34a83130f6afabfbf47c79a",
+      "bytes": 13256
+    },
+    "client/assets/scripts/app/MapTravelModel.ts": {
+      "sha256": "1fde72c83cb5804cddc8389d4e19d9cb1d0ffd1ac03c36388cfa01e5d7305d47",
+      "bytes": 9068
+    },
+    "client/assets/scripts/app/MapAttachmentCoordinator.ts": {
+      "sha256": "f230ba5c57c543090bd3053615017a63b852b9a74df3905b66541f372f261514",
+      "bytes": 2802
+    },
+    "client/assets/scripts/app/GameHUD.ts": {
+      "sha256": "0710967fe87fc6e0787f5b0965daa5581cbd9d94a241298d58db2d7cd0627de7",
+      "bytes": 6086
+    },
+    "client/assets/scripts/app/GameWorldView.ts": {
+      "sha256": "8ebbe7530718500314fb4f43ef906865c07e75ad2c93c22afcc89cd72c5792b4",
+      "bytes": 28442
+    },
+    "client/tests/app/role_binding.test.cjs": {
+      "sha256": "5919ffe28ba2c41f15b61410f54c0c66c4a0108246bfb9b7ba542e0767358ec0",
+      "bytes": 8779
+    },
+    "client/tests/app/messages.test.cjs": {
+      "sha256": "cab5ca817ebe1f28ad94bf4f9a2fc82d3a1a0a7d1d7dafb08eb3174c84dc5e33",
+      "bytes": 12118
+    },
+    "client/tests/app/transport.test.cjs": {
+      "sha256": "6badde622ff5db2665085e153905ddcfd9ec5134eb694b55d7da652738f75eec",
+      "bytes": 30559
+    },
+    "client/tests/app/map_travel_runtime.test.cjs": {
+      "sha256": "2e60b4493efdd1928e537c047d6f35deeb904126b427fba0038f0d1c0b58a48c",
+      "bytes": 25264
+    },
+    "client/tests/app/combat_session.test.cjs": {
+      "sha256": "a1fae68ce64423ce624ee386bdd79e5e596ee84d36b47a5017b52944e98b79fd",
+      "bytes": 11013
+    },
+    "client/tests/app/helpers/session_harness.cjs": {
+      "sha256": "c1488d3b366256f75cd5b4005c567946eb69f4f1ca72ae4252b42129cb86d4ec",
+      "bytes": 2689
+    },
+    "client/tests/ui/compile_models.mjs": {
+      "sha256": "69c972532c74c8dd603006f22ecff06f4a570793d698898e6e0b2056fa0a66b0",
+      "bytes": 1888
+    },
+    "tools/client/verify_town_travel_browser.cjs": {
+      "sha256": "6c319664f977a78e3dcac829a17de51c53e8c57a6aa2b88c7169478f5a22f00b",
+      "bytes": 17759
+    },
+    "shared/proto/world.proto": {
+      "sha256": "8bad9283f774dc93606a10607c63202e5dcc4fa5000d2492583dab1295ed1f31",
+      "bytes": 9475
+    },
+    "shared/proto/protocol_manifest.json": {
+      "sha256": "4f7123ff37cf6686b56e886d83fb13ed617450296e1dbc95721ff2e93d053db3",
+      "bytes": 28702
+    },
+    "client/assets/scripts/generated/protobuf/client_pb.js": {
+      "sha256": "6496adbc297b1b77dfa1e2d9d00359885c104d0276e4f7661ab97ac124d7584a",
+      "bytes": 1055258
+    },
+    "client/tests/app/binding_browser_wait.test.cjs": {
+      "sha256": "ff7f6ca5805771790d8c29da2dbeff5d4703c6ced4569f7714a92d670bd869c2",
+      "bytes": 3054
+    },
+    "config/development/first-loop.json": {
+      "sha256": "ad25d79ee7bb913c429de29f9d919629b0b41adb1e61ef6ebcc39cbbecd6eeb5",
+      "bytes": 279746
+    },
+    "client/tests/app/binding_ground_hit.test.cjs": {
+      "sha256": "7efc2dee94e25712a1ca3c971f05410e6191797fca0a382ec7016b202105afbb",
+      "bytes": 4227
+    }
+  },
+  "not_verified_here": [
+    "Creator真实构建",
+    "正常Chrome触屏可信绑定流程",
+    "真实WS冷重建",
+    "手机真机",
+    "容量",
+    "21瞬移"
+  ],
+  "saved_scene_prefab_edited_by_this_agent": false,
+  "qa_wait_review": {
+    "category": "QA工具可靠性修复，不是产品故障",
+    "dependency": "playwright-core 1.64.1",
+    "primary_local_evidence": {
+      "file": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\browser-tools\\node_modules\\playwright-core\\lib\\coreBundle.js",
+      "line": 25707,
+      "summary": "predicate()返回Promise时先作为truthy停止轮询，fulfill吸收false结果不会再继续轮询。"
+    },
+    "fix": "先evaluateHandle异步导入只读session引用，waitForFunction谓词为同步函数并返回Boolean；finally释放JSHandle。",
+    "regression_tests": "client/tests/app/binding_browser_wait.test.cjs，3项实际抽取工具函数回归，包含等待、句柄释放与旧服务版本反例。",
+    "production_ts_edited_for_fix": false
+  },
+  "protocol_ui_review": {
+    "blocking_findings": [],
+    "notes": [
+      "BindingState仅S2C20011，自动SourceSeq不写economic command/Pending；operation继续用完整Inventory.revision。",
+      "观察按当前连接binding/RoleKey/scene隔离，cause1静默，trusted cause2 Ready后去重提示。",
+      "保存Role Message仅更新文本，沿用600×110/font24/line30，未改布局。",
+      "浏览器实际运行、GPU和冷重建结论仍由root独立验收。"
+    ]
+  },
+  "production_ts_match_report_capture": true,
+  "fingerprints_before_qa_tool_fix": {
+    "tools/client/verify_town_travel_browser.cjs": {
+      "sha256": "38cb91a921b927d609d47a66baccd870dfa8cd7796d8372390ac41c1a356b768",
+      "bytes": 14258
+    }
+  },
+  "updated_at_utc": "2026-10-28T19:55:46.754593+00:00",
+  "qa_rule_version_review": {
+    "expected_rule_version": "14",
+    "source": "config/development/first-loop.json.rule_version",
+    "checks": [
+      "每条实际EnterLine.resource_version记录并断言",
+      "每次初入/进城/健康重入/返个人Ready读取实际session.entry.resourceVersion并断言",
+      "每个state快照保存实际resourceVersion"
+    ],
+    "negative_case": "旧服务即使已经Ready，实际版本不等于当前配置仍失败。"
+  },
+  "qa_ground_hit_review": {
+    "category": "正常实体点击行为被QA误当作地面；工具路线修复，不是产品导航故障",
+    "evidence": [
+      "Entity.prefab根UITransform为96×128，anchor=.5/.5",
+      "GameWorldView.ts根TOUCH_END停止传播并展示实体详情",
+      "MapTouchNavigator仅目标为viewport本体时提交地面导航",
+      "Creator3.8.8 UITransform.hitTest按根局部矩形判定，32px北一格仍处本人命中区"
+    ],
+    "historical_failure_preserved": ".work/safe-zone-binding-20261029/diagnostics/entity-hit-before-fix/preservation.json",
+    "fix": "当前视觉根矩形+8px余量、静态阻挡、实体占格、实际视口、UI覆盖与同安全区预检；优先横向4至5格正常触屏往返，回程等待宠物离开命中区",
+    "candidates": [
+      [
+        654,
+        631
+      ],
+      [
+        646,
+        631
+      ],
+      [
+        655,
+        631
+      ],
+      [
+        645,
+        631
+      ]
+    ],
+    "new_default_report_dir": ".work/safe-zone-binding-20261029/browser-town-ground-fixed",
+    "direct_navigation_or_position_writes": false,
+    "production_ts_edited": false,
+    "lf_only_tool_and_new_test": true
+  }
+}

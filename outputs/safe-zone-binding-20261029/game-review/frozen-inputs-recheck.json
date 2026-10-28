@@ -1,0 +1,13 @@
+{
+  "checked_at_utc": "2026-10-28T19:53:11.208375+00:00",
+  "files_checked": 45,
+  "changed": [
+    {
+      "path": "server/internal/persistence/safe_zone_binding.go",
+      "expected": "961c19b27097385049854f0263417b7289593c72c82e2db92419c7f1381cfa6c",
+      "actual": "37e0da97a459d47a72df872a82afbc48ff6a7afaab878428bb7258f244979a38"
+    }
+  ],
+  "stable": false,
+  "scope": "归档manifest所列game全部Go及关键Store/domain/PB/fixture输入；root全包manifest为阶段最终权威"
+}

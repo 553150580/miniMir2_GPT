@@ -1,0 +1,14 @@
+{
+  "task": "scene",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/scene/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:34:33.011009+00:00",
+  "finished_at": "2026-10-28T19:34:33.189789+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/scene.txt",
+  "output_sha256": "137149f77cd7e59a5b51170c07f501b9ff4a20cf782ddbe302e27b2b142d2fe0",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

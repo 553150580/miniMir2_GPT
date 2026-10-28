@@ -1,0 +1,19 @@
+{
+  "task": "python",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T19:31:50.530166+00:00",
+  "finished_at": "2026-10-28T19:32:09.025960+00:00",
+  "output": ".work/safe-zone-binding-20261029/checks/python.txt",
+  "output_sha256": "8b3a67ef9d219189b53385fc448a417927c3444661d3ca7c161883f51ea90b00",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

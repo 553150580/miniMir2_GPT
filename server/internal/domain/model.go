@@ -67,38 +67,40 @@ type Report struct {
 	Sequence    int64  `bson:"sequence" json:"settlement_sequence"`
 }
 type Role struct {
-	ID               string         `bson:"_id" json:"role_id"`
-	AccountID        string         `bson:"account_id" json:"account_id"`
-	Origin           uint64         `bson:"origin_server_id" json:"origin_server_id"`
-	Slot             uint32         `bson:"slot" json:"slot"`
-	Job              uint32         `bson:"job" json:"job"`
-	Gender           uint32         `bson:"gender" json:"gender"`
-	Name             string         `bson:"name" json:"name"`
-	NameKey          string         `bson:"name_key" json:"-"`
-	Level            uint32         `bson:"level" json:"level"`
-	Experience       int64          `bson:"experience" json:"experience"`
-	Revision         int64          `bson:"revision" json:"revision"`
-	EconomicSeq      int64          `bson:"economic_command_seq" json:"economic_command_seq"`
-	SourceSeq        int64          `bson:"source_seq" json:"source_seq"`
-	Owner            string         `bson:"owner_instance" json:"-"`
-	RunEpoch         int64          `bson:"run_epoch" json:"-"`
-	SessionEpoch     int64          `bson:"session_epoch" json:"binding_epoch"`
-	Wallet           Wallet         `bson:"wallet" json:"wallet"`
-	Items            []Item         `bson:"items" json:"items"`
-	Equipped         []Equipped     `bson:"equipped" json:"equipped"`
-	Capacity         int            `bson:"capacity" json:"capacity"`
-	PickupStopped    bool           `bson:"pickup_stopped" json:"pickup_stopped"`
-	LastDiscardItem  uint32         `bson:"last_discard_item_id" json:"last_discard_item_id"`
-	LastDiscardBound bool           `bson:"last_discard_bound" json:"last_discard_bound"`
-	HostingSeconds   int64          `bson:"hosting_seconds" json:"hosting_seconds"`
-	ClaimDay         string         `bson:"claim_day" json:"-"`
-	ClaimedSeconds   int64          `bson:"claimed_seconds" json:"-"`
-	NoEquipmentKills int            `bson:"no_equipment_kills" json:"-"`
-	PrivilegeUntil   time.Time      `bson:"privilege_until" json:"-"`
-	HostingCardUntil time.Time      `bson:"hosting_card_until" json:"-"`
-	Report           Report         `bson:"hosting_report" json:"hosting_report"`
-	Skills           []LearnedSkill `bson:"learned_skills" json:"learned_skills"`
-	Binding          *RoleBinding   `bson:"binding,omitempty" json:"binding,omitempty"`
+	ID                string         `bson:"_id" json:"role_id"`
+	AccountID         string         `bson:"account_id" json:"account_id"`
+	Origin            uint64         `bson:"origin_server_id" json:"origin_server_id"`
+	Slot              uint32         `bson:"slot" json:"slot"`
+	Job               uint32         `bson:"job" json:"job"`
+	Gender            uint32         `bson:"gender" json:"gender"`
+	Name              string         `bson:"name" json:"name"`
+	NameKey           string         `bson:"name_key" json:"-"`
+	Level             uint32         `bson:"level" json:"level"`
+	Experience        int64          `bson:"experience" json:"experience"`
+	Revision          int64          `bson:"revision" json:"revision"`
+	EconomicSeq       int64          `bson:"economic_command_seq" json:"economic_command_seq"`
+	SourceSeq         int64          `bson:"source_seq" json:"source_seq"`
+	Owner             string         `bson:"owner_instance" json:"-"`
+	RunEpoch          int64          `bson:"run_epoch" json:"-"`
+	SessionEpoch      int64          `bson:"session_epoch" json:"binding_epoch"`
+	Wallet            Wallet         `bson:"wallet" json:"wallet"`
+	Items             []Item         `bson:"items" json:"items"`
+	Equipped          []Equipped     `bson:"equipped" json:"equipped"`
+	Capacity          int            `bson:"capacity" json:"capacity"`
+	PickupStopped     bool           `bson:"pickup_stopped" json:"pickup_stopped"`
+	LastDiscardItem   uint32         `bson:"last_discard_item_id" json:"last_discard_item_id"`
+	LastDiscardBound  bool           `bson:"last_discard_bound" json:"last_discard_bound"`
+	HostingSeconds    int64          `bson:"hosting_seconds" json:"hosting_seconds"`
+	ClaimDay          string         `bson:"claim_day" json:"-"`
+	ClaimedSeconds    int64          `bson:"claimed_seconds" json:"-"`
+	NoEquipmentKills  int            `bson:"no_equipment_kills" json:"-"`
+	PrivilegeUntil    time.Time      `bson:"privilege_until" json:"-"`
+	HostingCardUntil  time.Time      `bson:"hosting_card_until" json:"-"`
+	Report            Report         `bson:"hosting_report" json:"hosting_report"`
+	Skills            []LearnedSkill `bson:"learned_skills" json:"learned_skills"`
+	Binding           *RoleBinding   `bson:"binding,omitempty" json:"binding,omitempty"`
+	BindingSourceSeq  int64          `bson:"binding_source_seq,omitempty" json:"-"`
+	BindingSafeZoneID uint64         `bson:"-" json:"-"`
 }
 
 // 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。
