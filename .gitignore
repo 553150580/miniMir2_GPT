@@ -1,4 +1,8 @@
+# macOS 缓存与跨系统复制元数据
 .DS_Store
+._*
+__MACOSX/
+.AppleDouble/
 .work/
 **/node_modules
 __pycache__/
