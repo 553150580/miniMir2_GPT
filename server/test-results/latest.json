@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "started_at_utc": "2026-10-28T15:25:45.780547+00:00",
-  "finished_at_utc": "2026-10-28T15:29:16.256855+00:00",
+  "started_at_utc": "2026-10-28T17:19:08.921293+00:00",
+  "finished_at_utc": "2026-10-28T17:22:54.490245+00:00",
   "command": [
     "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
     "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
@@ -519,7 +519,199 @@
     },
     {
       "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryPreservesLegacyPersonalMapAndAddsFullTown"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownCollisionBitmapUsesLowBitFirstAcrossRows"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownSafetyZonesUseInclusiveSquareAndSourceOrder"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/尺寸溢出"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源宽度不符"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/未知类型"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图扩大"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/非法来源摘要"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图变城镇"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/负高"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/伪造怪槽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区负半径"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区左边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复目录ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/短位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/并行阻挡源"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/空来源代码"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区半径溢出"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区中心越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺明确类型"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/缺位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/长位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/入口阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区重复ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区上边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/不可持久ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/额外个人图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/零宽"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/无来源"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/来源高度不符"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区零ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/主图偷偷换位图"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区右边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/安全区下边越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules/重复主图ID"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapDirectoryRejectsInvalidTownDataWithoutRelaxingPersonalRules"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestTownBitmapRejectsNonzeroPaddingAndAcceptsOptionalLegacyPetSpawn"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapTemplateJSONRetainsLegacyFormatAndDecodesBase64Collision"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapQueriesFailClosedForInvalidDimensions"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap"
+    },
+    {
+      "package": "minimir/internal/devconfig",
       "test": "TestMapApprovedDimensionsAndDerivedSearchBudget"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡重复"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生静态孤岛"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -527,11 +719,27 @@
     },
     {
       "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生重叠"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
+    },
+    {
+      "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生阻挡"
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家宝宝出生重叠"
+      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -543,19 +751,7 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡重复"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/宝宝出生阻挡"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -563,27 +759,7 @@
     },
     {
       "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/玩家出生阻挡"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生重叠"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物出生静态孤岛"
-    },
-    {
-      "package": "minimir/internal/devconfig",
       "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/缺怪物槽位"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/阻挡越界"
-    },
-    {
-      "package": "minimir/internal/devconfig",
-      "test": "TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells/怪物宝宝出生重叠"
     },
     {
       "package": "minimir/internal/devconfig",
@@ -936,6 +1112,30 @@
     {
       "package": "minimir/internal/game",
       "test": "TestDeadPlayerCountChangePushesSnapshotWithoutReset"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextSkillFlightAreaAndLineUseCurrentTerrain"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextGroundIntentAndEntryPreserveSourceCoordinates"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback"
+    },
+    {
+      "package": "minimir/internal/game",
+      "test": "TestRoomMapContextColdInitializationAndRespawnUseCorrectTemplate"
     },
     {
       "package": "minimir/internal/game",
@@ -1757,13 +1957,13 @@
   "skipped_tests": [],
   "fixture": {
     "path": "config/development/first-loop.json",
-    "sha256": "92e39cb378057b2aa4c11da4d0b64bcd82a56d9359d3ef0af9fd3cc2d27b4176",
+    "sha256": "7868993c9d1cc33631d827e626683039a0934ce1a8d256c142ef680802c73a96",
     "candidate_only": true,
     "runtime_ready": false
   },
   "source_sha256": {
     "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
-    "config/development/first-loop.json": "92e39cb378057b2aa4c11da4d0b64bcd82a56d9359d3ef0af9fd3cc2d27b4176",
+    "config/development/first-loop.json": "7868993c9d1cc33631d827e626683039a0934ce1a8d256c142ef680802c73a96",
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
@@ -1775,18 +1975,19 @@
     "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
     "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
     "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
-    "server/internal/devconfig/binding.go": "1c33b13e2cc17eb48649e25616501f7011981a9932625e577fb3c96f55fb4f55",
+    "server/internal/devconfig/binding.go": "6b0d6bd5f2d3b790474c3d8319dc58c10425b4b659877573c601ca9ea627c95a",
     "server/internal/devconfig/binding_test.go": "d9b39d15b42880ba051b00ae0c3883bc1d009a99aebeb8e8324b6e583b71b79d",
     "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
     "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
     "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
     "server/internal/devconfig/combat_modes_test.go": "53ce7a9fafd52e18acad3d9cdcefad90b956d065ec4a57c2c9b1bb72d924a499",
-    "server/internal/devconfig/config.go": "0401d68a837e381403cb233a0f1efbb4c761bbf281bef86421dc0863944c4c2c",
+    "server/internal/devconfig/config.go": "47b45fa88af32647416bfa8906d2245ebbe4dda9e836e26b0a4bcdf265e57bc0",
     "server/internal/devconfig/displacement.go": "b4c5b0bdbf6d1cb17292d8497c3b4b98a5bc971d16bf7f66f0630d20488472b7",
     "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
     "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
     "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
-    "server/internal/devconfig/map.go": "8be8300917a17511e1c45cf7d06c7ef1e06e1a364aef289e7c0c171d7d0eee55",
+    "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
+    "server/internal/devconfig/map_catalog_test.go": "9a99bf6f47c82e37f23cdd37d087e34a53e675627de7b7c148862cd01c3f9623",
     "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
     "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
     "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
@@ -1797,37 +1998,39 @@
     "server/internal/domain/model.go": "c97e1d982a24ae7d44b93227433867302042fac62c983e60c908f6dd4a567947",
     "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
     "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
-    "server/internal/game/combat.go": "73e576d8e94ea35fbc3a8868d41a37043c6c0057d18ad4dfe7441c5ad9ecf982",
+    "server/internal/game/combat.go": "5ecd423e9ca07d38efbed8d1f409453a47dcda234f0e4ebdda7993d3970ce6cb",
     "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
-    "server/internal/game/combat_status.go": "8b96585135504a2e2483f7a3c97f34207333cb13e42a4c96c50f45de835a2249",
+    "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
     "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
-    "server/internal/game/displacement_skills.go": "2d86fd06a1e8f5a76e6c699b8d7cc4e2092383fd88e0204d66de2eef85418f41",
+    "server/internal/game/displacement_skills.go": "9a9885c7454e15d40dd6831f72b4db2308edfe6b2f219d6949e4536da53dab77",
     "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
-    "server/internal/game/grid_test.go": "0f86a8cd264c94df58c5dc5ed892704da61530f8429e64d6c2eda7135813b59d",
+    "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
     "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
-    "server/internal/game/melee.go": "63c82bcb0ef49e2a8c49117301d2ef22b6efa4161f5c587d9ae3a0a615a4b9da",
+    "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
+    "server/internal/game/map_context_test.go": "2c61fe69642e41b03b3ce10f65fed1f41f98a5ad8cead869584487c7009a0877",
+    "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
     "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
-    "server/internal/game/movement.go": "02570c2b912bafd6e39e6e7b774a9253510e1a273313b294c2cfaa42ca3e694f",
-    "server/internal/game/movement_test.go": "677796f06ef367d4719369fd2eff46b4569e07347ec9d5570c7b6350326755c3",
+    "server/internal/game/movement.go": "8625366ab978ca9bb0a1f2506c1d35d853e7d853b429b8dad4125a81db658e13",
+    "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
     "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
     "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
-    "server/internal/game/potions_test.go": "e0434a10fc7cf10abccb96f95e2be280dbc8f725a6197a555f86fa915e4ba94a",
-    "server/internal/game/runtime.go": "f94e47ad2f9b15c379beef83705201bc847ad61aae5feaed66412d5d52662902",
+    "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
+    "server/internal/game/runtime.go": "c43067bbfa1c5ab9b4fb69d64c16d5d399e8266b6cd43dd82c7ec0a99d7484b2",
     "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
     "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
-    "server/internal/game/skill_cast.go": "d1480cc9fd6b2bd78f9a03a9b7b6b0e41bcec5c1158effa552010b485de91041",
+    "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
     "server/internal/game/skill_preview_test.go": "c62f36d36366d9a8d324b43352abd6b037ac4006f98d5f8c4cd8ed01de50fab6",
-    "server/internal/game/skills.go": "9108a374d787a52670a65070540b6a76176237c33b7dc67d7a7996b23abf4998",
+    "server/internal/game/skills.go": "4c5fc6e16c97a41f29843aaa234c708e021a94979639b1c346d7b4a80c8418dc",
     "server/internal/game/skills_test.go": "8886bd0cd266d14af21bb39d086a79b610c3dcfc1d4f3436d1123e52790a851b",
     "server/internal/game/source_pushed_test.go": "3f62dbad9309c45ac885a399f283e5a6ade55c3aca1b8e5ef77252d930f14b7a",
     "server/internal/game/testdata/source-displacement-skills-vectors.json.gz": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27",
     "server/internal/game/testdata/source-pushed-vectors.json.gz": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
     "server/internal/game/testdata/source-status-vectors.json.gz": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa",
-    "server/internal/game/timeline.go": "05fd82d7742b52101c4bc903930b3f9e5acc8f494c379d19023ace2590c97f36",
+    "server/internal/game/timeline.go": "d384b606eedcb7c347c9f08e3ed37d6441ae44dc015d87a9cd6620918e61fe5a",
     "server/internal/game/timeline_test.go": "704651e7041542b8fe18298197b633eefe4c535b5fd478591559cb234cb8efd6",
-    "server/internal/integration/binding_test.go": "6399e0614a2a826158fd5dc4199029e18dbe15266fac3eb30608a6800ee4903d",
+    "server/internal/integration/binding_test.go": "6c0521ece015de8f75e658d5a0c9828e69e696220a422c23e3b6f96cbca31904",
     "server/internal/integration/combat_area_test.go": "65e99d49febaba1d4203fbbb08e412a721ed081080185c35b14a6e68b857ee55",
     "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
     "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
@@ -1841,7 +2044,7 @@
     "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
     "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
     "server/internal/persistence/binding.go": "2c501f1bd32ebdd6d63f3cc56c6a996c0a1977808f3f43f224062ad6f5556d0f",
-    "server/internal/persistence/binding_test.go": "89ad7782f65f34c3d7fde98fe25c7e4e0e98092f7fbb0bcc675fcc64cbcd5e42",
+    "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
     "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
     "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
     "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
@@ -1859,7 +2062,7 @@
   },
   "source_sha256_after": {
     "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
-    "config/development/first-loop.json": "92e39cb378057b2aa4c11da4d0b64bcd82a56d9359d3ef0af9fd3cc2d27b4176",
+    "config/development/first-loop.json": "7868993c9d1cc33631d827e626683039a0934ce1a8d256c142ef680802c73a96",
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
@@ -1871,18 +2074,19 @@
     "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
     "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
     "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
-    "server/internal/devconfig/binding.go": "1c33b13e2cc17eb48649e25616501f7011981a9932625e577fb3c96f55fb4f55",
+    "server/internal/devconfig/binding.go": "6b0d6bd5f2d3b790474c3d8319dc58c10425b4b659877573c601ca9ea627c95a",
     "server/internal/devconfig/binding_test.go": "d9b39d15b42880ba051b00ae0c3883bc1d009a99aebeb8e8324b6e583b71b79d",
     "server/internal/devconfig/buffs.go": "e16eed073640bc6df0c0bb86fbfe9a7882f6c9200a5227dc5af0c0d3ec78d871",
     "server/internal/devconfig/buffs_test.go": "7ad327a25e1592d6fa594c4635652d2f1c0ef2f4a37af66d976485cefdeae1f6",
     "server/internal/devconfig/combat.go": "166eb49ff8b3a668ef2c4fee579ae1d9969a845888d4bb09e89111a35d8bacc6",
     "server/internal/devconfig/combat_modes_test.go": "53ce7a9fafd52e18acad3d9cdcefad90b956d065ec4a57c2c9b1bb72d924a499",
-    "server/internal/devconfig/config.go": "0401d68a837e381403cb233a0f1efbb4c761bbf281bef86421dc0863944c4c2c",
+    "server/internal/devconfig/config.go": "47b45fa88af32647416bfa8906d2245ebbe4dda9e836e26b0a4bcdf265e57bc0",
     "server/internal/devconfig/displacement.go": "b4c5b0bdbf6d1cb17292d8497c3b4b98a5bc971d16bf7f66f0630d20488472b7",
     "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
     "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
     "server/internal/devconfig/displacement_test.go": "15cf43656e5afd4536037c9e6bc8ffc887f93b6b4e19b68dbe0000a5091d913b",
-    "server/internal/devconfig/map.go": "8be8300917a17511e1c45cf7d06c7ef1e06e1a364aef289e7c0c171d7d0eee55",
+    "server/internal/devconfig/map.go": "9831c19a381c6e5641cc23e13f5b46bf86dad35bc9029eac7eadb426d62b0052",
+    "server/internal/devconfig/map_catalog_test.go": "9a99bf6f47c82e37f23cdd37d087e34a53e675627de7b7c148862cd01c3f9623",
     "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
     "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
     "server/internal/devconfig/skill_economy.go": "914c29a80307090690a13397341017a563395ff85cd2f97cdc2ca0ee029c97fc",
@@ -1893,37 +2097,39 @@
     "server/internal/domain/model.go": "c97e1d982a24ae7d44b93227433867302042fac62c983e60c908f6dd4a567947",
     "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
     "server/internal/game/casting_material.go": "ece05366c4b1a4d88eae13d58143673635e01216b585e0f5b8e79450c62c0fc8",
-    "server/internal/game/combat.go": "73e576d8e94ea35fbc3a8868d41a37043c6c0057d18ad4dfe7441c5ad9ecf982",
+    "server/internal/game/combat.go": "5ecd423e9ca07d38efbed8d1f409453a47dcda234f0e4ebdda7993d3970ce6cb",
     "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
-    "server/internal/game/combat_status.go": "8b96585135504a2e2483f7a3c97f34207333cb13e42a4c96c50f45de835a2249",
+    "server/internal/game/combat_status.go": "feec68ac87509f81b0999c9539d5b76294ba345c5cda32f710c5107b19337e79",
     "server/internal/game/combat_status_test.go": "78f77854ba6a250149cdb0b20c37ecd97d355ed3f9c32a4286f04c4fa42c9adf",
-    "server/internal/game/displacement_skills.go": "2d86fd06a1e8f5a76e6c699b8d7cc4e2092383fd88e0204d66de2eef85418f41",
+    "server/internal/game/displacement_skills.go": "9a9885c7454e15d40dd6831f72b4db2308edfe6b2f219d6949e4536da53dab77",
     "server/internal/game/displacement_skills_test.go": "baedb95e36c95839dda9a38a6af18d598273188ba6486ae0dd02fa105d760d0b",
-    "server/internal/game/grid_test.go": "0f86a8cd264c94df58c5dc5ed892704da61530f8429e64d6c2eda7135813b59d",
+    "server/internal/game/grid_test.go": "d04456acf4eec72a3a3634e9ecd5fa534fd7ff9548e63353b6da87e86f0ef569",
     "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
     "server/internal/game/hosting_test.go": "86ed231d9acdf76882972e437938514a1d057ba47fdee601326048a45bf9705f",
-    "server/internal/game/melee.go": "63c82bcb0ef49e2a8c49117301d2ef22b6efa4161f5c587d9ae3a0a615a4b9da",
+    "server/internal/game/map_context.go": "75419c40e3fb0eeb878c5a00a2aaa2e2f7dffd241a8a9690f68cf1ace02de884",
+    "server/internal/game/map_context_test.go": "2c61fe69642e41b03b3ce10f65fed1f41f98a5ad8cead869584487c7009a0877",
+    "server/internal/game/melee.go": "fd01c1ea49ccd9f49bec7f4c11f78fc2ed233d70f14de42ade7eee505c32115a",
     "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
-    "server/internal/game/movement.go": "02570c2b912bafd6e39e6e7b774a9253510e1a273313b294c2cfaa42ca3e694f",
-    "server/internal/game/movement_test.go": "677796f06ef367d4719369fd2eff46b4569e07347ec9d5570c7b6350326755c3",
+    "server/internal/game/movement.go": "8625366ab978ca9bb0a1f2506c1d35d853e7d853b429b8dad4125a81db658e13",
+    "server/internal/game/movement_test.go": "3d56296c0359c13ef4082857601192c19f3151ed3c55a154ce981aaa31d03a6a",
     "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
     "server/internal/game/observation_test.go": "11b2f9470b9e8d97c8cfa99f23cc0878fa19affaa3542db0fbb47bd9ca1ac927",
     "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
-    "server/internal/game/potions_test.go": "e0434a10fc7cf10abccb96f95e2be280dbc8f725a6197a555f86fa915e4ba94a",
-    "server/internal/game/runtime.go": "f94e47ad2f9b15c379beef83705201bc847ad61aae5feaed66412d5d52662902",
+    "server/internal/game/potions_test.go": "58842309c5c895a51be8a041d4a550a301f83c94b523efa9381c8feb6a1432f6",
+    "server/internal/game/runtime.go": "c43067bbfa1c5ab9b4fb69d64c16d5d399e8266b6cd43dd82c7ec0a99d7484b2",
     "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
     "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
-    "server/internal/game/skill_cast.go": "d1480cc9fd6b2bd78f9a03a9b7b6b0e41bcec5c1158effa552010b485de91041",
+    "server/internal/game/skill_cast.go": "de04f3ea2a7c2cc9db118bdfb6c2d2faf58b6a1ad4e68afe774b5ba298c03384",
     "server/internal/game/skill_preview_test.go": "c62f36d36366d9a8d324b43352abd6b037ac4006f98d5f8c4cd8ed01de50fab6",
-    "server/internal/game/skills.go": "9108a374d787a52670a65070540b6a76176237c33b7dc67d7a7996b23abf4998",
+    "server/internal/game/skills.go": "4c5fc6e16c97a41f29843aaa234c708e021a94979639b1c346d7b4a80c8418dc",
     "server/internal/game/skills_test.go": "8886bd0cd266d14af21bb39d086a79b610c3dcfc1d4f3436d1123e52790a851b",
     "server/internal/game/source_pushed_test.go": "3f62dbad9309c45ac885a399f283e5a6ade55c3aca1b8e5ef77252d930f14b7a",
     "server/internal/game/testdata/source-displacement-skills-vectors.json.gz": "6776a52a6b2ba75e897d719b6c517e747d007cfe30ebe69b2b98d88faf919b27",
     "server/internal/game/testdata/source-pushed-vectors.json.gz": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
     "server/internal/game/testdata/source-status-vectors.json.gz": "9a6003e92e8e9822abbda092626817e299d00994a599199a664004980ffa8eaa",
-    "server/internal/game/timeline.go": "05fd82d7742b52101c4bc903930b3f9e5acc8f494c379d19023ace2590c97f36",
+    "server/internal/game/timeline.go": "d384b606eedcb7c347c9f08e3ed37d6441ae44dc015d87a9cd6620918e61fe5a",
     "server/internal/game/timeline_test.go": "704651e7041542b8fe18298197b633eefe4c535b5fd478591559cb234cb8efd6",
-    "server/internal/integration/binding_test.go": "6399e0614a2a826158fd5dc4199029e18dbe15266fac3eb30608a6800ee4903d",
+    "server/internal/integration/binding_test.go": "6c0521ece015de8f75e658d5a0c9828e69e696220a422c23e3b6f96cbca31904",
     "server/internal/integration/combat_area_test.go": "65e99d49febaba1d4203fbbb08e412a721ed081080185c35b14a6e68b857ee55",
     "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
     "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
@@ -1937,7 +2143,7 @@
     "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
     "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
     "server/internal/persistence/binding.go": "2c501f1bd32ebdd6d63f3cc56c6a996c0a1977808f3f43f224062ad6f5556d0f",
-    "server/internal/persistence/binding_test.go": "89ad7782f65f34c3d7fde98fe25c7e4e0e98092f7fbb0bcc675fcc64cbcd5e42",
+    "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
     "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
     "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
     "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
@@ -1953,7 +2159,7 @@
     "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
     "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
   },
-  "events_sha256": "121ab4c7ada0ccf452f53a12a1976c732e68a4b047819f99e2774349c2eb5030",
+  "events_sha256": "3f5b294ccb50c8c90f440f46b2483fc5da429cc9d826ac2d633b75b892e1ef05",
   "production_ready": false,
   "failed_tests": [],
   "package_timeout_seconds": 600,

@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"math"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
@@ -66,8 +67,8 @@ func TestInitialBindingUsesApprovedListAndNeverInfersCurrentSpawn(t *testing.T) 
 	if err := s.checkBinding(saved); err != nil {
 		t.Fatal(err)
 	}
-	saved.MapID++
-	if Code(s.checkBinding(saved)) != p.CodeLineForbidden || saved.MapID != cfg.Fixture.Map.ID+1 {
+	saved.MapID = math.MaxInt64
+	if Code(s.checkBinding(saved)) != p.CodeLineForbidden || saved.MapID != math.MaxInt64 {
 		t.Fatal("未知地图绑定未拒绝，或被自动覆盖")
 	}
 }

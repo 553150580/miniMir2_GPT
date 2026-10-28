@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 11,
+  "rule_version": 12,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -3398,5 +3398,70 @@
       "job_id": 2,
       "can_push": true
     }
-  ]
+  ],
+  "map_catalog": [
+    {
+      "id": "1",
+      "name": "林间战场",
+      "resource_key": "development/maps/first-map",
+      "width": 17,
+      "height": 17,
+      "scene_kind": 1,
+      "safe_zones": []
+    },
+    {
+      "id": "2",
+      "name": "比奇省",
+      "resource_key": "source-maps/map-2/manifest",
+      "width": 700,
+      "height": 700,
+      "scene_kind": 2,
+      "safe_zones": [
+        {
+          "id": "106",
+          "center": {
+            "x": 650,
+            "y": 631
+          },
+          "radius": 8
+        },
+        {
+          "id": "107",
+          "center": {
+            "x": 650,
+            "y": 631
+          },
+          "radius": 8
+        },
+        {
+          "id": "108",
+          "center": {
+            "x": 650,
+            "y": 631
+          },
+          "radius": 8
+        },
+        {
+          "id": "113",
+          "center": {
+            "x": 289,
+            "y": 618
+          },
+          "radius": 8
+        },
+        {
+          "id": "117",
+          "center": {
+            "x": 331,
+            "y": 267
+          },
+          "radius": 10
+        }
+      ]
+    }
+  ],
+  "source_map_streaming": {
+    "load_concurrency": 4,
+    "cache_capacity": 49
+  }
 }

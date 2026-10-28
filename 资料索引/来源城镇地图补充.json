@@ -1,0 +1,47 @@
+{
+  "status": "source_candidate_only",
+  "runtime_ready": false,
+  "map_source": {
+    "path": "资料参考/myf/Mir200/Map/0.map",
+    "sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec"
+  },
+  "selected_gameplay_fields": {
+    "Mir200/Envir/MapInfo.txt": {
+      "sha256": "358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707",
+      "line": 5,
+      "selected_fields": [
+        "比奇省"
+      ],
+      "source_line_sha256": "30d53bc2699696766023fb793ee26fc1a752466398ec728f7db9c117806c8765"
+    },
+    "Mir200/Envir/Market_Def/传送员/传送员-0.txt": {
+      "sha256": "8d15e7532b71a3541d21b35401d54fbebcc08cd3274cfab70ff51263bb0c1a09",
+      "line": 39,
+      "selected_fields": [
+        "0",
+        "633",
+        "613"
+      ],
+      "source_line_sha256": "9276b7f0bf8bc3ddd8a1fd691de1ea2440d7a3ab9783e017a4628b97b9509c01"
+    }
+  },
+  "exclusions": [
+    "不执行来源指令",
+    "不移植传送费用",
+    "不读取账号或部署配置"
+  ],
+  "new_character_start_pool_verified": false,
+  "minimap_candidate": {
+    "source_copy": "资料参考/myf/Mir200/Envir/MiniMap.txt",
+    "source_sha256": "4d3c42c61f33ddd11ce8629bf84794f174f02d58d6b534bc516dbb25739625f1",
+    "source_line": 98,
+    "map_code": "0",
+    "mapped_image_number": 101,
+    "selected_raw_frame": 100,
+    "source_package": "mmap",
+    "index_base_engine_verified": false,
+    "status": "candidate_cross_source_visual_match",
+    "wil_sha256": "5f91dc88f822717e21e417901fecf446e67546b9ed29eb22039708edfc2b7609",
+    "wix_sha256": "49ff747a54945ce4a629d56221a285f15b84f761d182b9f3d9fe2af20d388186"
+  }
+}

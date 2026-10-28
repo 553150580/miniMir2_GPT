@@ -26,11 +26,11 @@ const geometry={width:17,height:17,tile_width:64,tile_height:32,soil_thickness_p
 const cc={Node,UITransform,Sprite,Label,ProgressBar,Graphics,Color,Vec3,isValid:()=>true,game:{totalTime:100}};
 test('真实资源预载在取票前拒绝新旧地图混包并释放已持有资源，不进入固定场景后才发现错位',async()=>{
     const loaded=[],released=[],map={...geometry,surface_width:1088,surface_height:544,world_height:591,background_offset_y:24};
-    const values={'development/manifest':{map:{...geometry}},'development/maps/first-map':map};
+    const values={'development/manifest':{map:{...geometry}},'development/gameplay':{},'development/maps/first-map':map};
     const resources={load(path,_type,done){loaded.push(path);done(null,{json:values[path],addRef(){},decRef(){released.push(path);}});}};
     const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),id=>id==='cc'?{resources}:id==='./GridProjection'?{GridProjection}:{});
     await assert.rejects(WorldAssets.prepare(0,()=>{}),/地图地板、投影与来源清单不一致/);
-    assert.deepEqual(loaded,['development/manifest','development/maps/first-map']);assert.deepEqual(released,loaded);
+    assert.deepEqual(loaded,['development/manifest','development/gameplay','development/maps/first-map']);assert.deepEqual(released,loaded);
 });
 test('真实地图绘制只使用保存节点：两侧48像素土层、18+18网格、独立Surface与菱形目标',()=>{
     const world=new Node('World');world.add(Sprite,new Sprite());

@@ -1,0 +1,1675 @@
+{
+  "created_at_utc": "2026-10-28T16:47:27.967764+00:00",
+  "scope": "只读取明确指定的四份玩法Excel ZIP；未修改工作簿",
+  "empty_definition": "行内所有cell均不含v/f/is载荷；只含样式和行属性的模板归为空；公式即使无缓存也不归空",
+  "metadata_check": "比较将删除空行的所有行属性及各地址cell的s/cm/vm等非r/t属性和未知子节点，不把样式差异当作值冲突",
+  "workbooks": [
+    {
+      "path": ".work/displacement-skills-20261028/workbook-before.xlsx",
+      "exists": true,
+      "sha256_before": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894",
+      "sha256_after": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894",
+      "source_bytes_unchanged": true,
+      "summary": {
+        "worksheet_count": 95,
+        "xml_row_count": 1532,
+        "xml_cell_count": 13694,
+        "formula_cell_count": 460,
+        "duplicate_row_groups": 0,
+        "duplicate_row_excess": 0,
+        "only_empty_templates": 0,
+        "one_nonempty_plus_empty_templates": 0,
+        "multiple_nonempty_rows": 0,
+        "conflicting_value_addresses": 0,
+        "empty_row_attribute_conflicts": 0,
+        "empty_cell_metadata_conflicts": 0,
+        "empty_metadata_missing_from_keeper": 0,
+        "safe_delete_only_groups": 0,
+        "safe_with_nonempty_row_height_preserved": 0,
+        "same_row_duplicate_cell_addresses": 0
+      },
+      "affected_sheets": [],
+      "delete_empty_duplicate_rows_simulation": {
+        "performed_in_memory_only": true,
+        "all_nonempty_row_xml_and_order_identical": true,
+        "sheet_fingerprints_before": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "07d6f2cfb22940dab378a04fdc95a02c91e02b553bc485edf8130e85f58db0fd",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "69e94476c526ab187db58d839a57d0b35552c115309e03d037ad2e31908600bd",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "8f7c48c7c7616cb713e8e443c3ef6ecc5235e922e8f5396a3686374bee56f928",
+          "地图碰撞": "f88ac88839d9e7e2723adf88f9c01cc31d41c3f990287b95554512c316d97eb8",
+          "地图区域与NPC": "f5e3ca748dee2ffa503a8b113228c39787c7820bb39a2f363c2bdaa425fdcd98",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "14d3e7b6e6c9e5acf22deb0e794b7a143b7cf3f42b6b697d204f2b09e409f965",
+          "技能逐级扩展": "f311f80d456178b421cd1cf27f6fef7fd3b31bdce37db8f7a5217bcf4e46a408",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "aacd39cf6ca5044b0232095fb57be2e1ba21a693bc99cfb3ff5425166e2dc395"
+        },
+        "sheet_fingerprints_after": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "07d6f2cfb22940dab378a04fdc95a02c91e02b553bc485edf8130e85f58db0fd",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "69e94476c526ab187db58d839a57d0b35552c115309e03d037ad2e31908600bd",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "8f7c48c7c7616cb713e8e443c3ef6ecc5235e922e8f5396a3686374bee56f928",
+          "地图碰撞": "f88ac88839d9e7e2723adf88f9c01cc31d41c3f990287b95554512c316d97eb8",
+          "地图区域与NPC": "f5e3ca748dee2ffa503a8b113228c39787c7820bb39a2f363c2bdaa425fdcd98",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "14d3e7b6e6c9e5acf22deb0e794b7a143b7cf3f42b6b697d204f2b09e409f965",
+          "技能逐级扩展": "f311f80d456178b421cd1cf27f6fef7fd3b31bdce37db8f7a5217bcf4e46a408",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "aacd39cf6ca5044b0232095fb57be2e1ba21a693bc99cfb3ff5425166e2dc395"
+        }
+      },
+      "conclusion": "未发现重复row，无须修复"
+    },
+    {
+      "path": ".work/source-town-20261028/workbook-before.xlsx",
+      "exists": true,
+      "sha256_before": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74",
+      "sha256_after": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74",
+      "source_bytes_unchanged": true,
+      "summary": {
+        "worksheet_count": 95,
+        "xml_row_count": 1544,
+        "xml_cell_count": 13862,
+        "formula_cell_count": 460,
+        "duplicate_row_groups": 0,
+        "duplicate_row_excess": 0,
+        "only_empty_templates": 0,
+        "one_nonempty_plus_empty_templates": 0,
+        "multiple_nonempty_rows": 0,
+        "conflicting_value_addresses": 0,
+        "empty_row_attribute_conflicts": 0,
+        "empty_cell_metadata_conflicts": 0,
+        "empty_metadata_missing_from_keeper": 0,
+        "safe_delete_only_groups": 0,
+        "safe_with_nonempty_row_height_preserved": 0,
+        "same_row_duplicate_cell_addresses": 0
+      },
+      "affected_sheets": [],
+      "delete_empty_duplicate_rows_simulation": {
+        "performed_in_memory_only": true,
+        "all_nonempty_row_xml_and_order_identical": true,
+        "sheet_fingerprints_before": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "8f7c48c7c7616cb713e8e443c3ef6ecc5235e922e8f5396a3686374bee56f928",
+          "地图碰撞": "f88ac88839d9e7e2723adf88f9c01cc31d41c3f990287b95554512c316d97eb8",
+          "地图区域与NPC": "f5e3ca748dee2ffa503a8b113228c39787c7820bb39a2f363c2bdaa425fdcd98",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "62eef73479377dabccfaa7b5315ee31342fd6c2b0574a59abd6583f6ecbaede2"
+        },
+        "sheet_fingerprints_after": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "8f7c48c7c7616cb713e8e443c3ef6ecc5235e922e8f5396a3686374bee56f928",
+          "地图碰撞": "f88ac88839d9e7e2723adf88f9c01cc31d41c3f990287b95554512c316d97eb8",
+          "地图区域与NPC": "f5e3ca748dee2ffa503a8b113228c39787c7820bb39a2f363c2bdaa425fdcd98",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "62eef73479377dabccfaa7b5315ee31342fd6c2b0574a59abd6583f6ecbaede2"
+        }
+      },
+      "conclusion": "未发现重复row，无须修复"
+    },
+    {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "exists": true,
+      "sha256_before": "5801bd0c5c76bcb7765110fe65d8a2ae4de1846e56f5062e4a1b10acc0d88d0a",
+      "sha256_after": "5801bd0c5c76bcb7765110fe65d8a2ae4de1846e56f5062e4a1b10acc0d88d0a",
+      "source_bytes_unchanged": true,
+      "summary": {
+        "worksheet_count": 95,
+        "xml_row_count": 1551,
+        "xml_cell_count": 13940,
+        "formula_cell_count": 460,
+        "duplicate_row_groups": 7,
+        "duplicate_row_excess": 7,
+        "only_empty_templates": 0,
+        "one_nonempty_plus_empty_templates": 7,
+        "multiple_nonempty_rows": 0,
+        "conflicting_value_addresses": 0,
+        "empty_row_attribute_conflicts": 3,
+        "empty_cell_metadata_conflicts": 0,
+        "empty_metadata_missing_from_keeper": 0,
+        "safe_delete_only_groups": 4,
+        "safe_with_nonempty_row_height_preserved": 7,
+        "same_row_duplicate_cell_addresses": 0
+      },
+      "affected_sheets": [
+        {
+          "sheet": "地图定义",
+          "zip_member": "xl/worksheets/sheet55.xml",
+          "xml_row_count": 10,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                4
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5",
+                    "K5",
+                    "L5",
+                    "M5",
+                    "N5",
+                    "O5",
+                    "P5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "196",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [
+                {
+                  "row_ordinal": 4,
+                  "key": "ht",
+                  "empty_value": "15",
+                  "keeper_value": "196"
+                }
+              ],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": "保留含值行原ht/customHeight等属性；空模板ht=15不覆盖数据行"
+            }
+          ],
+          "duplicate_cell_address_count": 14,
+          "same_row_duplicate_cells": []
+        },
+        {
+          "sheet": "地图碰撞",
+          "zip_member": "xl/worksheets/sheet56.xml",
+          "xml_row_count": 10,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                4
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5",
+                    "K5",
+                    "L5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "112",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [
+                {
+                  "row_ordinal": 4,
+                  "key": "ht",
+                  "empty_value": "15",
+                  "keeper_value": "112"
+                }
+              ],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": "保留含值行原ht/customHeight等属性；空模板ht=15不覆盖数据行"
+            }
+          ],
+          "duplicate_cell_address_count": 12,
+          "same_row_duplicate_cells": []
+        },
+        {
+          "sheet": "地图区域与NPC",
+          "zip_member": "xl/worksheets/sheet57.xml",
+          "xml_row_count": 14,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                4
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "26.399999618530273",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [
+                {
+                  "row_ordinal": 4,
+                  "key": "ht",
+                  "empty_value": "15",
+                  "keeper_value": "26.399999618530273"
+                }
+              ],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": "保留含值行原ht/customHeight等属性；空模板ht=15不覆盖数据行"
+            },
+            {
+              "row_number": 6,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                6
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 7,
+                  "payload_addresses": [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "F6",
+                    "G6",
+                    "H6",
+                    "I6",
+                    "J6"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "6": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "7": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 7,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                8
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 9,
+                  "payload_addresses": [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "F7",
+                    "G7",
+                    "H7",
+                    "I7",
+                    "J7"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "8": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "9": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 8,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                10
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 11,
+                  "payload_addresses": [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8",
+                    "F8",
+                    "G8",
+                    "H8",
+                    "I8",
+                    "J8"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "10": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "11": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 9,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                12
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 13,
+                  "payload_addresses": [
+                    "A9",
+                    "B9",
+                    "C9",
+                    "D9",
+                    "F9",
+                    "G9",
+                    "H9",
+                    "I9",
+                    "J9"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "12": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "13": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            }
+          ],
+          "duplicate_cell_address_count": 50,
+          "same_row_duplicate_cells": []
+        }
+      ],
+      "delete_empty_duplicate_rows_simulation": {
+        "performed_in_memory_only": true,
+        "all_nonempty_row_xml_and_order_identical": true,
+        "sheet_fingerprints_before": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "7293c3f27eb7c298ccd6ce461e5dae690f5e4122d76900a6668d7497144fb4c2",
+          "地图碰撞": "4e78047ecee0dd9ac13933a4e965bdc4b3c48664e40511f57a9ed102fff2616c",
+          "地图区域与NPC": "9f0b37cf58d845caa87bd7a468229ee2090bd3cf623740ad86fccfd664467997",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "9422bea8a52f99cc12e4c1503cc3d6fda8bd887f762aa3dbfb2871980dd99692"
+        },
+        "sheet_fingerprints_after": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "7293c3f27eb7c298ccd6ce461e5dae690f5e4122d76900a6668d7497144fb4c2",
+          "地图碰撞": "4e78047ecee0dd9ac13933a4e965bdc4b3c48664e40511f57a9ed102fff2616c",
+          "地图区域与NPC": "9f0b37cf58d845caa87bd7a468229ee2090bd3cf623740ad86fccfd664467997",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "9422bea8a52f99cc12e4c1503cc3d6fda8bd887f762aa3dbfb2871980dd99692"
+        }
+      },
+      "conclusion": "删除重复空模板并完整保留含值行及其原行高/样式可保留全部业务数据；无须合并单元格元数据，不用空模板15行高覆盖数据行"
+    },
+    {
+      "path": ".work/source-town-20261028/minimap-candidate.xlsx",
+      "exists": true,
+      "sha256_before": "fd876c4377814a5652ce87a3934084e92f9d08c399a100354ace712e82454c51",
+      "sha256_after": "fd876c4377814a5652ce87a3934084e92f9d08c399a100354ace712e82454c51",
+      "source_bytes_unchanged": true,
+      "summary": {
+        "worksheet_count": 95,
+        "xml_row_count": 1551,
+        "xml_cell_count": 13941,
+        "formula_cell_count": 460,
+        "duplicate_row_groups": 7,
+        "duplicate_row_excess": 7,
+        "only_empty_templates": 0,
+        "one_nonempty_plus_empty_templates": 6,
+        "multiple_nonempty_rows": 1,
+        "conflicting_value_addresses": 2,
+        "empty_row_attribute_conflicts": 2,
+        "empty_cell_metadata_conflicts": 0,
+        "empty_metadata_missing_from_keeper": 0,
+        "safe_delete_only_groups": 4,
+        "safe_with_nonempty_row_height_preserved": 6,
+        "same_row_duplicate_cell_addresses": 0
+      },
+      "affected_sheets": [
+        {
+          "sheet": "地图定义",
+          "zip_member": "xl/worksheets/sheet55.xml",
+          "xml_row_count": 10,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "multiple_nonempty_rows",
+              "occurrences": 2,
+              "empty_ordinals": [],
+              "nonempty_rows": [
+                {
+                  "ordinal": 4,
+                  "payload_addresses": [
+                    "M5",
+                    "O5"
+                  ]
+                },
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5",
+                    "K5",
+                    "L5",
+                    "M5",
+                    "N5",
+                    "O5",
+                    "P5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "196",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [
+                {
+                  "address": "M5",
+                  "values": [
+                    {
+                      "row_ordinal": 4,
+                      "sha256": "0d70434508a5f4ee64bdac70e4a3f8ae2fe00caad44ad1331a519b3a9556c069",
+                      "characters": 180,
+                      "preview": "{\"inline_string\":\"用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证；MiniMap.txt:98图号101与mmap原帧100视觉候选对齐，原引擎编号基址未认证\"}"
+                    },
+                    {
+                      "row_ordinal": 5,
+                      "sha256": "a7b9e31f395e1874b360b048a01a61fbd48aaa06ac64d5e4aee6ec7b8ddf0854",
+                      "characters": 133,
+                      "preview": "{\"inline_string\":\"用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证\"}"
+                    }
+                  ]
+                },
+                {
+                  "address": "O5",
+                  "values": [
+                    {
+                      "row_ordinal": 4,
+                      "sha256": "4db8ffa4e991d47697ce97133a563fe792b9a9d016145e74512d3b4da881b1c4",
+                      "characters": 259,
+                      "preview": "{\"inline_string\":\"{\\\"projection\\\":\\\"source_rectangular\\\",\\\"tile_width\\\":48,\\\"tile_height\\\":32,\\\"soil_thickness_px\\\":0,\\\"source_origin\\\":{\\\"x\\\":0,\\\"y\\\":0},\\\"chunk_size_cells\\\":16,\\\""
+                    },
+                    {
+                      "row_ordinal": 5,
+                      "sha256": "23c9be13c0a1b1754aeec7817225451b75e03ceb479f6d2cbd96d93f0ae619e2",
+                      "characters": 206,
+                      "preview": "{\"inline_string\":\"{\\\"projection\\\":\\\"source_rectangular\\\",\\\"tile_width\\\":48,\\\"tile_height\\\":32,\\\"soil_thickness_px\\\":0,\\\"source_origin\\\":{\\\"x\\\":0,\\\"y\\\":0},\\\"chunk_size_cells\\\":16,\\\""
+                    }
+                  ]
+                }
+              ],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": false,
+              "attribute_resolution": null
+            }
+          ],
+          "duplicate_cell_address_count": 15,
+          "same_row_duplicate_cells": []
+        },
+        {
+          "sheet": "地图碰撞",
+          "zip_member": "xl/worksheets/sheet56.xml",
+          "xml_row_count": 10,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                4
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5",
+                    "K5",
+                    "L5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "112",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [
+                {
+                  "row_ordinal": 4,
+                  "key": "ht",
+                  "empty_value": "15",
+                  "keeper_value": "112"
+                }
+              ],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": "保留含值行原ht/customHeight等属性；空模板ht=15不覆盖数据行"
+            }
+          ],
+          "duplicate_cell_address_count": 12,
+          "same_row_duplicate_cells": []
+        },
+        {
+          "sheet": "地图区域与NPC",
+          "zip_member": "xl/worksheets/sheet57.xml",
+          "xml_row_count": 14,
+          "duplicate_row_groups": [
+            {
+              "row_number": 5,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                4
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 5,
+                  "payload_addresses": [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "F5",
+                    "G5",
+                    "H5",
+                    "I5",
+                    "J5"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "4": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "5": {
+                  "ht": "26.399999618530273",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [
+                {
+                  "row_ordinal": 4,
+                  "key": "ht",
+                  "empty_value": "15",
+                  "keeper_value": "26.399999618530273"
+                }
+              ],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": false,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": "保留含值行原ht/customHeight等属性；空模板ht=15不覆盖数据行"
+            },
+            {
+              "row_number": 6,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                6
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 7,
+                  "payload_addresses": [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "F6",
+                    "G6",
+                    "H6",
+                    "I6",
+                    "J6"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "6": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "7": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 7,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                8
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 9,
+                  "payload_addresses": [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "F7",
+                    "G7",
+                    "H7",
+                    "I7",
+                    "J7"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "8": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "9": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 8,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                10
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 11,
+                  "payload_addresses": [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8",
+                    "F8",
+                    "G8",
+                    "H8",
+                    "I8",
+                    "J8"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "10": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "11": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            },
+            {
+              "row_number": 9,
+              "category": "one_nonempty_plus_empty_templates",
+              "occurrences": 2,
+              "empty_ordinals": [
+                12
+              ],
+              "nonempty_rows": [
+                {
+                  "ordinal": 13,
+                  "payload_addresses": [
+                    "A9",
+                    "B9",
+                    "C9",
+                    "D9",
+                    "F9",
+                    "G9",
+                    "H9",
+                    "I9",
+                    "J9"
+                  ]
+                }
+              ],
+              "row_attributes_by_ordinal": {
+                "12": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                },
+                "13": {
+                  "ht": "15",
+                  "hidden": "0",
+                  "customHeight": "1"
+                }
+              },
+              "conflicting_value_addresses": [],
+              "identical_nonempty_addresses": [],
+              "empty_row_attribute_conflicts": [],
+              "empty_cell_metadata_conflicts": [],
+              "empty_metadata_missing_from_keeper": [],
+              "safe_to_delete_only_empty_rows_without_metadata_merge": true,
+              "safe_to_delete_empty_row_and_keep_nonempty_row_attributes": true,
+              "attribute_resolution": null
+            }
+          ],
+          "duplicate_cell_address_count": 50,
+          "same_row_duplicate_cells": []
+        }
+      ],
+      "delete_empty_duplicate_rows_simulation": {
+        "performed_in_memory_only": true,
+        "all_nonempty_row_xml_and_order_identical": true,
+        "sheet_fingerprints_before": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "95714be28c76ce5e951a3e3a1a051fa95b82e1492ea6dc798e9dce4d9b533a17",
+          "地图碰撞": "4e78047ecee0dd9ac13933a4e965bdc4b3c48664e40511f57a9ed102fff2616c",
+          "地图区域与NPC": "9f0b37cf58d845caa87bd7a468229ee2090bd3cf623740ad86fccfd664467997",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "9422bea8a52f99cc12e4c1503cc3d6fda8bd887f762aa3dbfb2871980dd99692"
+        },
+        "sheet_fingerprints_after": {
+          "配置目录": "a4bafb7eca9e7642a261a487a964873e0f25f8bbaed2fd3c9ea897bf865e7976",
+          "四货币": "9a0c123729803c76618f76c12a47ef8aec43f853d1609e98a479bf0c31ea808b",
+          "职业与固定形象": "2ccf91c615626b3d75b174e29b85ee97c3e1f7ab9573c4308476a2a515fc32f7",
+          "装备部位": "f72e4ffbf04b88354f54a2077dde39d434559c65cc090ad0a6e54db4de8fb463",
+          "品质与词条槽": "1ac560dd4ae57c54de739b00f76bf454153a1563c2b61752671a7fc8e438441f",
+          "装备阶段": "0618a577cc765c477eac04af403f0729c163e44ac4a025f2347cbb4e2641cd8a",
+          "产品范围与基础约束": "981bff3fc90ec5f3235199272d567f742e8b45e90e466b731b55ffa0f8011e45",
+          "角色与仓库规则": "ed44efccb6fbbdb561492d14f9a07121fb9a082feaaf5c10692bd53d2baf2590",
+          "绑定判定事件": "1ec99259f53768dab1c8861388cb806a6e4da893cfc321ce7c7eae412c59df4a",
+          "绑定资源授权": "88ff5c58c3ef9365cb03db8b74a953659e1370ff463ccbd9c65fd297fd3eca65",
+          "双卡产品": "feeeff55921c1a92a1f5071e88a22b048e4bbcd40d07e1203d93a0bd1c172e6a",
+          "双卡与托管权益": "3555bd3f34228c6bb6a57152fc6feb284853114b131bc1afbfc416018593f658",
+          "道具竞购规则": "8dd0b80ee200fad5b10608a4d324a5df098bcca821088f83d557f4aeeabf9816",
+          "金币撮合规则": "56bfcc741fb0dddadf60418ed9af7e0d601796be3eb0d77a575fefebdcdf5ed9",
+          "普通掉落互斥分类": "6ffdf898873fae925f9142685f8f3f4371cd77b59841fbd747b891a23cc97437",
+          "保底与掉落限额规则": "14fcf6bfe8debf7938aa3132b18ae68c6799c45ef7ca2de5e085b709189ad1e8",
+          "洗炼16词条池": "12fe53d38421df7e41a215c0b553013dd42e1343dfd261a76f77c51038390ceb",
+          "洗炼品质消耗": "a90eb4d626681c50a723156141b373149f615da0f69e899c294d2eca2a64c4ee",
+          "洗炼五档": "662b50266e188da8f82208f911237218b51cf97c6fd95d9fbde2364f39a331e8",
+          "洗炼锁槽费用": "436d3833ccf662eabdaa54b45a36c88054c70a1ccc2f82e9f81f8749982a8053",
+          "部位强化逐级候选": "5d2769bfa885e19514a1e4a995df1702b03426cd9d5423ec298279736daa1a99",
+          "炼体七系候选": "d661b8f4f0d5514e97aebc992dfd20720184265e5660360b1f8a95a0087f39fa",
+          "炼体逐级概率": "7177a9478ac8062b8a78659284370216ec118bb9e2a850c0e156b22cbdebb5fe",
+          "初始幸运生成": "3f19f13c23a88bca9d84ad06ec76f81e6ed91f74e9dd6bfc39e9897f045b6656",
+          "用油逐级规则": "525ce7f99884ea9953128917442cccf9bda7e0fdff832d70c36b40769785f51e",
+          "幸运一击贡献": "438c5554184b343aba739df915078882cf1752617477eb8941af389b6fe50e9f",
+          "幸运11贡献位": "50eae0e56ce25e864c50cf50e79ebcfeaef00b2f8c5656e3a49438eeeebe1ee0",
+          "幸运结算与分解规则": "b934213e0a4ad4e33b4993900b1c9c29fdb27a2bf43c6e2fac30e503325ee7b2",
+          "矿种候选": "f5e62c28b4c54a019364efb94a78bdd68442c20887ea5a04ddcfb227e928af41",
+          "矿区楼层候选": "a36fe806c11827f7704278df6b49288e6b34b10aa74d99dc71af9b6d32006c56",
+          "矿石纯度档": "a26edfd55a65d017b6233c13b181cf6e2daf701765f23c89860ceef3bd0cd705",
+          "挖矿打造修理规则": "f26c56437fe31302015100651bf6a26a88aa7f7b12384b4e463e5061976523c6",
+          "等级档费用候选": "91595efca49215648f50cbf9baae6260a410cbe66fc48334a928e0d57fb0e4c8",
+          "技能书分解候选": "8adddf295a95a75d1e5d22205f4dba1747cb62d308e0d88dd8a54de3657d92bc",
+          "商城商品候选": "6da749ea528fca242d94ab11cbcd753b19c2b469f7b60b383ea0ea0501b611e2",
+          "挑战与副本规则": "f9e787562fd636bdc96f3d15e13ca4d459bf1bf2694188adaded4b6d3f130910",
+          "副本等级入口": "6637e45d8d2024601a54a6212df1bb7260198d0e903b6dd114d359ead464c14d",
+          "镜像竞技规则": "934baa97ed83453f12ba04c549d5bf882f8fe0ae808df6fb8b0fc90befb14b5b",
+          "竞技连胜积分": "85a0cbcda5b2019253f7122899b68f0aeba9b18c7ac1198d253b4e641fe255fa",
+          "等级转生与任务规则": "09a6924b6404ab5f94b1dd13711cb88fdf2489ffa348b2dc283e6cae9e8327c7",
+          "魂兽名录": "8773b92c6cc959837475fcd6c0da2fea6b2d88f08e942efca3e3689db01275c6",
+          "魂兽三池词条": "b5eec5902f4479885d0b4cfb40f01c38aa0ebc5e4b7f8ae798dd78a2b8588801",
+          "魂兽勋章翅膀规则": "ee24ca245b99cfa4356e2e6f32ff85703c02f712aa95c138310d2c5db1ed7273",
+          "翅膀逐阶待定": "6be1f237bee4df99fd5cc697379c6a6bf07ed8e52cf716341b384021796ba107",
+          "战令档位候选": "1340a57775539e93d1c2dfbdea2c105b4cde083d692ca4fedd782e9d146439ba",
+          "战令奖励候选": "b9e1524a4cc842a19642cb7f3d6c7f724e6de54029802ad218f701b7b03b208e",
+          "首充与广告候选": "ad0f8b8804d516b7f68d8679047a99183477214db604f873bf044de1f67016c2",
+          "全来源预算候选": "cec939b1394c219af09b2871d6f4560457261537985014ee70acccc7d981a9a7",
+          "客户端显示与操作": "d3f1eaa1a6da3bb4a67cedc7fb755234ec4736ad10907cd7f7ece8478fea56e9",
+          "职业基础与成长": "6acdce07bbc3fbc5a43c630dfc08eef916aa2dd420beea80216b813197c6cefe",
+          "物品定义": "e7269a8088e956459d1fd2562398d4eb1c0fac32514338124696bd47e1eb9880",
+          "装备定义": "b234f67c782eb069b4cbd658ee285f89d71c8797fac47bb03623ed98e42bbe2d",
+          "装备外观映射": "4d3f9c4f2adb431b29bc9b190a8cdb824ebf55f341a2e724a6f1086d900e1f7b",
+          "怪物定义": "902fb2e51b96557e416799db3b57d612d33cbea822e2a895ef55f73f216ecc9f",
+          "地图定义": "95714be28c76ce5e951a3e3a1a051fa95b82e1492ea6dc798e9dce4d9b533a17",
+          "地图碰撞": "4e78047ecee0dd9ac13933a4e965bdc4b3c48664e40511f57a9ed102fff2616c",
+          "地图区域与NPC": "9f0b37cf58d845caa87bd7a468229ee2090bd3cf623740ad86fccfd664467997",
+          "刷怪生成点": "0e2fb7f26c80aec02c65bab0867a630900d2f0d68d89d948e5442848e0c9b8f5",
+          "NPC功能": "1bfe54aaddee59292ea50e73d1bcdc0c7ed16db0341ffe0e52965eb402d0c215",
+          "技能基础定义": "23b6ece1309cb0e83b16099a06f3e36217fd8ca35084c19b6350be882b4013c6",
+          "技能逐级扩展": "1909a7ca01176e687faf5733eb920c101d4b9eec064e3df639b9c7c0b29dd46a",
+          "技能范围格模板": "2d5e04a57f6efb2a089dd3349dfb7335aa9c93306200a6bb6dbe86a5853bad9e",
+          "Buff定义": "f8af39a737af696a3de98542bbc232afdeddf421b53c6a128e200ffb90f741fb",
+          "效果列表": "accb40406df391614e3853c6ac0d2791c72d0bcfd5fa0a97061409743459d0d2",
+          "职业宠物模板": "23bcb29bd7502e3f5c23db148a7e3748efca2df5e580e2feae7535da80c24c4e",
+          "宠物成长": "13518257af8479c546e9e549157450473e13fccecb810b77ff632e8d1b5b058c",
+          "逐级经验": "d9c90efb3b36e48379a56c675c075888211df59ff36d88f3c1126cb452f7f255",
+          "转生条件": "c41297c3a6ce8cf9a53eba400ee09518f5c13e87d18545349618845af392ebcb",
+          "掉落池定义": "dc519e7c09d3a127d20122e64667e9cfc415cd502ff9caef9c94758e5225f34c",
+          "掉落条目": "ea763f27aac6699200e38e29ea791429d8b1fedd9d412e2abc4791c7df292248",
+          "高品质随机掉落额度": "230ebb73bd33b10d870ad1ea9d12f2a22f9faf57e04299254f4571028cdff4f0",
+          "装备分解金币与副产物": "b38abbd77c108564ec5944506a1b84688d5fbed370a7169a47b62271a85bc635",
+          "词条阶段基数与上限": "34da979d1a507a7e469f7bb8bcc88e01250bb3bbad251c27f6ff841540564d07",
+          "锄头工具": "0d8a1dd19e96cc1cc2dda7c239ca09499cfd59bbb2987621f7ee0c721fbf3f75",
+          "图纸打造配方": "0ab20a6018638c3dd9112af8699bdd18963df84e562d382145ca7e866bff94c5",
+          "修理配方": "a1e3ed79cee0f953817a756cd949134dd3613af004932673ff600f6e5b043ae9",
+          "BOSS与场次模板": "910af760d18ee6278d9675234b371df431663e16763ca081edcc84fa47918460",
+          "讨伐链模板": "bc19292ef4f214117ef6643113f08d63a99b369f4e4427e5508405ec67be9845",
+          "竞技赛季奖励与兑换": "f49fb3d7a3dab9a37d4b693c8686e03568cf7cde15d00dafb2f5f1668d8fdbc0",
+          "主线任务": "80fd8598d36f78e452543c8492ca1849dd101357fd87dffa8faddec8524ed419",
+          "每日任务池": "357c39b01a18c04b229c3f16cc5449778ac672155e65c8c85e1f83ed6201b863",
+          "永久成就": "bef60b053e38946d16cd6d5247b8ed1e04f742b0fb6335ff3b5c370a1a9d25be",
+          "怪物图鉴条目": "6ff91e6ab11e184623f4a9cf0e034159dcaf9906a3c5ed05a7d892265155f9e2",
+          "魂兽逐星价值与消耗": "515abcfc05c5085e12f41f96f6f1e7117e8c41086264ab6fae952452335a1270",
+          "勋章逐级配置": "2b840303ff624b9cfeadd529bd2744094ee44222dee3d7a176f7a54afb7429b1",
+          "奖励组定义": "1b1f771d649afb1541d520ef09121665f36e9e492036adf7ec85e04ed86c29d5",
+          "奖励组条目": "9240841942892e09b4d2e3f963b55f6fdd21f41043f55bc518b8c242beced164",
+          "系统邮件模板": "c38a8ccec2719efc7db438c28b04ab80fd719581f2227f505bac0bb800f74e53",
+          "属性单位与结算管线": "97a157472213f1c2840b8457ac2793b07eeb0da5738c357898e4607af24be003",
+          "历史七档行为样本": "05b707e6b1599688f89aa9a3986e0f0098448094747980afd7e8e539e4a3cc28",
+          "历史样本隔离": "d54e9220133f38f9a833531e2b7b8efd8f3d011799bd1d6b1bfef75715a357df",
+          "服务端权威规则": "1cd0bffb51b70caec9d6e26e094af712ab7f0b7d992f75305d51c6b1a4809e67",
+          "发布缺口": "73beb08bd0b986dbc018e36ca54e8dc66ac97c4766cae599cef9f9d139a2b10f",
+          "使用说明": "7e8dad3fc4c7eeecbc5782e4df8a34e79a6cf0f0ce8cd938132e002e85bc1dfe",
+          "开发首循环夹具": "9422bea8a52f99cc12e4c1503cc3d6fda8bd887f762aa3dbfb2871980dd99692"
+        }
+      },
+      "conclusion": "存在真实非空同地址冲突；不得盲删或自动选后行，候选应弃用并从未覆盖的源表重新编辑"
+    }
+  ]
+}

@@ -38,25 +38,8 @@ func distance(a, b devconfig.Point) int {
 	}
 	return y
 }
-func (w *worker) walkable(q devconfig.Point) bool {
-	f := &w.e.Store.Cfg.Fixture
-	if !w.inBounds(q) {
-		return false
-	}
-	for _, blocked := range f.Map.Blocked {
-		if blocked == q {
-			return false
-		}
-	}
-	return true
-}
-
-func (w *worker) inBounds(q devconfig.Point) bool {
-	f := w.e.Store.Cfg.Fixture
-	return q.X >= 0 && q.Y >= 0 && q.X < f.Map.Width && q.Y < f.Map.Height
-}
 func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
-	if !w.walkable(q) {
+	if !w.walkable(r, q) {
 		return false
 	}
 	all := []*entity{&r.Player}
@@ -77,7 +60,7 @@ func (w *worker) neighbor(r *room, from, to devconfig.Point, self *entity) bool 
 	}
 	dx, dy := to.X-from.X, to.Y-from.Y
 	if dx != 0 && dy != 0 {
-		if !w.walkable(devconfig.Point{X: from.X + dx, Y: from.Y}) || !w.walkable(devconfig.Point{X: from.X, Y: from.Y + dy}) {
+		if !w.walkable(r, devconfig.Point{X: from.X + dx, Y: from.Y}) || !w.walkable(r, devconfig.Point{X: from.X, Y: from.Y + dy}) {
 			return false
 		}
 	}
@@ -88,8 +71,8 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 		return
 	}
 	start := e.Pos
-	budget := w.e.Store.Cfg.Fixture.GridCellBudget()
-	if budget == 0 || !w.inBounds(start) || !w.inBounds(target) {
+	budget := w.mapCellBudget(r)
+	if budget == 0 || !w.inBounds(r, start) || !w.inBounds(r, target) {
 		return
 	}
 	queue := []devconfig.Point{start}
@@ -177,6 +160,9 @@ func (w *worker) nearest(r *room, from *entity) *entity {
 	return best
 }
 func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...uint32) {
+	if w.mapCellBudget(r) == 0 {
+		return
+	}
 	if from.Kind == 1 && w.sourceTimeline() {
 		if target == nil || target.HP <= 0 || distance(from.Pos, target.Pos) > 1 {
 			return
@@ -193,7 +179,7 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 		return
 	}
 	dx, dy := target.Pos.X-from.Pos.X, target.Pos.Y-from.Pos.Y
-	if dx != 0 && dy != 0 && (!w.walkable(devconfig.Point{X: from.Pos.X + dx, Y: from.Pos.Y}) || !w.walkable(devconfig.Point{X: from.Pos.X, Y: from.Pos.Y + dy})) {
+	if dx != 0 && dy != 0 && (!w.walkable(r, devconfig.Point{X: from.Pos.X + dx, Y: from.Pos.Y}) || !w.walkable(r, devconfig.Point{X: from.Pos.X, Y: from.Pos.Y + dy})) {
 		return
 	}
 	a, b := w.fighter(r, from), w.fighter(r, target)
@@ -262,6 +248,11 @@ func (w *worker) step(r *room, now time.Time) {
 		return
 	}
 	if r.Scene == 0 {
+		return
+	}
+	mapTemplate, ok := w.currentMap(r)
+	if !ok {
+		w.isolateRoom(r)
 		return
 	}
 	if r.Conn != nil && !r.Ready {
@@ -344,10 +335,14 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	for i, m := range r.Monsters {
 		if m.HP == 0 && !m.RespawnAt.IsZero() && !now.Before(m.RespawnAt) {
+			if i >= len(mapTemplate.MonsterSpawns) || !mapTemplate.Walkable(mapTemplate.MonsterSpawns[i]) {
+				w.isolateRoom(r)
+				return
+			}
 			m.HP = m.MaxHP
 			m.Life++
 			m.Statuses = nil
-			if !w.relocate(r, m, w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]) {
+			if !w.relocate(r, m, mapTemplate.MonsterSpawns[i]) {
 				return
 			}
 			m.MovementRevision, m.MovementKind = 0, movementInitial

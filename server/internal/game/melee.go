@@ -91,7 +91,7 @@ func (w *worker) setSkillMode(r *room, id uint32, enabled bool, now time.Time) u
 	if !exists || !learned || s.JobID != r.Role.Job || rank < s.LearnedLevel || rank > s.MaxLevel {
 		return p.CodeSkillNotLearned
 	}
-	if r.Pending || r.Isolated || r.Player.HP <= 0 {
+	if r.Pending || r.Isolated || r.Player.HP <= 0 || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
 	switch s.Behavior {
@@ -138,7 +138,7 @@ func stepPoint(origin devconfig.Point, direction uint32, distance int) devconfig
 
 // 本阶段只允许活跃怪物为敌；每格以稳定句柄选第一个合法敌人，不把宠物算作敌人。
 func (w *worker) enemyAt(r *room, point devconfig.Point) *entity {
-	if !w.walkable(point) {
+	if !w.walkable(r, point) {
 		return nil
 	}
 	var found *entity
@@ -185,7 +185,7 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 		return p.CodeInvalidArgument
 	}
 	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
-	if r.Pending || r.Isolated || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) {
+	if r.Pending || r.Isolated || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
 	s, rank := w.selectedAttack(r, direction, now)

@@ -56,7 +56,7 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 	friendly := strings.HasPrefix(targetKind(s), "friendly")
 	out := []*entity{}
 	for _, e := range all {
-		if e == nil || e.HP <= 0 || distance(e.Pos, grid) > s.AreaRadius || !w.walkable(e.Pos) {
+		if e == nil || e.HP <= 0 || distance(e.Pos, grid) > s.AreaRadius || !w.walkable(r, e.Pos) {
 			continue
 		}
 		if (friendly && (e.Kind == 1 || e.Kind == 2)) || (!friendly && e.Kind == 3) {
@@ -70,7 +70,7 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 func (w *worker) lineTargets(r *room, c pendingCast) []*entity {
 	if c.Skill.Behavior == "hell_fire" && c.LineRemaining > 0 {
 		point := stepPoint(c.TargetPoint, c.Direction, 1)
-		if !w.walkable(point) {
+		if !w.walkable(r, point) {
 			return nil
 		}
 		var out []*entity
@@ -85,7 +85,7 @@ func (w *worker) lineTargets(r *room, c pendingCast) []*entity {
 	var out []*entity
 	for i := 1; i <= c.Skill.LineCells; i++ {
 		point := stepPoint(c.TargetPoint, c.Direction, i)
-		if !w.walkable(point) {
+		if !w.walkable(r, point) {
 			if c.Skill.LineStopOnBlocked {
 				break
 			}
@@ -108,6 +108,9 @@ func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32
 	return w.acceptPreparedCast(r, plan, input, now)
 }
 func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed bool, ground ...*pb.GridPoint) (*preparedCast, uint32) {
+	if w.mapCellBudget(r) == 0 {
+		return nil, p.CodeSkillStateBlocked
+	}
 	if direction > 7 {
 		return nil, p.CodeSkillTarget
 	}
@@ -129,7 +132,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 		if targetHandle != 0 || direction > 7 {
 			return nil, p.CodeSkillTarget
 		}
-		if len(ground) > 0 && ground[0] != nil && !w.inBounds(devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}) {
+		if len(ground) > 0 && ground[0] != nil && !w.inBounds(r, devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}) {
 			return nil, p.CodeSkillTarget
 		}
 		point = r.Player.Pos
@@ -138,7 +141,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 			return nil, p.CodeSkillTarget
 		}
 		point = devconfig.Point{X: int(ground[0].X), Y: int(ground[0].Y)}
-		if !w.inBounds(point) {
+		if !w.inBounds(r, point) {
 			return nil, p.CodeSkillTarget
 		}
 	} else {
@@ -152,7 +155,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 		return nil, p.CodeSkillTarget
 	}
 	requireFlight := s.RequireLineOfSight || (s.TargetKind == "" && s.Behavior == "fireball")
-	if requireFlight && !w.lineOfSight(r.Player.Pos, point) {
+	if requireFlight && !w.lineOfSight(r, r.Player.Pos, point) {
 		return nil, p.CodeSkillTarget
 	}
 	cost := s.MPBaseCost + int64(level)*s.MPLevelCost
@@ -270,7 +273,7 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 }
 
 func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
-	if c.Scene != r.Scene {
+	if c.Scene != r.Scene || w.mapCellBudget(r) == 0 {
 		return
 	}
 	handler, registered := skillHandlers[c.Skill.Behavior]
@@ -286,7 +289,7 @@ func (w *worker) resolveCast(r *room, c pendingCast, now time.Time) {
 		targets = w.lineTargets(r, c)
 		if c.Skill.Behavior == "hell_fire" {
 			point := stepPoint(c.TargetPoint, c.Direction, 1)
-			if !w.walkable(point) {
+			if !w.walkable(r, point) {
 				return
 			}
 			w.send(r, p.MsgS2CCastStep, 0, &pb.CastStep{SceneEpoch: r.Scene, CastId: c.ID, SkillId: c.Skill.ID, CasterHandle: c.Caster.Handle, CasterLife: c.Caster.Life, Grid: pointPB(point), Direction: c.Direction, StepIndex: uint32(c.Skill.LineCells - c.LineRemaining + 1), SkillLevel: c.SkillLevel})
@@ -415,7 +418,7 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				}
 				count := 0
 				for _, e := range []*entity{&r.Player, r.Pet} {
-					if missing(e) && distance(e.Pos, center) <= s.AreaRadius && w.walkable(e.Pos) {
+					if missing(e) && distance(e.Pos, center) <= s.AreaRadius && w.walkable(r, e.Pos) {
 						count++
 					}
 				}
@@ -495,7 +498,7 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				}
 				grid = pointPB(target.Pos)
 			}
-			if distance(r.Player.Pos, target.Pos) > s.RangeCells || s.RequireLineOfSight && !w.lineOfSight(r.Player.Pos, target.Pos) {
+			if distance(r.Player.Pos, target.Pos) > s.RangeCells || s.RequireLineOfSight && !w.lineOfSight(r, r.Player.Pos, target.Pos) {
 				if approach == nil {
 					approach = target
 				}

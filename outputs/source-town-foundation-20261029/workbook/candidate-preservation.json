@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "changed_cells": 76,
+  "all_other_cells_preserved": true,
+  "all_worksheets_preserved": true,
+  "input_sha256": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74",
+  "output_sha256": "5801bd0c5c76bcb7765110fe65d8a2ae4de1846e56f5062e4a1b10acc0d88d0a",
+  "runtime_binding_enabled": false,
+  "skills_selected": 21
+}

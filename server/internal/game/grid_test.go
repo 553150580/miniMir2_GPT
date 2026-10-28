@@ -36,7 +36,7 @@ func testGridEightDirectionsAndCornerBlocking(t *testing.T, size int) {
 	if w.neighbor(r, r.Player.Pos, devconfig.Point{X: 9, Y: 9}, &r.Player) {
 		t.Fatal("斜向移动穿过墙角")
 	}
-	if w.walkable(devconfig.Point{X: -1, Y: 8}) || w.walkable(devconfig.Point{X: size, Y: 8}) || !w.walkable(devconfig.Point{X: size - 1, Y: size - 1}) {
+	if w.walkable(r, devconfig.Point{X: -1, Y: 8}) || w.walkable(r, devconfig.Point{X: size, Y: 8}) || !w.walkable(r, devconfig.Point{X: size - 1, Y: size - 1}) {
 		t.Fatal("可走范围越界")
 	}
 	target := &entity{Kind: 3, HP: 10, Pos: devconfig.Point{X: 9, Y: 9}}
@@ -59,7 +59,7 @@ func TestSeventeenGridCanRouteThroughMoreThanOld256VisitedNodes(t *testing.T) {
 	for step := 0; step < f.GridCellBudget() && r.Player.Pos != target; step++ {
 		before := r.Player.Pos
 		w.move(r, &r.Player, target, now.Add(time.Duration(step)*600*time.Millisecond), 600)
-		if r.Player.Pos == before || distance(r.Player.Pos, before) != 1 || !w.walkable(r.Player.Pos) {
+		if r.Player.Pos == before || distance(r.Player.Pos, before) != 1 || !w.walkable(r, r.Player.Pos) {
 			t.Fatalf("17格有效绕行在%+v被旧256预算截断或跨格瞬移", before)
 		}
 	}

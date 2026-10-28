@@ -6,6 +6,7 @@ import (
 	"github.com/coder/websocket"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"io"
+	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
 	"minimir/internal/devconfig"
@@ -78,7 +79,7 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 			expected.X, expected.Y = 2, 2
 			_, err = inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": id, "revision": 1}, bson.M{"$set": bson.M{"binding": expected}})
 		case "invalid_map":
-			expected.MapID++
+			expected.MapID = math.MaxInt64
 			_, err = inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": id, "revision": 1}, bson.M{"$set": bson.M{"binding": expected}})
 		}
 		must(t, err)

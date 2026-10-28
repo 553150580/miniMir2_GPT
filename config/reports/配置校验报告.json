@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 934,
+  "record_count": 941,
   "status_counts": {
-    "candidate": 435,
+    "candidate": 442,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -414,8 +414,15 @@
     "game_monsters 第5行缺少必填 drop_pool_id",
     "game_monsters/2 尚为 candidate",
     "game_maps/1 尚为 candidate",
+    "game_maps/2 尚为 candidate",
     "game_map_collisions/1 尚为 candidate",
+    "game_map_collisions/2 尚为 candidate",
     "game_map_regions/1 尚为 candidate",
+    "game_map_regions/106 尚为 candidate",
+    "game_map_regions/107 尚为 candidate",
+    "game_map_regions/108 尚为 candidate",
+    "game_map_regions/113 尚为 candidate",
+    "game_map_regions/117 尚为 candidate",
     "game_monster_spawns/1 尚为 candidate",
     "game_monster_spawns/2 尚为 candidate",
     "game_monster_spawns/3 尚为 candidate",
@@ -700,6 +707,6 @@
   ],
   "workbook_hashes": {
     "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
-    "gameplay": "660d50243dc528292235e60ad65633117aeda66641c2bc2852ab9604c3cc1d74"
+    "gameplay": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f"
   }
 }

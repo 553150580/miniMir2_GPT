@@ -1,0 +1,2693 @@
+{
+  "passed": true,
+  "scope": "实际Creator/Chrome客户端来源地图渲染诊断；实体/坐标为仅内存展示输入，未做服务端城镇切换、绑定、瞬移、NPC或战斗验收",
+  "build": {
+    "creator": "3.8.8",
+    "seconds": 110.72,
+    "sourceStable": true,
+    "layoutsPreserved": true
+  },
+  "sourceManifestSha256": "07774060885769d5dbbf057ecaf70a4cc1e368fa20317d2d5f3839b3a7c754e4",
+  "physicalMobileVerified": false,
+  "serverTownTransitionVerified": false,
+  "checks": [
+    "真实构建System.import与保存Game.scene；AppRoot/Input组件禁用；完整来源地图及真实小地图准备",
+    "银杏/边界/比奇真实原格画面与保存HUD",
+    "100ms原帧火把及SRC_ALPHA/ONE加色",
+    "987px高前景来自视口外owner块",
+    "四角边缘、远距往返与49块LRU淘汰",
+    "Label24/保存0.7比例及原生逐行遮挡",
+    "真实小地图1052×699等比显示",
+    "加高160像素仅增地图视口",
+    "销毁前Sprite/材质解绑及资源引用归零",
+    "RPC/WS请求为0"
+  ],
+  "cases": [
+    {
+      "plan": {
+        "id": "01-silver",
+        "label": "银杏新人村安全区中心",
+        "x": 650,
+        "y": 631
+      },
+      "ready": true,
+      "view": {
+        "chunks": 6,
+        "pendingChunks": 0,
+        "readyChunks": 6,
+        "visibleNodes": 148,
+        "floorNodes": 115,
+        "objectNodes": 33,
+        "viewportRevision": 1,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 6,
+          "active": 0,
+          "queued": 0,
+          "ready": 6,
+          "pinned": 6,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 246,
+        "retainedFrames": 246,
+        "frameReferences": 348
+      },
+      "viewport": [
+        30864,
+        19804,
+        31584,
+        20612
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 31224,
+            "y": -20208
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 31272,
+            "y": -20240
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 43.93330880850194,
+          "y": -27.345714285714287,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -30864,
+        "y": -19676,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "02-boundary",
+        "label": "边界村安全区中心",
+        "x": 289,
+        "y": 618
+      },
+      "ready": true,
+      "view": {
+        "chunks": 7,
+        "pendingChunks": 0,
+        "readyChunks": 7,
+        "visibleNodes": 283,
+        "floorNodes": 236,
+        "objectNodes": 47,
+        "viewportRevision": 2,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 13,
+          "active": 0,
+          "queued": 0,
+          "ready": 13,
+          "pinned": 7,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 504,
+        "retainedFrames": 504,
+        "frameReferences": 951
+      },
+      "viewport": [
+        13536,
+        19388,
+        14256,
+        20196
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40"
+      ],
+      "badNative": [],
+      "torch": [
+        {
+          "id": "17_38/286/615/4",
+          "owner": "17_38",
+          "x": 286,
+          "y": 615,
+          "key": "Objects:2727",
+          "expected": "Objects:2727",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        },
+        {
+          "id": "18_38/293/623/4",
+          "owner": "18_38",
+          "x": 293,
+          "y": 623,
+          "key": "Objects:2727",
+          "expected": "Objects:2727",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        }
+      ],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 13896,
+            "y": -19792
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 13944,
+            "y": -19824
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -8.845142039648476,
+          "y": -26.082857142857144,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -13536,
+        "y": -19260,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "03-bich",
+        "label": "比奇城安全区中心",
+        "x": 331,
+        "y": 267
+      },
+      "ready": true,
+      "view": {
+        "chunks": 7,
+        "pendingChunks": 0,
+        "readyChunks": 7,
+        "visibleNodes": 158,
+        "floorNodes": 141,
+        "objectNodes": 17,
+        "viewportRevision": 3,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 20,
+          "active": 0,
+          "queued": 0,
+          "ready": 20,
+          "pinned": 7,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 655,
+        "retainedFrames": 655,
+        "frameReferences": 1318
+      },
+      "viewport": [
+        15552,
+        8156,
+        16272,
+        8964
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18"
+      ],
+      "badNative": [],
+      "torch": [
+        {
+          "id": "20_16/328/267/4",
+          "owner": "20_16",
+          "x": 328,
+          "y": 267,
+          "key": "Objects:2725",
+          "expected": "Objects:2725",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        },
+        {
+          "id": "21_17/336/275/4",
+          "owner": "21_17",
+          "x": 336,
+          "y": 275,
+          "key": "Objects:2725",
+          "expected": "Objects:2725",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        }
+      ],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 15912,
+            "y": -8560
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 15960,
+            "y": -8592
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -2.7047128550991197,
+          "y": 8.014285714285716,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -15552.000000000002,
+        "y": -8028,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "04-torch",
+        "label": "来源加色火把",
+        "x": 328,
+        "y": 267,
+        "torch": {
+          "owner": "20_16",
+          "x": 328,
+          "y": 267
+        }
+      },
+      "ready": true,
+      "view": {
+        "chunks": 5,
+        "pendingChunks": 0,
+        "readyChunks": 5,
+        "visibleNodes": 163,
+        "floorNodes": 143,
+        "objectNodes": 20,
+        "viewportRevision": 4,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 20,
+          "active": 0,
+          "queued": 0,
+          "ready": 20,
+          "pinned": 5,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 655,
+        "retainedFrames": 655,
+        "frameReferences": 1318
+      },
+      "viewport": [
+        15408,
+        8156,
+        16128,
+        8964
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18"
+      ],
+      "badNative": [],
+      "torch": [
+        {
+          "id": "20_16/328/267/4",
+          "owner": "20_16",
+          "x": 328,
+          "y": 267,
+          "key": "Objects:2725",
+          "expected": "Objects:2725",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        },
+        {
+          "id": "21_17/336/275/4",
+          "owner": "21_17",
+          "x": 336,
+          "y": 275,
+          "key": "Objects:2725",
+          "expected": "Objects:2725",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        },
+        {
+          "id": "20_17/320/276/4",
+          "owner": "20_17",
+          "x": 320,
+          "y": 276,
+          "key": "Objects:2725",
+          "expected": "Objects:2725",
+          "blendSrc": 2,
+          "blendDst": 1,
+          "width": 100,
+          "height": 100
+        }
+      ],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 15768,
+            "y": -8560
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 15816,
+            "y": -8592
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -3.1433149397097875,
+          "y": 8.014285714285716,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -15407.999999999998,
+        "y": -8028,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "05-high-front",
+        "label": "987像素高前景跨owner块",
+        "x": 242,
+        "y": 251,
+        "high": {
+          "owner": "15_17",
+          "x": 243,
+          "y": 276
+        }
+      },
+      "ready": true,
+      "view": {
+        "chunks": 8,
+        "pendingChunks": 0,
+        "readyChunks": 8,
+        "visibleNodes": 146,
+        "floorNodes": 112,
+        "objectNodes": 34,
+        "viewportRevision": 5,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 28,
+          "active": 0,
+          "queued": 0,
+          "ready": 28,
+          "pinned": 8,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 737,
+        "retainedFrames": 737,
+        "frameReferences": 1489
+      },
+      "viewport": [
+        11280,
+        7644,
+        12000,
+        8452
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 11640,
+            "y": -8048
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 11688,
+            "y": -8080
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -15.71657469854895,
+          "y": 9.568571428571435,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -11280,
+        "y": -7516,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true,
+      "high": {
+        "visible": true,
+        "ownerBelow": true,
+        "height": 987
+      }
+    },
+    {
+      "plan": {
+        "id": "06-top-left",
+        "label": "全图左上边缘",
+        "x": 0,
+        "y": 0
+      },
+      "ready": true,
+      "view": {
+        "chunks": 2,
+        "pendingChunks": 0,
+        "readyChunks": 2,
+        "visibleNodes": 104,
+        "floorNodes": 104,
+        "objectNodes": 0,
+        "viewportRevision": 6,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 30,
+          "active": 0,
+          "queued": 0,
+          "ready": 30,
+          "pinned": 2,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 742,
+        "retainedFrames": 742,
+        "frameReferences": 1499
+      },
+      "viewport": [
+        0,
+        0,
+        720,
+        808
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 24,
+            "y": -16
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 72,
+            "y": -48
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -51.097142857142856,
+          "y": 33.95142857142857,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": 0,
+        "y": 128,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "07-top-right",
+        "label": "全图右上边缘",
+        "x": 699,
+        "y": 0
+      },
+      "ready": true,
+      "view": {
+        "chunks": 4,
+        "pendingChunks": 0,
+        "readyChunks": 4,
+        "visibleNodes": 104,
+        "floorNodes": 104,
+        "objectNodes": 0,
+        "viewportRevision": 7,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 34,
+          "active": 0,
+          "queued": 0,
+          "ready": 34,
+          "pinned": 4,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 747,
+        "retainedFrames": 747,
+        "frameReferences": 1519
+      },
+      "viewport": [
+        32880,
+        0,
+        33600,
+        808
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 33576,
+            "y": -16
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 33576,
+            "y": -48
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 51.09714285714286,
+          "y": 33.95142857142857,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -32880,
+        "y": 128,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "08-bottom-right",
+        "label": "全图右下边缘",
+        "x": 699,
+        "y": 699
+      },
+      "ready": true,
+      "view": {
+        "chunks": 4,
+        "pendingChunks": 0,
+        "readyChunks": 4,
+        "visibleNodes": 111,
+        "floorNodes": 104,
+        "objectNodes": 7,
+        "viewportRevision": 8,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 38,
+          "active": 0,
+          "queued": 0,
+          "ready": 38,
+          "pinned": 4,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 771,
+        "retainedFrames": 771,
+        "frameReferences": 1599
+      },
+      "viewport": [
+        32880,
+        21592,
+        33600,
+        22400
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 33576,
+            "y": -22384
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 33576,
+            "y": -22384
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 51.09714285714286,
+          "y": -33.95142857142857,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -32880,
+        "y": -21464,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "09-bottom-left",
+        "label": "全图左下边缘",
+        "x": 0,
+        "y": 699
+      },
+      "ready": true,
+      "view": {
+        "chunks": 2,
+        "pendingChunks": 0,
+        "readyChunks": 2,
+        "visibleNodes": 104,
+        "floorNodes": 104,
+        "objectNodes": 0,
+        "viewportRevision": 9,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 40,
+          "active": 0,
+          "queued": 0,
+          "ready": 40,
+          "pinned": 2,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 771,
+        "retainedFrames": 771,
+        "frameReferences": 1609
+      },
+      "viewport": [
+        0,
+        21592,
+        720,
+        22400
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 24,
+            "y": -22384
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 72,
+            "y": -22384
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -51.097142857142856,
+          "y": -33.95142857142857,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": 0,
+        "y": -21464,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "10-lru-north",
+        "label": "远距LRU北部观察点",
+        "x": 350,
+        "y": 50
+      },
+      "ready": true,
+      "view": {
+        "chunks": 5,
+        "pendingChunks": 0,
+        "readyChunks": 5,
+        "visibleNodes": 129,
+        "floorNodes": 112,
+        "objectNodes": 17,
+        "viewportRevision": 10,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 45,
+          "active": 0,
+          "queued": 0,
+          "ready": 45,
+          "pinned": 5,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 846,
+        "retainedFrames": 846,
+        "frameReferences": 1776
+      },
+      "viewport": [
+        16464,
+        1212,
+        17184,
+        2020
+      ],
+      "cachedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 16824,
+            "y": -1616
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 16872,
+            "y": -1648
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 0.07310034743510659,
+          "y": 29.09428571428571,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -16464,
+        "y": -1084,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "11-lru-west",
+        "label": "远距LRU西部观察点",
+        "x": 100,
+        "y": 350
+      },
+      "ready": true,
+      "view": {
+        "chunks": 6,
+        "pendingChunks": 0,
+        "readyChunks": 6,
+        "visibleNodes": 206,
+        "floorNodes": 169,
+        "objectNodes": 37,
+        "viewportRevision": 11,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 49,
+          "active": 0,
+          "queued": 0,
+          "ready": 49,
+          "pinned": 6,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 887,
+        "retainedFrames": 887,
+        "frameReferences": 1852
+      },
+      "viewport": [
+        4464,
+        10812,
+        5184,
+        11620
+      ],
+      "cachedOwners": [
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 4824,
+            "y": -11216
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 4872,
+            "y": -11248
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": -36.477073370120586,
+          "y": -0.04857142857142538,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -4464,
+        "y": -10684,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "12-lru-east",
+        "label": "远距LRU东部观察点",
+        "x": 600,
+        "y": 350
+      },
+      "ready": true,
+      "view": {
+        "chunks": 3,
+        "pendingChunks": 0,
+        "readyChunks": 3,
+        "visibleNodes": 136,
+        "floorNodes": 112,
+        "objectNodes": 24,
+        "viewportRevision": 12,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 49,
+          "active": 0,
+          "queued": 0,
+          "ready": 49,
+          "pinned": 3,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 836,
+        "retainedFrames": 836,
+        "frameReferences": 1753
+      },
+      "viewport": [
+        28464,
+        10812,
+        29184,
+        11620
+      ],
+      "cachedOwners": [
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23",
+        "37_21",
+        "37_22",
+        "37_23"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23",
+        "37_21",
+        "37_22",
+        "37_23"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 28824,
+            "y": -11216
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 28872,
+            "y": -11248
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 36.62327406499081,
+          "y": -0.04857142857142538,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -28464,
+        "y": -10684,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    },
+    {
+      "plan": {
+        "id": "13-silver-return",
+        "label": "远距视口往返与LRU",
+        "x": 650,
+        "y": 631
+      },
+      "ready": true,
+      "view": {
+        "chunks": 6,
+        "pendingChunks": 0,
+        "readyChunks": 6,
+        "visibleNodes": 148,
+        "floorNodes": 115,
+        "objectNodes": 33,
+        "viewportRevision": 13,
+        "assetsGeneration": 0,
+        "disposed": false
+      },
+      "assets": {
+        "disposed": false,
+        "generation": 0,
+        "chunks": {
+          "entries": 49,
+          "active": 0,
+          "queued": 0,
+          "ready": 49,
+          "pinned": 6,
+          "releaseErrorCount": 0
+        },
+        "requests": {
+          "active": 0,
+          "queued": 0
+        },
+        "sharedFrames": 796,
+        "retainedFrames": 796,
+        "frameReferences": 1615
+      },
+      "viewport": [
+        30864,
+        19804,
+        31584,
+        20612
+      ],
+      "cachedOwners": [
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23",
+        "37_21",
+        "37_22",
+        "37_23",
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40"
+      ],
+      "visitedOwners": [
+        "40_38",
+        "41_38",
+        "40_39",
+        "41_39",
+        "40_40",
+        "41_40",
+        "17_37",
+        "18_37",
+        "17_38",
+        "18_38",
+        "17_39",
+        "18_39",
+        "17_40",
+        "20_15",
+        "21_15",
+        "20_16",
+        "21_16",
+        "20_17",
+        "21_17",
+        "20_18",
+        "14_14",
+        "15_14",
+        "14_15",
+        "15_15",
+        "14_16",
+        "15_16",
+        "14_17",
+        "15_17",
+        "0_0",
+        "0_1",
+        "42_0",
+        "43_0",
+        "42_1",
+        "43_1",
+        "42_42",
+        "43_42",
+        "42_43",
+        "43_43",
+        "0_42",
+        "0_43",
+        "21_2",
+        "22_2",
+        "21_3",
+        "22_3",
+        "22_4",
+        "5_21",
+        "6_21",
+        "5_22",
+        "6_22",
+        "5_23",
+        "6_23",
+        "37_21",
+        "37_22",
+        "37_23"
+      ],
+      "badNative": [],
+      "torch": [],
+      "names": [
+        {
+          "handle": 1,
+          "name": "渲染道士",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 96,
+          "hpY": 76,
+          "position": {
+            "x": 31224,
+            "y": -20208
+          },
+          "direction": 2
+        },
+        {
+          "handle": 2,
+          "name": "变异骷髅",
+          "fontSize": 24,
+          "scaleX": 0.7,
+          "scaleY": 0.7,
+          "nameY": 98,
+          "hpY": 78,
+          "position": {
+            "x": 31272,
+            "y": -20240
+          },
+          "direction": 2
+        }
+      ],
+      "orderCorrect": true,
+      "minimap": {
+        "enabled": true,
+        "nativeWidth": 1052,
+        "nativeHeight": 699,
+        "width": 102.34048640915594,
+        "height": 68,
+        "dot": {
+          "x": 43.93330880850194,
+          "y": -27.345714285714287,
+          "active": true
+        }
+      },
+      "fixedUI": {
+        "top": 128,
+        "bottom": 344,
+        "mapHeight": 808
+      },
+      "clip": {
+        "x": -30864,
+        "y": -19676,
+        "width": 33600,
+        "height": 22400
+      },
+      "violations": [],
+      "errors": [],
+      "caseChecksPassed": true
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "Unexpected screen orientation: 13"
+    }
+  ],
+  "networkAttempts": [],
+  "frameReferenceViolations": [],
+  "prepared": {
+    "scene": "Game",
+    "disabledAppRoots": 1,
+    "mapId": "2",
+    "width": 700,
+    "height": 700,
+    "minimap": {
+      "package": "mmap",
+      "raw_frame": 100,
+      "frame": "mmap:100"
+    },
+    "minimapOriginal": {
+      "width": 1052,
+      "height": 699
+    },
+    "integrity": {
+      "chunkValidation": "creator_imported_json_structure_on_load",
+      "originalChunkBytesHashVerifiedAtRuntime": false
+    },
+    "cache": {
+      "disposed": false,
+      "generation": 0,
+      "chunks": {
+        "entries": 0,
+        "active": 0,
+        "queued": 0,
+        "ready": 0,
+        "pinned": 0,
+        "releaseErrorCount": 0
+      },
+      "requests": {
+        "active": 0,
+        "queued": 0
+      },
+      "sharedFrames": 1,
+      "retainedFrames": 1,
+      "frameReferences": 1
+    }
+  },
+  "torchSamples": [
+    "Objects:2726",
+    "Objects:2727",
+    "Objects:2728",
+    "Objects:2729",
+    "Objects:2730",
+    "Objects:2732",
+    "Objects:2723",
+    "Objects:2724",
+    "Objects:2725",
+    "Objects:2726",
+    "Objects:2728",
+    "Objects:2729"
+  ],
+  "taller": {
+    "ready": true,
+    "view": {
+      "chunks": 6,
+      "pendingChunks": 0,
+      "readyChunks": 6,
+      "visibleNodes": 181,
+      "floorNodes": 141,
+      "objectNodes": 40,
+      "viewportRevision": 14,
+      "assetsGeneration": 0,
+      "disposed": false
+    },
+    "assets": {
+      "disposed": false,
+      "generation": 0,
+      "chunks": {
+        "entries": 49,
+        "active": 0,
+        "queued": 0,
+        "ready": 49,
+        "pinned": 6,
+        "releaseErrorCount": 0
+      },
+      "requests": {
+        "active": 0,
+        "queued": 0
+      },
+      "sharedFrames": 796,
+      "retainedFrames": 796,
+      "frameReferences": 1615
+    },
+    "viewport": [
+      30864,
+      19724,
+      31584,
+      20692
+    ],
+    "cachedOwners": [
+      "18_39",
+      "17_40",
+      "20_15",
+      "21_15",
+      "20_16",
+      "21_16",
+      "20_17",
+      "21_17",
+      "20_18",
+      "14_14",
+      "15_14",
+      "14_15",
+      "15_15",
+      "14_16",
+      "15_16",
+      "14_17",
+      "15_17",
+      "0_0",
+      "0_1",
+      "42_0",
+      "43_0",
+      "42_1",
+      "43_1",
+      "42_42",
+      "43_42",
+      "42_43",
+      "43_43",
+      "0_42",
+      "0_43",
+      "21_2",
+      "22_2",
+      "21_3",
+      "22_3",
+      "22_4",
+      "5_21",
+      "6_21",
+      "5_22",
+      "6_22",
+      "5_23",
+      "6_23",
+      "37_21",
+      "37_22",
+      "37_23",
+      "40_38",
+      "41_38",
+      "40_39",
+      "41_39",
+      "40_40",
+      "41_40"
+    ],
+    "visitedOwners": [
+      "40_38",
+      "41_38",
+      "40_39",
+      "41_39",
+      "40_40",
+      "41_40",
+      "17_37",
+      "18_37",
+      "17_38",
+      "18_38",
+      "17_39",
+      "18_39",
+      "17_40",
+      "20_15",
+      "21_15",
+      "20_16",
+      "21_16",
+      "20_17",
+      "21_17",
+      "20_18",
+      "14_14",
+      "15_14",
+      "14_15",
+      "15_15",
+      "14_16",
+      "15_16",
+      "14_17",
+      "15_17",
+      "0_0",
+      "0_1",
+      "42_0",
+      "43_0",
+      "42_1",
+      "43_1",
+      "42_42",
+      "43_42",
+      "42_43",
+      "43_43",
+      "0_42",
+      "0_43",
+      "21_2",
+      "22_2",
+      "21_3",
+      "22_3",
+      "22_4",
+      "5_21",
+      "6_21",
+      "5_22",
+      "6_22",
+      "5_23",
+      "6_23",
+      "37_21",
+      "37_22",
+      "37_23"
+    ],
+    "badNative": [],
+    "torch": [],
+    "names": [
+      {
+        "handle": 1,
+        "name": "渲染道士",
+        "fontSize": 24,
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "nameY": 96,
+        "hpY": 76,
+        "position": {
+          "x": 31224,
+          "y": -20208
+        },
+        "direction": 2
+      },
+      {
+        "handle": 2,
+        "name": "变异骷髅",
+        "fontSize": 24,
+        "scaleX": 0.7,
+        "scaleY": 0.7,
+        "nameY": 98,
+        "hpY": 78,
+        "position": {
+          "x": 31272,
+          "y": -20240
+        },
+        "direction": 2
+      }
+    ],
+    "orderCorrect": true,
+    "minimap": {
+      "enabled": true,
+      "nativeWidth": 1052,
+      "nativeHeight": 699,
+      "width": 102.34048640915594,
+      "height": 68,
+      "dot": {
+        "x": 43.93330880850194,
+        "y": -27.345714285714287,
+        "active": true
+      }
+    },
+    "fixedUI": {
+      "top": 128,
+      "bottom": 344,
+      "mapHeight": 968
+    },
+    "clip": {
+      "x": -30864,
+      "y": -19596,
+      "width": 33600,
+      "height": 22400
+    },
+    "violations": [],
+    "errors": []
+  },
+  "lru": {
+    "visited": 54,
+    "cache": 49,
+    "evicted": 5
+  },
+  "disposal": {
+    "view": {
+      "chunks": 0,
+      "pendingChunks": 0,
+      "readyChunks": 0,
+      "visibleNodes": 0,
+      "floorNodes": 0,
+      "objectNodes": 0,
+      "viewportRevision": 14,
+      "assetsGeneration": 0,
+      "disposed": true
+    },
+    "assets": {
+      "disposed": true,
+      "generation": 0,
+      "chunks": {
+        "entries": 0,
+        "active": 0,
+        "queued": 0,
+        "ready": 0,
+        "pinned": 0,
+        "releaseErrorCount": 0
+      },
+      "requests": {
+        "active": 0,
+        "queued": 0
+      },
+      "sharedFrames": 0,
+      "retainedFrames": 0,
+      "frameReferences": 0
+    },
+    "violations": [],
+    "errors": [],
+    "minimapBound": false
+  }
+}

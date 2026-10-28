@@ -209,7 +209,7 @@ func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid
 	w.send(r, p.MsgS2CCombatImpact, 0, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster, TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing, CastId: cast, AttackSequence: attack})
 }
 func (w *worker) resolveAttack(r *room, a pendingAttack, now time.Time) {
-	if a.Target.Scene != r.Scene || a.Caster.Scene != r.Scene {
+	if a.Target.Scene != r.Scene || a.Caster.Scene != r.Scene || w.mapCellBudget(r) == 0 {
 		return
 	}
 	target := w.resolve(r, a.Target)

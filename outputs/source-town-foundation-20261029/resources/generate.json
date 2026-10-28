@@ -1,0 +1,34 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/build_source_maps.py",
+    "--map-id",
+    "2",
+    "--source-map",
+    "资料参考/myf/Mir200/Map/0.map",
+    "--source-root",
+    "D:/Mir2/mir2_gxx/assets/legacy/primary_180"
+  ],
+  "started_utc": "2026-10-28T16:53:43.181856+00:00",
+  "elapsed_seconds": 36.264,
+  "exit_code": 0,
+  "stdout_log": "generate.stdout.log",
+  "stderr_log": "generate.stderr.log",
+  "before_artifact_files": 6571,
+  "after_artifact_files": 6572,
+  "changed_existing_artifacts": [
+    "manifest.json"
+  ],
+  "added_artifacts": [
+    "frames/mmap/frame_000100.png"
+  ],
+  "old_png_count": 4634,
+  "old_png_changes": [],
+  "old_chunk_count": 1936,
+  "old_chunk_changes": [],
+  "unique_gameplay_workbook_sha256": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f"
+}

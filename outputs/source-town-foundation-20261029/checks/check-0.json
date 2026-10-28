@@ -1,0 +1,12 @@
+{
+  "task": "check",
+  "command": [
+    "python3",
+    "tools/reference/verify_copies.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T17:19:18.156506+00:00",
+  "finished_at": "2026-10-28T17:19:18.419190+00:00",
+  "output": ".work/source-town-20261028/checks/check-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

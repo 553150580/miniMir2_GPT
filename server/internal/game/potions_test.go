@@ -23,6 +23,7 @@ func potionWorker() (*worker, *room, *capturedConnection) {
 	r.Role.EconomicSeq, r.Role.Revision = 11, 17
 	r.Potions.LastAppliedSeq = 11
 	f := devconfig.Fixture{Potions: devconfig.PotionRules{TickMS: 7, BasePerTick: 3, LevelsPerStep: 4, UseDelayMS: 11, QueueCap: 23}}
+	f.Map.ID, f.Map.Width, f.Map.Height = 1, 17, 17
 	w := &worker{e: &Engine{Store: &persistence.Store{Cfg: devconfig.Config{Fixture: f}}}, rooms: map[string]*room{"role": r}}
 	return w, r, conn
 }

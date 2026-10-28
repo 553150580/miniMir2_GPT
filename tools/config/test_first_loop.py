@@ -59,7 +59,7 @@ def candidate_tables():
                        attack_interval_ms=700,move_interval_ms=500,exp=3)
     tables={
         'dev_first_loop_profile':[source_row(1,parameters=profile)],
-        'game_maps':[source_row(1,collision_id=1,width_cells=2,height_cells=2,spawn_cell={'x':0,'y':0},
+        'game_maps':[source_row(1,display_name='测试地图',tile_resource_key='development/maps/first-map',collision_id=1,width_cells=2,height_cells=2,spawn_cell={'x':0,'y':0},
             visual_geometry={'projection':'isometric_diamond','tile_width':70,'tile_height':35,'soil_thickness_px':13,'source_origin':{'x':4,'y':5}},decorations=[])],
         'game_map_collisions':[source_row(1,width_cells=2,height_cells=2,blocked_cells=[],client_navigation={'geometry_reference':'game_maps/1.visual_geometry','collision_basis':'authored_edge_decorations'})],
         'game_monsters':[fighter],

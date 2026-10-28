@@ -1,0 +1,13 @@
+{
+  "task": "go-test",
+  "command": [
+    "go",
+    "test",
+    "./..."
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T17:01:22.732876+00:00",
+  "finished_at": "2026-10-28T17:01:31.099899+00:00",
+  "output": ".work/source-town-20261028/checks/go-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

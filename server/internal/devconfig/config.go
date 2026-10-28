@@ -101,21 +101,14 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 }
 
 type Fixture struct {
-	SchemaVersion   int    `json:"schema_version"`
-	RuleVersion     uint64 `json:"rule_version"`
-	DevelopmentOnly bool   `json:"development_only"`
-	RuntimeReady    bool   `json:"runtime_ready"`
-	SourceStatus    string `json:"source_status"`
-	DamageFormula   string `json:"damage_formula"`
-	Map             struct {
-		ID            uint64  `json:"id"`
-		Width         int     `json:"width"`
-		Height        int     `json:"height"`
-		Blocked       []Point `json:"blocked"`
-		PlayerSpawn   Point   `json:"player_spawn"`
-		PetSpawn      Point   `json:"pet_spawn"`
-		MonsterSpawns []Point `json:"monster_spawns"`
-	} `json:"map"`
+	SchemaVersion     int                `json:"schema_version"`
+	RuleVersion       uint64             `json:"rule_version"`
+	DevelopmentOnly   bool               `json:"development_only"`
+	RuntimeReady      bool               `json:"runtime_ready"`
+	SourceStatus      string             `json:"source_status"`
+	DamageFormula     string             `json:"damage_formula"`
+	Map               MapTemplate        `json:"map"`
+	Maps              []MapTemplate      `json:"maps,omitempty"`
 	Players           []Fighter          `json:"players"`
 	Pet               Fighter            `json:"pet"`
 	Monsters          []Monster          `json:"monsters"`

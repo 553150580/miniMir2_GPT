@@ -1,0 +1,12 @@
+{
+  "task": "client-scene-test",
+  "command": [
+    "node",
+    "tools/client/compile_scene_tests.mjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T17:01:16.556914+00:00",
+  "finished_at": "2026-10-28T17:01:17.306133+00:00",
+  "output": ".work/source-town-20261028/checks/client-scene-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

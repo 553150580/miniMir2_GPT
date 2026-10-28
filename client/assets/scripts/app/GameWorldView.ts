@@ -1,4 +1,4 @@
-import { EventTouch, game, instantiate, isValid, Label, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
+import { Color, EventTouch, game, Graphics, instantiate, isValid, Label, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
 import { AnimationSample, EntityAnimation, movementDisplayDurationMs } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
@@ -9,6 +9,10 @@ import { prepareMapSurface } from './MapSurface';
 import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
 import { StatusEffects } from './StatusEffects';
 import { DisplacementEvent, EntityDisplacement } from './EntityDisplacement';
+import { SourceProjection } from './SourceProjection';
+import { SourceMapView } from './SourceMapView';
+import type { SourceMapEntityOrder } from './SourceMapView';
+import type { SourceRect } from './SourceMapModel';
 
 interface Visual {
     node: Node;
@@ -34,6 +38,10 @@ export class GameWorldView {
     private lastAttackId = 0n;
     private visuals = new Map<number, Visual>();
     private projection?: GridProjection;
+    private sourceView?: SourceMapView;
+    private mapReady = false;
+    private mapPreparation?: Promise<void>;
+    private mapFailure: unknown;
     private readonly props: Array<{ node: Node; foot: Vec3; id: string }> = [];
     private disposed = false;
     private selected: (entity: any) => void = () => {};
@@ -52,13 +60,25 @@ export class GameWorldView {
         if (this.disposed) { assets.dispose(); return; }
         this.assets = assets; this.selected = onSelected;
         this.manifest = assets.manifest; this.map = assets.map; this.gameplay = assets.gameplay;
-        this.projection = new GridProjection(this.map);
-        prepareMapSurface(this.world, assets, this.projection);
+        this.mapReady = false;
+        if (assets.sourceMap) {
+            this.projection = new SourceProjection(assets.sourceMap.model);
+            const surface = this.prepareSourceSurface();
+            this.sourceView = new SourceMapView(assets.sourceMap, this.world, surface, this.entities);
+        } else {
+            this.projection = new GridProjection(this.map);
+            // 同一保存场景可以先后承载来源城镇与个人图，只恢复运行数据，不重建保存布局。
+            this.world.getComponent(UITransform)!.setAnchorPoint(.5, .5);
+            for (const name of ['Soil', 'GridLines']) { const node = this.world.getChildByName(name); if (node) node.active = true; }
+            const surface = this.world.getChildByName('Surface'); surface?.getComponent(UITransform)?.setAnchorPoint(.5, .5);
+            const sprite = surface?.getComponent(Sprite); if (sprite) sprite.enabled = true;
+            prepareMapSurface(this.world, assets, this.projection);
+        }
         this.statusEffects = new StatusEffects(assets, this.sceneEpoch, (handle, life) => {
             const visual = this.visuals.get(handle);
             return visual?.state.life?.toString() === life ? visual.node.getChildByName('AttachedEffects') : null;
         });
-        for (const prop of this.map.props ?? []) {
+        for (const prop of assets.sourceMap ? [] : this.map.props ?? []) {
             const definition = this.manifest.frames[prop.frame], frame = assets.frames.get(prop.frame);
             if (!frame || !definition) throw new Error(`地图物件尚未预载：${prop.frame}`);
             const node = instantiate(assets.propPrefab); node.name = prop.id; node.parent = this.entities;
@@ -76,6 +96,22 @@ export class GameWorldView {
                 const visual = this.visuals.get(handle), pose = visual?.pose;
                 return pose?.action === 'attack' && visual?.animation ? { attackSequence: visual.animation.currentAttackSequence, frame: pose.frame, direction: this.projection!.visualDirection(pose.direction) } : null;
             }, this.projection);
+        this.mapReady = !this.sourceView;
+    }
+
+    get isMapReady(): boolean { return !this.disposed && this.mapReady && (!this.sourceView || this.sourceView.isReady); }
+    get mapPreparationError(): unknown { return this.mapFailure; }
+    // 来源地图须先取得玩家基线/权威位置，不能用任意出生点准备另一个视口后提前声明就绪。
+    prepareViewport(position?: { x: number; y: number }): Promise<void> {
+        if (this.disposed || !this.assets) return Promise.reject(new Error('世界视图尚未准备或已经销毁'));
+        if (!this.sourceView) return Promise.resolve();
+        if (position) {
+            if (![position.x, position.y].every(Number.isFinite) || position.x < 0 || position.y < 0 || position.x >= this.map.width || position.y >= this.map.height) return Promise.reject(new Error('来源地图准备位置越界'));
+            this.playerPosition = { ...position };
+        }
+        if (!this.playerPosition) return Promise.reject(new Error('来源地图尚无玩家基线位置'));
+        this.refitCamera();
+        return this.mapPreparation ?? Promise.reject(new Error('来源地图视口尺寸尚未就绪'));
     }
 
     acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
@@ -117,7 +153,9 @@ export class GameWorldView {
         if (!this.map) return null;
         const local = this.world.getComponent(UITransform)!.convertToNodeSpaceAR(new Vec3(point.x, point.y));
         const cell = (this.projection ??= new GridProjection(this.map)).cellAt(local);
-        return cell && (!requireWalkable || !this.map.blocked.some((point: { x: number; y: number }) => point.x === cell.x && point.y === cell.y)) ? cell : null;
+        const walkable = !cell || !requireWalkable || (this.assets?.sourceMap ? this.assets.sourceMap.model.isWalkable(cell.x, cell.y)
+            : !this.map.blocked.some((point: { x: number; y: number }) => point.x === cell.x && point.y === cell.y));
+        return cell && walkable ? cell : null;
     }
 
     apply(baseline: any): void {
@@ -178,7 +216,7 @@ export class GameWorldView {
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0
                 : Math.max(0, Math.min(1, Number(BigInt(state.hp.toString()) * 10000n / BigInt(state.hpMax.toString())) / 10000));
         }
-        for (const [id, visual] of this.visuals) if (!alive.has(id)) { visual.node.destroy(); this.visuals.delete(id); }
+        for (const [id, visual] of Array.from(this.visuals)) if (!alive.has(id)) { visual.node.destroy(); this.visuals.delete(id); }
         if (baseline.stateSequence != null) this.statusEffects?.observe(baseline.stateSequence, baseline.entities, now);
         // 首帧定位同样走显示模型；后续快照绝不直接设置节点为新格坐标。
         this.update(0, this.job, this.weaponEquipped);
@@ -190,6 +228,15 @@ export class GameWorldView {
         const view = this.viewport.getComponent(UITransform), world = this.world.getComponent(UITransform);
         if (!isValid(view, true) || !isValid(world, true) || view.width <= 0 || view.height <= 0) return;
         const point = this.grid(this.playerPosition.x, this.playerPosition.y), scale = this.world.scale;
+        if (this.sourceView) {
+            if (![scale.x, scale.y].every(value => Number.isFinite(value) && value > 0)) return;
+            const width = this.map.pixel_width, height = this.map.pixel_height, visibleWidth = view.width / scale.x, visibleHeight = view.height / scale.y;
+            const centerX = visibleWidth >= width ? width / 2 : Math.max(visibleWidth / 2, Math.min(width - visibleWidth / 2, point.x));
+            const centerY = visibleHeight >= height ? height / 2 : Math.max(visibleHeight / 2, Math.min(height - visibleHeight / 2, -point.y));
+            this.world.setPosition((.5 - view.anchorPoint.x) * view.width - centerX * scale.x,
+                (.5 - view.anchorPoint.y) * view.height + centerY * scale.y, this.world.position.z);
+            this.requestSourceViewport(); return;
+        }
         const rangeX = Math.max(0, (world.width * scale.x - view.width) / 2);
         const rangeY = Math.max(0, (world.height * scale.y - view.height) / 2);
         this.world.setPosition(Math.max(-rangeX, Math.min(rangeX, -point.x * scale.x)),
@@ -206,11 +253,14 @@ export class GameWorldView {
             else audit.maxGap = Math.max(audit.maxGap, now - audit.last);
             audit.last = now; audit.updates++;
         }
-        for (const visual of this.visuals.values()) {
+        const sourceOrder: SourceMapEntityOrder[] = [];
+        for (const visual of Array.from(this.visuals.values())) {
             const motion = visual.motion.sample(now);
             if (audit && motion.moving && visual.state.entityKind <= 3
                 && (Math.abs(motion.x - Math.round(motion.x)) > .001 || Math.abs(motion.y - Math.round(motion.y)) > .001)) audit.intermediate[visual.state.entityKind]++;
             visual.node.setPosition(this.grid(motion.x, motion.y));
+            if (this.sourceView) sourceOrder.push({ id: `entity_${visual.state.entityHandle}`, node: visual.node,
+                x: motion.x, y: motion.y, row: visual.state.position.y });
             if (visual.state.entityHandle === this.playerHandle) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
             visual.pose = pose ?? null;
@@ -245,9 +295,12 @@ export class GameWorldView {
             });
         }
         // 依据当帧脚底位置处理遮挡，HUD不参与世界深度排序。
-        const depth: Array<ProjectedDepth & { node: Node }> = this.props.map(prop => ({ node: prop.node, x: prop.foot.x, y: prop.foot.y, layer: 0, id: prop.id }));
-        for (const visual of this.visuals.values()) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
-        depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
+        if (this.sourceView) this.sourceView.setEntities(sourceOrder);
+        else {
+            const depth: Array<ProjectedDepth & { node: Node }> = this.props.map(prop => ({ node: prop.node, x: prop.foot.x, y: prop.foot.y, layer: 0, id: prop.id }));
+            for (const visual of Array.from(this.visuals.values())) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
+            depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
+        }
         this.effects?.update(now);
         this.statusEffects?.update(now);
         this.refitCamera();
@@ -261,14 +314,59 @@ export class GameWorldView {
         }
     }
 
+    private prepareSourceSurface(): Node {
+        const surface = this.world.getChildByName('Surface'); if (!surface) throw new Error('场景尚未保存来源地图Surface容器');
+        const transform = this.world.getComponent(UITransform)!; transform.setAnchorPoint(0, 1); transform.setContentSize(this.map.pixel_width, this.map.pixel_height);
+        const worldSprite = this.world.getComponent(Sprite); if (worldSprite) worldSprite.enabled = false;
+        surface.setPosition(0, 0, 0); surface.setScale(1, 1, 1); surface.angle = 0;
+        surface.getComponent(UITransform)!.setAnchorPoint(0, 1); surface.getComponent(UITransform)!.setContentSize(this.map.pixel_width, this.map.pixel_height);
+        const background = surface.getComponent(Sprite); if (background) { background.spriteFrame = null; background.enabled = false; }
+        this.entities.setPosition(0, 0, 0); this.entities.setScale(1, 1, 1); this.entities.angle = 0;
+        for (const name of ['Soil', 'GridLines']) {
+            const node = this.world.getChildByName(name); if (node) { node.getComponent(Graphics)?.clear(); node.active = false; }
+        }
+        const marker = this.world.getChildByName('TargetMarker');
+        if (marker) {
+            marker.active = false; const sprite = marker.getComponent(Sprite); if (sprite) sprite.enabled = false;
+            const graphics = marker.getChildByName('Diamond')?.getComponent(Graphics);
+            if (graphics) {
+                graphics.clear(); graphics.fillColor = new Color(255, 220, 90, 65); graphics.rect(-24, -16, 48, 32); graphics.fill();
+                graphics.strokeColor = new Color(255, 220, 90, 210); graphics.lineWidth = 1.5; graphics.rect(-24, -16, 48, 32); graphics.stroke();
+            }
+        }
+        return surface;
+    }
+    private requestSourceViewport(): void {
+        if (!this.sourceView) return;
+        const view = this.viewport.getComponent(UITransform)!, world = this.world.getComponent(UITransform)!;
+        const left = -view.width * view.anchorPoint.x, bottom = -view.height * view.anchorPoint.y;
+        const points = [[left, bottom], [left + view.width, bottom], [left + view.width, bottom + view.height], [left, bottom + view.height]]
+            .map(([x, y]) => world.convertToNodeSpaceAR(view.convertToWorldSpaceAR(new Vec3(x, y))));
+        const rect: SourceRect = [Math.min(...points.map(point => point.x)), -Math.max(...points.map(point => point.y)),
+            Math.max(...points.map(point => point.x)), -Math.min(...points.map(point => point.y))];
+        let preparation: Promise<void>;
+        try { preparation = this.sourceView.setViewport(rect, game.totalTime); }
+        catch (error) { preparation = Promise.reject(error); }
+        if (preparation === this.mapPreparation) return;
+        this.mapReady = false; this.mapFailure = undefined; this.mapPreparation = preparation;
+        void preparation.then(() => { if (!this.disposed && this.mapPreparation === preparation) this.mapReady = true; }, error => {
+            if (!this.disposed && this.mapPreparation === preparation) { this.mapReady = false; this.mapFailure = error; }
+        });
+    }
+
 
     dispose(): void {
         if (this.disposed) return;
         this.disposed = true;
+        this.mapReady = false; this.sourceView?.dispose(); this.sourceView = undefined; this.mapPreparation = undefined;
         if (isValid(this.viewport, true)) this.viewport.off(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
         this.playerPosition = null;
-        for (const visual of this.visuals.values()) if (isValid(visual.node, true)) visual.node.destroy();
-        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined; this.assets?.dispose(); this.assets = undefined;
-        for (const prop of this.props) if (isValid(prop.node, true)) prop.node.destroy(); this.props.length = 0;
+        for (const visual of Array.from(this.visuals.values())) if (isValid(visual.node, true)) {
+            for (const sprite of visual.body) sprite.spriteFrame = null;
+            visual.node.destroy();
+        }
+        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined;
+        for (const prop of this.props) if (isValid(prop.node, true)) { const sprite = prop.node.getComponent(Sprite); if (sprite) sprite.spriteFrame = null; prop.node.destroy(); }
+        this.props.length = 0; this.assets?.dispose(); this.assets = undefined;
     }
 }

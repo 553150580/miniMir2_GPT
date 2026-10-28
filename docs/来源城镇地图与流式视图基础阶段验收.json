@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "recorded_at_utc": "2026-10-28T17:23:09.937506+00:00",
+  "stage": "完整来源城镇目录、来源安全区几何与流式视图基础",
+  "status": "限定基础验收通过；同owner健康往返、安全区绑定与瞬移尚待实现",
+  "user_route": "先接入来源城镇地图及安全区，再启用绑定与瞬移",
+  "runtime": {
+    "rule_version": 12,
+    "preview": "dev-source-town-v0.12-534f1e5def1e",
+    "fixture_sha256": "7868993c9d1cc33631d827e626683039a0934ce1a8d256c142ef680802c73a96",
+    "binding_enabled": false,
+    "teleport21_enabled": false,
+    "skills": 21,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "maps": {
+    "personal": {
+      "id": "1",
+      "cells": [
+        17,
+        17
+      ],
+      "projection": "isometric_diamond",
+      "tile": [
+        64,
+        32
+      ],
+      "soil_px": 48
+    },
+    "town": {
+      "id": "2",
+      "name": "比奇省",
+      "source_code": "0",
+      "cells": [
+        700,
+        700
+      ],
+      "projection": "source_rectangular",
+      "tile": [
+        48,
+        32
+      ],
+      "source_sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec",
+      "manifest_sha256": "07774060885769d5dbbf057ecaf70a4cc1e368fa20317d2d5f3839b3a7c754e4",
+      "chunks": 1936,
+      "pngs": 4635,
+      "safe_zone_ids": [
+        "106",
+        "107",
+        "108",
+        "113",
+        "117"
+      ],
+      "safe_zone_source_rows": [
+        6,
+        7,
+        8,
+        13,
+        17
+      ],
+      "developer_entry": {
+        "x": 633,
+        "y": 613
+      },
+      "minimap": {
+        "package": "mmap",
+        "raw_frame": 100,
+        "frame": "mmap:100"
+      },
+      "minimap_cross_source_candidate": true,
+      "source_engine_minimap_index_base_verified": false,
+      "static_blocked": 162653,
+      "closed_door_cells": 182,
+      "runtime_blocked": 162741,
+      "no_monster_spawns": true,
+      "runtime_original_json_sha_verified": false
+    }
+  },
+  "verification": {
+    "go_mongo_ws_race_passed_including_subtests": 483,
+    "go_skipped": 0,
+    "go_frozen_inputs": 97,
+    "go_source_stable": true,
+    "client_js_passed": 269,
+    "client_ui_app_passed": 253,
+    "client_scene_passed": 16,
+    "configuration_python_passed": 55,
+    "host_python_passed": 4,
+    "protobuf_boundary_cases": 377,
+    "creator_seconds": 110.72,
+    "creator_exit_code": 36,
+    "saved_layouts_preserved": 10,
+    "source_asset_files": 6572,
+    "source_asset_bytes": 73738669,
+    "normal_ui_checks": 6,
+    "normal_ui_warnings": [
+      {
+        "type": "warning",
+        "text": "Unexpected screen orientation: 13"
+      }
+    ],
+    "source_render_checks": [
+      "真实构建System.import与保存Game.scene；AppRoot/Input组件禁用；完整来源地图及真实小地图准备",
+      "银杏/边界/比奇真实原格画面与保存HUD",
+      "100ms原帧火把及SRC_ALPHA/ONE加色",
+      "987px高前景来自视口外owner块",
+      "四角边缘、远距往返与49块LRU淘汰",
+      "Label24/保存0.7比例及原生逐行遮挡",
+      "真实小地图1052×699等比显示",
+      "加高160像素仅增地图视口",
+      "销毁前Sprite/材质解绑及资源引用归零",
+      "RPC/WS请求为0"
+    ],
+    "source_render_cases": 13,
+    "source_render_warnings": [
+      {
+        "type": "warning",
+        "text": "Unexpected screen orientation: 13"
+      }
+    ],
+    "physical_mobile_verified": false,
+    "server_town_transition_verified": false,
+    "capacity_verified": false
+  },
+  "configuration": {
+    "tables": 98,
+    "records": 941,
+    "status_counts": {
+      "candidate": 442,
+      "confirmed": 393,
+      "historical": 36,
+      "unverified": 70
+    },
+    "release_blockers": 691,
+    "gameplay_workbook_sha256": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f",
+    "architecture_workbook_sha256": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab"
+  },
+  "limits": [
+    "当前正常入场仍进入个人图；来源画面由禁用业务组件和网络的独立诊断工具实例化，不能当成已实现服务端城镇往返",
+    "地图目录、完整资源、来源碰撞与安全区几何已核对；安全区动作触发、永久绑定提交及21/TemporalFlux尚未启用",
+    "随机初始新生池仍未认证；StartPoint重复行不解释为新生权重，来源入口不冒称绑定点",
+    "城镇当前无怪、门关闭；开门、室内、NPC、灯光天气及各伤害类型安全区规则未实现或认证",
+    "旧同步BFS对来源合法不可达格耗时超过200毫秒，探针使用上一份仅来源证据不同的fixture；城镇业务开放前须完成增量有界导航",
+    "来源JSON逐块运行只验证Creator导入对象结构，原字节摘要由生成及复验记录；不冒称运行时原字节验签",
+    "完整P0、目标1.80完整认证、真机、容量、长期稳定及正式发布未完成"
+  ],
+  "evidence_sha256": {
+    "outputs/source-town-foundation-20261029/browser-ui/01-login.png": "637c937fec8b8879a3dfc9e214358d5b6cc6f46ccdd1855f05bfcaf6f295d36f",
+    "outputs/source-town-foundation-20261029/browser-ui/02-game.png": "0ae94a64d13aa93365871ca70ad053bd56ec4ea6825b2f740af1685378915fa2",
+    "outputs/source-town-foundation-20261029/browser-ui/03-navigation-panel.png": "c0f428b67292580f853b4c5410ad7a359d88114dd85004cffff014e08b8d26c1",
+    "outputs/source-town-foundation-20261029/browser-ui/04-taller-viewport.png": "256a3fc664e2e57ac4be5332e668e0cd6634d5a0690ac8ce75c3c8759a17f318",
+    "outputs/source-town-foundation-20261029/browser-ui/05-healthy-reentry.png": "c15271b9297ba105e09f50fdd2e238beee7459dfce7c07b97ae27975112cf83a",
+    "outputs/source-town-foundation-20261029/browser-ui/navigation-trace.json": "5a23f74564e417be13b5b0f83e18563ac4027966245def6009abcecd8b96482f",
+    "outputs/source-town-foundation-20261029/browser-ui/report.json": "281c6b31cd2972a7ada83c7e389f776ad7869ea9f411781c9e99c49d44f85651",
+    "outputs/source-town-foundation-20261029/checks/check-0.json": "9f6ca2f46dd10b3ecfe1f977c856bf2cac4a2b40ec8bcb269eab87217f8d36a7",
+    "outputs/source-town-foundation-20261029/checks/check-0.txt": "faeab5026b7c83d041651bb78d64615477197be065b3d71aa4efbdd9d187be85",
+    "outputs/source-town-foundation-20261029/checks/check-1.json": "fa7d4f0978965e98daa7c8776c01f27e74b6eb2da5456a09915b6b56c341c344",
+    "outputs/source-town-foundation-20261029/checks/check-1.txt": "54254e853679e7cfbadf16cb8830dcdbd417aca52da99b26258129544dddd83c",
+    "outputs/source-town-foundation-20261029/checks/check-2.json": "e9ff4cd9078d8f8ba786c18c8ccd3ec83b83752d74a68b037ede9af0225b96ce",
+    "outputs/source-town-foundation-20261029/checks/check-2.txt": "a9e1a081382b7f84611f824069d77a751039eb9beaab20db67cad3bedfa095a4",
+    "outputs/source-town-foundation-20261029/checks/client-build-0.json": "f05af6f14780d290dc5e98d6ba138692495bf79b1caaa60cb0b6c87ec9a80ef1",
+    "outputs/source-town-foundation-20261029/checks/client-build-0.txt": "f347f89a4bb951644f25d65ec04c9c7f4cf3d5e2b11021d2e46e5de0124278b6",
+    "outputs/source-town-foundation-20261029/checks/client-scene-test-0.json": "136db3e8a52f5a805d8f0e00f3f14fa41b13ea5d9be0cf1c36169608229d8935",
+    "outputs/source-town-foundation-20261029/checks/client-scene-test-0.txt": "da70292a8e96a7662d91ca8936ada79495bdd094f0467dce2e47accdb6786728",
+    "outputs/source-town-foundation-20261029/checks/client-scene-test-1.json": "337e2f9710bfe130f107aa65f1f391016b85339fa1f90af4b701052323093fe3",
+    "outputs/source-town-foundation-20261029/checks/client-scene-test-1.txt": "4dd0ae47b94e2690a42c1de0e26b61d3459f8f76dcdb3e2a87a8e85d934d0b69",
+    "outputs/source-town-foundation-20261029/checks/client-test-0.json": "c9a988f3256ab62d958e0def3c57ad981d868d4dde3e4b83d9e34c48e5b5e103",
+    "outputs/source-town-foundation-20261029/checks/client-test-0.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "outputs/source-town-foundation-20261029/checks/client-test-1.json": "ff1fb3a2ebe38793fdb302c5deed5cc73f0e4d9d06a9a792136117c35d29d86a",
+    "outputs/source-town-foundation-20261029/checks/client-test-1.txt": "a95e03880f137ddd915b7209f968b6eeec938b288e33d678e07f1c8aa10c017d",
+    "outputs/source-town-foundation-20261029/checks/client-typecheck-0.json": "352ae736479a700c23b2cc5de32b9a69f9497df2d476e5892d39cbdfa4c7bb81",
+    "outputs/source-town-foundation-20261029/checks/client-typecheck-0.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "outputs/source-town-foundation-20261029/checks/development-resources-check-0.json": "eb0c308d3b7020b3b42fb1d406eb503ef760df249ffd5fe64ac8572dddea7d5e",
+    "outputs/source-town-foundation-20261029/checks/development-resources-check-0.txt": "1972fb42bed1b4e6fb5df6938c447e5044f37a6eb0d2124f9f56267609598605",
+    "outputs/source-town-foundation-20261029/checks/development-resources-check-1.json": "73b12c4c5b58d4ae2effa831c46f79a52f30f719fcbe363222843871d6307328",
+    "outputs/source-town-foundation-20261029/checks/development-resources-check-1.txt": "1dace81a90a6ddae6965db88e771be9e7c319b053a0c6093ce401d2a84c07443",
+    "outputs/source-town-foundation-20261029/checks/go-test-0.json": "e51b3b4c26b4738e5527b4b11c55fbd140e2239244d8a96ddb83d1404df432e7",
+    "outputs/source-town-foundation-20261029/checks/go-test-0.txt": "fd73db857d39a8d186137ed8b073ec7970a6ce244030f400c1d170c672c3f76f",
+    "outputs/source-town-foundation-20261029/checks/host-test-0.json": "3138487e3e96e00abcd8f3e9873075381e5ac5390c8d823da9bdb5b77063d64c",
+    "outputs/source-town-foundation-20261029/checks/host-test-0.txt": "f9bd8c2616252d4ec9715c2e60ef80ac8d0fe940ee07e21b9e008107fb3ee5fb",
+    "outputs/source-town-foundation-20261029/checks/protocol-check-0.json": "4b07560476d58599375892f0c34824022c544dafd3622c98c309422831f970a8",
+    "outputs/source-town-foundation-20261029/checks/protocol-check-0.txt": "18d973e686edcae4887c523044d4c43e92186596957fd73ca27cfe30bdf21e3a",
+    "outputs/source-town-foundation-20261029/checks/protocol-check-1.json": "f9438e50b5017e353ab5e0300254cd1728e4ac1dac64950464630cd1076d4a6e",
+    "outputs/source-town-foundation-20261029/checks/protocol-check-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "outputs/source-town-foundation-20261029/checks/python-test-0.json": "4b9ccafdd151b5243ffa3510ae3fcfee65309593fda6ddd92acfc6621aa145aa",
+    "outputs/source-town-foundation-20261029/checks/python-test-0.txt": "0487b41043432ff42d69324326afe7184a4f7b2ae5ef85108fb62834c3a6ee15",
+    "outputs/source-town-foundation-20261029/checks/server-integration-test-0.json": "fb3dee7749dfbf251daf5a735de70ef136db79ed85935499e7044513ad80c3c4",
+    "outputs/source-town-foundation-20261029/checks/server-integration-test-0.txt": "4f557f6055441d5b3db17ffa3577fa0d5db1db5b65e96df44ab8a395db9fbcce",
+    "outputs/source-town-foundation-20261029/creator/creator-cli.log": "423446ac54888071cf3f303787ca8894a64c3f63468d29306b64308b0456ad3e",
+    "outputs/source-town-foundation-20261029/creator/report.json": "a787307055a0989800c87fa471425993dfe014eb367bed407761060e7e500040",
+    "outputs/source-town-foundation-20261029/navigation/next-stage-readonly-plan.md": "766a9770417bb989358a0b49c3234f6a8b707961000b509eb1d0d10d27e0868f",
+    "outputs/source-town-foundation-20261029/navigation/previous-fixture-measurements.json": "89cff50e21cc35c1f5fed21dd5986d6cebe9b51fbf28246aaa1324a0a6169053",
+    "outputs/source-town-foundation-20261029/personal-resources.json": "343cd093090ff883dd040cc098a58566dc77f758d265327268e46051031261be",
+    "outputs/source-town-foundation-20261029/reference-copies.json": "2f823e470935d41debbe4e3ff43821a08bf446b552d82da782acffa2bd0d37b6",
+    "outputs/source-town-foundation-20261029/resources/artifact-inventory.json": "1c030d1bd4df6af70dbf790f48de6693ea493899c300780c6e1b6ea2f0dc4993",
+    "outputs/source-town-foundation-20261029/resources/artifacts-before-check.json": "d139f3c029d1f7fed085c811b90022332e2f28da6f1caa942c79a28e868be148",
+    "outputs/source-town-foundation-20261029/resources/artifacts-before-update.json": "fac56949d0d8c1fead022d554622c910a1892a6f23715912a9029010c55b21a5",
+    "outputs/source-town-foundation-20261029/resources/check.json": "df5213c75e599d44f0dc2fb25a9959f8db3b8bf17bc5ec4acff4546e207f0085",
+    "outputs/source-town-foundation-20261029/resources/check.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/source-town-foundation-20261029/resources/check.stdout.log": "79d55794f8f41ac0c1fcefd402634e1904f7f5a2b86131ef79792ceed1b74912",
+    "outputs/source-town-foundation-20261029/resources/generate.json": "920e9bba05bd022d703d69c20a10a3499d980eaf87331431672b02d4ce2f1dc0",
+    "outputs/source-town-foundation-20261029/resources/generate.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/source-town-foundation-20261029/resources/generate.stdout.log": "29c9ae12d54656907c56c8f1485dfbf9a7d086e1b4e2fb31267de7cd1a82fb68",
+    "outputs/source-town-foundation-20261029/resources/resource-report.json": "beb72b002e7f6bcabf6247a59bc59cc62960b71a9efbe3e89bf8fd5d22931dfb",
+    "outputs/source-town-foundation-20261029/server/latest.events.jsonl": "3f5b294ccb50c8c90f440f46b2483fc5da429cc9d826ac2d633b75b892e1ef05",
+    "outputs/source-town-foundation-20261029/server/latest.json": "dc2720e94df2eb8b6ae258ccf8176088d9604ddb703de5bc2a54f9a24641b92a",
+    "outputs/source-town-foundation-20261029/source-render/01-silver-map.png": "917d5e45632ca98fc7cc11aa0e14370b1e9b3c30a47eacc61a249f1a6352be9a",
+    "outputs/source-town-foundation-20261029/source-render/01-silver.png": "4fae0ea635d9cc9244c6a423a49dcd0eb302ddf90d220569684bfeecfe0dd7d4",
+    "outputs/source-town-foundation-20261029/source-render/02-boundary-map.png": "97b6d7883facde56d3274eb40595484c06eda817a94e8b70622de24bdcb59159",
+    "outputs/source-town-foundation-20261029/source-render/02-boundary.png": "f8e631a2f100dfac50b5c5d2da0aba9d81e93dfb635309b3e58fc44622de3b38",
+    "outputs/source-town-foundation-20261029/source-render/03-bich-map.png": "59f9751211e62965aedda682cbb90f3994f8dc789340b2fc16f33376b1b5317d",
+    "outputs/source-town-foundation-20261029/source-render/03-bich.png": "c1e70d85e98dabbbe835f4db7e8d799876932fa89fb8d312f5ae1bad86fd564a",
+    "outputs/source-town-foundation-20261029/source-render/04-torch-map.png": "eced2c57e7de3a9b3510fed5f0011aadba5d99f7779deadd67a29c45eb678ea4",
+    "outputs/source-town-foundation-20261029/source-render/04-torch.png": "4bf767cca5fb0ea9eaf3f35a09ebc0ce1674d8131d6c31954145c6b0dbdd71cd",
+    "outputs/source-town-foundation-20261029/source-render/05-high-front-map.png": "9d262656dcbd4f2de887f33b925c08285a256f9bb02a57397978fbddc12a109c",
+    "outputs/source-town-foundation-20261029/source-render/05-high-front.png": "9d262656dcbd4f2de887f33b925c08285a256f9bb02a57397978fbddc12a109c",
+    "outputs/source-town-foundation-20261029/source-render/06-top-left-map.png": "34f00c98db0d57901b1a3466d29479f6e71f679eed2e9bd7f1a41524f454d485",
+    "outputs/source-town-foundation-20261029/source-render/06-top-left.png": "716ed403fe95124946c15cd7c86fa7a27cd47845381741f15cd04d0ecac645c8",
+    "outputs/source-town-foundation-20261029/source-render/07-top-right-map.png": "94f456c7a56a9d910e7689e6ffac24f9cf8be036984bb855c5bb292e976951c1",
+    "outputs/source-town-foundation-20261029/source-render/07-top-right.png": "d84c54ffe71fbdafa5dff9fba6b909ee1229f6af3e072393685a395e0abf4674",
+    "outputs/source-town-foundation-20261029/source-render/08-bottom-right-map.png": "f644c75e4a1f6e7e02803f0daf81790cc4848b259033ddfd066eedd6c156b705",
+    "outputs/source-town-foundation-20261029/source-render/08-bottom-right.png": "3334e7a755711e95e8010beb882403cdf92478242df4371f1db0c0c555dab906",
+    "outputs/source-town-foundation-20261029/source-render/09-bottom-left-map.png": "4bb857d468f9833f8877f51f33e97e14ae4f10bd22aec319a9e51e94b321ef77",
+    "outputs/source-town-foundation-20261029/source-render/09-bottom-left.png": "93def99269699789903b9f732865f23d8cba369b27ad505aab3d13a55e9ca6d0",
+    "outputs/source-town-foundation-20261029/source-render/10-lru-north-map.png": "299933fd2406bf5aa351baa0f8bb492cab1ca3ba98d6591bf854424f5add9e26",
+    "outputs/source-town-foundation-20261029/source-render/10-lru-north.png": "ea3c99aeb1e529c9548dc1def6f7cdf570db85c0b5eda2a4a57df759e69b0ae3",
+    "outputs/source-town-foundation-20261029/source-render/11-lru-west-map.png": "89877e94c01b0963e2f580f316efbed4e6168cbd4e41a8c4f6a3e0b2c3286ad2",
+    "outputs/source-town-foundation-20261029/source-render/11-lru-west.png": "89877e94c01b0963e2f580f316efbed4e6168cbd4e41a8c4f6a3e0b2c3286ad2",
+    "outputs/source-town-foundation-20261029/source-render/12-lru-east-map.png": "5e498ecd84800657b95a3a2cd3c25c46d9cb5bc390c68eaece66e9a21d87e5e8",
+    "outputs/source-town-foundation-20261029/source-render/12-lru-east.png": "997a2583538f7d48cf08bb5f9def9367353b06adba1fd6e7c5da4f60e4e28e04",
+    "outputs/source-town-foundation-20261029/source-render/13-silver-return-map.png": "0c28144e41d7adcceed52d02d3a39e110cb466e98e1024bd50aab1515b9a233f",
+    "outputs/source-town-foundation-20261029/source-render/13-silver-return.png": "0c28144e41d7adcceed52d02d3a39e110cb466e98e1024bd50aab1515b9a233f",
+    "outputs/source-town-foundation-20261029/source-render/14-taller-silver.png": "05f404729bc15e4fa1ff25f9c1edc61185db3dac080911bfa04543aa243d88b6",
+    "outputs/source-town-foundation-20261029/source-render/report.json": "63ba3d9b58368e550d7c33b7b27a21759799dab914f47b95abd3c974d2c8c63a",
+    "outputs/source-town-foundation-20261029/workbook/candidate-preservation.json": "d50841f55a41fe9160ae5490a91ee9d1ac57f7078c719efbe9c9da5cbc0cea44",
+    "outputs/source-town-foundation-20261029/workbook/duplicate-row-audit.json": "295d5eee5c26e7bfc9306f78484e4493716cd71158fb032a992edcd96fa23e52",
+    "outputs/source-town-foundation-20261029/workbook/minimap-edit-review.json": "be0b525738ba0f74d7ac0f957f123bd32574f095e30b2373c0ea375878d349bc",
+    "outputs/source-town-foundation-20261029/workbook/minimap-preservation.json": "2e58ea186c4ca223f22e8df3aa1e6bb4c3745df1d048d32d5bea8dda6ad1e626",
+    "outputs/source-town-foundation-20261029/workbook/town-edit-review.json": "91d90ebe2624175ac3022a3908254912822e6c3e2886542500bc8f7b8d5633ca"
+  }
+}

@@ -17,3 +17,4 @@ outputs/windows-adaptation-20261028/checks/*.txt -text
 # 阶段证据直接核对字节摘要，跨平台检出时保留原始换行。
 outputs/development-displacement-skills-20261028/** -text
 outputs/role-binding-foundation-20261028/** -text
+outputs/source-town-foundation-20261029/** -text

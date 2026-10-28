@@ -11,6 +11,9 @@ import (
 
 // 记录实际入格顺序。最多十个活实体，按格读当前列表可保留源扫描中删除/追加的语义。
 func (w *worker) relocate(r *room, e *entity, point devconfig.Point) bool {
+	if !w.walkable(r, point) {
+		return false
+	}
 	if r.CellEntrySequence == math.MaxUint64 {
 		w.isolateRoom(r)
 		return false
@@ -38,7 +41,7 @@ func (w *worker) displacementEnemy(r *room, e *entity) bool {
 }
 
 func (w *worker) resolveDisplacementSkill(r *room, cast pendingCast, now time.Time) {
-	if r.Isolated || r.Pending || w.resolve(r, cast.Caster) != &r.Player || r.Player.HP <= 0 || cast.Skill.Displacement == nil {
+	if r.Isolated || r.Pending || w.resolve(r, cast.Caster) != &r.Player || r.Player.HP <= 0 || cast.Skill.Displacement == nil || w.mapCellBudget(r) == 0 {
 		return
 	}
 	// Pushed内部会尝试同步基线；整次同步施放完成前延后，防止基线先于冲撞事件确认水位。
@@ -67,7 +70,7 @@ func (w *worker) repulsion(r *room, cast pendingCast, now time.Time) {
 					continue
 				}
 				point := devconfig.Point{X: x, Y: y}
-				if !w.walkable(point) {
+				if !w.walkable(r, point) {
 					continue
 				}
 				for i := 0; !r.Isolated; i++ {
@@ -103,7 +106,7 @@ func (w *worker) shoulderDash(r *room, cast pendingCast, now time.Time) {
 	path := []devconfig.Point{}
 	for i := 0; i < length && !r.Isolated; i++ {
 		next := stepPoint(r.Player.Pos, cast.Direction, 1)
-		if !w.walkable(next) {
+		if !w.walkable(r, next) {
 			break
 		}
 		if i == 0 {

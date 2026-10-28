@@ -76,6 +76,26 @@
     {
       "path": "docs/抗拒火环与野蛮冲撞实施边界.md",
       "sha256": "64c80a97a8c07a46549ed0d9ac5c0835d0e995c5f6c3252a634e9806f9b6b85d"
+    },
+    {
+      "path": "docs/来源城镇地图与安全区实施边界.md",
+      "sha256": "80cee1ed2f631b0e8d4e190a0570d1844c96b9304afbadd69836eb7cfe616a60"
+    },
+    {
+      "path": "资料索引/来源城镇地图补充.json",
+      "sha256": "1c5237e3328e3dbef75de3d4e28397e0ad4a4b89d5b5bcb566de48ec1fbbc989"
+    },
+    {
+      "path": "资料参考/myf/Mir200/Envir/StartPoint.txt",
+      "sha256": "5da04adcfbc5e0024ddfb714ad2ddbd110e583f7cbbf7e20ee139c7d8d1a2050"
+    },
+    {
+      "path": "资料参考/myf/Mir200/Map/0.map",
+      "sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec"
+    },
+    {
+      "path": "资料参考/myf/Mir200/Envir/MiniMap.txt",
+      "sha256": "4d3c42c61f33ddd11ce8629bf84794f174f02d58d6b534bc516dbb25739625f1"
     }
   ],
   "workbooks": [
@@ -14295,6 +14315,54 @@
                 }
               }
             }
+          },
+          "map_catalog_ids": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1
+            }
+          },
+          "binding": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "start_points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "map_id": {
+                      "type": "int",
+                      "minimum": 1
+                    },
+                    "x": {
+                      "type": "int",
+                      "minimum": 0
+                    },
+                    "y": {
+                      "type": "int",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "source_map_streaming": {
+            "type": "object",
+            "properties": {
+              "load_concurrency": {
+                "type": "int",
+                "minimum": 1
+              },
+              "cache_capacity": {
+                "type": "int",
+                "minimum": 1
+              }
+            }
           }
         }
       },
@@ -21758,6 +21826,591 @@
         }
       },
       "source_ref": "用户2026-10-28明确审定Crystal来源逐阶推距/冲距；docs/抗拒火环与野蛮冲撞实施边界.md；Crystal HumanObject.cs:3953-4008,4975-5157与Envir默认；非目标1.80认证"
+    },
+    {
+      "table_id": "game_maps",
+      "id": 2,
+      "field": "spawn_cell",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_maps",
+      "id": 2,
+      "field": "visual_geometry",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "projection": {
+            "type": "string"
+          },
+          "tile_width": {
+            "type": "int",
+            "minimum": 1
+          },
+          "tile_height": {
+            "type": "int",
+            "minimum": 1
+          },
+          "soil_thickness_px": {
+            "type": "int",
+            "minimum": 0
+          },
+          "source_origin": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "chunk_size_cells": {
+            "type": "int",
+            "minimum": 1
+          },
+          "source_map_code": {
+            "type": "string"
+          },
+          "minimap": {
+            "type": "object",
+            "properties": {
+              "package": {
+                "type": "string"
+              },
+              "raw_frame": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_maps",
+      "id": 2,
+      "field": "decorations",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "frame": {
+              "type": "string"
+            },
+            "collision_cell_index": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_collisions",
+      "id": 2,
+      "field": "blocked_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "source_file": {
+            "type": "string"
+          },
+          "door_policy": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_collisions",
+      "id": 2,
+      "field": "client_navigation",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "geometry_reference": {
+            "type": "string"
+          },
+          "collision_basis": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 106,
+      "field": "region_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "min_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "min_y": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 106,
+      "field": "monster_pool",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monster_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "slots": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 106,
+      "field": "entry_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "region_kind": {
+            "type": "string"
+          },
+          "center": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "geometry": {
+            "type": "string"
+          },
+          "source_order": {
+            "type": "int",
+            "minimum": 1
+          },
+          "initial_binding_status": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 107,
+      "field": "region_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "min_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "min_y": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 107,
+      "field": "monster_pool",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monster_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "slots": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 107,
+      "field": "entry_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "region_kind": {
+            "type": "string"
+          },
+          "center": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "geometry": {
+            "type": "string"
+          },
+          "source_order": {
+            "type": "int",
+            "minimum": 1
+          },
+          "initial_binding_status": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 108,
+      "field": "region_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "min_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "min_y": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 108,
+      "field": "monster_pool",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monster_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "slots": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 108,
+      "field": "entry_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "region_kind": {
+            "type": "string"
+          },
+          "center": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "geometry": {
+            "type": "string"
+          },
+          "source_order": {
+            "type": "int",
+            "minimum": 1
+          },
+          "initial_binding_status": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 113,
+      "field": "region_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "min_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "min_y": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 113,
+      "field": "monster_pool",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monster_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "slots": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 113,
+      "field": "entry_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "region_kind": {
+            "type": "string"
+          },
+          "center": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "geometry": {
+            "type": "string"
+          },
+          "source_order": {
+            "type": "int",
+            "minimum": 1
+          },
+          "initial_binding_status": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 117,
+      "field": "region_cells",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "min_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "min_y": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_x": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_y": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 117,
+      "field": "monster_pool",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monster_id": {
+              "type": "int",
+              "minimum": 0
+            },
+            "slots": {
+              "type": "int",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
+    },
+    {
+      "table_id": "game_map_regions",
+      "id": 117,
+      "field": "entry_rules",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "region_kind": {
+            "type": "string"
+          },
+          "center": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "int",
+                "minimum": 0
+              },
+              "y": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          },
+          "radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "geometry": {
+            "type": "string"
+          },
+          "source_order": {
+            "type": "int",
+            "minimum": 1
+          },
+          "initial_binding_status": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证"
     }
   ]
 }

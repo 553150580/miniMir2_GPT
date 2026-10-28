@@ -2,14 +2,14 @@
   "schema_version": 1,
   "copy_manifest_version": "local_reference_v1",
   "runtime_ready": false,
-  "scope": "轻量原字节参考副本；不复制地图、图像包、音效大包、账号、凭据或部署配置",
+  "scope": "轻量原字节参考副本及城镇阶段必要完整0.map；不复制图像包、音效大包、账号、凭据或部署配置",
   "source_manifest_path": "资料索引/参考文件清单.json",
   "source_manifest_sha256": "71542c0d8bb34508865f444bcdbaebf146c3d66caabff32e4cb38c26e608da32",
-  "copied_file_count": 326,
-  "copied_bytes": 22610894,
+  "copied_file_count": 328,
+  "copied_bytes": 28493807,
   "counts_by_source": {
     "crystal": 307,
-    "myf": 8,
+    "myf": 10,
     "ui_reference": 11
   },
   "policy": {
@@ -5605,6 +5605,34 @@
       "text_transcoding": false,
       "runtime_enabled": false,
       "reason": "用户明确先接来源城镇及安全区；仅安全区/复活点静态资料，不包含账号、凭据或部署脚本"
+    },
+    {
+      "reference_id": "myf:Mir200/Map/0.map",
+      "source_id": "myf",
+      "source_root": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF",
+      "source_relative_path": "Mir200/Map/0.map",
+      "target_relative_path": "资料参考/myf/Mir200/Map/0.map",
+      "bytes": 5880052,
+      "source_sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec",
+      "target_sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "runtime_enabled": false,
+      "reason": "用户明确先接来源城镇及安全区；为完整来源地图生成与逐格复验保存必要0.map，图像大包仍不复制"
+    },
+    {
+      "reference_id": "myf:Mir200/Envir/MiniMap.txt",
+      "source_id": "myf",
+      "source_root": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF",
+      "source_relative_path": "Mir200/Envir/MiniMap.txt",
+      "target_relative_path": "资料参考/myf/Mir200/Envir/MiniMap.txt",
+      "bytes": 2861,
+      "source_sha256": "4d3c42c61f33ddd11ce8629bf84794f174f02d58d6b534bc516dbb25739625f1",
+      "target_sha256": "4d3c42c61f33ddd11ce8629bf84794f174f02d58d6b534bc516dbb25739625f1",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "runtime_enabled": false,
+      "reason": "仅来源小地图号与图像编号的静态映射；不含账号、凭据或部署逻辑，编号基址尚未认证"
     }
   ]
 }

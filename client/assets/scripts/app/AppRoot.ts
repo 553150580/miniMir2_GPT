@@ -185,7 +185,7 @@ export class AppRoot extends Component {
         const prepared = session.preparedWorld;
         if (!prepared) throw new Error('入场前尚未准备动作资源，请返回选角重试');
         session.preparedWorld = null;
-        this.hud.setMapFrame(prepared.background);
+        this.hud.setMapFrame(prepared.background, prepared.sourceMap);
         this.world.prepare(prepared, entity => {
             if (this.consumeGround(entity.position)) return;
             this.selectedTarget = entity.entityHandle;

@@ -1,4 +1,4 @@
-import { _decorator, Component, Label, Node, ProgressBar, Sprite, SpriteFrame, Toggle, UITransform } from 'cc';
+import { _decorator, Component, isValid, Label, Node, ProgressBar, Sprite, SpriteFrame, Toggle, UITransform } from 'cc';
 import { createHudState, HudInput, miniMapPoint } from './HudModel';
 
 const { ccclass } = _decorator;
@@ -8,16 +8,35 @@ const { ccclass } = _decorator;
 export class GameHUD extends Component {
     private readonly labels = new Map<string, Label>();
     private readonly bars = new Map<string, ProgressBar>();
+    private miniMapSlot: { width: number; height: number } | null = null;
+    private releaseMapInvalidation?: () => void;
 
-    setMapFrame(frame: SpriteFrame): void {
-        // 小地图旧容器几何保留，菱形地板使用保存的2:1子Sprite等比显示。
+    setMapFrame(frame: SpriteFrame | null, lifecycle?: { onBeforeInvalidation(listener: () => void): () => void }): void {
+        this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined;
+        // 保存的槽位不拉伸；不同来源小地图在同一槽内等比显示。
         this.saved('TopHUD/MiniMap/Map').getComponent(Sprite)!.spriteFrame = null;
         const sprite = this.saved('TopHUD/MiniMap/Map/Surface').getComponent(Sprite)!;
+        const transform = sprite.node.getComponent(UITransform)!;
+        this.miniMapSlot ??= { width: transform.width, height: transform.height };
         sprite.type = Sprite.Type.SIMPLE;
         sprite.trim = false;
         sprite.sizeMode = Sprite.SizeMode.CUSTOM;
         sprite.spriteFrame = frame;
+        sprite.enabled = frame !== null;
+        if (frame) {
+            const size = frame.originalSize, slot = this.miniMapSlot;
+            if (size.width <= 0 || size.height <= 0) throw new Error('小地图原图尺寸无效');
+            const scale = Math.min(slot.width / size.width, slot.height / size.height);
+            transform.setContentSize(size.width * scale, size.height * scale);
+        }
+        if (lifecycle) this.releaseMapInvalidation = lifecycle.onBeforeInvalidation(() => {
+            this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined;
+            // Sprite赋帧本身不取得资源引用；必须在来源资源释放前同步解绑。
+            if (isValid(sprite, true)) { sprite.spriteFrame = null; sprite.enabled = false; }
+        });
     }
+
+    onDestroy(): void { this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined; }
 
     refresh(input: HudInput): void {
         const state = createHudState(input);

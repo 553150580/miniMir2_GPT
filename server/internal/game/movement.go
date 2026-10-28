@@ -55,7 +55,7 @@ func (w *worker) beginMovement(r *room, e *entity, kind uint32) bool {
 }
 
 func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction uint32, now time.Time, interval int64) bool {
-	if r.Pending {
+	if r.Pending || !w.walkable(r, point) {
 		return false
 	}
 	if !w.beginMovement(r, e, movementWalk) {
@@ -109,7 +109,7 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 		out.Stop = pushStale
 		return
 	}
-	if direction >= uint32(len(directions)) || distance < 0 || e.Kind < 1 || e.Kind > 3 || !w.inBounds(e.Pos) || w.e.Store.Cfg.Fixture.GridCellBudget() == 0 || e.Kind == 3 && e.Monster == nil {
+	if direction >= uint32(len(directions)) || distance < 0 || e.Kind < 1 || e.Kind > 3 || !w.inBounds(r, e.Pos) || w.mapCellBudget(r) == 0 || e.Kind == 3 && e.Monster == nil {
 		out.Stop = pushInvalid
 		return
 	}
@@ -143,7 +143,7 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 	}()
 	for step := 0; step < distance; step++ {
 		point := stepPoint(e.Pos, direction, 1)
-		if !w.walkable(point) {
+		if !w.walkable(r, point) {
 			out.Stop = pushTerrain
 			return
 		} // 源early return跳过所有后置时钟赋值。

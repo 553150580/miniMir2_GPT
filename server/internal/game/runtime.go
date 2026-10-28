@@ -93,6 +93,7 @@ type room struct {
 	Auth                  persistence.Auth
 	Conn                  Connection
 	Ready                 bool
+	MapID                 uint64
 	Scene                 uint64
 	Baseline              uint64
 	Sequence              uint64
@@ -461,7 +462,7 @@ func (w *worker) command(c command) {
 		}
 		if q.Destination != nil {
 			point := devconfig.Point{X: int(q.Destination.X), Y: int(q.Destination.Y)}
-			if !w.walkable(point) {
+			if !w.walkable(r, point) {
 				w.failure(r, c.frame, p.CodeInvalidArgument)
 				return
 			}
@@ -578,7 +579,11 @@ func (w *worker) join(r *room, c command) {
 				w.isolateRoom(r)
 				return
 			}
-			w.send(r, p.MsgS2CEnterLine, c.frame.Request, w.enterLineResult(r))
+			entry := w.enterLineResult(r)
+			if entry == nil {
+				return
+			}
+			w.send(r, p.MsgS2CEnterLine, c.frame.Request, entry)
 			w.baseline(r)
 			w.after(r)
 		}
@@ -592,10 +597,16 @@ func (w *worker) join(r *room, c command) {
 	}
 }
 func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
-	return &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1), PlayerHandle: r.Player.Handle}
+	m, ok := w.currentMap(r)
+	if !ok {
+		w.isolateRoom(r)
+		return nil
+	}
+	return &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: m.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: m.SceneKindValue(), NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1), PlayerHandle: r.Player.Handle}
 }
 func (w *worker) initialize(r *room, role domain.Role) {
 	f := &w.e.Store.Cfg.Fixture
+	r.MapID = f.Map.ID
 	player, _ := f.Player(role.Job)
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.Role = role
@@ -627,6 +638,11 @@ func (w *worker) after(r *room) {
 }
 
 func (w *worker) revivePlayer(r *room) {
+	m, ok := w.currentMap(r)
+	if !ok || !m.Walkable(m.PlayerSpawn) {
+		w.isolateRoom(r)
+		return
+	}
 	r.Player.Life++
 	r.Player.MovementRevision, r.Player.MovementKind = 0, movementInitial
 	for id, status := range r.Player.Statuses {
@@ -640,7 +656,7 @@ func (w *worker) revivePlayer(r *room) {
 	r.Melee.Revision++
 	r.Player.HP = r.Player.MaxHP
 	r.Player.MP = r.Player.MaxMP
-	if !w.relocate(r, &r.Player, w.e.Store.Cfg.Fixture.Map.PlayerSpawn) {
+	if !w.relocate(r, &r.Player, m.PlayerSpawn) {
 		return
 	}
 	r.Player.Action = 0

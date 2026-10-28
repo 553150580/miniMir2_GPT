@@ -1,5 +1,38 @@
 import { Asset, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 import { GridProjection } from './GridProjection';
+import { SourceMapAssets } from './SourceMapAssets';
+
+interface WorldMapEntry {
+    readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
+    readonly width?: number; readonly height?: number; readonly safe_zones?: readonly unknown[];
+}
+function mapIdString(value: unknown): string {
+    if (typeof value !== 'string' && typeof value !== 'bigint' && (!value || typeof value !== 'object' || typeof (value as { toString?: unknown }).toString !== 'function')) throw new Error('地图ID必须使用十进制字符串或64位对象');
+    const id = typeof value === 'string' ? value : value.toString();
+    if (typeof id !== 'string' || !/^(0|[1-9]\d*)$/.test(id) || BigInt(id) > 18446744073709551615n) throw new Error('地图ID超出uint64十进制范围');
+    return id;
+}
+// 旧profile仅兼容原first-map；目录存在时严格按其字符串ID选择，不回落成另一张图。
+export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | string): WorldMapEntry {
+    const requested = mapId === undefined ? undefined : mapIdString(mapId);
+    if (gameplay?.map_catalog === undefined) {
+        if (requested !== undefined && requested !== '1') throw new Error('旧profile未配置请求的地图');
+        return { id: '1', resource_key: 'development/maps/first-map', scene_kind: 1 };
+    }
+    const catalog = gameplay.map_catalog;
+    if (!Array.isArray(catalog) || !catalog.length || catalog[0]?.scene_kind !== 1) throw new Error('地图目录缺少首项个人地图');
+    const ids = new Set<string>();
+    for (const entry of catalog) {
+        if (!entry || typeof entry.id !== 'string') throw new Error('地图目录ID必须是十进制字符串');
+        const id = mapIdString(entry.id);
+        if (ids.has(id) || ![1, 2].includes(entry.scene_kind) || ![entry.width, entry.height].every(value => Number.isSafeInteger(value) && value > 0)
+            || typeof entry.resource_key !== 'string' || !entry.resource_key || /[\\:]/.test(entry.resource_key)
+            || entry.resource_key.split('/').some((part: string) => !part || part === '.' || part === '..')) throw new Error('地图目录条目无效');
+        ids.add(id);
+    }
+    const selected = requested === undefined ? catalog[0] : catalog.find((entry: WorldMapEntry) => entry.id === requested);
+    if (!selected) throw new Error('地图目录没有请求的地图'); return selected;
+}
 
 export function effectFrameKeys(value: any): string[] {
     if (!value || typeof value !== 'object') return [];
@@ -21,7 +54,10 @@ export class WorldAssets {
     propPrefab!: Prefab;
     beamPrefab!: Prefab;
     statusBadgePrefab!: Prefab;
-    background!: SpriteFrame;
+    background: SpriteFrame | null = null;
+    sourceMap?: SourceMapAssets;
+    mapId = '1';
+    get mapBackground(): SpriteFrame | null { return this.background; }
     readonly frames = new Map<string, SpriteFrame>();
     private owned = new Set<Asset>();
     private disposed = false;
@@ -31,25 +67,41 @@ export class WorldAssets {
         return asset;
     }
 
-    static async prepare(job: number, progress: (completed: number, total: number) => void): Promise<WorldAssets> {
+    static async prepare(job: number, progress: (completed: number, total: number) => void, mapId?: { toString(): string } | string): Promise<WorldAssets> {
         const result = new WorldAssets();
         try {
             result.manifest = result.own(await load<JsonAsset>('development/manifest', JsonAsset)).json;
-            result.map = result.own(await load<JsonAsset>('development/maps/first-map', JsonAsset)).json;
-            const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
-            if (result.map.surface_width !== projection.surfaceWidth || result.map.surface_height !== projection.surfaceHeight
-                || result.map.world_height !== projection.worldHeight || result.map.background_offset_y !== projection.floorCenterY
-                || mapInfo?.width !== result.map.width || mapInfo?.height !== result.map.height
-                || mapInfo?.tile_width !== result.map.tile_width || mapInfo?.tile_height !== result.map.tile_height
-                || mapInfo?.projection !== result.map.projection
-                || ['soil_thickness_px', 'surface_width', 'surface_height', 'world_height', 'background_offset_y'].some(key => mapInfo?.[key] !== result.map[key])) throw new Error('地图地板、投影与来源清单不一致，请更新同一份资源');
             result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
+            const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id;
+            if (selected.scene_kind === 2) {
+                const streaming = result.gameplay.source_map_streaming;
+                if (!streaming || ![streaming.load_concurrency, streaming.cache_capacity].every(value => Number.isSafeInteger(value) && value > 0)) throw new Error('来源地图缺少显式流式并发/缓存预算');
+                result.sourceMap = await SourceMapAssets.prepare(selected.resource_key, { concurrency: streaming.load_concurrency, capacity: streaming.cache_capacity });
+                const source = result.sourceMap.model.manifest;
+                if (source.id !== selected.id || source.width !== selected.width || source.height !== selected.height) throw new Error('来源地图清单与目录身份/完整尺寸不一致');
+                result.map = Object.freeze({ ...source, name: selected.name, scene_kind: selected.scene_kind, safe_zones: selected.safe_zones });
+                result.propPrefab = result.sourceMap.propPrefab; result.background = result.sourceMap.minimap;
+            } else {
+                result.map = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
+                if (selected.width !== undefined || result.map.id !== undefined) {
+                    const id = typeof result.map.id === 'number' && Number.isSafeInteger(result.map.id) && result.map.id >= 0 ? String(result.map.id) : mapIdString(result.map.id);
+                    if (id !== selected.id) throw new Error('个人地图资源与目录身份不一致');
+                }
+                const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
+                if (result.map.surface_width !== projection.surfaceWidth || result.map.surface_height !== projection.surfaceHeight
+                    || result.map.world_height !== projection.worldHeight || result.map.background_offset_y !== projection.floorCenterY
+                    || mapInfo?.width !== result.map.width || mapInfo?.height !== result.map.height
+                    || mapInfo?.tile_width !== result.map.tile_width || mapInfo?.tile_height !== result.map.tile_height
+                    || mapInfo?.projection !== result.map.projection
+                    || ['soil_thickness_px', 'surface_width', 'surface_height', 'world_height', 'background_offset_y'].some(key => mapInfo?.[key] !== result.map[key])
+                    || (selected.width !== undefined && selected.width !== result.map.width) || (selected.height !== undefined && selected.height !== result.map.height)) throw new Error('地图地板、投影与来源清单不一致，请更新同一份资源');
+                result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
+                result.background = result.own(await load<SpriteFrame>(`${selected.resource_key}/spriteFrame`, SpriteFrame));
+            }
             result.prefab = result.own(await load<Prefab>('prefabs/Entity', Prefab));
             result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
-            result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
             result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
             result.statusBadgePrefab = result.own(await load<Prefab>('prefabs/StatusBadge', Prefab));
-            result.background = result.own(await load<SpriteFrame>('development/maps/first-map/spriteFrame', SpriteFrame));
             const profileIds = new Set<string>();
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
             if (!player) throw new Error('当前职业缺少外观资源');
@@ -117,7 +169,8 @@ export class WorldAssets {
     dispose(): void {
         if (this.disposed) return;
         this.disposed = true;
-        for (const asset of this.owned) asset.decRef();
+        this.sourceMap?.dispose(); this.sourceMap = undefined;
+        for (const asset of Array.from(this.owned)) asset.decRef();
         this.owned.clear(); this.frames.clear();
     }
 }

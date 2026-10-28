@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import sys
 
 ROOT=Path(__file__).resolve().parents[2]
@@ -430,9 +431,112 @@ def validate_map_asset(tables):
     if not isinstance(props,list) or [{k:p.get(k) for k in ['id','frame','x','y']} for p in props]!=expected:raise ValueError('运行装饰不得混入未配置的大树或其它物件')
     return asset
 
+def source_map_catalog(tables,profile):
+    """地图配置引用唯一Excel及已冻结来源资产，生成物不另提供可编辑数值。"""
+    if profile['rule_version']<12:
+        return [],[]
+    ids=profile.get('map_catalog_ids');binding=profile.get('binding');streaming=profile.get('source_map_streaming')
+    if not isinstance(ids,list) or any(type(id) is not int or id<=0 for id in ids) or len(set(ids))!=len(ids) or profile['map_id'] in ids:
+        raise ValueError('额外地图目录必须是唯一显式ID且不重复个人地图')
+    if not isinstance(binding,dict) or set(binding)!={'enabled','start_points'} or type(binding['enabled']) is not bool or not isinstance(binding['start_points'],list):
+        raise ValueError('rule12必须显式提供绑定合同，不能默认启用或补出生点')
+    if binding!={'enabled':False,'start_points':[]}:
+        raise ValueError('来源城镇与安全区阶段绑定尚未完成业务验收，运行入口须关闭')
+    if not isinstance(streaming,dict) or set(streaming)!={'load_concurrency','cache_capacity'} or any(type(n) is not int or n<=0 for n in streaming.values()):
+        raise ValueError('来源地图加载并发与缓存容量须由唯一Excel显式维护')
+    records=[];evidence=[]
+    for id in ids:
+        definition=next((row for row in tables['game_maps'] if row['id']==id),None)
+        if definition is None or definition['scene_kind']!='town':raise ValueError('额外目录仅接入明确来源城镇，不伪造普通怪物槽')
+        collision=next((row for row in tables['game_map_collisions'] if row['id']==definition['collision_id']),None)
+        if collision is None or collision['walkable_encoding']!='source_map_v0_closed_doors' or not isinstance(collision['blocked_cells'],dict) or collision['blocked_cells']!={'source_file':'myf:Mir200/Map/0.map','door_policy':'closed'}:
+            raise ValueError('来源城镇必须引用已登记原图与明确关闭门策略')
+        width,height=definition['width_cells'],definition['height_cells']
+        if (collision['width_cells'],collision['height_cells'])!=(width,height):raise ValueError('城镇地图与唯一碰撞表尺寸不一致')
+        geometry=definition['visual_geometry'];key=definition['tile_resource_key']
+        required_geometry={'projection','tile_width','tile_height','soil_thickness_px','source_origin','chunk_size_cells','source_map_code'}
+        if not isinstance(geometry,dict) or not required_geometry.issubset(geometry) or set(geometry)-required_geometry-{'minimap'}:
+            raise ValueError('来源地图几何必须显式提供七项必需字段，仅允许可选minimap')
+        if geometry['projection']!='source_rectangular' or any(type(geometry[name]) is not int for name in ('tile_width','tile_height','soil_thickness_px','chunk_size_cells')):
+            raise ValueError('来源地图投影须为原生矩形，几何数值须为整数')
+        if (geometry['tile_width'],geometry['tile_height'],geometry['soil_thickness_px'],geometry['chunk_size_cells'])!=(48,32,0,16):
+            raise ValueError('来源地图须保持已实现的原生48×32、零土层与16格分块合同')
+        if geometry['source_origin']!={'x':0,'y':0} or any(type(value) is not int for value in geometry['source_origin'].values()) or not isinstance(geometry['source_map_code'],str) or not geometry['source_map_code']:
+            raise ValueError('来源地图必须显式提供整数零原点和来源地图代码')
+        asset=(ROOT/'client/assets/resources'/(key+'.json')).resolve()
+        if not asset.is_relative_to((ROOT/'client/assets/resources/source-maps').resolve()) or not asset.is_file():raise ValueError('完整来源城镇资产尚未生成或路径越界')
+        manifest=read(asset)
+        if manifest['id']!=str(id) or (manifest['width'],manifest['height'])!=(definition['width_cells'],definition['height_cells']) or any(manifest.get(name)!=value for name,value in geometry.items() if name!='minimap'):
+            raise ValueError('完整来源城镇身份/尺寸/坐标与唯一Excel不同')
+        if ('minimap' in geometry)!=('minimap' in manifest):
+            raise ValueError('来源小地图配置与生成清单必须同时存在或同时缺省，不能保留旧配置')
+        if 'minimap' in geometry:
+            selected=geometry['minimap']
+            if not isinstance(selected,dict) or set(selected)!={'package','raw_frame'} or not isinstance(selected['package'],str) or not re.fullmatch(r'[A-Za-z0-9_]+',selected['package']) or type(selected['raw_frame']) is not int or selected['raw_frame']<0:
+                raise ValueError('来源小地图须显式选择合法包名和整数原帧，不补默认')
+            actual=manifest.get('minimap');minimap_key=f"{selected['package']}:{selected['raw_frame']}"
+            if actual!={**selected,'frame':minimap_key} or minimap_key not in manifest['frames'] or manifest['frames'][minimap_key]['declared_empty']:
+                raise ValueError('来源小地图实际原帧身份与唯一Excel选择不同')
+        if manifest['source']['sha256']!=collision['source_hash'] or not manifest['source'].get('full_source_map'):
+            raise ValueError('城镇原图摘要或完整地图身份不符')
+        source=ROOT/'资料参考/myf/Mir200/Map/0.map'
+        source_bytes=source.read_bytes()
+        if hashlib.sha256(source_bytes).hexdigest()!=collision['source_hash'] or manifest['tool_sha256']!=config.sha256(ROOT/'tools/resources/build_source_maps.py') or manifest['decoder_sha256']!=config.sha256(ROOT/'tools/resources/inspect_wil.py'):
+            raise ValueError('来源地图或生成器已变更，不能使用旧城镇资产')
+        import base64
+        bitmap=base64.b64decode(manifest['collision']['runtime_bits'],validate=True);cells=definition['width_cells']*definition['height_cells']
+        if len(bitmap)!=(cells+7)//8 or cells%8 and bitmap[-1]>>(cells%8):raise ValueError('城镇碰撞位图长度或尾部补位错误')
+        if manifest['collision']['encoding']!='row_major_lsb0_blocked_bitset_base64' or hashlib.sha256(bitmap).hexdigest()!=manifest['collision']['runtime_sha256'] or manifest['door_contract']['policy']!='closed_development_candidate':
+            raise ValueError('城镇碰撞编码、摘要或关闭门合同错误')
+        # 独立于资源生成器复算列优先原格，防止等长但内容被改写的位图混入后端。
+        if source_bytes[4:18]!=b'\rLegend of mir' or len(source_bytes)!=52+cells*12 or struct.unpack_from('<HH',source_bytes)!=(width,height):raise ValueError('来源城镇原图格式或完整尺寸不符')
+        expected=bytearray(len(bitmap))
+        for x in range(width):
+            for y in range(height):
+                offset=52+(x*height+y)*12;back,middle,front=struct.unpack_from('<HHH',source_bytes,offset)
+                if (back|middle|front)&0x8000 or source_bytes[offset+6]&0x7f:
+                    index=y*width+x;expected[index//8]|=1<<(index%8)
+        if bytes(expected)!=bitmap:raise ValueError('城镇运行碰撞与已锁原图静态位及关闭门位不同')
+        def walkable(point):
+            if not isinstance(point,dict) or set(point)!={'x','y'} or any(type(value) is not int for value in point.values()):return False
+            x,y=point['x'],point['y']
+            return 0<=x<width and 0<=y<height and not bitmap[(y*width+x)//8]&(1<<((y*width+x)%8))
+        if not walkable(definition['spawn_cell']):raise ValueError('来源城镇入口必须位于可走格')
+        zones=[];orders=[]
+        for row in tables['game_map_regions']:
+            if row['map_id']!=id:continue
+            rules=row['entry_rules']
+            if rules.get('region_kind')!='safe_zone' or rules.get('geometry')!='chebyshev_inclusive' or rules.get('initial_binding_status')!='unverified' or row['monster_pool']:
+                raise ValueError('城镇只接入显式安全区，不猜新生池或刷新怪物')
+            center,radius=rules['center'],rules['radius'];bounds={'min_x':center['x']-radius,'min_y':center['y']-radius,'max_x':center['x']+radius,'max_y':center['y']+radius}
+            if row['region_cells']!=bounds:raise ValueError('安全区中心/半径与区域边界不一致')
+            if type(radius) is not int or radius<0 or not walkable(center) or bounds['min_x']<0 or bounds['min_y']<0 or bounds['max_x']>=width or bounds['max_y']>=height:raise ValueError('安全区中心须可走且含边界范围不可越出来源地图')
+            order=rules['source_order']
+            if type(order) is not int or order<=0:raise ValueError('安全区来源行号须为显式正整数')
+            zones.append({'id':row['id'],'center':deepcopy(center),'radius':radius});orders.append(order)
+        if not zones or orders!=sorted(orders) or len(set(orders))!=len(orders):raise ValueError('来源安全区顺序须明确保留，不能去重同中心行')
+        # Excel仍是数值源；锁定的来源行只作真实性对拍，不从缺失来源反填运行配置。
+        safe_source=ROOT/'资料参考/myf/Mir200/Envir/StartPoint.txt'
+        source_lock=next((row for row in config.load_json(ROOT/'config/schema/catalog.json')['source_locks'] if row['path']==safe_source.relative_to(ROOT).as_posix()),None)
+        if source_lock is None or config.sha256(safe_source)!=source_lock['sha256']:raise ValueError('安全区原始资料未通过来源锁')
+        expected_zones=[]
+        for number,line in enumerate(safe_source.read_bytes().decode('gb18030').splitlines(),1):
+            fields=line.split()
+            if not fields or fields[0].startswith(';') or fields[0]!=geometry['source_map_code']:continue
+            if len(fields)!=8 or not all(re.fullmatch(r'[0-9]+',field) for field in fields[1:]):raise ValueError('来源安全区记录格式不符合已登记合同')
+            expected_zones.append((number,{'x':int(fields[1]),'y':int(fields[2])},int(fields[4])))
+        if [(order,zone['center'],zone['radius']) for order,zone in zip(orders,zones)]!=expected_zones:
+            raise ValueError('城镇安全区须完整保持已锁来源行号、中心与半径，包括重复行')
+        records.append({'id':id,'display_name':definition['display_name'],'resource_key':key,'width':definition['width_cells'],'height':definition['height_cells'],'scene_kind':2,
+            'collision_bits':manifest['collision']['runtime_bits'],'player_spawn':deepcopy(definition['spawn_cell']),
+            'safe_zones':zones,'source':{'code':geometry['source_map_code'],'sha256':collision['source_hash'],'width':definition['width_cells'],'height':definition['height_cells']}})
+        evidence.append({'map_id':str(id),'resource_key':key,'manifest_sha256':config.sha256(asset),'source_sha256':collision['source_hash'],
+                         'door_policy':'closed_development_candidate','full_source_map':True,'initial_binding_pool_verified':False})
+    return records,evidence
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
-    profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',1);collision=one('game_map_collisions',m['collision_id'])
+    profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',profile['map_id']);collision=one('game_map_collisions',m['collision_id'])
     spawns=[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]
     validate_map_inputs(m,collision,profile,spawns)
     monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
@@ -488,7 +592,7 @@ def fixture_from_rows(tables):
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
         'potions':potions,'skills':skills,'buffs':buffs,'casting_supply':supply,'combat_timing':deepcopy(profile['combat_timing']),'healing':healing,'player_growth':growth,'initial_skill_books':deepcopy(profile['initial_skill_books']),**economy,
-        'map':{'id':m['id'],'width':m['width_cells'],'height':m['height_cells'],'blocked':deepcopy(collision['blocked_cells']),
+        'map':{'id':m['id'],'scene_kind':1,'display_name':m['display_name'],'resource_key':m['tile_resource_key'],'width':m['width_cells'],'height':m['height_cells'],'blocked':deepcopy(collision['blocked_cells']),
                'player_spawn':deepcopy(m['spawn_cell']),'pet_spawn':deepcopy(profile['pet_spawn']),'monster_spawns':deepcopy(spawns)},
         'players':profile['players'],'pet':fighter(pet),'monsters':[{**fighter(monster),'id':monster['id'],'exp':monster['exp'],
                     'gold_min':drop_gold['quantity_min'],'gold_max':drop_gold['quantity_max'],'respawn_ms':10000}],
@@ -522,6 +626,11 @@ def fixture_from_rows(tables):
                                 'monster_resist_scope':'本轮开发怪物/宠物不配置魔法闪避加成（0）；权重从唯一Excel中共同的源码默认候选权重取得',
                                 'formal_skill_and_upgrade_tables_populated':True,
                                 'economy_reference':'docs/技能获取与升级实施边界.md；书本=目标阶+1用户确定，页与来源渠道候选'}}}
+    if profile['rule_version']>=12:
+        catalog,catalog_evidence=source_map_catalog(tables,profile)
+        result['maps']=catalog;result['binding']=deepcopy(profile['binding'])
+        result['source_map_streaming']=deepcopy(profile['source_map_streaming'])
+        result['_source_evidence']['source_map_catalog']=catalog_evidence
     return result
 
 def public_gameplay(fixture):
@@ -569,7 +678,12 @@ def public_gameplay(fixture):
             'jobs':[{'job_id':p['job_id'],'name':['战士','法师','道士'][p['job_id']],'profile':'player_female' if p['job_id']==1 else 'player_male','can_push':p['can_push']} for p in fixture['players']],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
             'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']],
-            'pet_profiles':[{'definition_id':fixture['pet']['definition_id'],'name':'变异骷髅','profile':'pet_skeleton','job_id':2,'can_push':fixture['pet']['can_push']}]}
+            'pet_profiles':[{'definition_id':fixture['pet']['definition_id'],'name':'变异骷髅','profile':'pet_skeleton','job_id':2,'can_push':fixture['pet']['can_push']}],
+            **({'map_catalog':[{'id':str(row['id']),'name':row['display_name'],'resource_key':row['resource_key'],
+                   'width':row['width'],'height':row['height'],'scene_kind':row.get('scene_kind',1),
+                   'safe_zones':[{'id':str(zone['id']),'center':deepcopy(zone['center']),'radius':zone['radius']} for zone in row.get('safe_zones',[])]}
+                 for row in [fixture['map']]+fixture['maps']],
+                'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {})}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true',help='历史首次初始化；已建立开发表后禁止重跑，不能覆盖唯一Excel');p.add_argument('--check',action='store_true');args=p.parse_args()

@@ -54,17 +54,13 @@ func (r *BindingRules) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// 当前地图目录只开放个人地图；未配置的城镇ID必须拒绝，后续扩目录时再拓展查找。
+// 绑定只核对已配置目录中的静态可走格；不能据此改写已有角色的永久绑定。
 func (f *Fixture) ValidBinding(point BindingPoint) bool {
-	if point.MapID == 0 || point.MapID > math.MaxInt64 || point.MapID != f.Map.ID || point.X < 0 || point.Y < 0 || int64(point.X) >= int64(f.Map.Width) || int64(point.Y) >= int64(f.Map.Height) {
+	if point.MapID == 0 || point.MapID > math.MaxInt64 {
 		return false
 	}
-	for _, blocked := range f.Map.Blocked {
-		if blocked.X == int(point.X) && blocked.Y == int(point.Y) {
-			return false
-		}
-	}
-	return true
+	m, ok := f.MapByID(point.MapID)
+	return ok && m.Walkable(Point{X: int(point.X), Y: int(point.Y)})
 }
 
 func (f *Fixture) ValidateBinding() error {

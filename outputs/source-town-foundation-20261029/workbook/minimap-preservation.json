@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "input_sha256": "5801bd0c5c76bcb7765110fe65d8a2ae4de1846e56f5062e4a1b10acc0d88d0a",
+  "output_sha256": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f",
+  "changed_cells": [
+    [
+      "地图定义",
+      5,
+      13
+    ],
+    [
+      "地图定义",
+      5,
+      15
+    ]
+  ],
+  "all_other_cells_preserved": true,
+  "formulas_preserved": 460,
+  "duplicate_rows_after": 0,
+  "source_town_data_unchanged": true,
+  "minimap": {
+    "package": "mmap",
+    "raw_frame": 100
+  }
+}

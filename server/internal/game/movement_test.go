@@ -169,7 +169,7 @@ func TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble(t *testing.T) {
 	for index, test := range tests {
 		t.Run(string(rune('0'+index)), func(t *testing.T) {
 			w, r, c := pushedWorker(t)
-			if w.walkable(test.blocked) {
+			if w.walkable(r, test.blocked) {
 				t.Fatal("唯一运行场景已不包含本例四个小物阻挡")
 			}
 			e := r.Monsters[0]

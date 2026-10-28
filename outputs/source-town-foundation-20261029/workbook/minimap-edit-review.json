@@ -1,0 +1,58 @@
+{
+  "input_sha256": "5801bd0c5c76bcb7765110fe65d8a2ae4de1846e56f5062e4a1b10acc0d88d0a",
+  "output_sha256": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f",
+  "edited_worksheets": [
+    "xl/worksheets/sheet55.xml",
+    "xl/worksheets/sheet56.xml",
+    "xl/worksheets/sheet57.xml"
+  ],
+  "untouched_zip_members_verified": 100,
+  "all_requested_values_readback_equal": true,
+  "edited_cells": 2,
+  "formulas_overwritten": false,
+  "source_workbook_overwritten": false,
+  "normalized_empty_duplicate_rows": [
+    {
+      "sheet": "地图定义",
+      "row": 5,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图碰撞",
+      "row": 5,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图区域与NPC",
+      "row": 5,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图区域与NPC",
+      "row": 6,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图区域与NPC",
+      "row": 7,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图区域与NPC",
+      "row": 8,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    },
+    {
+      "sheet": "地图区域与NPC",
+      "row": 9,
+      "removed_empty_rows": 1,
+      "retained_populated_row_unchanged": true
+    }
+  ]
+}

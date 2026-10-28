@@ -183,7 +183,7 @@ func (w *worker) buffTargets(r *room, c pendingCast) []*entity {
 	}
 	var out []*entity
 	for _, target := range []*entity{&r.Player, r.Pet} {
-		if target != nil && (b.AllowDeadTargets || target.HP > 0) && distance(target.Pos, c.TargetPoint) <= c.Skill.AreaRadius && w.walkable(target.Pos) {
+		if target != nil && (b.AllowDeadTargets || target.HP > 0) && distance(target.Pos, c.TargetPoint) <= c.Skill.AreaRadius && w.walkable(r, target.Pos) {
 			out = append(out, target)
 		}
 	}

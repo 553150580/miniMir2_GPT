@@ -29,6 +29,45 @@ def children(node,name):
     return [c for c in node.childNodes if c.nodeType==c.ELEMENT_NODE and c.localName==name]
 
 
+def has_row_data(row):
+    for cell in children(row,'c'):
+        if children(cell,'f'):return True
+        for value in children(cell,'v')+children(cell,'is'):
+            if any(node.data for descendant in value.getElementsByTagName('*') for node in descendant.childNodes if node.nodeType==node.TEXT_NODE):return True
+            if any(node.nodeType==node.TEXT_NODE and node.data for node in value.childNodes):return True
+    return False
+
+
+def normalize_empty_duplicate_rows(document,allow):
+    """只删除已审计的无值模板重复行；含值冲突或独有元数据一律拒绝。"""
+    sheet_data=document.getElementsByTagNameNS(MAIN,'sheetData')[0];groups={};result=[]
+    for row in children(sheet_data,'row'):
+        addresses=[cell.getAttribute('r') for cell in children(row,'c')]
+        if len(set(addresses))!=len(addresses):raise ValueError('同一行含重复单元格地址，禁止自动覆盖')
+        if any(not re.fullmatch('[A-Z]+'+row.getAttribute('r'),address) for address in addresses):raise ValueError('单元格地址与所在行不一致')
+        groups.setdefault(int(row.getAttribute('r')),[]).append(row)
+    for number,rows in groups.items():
+        if len(rows)<2:continue
+        if not allow:raise ValueError('工作表存在重复行，须先审计并显式允许清理空模板：'+str(number))
+        populated=[row for row in rows if has_row_data(row)]
+        if len(populated)!=1:raise ValueError('重复行不是唯一含值行与空模板，禁止自动合并：'+str(number))
+        winner=populated[0];winner_cells={cell.getAttribute('r'):cell for cell in children(winner,'c')}
+        for empty in rows:
+            if empty is winner:continue
+            for key,value in empty.attributes.items():
+                if key not in ('r','ht','customHeight') and winner.getAttribute(key)!=value:raise ValueError('重复空行有独有行元数据，禁止丢弃')
+            if any(node.nodeType==node.ELEMENT_NODE and node.localName!='c' for node in empty.childNodes):raise ValueError('重复空行有未知内容，禁止丢弃')
+            for cell in children(empty,'c'):
+                target=winner_cells.get(cell.getAttribute('r'))
+                if target is None:raise ValueError('重复空行有独有格式单元格，禁止丢弃')
+                if any(node.nodeType==node.ELEMENT_NODE and node.localName not in ('v','is') for node in cell.childNodes):raise ValueError('重复空单元格有未知元数据')
+                for key,value in cell.attributes.items():
+                    if key not in ('r','t') and target.getAttribute(key)!=value:raise ValueError('重复空单元格有独有样式或元数据')
+            sheet_data.removeChild(empty)
+        result.append(dict(row=number,removed_empty_rows=len(rows)-1,retained_populated_row_unchanged=True))
+    return result
+
+
 def apply(plan_path,output):
     plan=json.loads(plan_path.read_text(encoding='utf-8'))
     schema=config.load_json(ROOT/'config/schema/catalog.json')
@@ -44,12 +83,20 @@ def apply(plan_path,output):
     targets={n.getAttribute('Id'):n.getAttribute('Target') for n in relationships.documentElement.childNodes if n.nodeType==n.ELEMENT_NODE}
     sheets={n.getAttribute('name'):targets[n.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')]
             for n in workbook.getElementsByTagNameNS(MAIN,'sheet')}
-    raw=config.read_xlsx(book);documents={};edits=[]
+    raw=config.read_xlsx(book);documents={};edits=[];normalized=[]
+    if plan.get('normalize_empty_duplicate_rows',False):
+        for name,target in sheets.items():
+            path=target.lstrip('/') if target.startswith('/') else 'xl/'+target
+            document=minidom.parseString(contents[path]);repairs=normalize_empty_duplicate_rows(document,True)
+            if repairs:
+                documents[path]=document;normalized.extend(dict(sheet=name,**repair) for repair in repairs)
     tables={t['table_id']:t for t in schema['tables'] if t['workbook_group']==plan['group']}
     for operation in plan['operations']:
         table=tables[operation['table_id']];name=table['sheet_name']
         path=sheets[name].lstrip('/') if sheets[name].startswith('/') else 'xl/'+sheets[name]
-        document=documents.setdefault(path,minidom.parseString(contents[path]))
+        if path not in documents:
+            documents[path]=minidom.parseString(contents[path]);normalize_empty_duplicate_rows(documents[path],False)
+        document=documents[path]
         sheet_data=document.getElementsByTagNameNS(MAIN,'sheetData')[0]
         rows=children(sheet_data,'row')
         row_number=next((n for n,values in raw[name].items() if n>=4 and values.get(1)==operation['id']),None)
@@ -58,13 +105,18 @@ def apply(plan_path,output):
         if append:
             if set(operation['values'])!={f['name'] for f in table['fields']}:raise ValueError('追加记录必须提供全部字段，未知值保持空白')
             row_number=max(raw[name])+1
-            row=element(document,'row');row.setAttribute('r',str(row_number))
             template=next(r for r in rows if int(r.getAttribute('r'))==max(n for n in raw[name] if n>=4))
-            for key,value in template.attributes.items():
-                if key!='r':row.setAttribute(key,value)
-            later=next((r for r in rows if int(r.getAttribute('r'))>row_number),None)
-            if later:sheet_data.insertBefore(row,later)
-            else:sheet_data.appendChild(row)
+            row=next((r for r in rows if int(r.getAttribute('r'))==row_number),None)
+            if row is not None:
+                if has_row_data(row):raise ValueError('追加目标已有未识别的内容，禁止覆盖')
+                template=row
+            else:
+                row=element(document,'row');row.setAttribute('r',str(row_number))
+                for key,value in template.attributes.items():
+                    if key!='r':row.setAttribute(key,value)
+                later=next((r for r in rows if int(r.getAttribute('r'))>row_number),None)
+                if later:sheet_data.insertBefore(row,later)
+                else:sheet_data.appendChild(row)
             raw[name][row_number]={1:operation['id']}
         else:
             row=next(r for r in rows if int(r.getAttribute('r'))==row_number);template=row
@@ -113,7 +165,7 @@ def apply(plan_path,output):
         if not all(original.read(name)==staged.read(name) for name in untouched):raise ValueError('未编辑ZIP成员发生变化')
     return dict(input_sha256=plan['input_workbook_sha256'],output_sha256=config.sha256(output),edited_worksheets=list(documents),
                 untouched_zip_members_verified=len(untouched),all_requested_values_readback_equal=True,edited_cells=len(edits),
-                formulas_overwritten=False,source_workbook_overwritten=False)
+                formulas_overwritten=False,source_workbook_overwritten=False,normalized_empty_duplicate_rows=normalized)
 
 
 if __name__=='__main__':

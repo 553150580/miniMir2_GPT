@@ -1,0 +1,106 @@
+{
+  "fixture_sha256": "28727e18f02587027c448f6ea6dbe4030bbe41ac33cae1899ba72ad52dba85cb",
+  "go_version": "go1.27.3",
+  "map_cell_budget": 490000,
+  "runtime_gomaxprocs": 32,
+  "scenarios": [
+    {
+      "name": "real_town_distant_reachable",
+      "start": {
+        "x": 633,
+        "y": 613
+      },
+      "target": {
+        "x": 289,
+        "y": 618
+      },
+      "with_pet": false,
+      "samples": [
+        {
+          "milliseconds": 93.3196,
+          "allocated_bytes": 47446576,
+          "allocations": 149207,
+          "moved": true
+        },
+        {
+          "milliseconds": 91.3686,
+          "allocated_bytes": 47451640,
+          "allocations": 149211,
+          "moved": true
+        },
+        {
+          "milliseconds": 83.0058,
+          "allocated_bytes": 47446560,
+          "allocations": 149206,
+          "moved": true
+        }
+      ]
+    },
+    {
+      "name": "real_town_unreachable_legal_cell",
+      "start": {
+        "x": 633,
+        "y": 613
+      },
+      "target": {
+        "x": 396,
+        "y": 47
+      },
+      "with_pet": false,
+      "samples": [
+        {
+          "milliseconds": 217.3411,
+          "allocated_bytes": 101058504,
+          "allocations": 344019,
+          "moved": false
+        },
+        {
+          "milliseconds": 205.1385,
+          "allocated_bytes": 101058504,
+          "allocations": 344019,
+          "moved": false
+        },
+        {
+          "milliseconds": 235.8201,
+          "allocated_bytes": 101058632,
+          "allocations": 344021,
+          "moved": false
+        }
+      ]
+    },
+    {
+      "name": "synthetic_open_700_isolated_target_with_pet",
+      "start": {
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "x": 699,
+        "y": 699
+      },
+      "with_pet": true,
+      "samples": [
+        {
+          "milliseconds": 371.5178,
+          "allocated_bytes": 190603104,
+          "allocations": 498156,
+          "moved": false
+        },
+        {
+          "milliseconds": 353.4171,
+          "allocated_bytes": 190001968,
+          "allocations": 498131,
+          "moved": false
+        },
+        {
+          "milliseconds": 365.7366,
+          "allocated_bytes": 190630224,
+          "allocations": 498165,
+          "moved": false
+        }
+      ]
+    }
+  ],
+  "scope": "原样调用当前worker.move；只测单个同步调用，非owner并发/网络/容量验收；synthetic一项不是运行地图",
+  "source_component_cells": 327165
+}

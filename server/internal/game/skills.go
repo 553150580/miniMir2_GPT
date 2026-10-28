@@ -107,8 +107,8 @@ func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity 
 	}
 	return nil
 }
-func (w *worker) lineOfSight(from, to devconfig.Point) bool {
-	if !w.walkable(to) {
+func (w *worker) lineOfSight(r *room, from, to devconfig.Point) bool {
+	if !w.inBounds(r, from) || !w.walkable(r, to) {
 		return false
 	}
 	for from != to {
@@ -123,7 +123,7 @@ func (w *worker) lineOfSight(from, to devconfig.Point) bool {
 		} else if dy < 0 {
 			from.Y--
 		}
-		if !w.walkable(from) {
+		if !w.walkable(r, from) {
 			return false
 		}
 	}
