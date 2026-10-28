@@ -11,7 +11,7 @@ import (
 
 // 记录实际入格顺序。最多十个活实体，按格读当前列表可保留源扫描中删除/追加的语义。
 func (w *worker) relocate(r *room, e *entity, point devconfig.Point) bool {
-	if !w.walkable(r, point) {
+	if r.petAway(e) || !w.walkable(r, point) {
 		return false
 	}
 	return w.commitRelocation(r, e, point)
@@ -25,11 +25,14 @@ func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) boo
 	}
 	r.CellEntrySequence++
 	e.Pos, e.CellEntry = point, r.CellEntrySequence
+	if e == r.Pet {
+		r.recordPetPosition()
+	}
 	return true
 }
 
 func cellObjects(r *room, point devconfig.Point) []*entity {
-	all := []*entity{&r.Player, r.Pet}
+	all := []*entity{&r.Player, r.worldPet(r.currentWorld())}
 	all = append(all, r.Monsters[:r.MonsterCount]...)
 	result := []*entity{}
 	for _, e := range all {

@@ -1,0 +1,12 @@
+Command: .\tools\dev.ps1 go test ./internal/game -run '^TestPetResident' -count=1
+Exit code: 1
+Wall time: 7.9297166s; Go package time: 4.933s
+Scope: 仅增加room.PetWorld/PetLifeSequence与新反例；生产仍未使用居民字段。
+
+--- FAIL: TestPetResidentWorldDoesNotFollowAttachmentImplicitly (0.00s)
+    pet_lifecycle_test.go:21: 原World宠物失去真实居民身份
+--- FAIL: TestPetResidentTargetsAndCurrentMovementStayInWorld (0.00s)
+    pet_lifecycle_test.go:59: 治疗按主人附着而非宠物驻留图选目标
+FAIL
+FAIL	minimir/internal/game	4.933s
+FAIL

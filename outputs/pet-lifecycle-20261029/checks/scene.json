@@ -1,0 +1,14 @@
+{
+  "task": "scene",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/scene/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T22:15:57.692930+00:00",
+  "finished_at": "2026-10-28T22:15:57.840866+00:00",
+  "output": ".work/pet-lifecycle-20261029/checks/scene.txt",
+  "output_sha256": "50b40978f6f0691dc68c87519b8aa8c667a459e0179f9a5d9c0598c3a1b28c33",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

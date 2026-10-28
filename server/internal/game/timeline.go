@@ -239,7 +239,12 @@ func (w *worker) killBudgetAvailable(r *room) bool {
 	}
 	return possible <= cap
 }
-func reference(r *room, e *entity) actorRef { return referenceIn(r.currentWorld(), e) }
+func reference(r *room, e *entity) actorRef {
+	if e != nil && e == r.Pet {
+		return r.petReference()
+	}
+	return referenceIn(r.currentWorld(), e)
+}
 func (w *worker) resolve(r *room, ref actorRef) *entity {
 	return w.resolveInWorld(r, r.currentWorld(), ref)
 }

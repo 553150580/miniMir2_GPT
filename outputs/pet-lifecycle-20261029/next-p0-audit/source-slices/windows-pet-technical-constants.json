@@ -1,0 +1,54 @@
+[
+  {
+    "root": "windows_latest",
+    "source_path": "D:\\123DownLoad\\CrystalLatest\\Shared\\Globals.cs",
+    "source_sha256": "008929a058617c42cd11391ad20fa1f4f966be6d645bc24ac2279a60f57a3c49",
+    "technical_lines_only": [
+      {
+        "line": 37,
+        "text": "DataRange = 16;//Was 24"
+      }
+    ]
+  },
+  {
+    "root": "windows_latest",
+    "source_path": "D:\\123DownLoad\\CrystalLatest\\Server\\Settings.cs",
+    "source_sha256": "c9fbfa492e33b1a4e07a79a86a002c7918418531b7bdf4ba6671916a38f2faec",
+    "technical_lines_only": [
+      {
+        "line": 162,
+        "text": "SkeletonName = \"BoneFamiliar\","
+      },
+      {
+        "line": 163,
+        "text": "ShinsuName = \"Shinsu\","
+      }
+    ]
+  },
+  {
+    "root": "windows_local",
+    "source_path": "D:\\123DownLoad\\CrystalLocal\\Shared\\Globals.cs",
+    "source_sha256": "26b4f07e9ce108187641a1f3bea40b182b0b1fb1d9bb53597c87cf76bc6dc0be",
+    "technical_lines_only": [
+      {
+        "line": 35,
+        "text": "DataRange = 16;//Was 24"
+      }
+    ]
+  },
+  {
+    "root": "windows_local",
+    "source_path": "D:\\123DownLoad\\CrystalLocal\\Server\\Settings.cs",
+    "source_sha256": "d6608fa95469f038c4d6e96ee140b4c05fc0ee92212f39756e78f0ebee722a55",
+    "technical_lines_only": [
+      {
+        "line": 123,
+        "text": "public static string SkeletonName = \"BoneFamiliar\","
+      },
+      {
+        "line": 124,
+        "text": "ShinsuName = \"Shinsu\","
+      }
+    ]
+  }
+]

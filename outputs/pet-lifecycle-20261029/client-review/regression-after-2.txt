@@ -1,0 +1,36 @@
+✔ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (11.7811ms)
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (10.1962ms)
+✔ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (6.6301ms)
+✔ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (6.0785ms)
+✔ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (6.3011ms)
+✔ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (5.9458ms)
+✔ 实际primary WorldView.prepare + HUD完整owner + WorldView.dispose：保存双Surface在背景ref0前解绑 (3.4938ms)
+✔ 实际WorldAssets直接释放先解绑保存地板/HUD、活body/skill/status，延迟destroy仍无绑定ref0 (3.7431ms)
+✔ 实际apply实体移除、skill/status update过期先同步清帧，已从索引删除的待销毁节点不会漏 (3.4629ms)
+✔ 共享同一Frame的新owner在相同保存节点挂接后，旧Surface/HUD失效回调不能清新owner (1.4205ms)
+✔ 失效通知即使某个消费者失败仍通知其它人且保留资源；重入释放拒绝，移除故障后可重试 (1.1236ms)
+✔ HUD先销毁会同步解绑再退订，不依赖下一帧或世界owner通知 (0.6519ms)
+✔ 实际GameCombatStatus退役徽标先清根及子Sprite，WorldAssets归还保存prefab依赖前无残留绑定 (11.0129ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 508.9908
+
+✖ failing tests:
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:22:1
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (10.1962ms)
+  TypeError [Error]: Cannot read properties of undefined (reading 'key')
+      at D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:26:231
+      at Array.some (<anonymous>)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:26:170)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

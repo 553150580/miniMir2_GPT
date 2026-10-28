@@ -44,8 +44,8 @@ func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
 		return false
 	}
 	all := []*entity{&r.Player}
-	if r.Pet != nil {
-		all = append(all, r.Pet)
+	if pet := r.worldPet(r.currentWorld()); pet != nil {
+		all = append(all, pet)
 	}
 	all = append(all, r.Monsters[:r.MonsterCount]...)
 	for _, e := range all {
@@ -68,6 +68,9 @@ func (w *worker) neighbor(r *room, from, to devconfig.Point, self *entity) bool 
 	return true
 }
 func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time, interval int64) {
+	if r.petAway(e) {
+		return
+	}
 	if w.moveTown(r, e, target, now, interval) {
 		if e == &r.Player {
 			w.finishFailedTownNavigation(r)
@@ -158,6 +161,9 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	return statusFighter(e, e.Monster.Fighter)
 }
 func (w *worker) nearest(r *room, from *entity) *entity {
+	if r.petAway(from) {
+		return nil
+	}
 	var best *entity
 	for _, m := range r.Monsters[:r.MonsterCount] {
 		if m.HP > 0 && (best == nil || distance(from.Pos, m.Pos) < distance(from.Pos, best.Pos)) {
@@ -167,7 +173,7 @@ func (w *worker) nearest(r *room, from *entity) *entity {
 	return best
 }
 func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...uint32) {
-	if w.mapCellBudget(r) == 0 {
+	if w.mapCellBudget(r) == 0 || r.petAway(from) || r.petAway(target) {
 		return
 	}
 	if from.Kind == 1 && w.sourceTimeline() {
@@ -416,17 +422,18 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Pending || r.Isolated {
 		return
 	}
-	if r.Pet != nil && r.Pet.HP > 0 {
+	pet := r.worldPet(r.currentWorld())
+	if pet != nil && pet.HP > 0 {
 		if r.Auto && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
-			if target := w.nearest(r, r.Pet); target != nil {
-				if distance(r.Pet.Pos, target.Pos) <= 1 {
-					w.attack(r, r.Pet, target, now)
+			if target := w.nearest(r, pet); target != nil {
+				if distance(pet.Pos, target.Pos) <= 1 {
+					w.attack(r, pet, target, now)
 				} else {
-					w.move(r, r.Pet, target.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
+					w.move(r, pet, target.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
 				}
 			}
-		} else if distance(r.Pet.Pos, r.Player.Pos) > 2 {
-			w.move(r, r.Pet, r.Player.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
+		} else if distance(pet.Pos, r.Player.Pos) > 2 {
+			w.move(r, pet, r.Player.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
 		}
 	}
 	if r.Pending || r.Isolated {
@@ -437,8 +444,8 @@ func (w *worker) step(r *room, now time.Time) {
 			continue
 		}
 		target := &r.Player
-		if r.Pet != nil && r.Pet.HP > 0 && distance(m.Pos, r.Pet.Pos) < distance(m.Pos, r.Player.Pos) {
-			target = r.Pet
+		if pet != nil && pet.HP > 0 && distance(m.Pos, pet.Pos) < distance(m.Pos, r.Player.Pos) {
+			target = pet
 		}
 		if distance(m.Pos, target.Pos) <= 1 {
 			w.attack(r, m, target, now)

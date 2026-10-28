@@ -183,9 +183,11 @@ export class GameWorldView {
         for (const state of baseline.entities) {
             alive.add(state.entityHandle);
             let visual = this.visuals.get(state.entityHandle);
-            if (!visual) {
+            const profile = this.assets.profile(state, this.job);
+            // 句柄是实体槽位；同槽位换定义或外观时，层数、头顶和动作必须取新模板。
+            const replaced = visual && (visual.state.entityKind !== state.entityKind || visual.state.definitionId !== state.definitionId || visual.profile !== profile) ? visual : undefined;
+            if (!visual || replaced) {
                 const node = instantiate(this.assets.prefab); node.parent = this.entities;
-                const profile = this.assets.profile(state, this.job);
                 const body = node.getChildByName('Body')!;
                 if (profile) {
                     const name = node.getChildByName('Name')!, hp = node.getChildByName('HP')!, transform = body.getComponent(UITransform)!;
@@ -203,12 +205,26 @@ export class GameWorldView {
                 for (const sprite of sprites) { sprite.type = Sprite.Type.SIMPLE; sprite.trim = false; }
                 node.on(Node.EventType.TOUCH_END, (event: EventTouch) => {
                     event.propagationStopped = true;
-                    const current = this.visuals.get(state.entityHandle); if (current) this.selected(current.state);
+                    const current = this.visuals.get(state.entityHandle);
+                    if (current?.node === node) this.selected(current.state);
                 });
-                visual = { node, body: sprites, state, profile, motion: new EntityMotion(),
+                const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
+                visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
+                    motion: sameLife ? replaced.motion : new EntityMotion(),
                     animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null,
-                    movement: new EntityDisplacement(this.sceneEpoch, state.entityHandle) };
+                    movement: sameLife ? replaced.movement : new EntityDisplacement(this.sceneEpoch, state.entityHandle) };
+                if (sameLife) {
+                    // 换装不降低位移水位、不重播旧攻击；后续新序号仍正常触发新外观动作。
+                    const previous = replaced.state;
+                    visual.motion.releaseHold(now);
+                    visual.animation?.observe({ direction: previous.direction, action: 0, attackSequence: previous.attackSequence,
+                        castSequence: previous.castSequence, dead: previous.hp.isZero(), injured: false }, now);
+                    // 状态以scene/handle/Life为身份，外观替换只迁移附体节点，保留原播放时钟。
+                    const oldEffects = replaced.node.getChildByName('AttachedEffects'), newEffects = node.getChildByName('AttachedEffects');
+                    if (oldEffects && newEffects) for (const child of Array.from(oldEffects.children)) child.parent = newEffects;
+                }
                 this.visuals.set(state.entityHandle, visual);
+                if (replaced) this.removeVisual(replaced);
             }
             const previous = visual.state;
             if (previous.life?.toString() !== state.life?.toString()) {
@@ -374,7 +390,14 @@ export class GameWorldView {
 
 
     private removeVisual(visual: Visual): void {
-        for (const sprite of visual.body) if (isValid(sprite)) { sprite.spriteFrame = null; sprite.customMaterial = null; }
+        // 新Life的附体节点也属于旧visual；不能等Creator帧尾destroy再解除资源引用。
+        const clear = (node: Node): void => {
+            if (!isValid(node)) return;
+            const sprite = node.getComponent(Sprite);
+            if (sprite && isValid(sprite)) { sprite.spriteFrame = null; sprite.customMaterial = null; }
+            for (const child of Array.from(node.children)) clear(child);
+        };
+        clear(visual.node);
         if (isValid(visual.node, true)) { visual.node.active = false; visual.node.parent = null; visual.node.destroy(); }
     }
     private releaseVisuals(): void {

@@ -16,6 +16,7 @@ type worldState struct {
 	PlayerPosition devconfig.Point
 	PetPosition    devconfig.Point
 	HasPet         bool
+	PetLife        uint64 // 历史位置提示所属birth；真实居民由room.PetWorld判定。
 	Monsters       []*entity
 	MonsterCount   int
 	Auto           bool
@@ -128,8 +129,10 @@ func (w *worker) resolveInWorld(r *room, world *worldState, ref actorRef) *entit
 	}
 	all := world.Monsters[:world.MonsterCount]
 	if world == r.currentWorld() {
-		all = append(append([]*entity{&r.Player, r.Pet}, all...), world.Loot...)
+		all = append([]*entity{&r.Player}, all...)
+		all = append(all, world.Loot...)
 	}
+	all = append(all[:len(all):len(all)], r.worldPet(world))
 	for _, e := range all {
 		if e != nil && e.Handle == ref.Handle && e.Life == ref.Life {
 			return e
@@ -163,7 +166,7 @@ func (r *room) eventCount() int {
 func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Point, petPoint *devconfig.Point) bool {
 	m, known := w.worldMap(target)
 	if !known || target == nil || r.world(target.Ref) != target || !m.Contains(point) || r.Player.MovementRevision == math.MaxUint64 ||
-		r.Pet != nil && (petPoint == nil || !m.Contains(*petPoint) || r.Pet.MovementRevision == math.MaxUint64) {
+		r.Pet != nil && (r.petResidentWorld() == nil || petPoint == nil || !m.Contains(*petPoint) || r.Pet.MovementRevision == math.MaxUint64) {
 		return false
 	}
 	moves := uint64(1)
@@ -178,9 +181,9 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 		w.cancelTownNavigation(r)
 	}
 	old.PlayerPosition = r.Player.Pos
-	old.HasPet = r.Pet != nil
-	if r.Pet != nil {
-		old.PetPosition = r.Pet.Pos
+	old.HasPet = r.worldPet(old) != nil
+	if pet := r.worldPet(old); pet != nil {
+		old.PetPosition, old.PetLife = pet.Pos, pet.Life
 	}
 	r.worldState = target
 	if old == r.PersonalWorld && target == r.TownWorld {
@@ -193,6 +196,7 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 	w.commitRelocation(r, &r.Player, point)
 	if r.Pet != nil {
 		w.beginMovement(r, r.Pet, movementTeleport)
+		r.PetWorld = target.Ref
 		w.commitRelocation(r, r.Pet, *petPoint)
 	}
 	return true

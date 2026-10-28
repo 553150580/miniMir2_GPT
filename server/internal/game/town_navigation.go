@@ -110,7 +110,7 @@ func townActorIndex(r *room, e *entity) int {
 	if e == &r.Player {
 		return 0
 	}
-	if e != nil && e == r.Pet {
+	if e != nil && e == r.worldPet(r.currentWorld()) {
 		return 1
 	}
 	return -1
@@ -208,7 +208,7 @@ func (w *worker) updateTownOccupancy(q *townNavigationRequest) bool {
 		n.scratch = append(n.scratch, townPoint(e.Pos))
 		return true
 	}
-	if !add(&r.Player) || !add(r.Pet) {
+	if !add(&r.Player) || !add(r.worldPet(r.currentWorld())) {
 		return false
 	}
 	for _, e := range r.Monsters[:r.MonsterCount] {

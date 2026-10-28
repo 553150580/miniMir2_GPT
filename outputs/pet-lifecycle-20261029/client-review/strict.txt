@@ -1,0 +1,1 @@
+{"strict_typecheck":true,"typescript":"5.8.2","creator_build_verified":false}

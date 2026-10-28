@@ -1,0 +1,127 @@
+--- copied/Server/MirObjects/HumanObject.cs
++++ windows_local/Server/MirObjects/HumanObject.cs
+@@ -1,11 +1,5 @@
+         private void SummonSkeleton(UserMagic magic)
+         {
+-            if (CurrentMap.Info.NoPets)
+-            {
+-                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+-                return;
+-            }
+-            
+             MonsterObject monster;
+             for (int i = 0; i < Pets.Count; i++)
+             {
+--- copied/Server/MirObjects/HumanObject.cs
++++ windows_local/Server/MirObjects/HumanObject.cs
+@@ -1,11 +1,5 @@
+         private void SummonShinsu(UserMagic magic)
+         {
+-            if (CurrentMap.Info.NoPets)
+-            {
+-                ReceiveChat("You cannot summon pets on this map.", ChatType.System);
+-                return;
+-            }
+-            
+             MonsterObject monster;
+             for (int i = 0; i < Pets.Count; i++)
+             {
+--- copied/Server/MirObjects/PlayerObject.cs
++++ windows_local/Server/MirObjects/PlayerObject.cs
+@@ -3,8 +3,6 @@
+             if (!CanGainExp) return;
+ 
+             if (amount == 0) return;
+-
+-            if (CurrentMap?.Info?.NoExperience == true) return;
+ 
+             if (Info.Married != 0)
+             {
+@@ -41,11 +39,12 @@
+             if (Info.Mentor != 0 && !Info.IsMentor)
+             {
+                 MenteeEXP += (amount * Settings.MenteeExpBank) / 100;
+-            }
++            }    
+ 
+             Experience += amount;
+ 
+             Enqueue(new S.GainExperience { Amount = amount });
++
+ 
+             for (int i = 0; i < Pets.Count; i++)
+             {
+@@ -54,7 +53,7 @@
+                     monster.PetExp(amount);
+             }
+ 
+-            if (MyGuild != null && MyGuild.Name != Settings.NewbieGuild)
++            if (MyGuild != null)
+                 MyGuild.GainExp(amount);
+ 
+             if (Experience < MaxExperience) return;
+--- copied/Server/MirObjects/MonsterObject.cs
++++ windows_local/Server/MirObjects/MonsterObject.cs
+@@ -1,42 +1,6 @@
+         public void PetRecall()
+         {
+-            if (Master == null || Master.CurrentMap == null) return;
+-
+-            // Prevent pet from warping into NoPets maps (unless exempt e.g. pickup pets)
+-            if (Master.CurrentMap.Info.NoPets && !IgnoresNoPetRestriction)
+-            {
+-                Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.CannotFollowIntoMapWaitHere, Name), ChatType.System);
+-
+-                Frozen = true;
+-                Target = null;
+-                PMode = PetMode.None;
+-
+-                Broadcast(new S.ObjectTurn
+-                {
+-                    Direction = Direction,
+-                    Location = CurrentLocation
+-                });
+-
+-                return;
+-            }
+-
+-            bool wasFrozen = Frozen;
+-
+-            // Restore pet state
+-            Frozen = false;
+-            Target = null;
+-            PMode = PetMode.Both;
+-
+-            // Only teleport if needed
+-            if (CurrentMap != Master.CurrentMap)
+-            {
+-                if (!Teleport(Master.CurrentMap, Master.Back))
+-                    Teleport(Master.CurrentMap, Master.CurrentLocation);
+-
+-                // Only show message if returning from frozen/waiting state
+-                if (wasFrozen)
+-                {
+-                    Master.ReceiveChat(GameLanguage.ServerTextMap.GetLocalization(ServerTextKeys.HasReturnedToYourSide,Name), ChatType.System);
+-                }
+-            }
++            if (Master == null) return;
++            if (!Teleport(Master.CurrentMap, Master.Back))
++                Teleport(Master.CurrentMap, Master.CurrentLocation);
+         }
+--- copied/Server/MirObjects/MonsterObject.cs
++++ windows_local/Server/MirObjects/MonsterObject.cs
+@@ -18,12 +18,8 @@
+             {
+                 EXPOwner.WinExp(Experience, Level);
+ 
+-                if (EXPOwner.Race != ObjectType.Hero)
+-                {
+-                    PlayerObject playerObj = (PlayerObject)EXPOwner;
+-                    playerObj.CheckGroupQuestKill(Info);
+-                }
+-
++                PlayerObject playerObj = (PlayerObject)EXPOwner;
++                playerObj.CheckGroupQuestKill(Info);
+             }
+ 
+             if (Respawn != null)

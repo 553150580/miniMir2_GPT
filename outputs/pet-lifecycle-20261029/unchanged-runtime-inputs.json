@@ -1,0 +1,9 @@
+{
+  "outputs/development-prep-20261026/玩法配置.xlsx": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb",
+  "outputs/development-prep-20261026/架构配置.xlsx": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+  "config/development/first-loop.json": "0edbe0d5e7bb8f5ac71592469fbced1b37ac896e5c572380f76f53f5631456d6",
+  "client/assets/resources/development/gameplay.json": "91fd231920d3ffae7c5078e18f3aa09af9f8fae99380af3a855dcd1aef237041",
+  "config/schema/catalog.json": "fe4f37185f97ae6785df2bbd75ee4cbc6750e6393c4db7bf8bb416e7e9e1e5ef",
+  "shared/proto/world.proto": "e82932ce6413edbe3844a1987d438e52f8f10016debbd61b52bfae2f669c6926",
+  "shared/proto/protocol_manifest.json": "1834455191b65bc38380e1283699680fe7956870e7bd8b91f48d05415c416685"
+}

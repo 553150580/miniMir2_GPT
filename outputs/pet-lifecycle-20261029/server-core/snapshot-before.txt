@@ -1,0 +1,13 @@
+Command: .\tools\dev.ps1 go test ./internal/game -run '^TestPetMapTravelReturn' -count=1
+Exit code: 1
+Wall time: 7.7496012s; Go package time: 4.757s
+Scope: root只读审查发现HasPet/PetPosition缺少birth，新生命周期API使旧hint可错误用于新宠；此前390节点全game race仍是此反例修复前的真实通过。
+
+--- FAIL: TestPetMapTravelReturnNeverAppliesPreviousBirthPosition (0.01s)
+    --- FAIL: TestPetMapTravelReturnNeverAppliesPreviousBirthPosition/town (0.00s)
+        pet_lifecycle_test.go:323: 新birth继承旧宠位置或覆盖实际resident: old={0 0} actual={0 0} expected={8 7}
+    --- FAIL: TestPetMapTravelReturnNeverAppliesPreviousBirthPosition/personal (0.00s)
+        pet_lifecycle_test.go:323: 新birth继承旧宠位置或覆盖实际resident: old={0 0} actual={0 0} expected={1 0}
+FAIL
+FAIL	minimir/internal/game	4.757s
+FAIL

@@ -376,10 +376,17 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 			ok = false
 		} else {
 			monsters, count = r.SavedPersonal.Monsters, r.SavedPersonal.MonsterCount
-			if r.SavedPersonal.HasPet {
+			if r.Pet != nil && r.SavedPersonal.HasPet && r.SavedPersonal.PetLife == r.Pet.Life {
 				preferred = &r.SavedPersonal.PetPosition
 			}
 		}
+	}
+	residentWorld := r.TownWorld
+	if plan.Destination == travelToPersonal {
+		residentWorld = r.SavedPersonal
+	}
+	if pet := r.worldPet(residentWorld); pet != nil {
+		preferred = &pet.Pos // 目的World已有同一宠物时，真实现场优先于历史位置提示。
 	}
 	if !ok || target.SceneKindValue() != plan.TargetKind || !target.Walkable(plan.Position) || count < 0 || count > len(monsters) ||
 		travelOccupied(monsters, count, plan.Position) || r.Scene == math.MaxUint64 || r.Player.MovementRevision == math.MaxUint64 ||

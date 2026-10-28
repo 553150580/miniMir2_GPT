@@ -1,0 +1,7 @@
+# 职业宠物驻留与表现基础证据
+
+本阶段仍为rule15和原22项技能，17、购符、训练及独立尸体容器未开放。当前免费道士开发宠物仅补明确居民身份，不能把本阶段写成正常召唤业务。新Life/异图安装与模板替换来自组件/真实TS受控Cocos测试；browser-town七项及browser-ui六项是当前正常业务回归，没有以隐藏注入冒充正常召唤。
+
+server-core保留最初两项resident反例、两项旅行快照反例及各轮真实终态。server-peer是只读审查，不等于执行测试。client-review保留模板切换修复前的五项失败。server目录和checks/go为最终真实Mongo/WS全包race。Creator目录为本轮真实构建，10布局未变。next-p0-audit是完整P0缺口、技能来源与未执行配置蓝图，不能当已启用数值。
+
+九份CrystalLatest核心文件与既有副本逐字匹配，Settings仅技术摘录及历史SHA，Globals为独立补充副本；CrystalLocal有实质召回/NoPets差异，不能混用。来源账号、部署配置和数据库未作为输入。evidence-paths.json将原.work证据路径映射到归档。

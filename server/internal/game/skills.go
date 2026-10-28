@@ -92,17 +92,14 @@ func (w *worker) skillTarget(r *room, s devconfig.Skill, handle uint32) *entity 
 }
 func (w *worker) skillTargetInWorld(r *room, world *worldState, s devconfig.Skill, handle uint32) *entity {
 	if s.Behavior == "healing" {
-		if world != r.currentWorld() {
-			return nil
-		}
 		if handle == 0 || handle == r.Player.Handle {
-			if r.Player.HP > 0 {
+			if world == r.currentWorld() && r.Player.HP > 0 {
 				return &r.Player
 			}
 			return nil
 		}
-		if r.Pet != nil && r.Pet.Handle == handle && r.Pet.HP > 0 {
-			return r.Pet
+		if pet := r.worldPet(world); pet != nil && pet.Handle == handle && pet.HP > 0 {
+			return pet
 		}
 		return nil
 	}

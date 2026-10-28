@@ -3,6 +3,7 @@
 check:
 	./tools/dev python3 tools/reference/inventory.py --check
 	./tools/dev python3 tools/reference/prepare_local.py --check
+	./tools/dev python3 tools/reference/verify_pet_sources.py
 	./tools/dev python3 tools/config/export_configs.py --check
 	./tools/dev python3 tools/config/generate_protocol.py --check
 
@@ -53,6 +54,7 @@ client-scene-test:
 references:
 	./tools/dev python3 tools/reference/inventory.py
 	./tools/dev python3 tools/reference/prepare_local.py
+	./tools/dev python3 tools/reference/verify_pet_sources.py
 
 environment:
 	./tools/dev python3 tools/environment/check.py

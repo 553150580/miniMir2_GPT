@@ -1,0 +1,106 @@
+✖ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (14.5579ms)
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (7.1919ms)
+✖ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (7.107ms)
+✖ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (7.2317ms)
+✖ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (7.2447ms)
+✖ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (7.0966ms)
+✔ 实际primary WorldView.prepare + HUD完整owner + WorldView.dispose：保存双Surface在背景ref0前解绑 (3.8461ms)
+✔ 实际WorldAssets直接释放先解绑保存地板/HUD、活body/skill/status，延迟destroy仍无绑定ref0 (3.7126ms)
+✔ 实际apply实体移除、skill/status update过期先同步清帧，已从索引删除的待销毁节点不会漏 (1.6248ms)
+✔ 共享同一Frame的新owner在相同保存节点挂接后，旧Surface/HUD失效回调不能清新owner (1.7428ms)
+✔ 失效通知即使某个消费者失败仍通知其它人且保留资源；重入释放拒绝，移除故障后可重试 (1.2994ms)
+✔ HUD先销毁会同步解绑再退订，不依赖下一帧或世界owner通知 (0.821ms)
+✔ 实际GameCombatStatus退役徽标先清根及子Sprite，WorldAssets归还保存prefab依赖前无残留绑定 (15.3859ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 7
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 555.994
+
+✖ failing tests:
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:14:1
+✖ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (14.5579ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.apply (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:262:26)
+      at Object.apply (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:38:111)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:16:4)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:22:1
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (7.1919ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.apply (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:262:26)
+      at Object.apply (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:38:111)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:24:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:30:1
+✖ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (7.107ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.apply (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:262:26)
+      at Object.apply (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:38:111)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:32:4)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:39:1
+✖ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (7.2317ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.releaseVisuals (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:527:18)
+      at GameWorldView.dispose (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:549:14)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:42:156)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:45:1
+✖ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (7.2447ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.apply (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:262:26)
+      at Object.apply (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:38:111)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:48:73)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:54:1
+✖ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (7.0966ms)
+  TypeError [Error]: Cannot set properties of undefined (setting 'spriteFrame')
+      at clear (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:500:36)
+      at GameWorldView.removeVisual (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:506:9)
+      at GameWorldView.apply (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:27:2), <anonymous>:262:26)
+      at Object.apply (D:\A_Claude\miniMir2_GPT\client\tests\support\world_runtime.cjs:38:111)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:57:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)

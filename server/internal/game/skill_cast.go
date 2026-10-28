@@ -58,8 +58,9 @@ func (w *worker) areaTargets(r *room, s devconfig.Skill, grid devconfig.Point) [
 func (w *worker) areaTargetsInWorld(r *room, world *worldState, s devconfig.Skill, grid devconfig.Point) []*entity {
 	all := world.Monsters[:world.MonsterCount]
 	if world == r.currentWorld() {
-		all = append([]*entity{&r.Player, r.Pet}, all...)
+		all = append([]*entity{&r.Player}, all...)
 	}
+	all = append(all[:len(all):len(all)], r.worldPet(world))
 	friendly := strings.HasPrefix(targetKind(s), "friendly")
 	out := []*entity{}
 	for _, e := range all {
@@ -397,6 +398,7 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 	}
 }
 func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
+	pet := r.worldPet(r.currentWorld())
 	skills := append([]devconfig.Skill(nil), w.e.Store.Cfg.Fixture.Skills...)
 	sort.SliceStable(skills, func(i, j int) bool {
 		if skills[i].AutoPriority == skills[j].AutoPriority {
@@ -426,13 +428,13 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				}
 			} else {
 				if !missing(&r.Player) {
-					if !missing(r.Pet) {
+					if !missing(pet) {
 						continue
 					}
-					center = r.Pet.Pos
+					center = pet.Pos
 				}
 				count := 0
-				for _, e := range []*entity{&r.Player, r.Pet} {
+				for _, e := range []*entity{&r.Player, pet} {
 					if missing(e) && distance(e.Pos, center) <= s.AreaRadius && w.walkable(r, e.Pos) {
 						count++
 					}
@@ -483,8 +485,8 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 		}
 		if handler.Healing {
 			target = &r.Player
-			if target.HP >= target.MaxHP && r.Pet != nil && r.Pet.HP > 0 && r.Pet.HP < r.Pet.MaxHP {
-				target = r.Pet
+			if target.HP >= target.MaxHP && pet != nil && pet.HP > 0 && pet.HP < pet.MaxHP {
+				target = pet
 			}
 			if target.HP >= target.MaxHP || target.HealAmount > 0 {
 				continue

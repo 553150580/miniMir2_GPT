@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "existing_core_files_matched": 9,
+  "independent_globals_copy": true,
+  "technical_settings_slice_only": true,
+  "accessible_technical_sources_reverified": [
+    "globals",
+    "settings"
+  ],
+  "source_contract_sha256": "c3295e43cb892e3bd8dae3805ecdb96043eeffe291515d328f2489edfe364347",
+  "operating_configuration_or_account_db_read": false,
+  "runtime_ready": false,
+  "target_180_verified": false
+}

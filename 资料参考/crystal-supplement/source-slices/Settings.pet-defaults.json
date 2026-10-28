@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "is_runtime_configuration": false,
+  "source_path": "D:\\123DownLoad\\CrystalLatest\\Server\\Settings.cs",
+  "source_sha256": "c9fbfa492e33b1a4e07a79a86a002c7918418531b7bdf4ba6671916a38f2faec",
+  "scope": "仅两个静态宠物默认名；不复制或读取来源运行配置",
+  "technical_lines": [
+    {
+      "line": 162,
+      "text": "SkeletonName = \"BoneFamiliar\","
+    },
+    {
+      "line": 163,
+      "text": "ShinsuName = \"Shinsu\","
+    }
+  ]
+}

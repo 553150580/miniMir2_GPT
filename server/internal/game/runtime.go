@@ -117,6 +117,8 @@ type room struct {
 	Sequence              uint64
 	Player                entity
 	Pet                   *entity
+	PetWorld              worldRef
+	PetLifeSequence       uint64
 	Manual                bool
 	ManualDirection       uint32
 	Pending               bool
@@ -664,6 +666,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.worldState = &worldState{}
 	r.PersonalWorld, r.TownWorld = nil, nil
 	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
+	r.Pet, r.PetWorld, r.PetLifeSequence = nil, worldRef{}, 0
 	f := &w.e.Store.Cfg.Fixture
 	r.MapID = f.Map.ID
 	player, _ := f.Player(role.Job)
@@ -682,6 +685,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP
 	if role.Job == f.Pet.JobID {
 		r.Pet = &entity{Handle: 2, Kind: 2, Def: f.Pet.DefinitionID, Pos: f.Map.PetSpawn, HP: f.Pet.HP, MaxHP: f.Pet.HP, MP: f.Pet.MP, MaxMP: f.Pet.MP}
+		r.PetWorld = r.currentWorld().Ref
 	}
 	for i := 0; i < 8; i++ {
 		def := f.Monsters[i%len(f.Monsters)]
@@ -781,8 +785,8 @@ func (w *worker) baseline(r *room, request ...uint32) {
 		}
 	}
 	entities := []*entity{&r.Player}
-	if r.Pet != nil {
-		entities = append(entities, r.Pet)
+	if pet := r.worldPet(r.currentWorld()); pet != nil {
+		entities = append(entities, pet)
 	}
 	entities = append(entities, r.Monsters[:r.MonsterCount]...)
 	entities = append(entities, r.Loot...)

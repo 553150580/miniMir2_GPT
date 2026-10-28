@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "path": "资料索引/职业宠物补充来源契约.json",
+  "before_sha256": "c3295e43cb892e3bd8dae3805ecdb96043eeffe291515d328f2489edfe364347",
+  "after_sha256": "99a583f12645c77eb609c3c0bfa7b59c37bd51aa6c0955d3bee44a52e7a665a3",
+  "removed_crlf_count": 484,
+  "json_semantics_unchanged": true,
+  "raw_reference_bytes_changed": false,
+  "go_client_build_inputs_changed": false,
+  "reason": "新工程JSON按Git LF约定入库；原来源代码与Settings摘录不改，重新核验补充来源与统一check入口。"
+}

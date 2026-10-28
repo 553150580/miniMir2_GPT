@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-28T22:18:14.834300+00:00",
+  "kind": "read-only intermediate source snapshot; no stable freeze assertion",
+  "sha256": {
+    "server/internal/game/pet_lifecycle.go": "5fef7257b6986a70c2cfb7da94f9c79fd8cf810d3ec6b99e5c3a32b2e3891138",
+    "server/internal/game/pet_lifecycle_test.go": "8e4da622c17d69cc6e88905865c7f36d228be8709a51b66ca25f8fd39798928c",
+    "server/internal/game/world_context.go": "efa64a317c334957c8e9eaae000d07b8b9f1034c7d0f2f92afa7c54db8592880",
+    "server/internal/game/world_context_test.go": "6bda6f6deff04d3c99d38123645acbcf8b1eabad31b780db12f64b66d9024634",
+    "server/internal/game/combat.go": "f2168c0008beafdc5504acfdafcba5d933b7f21902898a579dbd6c1e9608310a",
+    "server/internal/game/combat_status.go": "f6e2feacac3ef808bf0ed93fd0765ef9f47833e3989650c547fab31c8b5cda44",
+    "server/internal/game/displacement_skills.go": "2c58c0d4c3cfa1cc8ee76f79cdb43cb3eed924cabed680504d86af167f144607",
+    "server/internal/game/movement.go": "fa022e393d183e46475d03d328c8d4602388d6924dd87b750b1b9b8e8e65a023",
+    "server/internal/game/runtime.go": "a6c033180c33b1919374a48aa7db55d6aeef35bce39585fddab1c39360f378fa",
+    "server/internal/game/skill_cast.go": "dabfcf32308e6f2c81ab088d6ff78328a24e98e9ac2fa043c569d1baa868c119",
+    "server/internal/game/skills.go": "a9c4fcb084fc639a36cffacc713c522e68ffbd840a83bef1608e7e7b21e1b434",
+    "server/internal/game/timeline.go": "c9f48b8026f6eb830ffb2205e3c159c87bdce555cfd93eb58a6a69357997d282",
+    "server/internal/game/town_navigation.go": "76ab6688ee890e20c2705d59f17bfbf2dedbcd96bd2a9fdbabf76dd9b8277544",
+    "server/internal/game/map_travel.go": "3f02352a98fdcc1624df0cea548c264706405aaf5c8ff96ae5d574c491ea3044",
+    "server/internal/game/teleport21.go": "3ee507325257d3c1d81645c398d1a30a5843e0fffa6c38590284a19a73bbe329",
+    "docs/职业宠物生命周期与召唤实施边界.md": "207a40dfc9d63913447709a796fe0ce8cefe408d412372243876388e7b716f05",
+    "docs/架构适配与规则优先级.md": "bd8a307a58365667da30be8414d97353a3d8c6ff9d0898496f394f891b7597ca"
+  }
+}

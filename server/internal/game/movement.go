@@ -55,7 +55,7 @@ func (w *worker) beginMovement(r *room, e *entity, kind uint32) bool {
 }
 
 func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction uint32, now time.Time, interval int64) bool {
-	if r.Pending || !w.walkable(r, point) {
+	if r.Pending || r.petAway(e) || !w.walkable(r, point) {
 		return false
 	}
 	binding, allowed := w.prepareSafeZoneWalk(r, e, point)
@@ -112,7 +112,7 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 		return
 	}
 	e := w.resolve(r, target)
-	if e == nil {
+	if e == nil || target.World != r.currentWorld().Ref {
 		out.Stop = pushStale
 		return
 	}

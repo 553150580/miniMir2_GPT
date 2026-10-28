@@ -37,7 +37,7 @@
     "client/assets/scripts/app/GameSession.ts": "06841532f2f3289eb3f86092e978a00558bf03d18cadbffe5033132f0e1b9276",
     "client/assets/scripts/app/GameSkillAssets.ts": "232292e052fae3c28842224f1dfeab4cea51b846d8fe1218748ba3632eaa0b33",
     "client/assets/scripts/app/GameSkills.ts": "e273f5a97837ba6371200dd13379067052fb6eb17a5de441f4ca31605987aacc",
-    "client/assets/scripts/app/GameWorldView.ts": "0b84709c49437ba456da1a8d676756f2d8433cd0810023ddf205b01a420cebab",
+    "client/assets/scripts/app/GameWorldView.ts": "689b90a1f122f0ea4d099cf20e118c8f29799aae1999a77c933bae66e62f57fd",
     "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
     "client/assets/scripts/app/HudModel.ts": "1c16c36a4afcf1e040b3044dff73a1faa0bc7b51920cd05fa833b6043bae9e58",
     "client/assets/scripts/app/InputTrace.ts": "55da40adb82cf3628f32eb3be2e7531d58927b1f4b2b5da547d587ab5a7758f3",
@@ -80,7 +80,7 @@
     "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
     "client/assets/scripts/generated/protobuf/client_pb.js": "81eafc1aca8fdcd0032679a500e8504b54058fb8b86854868d915d097e263af3"
   },
-  "seconds": 116.82,
+  "seconds": 122.07,
   "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log",
   "physical_mobile_verified": false
 }

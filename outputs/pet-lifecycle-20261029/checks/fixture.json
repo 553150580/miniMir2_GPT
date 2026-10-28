@@ -1,0 +1,14 @@
+{
+  "task": "fixture",
+  "command": [
+    "python3",
+    "tools/resources/prepare_first_loop.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T22:15:56.767393+00:00",
+  "finished_at": "2026-10-28T22:15:57.249675+00:00",
+  "output": ".work/pet-lifecycle-20261029/checks/fixture.txt",
+  "output_sha256": "4c3824129e85b10242aa69c1199271c576ca91260e8eee7a14b25302dfc6f2c8",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

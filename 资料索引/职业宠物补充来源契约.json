@@ -1,0 +1,484 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "scope": "职业宠物静态技术源码补充；不是运行数值源或完整1.80认证",
+  "is_runtime_configuration": false,
+  "target_180_verified": false,
+  "unique_runtime_numeric_source": "outputs/development-prep-20261026/两本唯一Excel",
+  "authorization": "root明确授权白名单读取两个Windows技术源码目录；独立复制Latest Globals，Settings只摘录默认宠物名",
+  "source_inputs_read_only": true,
+  "source_inputs_hashes_stable": true,
+  "source_programs_executed": false,
+  "operating_configuration_or_account_db_read": false,
+  "globals": {
+    "source_path": "D:\\123DownLoad\\CrystalLatest\\Shared\\Globals.cs",
+    "source_sha256": "008929a058617c42cd11391ad20fa1f4f966be6d645bc24ac2279a60f57a3c49",
+    "local_reference_path": "资料参考/crystal-supplement/Shared/Globals.cs",
+    "target_sha256": "008929a058617c42cd11391ad20fa1f4f966be6d645bc24ac2279a60f57a3c49",
+    "target_st_nlink": 1,
+    "copy_mode": "independent_byte_copy",
+    "data_range_line": 37,
+    "data_range_cells": 16,
+    "field_status": "已匹配核心源码的静态常量；选入运行仍须唯一Excel候选"
+  },
+  "settings": {
+    "source_path": "D:\\123DownLoad\\CrystalLatest\\Server\\Settings.cs",
+    "source_sha256": "c9fbfa492e33b1a4e07a79a86a002c7918418531b7bdf4ba6671916a38f2faec",
+    "matches_previously_registered_settings_sha256": true,
+    "historical_registered_sha256": "c9fbfa492e33b1a4e07a79a86a002c7918418531b7bdf4ba6671916a38f2faec",
+    "whole_file_copied": false,
+    "local_technical_slice": "资料参考/crystal-supplement/source-slices/Settings.pet-defaults.json",
+    "technical_slice_sha256": "4887baa5c9e8f646ee07c334cfd6a835aaece9d74f8fa86d1c350a3173a4e2b3",
+    "technical_default_literals": {
+      "SkeletonName": {
+        "value": "BoneFamiliar",
+        "line": 162
+      },
+      "ShinsuName": {
+        "value": "Shinsu",
+        "line": 163
+      }
+    },
+    "field_status": "仅技术默认名称；可被Game配置覆盖，未读取运营配置，不认证原服实际模板选择"
+  },
+  "core_file_comparison": [
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "source_sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "reference_sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/PlayerObject.cs",
+      "source_sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "reference_sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "source_sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "reference_sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MapObject.cs",
+      "source_sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "reference_sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirEnvir/Map.cs",
+      "source_sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "reference_sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirEnvir/Envir.cs",
+      "source_sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
+      "reference_sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirDatabase/MagicInfo.cs",
+      "source_sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "reference_sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirDatabase/BuffInfo.cs",
+      "source_sha256": "19738c0c4e1bc713e2c5b8def0d621c557567dcdd2f68073fcc9c94d3c1f552f",
+      "reference_sha256": "19738c0c4e1bc713e2c5b8def0d621c557567dcdd2f68073fcc9c94d3c1f552f",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/Monsters/BoneFamiliar.cs",
+      "source_sha256": "98742b0f0ae55c2f6220834cd589136814abe22caf6ed9a674b8ee677443396b",
+      "reference_sha256": "98742b0f0ae55c2f6220834cd589136814abe22caf6ed9a674b8ee677443396b",
+      "byte_equal": true,
+      "bom_eol_normalized_equal": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "source_sha256": "abbfb24ac99e85c58f27700493f32fcae71c6965b38e16910a7093fe1c960c42",
+      "reference_sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/PlayerObject.cs",
+      "source_sha256": "4b3f759bdf93ea2f07d06ed10d11979268890b18545e5161742729ff9103d51f",
+      "reference_sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "source_sha256": "866f29c2f1b408013627998022897ad63d9cf1362e0c83145011fcaacb48a9e8",
+      "reference_sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MapObject.cs",
+      "source_sha256": "103fce9c798ea83693b9e0af57e694794ddeaf3732ed95cc017cac13cc4f866a",
+      "reference_sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirEnvir/Map.cs",
+      "source_sha256": "645c9b438f5f57c6bb7d2b27ad787f341a4a96eab412e326312f02469d7c5112",
+      "reference_sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirEnvir/Envir.cs",
+      "source_sha256": "77e60eafc993c24a1f6a2c84ffff653d7458f6d723a3f72b1772a2839ced6ddd",
+      "reference_sha256": "9c39ad15452eef9e98323329860b5c86ed57f1a44114d22749c88b07b1756db7",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirDatabase/MagicInfo.cs",
+      "source_sha256": "848eb347b3a425e64fb1386419056364153f97ed385665fd1f1d9d098fec880e",
+      "reference_sha256": "08fa4ef733adcfff800d39fd7071936e5ab1e201bd65b55b7b662488164a5e13",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirDatabase/BuffInfo.cs",
+      "source_sha256": "a00ca6e262dc342c16af58c0772b1f3cb4c2dbf832c54d73c57916c7609c1c82",
+      "reference_sha256": "19738c0c4e1bc713e2c5b8def0d621c557567dcdd2f68073fcc9c94d3c1f552f",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/Monsters/BoneFamiliar.cs",
+      "source_sha256": "1a438df3a1f275c8085633ed4dfc2aaa06b9893b6111db8e1582181a37f43e36",
+      "reference_sha256": "98742b0f0ae55c2f6220834cd589136814abe22caf6ed9a674b8ee677443396b",
+      "byte_equal": false,
+      "bom_eol_normalized_equal": false
+    }
+  ],
+  "related_method_comparison": [
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "signature": "private void SummonSkeleton(",
+      "source_lines": [
+        4399,
+        4439
+      ],
+      "reference_lines": [
+        4399,
+        4439
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "signature": "private void SummonSkeleton(",
+      "source_lines": [
+        4168,
+        4202
+      ],
+      "reference_lines": [
+        4399,
+        4439
+      ],
+      "section_text_equal_after_bom_eol_normalization": false
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "signature": "private void SummonShinsu(",
+      "source_lines": [
+        4448,
+        4488
+      ],
+      "reference_lines": [
+        4448,
+        4488
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/HumanObject.cs",
+      "signature": "private void SummonShinsu(",
+      "source_lines": [
+        4211,
+        4245
+      ],
+      "reference_lines": [
+        4448,
+        4488
+      ],
+      "section_text_equal_after_bom_eol_normalization": false
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/PlayerObject.cs",
+      "signature": "public override void GainExp(",
+      "source_lines": [
+        846,
+        931
+      ],
+      "reference_lines": [
+        846,
+        931
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/PlayerObject.cs",
+      "signature": "public override void GainExp(",
+      "source_lines": [
+        770,
+        854
+      ],
+      "reference_lines": [
+        846,
+        931
+      ],
+      "section_text_equal_after_bom_eol_normalization": false
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public void PetExp(",
+      "source_lines": [
+        3502,
+        3518
+      ],
+      "reference_lines": [
+        3502,
+        3518
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public void PetExp(",
+      "source_lines": [
+        3224,
+        3240
+      ],
+      "reference_lines": [
+        3502,
+        3518
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public int DeadDelay",
+      "source_lines": [
+        584,
+        601
+      ],
+      "reference_lines": [
+        584,
+        601
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public int DeadDelay",
+      "source_lines": [
+        546,
+        563
+      ],
+      "reference_lines": [
+        584,
+        601
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public void PetRecall(",
+      "source_lines": [
+        1334,
+        1375
+      ],
+      "reference_lines": [
+        1334,
+        1375
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public void PetRecall(",
+      "source_lines": [
+        1198,
+        1203
+      ],
+      "reference_lines": [
+        1334,
+        1375
+      ],
+      "section_text_equal_after_bom_eol_normalization": false
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public override void Die(",
+      "source_lines": [
+        966,
+        1006
+      ],
+      "reference_lines": [
+        966,
+        1006
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public override void Die(",
+      "source_lines": [
+        847,
+        883
+      ],
+      "reference_lines": [
+        966,
+        1006
+      ],
+      "section_text_equal_after_bom_eol_normalization": false
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public virtual void RefreshAll(",
+      "source_lines": [
+        811,
+        833
+      ],
+      "reference_lines": [
+        811,
+        833
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public virtual void RefreshAll(",
+      "source_lines": [
+        699,
+        721
+      ],
+      "reference_lines": [
+        811,
+        833
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public bool Spawn(Map temp,",
+      "source_lines": [
+        689,
+        705
+      ],
+      "reference_lines": [
+        689,
+        705
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public bool Spawn(Map temp,",
+      "source_lines": [
+        632,
+        648
+      ],
+      "reference_lines": [
+        689,
+        705
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_latest",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public override void Spawned(",
+      "source_lines": [
+        734,
+        744
+      ],
+      "reference_lines": [
+        734,
+        744
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    },
+    {
+      "root": "windows_local",
+      "relative_path": "Server/MirObjects/MonsterObject.cs",
+      "signature": "public override void Spawned(",
+      "source_lines": [
+        677,
+        687
+      ],
+      "reference_lines": [
+        734,
+        744
+      ],
+      "section_text_equal_after_bom_eol_normalization": true
+    }
+  ],
+  "proposed_candidate_composition": {
+    "skeleton": "MYF Monster.csv:381变异骷髅基础模板 + Crystal BoneFamiliar召唤/训练行为，显式跨来源开发候选",
+    "ai_23_mapping": "MonsterObject.GetMonster:65–67的AI23对应BoneFamiliar；不将MYF Race100直接等同AI23",
+    "corpse_ttl_ms": {
+      "value": 180000,
+      "source": "MonsterObject.DeadDelay:584–599的default分支",
+      "status": "若本作选择BoneFamiliar/AI23行为时的明确开发候选，非MYF实服配置认证"
+    }
+  },
+  "technical_slices": ".work/next-p0-20261029/source-slices/windows-pet-technical-constants.json",
+  "related_differences": ".work/next-p0-20261029/source-slices/windows-local-related-methods.diff.txt",
+  "boundary": "Latest逐文件相同只证明列出的技术输入匹配，不声明两个目录所有文件/提交或实际部署配置相同；Local不同版本单独保留，不混为既有快照"
+}

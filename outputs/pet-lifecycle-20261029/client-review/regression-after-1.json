@@ -1,0 +1,16 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/pet_visual_lifecycle.test.cjs",
+    "client/tests/app/world_asset_lifecycle.test.cjs"
+  ],
+  "exit_code": 1,
+  "utc": "2026-10-28T22:08:37.097176+00:00"
+}

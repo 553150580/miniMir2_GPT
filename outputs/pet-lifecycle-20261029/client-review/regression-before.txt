@@ -1,0 +1,305 @@
+✖ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (15.9013ms)
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (8.0705ms)
+✖ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (8.043ms)
+✔ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (6.6844ms)
+✖ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (7.7427ms)
+✖ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (7.045ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 1
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 451.1798
+
+✖ failing tests:
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:14:1
+✖ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (15.9013ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be reference-equal to "expected":
+  
+  {
+    animation: EntityAnimation {
+      action: 'standing',
+      actionDirection: 4,
+      attackSequence: 0,
+      castDirection: 2,
+      castSequence: 0,
+      dead: false,
+      definitions: {
+        attack: {
+          count: 6,
+          direction_stride: 10,
+          directions: [
+            {
+              direction: 0,
+              frames: [
+                'Mon4:2680',
+                'Mon4:2681',
+                'Mon4:2682',
+                'Mon4:2683',
+                'Mon4:2684',
+                'Mon4:2685'
+              ],
+              name: 'up'
+            },
+            {
+              direction: 1,
+              frames: [
+                'Mon4:2690',
+                'Mon4:2691',
+                'Mon4:2692',
+                'Mon4:2693',
+                'Mon4:2694',
+                'Mon4:2695'
+              ],
+              name: 'up_right'
+            },
+            {
+              direction: 2,
+              frames: [
+                'Mon4:2700',
+                'Mon4:2701',
+                'Mon4:2702',
+                'Mon4:2703',
+                'Mon4:2704',
+                'Mon4:2705'
+  ...
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:17:45)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:22:1
+✖ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (8.0705ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be reference-equal to "expected":
+  
+  {
+    animation: EntityAnimation {
+      action: 'attack',
+      actionDirection: 2,
+      attackSequence: 1,
+      castDirection: 2,
+      castSequence: 0,
+      dead: false,
+      definitions: {
+        attack: {
+          count: 6,
+          direction_stride: 10,
+          directions: [
+            {
+              direction: 0,
+              frames: [
+                'Mon4:2680',
+                'Mon4:2681',
+                'Mon4:2682',
+                'Mon4:2683',
+                'Mon4:2684',
+                'Mon4:2685'
+              ],
+              name: 'up'
+            },
+            {
+              direction: 1,
+              frames: [
+                'Mon4:2690',
+                'Mon4:2691',
+                'Mon4:2692',
+                'Mon4:2693',
+                'Mon4:2694',
+                'Mon4:2695'
+              ],
+              name: 'up_right'
+            },
+            {
+              direction: 2,
+              frames: [
+                'Mon4:2700',
+                'Mon4:2701',
+                'Mon4:2702',
+                'Mon4:2703',
+                'Mon4:2704',
+                'Mon4:2705'
+  ...
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:25:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:30:1
+✖ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (8.043ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be reference-equal to "expected":
+  
+  {
+    animation: EntityAnimation {
+      action: 'standing',
+      actionDirection: 4,
+      attackSequence: 0,
+      castDirection: 2,
+      castSequence: 0,
+      dead: false,
+      definitions: {
+        attack: {
+          count: 6,
+          direction_stride: 10,
+          directions: [
+            {
+              direction: 0,
+              frames: [
+                'Mon4:2680',
+                'Mon4:2681',
+                'Mon4:2682',
+                'Mon4:2683',
+                'Mon4:2684',
+                'Mon4:2685'
+              ],
+              name: 'up'
+            },
+            {
+              direction: 1,
+              frames: [
+                'Mon4:2690',
+                'Mon4:2691',
+                'Mon4:2692',
+                'Mon4:2693',
+                'Mon4:2694',
+                'Mon4:2695'
+              ],
+              name: 'up_right'
+            },
+            {
+              direction: 2,
+              frames: [
+                'Mon4:2700',
+                'Mon4:2701',
+                'Mon4:2702',
+                'Mon4:2703',
+                'Mon4:2704',
+                'Mon4:2705'
+  ...
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:33:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:45:1
+✖ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (7.7427ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" not to be reference-equal to "expected":
+  
+  {
+    animation: EntityAnimation {
+      action: 'standing',
+      actionDirection: 2,
+      attackSequence: 9,
+      castDirection: 2,
+      castSequence: 0,
+      dead: false,
+      definitions: {
+        attack: {
+          count: 6,
+          direction_stride: 10,
+          directions: [
+            {
+              direction: 0,
+              frames: [
+                'Mon4:2680',
+                'Mon4:2681',
+                'Mon4:2682',
+                'Mon4:2683',
+                'Mon4:2684',
+                'Mon4:2685'
+              ],
+              name: 'up'
+            },
+            {
+              direction: 1,
+              frames: [
+                'Mon4:2690',
+                'Mon4:2691',
+                'Mon4:2692',
+                'Mon4:2693',
+                'Mon4:2694',
+                'Mon4:2695'
+              ],
+              name: 'up_right'
+            },
+            {
+              direction: 2,
+              frames: [
+                'Mon4:2700',
+                'Mon4:2701',
+                'Mon4:2702',
+                'Mon4:2703',
+                'Mon4:2704',
+                'Mon4:2705'
+  ...
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:49:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\pet_visual_lifecycle.test.cjs:54:1
+✖ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (7.045ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'not observed'
+  - null
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\pet_visual_lifecycle.test.cjs:57:122)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'not observed',
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
