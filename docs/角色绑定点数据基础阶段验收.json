@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "recorded_at_utc": "2026-10-28T15:35:29.742412+00:00",
+  "stage": "角色绑定点永久数据与入场事务基础",
+  "status": "数据基础限定验收通过，城镇及安全区业务待实现",
+  "user_route": "先接入来源城镇地图及安全区，再启用绑定与瞬移",
+  "runtime": {
+    "rule_version": 11,
+    "fixture_sha256": "92e39cb378057b2aa4c11da4d0b64bcd82a56d9359d3ef0af9fd3cc2d27b4176",
+    "skills": 21,
+    "binding_enabled": false,
+    "teleport21_enabled": false,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "implementation": {
+    "compact_permanent_binding": true,
+    "create_with_role_atomic": true,
+    "old_role_backfill_in_fenced_entry_transaction": true,
+    "initial_candidate_fixed_outside_transaction": true,
+    "existing_binding_preserved": true,
+    "invalid_binding_rolls_back_ticket_session_and_revision": true,
+    "missing_coordinates_not_filled_with_zero": true,
+    "no_current_position_or_hp_mp_persistence": true
+  },
+  "verification": {
+    "go_passed_including_subtests": 433,
+    "mongo_ws": true,
+    "race": true,
+    "skipped": 0,
+    "source_stable_during_test": true,
+    "source_files": 94,
+    "reference_copies": 326,
+    "accessible_originals": 4,
+    "client_code_and_layouts_unchanged": true,
+    "workbooks_and_runtime_fixture_unchanged": true
+  },
+  "sources": {
+    "safe_zone_rows": 13,
+    "map0_dimensions": [
+      700,
+      700
+    ],
+    "whole_map_bytes_equal": false,
+    "silver_village": {
+      "source_map_code": "0",
+      "source_point": [
+        650,
+        631
+      ],
+      "radius": 8,
+      "compared_cells": 289,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "blocked": 23,
+      "center_walkable": true,
+      "animated_cells": 0,
+      "door_cells": 0
+    }
+  },
+  "limits": [
+    "当前只实现永久数据与接管基础，运行入口未启用；rule12和测试坐标仅为隔离测试输入",
+    "来源城镇资源、地图目录、客户端只读观察、安全区触发更新、健康跨图及21/TemporalFlux尚待实现",
+    "StartPoint.txt定义安全区/复活点，不能单凭文件名认证初始新角色城镇选择或Crystal StartPoint标志",
+    "既有传输层入场拒绝后立即关闭，错误帧可能先于EOF丢弃；此交付问题未在本阶段修复",
+    "局部原格一致不等于两份完整地图相同，不构成目标1.80、真机、容量或正式发布验收"
+  ],
+  "evidence_sha256": {
+    "outputs/role-binding-foundation-20261028/checks/check-0.json": "8435daf571e9744f352c4e08fe6a02f72e84e0b12d5f10fae979281d8f091e6b",
+    "outputs/role-binding-foundation-20261028/checks/check-0.txt": "ebd28084a8c553ac802b281eceb98112d989bd40aa22a35cb216a4fb35eadcf3",
+    "outputs/role-binding-foundation-20261028/checks/check-1.json": "635b5f6511462606c2282b5be4c4ac650e605846a5d2818841f4c820a0b10aaa",
+    "outputs/role-binding-foundation-20261028/checks/check-1.txt": "3c351442768a2bb0a70f4dcb8ebcb03e9bbd2c669c94560e13f5c56f0e044c26",
+    "outputs/role-binding-foundation-20261028/checks/check-2.json": "e50d5d8c688ab0d16eb0a7802f9cf72f7881bf4db5ca4747e4be4027bfe55103",
+    "outputs/role-binding-foundation-20261028/checks/check-2.txt": "a9e1a081382b7f84611f824069d77a751039eb9beaab20db67cad3bedfa095a4",
+    "outputs/role-binding-foundation-20261028/checks/server-integration-test-0.json": "b1afb0d2dc5d50266c3e76f45f0badc9fd8897d25e5e69f54708f959dee3c7fd",
+    "outputs/role-binding-foundation-20261028/checks/server-integration-test-0.txt": "6636df40ef77697f2727d06a873982e6deeebcbc91073de563be968aa9fe2bb1",
+    "outputs/role-binding-foundation-20261028/reference-copies.json": "801286772954cac64a484e7f14de4bb853764b17f4ede1ecce05f68890c8a105",
+    "outputs/role-binding-foundation-20261028/server/latest.events.jsonl": "121ab4c7ada0ccf452f53a12a1976c732e68a4b047819f99e2774349c2eb5030",
+    "outputs/role-binding-foundation-20261028/server/latest.json": "49a9a82af90439bf04f26f7a937702f3fdebc3248caa73c0d558ce5108df2ac5",
+    "outputs/role-binding-foundation-20261028/town-sources.json": "0c02f67fac3a2bf079896e8a623df362807b435fac1200c4cc4cf5385429b8ad"
+  }
+}

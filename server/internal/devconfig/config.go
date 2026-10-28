@@ -132,6 +132,7 @@ type Fixture struct {
 	SkillBookRecycle  []SkillBookRecycle `json:"skill_book_recycle"`
 	SkillEconomy      SkillEconomy       `json:"skill_economy"`
 	CombatTiming      CombatTiming       `json:"combat_timing"`
+	Binding           *BindingRules      `json:"binding,omitempty"`
 	Drops             struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`
@@ -230,6 +231,9 @@ func (f *Fixture) Validate() error {
 		return errors.New("必须显式启用有来源的candidate开发fixture；不冒充1.80正式数值")
 	}
 	if err := f.ValidateMap(); err != nil {
+		return err
+	}
+	if err := f.ValidateBinding(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

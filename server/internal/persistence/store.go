@@ -267,8 +267,15 @@ func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
 }
 func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 	var r domain.Role
-	e := s.DB.Collection("roles").FindOne(ctx, bson.M{"_id": id}).Decode(&r)
-	return r, e
+	raw, err := s.DB.Collection("roles").FindOne(ctx, bson.M{"_id": id}).Raw()
+	if err != nil {
+		return r, err
+	}
+	if err = checkBindingDocument(raw); err != nil {
+		return r, err
+	}
+	err = bson.Unmarshal(raw, &r)
+	return r, err
 }
 func (s *Store) accountGuard(ctx context.Context, a Auth) error {
 	r, e := s.DB.Collection("accounts").UpdateOne(ctx, bson.M{"_id": a.AccountID, "active": true, "auth_version": a.AuthVersion}, bson.M{"$inc": bson.M{"auth_guard_seq": 1}})

@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "source_record_only": true,
+  "runtime_configuration": false,
+  "runtime_ready": false,
+  "user_route": "先接入来源城镇地图及安全区，再启用绑定与瞬移",
+  "sources": {
+    "start_points": {
+      "original": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF\\Mir200\\Envir\\StartPoint.txt",
+      "copy": "资料参考/myf/Mir200/Envir/StartPoint.txt",
+      "sha256": "5da04adcfbc5e0024ddfb714ad2ddbd110e583f7cbbf7e20ee139c7d8d1a2050",
+      "encoding": "gb18030"
+    },
+    "server_map0": {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF\\Mir200\\Map\\0.map",
+      "sha256": "2780766485d1e047dc2e8f03578ee83c6a14fd91597fe4562329cb8f24e1d4ec",
+      "width": 700,
+      "height": 700
+    },
+    "client_map0": {
+      "path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Map\\0.map",
+      "sha256": "8bc3c4db1edfddb3485084e9ca6ada296ad0d401e7d97f79e04d4585a4de7af6",
+      "width": 700,
+      "height": 700
+    }
+  },
+  "whole_map_bytes_equal": false,
+  "map0_cell_bytes_equal": false,
+  "source_safe_zone_rows": [
+    {
+      "source_line": 6,
+      "map_code": "0",
+      "x": 650,
+      "y": 631,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "银杏山谷（银杏新人村）"
+    },
+    {
+      "source_line": 7,
+      "map_code": "0",
+      "x": 650,
+      "y": 631,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "银杏山谷（银杏新人村）"
+    },
+    {
+      "source_line": 8,
+      "map_code": "0",
+      "x": 650,
+      "y": 631,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "银杏山谷（银杏新人村）"
+    },
+    {
+      "source_line": 13,
+      "map_code": "0",
+      "x": 289,
+      "y": 618,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "边界村"
+    },
+    {
+      "source_line": 17,
+      "map_code": "0",
+      "x": 331,
+      "y": 267,
+      "radius": 10,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "比奇城"
+    },
+    {
+      "source_line": 21,
+      "map_code": "2",
+      "x": 503,
+      "y": 483,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "毒蛇山谷村庄"
+    },
+    {
+      "source_line": 25,
+      "map_code": "11",
+      "x": 178,
+      "y": 326,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "白日门"
+    },
+    {
+      "source_line": 29,
+      "map_code": "3",
+      "x": 330,
+      "y": 330,
+      "radius": 10,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "盟重土城"
+    },
+    {
+      "source_line": 33,
+      "map_code": "3",
+      "x": 850,
+      "y": 675,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "红名村"
+    },
+    {
+      "source_line": 37,
+      "map_code": "4",
+      "x": 240,
+      "y": 200,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "封魔谷"
+    },
+    {
+      "source_line": 41,
+      "map_code": "绝望谷",
+      "x": 138,
+      "y": 186,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "绝望谷"
+    },
+    {
+      "source_line": 45,
+      "map_code": "5",
+      "x": 141,
+      "y": 337,
+      "radius": 8,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "苍月岛"
+    },
+    {
+      "source_line": 49,
+      "map_code": "jingji3",
+      "x": 120,
+      "y": 120,
+      "radius": 6,
+      "no_chat": 0,
+      "halo_type": 3,
+      "pk_zone": 0,
+      "pk_fire": 0,
+      "label": "静寂之城"
+    }
+  ],
+  "map0_safe_zone_comparisons": [
+    {
+      "source_line": 6,
+      "label": "银杏山谷（银杏新人村）",
+      "center": {
+        "x": 650,
+        "y": 631
+      },
+      "radius": 8,
+      "full_region_in_both_maps": true,
+      "cells": 289,
+      "server_blocked": 23,
+      "client_blocked": 23,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "server_center_walkable": true,
+      "client_center_walkable": true,
+      "front_libraries": [
+        2
+      ],
+      "animated_cells": 0,
+      "door_cells": 0
+    },
+    {
+      "source_line": 7,
+      "label": "银杏山谷（银杏新人村）",
+      "center": {
+        "x": 650,
+        "y": 631
+      },
+      "radius": 8,
+      "full_region_in_both_maps": true,
+      "cells": 289,
+      "server_blocked": 23,
+      "client_blocked": 23,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "server_center_walkable": true,
+      "client_center_walkable": true,
+      "front_libraries": [
+        2
+      ],
+      "animated_cells": 0,
+      "door_cells": 0
+    },
+    {
+      "source_line": 8,
+      "label": "银杏山谷（银杏新人村）",
+      "center": {
+        "x": 650,
+        "y": 631
+      },
+      "radius": 8,
+      "full_region_in_both_maps": true,
+      "cells": 289,
+      "server_blocked": 23,
+      "client_blocked": 23,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "server_center_walkable": true,
+      "client_center_walkable": true,
+      "front_libraries": [
+        2
+      ],
+      "animated_cells": 0,
+      "door_cells": 0
+    },
+    {
+      "source_line": 13,
+      "label": "边界村",
+      "center": {
+        "x": 289,
+        "y": 618
+      },
+      "radius": 8,
+      "full_region_in_both_maps": true,
+      "cells": 289,
+      "server_blocked": 38,
+      "client_blocked": 38,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "server_center_walkable": true,
+      "client_center_walkable": true,
+      "front_libraries": [
+        2
+      ],
+      "animated_cells": 2,
+      "door_cells": 0
+    },
+    {
+      "source_line": 17,
+      "label": "比奇城",
+      "center": {
+        "x": 331,
+        "y": 267
+      },
+      "radius": 10,
+      "full_region_in_both_maps": true,
+      "cells": 441,
+      "server_blocked": 8,
+      "client_blocked": 8,
+      "raw_cell_differences": 0,
+      "collision_differences": 0,
+      "server_center_walkable": true,
+      "client_center_walkable": true,
+      "front_libraries": [
+        2
+      ],
+      "animated_cells": 2,
+      "door_cells": 0
+    }
+  ],
+  "limits": [
+    "StartPoint.txt注释定义安全区/复活点，不单凭文件名认证新角色初始选择或Crystal StartPoint标志",
+    "只核对0.map已核验格式，其它地图与版本未在本报告验收",
+    "MYF安全区半径映射Crystal Chebyshev语义仍属跨来源候选；未开放PK字段、收费或部署指令",
+    "原图摘要相同、局部格相同或来源记录生成均不等于城镇渲染、安全区业务、绑定或瞬移已实现"
+  ]
+}

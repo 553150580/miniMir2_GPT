@@ -98,6 +98,14 @@ type Role struct {
 	HostingCardUntil time.Time      `bson:"hosting_card_until" json:"-"`
 	Report           Report         `bson:"hosting_report" json:"hosting_report"`
 	Skills           []LearnedSkill `bson:"learned_skills" json:"learned_skills"`
+	Binding          *RoleBinding   `bson:"binding,omitempty" json:"binding,omitempty"`
+}
+
+// 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。
+type RoleBinding struct {
+	MapID uint64 `bson:"map_id" json:"map_id"`
+	X     int32  `bson:"x" json:"x"`
+	Y     int32  `bson:"y" json:"y"`
 }
 type LearnedSkill struct {
 	SkillID uint32 `bson:"skill_id" json:"skill_id"`

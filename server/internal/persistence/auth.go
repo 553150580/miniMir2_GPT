@@ -138,6 +138,11 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 			r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: book.ItemID, Quantity: 1, Bound: true, Version: 1, SourceKind: "initial_grant", SourceID: domain.Hex(q.OpId)})
 		}
 	}
+	binding, err := s.initialBinding()
+	if err != nil {
+		return nil, err
+	}
+	r.Binding = binding
 	var result domain.Role
 	e := s.tx(ctx, func(tc context.Context) error {
 		if e := s.accountGuard(tc, a); e != nil {
@@ -207,6 +212,11 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 	if e != nil {
 		return domain.Role{}, Auth{}, e
 	}
+	// 在重试事务之外固定本次候选；已存在的永久绑定始终优先。
+	initial, e := s.initialBinding()
+	if e != nil {
+		return domain.Role{}, Auth{}, e
+	}
 	a := Auth{AccountID: t.AccountID, AuthVersion: t.AuthVersion, RoleID: t.RoleID}
 	var r domain.Role
 	e = s.tx(ctx, func(tc context.Context) error {
@@ -225,6 +235,12 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 		}
 		r, err = s.Role(tc, t.RoleID)
 		if err != nil {
+			return err
+		}
+		if r.Binding == nil {
+			r.Binding = initial
+		}
+		if err = s.checkBinding(r.Binding); err != nil {
 			return err
 		}
 		old := r.Revision

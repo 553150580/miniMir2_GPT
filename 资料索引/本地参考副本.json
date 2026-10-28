@@ -5,11 +5,11 @@
   "scope": "轻量原字节参考副本；不复制地图、图像包、音效大包、账号、凭据或部署配置",
   "source_manifest_path": "资料索引/参考文件清单.json",
   "source_manifest_sha256": "71542c0d8bb34508865f444bcdbaebf146c3d66caabff32e4cb38c26e608da32",
-  "copied_file_count": 325,
-  "copied_bytes": 22609331,
+  "copied_file_count": 326,
+  "copied_bytes": 22610894,
   "counts_by_source": {
     "crystal": 307,
-    "myf": 7,
+    "myf": 8,
     "ui_reference": 11
   },
   "policy": {
@@ -5591,6 +5591,20 @@
       "text_transcoding": false,
       "reason": "补齐既有通用传送原帧来源证据；摘要与原manifest一致",
       "runtime_enabled": false
+    },
+    {
+      "reference_id": "myf:Mir200/Envir/StartPoint.txt",
+      "source_id": "myf",
+      "source_root": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF",
+      "source_relative_path": "Mir200/Envir/StartPoint.txt",
+      "target_relative_path": "资料参考/myf/Mir200/Envir/StartPoint.txt",
+      "bytes": 1563,
+      "source_sha256": "5da04adcfbc5e0024ddfb714ad2ddbd110e583f7cbbf7e20ee139c7d8d1a2050",
+      "target_sha256": "5da04adcfbc5e0024ddfb714ad2ddbd110e583f7cbbf7e20ee139c7d8d1a2050",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "runtime_enabled": false,
+      "reason": "用户明确先接来源城镇及安全区；仅安全区/复活点静态资料，不包含账号、凭据或部署脚本"
     }
   ]
 }

@@ -1,0 +1,95 @@
+package devconfig
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"math"
+)
+
+// 初始绑定必须来自唯一配置；不存在时保持旧版本关闭，不能推定为玩家出生点。
+type BindingRules struct {
+	Enabled     bool           `json:"enabled"`
+	StartPoints []BindingPoint `json:"start_points"`
+}
+
+type BindingPoint struct {
+	MapID uint64 `json:"map_id"`
+	X     int32  `json:"x"`
+	Y     int32  `json:"y"`
+}
+
+func (p *BindingPoint) UnmarshalJSON(data []byte) error {
+	var raw struct {
+		MapID *uint64 `json:"map_id"`
+		X     *int32  `json:"x"`
+		Y     *int32  `json:"y"`
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&raw); err != nil {
+		return err
+	}
+	if raw.MapID == nil || raw.X == nil || raw.Y == nil {
+		return errors.New("绑定地图和坐标必须显式提供，不能以缺失代替坐标0")
+	}
+	*p = BindingPoint{MapID: *raw.MapID, X: *raw.X, Y: *raw.Y}
+	return nil
+}
+
+func (r *BindingRules) UnmarshalJSON(data []byte) error {
+	var raw struct {
+		Enabled     *bool           `json:"enabled"`
+		StartPoints *[]BindingPoint `json:"start_points"`
+	}
+	decoder := json.NewDecoder(bytes.NewReader(data))
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&raw); err != nil {
+		return err
+	}
+	if raw.Enabled == nil || raw.StartPoints == nil {
+		return errors.New("绑定开关及起点数组必须显式提供")
+	}
+	*r = BindingRules{Enabled: *raw.Enabled, StartPoints: *raw.StartPoints}
+	return nil
+}
+
+// 当前地图目录只开放个人地图；未配置的城镇ID必须拒绝，后续扩目录时再拓展查找。
+func (f *Fixture) ValidBinding(point BindingPoint) bool {
+	if point.MapID == 0 || point.MapID > math.MaxInt64 || point.MapID != f.Map.ID || point.X < 0 || point.Y < 0 || int64(point.X) >= int64(f.Map.Width) || int64(point.Y) >= int64(f.Map.Height) {
+		return false
+	}
+	for _, blocked := range f.Map.Blocked {
+		if blocked.X == int(point.X) && blocked.Y == int(point.Y) {
+			return false
+		}
+	}
+	return true
+}
+
+func (f *Fixture) ValidateBinding() error {
+	if f.Binding == nil {
+		if f.RuleVersion >= 12 {
+			return errors.New("rule12起须显式提供绑定规则，待审定时关闭并保留空起点")
+		}
+		return nil
+	}
+	if f.RuleVersion < 12 {
+		return errors.New("角色绑定配置须使用rule12及后续版本")
+	}
+	if !f.Binding.Enabled {
+		if len(f.Binding.StartPoints) != 0 {
+			return errors.New("绑定入口关闭时不得携带隐含启用的起点")
+		}
+		return nil
+	}
+	if len(f.Binding.StartPoints) == 0 {
+		return errors.New("启用绑定必须提供已审定的起点")
+	}
+	for _, point := range f.Binding.StartPoints {
+		if !f.ValidBinding(point) {
+			return errors.New("绑定起点须属于已配置地图的可走地格")
+		}
+	}
+	return nil
+}

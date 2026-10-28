@@ -13,7 +13,7 @@ def sha(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--report', default='outputs/windows-adaptation-20261028/reference-copies.json')
+    parser.add_argument('--report', default='.work/reference-copies-check.json')
     args = parser.parse_args()
     manifest = json.loads((ROOT / '资料索引/本地参考副本.json').read_text(encoding='utf-8'))
     errors, checked, originals, seen = [], 0, 0, set()
