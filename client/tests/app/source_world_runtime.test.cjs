@@ -71,9 +71,10 @@ test('真实跨层来源视口先等待原生块，矩形点击/镜头/方向/�
  assert.equal(view.props.length,0);assert.equal(world.getChildByName('Surface').getComponent(Sprite).enabled,false);assert.equal(world.getChildByName('Soil').active,false);
  view.acceptDisplacement(event({origin:{x:650,y:631},path:[{x:651,y:631}],facingDirection:2,movementDirection:2}));cc.game.totalTime=250;view.update(0,0,true);
  assert.deepEqual(view.visuals.get(1).node.position,view.grid(650.5,631));assert.equal(view.visuals.get(1).movement.position.x,651);
- assets.sourceMap.replaceGeneration();assert.equal(view.isMapReady,false);assert.equal(view.sourceView.stats.visibleNodes,0);view.update(0,0,true);await settle(resources,view,view.prepareViewport());
+ const invalidations=[];assets.onBeforeInvalidation(reason=>invalidations.push(reason));
+ assets.sourceMap.replaceGeneration();assert.deepEqual(invalidations,['source']);assert.equal(view.isMapReady,false);assert.equal(view.sourceView.stats.visibleNodes,0);view.update(0,0,true);await settle(resources,view,view.prepareViewport());
  viewport.getComponent(UITransform).setContentSize(1000,900);view.refitCamera();assert.equal(view.isMapReady,false);await settle(resources,view,view.prepareViewport());
- view.dispose();assert.equal(view.isMapReady,false);resources.flush();await flush();assertReleased(resources);assert.equal(world.destroyed,undefined);assert.equal(entities.destroyed,undefined);
+ view.dispose();assert.deepEqual(invalidations,['source','dispose']);assert.equal(view.isMapReady,false);resources.flush();await flush();assertReleased(resources);assert.equal(world.destroyed,undefined);assert.equal(entities.destroyed,undefined);
  // 复用相同保存容器切回个人图，来源分支改过的运行anchor/active必须恢复。
  const personal=await WorldAssets.prepare(0,()=>{}),personalView=new GameWorldView(viewport,world,entities,'个人复入',0,Long.UONE,1);personalView.prepare(personal,()=>{});
  assert.deepEqual(world.getComponent(UITransform).anchorPoint,{x:.5,y:.5});assert.deepEqual(world.getChildByName('Surface').getComponent(UITransform).anchorPoint,{x:.5,y:.5});assert.equal(world.getChildByName('Surface').getComponent(Sprite).enabled,true);assert.equal(world.getChildByName('Soil').active,true);assert.equal(world.getChildByName('GridLines').active,true);assert.equal(personalView.isMapReady,true);await personalView.prepareViewport();personalView.dispose();assertReleased(resources);

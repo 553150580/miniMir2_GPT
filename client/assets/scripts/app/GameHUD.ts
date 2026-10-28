@@ -10,9 +10,12 @@ export class GameHUD extends Component {
     private readonly bars = new Map<string, ProgressBar>();
     private miniMapSlot: { width: number; height: number } | null = null;
     private releaseMapInvalidation?: () => void;
+    private clearMapFrame?: () => void;
+    private mapBinding = 0;
 
     setMapFrame(frame: SpriteFrame | null, lifecycle?: { onBeforeInvalidation(listener: () => void): () => void }): void {
         this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined;
+        const binding = ++this.mapBinding;
         // 保存的槽位不拉伸；不同来源小地图在同一槽内等比显示。
         this.saved('TopHUD/MiniMap/Map').getComponent(Sprite)!.spriteFrame = null;
         const sprite = this.saved('TopHUD/MiniMap/Map/Surface').getComponent(Sprite)!;
@@ -29,14 +32,25 @@ export class GameHUD extends Component {
             const scale = Math.min(slot.width / size.width, slot.height / size.height);
             transform.setContentSize(size.width * scale, size.height * scale);
         }
-        if (lifecycle) this.releaseMapInvalidation = lifecycle.onBeforeInvalidation(() => {
-            this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined;
-            // Sprite赋帧本身不取得资源引用；必须在来源资源释放前同步解绑。
+        const clear = (): void => {
+            if (this.mapBinding !== binding) return;
+            // primary背景与source小地图均在完整WorldAssets失效前同步解绑。
             if (isValid(sprite, true)) { sprite.spriteFrame = null; sprite.enabled = false; }
-        });
+        };
+        this.clearMapFrame = clear;
+        if (lifecycle) {
+            try {
+                const release = lifecycle.onBeforeInvalidation(() => {
+                    clear();
+                    release();
+                    if (this.releaseMapInvalidation === release) this.releaseMapInvalidation = undefined;
+                });
+                this.releaseMapInvalidation = release;
+            } catch (error) { clear(); this.clearMapFrame = undefined; throw error; }
+        }
     }
 
-    onDestroy(): void { this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined; }
+    onDestroy(): void { this.clearMapFrame?.(); this.clearMapFrame = undefined; this.mapBinding++; this.releaseMapInvalidation?.(); this.releaseMapInvalidation = undefined; }
 
     refresh(input: HudInput): void {
         const state = createHudState(input);

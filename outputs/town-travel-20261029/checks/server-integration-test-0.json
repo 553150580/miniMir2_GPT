@@ -1,0 +1,14 @@
+{
+  "task": "server-integration-test",
+  "command": [
+    "python3",
+    "tools/server/test.py",
+    "--mongo",
+    "--race"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T18:42:07.061136+00:00",
+  "finished_at": "2026-10-28T18:46:53.283942+00:00",
+  "output": ".work/town-travel-20261029/checks/server-integration-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

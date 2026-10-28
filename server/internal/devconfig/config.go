@@ -101,31 +101,33 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 }
 
 type Fixture struct {
-	SchemaVersion     int                `json:"schema_version"`
-	RuleVersion       uint64             `json:"rule_version"`
-	DevelopmentOnly   bool               `json:"development_only"`
-	RuntimeReady      bool               `json:"runtime_ready"`
-	SourceStatus      string             `json:"source_status"`
-	DamageFormula     string             `json:"damage_formula"`
-	Map               MapTemplate        `json:"map"`
-	Maps              []MapTemplate      `json:"maps,omitempty"`
-	Players           []Fighter          `json:"players"`
-	Pet               Fighter            `json:"pet"`
-	Monsters          []Monster          `json:"monsters"`
-	Items             []Item             `json:"items"`
-	Potions           PotionRules        `json:"potions"`
-	Skills            []Skill            `json:"skills"`
-	Buffs             []BuffDefinition   `json:"buffs"`
-	CastingSupply     CastingSupplyRules `json:"casting_supply"`
-	Healing           HealingRules       `json:"healing"`
-	PlayerGrowth      []PlayerGrowth     `json:"player_growth"`
-	InitialSkillBooks []InitialSkillBook `json:"initial_skill_books"`
-	SkillUpgrades     []SkillUpgrade     `json:"skill_upgrades"`
-	SkillShop         []SkillShop        `json:"skill_shop"`
-	SkillBookRecycle  []SkillBookRecycle `json:"skill_book_recycle"`
-	SkillEconomy      SkillEconomy       `json:"skill_economy"`
-	CombatTiming      CombatTiming       `json:"combat_timing"`
-	Binding           *BindingRules      `json:"binding,omitempty"`
+	SchemaVersion     int                   `json:"schema_version"`
+	RuleVersion       uint64                `json:"rule_version"`
+	DevelopmentOnly   bool                  `json:"development_only"`
+	RuntimeReady      bool                  `json:"runtime_ready"`
+	SourceStatus      string                `json:"source_status"`
+	DamageFormula     string                `json:"damage_formula"`
+	Map               MapTemplate           `json:"map"`
+	Maps              []MapTemplate         `json:"maps,omitempty"`
+	Players           []Fighter             `json:"players"`
+	Pet               Fighter               `json:"pet"`
+	Monsters          []Monster             `json:"monsters"`
+	Items             []Item                `json:"items"`
+	Potions           PotionRules           `json:"potions"`
+	Skills            []Skill               `json:"skills"`
+	Buffs             []BuffDefinition      `json:"buffs"`
+	CastingSupply     CastingSupplyRules    `json:"casting_supply"`
+	Healing           HealingRules          `json:"healing"`
+	PlayerGrowth      []PlayerGrowth        `json:"player_growth"`
+	InitialSkillBooks []InitialSkillBook    `json:"initial_skill_books"`
+	SkillUpgrades     []SkillUpgrade        `json:"skill_upgrades"`
+	SkillShop         []SkillShop           `json:"skill_shop"`
+	SkillBookRecycle  []SkillBookRecycle    `json:"skill_book_recycle"`
+	SkillEconomy      SkillEconomy          `json:"skill_economy"`
+	CombatTiming      CombatTiming          `json:"combat_timing"`
+	Binding           *BindingRules         `json:"binding,omitempty"`
+	TownTravel        *TownTravelConfig     `json:"town_travel,omitempty"`
+	TownNavigation    *TownNavigationConfig `json:"town_navigation,omitempty"`
 	Drops             struct {
 		EquipmentItemIDs   []uint32 `json:"equipment_item_ids"`
 		ItemIDs            []uint32 `json:"item_ids"`
@@ -227,6 +229,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateBinding(); err != nil {
+		return err
+	}
+	if err := f.ValidateTownConfiguration(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

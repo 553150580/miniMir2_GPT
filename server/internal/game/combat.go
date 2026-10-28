@@ -67,6 +67,12 @@ func (w *worker) neighbor(r *room, from, to devconfig.Point, self *entity) bool 
 	return true
 }
 func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time, interval int64) {
+	if w.moveTown(r, e, target, now, interval) {
+		if e == &r.Player {
+			w.finishFailedTownNavigation(r)
+		}
+		return
+	}
 	if now.Before(e.NextMove) || now.Before(e.ActionReadyAt) || e.HP <= 0 || e.Pos == target {
 		return
 	}
@@ -272,6 +278,7 @@ func (w *worker) step(r *room, now time.Time) {
 		delta = 200 * time.Millisecond
 	}
 	if r.Pending {
+		w.progressMapTravel(r, now)
 		if r.PendingRetry != nil && !now.Before(r.RetryAt) {
 			j := *r.PendingRetry
 			if w.submit(j) {
@@ -300,6 +307,7 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	offline := r.Conn == nil
 	if r.Player.HP <= 0 {
+		w.progressMapTravel(r, now)
 		return
 	}
 	if w.tickPotions(r, now) {
@@ -310,6 +318,16 @@ func (w *worker) step(r *room, now time.Time) {
 		// Crystal ProcessRegen统一结算满值后清除所有HP恢复余额，不能供同帧受击后复用。
 		r.Player.HealAmount = 0
 		r.Potions.HP = 0
+	}
+	if w.progressMapTravel(r, now) {
+		return
+	}
+	if mapTemplate.SceneKindValue() == devconfig.SceneKindTown {
+		// 来源城镇不运行离线战斗或扣托管；既有状态/恢复已在上方按真实时钟推进。
+		r.HostMS = 0
+		if offline {
+			return
+		}
 	}
 	if offline && (r.Role.HostingSeconds <= 0 || r.Role.PickupStopped || !r.Auto) {
 		return
@@ -350,6 +368,10 @@ func (w *worker) step(r *room, now time.Time) {
 			m.Action = 0
 		}
 	}
+	// 原截止和恢复照常推进；新地图必须先收到匹配ACK才允许新增移动/AI/攻击。
+	if r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
+		return
+	}
 	a := w.fighter(r, &r.Player)
 	if r.Manual {
 		d := directions[r.ManualDirection]
@@ -384,7 +406,7 @@ func (w *worker) step(r *room, now time.Time) {
 		return
 	}
 	if r.Pet != nil && r.Pet.HP > 0 {
-		if r.Auto {
+		if r.Auto && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
 			if target := w.nearest(r, r.Pet); target != nil {
 				if distance(r.Pet.Pos, target.Pos) <= 1 {
 					w.attack(r, r.Pet, target, now)

@@ -534,6 +534,29 @@ def source_map_catalog(tables,profile):
                          'door_policy':'closed_development_candidate','full_source_map':True,'initial_binding_pool_verified':False})
     return records,evidence
 
+def town_runtime_rules(profile,maps):
+    """旅行等待和导航预算只读唯一Excel；缺项不由运行代码补数。"""
+    travel=profile.get('town_travel');navigation=profile.get('town_navigation')
+    travel_fields={'enabled','town_map_id','plan_ttl_ms','quiesce_ttl_ms','ack_ttl_ms','max_plans_per_scene'}
+    navigation_fields={'enabled','work_per_task','work_per_worker_tick','workspaces_per_worker','queue_per_worker','max_expanded','max_frontier','max_route_cells','max_replans','max_dynamic_cells','max_memory_bytes_per_worker'}
+    for values,fields in [(travel,travel_fields),(navigation,navigation_fields)]:
+        if not isinstance(values,dict) or set(values)!=fields or type(values['enabled']) is not bool:
+            raise ValueError('rule13必须显式提供完整城镇旅行及有界导航合同')
+        if any(type(value) is not int or value<(0 if name=='max_replans' else 1) for name,value in values.items() if name!='enabled'):
+            raise ValueError('城镇等待与导航预算须为明确整数，不能补默认或接受小数')
+    town=next((row for row in maps if row['id']==travel['town_map_id']),None)
+    if town is None or town['scene_kind']!=2 or travel['enabled'] and not navigation['enabled']:
+        raise ValueError('旅行只准入已核完整城镇，开放前必须启用有界导航')
+    if travel['quiesce_ttl_ms']>travel['plan_ttl_ms'] or any(travel[name]>86400000 for name in ['plan_ttl_ms','ack_ttl_ms']):raise ValueError('城镇等待时限不符合有界合同')
+    if travel['max_plans_per_scene']>256:raise ValueError('旅行ID历史须有界，满时不遗忘取消记录')
+    cells=town['width']*town['height'];n=navigation
+    if n['work_per_worker_tick']<n['work_per_task'] or n['workspaces_per_worker']>256 or n['queue_per_worker']>256 or n['max_dynamic_cells']<2 or any(n[name]>cells for name in ['max_expanded','max_frontier','max_route_cells','max_replans','max_dynamic_cells','work_per_worker_tick']):
+        raise ValueError('导航预算超过配置地图或现有worker准入范围')
+    word=struct.calcsize('P');workspace=cells*(12+word)+n['max_frontier']*word
+    reserved=n['workspaces_per_worker']*workspace+(n['workspaces_per_worker']+n['queue_per_worker'])*n['max_route_cells']*2*word
+    if reserved>n['max_memory_bytes_per_worker']:raise ValueError('导航大缓冲预留超过显式每worker内存预算')
+    return deepcopy(travel),deepcopy(navigation)
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',profile['map_id']);collision=one('game_map_collisions',m['collision_id'])
@@ -631,6 +654,8 @@ def fixture_from_rows(tables):
         result['maps']=catalog;result['binding']=deepcopy(profile['binding'])
         result['source_map_streaming']=deepcopy(profile['source_map_streaming'])
         result['_source_evidence']['source_map_catalog']=catalog_evidence
+        if profile['rule_version']>=13:
+            result['town_travel'],result['town_navigation']=town_runtime_rules(profile,catalog)
     return result
 
 def public_gameplay(fixture):
@@ -683,7 +708,8 @@ def public_gameplay(fixture):
                    'width':row['width'],'height':row['height'],'scene_kind':row.get('scene_kind',1),
                    'safe_zones':[{'id':str(zone['id']),'center':deepcopy(zone['center']),'radius':zone['radius']} for zone in row.get('safe_zones',[])]}
                  for row in [fixture['map']]+fixture['maps']],
-                'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {})}
+                'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {}),
+            **({'town_travel':{'enabled':fixture['town_travel']['enabled'],'town_map_id':str(fixture['town_travel']['town_map_id'])}} if fixture['rule_version']>=13 else {})}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true',help='历史首次初始化；已建立开发表后禁止重跑，不能覆盖唯一Excel');p.add_argument('--check',action='store_true');args=p.parse_args()

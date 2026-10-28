@@ -1,4 +1,4 @@
-import { _decorator, Button, Component, director, EditBox, game, Game, isValid, Label, Node, profiler, ProgressBar, sys, Toggle } from 'cc';
+import { _decorator, Button, Component, director, EditBox, game, Game, isValid, Label, Node, profiler, ProgressBar, sys, Toggle, UITransform } from 'cc';
 import Long from 'long';
 import { CreatorSceneBackend } from '../core/scene/CreatorSceneBackend';
 import { SceneLoader } from '../core/scene/SceneLoader';
@@ -9,8 +9,8 @@ import { List } from '../ui/List';
 import { NavigationIntent } from '../input/NavigationIntent';
 import { TouchJoystick } from '../input/TouchJoystick';
 import { MapTouchNavigator } from '../input/MapTouchNavigator';
-import { newOperationId } from './GameConnection';
-import { operation, roleIdentity, session } from './GameSession';
+import { newOperationId, ProtocolResponseError } from './GameConnection';
+import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
 import { PendingOperations } from './PendingOperations';
 import { GameWorldView } from './GameWorldView';
 import { WorldAssets } from './WorldAssets';
@@ -27,6 +27,10 @@ import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, valid
 import { GameCombatStatus } from './GameCombatStatus';
 import { combatAttributeLines, statusLines } from './CombatStatusModel';
 import { captureSupply, CastingSupplySnapshot, selectedCastingSupply, SupplySelection, validateSupply } from './CastingSupplyModel';
+import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachmentCoordinator';
+import { attachmentKey } from './MapTravelModel';
+import type { AttachmentIdentity, TravelContext } from './MapTravelModel';
+import { MapViewportPreparation } from './MapViewportPreparation';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -36,6 +40,7 @@ export class AppRoot extends Component {
     @property sceneKind = 'Boot';
     private readonly buttons: Array<[Node, string, () => void]> = [];
     private readonly cleanups: Array<() => void> = [];
+    private readonly mapWaiters = new Set<() => void>();
     private nav = new NavigationIntent();
     private world?: GameWorldView;
     private hud?: GameHUD;
@@ -62,6 +67,20 @@ export class AppRoot extends Component {
     private joystick?: TouchJoystick;
     private uiActionBusy = false;
     private reconciliationStarted = false;
+    private attachment?: MapAttachmentCoordinator<WorldAssets, GameWorldView>;
+    private attached?: AttachmentIdentity;
+    private attachmentTarget = '';
+    private attachmentTask?: Promise<GameWorldView>;
+    private attaching = false;
+    private mapLoading = false;
+    private navigationUnsubscribe?: () => void;
+    private inputBarrier = false;
+    private inputEnabled: { map: boolean; joystick: boolean } | null = null;
+    private preparedTravel?: { id: string; assets: WorldAssets; viewport: MapViewportPreparation };
+    private travelSource?: TravelContext;
+    private travelDestination = 1;
+    private travelUiSequence = 0;
+    private enterAttempt = 0;
     private leaving = false;
     private releaseInput = (): void => { if (this.joystick) this.joystick.release(); else this.nav.releaseJoystick(); };
 
@@ -70,7 +89,8 @@ export class AppRoot extends Component {
         session.scenes ??= new SceneManager(new SceneLoader(new CreatorSceneBackend(director)), ['Boot', 'Login', 'RoleSelect', 'Game'], this.sceneKind);
         const unsubscribe = session.scenes.subscribe(state => {
             const overlay = this.node.getChildByPath('Loading'); if (!overlay) return;
-            overlay.active = state.phase === 'preloading' || state.phase === 'loading';
+            overlay.active = this.mapLoading || state.phase === 'preloading' || state.phase === 'loading';
+            if (this.mapLoading) return;
             const label = overlay.getChildByPath('Status')?.getComponent(Label);
             if (label) label.string = state.phase === 'loading' ? '正在启动场景' : state.progress?.ratio == null ? '准备资源中' : `已加载 ${state.progress.completed}/${state.progress.total}`;
             const bar = overlay.getChildByPath('Progress')?.getComponent(ProgressBar); if (bar) bar.progress = state.progress?.ratio ?? 0;
@@ -87,20 +107,21 @@ export class AppRoot extends Component {
     update(dt: number): void {
         this.world?.update(dt, session.role?.job ?? 0, !!session.inventory?.equipped?.some((entry: any) => entry.slot === 0));
         this.combatStatus?.update();
-        if (!session.ready || !this.world || this.leaving) return;
+        if (!this.canSendInput()) return;
         this.moveTimer += dt;
         if (this.moveTimer < .15) return;
         this.moveTimer = 0;
         const direction = this.nav.state.direction;
         if (direction.x || direction.y) {
-            const facing = this.world.logicalDirection(direction.x, direction.y);
+            const facing = this.world!.logicalDirection(direction.x, direction.y);
             if (facing !== null) session.connection.send(20006, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, direction: facing });
         }
     }
 
     onDestroy(): void {
         this.disposed = true;
-        this.world?.dispose();
+        for (const cancel of Array.from(this.mapWaiters)) cancel();
+        this.enterAttempt++; this.attachment?.dispose(); this.world?.dispose(); this.releasePreparedTravel(); this.navigationUnsubscribe?.();
         for (const [node, eventType, handler] of this.buttons) if (isValid(node, true)) node.off(eventType, handler, this);
         for (const cleanup of this.cleanups) cleanup();
         game.off(Game.EVENT_HIDE, this.releaseInput, this);
@@ -134,21 +155,24 @@ export class AppRoot extends Component {
         });
         this.button('Enter', async () => {
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
+            const attempt = ++this.enterAttempt, token = session.connection.token;
             session.preparedWorld?.dispose(); session.preparedWorld = null;
             const assets = await WorldAssets.prepare(role.job, (done, total) => {
                 if (!this.disposed) this.status(`准备动作资源 ${done}/${total}`);
             });
-            if (this.disposed) { assets.dispose(); return; }
+            if (this.disposed || this.enterAttempt !== attempt || session.connection.token !== token) { assets.dispose(); return; }
             session.preparedWorld = assets;
             try {
                 // 动作资源准备完成才取短票，避免网络加载占用入场基线的确认期限。
                 this.status('正在获取入场票据');
                 const ticket = await session.connection.rpc(10007, { role: role.key });
+                if (this.disposed || this.enterAttempt !== attempt || session.connection.token !== token) throw new StaleMapAttachmentError('旧选角取票已经失效');
                 session.role = role; session.ready = false; session.entry = null; session.baseline = null;
                 await session.connection.connect(ticket.ticket);
+                if (this.disposed || this.enterAttempt !== attempt || session.role !== role || !currentEntryIdentity()) throw new StaleMapAttachmentError('旧选角入场已经失效');
                 await session.scenes!.switchTo('Game');
             } catch (error) {
-                session.connection.close();
+                if (!this.disposed && this.enterAttempt === attempt) session.connection.close();
                 if (session.preparedWorld === assets) { assets.dispose(); session.preparedWorld = null; }
                 throw error;
             }
@@ -181,69 +205,40 @@ export class AppRoot extends Component {
         this.cleanups.push(() => { if (isValid(safe, true)) safe.off(GameMessages.EVENT_SELECTED, selectedMessage, this); });
         this.button('BottomHUD/Footer/ChangeRole', () => this.leave(false));
         const viewport = this.find('MapViewport'); const world = viewport.getChildByName('World')!;
-        this.world = new GameWorldView(viewport, world, world.getChildByName('Entities')!, session.role.name, session.role.job, session.entry.sceneEpoch, session.entry.playerHandle);
-        const prepared = session.preparedWorld;
-        if (!prepared) throw new Error('入场前尚未准备动作资源，请返回选角重试');
-        session.preparedWorld = null;
-        this.hud.setMapFrame(prepared.background, prepared.sourceMap);
-        this.world.prepare(prepared, entity => {
-            if (this.consumeGround(entity.position)) return;
-            this.selectedTarget = entity.entityHandle;
-            this.combatStatus?.showDetails('实体详情', [`${({ 1: '角色', 2: '宠物', 3: '怪物', 4: '掉落' } as Record<number, string>)[entity.entityKind] ?? '实体'}`, `位置 ${entity.position.x}, ${entity.position.y}`,
-                `生命 ${entity.hp} / ${entity.hpMax}`, ...combatAttributeLines(entity.combatAttributes),
-                ...(entity.statuses ?? []).flatMap((status: any) => statusLines(status, game.totalTime, game.totalTime, this.world!.gameplay.statuses))]);
-        });
-        this.combatStatus = new GameCombatStatus(safe, this.ui, this.popup, prepared.statusBadgePrefab, session.entry.playerHandle, prepared.gameplay.statuses);
+        this.attachment = new MapAttachmentCoordinator<WorldAssets, GameWorldView>();
         this.cleanups.push(() => this.combatStatus?.dispose());
         this.skills = new GameSkills(safe, this.popup, (title, lines) => this.combatStatus!.showDetails(title, lines));
         this.cleanups.push(() => this.skills?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
-        const cast = (event: CastEvent): void => this.world?.acceptCast(event);
+        const cast = (event: CastEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCast(event); };
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
-        const castStep = (event: CastStepEvent): void => this.world?.acceptCastStep(event);
+        const castStep = (event: CastStepEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCastStep(event); };
         session.castSteps.add(castStep); this.cleanups.push(() => session.castSteps.delete(castStep));
-        const attack = (event: AttackEvent): void => this.world?.acceptAttack(event);
+        const attack = (event: AttackEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptAttack(event); };
         session.attacks.add(attack); this.cleanups.push(() => session.attacks.delete(attack));
-        const impact = (event: ImpactEvent): void => this.world?.acceptImpact(event);
+        const impact = (event: ImpactEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptImpact(event); };
         session.impacts.add(impact); this.cleanups.push(() => session.impacts.delete(impact));
-        const displacement = (event: Parameters<GameWorldView['acceptDisplacement']>[0]): void => this.world?.acceptDisplacement(event);
+        const displacement = (event: Parameters<GameWorldView['acceptDisplacement']>[0]): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptDisplacement(event); };
         session.displacements.add(displacement); this.cleanups.push(() => session.displacements.delete(displacement));
         if (this.disposed) return;
-        viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.world!.screenToGrid(point, !this.aim),
-            grid => this.consumeGround(grid), grid => { if (!this.leaving && this.aim) this.world!.showAim(grid); });
         this.joystick = this.find('MapViewport/Joystick').getComponent(TouchJoystick)!;
-        this.joystick.bind(this.nav);
+        this.setInputBarrier(true);
         game.on(Game.EVENT_HIDE, this.releaseInput, this);
         if (typeof window !== 'undefined') window.addEventListener('blur', this.releaseInput);
-        this.cleanups.push(this.nav.subscribe((state, reason) => {
-            if (!session.ready || this.leaving) return;
-            if (reason === 'ground' && state.target) {
-                const inputSequence = ++this.inputSequence; this.nav.bindGroundInput(inputSequence);
-                session.connection.send(20006, { sceneEpoch: session.entry.sceneEpoch, inputSequence, destination: state.target });
-            }
-            else if (reason === 'release') session.connection.send(20006, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, releaseJoystick: true });
-        }));
         this.ui.node.on(UIMgr.EVENT_CHANGED, this.releaseInput, this); this.popup.node.on(PopupView.EVENT_CHANGED, this.releaseInput, this);
         this.cleanups.push(() => { if (this.ui && isValid(this.ui.node, true)) this.ui.node.off(UIMgr.EVENT_CHANGED, this.releaseInput, this); if (this.popup && isValid(this.popup.node, true)) this.popup.node.off(PopupView.EVENT_CHANGED, this.releaseInput, this); });
         this.bindGameButtons();
-        const refresh = (): void => this.refreshGame(); session.update.add(refresh); this.cleanups.push(() => session.update.delete(refresh));
-        this.refreshGame();
-        // 地图与可编辑场景已真实准备好后才确认当前连接的完整基线。
-        if (!session.baseline) await new Promise<void>((resolve, reject) => {
-            const timer = setTimeout(() => { session.update.delete(check); reject(new Error('等待场景基线超时')); }, 10000);
-            const check = (): void => { if (session.baseline) { clearTimeout(timer); session.update.delete(check); resolve(); } }; session.update.add(check);
-        });
-        if (this.disposed) return;
-        session.connection.send(4, { sceneEpoch: session.entry.sceneEpoch, baselineId: session.entry.baselineId });
-        this.status('已确认地图基线，等待服务端就绪');
+        const refresh = (): void => this.handleSessionUpdate(); session.update.add(refresh); this.cleanups.push(() => session.update.delete(refresh));
+        await this.attachCurrentEntry();
     }
 
     private bindGameButtons(): void {
         for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
             this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => { this.ui!.open(panel); this.refreshGame(); });
         }
-        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['BottomHUD/Footer/Map','Role'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
+        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
+        this.button('BottomHUD/Footer/Map', () => this.travelMap());
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
         this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); }, Toggle.EventType.TOGGLE);
@@ -316,10 +311,278 @@ export class AppRoot extends Component {
         }
     }
 
+    private handleSessionUpdate(): void {
+        if (this.disposed) return;
+        if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
+        const identity = currentEntryIdentity();
+        if (!identity || !isCurrentEntry(identity)) {
+            this.attachment?.invalidate(); this.attachmentTarget = ''; this.attachmentTask = undefined; this.attaching = false;
+            this.setInputBarrier(true); this.releasePreparedTravel(); this.status(session.lastError || '连接已变化，请重新进入'); return;
+        }
+        if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
+            void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
+        }
+        this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput);
+        this.refreshGame();
+    }
+
+    private attachCurrentEntry(): Promise<GameWorldView> {
+        const identity = currentEntryIdentity(), entry = session.entry, role = session.role;
+        if (!identity || !entry || !role || !isCurrentEntry(identity) || !this.attachment) return Promise.reject(new StaleMapAttachmentError('入场身份已经变化'));
+        const key = attachmentKey(identity);
+        if (this.attachmentTarget === key && this.attachmentTask) return this.attachmentTask;
+        this.attachmentTarget = key; this.attaching = true; this.setInputBarrier(true); this.showMapLoading(true, '准备目标地图');
+        let prime: MapViewportPreparation | undefined;
+        const task = this.attachment.attach(identity, {
+            current: () => !this.disposed && session.entry === entry && isCurrentEntry(identity),
+            load: async () => {
+                let assets: WorldAssets | undefined;
+                try {
+                    if (this.preparedTravel?.id === identity.travelId && this.preparedTravel.assets.mapId === identity.map.toString()) {
+                        assets = this.preparedTravel.assets; prime = this.preparedTravel.viewport; this.preparedTravel = undefined;
+                    } else {
+                        const warm = session.preparedWorld;
+                        if (warm?.mapId === identity.map.toString()) { assets = warm; session.preparedWorld = null; }
+                        else {
+                            assets = await WorldAssets.prepare(role.job, (done, total) => {
+                                if (!this.disposed && isCurrentEntry(identity)) this.showMapLoading(true, `准备地图资源 ${done}/${total}`, done, total);
+                            }, entry.roomId);
+                            if (warm && session.preparedWorld === warm) { session.preparedWorld = null; warm.dispose(); }
+                        }
+                    }
+                    if (this.disposed || session.entry !== entry || !isCurrentEntry(identity)) throw new StaleMapAttachmentError('旧地图资源准备已经失效');
+                    if (assets.mapId !== identity.map.toString() || String(assets.gameplay.rule_version) !== entry.resourceVersion.toString()) throw new Error('地图资源或规则版本与真实入场身份不一致');
+                    await this.waitBaseline(identity); return assets;
+                } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
+            },
+            mount: assets => {
+                this.combatStatus?.dispose(); this.combatStatus = undefined;
+                this.selectedTarget = null; this.aim = null; this.lastBaseline = ''; this.lastInventory = null; this.reconciliationStarted = false;
+                const viewport = this.find('MapViewport'), world = viewport.getChildByName('World')!;
+                const view = new GameWorldView(viewport, world, world.getChildByName('Entities')!, role.name, role.job, entry.sceneEpoch, entry.playerHandle);
+                this.world = view; this.attached = identity;
+                this.hud!.setMapFrame(assets.background, assets);
+                view.prepare(assets, entity => {
+                    if (!this.isWorldCurrent() || this.world !== view || !this.canSendInput()) return;
+                    if (this.consumeGround(entity.position)) return;
+                    this.selectedTarget = entity.entityHandle;
+                    this.combatStatus?.showDetails('实体详情', [`${({ 1: '角色', 2: '宠物', 3: '怪物', 4: '掉落' } as Record<number, string>)[entity.entityKind] ?? '实体'}`, `位置 ${entity.position.x}, ${entity.position.y}`,
+                        `生命 ${entity.hp} / ${entity.hpMax}`, ...combatAttributeLines(entity.combatAttributes),
+                        ...(entity.statuses ?? []).flatMap((status: any) => statusLines(status, game.totalTime, game.totalTime, view.gameplay.statuses))]);
+                });
+                const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses);
+                this.combatStatus = combatStatus;
+                const releaseStatus = assets.onBeforeInvalidation(reason => {
+                    if (reason !== 'dispose') return;
+                    combatStatus.dispose(); releaseStatus();
+                    if (this.combatStatus === combatStatus) this.combatStatus = undefined;
+                });
+                this.bindNavigation(identity); return view;
+            },
+            prepare: async view => {
+                const baseline = await this.waitBaseline(identity);
+                view.apply(baseline); this.lastBaseline = baseline.stateSequence.toString(); this.nav.observeAuthority(baseline.navigationState);
+                const sequence = baseline.navigationState?.inputSequence;
+                if (Number.isInteger(sequence) && sequence >= 0 && sequence <= 0xffffffff) this.inputSequence = Math.max(this.inputSequence, sequence);
+                const player = baseline.entities.find((value: any) => value.entityHandle === entry.playerHandle);
+                if (!player) throw new Error('当前地图基线缺少玩家身份');
+                await view.prepareViewport(player.position);
+                if (!view.isMapReady) throw new Error('当前地图首视口尚未准备完成');
+                prime?.release(); prime = undefined;
+            },
+            acknowledge: view => {
+                if (!isCurrentEntry(identity) || session.entry !== entry || this.world !== view || !view.isMapReady
+                    || session.baseline?.sceneEpoch.toString() !== identity.scene.toString() || session.baseline?.baselineId.toString() !== identity.baseline.toString()) throw new StaleMapAttachmentError('旧地图准备不得确认新场景');
+                if (identity.travelId && !session.travel.acknowledge(identity)) throw new StaleMapAttachmentError('旅行附着确认代次已经变化');
+                session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId });
+            },
+        });
+        this.attachmentTask = task;
+        void task.then(() => {
+            if (!this.disposed && this.attachmentTarget === key && isCurrentEntry(identity)) {
+                this.attaching = false; this.showMapLoading(false); this.handleSessionUpdate();
+            }
+        }, error => {
+            prime?.release(); prime = undefined;
+            if (!this.disposed && this.attachmentTarget === key && isCurrentEntry(identity)) {
+                this.attaching = false; this.showMapLoading(false); this.setInputBarrier(true); this.error(error);
+            }
+        });
+        return task;
+    }
+
+    private waitBaseline(identity: AttachmentIdentity): Promise<any> {
+        const current = (): boolean => !this.disposed && isCurrentEntry(identity);
+        const valid = (): boolean => !!session.baseline && session.baseline.sceneEpoch.toString() === identity.scene.toString() && session.baseline.baselineId.toString() === identity.baseline.toString();
+        if (!current()) return Promise.reject(new StaleMapAttachmentError('等待基线的入场身份已失效'));
+        if (valid()) return Promise.resolve(session.baseline);
+        return new Promise((resolve, reject) => {
+            let finished = false;
+            const finish = (error?: Error): void => { if (finished) return; finished = true; clearTimeout(timer); session.update.delete(check); this.mapWaiters.delete(cancel); if (error) reject(error); else resolve(session.baseline); };
+            const cancel = (): void => finish(new StaleMapAttachmentError('地图基线等待已取消'));
+            const check = (): void => { if (!current()) finish(new StaleMapAttachmentError('旧基线等待已经失效')); else if (valid()) finish(); };
+            const timer = setTimeout(() => finish(new Error('等待场景基线超时')), 10000); session.update.add(check); this.mapWaiters.add(cancel);
+        });
+    }
+
+    private bindNavigation(identity: AttachmentIdentity): void {
+        this.releaseInput(); this.navigationUnsubscribe?.(); this.nav = new NavigationIntent(); this.nav.setInputBlocked(true);
+        const viewport = this.find('MapViewport');
+        viewport.getComponent(MapTouchNavigator)!.bind(this.nav, point => this.canSendInput() ? this.world!.screenToGrid(point, !this.aim) : null,
+            grid => this.canSendInput() && this.consumeGround(grid), grid => { if (this.canSendInput() && this.aim) this.world!.showAim(grid); });
+        this.joystick!.bind(this.nav);
+        this.navigationUnsubscribe = this.nav.subscribe((state, reason) => {
+            if (!this.canSendInput() || !isCurrentEntry(identity)) return;
+            if (reason === 'unreachable') {
+                const navigation = session.baseline?.navigationState;
+                this.messages?.navigationUnreachable(`${identity.role}:${identity.binding}:${identity.scene}:${navigation?.revision}:${navigation?.inputSequence}`);
+            } else if (reason === 'ground' && state.target) {
+                const inputSequence = ++this.inputSequence; this.nav.bindGroundInput(inputSequence);
+                session.connection.send(20006, { sceneEpoch: identity.scene, inputSequence, destination: state.target });
+            } else if (reason === 'release') session.connection.send(20006, { sceneEpoch: identity.scene, inputSequence: ++this.inputSequence, releaseJoystick: true });
+        });
+    }
+    private isWorldCurrent(): boolean { return !!this.attached && !!this.world && isCurrentEntry(this.attached) && this.world.sceneEpoch.toString() === this.attached.scene.toString(); }
+    private canSendInput(): boolean { return !this.disposed && !this.leaving && !this.attaching && !this.inputBarrier && session.ready && !session.travel?.blocksInput && this.isWorldCurrent(); }
+    private eventMatchesWorld(scene: { toString(): string }): boolean { return this.isWorldCurrent() && this.attached!.scene.toString() === scene.toString(); }
+    private setInputBarrier(blocked: boolean): void {
+        this.nav.setInputBlocked(blocked || this.leaving);
+        if (this.inputBarrier === blocked) return;
+        const map = this.find('MapViewport').getComponent(MapTouchNavigator)!, joystick = this.joystick;
+        if (!joystick) return;
+        if (blocked) { this.releaseInput(); this.inputEnabled = { map: map.enabled, joystick: joystick.enabled }; map.enabled = false; joystick.enabled = false; }
+        else { map.enabled = this.inputEnabled?.map ?? true; joystick.enabled = this.inputEnabled?.joystick ?? true; this.inputEnabled = null; }
+        this.inputBarrier = blocked;
+    }
+    private showMapLoading(visible: boolean, text = '', completed?: number, total?: number): void {
+        if (this.disposed) return; this.mapLoading = visible;
+        const node = this.node.getChildByName('Loading'); if (!node) return; node.active = visible;
+        if (text) { const label = node.getChildByName('Status')?.getComponent(Label); if (label) label.string = text; }
+        if (completed !== undefined && total !== undefined && total > 0) { const bar = node.getChildByName('Progress')?.getComponent(ProgressBar); if (bar) bar.progress = completed / total; }
+    }
+    private travelContext(): TravelContext {
+        const identity = currentEntryIdentity(), entry = session.entry;
+        const player = session.baseline?.entities.find((value: any) => value.entityHandle === entry?.playerHandle);
+        if (!identity || !entry || !player || !isCurrentEntry(identity)) throw new Error('旅行缺少当前角色与场景身份');
+        return { connection: identity.connection, binding: identity.binding, role: identity.role, scene: identity.scene, baseline: identity.baseline, life: player.life, rule: entry.resourceVersion };
+    }
+    private validateTravel(): void {
+        this.ensureNotLeaving();
+        if (!session.ready || !this.isWorldCurrent() || this.attaching) throw new Error('当前地图尚未就绪');
+        const player = session.baseline?.entities.find((value: any) => value.entityHandle === session.entry.playerHandle);
+        if (!player || player.hp.isZero()) throw new Error('角色存活时才能往返城镇');
+        if (this.economicBusy || this.unresolved || session.pending?.get(roleIdentity())) throw new Error('上一笔资产操作须先沿原身份核对');
+    }
+    private async travelMap(): Promise<void> {
+        if (session.travel.phase === 'uncertain' && this.travelSource) { await this.reconcileTravel(this.travelSource); return; }
+        this.validateTravel();
+        if (this.world!.gameplay.town_travel?.enabled !== true) throw new Error('城镇往返尚未开放');
+        if (session.travel.active) throw new Error('上一旅行计划尚未确定，请等待原计划状态或重新连接');
+        const source = this.travelContext(), entry = session.entry, id = Array.from(newOperationId(), byte => byte.toString(16).padStart(2, '0')).join('');
+        const destination = entry.sceneKind === 2 ? 2 : 1;
+        const scope = { id, generation: session.travel.begin(source, id, destination), ui: ++this.travelUiSequence };
+        const current = (): boolean => !this.disposed && this.travelUiSequence === scope.ui && session.travel.id === scope.id && session.travel.generation === scope.generation;
+        let prepared: typeof this.preparedTravel;
+        this.travelSource = source; this.travelDestination = destination;
+        this.releaseInput(); this.showMapLoading(true, '申请目标地图计划');
+        try {
+            const plan = await session.connection.request(20007, { sceneEpoch: entry.sceneEpoch, travelId: id, destination });
+            if (!current()) throw new StaleMapAttachmentError('旧旅行计划回调已经失效');
+            if (plan.phase !== undefined) throw new Error('服务端已终止或处理本次旅行计划');
+            session.travel.acceptPlan(plan, this.travelContext(), Date.now()); this.validateTravel();
+            const assets = await WorldAssets.prepare(session.role.job, (done, total) => {
+                if (current() && session.travel.active) this.showMapLoading(true, `准备目标资源 ${done}/${total}`, done, total);
+            }, plan.targetMapId);
+            const prime = new MapViewportPreparation(assets);
+            let valid = false;
+            try { valid = current() && session.travel.active && session.travel.matches(this.travelContext()); } catch { /* 原身份已丢失，仍须归还刚完成的资源。 */ }
+            if (!valid) { assets.dispose(); throw new StaleMapAttachmentError('旧旅行资源准备已经失效'); }
+            prepared = { id, assets, viewport: prime }; this.preparedTravel = prepared;
+            if ((assets.sourceMap ? 2 : 1) !== plan.targetSceneKind) throw new Error('旅行目标地图类型与资源不匹配');
+            const view = this.find('MapViewport').getComponent(UITransform)!, scale = this.world!.world.scale;
+            await prime.prepare(plan.position, view.width / scale.x, view.height / scale.y);
+            if (!current()) throw new StaleMapAttachmentError('旧旅行视口准备已经失效');
+            this.validateTravel(); session.travel.prepared(this.travelContext(), Date.now()); this.showMapLoading(false);
+            const accepted = await this.popup!.confirm('Confirm', destination === 1 ? '目标城镇资源已准备。确认前往城镇？原个人战斗现场将由服务端保留。' : '目标个人地图资源已准备。确认返回原战斗现场？', '地图往返');
+            if (!current()) throw new StaleMapAttachmentError('旧旅行确认已经失效');
+            if (!accepted) { await this.cancelTravel(id, source); return; }
+            this.validateTravel(); this.releaseInput(); session.travel.commit(this.travelContext(), Date.now()); this.setInputBarrier(true);
+            this.showMapLoading(true, '等待服务端收束并移交地图');
+            await session.connection.request(20009, { sceneEpoch: entry.sceneEpoch, travelId: id, cancel: false });
+            if (!current()) throw new StaleMapAttachmentError('旧旅行提交回调已经失效');
+            await this.waitTravel(id, source);
+        } catch (error) {
+            if (!current()) throw new StaleMapAttachmentError('旧旅行回调已经失效');
+            if (session.travel.active) {
+                if (session.travel.phase === 'planning' && error instanceof ProtocolResponseError) { session.travel.reset(); scope.id = session.travel.id; scope.generation = session.travel.generation; }
+                else if (session.travel.blocksInput) session.travel.uncertain();
+                else { try { await this.cancelTravel(id, source); } catch { if (current()) session.travel.uncertain(); } }
+            }
+            if (!current()) throw new StaleMapAttachmentError('旧旅行取消回调已经失效');
+            throw error;
+        } finally {
+            if (prepared && (!current() || !session.travel.blocksInput)) this.releasePreparedTravel(prepared);
+            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput); this.refreshGame(); }
+        }
+    }
+    private async cancelTravel(id: string, source: TravelContext): Promise<void> {
+        if (session.travel.id !== id || !session.travel.active) return;
+        if (!session.travel.sameConnection(source) || session.connection.generation !== source.connection || session.connection.binding.toString() !== source.binding.toString()
+            || session.entry?.sceneEpoch.toString() !== source.scene.toString() || roleIdentity() !== source.role) throw new StaleMapAttachmentError('旧旅行不得升级授权取消');
+        session.travel.cancelling();
+        const result = await session.connection.request(20009, { sceneEpoch: source.scene, travelId: id, cancel: true });
+        if (result.travelId !== id || ![3, 4].includes(result.phase)) throw new Error('旅行取消尚未由服务端确定');
+    }
+    private async reconcileTravel(source: TravelContext): Promise<void> {
+        const id = session.travel.id;
+        const scope = { id, generation: session.travel.generation, ui: ++this.travelUiSequence }, prepared = this.preparedTravel;
+        const current = (): boolean => !this.disposed && this.travelUiSequence === scope.ui && session.travel.id === scope.id && session.travel.generation === scope.generation;
+        if (!session.travel.sameConnection(source) || session.connection.generation !== source.connection || session.connection.binding.toString() !== source.binding.toString()) throw new StaleMapAttachmentError('旧旅行只能在原连接核对');
+        this.showMapLoading(true, '沿原旅行身份核对结果');
+        try {
+            if (!session.travel.blocksInput) {
+                // Prepare响应丢失时只用原id重查；服务端可返回原Plan或phase3/4终态。
+                if (!session.travel.plan) {
+                    try { await session.connection.request(20007, { sceneEpoch: source.scene, travelId: id, destination: this.travelDestination }); }
+                    catch (error) { if (current() && error instanceof ProtocolResponseError) { session.travel.reset(); scope.id = session.travel.id; scope.generation = session.travel.generation; } throw error; }
+                }
+                if (!current()) throw new StaleMapAttachmentError('旧旅行核对回调已经失效');
+                if (session.travel.active) await this.cancelTravel(id, source);
+            }
+            else { await session.connection.request(20009, { sceneEpoch: source.scene, travelId: id, cancel: false }); if (!current()) throw new StaleMapAttachmentError('旧旅行核对回调已经失效'); await this.waitTravel(id, source); }
+            if (!current()) throw new StaleMapAttachmentError('旧旅行核对结束已经失效');
+        } catch (error) {
+            if (!current()) throw new StaleMapAttachmentError('旧旅行核对已经失效');
+            throw error;
+        } finally {
+            if (prepared && (!current() || !session.travel.blocksInput)) this.releasePreparedTravel(prepared);
+            if (current()) { this.showMapLoading(false); this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput); this.refreshGame(); }
+        }
+    }
+    private waitTravel(id: string, source: TravelContext): Promise<void> {
+        const generation = session.travel.generation;
+        return new Promise((resolve, reject) => {
+            const finish = (error?: Error): void => { session.update.delete(check); this.mapWaiters.delete(cancel); if (error) reject(error); else resolve(); };
+            const cancel = (): void => finish(new StaleMapAttachmentError('旅行等待已取消'));
+            const check = (): void => {
+                if (this.disposed || session.connection.generation !== source.connection || session.connection.binding.toString() !== source.binding.toString() || session.travel.id !== id || session.travel.generation !== generation) finish(new StaleMapAttachmentError('旅行连接已变化'));
+                else if (session.travel.phase === 'complete' && session.ready && this.isWorldCurrent() && this.world!.isMapReady) finish();
+                else if (['cancelled', 'expired'].includes(session.travel.phase)) finish(new Error('服务端已取消或终止本次旅行'));
+            };
+            session.update.add(check); this.mapWaiters.add(cancel); check();
+        });
+    }
+    private releasePreparedTravel(owner?: NonNullable<typeof this.preparedTravel>): void {
+        const prepared = this.preparedTravel; if (!prepared || (owner && prepared !== owner)) return;
+        this.preparedTravel = undefined; prepared.viewport.release(); prepared.assets.dispose();
+    }
+
     private refreshGame(): void {
-        if (this.disposed || !this.world) return;
+        if (this.disposed || !this.world || !this.isWorldCurrent()) return;
         const baseline = session.baseline;
-        if (session.hosting) this.auto = session.hosting.autoBattleEnabled;
+        const town = session.entry?.sceneKind === 2;
+        if (town) this.auto = false;
+        else if (session.hosting) this.auto = session.hosting.autoBattleEnabled;
         if (baseline) this.count = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
         if (baseline && this.lastBaseline !== baseline.stateSequence.toString()) {
             this.lastBaseline = baseline.stateSequence.toString(); this.world.apply(baseline);
@@ -331,6 +594,11 @@ export class AppRoot extends Component {
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
         this.hud?.refresh(presentation);
+        this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !this.attaching;
+        this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !this.attaching;
+        const travel = this.find('BottomHUD/Footer/Map').getComponent(Button)!;
+        travel.interactable = (session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled);
+        this.text('BottomHUD/Footer/Map/Label', session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
         this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
         this.combatStatus?.refresh(baseline, session.ready);
         const player = baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
@@ -557,6 +825,7 @@ export class AppRoot extends Component {
         this.ensureNotLeaving();
         try {
             if (!session.ready) throw new Error('场景尚未就绪');
+            if (session.entry?.sceneKind === 2) throw new Error('城镇不刷怪，不能修改自动战斗和怪物数量');
             await session.connection.request(30004, { sceneEpoch: session.entry.sceneEpoch, enabled: this.auto, monsterCount: this.count });
         } finally {
             // Toggle会先翻转自身；拒绝或断线时也立即恢复服务端确认的状态。
@@ -602,7 +871,7 @@ export class AppRoot extends Component {
         // 先释放已有摇杆，再只对本次退出关闭新输入；普通资产等待不使用此屏障。
         this.releaseInput(); this.leaving = true; this.nav.setInputBlocked(true);
         try {
-            if (session.ready) {
+            if (session.ready && !session.travel?.blocksInput && !this.attaching && this.isWorldCurrent()) {
                 const entry = session.entry, binding = session.connection.binding.toString(), role = roleIdentity();
                 const ack = await session.connection.request(20006, { sceneEpoch: entry.sceneEpoch, inputSequence: ++this.inputSequence, cancelNavigation: true });
                 if (this.disposed || session.entry !== entry || session.connection.binding.toString() !== binding || roleIdentity() !== role
@@ -619,18 +888,18 @@ export class AppRoot extends Component {
             if (!hosting) await this.changeScene('RoleSelect'); else { session.connection.token = ''; await this.changeScene('Login'); }
         } finally {
             // 切换成功后Creator会销毁旧组件并清空字段；只有留在原场景时才恢复输入。
-            if (!this.disposed) { this.leaving = false; this.nav.setInputBlocked(false); }
+            if (!this.disposed) { this.leaving = false; this.nav.setInputBlocked(this.inputBarrier); }
         }
     }
 
-    private ensureNotLeaving(): void { if (this.leaving) throw new Error('正在等待退出确认，请稍后操作'); }
+    private ensureNotLeaving(): void { if (this.leaving || this.attaching || session.travel?.blocksInput) throw new Error('正在等待退出或地图附着确认，请稍后操作'); }
 
     private async changeScene(name: string): Promise<void> { try { await session.scenes!.switchTo(name); } catch (error) { this.error(error); } }
     private find(path: string): Node { const value = this.node.getChildByPath(`Safe/${path}`); if (!value) throw new Error(`场景缺少已保存引用：${path}`); return value; }
     private edit(path: string): EditBox { return this.find(path).getComponent(EditBox)!; }
     private text(path: string, value: string): void { const label = this.find(path).getComponent(Label); if (label) label.string = value; }
     private status(message: string): void { if (this.disposed) return; const label = this.node.getChildByPath('Safe/Status')?.getComponent(Label); if (label) label.string = message; }
-    private error(error: unknown): void { if (this.disposed) return; const message = error instanceof Error ? error.message : String(error); session.lastError = message; this.status(message); }
+    private error(error: unknown): void { if (this.disposed || (error instanceof Error && (error as StaleMapAttachmentError).staleMapAttachment === true)) return; const message = error instanceof Error ? error.message : String(error); session.lastError = message; this.status(message); }
     private button(path: string, action: () => unknown, eventType: string = Button.EventType.CLICK): void {
         const node = this.find(path); const handler = (): void => {
             traceInput({ event: 'button', path, event_type: eventType, blocked: this.uiActionBusy || this.leaving });

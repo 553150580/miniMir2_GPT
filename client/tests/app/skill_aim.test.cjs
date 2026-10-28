@@ -29,12 +29,13 @@ function app(){
         base_cost:3,level_cost:2,cast_ms:600,impact_base_ms:500,projectile_ms_per_cell:0,accuracy_per_level:0});
     const definitions=[definition(1,'fireball','enemy_entity'),definition(11,'thunderbolt','enemy_entity'),definition(23,'firebang','enemy_grid')];
     const sent=[],shown=[];
-    const session={ready:true,role:{job:1},entry:{sceneEpoch:'1',resourceVersion:'5',playerHandle:1},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
-        baseline:{entities:[{entityHandle:1,entityKind:1,hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,hp:'100',position:{x:4,y:4},direction:0}]},connection:{send:(id,value)=>sent.push({id,value})}};
+    const identity={connection:1,binding:'1',role:'roleA',scene:'1',baseline:'1',map:'1',travelId:''};
+    const session={ready:true,travel:{active:false,blocksInput:false},role:{job:1},entry:{sceneEpoch:'1',baselineId:'1',roomId:'1',sceneKind:1,resourceVersion:'5',playerHandle:1},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
+        baseline:{entities:[{entityHandle:1,entityKind:1,hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,hp:'100',position:{x:4,y:4},direction:0}]},connection:{generation:1,binding:Long.UONE,connected:true,send:(id,value)=>sent.push({id,value})}};
     const {AppRoot}=load(path.join(root,'client/assets/scripts/app/AppRoot.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{}}
-        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
+        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',currentEntryIdentity:()=>identity,isCurrentEntry:value=>value===identity&&session.entry.sceneEpoch.toString()===identity.scene,operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
     const instance=new AppRoot(),saved={active:false,getComponent:()=>({string:''})};
-    instance.world={gameplay:{skills:definitions,items:[]},map:{width:16,height:16},showAim:value=>shown.push(value)};instance.ui={top:null};instance.find=()=>saved;instance.error=error=>{throw error;};
+    instance.attached=identity;instance.world={sceneEpoch:'1',isMapReady:true,gameplay:{skills:definitions,items:[]},map:{width:16,height:16},showAim:value=>shown.push(value)};instance.ui={top:null};instance.find=()=>saved;instance.error=error=>{throw error;};
     const row=id=>models.skillRows(instance.skillSnapshot()).find(row=>row.definition.id===id);
     return {instance,session,sent,shown,row,definitions,definition};
 }

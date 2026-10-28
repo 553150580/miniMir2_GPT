@@ -2066,6 +2066,468 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a MapTravelPrepare.
+         * @deprecated Use minimir.v1.MapTravelPrepare.$Properties instead.
+         */
+        interface IMapTravelPrepare extends minimir.v1.MapTravelPrepare.$Properties {
+        }
+
+        /** Represents a MapTravelPrepare. */
+        class MapTravelPrepare {
+
+            /**
+             * Constructs a new MapTravelPrepare.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MapTravelPrepare.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MapTravelPrepare scene_epoch. */
+            scene_epoch: Long;
+
+            /** MapTravelPrepare travel_id. */
+            travel_id: string;
+
+            /** MapTravelPrepare destination. */
+            destination: number;
+
+            /**
+             * Creates a new MapTravelPrepare instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MapTravelPrepare instance
+             */
+            static create(properties: minimir.v1.MapTravelPrepare.$Shape): minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape;
+            static create(properties?: minimir.v1.MapTravelPrepare.$Properties): minimir.v1.MapTravelPrepare;
+
+            /**
+             * Encodes the specified MapTravelPrepare message. Does not implicitly {@link minimir.v1.MapTravelPrepare.verify|verify} messages.
+             * @param message MapTravelPrepare message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MapTravelPrepare.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MapTravelPrepare message, length delimited. Does not implicitly {@link minimir.v1.MapTravelPrepare.verify|verify} messages.
+             * @param message MapTravelPrepare message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MapTravelPrepare.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MapTravelPrepare message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape} MapTravelPrepare
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape;
+
+            /**
+             * Decodes a MapTravelPrepare message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape} MapTravelPrepare
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape;
+
+            /**
+             * Verifies a MapTravelPrepare message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MapTravelPrepare
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MapTravelPrepare {
+
+            /** Properties of a MapTravelPrepare. */
+            interface $Properties {
+
+                /** MapTravelPrepare scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MapTravelPrepare travel_id */
+                travel_id?: (string|null);
+
+                /** MapTravelPrepare destination */
+                destination?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MapTravelPrepare. */
+            type $Shape = minimir.v1.MapTravelPrepare.$Properties;
+        }
+
+        /**
+         * Properties of a MapTravelPlan.
+         * @deprecated Use minimir.v1.MapTravelPlan.$Properties instead.
+         */
+        interface IMapTravelPlan extends minimir.v1.MapTravelPlan.$Properties {
+        }
+
+        /** Represents a MapTravelPlan. */
+        class MapTravelPlan {
+
+            /**
+             * Constructs a new MapTravelPlan.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MapTravelPlan.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MapTravelPlan travel_id. */
+            travel_id: string;
+
+            /** MapTravelPlan from_scene_epoch. */
+            from_scene_epoch: Long;
+
+            /** MapTravelPlan target_map_id. */
+            target_map_id: Long;
+
+            /** MapTravelPlan target_scene_kind. */
+            target_scene_kind: number;
+
+            /** MapTravelPlan position. */
+            position?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** MapTravelPlan expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /**
+             * Creates a new MapTravelPlan instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MapTravelPlan instance
+             */
+            static create(properties: minimir.v1.MapTravelPlan.$Shape): minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape;
+            static create(properties?: minimir.v1.MapTravelPlan.$Properties): minimir.v1.MapTravelPlan;
+
+            /**
+             * Encodes the specified MapTravelPlan message. Does not implicitly {@link minimir.v1.MapTravelPlan.verify|verify} messages.
+             * @param message MapTravelPlan message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MapTravelPlan.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MapTravelPlan message, length delimited. Does not implicitly {@link minimir.v1.MapTravelPlan.verify|verify} messages.
+             * @param message MapTravelPlan message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MapTravelPlan.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MapTravelPlan message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape} MapTravelPlan
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape;
+
+            /**
+             * Decodes a MapTravelPlan message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape} MapTravelPlan
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape;
+
+            /**
+             * Verifies a MapTravelPlan message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MapTravelPlan
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MapTravelPlan {
+
+            /** Properties of a MapTravelPlan. */
+            interface $Properties {
+
+                /** MapTravelPlan travel_id */
+                travel_id?: (string|null);
+
+                /** MapTravelPlan from_scene_epoch */
+                from_scene_epoch?: (Long|null);
+
+                /** MapTravelPlan target_map_id */
+                target_map_id?: (Long|null);
+
+                /** MapTravelPlan target_scene_kind */
+                target_scene_kind?: (number|null);
+
+                /** MapTravelPlan position */
+                position?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** MapTravelPlan expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MapTravelPlan. */
+            type $Shape = minimir.v1.MapTravelPlan.$Properties;
+        }
+
+        /**
+         * Properties of a MapTravelCommit.
+         * @deprecated Use minimir.v1.MapTravelCommit.$Properties instead.
+         */
+        interface IMapTravelCommit extends minimir.v1.MapTravelCommit.$Properties {
+        }
+
+        /** Represents a MapTravelCommit. */
+        class MapTravelCommit {
+
+            /**
+             * Constructs a new MapTravelCommit.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MapTravelCommit.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MapTravelCommit scene_epoch. */
+            scene_epoch: Long;
+
+            /** MapTravelCommit travel_id. */
+            travel_id: string;
+
+            /** MapTravelCommit cancel. */
+            cancel: boolean;
+
+            /**
+             * Creates a new MapTravelCommit instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MapTravelCommit instance
+             */
+            static create(properties: minimir.v1.MapTravelCommit.$Shape): minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape;
+            static create(properties?: minimir.v1.MapTravelCommit.$Properties): minimir.v1.MapTravelCommit;
+
+            /**
+             * Encodes the specified MapTravelCommit message. Does not implicitly {@link minimir.v1.MapTravelCommit.verify|verify} messages.
+             * @param message MapTravelCommit message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MapTravelCommit.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MapTravelCommit message, length delimited. Does not implicitly {@link minimir.v1.MapTravelCommit.verify|verify} messages.
+             * @param message MapTravelCommit message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MapTravelCommit.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MapTravelCommit message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape} MapTravelCommit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape;
+
+            /**
+             * Decodes a MapTravelCommit message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape} MapTravelCommit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape;
+
+            /**
+             * Verifies a MapTravelCommit message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MapTravelCommit
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MapTravelCommit {
+
+            /** Properties of a MapTravelCommit. */
+            interface $Properties {
+
+                /** MapTravelCommit scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MapTravelCommit travel_id */
+                travel_id?: (string|null);
+
+                /** MapTravelCommit cancel */
+                cancel?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MapTravelCommit. */
+            type $Shape = minimir.v1.MapTravelCommit.$Properties;
+        }
+
+        /**
+         * Properties of a MapTravelState.
+         * @deprecated Use minimir.v1.MapTravelState.$Properties instead.
+         */
+        interface IMapTravelState extends minimir.v1.MapTravelState.$Properties {
+        }
+
+        /** Represents a MapTravelState. */
+        class MapTravelState {
+
+            /**
+             * Constructs a new MapTravelState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.MapTravelState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** MapTravelState travel_id. */
+            travel_id: string;
+
+            /** MapTravelState from_scene_epoch. */
+            from_scene_epoch: Long;
+
+            /** MapTravelState scene_epoch. */
+            scene_epoch: Long;
+
+            /** MapTravelState phase. */
+            phase: number;
+
+            /** MapTravelState target_map_id. */
+            target_map_id: Long;
+
+            /**
+             * Creates a new MapTravelState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns MapTravelState instance
+             */
+            static create(properties: minimir.v1.MapTravelState.$Shape): minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape;
+            static create(properties?: minimir.v1.MapTravelState.$Properties): minimir.v1.MapTravelState;
+
+            /**
+             * Encodes the specified MapTravelState message. Does not implicitly {@link minimir.v1.MapTravelState.verify|verify} messages.
+             * @param message MapTravelState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.MapTravelState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified MapTravelState message, length delimited. Does not implicitly {@link minimir.v1.MapTravelState.verify|verify} messages.
+             * @param message MapTravelState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.MapTravelState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a MapTravelState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape} MapTravelState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape;
+
+            /**
+             * Decodes a MapTravelState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape} MapTravelState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape;
+
+            /**
+             * Verifies a MapTravelState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for MapTravelState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace MapTravelState {
+
+            /** Properties of a MapTravelState. */
+            interface $Properties {
+
+                /** MapTravelState travel_id */
+                travel_id?: (string|null);
+
+                /** MapTravelState from_scene_epoch */
+                from_scene_epoch?: (Long|null);
+
+                /** MapTravelState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** MapTravelState phase */
+                phase?: (number|null);
+
+                /** MapTravelState target_map_id */
+                target_map_id?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a MapTravelState. */
+            type $Shape = minimir.v1.MapTravelState.$Properties;
+        }
+
+        /**
          * Properties of a SyncReady.
          * @deprecated Use minimir.v1.SyncReady.$Properties instead.
          */
@@ -3038,6 +3500,9 @@ export namespace minimir {
             /** SceneBaselineChunk navigation_state. */
             navigation_state?: (minimir.v1.NavigationState.$Properties|null);
 
+            /** SceneBaselineChunk safe_zone_id. */
+            safe_zone_id: Long;
+
             /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @param [properties] Properties to set
@@ -3124,6 +3589,9 @@ export namespace minimir {
 
                 /** SceneBaselineChunk navigation_state */
                 navigation_state?: (minimir.v1.NavigationState.$Properties|null);
+
+                /** SceneBaselineChunk safe_zone_id */
+                safe_zone_id?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

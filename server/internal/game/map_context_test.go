@@ -43,7 +43,17 @@ func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
 		}
 	}
 	town.Player.Pos = devconfig.Point{X: 633, Y: 613}
-	w.move(town, &town.Player, devconfig.Point{X: 633, Y: 614}, time.Now(), 600)
+	town.Player.Handle, town.Scene, town.Ready, town.Conn = 1, 3, true, &capturedConnection{}
+	w.e.workers = []*worker{w}
+	if err := w.e.initializeTownNavigation(); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < 3 && town.Player.Pos != (devconfig.Point{X: 633, Y: 614}); i++ {
+		now := time.Now().Add(time.Duration(i) * time.Second)
+		w.beginTownNavigationTick(now)
+		w.move(town, &town.Player, devconfig.Point{X: 633, Y: 614}, now, 600)
+		w.endTownNavigationTick()
+	}
 	if town.Player.Pos != (devconfig.Point{X: 633, Y: 614}) {
 		t.Fatal("来源原坐标未能普通行走，或被裁成17×17")
 	}

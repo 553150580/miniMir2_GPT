@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "compared_against": "outputs/source-town-foundation-20261029/resources/artifact-inventory.json",
+  "json_png_files": 6572,
+  "total_bytes": 73738669,
+  "all_bytes_unchanged": true,
+  "manifest_sha256": "07774060885769d5dbbf057ecaf70a4cc1e368fa20317d2d5f3839b3a7c754e4"
+}

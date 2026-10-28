@@ -137,3 +137,10 @@ test('一次满包错误的订阅与请求回执不重复刷屏，旧两种文�
     log.observe(state({ lastError: '连接已关闭' }));
     assert.equal(log.messages.at(-1).message, '连接已关闭');
 });
+
+test('无法到达消息按原导航身份去重，切角清理去重状态，不冒充已到达',()=>{
+    const log=new SystemMessageLog();log.observe(state());assert.equal(log.navigationUnreachable('role:binding:scene:revision:input'),true);
+    assert.equal(log.navigationUnreachable('role:binding:scene:revision:input'),false);assert.equal(log.navigationUnreachable(''),false);
+    assert.equal(log.messages.at(-1).message,'当前无法到达该位置');assert.equal(log.messages.filter(value=>value.title==='导航').length,1);
+    log.observe(state({roleIdentity:'1:role-b'}));assert.equal(log.navigationUnreachable('role:binding:scene:revision:input'),true);
+});

@@ -1,0 +1,12 @@
+{
+  "task": "client-build",
+  "command": [
+    "python3",
+    "tools/client/build.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T18:52:56.862978+00:00",
+  "finished_at": "2026-10-28T18:54:46.538892+00:00",
+  "output": ".work/town-travel-20261029/checks/client-build-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

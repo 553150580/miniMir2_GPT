@@ -1,0 +1,1 @@
+{"server": "D:\\A_Claude\\miniMir2_GPT\\server\\internal\\protocol", "client": "D:\\A_Claude\\miniMir2_GPT\\client\\assets\\scripts\\generated", "implementation_status": "generated_constants_only"}

@@ -226,6 +226,288 @@ func (x *EnterWorldAck) GetBaselineId() uint64 {
 	return 0
 }
 
+// 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
+type MapTravelPrepare struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	TravelId      string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	Destination   uint32                 `protobuf:"varint,3,opt,name=destination,proto3" json:"destination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MapTravelPrepare) Reset() {
+	*x = MapTravelPrepare{}
+	mi := &file_world_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapTravelPrepare) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapTravelPrepare) ProtoMessage() {}
+
+func (x *MapTravelPrepare) ProtoReflect() protoreflect.Message {
+	mi := &file_world_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapTravelPrepare.ProtoReflect.Descriptor instead.
+func (*MapTravelPrepare) Descriptor() ([]byte, []int) {
+	return file_world_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *MapTravelPrepare) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *MapTravelPrepare) GetTravelId() string {
+	if x != nil {
+		return x.TravelId
+	}
+	return ""
+}
+
+func (x *MapTravelPrepare) GetDestination() uint32 {
+	if x != nil {
+		return x.Destination
+	}
+	return 0
+}
+
+type MapTravelPlan struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	TravelId        string                 `protobuf:"bytes,1,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	FromSceneEpoch  uint64                 `protobuf:"varint,2,opt,name=from_scene_epoch,json=fromSceneEpoch,proto3" json:"from_scene_epoch,omitempty"`
+	TargetMapId     uint64                 `protobuf:"varint,3,opt,name=target_map_id,json=targetMapId,proto3" json:"target_map_id,omitempty"`
+	TargetSceneKind uint32                 `protobuf:"varint,4,opt,name=target_scene_kind,json=targetSceneKind,proto3" json:"target_scene_kind,omitempty"`
+	Position        *GridPoint             `protobuf:"bytes,5,opt,name=position,proto3" json:"position,omitempty"`
+	ExpiresAtUnixMs int64                  `protobuf:"varint,6,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *MapTravelPlan) Reset() {
+	*x = MapTravelPlan{}
+	mi := &file_world_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapTravelPlan) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapTravelPlan) ProtoMessage() {}
+
+func (x *MapTravelPlan) ProtoReflect() protoreflect.Message {
+	mi := &file_world_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapTravelPlan.ProtoReflect.Descriptor instead.
+func (*MapTravelPlan) Descriptor() ([]byte, []int) {
+	return file_world_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *MapTravelPlan) GetTravelId() string {
+	if x != nil {
+		return x.TravelId
+	}
+	return ""
+}
+
+func (x *MapTravelPlan) GetFromSceneEpoch() uint64 {
+	if x != nil {
+		return x.FromSceneEpoch
+	}
+	return 0
+}
+
+func (x *MapTravelPlan) GetTargetMapId() uint64 {
+	if x != nil {
+		return x.TargetMapId
+	}
+	return 0
+}
+
+func (x *MapTravelPlan) GetTargetSceneKind() uint32 {
+	if x != nil {
+		return x.TargetSceneKind
+	}
+	return 0
+}
+
+func (x *MapTravelPlan) GetPosition() *GridPoint {
+	if x != nil {
+		return x.Position
+	}
+	return nil
+}
+
+func (x *MapTravelPlan) GetExpiresAtUnixMs() int64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+type MapTravelCommit struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	TravelId      string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	Cancel        bool                   `protobuf:"varint,3,opt,name=cancel,proto3" json:"cancel,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MapTravelCommit) Reset() {
+	*x = MapTravelCommit{}
+	mi := &file_world_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapTravelCommit) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapTravelCommit) ProtoMessage() {}
+
+func (x *MapTravelCommit) ProtoReflect() protoreflect.Message {
+	mi := &file_world_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapTravelCommit.ProtoReflect.Descriptor instead.
+func (*MapTravelCommit) Descriptor() ([]byte, []int) {
+	return file_world_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *MapTravelCommit) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *MapTravelCommit) GetTravelId() string {
+	if x != nil {
+		return x.TravelId
+	}
+	return ""
+}
+
+func (x *MapTravelCommit) GetCancel() bool {
+	if x != nil {
+		return x.Cancel
+	}
+	return false
+}
+
+// 1收束旧事件、2已移交、3已取消、4已过期；提交后不能由取消回滚世界。
+type MapTravelState struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	TravelId       string                 `protobuf:"bytes,1,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	FromSceneEpoch uint64                 `protobuf:"varint,2,opt,name=from_scene_epoch,json=fromSceneEpoch,proto3" json:"from_scene_epoch,omitempty"`
+	SceneEpoch     uint64                 `protobuf:"varint,3,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	Phase          uint32                 `protobuf:"varint,4,opt,name=phase,proto3" json:"phase,omitempty"`
+	TargetMapId    uint64                 `protobuf:"varint,5,opt,name=target_map_id,json=targetMapId,proto3" json:"target_map_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MapTravelState) Reset() {
+	*x = MapTravelState{}
+	mi := &file_world_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapTravelState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapTravelState) ProtoMessage() {}
+
+func (x *MapTravelState) ProtoReflect() protoreflect.Message {
+	mi := &file_world_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MapTravelState.ProtoReflect.Descriptor instead.
+func (*MapTravelState) Descriptor() ([]byte, []int) {
+	return file_world_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *MapTravelState) GetTravelId() string {
+	if x != nil {
+		return x.TravelId
+	}
+	return ""
+}
+
+func (x *MapTravelState) GetFromSceneEpoch() uint64 {
+	if x != nil {
+		return x.FromSceneEpoch
+	}
+	return 0
+}
+
+func (x *MapTravelState) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *MapTravelState) GetPhase() uint32 {
+	if x != nil {
+		return x.Phase
+	}
+	return 0
+}
+
+func (x *MapTravelState) GetTargetMapId() uint64 {
+	if x != nil {
+		return x.TargetMapId
+	}
+	return 0
+}
+
 // 仅在当前场景基线ACK验证成功后发送，客户端据此恢复经济命令序号。
 type SyncReady struct {
 	state                  protoimpl.MessageState `protogen:"open.v1"`
@@ -238,7 +520,7 @@ type SyncReady struct {
 
 func (x *SyncReady) Reset() {
 	*x = SyncReady{}
-	mi := &file_world_proto_msgTypes[3]
+	mi := &file_world_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -250,7 +532,7 @@ func (x *SyncReady) String() string {
 func (*SyncReady) ProtoMessage() {}
 
 func (x *SyncReady) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[3]
+	mi := &file_world_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -263,7 +545,7 @@ func (x *SyncReady) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SyncReady.ProtoReflect.Descriptor instead.
 func (*SyncReady) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{3}
+	return file_world_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SyncReady) GetSceneEpoch() uint64 {
@@ -323,7 +605,7 @@ type EntityState struct {
 
 func (x *EntityState) Reset() {
 	*x = EntityState{}
-	mi := &file_world_proto_msgTypes[4]
+	mi := &file_world_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -335,7 +617,7 @@ func (x *EntityState) String() string {
 func (*EntityState) ProtoMessage() {}
 
 func (x *EntityState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[4]
+	mi := &file_world_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -348,7 +630,7 @@ func (x *EntityState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntityState.ProtoReflect.Descriptor instead.
 func (*EntityState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{4}
+	return file_world_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *EntityState) GetEntityHandle() uint32 {
@@ -531,7 +813,7 @@ type EntityDisplacement struct {
 
 func (x *EntityDisplacement) Reset() {
 	*x = EntityDisplacement{}
-	mi := &file_world_proto_msgTypes[5]
+	mi := &file_world_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -543,7 +825,7 @@ func (x *EntityDisplacement) String() string {
 func (*EntityDisplacement) ProtoMessage() {}
 
 func (x *EntityDisplacement) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[5]
+	mi := &file_world_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -556,7 +838,7 @@ func (x *EntityDisplacement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntityDisplacement.ProtoReflect.Descriptor instead.
 func (*EntityDisplacement) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{5}
+	return file_world_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *EntityDisplacement) GetSceneEpoch() uint64 {
@@ -662,7 +944,7 @@ type NavigationState struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	InputSequence uint32                 `protobuf:"varint,1,opt,name=input_sequence,json=inputSequence,proto3" json:"input_sequence,omitempty"`
 	Destination   *GridPoint             `protobuf:"bytes,2,opt,name=destination,proto3" json:"destination,omitempty"`
-	// 0无目标、1进行中、2已到达、3玩家主动方向接管、4显式取消；仍保留原目标格。
+	// 0无目标、1进行中、2已到达、3玩家主动方向接管、4显式取消、5本次不可达或预算终止；仍保留原目标格。
 	Status uint32 `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
 	// 目标身份只在新地面目标被接受时推进；健康重入输入序号从0开始，此身份不重置。
 	Revision      uint64 `protobuf:"varint,4,opt,name=revision,proto3" json:"revision,omitempty"`
@@ -672,7 +954,7 @@ type NavigationState struct {
 
 func (x *NavigationState) Reset() {
 	*x = NavigationState{}
-	mi := &file_world_proto_msgTypes[6]
+	mi := &file_world_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -684,7 +966,7 @@ func (x *NavigationState) String() string {
 func (*NavigationState) ProtoMessage() {}
 
 func (x *NavigationState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[6]
+	mi := &file_world_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -697,7 +979,7 @@ func (x *NavigationState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use NavigationState.ProtoReflect.Descriptor instead.
 func (*NavigationState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{6}
+	return file_world_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *NavigationState) GetInputSequence() uint32 {
@@ -745,7 +1027,7 @@ type EntityStatusState struct {
 
 func (x *EntityStatusState) Reset() {
 	*x = EntityStatusState{}
-	mi := &file_world_proto_msgTypes[7]
+	mi := &file_world_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -757,7 +1039,7 @@ func (x *EntityStatusState) String() string {
 func (*EntityStatusState) ProtoMessage() {}
 
 func (x *EntityStatusState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[7]
+	mi := &file_world_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -770,7 +1052,7 @@ func (x *EntityStatusState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntityStatusState.ProtoReflect.Descriptor instead.
 func (*EntityStatusState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{7}
+	return file_world_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *EntityStatusState) GetStatusId() uint32 {
@@ -858,7 +1140,7 @@ type CombatAttributes struct {
 
 func (x *CombatAttributes) Reset() {
 	*x = CombatAttributes{}
-	mi := &file_world_proto_msgTypes[8]
+	mi := &file_world_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -870,7 +1152,7 @@ func (x *CombatAttributes) String() string {
 func (*CombatAttributes) ProtoMessage() {}
 
 func (x *CombatAttributes) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[8]
+	mi := &file_world_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -883,7 +1165,7 @@ func (x *CombatAttributes) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CombatAttributes.ProtoReflect.Descriptor instead.
 func (*CombatAttributes) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{8}
+	return file_world_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *CombatAttributes) GetPhysicalAttackMin() int64 {
@@ -987,13 +1269,15 @@ type SceneBaselineChunk struct {
 	Entities        []*EntityState         `protobuf:"bytes,6,rep,name=entities,proto3" json:"entities,omitempty"`
 	SkillModeState  *SkillModeState        `protobuf:"bytes,7,opt,name=skill_mode_state,json=skillModeState,proto3" json:"skill_mode_state,omitempty"`
 	NavigationState *NavigationState       `protobuf:"bytes,8,opt,name=navigation_state,json=navigationState,proto3" json:"navigation_state,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// 当前角色原格对应的来源安全区；0表示区外。仅观察，不授予免疫或永久绑定。
+	SafeZoneId    uint64 `protobuf:"varint,9,opt,name=safe_zone_id,json=safeZoneId,proto3" json:"safe_zone_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SceneBaselineChunk) Reset() {
 	*x = SceneBaselineChunk{}
-	mi := &file_world_proto_msgTypes[9]
+	mi := &file_world_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1005,7 +1289,7 @@ func (x *SceneBaselineChunk) String() string {
 func (*SceneBaselineChunk) ProtoMessage() {}
 
 func (x *SceneBaselineChunk) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[9]
+	mi := &file_world_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1018,7 +1302,7 @@ func (x *SceneBaselineChunk) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SceneBaselineChunk.ProtoReflect.Descriptor instead.
 func (*SceneBaselineChunk) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{9}
+	return file_world_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *SceneBaselineChunk) GetSceneEpoch() uint64 {
@@ -1077,6 +1361,13 @@ func (x *SceneBaselineChunk) GetNavigationState() *NavigationState {
 	return nil
 }
 
+func (x *SceneBaselineChunk) GetSafeZoneId() uint64 {
+	if x != nil {
+		return x.SafeZoneId
+	}
+	return 0
+}
+
 type MoveIntent struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	SceneEpoch      uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
@@ -1093,7 +1384,7 @@ type MoveIntent struct {
 
 func (x *MoveIntent) Reset() {
 	*x = MoveIntent{}
-	mi := &file_world_proto_msgTypes[10]
+	mi := &file_world_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1105,7 +1396,7 @@ func (x *MoveIntent) String() string {
 func (*MoveIntent) ProtoMessage() {}
 
 func (x *MoveIntent) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[10]
+	mi := &file_world_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1118,7 +1409,7 @@ func (x *MoveIntent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MoveIntent.ProtoReflect.Descriptor instead.
 func (*MoveIntent) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{10}
+	return file_world_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *MoveIntent) GetSceneEpoch() uint64 {
@@ -1177,7 +1468,7 @@ type CastIntent struct {
 
 func (x *CastIntent) Reset() {
 	*x = CastIntent{}
-	mi := &file_world_proto_msgTypes[11]
+	mi := &file_world_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1189,7 +1480,7 @@ func (x *CastIntent) String() string {
 func (*CastIntent) ProtoMessage() {}
 
 func (x *CastIntent) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[11]
+	mi := &file_world_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1202,7 +1493,7 @@ func (x *CastIntent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CastIntent.ProtoReflect.Descriptor instead.
 func (*CastIntent) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{11}
+	return file_world_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *CastIntent) GetSceneEpoch() uint64 {
@@ -1260,7 +1551,7 @@ type AttackIntent struct {
 
 func (x *AttackIntent) Reset() {
 	*x = AttackIntent{}
-	mi := &file_world_proto_msgTypes[12]
+	mi := &file_world_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1272,7 +1563,7 @@ func (x *AttackIntent) String() string {
 func (*AttackIntent) ProtoMessage() {}
 
 func (x *AttackIntent) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[12]
+	mi := &file_world_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1285,7 +1576,7 @@ func (x *AttackIntent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AttackIntent.ProtoReflect.Descriptor instead.
 func (*AttackIntent) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{12}
+	return file_world_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *AttackIntent) GetSceneEpoch() uint64 {
@@ -1328,7 +1619,7 @@ type SkillModeIntent struct {
 
 func (x *SkillModeIntent) Reset() {
 	*x = SkillModeIntent{}
-	mi := &file_world_proto_msgTypes[13]
+	mi := &file_world_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1340,7 +1631,7 @@ func (x *SkillModeIntent) String() string {
 func (*SkillModeIntent) ProtoMessage() {}
 
 func (x *SkillModeIntent) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[13]
+	mi := &file_world_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1353,7 +1644,7 @@ func (x *SkillModeIntent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillModeIntent.ProtoReflect.Descriptor instead.
 func (*SkillModeIntent) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{13}
+	return file_world_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *SkillModeIntent) GetSceneEpoch() uint64 {
@@ -1397,7 +1688,7 @@ type SkillModeEntry struct {
 
 func (x *SkillModeEntry) Reset() {
 	*x = SkillModeEntry{}
-	mi := &file_world_proto_msgTypes[14]
+	mi := &file_world_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1409,7 +1700,7 @@ func (x *SkillModeEntry) String() string {
 func (*SkillModeEntry) ProtoMessage() {}
 
 func (x *SkillModeEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[14]
+	mi := &file_world_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1422,7 +1713,7 @@ func (x *SkillModeEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillModeEntry.ProtoReflect.Descriptor instead.
 func (*SkillModeEntry) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{14}
+	return file_world_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *SkillModeEntry) GetSkillId() uint32 {
@@ -1474,7 +1765,7 @@ type SkillModeState struct {
 
 func (x *SkillModeState) Reset() {
 	*x = SkillModeState{}
-	mi := &file_world_proto_msgTypes[15]
+	mi := &file_world_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1486,7 +1777,7 @@ func (x *SkillModeState) String() string {
 func (*SkillModeState) ProtoMessage() {}
 
 func (x *SkillModeState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[15]
+	mi := &file_world_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1499,7 +1790,7 @@ func (x *SkillModeState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SkillModeState.ProtoReflect.Descriptor instead.
 func (*SkillModeState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{15}
+	return file_world_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *SkillModeState) GetSceneEpoch() uint64 {
@@ -1555,7 +1846,7 @@ type CastStep struct {
 
 func (x *CastStep) Reset() {
 	*x = CastStep{}
-	mi := &file_world_proto_msgTypes[16]
+	mi := &file_world_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1567,7 +1858,7 @@ func (x *CastStep) String() string {
 func (*CastStep) ProtoMessage() {}
 
 func (x *CastStep) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[16]
+	mi := &file_world_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1580,7 +1871,7 @@ func (x *CastStep) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CastStep.ProtoReflect.Descriptor instead.
 func (*CastStep) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{16}
+	return file_world_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *CastStep) GetSceneEpoch() uint64 {
@@ -1668,7 +1959,7 @@ type CastAccepted struct {
 
 func (x *CastAccepted) Reset() {
 	*x = CastAccepted{}
-	mi := &file_world_proto_msgTypes[17]
+	mi := &file_world_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1680,7 +1971,7 @@ func (x *CastAccepted) String() string {
 func (*CastAccepted) ProtoMessage() {}
 
 func (x *CastAccepted) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[17]
+	mi := &file_world_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1693,7 +1984,7 @@ func (x *CastAccepted) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CastAccepted.ProtoReflect.Descriptor instead.
 func (*CastAccepted) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{17}
+	return file_world_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *CastAccepted) GetSceneEpoch() uint64 {
@@ -1809,7 +2100,7 @@ type AttackAccepted struct {
 
 func (x *AttackAccepted) Reset() {
 	*x = AttackAccepted{}
-	mi := &file_world_proto_msgTypes[18]
+	mi := &file_world_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1821,7 +2112,7 @@ func (x *AttackAccepted) String() string {
 func (*AttackAccepted) ProtoMessage() {}
 
 func (x *AttackAccepted) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[18]
+	mi := &file_world_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1834,7 +2125,7 @@ func (x *AttackAccepted) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AttackAccepted.ProtoReflect.Descriptor instead.
 func (*AttackAccepted) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{18}
+	return file_world_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *AttackAccepted) GetSceneEpoch() uint64 {
@@ -1949,7 +2240,7 @@ type CombatImpact struct {
 
 func (x *CombatImpact) Reset() {
 	*x = CombatImpact{}
-	mi := &file_world_proto_msgTypes[19]
+	mi := &file_world_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1961,7 +2252,7 @@ func (x *CombatImpact) String() string {
 func (*CombatImpact) ProtoMessage() {}
 
 func (x *CombatImpact) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[19]
+	mi := &file_world_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1974,7 +2265,7 @@ func (x *CombatImpact) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CombatImpact.ProtoReflect.Descriptor instead.
 func (*CombatImpact) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{19}
+	return file_world_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *CombatImpact) GetSceneEpoch() uint64 {
@@ -2072,7 +2363,7 @@ type AutoBattleIntent struct {
 
 func (x *AutoBattleIntent) Reset() {
 	*x = AutoBattleIntent{}
-	mi := &file_world_proto_msgTypes[20]
+	mi := &file_world_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2084,7 +2375,7 @@ func (x *AutoBattleIntent) String() string {
 func (*AutoBattleIntent) ProtoMessage() {}
 
 func (x *AutoBattleIntent) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[20]
+	mi := &file_world_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2097,7 +2388,7 @@ func (x *AutoBattleIntent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AutoBattleIntent.ProtoReflect.Descriptor instead.
 func (*AutoBattleIntent) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{20}
+	return file_world_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *AutoBattleIntent) GetSceneEpoch() uint64 {
@@ -2132,7 +2423,7 @@ type HostingState struct {
 
 func (x *HostingState) Reset() {
 	*x = HostingState{}
-	mi := &file_world_proto_msgTypes[21]
+	mi := &file_world_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2144,7 +2435,7 @@ func (x *HostingState) String() string {
 func (*HostingState) ProtoMessage() {}
 
 func (x *HostingState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[21]
+	mi := &file_world_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2157,7 +2448,7 @@ func (x *HostingState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingState.ProtoReflect.Descriptor instead.
 func (*HostingState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{21}
+	return file_world_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *HostingState) GetRemainHostingSec() uint32 {
@@ -2194,7 +2485,7 @@ type DeathNotice struct {
 
 func (x *DeathNotice) Reset() {
 	*x = DeathNotice{}
-	mi := &file_world_proto_msgTypes[22]
+	mi := &file_world_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2206,7 +2497,7 @@ func (x *DeathNotice) String() string {
 func (*DeathNotice) ProtoMessage() {}
 
 func (x *DeathNotice) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[22]
+	mi := &file_world_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2219,7 +2510,7 @@ func (x *DeathNotice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeathNotice.ProtoReflect.Descriptor instead.
 func (*DeathNotice) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{22}
+	return file_world_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *DeathNotice) GetDeathId() []byte {
@@ -2268,7 +2559,7 @@ type ReviveChoice struct {
 
 func (x *ReviveChoice) Reset() {
 	*x = ReviveChoice{}
-	mi := &file_world_proto_msgTypes[23]
+	mi := &file_world_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2280,7 +2571,7 @@ func (x *ReviveChoice) String() string {
 func (*ReviveChoice) ProtoMessage() {}
 
 func (x *ReviveChoice) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[23]
+	mi := &file_world_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2293,7 +2584,7 @@ func (x *ReviveChoice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviveChoice.ProtoReflect.Descriptor instead.
 func (*ReviveChoice) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{23}
+	return file_world_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ReviveChoice) GetDeathId() []byte {
@@ -2342,7 +2633,31 @@ const file_world_proto_rawDesc = "" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
 	"\vbaseline_id\x18\x02 \x01(\x04R\n" +
-	"baselineId\"\x88\x01\n" +
+	"baselineId\"r\n" +
+	"\x10MapTravelPrepare\x12\x1f\n" +
+	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
+	"sceneEpoch\x12\x1b\n" +
+	"\ttravel_id\x18\x02 \x01(\tR\btravelId\x12 \n" +
+	"\vdestination\x18\x03 \x01(\rR\vdestination\"\x86\x02\n" +
+	"\rMapTravelPlan\x12\x1b\n" +
+	"\ttravel_id\x18\x01 \x01(\tR\btravelId\x12(\n" +
+	"\x10from_scene_epoch\x18\x02 \x01(\x04R\x0efromSceneEpoch\x12\"\n" +
+	"\rtarget_map_id\x18\x03 \x01(\x04R\vtargetMapId\x12*\n" +
+	"\x11target_scene_kind\x18\x04 \x01(\rR\x0ftargetSceneKind\x121\n" +
+	"\bposition\x18\x05 \x01(\v2\x15.minimir.v1.GridPointR\bposition\x12+\n" +
+	"\x12expires_at_unix_ms\x18\x06 \x01(\x03R\x0fexpiresAtUnixMs\"g\n" +
+	"\x0fMapTravelCommit\x12\x1f\n" +
+	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
+	"sceneEpoch\x12\x1b\n" +
+	"\ttravel_id\x18\x02 \x01(\tR\btravelId\x12\x16\n" +
+	"\x06cancel\x18\x03 \x01(\bR\x06cancel\"\xb2\x01\n" +
+	"\x0eMapTravelState\x12\x1b\n" +
+	"\ttravel_id\x18\x01 \x01(\tR\btravelId\x12(\n" +
+	"\x10from_scene_epoch\x18\x02 \x01(\x04R\x0efromSceneEpoch\x12\x1f\n" +
+	"\vscene_epoch\x18\x03 \x01(\x04R\n" +
+	"sceneEpoch\x12\x14\n" +
+	"\x05phase\x18\x04 \x01(\rR\x05phase\x12\"\n" +
+	"\rtarget_map_id\x18\x05 \x01(\x04R\vtargetMapId\"\x88\x01\n" +
 	"\tSyncReady\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
@@ -2423,7 +2738,7 @@ const file_world_proto_rawDesc = "" +
 	" \x01(\x03R\x0fspiritAttackMax\x12\x1a\n" +
 	"\baccuracy\x18\v \x01(\x03R\baccuracy\x12\x18\n" +
 	"\aagility\x18\f \x01(\x03R\aagility\x128\n" +
-	"\x18damage_reduction_percent\x18\r \x01(\rR\x16damageReductionPercent\"\x82\x03\n" +
+	"\x18damage_reduction_percent\x18\r \x01(\rR\x16damageReductionPercent\"\xa4\x03\n" +
 	"\x12SceneBaselineChunk\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
@@ -2436,7 +2751,9 @@ const file_world_proto_rawDesc = "" +
 	"\x0estate_sequence\x18\x05 \x01(\x04R\rstateSequence\x123\n" +
 	"\bentities\x18\x06 \x03(\v2\x17.minimir.v1.EntityStateR\bentities\x12D\n" +
 	"\x10skill_mode_state\x18\a \x01(\v2\x1a.minimir.v1.SkillModeStateR\x0eskillModeState\x12F\n" +
-	"\x10navigation_state\x18\b \x01(\v2\x1b.minimir.v1.NavigationStateR\x0fnavigationState\"\x83\x02\n" +
+	"\x10navigation_state\x18\b \x01(\v2\x1b.minimir.v1.NavigationStateR\x0fnavigationState\x12 \n" +
+	"\fsafe_zone_id\x18\t \x01(\x04R\n" +
+	"safeZoneId\"\x83\x02\n" +
 	"\n" +
 	"MoveIntent\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
@@ -2585,61 +2902,66 @@ func file_world_proto_rawDescGZIP() []byte {
 	return file_world_proto_rawDescData
 }
 
-var file_world_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_world_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_world_proto_goTypes = []any{
 	(*EnterLineRequest)(nil),   // 0: minimir.v1.EnterLineRequest
 	(*EnterLineResult)(nil),    // 1: minimir.v1.EnterLineResult
 	(*EnterWorldAck)(nil),      // 2: minimir.v1.EnterWorldAck
-	(*SyncReady)(nil),          // 3: minimir.v1.SyncReady
-	(*EntityState)(nil),        // 4: minimir.v1.EntityState
-	(*EntityDisplacement)(nil), // 5: minimir.v1.EntityDisplacement
-	(*NavigationState)(nil),    // 6: minimir.v1.NavigationState
-	(*EntityStatusState)(nil),  // 7: minimir.v1.EntityStatusState
-	(*CombatAttributes)(nil),   // 8: minimir.v1.CombatAttributes
-	(*SceneBaselineChunk)(nil), // 9: minimir.v1.SceneBaselineChunk
-	(*MoveIntent)(nil),         // 10: minimir.v1.MoveIntent
-	(*CastIntent)(nil),         // 11: minimir.v1.CastIntent
-	(*AttackIntent)(nil),       // 12: minimir.v1.AttackIntent
-	(*SkillModeIntent)(nil),    // 13: minimir.v1.SkillModeIntent
-	(*SkillModeEntry)(nil),     // 14: minimir.v1.SkillModeEntry
-	(*SkillModeState)(nil),     // 15: minimir.v1.SkillModeState
-	(*CastStep)(nil),           // 16: minimir.v1.CastStep
-	(*CastAccepted)(nil),       // 17: minimir.v1.CastAccepted
-	(*AttackAccepted)(nil),     // 18: minimir.v1.AttackAccepted
-	(*CombatImpact)(nil),       // 19: minimir.v1.CombatImpact
-	(*AutoBattleIntent)(nil),   // 20: minimir.v1.AutoBattleIntent
-	(*HostingState)(nil),       // 21: minimir.v1.HostingState
-	(*DeathNotice)(nil),        // 22: minimir.v1.DeathNotice
-	(*ReviveChoice)(nil),       // 23: minimir.v1.ReviveChoice
-	(*GridPoint)(nil),          // 24: minimir.v1.GridPoint
-	(*OperationContext)(nil),   // 25: minimir.v1.OperationContext
+	(*MapTravelPrepare)(nil),   // 3: minimir.v1.MapTravelPrepare
+	(*MapTravelPlan)(nil),      // 4: minimir.v1.MapTravelPlan
+	(*MapTravelCommit)(nil),    // 5: minimir.v1.MapTravelCommit
+	(*MapTravelState)(nil),     // 6: minimir.v1.MapTravelState
+	(*SyncReady)(nil),          // 7: minimir.v1.SyncReady
+	(*EntityState)(nil),        // 8: minimir.v1.EntityState
+	(*EntityDisplacement)(nil), // 9: minimir.v1.EntityDisplacement
+	(*NavigationState)(nil),    // 10: minimir.v1.NavigationState
+	(*EntityStatusState)(nil),  // 11: minimir.v1.EntityStatusState
+	(*CombatAttributes)(nil),   // 12: minimir.v1.CombatAttributes
+	(*SceneBaselineChunk)(nil), // 13: minimir.v1.SceneBaselineChunk
+	(*MoveIntent)(nil),         // 14: minimir.v1.MoveIntent
+	(*CastIntent)(nil),         // 15: minimir.v1.CastIntent
+	(*AttackIntent)(nil),       // 16: minimir.v1.AttackIntent
+	(*SkillModeIntent)(nil),    // 17: minimir.v1.SkillModeIntent
+	(*SkillModeEntry)(nil),     // 18: minimir.v1.SkillModeEntry
+	(*SkillModeState)(nil),     // 19: minimir.v1.SkillModeState
+	(*CastStep)(nil),           // 20: minimir.v1.CastStep
+	(*CastAccepted)(nil),       // 21: minimir.v1.CastAccepted
+	(*AttackAccepted)(nil),     // 22: minimir.v1.AttackAccepted
+	(*CombatImpact)(nil),       // 23: minimir.v1.CombatImpact
+	(*AutoBattleIntent)(nil),   // 24: minimir.v1.AutoBattleIntent
+	(*HostingState)(nil),       // 25: minimir.v1.HostingState
+	(*DeathNotice)(nil),        // 26: minimir.v1.DeathNotice
+	(*ReviveChoice)(nil),       // 27: minimir.v1.ReviveChoice
+	(*GridPoint)(nil),          // 28: minimir.v1.GridPoint
+	(*OperationContext)(nil),   // 29: minimir.v1.OperationContext
 }
 var file_world_proto_depIdxs = []int32{
-	24, // 0: minimir.v1.EnterLineResult.position:type_name -> minimir.v1.GridPoint
-	24, // 1: minimir.v1.EntityState.position:type_name -> minimir.v1.GridPoint
-	7,  // 2: minimir.v1.EntityState.statuses:type_name -> minimir.v1.EntityStatusState
-	8,  // 3: minimir.v1.EntityState.combat_attributes:type_name -> minimir.v1.CombatAttributes
-	24, // 4: minimir.v1.EntityDisplacement.origin:type_name -> minimir.v1.GridPoint
-	24, // 5: minimir.v1.EntityDisplacement.path:type_name -> minimir.v1.GridPoint
-	24, // 6: minimir.v1.NavigationState.destination:type_name -> minimir.v1.GridPoint
-	4,  // 7: minimir.v1.SceneBaselineChunk.entities:type_name -> minimir.v1.EntityState
-	15, // 8: minimir.v1.SceneBaselineChunk.skill_mode_state:type_name -> minimir.v1.SkillModeState
-	6,  // 9: minimir.v1.SceneBaselineChunk.navigation_state:type_name -> minimir.v1.NavigationState
-	24, // 10: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
-	24, // 11: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
-	14, // 12: minimir.v1.SkillModeState.states:type_name -> minimir.v1.SkillModeEntry
-	24, // 13: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
-	24, // 14: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
-	24, // 15: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	24, // 16: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
-	24, // 17: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	24, // 18: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
-	25, // 19: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
-	20, // [20:20] is the sub-list for method output_type
-	20, // [20:20] is the sub-list for method input_type
-	20, // [20:20] is the sub-list for extension type_name
-	20, // [20:20] is the sub-list for extension extendee
-	0,  // [0:20] is the sub-list for field type_name
+	28, // 0: minimir.v1.EnterLineResult.position:type_name -> minimir.v1.GridPoint
+	28, // 1: minimir.v1.MapTravelPlan.position:type_name -> minimir.v1.GridPoint
+	28, // 2: minimir.v1.EntityState.position:type_name -> minimir.v1.GridPoint
+	11, // 3: minimir.v1.EntityState.statuses:type_name -> minimir.v1.EntityStatusState
+	12, // 4: minimir.v1.EntityState.combat_attributes:type_name -> minimir.v1.CombatAttributes
+	28, // 5: minimir.v1.EntityDisplacement.origin:type_name -> minimir.v1.GridPoint
+	28, // 6: minimir.v1.EntityDisplacement.path:type_name -> minimir.v1.GridPoint
+	28, // 7: minimir.v1.NavigationState.destination:type_name -> minimir.v1.GridPoint
+	8,  // 8: minimir.v1.SceneBaselineChunk.entities:type_name -> minimir.v1.EntityState
+	19, // 9: minimir.v1.SceneBaselineChunk.skill_mode_state:type_name -> minimir.v1.SkillModeState
+	10, // 10: minimir.v1.SceneBaselineChunk.navigation_state:type_name -> minimir.v1.NavigationState
+	28, // 11: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
+	28, // 12: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
+	18, // 13: minimir.v1.SkillModeState.states:type_name -> minimir.v1.SkillModeEntry
+	28, // 14: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
+	28, // 15: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
+	28, // 16: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	28, // 17: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
+	28, // 18: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	28, // 19: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
+	29, // 20: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_world_proto_init() }
@@ -2654,7 +2976,7 @@ func file_world_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_world_proto_rawDesc), len(file_world_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

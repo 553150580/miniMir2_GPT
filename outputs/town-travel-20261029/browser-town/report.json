@@ -1,0 +1,253 @@
+{
+  "passed": true,
+  "scope": "真实Creator及正常WS触屏城镇往返；不预置角色数值、不直接改地图/坐标，不作为绑定、瞬移、真机或容量验收",
+  "checks": [
+    "正常注册、道士创角与个人图触屏入场，无数据库预置",
+    "保存地图按钮及确认面板进入真实城镇；新scene/首视口/ACK就绪，角色和宠物Life保留",
+    "真实触屏逐段寻路到来源安全区650631，权威ID106",
+    "正常换角/新票健康重入仍在原Town，位置/生命/魔法保留",
+    "真实返回保留的个人现场，恢复原菱形地图与操作"
+  ],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "scene": "17907780536973105868",
+      "baseline": "1",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 8,
+      "y": 8
+    },
+    {
+      "scene": "17907780536973105869",
+      "baseline": "3",
+      "map": "2",
+      "kind": 2,
+      "player": 1,
+      "x": 633,
+      "y": 613
+    },
+    {
+      "scene": "17907780536973105869",
+      "baseline": "5",
+      "map": "2",
+      "kind": 2,
+      "player": 1,
+      "x": 650,
+      "y": 631
+    },
+    {
+      "scene": "17907780536973105870",
+      "baseline": "6",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 6,
+      "y": 6
+    }
+  ],
+  "travel": [
+    {
+      "id": "8632df93b30d016c367ce70b94a99a95",
+      "from": "17907780536973105868",
+      "scene": "17907780536973105868",
+      "phase": 1,
+      "map": "2"
+    },
+    {
+      "id": "8632df93b30d016c367ce70b94a99a95",
+      "from": "17907780536973105868",
+      "scene": "17907780536973105869",
+      "phase": 2,
+      "map": "2"
+    },
+    {
+      "id": "56cb73e3d7238db28a7ac73e51b6c9c2",
+      "from": "17907780536973105869",
+      "scene": "17907780536973105869",
+      "phase": 1,
+      "map": "1"
+    },
+    {
+      "id": "56cb73e3d7238db28a7ac73e51b6c9c2",
+      "from": "17907780536973105869",
+      "scene": "17907780536973105870",
+      "phase": 2,
+      "map": "1"
+    }
+  ],
+  "moves": [
+    {
+      "x": 639,
+      "y": 619
+    },
+    {
+      "x": 645,
+      "y": 625
+    },
+    {
+      "x": 650,
+      "y": 631
+    }
+  ],
+  "physicalMobileVerified": false,
+  "bindingVerified": false,
+  "teleport21Verified": false,
+  "before": {
+    "map": "1",
+    "scene": "17907780536973105868",
+    "baseline": "1",
+    "binding": "1",
+    "role": "Town6165f8",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 6,
+      "y": 6
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true
+  },
+  "town": {
+    "map": "2",
+    "scene": "17907780536973105869",
+    "baseline": "3",
+    "binding": "1",
+    "role": "Town6165f8",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 633,
+      "y": 613
+    },
+    "life": "0",
+    "hp": "12",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true
+  },
+  "safe": {
+    "map": "2",
+    "scene": "17907780536973105869",
+    "baseline": "3",
+    "binding": "1",
+    "role": "Town6165f8",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "12",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": false
+  },
+  "reentered": {
+    "map": "2",
+    "scene": "17907780536973105869",
+    "baseline": "5",
+    "binding": "2",
+    "role": "Town6165f8",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "12",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true
+  },
+  "returned": {
+    "map": "1",
+    "scene": "17907780536973105870",
+    "baseline": "6",
+    "binding": "2",
+    "role": "Town6165f8",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 6,
+      "y": 6
+    },
+    "life": "0",
+    "hp": "12",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true
+  }
+}

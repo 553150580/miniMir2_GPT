@@ -6,6 +6,7 @@ interface WorldMapEntry {
     readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
     readonly width?: number; readonly height?: number; readonly safe_zones?: readonly unknown[];
 }
+export type WorldAssetsInvalidation = 'dispose' | 'source';
 function mapIdString(value: unknown): string {
     if (typeof value !== 'string' && typeof value !== 'bigint' && (!value || typeof value !== 'object' || typeof (value as { toString?: unknown }).toString !== 'function')) throw new Error('地图ID必须使用十进制字符串或64位对象');
     const id = typeof value === 'string' ? value : value.toString();
@@ -61,6 +62,27 @@ export class WorldAssets {
     readonly frames = new Map<string, SpriteFrame>();
     private owned = new Set<Asset>();
     private disposed = false;
+    private disposing = false;
+    private notifying = false;
+    private readonly beforeInvalidation = new Set<(reason: WorldAssetsInvalidation) => void>();
+    private releaseSourceInvalidation?: () => void;
+
+    // 保存Surface/HUD和动态Sprite都不因赋帧自动持有素材，必须先同步解绑再归还引用。
+    onBeforeInvalidation(listener: (reason: WorldAssetsInvalidation) => void): () => void {
+        if (this.disposed || this.disposing || this.notifying) throw new Error('世界资源已经释放或正在失效');
+        this.beforeInvalidation.add(listener); return () => { this.beforeInvalidation.delete(listener); };
+    }
+    private notifyBeforeInvalidation(reason: WorldAssetsInvalidation): void {
+        if (this.notifying) throw new Error('世界资源失效通知不能重入');
+        this.notifying = true; let failed = false, failure: unknown;
+        try {
+            for (const listener of Array.from(this.beforeInvalidation)) {
+                try { listener(reason); } catch (error) { if (!failed) { failed = true; failure = error; } }
+            }
+        } finally { this.notifying = false; }
+        // 某个消费者解绑失败时仍通知其余消费者，并保留全部资源引用供原owner重试。
+        if (failed) throw failure;
+    }
 
     private own<T extends Asset>(asset: T): T {
         if (!this.owned.has(asset)) { asset.addRef(); this.owned.add(asset); }
@@ -77,6 +99,9 @@ export class WorldAssets {
                 const streaming = result.gameplay.source_map_streaming;
                 if (!streaming || ![streaming.load_concurrency, streaming.cache_capacity].every(value => Number.isSafeInteger(value) && value > 0)) throw new Error('来源地图缺少显式流式并发/缓存预算');
                 result.sourceMap = await SourceMapAssets.prepare(selected.resource_key, { concurrency: streaming.load_concurrency, capacity: streaming.cache_capacity });
+                result.releaseSourceInvalidation = result.sourceMap.onBeforeInvalidation(() => {
+                    if (!result.disposing) result.notifyBeforeInvalidation('source');
+                });
                 const source = result.sourceMap.model.manifest;
                 if (source.id !== selected.id || source.width !== selected.width || source.height !== selected.height) throw new Error('来源地图清单与目录身份/完整尺寸不一致');
                 result.map = Object.freeze({ ...source, name: selected.name, scene_kind: selected.scene_kind, safe_zones: selected.safe_zones });
@@ -168,9 +193,15 @@ export class WorldAssets {
 
     dispose(): void {
         if (this.disposed) return;
-        this.disposed = true;
-        this.sourceMap?.dispose(); this.sourceMap = undefined;
-        for (const asset of Array.from(this.owned)) asset.decRef();
-        this.owned.clear(); this.frames.clear();
+        if (this.disposing || this.notifying) throw new Error('世界资源释放不能重入');
+        this.disposing = true;
+        try {
+            this.notifyBeforeInvalidation('dispose');
+            this.sourceMap?.dispose(); this.sourceMap = undefined;
+            this.releaseSourceInvalidation?.(); this.releaseSourceInvalidation = undefined;
+            this.disposed = true; this.background = null;
+            for (const asset of Array.from(this.owned)) asset.decRef();
+            this.owned.clear(); this.frames.clear(); this.beforeInvalidation.clear();
+        } finally { this.disposing = false; }
     }
 }

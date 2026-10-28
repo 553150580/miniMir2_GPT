@@ -202,7 +202,7 @@ func TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap(t *testing
 		t.Fatal(err)
 	}
 	f := &cfg.Fixture
-	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion != 12 || f.Binding == nil || f.Binding.Enabled {
+	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion != 13 || f.Binding == nil || f.Binding.Enabled {
 		t.Fatal("当前目录阶段改变了个人初始地图或开启绑定")
 	}
 	for _, id := range []uint64{1, 2} {

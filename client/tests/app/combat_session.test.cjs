@@ -6,13 +6,15 @@ const {createRequire}=require('node:module');
 const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const file=path.resolve(__dirname,'../../assets/scripts/app/GameSession.ts');
 const Long=createRequire(file)('long');
-class Connection{subscribe(listener){this.listener=listener;}onStatus(listener){this.status=listener;}deliver(id,value){this.listener({id,value,error:0});}}
+// 这些历史用例每次Enter都表示重新建立观察连接；真实同连接换图另有专项。
+class Connection{constructor(){this.generation=0;this.binding=Long.UONE;}subscribe(listener){this.listener=listener;}onStatus(listener){this.status=message=>{this.generation++;listener(message);};}deliver(id,value){if(id===20002){this.generation++;this.binding=this.binding.add(1);value={roomId:Long.UONE,sceneKind:1,resourceVersion:Long.UONE,...value};}this.listener({id,value,error:0,binding:this.binding});}}
 const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,esModuleInterop:true}});
 const moduleLike={exports:{}};
 new Function('require','module','exports',compiled.outputText)(id=>id==='long'?Long:id==='./GameConnection'?{GameConnection:Connection}
     :id==='./BaselineAssembler'?{BaselineAssembler:class{reset(){}accept(value){return value;}}}:id==='./GameErrors'?{protocolErrorMessage:()=>''}
-    :id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):{},moduleLike,moduleLike.exports);
+    :id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):id==='./MapTravelModel'?require('../../../.work/ui-tests/app/MapTravelModel.js'):{},moduleLike,moduleLike.exports);
 const {session}=moduleLike.exports;
+session.role={job:0,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(1)}};
 test('入场必须显式提供正玩家句柄，缺失或越界不能沿kind或ID1恢复Ready',()=>{
     const entry={sceneEpoch:Long.UONE,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE};
     for(const playerHandle of [undefined,0,-1,4294967296]){session.connection.deliver(20002,{...entry,playerHandle});session.connection.deliver(6,entry);assert.equal(session.entry,null);assert.equal(session.ready,false);assert.match(session.lastError,/玩家身份/);}

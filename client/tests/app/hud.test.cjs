@@ -3,6 +3,14 @@ const assert = require('node:assert/strict');
 const { hudInteger, hudAmount, hudRatio, miniMapPoint, createHudState } = require('../../../.work/ui-tests/app/HudModel.js');
 const value = text => ({ toString: () => text });
 
+test('城镇安全区只使用权威基线观察，区外和死亡保持明确提示',()=>{
+    const input=sample();input.map={name:'比奇省',width:700,height:700,scene_kind:2};
+    input.baseline.safeZoneId=106n;assert.equal(createHudState(input).objective,'安全区 · 城镇漫步');
+    input.baseline.safeZoneId=0n;assert.equal(createHudState(input).objective,'城镇漫步');
+    input.baseline.entities[0].hp=0n;assert.equal(createHudState(input).objective,'角色已倒下 · 点击复活');
+    input.ready=false;assert.equal(createHudState(input).objective,'场景同步中');
+});
+
 test('四钱包保留64位精度，元宝按十分单位显示，缩写不先转Number', () => {
     assert.equal(hudAmount(value('9223372036854775807')), '9,223,372,036,854,775,807');
     assert.equal(hudAmount(value('9223372036854775807'), 1), '922,337,203,685,477,580.7');

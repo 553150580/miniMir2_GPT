@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-29",
+  "test": "TestMapTravelMongoWS",
+  "command": ".\\tools\\dev.ps1 go test -race -count=1 ./internal/integration -run '^TestMapTravelMongoWS$' -v",
+  "environment": {"MINIMIR_MONGO_E2E": "1"},
+  "exit_code": 0,
+  "test_seconds": 28.12,
+  "package_seconds": 33.381,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "race_reported": false,
+  "random_database": "minimir_dev_game_test_town_0c3102d48e89e0bc1ca5950ecf0e3110",
+  "database_cleanup": "沿用harness：cancel节点并等待结束后Drop随机专属库与Close；本次无清理错误",
+  "ownership_command": ".\\tools\\dev.ps1 python tools/environment/mongodb_windows.py status",
+  "ownership_exit_code": 0,
+  "ownership_output": "mongo-ownership.json",
+  "stdout": "mongo-ws-race.stdout.txt",
+  "capture": "由同一运行工具会话session99955的原始输出分块按先后拼接保存；没有重跑已通过用例",
+  "scope": [
+    "正常注册创角、领21600托管秒；仅随机测试库保底计数19为合法永久前态，真实击杀第20只生成确定掉落",
+    "Prepare->Plan->Commit->Quiescing/Committed State->EnterLine->完整baseline->ACK->SyncReady",
+    "旧scene/旧ACK拒绝，目标ACK前经济CodeLineRecovering且水位不变",
+    "目录2、原入口633613、安全区观察0、Town无怪无个人掉落",
+    "真实owner100ms tick普通导航至650631，来源安全区106",
+    "Town断线11秒，不扣Hosting、不刷收益/物品/SourceSeq",
+    "新ticket健康重入仍Town、同scene及新连接binding、相同Life/HP/MP/位置",
+    "返图ACK前保留原个人位置、死怪Life/HP/坐标与掉落；ACK后2秒内依原过期截止重生/清掉落",
+    "旅行不变钱包/EconomicSeq/SourceSeq/物品/经验/级别/托管报告，临时世界不进入role文档"
+  ],
+  "limits": [
+    "本轮源码尚未最终冻结，不声明全包最终Mongo/WS/race已通过",
+    "1条真实case，无故障注入；Pending/unknown原job与Buff/CD/药效精确保留另由game专项覆盖",
+    "非容量/全owner负载或Creator真实渲染验收"
+  ],
+  "prior_attempt": "第一job在Open前0.04s因新库前缀minimir_dev_town_test_不在既有白名单而被拒绝；只修测试前缀为minimir_dev_game_test_town_，未改生产安全门禁；未计为Mongo业务通过"
+}

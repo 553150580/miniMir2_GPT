@@ -1,0 +1,1 @@
+{"scope":"修后真实prepare/WorldAssets生命周期，HUD按新正式合同传assets；覆盖view.dispose、外部assets.dispose、同Frame新owner后旧回调","cases":[{"external":false,"rebind":false,"released_while_bound":[]},{"external":true,"rebind":false,"released_while_bound":[]},{"external":true,"rebind":true,"released_while_bound":[]}]}

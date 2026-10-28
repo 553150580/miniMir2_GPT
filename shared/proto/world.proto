@@ -17,6 +17,25 @@ message EnterLineResult {
   uint32 player_handle = 9;
 }
 message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
+// 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
+message MapTravelPrepare { uint64 scene_epoch = 1; string travel_id = 2; uint32 destination = 3; }
+message MapTravelPlan {
+  string travel_id = 1;
+  uint64 from_scene_epoch = 2;
+  uint64 target_map_id = 3;
+  uint32 target_scene_kind = 4;
+  GridPoint position = 5;
+  int64 expires_at_unix_ms = 6;
+}
+message MapTravelCommit { uint64 scene_epoch = 1; string travel_id = 2; bool cancel = 3; }
+// 1收束旧事件、2已移交、3已取消、4已过期；提交后不能由取消回滚世界。
+message MapTravelState {
+  string travel_id = 1;
+  uint64 from_scene_epoch = 2;
+  uint64 scene_epoch = 3;
+  uint32 phase = 4;
+  uint64 target_map_id = 5;
+}
 // 仅在当前场景基线ACK验证成功后发送，客户端据此恢复经济命令序号。
 message SyncReady { uint64 scene_epoch = 1; uint64 baseline_id = 2; uint64 next_economic_command_seq = 3; }
 message EntityState {
@@ -73,7 +92,7 @@ message EntityDisplacement {
 message NavigationState {
   uint32 input_sequence = 1;
   GridPoint destination = 2;
-  // 0无目标、1进行中、2已到达、3玩家主动方向接管、4显式取消；仍保留原目标格。
+  // 0无目标、1进行中、2已到达、3玩家主动方向接管、4显式取消、5本次不可达或预算终止；仍保留原目标格。
   uint32 status = 3;
   // 目标身份只在新地面目标被接受时推进；健康重入输入序号从0开始，此身份不重置。
   uint64 revision = 4;
@@ -114,6 +133,8 @@ message SceneBaselineChunk {
   repeated EntityState entities = 6;
   SkillModeState skill_mode_state = 7;
   NavigationState navigation_state = 8;
+  // 当前角色原格对应的来源安全区；0表示区外。仅观察，不授予免疫或永久绑定。
+  uint64 safe_zone_id = 9;
 }
 message MoveIntent {
   uint64 scene_epoch = 1;

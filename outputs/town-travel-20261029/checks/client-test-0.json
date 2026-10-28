@@ -1,0 +1,12 @@
+{
+  "task": "client-test",
+  "command": [
+    "node",
+    "client/tests/ui/compile_models.mjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T18:53:07.082539+00:00",
+  "finished_at": "2026-10-28T18:53:07.867503+00:00",
+  "output": ".work/town-travel-20261029/checks/client-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

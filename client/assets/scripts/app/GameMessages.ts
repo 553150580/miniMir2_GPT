@@ -66,6 +66,15 @@ export class GameMessages extends Component {
             this.queryChanged = false;
         }
         if (!this.log.observe(snapshot)) return;
+        this.presentRecent();
+    }
+
+    navigationUnreachable(identity: string): void {
+        if (!isValid(this, true) || !isValid(this.node, true) || !this.log.navigationUnreachable(identity)) return;
+        this.presentRecent();
+    }
+
+    private presentRecent(): void {
         const latest = this.log.messages.slice(-2);
         for (let index = 0; index < this.lines.length; index++) {
             const line = this.lines[index];

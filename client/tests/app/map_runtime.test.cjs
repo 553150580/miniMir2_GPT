@@ -53,7 +53,7 @@ test('真实世界渲染将直立物件与角色统一排序，身体武器及�
     const frames=new Map(),definitions={};
     const layer=package=>({package,actions:Object.fromEntries(['standing','walking','attack','struck','die','casting'].map(action=>[action,{count:6,duration_ms:100,directions:Array.from({length:8},(_,direction)=>({frames:Array.from({length:6},(_,i)=>{const key=`${package}:${action}:${direction}:${i}`;frames.set(key,{key});definitions[key]={width:20,height:80,offset_x:0,offset_y:action==='casting'?-400:action==='die'?-900:-40-direction-i,declared_empty:false};return key;})}))}]))});
     const profile={layers:[layer('Hum'),layer('Weapon')],layer_order_by_direction:{1:['Hum','Weapon']}};frames.set('Objects:1',{});definitions['Objects:1']={width:48,height:67,package:'Objects',raw_frame:1127};frames.set('Objects:2',{});definitions['Objects:2']={width:48,height:41,package:'Objects',raw_frame:8898};
-    const assets={manifest:{frames:definitions},map:{...geometry,props:[
+    const assets={onBeforeInvalidation:()=>()=>{},manifest:{frames:definitions},map:{...geometry,props:[
         {id:'brazier',x:8,y:9,display_x:8,display_y:9,group_id:'brazier_group',part_index:0,frame:'Objects:1',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
         {id:'sign',x:9,y:9,display_x:9,display_y:9,group_id:'sign_group',part_index:0,frame:'Objects:2',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
     ]},gameplay:{monster_profiles:[{definition_id:1,name:'稻草人'}]},frames,prefab:'entity',propPrefab:'prop',profile:()=>profile};

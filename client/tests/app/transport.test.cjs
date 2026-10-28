@@ -27,10 +27,30 @@ function loadSource(file){
     return module.exports;
 }
 function load(name){return loadSource(path.join(source,name+'.ts'));}
-const {encodePacket,decodePacket,GameConnection}=load('GameConnection');
+const {encodePacket,decodePacket,GameConnection,ProtocolResponseError}=load('GameConnection');
 const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
+
+test('安全区观察保留uint64且同一基线的全部块必须一致',()=>{
+    const a=new BaselineAssembler(),common={sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2,safeZoneId:Long.MAX_UNSIGNED_VALUE};
+    assert.equal(a.accept({...common,chunkIndex:0,entities:[{entityHandle:1}]},Long.UONE,Long.UONE),null);
+    assert.throws(()=>a.accept({...common,chunkIndex:1,entities:[],safeZoneId:Long.UZERO},Long.UONE,Long.UONE),/安全区/);
+    const result=a.accept({...common,chunkIndex:1,entities:[]},Long.UONE,Long.UONE);
+    assert.equal(result.safeZoneId.toString(),'18446744073709551615');
+    a.reset();assert.throws(()=>a.accept({...common,chunkIndex:0,entities:[],safeZoneId:106},Long.UONE,Long.UONE),/Long/);
+});
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
+
+test('旅行四消息与导航失败终态保留完整64位身份，Plan过期时间保持int64',()=>{
+    const id='0123456789abcdef0123456789abcdef',large=Long.fromString('9007199254740993',true);
+    const prepare=decodePacket(encodePacket(20007,7,large,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,travelId:id,destination:1})).value;
+    assert.equal(prepare.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(prepare.travelId,id);assert.equal(prepare.destination,1);
+    const plan=decodePacket(encodePacket(20008,7,large,{travelId:id,fromSceneEpoch:large,targetMapId:Long.MAX_UNSIGNED_VALUE,targetSceneKind:2,position:{x:633,y:613},expiresAtUnixMs:Long.MAX_VALUE})).value;
+    assert.equal(plan.targetMapId.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(plan.expiresAtUnixMs.toString(),Long.MAX_VALUE.toString());assert.deepEqual(plan.position,{x:633,y:613});
+    const commit=decodePacket(encodePacket(20009,8,large,{sceneEpoch:large,travelId:id,cancel:true})).value;assert.equal(commit.cancel,true);assert.equal(commit.sceneEpoch.toString(),large.toString());
+    const state=decodePacket(encodePacket(20010,0,large,{travelId:id,fromSceneEpoch:large,sceneEpoch:Long.MAX_UNSIGNED_VALUE,phase:2,targetMapId:Long.MAX_UNSIGNED_VALUE})).value;assert.equal(state.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(state.fromSceneEpoch.toString(),large.toString());
+    const navigation=decodePacket(encodePacket(5,0,large,{navigationState:{inputSequence:9,destination:{x:633,y:613},status:5,revision:Long.MAX_UNSIGNED_VALUE}})).value.navigationState;assert.equal(navigation.status,5);assert.equal(navigation.revision.toString(),Long.MAX_UNSIGNED_VALUE.toString());
+});
 test('入场显式player_handle保留uint32边界，不由entity_kind推断主人',()=>{
     const value=decodePacket(encodePacket(20002,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,playerHandle:4294967295})).value;
     assert.equal(value.playerHandle,4294967295);assert.equal(value.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());
@@ -202,6 +222,17 @@ test('同序号的快照不能抢经济回执，旧绑定被隔离，自动状�
         const previewSeq=decodePacket(socket.sent.at(-1)).seq;
         deliver(40003,previewSeq,Long.fromInt(5,true),{items:[],revision:Long.UONE});await Promise.resolve();assert.equal(quoted,false);
         deliver(40012,previewSeq,Long.fromInt(5,true),{previewId:new Uint8Array(16).fill(5),kind:1,offerId:1,quantity:Long.ONE});assert.equal((await preview).offerId,1);
+        const travelId='01'.repeat(16),plan=connection.request(20007,{sceneEpoch:Long.UONE,travelId,destination:1}),planSeq=decodePacket(socket.sent.at(-1)).seq;
+        let planDone=false;void plan.then(()=>planDone=true);deliver(5,planSeq,Long.fromInt(5,true),{});await Promise.resolve();assert.equal(planDone,false);
+        deliver(20008,planSeq,Long.fromInt(5,true),{travelId,fromSceneEpoch:Long.UONE,targetMapId:Long.fromInt(2,true),targetSceneKind:2,position:{x:633,y:613},expiresAtUnixMs:Long.MAX_VALUE});assert.equal((await plan).targetMapId.toString(),'2');
+        const commit=connection.request(20009,{sceneEpoch:Long.UONE,travelId,cancel:false}),commitSeq=decodePacket(socket.sent.at(-1)).seq;
+        deliver(20010,commitSeq,Long.fromInt(5,true),{travelId,phase:1,fromSceneEpoch:Long.UONE,sceneEpoch:Long.UONE,targetMapId:Long.fromInt(2,true)});assert.equal((await commit).phase,1);
+        const repeat=connection.request(20007,{sceneEpoch:Long.UONE,travelId,destination:1}),repeatSeq=decodePacket(socket.sent.at(-1)).seq;
+        deliver(20010,repeatSeq,Long.fromInt(5,true),{travelId,phase:4,fromSceneEpoch:Long.UONE,sceneEpoch:Long.UONE,targetMapId:Long.fromInt(2,true)});assert.equal((await repeat).phase,4);
+        const rejected=connection.request(20007,{sceneEpoch:Long.UONE,travelId,destination:1}),rejectSeq=decodePacket(socket.sent.at(-1)).seq;
+        // 只造协议层错误头，不伪装网络超时。
+        const errorFrame=new Uint8Array(Array.from(encodePacket(20008,rejectSeq,Long.fromInt(5,true),{})).concat([233,7]));errorFrame[1]=1;socket.onmessage({data:errorFrame.buffer});await assert.rejects(rejected,error=>error instanceof ProtocolResponseError&&error.code===1001);
+        let oldEntry=0;connection.subscribe(packet=>{if(packet.id===20002)oldEntry++;});deliver(20002,0,Long.fromInt(4,true),{sceneEpoch:Long.fromInt(2,true),baselineId:Long.UONE});assert.equal(oldEntry,0);assert.equal(connection.binding.toString(),'5');
     }finally{connection.close();global.WebSocket=original;delete global.location;}
 });
 
@@ -213,4 +244,16 @@ test('防御状态/属性及材料施法/装卸精确保留64位，完整空状�
     const baseline=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:1,life:Long.UZERO,statuses:[{statusId:31,sourceSkillId:31,skillLevel:0,remainingMs:0,maxPhysicalDefenceBonus:Long.MAX_VALUE,maxMagicDefenceBonus:Long.MAX_VALUE,damageReductionPercent:20,casterHandle:1,casterLife:large}],combatAttributes:{physicalAttackMin:Long.MAX_VALUE,magicDefenceMax:Long.MAX_VALUE,damageReductionPercent:20}},{entityHandle:2,statuses:[]}]})).value;
     assert.equal(baseline.entities[0].statuses[0].casterLife.toString(),large.toString());assert.equal(baseline.entities[0].statuses[0].maxMagicDefenceBonus.toString(),Long.MAX_VALUE.toString());assert.equal(baseline.entities[0].statuses[0].remainingMs,0);
     assert.equal(baseline.entities[0].combatAttributes.physicalAttackMin.toString(),Long.MAX_VALUE.toString());assert.deepEqual(baseline.entities[1].statuses,[]);
+});
+
+test('旧socket迟到open不能在新连接发送旧票；同步发送失败立即清理Pending与计时器',async()=>{
+    const original=global.WebSocket,oldLocation=global.location,sockets=[];
+    class Socket{static OPEN=1;constructor(){this.readyState=0;this.sent=[];sockets.push(this);}send(bytes){if(this.failSend)throw Error('同步发送失败');this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}
+    global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const connection=new GameConnection();
+    try{
+        const old=connection.connect('旧票'),oldCheck=assert.rejects(old,/旧游戏连接/),latest=connection.connect('新票');
+        sockets[0].onopen();await oldCheck;assert.equal(sockets[1].sent.length,0);sockets[1].readyState=1;sockets[1].onopen();await Promise.resolve();
+        const sent=decodePacket(sockets[1].sent[0]);assert.equal(sent.value.accountTicket,'新票');const bytes=encodePacket(20002,sent.seq,Long.fromInt(8,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});sockets[1].onmessage({data:bytes.buffer});await latest;
+        sockets[1].failSend=true;await assert.rejects(connection.request(20007,{sceneEpoch:Long.UONE,travelId:'01'.repeat(16),destination:1}),/同步发送失败/);assert.equal(connection.pending.size,0);
+    }finally{connection.close();global.WebSocket=original;global.location=oldLocation;}
 });

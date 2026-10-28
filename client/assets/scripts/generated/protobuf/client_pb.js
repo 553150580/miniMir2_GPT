@@ -5038,6 +5038,1168 @@ $root.minimir = (function() {
             return EnterWorldAck;
         })();
 
+        v1.MapTravelPrepare = (function() {
+
+            /**
+             * Properties of a MapTravelPrepare.
+             * @typedef {Object} minimir.v1.MapTravelPrepare.$Properties
+             * @property {Long|null} [scene_epoch] MapTravelPrepare scene_epoch
+             * @property {string|null} [travel_id] MapTravelPrepare travel_id
+             * @property {number|null} [destination] MapTravelPrepare destination
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MapTravelPrepare.
+             * @memberof minimir.v1
+             * @interface IMapTravelPrepare
+             * @augments minimir.v1.MapTravelPrepare.$Properties
+             * @deprecated Use minimir.v1.MapTravelPrepare.$Properties instead.
+             */
+
+            /**
+             * Shape of a MapTravelPrepare.
+             * @typedef {minimir.v1.MapTravelPrepare.$Properties} minimir.v1.MapTravelPrepare.$Shape
+             */
+
+            /**
+             * Constructs a new MapTravelPrepare.
+             * @memberof minimir.v1
+             * @classdesc Represents a MapTravelPrepare.
+             * @constructor
+             * @param {minimir.v1.MapTravelPrepare.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MapTravelPrepare = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MapTravelPrepare scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MapTravelPrepare
+             * @instance
+             */
+            MapTravelPrepare.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelPrepare travel_id.
+             * @member {string} travel_id
+             * @memberof minimir.v1.MapTravelPrepare
+             * @instance
+             */
+            MapTravelPrepare.prototype.travel_id = "";
+
+            /**
+             * MapTravelPrepare destination.
+             * @member {number} destination
+             * @memberof minimir.v1.MapTravelPrepare
+             * @instance
+             */
+            MapTravelPrepare.prototype.destination = 0;
+
+            /**
+             * Creates a new MapTravelPrepare instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {minimir.v1.MapTravelPrepare.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MapTravelPrepare} MapTravelPrepare instance
+             * @type {{
+             *   (properties: minimir.v1.MapTravelPrepare.$Shape): minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape;
+             *   (properties?: minimir.v1.MapTravelPrepare.$Properties): minimir.v1.MapTravelPrepare;
+             * }}
+             */
+            MapTravelPrepare.create = function(properties) {
+                return new MapTravelPrepare(properties);
+            };
+
+            /**
+             * Encodes the specified MapTravelPrepare message. Does not implicitly {@link minimir.v1.MapTravelPrepare.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {minimir.v1.MapTravelPrepare.$Properties} message MapTravelPrepare message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelPrepare.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id") && message.travel_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.travel_id);
+                if (message.destination != null && $Object.hasOwnProperty.call(message, "destination") && message.destination !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.destination);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MapTravelPrepare message, length delimited. Does not implicitly {@link minimir.v1.MapTravelPrepare.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {minimir.v1.MapTravelPrepare.$Properties} message MapTravelPrepare message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelPrepare.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MapTravelPrepare message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape} MapTravelPrepare
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelPrepare.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MapTravelPrepare();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.travel_id = value;
+                            else
+                                delete message.travel_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.destination = value;
+                            else
+                                delete message.destination;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MapTravelPrepare message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelPrepare & minimir.v1.MapTravelPrepare.$Shape} MapTravelPrepare
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelPrepare.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MapTravelPrepare message.
+             * @function verify
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MapTravelPrepare.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id"))
+                    if (!$util.isString(message.travel_id))
+                        return "travel_id: string expected";
+                if (message.destination != null && $Object.hasOwnProperty.call(message, "destination"))
+                    if (!$util.isInteger(message.destination))
+                        return "destination: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MapTravelPrepare
+             * @function getTypeUrl
+             * @memberof minimir.v1.MapTravelPrepare
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MapTravelPrepare.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MapTravelPrepare";
+            };
+
+            return MapTravelPrepare;
+        })();
+
+        v1.MapTravelPlan = (function() {
+
+            /**
+             * Properties of a MapTravelPlan.
+             * @typedef {Object} minimir.v1.MapTravelPlan.$Properties
+             * @property {string|null} [travel_id] MapTravelPlan travel_id
+             * @property {Long|null} [from_scene_epoch] MapTravelPlan from_scene_epoch
+             * @property {Long|null} [target_map_id] MapTravelPlan target_map_id
+             * @property {number|null} [target_scene_kind] MapTravelPlan target_scene_kind
+             * @property {minimir.v1.GridPoint.$Properties|null} [position] MapTravelPlan position
+             * @property {Long|null} [expires_at_unix_ms] MapTravelPlan expires_at_unix_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MapTravelPlan.
+             * @memberof minimir.v1
+             * @interface IMapTravelPlan
+             * @augments minimir.v1.MapTravelPlan.$Properties
+             * @deprecated Use minimir.v1.MapTravelPlan.$Properties instead.
+             */
+
+            /**
+             * Shape of a MapTravelPlan.
+             * @typedef {minimir.v1.MapTravelPlan.$Properties} minimir.v1.MapTravelPlan.$Shape
+             */
+
+            /**
+             * Constructs a new MapTravelPlan.
+             * @memberof minimir.v1
+             * @classdesc Represents a MapTravelPlan.
+             * @constructor
+             * @param {minimir.v1.MapTravelPlan.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MapTravelPlan = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MapTravelPlan travel_id.
+             * @member {string} travel_id
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.travel_id = "";
+
+            /**
+             * MapTravelPlan from_scene_epoch.
+             * @member {Long} from_scene_epoch
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.from_scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelPlan target_map_id.
+             * @member {Long} target_map_id
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.target_map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelPlan target_scene_kind.
+             * @member {number} target_scene_kind
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.target_scene_kind = 0;
+
+            /**
+             * MapTravelPlan position.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} position
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.position = null;
+
+            /**
+             * MapTravelPlan expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.MapTravelPlan
+             * @instance
+             */
+            MapTravelPlan.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new MapTravelPlan instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {minimir.v1.MapTravelPlan.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MapTravelPlan} MapTravelPlan instance
+             * @type {{
+             *   (properties: minimir.v1.MapTravelPlan.$Shape): minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape;
+             *   (properties?: minimir.v1.MapTravelPlan.$Properties): minimir.v1.MapTravelPlan;
+             * }}
+             */
+            MapTravelPlan.create = function(properties) {
+                return new MapTravelPlan(properties);
+            };
+
+            /**
+             * Encodes the specified MapTravelPlan message. Does not implicitly {@link minimir.v1.MapTravelPlan.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {minimir.v1.MapTravelPlan.$Properties} message MapTravelPlan message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelPlan.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id") && message.travel_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.travel_id);
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch") && (typeof message.from_scene_epoch === "object" ? message.from_scene_epoch.low || message.from_scene_epoch.high : message.from_scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.from_scene_epoch);
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id") && (typeof message.target_map_id === "object" ? message.target_map_id.low || message.target_map_id.high : message.target_map_id !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.target_map_id);
+                if (message.target_scene_kind != null && $Object.hasOwnProperty.call(message, "target_scene_kind") && message.target_scene_kind !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.target_scene_kind);
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position"))
+                    $root.minimir.v1.GridPoint.encode(message.position, writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.expires_at_unix_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MapTravelPlan message, length delimited. Does not implicitly {@link minimir.v1.MapTravelPlan.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {minimir.v1.MapTravelPlan.$Properties} message MapTravelPlan message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelPlan.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MapTravelPlan message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape} MapTravelPlan
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelPlan.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MapTravelPlan();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.travel_id = value;
+                            else
+                                delete message.travel_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.from_scene_epoch = value;
+                            else
+                                delete message.from_scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_map_id = value;
+                            else
+                                delete message.target_map_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_scene_kind = value;
+                            else
+                                delete message.target_scene_kind;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            message.position = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.position);
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MapTravelPlan message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelPlan & minimir.v1.MapTravelPlan.$Shape} MapTravelPlan
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelPlan.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MapTravelPlan message.
+             * @function verify
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MapTravelPlan.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id"))
+                    if (!$util.isString(message.travel_id))
+                        return "travel_id: string expected";
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch"))
+                    if (!$util.isInteger(message.from_scene_epoch) && !(message.from_scene_epoch && $util.isInteger(message.from_scene_epoch.low) && $util.isInteger(message.from_scene_epoch.high)))
+                        return "from_scene_epoch: integer|Long expected";
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id"))
+                    if (!$util.isInteger(message.target_map_id) && !(message.target_map_id && $util.isInteger(message.target_map_id.low) && $util.isInteger(message.target_map_id.high)))
+                        return "target_map_id: integer|Long expected";
+                if (message.target_scene_kind != null && $Object.hasOwnProperty.call(message, "target_scene_kind"))
+                    if (!$util.isInteger(message.target_scene_kind))
+                        return "target_scene_kind: integer expected";
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.position, _depth + 1);
+                    if (error)
+                        return "position." + error;
+                }
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MapTravelPlan
+             * @function getTypeUrl
+             * @memberof minimir.v1.MapTravelPlan
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MapTravelPlan.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MapTravelPlan";
+            };
+
+            return MapTravelPlan;
+        })();
+
+        v1.MapTravelCommit = (function() {
+
+            /**
+             * Properties of a MapTravelCommit.
+             * @typedef {Object} minimir.v1.MapTravelCommit.$Properties
+             * @property {Long|null} [scene_epoch] MapTravelCommit scene_epoch
+             * @property {string|null} [travel_id] MapTravelCommit travel_id
+             * @property {boolean|null} [cancel] MapTravelCommit cancel
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MapTravelCommit.
+             * @memberof minimir.v1
+             * @interface IMapTravelCommit
+             * @augments minimir.v1.MapTravelCommit.$Properties
+             * @deprecated Use minimir.v1.MapTravelCommit.$Properties instead.
+             */
+
+            /**
+             * Shape of a MapTravelCommit.
+             * @typedef {minimir.v1.MapTravelCommit.$Properties} minimir.v1.MapTravelCommit.$Shape
+             */
+
+            /**
+             * Constructs a new MapTravelCommit.
+             * @memberof minimir.v1
+             * @classdesc Represents a MapTravelCommit.
+             * @constructor
+             * @param {minimir.v1.MapTravelCommit.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MapTravelCommit = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MapTravelCommit scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MapTravelCommit
+             * @instance
+             */
+            MapTravelCommit.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelCommit travel_id.
+             * @member {string} travel_id
+             * @memberof minimir.v1.MapTravelCommit
+             * @instance
+             */
+            MapTravelCommit.prototype.travel_id = "";
+
+            /**
+             * MapTravelCommit cancel.
+             * @member {boolean} cancel
+             * @memberof minimir.v1.MapTravelCommit
+             * @instance
+             */
+            MapTravelCommit.prototype.cancel = false;
+
+            /**
+             * Creates a new MapTravelCommit instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {minimir.v1.MapTravelCommit.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MapTravelCommit} MapTravelCommit instance
+             * @type {{
+             *   (properties: minimir.v1.MapTravelCommit.$Shape): minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape;
+             *   (properties?: minimir.v1.MapTravelCommit.$Properties): minimir.v1.MapTravelCommit;
+             * }}
+             */
+            MapTravelCommit.create = function(properties) {
+                return new MapTravelCommit(properties);
+            };
+
+            /**
+             * Encodes the specified MapTravelCommit message. Does not implicitly {@link minimir.v1.MapTravelCommit.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {minimir.v1.MapTravelCommit.$Properties} message MapTravelCommit message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelCommit.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id") && message.travel_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.travel_id);
+                if (message.cancel != null && $Object.hasOwnProperty.call(message, "cancel") && message.cancel !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.cancel);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MapTravelCommit message, length delimited. Does not implicitly {@link minimir.v1.MapTravelCommit.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {minimir.v1.MapTravelCommit.$Properties} message MapTravelCommit message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelCommit.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MapTravelCommit message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape} MapTravelCommit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelCommit.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MapTravelCommit();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.travel_id = value;
+                            else
+                                delete message.travel_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.cancel = value;
+                            else
+                                delete message.cancel;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MapTravelCommit message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelCommit & minimir.v1.MapTravelCommit.$Shape} MapTravelCommit
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelCommit.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MapTravelCommit message.
+             * @function verify
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MapTravelCommit.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id"))
+                    if (!$util.isString(message.travel_id))
+                        return "travel_id: string expected";
+                if (message.cancel != null && $Object.hasOwnProperty.call(message, "cancel"))
+                    if (typeof message.cancel !== "boolean")
+                        return "cancel: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MapTravelCommit
+             * @function getTypeUrl
+             * @memberof minimir.v1.MapTravelCommit
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MapTravelCommit.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MapTravelCommit";
+            };
+
+            return MapTravelCommit;
+        })();
+
+        v1.MapTravelState = (function() {
+
+            /**
+             * Properties of a MapTravelState.
+             * @typedef {Object} minimir.v1.MapTravelState.$Properties
+             * @property {string|null} [travel_id] MapTravelState travel_id
+             * @property {Long|null} [from_scene_epoch] MapTravelState from_scene_epoch
+             * @property {Long|null} [scene_epoch] MapTravelState scene_epoch
+             * @property {number|null} [phase] MapTravelState phase
+             * @property {Long|null} [target_map_id] MapTravelState target_map_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a MapTravelState.
+             * @memberof minimir.v1
+             * @interface IMapTravelState
+             * @augments minimir.v1.MapTravelState.$Properties
+             * @deprecated Use minimir.v1.MapTravelState.$Properties instead.
+             */
+
+            /**
+             * Shape of a MapTravelState.
+             * @typedef {minimir.v1.MapTravelState.$Properties} minimir.v1.MapTravelState.$Shape
+             */
+
+            /**
+             * Constructs a new MapTravelState.
+             * @memberof minimir.v1
+             * @classdesc Represents a MapTravelState.
+             * @constructor
+             * @param {minimir.v1.MapTravelState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var MapTravelState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * MapTravelState travel_id.
+             * @member {string} travel_id
+             * @memberof minimir.v1.MapTravelState
+             * @instance
+             */
+            MapTravelState.prototype.travel_id = "";
+
+            /**
+             * MapTravelState from_scene_epoch.
+             * @member {Long} from_scene_epoch
+             * @memberof minimir.v1.MapTravelState
+             * @instance
+             */
+            MapTravelState.prototype.from_scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.MapTravelState
+             * @instance
+             */
+            MapTravelState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * MapTravelState phase.
+             * @member {number} phase
+             * @memberof minimir.v1.MapTravelState
+             * @instance
+             */
+            MapTravelState.prototype.phase = 0;
+
+            /**
+             * MapTravelState target_map_id.
+             * @member {Long} target_map_id
+             * @memberof minimir.v1.MapTravelState
+             * @instance
+             */
+            MapTravelState.prototype.target_map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new MapTravelState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {minimir.v1.MapTravelState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.MapTravelState} MapTravelState instance
+             * @type {{
+             *   (properties: minimir.v1.MapTravelState.$Shape): minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape;
+             *   (properties?: minimir.v1.MapTravelState.$Properties): minimir.v1.MapTravelState;
+             * }}
+             */
+            MapTravelState.create = function(properties) {
+                return new MapTravelState(properties);
+            };
+
+            /**
+             * Encodes the specified MapTravelState message. Does not implicitly {@link minimir.v1.MapTravelState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {minimir.v1.MapTravelState.$Properties} message MapTravelState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id") && message.travel_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.travel_id);
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch") && (typeof message.from_scene_epoch === "object" ? message.from_scene_epoch.low || message.from_scene_epoch.high : message.from_scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.from_scene_epoch);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.scene_epoch);
+                if (message.phase != null && $Object.hasOwnProperty.call(message, "phase") && message.phase !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.phase);
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id") && (typeof message.target_map_id === "object" ? message.target_map_id.low || message.target_map_id.high : message.target_map_id !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.target_map_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified MapTravelState message, length delimited. Does not implicitly {@link minimir.v1.MapTravelState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {minimir.v1.MapTravelState.$Properties} message MapTravelState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            MapTravelState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a MapTravelState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape} MapTravelState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.MapTravelState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.travel_id = value;
+                            else
+                                delete message.travel_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.from_scene_epoch = value;
+                            else
+                                delete message.from_scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.phase = value;
+                            else
+                                delete message.phase;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_map_id = value;
+                            else
+                                delete message.target_map_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a MapTravelState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.MapTravelState & minimir.v1.MapTravelState.$Shape} MapTravelState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            MapTravelState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a MapTravelState message.
+             * @function verify
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            MapTravelState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.travel_id != null && $Object.hasOwnProperty.call(message, "travel_id"))
+                    if (!$util.isString(message.travel_id))
+                        return "travel_id: string expected";
+                if (message.from_scene_epoch != null && $Object.hasOwnProperty.call(message, "from_scene_epoch"))
+                    if (!$util.isInteger(message.from_scene_epoch) && !(message.from_scene_epoch && $util.isInteger(message.from_scene_epoch.low) && $util.isInteger(message.from_scene_epoch.high)))
+                        return "from_scene_epoch: integer|Long expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.phase != null && $Object.hasOwnProperty.call(message, "phase"))
+                    if (!$util.isInteger(message.phase))
+                        return "phase: integer expected";
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id"))
+                    if (!$util.isInteger(message.target_map_id) && !(message.target_map_id && $util.isInteger(message.target_map_id.low) && $util.isInteger(message.target_map_id.high)))
+                        return "target_map_id: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for MapTravelState
+             * @function getTypeUrl
+             * @memberof minimir.v1.MapTravelState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            MapTravelState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.MapTravelState";
+            };
+
+            return MapTravelState;
+        })();
+
         v1.SyncReady = (function() {
 
             /**
@@ -7714,6 +8876,7 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.EntityState.$Properties>|null} [entities] SceneBaselineChunk entities
              * @property {minimir.v1.SkillModeState.$Properties|null} [skill_mode_state] SceneBaselineChunk skill_mode_state
              * @property {minimir.v1.NavigationState.$Properties|null} [navigation_state] SceneBaselineChunk navigation_state
+             * @property {Long|null} [safe_zone_id] SceneBaselineChunk safe_zone_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -7811,6 +8974,14 @@ $root.minimir = (function() {
             SceneBaselineChunk.prototype.navigation_state = null;
 
             /**
+             * SceneBaselineChunk safe_zone_id.
+             * @member {Long} safe_zone_id
+             * @memberof minimir.v1.SceneBaselineChunk
+             * @instance
+             */
+            SceneBaselineChunk.prototype.safe_zone_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @function create
              * @memberof minimir.v1.SceneBaselineChunk
@@ -7859,6 +9030,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.SkillModeState.encode(message.skill_mode_state, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
                 if (message.navigation_state != null && $Object.hasOwnProperty.call(message, "navigation_state"))
                     $root.minimir.v1.NavigationState.encode(message.navigation_state, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id") && (typeof message.safe_zone_id === "object" ? message.safe_zone_id.low || message.safe_zone_id.high : message.safe_zone_id !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.safe_zone_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7981,6 +9154,15 @@ $root.minimir = (function() {
                             message.navigation_state = $root.minimir.v1.NavigationState.decode(reader, reader.size(), $undefined, _depth + 1, message.navigation_state);
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.safe_zone_id = value;
+                            else
+                                delete message.safe_zone_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -8063,6 +9245,9 @@ $root.minimir = (function() {
                     if (error)
                         return "navigation_state." + error;
                 }
+                if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id"))
+                    if (!$util.isInteger(message.safe_zone_id) && !(message.safe_zone_id && $util.isInteger(message.safe_zone_id.low) && $util.isInteger(message.safe_zone_id.high)))
+                        return "safe_zone_id: integer|Long expected";
                 return null;
             };
 

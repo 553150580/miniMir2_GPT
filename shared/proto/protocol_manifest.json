@@ -588,6 +588,54 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议"
+    },
+    {
+      "value": 20007,
+      "name": "MsgC2SMapTravelPrepare",
+      "proto_message": "MapTravelPrepare",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "用户指定先接来源城镇；同owner健康旅行开发协议，准备不授权移交、基线就绪后才可输入"
+    },
+    {
+      "value": 20008,
+      "name": "MsgS2CMapTravelPlan",
+      "proto_message": "MapTravelPlan",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "用户指定先接来源城镇；同owner健康旅行开发协议，准备不授权移交、基线就绪后才可输入"
+    },
+    {
+      "value": 20009,
+      "name": "MsgC2SMapTravelCommit",
+      "proto_message": "MapTravelCommit",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "用户指定先接来源城镇；同owner健康旅行开发协议，准备不授权移交、基线就绪后才可输入"
+    },
+    {
+      "value": 20010,
+      "name": "MsgS2CMapTravelState",
+      "proto_message": "MapTravelState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "用户指定先接来源城镇；同owner健康旅行开发协议，准备不授权移交、基线就绪后才可输入"
     }
   ],
   "error_codes": [

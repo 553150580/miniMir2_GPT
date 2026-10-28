@@ -65,7 +65,7 @@ const report={passed:false,scope:'实际Creator/Chrome客户端来源地图渲�
    const hud=safe.getComponent('GameHUD');if(!hud)throw Error('保存Safe缺少GameHUD');
    const assets=await WorldAssets.prepare(2,()=>{},'2');if(!assets.sourceMap)throw Error('WorldAssets未选择来源类型');
    if(assets.sourceMap.model.manifest.width!==700||assets.sourceMap.model.manifest.minimap?.frame!=='mmap:100'||!assets.background)throw Error('实际构建缺少完整700地图及显式小地图');
-   const view=new GameWorldView(viewport,world,entities,'渲染道士',2,'9000000000000001',1);view.prepare(assets,()=>{});hud.setMapFrame(assets.background,assets.sourceMap);
+   const view=new GameWorldView(viewport,world,entities,'渲染道士',2,'9000000000000001',1);view.prepare(assets,()=>{});hud.setMapFrame(assets.background,assets);
    const qa={scope:'source_render_diagnostic_only',cc,safe,viewport,world,entities,hud,assets,source:assets.sourceMap,view,sequence:0,baseline:null,running:true,errors:[],violations:[],instrumented:new Set(),visitedOwners:new Set(),lastPlan:null};
    const number=value=>({toString:()=>String(value),isZero:()=>value===0,lessThan:other=>BigInt(value)<BigInt(other.toString())});
    qa.state=(handle,kind,x,y)=>({entityHandle:handle,entityKind:kind,definitionId:kind===2?2:0,position:{x,y},direction:2,moveIntervalMs:kind===1?400:2000,
@@ -89,7 +89,8 @@ const report={passed:false,scope:'实际Creator/Chrome客户端来源地图渲�
    const visuals=Array.from(s.visuals.values()),actors=Array.from(w.visuals.values()),cache=q.source.chunkCache;
    for(const hold of Array.from(s.chunks.values()))q.visitedOwners.add(hold.id);
    const badNative=visuals.filter(v=>v.node.scale.x!==1||v.node.scale.y!==1||v.sprite.trim!==false||v.transform.width!==v.draw.frame.width||v.transform.height!==v.draw.frame.height||v.transform.anchorPoint.x!==0||v.transform.anchorPoint.y!==1||v.node.position.x!==v.draw.bounds[0]||v.node.position.y!==-v.draw.bounds[1]).map(v=>v.id);
-   const torch=visuals.filter(v=>v.draw.blend===1).map(v=>{const target=v.sprite.getRenderMaterial(0)?.passes?.[0]?.blendState.targets[0];return{id:v.id,owner:v.owner,x:v.draw.x,y:v.draw.y,key:v.key,expected:'Objects:'+(2723+Math.floor(c.game.totalTime/100)%10),blendSrc:target?.blendSrc,blendDst:target?.blendDst,width:v.transform.width,height:v.transform.height};});
+   const renderClock=s.nowMs;
+   const torch=visuals.filter(v=>v.draw.blend===1).map(v=>{const target=v.sprite.getRenderMaterial(0)?.passes?.[0]?.blendState.targets[0];return{id:v.id,owner:v.owner,x:v.draw.x,y:v.draw.y,key:v.key,renderClock,expected:'Objects:'+(2723+Math.floor(renderClock/100)%10),blendSrc:target?.blendSrc,blendDst:target?.blendDst,width:v.transform.width,height:v.transform.height};});
    const expected=visuals.filter(v=>v.draw.layer>=3).map(v=>({node:v.node,row:v.draw.y,kind:0,x:v.draw.x,layer:v.draw.layer,id:v.id}));
    for(const a of actors)expected.push({node:a.node,row:a.state.position.y,kind:1,x:a.motion.sample(c.game.totalTime).x,layer:0,id:'entity_'+a.state.entityHandle});
    expected.sort((a,b)=>a.row-b.row||a.kind-b.kind||a.x-b.x||a.layer-b.layer||a.id.localeCompare(b.id));const actual=q.entities.children.filter(node=>expected.some(v=>v.node===node));

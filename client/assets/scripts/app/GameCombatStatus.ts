@@ -1,4 +1,4 @@
-import { Button, game, instantiate, isValid, Label, Node, Prefab } from 'cc';
+import { Button, game, instantiate, isValid, Label, Node, Prefab, Sprite } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
 import { UIMgr } from '../ui/UIMgr';
@@ -47,7 +47,7 @@ export class GameCombatStatus {
             badge.node.getChildByName('Name')!.getComponent(Label)!.string = statusShortName(status.statusId, this.definitions);
             badge.node.getChildByName('Time')!.getComponent(Label)!.string = `${statusSeconds(status, this.receivedAt, now)}秒`;
         }
-        for (const [id, badge] of this.badges) if (!retained.has(id)) { badge.node.off(Button.EventType.CLICK, badge.handler, this); badge.node.destroy(); this.badges.delete(id); }
+        for (const [id, badge] of Array.from(this.badges)) if (!retained.has(id)) { this.removeBadge(badge); this.badges.delete(id); }
         const lines = [...combatAttributeLines(player?.combatAttributes), '当前护佑状态'];
         for (const entity of this.entities.filter(row => row.entityHandle === this.playerHandle || row.entityKind === 2)) {
             const label = entity.entityHandle === this.playerHandle ? '角色' : '宠物';
@@ -72,5 +72,10 @@ export class GameCombatStatus {
     private bind(list: List, lines: readonly string[], preserve: boolean): void {
         list.setItems(detailLines(lines), (node, text) => { node.getChildByName('Text')!.getComponent(Label)!.string = String(text); }, preserve);
     }
-    dispose(): void { for (const badge of this.badges.values()) if (isValid(badge.node, true)) { badge.node.off(Button.EventType.CLICK, badge.handler, this); badge.node.destroy(); } this.badges.clear(); }
+    private removeBadge(badge: { node: Node; handler: () => void }): void {
+        if (!isValid(badge.node, true)) return;
+        for (const sprite of badge.node.getComponentsInChildren(Sprite)) { sprite.spriteFrame = null; sprite.customMaterial = null; }
+        badge.node.off(Button.EventType.CLICK, badge.handler, this); badge.node.active = false; badge.node.parent = null; badge.node.destroy();
+    }
+    dispose(): void { for (const badge of Array.from(this.badges.values())) this.removeBadge(badge); this.badges.clear(); }
 }

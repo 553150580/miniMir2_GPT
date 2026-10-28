@@ -142,3 +142,18 @@ test('意图快照、非法目标和观察者异常不污染当前导航', () =>
     nav.exitGame();
     assert.equal(events.length, 1);
 });
+
+test('status5只结束匹配input/revision/格子的导航，旧失败不能清新目标且终态只通知一次',()=>{
+    const nav=new NavigationIntent(),reasons=[];nav.subscribe((_value,reason)=>reasons.push(reason));
+    nav.setGroundTarget({x:633,y:613});nav.bindGroundInput(8);
+    nav.observeAuthority({inputSequence:8,destination:{x:633,y:613},status:1,revision:'9007199254740993'});
+    assert.equal(nav.observeAuthority({inputSequence:8,destination:{x:633,y:613},status:5,revision:'9007199254740994'}),false);
+    assert.equal(nav.observeAuthority({inputSequence:7,destination:{x:633,y:613},status:5,revision:'9007199254740993'}),false);
+    // 更高但身份不匹配的推送仍是全局修订水位，不能接受随后的低修订。
+    assert.deepEqual(nav.state.target,{x:633,y:613});
+    nav.setGroundTarget({x:640,y:620});nav.bindGroundInput(9);
+    assert.equal(nav.observeAuthority({inputSequence:8,destination:{x:633,y:613},status:5,revision:'9007199254740994'}),false);
+    assert.equal(nav.observeAuthority({inputSequence:9,destination:{x:640,y:620},status:5,revision:'9007199254740995'}),true);
+    assert.equal(nav.state.target,null);assert.equal(nav.observeAuthority({inputSequence:9,destination:{x:640,y:620},status:5,revision:'9007199254740995'}),false);
+    assert.equal(reasons.filter(value=>value==='unreachable').length,1);assert.equal(reasons.includes('arrived'),false);
+});

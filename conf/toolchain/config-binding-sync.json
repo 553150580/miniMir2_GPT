@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-source-town-v0.12-534f1e5def1e",
+  "config_version": "dev-town-travel-v0.13-447e0c35ff9d",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

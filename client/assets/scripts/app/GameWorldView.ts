@@ -26,6 +26,8 @@ interface Visual {
     pose: AnimationSample | null;
     movement: EntityDisplacement;
 }
+// 同一保存World可被下一场景复用；旧owner的迟到解绑不能清理新owner的Surface。
+const surfaceOwners = new WeakMap<Node, GameWorldView>();
 
 // 权威格坐标用于规则与点击；每帧显示位置及动作独立插值，不生成固定UI布局。
 export class GameWorldView {
@@ -33,6 +35,7 @@ export class GameWorldView {
     map: any;
     gameplay: any;
     private assets?: WorldAssets;
+    private releaseAssetsInvalidation?: () => void;
     private effects?: CombatEffects;
     private statusEffects?: StatusEffects;
     private lastAttackId = 0n;
@@ -59,6 +62,12 @@ export class GameWorldView {
     prepare(assets: WorldAssets, onSelected: (entity: any) => void): void {
         if (this.disposed) { assets.dispose(); return; }
         this.assets = assets; this.selected = onSelected;
+        this.releaseAssetsInvalidation = assets.onBeforeInvalidation(reason => {
+            if (reason !== 'dispose' || this.disposed) return;
+            this.releaseVisuals(); this.disposed = true;
+            this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined; this.assets = undefined;
+        });
+        surfaceOwners.set(this.world, this);
         this.manifest = assets.manifest; this.map = assets.map; this.gameplay = assets.gameplay;
         this.mapReady = false;
         if (assets.sourceMap) {
@@ -216,7 +225,7 @@ export class GameWorldView {
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0
                 : Math.max(0, Math.min(1, Number(BigInt(state.hp.toString()) * 10000n / BigInt(state.hpMax.toString())) / 10000));
         }
-        for (const [id, visual] of Array.from(this.visuals)) if (!alive.has(id)) { visual.node.destroy(); this.visuals.delete(id); }
+        for (const [id, visual] of Array.from(this.visuals)) if (!alive.has(id)) { this.removeVisual(visual); this.visuals.delete(id); }
         if (baseline.stateSequence != null) this.statusEffects?.observe(baseline.stateSequence, baseline.entities, now);
         // 首帧定位同样走显示模型；后续快照绝不直接设置节点为新格坐标。
         this.update(0, this.job, this.weaponEquipped);
@@ -355,18 +364,30 @@ export class GameWorldView {
     }
 
 
-    dispose(): void {
-        if (this.disposed) return;
-        this.disposed = true;
+    private removeVisual(visual: Visual): void {
+        for (const sprite of visual.body) if (isValid(sprite)) { sprite.spriteFrame = null; sprite.customMaterial = null; }
+        if (isValid(visual.node, true)) { visual.node.active = false; visual.node.parent = null; visual.node.destroy(); }
+    }
+    private releaseVisuals(): void {
         this.mapReady = false; this.sourceView?.dispose(); this.sourceView = undefined; this.mapPreparation = undefined;
         if (isValid(this.viewport, true)) this.viewport.off(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
         this.playerPosition = null;
-        for (const visual of Array.from(this.visuals.values())) if (isValid(visual.node, true)) {
-            for (const sprite of visual.body) sprite.spriteFrame = null;
-            visual.node.destroy();
-        }
-        this.visuals.clear(); this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined;
+        // 附体/战斗特效先解除帧，再销毁其所属实体；Creator的destroy实际在帧尾完成。
+        this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined;
+        for (const visual of Array.from(this.visuals.values())) this.removeVisual(visual);
+        this.visuals.clear();
         for (const prop of this.props) if (isValid(prop.node, true)) { const sprite = prop.node.getComponent(Sprite); if (sprite) sprite.spriteFrame = null; prop.node.destroy(); }
-        this.props.length = 0; this.assets?.dispose(); this.assets = undefined;
+        this.props.length = 0;
+        if (isValid(this.world, true) && surfaceOwners.get(this.world) === this) {
+            const surface = this.world.getChildByName('Surface')?.getComponent(Sprite);
+            if (surface) { surface.spriteFrame = null; surface.enabled = false; }
+            surfaceOwners.delete(this.world);
+        }
+    }
+    dispose(): void {
+        if (this.disposed && !this.assets) return;
+        this.releaseVisuals(); this.disposed = true;
+        this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined;
+        this.assets?.dispose(); this.assets = undefined;
     }
 }

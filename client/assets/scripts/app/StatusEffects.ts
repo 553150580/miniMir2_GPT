@@ -31,7 +31,11 @@ export class StatusEffects {
             visual.node.getComponent(UITransform)!.setAnchorPoint(0, 1); visual.node.getComponent(UITransform)!.setContentSize(definition.width, definition.height);
             visual.node.setPosition(definition.offset_x - 24, 16 - definition.offset_y); visual.key = key;
         }
-        for (const [key, visual] of this.nodes) if (!active.has(key)) { if (isValid(visual.node, true)) visual.node.destroy(); this.nodes.delete(key); }
+        for (const [key, visual] of Array.from(this.nodes)) if (!active.has(key)) { this.removeVisual(visual); this.nodes.delete(key); }
     }
-    dispose(): void { this.playback.clear(); for (const visual of this.nodes.values()) if (isValid(visual.node, true)) visual.node.destroy(); this.nodes.clear(); }
+    private removeVisual(visual: { node: Node; sprite: Sprite }): void {
+        if (isValid(visual.sprite)) { visual.sprite.spriteFrame = null; visual.sprite.customMaterial = null; }
+        if (isValid(visual.node, true)) { visual.node.active = false; visual.node.parent = null; visual.node.destroy(); }
+    }
+    dispose(): void { this.playback.clear(); for (const visual of Array.from(this.nodes.values())) this.removeVisual(visual); this.nodes.clear(); }
 }

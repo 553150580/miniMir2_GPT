@@ -1,0 +1,6 @@
+=== RUN   TestReviewFixedCancelledIDCannotBeRecreatedAfterAnotherTerminal
+--- PASS: TestReviewFixedCancelledIDCannotBeRecreatedAfterAnotherTerminal (0.04s)
+=== RUN   TestReviewFixedUnacknowledgedReturnDoesNotStartNewAI
+--- PASS: TestReviewFixedUnacknowledgedReturnDoesNotStartNewAI (0.04s)
+PASS
+ok  	minimir/internal/game	4.867s

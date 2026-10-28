@@ -116,7 +116,7 @@ export class CombatEffects {
             if (!key || !point) continue;
             active.add(pose.key); this.draw(pose.key, key, point);
         }
-        for (const [key, visual] of this.nodes) if (!active.has(key)) { visual.node.destroy(); this.nodes.delete(key); }
+        for (const [key, visual] of Array.from(this.nodes)) if (!active.has(key)) { this.removeVisual(visual); this.nodes.delete(key); }
     }
 
     private drawBeam(id: string, key: string, origin: Vec3, event: CastEvent, resource: any): void {
@@ -156,7 +156,11 @@ export class CombatEffects {
 
     dispose(): void {
         this.playback.clear(); this.melee.clear(); this.steps.clear(); this.teleports.clear();
-        for (const visual of this.nodes.values()) if (isValid(visual.node, true)) visual.node.destroy();
+        for (const visual of Array.from(this.nodes.values())) this.removeVisual(visual);
         this.nodes.clear();
+    }
+    private removeVisual(visual: EffectNode): void {
+        if (isValid(visual.sprite)) { visual.sprite.spriteFrame = null; visual.sprite.customMaterial = null; }
+        if (isValid(visual.node, true)) { visual.node.active = false; visual.node.parent = null; visual.node.destroy(); }
     }
 }

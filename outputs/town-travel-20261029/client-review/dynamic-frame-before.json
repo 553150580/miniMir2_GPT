@@ -1,0 +1,1 @@
+{"scope":"真实CombatEffects.draw/dispose、StatusEffects.update/dispose、GameWorldView.dispose、WorldAssets.dispose；Node.destroy按Creator延迟销毁保留Sprite字段","released_while_bound":["active skill Sprite","active attached status Sprite","actor retired earlier this frame"],"positive_controls":["active actor appearance解绑","active prop解绑"]}

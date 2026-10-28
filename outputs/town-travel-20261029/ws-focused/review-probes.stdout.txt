@@ -1,0 +1,8 @@
+=== RUN   TestReviewCancelledTravelIDCanBeRecreatedAfterAnotherTerminal
+    map_travel_review_probe_test.go:20: 实际复现：已取消ID1，经ID2取消后，迟到的ID1 prepare/commit仍将scene20切至Town；最终phase=2
+--- PASS: TestReviewCancelledTravelIDCanBeRecreatedAfterAnotherTerminal (0.04s)
+=== RUN   TestReviewUnacknowledgedReturnedPersonalWorldStartsNewAttacks
+    map_travel_review_probe_test.go:36: 实际复现：Ready=false、Travel.Acked=false 时新建攻击；PlayerAttackSequence 0→1、attacks=0 casts=0
+--- PASS: TestReviewUnacknowledgedReturnedPersonalWorldStartsNewAttacks (0.04s)
+PASS
+ok  	minimir/internal/game	4.946s

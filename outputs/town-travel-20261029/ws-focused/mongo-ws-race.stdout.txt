@@ -1,0 +1,8 @@
+=== RUN   TestMapTravelMongoWS
+2026/10/29 02:03:52 INFO 开发节点就绪 mode=gm address=127.0.0.1:57114 database=minimir_dev_game_test_town_0c3102d48e89e0bc1ca5950ecf0e3110 instance=dccdf4bb7b1410a2d7bd14aaca86e054 runtime_ready=false
+2026/10/29 02:03:52 INFO 开发节点就绪 mode=account address=127.0.0.1:57112 database=minimir_dev_game_test_town_0c3102d48e89e0bc1ca5950ecf0e3110 instance=459eda89c5ec41aade64ce0c959dc174 runtime_ready=false
+2026/10/29 02:03:53 INFO 开发节点就绪 mode=game address=127.0.0.1:57113 database=minimir_dev_game_test_town_0c3102d48e89e0bc1ca5950ecf0e3110 instance=5824d969516d2d75c9a0d7ea4b9f0f02 runtime_ready=false
+    map_travel_test.go:166: 通过: 随机库minimir_dev_game_test_town_0c3102d48e89e0bc1ca5950ecf0e3110，真实击杀/掉落、Town700入口、Plan/Commit/ACK、旧scene/旧ACK门禁、有界导航、11秒断线零收益零扣时、原生命健康重入、原怪物/掉落截止恢复
+--- PASS: TestMapTravelMongoWS (28.12s)
+PASS
+ok  	minimir/internal/integration	33.381s

@@ -4,7 +4,7 @@ export interface NavigationState {
     readonly target: GridPoint | null;
     readonly direction: Direction8;
 }
-export type NavigationReason = 'ground' | 'direction' | 'release' | 'arrived' | 'cancelled' | 'exit' | 'restore';
+export type NavigationReason = 'ground' | 'direction' | 'release' | 'arrived' | 'cancelled' | 'unreachable' | 'exit' | 'restore';
 export interface AuthoritativeNavigation { inputSequence: number; destination?: GridPoint; status: number; revision: { toString(): string } | bigint | string; }
 
 export function direction8(x: number, y: number, deadZone = 0.18): Direction8 {
@@ -84,11 +84,11 @@ export class NavigationIntent {
         this.seenRevision = revision;
         const matching = this.groundSequence === value.inputSequence
             && (this.groundRevision === null ? revision > this.groundLowerBound : revision === this.groundRevision);
-        if (value.status === 2 || value.status === 4) {
+        if (value.status === 2 || value.status === 4 || value.status === 5) {
             if (!this.target || !matching || !value.destination
                 || value.destination.x !== this.target.x || value.destination.y !== this.target.y) return false;
             this.target = null; this.groundSequence = null; this.groundRevision = null; this.localIntent = true;
-            this.direction = { x: 0, y: 0 }; this.publish(value.status === 2 ? 'arrived' : 'cancelled'); return true;
+            this.direction = { x: 0, y: 0 }; this.publish(value.status === 2 ? 'arrived' : value.status === 4 ? 'cancelled' : 'unreachable'); return true;
         }
         if (value.status === 3 && !this.localIntent) {
             this.target = null; this.groundSequence = null; this.groundRevision = null; this.localIntent = true; this.direction = { x: 0, y: 0 };

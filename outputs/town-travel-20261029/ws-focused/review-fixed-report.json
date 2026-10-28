@@ -1,0 +1,12 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -race -overlay ../.work/town-travel-20261029/ws-focused/review-fixed-overlay.json ./internal/game -run '^TestReviewFixed' -count=1 -v",
+  "exit_code": 0,
+  "package_seconds": 4.867,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "stdout": "review-fixed-race.stdout.txt",
+  "capture": "tools/dev.ps1子进程直接继承stdout，不进入PowerShell Tee对象管道；核对后从同一工具会话76443捕获输出按原文本保存，未重跑",
+  "production_files_modified_by_review": false,
+  "scope": "两个已真实复现缺陷的修后反向断言；Go overlay仅.work，不重跑已通过WS，不替代完整最终冻结Mongo/WS/race"
+}

@@ -73,8 +73,8 @@ def main():
             go.append(f"\t{row['name']} {typ} = {row['value']}")
             ts.append(f"export const {row['name']}: {row['value']} = {row['value']};")
         go.extend([')',''])
-    (server_out/'protocol_ids.go').write_text('\n'.join(go),encoding='utf-8')
-    (client_out/'protocol_ids.ts').write_text('\n'.join(ts)+'\n',encoding='utf-8')
+    (server_out/'protocol_ids.go').write_text('\n'.join(go),encoding='utf-8',newline='\n')
+    (client_out/'protocol_ids.ts').write_text('\n'.join(ts)+'\n',encoding='utf-8',newline='\n')
     print(json.dumps({'server':str(server_out),'client':str(client_out),'implementation_status':'generated_constants_only'},ensure_ascii=False))
 
 

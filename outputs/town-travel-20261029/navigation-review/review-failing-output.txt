@@ -1,0 +1,7 @@
+--- FAIL: TestReviewPendingPauseDoesNotClearUnchangedGroundTarget (0.00s)
+    town_navigation_review_probe_test.go:31: 第4次纯Pending暂停恢复清除地面目标: status=5 state=cancelled position={1 1} target={10 1}
+--- FAIL: TestReviewQuiescingSuspendsNavigationBeforeWorkerAdvance (0.00s)
+    town_navigation_review_probe_test.go:47: 旅行收束仍开始规划并占用共享池: used=4 state=searching routeHeld=true workspaceBusy=true
+FAIL
+FAIL	minimir/internal/game	3.618s
+FAIL

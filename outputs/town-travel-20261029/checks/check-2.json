@@ -1,0 +1,13 @@
+{
+  "task": "check",
+  "command": [
+    "python3",
+    "tools/config/generate_protocol.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T18:21:39.726167+00:00",
+  "finished_at": "2026-10-28T18:21:39.872067+00:00",
+  "output": ".work/town-travel-20261029/checks/check-2.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

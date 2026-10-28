@@ -1,0 +1,32 @@
+{
+  "input_sha256": "aef136b48254affe5a70fbb4ade59c38d4a9d93193e07e51daa77d08b859498f",
+  "output_sha256": "ad59ba6c8a12bd0abb82f78f84e2ac3a41b5902e3748eb256e0f2e213dfba8e9",
+  "edited_worksheets": [
+    "xl/worksheets/sheet95.xml"
+  ],
+  "untouched_zip_members_verified": 102,
+  "all_requested_values_readback_equal": true,
+  "edited_cells": 3,
+  "formulas_overwritten": false,
+  "source_workbook_overwritten": false,
+  "normalized_empty_duplicate_rows": [],
+  "changed_cells": [
+    [
+      "开发首循环夹具",
+      4,
+      3
+    ],
+    [
+      "开发首循环夹具",
+      4,
+      5
+    ],
+    [
+      "开发首循环夹具",
+      4,
+      6
+    ]
+  ],
+  "all_other_cells_preserved": true,
+  "input_book_not_modified_before_candidate_review": true
+}

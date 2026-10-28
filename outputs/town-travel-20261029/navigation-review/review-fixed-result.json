@@ -1,0 +1,21 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "go",
+    "test",
+    "-race",
+    "-overlay",
+    "../.work/town-travel-20261029/nav-review/review-overlay.json",
+    "./internal/game",
+    "-run",
+    "^TestReview(PendingPause|Quiescing)",
+    "-count=1"
+  ],
+  "exit_code": 0,
+  "scope": "只读overlay；原反例未改断言；不修改生产文件"
+}

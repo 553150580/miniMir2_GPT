@@ -49,6 +49,10 @@ const (
 	MsgC2SSkillAssetCommit uint16 = 40013
 	MsgC2SCastWithMaterial uint16 = 40014
 	MsgC2SSetCastingSupply uint16 = 40015
+	MsgC2SMapTravelPrepare uint16 = 20007
+	MsgS2CMapTravelPlan uint16 = 20008
+	MsgC2SMapTravelCommit uint16 = 20009
+	MsgS2CMapTravelState uint16 = 20010
 )
 
 const (

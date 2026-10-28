@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 12,
+  "rule_version": 13,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -3463,5 +3463,9 @@
   "source_map_streaming": {
     "load_concurrency": 4,
     "cache_capacity": 49
+  },
+  "town_travel": {
+    "enabled": true,
+    "town_map_id": "2"
   }
 }

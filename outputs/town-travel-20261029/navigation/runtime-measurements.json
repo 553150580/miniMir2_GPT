@@ -1,0 +1,284 @@
+{
+  "configured_worker_budget": {
+    "work_per_task": 1024,
+    "work_per_worker_tick": 8192,
+    "workspaces_per_worker": 1,
+    "queue_per_worker": 64,
+    "max_expanded": 490000,
+    "max_frontier": 65536,
+    "max_route_cells": 4096,
+    "max_replans": 3,
+    "max_dynamic_cells": 2,
+    "max_memory_bytes_per_worker": 33554432
+  },
+  "fixture_sha256": "3ef21a7807ac0d35b5debb73a603c941e869f43f364f0011f8ae7fed66baed80",
+  "go_version": "go1.27.3",
+  "runtime_collision_sha256": "be7ef1bd965f562beccf7314caa80a1672da8ebe755606f7056c9bb42e76a040",
+  "scenarios": [
+    {
+      "Name": "real_town_nearby_touch",
+      "Start": {
+        "X": 633,
+        "Y": 613
+      },
+      "Goal": {
+        "X": 650,
+        "Y": 631
+      },
+      "PerAdvance": 1024,
+      "Limits": {
+        "MaxExpanded": 490000,
+        "MaxFrontier": 65536,
+        "MaxRouteCells": 4096,
+        "MaxReplans": 3,
+        "MaxDynamicCells": 2
+      },
+      "Samples": [
+        {
+          "state": "route_ready",
+          "prepare_ms": 15.6717,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10417256,
+          "new_task_ms": 0,
+          "AdvanceCalls": 1,
+          "TotalExpanded": 33,
+          "TotalWork": 51,
+          "RouteCells": 18,
+          "PeakFrontier": 69,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "route_ready",
+          "prepare_ms": 14.3273,
+          "prepare_bytes": 3997824,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 1,
+          "TotalExpanded": 33,
+          "TotalWork": 51,
+          "RouteCells": 18,
+          "PeakFrontier": 69,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "route_ready",
+          "prepare_ms": 14.7692,
+          "prepare_bytes": 3997808,
+          "workspace_bytes": 10412176,
+          "new_task_ms": 0,
+          "AdvanceCalls": 1,
+          "TotalExpanded": 33,
+          "TotalWork": 51,
+          "RouteCells": 18,
+          "PeakFrontier": 69,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        }
+      ]
+    },
+    {
+      "Name": "real_town_distant_reachable",
+      "Start": {
+        "X": 633,
+        "Y": 613
+      },
+      "Goal": {
+        "X": 289,
+        "Y": 618
+      },
+      "PerAdvance": 1024,
+      "Limits": {
+        "MaxExpanded": 490000,
+        "MaxFrontier": 65536,
+        "MaxRouteCells": 4096,
+        "MaxReplans": 3,
+        "MaxDynamicCells": 2
+      },
+      "Samples": [
+        {
+          "state": "route_ready",
+          "prepare_ms": 15.4866,
+          "prepare_bytes": 3997808,
+          "workspace_bytes": 10412176,
+          "new_task_ms": 0,
+          "AdvanceCalls": 48,
+          "TotalExpanded": 48176,
+          "TotalWork": 48568,
+          "RouteCells": 392,
+          "PeakFrontier": 1312,
+          "MaxAdvanceMS": 1.5025,
+          "SumAdvanceMS": 11.190999999999999,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "route_ready",
+          "prepare_ms": 15.3779,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 48,
+          "TotalExpanded": 48176,
+          "TotalWork": 48568,
+          "RouteCells": 392,
+          "PeakFrontier": 1312,
+          "MaxAdvanceMS": 1.5996,
+          "SumAdvanceMS": 10.907399999999997,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "route_ready",
+          "prepare_ms": 14.9267,
+          "prepare_bytes": 3997808,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 48,
+          "TotalExpanded": 48176,
+          "TotalWork": 48568,
+          "RouteCells": 392,
+          "PeakFrontier": 1312,
+          "MaxAdvanceMS": 1.51,
+          "SumAdvanceMS": 11.001999999999999,
+          "SearchAllocatedBytes": 288
+        }
+      ]
+    },
+    {
+      "Name": "real_town_static_unreachable",
+      "Start": {
+        "X": 633,
+        "Y": 613
+      },
+      "Goal": {
+        "X": 396,
+        "Y": 47
+      },
+      "PerAdvance": 1024,
+      "Limits": {
+        "MaxExpanded": 490000,
+        "MaxFrontier": 65536,
+        "MaxRouteCells": 4096,
+        "MaxReplans": 3,
+        "MaxDynamicCells": 2
+      },
+      "Samples": [
+        {
+          "state": "static_unreachable",
+          "prepare_ms": 14.7403,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412176,
+          "new_task_ms": 0,
+          "AdvanceCalls": 0,
+          "TotalExpanded": 0,
+          "TotalWork": 0,
+          "RouteCells": 0,
+          "PeakFrontier": 0,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "static_unreachable",
+          "prepare_ms": 14.8281,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 0,
+          "TotalExpanded": 0,
+          "TotalWork": 0,
+          "RouteCells": 0,
+          "PeakFrontier": 0,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        },
+        {
+          "state": "static_unreachable",
+          "prepare_ms": 15.7345,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 0,
+          "TotalExpanded": 0,
+          "TotalWork": 0,
+          "RouteCells": 0,
+          "PeakFrontier": 0,
+          "MaxAdvanceMS": 0,
+          "SumAdvanceMS": 0,
+          "SearchAllocatedBytes": 288
+        }
+      ]
+    },
+    {
+      "Name": "synthetic_700_dynamic_bridge_blocked",
+      "Start": {
+        "X": 0,
+        "Y": 0
+      },
+      "Goal": {
+        "X": 699,
+        "Y": 699
+      },
+      "PerAdvance": 1024,
+      "Limits": {
+        "MaxExpanded": 490000,
+        "MaxFrontier": 65536,
+        "MaxRouteCells": 4096,
+        "MaxReplans": 3,
+        "MaxDynamicCells": 2
+      },
+      "Samples": [
+        {
+          "state": "waiting_dynamic_change",
+          "prepare_ms": 21.4979,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 240,
+          "TotalExpanded": 245000,
+          "TotalWork": 245000,
+          "RouteCells": 0,
+          "PeakFrontier": 1397,
+          "MaxAdvanceMS": 1.5749,
+          "SumAdvanceMS": 47.22100000000001,
+          "SearchAllocatedBytes": 304
+        },
+        {
+          "state": "waiting_dynamic_change",
+          "prepare_ms": 22.4951,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 240,
+          "TotalExpanded": 245000,
+          "TotalWork": 245000,
+          "RouteCells": 0,
+          "PeakFrontier": 1397,
+          "MaxAdvanceMS": 1.5009,
+          "SumAdvanceMS": 48.3893,
+          "SearchAllocatedBytes": 304
+        },
+        {
+          "state": "waiting_dynamic_change",
+          "prepare_ms": 22.3464,
+          "prepare_bytes": 3997792,
+          "workspace_bytes": 10412160,
+          "new_task_ms": 0,
+          "AdvanceCalls": 240,
+          "TotalExpanded": 245000,
+          "TotalWork": 245000,
+          "RouteCells": 0,
+          "PeakFrontier": 1397,
+          "MaxAdvanceMS": 2.0169,
+          "SumAdvanceMS": 48.247,
+          "SearchAllocatedBytes": 304
+        }
+      ]
+    }
+  ],
+  "scope": "生产纯算法overlay；预算读取当前唯一Excel生成fixture；prepare/workspace在owner准入前完成；仅逐任务量子耗时，不证明owner混合负载容量或真实时限"
+}

@@ -6,6 +6,10 @@ import { inputTraceMessage, traceInput } from './InputTrace';
 const pb = clientPb.minimir.v1;
 type MessageType = { encode(value: any): { finish(): Uint8Array }; decode(value: Uint8Array): any };
 export interface Packet { id: number; seq: number; binding: Long; error: number; value: any; }
+// 明确的协议拒绝与网络中断/未知提交分开，调用方不能把超时当作服务端撤销。
+export class ProtocolResponseError extends Error {
+    constructor(readonly messageId: number, readonly code: number) { super(protocolErrorMessage(messageId, code)); }
+}
 
 const codecs: Record<number, MessageType> = {
     1: pb.Heartbeat, 2: pb.HeartbeatResult, 4: pb.EnterWorldAck, 5: pb.SceneBaselineChunk, 6: pb.SyncReady,
@@ -14,6 +18,7 @@ const codecs: Record<number, MessageType> = {
     10007: pb.EntryTicketRequest, 10008: pb.EntryTicketResult,
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
+    20007: pb.MapTravelPrepare, 20008: pb.MapTravelPlan, 20009: pb.MapTravelCommit, 20010: pb.MapTravelState,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
     30012: pb.CastStep, 30013: pb.EntityDisplacement,
@@ -80,10 +85,13 @@ export class GameConnection {
     token = '';
     binding = Long.UZERO;
     private sequence = 0;
+    private lifecycle = 0;
     private socket?: WebSocket;
     private listeners = new Set<(packet: Packet) => void>();
     private statusListeners = new Set<(status: string) => void>();
-    private pending = new Map<number, { response: number; ok: (value: any) => void; fail: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
+    private pending = new Map<number, { responses: readonly number[]; ok: (value: any) => void; fail: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
+    get generation(): number { return this.lifecycle; }
+    get connected(): boolean { return this.socket?.readyState === WebSocket.OPEN; }
 
     subscribe(listener: (packet: Packet) => void): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
     onStatus(listener: (status: string) => void): () => void { this.statusListeners.add(listener); return () => this.statusListeners.delete(listener); }
@@ -97,7 +105,7 @@ export class GameConnection {
         if (!response.ok) throw new Error(`认证服务返回HTTP ${response.status}`);
         const packet = decodePacket(new Uint8Array(await response.arrayBuffer()));
         if (packet.seq !== seq) throw new Error('认证响应序号不匹配');
-        if (packet.error) throw new Error(protocolErrorMessage(packet.id, packet.error));
+        if (packet.error) throw new ProtocolResponseError(packet.id, packet.error);
         return packet.value;
     }
 
@@ -105,18 +113,22 @@ export class GameConnection {
         this.close(); this.binding = Long.UZERO;
         const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
         const socket = new WebSocket(`${protocol}//${location.host}/game/ws`); this.socket = socket;
+        const generation = this.lifecycle;
         socket.binaryType = 'arraybuffer';
         socket.onmessage = event => {
             if (this.socket !== socket || !(event.data instanceof ArrayBuffer)) return;
             try {
                 const packet = decodePacket(new Uint8Array(event.data));
-                if (packet.id === 20002 && !packet.error) this.binding = packet.binding;
-                else if (!this.binding.isZero() && !packet.binding.equals(this.binding)) return;
+                if (!this.binding.isZero() && !packet.binding.equals(this.binding)) return;
+                if (packet.id === 20002 && !packet.error) {
+                    if (packet.binding.isZero()) throw new Error('入场缺少非零连接绑定');
+                    this.binding = packet.binding;
+                }
                 if (!packet.error) traceInput(inputTraceMessage('receive', packet.id, packet.seq, packet.value));
                 const pending = this.pending.get(packet.seq);
-                if (pending && (packet.error || packet.id === pending.response)) {
+                if (pending && (packet.error || pending.responses.includes(packet.id))) {
                     this.pending.delete(packet.seq); clearTimeout(pending.timer);
-                    if (packet.error) pending.fail(new Error(protocolErrorMessage(packet.id, packet.error))); else pending.ok(packet.value);
+                    if (packet.error) pending.fail(new ProtocolResponseError(packet.id, packet.error)); else pending.ok(packet.value);
                 }
                 for (const listener of Array.from(this.listeners)) listener(packet);
             } catch (error) { this.report(error instanceof Error ? error.message : String(error)); }
@@ -127,7 +139,9 @@ export class GameConnection {
             socket.onopen = () => { clearTimeout(timer); ok(); };
             socket.onerror = () => { clearTimeout(timer); fail(new Error('游戏连接失败')); };
         });
+        if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏连接准备已经失效');
         await this.request(20001, { accountTicket: ticket });
+        if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏入场回执已经失效');
     }
 
     send(id: number, value: any): number {
@@ -142,15 +156,18 @@ export class GameConnection {
         const cancelNavigation = id === 20006 && value?.cancelNavigation === true;
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            this.pending.set(seq, { response: cancelNavigation ? 5 : id === 20001 ? 20002 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005, ok, fail, timer });
-            this.socket!.send(encodePacket(id, seq, this.binding, value));
-            traceInput(inputTraceMessage('send', id, seq, value));
+            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005];
+            this.pending.set(seq, { responses, ok, fail, timer });
+            try {
+                this.socket!.send(encodePacket(id, seq, this.binding, value));
+                traceInput(inputTraceMessage('send', id, seq, value));
+            } catch (error) { this.pending.delete(seq); clearTimeout(timer); fail(error instanceof Error ? error : new Error(String(error))); }
         });
     }
 
-    close(): void { const old = this.socket; this.socket = undefined; old?.close(); this.rejectPending(); }
-    private rejectPending(): void { for (const item of this.pending.values()) { clearTimeout(item.timer); item.fail(new Error('连接已关闭')); } this.pending.clear(); }
-    private report(message: string): void { for (const listener of Array.from(this.statusListeners)) listener(message); }
+    close(): void { this.lifecycle++; const old = this.socket; this.socket = undefined; old?.close(); this.rejectPending(); }
+    private rejectPending(): void { for (const item of Array.from(this.pending.values())) { clearTimeout(item.timer); item.fail(new Error('连接已关闭')); } this.pending.clear(); }
+    private report(message: string): void { this.lifecycle++; for (const listener of Array.from(this.statusListeners)) listener(message); }
 }
 
 export function newOperationId(): Uint8Array { const bytes = new Uint8Array(16); crypto.getRandomValues(bytes); return bytes; }

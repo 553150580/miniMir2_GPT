@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 60,
+  "message_count": 64,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -25,6 +25,10 @@
     "EnterLineRequest",
     "EnterLineResult",
     "EnterWorldAck",
+    "MapTravelPrepare",
+    "MapTravelPlan",
+    "MapTravelCommit",
+    "MapTravelState",
     "SyncReady",
     "EntityState",
     "EntityDisplacement",
@@ -67,8 +71,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 114,
-  "int64_boundary_cases": 377,
+  "int64_field_count": 123,
+  "int64_boundary_cases": 405,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -217,6 +221,54 @@
     {
       "message": "EnterWorldAck",
       "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelPrepare",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelPlan",
+      "field": "from_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelPlan",
+      "field": "target_map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelPlan",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "MapTravelCommit",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelState",
+      "field": "from_scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelState",
+      "field": "target_map_id",
       "type": "uint64",
       "cases": 3
     },
@@ -409,6 +461,12 @@
     {
       "message": "SceneBaselineChunk",
       "field": "state_sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "safe_zone_id",
       "type": "uint64",
       "cases": 3
     },
@@ -867,7 +925,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "697bbc961cd745e12dd71257ef1e8aba3093b2e2a1e1fe4b2f8a7ecc8a3f0ceb"
+      "sha256": "7b05143b515e0814f9d1daa334c30bb59632c68c181e738fc7530c30139c67ea"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -877,13 +935,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "303b0f2656971f3626eb9566bc9f0693744b172df24295a49aecd239395e139a",
-      "bytes": 963745
+      "sha256": "bf2911ff2c96b8125687ce14b2de25cfd635444da7d97f5333dd598c74c79d12",
+      "bytes": 1024113
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "83f8050fea18b74c2335a91ff51f1388ce2af021ba2f1ed6c0bcc62e0d4914ae",
-      "bytes": 313794
+      "sha256": "4628df1f153810bff75c6f21680a639305412fbc27692821dfadeffbf38ca2a4",
+      "bytes": 334014
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

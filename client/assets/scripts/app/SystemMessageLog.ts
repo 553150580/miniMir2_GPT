@@ -77,6 +77,7 @@ export class SystemMessageLog {
     private wasReady = false;
     private entered = false;
     private lastError = '';
+    private lastNavigationNotice = '';
     private previousInventory: { level: number; experience: bigint; items: ReturnType<typeof itemTotals> } | null = null;
     private previousWallet: bigint[] | null = null;
     private previousDead: boolean | null = null;
@@ -96,13 +97,17 @@ export class SystemMessageLog {
         const needle = query.trim().toLocaleLowerCase();
         return needle ? this.entries.filter(item => `${item.title}\n${item.message}`.toLocaleLowerCase().includes(needle)) : this.entries;
     }
+    navigationUnreachable(identity: string): boolean {
+        if (!identity || identity === this.lastNavigationNotice) return false;
+        this.lastNavigationNotice = identity; this.append('导航', '当前无法到达该位置'); return true;
+    }
 
     observe(snapshot: MessageSnapshot): boolean {
         const start = this.change;
         if (!snapshot.roleIdentity) return false;
         if (this.role !== snapshot.roleIdentity) {
             this.role = snapshot.roleIdentity; this.entries = []; this.change++;
-            this.binding = ''; this.entered = false; this.wasReady = false; this.lastError = '';
+            this.binding = ''; this.entered = false; this.wasReady = false; this.lastError = ''; this.lastNavigationNotice = '';
             this.seenReports.clear(); this.resetObservations();
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';

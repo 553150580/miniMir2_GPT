@@ -7,7 +7,7 @@ export interface HudInput {
     role: { name?: string; job?: number; level?: number } | null;
     wallet: { gold?: HudInteger; boundGold?: HudInteger; yuanbaoUnits?: HudInteger; boundYuanbaoUnits?: HudInteger } | null;
     inventory: { level?: number; experience?: HudInteger; items?: Array<{ itemId: number; quantity: HudInteger }> } | null;
-    baseline: { entities: Array<{ entityHandle: number; entityKind: number; position: { x: number; y: number }; hp: HudInteger; hpMax: HudInteger; mp: HudInteger; mpMax: HudInteger }> } | null;
+    baseline: { entities: Array<{ entityHandle: number; entityKind: number; position: { x: number; y: number }; hp: HudInteger; hpMax: HudInteger; mp: HudInteger; mpMax: HudInteger }>; safeZoneId?: string | bigint | { toString(): string } } | null;
     hosting?: unknown;
     report?: unknown;
     ready: boolean;
@@ -16,7 +16,7 @@ export interface HudInput {
     count: number;
     quickSkillLabel?: string;
     gameplay: { jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
-    map: ({ name?: string; width: number; height: number } & Partial<ProjectionGeometry>) | null;
+    map: ({ name?: string; width: number; height: number; scene_kind?: number } & Partial<ProjectionGeometry>) | null;
 }
 
 export function hudInteger(value: HudInteger): bigint {
@@ -82,6 +82,8 @@ export function createHudState(input: HudInput) {
     const next = input.gameplay?.experience?.find(row => row.level === level)?.next_level_exp;
     const experience = input.inventory?.experience;
     const dead = player != null && hudInteger(player.hp) <= 0n;
+    const town = input.map?.scene_kind === 2;
+    const inSafeZone = input.baseline?.safeZoneId != null && hudInteger(input.baseline.safeZoneId) > 0n;
     return {
         roleName: input.role?.name ?? '角色同步中',
         level: level == null ? '等级 —' : `${level}级`,
@@ -97,7 +99,7 @@ export function createHudState(input: HudInput) {
         experienceText: next == null ? `经验 ${hudAmount(experience)}` : `${hudAmount(experience)} / ${hudAmount(next)}`,
         experience: hudRatio(experience, next),
         redPotionCount: hudItemCount(input, 35), bluePotionCount: hudItemCount(input, 36),
-        objective: !input.ready ? '场景同步中' : dead ? '角色已倒下 · 点击复活' : `${input.auto ? '自动战斗' : '手动战斗'} · ${input.count}只怪物`,
+        objective: !input.ready ? '场景同步中' : dead ? '角色已倒下 · 点击复活' : town ? `${inSafeZone ? '安全区 · ' : ''}城镇漫步` : `${input.auto ? '自动战斗' : '手动战斗'} · ${input.count}只怪物`,
         auto: input.auto ? '自动' : '手动', count: `${input.count}怪`, attack: dead ? '复活' : '攻击',
         playerPosition: player?.position ?? null,
     };

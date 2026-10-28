@@ -11,6 +11,7 @@ import (
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
+	"minimir/internal/townnav"
 	"minimir/internal/wire"
 	"sync"
 	"sync/atomic"
@@ -27,36 +28,39 @@ type Connection interface {
 	Binding() uint64
 }
 type command struct {
-	role       string
-	conn       Connection
-	frame      wire.Frame
-	ticket     string
-	done       func(*worker)
-	tick       time.Time
-	at         time.Time
-	disconnect bool
+	role        string
+	conn        Connection
+	frame       wire.Frame
+	ticket      string
+	done        func(*worker)
+	tick        time.Time
+	at          time.Time
+	disconnect  bool
+	fromWaiting bool
 }
 type job struct {
 	run    func() func(*worker)
 	target *worker
 }
 type Engine struct {
-	Store    *persistence.Store
-	workers  []*worker
-	jobs     chan job
-	ctx      context.Context
-	cancel   context.CancelFunc
-	wg       sync.WaitGroup
-	baseline atomic.Uint64
-	stopped  atomic.Bool
+	Store     *persistence.Store
+	workers   []*worker
+	jobs      chan job
+	ctx       context.Context
+	cancel    context.CancelFunc
+	wg        sync.WaitGroup
+	baseline  atomic.Uint64
+	stopped   atomic.Bool
+	TownGrids map[uint64]*townnav.Grid
 }
 type worker struct {
-	e        *Engine
-	commands chan command
-	control  chan command
-	done     chan func(*worker)
-	rooms    map[string]*room
-	roll     func(int64) int64
+	e              *Engine
+	commands       chan command
+	control        chan command
+	done           chan func(*worker)
+	rooms          map[string]*room
+	roll           func(int64) int64
+	townNavigation *townNavigationWorker
 }
 type entity struct {
 	Handle           uint32
@@ -94,6 +98,10 @@ type room struct {
 	Conn                  Connection
 	Ready                 bool
 	MapID                 uint64
+	Travel                *mapTravelPlan
+	TravelHistory         *mapTravelHistory
+	SavedPersonal         *personalWorld
+	TownNavigation        [2]*townNavigationRequest
 	Scene                 uint64
 	Baseline              uint64
 	Sequence              uint64
@@ -147,6 +155,12 @@ func New(ctx context.Context, s *persistence.Store) *Engine {
 	for i := 0; i < 8; i++ {
 		w := &worker{e: e, commands: make(chan command, 256), control: make(chan command, 64), done: make(chan func(*worker), 256), rooms: map[string]*room{}}
 		e.workers = append(e.workers, w)
+	}
+	if err := e.initializeTownNavigation(); err != nil {
+		cancel()
+		panic("城镇导航准入初始化失败：" + err.Error())
+	}
+	for _, w := range e.workers {
 		e.wg.Go(w.loop)
 	}
 	for i := 0; i < 8; i++ {
@@ -249,6 +263,8 @@ func (e *Engine) Stop() {
 	for _, w := range e.workers {
 		e.post(w, command{done: func(w *worker) {
 			for _, r := range w.rooms {
+				w.cancelTownNavigation(r)
+				w.cancelMapTravelOnDetach(r)
 				if r.Conn != nil {
 					r.Conn.Close("maintenance")
 					r.Conn = nil
@@ -286,9 +302,11 @@ func (w *worker) loop() {
 				continue
 			}
 			if !c.tick.IsZero() {
+				w.beginTownNavigationTick(c.tick)
 				for _, r := range w.rooms {
 					w.step(r, c.tick)
 				}
+				w.endTownNavigationTick()
 				continue
 			}
 			w.command(c)
@@ -350,6 +368,8 @@ func (w *worker) command(c command) {
 	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			w.cancelMapTravelOnDetach(r)
+			w.cancelTownNavigation(r)
 			r.PreviewGeneration++
 			r.PreviewInFlight = false
 			r.Conn = nil
@@ -360,6 +380,9 @@ func (w *worker) command(c command) {
 			at := c.at
 			if at.IsZero() {
 				at = time.Now()
+			}
+			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown {
+				r.HostSession = ""
 			}
 			transitionEventHosting(r, at, r.HostSession)
 			r.HostMS = 0
@@ -382,6 +405,9 @@ func (w *worker) command(c command) {
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.BaselineId != r.Baseline {
 			return
 		}
+		if !w.finishMapTravelAck(r, time.Now()) {
+			return
+		}
 		r.Ready = true
 		w.expireModes(r, time.Now())
 		w.snapshot(r)
@@ -394,7 +420,19 @@ func (w *worker) command(c command) {
 		w.send(r, p.MsgS2CSyncReady, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
 		return
 	}
+	if c.frame.ID == p.MsgC2SMapTravelPrepare {
+		w.prepareMapTravel(r, c.frame)
+		return
+	}
+	if c.frame.ID == p.MsgC2SMapTravelCommit {
+		w.commitMapTravel(r, c.frame)
+		return
+	}
 	if !r.Ready {
+		w.failure(r, c.frame, p.CodeLineRecovering)
+		return
+	}
+	if mapTravelQuiescing(r) && !c.fromWaiting {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
@@ -446,6 +484,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.CancelNavigation {
+			w.cancelTownNavigation(r)
 			// 明确退出才取消地面目标；保留原目标身份供客户端核对，健康断线和摇杆释放不走此分支。
 			r.Destination, r.Manual = nil, false
 			if r.Navigation.Destination != nil && r.Navigation.Revision != 0 {
@@ -470,10 +509,12 @@ func (w *worker) command(c command) {
 				w.isolateRoom(r)
 				return
 			}
+			w.cancelTownNavigation(r)
 			r.Destination = &point
 			r.Navigation = navigationState{InputSequence: q.InputSequence, Destination: &point, Status: navigationActive, Revision: r.Navigation.Revision + 1}
 			r.Manual = false
 		} else {
+			w.cancelTownNavigation(r)
 			r.Manual = true
 			r.ManualDirection = q.Direction
 			r.Destination = nil
@@ -490,6 +531,11 @@ func (w *worker) command(c command) {
 		if q.Enabled && r.Role.PickupStopped {
 			w.failure(r, c.frame, p.CodeLineForbidden)
 			w.hosting(r, 0)
+			return
+		}
+		if m, ok := w.currentMap(r); !ok || m.SceneKindValue() == devconfig.SceneKindTown {
+			w.failure(r, c.frame, p.CodeLineForbidden)
+			w.hosting(r, c.frame.Request)
 			return
 		}
 		if q.MonsterCount > 0 {
@@ -554,6 +600,8 @@ func (w *worker) join(r *room, c command) {
 			if r.Conn != nil && r.Conn != c.conn {
 				r.Conn.Close("role taken over")
 			}
+			w.cancelMapTravelOnDetach(r)
+			w.cancelTownNavigation(r)
 			r.Role = role
 			r.Auth = auth
 			transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
@@ -566,6 +614,9 @@ func (w *worker) join(r *room, c command) {
 			r.HostSession = ""
 			r.LastTick = time.Now()
 			r.AwaitUntil = time.Now().Add(10 * time.Second)
+			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown && w.e.Store.Cfg.Fixture.TownTravel != nil {
+				r.AwaitUntil = time.Now().Add(time.Duration(w.e.Store.Cfg.Fixture.TownTravel.AckTTLMS) * time.Millisecond)
+			}
 			if !c.conn.Alive() {
 				r.Conn = nil
 				r.HostSession = domain.ID()
@@ -605,6 +656,8 @@ func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
 	return &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: m.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: m.SceneKindValue(), NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1), PlayerHandle: r.Player.Handle}
 }
 func (w *worker) initialize(r *room, role domain.Role) {
+	w.cancelTownNavigation(r)
+	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
 	f := &w.e.Store.Cfg.Fixture
 	r.MapID = f.Map.ID
 	player, _ := f.Player(role.Job)
@@ -633,6 +686,7 @@ func (w *worker) after(r *room) {
 	for len(r.Waiting) > 0 && !r.Pending && !r.Isolated {
 		c := r.Waiting[0]
 		r.Waiting = r.Waiting[1:]
+		c.fromWaiting = true
 		w.command(c)
 	}
 }
@@ -714,6 +768,11 @@ func (w *worker) baseline(r *room, request ...uint32) {
 	}
 	r.Sequence++
 	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto()}
+	if m, ok := w.currentMap(r); ok {
+		if zone, inside := m.SafeZoneAt(r.Player.Pos); inside {
+			out.SafeZoneId = zone.ID
+		}
+	}
 	entities := []*entity{&r.Player}
 	if r.Pet != nil {
 		entities = append(entities, r.Pet)
