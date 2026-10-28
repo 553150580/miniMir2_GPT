@@ -124,22 +124,14 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 	if next == nil {
 		return
 	}
+	direction := e.Direction
 	for i, d := range directions {
 		if next.X-start.X == d.X && next.Y-start.Y == d.Y {
-			e.Direction = uint32(i)
+			direction = uint32(i)
 			break
 		}
 	}
-	e.Pos = *next
-	e.Action = 1
-	e.ActionUntil = now.Add(200 * time.Millisecond)
-	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)
-	if e.Kind == 1 {
-		e.ActionReadyAt = e.NextMove
-	} else if e.NextAttack.Before(e.NextMove) {
-		// Crystal Monster.Walk:2128–2131：普通行走推进AttackTime；被推的移动节流不承担攻击门禁。
-		e.NextAttack = e.NextMove
-	}
+	w.commitWalk(r, e, *next, direction, now, interval)
 }
 func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	f := &w.e.Store.Cfg.Fixture
@@ -309,7 +301,7 @@ func (w *worker) step(r *room, now time.Time) {
 	// 已经释放的法术与恢复队列不属于后续离线战斗授权；未知事务仍在上方冻结。
 	w.advanceEvents(r, now)
 	w.flushKillFacts(r)
-	if r.Pending {
+	if r.Pending || r.Isolated {
 		return
 	}
 	if w.tickHealing(r, now) {
@@ -356,6 +348,7 @@ func (w *worker) step(r *room, now time.Time) {
 			m.Life++
 			m.Statuses = nil
 			m.Pos = w.e.Store.Cfg.Fixture.Map.MonsterSpawns[i]
+			m.MovementRevision, m.MovementKind = 0, movementInitial
 			m.RespawnAt = time.Time{}
 			m.Action = 0
 		}
@@ -365,15 +358,14 @@ func (w *worker) step(r *room, now time.Time) {
 		d := directions[r.ManualDirection]
 		target := devconfig.Point{X: r.Player.Pos.X + d.X, Y: r.Player.Pos.Y + d.Y}
 		if w.neighbor(r, r.Player.Pos, target, &r.Player) && !now.Before(r.Player.NextMove) && !now.Before(r.Player.ActionReadyAt) {
-			r.Player.Direction = r.ManualDirection
-			r.Player.Pos = target
-			r.Player.Action = 1
-			r.Player.ActionUntil = now.Add(200 * time.Millisecond)
-			r.Player.NextMove = now.Add(time.Duration(a.MoveMS) * time.Millisecond)
-			r.Player.ActionReadyAt = r.Player.NextMove
+			w.commitWalk(r, &r.Player, target, r.ManualDirection, now, a.MoveMS)
 		}
 	} else if r.Destination != nil {
 		if r.Player.Pos == *r.Destination {
+			if r.Navigation.InputSequence != 0 && r.Navigation.Status == navigationActive {
+				r.Navigation.Status = navigationArrived
+				w.snapshot(r)
+			}
 			r.Destination = nil
 		} else {
 			w.move(r, &r.Player, *r.Destination, now, a.MoveMS)
@@ -391,7 +383,7 @@ func (w *worker) step(r *room, now time.Time) {
 			}
 		}
 	}
-	if r.Pending {
+	if r.Pending || r.Isolated {
 		return
 	}
 	if r.Pet != nil && r.Pet.HP > 0 {
@@ -407,7 +399,7 @@ func (w *worker) step(r *room, now time.Time) {
 			w.move(r, r.Pet, r.Player.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
 		}
 	}
-	if r.Pending {
+	if r.Pending || r.Isolated {
 		return
 	}
 	for _, m := range r.Monsters[:r.MonsterCount] {
@@ -423,7 +415,7 @@ func (w *worker) step(r *room, now time.Time) {
 		} else {
 			w.move(r, m, target.Pos, now, m.Monster.MoveMS)
 		}
-		if r.Pending {
+		if r.Pending || r.Isolated {
 			break
 		}
 	}

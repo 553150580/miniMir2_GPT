@@ -1,0 +1,13 @@
+?   	minimir/api/generated/minimirv1	[no test files]
+?   	minimir/cmd/nbserver	[no test files]
+?   	minimir/cmd/toolchain-smoke	[no test files]
+?   	minimir/internal/bootstrap	[no test files]
+?   	minimir/internal/configtypes	[no test files]
+ok  	minimir/internal/devconfig	(cached)
+?   	minimir/internal/domain	[no test files]
+ok  	minimir/internal/game	4.786s
+ok  	minimir/internal/integration	4.835s
+ok  	minimir/internal/persistence	3.209s
+?   	minimir/internal/protocol	[no test files]
+?   	minimir/internal/transport	[no test files]
+?   	minimir/internal/wire	[no test files]

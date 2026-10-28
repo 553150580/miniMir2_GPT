@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 9,
+  "rule_version": 10,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -43,6 +43,7 @@
       "require_line_of_sight": true,
       "auto_priority": 10,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -109,6 +110,7 @@
       "require_line_of_sight": false,
       "auto_priority": 30,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -175,6 +177,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -241,6 +244,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -307,6 +311,7 @@
       "require_line_of_sight": true,
       "auto_priority": 20,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -373,6 +378,7 @@
       "require_line_of_sight": false,
       "auto_priority": 30,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -439,6 +445,7 @@
       "require_line_of_sight": false,
       "auto_priority": 40,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -505,6 +512,7 @@
       "require_line_of_sight": false,
       "auto_priority": 40,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -571,6 +579,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -637,6 +646,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [
         0
       ],
@@ -705,6 +715,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [
         -1,
         1,
@@ -775,6 +786,7 @@
       "require_line_of_sight": false,
       "auto_priority": 0,
       "auto_min_targets": 0,
+      "auto_enabled": false,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -841,6 +853,7 @@
       "require_line_of_sight": false,
       "auto_priority": 40,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 6,
@@ -907,6 +920,7 @@
       "require_line_of_sight": false,
       "auto_priority": 60,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -973,6 +987,7 @@
       "require_line_of_sight": false,
       "auto_priority": 50,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -1039,6 +1054,7 @@
       "require_line_of_sight": false,
       "auto_priority": 35,
       "auto_min_targets": 2,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 4,
@@ -1105,6 +1121,7 @@
       "require_line_of_sight": false,
       "auto_priority": 6,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -1171,6 +1188,7 @@
       "require_line_of_sight": false,
       "auto_priority": 7,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -1237,6 +1255,7 @@
       "require_line_of_sight": false,
       "auto_priority": 5,
       "auto_min_targets": 1,
+      "auto_enabled": true,
       "secondary_direction_offsets": [],
       "secondary_distance_cells": 0,
       "line_cells": 0,
@@ -1383,7 +1402,11 @@
     "player_attack_action_ms": 550,
     "player_attack_impact_ms": 300,
     "event_capacity": 128,
-    "kill_queue_capacity": 16
+    "kill_queue_capacity": 16,
+    "player_push_action_ms": 500,
+    "monster_push_action_ms_per_step": 300,
+    "monster_push_move_ms_per_step": 500,
+    "pushed_step_display_ms": 300
   },
   "healing": {
     "tick_ms": 600,
@@ -3188,7 +3211,8 @@
       "agility": 15,
       "magic_resist": 0,
       "magic_resist_weight": 10,
-      "attack_speed": 0
+      "attack_speed": 0,
+      "can_push": true
     },
     {
       "job_id": 1,
@@ -3212,7 +3236,8 @@
       "agility": 15,
       "magic_resist": 0,
       "magic_resist_weight": 10,
-      "attack_speed": 0
+      "attack_speed": 0,
+      "can_push": true
     },
     {
       "job_id": 2,
@@ -3236,7 +3261,8 @@
       "agility": 18,
       "magic_resist": 0,
       "magic_resist_weight": 10,
-      "attack_speed": 0
+      "attack_speed": 0,
+      "can_push": true
     }
   ],
   "pet": {
@@ -3263,7 +3289,8 @@
     "attack_speed": 0,
     "attack_ms": 1000,
     "move_ms": 1000,
-    "undead": true
+    "undead": true,
+    "can_push": true
   },
   "monsters": [
     {
@@ -3291,6 +3318,7 @@
       "attack_ms": 2500,
       "move_ms": 1500,
       "undead": true,
+      "can_push": true,
       "id": 1,
       "exp": 15,
       "gold_min": 30,
@@ -3921,13 +3949,13 @@
       "game_monsters": [
         {
           "id": 1,
-          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:13；client/assets/resources/development/manifest.json",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。"
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:13；client/assets/resources/development/manifest.json；资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39；资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。；CanPush采用Crystal MonsterInfo默认true作为当前形象开发候选，并非MYF实库已认证；宠物从其monster_template_id同一怪物attributes引用，不另维护。"
         },
         {
           "id": 2,
-          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。"
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json；资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39；资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093",
+          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。；CanPush采用Crystal MonsterInfo默认true作为当前形象开发候选，并非MYF实库已认证；宠物从其monster_template_id同一怪物attributes引用，不另维护。"
         }
       ],
       "game_items": [
@@ -4374,97 +4402,97 @@
         {
           "id": 1,
           "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选",
-          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 2,
           "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选",
-          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 3,
           "source_ref": "docs/技能来源核验与实施清单.md；docs/技能获取与升级实施边界.md；Crystal默认源码候选",
-          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 4,
           "source_ref": "docs/范围技能与战斗时序实施边界.md；资料参考/crystal/Server/MirEnvir/Envir.cs；HumanObject.cs与MirEnvir/Map.cs源码候选",
-          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 5,
           "source_ref": "docs/范围技能与战斗时序实施边界.md；资料参考/crystal/Server/MirEnvir/Envir.cs；HumanObject.cs与MirEnvir/Map.cs源码候选",
-          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 11,
           "source_ref": "docs/范围技能与战斗时序实施边界.md；资料参考/crystal/Server/MirEnvir/Envir.cs；HumanObject.cs与MirEnvir/Map.cs源码候选",
-          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 23,
           "source_ref": "docs/范围技能与战斗时序实施边界.md；资料参考/crystal/Server/MirEnvir/Envir.cs；HumanObject.cs与MirEnvir/Map.cs源码候选",
-          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 29,
           "source_ref": "docs/范围技能与战斗时序实施边界.md；资料参考/crystal/Server/MirEnvir/Envir.cs；HumanObject.cs与MirEnvir/Map.cs源码候选",
-          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。"
+          "note": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 7,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 12,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 25,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 26,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 10,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 33,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 24,
           "source_ref": "docs/战士攻击模式与方向技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs；MirEnvir/Map.cs与Envir.cs；Client/MirObjects/PlayerObject.cs源码候选",
-          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。"
+          "note": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 9,
           "source_ref": "用户2026-10-27审定地狱火所有阶固定正前4格；docs/战士攻击模式与方向技能实施边界.md；Crystal HumanObject.cs:4103–4118/Map.cs:875–910默认候选",
-          "note": "形状按用户已定：rank0–3均正前4格，明确不采用源rank3左右射线；MP/威力/门槛/书价仍源码开发候选。首格500，后格实际处理时钟+100，阻挡break，同对象可跨格再次受击；不是整cast去重。"
+          "note": "形状按用户已定：rank0–3均正前4格，明确不采用源rank3左右射线；MP/威力/门槛/书价仍源码开发候选。首格500，后格实际处理时钟+100，阻挡break，同对象可跨格再次受击；不是整cast去重。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 14,
           "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
-          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。"
+          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 15,
           "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
-          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。"
+          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         },
         {
           "id": 31,
           "source_ref": "docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
-          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。"
+          "note": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
         }
       ],
       "game_buffs": [
@@ -4942,8 +4970,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证",
-          "note": "rule9防御状态和材料协议开发候选；护符单位未定，入口关闭；既有17×17小型场边装饰及头顶布局保持。"
+          "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证；资料参考/crystal/Server/MirObjects/HumanObject.cs:2649-2724；MonsterObject.cs:1035-1093；资料参考/crystal/Client/MirObjects/PlayerObject.cs:1037-1041,1493-1497,2384-2401；Frames.cs:158（Pushed六帧按步长2倒放、100ms帧间隔的300ms开发表现）",
+          "note": "rule9防御状态和材料协议开发候选；护符单位未定，入口关闭；既有17×17小型场边装饰及头顶布局保持。；rule10仅位移共用底座：Human无Info.CanPush门槛；玩家推后动作500ms、怪物每推格动作300ms/移动500ms、推步表现300ms独立候选，不借用攻击命中时长。8/27/21仍未选入；推距、绑定目的地与护符单位未填。"
         }
       ],
       "game_drop_categories": [
@@ -5046,7 +5074,7 @@
       },
       {
         "path": "client/assets/resources/development/manifest.json",
-        "sha256": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a"
+        "sha256": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536"
       },
       {
         "path": "client/assets/resources/development/maps/first-map.json",
@@ -5055,12 +5083,28 @@
       {
         "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
         "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1"
+      },
+      {
+        "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+        "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+      },
+      {
+        "path": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs",
+        "sha256": "2b57f0add803473b32b612ffb1327f8819e460d5826f10519617b22f1d32f614"
+      },
+      {
+        "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+        "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+      },
+      {
+        "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+        "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
       }
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "0472e11200410d37ebb4f4ad9f2a7c43644a1690e887882dbda26c3d6339f9b5"
+      "sha256": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894"
     },
-    "exporter_sha256": "741624d952e03e0870d5c28bdd88bc89abcfecd2e2fd615f1c17c910382f5a59"
+    "exporter_sha256": "cb448b7b7ddb58788561d0cb70aa7429f43ad194da3b9fbedbe8ceffbc83efdb"
   }
 }

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-28",
+  "recorded_at_utc": "2026-10-28T12:10:14.048511+00:00",
+  "stage": "Windows工具链及权威位移与导航观察基础",
+  "status": "限定开发验收通过",
+  "configuration": {
+    "version": "dev-displacement-foundation-v0.10-71dc81b157b6",
+    "rule_version": 10,
+    "fixture_sha256": "b5dfa79dd41a6886dd42f9f58cdbdff4b58b8d7d51839407850781e1076c2b68",
+    "workbook_hashes": {
+      "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+      "gameplay": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894"
+    },
+    "table_count": 98,
+    "record_count": 922,
+    "skills": 19,
+    "release_blockers": 668,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "implementation": {
+    "authoritative_movement_revision": "scene/handle/life/uint64",
+    "ordered_successful_path": true,
+    "source_pushed_subset": true,
+    "navigation_revision_and_cancel_ack": true,
+    "revival_keeps_active_destination": true,
+    "saved_layouts_changed": false,
+    "source_pngs_preserved": true,
+    "frames": 3332,
+    "extra_frames": 324,
+    "player_handle_explicit": true,
+    "old_scene_async_callback_guard": true,
+    "full_displacement_skills_opened": false
+  },
+  "checks": {
+    "javascript": {
+      "passed": 240,
+      "scene": 16,
+      "ui_app": 224,
+      "skipped": 0
+    },
+    "python_config": {
+      "passed": 41
+    },
+    "windows_host": {
+      "passed": 4
+    },
+    "protobuf": {
+      "messages": 60,
+      "int64_fields": 114,
+      "boundary_cases": 377,
+      "message_ids": 47,
+      "error_codes": 31
+    },
+    "dotnet_source_vectors": {
+      "passed": 3892,
+      "scope": "逐字来源Pushed/PointMove/ReverseDirection；当前无Concentration、Spell、安全区的最小世界；Human.NextMove按登记动作锁映射单列"
+    },
+    "go": {
+      "passed_including_subtests": 379,
+      "skipped": 0,
+      "mongo_ws": true,
+      "race": true,
+      "source_files": 82,
+      "source_stable_during_test": true,
+      "report_sha256": "337d929de7bd5efa174297aedbe2d8e7be34f94dbcbc5be51e24ec186696279f",
+      "events_sha256": "df0b4f910147f463b72701daa9494ea3c04ad16cf57829752ab568073b67af6f"
+    },
+    "strict_creator_types": {
+      "passed": true
+    },
+    "references": {
+      "copies": 325,
+      "originals_reverified": 3
+    },
+    "resources": {
+      "verified_pngs": 3332
+    }
+  },
+  "creator": {
+    "version": "3.8.8",
+    "platform": "web-mobile",
+    "success": true,
+    "seconds": 171.48,
+    "exit_code": 36,
+    "saved_assets": 10,
+    "layouts_preserved": true,
+    "source_stable": true
+  },
+  "browser": {
+    "report": "outputs/windows-adaptation-20261028/browser/report.json",
+    "checks": 6,
+    "screenshots": 5,
+    "javascript_errors": 0,
+    "warnings": [
+      {
+        "type": "warning",
+        "text": "Unexpected screen orientation: 13"
+      }
+    ],
+    "touch_input": true,
+    "physical_mobile_verified": false
+  },
+  "database": {
+    "backend": "windows_native",
+    "version": "8.0.34",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "new_data_directory": true,
+    "normal_stop_restart_verified": true,
+    "transaction_commit_abort_verified": true,
+    "user_exception_authorized": true
+  },
+  "historical_failures": {
+    "preserved": true,
+    "scope": "TCG包预算、旧群疗断言、软件VM时限问题；原始归档未改写成通过"
+  },
+  "limits": [
+    "抗拒火环8、野蛮冲撞27、瞬息移动21仍未开放，原语测试不是完整技能验收",
+    "位移距离随阶、绑定点/跨图、TemporalFlux与护符单位/报价仍待定或待核验",
+    "来源Concentration、地面Spell、安全区、完整对象调度未由最小原语对拍证明",
+    "未执行未知提交网络故障下退出交付、真机、容量、完整P0或目标1.80全部认证",
+    "runtime_ready=false、668项正式配置阻断保留，不作为生产发布验收"
+  ],
+  "evidence_sha256": {
+    "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90",
+    "conf/dev/server.json": "0f80c9918634358806ae57c95f14fb55978fdca6530b9370fedcb9dedfbb5550",
+    "outputs/windows-adaptation-20261028/toolchain-check.json": "d51aceabfa09a3a75fe0fefca7e4cffcbaf70c57b86927fc654a696566e42c56",
+    "outputs/windows-adaptation-20261028/environment-check.json": "687e7d8271a265dde44e78f4778e938c73259ac64759a68df941cfb89c9316b2",
+    "outputs/windows-adaptation-20261028/reference-copies.json": "59d945948c1679b539cf6057fed63ba1333c28860eda3a84057129f2089bc7d8",
+    "outputs/windows-adaptation-20261028/resource-regeneration.json": "bc217c18d9bac34468166634ae9e71d03e36aeee39ce5c63634581a07ec55d6f",
+    "outputs/windows-adaptation-20261028/fixture-migration.json": "a9af49aa0dbf727eebe65f34fafb82c597bc04d1736cdf369ad96ea8c365b4fd",
+    "outputs/windows-adaptation-20261028/browser/report.json": "c897639a8ed83068941bff49d3dd1b0c62a1e595f3ced28f74e56fa8e6ee57b6",
+    "outputs/windows-adaptation-20261028/browser/navigation-trace.json": "4d1111167967e71ada57d65d976711099916e94781412d234d79082a9fe8ae3b",
+    "outputs/windows-adaptation-20261028/native-database.json": "5922ca1d995e61b3f1cbb0df3e47bf607fd7c9a5ee28efe730b595207fbcdd44",
+    "outputs/windows-adaptation-20261028/pushed-source-oracle.json": "8e098d882d3e9daaa04cee3d1bd05831e305c6d9499c35794c0cb72d1b46d867",
+    "docs/客户端构建检查.json": "5b3ad68638d5a7dacaafa909384632cc5bc65f695c0cfd32b8d91a8c65af9112",
+    "server/test-results/latest.json": "337d929de7bd5efa174297aedbe2d8e7be34f94dbcbc5be51e24ec186696279f",
+    "server/test-results/latest.events.jsonl": "df0b4f910147f463b72701daa9494ea3c04ad16cf57829752ab568073b67af6f",
+    "outputs/windows-adaptation-20261028/browser/01-login.png": "637c937fec8b8879a3dfc9e214358d5b6cc6f46ccdd1855f05bfcaf6f295d36f",
+    "outputs/windows-adaptation-20261028/browser/02-game.png": "110475e01c234e0636865b728ba81a8613ba921223068ce08fc8ac61484f3110",
+    "outputs/windows-adaptation-20261028/browser/03-navigation-panel.png": "f60bf2d303e2a24513ac3c1e391d070beee08437211ac683ad7f16e120813061",
+    "outputs/windows-adaptation-20261028/browser/04-taller-viewport.png": "b51e3af565778953c8caba207816b94130aa56228c053dffb0bd57a580c4ea7b",
+    "outputs/windows-adaptation-20261028/browser/05-healthy-reentry.png": "38e14b18cf7c1b4ce07907814b5e4bc415eb19e9a095eee7854da28149e131c4"
+  }
+}

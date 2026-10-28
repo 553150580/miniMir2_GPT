@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ts = require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts = require('../../../tools/client/creator_paths.cjs').typescript;
 const file = path.resolve(__dirname, '../../assets/scripts/app/EntityMotion.ts');
 const result = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
     compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS },
@@ -139,7 +139,7 @@ test('密集积压有队列上限，reset和非法输入不产生NaN或残留运
     const snapped = motion.push(target(2, 1), 200);
     assert.equal(snapped.moving, false); assert.equal(snapped.x, 2);
     motion.reset();
-    assert.deepEqual(motion.sample(0), { x: 0, y: 0, moving: false, direction: 0, stepSequence: 0, stepProgress: 0 });
+    assert.deepEqual(motion.sample(0), { x: 0, y: 0, moving: false, direction: 0, stepSequence: 0, stepProgress: 0, movementKind: 0, dashPhase: 0 });
     assert.throws(() => motion.push(target(NaN), 0));
     assert.throws(() => motion.push(target(0, 0, -1), 0));
     assert.throws(() => motion.push(target(0, 0, 600, 8), 0));

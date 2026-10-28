@@ -1,6 +1,12 @@
 # 开发环境配置模板
 
-本目录包含待实现配置契约的开发模板和已安装工具的版本证据。`examples/`模板的`runtime_ready=false`：游戏配置加载器、节点程序和业务迁移尚未实现；`toolchain/`则记录实际工具安装、PB生成及专属开发数据库的检查结果，两者分别维护。
+本目录包含完整发布契约尚待验收的配置模板和已安装工具的版本证据。`examples/`模板的`runtime_ready=false`；已实现开发子集以根README和阶段验收为准。`toolchain/`记录实际工具安装、PB生成及专属开发数据库检查，两者分别维护。
+
+Windows当前使用`toolchain/windows-amd64.lock.json`，统一入口为`./tools/dev.ps1`。Python3.14.9、Go1.27.3、Node24.22.1、protoc36.2、Go PB插件1.36.12、gh2.103.2及.NET10.0.403采用用户目录安装；原Darwin锁不覆盖Windows选择。引导器不修改系统工具、Codex依赖或全局PATH，Git迁移只改当前仓库的可执行位识别和旧Mac凭据助手。
+
+Windows保存原始资产、来源副本和两本Excel的字节；`.gitattributes`对参考副本禁用换行转换。原资料不可访问时，配置依据只允许使用清单中相同SHA-256的独立副本，已存在但摘要改变的原文件仍拒绝。资源再生成到`.work`独立目录逐项比较，不重写现有scene/prefab或历史来源元数据。
+
+Windows使用用户2026-10-28明确允许的Mongo8.0.34原生新副本集，回环27119、minimirWinDev，目录`%LOCALAPPDATA%/minimir-mongodb/windows/8.0.34/<project-key>/data`。统一受控入口核对项目、官方归档和二进制摘要、PID创建时钟、命令行及回环监听，再执行副本集探测或正常停止。`dev/server.json`的`mongo_uri_by_platform.windows`覆盖原Lima URI；Go只接受当前平台固定端点。事务提交/回滚、正常停止重启与379条全量Mongo/WS race已通过，原业务时限保持。原Windows Lima VM已正常关闭，可选锁和历史TCG失败证据保留；macOS Lima约定不变。
 
 工程布局为server/client，共享协议在shared/proto。模板内公共输入路径相对项目根目录；正式配置加载器应显式解析工程根/配置根，避免随当前工作目录变化而加载错误版本。工具命令由根目录tools/dev统一选择版本。
 

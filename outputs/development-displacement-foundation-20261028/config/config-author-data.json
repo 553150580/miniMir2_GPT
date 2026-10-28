@@ -1,0 +1,284 @@
+{
+  "operation": "rule9_to_rule10_displacement_foundation",
+  "input_workbook_sha256": "0472e11200410d37ebb4f4ad9f2a7c43644a1690e887882dbda26c3d6339f9b5",
+  "expected_worksheets": 95,
+  "rule_version": 10,
+  "edits": [
+    {
+      "sheet": "技能基础定义",
+      "cell": "G5",
+      "value": "{\"kind\":\"enemy_entity\",\"range_cells\":9,\"target_move_tolerance_cells\":2,\"area_radius\":0,\"require_line_of_sight\":true,\"auto_priority\":10,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S5",
+      "value": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G6",
+      "value": "{\"kind\":\"friendly_entity\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":30,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S6",
+      "value": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G7",
+      "value": "{\"kind\":\"passive\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"passive\",\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S7",
+      "value": "从原开发夹具原值迁移；未核验目标1.80，未填造范围模板ID。初学0，开放原生阶0至3。 本轮显式登记目标类型/区域半径/飞行遮挡和非线性被动数组；原三技能费用与行为不变。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G8",
+      "value": "{\"kind\":\"passive\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"passive\",\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S8",
+      "value": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G9",
+      "value": "{\"kind\":\"enemy_entity\",\"range_cells\":9,\"target_move_tolerance_cells\":2,\"area_radius\":0,\"require_line_of_sight\":true,\"auto_priority\":20,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S9",
+      "value": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G10",
+      "value": "{\"kind\":\"enemy_entity\",\"range_cells\":9,\"target_move_tolerance_cells\":2,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":30,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S10",
+      "value": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G11",
+      "value": "{\"kind\":\"enemy_grid\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":1,\"require_line_of_sight\":false,\"auto_priority\":40,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S11",
+      "value": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G12",
+      "value": "{\"kind\":\"friendly_grid\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":1,\"require_line_of_sight\":false,\"auto_priority\":40,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S12",
+      "value": "development源码默认候选；学习取Crystal Level1为明确适配，升级门槛沿该技能Level1/2/3。MYF原书价格只作开发定价参考；未认证目标1.80。 auto_priority/min_targets是本作开发自动策略候选，不是原版AI行为认证。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G13",
+      "value": "{\"kind\":\"passive\",\"activation_kind\":\"passive_proc\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S13",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G14",
+      "value": "{\"kind\":\"attack_mode\",\"activation_kind\":\"toggle\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[0],\"secondary_distance_cells\":2,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S14",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G15",
+      "value": "{\"kind\":\"attack_mode\",\"activation_kind\":\"toggle\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[-1,1,2],\"secondary_distance_cells\":1,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S15",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G16",
+      "value": "{\"kind\":\"attack_charge\",\"activation_kind\":\"charge\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":false}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S16",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G17",
+      "value": "{\"kind\":\"enemy_direction\",\"activation_kind\":\"cast\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":40,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":6,\"line_stop_on_blocked\":false,\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S17",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G18",
+      "value": "{\"kind\":\"enemy_grid\",\"activation_kind\":\"cast\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":1,\"require_line_of_sight\":false,\"auto_priority\":60,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S18",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G19",
+      "value": "{\"kind\":\"enemy_self\",\"activation_kind\":\"cast\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":2,\"require_line_of_sight\":false,\"auto_priority\":50,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S19",
+      "value": "development源码默认候选；基础行为逐项登记，学习/升级门槛沿Crystal Level1/2/3；书本=目标阶+1已定，页与书价候选；未认证目标1.80。战士不用Magic默认1800时钟，按普通攻击550动作/300前格受理；新自动优先级只是本作候选。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G20",
+      "value": "{\"kind\":\"enemy_direction\",\"activation_kind\":\"cast\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":35,\"auto_min_targets\":2,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":4,\"line_stop_on_blocked\":true,\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S20",
+      "value": "形状按用户已定：rank0–3均正前4格，明确不采用源rank3左右射线；MP/威力/门槛/书价仍源码开发候选。首格500，后格实际处理时钟+100，阻挡break，同对象可跨格再次受击；不是整cast去重。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G21",
+      "value": "{\"kind\":\"friendly_grid\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":3,\"require_line_of_sight\":false,\"auto_priority\":6,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S21",
+      "value": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G22",
+      "value": "{\"kind\":\"friendly_grid\",\"range_cells\":9,\"target_move_tolerance_cells\":0,\"area_radius\":3,\"require_line_of_sight\":false,\"auto_priority\":7,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S22",
+      "value": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G23",
+      "value": "{\"kind\":\"friendly_self\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":5,\"auto_min_targets\":1,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":true}"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S23",
+      "value": "源码防御分支开发候选；0至3阶，不启用随机练功。目标范围、死亡/重施/离散时钟以实施边界登记；自动优先级为本作候选。护符包单位待用户决定，未确认时永久材料入口关闭。；rule10显式auto_enabled保持已有普通自动选技候选行为；优先级0不表示关闭；被动、开关、充能不进入普通选技，烈火独立自动逻辑不变。"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "G4",
+      "value": "{\"mp\":0,\"physical_attack_min\":1,\"physical_attack_max\":2,\"physical_defence_min\":0,\"physical_defence_max\":0,\"magic_defence\":0,\"accuracy\":5,\"agility\":10,\"undead\":true,\"can_push\":true}"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "Q4",
+      "value": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:13；client/assets/resources/development/manifest.json；资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39；资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "R4",
+      "value": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。；CanPush采用Crystal MonsterInfo默认true作为当前形象开发候选，并非MYF实库已认证；宠物从其monster_template_id同一怪物attributes引用，不另维护。"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "G5",
+      "value": "{\"mp\":0,\"physical_attack_min\":10,\"physical_attack_max\":20,\"physical_defence_min\":10,\"physical_defence_max\":10,\"magic_defence\":10,\"accuracy\":15,\"agility\":20,\"undead\":true,\"can_push\":true}"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "Q5",
+      "value": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json；资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39；资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "R5",
+      "value": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。；CanPush采用Crystal MonsterInfo默认true作为当前形象开发候选，并非MYF实库已认证；宠物从其monster_template_id同一怪物attributes引用，不另维护。"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "C4",
+      "value": "{\"rule_version\":10,\"map_id\":1,\"monster_id\":1,\"pet_id\":1,\"players\":[{\"job_id\":0,\"definition_id\":0,\"hp\":18,\"mp\":14,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":1,\"definition_id\":1,\"hp\":15,\"mp\":17,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":2,\"definition_id\":2,\"hp\":16,\"mp\":13,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":18,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true}],\"inventory_capacity\":32,\"initial_inventory\":[218,218,193,35,36],\"initial_bound_gold\":0,\"allow_free_dev_revive\":true,\"damage_formula\":\"development_source_combat\",\"recycle_test_gold_by_item\":{\"35\":0,\"36\":0,\"193\":400,\"218\":50},\"technical_parameters_notice\":\"32格/赠送清单/免费主动复活/等权子集是本次开发测试夹具。回收50/400仅借来源Price作绑定金币事务测试，不是正式分解值。 新角色按职业赠1本绑定开发技能书；首组三本7级学习为本项目候选资格，不是从MYF NeedLevel或Crystal Level1证明的原版读书门槛；初学原生等级0，重复书不升级。 本轮逐阶书本按用户目标rank+1；页5/10/20、首组三本NPC书500金币与普通道具子集新增精良职业书均为显式开发候选。商店与赠书禁拆页；旧未知来源不补推掉落。 本轮事件容量128和逐杀队列16是development技术预算；不证明承载量。人类攻击动作550/命中300/等级攻速公式与视觉动画时钟分离，首组装备尚无攻速词条按0适配。 新五本学习采用各自Crystal Level1适配，价格候选按MYF原字段分别600/2000/1600/3000/15000金币；不声称来源服实际报价。 战士持续模式与烈火充能为临时内存；健康离线沿绝对截止推进，不写永久聚合。 地狱火每个有效传播格发送权威CastStep，首格500ms；后格按实际处理时钟+100ms，不按客户端计时或一帧追赶。 用户2026-10-27审定地图17×17及菱形2.5D；64×32地格/48像素土层是本轮美术候选。宠物出生8,7从既有开发资产显式迁入本Excel，不再回读生成地图作数值源；界内与连通性逐项校验。 用户后续确认移除大遮挡物，场边4件小物；出生保持，碰撞仅取小物对应4格。名字24字号、预制体0.7缩放并与血条位于头顶。 本轮防御状态31/14/15为源码候选；独立材料槽100不占10个强化装备位。护符包数量未审定，入口关闭，不从DuraMax猜数量。\",\"player_stats_source\":\"Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。\",\"damage_scope_notice\":\"开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。\",\"revive_notice\":\"开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。\",\"potions\":{\"tick_ms\":200,\"base_per_tick\":5,\"levels_per_step\":10,\"use_delay_ms\":300,\"queue_cap\":65535,\"effects\":[{\"item_id\":35,\"hp\":20,\"mp\":0},{\"item_id\":36,\"hp\":0,\"mp\":30}]},\"player_growth\":[{\"job_id\":0,\"hp_base\":14,\"mp_base\":11,\"hp_gain\":4,\"hp_gain_rate\":4.5,\"mp_gain\":3.5,\"mp_gain_rate\":0,\"attack_divisor\":5,\"defence_max_divisor\":7,\"magic_divisor\":0,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":1,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":15,\"hp_gain_rate\":1.8,\"mp_gain\":5,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":7,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":2,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":6,\"hp_gain_rate\":2.5,\"mp_gain\":8,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":0,\"tao_divisor\":7,\"magic_defence_min_divisor\":12,\"magic_defence_max_divisor\":6}],\"healing\":{\"tick_ms\":600,\"base_per_tick\":5,\"pet_base_per_tick\":5,\"levels_per_step\":10,\"queue_fraction_divisor\":10,\"queue_cap\":65535},\"initial_skill_books\":[{\"job_id\":1,\"item_id\":7},{\"job_id\":2,\"item_id\":21},{\"job_id\":0,\"item_id\":1}],\"skill_ids\":[1,2,3,4,5,11,23,29,7,12,25,26,10,33,24,9,14,15,31],\"skill_economy\":{\"page_item_id\":900001,\"preview_ttl_ms\":120000,\"preview_material_limit\":32},\"skill_shop_entries\":[{\"offer_id\":6,\"item_id\":7,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":7,\"item_id\":21,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":8,\"item_id\":1,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":3,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":4,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":9,\"item_id\":22,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":10,\"item_id\":12,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":11,\"item_id\":11,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":12,\"item_id\":14,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":13,\"item_id\":32,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":14,\"item_id\":2,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":15,\"item_id\":3,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":16,\"item_id\":4,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":17,\"item_id\":6,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":18,\"item_id\":16,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":19,\"item_id\":20,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":20,\"item_id\":17,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":21,\"item_id\":10,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":22,\"item_id\":28,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":23,\"item_id\":29,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":24,\"item_id\":18,\"required_role_level\":1,\"max_purchase_quantity\":32}],\"recyclable_book_ids\":[7,21,1,22,12,11,14,32,2,3,4,6,16,20,17,10,28,29,18],\"recycle_source_kinds\":[\"monster_drop\"],\"skill_book_drop_quality\":1,\"combat_timing\":{\"player_attack_base_ms\":1400,\"player_attack_speed_step_ms\":60,\"player_attack_level_step_ms\":14,\"player_attack_level_cap_ms\":370,\"player_attack_min_ms\":550,\"player_attack_action_ms\":550,\"player_attack_impact_ms\":300,\"event_capacity\":128,\"kill_queue_capacity\":16,\"player_push_action_ms\":500,\"monster_push_action_ms_per_step\":300,\"monster_push_move_ms_per_step\":500,\"pushed_step_display_ms\":300},\"pet_spawn\":{\"x\":8,\"y\":7},\"casting_supply\":{\"enabled\":false,\"slot\":100,\"item_ids\":[187]}}"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "E4",
+      "value": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（原字节摘要及候选适配）；docs/技能来源核验与实施清单.md（默认参数候选及开发适配）；用户2026-10-27目标阶+1书本；docs/技能获取与升级实施边界.md；范围技能与战斗时序实施边界；Crystal普通攻击与范围源码候选；战士攻击模式与方向技能实施边界；Crystal逐项分支与binary32候选；用户2026-10-27审定地狱火所有阶正前4格；用户17×17菱形2.5D地图；完整289原格与土层投影；宠物出生迁入唯一Excel；用户要求移除大型遮挡，仅四周4件小型设施；源碰撞位与本作摆放明确分离；docs/战斗状态与防御技能实施边界.md；资料参考/crystal/Server/MirObjects/HumanObject.cs与MirEnvir/Map.cs；开发候选，非目标1.80认证；资料参考/crystal/Server/MirObjects/HumanObject.cs:2649-2724；MonsterObject.cs:1035-1093；资料参考/crystal/Client/MirObjects/PlayerObject.cs:1037-1041,1493-1497,2384-2401；Frames.cs:158（Pushed六帧按步长2倒放、100ms帧间隔的300ms开发表现）"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "F4",
+      "value": "rule9防御状态和材料协议开发候选；护符单位未定，入口关闭；既有17×17小型场边装饰及头顶布局保持。；rule10仅位移共用底座：Human无Info.CanPush门槛；玩家推后动作500ms、怪物每推格动作300ms/移动500ms、推步表现300ms独立候选，不借用攻击命中时长。8/27/21仍未选入；推距、绑定目的地与护符单位未填。"
+    }
+  ],
+  "source_hashes": {
+    "human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    "monster": {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+    },
+    "monster_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs",
+      "sha256": "2b57f0add803473b32b612ffb1327f8819e460d5826f10519617b22f1d32f614"
+    },
+    "client": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    }
+  },
+  "selected_skills": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    11,
+    23,
+    29,
+    7,
+    12,
+    25,
+    26,
+    10,
+    33,
+    24,
+    9,
+    14,
+    15,
+    31
+  ],
+  "skills_8_27_21_enabled": false,
+  "pending_policies_filled": false
+}

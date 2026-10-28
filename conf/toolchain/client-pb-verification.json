@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 58,
+  "message_count": 60,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -27,6 +27,8 @@
     "EnterWorldAck",
     "SyncReady",
     "EntityState",
+    "EntityDisplacement",
+    "NavigationState",
     "EntityStatusState",
     "CombatAttributes",
     "SceneBaselineChunk",
@@ -65,8 +67,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 108,
-  "int64_boundary_cases": 359,
+  "int64_field_count": 114,
+  "int64_boundary_cases": 377,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -263,6 +265,42 @@
     {
       "message": "EntityState",
       "field": "life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityState",
+      "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "entity_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "NavigationState",
+      "field": "revision",
       "type": "uint64",
       "cases": 3
     },
@@ -829,7 +867,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "2743cbf15ac1ccc35e0cd4c519856dcaab9c1a9a5c6da34c5ada5c2413fc044c"
+      "sha256": "697bbc961cd745e12dd71257ef1e8aba3093b2e2a1e1fe4b2f8a7ecc8a3f0ceb"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -838,14 +876,14 @@
   ],
   "generated_files": [
     {
-      "path": "client/assets/scripts/generated/protobuf/client_pb.js",
-      "sha256": "19b373f738da63e0092446b070ee49802810d292150bb517c9a20f855abf5d46",
-      "bytes": 914966
+      "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
+      "sha256": "303b0f2656971f3626eb9566bc9f0693744b172df24295a49aecd239395e139a",
+      "bytes": 963745
     },
     {
-      "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
-      "sha256": "dfe0e3ba2023e29953921acd07ac92e39c4a993667451e1d07e7f25c4e697838",
-      "bytes": 300619
+      "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
+      "sha256": "83f8050fea18b74c2335a91ff51f1388ce2af021ba2f1ed6c0bcc62e0d4914ae",
+      "bytes": 313794
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

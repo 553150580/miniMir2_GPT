@@ -26,7 +26,7 @@ import (
 // 这是明确 opt-in 的真实Mongo/HTTP/WS集成测试，仅创建并删除随机专属测试库。
 func TestFirstLoopMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
-		t.Skip("设置MINIMIR_MONGO_E2E=1以连接本任务27118开发副本集")
+		t.Skip("设置MINIMIR_MONGO_E2E=1以连接当前平台本任务专属开发副本集")
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)

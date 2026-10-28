@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"google.golang.org/protobuf/proto"
+	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -83,6 +84,8 @@ type entity struct {
 	HealAmount       int64
 	NextHeal         time.Time
 	Statuses         map[uint32]*combatStatus
+	MovementRevision uint64
+	MovementKind     uint32
 }
 type room struct {
 	Role                domain.Role
@@ -100,6 +103,7 @@ type room struct {
 	Manual              bool
 	ManualDirection     uint32
 	Destination         *devconfig.Point
+	Navigation          navigationState
 	Pending             bool
 	PendingRetry        *job
 	RetryAt             time.Time
@@ -429,12 +433,23 @@ func (w *worker) command(c command) {
 		w.skillAssetPreview(r, c.frame)
 	case p.MsgC2SMoveIntent:
 		var q pb.MoveIntent
-		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
+		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 || q.CancelNavigation && (q.Destination != nil || q.ReleaseJoystick || q.Direction != 0) {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
 			return
 		}
 		if !acceptInput(r, q.InputSequence) {
 			w.failure(r, c.frame, p.CodeStaleInput)
+			return
+		}
+		if q.CancelNavigation {
+			// 明确退出才取消地面目标；保留原目标身份供客户端核对，健康断线和摇杆释放不走此分支。
+			r.Destination, r.Manual = nil, false
+			if r.Navigation.Destination != nil && r.Navigation.Revision != 0 {
+				r.Navigation.Status = navigationCancelled
+			} else {
+				r.Navigation.Status = navigationNone
+			}
+			w.baseline(r, c.frame.Request)
 			return
 		}
 		if q.ReleaseJoystick {
@@ -447,12 +462,20 @@ func (w *worker) command(c command) {
 				w.failure(r, c.frame, p.CodeInvalidArgument)
 				return
 			}
+			if r.Navigation.Revision == math.MaxUint64 {
+				w.isolateRoom(r)
+				return
+			}
 			r.Destination = &point
+			r.Navigation = navigationState{InputSequence: q.InputSequence, Destination: &point, Status: navigationActive, Revision: r.Navigation.Revision + 1}
 			r.Manual = false
 		} else {
 			r.Manual = true
 			r.ManualDirection = q.Direction
 			r.Destination = nil
+			if r.Navigation.InputSequence != 0 {
+				r.Navigation.Status = navigationManual
+			}
 		}
 	case p.MsgC2SAutoBattle:
 		var q pb.AutoBattleIntent
@@ -548,7 +571,11 @@ func (w *worker) join(r *room, c command) {
 			}
 			transitionEventHosting(r, time.Now(), "")
 			c.conn.SetBinding(uint64(auth.SessionEpoch))
-			w.send(r, p.MsgS2CEnterLine, c.frame.Request, &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(role.EconomicSeq + 1)})
+			if r.Player.Handle == 0 {
+				w.isolateRoom(r)
+				return
+			}
+			w.send(r, p.MsgS2CEnterLine, c.frame.Request, w.enterLineResult(r))
 			w.baseline(r)
 			w.after(r)
 		}
@@ -561,12 +588,18 @@ func (w *worker) join(r *room, c command) {
 		}
 	}
 }
+func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
+	return &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: w.e.Store.Cfg.Fixture.Map.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: 1, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1), PlayerHandle: r.Player.Handle}
+}
 func (w *worker) initialize(r *room, role domain.Role) {
 	f := &w.e.Store.Cfg.Fixture
 	player, _ := f.Player(role.Job)
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.Role = role
 	r.Potions.LastAppliedSeq = role.EconomicSeq
+	r.Navigation = navigationState{}
+	r.Destination = nil
+	r.Manual = false
 	r.MaterialEconomicSeq, r.MaterialSourceSeq = role.EconomicSeq, role.SourceSeq
 	r.Auto = true
 	r.MonsterCount = 1
@@ -592,6 +625,7 @@ func (w *worker) after(r *room) {
 
 func (w *worker) revivePlayer(r *room) {
 	r.Player.Life++
+	r.Player.MovementRevision, r.Player.MovementKind = 0, movementInitial
 	for id, status := range r.Player.Statuses {
 		if status.RemoveOnDeath {
 			delete(r.Player.Statuses, id)
@@ -606,13 +640,17 @@ func (w *worker) revivePlayer(r *room) {
 	r.Player.Pos = w.e.Store.Cfg.Fixture.Map.PlayerSpawn
 	r.Player.Action = 0
 	r.DeathID = ""
-	r.Destination = nil
+	// 同图复活仅释放摇杆，原地面导航目标保留并从新脚点继续规划。
+	r.Manual = false
 	r.HostMS = 0
 }
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
+	if r.Isolated {
+		return
+	}
 	if !r.Ready {
 		switch id {
-		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CCastStep, p.MsgS2CSkillModeState, p.MsgS2CDeathNotice:
+		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CCastStep, p.MsgS2CSkillModeState, p.MsgS2CDeathNotice, p.MsgS2CEntityDisplacement:
 			return
 		}
 	}
@@ -642,19 +680,19 @@ func (w *worker) hosting(r *room, request uint32) {
 	w.send(r, p.MsgS2CHostingState, request, &pb.HostingState{RemainHostingSec: uint32(r.Role.HostingSeconds), AutoBattleEnabled: r.Auto, StateRevision: uint64(r.Role.Revision)})
 }
 func (w *worker) snapshot(r *room) {
-	if !r.Ready {
+	if !r.Ready || r.Isolated {
 		return
 	}
 	w.baseline(r)
 }
 
-// 入场基线在ACK之前发送；周期同步仍经snapshot的Ready门槛。
-func (w *worker) baseline(r *room) {
+// 入场基线在ACK之前发送；周期同步仍经snapshot的Ready门槛。明确取消沿同一请求号确认后才关闭连接。
+func (w *worker) baseline(r *room, request ...uint32) {
 	if r.Conn == nil {
 		return
 	}
 	r.Sequence++
-	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now())}
+	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto()}
 	entities := []*entity{&r.Player}
 	if r.Pet != nil {
 		entities = append(entities, r.Pet)
@@ -671,9 +709,13 @@ func (w *worker) baseline(r *room) {
 			attackMS = uint32(stats.AttackMS)
 			attributes = w.combatAttributesPB(r, e)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind})
 	}
-	w.send(r, p.MsgS2CSceneBaseline, 0, out)
+	requestID := uint32(0)
+	if len(request) > 0 {
+		requestID = request[0]
+	}
+	w.send(r, p.MsgS2CSceneBaseline, requestID, out)
 }
 func pointPB(p devconfig.Point) *pb.GridPoint { return &pb.GridPoint{X: int32(p.X), Y: int32(p.Y)} }
 func (w *worker) asset(r *room, f wire.Frame) {

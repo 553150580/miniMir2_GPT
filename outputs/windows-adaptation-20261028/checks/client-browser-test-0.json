@@ -1,0 +1,12 @@
+{
+  "task": "client-browser-test",
+  "command": [
+    "node",
+    "tools/client/verify_windows_browser.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T11:59:07.572373+00:00",
+  "finished_at": "2026-10-28T11:59:31.824172+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/client-browser-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

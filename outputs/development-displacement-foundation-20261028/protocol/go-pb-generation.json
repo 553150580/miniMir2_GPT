@@ -1,0 +1,17 @@
+{
+  "protoc": "libprotoc 36.2",
+  "protoc_gen_go": "protoc-gen-go v1.36.12",
+  "sources": {
+    "account.proto": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964",
+    "assets.proto": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23",
+    "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
+    "world.proto": "cac66ca8e4ece043d7603d72c0557c05b2f3ab4bf28a4b11f0429ea55ee8c3b0"
+  },
+  "outputs": {
+    "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+    "server/api/generated/minimirv1/world.pb.go": "b92c027bb036dcbe143b75e353549001bf6829e6ab330756427d4deff42123c1",
+    "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
+    "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18"
+  },
+  "business_implemented": false
+}

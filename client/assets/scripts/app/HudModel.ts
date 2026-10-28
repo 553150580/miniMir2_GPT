@@ -3,10 +3,11 @@ import { GridProjection, ProjectionGeometry } from './GridProjection';
 export type HudInteger = bigint | number | string | { toString(): string };
 
 export interface HudInput {
+    playerHandle: number;
     role: { name?: string; job?: number; level?: number } | null;
     wallet: { gold?: HudInteger; boundGold?: HudInteger; yuanbaoUnits?: HudInteger; boundYuanbaoUnits?: HudInteger } | null;
     inventory: { level?: number; experience?: HudInteger; items?: Array<{ itemId: number; quantity: HudInteger }> } | null;
-    baseline: { entities: Array<{ entityKind: number; position: { x: number; y: number }; hp: HudInteger; hpMax: HudInteger; mp: HudInteger; mpMax: HudInteger }> } | null;
+    baseline: { entities: Array<{ entityHandle: number; entityKind: number; position: { x: number; y: number }; hp: HudInteger; hpMax: HudInteger; mp: HudInteger; mpMax: HudInteger }> } | null;
     hosting?: unknown;
     report?: unknown;
     ready: boolean;
@@ -76,7 +77,7 @@ export function miniMapPoint(position: { x: number; y: number } | null, map: ({ 
 }
 
 export function createHudState(input: HudInput) {
-    const player = input.baseline?.entities.find(entity => entity.entityKind === 1);
+    const player = input.playerHandle > 0 ? input.baseline?.entities.find(entity => entity.entityHandle === input.playerHandle) : undefined;
     const level = input.inventory?.level ?? input.role?.level;
     const next = input.gameplay?.experience?.find(row => row.level === level)?.next_level_exp;
     const experience = input.inventory?.experience;

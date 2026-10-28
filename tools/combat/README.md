@@ -9,3 +9,11 @@
 需要更新Go回归向量时，由服务端测试维护者执行`./tools/dev python tools/combat/run_source_oracle.py --go-fixture server/internal/devconfig/testdata/source-damage-vectors.json.gz`。该参数仅裁出13个输入/预期字段并以mtime=0生成确定性gzip；正常运行不会写服务端文件。向量不读取当前Excel或服务端待测函数，来源公式改变会先被SHA门禁拒绝。
 
 这些是固定抽样公式证据，不证明目标1.80归属、来源实服数据库、完整随机序列、全伤害管线或玩法平衡。运行数值仍只维护唯一Excel；此处从只读源码生成测试向量，不作为运行配置。
+
+## Pushed原语对拍
+
+运行`./tools/dev python3 tools/combat/run_displacement_oracle.py`，或附加`--go-fixture server/internal/game/testdata/source-pushed-vectors.json.gz`更新确定性测试向量。工具锁定四份来源SHA，逐字提取Human/Monster的Pushed、Functions的PointMove/ReverseDirection和MirDirection枚举，由同一已锁.NET编译执行；不运行参考服，也不访问账号数据。
+
+当前3892个输入组合覆盖八方向、中央与边缘/小物附近、零步及多步、动态首格/后格占用、CanPush开关、地形early return和不检查斜角侧格。输入地图几何取当前开发地图作为场景输入，期望路径和时钟由独立C#来源执行得出，不调用待测Go函数或读取Excel推导期望公式。Human.NextMove是本项目对源ActionTime的映射，向量同时保留源MoveTime及明确的项目预期字段。
+
+最小世界不包含Concentration、地面Spell或安全区；对应桩分支若意外进入会失败。源SafeZone局部变量接null产生的CS8600警告保留，0个编译错误；不能把这项对拍写成所有源对象语义、绑定、导航、三个完整位移技能或目标1.80认证。scene/life、Ready、导航身份及授权门禁由项目回归另行验证。

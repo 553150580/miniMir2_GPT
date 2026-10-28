@@ -22,6 +22,7 @@ import (
 	"golang.org/x/crypto/argon2"
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
+	"minimir/internal/devconfig"
 )
 
 func main() {
@@ -74,8 +75,8 @@ func checkMongo(uri string, report map[string]any) error {
 	if err != nil || u.Scheme != "mongodb" || u.Hostname() != "127.0.0.1" || u.User != nil || (u.Path != "" && u.Path != "/") {
 		return errors.New("smoke仅连接无真实凭据的127.0.0.1独立开发副本集，不接受现有业务库")
 	}
-	if u.Query().Get("directConnection") != "true" || u.Query().Get("replicaSet") != "minimirDev" {
-		return errors.New("smoke要求独立minimirDev单节点副本集及directConnection=true")
+	if uri != devconfig.DevelopmentMongoURI() {
+		return errors.New("smoke仅连接当前平台本任务固定端点及directConnection=true")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -91,8 +92,8 @@ func checkMongo(uri string, report map[string]any) error {
 	if err = client.Database("admin").RunCommand(ctx, bson.D{{Key: "hello", Value: 1}}).Decode(&hello); err != nil {
 		return err
 	}
-	if hello["setName"] != "minimirDev" {
-		return errors.New("目标不是预期的minimirDev开发副本集")
+	if hello["setName"] != u.Query().Get("replicaSet") {
+		return errors.New("目标不是预期的专属开发副本集")
 	}
 	var build struct {
 		Version string `bson:"version"`

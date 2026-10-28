@@ -1,0 +1,12 @@
+{
+  "task": "client-typecheck",
+  "command": [
+    "node",
+    "tools/client/typecheck.mjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T11:35:33.981233+00:00",
+  "finished_at": "2026-10-28T11:35:42.580631+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/client-typecheck-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

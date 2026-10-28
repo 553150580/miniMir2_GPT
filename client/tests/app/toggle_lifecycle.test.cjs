@@ -2,9 +2,9 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const engine=process.env.MINIMIR_CREATOR_APP??'/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const toggleFile=path.join(engine,'Contents/Resources/resources/3d/engine/cocos/ui/toggle.ts');
+const toggleFile=path.join(require('../../../tools/client/creator_paths.cjs').engineRoot,'cocos/ui/toggle.ts');
 
 // 加载锁定引擎的真实Toggle及AppRoot实现；仅外围Node事件容器、Button基类和场景依赖使用替身。
 class NodeEvents{
@@ -29,10 +29,11 @@ const {Toggle}=load(toggleFile,id=>id==='cc.decorator'?decorators:id==='internal
     :id==='./button'?{Button,ButtonEventType:Button.EventType}:id==='../core/data/utils/extends-enum'?{extendsEnum:Object.assign}
     :id==='../core/global-exports'?{legacyCC:{Node:{isNode:()=>true}}}:id==='../scene-graph/component-event-handler'?{EventHandler:{emitEvents(){}}}:{});
 const trace=[];
+const session={lastError:''};
 const {AppRoot}=load(path.resolve(__dirname,'../../assets/scripts/app/AppRoot.ts'),id=>id==='cc'
     ?{_decorator:decorators,Button,Toggle,Component:class{},isValid:()=>true,game:{off(){}},Game:{EVENT_HIDE:'hide'}}
     :id.endsWith('/NavigationIntent')?{NavigationIntent:class{}}
-    :id==='./GameSession'?{session:{lastError:''}}
+    :id==='./GameSession'?{session}
     :id==='./InputTrace'?{traceInput:record=>trace.push(record)}:{});
 function setup(){const root=new AppRoot(),toggle=new Toggle();root.find=()=>toggle.node;root.error=error=>{throw error;};toggle.onEnable();return {root,toggle};}
 
@@ -78,4 +79,35 @@ test('真实技能模式Toggle绑定只发送一次最终勾选，发送与拒�
         root.uiActionBusy=false;toggle.node.emit(Button.EventType.CLICK);assert.equal(submitted.length,2);assert.equal(submitted[1].enabled,true);assert.equal(toggle.isChecked,false);
         root.onDestroy();
     }
+});
+
+test('真实退出完成后Creator清空旧组件对象字段，finally不再解锁已销毁导航',async()=>{
+    const root=new AppRoot(),blocked=[];let exited=0,closed=0;
+    session.ready=false;session.connection={close(){closed++;}};
+    root.releaseInput=()=>{};
+    root.nav={setInputBlocked:value=>blocked.push(value),exitGame(){exited++;}};
+    root.changeScene=async name=>{
+        assert.equal(name,'RoleSelect');
+        root.disposed=true;root.nav=null;root.node=null;
+        session.lastError='新场景状态';
+    };
+    await root.leave(false);
+    assert.deepEqual(blocked,[true]);assert.equal(exited,1);assert.equal(closed,1);
+    root.error(new Error('旧场景迟到错误'));root.status('旧场景迟到文字');
+    assert.equal(session.lastError,'新场景状态');
+});
+
+test('退出未切换场景时仍恢复原输入，迟到按钮拒绝不会触碰已销毁节点',async()=>{
+    const root=new AppRoot(),blocked=[];
+    session.ready=false;session.connection={close(){}};root.releaseInput=()=>{};
+    root.nav={setInputBlocked:value=>blocked.push(value),exitGame(){}};
+    root.changeScene=async()=>{throw new Error('切换失败');};
+    await assert.rejects(root.leave(false),/切换失败/);
+    assert.deepEqual(blocked,[true,false]);assert.equal(root.leaving,false);
+    const button=new NodeEvents();root.find=()=>button;
+    let reject;root.button('Enter',()=>new Promise((_resolve,fail)=>{reject=fail;}));
+    button.emit(Button.EventType.CLICK);
+    root.disposed=true;root.node=null;session.lastError='新场景状态';
+    reject(new Error('旧操作拒绝'));await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(session.lastError,'新场景状态');
 });

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"math"
 	"net"
-	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -20,6 +20,7 @@ type Point struct {
 	Y int `json:"y"`
 }
 type Fighter struct {
+	CanPush           bool   `json:"can_push"`
 	Level             uint32 `json:"level"`
 	JobID             uint32 `json:"job_id"`
 	DefinitionID      uint32 `json:"definition_id"`
@@ -43,6 +44,7 @@ type Fighter struct {
 	Agility           int64  `json:"agility"`
 	MagicResist       int64  `json:"magic_resist"`
 	MagicResistWeight int64  `json:"magic_resist_weight"`
+	canPushExplicit   bool
 }
 type Monster struct {
 	Fighter
@@ -149,19 +151,28 @@ type Fixture struct {
 	Hash               string   `json:"-"`
 }
 type Config struct {
-	Environment    string   `json:"environment"`
-	AccountAddress string   `json:"account_address"`
-	GameAddress    string   `json:"game_address"`
-	GMAddress      string   `json:"gm_address"`
-	MongoURI       string   `json:"mongo_uri"`
-	Database       string   `json:"database"`
-	FixtureFile    string   `json:"fixture_file"`
-	NodeID         string   `json:"node_id"`
-	OriginID       uint64   `json:"origin_id"`
-	RunID          uint64   `json:"run_id"`
-	AllowedOrigins []string `json:"allowed_origins"`
-	Root           string   `json:"-"`
-	Fixture        Fixture  `json:"-"`
+	Environment        string            `json:"environment"`
+	AccountAddress     string            `json:"account_address"`
+	GameAddress        string            `json:"game_address"`
+	GMAddress          string            `json:"gm_address"`
+	MongoURI           string            `json:"mongo_uri"`
+	MongoURIByPlatform map[string]string `json:"mongo_uri_by_platform,omitempty"`
+	Database           string            `json:"database"`
+	FixtureFile        string            `json:"fixture_file"`
+	NodeID             string            `json:"node_id"`
+	OriginID           uint64            `json:"origin_id"`
+	RunID              uint64            `json:"run_id"`
+	AllowedOrigins     []string          `json:"allowed_origins"`
+	Root               string            `json:"-"`
+	Fixture            Fixture           `json:"-"`
+}
+
+// DevelopmentMongoURI限定本机平台端点；Windows新副本集与原Lima端点分开。
+func DevelopmentMongoURI() string {
+	if runtime.GOOS == "windows" {
+		return "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true"
+	}
+	return "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true"
 }
 
 func Load(path string) (Config, error) {
@@ -187,9 +198,11 @@ func Load(path string) (Config, error) {
 			return c, errors.New("development监听必须显式127.0.0.1")
 		}
 	}
-	u, e := url.Parse(c.MongoURI)
-	if e != nil || u.Hostname() != "127.0.0.1" || u.Port() != "27118" || u.User != nil || u.Query().Get("replicaSet") != "minimirDev" {
-		return c, errors.New("仅允许本任务独立loopback Mongo副本集")
+	if platformURI, ok := c.MongoURIByPlatform[runtime.GOOS]; ok {
+		c.MongoURI = platformURI
+	}
+	if c.MongoURI != DevelopmentMongoURI() {
+		return c, errors.New("仅允许当前平台本任务独立loopback Mongo副本集")
 	}
 	if c.Database != "minimir_dev_game" && !strings.HasPrefix(c.Database, "minimir_dev_game_test_") {
 		return c, errors.New("必须使用专用开发游戏数据库")
@@ -217,6 +230,9 @@ func (f *Fixture) Validate() error {
 		return errors.New("必须显式启用有来源的candidate开发fixture；不冒充1.80正式数值")
 	}
 	if err := f.ValidateMap(); err != nil {
+		return err
+	}
+	if err := f.ValidateDisplacementFoundation(); err != nil {
 		return err
 	}
 	if f.InventoryCapacity < 1 || f.InventoryCapacity > 100 || f.InitialBoundGold < 0 {

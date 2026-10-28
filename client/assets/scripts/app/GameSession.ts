@@ -7,6 +7,7 @@ import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { acceptsSkillModeState, SkillModeState } from './SkillModel';
+import type { DisplacementEvent } from './EntityDisplacement';
 const assembler = new BaselineAssembler();
 
 // 连接与数据跨场景保留，不通过持久UI节点重建固定布局。
@@ -34,14 +35,17 @@ export const session = {
     attacks: new Set<(event: AttackEvent) => void>(),
     impacts: new Set<(event: ImpactEvent) => void>(),
     castSteps: new Set<(event: CastStepEvent) => void>(),
+    displacements: new Set<(event: DisplacementEvent) => void>(),
     quickSkills: new Map<string, number>(),
 };
 session.connection.subscribe((packet: Packet) => {
     if (packet.error) { session.lastError = protocolErrorMessage(packet.id, packet.error); }
     else switch (packet.id) {
         case 20002:
-            assembler.reset(); session.entry = packet.value; session.baseline = null; session.ready = false;
+            assembler.reset(); session.entry = null; session.baseline = null; session.ready = false;
             session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
+            if (!Number.isInteger(packet.value.playerHandle) || packet.value.playerHandle < 1 || packet.value.playerHandle > 0xffffffff) { session.lastError = '入场缺少有效玩家身份'; break; }
+            session.entry = packet.value;
             session.command = packet.value.nextEconomicCommandSeq ?? Long.UONE; break;
         case 5:
             if (session.entry) {
@@ -80,6 +84,11 @@ session.connection.subscribe((packet: Packet) => {
         case 30012:
             if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
                 for (const listener of Array.from(session.castSteps)) listener(packet.value);
+            }
+            break;
+        case 30013:
+            if (session.ready && session.entry && packet.value.sceneEpoch.equals(session.entry.sceneEpoch)) {
+                for (const listener of Array.from(session.displacements)) listener(packet.value);
             }
             break;
         case 40008: session.report = packet.value; break;

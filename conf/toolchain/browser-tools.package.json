@@ -1,0 +1,6 @@
+{
+  "name": "minimir-browser-toolchain",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": { "playwright-core": "1.64.1" }
+}

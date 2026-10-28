@@ -1,0 +1,59 @@
+--- /Users/srf/Miro2/miniMir2_GPT/server/internal/integration/first_loop_test.go
++++ /Users/srf/Miro2/miniMir2_GPT/.work/displacement-foundation/diagnostic/first_loop_test.go
+@@ -541,6 +541,7 @@
+ 		}
+ 	}
+ 	c.request++
++	if message,ok:=q.(*pb.CastIntent);ok && c.t.Name()=="TestCombatAreaFiveSkillsAndEightKillMongoWS" && message.SkillId==29 { c.t.Logf("DIAG SEND29 scene=%d input=%d cached_state=%d target=(%v)",message.SceneEpoch,message.InputSequence,c.scene.StateSequence,message.TargetGrid) }
+ 	must(c.t, c.ws.Write(c.ctx, websocket.MessageBinary, wire.Encode(wire.Message(id, c.request, c.binding, q))))
+ 	return c.request
+ }
+@@ -581,6 +582,7 @@
+ 		c.report = &pb.HostingReport{}
+ 		must(c.t, proto.Unmarshal(f.Payload, c.report))
+ 	}
++	c.traceAreaFrame(f)
+ 	return f
+ }
+ func (c *client) until(predicate func(wire.Frame) bool) wire.Frame {
+@@ -624,3 +626,20 @@
+ 		c.t.Fatalf("自动战斗响应没有返回真实状态: enabled=%v state=%v", enabled, c.hosting)
+ 	}
+ }
++
++// 临时overlay诊断只记录战斗观察，不记录登录、票据、密码或资产payload。
++func (c *client) traceAreaFrame(frame wire.Frame) {
++ if c.t.Name()!="TestCombatAreaFiveSkillsAndEightKillMongoWS" { return }
++ switch frame.ID {
++ case p.MsgS2CCastAccepted:
++  event:=&pb.CastAccepted{};if proto.Unmarshal(frame.Payload,event)==nil && event.SkillId==29 {c.t.Logf("DIAG CA29 scene=%d cast=%d life=%d delay=%d input=%d origin=%v grid=%v",event.SceneEpoch,event.CastId,event.CasterLife,event.DelayMs,event.InputSequence,event.Origin,event.TargetGrid)}
++ case p.MsgS2CCombatImpact:
++  event:=&pb.CombatImpact{};if proto.Unmarshal(frame.Payload,event)==nil && event.SkillId==29 {c.t.Logf("DIAG IMPACT29 scene=%d cast=%d target=%d life=%d outcome=%d amount=%d healing=%v grid=%v",event.SceneEpoch,event.CastId,event.TargetHandle,event.TargetLife,event.Outcome,event.Amount,event.Healing,event.TargetGrid)}
++ case p.MsgS2CSceneBaseline:
++  entities:=[]string{}
++  for _,entity:=range c.scene.Entities {if entity.EntityKind>=1&&entity.EntityKind<=3 {entities=append(entities,fmt.Sprintf("h%d:k%d hp%d/%d xy(%d,%d) life%d attack%d cast%d/%d",entity.EntityHandle,entity.EntityKind,entity.Hp,entity.HpMax,entity.Position.X,entity.Position.Y,entity.Life,entity.AttackSequence,entity.CastSequence,entity.CastSkillId))}}
++  c.t.Logf("DIAG BASE scene=%d seq=%d entities=%v",c.scene.SceneEpoch,c.scene.StateSequence,entities)
++ case p.MsgS2CDeathNotice:
++  c.t.Logf("DIAG DEATH scene=%d state=%d",c.entry.SceneEpoch,c.scene.StateSequence)
++ }
++}
+--- /Users/srf/Miro2/miniMir2_GPT/server/internal/integration/combat_area_test.go
++++ /Users/srf/Miro2/miniMir2_GPT/.work/displacement-foundation/diagnostic/combat_area_test.go
+@@ -176,7 +176,9 @@
+ 	beforePlayer, beforePet := tao.player().Hp, tao.entity(2).Hp
+ 	time.Sleep(time.Duration(cfg.Fixture.Players[0].MoveMS+100) * time.Millisecond)
+ 	t.Logf("准备群疗：player=%d pet=%d", tao.player().Hp, tao.entity(2).Hp)
++	t.Log("DIAG phase WAIT_CA29")
+ 	tao.castAccepted(29, 0, tao.player().Position)
++	t.Log("DIAG phase WAIT_IMPACTS29")
+ 	healed := map[uint32]bool{}
+ 	for len(healed) < 2 {
+ 		f := tao.read()
+@@ -192,6 +194,7 @@
+ 	if !healed[1] || !healed[2] {
+ 		t.Fatal("群疗没有逐友方入队")
+ 	}
++	t.Logf("DIAG phase WAIT_HP29 healed=%v beforePlayer=%d beforePet=%d",healed,beforePlayer,beforePet)
+ 	playerRecovered, petRecovered := false, false
+ 	tao.until(func(f wire.Frame) bool {
+ 		if f.ID != p.MsgS2CSceneBaseline {

@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const root=path.resolve(__dirname,'../../..');
 const Long=require('node:module').createRequire(path.join(root,'client/assets/scripts/app/AppRoot.ts'))('long');
 const models=require('../../../.work/ui-tests/app/SkillModel.js');
@@ -29,7 +29,7 @@ function app(){
         base_cost:3,level_cost:2,cast_ms:600,impact_base_ms:500,projectile_ms_per_cell:0,accuracy_per_level:0});
     const definitions=[definition(1,'fireball','enemy_entity'),definition(11,'thunderbolt','enemy_entity'),definition(23,'firebang','enemy_grid')];
     const sent=[],shown=[];
-    const session={ready:true,role:{job:1},entry:{sceneEpoch:'1',resourceVersion:'5'},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
+    const session={ready:true,role:{job:1},entry:{sceneEpoch:'1',resourceVersion:'5',playerHandle:1},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
         baseline:{entities:[{entityHandle:1,entityKind:1,hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,hp:'100',position:{x:4,y:4},direction:0}]},connection:{send:(id,value)=>sent.push({id,value})}};
     const {AppRoot}=load(path.join(root,'client/assets/scripts/app/AppRoot.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{}}
         :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
@@ -62,7 +62,7 @@ test('真实AppRoot可提交blocked center，越界但仍在射程内也必须�
 test('真实世界坐标转换：普通导航拒绝阻挡中心，瞄准允许同格；地图外两种模式均拒绝',()=>{
     class Vec3{constructor(x=0,y=0,z=0){this.x=x;this.y=y;this.z=z;}}
     const {GameWorldView}=load(path.join(root,'client/assets/scripts/app/GameWorldView.ts'),id=>id==='cc'?{Vec3,UITransform:class{},isValid:()=>false}:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):{});
-    const world=new GameWorldView({}, {getComponent:()=>({convertToNodeSpaceAR:point=>point})}, {}, '',1,'1');
+    const world=new GameWorldView({}, {getComponent:()=>({convertToNodeSpaceAR:point=>point})}, {}, '',1,'1',1);
     world.map={width:4,height:4,tile_width:64,tile_height:32,soil_thickness_px:48,projection:'isometric_diamond',blocked:Array.from({length:4},(_,y)=>Array.from({length:4},(_,x)=>({x,y}))).flat(),cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
     const point=world.grid(1,1);assert.equal(world.screenToGrid(point),null);assert.deepEqual(world.screenToGrid(point,false),{x:1,y:1});
     const outside=world.grid(4,1);assert.equal(world.screenToGrid(outside),null);assert.equal(world.screenToGrid(outside,false),null);

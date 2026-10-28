@@ -385,8 +385,9 @@ def main(argv=None):
         errors += semantic_checks(data)
         errors += check_json_contracts(schema, data)
         release_issues.extend(f"{c['table_id']}/{c['id']}.{c['field']} 的JSON领域结构仍待核验" for c in schema.get("json_contracts", []) if c["shape"].get("type") == "unverified")
+        from source_locations import resolve_locked_source
         for ref in schema["source_locks"]:
-            p = ROOT / ref["path"]
+            p = resolve_locked_source(ROOT, ref)
             if not p.exists() or sha256(p) != ref["sha256"]:
                 errors.append(f"依据文件发生变化：{ref['path']}，须先重新对齐schema和配置，再更新锁")
         if not re.fullmatch(r"[A-Za-z0-9._-]{1,80}", args.version):
@@ -402,7 +403,7 @@ def main(argv=None):
             "workbook_hashes": {g: sha256(p) for g, p in paths.items()},
         }
         args.report.parent.mkdir(parents=True, exist_ok=True)
-        args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
         if errors or (args.mode == "release" and release_issues):
             print(json.dumps({"structure_valid": not errors, "runtime_ready": False, "error_count": len(errors), "release_blocker_count": len(release_issues), "report": str(args.report)}, ensure_ascii=False))
             return 2
@@ -424,15 +425,15 @@ def main(argv=None):
             files = {}
             for target, payload in payloads.items():
                 p = temp / f"{target}.json"
-                p.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                p.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
                 files[p.name] = sha256(p)
             go, ts = generate_bindings(schema)
-            (temp / "config_types.go").write_text(go + "\n", encoding="utf-8")
-            (temp / "config_types.ts").write_text(ts + "\n", encoding="utf-8")
+            (temp / "config_types.go").write_text(go + "\n", encoding="utf-8", newline="\n")
+            (temp / "config_types.ts").write_text(ts + "\n", encoding="utf-8", newline="\n")
             for name in ("config_types.go", "config_types.ts"):
                 files[name] = sha256(temp / name)
             manifest = {"version": release_name, "requested_version": args.version, "content_sha256": digest, "runtime_ready": report["runtime_ready"], "mode": args.mode, "files": files, "source_locks": schema["source_locks"], "workbooks": report["workbook_hashes"], "schema_sha256": sha256(args.schema), "record_states": all_states}
-            (temp / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            (temp / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
             if dest.exists():
                 old = load_json(dest / "manifest.json")
                 if old != manifest:
@@ -441,7 +442,7 @@ def main(argv=None):
                 os.replace(temp, dest)
             pointer = dest.parent / f"{args.mode}_current.json"
             pointer_tmp = pointer.with_suffix(".tmp")
-            pointer_tmp.write_text(json.dumps({"path": release_name, "version": release_name, "content_sha256": digest, "runtime_ready": report["runtime_ready"]}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            pointer_tmp.write_text(json.dumps({"path": release_name, "version": release_name, "content_sha256": digest, "runtime_ready": report["runtime_ready"]}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
             os.replace(pointer_tmp, pointer)
         finally:
             if temp.exists():

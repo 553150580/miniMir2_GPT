@@ -1,0 +1,15 @@
+{
+  "command": [
+    "./tools/dev",
+    "node",
+    "/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript/lib/tsc.js",
+    "--noEmit",
+    "-p",
+    "client/tsconfig.json"
+  ],
+  "exit_code": 0,
+  "duration_seconds": 17.488,
+  "stdout": "",
+  "stderr": "",
+  "completed_at": "2026-10-27T20:08:02.994089+00:00"
+}

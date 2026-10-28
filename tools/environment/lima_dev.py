@@ -2,6 +2,12 @@
 """仅管理当前项目登记的minimir-dev开发VM；不创建任意VM或启用自动开机。"""
 from __future__ import annotations
 
+import os
+import sys
+if os.name == 'nt' and __name__ == '__main__':
+    from lima_windows import main
+    raise SystemExit(main())
+
 import argparse
 import hashlib
 import json

@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const source=path.resolve(__dirname,'../../assets/scripts/app');
 const {GridProjection}=require('../../../.work/ui-tests/app/GridProjection.js');
 const {beamGeometry}=require('../../../.work/ui-tests/app/BeamGeometry.js');
@@ -44,11 +44,11 @@ test('真实地图绘制只使用保存节点：两侧48像素土层、18+18网�
     assert.equal(world.getChildByName('TargetMarker').getComponent(Sprite).enabled,false);assert(diamond.getComponent(Graphics).operations.some(row=>row[0]==='line'&&row[1]===32&&row[2]===0));
 });
 test('真实世界渲染将直立物件与角色统一排序，身体武器及刀光样本共同映射视觉方向',()=>{
-    const {EntityMotion}=load(path.join(source,'EntityMotion.ts'),()=>({})),{EntityAnimation,movementDisplayDurationMs}=load(path.join(source,'EntityAnimation.ts'),()=>({}));let effects;
+    const {EntityMotion}=load(path.join(source,'EntityMotion.ts'),()=>({})),{EntityAnimation,movementDisplayDurationMs}=load(path.join(source,'EntityAnimation.ts'),()=>({})),{EntityDisplacement}=load(path.join(source,'EntityDisplacement.ts'),()=>({}));let effects;
     class Effects{constructor(...args){this.sample=args[6];effects=this;}update(){}attack(){}dispose(){}}
     const makeSprite=name=>{const n=new Node(name);n.add(Sprite,new Sprite());return n;};
     cc.instantiate=prefab=>{if(prefab==='prop')return makeSprite('prop');if(prefab instanceof Node)return makeSprite(prefab.name);const n=new Node('entity'),body=makeSprite('Body');body.getComponent(UITransform).setContentSize(64,96);body.parent=n;const name=new Node('Name');name.add(Label,{});name.setPosition(0,78);name.scale=new Vec3(.7,.7,1);name.parent=n;const hp=new Node('HP');hp.add(ProgressBar,{});hp.setPosition(0,58);hp.parent=n;return n;};
-    const {GameWorldView}=load(path.join(source,'GameWorldView.ts'),id=>id==='cc'?cc:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):id==='./EntityHeadAnchor'?require('../../../.work/ui-tests/app/EntityHeadAnchor.js'):id==='./MapSurface'?{prepareMapSurface(){}}:id==='./EntityMotion'?{EntityMotion}:id==='./EntityAnimation'?{EntityAnimation,movementDisplayDurationMs}:id==='./CombatEffects'?{CombatEffects:Effects}:id==='./StatusEffects'?{StatusEffects:class{observe(){}update(){}dispose(){}}}:{});
+    const {GameWorldView}=load(path.join(source,'GameWorldView.ts'),id=>id==='cc'?cc:id==='./GridProjection'?require('../../../.work/ui-tests/app/GridProjection.js'):id==='./EntityHeadAnchor'?require('../../../.work/ui-tests/app/EntityHeadAnchor.js'):id==='./MapSurface'?{prepareMapSurface(){}}:id==='./EntityMotion'?{EntityMotion}:id==='./EntityAnimation'?{EntityAnimation,movementDisplayDurationMs}:id==='./EntityDisplacement'?{EntityDisplacement}:id==='./CombatEffects'?{CombatEffects:Effects}:id==='./StatusEffects'?{StatusEffects:class{observe(){}update(){}dispose(){}}}:{});
     const viewport=new Node('viewport');viewport.getComponent(UITransform).setContentSize(720,808);const world=new Node('world'),entities=new Node('entities');entities.parent=world;new Node('Effects').parent=world;
     const frames=new Map(),definitions={};
     const layer=package=>({package,actions:Object.fromEntries(['standing','walking','attack','struck','die','casting'].map(action=>[action,{count:6,duration_ms:100,directions:Array.from({length:8},(_,direction)=>({frames:Array.from({length:6},(_,i)=>{const key=`${package}:${action}:${direction}:${i}`;frames.set(key,{key});definitions[key]={width:20,height:80,offset_x:0,offset_y:action==='casting'?-400:action==='die'?-900:-40-direction-i,declared_empty:false};return key;})}))}]))});
@@ -57,7 +57,7 @@ test('真实世界渲染将直立物件与角色统一排序，身体武器及�
         {id:'brazier',x:8,y:9,display_x:8,display_y:9,group_id:'brazier_group',part_index:0,frame:'Objects:1',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
         {id:'sign',x:9,y:9,display_x:9,display_y:9,group_id:'sign_group',part_index:0,frame:'Objects:2',anchor_x:.5,anchor_y:0,pixel_offset_x:0,pixel_offset_y:0},
     ]},gameplay:{monster_profiles:[{definition_id:1,name:'稻草人'}]},frames,prefab:'entity',propPrefab:'prop',profile:()=>profile};
-    const view=new GameWorldView(viewport,world,entities,'角色',0,'1');view.prepare(assets,()=>{});
+    const view=new GameWorldView(viewport,world,entities,'角色',0,'1',1);view.prepare(assets,()=>{});
     const hp={isZero:()=>false,lessThan:()=>false,toString:()=> '100'};
     const state=(handle,kind,x,y)=>({entityHandle:handle,entityKind:kind,definitionId:kind===3?1:0,position:{x,y},direction:0,moveIntervalMs:1000,hp,hpMax:hp,life:'0',action:0,attackSequence:0,castSequence:0});
     view.apply({entities:[state(1,1,8,8),state(3,3,7,7)]});view.update(0,0,true);

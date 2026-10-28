@@ -1,0 +1,18 @@
+{
+  "task": "host-test",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/environment",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T12:02:16.408734+00:00",
+  "finished_at": "2026-10-28T12:02:17.816872+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/host-test-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

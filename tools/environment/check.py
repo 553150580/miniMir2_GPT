@@ -69,6 +69,9 @@ def generation_files_match(records):
 
 
 def main():
+    if os.name == 'nt':
+        from check_windows import main as windows_main
+        return windows_main()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--strict", action="store_true", help="工具链或开发数据库未就绪时返回2")
     parser.add_argument("--creator-path", help="指定Creator.app；仍须为3.8.8")

@@ -13,6 +13,8 @@ message EnterLineResult {
   GridPoint position = 6;
   uint32 scene_kind = 7;
   uint64 next_economic_command_seq = 8;
+  // 当前附着角色的实体句柄；客户端不能把所有玩家种类或固定句柄猜成本人。
+  uint32 player_handle = 9;
 }
 message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
 // 仅在当前场景基线ACK验证成功后发送，客户端据此恢复经济命令序号。
@@ -42,6 +44,39 @@ message EntityState {
   // 当前生命的权威状态全量；空列表清除，剩余时间为0不等于客户端可自行移除。
   repeated EntityStatusState statuses = 19;
   CombatAttributes combat_attributes = 20;
+  // 当前生命的运动水位；普通行走和显式强制位移均推进，基线不补播旧路径。
+  uint64 movement_revision = 21;
+  // 0初始、1普通走、2被推、3冲撞、4传送、5冲撞失败；纯观察身份。
+  uint32 movement_kind = 22;
+}
+// 仅描述已提交的真实路径；不授予客户端移动能力，也不重放进场前的旧事件。
+message EntityDisplacement {
+  uint64 scene_epoch = 1;
+  uint32 entity_handle = 2;
+  uint64 entity_life = 3;
+  uint64 movement_revision = 4;
+  uint32 kind = 5;
+  GridPoint origin = 6;
+  // 每点为一次成功推进后的格；被推/冲撞保留邻格顺序，传送恰一个落点。
+  repeated GridPoint path = 7;
+  uint32 facing_direction = 8;
+  uint32 movement_direction = 9;
+  // 显示用每格时长，不替代服务端动作、移动或攻击锁。
+  uint32 step_duration_ms = 10;
+  uint32 source_skill_id = 11;
+  uint64 cast_id = 12;
+  // 抢占旧身体动作的水位；已释放的投射物及命中仍按原身份处理。
+  uint32 attack_sequence = 13;
+  uint32 cast_sequence = 14;
+}
+// 最后一个地面目标的权威观察；只按匹配输入身份确认到达，不从强制路径猜到达。
+message NavigationState {
+  uint32 input_sequence = 1;
+  GridPoint destination = 2;
+  // 0无目标、1进行中、2已到达、3玩家主动方向接管、4显式取消；仍保留原目标格。
+  uint32 status = 3;
+  // 目标身份只在新地面目标被接受时推进；健康重入输入序号从0开始，此身份不重置。
+  uint64 revision = 4;
 }
 message EntityStatusState {
   uint32 status_id = 1;
@@ -78,8 +113,18 @@ message SceneBaselineChunk {
   uint64 state_sequence = 5;
   repeated EntityState entities = 6;
   SkillModeState skill_mode_state = 7;
+  NavigationState navigation_state = 8;
 }
-message MoveIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; GridPoint destination = 3; uint32 direction = 4; bool release_joystick = 5; }
+message MoveIntent {
+  uint64 scene_epoch = 1;
+  uint32 input_sequence = 2;
+  GridPoint destination = 3;
+  uint32 direction = 4;
+  bool release_joystick = 5;
+  // 正常连接显式退出/换角先取消目标，收到同Request的完整基线确认后再关闭连接。
+  // 与destination/release/方向输入互斥，普通失焦、后台和断线不发送此意图。
+  bool cancel_navigation = 6;
+}
 message CastIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 skill_id = 3; uint32 target_handle = 4; GridPoint target_grid = 5; uint32 direction = 6; }
 // 近战按受理时的逻辑朝向取格；skill_id为0时由权威模式选技，其它值只校验预期。
 message AttackIntent { uint64 scene_epoch = 1; uint32 input_sequence = 2; uint32 direction = 3; uint32 skill_id = 4; }

@@ -40,15 +40,19 @@ func (s Skill) MaximumAttackBonus(level uint32) int64 {
 }
 
 type CombatTiming struct {
-	PlayerAttackBaseMS      int64 `json:"player_attack_base_ms"`
-	PlayerAttackSpeedStepMS int64 `json:"player_attack_speed_step_ms"`
-	PlayerAttackLevelStepMS int64 `json:"player_attack_level_step_ms"`
-	PlayerAttackLevelCapMS  int64 `json:"player_attack_level_cap_ms"`
-	PlayerAttackMinMS       int64 `json:"player_attack_min_ms"`
-	PlayerAttackActionMS    int64 `json:"player_attack_action_ms"`
-	PlayerAttackImpactMS    int64 `json:"player_attack_impact_ms"`
-	EventCapacity           int   `json:"event_capacity"`
-	KillQueueCapacity       int   `json:"kill_queue_capacity"`
+	PlayerAttackBaseMS         int64 `json:"player_attack_base_ms"`
+	PlayerAttackSpeedStepMS    int64 `json:"player_attack_speed_step_ms"`
+	PlayerAttackLevelStepMS    int64 `json:"player_attack_level_step_ms"`
+	PlayerAttackLevelCapMS     int64 `json:"player_attack_level_cap_ms"`
+	PlayerAttackMinMS          int64 `json:"player_attack_min_ms"`
+	PlayerAttackActionMS       int64 `json:"player_attack_action_ms"`
+	PlayerAttackImpactMS       int64 `json:"player_attack_impact_ms"`
+	PlayerPushActionMS         int64 `json:"player_push_action_ms"`
+	MonsterPushActionMSPerStep int64 `json:"monster_push_action_ms_per_step"`
+	MonsterPushMoveMSPerStep   int64 `json:"monster_push_move_ms_per_step"`
+	PushedStepDisplayMS        int64 `json:"pushed_step_display_ms"`
+	EventCapacity              int   `json:"event_capacity"`
+	KillQueueCapacity          int   `json:"kill_queue_capacity"`
 }
 
 func (s Skill) AccuracyBonus(level uint32) int64 {

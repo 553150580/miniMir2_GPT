@@ -398,6 +398,18 @@
       "source_ref": "2026-10-27用户审定地狱火固定四格；实际推进格观察，不重播旧步"
     },
     {
+      "value": 30013,
+      "name": "MsgS2CEntityDisplacement",
+      "proto_message": "EntityDisplacement",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "2026-10-28位移共用底座：真实路径、运动水位及身体动作隔离；非新技能开放"
+    },
+    {
       "value": 40001,
       "name": "MsgC2SEquip",
       "proto_message": "EquipRequest",

@@ -33,6 +33,7 @@ const (
 	MsgS2CSkillModeState uint16 = 30010
 	MsgC2SAttackIntent uint16 = 30011
 	MsgS2CCastStep uint16 = 30012
+	MsgS2CEntityDisplacement uint16 = 30013
 	MsgC2SEquip uint16 = 40001
 	MsgC2SRecycle uint16 = 40002
 	MsgS2CInventory uint16 = 40003

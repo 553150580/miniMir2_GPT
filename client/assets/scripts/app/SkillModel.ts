@@ -187,16 +187,16 @@ export function gridDirection(origin: { x: number; y: number }, target: { x: num
     if (!dx && !dy) return fallback;
     return (Math.round(Math.atan2(dx, -dy) * count / (2 * Math.PI)) + count) % count;
 }
-export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[], selectedHandle: number | null): SkillEntity {
-    const player = validateCaster(row, entities), targetKind = skillTargetKind(row.definition);
+export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[], selectedHandle: number | null, playerHandle: number): SkillEntity {
+    const player = validateCaster(row, entities, playerHandle), targetKind = skillTargetKind(row.definition);
     if (targetKind !== 'enemy_entity' && targetKind !== 'friendly_entity') throw new Error('该技能需要选择地面位置');
     const friendly = targetKind === 'friendly_entity';
     const distance = (target: SkillEntity): number => Math.max(Math.abs(target.position.x - player.position.x), Math.abs(target.position.y - player.position.y));
     const legal = (target: SkillEntity): boolean => integer(target.hp) > 0n
-        && (friendly ? target.entityKind === 1 || target.entityKind === 2 : target.entityKind === 3);
+        && (friendly ? target.entityHandle === playerHandle || target.entityKind === 2 : target.entityKind === 3);
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
     if (selected && integer(selected.hp) === 0n && (friendly
-        ? selected.entityKind === 1 || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
+        ? selected.entityHandle === playerHandle || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;
     if (!target && friendly) target = player;
     if (!target) target = entities.filter(legal).slice().sort((a, b) => distance(a) - distance(b) || a.entityHandle - b.entityHandle)[0];
@@ -204,8 +204,8 @@ export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[
     if (distance(target) > row.definition.range) throw new Error('目标超出技能射程，请靠近后施放');
     return target;
 }
-export function validateGroundTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }): { x: number; y: number } {
-    const player = validateCaster(row, entities);
+export function validateGroundTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }, playerHandle: number): { x: number; y: number } {
+    const player = validateCaster(row, entities, playerHandle);
     if (!isGroundSkill(row.definition)) throw new Error('该技能需要选择实体目标');
     // 范围中心允许阻挡格；命中格逐格是否可作用由服务端裁定，不复用移动可行走条件。
     if (![bounds.width, bounds.height].every(value => Number.isSafeInteger(value) && value > 0)
@@ -214,17 +214,17 @@ export function validateGroundTarget(row: SkillRow, entities: readonly SkillEnti
     if (Math.max(Math.abs(grid.x - player.position.x), Math.abs(grid.y - player.position.y)) > row.definition.range) throw new Error('目标超出技能射程，请重新选择地面');
     return { x: grid.x, y: grid.y };
 }
-export function validateDirectionTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }): { x: number; y: number; direction: number } {
-    const player = validateCaster(row, entities);
+export function validateDirectionTarget(row: SkillRow, entities: readonly SkillEntity[], grid: { x: number; y: number }, bounds: { width: number; height: number }, playerHandle: number): { x: number; y: number; direction: number } {
+    const player = validateCaster(row, entities, playerHandle);
     if (!isDirectionalSkill(row.definition)) throw new Error('该技能无需方向瞄准');
     if (![grid.x, grid.y].every(value => Number.isSafeInteger(value) && value >= 0) || grid.x >= bounds.width || grid.y >= bounds.height) throw new Error('方向目标超出地图边界');
     if (grid.x === player.position.x && grid.y === player.position.y) throw new Error('请轻触角色周围选择方向');
     return { x: grid.x, y: grid.y, direction: gridDirection(player.position, grid, player.direction) };
 }
-export function validateCaster(row: SkillRow, entities: readonly SkillEntity[], checkCost = true): SkillEntity {
+export function validateCaster(row: SkillRow, entities: readonly SkillEntity[], playerHandle: number, checkCost = true): SkillEntity {
     if (!row.learned) throw new Error('尚未学会该技能');
     if (!row.definition.active) throw new Error('该技能为被动技能，无需主动施放');
-    const player = entities.find(entity => entity.entityKind === 1);
+    const player = entities.find(entity => entity.entityHandle === playerHandle);
     if (!player || integer(player.hp) === 0n) throw new Error('角色已倒下，不能施放技能');
     if (checkCost && integer(player.mp ?? 0) < BigInt(row.cost)) throw new Error('魔法不足');
     return player;

@@ -1,0 +1,13 @@
+{
+  "task": "client-scene-test",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/scene/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T12:02:18.377072+00:00",
+  "finished_at": "2026-10-28T12:02:18.581812+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/client-scene-test-1.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

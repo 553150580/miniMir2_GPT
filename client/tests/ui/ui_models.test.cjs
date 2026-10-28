@@ -111,10 +111,12 @@ test('主动推方向终止导航，松手只释放方向而不恢复已终止�
 test('到达回执只结束对应目标，旧路径回执不能清除新目标', () => {
     const nav = new NavigationIntent();
     nav.setGroundTarget({ x: 1, y: 2 });
+    nav.bindGroundInput(1);
     nav.setGroundTarget({ x: 3, y: 4 });
-    assert.equal(nav.completeGroundTarget({ x: 1, y: 2 }), false);
+    nav.bindGroundInput(2);
+    assert.equal(nav.observeAuthority({ inputSequence: 1, destination: { x: 1, y: 2 }, status: 2, revision: '1' }), false);
     assert.deepEqual(nav.state.target, { x: 3, y: 4 });
-    assert.equal(nav.completeGroundTarget({ x: 3, y: 4 }), true);
+    assert.equal(nav.observeAuthority({ inputSequence: 2, destination: { x: 3, y: 4 }, status: 2, revision: '2' }), true);
     assert.equal(nav.state.target, null);
     nav.setGroundTarget({ x: 9, y: 9 });
     nav.exitGame();

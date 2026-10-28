@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '../../..');
 // Sprite.Type 与 ProgressBar.Mode 是两套枚举，FILLED 的序列化值不同。
 const SPRITE_SIMPLE = 0, SPRITE_FILLED = 3, FILL_VERTICAL = 1, PROGRESS_FILLED = 2;
 const creator = process.env.MINIMIR_CREATOR_APP ?? '/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const engine = path.join(creator, 'Contents/Resources/resources/3d/engine/cocos');
+const engine = path.join(require('../../../tools/client/creator_paths.cjs').engineRoot, 'cocos');
 const scene = JSON.parse(fs.readFileSync(path.join(root, 'client/assets/scenes/Game.scene'), 'utf8'));
 const nodes = new Map();
 function indexNode(index, prefix = '') {

@@ -1,0 +1,30 @@
+{
+  "source_commit": "cd4e5bc4ea476960f7d14d91261ce36a2bc9f081",
+  "sha256": {
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/scenes/RoleSelect.scene.meta": "9ca49a03196b193c59331ef5c0980f6ce1d2e8786d2943c91d509e1f6442718f",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/Login.scene.meta": "33f2b2a4da3b997c5bf90a644d2186fea5b116298c09980cd83166cf4ecb2d3e",
+    "client/assets/scenes/Game.scene": "4263e30f530ae174c570e43e6b5f3d21fede2b6bda2dd93b8bd10dfb42f762d5",
+    "client/assets/scenes/Game.scene.meta": "8f9e60677e3d5d37bb71fe5e3ffaece1c57e82f2b23d917ca586c271780d44d9",
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Boot.scene.meta": "117e4834d9271d6e1a91dc84ca0ac11eb925a723570477672410a7c95c278fde",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+    "client/assets/resources/prefabs/StatusBadge.prefab.meta": "40532adfdbe509b65e325e7f9ef3095d3089b38fa2c130ca6886a7c60bcbd42b",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Effect.prefab.meta": "0ff2ae4c018e2c57f3281ac78eadd3cac02d461b5dc86650624e67d8eb05c8c5",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/Entity.prefab.meta": "e94abefaed2e6b6a24924b0e5ff19c48f2324f82e3300290d01553f9dc867994",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/MapProp.prefab.meta": "15937f137a52433ba42bc1fd6a6d110b223c6f9b17ebb29a9e4bbf343feb1ae6",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Beam.prefab.meta": "8cf11ea9a90593b5702967c335c665b9a34221e960904f427890ad8b581304b7",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/ListItem.prefab.meta": "508ab1c3f8d5d20f271ef1172d2c9d8f5e48c916133f3d253f49069a420b9a2d",
+    "outputs/development-prep-20261026/架构配置.xlsx": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "0472e11200410d37ebb4f4ad9f2a7c43644a1690e887882dbda26c3d6339f9b5"
+  },
+  "allowed_changes": [
+    "玩法配置.xlsx中本阶段已登记字段；架构表与保存布局不变"
+  ]
+}

@@ -8,6 +8,7 @@ import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridPro
 import { prepareMapSurface } from './MapSurface';
 import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
 import { StatusEffects } from './StatusEffects';
+import { DisplacementEvent, EntityDisplacement } from './EntityDisplacement';
 
 interface Visual {
     node: Node;
@@ -19,6 +20,7 @@ interface Visual {
     keys: string[];
     orderDirection: number;
     pose: AnimationSample | null;
+    movement: EntityDisplacement;
 }
 
 // 权威格坐标用于规则与点击；每帧显示位置及动作独立插值，不生成固定UI布局。
@@ -41,7 +43,8 @@ export class GameWorldView {
     private audit = typeof location !== 'undefined' && new URLSearchParams(location.search).get('renderQA') === '1'
         ? { stage: 'initial', start: 0, last: 0, updates: 0, maxGap: 0, changedFrames: 0, intermediate: [0, 0, 0, 0] } : null;
 
-    constructor(readonly viewport: Node, readonly world: Node, readonly entities: Node, readonly playerName: string, readonly job: number, readonly sceneEpoch: { toString(): string }) {
+    constructor(readonly viewport: Node, readonly world: Node, readonly entities: Node, readonly playerName: string, readonly job: number, readonly sceneEpoch: { toString(): string }, readonly playerHandle: number) {
+        if (!Number.isInteger(playerHandle) || playerHandle < 1 || playerHandle > 0xffffffff) throw new Error('入场玩家句柄无效');
         if (isValid(this.viewport, true)) this.viewport.on(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
     }
 
@@ -78,6 +81,20 @@ export class GameWorldView {
     acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
     acceptCastStep(event: CastStepEvent): void { if (!this.disposed) this.effects?.step(event, game.totalTime); }
     acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
+    acceptDisplacement(event: DisplacementEvent): void {
+        if (this.disposed || !this.map) return;
+        const inside = (point: { x: number; y: number }): boolean => !!point && point.x >= 0 && point.y >= 0 && point.x < this.map.width && point.y < this.map.height;
+        if (!inside(event.origin) || !event.path?.every(inside)) return;
+        const visual = this.visuals.get(event.entityHandle), accepted = visual?.movement.accept(event);
+        if (!visual || !accepted) return;
+        const now = game.totalTime;
+        visual.animation?.displace(event.attackSequence, event.castSequence);
+        visual.motion.displace(event, now, event.entityHandle === this.playerHandle, accepted.recover);
+        visual.state = { ...visual.state, position: visual.movement.position, direction: event.facingDirection,
+            movementRevision: event.movementRevision, movementKind: event.kind };
+        this.effects?.displacement(event, now, event.entityHandle === this.playerHandle);
+        this.update(0, this.job, this.weaponEquipped);
+    }
     acceptAttack(event: AttackEvent): void {
         if (this.disposed || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;
         const id = BigInt(event.eventId.toString()); if (id <= this.lastAttackId) return; this.lastAttackId = id;
@@ -133,19 +150,27 @@ export class GameWorldView {
                     const current = this.visuals.get(state.entityHandle); if (current) this.selected(current.state);
                 });
                 visual = { node, body: sprites, state, profile, motion: new EntityMotion(),
-                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null };
+                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null,
+                    movement: new EntityDisplacement(this.sceneEpoch, state.entityHandle) };
                 this.visuals.set(state.entityHandle, visual);
             }
             const previous = visual.state;
+            if (previous.life?.toString() !== state.life?.toString()) {
+                visual.motion.reset(); visual.animation = visual.profile ? new EntityAnimation(visual.profile.layers[0].actions) : null;
+            }
             if (!previous.hp.isZero() && state.hp.isZero()) visual.motion.releaseHold(now);
-            visual.motion.push({ x: state.position.x, y: state.position.y, direction: state.direction,
+            const decision = state.movementRevision == null ? 'walk'
+                : visual.movement.observe(state.life, state.movementRevision, state.movementKind, state.position);
+            if (decision === 'stale') visual.motion.touchSnapshot(now);
+            else visual.motion.push({ x: state.position.x, y: state.position.y, direction: state.direction,
                 durationMs: movementDisplayDurationMs(state.entityKind, visual.profile?.layers[0].actions.walking, state.moveIntervalMs),
-                snap: state.entityKind === 4 || (previous.hp.isZero() && !state.hp.isZero()) }, now);
+                snap: decision === 'initial' || decision === 'recover' || state.entityKind === 4 || (previous.hp.isZero() && !state.hp.isZero()) }, now);
             visual.animation?.observe({ direction: state.direction, action: state.action, attackSequence: state.attackSequence, castSequence: state.castSequence,
                 dead: state.hp.isZero(), injured: state.hp.lessThan(previous.hp) }, now);
-            visual.state = state;
+            if ((decision === 'initial' || decision === 'recover') && state.movementKind >= 2) visual.animation?.displace(state.attackSequence, state.castSequence);
+            visual.state = decision === 'stale' ? { ...state, position: visual.movement.position, direction: previous.direction } : state;
             const name = visual.node.getChildByName('Name')!;
-            const displayName = entityDisplayName(state.entityKind, state.definitionId, this.playerName, this.job, this.gameplay);
+            const displayName = entityDisplayName(state.entityKind, state.definitionId, state.entityHandle === this.playerHandle ? this.playerName : '', this.job, this.gameplay);
             name.active = !!displayName;
             name.getComponent(Label)!.string = displayName;
             const hp = visual.node.getChildByName('HP')!;
@@ -186,7 +211,7 @@ export class GameWorldView {
             if (audit && motion.moving && visual.state.entityKind <= 3
                 && (Math.abs(motion.x - Math.round(motion.x)) > .001 || Math.abs(motion.y - Math.round(motion.y)) > .001)) audit.intermediate[visual.state.entityKind]++;
             visual.node.setPosition(this.grid(motion.x, motion.y));
-            if (visual.state.entityKind === 1) this.playerPosition = { x: motion.x, y: motion.y };
+            if (visual.state.entityHandle === this.playerHandle) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
             visual.pose = pose ?? null;
             if (!pose) { for (const sprite of visual.body) sprite.node.active = false; continue; }

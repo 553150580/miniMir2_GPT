@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {createRequire}=require('node:module');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const file=path.resolve(__dirname,'../../assets/scripts/app/GameSession.ts');
 const Long=createRequire(file)('long');
 class Connection{subscribe(listener){this.listener=listener;}onStatus(listener){this.status=listener;}deliver(id,value){this.listener({id,value,error:0});}}
@@ -13,9 +13,25 @@ new Function('require','module','exports',compiled.outputText)(id=>id==='long'?L
     :id==='./BaselineAssembler'?{BaselineAssembler:class{reset(){}accept(value){return value;}}}:id==='./GameErrors'?{protocolErrorMessage:()=>''}
     :id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):{},moduleLike,moduleLike.exports);
 const {session}=moduleLike.exports;
+test('入场必须显式提供正玩家句柄，缺失或越界不能沿kind或ID1恢复Ready',()=>{
+    const entry={sceneEpoch:Long.UONE,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE};
+    for(const playerHandle of [undefined,0,-1,4294967296]){session.connection.deliver(20002,{...entry,playerHandle});session.connection.deliver(6,entry);assert.equal(session.entry,null);assert.equal(session.ready,false);assert.match(session.lastError,/玩家身份/);}
+    session.connection.deliver(20002,{...entry,playerHandle:7});session.connection.deliver(6,entry);assert.equal(session.entry.playerHandle,7);assert.equal(session.ready,true);
+});
+test('显式位移只在当前Ready连接转发，初始/重连基线不补播旧路径',()=>{
+    let count=0;const listener=()=>count++;session.displacements.add(listener);
+    const entry={sceneEpoch:Long.UONE,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1};
+    session.connection.deliver(20002,entry);session.connection.deliver(30013,{sceneEpoch:Long.UONE});assert.equal(count,0);
+    session.connection.deliver(5,{stateSequence:Long.UONE,entities:[{entityHandle:1,movementRevision:Long.fromInt(9),movementKind:2}]});assert.equal(count,0);
+    session.connection.deliver(6,entry);session.connection.deliver(30013,{sceneEpoch:Long.fromInt(2)});assert.equal(count,0);
+    session.connection.deliver(30013,{sceneEpoch:Long.UONE});assert.equal(count,1);
+    session.connection.status('测试断线');session.connection.deliver(30013,{sceneEpoch:Long.UONE});assert.equal(count,1);
+    session.connection.deliver(20002,entry);session.connection.deliver(5,{stateSequence:Long.UONE,entities:[{entityHandle:1,movementRevision:Long.fromInt(9),movementKind:2}]});assert.equal(count,1);
+    session.displacements.delete(listener);
+});
 test('瞬时战斗流仅在当前场景Ready转发，初始及重连基线不补播历史动作特效',()=>{
     const seen={casts:0,attacks:0,impacts:0};session.casts.add(()=>seen.casts++);session.attacks.add(()=>seen.attacks++);session.impacts.add(()=>seen.impacts++);
-    const entry=sceneEpoch=>({sceneEpoch,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE});
+    const entry=sceneEpoch=>({sceneEpoch,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1});
     session.connection.deliver(20002,entry(Long.UONE));
     session.connection.deliver(5,{stateSequence:Long.UONE,entities:[{castSequence:99,attackSequence:99}]});
     for(const id of [30006,30007,30008])session.connection.deliver(id,{sceneEpoch:Long.UONE});assert.deepEqual(seen,{casts:0,attacks:0,impacts:0});
@@ -28,7 +44,7 @@ test('瞬时战斗流仅在当前场景Ready转发，初始及重连基线不补
     for(const id of [30006,30007,30008])session.connection.deliver(id,{sceneEpoch:Long.UONE});assert.deepEqual(seen,{casts:1,attacks:1,impacts:1});
 });
 test('模式基线可在Ready前恢复，推送按原场景与修订隔离，重入清缓存且不触发旧刀光',()=>{
-    const epoch=Long.fromString('9007199254740993',true),entry={sceneEpoch:epoch,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE};
+    const epoch=Long.fromString('9007199254740993',true),entry={sceneEpoch:epoch,baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1};
     session.connection.deliver(20002,entry);
     const mode={sceneEpoch:epoch,revision:Long.fromString('9007199254740993',true),playerLife:Long.UZERO,serverTimeUnixMs:Long.fromString('1900000000000',true),states:[{skillId:26,enabled:false,ready:true,remainingMs:5000,cooldownRemainingMs:5000}]};
     session.connection.deliver(5,{stateSequence:Long.UONE,entities:[],skillModeState:mode});assert.equal(session.ready,false);assert.equal(session.skillModes.states[0].ready,true);
@@ -39,7 +55,7 @@ test('模式基线可在Ready前恢复，推送按原场景与修订隔离，重
 });
 test('CastStep只转发当前Ready连接的真实未来步，重入基线不补播旧起手和已处理格',()=>{
     let received=0;const listener=()=>received++;session.castSteps.add(listener);
-    const entry={sceneEpoch:Long.fromInt(3,true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE};
+    const entry={sceneEpoch:Long.fromInt(3,true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1};
     session.connection.deliver(20002,entry);session.connection.deliver(30012,{sceneEpoch:entry.sceneEpoch,stepIndex:1});assert.equal(received,0);
     session.connection.deliver(5,{stateSequence:Long.UONE,entities:[{castSequence:99,castSkillId:9}]});assert.equal(received,0);
     session.connection.deliver(6,entry);session.connection.deliver(30012,{sceneEpoch:Long.UONE,stepIndex:2});assert.equal(received,0);
@@ -61,7 +77,7 @@ test('同连接复活用新life与更高修订恢复模式操作，迟到旧life
         activation_kind:'toggle',target_kind:'attack_mode',range:2,base_cost:0,level_cost:0};
     app.world={gameplay:{skills:[definition]}};
     const epoch=Long.fromString('9007199254740993',true),revision=Long.fromString('9007199254740995',true);
-    const entry={sceneEpoch:epoch,resourceVersion:Long.fromInt(6,true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE};
+    const entry={sceneEpoch:epoch,resourceVersion:Long.fromInt(6,true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1};
     session.connection.deliver(20002,entry);session.role={job:0};
     session.inventory={level:40,items:[],learnedSkills:[{skillId:12,level:0}]};
     const oldMode={sceneEpoch:epoch,revision,playerLife:Long.UZERO,serverTimeUnixMs:Long.fromString('1900000000000',true),

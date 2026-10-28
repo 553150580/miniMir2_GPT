@@ -180,15 +180,23 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 					c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && c.entity(2).Hp < c.entity(2).HpMax })
 				}
 				hpBefore, mpBefore := c.entity(target).Hp, c.player().Mp
+				targetLife := c.entity(target).Life
 				request := c.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: c.entry.SceneEpoch, SkillId: skill.ID, TargetHandle: target})
 				eventFrame := c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CCastAccepted })
 				event := &pb.CastAccepted{}
 				must(t, proto.Unmarshal(eventFrame.Payload, event))
 				acceptedAt := time.Now()
 				c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && c.player().CastSequence == 1 })
-				if c.player().Mp != mpBefore-skill.MPBaseCost || event.CastId != 1 || event.InputSequence != c.input || c.entity(target).Hp != hpBefore {
-					t.Fatal("受理时MP/输入/延迟/动作基线不符")
+				acceptanceHPValid := c.entity(target).Hp == hpBefore
+				if job == 2 {
+					// 活世界仍可受击；只禁止受理瞬间凭空回血，不把持续伤害误判成施法时序错误。
+					acceptanceHPValid = c.entity(target).Hp > 0 && c.entity(target).Hp <= hpBefore && c.entity(target).Life == targetLife
 				}
+				if c.player().Mp != mpBefore-skill.MPBaseCost || event.CastId != 1 || event.InputSequence != c.input || !acceptanceHPValid {
+					t.Fatalf("受理时MP/输入/延迟/动作基线不符：job=%d mp=%d expected_mp=%d cast=%d input=%d expected_input=%d target_hp=%d before_hp=%d", job, c.player().Mp, mpBefore-skill.MPBaseCost, event.CastId, event.InputSequence, c.input, c.entity(target).Hp, hpBefore)
+				}
+				// 治疗恢复从受理后的新鲜受伤基线观察；不能要求恢复掉之后继续受到的全部伤害。
+				healingObservationHP := c.entity(target).Hp
 				// 相同输入不重放效果；新输入在动作锁内也不能重扣MP。
 				stale := c.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: c.entry.SceneEpoch, SkillId: skill.ID, TargetHandle: target, InputSequence: event.InputSequence})
 				c.expectError(stale, p.CodeStaleInput)
@@ -202,7 +210,10 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 					if job == 1 {
 						return c.entity(target).Hp < hpBefore
 					}
-					return c.entity(target).Hp > hpBefore
+					if c.entity(target).Life != targetLife || c.entity(target).Hp <= 0 {
+						t.Fatal("治疗观察前态失效：目标已死亡或换代")
+					}
+					return c.entity(target).Hp > healingObservationHP
 				})
 				if time.Since(acceptedAt) < time.Duration(event.DelayMs-50)*time.Millisecond {
 					t.Fatal("真实WS效果早于投射/治疗延迟")

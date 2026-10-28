@@ -4,7 +4,8 @@ export interface NavigationState {
     readonly target: GridPoint | null;
     readonly direction: Direction8;
 }
-export type NavigationReason = 'ground' | 'direction' | 'release' | 'arrived' | 'exit';
+export type NavigationReason = 'ground' | 'direction' | 'release' | 'arrived' | 'cancelled' | 'exit' | 'restore';
+export interface AuthoritativeNavigation { inputSequence: number; destination?: GridPoint; status: number; revision: { toString(): string } | bigint | string; }
 
 export function direction8(x: number, y: number, deadZone = 0.18): Direction8 {
     const threshold = Number.isFinite(deadZone) ? Math.max(0, deadZone) : 0.18;
@@ -20,6 +21,12 @@ export function direction8(x: number, y: number, deadZone = 0.18): Direction8 {
 export class NavigationIntent {
     private target: GridPoint | null = null;
     private direction: Direction8 = { x: 0, y: 0 };
+    private groundSequence: number | null = null;
+    private localIntent = false;
+    private seenRevision = 0n;
+    private groundLowerBound = 0n;
+    private groundRevision: bigint | null = null;
+    private inputBlocked = false;
     private readonly listeners = new Set<(state: NavigationState, reason: NavigationReason) => void>();
 
     get state(): NavigationState {
@@ -30,21 +37,25 @@ export class NavigationIntent {
         this.listeners.add(listener);
         return () => { this.listeners.delete(listener); };
     }
+    setInputBlocked(blocked: boolean): void { this.inputBlocked = blocked; }
 
     setGroundTarget(target: GridPoint): boolean {
-        if (!Number.isSafeInteger(target.x) || !Number.isSafeInteger(target.y)) return false;
+        if (this.inputBlocked || !Number.isSafeInteger(target.x) || !Number.isSafeInteger(target.y)) return false;
         this.target = { ...target };
+        this.groundSequence = null; this.groundRevision = null; this.groundLowerBound = this.seenRevision; this.localIntent = true;
         this.direction = { x: 0, y: 0 };
         this.publish('ground');
         return true;
     }
 
     setJoystick(value: Direction8): void {
+        if (this.inputBlocked) return;
         const valid = (axis: number): boolean => axis === -1 || axis === 0 || axis === 1;
         if (!valid(value.x) || !valid(value.y)) return;
         if (!value.x && !value.y) { this.releaseJoystick(); return; }
         const changed = this.target !== null || this.direction.x !== value.x || this.direction.y !== value.y;
         this.target = null;
+        this.groundSequence = null; this.groundRevision = null; this.localIntent = true;
         this.direction = { ...value };
         if (changed) this.publish('direction');
     }
@@ -56,15 +67,43 @@ export class NavigationIntent {
         this.publish('release');
     }
 
-    completeGroundTarget(reached: GridPoint): boolean {
-        if (!this.target || reached.x !== this.target.x || reached.y !== this.target.y) return false;
-        this.target = null;
-        this.publish('arrived');
-        return true;
+    bindGroundInput(sequence: number): void {
+        if (this.target && Number.isInteger(sequence) && sequence >= 0 && sequence <= 0xffffffff) {
+            this.groundSequence = sequence; this.groundLowerBound = this.seenRevision;
+        }
+    }
+
+    // 强制路径即使经过目标也不等于寻路到达，只接受当前输入身份的权威结果。
+    observeAuthority(value: AuthoritativeNavigation | null | undefined): boolean {
+        if (!value || !Number.isInteger(value.inputSequence) || value.inputSequence < 0 || value.inputSequence > 0xffffffff) return false;
+        let revision: bigint;
+        try {
+            if (typeof value.revision === 'number' || !/^\d+$/.test(value.revision?.toString() ?? '')) return false;
+            revision = BigInt(value.revision.toString()); if (revision > (1n << 64n) - 1n || revision < this.seenRevision) return false;
+        } catch { return false; }
+        this.seenRevision = revision;
+        const matching = this.groundSequence === value.inputSequence
+            && (this.groundRevision === null ? revision > this.groundLowerBound : revision === this.groundRevision);
+        if (value.status === 2 || value.status === 4) {
+            if (!this.target || !matching || !value.destination
+                || value.destination.x !== this.target.x || value.destination.y !== this.target.y) return false;
+            this.target = null; this.groundSequence = null; this.groundRevision = null; this.localIntent = true;
+            this.direction = { x: 0, y: 0 }; this.publish(value.status === 2 ? 'arrived' : 'cancelled'); return true;
+        }
+        if (value.status === 3 && !this.localIntent) {
+            this.target = null; this.groundSequence = null; this.groundRevision = null; this.localIntent = true; this.direction = { x: 0, y: 0 };
+            this.publish('restore'); return true;
+        }
+        if (value.status !== 1 || !value.destination || !Number.isSafeInteger(value.destination.x) || !Number.isSafeInteger(value.destination.y)
+            || (this.localIntent && !matching)) return false;
+        if (this.groundSequence === value.inputSequence && this.groundRevision === revision && this.target?.x === value.destination.x && this.target?.y === value.destination.y) return false;
+        this.target = { ...value.destination }; this.direction = { x: 0, y: 0 }; this.groundSequence = value.inputSequence; this.groundRevision = revision;
+        this.publish('restore'); return true;
     }
 
     exitGame(): void {
         this.target = null;
+        this.groundSequence = null; this.groundRevision = null; this.localIntent = true;
         this.direction = { x: 0, y: 0 };
         this.publish('exit');
     }

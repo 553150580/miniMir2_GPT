@@ -24,7 +24,7 @@ TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_c
            'game_monster_spawns','game_pet_templates','game_exp_levels','game_drop_pools','game_drop_entries',
            'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
 
-def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
 def csv_rows(name):
     with (CSV_ROOT/name).open(encoding='utf-8-sig',newline='') as f:return [(i,row) for i,row in enumerate(csv.DictReader(f),2)]
@@ -161,18 +161,18 @@ def potion_rules(profile,items):
         seen.add(item_id)
     return deepcopy(settings)
 
-SKILL_TARGET_FIELDS='range_cells target_move_tolerance_cells area_radius require_line_of_sight auto_priority auto_min_targets secondary_direction_offsets secondary_distance_cells line_cells line_stop_on_blocked activation_kind'.split()
+SKILL_TARGET_FIELDS='range_cells target_move_tolerance_cells area_radius require_line_of_sight auto_priority auto_min_targets auto_enabled secondary_direction_offsets secondary_distance_cells line_cells line_stop_on_blocked activation_kind'.split()
 SKILL_CAST_FIELDS='cooldown_reduction_ms global_spell_ms action_ms delay_base_ms projectile_ms_per_cell secondary_impact_ms charge_window_ms line_step_ms'.split()
 SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm accuracy_by_level healing_stat_multiplier add_caster_level undead_multiplier_ppm max_attack_bonus_by_level ready_proc_denominator ready_proc_numerators non_undead_divisor'.split()
 SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator buff_id material_item_id material_quantity'.split()
-SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked']
+SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked','auto_enabled']
 SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
 SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour']
 SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self','friendly_self']
 BUFF_BEHAVIORS={'magic_shield':'magic_shield','soul_shield':'max_magic_defence','blessed_armour':'max_physical_defence'}
 BUFF_ATTRIBUTE_FIELDS='kind value_by_level target_level_divisor target_level_add hit_duration_loss_ms_per_hp'.split()
 BUFF_DURATION_FIELDS='kind stat_add stat_multiplier seconds_by_level'.split()
-COMBAT_TIMING_FIELDS='player_attack_base_ms player_attack_speed_step_ms player_attack_level_step_ms player_attack_level_cap_ms player_attack_min_ms player_attack_action_ms player_attack_impact_ms event_capacity kill_queue_capacity'.split()
+COMBAT_TIMING_FIELDS='player_attack_base_ms player_attack_speed_step_ms player_attack_level_step_ms player_attack_level_cap_ms player_attack_min_ms player_attack_action_ms player_attack_impact_ms event_capacity kill_queue_capacity player_push_action_ms monster_push_action_ms_per_step monster_push_move_ms_per_step pushed_step_display_ms'.split()
 HEALING_FIELDS='tick_ms base_per_tick pet_base_per_tick levels_per_step queue_fraction_divisor queue_cap'.split()
 GROWTH_FIELDS='hp_gain hp_gain_rate mp_gain mp_gain_rate attack_divisor defence_max_divisor magic_divisor tao_divisor magic_defence_min_divisor magic_defence_max_divisor'.split()
 
@@ -308,6 +308,7 @@ def validate_skills(profile,skills):
     if not isinstance(healing,dict) or set(healing)!=set(HEALING_FIELDS) or any(type(healing[k]) is not int or healing[k]<=0 for k in HEALING_FIELDS):raise ValueError('治疗队列参数不完整')
     players=profile.get('players');growth=profile.get('player_growth');initial=profile.get('initial_skill_books')
     if not isinstance(players,list) or {p['job_id'] for p in players}!={0,1,2}:raise ValueError('三职业基础属性缺失')
+    if any(type(p.get('can_push')) is not bool for p in players):raise ValueError('玩家can_push必须显式布尔值，不得缺失、null或数字代替')
     if not isinstance(growth,list) or len(growth)!=3 or {g['job_id'] for g in growth}!={0,1,2}:raise ValueError('三职业成长缺失')
     for g in growth:
         if set(g)!=set(GROWTH_FIELDS)|{'job_id','hp_base','mp_base'}:raise ValueError('职业成长字段不完整')
@@ -417,6 +418,7 @@ def fixture_from_rows(tables):
     spawns=[r['cell'] for r in tables['game_monster_spawns'] if r['map_id']==m['id']]
     validate_map_inputs(m,collision,profile,spawns)
     monster=one('game_monsters',profile['monster_id']);pet_def=one('game_pet_templates',profile['pet_id']);pet=one('game_monsters',pet_def['monster_template_id'])
+    if any(type(r['attributes'].get('can_push')) is not bool for r in [monster,pet]):raise ValueError('已选怪物及宠物来源can_push必须显式布尔值')
     skills=skill_definitions(tables,profile);validate_skills(profile,skills)
     supply=casting_supply_rules(profile,tables);buffs,buff_names=buff_definitions(tables,skills,supply)
     if profile['combat_timing']['kill_queue_capacity']<sum(r['map_id']==m['id'] for r in tables['game_monster_spawns'])+1:raise ValueError('逐杀队列必须覆盖本地图全部怪物槽及后续结算边界')
@@ -431,7 +433,7 @@ def fixture_from_rows(tables):
         'magic_defence_max':r['attributes']['magic_defence'],'magic_min':0,'magic_max':0,'tao_min':0,'tao_max':0,
         'accuracy':r['attributes']['accuracy'],'agility':r['attributes']['agility'],
         'magic_resist':0,'magic_resist_weight':resist_weight,
-        'attack_speed':0,'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms'],'undead':r['attributes']['undead']}
+        'attack_speed':0,'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms'],'undead':r['attributes']['undead'],'can_push':r['attributes']['can_push']}
     items=[]
     for r in tables['game_items']:
         if r['id'] not in [35,36,193,218]:continue
@@ -519,7 +521,7 @@ def public_gameplay(fixture):
         items.append(item)
     skills=[{'id':s['id'],'name':s['name'],'job_id':s['job_id'],'book_item_id':s['book_item_id'],
              'learn_level':s['learn_level'],'initial_level':s['learned_level'],'max_level':s['max_level'],'kind':s['behavior'],'active':s['activation_kind'] not in ['passive','passive_proc'],
-             'activation_kind':s['activation_kind'],
+             'activation_kind':s['activation_kind'],'auto_enabled':s['auto_enabled'],
              'buff_id':s['buff_id'],'material_item_id':s['material_item_id'],'material_quantity':s['material_quantity'],
              'target_kind':s['target_kind'],'area_radius':s['area_radius'],'require_line_of_sight':s['require_line_of_sight'],
              'range':s['range_cells'],'base_cost':s['mp_base_cost'],'level_cost':s['mp_level_cost'],
@@ -545,10 +547,10 @@ def public_gameplay(fixture):
                             'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],
                             'output_bound':r['output_bound'],'max_purchase_quantity':r['max_purchase_quantity'],'source_status':'candidate'} for r in fixture['skill_shop']],
             'items':items,
-            'jobs':[{'job_id':0,'name':'战士','profile':'player_male'},{'job_id':1,'name':'法师','profile':'player_female'},{'job_id':2,'name':'道士','profile':'player_male'}],
+            'jobs':[{'job_id':p['job_id'],'name':['战士','法师','道士'][p['job_id']],'profile':'player_female' if p['job_id']==1 else 'player_male','can_push':p['can_push']} for p in fixture['players']],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
-            'monster_profiles':[{'definition_id':1,'name':'稻草人','profile':'monster_scarecrow'}],
-            'pet_profiles':[{'definition_id':2,'name':'变异骷髅','profile':'pet_skeleton','job_id':2}]}
+            'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']],
+            'pet_profiles':[{'definition_id':fixture['pet']['definition_id'],'name':'变异骷髅','profile':'pet_skeleton','job_id':2,'can_push':fixture['pet']['can_push']}]}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true',help='历史首次初始化；已建立开发表后禁止重跑，不能覆盖唯一Excel');p.add_argument('--check',action='store_true');args=p.parse_args()
@@ -566,7 +568,7 @@ def main():
         fixture['_source_evidence']['workbook_sync']='exported_from_current_unique_excel'
         fixture['_source_evidence']['source_locks']=schema['source_locks']
         book=ROOT/next(w['path'] for w in schema['workbooks'] if w['group']=='gameplay')
-        fixture['_source_evidence']['workbook']={'path':str(book.relative_to(ROOT)),'sha256':config.sha256(book)}
+        fixture['_source_evidence']['workbook']={'path':book.relative_to(ROOT).as_posix(),'sha256':config.sha256(book)}
         fixture['_source_evidence']['exporter_sha256']=config.sha256(Path(__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')

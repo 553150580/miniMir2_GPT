@@ -6,10 +6,10 @@ const { protocolErrorMessage } = require('../../../.work/ui-tests/app/GameErrors
 function state(overrides = {}) {
     return {
         roleIdentity: '1:role-a', role: { name: '道士甲', level: 1 }, ready: true, lastError: '',
-        entry: { sceneEpoch: '1', baselineId: '1' }, map: { name: '初行之地' },
+        entry: { playerHandle: 1, sceneEpoch: '1', baselineId: '1' }, map: { name: '初行之地' },
         inventory: { level: 1, experience: '0', items: [{ itemId: 35, quantity: '5', bound: true }], equipped: [] },
         wallet: { gold: '0', boundGold: '10', yuanbaoUnits: '0', boundYuanbaoUnits: '0' },
-        baseline: { entities: [{ entityKind: 1, hp: '20' }] },
+        baseline: { entities: [{ entityHandle: 1, entityKind: 1, hp: '20' }] },
         hosting: { remainHostingSec: 21600, autoBattleEnabled: true },
         gameplay: { items: [{ item_id: 35, name: '小红药' }, { item_id: 218, name: '木剑' }] },
         ...overrides,
@@ -61,7 +61,7 @@ test('断线和入场身份换代重建观察基线，不推算离线资产收�
     log.observe(state({ ready: false, lastError: '连接已关闭' }));
     log.observe(state({ wallet: { boundGold: '10000' }, inventory: { level: 9, experience: '9900', items: [] } }));
     assert.deepEqual(log.messages.map(item => item.title), ['进入地图', '提示', '连接状态', '连接已恢复']);
-    log.observe(state({ entry: { sceneEpoch: '2', baselineId: '3' }, wallet: { boundGold: '15000' } }));
+    log.observe(state({ entry: { playerHandle: 1, sceneEpoch: '2', baselineId: '3' }, wallet: { boundGold: '15000' } }));
     assert.equal(log.messages.at(-1).title, '连接已恢复');
     assert.equal(log.messages.some(item => item.title === '余额更新' || item.title === '角色升级'), false);
 });
@@ -79,11 +79,17 @@ test('未就绪快照不产生收益，迟到的首次余额仍作为观察基�
 test('死亡恢复、自动状态及托管时长只记录真实边沿变化', () => {
     const log = new SystemMessageLog();
     log.observe(state());
-    const dead = state({ baseline: { entities: [{ entityKind: 1, hp: '0' }] }, hosting: { remainHostingSec: 43200, autoBattleEnabled: false } });
+    const dead = state({ baseline: { entities: [{ entityHandle: 1, entityKind: 1, hp: '0' }] }, hosting: { remainHostingSec: 43200, autoBattleEnabled: false } });
     log.observe(dead); log.observe(dead);
     assert.deepEqual(log.messages.slice(1).map(item => item.title), ['角色倒下', '托管时长更新', '战斗设置']);
-    log.observe({ ...dead, baseline: { entities: [{ entityKind: 1, hp: '16' }] } });
+    log.observe({ ...dead, baseline: { entities: [{ entityHandle: 1, entityKind: 1, hp: '16' }] } });
     assert.equal(log.messages.at(-1).title, '角色恢复');
+});
+test('系统死亡消息使用入场owner句柄，其它kind1倒下不产生本人的死亡提示',()=>{
+    const log=new SystemMessageLog(),base=state(),entities=[{entityHandle:2,entityKind:1,hp:'20'},base.baseline.entities[0]];
+    log.observe({...base,baseline:{entities}});log.observe({...base,baseline:{entities:[{...entities[0],hp:'0'},entities[1]]}});
+    assert(!log.messages.some(row=>row.title==='角色倒下'));
+    log.observe({...base,baseline:{entities:[{...entities[0],hp:'0'},{...entities[1],hp:'0'}]}});assert.equal(log.messages.at(-1).title,'角色倒下');
 });
 
 test('战报按真实结算身份去重，重连同回执不重复，切角清除旧消息', () => {

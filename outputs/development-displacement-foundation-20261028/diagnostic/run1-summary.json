@@ -1,0 +1,67 @@
+{
+  "diagnostic_only": true,
+  "original_test_changed": false,
+  "current_original_sha_matches": {
+    "server/internal/integration/first_loop_test.go": true,
+    "server/internal/integration/combat_area_test.go": true
+  },
+  "current_all79_source_mismatch": [],
+  "run1_pass_does_not_invalidate_first_failure": true,
+  "events": [
+    {
+      "Time": "2026-10-28T04:18:04.609116+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    combat_area_test.go:179: DIAG phase WAIT_CA29\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:04.610642+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    first_loop_test.go:635: DIAG CA29 scene=2671750072791890115 cast=1 life=0 delay=500 input=3 origin=x:8 y:8 grid=x:8 y:8\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:05.189658+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    first_loop_test.go:637: DIAG IMPACT29 scene=2671750072791890115 cast=1 target=1 life=0 outcome=4 amount=11 healing=true grid=x:8 y:8\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:05.191436+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    first_loop_test.go:637: DIAG IMPACT29 scene=2671750072791890115 cast=1 target=2 life=0 outcome=4 amount=11 healing=true grid=x:8 y:7\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:05.191528+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    combat_area_test.go:197: DIAG phase WAIT_HP29 healed=map[1:true 2:true] beforePlayer=310 beforePet=30\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:05.49255+08:00",
+      "Action": "output",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Output": "    combat_area_test.go:209: 群疗双方真实分跳完成\n"
+    },
+    {
+      "Time": "2026-10-28T04:18:19.639652+08:00",
+      "Action": "pass",
+      "Package": "minimir/internal/integration",
+      "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+      "Elapsed": 24.06
+    },
+    {
+      "Time": "2026-10-28T04:18:20.729723+08:00",
+      "Action": "pass",
+      "Package": "minimir/internal/integration",
+      "Elapsed": 27.064
+    }
+  ]
+}

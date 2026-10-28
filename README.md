@@ -1,10 +1,12 @@
 # 传奇2竖屏挂机版开发入口
 
+Windows工具链与rule10权威位移、导航观察基础已通过限定开发验收：379条真实Mongo/WS race（0跳过）、240项客户端、41项配置Python、4项Windows主机、377个PB边界及3892组来源原语对拍通过。Creator3.8.8实构171.48秒、10份保存布局不变；本机触屏6项流程通过。Windows使用用户明确授权的专属Mongo8.0.34新副本集，业务时限未放宽。19项技能范围保持，8/27/21未开放；完整P0、真机、容量、目标1.80完整认证及发布仍未完成。见[阶段验收](docs/权威位移与导航观察阶段验收.json)与[Windows适配](docs/Windows工具链适配与当前验证.md)。
+
 普通移动与动作时钟修复已完成限定验收：怪物/宝宝按各自资源六帧600毫秒落脚，1000/2000毫秒AI发步节奏保持；普通walk显式推进攻击时钟，不再让移动节流充当攻击共享锁。211项JS、33项Python、359个PB边界与289条真实Mongo/WS race通过，Creator实构193.42秒且10份保存资产未变；本机6张截图、25条输入/2条表现记录，新增warn/error为0。四周4小物、中央开阔及头顶布局保持。见[修复阶段验收](docs/普通移动与动作时钟阶段验收.json)和[实施边界](docs/普通移动与动作时钟修复边界.md)。
 
 上一战斗状态与三项防御技能阶段已完成限定开发验收。快照`dev-combat-status-v0.9-48873786ee49`、rule_version9；19项技能、57条升级、21项商店及76条书品质分解投影来自两本唯一Excel。魔法盾31已在本机GUI正常购书、学习、施放并查看状态详情；护符仍为disabled，幽灵盾14与神圣战甲术15的材料路径仅由隔离测试验证，不表示玩家购符施法闭环已开放。完整P0、目标1.80完整认证、手机真机、容量及正式发布仍未完成。最终范围见[阶段验收](docs/战斗状态与防御技能阶段验收.json)和[浏览器证据](outputs/development-combat-status-20261028/本机浏览器验收.json)，实施约束见[防御技能边界](docs/战斗状态与防御技能实施边界.md)。
 
-v0.8的17×17菱形开阔地图已完成独立限定本机验收，64×32地格、48像素土层、场边4件小物、4阻挡及285可走连通保持；名字Label24、保存缩放0.7，与血条稳定置于各形象头顶。历史证据见[地图阶段验收](docs/17x17菱形地图阶段验收.json)，当前配置仍为rule9，代码与构建以上述普通移动修复证据为准。玩法依据《最终策划案.md》，技术参考《架构方案.md》。
+v0.8的17×17菱形开阔地图已完成独立限定本机验收，64×32地格、48像素土层、场边4件小物、4阻挡及285可走连通保持；名字Label24、保存缩放0.7，与血条稳定置于各形象头顶。历史证据见[地图阶段验收](docs/17x17菱形地图阶段验收.json)，当时配置为rule9；当前rule10以上述基础阶段验收为准。玩法依据《最终策划案.md》，技术参考《架构方案.md》。
 
 ## 从这里开始
 
@@ -32,7 +34,7 @@ UI参考图/         原样参考图片
 
 ## 本地检查
 
-在本项目目录执行，`tools/dev`选择已经安装并锁定的较新工具。Go命令自动以server为工作目录：
+在本项目目录执行，`tools/dev`选择已经安装并锁定的较新工具。Go命令自动以server为工作目录。macOS保留以下Make入口：
 
 ```bash
 make environment
@@ -46,7 +48,25 @@ make server-integration-test
 make development-resources-check
 ```
 
-启动本地开发服务使用`make dev-start`，查看与停止使用`make dev-status`、`make dev-stop`。客户端同源入口为`http://127.0.0.1:18080`，account/game/gm分别监听18100/18101/18102；开发工具管理进程，数据库由独立Mongo开发环境管理。
+Windows使用同一个Python分发器的PowerShell入口，不依赖系统旧Go/Python或全局PATH。首次引导会核验官方归档摘要，并安装到`%LOCALAPPDATA%/minimir-toolchain/windows-amd64`；Creator固定3.8.8，现有WinLibs GCC16.1.0按路径/摘要锁定用于race编译；Lima/QEMU仅保留可选诊断安装。身份和凭据不写入仓库。
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/environment/bootstrap_windows.ps1 -InitializePython -BrowserTools
+./tools/dev.ps1 python3 tools/environment/check.py --strict --skip-database
+./tools/dev.ps1 task check
+./tools/dev.ps1 task test
+./tools/dev.ps1 task client-build
+./tools/dev.ps1 task client-typecheck
+./tools/dev.ps1 task development-resources-check
+```
+
+`--skip-database`只核验工具，不表示数据库或业务已通过。Windows平台锁在`conf/toolchain/windows-amd64.lock.json`，原有Mac锁保留其历史用途。Creator安装位置可用`MINIMIR_CREATOR_APP`指定；只读原客户端根目录可用`MINIMIR_CLIENT_180_ROOT`指定，资源检查仍须匹配原摘要。Windows来源检查核验项目内独立副本及可访问原文件，不冒称重新扫描Mac原始来源树。
+
+Windows专属数据库通过`tools/environment/mongodb_dev.py init/start/status/stop`管理。用户已明确选择Windows Mongo8.0.34新副本集，固定127.0.0.1:27119、minimirWinDev和本任务独立数据目录；不接入已有数据库，不注册开机服务。事务及正常停止重启通过，完整Mongo/WS race379条通过、0跳过；历史软件QEMU失败另存，单项业务时限保持。
+
+本次Windows迁移的命令、已通过范围和数据库阻断见[适配记录](docs/Windows工具链适配与当前验证.md)及[检查状态](outputs/windows-adaptation-20261028/current-status.json)。当前客户端240项测试、Creator实构、379条Mongo/WS race及限定浏览器触屏流程通过；rule10基础已完成限定验收，完整技能与发布门禁保留。
+
+Windows使用`./tools/dev.ps1 task dev-start/dev-status/dev-stop`。macOS启动本地开发服务使用`make dev-start`，查看与停止使用`make dev-status`、`make dev-stop`。客户端同源入口为`http://127.0.0.1:18080`，account/game/gm分别监听18100/18101/18102；开发工具管理进程，数据库由独立Mongo开发环境管理。
 
 `--check` 默认检查数据结构。预览配置中的 `runtime_ready=false` 表示还存在待核验内容或业务验收。正式门禁单独执行：
 

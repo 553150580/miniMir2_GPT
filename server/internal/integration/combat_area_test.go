@@ -93,15 +93,54 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
+	const testRoleLevel uint32 = 36
 	// 仅隔离用例使用近距离弱目标和可受伤宝宝，确定性观察区域命中/治疗；不改唯一Excel。
 	cfg.Fixture.Monsters[0].HP = 5
 	cfg.Fixture.Monsters[0].AttackMin = cfg.Fixture.Healing.PetBasePerTick * 2
 	cfg.Fixture.Monsters[0].AttackMax = cfg.Fixture.Monsters[0].AttackMin
 	cfg.Fixture.Monsters[0].Accuracy = cfg.Fixture.Pet.Agility
 	cfg.Fixture.Pet.DefenceMin, cfg.Fixture.Pet.DefenceMax = 0, 0
-	base, _ := cfg.Fixture.PlayerAtLevel(1, 36)
+	base, _ := cfg.Fixture.PlayerAtLevel(1, testRoleLevel)
 	cfg.Fixture.Monsters[0].DefenceMin, cfg.Fixture.Monsters[0].DefenceMax = base.AttackMax, base.AttackMax
 	cfg.Fixture.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 6}, {X: 6, Y: 7}, {X: 6, Y: 8}, {X: 7, Y: 6}, {X: 7, Y: 8}, {X: 8, Y: 6}, {X: 8, Y: 7}, {X: 8, Y: 8}}
+	injuryMonsterCount := uint32(len(cfg.Fixture.Map.MonsterSpawns) - 1)
+	moveWaitMS := cfg.Fixture.Players[0].MoveMS + 100 // 沿用本例已有的动作结束观察余量。
+	massHealing, ok := cfg.Fixture.Skill(29)
+	if !ok {
+		t.Fatal("缺少群疗唯一配置")
+	}
+	taoStats, ok := cfg.Fixture.PlayerAtLevel(2, testRoleLevel)
+	if !ok {
+		t.Fatal("缺少道士成长配置")
+	}
+	maximumRoll := func(base, bonus int64) int64 {
+		if bonus > 0 {
+			return base + bonus - 1
+		}
+		return base
+	}
+	maximumQueue := massHealing.SourceDamage(massHealing.LearnedLevel, taoStats.TaoMax*massHealing.HealingStatMultiplier, massHealing.SourcePower(massHealing.LearnedLevel, maximumRoll(massHealing.MPowerBase, massHealing.MPowerBonus), maximumRoll(massHealing.PowerBase, massHealing.PowerBonus)))
+	if massHealing.AddCasterLevel {
+		maximumQueue += int64(testRoleLevel)
+	}
+	if maximumQueue > cfg.Fixture.Healing.QueueCap {
+		maximumQueue = cfg.Fixture.Healing.QueueCap
+	}
+	ceil := func(amount, unit int64) int64 {
+		if amount <= 0 || unit <= 0 {
+			t.Fatal("群疗隔离前态预算缺少正数配置")
+		}
+		return (amount + unit - 1) / unit
+	}
+	recoveryTicks := ceil(maximumQueue, cfg.Fixture.Healing.PetBasePerTick)
+	attackPeriodMS := cfg.Fixture.Monsters[0].AttackMS
+	// 只增加本例宠物耐久：动作等待、投射生效、完整恢复跳数，再留一个原怪攻击周期。
+	observationMS := moveWaitMS + massHealing.DelayBaseMS + recoveryTicks*cfg.Fixture.Healing.TickMS + attackPeriodMS
+	maximumBursts := 1 + ceil(observationMS, attackPeriodMS)
+	basePetHP := cfg.Fixture.Pet.HP
+	petHeadroom := int64(injuryMonsterCount) * cfg.Fixture.Monsters[0].AttackMax * maximumBursts
+	cfg.Fixture.Pet.HP += petHeadroom
+	t.Logf("群疗隔离生存预算：wait=%d delay=%d maxQueue=%d petTick=%d×%d attackPeriod=%d window=%d bursts=%d damage=%d×%d×%d=%d，PetHP=%d+%d=%d（仅测试实例）", moveWaitMS, massHealing.DelayBaseMS, maximumQueue, recoveryTicks, cfg.Fixture.Healing.TickMS, attackPeriodMS, observationMS, maximumBursts, injuryMonsterCount, cfg.Fixture.Monsters[0].AttackMax, maximumBursts, petHeadroom, basePetHP, petHeadroom, cfg.Fixture.Pet.HP)
 	ctx, cancel := context.WithCancel(context.Background())
 	inspection, err := persistence.Open(ctx, cfg)
 	must(t, err)
@@ -130,7 +169,7 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	create := func(slot, job uint32) *pb.RoleSummary {
 		role := &pb.RoleSummary{}
 		rpc(t, endpoint, login.AccountToken, p.MsgC2SCreateRole, &pb.CreateRoleRequest{OriginServerId: 1, Slot: slot, Job: job, Name: "范围" + domain.ID()[:7], OpId: domain.Bytes(domain.ID())}, role, 0)
-		_, err := inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": domain.Hex(role.Key.RoleId)}, bson.M{"$set": bson.M{"level": 36, "wallet": domain.Wallet{Gold: 1000000, BoundGold: 1000000, BoundYuanbao: 1000000}, "no_equipment_kills": cfg.Fixture.Drops.EquipmentGuarantee - 1, "privilege_until": time.Now().Add(time.Minute)}})
+		_, err := inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": domain.Hex(role.Key.RoleId)}, bson.M{"$set": bson.M{"level": testRoleLevel, "wallet": domain.Wallet{Gold: 1000000, BoundGold: 1000000, BoundYuanbao: 1000000}, "no_equipment_kills": cfg.Fixture.Drops.EquipmentGuarantee - 1, "privilege_until": time.Now().Add(time.Minute)}})
 		must(t, err)
 		return role
 	}
@@ -165,31 +204,113 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	taoRole := create(2, 2)
 	tao := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, taoRole.Key))
 	defer tao.close()
-	tao.auto(false, 7)
+	tao.auto(false, 1) // 购书/学习RPC耗时不再落入宠物承受七怪伤害的观察窗。
 	for _, id := range []uint32{4, 29} {
 		tao.buyAndLearnSkill(cfg.Fixture, id)
 	}
 	t.Log("道士NPC购书学习精神力/群疗完成")
+	tao.auto(false, injuryMonsterCount)
+	ownerHandle := tao.entry.PlayerHandle
+	if ownerHandle == 0 {
+		t.Fatal("群疗入场缺少权威本人句柄")
+	}
+	petHandle := uint32(0)
+	for _, entity := range tao.scene.Entities {
+		if entity.EntityKind == 2 {
+			if petHandle != 0 {
+				t.Fatal("群疗隔离前态出现多只宠物")
+			}
+			petHandle = entity.EntityHandle
+		}
+	}
+	if petHandle == 0 {
+		t.Fatal("群疗隔离前态缺少宠物")
+	}
 	tao.until(func(f wire.Frame) bool {
-		return f.ID == p.MsgS2CSceneBaseline && tao.player().Hp < tao.player().HpMax && tao.entity(2).Hp > 0 && tao.entity(2).Hp < tao.entity(2).HpMax
+		if f.ID != p.MsgS2CSceneBaseline {
+			return false
+		}
+		player, pet := tao.entity(ownerHandle), tao.entity(petHandle)
+		if player == nil || pet == nil || player.Hp <= 0 || pet.Hp <= 0 {
+			t.Fatal("群疗制造受伤阶段前态失效：友方缺失或死亡")
+		}
+		return player.Hp < player.HpMax && pet.Hp < pet.HpMax
 	})
-	beforePlayer, beforePet := tao.player().Hp, tao.entity(2).Hp
-	time.Sleep(time.Duration(cfg.Fixture.Players[0].MoveMS+100) * time.Millisecond)
-	t.Logf("准备群疗：player=%d pet=%d", tao.player().Hp, tao.entity(2).Hp)
-	tao.castAccepted(29, 0, tao.player().Position)
+	time.Sleep(time.Duration(moveWaitMS) * time.Millisecond)
+	// 同owner命令的回复后紧接其基线，排空旧观察；不能把睡眠前的缓存HP当施法时前态。
+	tao.auto(false, injuryMonsterCount)
+	tao.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline })
+	player, pet := tao.entity(ownerHandle), tao.entity(petHandle)
+	if player == nil || pet == nil {
+		t.Fatal("群疗发起阶段前态失效：友方缺失")
+	}
+	center := proto.Clone(player.Position).(*pb.GridPoint)
+	healingScene, casterLife, petLife := tao.entry.SceneEpoch, player.Life, pet.Life
+	inside := func(point *pb.GridPoint) bool {
+		if point == nil {
+			return false
+		}
+		dx, dy := int64(point.X)-int64(center.X), int64(point.Y)-int64(center.Y)
+		if dx < 0 {
+			dx = -dx
+		}
+		if dy < 0 {
+			dy = -dy
+		}
+		return dx <= int64(massHealing.AreaRadius) && dy <= int64(massHealing.AreaRadius)
+	}
 	healed := map[uint32]bool{}
+	checkPendingFriends := func(stage string) {
+		if tao.scene.SceneEpoch != healingScene {
+			t.Fatalf("群疗%s前态失效：scene已变化", stage)
+		}
+		for _, friend := range []struct {
+			handle uint32
+			life   uint64
+		}{{ownerHandle, casterLife}, {petHandle, petLife}} {
+			if healed[friend.handle] {
+				continue
+			}
+			state := tao.entity(friend.handle)
+			if state == nil || state.Hp <= 0 || state.Life != friend.life || !inside(state.Position) {
+				t.Fatalf("群疗%s前态失效：handle=%d期望life=%d，当前=%v，中心=%v", stage, friend.handle, friend.life, state, center)
+			}
+		}
+	}
+	checkPendingFriends("发起")
+	if player.Hp >= player.HpMax || pet.Hp >= pet.HpMax {
+		t.Fatal("群疗发起阶段前态失效：两个友方必须均受伤")
+	}
+	beforePlayer, beforePet := player.Hp, pet.Hp
+	t.Logf("准备群疗：state=%d owner=%d life=%d hp=%d pet=%d life=%d hp=%d center=%v", tao.scene.StateSequence, ownerHandle, casterLife, player.Hp, petHandle, petLife, pet.Hp, center)
+	accepted := tao.castAccepted(29, 0, center)
+	if accepted.SceneEpoch != healingScene || accepted.CasterHandle != ownerHandle || accepted.CasterLife != casterLife || accepted.InputSequence != tao.input || !proto.Equal(accepted.Origin, center) || !proto.Equal(accepted.TargetGrid, center) || accepted.DelayMs != uint32(massHealing.DelayBaseMS) {
+		t.Fatalf("群疗本次CA与发起life/中心/输入/延迟不符：%v", accepted)
+	}
+	checkPendingFriends("受理后")
 	for len(healed) < 2 {
 		f := tao.read()
+		checkPendingFriends("生效观察")
 		if f.ID != p.MsgS2CCombatImpact {
 			continue
 		}
 		impact := &pb.CombatImpact{}
 		must(t, proto.Unmarshal(f.Payload, impact))
-		if impact.SkillId == 29 && impact.Outcome == 4 && impact.Healing && impact.Amount > 0 {
-			healed[impact.TargetHandle] = true
+		if impact.SkillId != 29 || impact.CastId != accepted.CastId {
+			continue
 		}
+		expectedLife := casterLife
+		if impact.TargetHandle == petHandle {
+			expectedLife = petLife
+		} else if impact.TargetHandle != ownerHandle {
+			t.Fatalf("群疗本次cast出现非预期目标：%v", impact)
+		}
+		if impact.SceneEpoch != healingScene || impact.TargetLife != expectedLife || impact.Outcome != 4 || !impact.Healing || impact.Amount <= 0 {
+			t.Fatalf("群疗合法前态未逐友方入队：%v", impact)
+		}
+		healed[impact.TargetHandle] = true
 	}
-	if !healed[1] || !healed[2] {
+	if !healed[ownerHandle] || !healed[petHandle] {
 		t.Fatal("群疗没有逐友方入队")
 	}
 	playerRecovered, petRecovered := false, false
@@ -197,7 +318,11 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 		if f.ID != p.MsgS2CSceneBaseline {
 			return false
 		}
-		playerHP, petHP := tao.player().Hp, tao.entity(2).Hp
+		player, pet := tao.entity(ownerHandle), tao.entity(petHandle)
+		if player == nil || pet == nil || player.Hp <= 0 || pet.Hp <= 0 || player.Life != casterLife || pet.Life != petLife {
+			t.Fatal("群疗分跳恢复观察前态失效：友方缺失/死亡/换life")
+		}
+		playerHP, petHP := player.Hp, pet.Hp
 		playerRecovered = playerRecovered || playerHP > beforePlayer
 		petRecovered = petRecovered || petHP > beforePet
 		beforePlayer, beforePet = playerHP, petHP

@@ -24,7 +24,7 @@ export interface MessageSnapshot {
         equipped?: readonly { item?: ItemObservation | null }[];
     } | null;
     wallet?: Partial<Record<'gold' | 'boundGold' | 'yuanbaoUnits' | 'boundYuanbaoUnits', MessageInteger>> | null;
-    baseline?: { entities?: readonly { entityKind: number; hp?: MessageInteger }[] } | null;
+    baseline?: { entities?: readonly { entityHandle: number; entityKind: number; hp?: MessageInteger }[] } | null;
     hosting?: { remainHostingSec?: MessageInteger; autoBattleEnabled?: boolean } | null;
     report?: {
         hostingSessionId?: Uint8Array;
@@ -34,7 +34,7 @@ export interface MessageSnapshot {
         experience?: MessageInteger;
         drops?: readonly ItemObservation[];
     } | null;
-    entry?: { sceneEpoch?: MessageInteger; baselineId?: MessageInteger } | null;
+    entry?: { sceneEpoch?: MessageInteger; baselineId?: MessageInteger; playerHandle?: number } | null;
     gameplay?: { items?: readonly { item_id: number; name: string }[] } | null;
     map?: { name?: string } | null;
     ready: boolean;
@@ -125,7 +125,7 @@ export class SystemMessageLog {
         }
         this.observeInventory(snapshot);
         this.observeWallet(snapshot);
-        const player = snapshot.baseline?.entities?.find(entity => entity.entityKind === 1);
+        const player = snapshot.entry?.playerHandle ? snapshot.baseline?.entities?.find(entity => entity.entityHandle === snapshot.entry!.playerHandle) : undefined;
         if (player) {
             const dead = integer(player.hp) <= 0n;
             if (this.previousDead !== null && dead !== this.previousDead) this.append(dead ? '角色倒下' : '角色恢复', dead

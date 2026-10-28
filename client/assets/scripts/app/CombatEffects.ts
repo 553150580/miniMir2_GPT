@@ -4,6 +4,7 @@ import { effectFrameKeys, WorldAssets } from './WorldAssets';
 import { isGroundSkill } from './SkillModel';
 import type { GridProjection } from './GridProjection';
 import { beamGeometry } from './BeamGeometry';
+import type { DisplacementEvent } from './EntityDisplacement';
 
 interface EffectNode { node: Node; sprite: Sprite; frame: string; }
 
@@ -13,6 +14,7 @@ export class CombatEffects {
     private readonly melee = new MeleePlayback();
     private readonly steps = new CastStepPlayback();
     private readonly nodes = new Map<string, EffectNode>();
+    private readonly teleports = new Map<string, { event: DisplacementEvent; started: number; owner: boolean }>();
 
     constructor(private readonly assets: WorldAssets, private readonly parent: Node, sceneEpoch: { toString(): string },
         private readonly grid: (x: number, y: number) => Vec3, private readonly position: (handle: number) => Vec3 | null,
@@ -29,6 +31,12 @@ export class CombatEffects {
         const frames = effectFrameKeys(this.assets.manifest.effects[String(event.skillId)]);
         if (frames.some(key => !this.assets.frames.has(key))) return;
         this.playback.accept(event, definition, now);
+    }
+    displacement(event: DisplacementEvent, now: number, owner: boolean): void {
+        if (event.kind !== 4 || !this.assets.manifest.teleport) return;
+        const key = `teleport:${event.entityHandle}:${event.entityLife}:${event.movementRevision}`;
+        this.teleports.set(key, { event, started: now, owner });
+        if (this.teleports.size > 64) this.teleports.delete(this.teleports.keys().next().value!);
     }
     attack(event: AttackEvent, now: number): void {
         const resource = this.assets.manifest.effects?.[String(event.skillId)];
@@ -53,6 +61,19 @@ export class CombatEffects {
             id => this.assets.manifest.effects[String(id)]?.cast?.duration_ms ?? 0,
             id => this.assets.manifest.effects[String(id)]?.beam?.duration_ms ?? 0);
         const active = new Set<string>();
+        for (const [id, visual] of this.teleports) {
+            const elapsed = Math.max(0, now - visual.started), resource = this.assets.manifest.teleport;
+            if (elapsed >= Math.max(resource.out.duration_ms, resource.in.duration_ms)) { this.teleports.delete(id); continue; }
+            for (const kind of visual.owner ? ['in'] : ['out', 'in']) {
+                const part = resource[kind]; if (elapsed >= part.duration_ms) continue;
+                if (kind === 'in' && this.life(visual.event.entityHandle) !== visual.event.entityLife.toString()) continue;
+                const end = visual.event.path[0];
+                const position = kind === 'out' ? this.grid(visual.event.origin.x, visual.event.origin.y)
+                    : this.position(visual.event.entityHandle) ?? this.grid(end.x, end.y);
+                const key = part.frames[Math.min(part.frames.length - 1, Math.floor(elapsed * part.frames.length / part.duration_ms))];
+                active.add(`${id}:${kind}`); this.draw(`${id}:${kind}`, key, position);
+            }
+        }
         for (const cast of this.playback.casts) {
             const resource = this.assets.manifest.effects[String(cast.event.skillId)];
             for (const pose of effectPoses(cast, now, resource.cast?.duration_ms ?? 0, resource.beam?.duration_ms ?? 0)) {
@@ -134,7 +155,7 @@ export class CombatEffects {
     }
 
     dispose(): void {
-        this.playback.clear(); this.melee.clear(); this.steps.clear();
+        this.playback.clear(); this.melee.clear(); this.steps.clear(); this.teleports.clear();
         for (const visual of this.nodes.values()) if (isValid(visual.node, true)) visual.node.destroy();
         this.nodes.clear();
     }

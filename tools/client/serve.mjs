@@ -16,6 +16,7 @@ const proxy = (request, response) => {
     request.pipe(upstream);
 };
 const server = http.createServer((request,response) => {
+    if (request.url === '/favicon.ico') { response.writeHead(204); response.end(); return; }
     if (request.url === '/account/rpc') { proxy(request,response); return; }
     if (request.url === '/healthz') { response.writeHead(existsSync(path.join(root,'index.html')) ? 200 : 503, {'Content-Type':'application/json'}); response.end(JSON.stringify({webMobileBuild:existsSync(path.join(root,'index.html')),developmentOnly:true,pid:process.pid,run_id:runId})); return; }
     let target;
@@ -35,4 +36,4 @@ server.on('upgrade',(request,socket,head) => {
     upstream.on('error',()=>socket.destroy());socket.on('error',()=>upstream.destroy());socket.on('close',()=>upstream.destroy());
 });
 server.listen(18080,'127.0.0.1',()=>console.log('本机开发客户端：http://127.0.0.1:18080（仅回环监听）'));
-for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>{for(const socket of sockets)socket.destroy();server.close(()=>process.exit(0));});
+for(const signal of (process.platform==='win32'?['SIGINT','SIGTERM','SIGBREAK']:['SIGINT','SIGTERM']))process.on(signal,()=>{for(const socket of sockets)socket.destroy();server.close(()=>process.exit(0));});

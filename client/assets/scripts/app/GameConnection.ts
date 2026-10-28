@@ -16,7 +16,7 @@ const codecs: Record<number, MessageType> = {
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
     30001: pb.DeathNotice, 30002: pb.ReviveChoice, 30003: pb.CastIntent, 30004: pb.AutoBattleIntent, 30005: pb.HostingState, 30006: pb.CastAccepted,
     30007: pb.AttackAccepted, 30008: pb.CombatImpact, 30009: pb.SkillModeIntent, 30010: pb.SkillModeState, 30011: pb.AttackIntent,
-    30012: pb.CastStep,
+    30012: pb.CastStep, 30013: pb.EntityDisplacement,
     40001: pb.EquipRequest, 40002: pb.RecycleRequest, 40003: pb.InventoryResult,
     40004: pb.WalletState, 40005: pb.OperationResult, 40006: pb.ClaimHostingTimeRequest,
     40007: pb.BuyHostingTimeRequest, 40008: pb.HostingReport,
@@ -139,9 +139,10 @@ export class GameConnection {
     request(id: number, value: any): Promise<any> {
         if (this.socket?.readyState !== WebSocket.OPEN) return Promise.reject(new Error('游戏尚未连接'));
         const seq = ++this.sequence;
+        const cancelNavigation = id === 20006 && value?.cancelNavigation === true;
         return new Promise((ok, fail) => {
-            const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error('操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            this.pending.set(seq, { response: id === 20001 ? 20002 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005, ok, fail, timer });
+            const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
+            this.pending.set(seq, { response: cancelNavigation ? 5 : id === 20001 ? 20002 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005, ok, fail, timer });
             this.socket!.send(encodePacket(id, seq, this.binding, value));
             traceInput(inputTraceMessage('send', id, seq, value));
         });

@@ -1,0 +1,12 @@
+{
+  "task": "protocol-check",
+  "command": [
+    "node",
+    "tools/config/verify_bindings.mjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T12:02:30.956861+00:00",
+  "finished_at": "2026-10-28T12:02:32.000710+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/protocol-check-1.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

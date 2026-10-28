@@ -1,0 +1,7 @@
+{
+  "config_version": "dev-displacement-foundation-v0.10-71dc81b157b6",
+  "server": "server/internal/configtypes/config_types.go",
+  "client": "client/assets/scripts/generated/config_types.ts",
+  "runtime_ready": false,
+  "generated_only": true
+}

@@ -1,0 +1,903 @@
+{
+  "status": "passed",
+  "validation_scope": "candidate_static_protobuf_wire_codec_only",
+  "node_version": "v24.22.1",
+  "runtime_long_loaded": true,
+  "int64_number_conversion": false,
+  "message_count": 60,
+  "message_names": [
+    "RoleKey",
+    "GridPoint",
+    "OperationContext",
+    "OperationResult",
+    "Heartbeat",
+    "HeartbeatResult",
+    "Batch",
+    "ConfigVersion",
+    "LocalLoginRequest",
+    "LoginResult",
+    "RoleDirectoryRequest",
+    "RoleSummary",
+    "RoleDirectoryResult",
+    "CreateRoleRequest",
+    "EntryTicketRequest",
+    "EntryTicketResult",
+    "EnterLineRequest",
+    "EnterLineResult",
+    "EnterWorldAck",
+    "SyncReady",
+    "EntityState",
+    "EntityDisplacement",
+    "NavigationState",
+    "EntityStatusState",
+    "CombatAttributes",
+    "SceneBaselineChunk",
+    "MoveIntent",
+    "CastIntent",
+    "AttackIntent",
+    "SkillModeIntent",
+    "SkillModeEntry",
+    "SkillModeState",
+    "CastStep",
+    "CastAccepted",
+    "AttackAccepted",
+    "CombatImpact",
+    "AutoBattleIntent",
+    "HostingState",
+    "DeathNotice",
+    "ReviveChoice",
+    "WalletState",
+    "ItemView",
+    "EquippedItem",
+    "LearnedSkill",
+    "InventoryResult",
+    "EquipRequest",
+    "RecycleRequest",
+    "UseItemRequest",
+    "LearnSkillRequest",
+    "SetCastingSupplyRequest",
+    "CastWithMaterialRequest",
+    "ItemConsumption",
+    "SkillAssetPreviewRequest",
+    "SkillMaterialView",
+    "SkillNumericComparison",
+    "SkillAssetPreview",
+    "SkillAssetCommitRequest",
+    "ClaimHostingTimeRequest",
+    "BuyHostingTimeRequest",
+    "HostingReport"
+  ],
+  "int64_field_count": 114,
+  "int64_boundary_cases": 377,
+  "int64_checks": [
+    {
+      "message": "RoleKey",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "expected_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationContext",
+      "field": "expected_rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationResult",
+      "field": "command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "OperationResult",
+      "field": "new_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "Heartbeat",
+      "field": "client_monotonic_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HeartbeatResult",
+      "field": "server_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ConfigVersion",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ConfigVersion",
+      "field": "resource_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "LoginResult",
+      "field": "expires_at_unix",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleDirectoryRequest",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleSummary",
+      "field": "appearance_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "RoleDirectoryResult",
+      "field": "route_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CreateRoleRequest",
+      "field": "origin_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "run_server_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "route_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntryTicketResult",
+      "field": "expires_at_unix",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "room_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "resource_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterLineResult",
+      "field": "next_economic_command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterWorldAck",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EnterWorldAck",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SyncReady",
+      "field": "next_economic_command_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityState",
+      "field": "hp",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "hp_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "mp",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "mp_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityState",
+      "field": "life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityState",
+      "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "entity_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityDisplacement",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "NavigationState",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "max_physical_defence_bonus",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "max_magic_defence_bonus",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EntityStatusState",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_defence_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "physical_defence_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_defence_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_defence_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "magic_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "spirit_attack_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "spirit_attack_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "accuracy",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatAttributes",
+      "field": "agility",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SceneBaselineChunk",
+      "field": "state_sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MoveIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "player_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillModeState",
+      "field": "server_time_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastStep",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastAccepted",
+      "field": "target_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "event_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AttackAccepted",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "event_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "target_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CombatImpact",
+      "field": "amount",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "CombatImpact",
+      "field": "cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AutoBattleIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingState",
+      "field": "state_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "DeathNotice",
+      "field": "inplace_price_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "DeathNotice",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WalletState",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WalletState",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "ItemView",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "InventoryResult",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "InventoryResult",
+      "field": "experience",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "UseItemRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SetCastingSupplyRequest",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "material_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "caster_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemConsumption",
+      "field": "version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemConsumption",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillAssetPreviewRequest",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillMaterialView",
+      "field": "consume_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillNumericComparison",
+      "field": "before_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillNumericComparison",
+      "field": "before_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillNumericComparison",
+      "field": "after_min",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillNumericComparison",
+      "field": "after_max",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "SkillAssetPreview",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillAssetPreview",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillAssetPreview",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SkillAssetPreview",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "used_seconds",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "kills",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "experience",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "settlement_sequence",
+      "type": "uint64",
+      "cases": 3
+    }
+  ],
+  "bytes_field_count": 19,
+  "bytes_checks": [
+    {
+      "message": "RoleKey",
+      "field": "role_id",
+      "repeated": false
+    },
+    {
+      "message": "OperationContext",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "OperationResult",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "Batch",
+      "field": "application_bodies",
+      "repeated": true
+    },
+    {
+      "message": "LoginResult",
+      "field": "account_id",
+      "repeated": false
+    },
+    {
+      "message": "CreateRoleRequest",
+      "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "DeathNotice",
+      "field": "death_id",
+      "repeated": false
+    },
+    {
+      "message": "ReviveChoice",
+      "field": "death_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemView",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "RecycleRequest",
+      "field": "item_instance_ids",
+      "repeated": true
+    },
+    {
+      "message": "UseItemRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "LearnSkillRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "SetCastingSupplyRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "CastWithMaterialRequest",
+      "field": "material_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "ItemConsumption",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "SkillAssetPreview",
+      "field": "preview_id",
+      "repeated": false
+    },
+    {
+      "message": "SkillAssetCommitRequest",
+      "field": "preview_id",
+      "repeated": false
+    },
+    {
+      "message": "HostingReport",
+      "field": "hosting_session_id",
+      "repeated": false
+    }
+  ],
+  "nested_wallet_and_drops": "passed",
+  "utf8_strings": "passed",
+  "truncated_known_message_rejected": true,
+  "proto_sources": [
+    {
+      "path": "shared/proto/common.proto",
+      "sha256": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98"
+    },
+    {
+      "path": "shared/proto/account.proto",
+      "sha256": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964"
+    },
+    {
+      "path": "shared/proto/world.proto",
+      "sha256": "cac66ca8e4ece043d7603d72c0557c05b2f3ab4bf28a4b11f0429ea55ee8c3b0"
+    },
+    {
+      "path": "shared/proto/assets.proto",
+      "sha256": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23"
+    }
+  ],
+  "generated_files": [
+    {
+      "path": "client/assets/scripts/generated/protobuf/client_pb.js",
+      "sha256": "99f7ff71d85909b03abeb05f431384862d002c455d09c0d3880279bfc7e94c8c",
+      "bytes": 962486
+    },
+    {
+      "path": "client/assets/scripts/generated/protobuf/client_pb.d.ts",
+      "sha256": "c24c3cd8b12765de214ffb8abbab2627846d3e7764232e5194453c5390826887",
+      "bytes": 313599
+    }
+  ],
+  "runtime_dependency_scope": "client/node_modules",
+  "runtime_dependencies": {
+    "protobufjs": "8.8.1",
+    "long": "5.3.2"
+  },
+  "business_logic_verified": false,
+  "authentication_verified": false,
+  "creator_project_build_verified": false,
+  "limitations": [
+    "协议仍为研发草案；未实现服务器业务或账号认证。",
+    "本检查不替代Creator实际打包、真机或网络互通验收。",
+    "bytes线格式不会替服务端校验永久ID必须16字节等业务约束。",
+    "业务调用必须显式构造Long；禁止Number/parseInt/long.toNumber传递64位值。"
+  ]
+}

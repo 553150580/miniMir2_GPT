@@ -24,13 +24,13 @@ test('血蓝经验条采用大整数计算，空数据、零上限和越界状�
 
 function sample() {
     return {
-        role: { name: '测试道士', job: 2, level: 1 },
+        playerHandle: 1, role: { name: '测试道士', job: 2, level: 1 },
         wallet: { gold: value('123'), boundGold: value('456'), yuanbaoUnits: value('27'), boundYuanbaoUnits: value('38') },
         inventory: { level: 3, experience: value('12'), items: [
             { itemId: 35, quantity: value('2') }, { itemId: 35, quantity: value('3') },
             { itemId: 36, quantity: value('4') }, { itemId: 218, quantity: value('99') },
         ] },
-        baseline: { entities: [{ entityKind: 1, position: { x: 8, y: 7 }, hp: value('14'), hpMax: value('16'), mp: value('10'), mpMax: value('20') }] },
+        baseline: { entities: [{ entityHandle: 1, entityKind: 1, position: { x: 8, y: 7 }, hp: value('14'), hpMax: value('16'), mp: value('10'), mpMax: value('20') }] },
         ready: true, auto: true, count: 4,
         gameplay: { jobs: [{ job_id: 2, name: '道士' }], items: [{ item_id: 35, kind: 'potion' }, { item_id: 36, kind: 'potion' }], experience: [{ level: 3, next_level_exp: 30 }] },
         map: { name: '开发地图0局部', width: 16, height: 16 },
@@ -47,6 +47,12 @@ test('HUD使用同步等级、实际背包药品总数和四钱包独立余额',
     assert.equal(state.experienceText, '12 / 30'); assert.equal(state.experience, .4);
     assert.equal(state.hpText, '14/16'); assert.equal(state.mp, .5);
     assert.equal(state.objective, '自动战斗 · 4只怪物');
+});
+test('血蓝、坐标和复活入口只绑定显式owner，前排其它kind1不会冒充本人',()=>{
+    const input=sample(),own={...input.baseline.entities[0],entityHandle:7};input.playerHandle=7;
+    input.baseline.entities=[{...own,entityHandle:2,hp:'0',mp:'0',position:{x:1,y:1}},own];
+    const value=createHudState(input);assert.equal(value.hpText,'14/16');assert.equal(value.attack,'攻击');assert.equal(value.position,'(8,7)');
+    input.playerHandle=0;assert.equal(createHudState(input).hpText,'—/—');
 });
 
 test('没有配置或同步数据时显示待同步，缺经验下一档不假称满级', () => {

@@ -1,8 +1,8 @@
-export type EntityAction = 'standing' | 'walking' | 'attack' | 'struck' | 'die' | 'casting';
+export type EntityAction = 'standing' | 'walking' | 'running' | 'attack' | 'struck' | 'die' | 'casting';
 export interface AnimationDefinition { count: number; duration_ms: number; }
-export type AnimationDefinitions = Record<Exclude<EntityAction, 'casting'>, AnimationDefinition> & Partial<Record<'casting', AnimationDefinition>>;
+export type AnimationDefinitions = Record<Exclude<EntityAction, 'casting' | 'running'>, AnimationDefinition> & Partial<Record<'casting' | 'running', AnimationDefinition>>;
 export interface AnimationObservation { direction: number; action: number; attackSequence: number; castSequence?: number; dead: boolean; injured: boolean; }
-export interface AnimationMotion { moving: boolean; direction: number; stepProgress: number; }
+export interface AnimationMotion { moving: boolean; direction: number; stepProgress: number; movementKind?: number; dashPhase?: number; }
 export interface AnimationSample { action: EntityAction; direction: number; frame: number; }
 
 // 怪物及宝宝按原帧播放一步，AI发步间隔只决定下一次目标何时到达。
@@ -23,6 +23,9 @@ export class EntityAnimation {
     private pendingAttack = false;
     private pendingAttackDirection = 4;
     private playingAttackSequence = 0;
+    private playingCastSequence = 0;
+    private displacedAttackSequence = -1;
+    private displacedCastSequence = -1;
     private pendingHurt = false;
     private action: EntityAction = 'standing';
     private started = 0;
@@ -32,10 +35,23 @@ export class EntityAnimation {
     constructor(private readonly definitions: AnimationDefinitions) {}
 
     acceptAttack(sequence: number, direction: number): void {
-        if (this.dead || sequence === this.attackSequence) return;
+        if (this.dead || sequence <= this.displacedAttackSequence || sequence <= this.attackSequence) return;
         this.attackSequence = sequence; this.pendingAttack = true; this.pendingAttackDirection = direction;
     }
     get currentAttackSequence(): number { return this.playingAttackSequence; }
+
+    // 只丢弃位移水位以内的旧身体动作，新于水位的动作仍在落脚后播放。
+    displace(attackSequence: number, castSequence: number): void {
+        this.displacedAttackSequence = Math.max(this.displacedAttackSequence, attackSequence);
+        this.displacedCastSequence = Math.max(this.displacedCastSequence, castSequence);
+        this.pendingAttack = (this.pendingAttack && this.attackSequence > this.displacedAttackSequence)
+            || (this.action === 'attack' && this.playingAttackSequence > this.displacedAttackSequence);
+        this.pendingCast = (this.pendingCast && this.castSequence > this.displacedCastSequence)
+            || (this.action === 'casting' && this.playingCastSequence > this.displacedCastSequence);
+        this.attackSequence = Math.max(this.attackSequence, attackSequence);
+        this.castSequence = Math.max(this.castSequence, castSequence);
+        this.pendingHurt = false; this.action = 'standing'; this.started = 0;
+    }
 
     get playbackUntil(): number {
         const definition = this.definitions[this.action];
@@ -51,9 +67,9 @@ export class EntityAnimation {
             this.castSequence = value.castSequence ?? 0;
             this.dead = value.dead;
             this.initialCorpse = value.dead;
-            this.pendingAttack = !value.dead && value.action === 2;
+            this.pendingAttack = !value.dead && value.action === 2 && value.attackSequence > this.displacedAttackSequence;
             this.pendingAttackDirection = value.direction;
-            this.pendingCast = !value.dead && value.action === 5 && !!this.definitions.casting;
+            this.pendingCast = !value.dead && value.action === 5 && !!this.definitions.casting && (value.castSequence ?? 0) > this.displacedCastSequence;
             this.castDirection = value.direction;
             this.started = now;
             return;
@@ -62,20 +78,24 @@ export class EntityAnimation {
             this.action = 'standing'; this.started = now;
             this.pendingAttack = false; this.pendingHurt = false; this.pendingCast = false; this.initialCorpse = false;
         }
-        if (!value.dead && value.attackSequence !== this.attackSequence) {
+        if (!value.dead && value.attackSequence > this.attackSequence && value.attackSequence > this.displacedAttackSequence) {
             this.pendingAttack = true; this.pendingAttackDirection = value.direction;
         }
-        if (!value.dead && (value.castSequence ?? 0) !== this.castSequence && this.definitions.casting) {
+        if (!value.dead && (value.castSequence ?? 0) > this.castSequence && (value.castSequence ?? 0) > this.displacedCastSequence && this.definitions.casting) {
             this.pendingCast = true; this.castDirection = value.direction; this.pendingAttack = false;
         }
         if (!value.dead && value.injured && !this.pendingAttack && !this.pendingCast && this.action !== 'attack' && this.action !== 'casting') this.pendingHurt = true;
         if (value.dead && !this.dead) { this.pendingAttack = false; this.pendingHurt = false; this.pendingCast = false; }
         this.dead = value.dead;
-        this.attackSequence = value.attackSequence;
-        this.castSequence = value.castSequence ?? 0;
+        this.attackSequence = Math.max(this.attackSequence, value.attackSequence);
+        this.castSequence = Math.max(this.castSequence, value.castSequence ?? 0);
     }
 
     sample(now: number, motion: AnimationMotion): AnimationSample {
+        if (motion.moving && motion.movementKind === 2) return { action: 'walking', direction: motion.direction,
+            frame: Math.max(0, this.definitions.walking.count - 1 - 2 * Math.floor(motion.stepProgress * 3)) };
+        if (motion.moving && motion.movementKind === 3 && this.definitions.running) return { action: 'running', direction: motion.direction,
+            frame: (motion.dashPhase ?? 0) * 3 + Math.min(2, Math.floor(motion.stepProgress * 3)) };
         // 只完成已收到的落脚步，随后倒地；HP和业务终态无需等待表现结束。
         if (this.dead && motion.moving && !this.initialCorpse) return this.walking(motion);
         if (this.dead) {
@@ -114,6 +134,7 @@ export class EntityAnimation {
     private begin(action: EntityAction, now: number, direction = this.direction): void {
         this.action = action; this.started = now; this.actionDirection = direction;
         if (action === 'attack') this.playingAttackSequence = this.attackSequence;
+        if (action === 'casting') this.playingCastSequence = this.castSequence;
     }
     private frame(action: EntityAction, elapsed: number, direction: number, loop: boolean): AnimationSample {
         const definition = this.definitions[action]!;

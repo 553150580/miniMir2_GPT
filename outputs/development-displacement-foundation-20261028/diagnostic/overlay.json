@@ -1,0 +1,6 @@
+{
+  "Replace": {
+    "/Users/srf/Miro2/miniMir2_GPT/server/internal/integration/first_loop_test.go": "/Users/srf/Miro2/miniMir2_GPT/.work/displacement-foundation/diagnostic/first_loop_test.go",
+    "/Users/srf/Miro2/miniMir2_GPT/server/internal/integration/combat_area_test.go": "/Users/srf/Miro2/miniMir2_GPT/.work/displacement-foundation/diagnostic/combat_area_test.go"
+  }
+}

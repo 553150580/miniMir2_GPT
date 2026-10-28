@@ -1,3 +1,4 @@
+import creatorPaths from './creator_paths.cjs';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -5,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const creatorApp = process.env.MINIMIR_CREATOR_APP ?? '/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const typescriptRoot = path.join(creatorApp, 'Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const typescriptRoot = creatorPaths.typescriptRoot;
 const version = JSON.parse(readFileSync(path.join(typescriptRoot, 'package.json'), 'utf8')).version;
 if (!version.startsWith('5.8.')) throw new Error(`需要 Creator 自带 TypeScript 5.8，实际为 ${version}`);
 const source = path.join(root, 'client/assets/scripts/core/scene');

@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "status": "diagnosed_test_precondition_race_reproducible",
+  "production_source_changed": false,
+  "actual_test_source_changed": false,
+  "fixture_changed": false,
+  "all79_original_source_mismatch": [],
+  "original_test_sha256": {
+    "server/internal/integration/first_loop_test.go": "f3eb2ee4ddb414f9dad57133e68b0d56d602b7dadedc91824ad1b79770db45c6",
+    "server/internal/integration/combat_area_test.go": "cec105e667fd9a5fe86cf1be05468e24fdae8ac7ed3bdffb80c4448ddbeffe1d"
+  },
+  "first_full_failure_preserved": ".work/displacement-foundation/first-full-go-failed/latest.*",
+  "first_full_retrospective_conclusive": false,
+  "run1": {
+    "kind": "logging_only_overlay",
+    "result": "pass",
+    "meaning": "双友方存活时，CA先于Impact；两者各11入队并实际分跳恢复",
+    "original_failure_not_dismissed": true,
+    "events": [
+      {
+        "Time": "2026-10-28T04:18:04.609116+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:179: DIAG phase WAIT_CA29\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:04.610642+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    first_loop_test.go:635: DIAG CA29 scene=2671750072791890115 cast=1 life=0 delay=500 input=3 origin=x:8 y:8 grid=x:8 y:8\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:05.189658+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    first_loop_test.go:637: DIAG IMPACT29 scene=2671750072791890115 cast=1 target=1 life=0 outcome=4 amount=11 healing=true grid=x:8 y:8\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:05.191436+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    first_loop_test.go:637: DIAG IMPACT29 scene=2671750072791890115 cast=1 target=2 life=0 outcome=4 amount=11 healing=true grid=x:8 y:7\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:05.191528+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:197: DIAG phase WAIT_HP29 healed=map[1:true 2:true] beforePlayer=310 beforePet=30\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:05.49255+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:209: 群疗双方真实分跳完成\n"
+      },
+      {
+        "Time": "2026-10-28T04:18:19.639652+08:00",
+        "Action": "pass",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Elapsed": 24.06
+      },
+      {
+        "Time": "2026-10-28T04:18:20.729723+08:00",
+        "Action": "pass",
+        "Package": "minimir/internal/integration",
+        "Elapsed": 27.064
+      }
+    ]
+  },
+  "run2": {
+    "kind": "controlled_client_delay_experiment",
+    "extra_delay_ms": 2500,
+    "result": "expected_diagnostic_failure",
+    "expected_failure_observed": true,
+    "meaning": "宠物仍在原格(8,7)，HP降0；CA受理后仅玩家入队，原要求两个活友方Impact的循环不再可满足",
+    "events": [
+      {
+        "Time": "2026-10-28T04:21:42.98545+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:179: DIAG experiment slow-window +2500ms begins (test-only)\n"
+      },
+      {
+        "Time": "2026-10-28T04:21:45.486183+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:181: DIAG experiment slow-window finished; original CA/Impact path resumes\n"
+      },
+      {
+        "Time": "2026-10-28T04:21:45.486478+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:182: DIAG phase WAIT_CA29\n"
+      },
+      {
+        "Time": "2026-10-28T04:21:45.495557+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    first_loop_test.go:635: DIAG CA29 scene=483405380612648075 cast=1 life=0 delay=500 input=3 origin=x:8 y:8 grid=x:8 y:8\n"
+      },
+      {
+        "Time": "2026-10-28T04:21:46.001926+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    first_loop_test.go:637: DIAG IMPACT29 scene=483405380612648075 cast=1 target=1 life=0 outcome=4 amount=11 healing=true grid=x:8 y:8\n"
+      },
+      {
+        "Time": "2026-10-28T04:21:46.002064+08:00",
+        "Action": "output",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Output": "    combat_area_test.go:197: DIAG EXPECTED_FAILURE_OBSERVED: pet dead at x:8 y:7, only player29 Impact; original two-target loop cannot complete\n",
+        "OutputType": "error"
+      },
+      {
+        "Time": "2026-10-28T04:21:46.891162+08:00",
+        "Action": "fail",
+        "Package": "minimir/internal/integration",
+        "Test": "TestCombatAreaFiveSkillsAndEightKillMongoWS",
+        "Elapsed": 12.95
+      },
+      {
+        "Time": "2026-10-28T04:21:46.951427+08:00",
+        "Action": "fail",
+        "Package": "minimir/internal/integration",
+        "Elapsed": 14.474
+      }
+    ]
+  },
+  "production_review": {
+    "mass_healing_amount_target_filter_queue_and_tick_changed": false,
+    "causal_send_order": "同worker acceptPreparedCast同步CA→baseline，500ms后resolveCast→Impact，WS发送队列FIFO；本次Impact不能先于CA",
+    "new_pushed_called_in_live_flow": false,
+    "auto_enabled_applies_to_manual_false_flow": false,
+    "navigation_ground_in_this_tao_flow": false,
+    "confirmed_production_regression": null
+  },
+  "recommendation": {
+    "modify_only_isolated_test_setup": true,
+    "learn_before_large_injury_wave": true,
+    "pet_survival_budget": "由本用例既有等待/施法延迟/恢复tick观察窗+已配置怪物最大伤害/攻击周期计算足够余量，非正式数值",
+    "explicit_invariants": [
+      "发起前与每次生效观察的玩家/宠物HP>0",
+      "记录接受时的caster/target life及目标范围",
+      "只统计本次cast_id的目标Impact",
+      "失去合法前态立即给出setup失效诊断，不能空等整体80秒"
+    ],
+    "unchanged": [
+      "生产areaTargets活体过滤",
+      "群疗Amount/MP/CD/队列/tick",
+      "唯一Excel/fixture",
+      "客户端80s上下文与整体Go测试timeout"
+    ]
+  }
+}

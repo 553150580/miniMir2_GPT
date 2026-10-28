@@ -1,0 +1,181 @@
+{
+  "evidence_status": "configuration_checks_finalized",
+  "recorded_at": "2026-10-27T19:56:50.696682+00:00",
+  "scope": "位移共用底座配置和严格typed载入；不开放8/27/21，不填未审定推距、绑定地图、护符单位",
+  "rule_version": 10,
+  "configuration": {
+    "selected_skills": 19,
+    "auto_enabled": 13,
+    "can_push_source": "玩家来源Human无Info.CanPush门槛；怪物/宠物共用game_monsters.attributes，采用MonsterInfo默认候选true",
+    "casting_supply_enabled": false,
+    "original_parameters_preserved": true
+  },
+  "checks": {
+    "python": {
+      "passed": 37,
+      "command": "./tools/dev python -m unittest discover -s tools/config -p 'test_*.py'",
+      "log": "config-python-full.log"
+    },
+    "go_devconfig": {
+      "passed": true,
+      "duration_seconds": 5.744,
+      "command": "./tools/dev go test ./internal/devconfig -count=1",
+      "log": "config-go-devconfig.log"
+    },
+    "spreadsheet": {
+      "marker_count": 1,
+      "worksheets": 95,
+      "controlled_cells": 47,
+      "before_after_previews_viewed": true,
+      "preservation_report": "config-preservation-check.json",
+      "architecture_unchanged": true
+    },
+    "schema_and_semantic": {
+      "tables": 98,
+      "records": 922,
+      "errors": 0,
+      "report": "config-staged-validation.json"
+    },
+    "config_check": {
+      "passed": true,
+      "log": "config-check.log"
+    },
+    "fixture_projection_check": {
+      "passed": true,
+      "log": "config-projection-check.log"
+    },
+    "bindings": {
+      "passed": true,
+      "typescript": "5.8.2",
+      "compiler": "creator_3.8.8",
+      "creator_build": "not_run",
+      "log": "config-bindings-check.log"
+    },
+    "public_clock_filter_regression_passed": true
+  },
+  "source_evidence": {
+    "human_push": "资料参考/crystal/Server/MirObjects/HumanObject.cs:2649-2724（动作赋值2723）",
+    "monster_push": "资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093（CanPush1037、ActionTime1073、MoveTime1074）",
+    "monster_default": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39",
+    "pushed_display": "资料参考/crystal/Client/MirObjects/PlayerObject.cs:1037-1041,1493-1497,2384-2401；Frames.cs:158，按2帧倒放的300ms候选"
+  },
+  "source_locks": [
+    {
+      "path": "最终策划案.md",
+      "sha256": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4"
+    },
+    {
+      "path": "架构方案.md",
+      "sha256": "76ff24111f1e4325f11d5242927ca1fb811da15d97d162a6e01580fe5165e1a9"
+    },
+    {
+      "path": "UI参考图/用户确认/主界面UI布局参考.png",
+      "sha256": "efb48e433f26b2a6cf2c52ae6f5eeb351a132573ab726afc01ed4844aa135ee2"
+    },
+    {
+      "path": "资料索引/用户确认参考.json",
+      "sha256": "03a2a7813fd658600cd8d0b330c4cc96bf9d9d3db0af6534fb1df4dca83df2f3"
+    },
+    {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv",
+      "sha256": "d97075ce90dd0a86cf75b9d1d16959c1b3478b2503e20624d880ff8ccaa05a39"
+    },
+    {
+      "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+      "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7"
+    },
+    {
+      "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Exps.ini",
+      "sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "path": "/Users/srf/Miro2/MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
+      "sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Shared/BaseStats.cs",
+      "sha256": "b103cbfb609c1d5b578b0f920e40972fda46bbb1057f18fca391ab3dd9da4dfa"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    {
+      "path": "/Users/srf/Miro2/SuprcodeCrystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f"
+    },
+    {
+      "path": "client/assets/resources/development/manifest.json",
+      "sha256": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536"
+    },
+    {
+      "path": "client/assets/resources/development/maps/first-map.json",
+      "sha256": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs",
+      "sha256": "2b57f0add803473b32b612ffb1327f8819e460d5826f10519617b22f1d32f614"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    }
+  ],
+  "sha256": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "c209aa4093a6c1e5467bb739beceb0f994afaa020ed8cace1b6070e3ec127894",
+    "outputs/development-prep-20261026/架构配置.xlsx": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+    "config/schema/catalog.json": "0e971bead246b3929c6a04d1ddb1e765858db95eefe4f209a9ba683aab9013a8",
+    "tools/resources/prepare_first_loop.py": "351fcdf96fadc75fb388c8a2daa4b8e0cafa93f9e0af4f5527d4b47248f8a5f9",
+    "tools/config/test_export.py": "89e4706d4cc73f30a0f904ad353defc738449069bbeb4ebeb249a6e72198e531",
+    "tools/config/test_first_loop.py": "0d7762c5de917cc065a632d9ceb1b1aed911b64463df18760a456f41027744ad",
+    "server/internal/devconfig/config.go": "aa3a8eefdb1568ea8b18eb61a4feb3b3fcec5072e9c4f7ebb582ea1c0af3b02f",
+    "server/internal/devconfig/combat.go": "be0774a2dc688c4105548fbecd58e08edeaee99b3bb470329d6d1966cf9c0d8b",
+    "server/internal/devconfig/skills.go": "a1752e5b5acfd64f9ba4470f14a257b0b2b7d2fb5d7176f80a9778990a4f16f7",
+    "server/internal/devconfig/displacement.go": "b4c5b0bdbf6d1cb17292d8497c3b4b98a5bc971d16bf7f66f0630d20488472b7",
+    "server/internal/devconfig/displacement_test.go": "87ffd96df2ffd859aae82f7ff66dd6b35237668e992dd95260318c59c4e8fe39",
+    "config/development/first-loop.json": "a29b5bc355c73f91033ead8f34259217781c7121fdd3908822a13cd73f0cfddb",
+    "client/assets/resources/development/gameplay.json": "6ad198c2c05b757c5845f5774c037bde164f80193dde2eb5e889e9542184a8c0",
+    "config/releases/dev-displacement-foundation-v0.10-71dc81b157b6/manifest.json": "172e96b565ff2b957179d55f8672e3ced5fe3b2f7b4fdd461ef417a410c47848",
+    "config/releases/preview_current.json": "3565441cbfe25bdf1f68834e1cb657d38d99c06c070cecde9aaf867dbcc3da47",
+    "conf/toolchain/config-binding-sync.json": "e4399a76694b5a7a79d31a3e0ef7fa63ab4193285c3cc25c4068a5cfbd82a8e8",
+    "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "client/assets/scripts/generated/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "client/assets/resources/development/manifest.json": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536",
+    "client/assets/resources/development/maps/first-map.json": "adc6204f0287c12d7440b6cdc1b3421470d213c7361424c39177246c02c0e1eb"
+  },
+  "release_pending": false,
+  "formal_target_180_verified": false,
+  "full_P0_complete": false,
+  "public_boundary": {
+    "profile_parameters_target": "none",
+    "monster_attributes_target": "server",
+    "skill_target_rule_target": "both",
+    "public_four_push_timings_exposed": false,
+    "public_combat_timing_exposed": false,
+    "client_display_source": "30013 EntityDisplacement.stepDurationMs",
+    "can_push_and_auto_enabled": "显式白名单，仅可观察标记"
+  },
+  "config_version": "dev-displacement-foundation-v0.10-71dc81b157b6",
+  "record_counts": {
+    "tables": 98,
+    "records": 922,
+    "candidate": 423,
+    "confirmed": 393,
+    "historical": 36,
+    "unverified": 70,
+    "release_blockers": 668
+  },
+  "phase_business_browser_capacity_passed": false
+}

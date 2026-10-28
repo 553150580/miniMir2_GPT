@@ -4413,6 +4413,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.GridPoint.$Properties|null} [position] EnterLineResult position
              * @property {number|null} [scene_kind] EnterLineResult scene_kind
              * @property {Long|null} [next_economic_command_seq] EnterLineResult next_economic_command_seq
+             * @property {number|null} [player_handle] EnterLineResult player_handle
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -4509,6 +4510,14 @@ $root.minimir = (function() {
             EnterLineResult.prototype.next_economic_command_seq = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * EnterLineResult player_handle.
+             * @member {number} player_handle
+             * @memberof minimir.v1.EnterLineResult
+             * @instance
+             */
+            EnterLineResult.prototype.player_handle = 0;
+
+            /**
              * Creates a new EnterLineResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EnterLineResult
@@ -4556,6 +4565,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.scene_kind);
                 if (message.next_economic_command_seq != null && $Object.hasOwnProperty.call(message, "next_economic_command_seq") && (typeof message.next_economic_command_seq === "object" ? message.next_economic_command_seq.low || message.next_economic_command_seq.high : message.next_economic_command_seq !== 0))
                     writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.next_economic_command_seq);
+                if (message.player_handle != null && $Object.hasOwnProperty.call(message, "player_handle") && message.player_handle !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.player_handle);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4682,6 +4693,15 @@ $root.minimir = (function() {
                                 delete message.next_economic_command_seq;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.player_handle = value;
+                            else
+                                delete message.player_handle;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -4756,6 +4776,9 @@ $root.minimir = (function() {
                 if (message.next_economic_command_seq != null && $Object.hasOwnProperty.call(message, "next_economic_command_seq"))
                     if (!$util.isInteger(message.next_economic_command_seq) && !(message.next_economic_command_seq && $util.isInteger(message.next_economic_command_seq.low) && $util.isInteger(message.next_economic_command_seq.high)))
                         return "next_economic_command_seq: integer|Long expected";
+                if (message.player_handle != null && $Object.hasOwnProperty.call(message, "player_handle"))
+                    if (!$util.isInteger(message.player_handle))
+                        return "player_handle: integer expected";
                 return null;
             };
 
@@ -5302,6 +5325,8 @@ $root.minimir = (function() {
              * @property {number|null} [attack_skill_level] EntityState attack_skill_level
              * @property {Array.<minimir.v1.EntityStatusState.$Properties>|null} [statuses] EntityState statuses
              * @property {minimir.v1.CombatAttributes.$Properties|null} [combat_attributes] EntityState combat_attributes
+             * @property {Long|null} [movement_revision] EntityState movement_revision
+             * @property {number|null} [movement_kind] EntityState movement_kind
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5495,6 +5520,22 @@ $root.minimir = (function() {
             EntityState.prototype.combat_attributes = null;
 
             /**
+             * EntityState movement_revision.
+             * @member {Long} movement_revision
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.movement_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityState movement_kind.
+             * @member {number} movement_kind
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.movement_kind = 0;
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -5567,6 +5608,10 @@ $root.minimir = (function() {
                         $root.minimir.v1.EntityStatusState.encode(message.statuses[i], writer.uint32(/* id 19, wireType 2 =*/154).fork(), _depth + 1).ldelim();
                 if (message.combat_attributes != null && $Object.hasOwnProperty.call(message, "combat_attributes"))
                     $root.minimir.v1.CombatAttributes.encode(message.combat_attributes, writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision") && (typeof message.movement_revision === "object" ? message.movement_revision.low || message.movement_revision.high : message.movement_revision !== 0))
+                    writer.uint32(/* id 21, wireType 0 =*/168).uint64(message.movement_revision);
+                if (message.movement_kind != null && $Object.hasOwnProperty.call(message, "movement_kind") && message.movement_kind !== 0)
+                    writer.uint32(/* id 22, wireType 0 =*/176).uint32(message.movement_kind);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5797,6 +5842,24 @@ $root.minimir = (function() {
                             message.combat_attributes = $root.minimir.v1.CombatAttributes.decode(reader, reader.size(), $undefined, _depth + 1, message.combat_attributes);
                             continue;
                         }
+                    case 21: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.movement_revision = value;
+                            else
+                                delete message.movement_revision;
+                            continue;
+                        }
+                    case 22: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.movement_kind = value;
+                            else
+                                delete message.movement_kind;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5915,6 +5978,12 @@ $root.minimir = (function() {
                     if (error)
                         return "combat_attributes." + error;
                 }
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision"))
+                    if (!$util.isInteger(message.movement_revision) && !(message.movement_revision && $util.isInteger(message.movement_revision.low) && $util.isInteger(message.movement_revision.high)))
+                        return "movement_revision: integer|Long expected";
+                if (message.movement_kind != null && $Object.hasOwnProperty.call(message, "movement_kind"))
+                    if (!$util.isInteger(message.movement_kind))
+                        return "movement_kind: integer expected";
                 return null;
             };
 
@@ -5933,6 +6002,811 @@ $root.minimir = (function() {
             };
 
             return EntityState;
+        })();
+
+        v1.EntityDisplacement = (function() {
+
+            /**
+             * Properties of an EntityDisplacement.
+             * @typedef {Object} minimir.v1.EntityDisplacement.$Properties
+             * @property {Long|null} [scene_epoch] EntityDisplacement scene_epoch
+             * @property {number|null} [entity_handle] EntityDisplacement entity_handle
+             * @property {Long|null} [entity_life] EntityDisplacement entity_life
+             * @property {Long|null} [movement_revision] EntityDisplacement movement_revision
+             * @property {number|null} [kind] EntityDisplacement kind
+             * @property {minimir.v1.GridPoint.$Properties|null} [origin] EntityDisplacement origin
+             * @property {Array.<minimir.v1.GridPoint.$Properties>|null} [path] EntityDisplacement path
+             * @property {number|null} [facing_direction] EntityDisplacement facing_direction
+             * @property {number|null} [movement_direction] EntityDisplacement movement_direction
+             * @property {number|null} [step_duration_ms] EntityDisplacement step_duration_ms
+             * @property {number|null} [source_skill_id] EntityDisplacement source_skill_id
+             * @property {Long|null} [cast_id] EntityDisplacement cast_id
+             * @property {number|null} [attack_sequence] EntityDisplacement attack_sequence
+             * @property {number|null} [cast_sequence] EntityDisplacement cast_sequence
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EntityDisplacement.
+             * @memberof minimir.v1
+             * @interface IEntityDisplacement
+             * @augments minimir.v1.EntityDisplacement.$Properties
+             * @deprecated Use minimir.v1.EntityDisplacement.$Properties instead.
+             */
+
+            /**
+             * Shape of an EntityDisplacement.
+             * @typedef {minimir.v1.EntityDisplacement.$Properties} minimir.v1.EntityDisplacement.$Shape
+             */
+
+            /**
+             * Constructs a new EntityDisplacement.
+             * @memberof minimir.v1
+             * @classdesc Represents an EntityDisplacement.
+             * @constructor
+             * @param {minimir.v1.EntityDisplacement.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EntityDisplacement = function (properties) {
+                this.path = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EntityDisplacement scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityDisplacement entity_handle.
+             * @member {number} entity_handle
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.entity_handle = 0;
+
+            /**
+             * EntityDisplacement entity_life.
+             * @member {Long} entity_life
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.entity_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityDisplacement movement_revision.
+             * @member {Long} movement_revision
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.movement_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityDisplacement kind.
+             * @member {number} kind
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.kind = 0;
+
+            /**
+             * EntityDisplacement origin.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} origin
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.origin = null;
+
+            /**
+             * EntityDisplacement path.
+             * @member {Array.<minimir.v1.GridPoint.$Properties>} path
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.path = $util.emptyArray;
+
+            /**
+             * EntityDisplacement facing_direction.
+             * @member {number} facing_direction
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.facing_direction = 0;
+
+            /**
+             * EntityDisplacement movement_direction.
+             * @member {number} movement_direction
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.movement_direction = 0;
+
+            /**
+             * EntityDisplacement step_duration_ms.
+             * @member {number} step_duration_ms
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.step_duration_ms = 0;
+
+            /**
+             * EntityDisplacement source_skill_id.
+             * @member {number} source_skill_id
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.source_skill_id = 0;
+
+            /**
+             * EntityDisplacement cast_id.
+             * @member {Long} cast_id
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.cast_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EntityDisplacement attack_sequence.
+             * @member {number} attack_sequence
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.attack_sequence = 0;
+
+            /**
+             * EntityDisplacement cast_sequence.
+             * @member {number} cast_sequence
+             * @memberof minimir.v1.EntityDisplacement
+             * @instance
+             */
+            EntityDisplacement.prototype.cast_sequence = 0;
+
+            /**
+             * Creates a new EntityDisplacement instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {minimir.v1.EntityDisplacement.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EntityDisplacement} EntityDisplacement instance
+             * @type {{
+             *   (properties: minimir.v1.EntityDisplacement.$Shape): minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape;
+             *   (properties?: minimir.v1.EntityDisplacement.$Properties): minimir.v1.EntityDisplacement;
+             * }}
+             */
+            EntityDisplacement.create = function(properties) {
+                return new EntityDisplacement(properties);
+            };
+
+            /**
+             * Encodes the specified EntityDisplacement message. Does not implicitly {@link minimir.v1.EntityDisplacement.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {minimir.v1.EntityDisplacement.$Properties} message EntityDisplacement message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EntityDisplacement.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle") && message.entity_handle !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.entity_handle);
+                if (message.entity_life != null && $Object.hasOwnProperty.call(message, "entity_life") && (typeof message.entity_life === "object" ? message.entity_life.low || message.entity_life.high : message.entity_life !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.entity_life);
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision") && (typeof message.movement_revision === "object" ? message.movement_revision.low || message.movement_revision.high : message.movement_revision !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.movement_revision);
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.kind);
+                if (message.origin != null && $Object.hasOwnProperty.call(message, "origin"))
+                    $root.minimir.v1.GridPoint.encode(message.origin, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
+                if (message.path != null && message.path.length)
+                    for (var i = 0; i < message.path.length; ++i)
+                        $root.minimir.v1.GridPoint.encode(message.path[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.facing_direction != null && $Object.hasOwnProperty.call(message, "facing_direction") && message.facing_direction !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.facing_direction);
+                if (message.movement_direction != null && $Object.hasOwnProperty.call(message, "movement_direction") && message.movement_direction !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.movement_direction);
+                if (message.step_duration_ms != null && $Object.hasOwnProperty.call(message, "step_duration_ms") && message.step_duration_ms !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.step_duration_ms);
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id") && message.source_skill_id !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.source_skill_id);
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id") && (typeof message.cast_id === "object" ? message.cast_id.low || message.cast_id.high : message.cast_id !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.cast_id);
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence") && message.attack_sequence !== 0)
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.attack_sequence);
+                if (message.cast_sequence != null && $Object.hasOwnProperty.call(message, "cast_sequence") && message.cast_sequence !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.cast_sequence);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EntityDisplacement message, length delimited. Does not implicitly {@link minimir.v1.EntityDisplacement.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {minimir.v1.EntityDisplacement.$Properties} message EntityDisplacement message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EntityDisplacement.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EntityDisplacement message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape} EntityDisplacement
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EntityDisplacement.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EntityDisplacement();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.entity_handle = value;
+                            else
+                                delete message.entity_handle;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.entity_life = value;
+                            else
+                                delete message.entity_life;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.movement_revision = value;
+                            else
+                                delete message.movement_revision;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.origin = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.origin);
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.path && message.path.length))
+                                message.path = [];
+                            message.path.push($root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.facing_direction = value;
+                            else
+                                delete message.facing_direction;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.movement_direction = value;
+                            else
+                                delete message.movement_direction;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.step_duration_ms = value;
+                            else
+                                delete message.step_duration_ms;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.source_skill_id = value;
+                            else
+                                delete message.source_skill_id;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.cast_id = value;
+                            else
+                                delete message.cast_id;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.attack_sequence = value;
+                            else
+                                delete message.attack_sequence;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.cast_sequence = value;
+                            else
+                                delete message.cast_sequence;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EntityDisplacement message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape} EntityDisplacement
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EntityDisplacement.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EntityDisplacement message.
+             * @function verify
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EntityDisplacement.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle"))
+                    if (!$util.isInteger(message.entity_handle))
+                        return "entity_handle: integer expected";
+                if (message.entity_life != null && $Object.hasOwnProperty.call(message, "entity_life"))
+                    if (!$util.isInteger(message.entity_life) && !(message.entity_life && $util.isInteger(message.entity_life.low) && $util.isInteger(message.entity_life.high)))
+                        return "entity_life: integer|Long expected";
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision"))
+                    if (!$util.isInteger(message.movement_revision) && !(message.movement_revision && $util.isInteger(message.movement_revision.low) && $util.isInteger(message.movement_revision.high)))
+                        return "movement_revision: integer|Long expected";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.origin != null && $Object.hasOwnProperty.call(message, "origin")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.origin, _depth + 1);
+                    if (error)
+                        return "origin." + error;
+                }
+                if (message.path != null && $Object.hasOwnProperty.call(message, "path")) {
+                    if (!$Array.isArray(message.path))
+                        return "path: array expected";
+                    for (var i = 0; i < message.path.length; ++i) {
+                        var error = $root.minimir.v1.GridPoint.verify(message.path[i], _depth + 1);
+                        if (error)
+                            return "path." + error;
+                    }
+                }
+                if (message.facing_direction != null && $Object.hasOwnProperty.call(message, "facing_direction"))
+                    if (!$util.isInteger(message.facing_direction))
+                        return "facing_direction: integer expected";
+                if (message.movement_direction != null && $Object.hasOwnProperty.call(message, "movement_direction"))
+                    if (!$util.isInteger(message.movement_direction))
+                        return "movement_direction: integer expected";
+                if (message.step_duration_ms != null && $Object.hasOwnProperty.call(message, "step_duration_ms"))
+                    if (!$util.isInteger(message.step_duration_ms))
+                        return "step_duration_ms: integer expected";
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id"))
+                    if (!$util.isInteger(message.source_skill_id))
+                        return "source_skill_id: integer expected";
+                if (message.cast_id != null && $Object.hasOwnProperty.call(message, "cast_id"))
+                    if (!$util.isInteger(message.cast_id) && !(message.cast_id && $util.isInteger(message.cast_id.low) && $util.isInteger(message.cast_id.high)))
+                        return "cast_id: integer|Long expected";
+                if (message.attack_sequence != null && $Object.hasOwnProperty.call(message, "attack_sequence"))
+                    if (!$util.isInteger(message.attack_sequence))
+                        return "attack_sequence: integer expected";
+                if (message.cast_sequence != null && $Object.hasOwnProperty.call(message, "cast_sequence"))
+                    if (!$util.isInteger(message.cast_sequence))
+                        return "cast_sequence: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EntityDisplacement
+             * @function getTypeUrl
+             * @memberof minimir.v1.EntityDisplacement
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EntityDisplacement.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EntityDisplacement";
+            };
+
+            return EntityDisplacement;
+        })();
+
+        v1.NavigationState = (function() {
+
+            /**
+             * Properties of a NavigationState.
+             * @typedef {Object} minimir.v1.NavigationState.$Properties
+             * @property {number|null} [input_sequence] NavigationState input_sequence
+             * @property {minimir.v1.GridPoint.$Properties|null} [destination] NavigationState destination
+             * @property {number|null} [status] NavigationState status
+             * @property {Long|null} [revision] NavigationState revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a NavigationState.
+             * @memberof minimir.v1
+             * @interface INavigationState
+             * @augments minimir.v1.NavigationState.$Properties
+             * @deprecated Use minimir.v1.NavigationState.$Properties instead.
+             */
+
+            /**
+             * Shape of a NavigationState.
+             * @typedef {minimir.v1.NavigationState.$Properties} minimir.v1.NavigationState.$Shape
+             */
+
+            /**
+             * Constructs a new NavigationState.
+             * @memberof minimir.v1
+             * @classdesc Represents a NavigationState.
+             * @constructor
+             * @param {minimir.v1.NavigationState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var NavigationState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * NavigationState input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.NavigationState
+             * @instance
+             */
+            NavigationState.prototype.input_sequence = 0;
+
+            /**
+             * NavigationState destination.
+             * @member {minimir.v1.GridPoint.$Properties|null|undefined} destination
+             * @memberof minimir.v1.NavigationState
+             * @instance
+             */
+            NavigationState.prototype.destination = null;
+
+            /**
+             * NavigationState status.
+             * @member {number} status
+             * @memberof minimir.v1.NavigationState
+             * @instance
+             */
+            NavigationState.prototype.status = 0;
+
+            /**
+             * NavigationState revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.NavigationState
+             * @instance
+             */
+            NavigationState.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new NavigationState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {minimir.v1.NavigationState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.NavigationState} NavigationState instance
+             * @type {{
+             *   (properties: minimir.v1.NavigationState.$Shape): minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape;
+             *   (properties?: minimir.v1.NavigationState.$Properties): minimir.v1.NavigationState;
+             * }}
+             */
+            NavigationState.create = function(properties) {
+                return new NavigationState(properties);
+            };
+
+            /**
+             * Encodes the specified NavigationState message. Does not implicitly {@link minimir.v1.NavigationState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {minimir.v1.NavigationState.$Properties} message NavigationState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NavigationState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.input_sequence);
+                if (message.destination != null && $Object.hasOwnProperty.call(message, "destination"))
+                    $root.minimir.v1.GridPoint.encode(message.destination, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status") && message.status !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.status);
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified NavigationState message, length delimited. Does not implicitly {@link minimir.v1.NavigationState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {minimir.v1.NavigationState.$Properties} message NavigationState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            NavigationState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a NavigationState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape} NavigationState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NavigationState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.NavigationState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.destination = $root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1, message.destination);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.status = value;
+                            else
+                                delete message.status;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a NavigationState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape} NavigationState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            NavigationState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a NavigationState message.
+             * @function verify
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            NavigationState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                if (message.destination != null && $Object.hasOwnProperty.call(message, "destination")) {
+                    var error = $root.minimir.v1.GridPoint.verify(message.destination, _depth + 1);
+                    if (error)
+                        return "destination." + error;
+                }
+                if (message.status != null && $Object.hasOwnProperty.call(message, "status"))
+                    if (!$util.isInteger(message.status))
+                        return "status: integer expected";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for NavigationState
+             * @function getTypeUrl
+             * @memberof minimir.v1.NavigationState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            NavigationState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.NavigationState";
+            };
+
+            return NavigationState;
         })();
 
         v1.EntityStatusState = (function() {
@@ -6839,6 +7713,7 @@ $root.minimir = (function() {
              * @property {Long|null} [state_sequence] SceneBaselineChunk state_sequence
              * @property {Array.<minimir.v1.EntityState.$Properties>|null} [entities] SceneBaselineChunk entities
              * @property {minimir.v1.SkillModeState.$Properties|null} [skill_mode_state] SceneBaselineChunk skill_mode_state
+             * @property {minimir.v1.NavigationState.$Properties|null} [navigation_state] SceneBaselineChunk navigation_state
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -6928,6 +7803,14 @@ $root.minimir = (function() {
             SceneBaselineChunk.prototype.skill_mode_state = null;
 
             /**
+             * SceneBaselineChunk navigation_state.
+             * @member {minimir.v1.NavigationState.$Properties|null|undefined} navigation_state
+             * @memberof minimir.v1.SceneBaselineChunk
+             * @instance
+             */
+            SceneBaselineChunk.prototype.navigation_state = null;
+
+            /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @function create
              * @memberof minimir.v1.SceneBaselineChunk
@@ -6974,6 +7857,8 @@ $root.minimir = (function() {
                         $root.minimir.v1.EntityState.encode(message.entities[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
                 if (message.skill_mode_state != null && $Object.hasOwnProperty.call(message, "skill_mode_state"))
                     $root.minimir.v1.SkillModeState.encode(message.skill_mode_state, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.navigation_state != null && $Object.hasOwnProperty.call(message, "navigation_state"))
+                    $root.minimir.v1.NavigationState.encode(message.navigation_state, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7090,6 +7975,12 @@ $root.minimir = (function() {
                             message.skill_mode_state = $root.minimir.v1.SkillModeState.decode(reader, reader.size(), $undefined, _depth + 1, message.skill_mode_state);
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            message.navigation_state = $root.minimir.v1.NavigationState.decode(reader, reader.size(), $undefined, _depth + 1, message.navigation_state);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7167,6 +8058,11 @@ $root.minimir = (function() {
                     if (error)
                         return "skill_mode_state." + error;
                 }
+                if (message.navigation_state != null && $Object.hasOwnProperty.call(message, "navigation_state")) {
+                    var error = $root.minimir.v1.NavigationState.verify(message.navigation_state, _depth + 1);
+                    if (error)
+                        return "navigation_state." + error;
+                }
                 return null;
             };
 
@@ -7197,6 +8093,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.GridPoint.$Properties|null} [destination] MoveIntent destination
              * @property {number|null} [direction] MoveIntent direction
              * @property {boolean|null} [release_joystick] MoveIntent release_joystick
+             * @property {boolean|null} [cancel_navigation] MoveIntent cancel_navigation
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -7269,6 +8166,14 @@ $root.minimir = (function() {
             MoveIntent.prototype.release_joystick = false;
 
             /**
+             * MoveIntent cancel_navigation.
+             * @member {boolean} cancel_navigation
+             * @memberof minimir.v1.MoveIntent
+             * @instance
+             */
+            MoveIntent.prototype.cancel_navigation = false;
+
+            /**
              * Creates a new MoveIntent instance using the specified properties.
              * @function create
              * @memberof minimir.v1.MoveIntent
@@ -7310,6 +8215,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.direction);
                 if (message.release_joystick != null && $Object.hasOwnProperty.call(message, "release_joystick") && message.release_joystick !== false)
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.release_joystick);
+                if (message.cancel_navigation != null && $Object.hasOwnProperty.call(message, "cancel_navigation") && message.cancel_navigation !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.cancel_navigation);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -7409,6 +8316,15 @@ $root.minimir = (function() {
                                 delete message.release_joystick;
                             continue;
                         }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.cancel_navigation = value;
+                            else
+                                delete message.cancel_navigation;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -7474,6 +8390,9 @@ $root.minimir = (function() {
                 if (message.release_joystick != null && $Object.hasOwnProperty.call(message, "release_joystick"))
                     if (typeof message.release_joystick !== "boolean")
                         return "release_joystick: boolean expected";
+                if (message.cancel_navigation != null && $Object.hasOwnProperty.call(message, "cancel_navigation"))
+                    if (typeof message.cancel_navigation !== "boolean")
+                        return "cancel_navigation: boolean expected";
                 return null;
             };
 

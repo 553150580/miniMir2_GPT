@@ -10,6 +10,8 @@ export interface MotionFrame extends MotionPoint {
     readonly direction: number;
     readonly stepProgress: number;
     readonly stepSequence: number;
+    readonly movementKind: number;
+    readonly dashPhase: number;
 }
 export interface MotionOptions {
     // 以下仅为显示恢复阈值，不是角色或怪物的玩法速度。
@@ -22,6 +24,8 @@ interface Segment {
     readonly to: MotionPoint;
     readonly direction: number;
     readonly sequence: number;
+    readonly kind: number;
+    readonly dashPhase: number;
     base: number;
     start: number;
     end: number;
@@ -48,6 +52,8 @@ export class EntityMotion {
     private stepSequence = 0;
     private stepProgress = 0;
     private holdDeadline = 0;
+    private movementKind = 0;
+    private dashPhase = 0;
 
     constructor(options: MotionOptions = {}) {
         // 默认只插值相邻格，跨格丢失路径时不猜测一条可能穿过障碍的直线。
@@ -84,13 +90,28 @@ export class EntityMotion {
         const cadence = this.changedAt === null ? value.durationMs : now - this.changedAt;
         this.changedAt = now;
         this.target = point;
+        // 已确认的推移/冲撞前缀保留，普通新步接在它的末格之后，不能重排或斜切。
+        if (this.segments.some(segment => segment.kind === 2 || segment.kind === 3)) {
+            const start = Math.max(now, this.segments[this.segments.length - 1].end);
+            this.segments.push({ from: oldTarget, to: point, direction: directionOf(oldTarget, point), sequence: ++this.counter,
+                kind: 1, dashPhase: 0, base: 0, start, end: start + value.durationMs });
+            const lastForce = this.segments.reduce((last, segment, index) => segment.kind === 2 || segment.kind === 3 ? index : last, -1);
+            const suffix = this.segments.slice(lastForce + 1), budget = Math.min(value.durationMs, cadence > 0 ? cadence : value.durationMs);
+            const weight = suffix.reduce((sum, segment) => sum + 1 - segment.base, 0);
+            let cursor = Math.max(now, this.segments[lastForce].end);
+            for (const segment of suffix) {
+                segment.start = cursor; segment.end = cursor + budget * (1 - segment.base) / weight; cursor = segment.end;
+            }
+            if (this.segments.length > this.maxQueuedWaypoints) this.snapTo(point);
+            this.advance(now); return this.frame();
+        }
         if (this.segments.length && !held) {
             this.segments[0].from = { ...this.position };
             this.segments[0].base = this.stepProgress;
         }
         const start = held ? Math.max(this.holdDeadline, this.segments[this.segments.length - 1]?.end ?? now) : now;
         this.segments.push({ from: oldTarget, to: point, direction: directionOf(oldTarget, point),
-            sequence: ++this.counter, base: 0, start, end: held ? start + value.durationMs : start });
+            sequence: ++this.counter, kind: 1, dashPhase: 0, base: 0, start, end: held ? start + value.durationMs : start });
         if (this.segments.length > this.maxQueuedWaypoints) {
             this.snapTo(point);
             return this.frame();
@@ -112,6 +133,41 @@ export class EntityMotion {
     sample(nowMs: number): MotionFrame {
         this.advance(this.time(nowMs));
         return this.frame();
+    }
+
+    touchSnapshot(nowMs: number): void { this.snapshotAt = this.time(nowMs); this.advance(this.clock); }
+
+    // 路径来自权威逐格事实；不从端点补线，不让旧攻击等待门槛拖住推移。
+    displace(value: { kind: number; origin: MotionPoint; path: readonly MotionPoint[]; facingDirection: number; stepDurationMs: number },
+        nowMs: number, owner: boolean, recover = false): MotionFrame {
+        const now = this.time(nowMs); this.advance(now); this.releaseHold(now); this.snapshotAt = now;
+        const end = value.path[value.path.length - 1] ?? value.origin;
+        this.serverDirection = value.facingDirection;
+        if (recover || value.kind === 4 || !this.target || !same(this.target, value.origin)) {
+            this.snapTo(end); return this.frame();
+        }
+        if (value.kind === 5) return this.frame();
+        // 没有强制前缀时直接从受理原点接管；不保留旧普通走和身体等待队列。
+        if (!this.segments.some(segment => segment.kind === 2 || segment.kind === 3)) this.snapTo(value.origin);
+        let phase = 0;
+        if (value.kind === 3) {
+            if (owner) {
+                const previous = this.segments.slice().reverse().find(segment => segment.kind === 3);
+                if (previous) phase = 1 - previous.dashPhase;
+            } else {
+                const tail = this.segments[this.segments.length - 1];
+                if (tail?.kind === 3 && (this.segments.length > 1 || tail.start >= now)) phase = 1 - tail.dashPhase;
+            }
+        }
+        let from = value.origin, cursor = Math.max(now, this.segments[this.segments.length - 1]?.end ?? now);
+        for (const to of value.path) {
+            this.segments.push({ from: { ...from }, to: { ...to }, direction: value.facingDirection, sequence: ++this.counter,
+                kind: value.kind, dashPhase: phase, base: 0, start: cursor, end: cursor + value.stepDurationMs });
+            cursor += value.stepDurationMs; from = to; phase = 1 - phase;
+        }
+        this.target = { ...end }; this.changedAt = null;
+        if (this.segments.length > this.maxQueuedWaypoints) this.snapTo(end);
+        this.advance(now); return this.frame();
     }
 
     // 绝对时间门槛只延后未起步段；重复传同一截止时间不会累计等待。
@@ -161,6 +217,7 @@ export class EntityMotion {
         this.stepSequence = 0;
         this.stepProgress = 0;
         this.holdDeadline = 0;
+        this.movementKind = 0; this.dashPhase = 0;
     }
 
     private time(value: number): number {
@@ -177,6 +234,7 @@ export class EntityMotion {
         this.holdDeadline = 0;
         this.stepSequence = ++this.counter;
         this.stepProgress = 0;
+        this.movementKind = 0; this.dashPhase = 0;
     }
 
     private advance(now: number): void {
@@ -185,6 +243,7 @@ export class EntityMotion {
             this.position = { ...done.to };
             this.stepSequence = done.sequence;
             this.stepProgress = 1;
+            this.movementKind = done.kind; this.dashPhase = done.dashPhase;
         }
         const segment = this.segments[0];
         if (!segment) return;
@@ -193,11 +252,13 @@ export class EntityMotion {
             y: segment.from.y + (segment.to.y - segment.from.y) * ratio };
         this.stepSequence = segment.sequence;
         this.stepProgress = segment.base + (1 - segment.base) * ratio;
+        this.movementKind = segment.kind; this.dashPhase = segment.dashPhase;
     }
 
     private frame(): MotionFrame {
         return { ...this.position, moving: this.segments.length > 0 && this.clock >= this.segments[0].start,
             direction: this.segments[0]?.direction ?? this.serverDirection,
-            stepSequence: this.stepSequence, stepProgress: this.stepProgress };
+            stepSequence: this.stepSequence, stepProgress: this.stepProgress,
+            movementKind: this.segments.length ? this.movementKind : 0, dashPhase: this.dashPhase };
     }
 }

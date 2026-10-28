@@ -66,7 +66,7 @@ File.WriteAllText(args[0],JsonSerializer.Serialize(rows));
  commands=[['--cwd',str(project.relative_to(ROOT)),'dotnet','restore','--configfile','NuGet.Config'],['--cwd',str(project.relative_to(ROOT)),'dotnet','build','--no-restore','--configuration','Release'],['dotnet',str(project/'bin/Release/net10.0/Oracle.dll'),str(OUT/'vectors.json')]]
  with (OUT/'execution.log').open('w') as log:
   for command in commands:
-   if subprocess.run([str(ROOT/'tools/dev')]+command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT).returncode:raise SystemExit('来源公式构建失败，见'+str(OUT/'execution.log'))
+   if subprocess.run([sys.executable,str(ROOT/'tools/dev')]+command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT).returncode:raise SystemExit('来源公式构建失败，见'+str(OUT/'execution.log'))
  vectors=json.loads((OUT/'vectors.json').read_text());encoded=gzip.compress(json.dumps(vectors,separators=(',',':')).encode(),mtime=0)
  if args.go_fixture:args.go_fixture.parent.mkdir(parents=True,exist_ok=True);args.go_fixture.write_bytes(encoded)
  report={'status':'passed','sdk_version':lock['version'],'vectors':len(vectors),'source_files':{name:contract['sources'][name] for name in src},'compiled_source_sha256':hashlib.sha256(code.encode()).hexdigest(),'go_fixture_sha256':hashlib.sha256(encoded).hexdigest(),'source_fragments':{'magic_getpower_int':power,'reduction_and_armour':shield,'remaining_loss':wear,'tao_duration_expression':tao,'target_level_expression':bonus},'scope':'逐字公式/表达式由.NET独立执行；最小索引器和确定性SC桩；不覆盖完整PRNG、完整伤害分支、对象调度或目标1.80认证','runtime_configuration':False}

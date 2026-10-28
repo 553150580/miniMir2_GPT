@@ -43,6 +43,7 @@ func statusWorker(t *testing.T, job uint32) (*worker, *room, *capturedConnection
 		s.CooldownBaseMS = 1800
 		s.GlobalSpellMS = 1800
 		s.AutoPriority = 80
+		s.AutoEnabled = true
 		s.AutoMinTargets = 1
 		found := false
 		for i := range f.Skills {

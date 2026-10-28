@@ -18,7 +18,7 @@ MAP_SOURCE = ROOT.parent / '传奇1.80客户端/Map/0.map'
 # 原始Mir地图贴图格式；本作表现格宽高仅从唯一Excel读取。
 TILE_WIDTH, TILE_HEIGHT = 48, 32
 DIRECTIONS = ['up','up_right','right','down_right','down','down_left','left','up_left']
-PLAYER_ACTIONS = {'standing':(0,4,8,500),'walking':(64,6,8,100),'attack':(200,6,8,100),
+PLAYER_ACTIONS = {'standing':(0,4,8,500),'walking':(64,6,8,100),'running':(128,6,8,100),'attack':(200,6,8,100),
                   'casting':(392,6,8,100),'struck':(472,3,8,100),'die':(536,4,8,100)}
 MONSTER_ACTIONS = {'standing':(0,4,10,500),'walking':(80,6,10,100),'attack':(160,6,10,100),
                    'struck':(240,2,2,200),'die':(260,10,10,100)}
@@ -31,6 +31,14 @@ def sha(path): return wil.sha256_file(path)
 def canonical(obj): return json.dumps(obj,ensure_ascii=False,indent=2)+'\n'
 def evidence(relative, start, end, role):
     p=ROOT/relative
+    if not p.is_file():
+        # 原机位置失效时只接受旧清单中相同摘要的独立源码副本，不猜测替代版本。
+        baseline=json.loads((ROOT/'client/assets/resources/development/manifest.json').read_text(encoding='utf-8'))
+        record=next((item for item in baseline['evidence'] if item['path']==relative),None)
+        if record:
+            sys.path.insert(0,str(ROOT/'tools/config'))
+            from source_locations import resolve_locked_source
+            p=resolve_locked_source(ROOT,{'path':relative,'sha256':record['sha256']})
     return {'path':relative,'sha256':sha(p),'lines':[start,end],'role':role}
 def point(x,y):return {'x':x,'y':y}
 
@@ -277,7 +285,20 @@ def build_map(importer):
             'path':'maps/first-map.json','background':png}
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true');args=parser.parse_args()
+    global OUTPUT, MAP_SOURCE
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--check',action='store_true')
+    parser.add_argument('--source-root',type=Path,help='已核验的原客户端根目录；只读Data与Map')
+    parser.add_argument('--output',type=Path,help='独立再生成目录，仅允许项目内.work或outputs，不覆盖保存布局')
+    args=parser.parse_args()
+    if args.output:
+        candidate=args.output.resolve()
+        if not any(candidate.is_relative_to(ROOT/name) for name in ('.work','outputs')):
+            raise ValueError('独立再生成目录必须位于本项目.work或outputs内')
+        OUTPUT=candidate
+    if args.source_root:
+        source=args.source_root.resolve()
+        wil.SOURCE_ROOTS['client_180_named']=source/'Data'
+        MAP_SOURCE=source/'Map/0.map'
     if OUTPUT.is_symlink():raise ValueError('Output must not be a symlink')
     importer=Importer(args.check);map_info=build_map(importer);profiles={}
     for name,layers,actions in PROFILES:
@@ -292,7 +313,7 @@ def main():
                     keys=[importer.frame(package,base+start+direction*stride+i) for i in range(count)]
                     directions.append({'direction':direction,'name':DIRECTIONS[direction],'frames':keys})
                 layer['actions'][action]={'raw_start':base+start,'count':count,'direction_stride':stride,'duration_ms':interval,
-                                          'loop':action in ['standing','walking'],'directions':directions}
+                                          'loop':action in ['standing','walking','running'],'directions':directions}
             profile['layers'].append(layer)
         profiles[name]=profile
     # Magic原图含用于加色混合的暗色像素；保持原像素，由保存的特效Sprite选择加色混合。
@@ -313,6 +334,7 @@ def main():
              'projectile':{'directions':[[importer.frame('Magic',410+d*10+i) for i in range(6)] for d in range(16)],
                            'frame_ms':30,'blend':'additive'}},
         '7':{'kind':'slaying','attack':ranked_attack(1820)},
+        '8':{'kind':'repulsion','cast':effect(900,6,600)},
         '9':{'kind':'hell_fire','cast':effect(920,10,600),'cast_anchor':'origin','step':effect(930,6,500),
              'step_anchor':'grid','step_trigger':'authoritative_cast_step',
              'visual_adaptation':'User-approved fixed forward line for every rank; source rank3 side lines are not displayed.'},
@@ -329,6 +351,7 @@ def main():
         '15':{'kind':'blessed_armour','projectile':{'directions':[[importer.frame('Magic',1160+d*10+i) for i in range(3)] for d in range(16)],
                                                   'frame_ms':30,'blend':'additive'},
               'hit':effect(1340,15,1200),'hit_anchor':'grid'},
+        '21':{'kind':'teleport','cast':effect(1590,10,600)},
         '23':{'kind':'firebang','cast':effect(1650,10,600),'hit':effect(1660,10,1000),'hit_anchor':'grid'},
         '24':{'kind':'thunder_storm','cast':effect(1680,10,600),'cast_anchor':'origin'},
         '25':{'kind':'half_moon','attack':ranked_attack(2560)},
@@ -339,12 +362,14 @@ def main():
     }
     # 常驻效果只由权威状态列表绑定，不把一次施法受理当作永久壳已生效。
     statuses={'31':{'idle':effect(3890,3,600),'struck':effect(3900,3,600)}}
+    # 通用传送只按显式权威位移播放；本人没有离场光，不混入Blink的1600组。
+    teleport={'out':effect(250,10,500),'in':effect(260,10,500),'owner_plays_out':False}
     manifest={'schema_version':1,'purpose':'first_loop_development_candidates','development_only':True,'runtime_ready':False,
               'status':'candidate','official_180_restoration_verified':False,'pillow_version':PILLOW_VERSION,
               'converter':'tools/resources/build_development_assets.py','converter_sha256':sha(Path(__file__)),
               'wil_decoder_sha256':sha(ROOT/'tools/resources/inspect_wil.py'),'map':map_info,'direction_names':DIRECTIONS,
               'coordinate_contract':'Native frame PNGs remain uncropped and unscaled with original WIL offsets. Entity draw origin uses source offsets; authored small map props place the original image bottom center at their explicit collision cell. Historical source_props are not rendered. Only back/middle floor UVs are projected to the authored diamond; source logical y is down.',
-              'sources':list(importer.sources.values()),'profiles':profiles,'effects':effects,'statuses':statuses,'frames':importer.frames,
+              'sources':list(importer.sources.values()),'profiles':profiles,'effects':effects,'statuses':statuses,'teleport':teleport,'frames':importer.frames,
               'evidence':[evidence('资料参考/crystal/Client/MirObjects/Frames.cs',23,33,'monster compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/Frames.cs',153,168,'player compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1643,1657,'fireball/healing cast Magic frame groups'),
@@ -366,6 +391,13 @@ def main():
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1989,1994,'MagicShield caster frame group'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2276,2294,'MagicShield authoritative attached idle and struck frames'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',3023,3050,'SoulShield and BlessedArmour shared projectile and separate ground effect frames'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1037,1050,'Pushed uses Walking and DashL/R use Running; compact indices are not original WIL indices'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1493,1508,'Pushed starts at last walking frame and DashL/R start at frame0/3'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',2355,2400,'Dash advances three frames per successful cell; Pushed reverses walking by two frames each tick'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1661,1665,'Repulsion caster Magic900 six native frames'),
+                          evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1736,1741,'Teleport caster Magic1590 ten native frames'),
+                          evidence('../SuprcodeCrystal/Client/MirScenes/GameScene.cs',4077,4090,'Generic observer teleport-out Magic250; actor broadcast excludes the owner'),
+                          evidence('../SuprcodeCrystal/Client/MirScenes/GameScene.cs',4158,4172,'Generic teleport-in Magic260 follows the destination actor'),
                           evidence('资料参考/crystal/Client/MirObjects/Effect.cs',152,216,'16-direction projectile frames and additive rendering'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',4887,4919,'weapon/body/hair order by direction'),
                           evidence('资料参考/crystal/Client/MirObjects/MapCode.cs',226,259,'v0 layers, 1-based images, column-major cells'),

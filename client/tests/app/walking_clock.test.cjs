@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const ts = require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts = require('../../../tools/client/creator_paths.cjs').typescript;
 function load(name) {
     const source = fs.readFileSync(path.resolve(__dirname, `../../assets/scripts/app/${name}.ts`), 'utf8');
     const result = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS } });

@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import struct
+import sys
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -85,9 +86,9 @@ def main():
     (project / 'global.json').write_text(json.dumps({'sdk': {'version': lock['version'], 'rollForward': 'disable'}}))
     save(OUT / 'requests.json', requests)
     commands = [
-        [str(ROOT / 'tools/dev'), '--cwd', str(project.relative_to(ROOT)), 'dotnet', 'restore', '--configfile', 'NuGet.Config'],
-        [str(ROOT / 'tools/dev'), '--cwd', str(project.relative_to(ROOT)), 'dotnet', 'build', '--no-restore', '--configuration', 'Release'],
-        [str(ROOT / 'tools/dev'), 'dotnet', str(project / 'bin/Release/net10.0/Oracle.dll'), str(OUT / 'requests.json'), str(OUT / 'csharp-results.jsonl')],
+        [sys.executable,str(ROOT / 'tools/dev'), '--cwd', str(project.relative_to(ROOT)), 'dotnet', 'restore', '--configfile', 'NuGet.Config'],
+        [sys.executable,str(ROOT / 'tools/dev'), '--cwd', str(project.relative_to(ROOT)), 'dotnet', 'build', '--no-restore', '--configuration', 'Release'],
+        [sys.executable,str(ROOT / 'tools/dev'), 'dotnet', str(project / 'bin/Release/net10.0/Oracle.dll'), str(OUT / 'requests.json'), str(OUT / 'csharp-results.jsonl')],
     ]
     with (OUT / 'execution.log').open('w', encoding='utf-8') as log:
         for command in commands:

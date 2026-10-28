@@ -1862,6 +1862,9 @@ export namespace minimir {
             /** EnterLineResult next_economic_command_seq. */
             next_economic_command_seq: Long;
 
+            /** EnterLineResult player_handle. */
+            player_handle: number;
+
             /**
              * Creates a new EnterLineResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -1948,6 +1951,9 @@ export namespace minimir {
 
                 /** EnterLineResult next_economic_command_seq */
                 next_economic_command_seq?: (Long|null);
+
+                /** EnterLineResult player_handle */
+                player_handle?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -2246,6 +2252,12 @@ export namespace minimir {
             /** EntityState combat_attributes. */
             combat_attributes?: (minimir.v1.CombatAttributes.$Properties|null);
 
+            /** EntityState movement_revision. */
+            movement_revision: Long;
+
+            /** EntityState movement_kind. */
+            movement_kind: number;
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -2369,12 +2381,306 @@ export namespace minimir {
                 /** EntityState combat_attributes */
                 combat_attributes?: (minimir.v1.CombatAttributes.$Properties|null);
 
+                /** EntityState movement_revision */
+                movement_revision?: (Long|null);
+
+                /** EntityState movement_kind */
+                movement_kind?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an EntityState. */
             type $Shape = minimir.v1.EntityState.$Properties;
+        }
+
+        /**
+         * Properties of an EntityDisplacement.
+         * @deprecated Use minimir.v1.EntityDisplacement.$Properties instead.
+         */
+        interface IEntityDisplacement extends minimir.v1.EntityDisplacement.$Properties {
+        }
+
+        /** Represents an EntityDisplacement. */
+        class EntityDisplacement {
+
+            /**
+             * Constructs a new EntityDisplacement.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EntityDisplacement.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EntityDisplacement scene_epoch. */
+            scene_epoch: Long;
+
+            /** EntityDisplacement entity_handle. */
+            entity_handle: number;
+
+            /** EntityDisplacement entity_life. */
+            entity_life: Long;
+
+            /** EntityDisplacement movement_revision. */
+            movement_revision: Long;
+
+            /** EntityDisplacement kind. */
+            kind: number;
+
+            /** EntityDisplacement origin. */
+            origin?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** EntityDisplacement path. */
+            path: minimir.v1.GridPoint.$Properties[];
+
+            /** EntityDisplacement facing_direction. */
+            facing_direction: number;
+
+            /** EntityDisplacement movement_direction. */
+            movement_direction: number;
+
+            /** EntityDisplacement step_duration_ms. */
+            step_duration_ms: number;
+
+            /** EntityDisplacement source_skill_id. */
+            source_skill_id: number;
+
+            /** EntityDisplacement cast_id. */
+            cast_id: Long;
+
+            /** EntityDisplacement attack_sequence. */
+            attack_sequence: number;
+
+            /** EntityDisplacement cast_sequence. */
+            cast_sequence: number;
+
+            /**
+             * Creates a new EntityDisplacement instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EntityDisplacement instance
+             */
+            static create(properties: minimir.v1.EntityDisplacement.$Shape): minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape;
+            static create(properties?: minimir.v1.EntityDisplacement.$Properties): minimir.v1.EntityDisplacement;
+
+            /**
+             * Encodes the specified EntityDisplacement message. Does not implicitly {@link minimir.v1.EntityDisplacement.verify|verify} messages.
+             * @param message EntityDisplacement message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EntityDisplacement.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EntityDisplacement message, length delimited. Does not implicitly {@link minimir.v1.EntityDisplacement.verify|verify} messages.
+             * @param message EntityDisplacement message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EntityDisplacement.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EntityDisplacement message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape} EntityDisplacement
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape;
+
+            /**
+             * Decodes an EntityDisplacement message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape} EntityDisplacement
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EntityDisplacement & minimir.v1.EntityDisplacement.$Shape;
+
+            /**
+             * Verifies an EntityDisplacement message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EntityDisplacement
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EntityDisplacement {
+
+            /** Properties of an EntityDisplacement. */
+            interface $Properties {
+
+                /** EntityDisplacement scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** EntityDisplacement entity_handle */
+                entity_handle?: (number|null);
+
+                /** EntityDisplacement entity_life */
+                entity_life?: (Long|null);
+
+                /** EntityDisplacement movement_revision */
+                movement_revision?: (Long|null);
+
+                /** EntityDisplacement kind */
+                kind?: (number|null);
+
+                /** EntityDisplacement origin */
+                origin?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** EntityDisplacement path */
+                path?: (minimir.v1.GridPoint.$Properties[]|null);
+
+                /** EntityDisplacement facing_direction */
+                facing_direction?: (number|null);
+
+                /** EntityDisplacement movement_direction */
+                movement_direction?: (number|null);
+
+                /** EntityDisplacement step_duration_ms */
+                step_duration_ms?: (number|null);
+
+                /** EntityDisplacement source_skill_id */
+                source_skill_id?: (number|null);
+
+                /** EntityDisplacement cast_id */
+                cast_id?: (Long|null);
+
+                /** EntityDisplacement attack_sequence */
+                attack_sequence?: (number|null);
+
+                /** EntityDisplacement cast_sequence */
+                cast_sequence?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EntityDisplacement. */
+            type $Shape = minimir.v1.EntityDisplacement.$Properties;
+        }
+
+        /**
+         * Properties of a NavigationState.
+         * @deprecated Use minimir.v1.NavigationState.$Properties instead.
+         */
+        interface INavigationState extends minimir.v1.NavigationState.$Properties {
+        }
+
+        /** Represents a NavigationState. */
+        class NavigationState {
+
+            /**
+             * Constructs a new NavigationState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.NavigationState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** NavigationState input_sequence. */
+            input_sequence: number;
+
+            /** NavigationState destination. */
+            destination?: (minimir.v1.GridPoint.$Properties|null);
+
+            /** NavigationState status. */
+            status: number;
+
+            /** NavigationState revision. */
+            revision: Long;
+
+            /**
+             * Creates a new NavigationState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns NavigationState instance
+             */
+            static create(properties: minimir.v1.NavigationState.$Shape): minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape;
+            static create(properties?: minimir.v1.NavigationState.$Properties): minimir.v1.NavigationState;
+
+            /**
+             * Encodes the specified NavigationState message. Does not implicitly {@link minimir.v1.NavigationState.verify|verify} messages.
+             * @param message NavigationState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.NavigationState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified NavigationState message, length delimited. Does not implicitly {@link minimir.v1.NavigationState.verify|verify} messages.
+             * @param message NavigationState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.NavigationState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a NavigationState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape} NavigationState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape;
+
+            /**
+             * Decodes a NavigationState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape} NavigationState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.NavigationState & minimir.v1.NavigationState.$Shape;
+
+            /**
+             * Verifies a NavigationState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for NavigationState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace NavigationState {
+
+            /** Properties of a NavigationState. */
+            interface $Properties {
+
+                /** NavigationState input_sequence */
+                input_sequence?: (number|null);
+
+                /** NavigationState destination */
+                destination?: (minimir.v1.GridPoint.$Properties|null);
+
+                /** NavigationState status */
+                status?: (number|null);
+
+                /** NavigationState revision */
+                revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a NavigationState. */
+            type $Shape = minimir.v1.NavigationState.$Properties;
         }
 
         /**
@@ -2729,6 +3035,9 @@ export namespace minimir {
             /** SceneBaselineChunk skill_mode_state. */
             skill_mode_state?: (minimir.v1.SkillModeState.$Properties|null);
 
+            /** SceneBaselineChunk navigation_state. */
+            navigation_state?: (minimir.v1.NavigationState.$Properties|null);
+
             /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @param [properties] Properties to set
@@ -2813,6 +3122,9 @@ export namespace minimir {
                 /** SceneBaselineChunk skill_mode_state */
                 skill_mode_state?: (minimir.v1.SkillModeState.$Properties|null);
 
+                /** SceneBaselineChunk navigation_state */
+                navigation_state?: (minimir.v1.NavigationState.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -2854,6 +3166,9 @@ export namespace minimir {
 
             /** MoveIntent release_joystick. */
             release_joystick: boolean;
+
+            /** MoveIntent cancel_navigation. */
+            cancel_navigation: boolean;
 
             /**
              * Creates a new MoveIntent instance using the specified properties.
@@ -2932,6 +3247,9 @@ export namespace minimir {
 
                 /** MoveIntent release_joystick */
                 release_joystick?: (boolean|null);
+
+                /** MoveIntent cancel_navigation */
+                cancel_navigation?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

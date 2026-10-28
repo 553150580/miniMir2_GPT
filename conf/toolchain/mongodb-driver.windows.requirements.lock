@@ -1,0 +1,5 @@
+# 专属开发 VM 的宿主驱动；只在所有权和回环转发核验后使用。
+pymongo==4.19.0 \
+    --hash=sha256:ac673404456b23c568cea326ab996a6b35a6009e41d42bcb774db025d0918b7d
+dnspython==2.9.0 \
+    --hash=sha256:9a4aedb833c3c1b49214d04d44d3032ab7a9135f7c1d29a549b4ff78fd82fda9

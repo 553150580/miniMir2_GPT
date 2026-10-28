@@ -142,7 +142,7 @@ func (w *worker) advanceEvents(r *room, now time.Time) {
 		return events[i].At.Before(events[j].At)
 	})
 	for i, e := range events {
-		if r.Pending {
+		if r.Pending || r.Isolated {
 			for _, waiting := range events[i:] {
 				if waiting.Attack != nil {
 					r.Attacks = append(r.Attacks, *waiting.Attack)
@@ -291,7 +291,7 @@ func (w *worker) enqueueKillFact(r *room, m *entity, at time.Time, caster *entit
 }
 
 func (w *worker) flushKillFacts(r *room) {
-	if r.Pending || len(r.KillFacts) == 0 || r.KillFacts[0].Prepared {
+	if r.Pending || r.Isolated || len(r.KillFacts) == 0 || r.KillFacts[0].Prepared {
 		return
 	}
 	head := &r.KillFacts[0]

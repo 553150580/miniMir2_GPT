@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const {createRequire}=require('node:module');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const source=path.resolve(__dirname,'../../assets/scripts/app');
 const loadedModules=new Map();
 function loadSource(file){
@@ -31,10 +31,39 @@ const {encodePacket,decodePacket,GameConnection}=load('GameConnection');
 const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
+test('入场显式player_handle保留uint32边界，不由entity_kind推断主人',()=>{
+    const value=decodePacket(encodePacket(20002,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,playerHandle:4294967295})).value;
+    assert.equal(value.playerHandle,4294967295);assert.equal(value.sceneEpoch.toString(),Long.MAX_UNSIGNED_VALUE.toString());
+});
+test('显式位移及导航目标revision的所有64位身份往返精确，分块保留首块导航状态',()=>{
+    const large=Long.fromString('9007199254740993',true),last=Long.MAX_UNSIGNED_VALUE;
+    const value=decodePacket(encodePacket(30013,0,Long.UONE,{sceneEpoch:last,entityHandle:1,entityLife:Long.UZERO,movementRevision:large,
+        kind:3,origin:{x:1,y:1},path:[{x:2,y:1},{x:2,y:2}],facingDirection:4,movementDirection:2,stepDurationMs:300,sourceSkillId:27,castId:last,attackSequence:4294967295,castSequence:4294967295})).value;
+    assert.equal(value.sceneEpoch.toString(),last.toString());assert.equal(value.entityLife.toString(),'0');assert.equal(value.movementRevision.toString(),large.toString());assert.equal(value.castId.toString(),last.toString());
+    assert.deepEqual(value.path,[{x:2,y:1},{x:2,y:2}]);assert.equal(value.facingDirection,4);assert.equal(value.stepDurationMs,300);assert.equal(value.attackSequence,4294967295);
+    const assembler=new BaselineAssembler(),common={sceneEpoch:last,baselineId:large,stateSequence:Long.UONE,chunkCount:2};
+    const first=decodePacket(encodePacket(5,0,Long.UONE,{...common,chunkIndex:0,entities:[{entityHandle:1,life:Long.UZERO,movementRevision:large,movementKind:2}],navigationState:{inputSequence:1,destination:{x:5,y:4},status:1,revision:last}})).value;
+    assert.equal(assembler.accept(first,last,large),null);
+    const complete=assembler.accept(decodePacket(encodePacket(5,0,Long.UONE,{...common,chunkIndex:1,entities:[{entityHandle:2}]})).value,last,large);
+    assert.equal(complete.entities[0].movementRevision.toString(),large.toString());assert.equal(complete.entities[0].movementKind,2);assert.equal(complete.navigationState.revision.toString(),last.toString());assert.equal(complete.navigationState.status,1);
+});
 test('真实逐格CastStep保留64位场景/施法/生命和原格，空有效格不需要target字段',()=>{
     const large=Long.fromString('9007199254740993',true),step=decodePacket(encodePacket(30012,0,Long.UONE,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,castId:large,skillId:9,casterHandle:1,casterLife:large,grid:{x:4,y:2},direction:2,stepIndex:3,skillLevel:3})).value;
     assert.equal(step.sceneEpoch.toString(),'18446744073709551615');assert.equal(step.castId.toString(),large.toString());assert.equal(step.casterLife.toString(),large.toString());
     assert.deepEqual(step.grid,{x:4,y:2});assert.equal(step.stepIndex,3);assert.equal(step.skillLevel,3);assert.equal(step.targetHandle,undefined);
+});
+test('同一基线的导航分块必须一致，含重复块与大revision，下一序列独立恢复',()=>{
+    const revision=Long.fromString('9007199254740993',true),common={sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2};
+    const navigation={inputSequence:2,status:1,revision,destination:{x:5,y:4}};
+    for(const changed of [{status:2},{revision:revision.add(1)},{destination:{x:5,y:5}}]){
+        const assembler=new BaselineAssembler();assert.equal(assembler.accept({...common,chunkIndex:0,entities:[{entityHandle:1}],navigationState:navigation},Long.UONE,Long.UONE),null);
+        assert.throws(()=>assembler.accept({...common,chunkIndex:1,entities:[{entityHandle:2}],navigationState:{...navigation,...changed}},Long.UONE,Long.UONE),/导航状态不一致/);
+        const recovered=assembler.accept({...common,stateSequence:Long.fromInt(2),chunkCount:1,chunkIndex:0,entities:[{entityHandle:1}],navigationState:{...navigation,...changed}},Long.UONE,Long.UONE);assert(recovered);
+    }
+    const same=new BaselineAssembler();same.accept({...common,chunkIndex:0,entities:[{entityHandle:1}],navigationState:navigation},Long.UONE,Long.UONE);
+    assert(same.accept({...common,chunkIndex:1,entities:[{entityHandle:2}],navigationState:{...navigation,revision:Long.fromString(revision.toString(),true)}},Long.UONE,Long.UONE));
+    const duplicate=new BaselineAssembler();duplicate.accept({...common,chunkIndex:0,entities:[{entityHandle:1}],navigationState:navigation},Long.UONE,Long.UONE);
+    assert.throws(()=>duplicate.accept({...common,chunkIndex:0,entities:[{entityHandle:1}],navigationState:{...navigation,status:2}},Long.UONE,Long.UONE),/导航状态不一致/);
 });
 
 test('战士模式、朝向空挥及受理阶数/生命按新PB往返，模式基线跨分块仍完整恢复',()=>{

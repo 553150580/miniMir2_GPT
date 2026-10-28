@@ -1,393 +1,294 @@
 {
-  "schema_version": 2,
-  "checked_on": "2026-10-27",
-  "checked_at": "2026-10-27T00:29:46.654330+08:00",
-  "user_timezone": "Asia/Shanghai",
-  "required_creator_version": "3.8.8",
-  "toolchain_entry": "./tools/dev",
+  "schema_version": 3,
+  "checked_at_utc": "2026-10-28T11:57:40.264763+00:00",
+  "platform": "windows-amd64",
+  "toolchain_entry": "./tools/dev.ps1",
   "wrapper_active": true,
-  "checker_python": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
   "tools": {
     "go": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/go/go1.27.3/bin/go",
-      "return_code": 0,
-      "stdout": "go version go1.27.3 darwin/amd64",
-      "stderr": ""
-    },
-    "protoc": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/protoc/36.2/bin/protoc",
-      "return_code": 0,
-      "stdout": "libprotoc 36.2",
-      "stderr": ""
-    },
-    "protoc-gen-go": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/go-tools/bin/protoc-gen-go",
-      "return_code": 0,
-      "stdout": "protoc-gen-go v1.36.12",
-      "stderr": ""
-    },
-    "python3": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
-      "return_code": 0,
-      "stdout": "{\"executable\": \"/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3\", \"venv_prefix\": \"/Users/srf/.local/share/minimir-toolchain/python/tools-venv\", \"python_version\": \"3.14.9\", \"pillow_version\": \"13.0.0\"}",
-      "stderr": ""
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go\\1.27.3\\go\\bin\\go.exe",
+      "version": "go version go1.27.3 windows/amd64",
+      "exit_code": 0,
+      "binary_sha256": "83b7ba66215e696414fa49462d0db2da4f4cf15c7bebd42f0b189fa04866999d"
     },
     "uv": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/uv/uv-x86_64-apple-darwin/uv",
-      "return_code": 0,
-      "stdout": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-apple-darwin)",
-      "stderr": ""
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\uv\\0.13.5\\uv.exe",
+      "version": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+      "exit_code": 0,
+      "binary_sha256": "f45d1cb9d9140ca6d3f4005fdfc0ebeccf849fd04d1dc85804155cb923f1597b"
     },
     "node": {
-      "path": "/usr/local/bin/node",
-      "return_code": 0,
-      "stdout": "v24.22.1",
-      "stderr": ""
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+      "version": "v24.22.1",
+      "exit_code": 0,
+      "binary_sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
     },
-    "node_packages": [
-      {
-        "name": "protobufjs",
-        "expected_version": "8.8.1",
-        "actual_version": "8.8.1",
-        "path": "/Users/srf/.local/share/minimir-toolchain/node-tools/node_modules/protobufjs",
-        "passed": true
-      },
-      {
-        "name": "protobufjs-cli",
-        "expected_version": "2.7.1",
-        "actual_version": "2.7.1",
-        "path": "/Users/srf/.local/share/minimir-toolchain/node-tools/node_modules/protobufjs-cli",
-        "passed": true
-      },
-      {
-        "name": "long",
-        "expected_version": "5.3.2",
-        "actual_version": "5.3.2",
-        "path": "/Users/srf/.local/share/minimir-toolchain/node-tools/node_modules/long",
-        "passed": true
-      }
-    ],
-    "cocos_creator_candidates": [
-      {
-        "path": "/Applications/Cocos/Creator/3.8.8/CocosCreator.app",
-        "version": "3.8.8",
-        "matches_required": true
-      }
-    ],
-    "typescript": {
-      "path": "/usr/local/bin/node",
-      "return_code": 0,
-      "stdout": "Version 5.8.2",
-      "stderr": "",
-      "compiler_path": "/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript/bin/tsc"
+    "protoc": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\protoc\\36.2\\bin\\protoc.exe",
+      "version": "libprotoc 36.2",
+      "exit_code": 0,
+      "binary_sha256": "5a1b5350308309c9729ce4484a798981f281c10909144c4bdefd6a37688e4b1f"
     },
-    "lima": {
-      "path": "/Users/srf/.local/share/minimir-toolchain/lima/2.2.1/bin/limactl",
-      "return_code": 0,
-      "stdout": "limactl version 2.2.1",
-      "stderr": ""
+    "gh": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\gh\\2.103.2\\bin\\gh.exe",
+      "version": "gh version 2.103.2 (2026-10-23)\nhttps://github.com/cli/cli/releases/tag/v2.103.2",
+      "exit_code": 0,
+      "binary_sha256": "f1efa3796052b576a11abcc8e69c3966cf54e5858c94cc7bdae0d9fbf7ee91d8"
+    },
+    "dotnet": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\dotnet\\10.0.403\\dotnet.exe",
+      "version": "10.0.403",
+      "exit_code": 0,
+      "binary_sha256": "1e881ec1786c31ba712d052258b4ad4202ac155df5965794030037878abb822f"
+    },
+    "mongod": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\mongodb\\8.0.34\\mongodb-win32-x86_64-windows-8.0.34\\bin\\mongod.exe",
+      "version": "db version v8.0.34\nBuild Info: {\n    \"version\": \"8.0.34\",\n    \"gitVersion\": \"51db4515a6597aedcf6188ee4e48a27e65b065ae\",\n    \"modules\": [],\n    \"allocator\": \"tcmalloc-gperf\",\n    \"environment\": {\n        \"distmod\": \"windows\"\n    }\n}",
+      "exit_code": 0,
+      "binary_sha256": "4c9e9764cbac5be8eb92733e23ce7f70b52f8ae84b6879b4d5cc010c90ec6082"
     }
+  },
+  "python": {
+    "python": "3.14.9",
+    "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "pillow": "13.0.0"
   },
   "checks": [
     {
-      "code": "lock_go",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：go.lock.json"
-    },
-    {
-      "code": "lock_protoc",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：protoc.lock.json"
-    },
-    {
-      "code": "lock_go-modules",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：go-modules.lock.json"
-    },
-    {
-      "code": "lock_python",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：python.lock.json"
-    },
-    {
-      "code": "lock_node-tools",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：node-tools.lock.json"
-    },
-    {
-      "code": "lock_lima",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：lima.lock.json"
-    },
-    {
-      "code": "lock_mongodb",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "读取工具链锁：mongodb.lock.json"
-    },
-    {
       "code": "go_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Go运行版本与安装锁匹配"
-    },
-    {
-      "code": "go_archive_provenance",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Go官方归档摘要已在安装时核验"
-    },
-    {
-      "code": "protoc_version",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "protoc运行版本匹配"
-    },
-    {
-      "code": "protoc_binary_hash",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "protoc二进制摘要匹配"
-    },
-    {
-      "code": "go_pb_plugin",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Go PB插件版本与摘要匹配"
-    },
-    {
-      "code": "go_module_lock",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "server/go.mod与go.sum匹配已完成的Go模块校验",
-      "evidence": "conf/toolchain/go-modules.lock.json"
-    },
-    {
-      "code": "python_runtime",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "隔离Python运行版本匹配",
       "evidence": {
-        "executable": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv/bin/python3",
-        "venv_prefix": "/Users/srf/.local/share/minimir-toolchain/python/tools-venv",
-        "python_version": "3.14.9",
-        "pillow_version": "13.0.0"
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go\\1.27.3\\go\\bin\\go.exe",
+        "version": "go version go1.27.3 windows/amd64",
+        "exit_code": 0,
+        "binary_sha256": "83b7ba66215e696414fa49462d0db2da4f4cf15c7bebd42f0b189fa04866999d"
       }
     },
     {
-      "code": "python_binary_hash",
+      "code": "go_archive",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Python基础解释器摘要匹配"
+      "evidence": {
+        "expected": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff",
+        "actual": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff"
+      }
     },
     {
-      "code": "pillow_runtime",
+      "code": "uv_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Pillow版本与本机图像扩展摘要匹配"
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\uv\\0.13.5\\uv.exe",
+        "version": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+        "exit_code": 0,
+        "binary_sha256": "f45d1cb9d9140ca6d3f4005fdfc0ebeccf849fd04d1dc85804155cb923f1597b"
+      }
     },
     {
-      "code": "python_dependency_lock",
+      "code": "uv_archive",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Python工具依赖哈希锁匹配"
-    },
-    {
-      "code": "uv_runtime",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "uv版本和二进制摘要匹配"
+      "evidence": {
+        "expected": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a",
+        "actual": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a"
+      }
     },
     {
       "code": "node_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Node运行版本与锁匹配"
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+        "version": "v24.22.1",
+        "exit_code": 0,
+        "binary_sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+      }
     },
     {
-      "code": "node_packages",
+      "code": "node_archive",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "protobufjs/CLI/Long实际安装版本与registry完整性锁匹配"
+      "evidence": {
+        "expected": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5",
+        "actual": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5"
+      }
     },
     {
-      "code": "node_package_manifest",
+      "code": "protoc_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Node package_manifest摘要匹配"
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\protoc\\36.2\\bin\\protoc.exe",
+        "version": "libprotoc 36.2",
+        "exit_code": 0,
+        "binary_sha256": "5a1b5350308309c9729ce4484a798981f281c10909144c4bdefd6a37688e4b1f"
+      }
     },
     {
-      "code": "node_package_lock",
+      "code": "protoc_archive",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "Node package_lock摘要匹配"
+      "evidence": {
+        "expected": "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3",
+        "actual": "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3"
+      }
     },
     {
-      "code": "pbjs_pbts_executables",
+      "code": "gh_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "pbjs与pbts生成入口存在"
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\gh\\2.103.2\\bin\\gh.exe",
+        "version": "gh version 2.103.2 (2026-10-23)\nhttps://github.com/cli/cli/releases/tag/v2.103.2",
+        "exit_code": 0,
+        "binary_sha256": "f1efa3796052b576a11abcc8e69c3966cf54e5858c94cc7bdae0d9fbf7ee91d8"
+      }
+    },
+    {
+      "code": "gh_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda",
+        "actual": "fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda"
+      }
+    },
+    {
+      "code": "dotnet_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\dotnet\\10.0.403\\dotnet.exe",
+        "version": "10.0.403",
+        "exit_code": 0,
+        "binary_sha256": "1e881ec1786c31ba712d052258b4ad4202ac155df5965794030037878abb822f"
+      }
+    },
+    {
+      "code": "dotnet_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "7a114c318fa7f1d9822991b534b2814d0e78386ceda816b371f5141acefe741d87ccb606ede06cadac8f9ac5070e32b708a67bbd1619ff5e5a7858a27874ef48",
+        "actual": "7a114c318fa7f1d9822991b534b2814d0e78386ceda816b371f5141acefe741d87ccb606ede06cadac8f9ac5070e32b708a67bbd1619ff5e5a7858a27874ef48"
+      }
+    },
+    {
+      "code": "mongod_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\mongodb\\8.0.34\\mongodb-win32-x86_64-windows-8.0.34\\bin\\mongod.exe",
+        "version": "db version v8.0.34\nBuild Info: {\n    \"version\": \"8.0.34\",\n    \"gitVersion\": \"51db4515a6597aedcf6188ee4e48a27e65b065ae\",\n    \"modules\": [],\n    \"allocator\": \"tcmalloc-gperf\",\n    \"environment\": {\n        \"distmod\": \"windows\"\n    }\n}",
+        "exit_code": 0,
+        "binary_sha256": "4c9e9764cbac5be8eb92733e23ce7f70b52f8ae84b6879b4d5cc010c90ec6082"
+      }
+    },
+    {
+      "code": "mongod_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "6b021a0864494e4decf278b36477a29eb36072432773e4e62c2f42c302630db0",
+        "actual": "6b021a0864494e4decf278b36477a29eb36072432773e4e62c2f42c302630db0"
+      }
+    },
+    {
+      "code": "gcc_host_tool",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin\\gcc.exe",
+        "sha256": "e8534323dc63b8d18b83573769256d842ea98499e15a8e648af454d086e529bc",
+        "expected_version": "16.1.0"
+      }
+    },
+    {
+      "code": "isolated_python",
+      "status": "passed",
+      "evidence": {
+        "python": "3.14.9",
+        "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "pillow": "13.0.0"
+      }
     },
     {
       "code": "creator_version",
       "status": "passed",
-      "scope": "toolchain",
-      "message": "发现指定Cocos Creator 3.8.8"
-    },
-    {
-      "code": "creator_typescript",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Creator所选编辑器TypeScript5.8.2可运行；不替换引擎内部编译链"
-    },
-    {
-      "code": "lima_runtime",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Lima版本与二进制摘要匹配"
-    },
-    {
-      "code": "go_pb_generation",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Go PB生成证据匹配shared/proto与server输出",
-      "evidence": "conf/toolchain/go-pb-generation.json"
-    },
-    {
-      "code": "client_pb_generation",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "JS/DTS及Long编解码证据匹配当前源与输出",
-      "evidence": "conf/toolchain/client-pb-verification.json"
-    },
-    {
-      "code": "mongo_installation_evidence",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "Linux开发Mongo安装、回环、副本集和事务证据已锁定",
-      "evidence": "conf/toolchain/mongodb.verification.json"
-    },
-    {
-      "code": "mongo_controller_hash",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "专用Mongo身份控制器摘要匹配安装验证"
-    },
-    {
-      "code": "go_driver_mongo_evidence",
-      "status": "passed",
-      "scope": "toolchain",
-      "message": "锁定Go驱动已完成开发Mongo事务与uint64冒烟",
-      "evidence": "conf/toolchain/go-smoke-mongodb.json"
-    },
-    {
-      "code": "mongo_owned_runtime",
-      "status": "passed",
-      "scope": "database",
-      "message": "当前Mongo与回环转发由本项目身份控制器验证",
       "evidence": {
-        "controller_return_code": 0,
-        "error": ""
+        "app": "D:\\Program Files\\CocosCreator\\3.8.8",
+        "version": "3.8.8"
       }
     },
     {
-      "code": "mongo_current_run_transaction_evidence",
+      "code": "client_protobufjs",
       "status": "passed",
-      "scope": "database",
-      "message": "当前Mongo run-id对应已验证并清理的事务探测"
+      "evidence": {
+        "version": "8.8.1",
+        "expected": "8.8.1"
+      }
     },
     {
-      "code": "mongo_readonly_metadata",
+      "code": "client_long",
       "status": "passed",
-      "scope": "database",
-      "message": "当前版本、可写PRIMARY与单成员配置只读检查通过",
       "evidence": {
+        "version": "5.3.2",
+        "expected": "5.3.2"
+      }
+    },
+    {
+      "code": "generator_protobufjs",
+      "status": "passed",
+      "evidence": {
+        "version": "8.8.1",
+        "expected": "8.8.1"
+      }
+    },
+    {
+      "code": "generator_long",
+      "status": "passed",
+      "evidence": {
+        "version": "5.3.2",
+        "expected": "5.3.2"
+      }
+    },
+    {
+      "code": "generator_protobufjs-cli",
+      "status": "passed",
+      "evidence": {
+        "version": "2.7.1",
+        "expected": "2.7.1"
+      }
+    },
+    {
+      "code": "protoc_gen_go",
+      "status": "passed",
+      "evidence": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go-tools\\bin\\protoc-gen-go.exe"
+    },
+    {
+      "code": "owned_database",
+      "status": "passed",
+      "evidence": {
+        "backend": "windows_native",
+        "running": true,
+        "listener_verified": true,
+        "ownership_verified": true,
+        "pid": 5640,
+        "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
         "version": "8.0.34",
-        "set_name": "minimirDev",
-        "primary": true,
-        "members": [
-          "localhost:27017"
-        ]
+        "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+        "project_key": "1e81949e1d3b",
+        "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+        "port": 27119,
+        "replica_set": "minimirWinDev",
+        "endpoint_verified": true,
+        "production_ready": false
       }
     }
   ],
   "database": {
-    "backend": "lima_linux_vm",
-    "selected_version": "8.0.34",
-    "uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
-    "replica_set": "minimirDev",
-    "historical_transaction_evidence_passed": true,
-    "current_probe": {
-      "version": "8.0.34",
-      "set_name": "minimirDev",
-      "primary": true,
-      "members": [
-        "localhost:27017"
-      ]
-    },
-    "managed_status": {
-      "backend": "lima_linux_vm",
-      "version": "8.0.34",
-      "host_supported": false,
-      "guest_platform_supported": true,
-      "replica_set": "minimirDev",
-      "local_development_only": true,
-      "production_ready": false,
-      "running": true,
-      "vm_running": true,
-      "forwarding_verified": true,
-      "guest": {
-        "running": true,
-        "listener_verified": true,
-        "pid": 2072,
-        "run_id": "60cc88c1-4c20-42cc-8ceb-5b42e4dd3f30",
-        "status": "running",
-        "installation_id": "3e5413f3-864c-4cf9-9cb7-c3d0291e2859",
-        "project_key": "10f710612b37",
-        "replica_set": "minimirDev",
-        "port": 27017,
-        "bind_ip": "127.0.0.1",
-        "data_path": "/home/srf.guest/.local/share/minimir/mongodb/dev/10f710612b37/data",
-        "error": null,
-        "local_development_only": true,
-        "production_ready": false
-      },
-      "uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
-      "transaction_smoke": {
-        "replica_initialized": true,
-        "single_member_primary": true,
-        "transaction_commit_verified": true,
-        "transaction_abort_verified": true,
-        "temporary_probe_database_dropped": true,
-        "empty_database": "minimir_dev_10f710612b37",
-        "empty_environment_collection_count": 0,
-        "server_version": "8.0.34"
-      }
-    }
+    "backend": "windows_native",
+    "running": true,
+    "listener_verified": true,
+    "ownership_verified": true,
+    "pid": 5640,
+    "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+    "version": "8.0.34",
+    "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+    "project_key": "1e81949e1d3b",
+    "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "endpoint_verified": true,
+    "production_ready": false
   },
-  "toolchain_ready": true,
-  "development_database_ready": true,
-  "development_ready": true,
-  "game_runtime_ready": false,
-  "missing": [],
-  "informational_system_tools": {
-    "mongod": {
-      "path": "/usr/local/mongodb/bin/mongod",
-      "version": "5.0.19",
-      "modified": false,
-      "database_connected": false,
-      "selected": false
-    },
-    "docker": {
-      "path": null,
-      "required": false
-    }
-  },
-  "note": "就绪仅指固定工具链与本机单节点开发数据库；不代表游戏运行、业务迁移、Creator构建、HA或容量已验收。检查不启停或安装服务，不修改数据库。"
+  "checked_scope_passed": true,
+  "database_checked": true,
+  "production_ready": false
 }

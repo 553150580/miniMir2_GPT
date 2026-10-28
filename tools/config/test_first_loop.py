@@ -21,8 +21,8 @@ def source_row(id,**values):
 
 def candidate_tables():
     # 故意使用区别于当前Excel的参数，验证导出器没有补入第二套数值。
-    players=[{'job_id':i,'magic_resist_weight':17,'attack_speed':0} for i in range(3)]
-    profile={'rule_version':9,'map_id':1,'monster_id':1,'pet_id':1,'players':players,
+    players=[{'job_id':i,'magic_resist_weight':17,'attack_speed':0,'can_push':i!=1} for i in range(3)]
+    profile={'rule_version':10,'map_id':1,'monster_id':1,'pet_id':1,'players':players,
              'casting_supply':{'enabled':False,'slot':100,'item_ids':[187]},
              'inventory_capacity':4,'initial_inventory':[35,36],'initial_bound_gold':0,'pet_spawn':{'x':1,'y':0},
              'allow_free_dev_revive':True,'damage_formula':'测试结算路径',
@@ -40,6 +40,7 @@ def candidate_tables():
                      delay_base_ms=451,projectile_ms_per_cell=37,cooldown_base_ms=113)
         skill.update(target_kind='passive' if kind=='fencing' else 'friendly_entity' if kind=='healing' else 'enemy_entity',
                      activation_kind='passive' if kind=='fencing' else 'cast',
+                     auto_enabled=kind!='fencing',
                      area_radius=0,require_line_of_sight=kind=='fireball',add_caster_level=kind=='healing',accuracy_by_level=[0,1,2,3],
                      secondary_direction_offsets=[],secondary_distance_cells=0,secondary_impact_ms=0,charge_window_ms=0,
                      line_cells=0,line_step_ms=0,line_stop_on_blocked=False,non_undead_divisor=1,
@@ -54,7 +55,7 @@ def candidate_tables():
                                        {'offer_id':302,'item_id':900001,'required_role_level':1,'max_purchase_quantity':19}],
                    recyclable_book_ids=[r['book_item_id'] for r in native],recycle_source_kinds=['monster_drop'],skill_book_drop_quality=2)
     fighter=source_row(1,level=17,hp=18,attributes={'mp':14,'physical_attack_min':1,'physical_attack_max':2,'physical_defence_min':0,
-                                        'physical_defence_max':3,'magic_defence':4,'accuracy':5,'agility':6,'undead':True},
+                                        'physical_defence_max':3,'magic_defence':4,'accuracy':5,'agility':6,'undead':True,'can_push':False},
                        attack_interval_ms=700,move_interval_ms=500,exp=3)
     tables={
         'dev_first_loop_profile':[source_row(1,parameters=profile)],
@@ -122,6 +123,44 @@ def add_status_skill(tables,behavior='magic_shield',skill_id=401,buff_id=701):
 
 
 class PotionProjectionTests(unittest.TestCase):
+    def test_displacement_foundation_booleans_and_independent_clock_are_source_values(self):
+        tables=candidate_tables();profile=tables['dev_first_loop_profile'][0]['parameters']
+        keys=['player_push_action_ms','monster_push_action_ms_per_step','monster_push_move_ms_per_step','pushed_step_display_ms']
+        profile['combat_timing'].update(zip(keys,[503,307,509,311]))
+        tables['game_skills'][1]['target_rule'].update(auto_priority=0,auto_enabled=True)
+        result=fixture(tables);public=first_loop.public_gameplay(result)
+        self.assertEqual([result['combat_timing'][k] for k in keys],[503,307,509,311])
+        self.assertNotIn('combat_timing',public)
+        for key in keys:self.assertNotIn(key,json.dumps(public))
+        self.assertTrue(result['skills'][1]['auto_enabled']);self.assertEqual(result['skills'][1]['auto_priority'],0)
+        self.assertTrue(public['skills'][1]['auto_enabled']);self.assertFalse(public['skills'][0]['auto_enabled'])
+        self.assertEqual([r['can_push'] for r in public['jobs']],[True,False,True])
+        self.assertFalse(result['pet']['can_push']);self.assertFalse(result['monsters'][0]['can_push'])
+        self.assertFalse(public['pet_profiles'][0]['can_push']);self.assertFalse(public['monster_profiles'][0]['can_push'])
+        tables['game_monsters'][0]['attributes']['can_push']=True
+        changed=fixture(tables)
+        self.assertTrue(changed['pet']['can_push']);self.assertTrue(changed['monsters'][0]['can_push'])
+
+    def test_displacement_booleans_reject_missing_null_and_nonboolean(self):
+        for invalid in ['missing',None,0,'false']:
+            for actor in ['player','monster','skill']:
+                with self.subTest(invalid=invalid,actor=actor):
+                    tables=candidate_tables()
+                    data,key=(tables['dev_first_loop_profile'][0]['parameters']['players'][0],'can_push') if actor=='player' else (tables['game_monsters'][0]['attributes'],'can_push') if actor=='monster' else (tables['game_skills'][0]['target_rule'],'auto_enabled')
+                    if invalid=='missing':del data[key]
+                    else:data[key]=invalid
+                    with self.assertRaises((ValueError,KeyError)):fixture(tables)
+
+    def test_push_clock_missing_null_or_attack_field_cannot_supply_fallback(self):
+        for field in ['player_push_action_ms','monster_push_action_ms_per_step','monster_push_move_ms_per_step','pushed_step_display_ms']:
+            for invalid in ['missing',None,False,0]:
+                with self.subTest(field=field,invalid=invalid):
+                    tables=candidate_tables();timing=tables['dev_first_loop_profile'][0]['parameters']['combat_timing']
+                    timing['player_attack_impact_ms']=911
+                    if invalid=='missing':del timing[field]
+                    else:timing[field]=invalid
+                    with self.assertRaisesRegex(ValueError,'战斗时钟'):fixture(tables)
+
     def test_unique_buff_effect_chain_has_no_private_fields_or_numeric_defaults(self):
         tables=candidate_tables();skill,buff=add_status_skill(tables)
         buff['owner_internal']='不得公开';tables['game_effects'][0]['source_ref']='不得公开的来源'
@@ -262,7 +301,7 @@ class PotionProjectionTests(unittest.TestCase):
         tables=candidate_tables();before=deepcopy(tables)
         result=fixture(tables)
         self.assertEqual(result['potions'],before['dev_first_loop_profile'][0]['parameters']['potions'])
-        self.assertEqual(result['rule_version'],9)
+        self.assertEqual(result['rule_version'],tables['dev_first_loop_profile'][0]['parameters']['rule_version'])
         self.assertEqual(tables,before)
         tables['dev_first_loop_profile'][0]['parameters']['potions']['effects'][0]['hp']=999
         self.assertEqual(result['potions']['effects'][0]['hp'],17)

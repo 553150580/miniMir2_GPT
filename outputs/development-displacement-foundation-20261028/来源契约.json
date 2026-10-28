@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-27T19:58:14.549563+00:00",
+  "status": "source_candidate_with_explicit_project_adaptations",
+  "sources": {
+    "human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    "monster": {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+    },
+    "functions": {
+      "path": "资料参考/crystal/Shared/Functions/Functions.cs",
+      "sha256": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278"
+    },
+    "monster_info": {
+      "path": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs",
+      "sha256": "2b57f0add803473b32b612ffb1327f8819e460d5826f10519617b22f1d32f614"
+    },
+    "client_frames": {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    },
+    "client_player": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "client_monster": {
+      "path": "资料参考/crystal/Client/MirObjects/MonsterObject.cs",
+      "sha256": "2bb09d7378a198a8fcd24299a8d855dcfbf767413db88fa15054371663fb1c4d"
+    },
+    "client_scene": {
+      "path": "../SuprcodeCrystal/Client/MirScenes/GameScene.cs",
+      "sha256": "935d1ca35ddf4800bccdac4cd1675fcb59a269560a57bf98c2b952a459ffb504"
+    },
+    "direction_enum": {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398"
+    }
+  },
+  "source_ranges": {
+    "human_pushed": [
+      2649,
+      2724
+    ],
+    "monster_pushed": [
+      1035,
+      1093
+    ],
+    "client_pushed_frames": [
+      2384,
+      2404
+    ],
+    "client_dash_frames": [
+      2355,
+      2381
+    ],
+    "client_dash_queue": [
+      5424,
+      5464
+    ],
+    "direction_enum": [
+      833,
+      843
+    ]
+  },
+  "implemented_target": "Pushed原语、显式位移观察/显示、权威导航目标身份；三完整技能仍未开放",
+  "project_adaptations": [
+    "同步逐格源通知按一次调用的真实成功路径合并，不丢成功前缀",
+    "源Human单ActionTime映射到本作ActionReadyAt和NextMove；Monster仍两独立时钟",
+    "名义每格显示300ms，平滑插值与source共享tick初相/卡帧墙钟不声称等价",
+    "普通走与强制路径按scene/handle/life/revision分离恢复；新地面目标revision防健康重入inputseq复用",
+    "按用户既有导航约定修正同图复活清路，只释放摇杆"
+  ],
+  "source_semantics_not_in_current_runtime": [
+    "Concentration",
+    "持续地面Spell",
+    "安全区与绑定点",
+    "跨地图与TemporalFlux"
+  ],
+  "pending_product_choices": [
+    "技能8/27位移距离是否随阶增长",
+    "技能21绑定地图和绑定点完整范围",
+    "护符包单位和报价"
+  ],
+  "unopened_skill_ids": [
+    8,
+    27,
+    21
+  ],
+  "oracle": {
+    "vectors": 3892,
+    "go_fixture_sha256": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
+    "scope": "逐字来源Pushed/PointMove/ReverseDirection；当前无Concentration、Spell、安全区的最小世界；Human.NextMove按登记动作锁映射单列",
+    "not_proven": [
+      "目标1.80归属",
+      "Repulsion/ShoulderDash/Teleport完整技能",
+      "源完整对象调度、绑定及地面Spell",
+      "scene/life/授权/导航的项目门禁"
+    ]
+  },
+  "official_180_verified": false,
+  "production_ready": false
+}

@@ -1,0 +1,261 @@
+{
+  "schema_version": 3,
+  "checked_at_utc": "2026-10-28T11:57:42.957668+00:00",
+  "platform": "windows-amd64",
+  "toolchain_entry": "./tools/dev.ps1",
+  "wrapper_active": true,
+  "tools": {
+    "go": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go\\1.27.3\\go\\bin\\go.exe",
+      "version": "go version go1.27.3 windows/amd64",
+      "exit_code": 0,
+      "binary_sha256": "83b7ba66215e696414fa49462d0db2da4f4cf15c7bebd42f0b189fa04866999d"
+    },
+    "uv": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\uv\\0.13.5\\uv.exe",
+      "version": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+      "exit_code": 0,
+      "binary_sha256": "f45d1cb9d9140ca6d3f4005fdfc0ebeccf849fd04d1dc85804155cb923f1597b"
+    },
+    "node": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+      "version": "v24.22.1",
+      "exit_code": 0,
+      "binary_sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+    },
+    "protoc": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\protoc\\36.2\\bin\\protoc.exe",
+      "version": "libprotoc 36.2",
+      "exit_code": 0,
+      "binary_sha256": "5a1b5350308309c9729ce4484a798981f281c10909144c4bdefd6a37688e4b1f"
+    },
+    "gh": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\gh\\2.103.2\\bin\\gh.exe",
+      "version": "gh version 2.103.2 (2026-10-23)\nhttps://github.com/cli/cli/releases/tag/v2.103.2",
+      "exit_code": 0,
+      "binary_sha256": "f1efa3796052b576a11abcc8e69c3966cf54e5858c94cc7bdae0d9fbf7ee91d8"
+    },
+    "dotnet": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\dotnet\\10.0.403\\dotnet.exe",
+      "version": "10.0.403",
+      "exit_code": 0,
+      "binary_sha256": "1e881ec1786c31ba712d052258b4ad4202ac155df5965794030037878abb822f"
+    },
+    "mongod": {
+      "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\mongodb\\8.0.34\\mongodb-win32-x86_64-windows-8.0.34\\bin\\mongod.exe",
+      "version": "db version v8.0.34\nBuild Info: {\n    \"version\": \"8.0.34\",\n    \"gitVersion\": \"51db4515a6597aedcf6188ee4e48a27e65b065ae\",\n    \"modules\": [],\n    \"allocator\": \"tcmalloc-gperf\",\n    \"environment\": {\n        \"distmod\": \"windows\"\n    }\n}",
+      "exit_code": 0,
+      "binary_sha256": "4c9e9764cbac5be8eb92733e23ce7f70b52f8ae84b6879b4d5cc010c90ec6082"
+    }
+  },
+  "python": {
+    "python": "3.14.9",
+    "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "pillow": "13.0.0"
+  },
+  "checks": [
+    {
+      "code": "go_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go\\1.27.3\\go\\bin\\go.exe",
+        "version": "go version go1.27.3 windows/amd64",
+        "exit_code": 0,
+        "binary_sha256": "83b7ba66215e696414fa49462d0db2da4f4cf15c7bebd42f0b189fa04866999d"
+      }
+    },
+    {
+      "code": "go_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff",
+        "actual": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff"
+      }
+    },
+    {
+      "code": "uv_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\uv\\0.13.5\\uv.exe",
+        "version": "uv 0.13.5 (46776a95d 2026-10-21 x86_64-pc-windows-msvc)",
+        "exit_code": 0,
+        "binary_sha256": "f45d1cb9d9140ca6d3f4005fdfc0ebeccf849fd04d1dc85804155cb923f1597b"
+      }
+    },
+    {
+      "code": "uv_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a",
+        "actual": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a"
+      }
+    },
+    {
+      "code": "node_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+        "version": "v24.22.1",
+        "exit_code": 0,
+        "binary_sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+      }
+    },
+    {
+      "code": "node_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5",
+        "actual": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5"
+      }
+    },
+    {
+      "code": "protoc_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\protoc\\36.2\\bin\\protoc.exe",
+        "version": "libprotoc 36.2",
+        "exit_code": 0,
+        "binary_sha256": "5a1b5350308309c9729ce4484a798981f281c10909144c4bdefd6a37688e4b1f"
+      }
+    },
+    {
+      "code": "protoc_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3",
+        "actual": "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3"
+      }
+    },
+    {
+      "code": "gh_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\gh\\2.103.2\\bin\\gh.exe",
+        "version": "gh version 2.103.2 (2026-10-23)\nhttps://github.com/cli/cli/releases/tag/v2.103.2",
+        "exit_code": 0,
+        "binary_sha256": "f1efa3796052b576a11abcc8e69c3966cf54e5858c94cc7bdae0d9fbf7ee91d8"
+      }
+    },
+    {
+      "code": "gh_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda",
+        "actual": "fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda"
+      }
+    },
+    {
+      "code": "dotnet_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\dotnet\\10.0.403\\dotnet.exe",
+        "version": "10.0.403",
+        "exit_code": 0,
+        "binary_sha256": "1e881ec1786c31ba712d052258b4ad4202ac155df5965794030037878abb822f"
+      }
+    },
+    {
+      "code": "dotnet_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "7a114c318fa7f1d9822991b534b2814d0e78386ceda816b371f5141acefe741d87ccb606ede06cadac8f9ac5070e32b708a67bbd1619ff5e5a7858a27874ef48",
+        "actual": "7a114c318fa7f1d9822991b534b2814d0e78386ceda816b371f5141acefe741d87ccb606ede06cadac8f9ac5070e32b708a67bbd1619ff5e5a7858a27874ef48"
+      }
+    },
+    {
+      "code": "mongod_version",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\mongodb\\8.0.34\\mongodb-win32-x86_64-windows-8.0.34\\bin\\mongod.exe",
+        "version": "db version v8.0.34\nBuild Info: {\n    \"version\": \"8.0.34\",\n    \"gitVersion\": \"51db4515a6597aedcf6188ee4e48a27e65b065ae\",\n    \"modules\": [],\n    \"allocator\": \"tcmalloc-gperf\",\n    \"environment\": {\n        \"distmod\": \"windows\"\n    }\n}",
+        "exit_code": 0,
+        "binary_sha256": "4c9e9764cbac5be8eb92733e23ce7f70b52f8ae84b6879b4d5cc010c90ec6082"
+      }
+    },
+    {
+      "code": "mongod_archive",
+      "status": "passed",
+      "evidence": {
+        "expected": "6b021a0864494e4decf278b36477a29eb36072432773e4e62c2f42c302630db0",
+        "actual": "6b021a0864494e4decf278b36477a29eb36072432773e4e62c2f42c302630db0"
+      }
+    },
+    {
+      "code": "gcc_host_tool",
+      "status": "passed",
+      "evidence": {
+        "path": "C:\\Users\\55315\\AppData\\Local\\Microsoft\\WinGet\\Packages\\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\\mingw64\\bin\\gcc.exe",
+        "sha256": "e8534323dc63b8d18b83573769256d842ea98499e15a8e648af454d086e529bc",
+        "expected_version": "16.1.0"
+      }
+    },
+    {
+      "code": "isolated_python",
+      "status": "passed",
+      "evidence": {
+        "python": "3.14.9",
+        "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "pillow": "13.0.0"
+      }
+    },
+    {
+      "code": "creator_version",
+      "status": "passed",
+      "evidence": {
+        "app": "D:\\Program Files\\CocosCreator\\3.8.8",
+        "version": "3.8.8"
+      }
+    },
+    {
+      "code": "client_protobufjs",
+      "status": "passed",
+      "evidence": {
+        "version": "8.8.1",
+        "expected": "8.8.1"
+      }
+    },
+    {
+      "code": "client_long",
+      "status": "passed",
+      "evidence": {
+        "version": "5.3.2",
+        "expected": "5.3.2"
+      }
+    },
+    {
+      "code": "generator_protobufjs",
+      "status": "passed",
+      "evidence": {
+        "version": "8.8.1",
+        "expected": "8.8.1"
+      }
+    },
+    {
+      "code": "generator_long",
+      "status": "passed",
+      "evidence": {
+        "version": "5.3.2",
+        "expected": "5.3.2"
+      }
+    },
+    {
+      "code": "generator_protobufjs-cli",
+      "status": "passed",
+      "evidence": {
+        "version": "2.7.1",
+        "expected": "2.7.1"
+      }
+    },
+    {
+      "code": "protoc_gen_go",
+      "status": "passed",
+      "evidence": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\go-tools\\bin\\protoc-gen-go.exe"
+    }
+  ],
+  "database": {
+    "status": "not_checked"
+  },
+  "checked_scope_passed": true,
+  "database_checked": false,
+  "production_ready": false
+}

@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const model=require('../../../.work/ui-tests/app/SkillModel.js');
 const {CastPlayback,MeleePlayback,effectPoses}=require('../../../.work/ui-tests/app/CastPlayback.js');
 const state=changes=>({sceneEpoch:'9007199254740993',revision:'9007199254740993',playerLife:'0',serverTimeUnixMs:'1900000000000',

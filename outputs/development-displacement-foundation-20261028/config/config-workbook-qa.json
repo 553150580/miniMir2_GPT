@@ -1,0 +1,198 @@
+{
+  "rule_version": 10,
+  "operation_marker_count": 1,
+  "worksheet_count_expected": 95,
+  "changed_cells": [
+    {
+      "sheet": "技能基础定义",
+      "cell": "G5"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S5"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G6"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S6"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G7"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S7"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G8"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S8"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G9"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S9"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G10"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S10"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G11"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S11"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G12"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S12"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G13"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S13"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G14"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S14"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G15"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S15"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G16"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S16"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G17"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S17"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G18"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S18"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G19"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S19"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G20"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S20"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G21"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S21"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G22"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S22"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "G23"
+    },
+    {
+      "sheet": "技能基础定义",
+      "cell": "S23"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "G4"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "Q4"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "R4"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "G5"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "Q5"
+    },
+    {
+      "sheet": "怪物定义",
+      "cell": "R5"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "C4"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "E4"
+    },
+    {
+      "sheet": "开发首循环夹具",
+      "cell": "F4"
+    }
+  ],
+  "formula_error_scan": "{\"kind\":\"notice\",\"message\":\"Cell search matched 0 entries.\"}",
+  "all_edited_values_readback_equal": true,
+  "no_format_changes_requested": true
+}

@@ -5,11 +5,11 @@
   "scope": "轻量原字节参考副本；不复制地图、图像包、音效大包、账号、凭据或部署配置",
   "source_manifest_path": "资料索引/参考文件清单.json",
   "source_manifest_sha256": "71542c0d8bb34508865f444bcdbaebf146c3d66caabff32e4cb38c26e608da32",
-  "copied_file_count": 322,
-  "copied_bytes": 21962909,
+  "copied_file_count": 325,
+  "copied_bytes": 22609331,
   "counts_by_source": {
-    "crystal": 306,
-    "myf": 5,
+    "crystal": 307,
+    "myf": 7,
     "ui_reference": 11
   },
   "policy": {
@@ -5549,6 +5549,48 @@
         "source_text_encoding": "utf-8-sig",
         "review_is_target_version_or_balance_verification": false
       }
+    },
+    {
+      "reference_id": "myf:Mir200/Exps.ini",
+      "source_id": "myf",
+      "source_root": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF",
+      "source_relative_path": "Mir200/Exps.ini",
+      "target_relative_path": "资料参考/myf/Mir200/Exps.ini",
+      "bytes": 117004,
+      "source_sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+      "target_sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "reason": "Windows迁移时补齐既有schema已锁定的静态经验/怪物掉落依据，不新增运行数值",
+      "runtime_enabled": false
+    },
+    {
+      "reference_id": "myf:Mir200/Envir/MonItems/稻草人.txt",
+      "source_id": "myf",
+      "source_root": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF",
+      "source_relative_path": "Mir200/Envir/MonItems/稻草人.txt",
+      "target_relative_path": "资料参考/myf/Mir200/Envir/MonItems/稻草人.txt",
+      "bytes": 307,
+      "source_sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179",
+      "target_sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "reason": "Windows迁移时补齐既有schema已锁定的静态经验/怪物掉落依据，不新增运行数值",
+      "runtime_enabled": false
+    },
+    {
+      "reference_id": "crystal:Client/MirScenes/GameScene.cs",
+      "source_id": "crystal",
+      "source_root": "D:/123DownLoad/CrystalLatest",
+      "source_relative_path": "Client/MirScenes/GameScene.cs",
+      "target_relative_path": "资料参考/crystal/Client/MirScenes/GameScene.cs",
+      "bytes": 529111,
+      "source_sha256": "935d1ca35ddf4800bccdac4cd1675fcb59a269560a57bf98c2b952a459ffb504",
+      "target_sha256": "935d1ca35ddf4800bccdac4cd1675fcb59a269560a57bf98c2b952a459ffb504",
+      "copy_mode": "byte_preserving_independent_file",
+      "text_transcoding": false,
+      "reason": "补齐既有通用传送原帧来源证据；摘要与原manifest一致",
+      "runtime_enabled": false
     }
   ]
 }

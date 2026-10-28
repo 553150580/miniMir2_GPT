@@ -47,7 +47,7 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "549e020a12fe3cf63af6fc5d36d52fd2e3a5fa58063f1b55b3c3efdc87537a9a"
+      "sha256": "4f145f2c390e8a9b7321aa2f8d24fb7e545b81d143c2de39fa762ccf8f5de536"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
@@ -56,6 +56,22 @@
     {
       "path": "资料参考/crystal/Server/MirEnvir/Map.cs",
       "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirDatabase/MonsterInfo.cs",
+      "sha256": "2b57f0add803473b32b612ffb1327f8819e460d5826f10519617b22f1d32f614"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
     }
   ],
   "workbooks": [
@@ -13186,6 +13202,9 @@
           },
           "undead": {
             "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
           }
         }
       },
@@ -13232,6 +13251,9 @@
             "minimum": 0
           },
           "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
             "type": "boolean"
           }
         }
@@ -13905,6 +13927,9 @@
                 "attack_speed": {
                   "type": "int",
                   "minimum": 0
+                },
+                "can_push": {
+                  "type": "boolean"
                 }
               }
             }
@@ -14214,6 +14239,22 @@
                 "minimum": 1
               },
               "kill_queue_capacity": {
+                "type": "int",
+                "minimum": 1
+              },
+              "player_push_action_ms": {
+                "type": "int",
+                "minimum": 1
+              },
+              "monster_push_action_ms_per_step": {
+                "type": "int",
+                "minimum": 1
+              },
+              "monster_push_move_ms_per_step": {
+                "type": "int",
+                "minimum": 1
+              },
+              "pushed_step_display_ms": {
                 "type": "int",
                 "minimum": 1
               }
@@ -15196,6 +15237,9 @@
           },
           "line_stop_on_blocked": {
             "type": "boolean"
+          },
+          "auto_enabled": {
+            "type": "boolean"
           }
         }
       },
@@ -15409,6 +15453,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -15623,6 +15670,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -15837,6 +15887,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -16051,6 +16104,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -16265,6 +16321,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -16479,6 +16538,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -16693,6 +16755,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -16907,6 +16972,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -17121,6 +17189,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -17335,6 +17406,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -17549,6 +17623,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -17763,6 +17840,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -17977,6 +18057,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -18191,6 +18274,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -19182,6 +19268,9 @@
             "minimum": 0
           },
           "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "auto_enabled": {
             "type": "boolean"
           }
         }
@@ -19571,6 +19660,9 @@
           },
           "activation_kind": {
             "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
           }
         }
       },
@@ -19798,6 +19890,9 @@
           },
           "activation_kind": {
             "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
           }
         }
       },
@@ -20025,6 +20120,9 @@
           },
           "activation_kind": {
             "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
           }
         }
       },

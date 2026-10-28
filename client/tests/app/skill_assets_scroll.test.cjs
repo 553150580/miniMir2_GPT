@@ -2,7 +2,7 @@ const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const root=path.resolve(__dirname,'../../..');
 const decorator=(...args)=>args.length>1?undefined:(...params)=>params.length===1?params[0]:undefined;
 const decorators=new Proxy({},{get(){return decorator;}});
@@ -18,7 +18,7 @@ function load(file,requireModule){
 
 // 采用真实List及锁定3.8.8的偏移读取方法；滚动写入替身只记录公开scrollToOffset目标并更新边界。
 const engine=process.env.MINIMIR_CREATOR_APP??'/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const scrollSource=ts.createSourceFile('scroll-view.ts',fs.readFileSync(path.join(engine,'Contents/Resources/resources/3d/engine/cocos/ui/scroll-view.ts'),'utf8'),ts.ScriptTarget.Latest,true);
+const scrollSource=ts.createSourceFile('scroll-view.ts',fs.readFileSync(path.join(require('../../../tools/client/creator_paths.cjs').engineRoot,'cocos/ui/scroll-view.ts'),'utf8'),ts.ScriptTarget.Latest,true);
 const scrollClass=scrollSource.statements.find(node=>ts.isClassDeclaration(node)&&node.name.text==='ScrollView');
 const methods=['getScrollOffset','_getContentTopBoundary','_getContentBottomBoundary'].map(name=>scrollClass.members.find(node=>node.name?.getText(scrollSource)===name).getText(scrollSource));
 const scrollCompiled=ts.transpileModule(`class ReadOffsets{${methods.join('\n')}};exports.ReadOffsets=ReadOffsets;`,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}});

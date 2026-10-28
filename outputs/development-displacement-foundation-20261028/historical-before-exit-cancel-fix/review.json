@@ -1,0 +1,158 @@
+{
+  "review_status": "finalized_no_open_actionable_defects",
+  "recorded_at": "2026-10-27T20:12:03.636130+00:00",
+  "scope": "位移共用底座只读源和接入审阅；不开放8/27/21、不声称完整位移技能或公开地图",
+  "reviewer_test_commands_rerun": false,
+  "reviewer_runtime_or_layout_changes": false,
+  "source_candidate_not_target_180_certification": true,
+  "findings": [
+    {
+      "id": "R1",
+      "status": "resolved",
+      "file": "client/assets/scripts/app/BaselineAssembler.ts",
+      "issue": "同sequence各分块导航状态原先只取第一份未核一致",
+      "reproduction": "同scene/baseline/stateSequence，chunk0 active/revR，chunk1 arrived/revR，旧代码静默返回active",
+      "resolution": "同伴已加规范navigationIdentity并检查新增/重复分块；无nav后续块允许，下一sequence/reset清身份；已只读回读，测试由同伴执行",
+      "final_verification": "规范nav identity当前源码已只读复核，238测试原始log包含导航元数据矛盾及重复块回归通过；审阅者未重跑"
+    }
+  ],
+  "open_actionable_defects": [],
+  "checked": {
+    "server_source_pushed": [
+      "地形/地图无效格return跳后置，即使已有成功前缀仍发布真实path",
+      "occupied break即使0步也后置赋时；Human ActionTime500映射本作ActionReadyAt与NextMove同截止，Monster 300/500按成功步数独立",
+      "CanPush只拦怪物/宠物，Human原语无Info门槛；ActorRef(scene,handle,life)限制旧life",
+      "不修改NextAttack、NextSpell、SkillCooldowns或已发casts/attacks/kill facts",
+      "Pending与Isolated阻断原语，Ready=false不发瞬时、恢复只发当前基线",
+      "MovementRevision与Navigation.Revision到uint64max在修改现场前隔离，step不再处理后续实体",
+      "尸体原语无新增Dead门禁，但保留既有死亡Action；实际技能目标合法性仍由技能层过滤"
+    ],
+    "navigation": [
+      "Navigation.Revision仅新合法ground加1；健康join仅InputSequence重置0，Scene/目标/revision保留",
+      "Manual接管清Destination；releaseJoystick和同图复活仅释放Manual，保留ground identity",
+      "客户端ground绑定seenRevision下界，旧同seq同坐标旧revision到达不能误清新目标",
+      "active只publish restore，AppRoot只为ground/release发输入，不重发restore",
+      "强制路径经过目标不按显示坐标自动完成，只有当前权威arrived清目标"
+    ],
+    "client_motion": [
+      "force前缀及中间已确认normal点保留，普通后缀独立有界追赶；丢路径恢复只snap末格不补穿墙线",
+      "新force无旧force前缀时从显式origin接管旧normal，方向与逆向面向分开",
+      "位移body水位只清≤attack/cast sequence，较新pending保留，已释放CombatEffects不清",
+      "旧scene/handle/life/revision瞬时拒绝；基线先到、重入不重播旧路径",
+      "普通怪/宠仍walking.count×duration_ms=600ms，玩家仍自己的移动节奏",
+      "Teleport只通用250/260资源，未混入1600 Blink；owner身份显式沿player_handle"
+    ],
+    "owner_identity": [
+      "EnterLineResult.player_handle由server统一builder填真实r.Player.Handle，实际WS测试使用43而非固定1",
+      "GameSession先清旧entry/baseline/ready，playerHandle缺失/越界拒绝入场",
+      "GameWorldView以显式handle决定Dash首相、Teleport本人只入场、camera及姓名；不以kind1推断本人",
+      "AppRoot技能校验、HudModel及GameCombatStatus全部沿同一entry.playerHandle；同为kind1的非本人不夺镜头/HUD"
+    ]
+  },
+  "saved_layout_preserved": true,
+  "saved_asset_byte_checks": {
+    "client/assets/scenes/RoleSelect.scene": true,
+    "client/assets/scenes/RoleSelect.scene.meta": true,
+    "client/assets/scenes/Login.scene": true,
+    "client/assets/scenes/Login.scene.meta": true,
+    "client/assets/scenes/Game.scene": true,
+    "client/assets/scenes/Game.scene.meta": true,
+    "client/assets/scenes/Boot.scene": true,
+    "client/assets/scenes/Boot.scene.meta": true,
+    "client/assets/resources/prefabs/StatusBadge.prefab": true,
+    "client/assets/resources/prefabs/StatusBadge.prefab.meta": true,
+    "client/assets/resources/prefabs/Effect.prefab": true,
+    "client/assets/resources/prefabs/Effect.prefab.meta": true,
+    "client/assets/resources/prefabs/Entity.prefab": true,
+    "client/assets/resources/prefabs/Entity.prefab.meta": true,
+    "client/assets/resources/prefabs/MapProp.prefab": true,
+    "client/assets/resources/prefabs/MapProp.prefab.meta": true,
+    "client/assets/resources/prefabs/Beam.prefab": true,
+    "client/assets/resources/prefabs/Beam.prefab.meta": true,
+    "client/assets/resources/prefabs/ListItem.prefab": true,
+    "client/assets/resources/prefabs/ListItem.prefab.meta": true
+  },
+  "reviewed_hash_snapshot": {
+    "server/internal/game/movement.go": "3bfaa5f4cc5643efdc1d3819fa0c16a47271b9a374e846bdbb9c0dd3dadb6ce7",
+    "server/internal/game/runtime.go": "cb578be0508bbeb93c42c4eaa8f4ad3d0eb35a558f82d47345ef804c34d2d89d",
+    "server/internal/game/combat.go": "89c306cab8671ef3bdd2f699cc88c58a4739f064de651988033c96ee579ad82c",
+    "server/internal/game/skill_cast.go": "841d1230f5fcf33146722558a070555d8dd67c35f724badfc632b1164c9bd564",
+    "server/internal/game/timeline.go": "05fd82d7742b52101c4bc903930b3f9e5acc8f494c379d19023ace2590c97f36",
+    "client/assets/scripts/app/EntityDisplacement.ts": "982d3029d92ac0979c63a47225b9abd654dc1dfe2eeb80a69306803a084fd951",
+    "client/assets/scripts/app/EntityMotion.ts": "0d16a8747bcbae49143a8dff8684a0bced983d97f7b1d1a03720017bd4f2db59",
+    "client/assets/scripts/app/EntityAnimation.ts": "4d95b7bc5e3f335341f27f1d8af008b0eb9aab65572cdb986a2f8c028a4334fc",
+    "client/assets/scripts/app/GameWorldView.ts": "143e9ddda8e7b49fc7fe9f88b921e5b66b08a90bb83f022df25b92d5cfa20e3d",
+    "client/assets/scripts/app/GameSession.ts": "6935691f238f42a7e27aad4da5c5887bb174f8401dc73391f138c163e6c011e1",
+    "client/assets/scripts/app/AppRoot.ts": "dfc49692f2a1b1fd67caf9ba55cdc090f51f83946cf3b6e61911b4e7c1bf986e",
+    "client/assets/scripts/app/BaselineAssembler.ts": "6ce643377b2d3dde580234dfbac3767a1a4d4df4840f9894bf9621e83a6d79d2",
+    "client/assets/scripts/app/CombatEffects.ts": "5aaf76f919995c58d816194072355bb50bae4c7bb83bfe4e86775191ac3347cf",
+    "client/assets/scripts/app/GameConnection.ts": "40120c5253a84b97bc834a6a6264205e581ae026bbda2686e076eb109fd1e642",
+    "client/assets/scripts/input/NavigationIntent.ts": "d1bb7839b5928af96de0e59a15bacaf21ff7c4de6275569079198132526f1e14",
+    "client/assets/scripts/app/HudModel.ts": "ac8517466988ea5a6d7eefaf75ff7589515d88287791479bd9a9fdfa5e656be5",
+    "client/assets/scripts/app/GameCombatStatus.ts": "fb87f38a056bf194947c27947abb2dbde374c42b73bd758fd16be9f5001d75bb",
+    "client/assets/scripts/app/SkillModel.ts": "fc78d5380a1e3ab0274dea9b1916a49bbc76a551eca69f44e2a2cd8541c3ecf8",
+    "client/assets/scripts/app/WorldAssets.ts": "135bbfe7f4586ad3efcbcba181d659a5a68f4ec13aa1b48ca409c49584f4db66",
+    "shared/proto/world.proto": "cac66ca8e4ece043d7603d72c0557c05b2f3ab4bf28a4b11f0429ea55ee8c3b0",
+    "server/api/generated/minimirv1/world.pb.go": "b92c027bb036dcbe143b75e353549001bf6829e6ab330756427d4deff42123c1"
+  },
+  "server_freeze_sha256": {
+    "server/internal/game/movement.go": "3bfaa5f4cc5643efdc1d3819fa0c16a47271b9a374e846bdbb9c0dd3dadb6ce7",
+    "server/internal/game/runtime.go": "cb578be0508bbeb93c42c4eaa8f4ad3d0eb35a558f82d47345ef804c34d2d89d",
+    "server/internal/game/combat.go": "89c306cab8671ef3bdd2f699cc88c58a4739f064de651988033c96ee579ad82c",
+    "server/internal/game/timeline.go": "05fd82d7742b52101c4bc903930b3f9e5acc8f494c379d19023ace2590c97f36"
+  },
+  "server_freeze_matches_current": true,
+  "limitations": [
+    "本轮只交付位移共用原语与观察，不开放MYF8/27/21，距离/Teleport绑定/TemporalFlux政策仍未在运行配置中补值",
+    "当前仍个人场景、单宠、非PK；外人职业外观/AOI/跨图绑定点/来源地图持续法术和安全区Moved钩子尚不构成已交付能力",
+    "本次只读审阅未重跑同伴测试；game race25.039s与3892向量由同伴执行，root负责最终Mongo/Creator/浏览器汇总"
+  ],
+  "client_freeze": {
+    "file": ".work/displacement-foundation/client-freeze.json",
+    "implementation_sha256": "fe32a67da3aa8cf2022c765a65be0e05eac522a354b7f2334cf2c91ad07739b5",
+    "source_hash_count": 110,
+    "all_current_source_hashes_match": true,
+    "mismatches": [],
+    "tests_reported": {
+      "scene": 16,
+      "app_ui": 222,
+      "total": 238,
+      "failed": 0,
+      "skipped": 0,
+      "log": ".work/displacement-foundation/client-tests.log"
+    },
+    "strict_tsc_exit": 0,
+    "strict_tsc_duration_seconds": 17.488,
+    "resource_hashes_match_current": true
+  },
+  "line_references": {
+    "server/internal/game/movement.go": {
+      "func (w *worker) beginMovement": 43,
+      "func (w *worker) commitWalk": 56,
+      "func (w *worker) sourcePushed": 98
+    },
+    "server/internal/game/runtime.go": {
+      "r.Navigation = navigationState{InputSequence": 459,
+      "func (w *worker) enterLineResult": 580,
+      "func (w *worker) revivePlayer": 615
+    },
+    "client/assets/scripts/input/NavigationIntent.ts": {
+      "    observeAuthority(": 74
+    },
+    "client/assets/scripts/app/EntityMotion.ts": {
+      "    displace(": 141
+    },
+    "client/assets/scripts/app/EntityAnimation.ts": {
+      "    displace(": 44
+    },
+    "client/assets/scripts/app/BaselineAssembler.ts": {
+      "        if (chunk.navigationState)": 21
+    },
+    "client/assets/scripts/app/GameWorldView.ts": {
+      "    acceptDisplacement(": 84
+    },
+    "client/assets/scripts/app/HudModel.ts": {
+      "export function createHudState": 79
+    }
+  }
+}

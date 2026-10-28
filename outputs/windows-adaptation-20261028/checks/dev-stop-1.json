@@ -1,0 +1,13 @@
+{
+  "task": "dev-stop",
+  "command": [
+    "python3",
+    "tools/server/dev.py",
+    "stop"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T11:43:22.449174+00:00",
+  "finished_at": "2026-10-28T11:43:26.737742+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/dev-stop-1.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

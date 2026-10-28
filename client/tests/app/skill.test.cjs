@@ -49,23 +49,29 @@ test('学习确认前的角色、场景、规则、背包和原书变化均须�
 });
 test('火球优先合法所选怪物，否则取最近活怪；资源、死亡、被动与距离拒绝均明确', () => {
     const entities = [entity(1, 1, 2, 2), entity(2, 2, 2, 3), entity(3, 3, 5, 2), entity(4, 3, 3, 2), entity(5, 3, 2, 2, '0')];
-    assert.equal(selectSkillTarget(learned(), entities, 3).entityHandle, 3);
-    assert.equal(selectSkillTarget(learned(), entities, 2).entityHandle, 4);
-    assert.equal(selectSkillTarget(learned(), entities, null).entityHandle, 4);
-    assert.throws(() => selectSkillTarget(learned(), entities, 5), /已倒下/);
-    assert.throws(() => selectSkillTarget({ ...learned(), learned: false }, entities, null), /尚未学会/);
-    assert.throws(() => selectSkillTarget(learned({ active: false }), entities, null), /被动/);
-    assert.throws(() => selectSkillTarget(learned({ range: 1 }), entities, 3), /超出/);
-    entities[0].mp = '2'; assert.throws(() => selectSkillTarget(learned(), entities, null), /魔法不足/);
-    entities[0].hp = '0'; assert.throws(() => selectSkillTarget(learned(), entities, null), /角色已倒下/);
+    assert.equal(selectSkillTarget(learned(), entities, 3,1).entityHandle, 3);
+    assert.equal(selectSkillTarget(learned(), entities, 2,1).entityHandle, 4);
+    assert.equal(selectSkillTarget(learned(), entities, null,1).entityHandle, 4);
+    assert.throws(() => selectSkillTarget(learned(), entities, 5,1), /已倒下/);
+    assert.throws(() => selectSkillTarget({ ...learned(), learned: false }, entities, null,1), /尚未学会/);
+    assert.throws(() => selectSkillTarget(learned({ active: false }), entities, null,1), /被动/);
+    assert.throws(() => selectSkillTarget(learned({ range: 1 }), entities, 3,1), /超出/);
+    entities[0].mp = '2'; assert.throws(() => selectSkillTarget(learned(), entities, null,1), /魔法不足/);
+    entities[0].hp = '0'; assert.throws(() => selectSkillTarget(learned(), entities, null,1), /角色已倒下/);
+});
+test('施法者和治疗默认自身显式使用owner，未实现的其它玩家不冒充友方自身',()=>{
+    const entities=[entity(2,1,16,16,'0'),entity(7,1,2,2),entity(3,3,3,2)];
+    assert.equal(selectSkillTarget(learned(),entities,null,7).entityHandle,3);
+    assert.equal(selectSkillTarget(learned({kind:'healing',target_kind:'friendly_entity'}),entities,2,7).entityHandle,7);
+    entities[0].hp='100';entities[1].hp='0';assert.throws(()=>selectSkillTarget(learned(),entities,null,7),/角色已倒下/);
 });
 test('治愈支持自己及当前宠物，敌方选择退回自己，已死亡友方拒绝', () => {
     const entities = [entity(1, 1, 2, 2), entity(2, 2, 3, 3), entity(3, 3, 2, 3)];
     const skill = learned({ kind: 'healing' });
-    assert.equal(selectSkillTarget(skill, entities, 2).entityHandle, 2);
-    assert.equal(selectSkillTarget(skill, entities, null).entityHandle, 1);
-    assert.equal(selectSkillTarget(skill, entities, 3).entityHandle, 1);
-    entities[1].hp = '0'; assert.throws(() => selectSkillTarget(skill, entities, 2), /目标已倒下/);
+    assert.equal(selectSkillTarget(skill, entities, 2,1).entityHandle, 2);
+    assert.equal(selectSkillTarget(skill, entities, null,1).entityHandle, 1);
+    assert.equal(selectSkillTarget(skill, entities, 3,1).entityHandle, 1);
+    entities[1].hp = '0'; assert.throws(() => selectSkillTarget(skill, entities, 2,1), /目标已倒下/);
 });
 test('八方向身体与十六方向飞行按地图上方为0、顺时针排列，原地保留方向', () => {
     const origin = { x: 5, y: 5 }, deltas = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]];
@@ -127,20 +133,20 @@ test('地面技能必须明确选择合法范围格，不误用实体选取，�
     const entities=[entity(1,1,2,2),entity(3,3,4,4)],grid={x:4,y:4};
     const skill=learned({kind:'firebang',target_kind:'enemy_grid',area_radius:1,range:9});
     const bounds={width:16,height:16};
-    const before=JSON.stringify(entities);assert.deepEqual(validateGroundTarget(skill,entities,grid,bounds),grid);assert.equal(JSON.stringify(entities),before);
-    assert.throws(()=>selectSkillTarget(skill,entities,3),/地面位置/);
-    assert.throws(()=>validateGroundTarget(skill,entities,{x:12,y:4},bounds),/超出技能射程/);assert.throws(()=>validateGroundTarget(skill,entities,{x:-1,y:4},bounds),/无效/);
-    assert.throws(()=>validateGroundTarget(learned(),entities,grid,bounds),/实体目标/);
-    assert.deepEqual(validateGroundTarget(learned({kind:'mass_healing',target_kind:'friendly_grid'}),entities,grid,bounds),grid);
+    const before=JSON.stringify(entities);assert.deepEqual(validateGroundTarget(skill,entities,grid,bounds,1),grid);assert.equal(JSON.stringify(entities),before);
+    assert.throws(()=>selectSkillTarget(skill,entities,3,1),/地面位置/);
+    assert.throws(()=>validateGroundTarget(skill,entities,{x:12,y:4},bounds,1),/超出技能射程/);assert.throws(()=>validateGroundTarget(skill,entities,{x:-1,y:4},bounds,1),/无效/);
+    assert.throws(()=>validateGroundTarget(learned(),entities,grid,bounds,1),/实体目标/);
+    assert.deepEqual(validateGroundTarget(learned({kind:'mass_healing',target_kind:'friendly_grid'}),entities,grid,bounds,1),grid);
 });
 test('爆裂和群疗只按逻辑地图边界与射程验中心，不检查center是否可走',()=>{
     const entities=[entity(1,1,2,2)];
     const bounds={width:4,height:4,cells:Array.from({length:4},()=>Array.from({length:4},()=>({blocked:true})))};
     for(const [kind,target_kind]of [['firebang','enemy_grid'],['mass_healing','friendly_grid']]){
         const skill=learned({kind,target_kind,range:9});
-        assert.deepEqual(validateGroundTarget(skill,entities,{x:1,y:1},bounds),{x:1,y:1});
-        assert.throws(()=>validateGroundTarget(skill,entities,{x:4,y:1},bounds),/地图边界/);
-        assert.throws(()=>validateGroundTarget(skill,entities,{x:1,y:4},bounds),/地图边界/);
+        assert.deepEqual(validateGroundTarget(skill,entities,{x:1,y:1},bounds,1),{x:1,y:1});
+        assert.throws(()=>validateGroundTarget(skill,entities,{x:4,y:1},bounds,1),/地图边界/);
+        assert.throws(()=>validateGroundTarget(skill,entities,{x:1,y:4},bounds,1),/地图边界/);
     }
 });
 test('雷电300ms起手结束后不保持末帧，命中闪光由权威结果驱动；抵抗和失效不伪造命中',()=>{

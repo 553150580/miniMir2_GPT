@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "sdk_version": "10.0.403",
+  "vectors": 3892,
+  "sources": {
+    "human": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    "monster": {
+      "path": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e"
+    },
+    "functions": {
+      "path": "资料参考/crystal/Shared/Functions/Functions.cs",
+      "sha256": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278"
+    },
+    "enums": {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398"
+    }
+  },
+  "compiled_source_sha256": "2443718ecb467d6d5290db6391a6e8981801cf86b6afeb0044a673bc0a9e4438",
+  "go_fixture_sha256": "247536ea6c9433d624a57c913e3ae51687e02c44fe7bb282e40e6a2fa160f77d",
+  "source_fragments": {
+    "human_pushed": "public override int Pushed(MapObject pusher, MirDirection dir, int distance)\n        {\n            int result = 0;\n            MirDirection reverse = Functions.ReverseDirection(dir);\n            Cell cell;\n            for (int i = 0; i < distance; i++)\n            {\n                Point location = Functions.PointMove(CurrentLocation, dir, 1);\n\n                if (!CurrentMap.ValidPoint(location)) return result;\n\n                cell = CurrentMap.GetCell(location);\n\n                bool stop = false;\n                if (cell.Objects != null)\n                    for (int c = 0; c < cell.Objects.Count; c++)\n                    {\n                        MapObject ob = cell.Objects[c];\n                        if (!ob.Blocking) continue;\n                        stop = true;\n                    }\n                if (stop) break;\n\n                CurrentMap.GetCell(CurrentLocation).Remove(this);\n\n                Direction = reverse;\n                RemoveObjects(dir, 1);\n                CurrentLocation = location;\n                CurrentMap.GetCell(CurrentLocation).Add(this);\n                AddObjects(dir, 1);\n\n                Moved();\n\n                Enqueue(new S.Pushed { Direction = Direction, Location = CurrentLocation });\n                Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });\n                GetPlayerLocation();\n                result++;\n            }\n\n            if (result > 0)\n            {\n                if (HasBuff(BuffType.Concentration, out Buff concentration))\n                {\n                    concentration.Set(\"InterruptTime\", Envir.Time + (Settings.Second * 3));\n\n                    if (!concentration.Get<bool>(\"Interrupted\"))\n                    {\n                        concentration.Set(\"Interrupted\", true);\n                        UpdateConcentration(true, true);\n                    }\n                }\n\n                cell = CurrentMap.GetCell(CurrentLocation);\n\n                for (int i = 0; i < cell.Objects.Count; i++)\n                {\n                    if (cell.Objects[i].Race != ObjectType.Spell) continue;\n                    SpellObject ob = (SpellObject)cell.Objects[i];\n\n                    ob.ProcessSpell(this);\n                    //break;\n                }\n\n                SafeZoneInfo szi = CurrentMap.GetSafeZone(CurrentLocation);\n\n                if (szi != null)\n                {\n                    SetBindSafeZone(szi);\n                    InSafeZone = true;\n                }\n                else\n                    InSafeZone = false;\n            }\n\n            ActionTime = Envir.Time + 500;\n            return result;\n        }",
+    "monster_pushed": "public override int Pushed(MapObject pusher, MirDirection dir, int distance)\n        {\n            if (!Info.CanPush) return 0;\n            //if (!CanMove) return 0; //stops mobs that can't move (like cannibalplants) from being pushed\n\n            int result = 0;\n            MirDirection reverse = Functions.ReverseDirection(dir);\n            for (int i = 0; i < distance; i++)\n            {\n                Point location = Functions.PointMove(CurrentLocation, dir, 1);\n\n                if (!CurrentMap.ValidPoint(location)) return result;\n\n                Cell cell = CurrentMap.GetCell(location);\n\n                bool stop = false;\n                if (cell.Objects != null)\n                    for (int c = 0; c < cell.Objects.Count; c++)\n                    {\n                        MapObject ob = cell.Objects[c];\n                        if (!ob.Blocking) continue;\n                        stop = true;\n                    }\n                if (stop) break;\n\n                CurrentMap.GetCell(CurrentLocation).Remove(this);\n\n                Direction = reverse;\n                RemoveObjects(dir, 1);\n                CurrentLocation = location;\n                CurrentMap.GetCell(CurrentLocation).Add(this);\n                AddObjects(dir, 1);\n\n                Broadcast(new S.ObjectPushed { ObjectID = ObjectID, Direction = Direction, Location = CurrentLocation });\n\n                result++;\n            }\n\n            ActionTime = Envir.Time + 300 * result;\n            MoveTime = Envir.Time + 500 * result;\n\n            if (result > 0)\n            {\n                Cell cell = CurrentMap.GetCell(CurrentLocation);\n\n                for (int i = 0; i < cell.Objects.Count; i++)\n                {\n                    if (cell.Objects[i].Race != ObjectType.Spell) continue;\n                    SpellObject ob = (SpellObject)cell.Objects[i];\n\n                    ob.ProcessSpell(this);\n                    //break;\n                }\n            }\n\n            return result;\n        }",
+    "point_move": "public static Point PointMove(Point p, MirDirection d, int i)\n    {\n        switch (d)\n        {\n            case MirDirection.Up:\n                p.Offset(0, -i);\n                break;\n            case MirDirection.UpRight:\n                p.Offset(i, -i);\n                break;\n            case MirDirection.Right:\n                p.Offset(i, 0);\n                break;\n            case MirDirection.DownRight:\n                p.Offset(i, i);\n                break;\n            case MirDirection.Down:\n                p.Offset(0, i);\n                break;\n            case MirDirection.DownLeft:\n                p.Offset(-i, i);\n                break;\n            case MirDirection.Left:\n                p.Offset(-i, 0);\n                break;\n            case MirDirection.UpLeft:\n                p.Offset(-i, -i);\n                break;\n        }\n        return p;\n    }",
+    "reverse_direction": "public static MirDirection ReverseDirection(MirDirection dir)\n    {\n        switch (dir)\n        {\n            case MirDirection.Up:\n                return MirDirection.Down;\n            case MirDirection.UpRight:\n                return MirDirection.DownLeft;\n            case MirDirection.Right:\n                return MirDirection.Left;\n            case MirDirection.DownRight:\n                return MirDirection.UpLeft;\n            case MirDirection.Down:\n                return MirDirection.Up;\n            case MirDirection.DownLeft:\n                return MirDirection.UpRight;\n            case MirDirection.Left:\n                return MirDirection.Right;\n            case MirDirection.UpLeft:\n                return MirDirection.DownRight;\n            default:\n                return dir;\n        }\n    }",
+    "direction_enum": "public enum MirDirection : byte\n{\n    Up = 0,\n    UpRight = 1,\n    Right = 2,\n    DownRight = 3,\n    Down = 4,\n    DownLeft = 5,\n    Left = 6,\n    UpLeft = 7\n}"
+  },
+  "scope": "逐字来源Pushed/PointMove/ReverseDirection；当前无Concentration、Spell、安全区的最小世界；Human.NextMove按登记动作锁映射单列",
+  "not_proven": [
+    "目标1.80归属",
+    "Repulsion/ShoulderDash/Teleport完整技能",
+    "源完整对象调度、绑定及地面Spell",
+    "scene/life/授权/导航的项目门禁"
+  ],
+  "runtime_configuration": false
+}

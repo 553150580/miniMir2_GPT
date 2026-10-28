@@ -23,7 +23,7 @@ func receiptMigrationDB(t *testing.T) (context.Context, devconfig.Config, *mongo
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.MongoURI != "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true" {
+	if cfg.MongoURI != devconfig.DevelopmentMongoURI() {
 		t.Fatal("拒绝连接本任务专属开发Mongo之外的地址")
 	}
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()

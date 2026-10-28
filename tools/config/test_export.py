@@ -88,6 +88,23 @@ class ConfigurationTests(unittest.TestCase):
         self.assertTrue(exporter.validate_json_shape({'seconds':-1},contract,'purchase'))
         self.assertEqual(exporter.validate_json_shape({'seconds':0},contract,'purchase'),[])
 
+    def test_displacement_boolean_contracts_require_explicit_true_or_false(self):
+        contracts=[]
+        for contract in self.schema['json_contracts']:
+            if contract['table_id']=='game_skills' and contract['field']=='target_rule' and 'auto_enabled' in contract['shape']['properties']:
+                contracts.append((contract['shape'],'auto_enabled'))
+            if contract['table_id']=='game_monsters' and contract['field']=='attributes' and 'can_push' in contract['shape']['properties']:
+                contracts.append((contract['shape'],'can_push'))
+            if contract['table_id']=='dev_first_loop_profile' and contract['field']=='parameters':
+                contracts.append((contract['shape']['properties']['players']['items'],'can_push'))
+        self.assertEqual(len(contracts),22)
+        for shape,key in contracts:
+            with self.subTest(field=key):
+                field_shape=shape['properties'][key]
+                for value in [True,False]:self.assertEqual(exporter.validate_json_shape(value,field_shape,key),[])
+                for value in [None,0,'false']:self.assertTrue(exporter.validate_json_shape(value,field_shape,key))
+                self.assertTrue(exporter.validate_json_shape({}, {'type':'object','properties':{key:field_shape}},key))
+
     def test_ore_price_uses_exact_rational_integers(self):
         copper=next(r for r in self.data['game_ore_types'] if r['ore_key']=='copper')
         self.assertEqual((copper['price_gold_numerator'],copper['price_gold_denominator']),(1,2))

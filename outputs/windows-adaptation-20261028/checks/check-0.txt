@@ -1,0 +1,1 @@
+{"passed": true, "checked_copies": 325, "accessible_originals_reverified": 3, "errors": [], "original_source_tree_rescanned": false, "source_rules_certified": false, "runtime_ready": false}

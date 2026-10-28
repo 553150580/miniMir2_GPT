@@ -50,7 +50,7 @@ test('疾光八方向梁、雷光自身单效果、冰咆哮原起手及地表�
     assert.equal(manifest.effects['33'].cast.frames[0],'Magic:3840');assert.equal(manifest.effects['33'].hit.frames[0],'Magic:3850');assert.equal(manifest.effects['33'].hit.frames.length,20);assert.equal(manifest.effects['33'].hit.duration_ms,1300);
     const hell=manifest.effects['9'];assert.equal(hell.cast.frames[0],'Magic:920');assert.equal(hell.cast.frames.length,10);assert.equal(hell.cast_anchor,'origin');
     assert.equal(hell.step.frames[0],'Magic:930');assert.equal(hell.step.frames.length,6);assert.equal(hell.step.duration_ms,500);assert.equal(hell.step_trigger,'authoritative_cast_step');
-    const ts=require('/Applications/Cocos/Creator/3.8.8/CocosCreator.app/Contents/Resources/app.asar.unpacked/node_modules/typescript'),file=path.join(root,'client/assets/scripts/app/WorldAssets.ts');
+    const ts=require('../../../tools/client/creator_paths.cjs').typescript,file=path.join(root,'client/assets/scripts/app/WorldAssets.ts');
     const output=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}}),module={exports:{}};
     new Function('require','module','exports',output.outputText)(()=>({}),module,module.exports);
     const keys=module.exports.effectFrameKeys(manifest.effects['7']);assert.equal(keys.length,192);assert(keys.includes('Magic:2165'));

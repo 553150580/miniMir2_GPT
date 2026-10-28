@@ -39,6 +39,7 @@ type Skill struct {
 	UndeadMultiplierPPM       int64    `json:"undead_multiplier_ppm"`
 	AutoPriority              int      `json:"auto_priority"`
 	AutoMinTargets            int      `json:"auto_min_targets"`
+	AutoEnabled               bool     `json:"auto_enabled"`
 	PowerBase                 int64    `json:"power_base"`
 	PowerBonus                int64    `json:"power_bonus"`
 	MPowerBase                int64    `json:"mpower_base"`

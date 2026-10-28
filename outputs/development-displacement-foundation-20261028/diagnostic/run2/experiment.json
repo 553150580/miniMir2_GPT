@@ -1,0 +1,8 @@
+{
+  "kind": "controlled_diagnostic_only",
+  "extra_client_wait_ms": 2500,
+  "does_not_count_as_original_test_pass": true,
+  "production_or_actual_test_source_changed": false,
+  "runtime_skill_or_fixture_changed": false,
+  "failure_early_stop": "pet_HP0 with player29 Impact and no pet29 Impact; original loop unsatisfiable"
+}

@@ -1,3 +1,4 @@
+import creatorPaths from '../client/creator_paths.cjs';
 // 仅检查独立TypeScript声明/常量；优先使用已安装Creator的TypeScript，不生成产物。
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -5,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const creatorApp=process.env.COCOS_CREATOR_PATH||'/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const creatorTsc=path.join(creatorApp,'Contents/Resources/app.asar.unpacked/node_modules/typescript/lib/tsc.js');
+const creatorTsc=path.join(creatorPaths.typescriptRoot,'lib/tsc.js');
 let hasCreatorTsc=true;
 try{await fs.access(creatorTsc);}catch{hasCreatorTsc=false;}
 const executable=hasCreatorTsc?process.execPath:'tsc';

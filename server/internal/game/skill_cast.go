@@ -374,7 +374,7 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 	var approach *entity
 	for _, s := range skills {
 		handler, ok := skillHandlers[s.Behavior]
-		if !ok || handler.Passive || s.Activation() != "cast" || s.JobID != r.Role.Job {
+		if !ok || !s.AutoEnabled || handler.Passive || s.Activation() != "cast" || s.JobID != r.Role.Job {
 			continue
 		}
 		rank, learned := r.Role.Skill(s.ID)

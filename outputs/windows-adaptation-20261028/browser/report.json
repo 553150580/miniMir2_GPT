@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "checks": [
+    "通过正常注册和创建角色进入rule10；没有数据库预置",
+    "打开背包保留地面导航目标",
+    "同宽加高160像素只增加地图视口，顶底HUD高度保持",
+    "导航由服务端到达状态正常结束",
+    "换角发送一次显式取消，收到对应请求基线的status4确认后退出",
+    "健康重入恢复取消状态，没有重新提交旧地面目标"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "Unexpected screen orientation: 13"
+    }
+  ],
+  "viewportCases": [
+    [
+      720,
+      1280
+    ],
+    [
+      720,
+      1440
+    ]
+  ],
+  "touchInput": true,
+  "physicalMobileVerified": false,
+  "forcedMovementSkillsOpened": false,
+  "scope": "正常账号/角色、导航、面板、加高和退出确认；不作为完整技能、真机或容量验收"
+}

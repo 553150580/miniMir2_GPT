@@ -58,7 +58,7 @@ export class WorldAssets {
             for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();
             // 可接收的常驻状态与职业无关，入场前持有，不在受益时临时异步加载。
-            for (const key of effectFrameKeys(result.manifest.statuses)) {
+            for (const key of [...effectFrameKeys(result.manifest.statuses), ...effectFrameKeys(result.manifest.teleport)]) {
                 if (!result.manifest.frames[key]) throw new Error(`缺少常驻状态帧定义：${key}`);
                 if (!result.manifest.frames[key].declared_empty) keys.add(key);
             }

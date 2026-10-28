@@ -16,7 +16,7 @@ export class GameCombatStatus {
     private lastSecond = '';
     private ready = false;
     private detail: { handle: number; life: string; id: number } | null = null;
-    constructor(safe: Node, private readonly ui: UIMgr, private readonly popup: PopupView, private readonly template: Prefab, private readonly definitions: readonly StatusDefinition[] = []) {
+    constructor(safe: Node, private readonly ui: UIMgr, private readonly popup: PopupView, private readonly template: Prefab, private readonly playerHandle: number, private readonly definitions: readonly StatusDefinition[] = []) {
         const bar = safe.getChildByPath('MapViewport/BuffBar'), overview = safe.getChildByPath('UIMgr/Panels/CombatStatus/List')?.getComponent(List),
             details = safe.getChildByPath('PopupView/Panels/StatusDetails/List')?.getComponent(List);
         if (!bar || !overview || !details) throw new Error('状态条和滚动状态面板尚未保存');
@@ -31,7 +31,7 @@ export class GameCombatStatus {
         this.update();
     }
     update(): void {
-        const player = this.entities.find(value => value.entityKind === 1), states = player?.statuses ?? [];
+        const player = this.entities.find(value => value.entityHandle === this.playerHandle), states = player?.statuses ?? [];
         const now = game.totalTime, key = JSON.stringify([this.ready, this.sequence, states.map(row => [row.statusId, statusSeconds(row, this.receivedAt, now)])]);
         if (this.lastSecond === key) return; this.lastSecond = key;
         const retained = new Set<number>();
@@ -40,7 +40,7 @@ export class GameCombatStatus {
             let badge = this.badges.get(status.statusId);
             if (!badge) {
                 const node = instantiate(this.template); node.parent = this.bar;
-                const handler = (): void => { const current = this.entities.find(value => value.entityKind === 1); if (this.ready && current) this.showStatus(current.entityHandle, current.life.toString(), status.statusId); };
+                const handler = (): void => { const current = this.entities.find(value => value.entityHandle === this.playerHandle); if (this.ready && current) this.showStatus(current.entityHandle, current.life.toString(), status.statusId); };
                 node.on(Button.EventType.CLICK, handler, this); badge = { node, handler }; this.badges.set(status.statusId, badge);
             }
             badge.node.getComponent(Button)!.interactable = this.ready;
@@ -49,8 +49,8 @@ export class GameCombatStatus {
         }
         for (const [id, badge] of this.badges) if (!retained.has(id)) { badge.node.off(Button.EventType.CLICK, badge.handler, this); badge.node.destroy(); this.badges.delete(id); }
         const lines = [...combatAttributeLines(player?.combatAttributes), '当前护佑状态'];
-        for (const entity of this.entities.filter(row => row.entityKind === 1 || row.entityKind === 2)) {
-            const label = entity.entityKind === 1 ? '角色' : '宠物';
+        for (const entity of this.entities.filter(row => row.entityHandle === this.playerHandle || row.entityKind === 2)) {
+            const label = entity.entityHandle === this.playerHandle ? '角色' : '宠物';
             if (!entity.statuses?.length) lines.push(`${label}：无护佑状态`);
             for (const status of entity.statuses ?? []) lines.push(`${label} · ${statusName(status.statusId, this.definitions)}`, ...statusLines(status, this.receivedAt, now, this.definitions).slice(1));
         }

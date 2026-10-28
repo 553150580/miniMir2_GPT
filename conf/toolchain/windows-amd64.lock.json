@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "platform": "windows-amd64",
+  "prefix": "%LOCALAPPDATA%/minimir-toolchain/windows-amd64",
+  "lima_home": "%LOCALAPPDATA%/minimir-lima",
+  "python_version": "3.14.9",
+  "pillow_version": "13.0.0",
+  "creator_version": "3.8.8",
+  "host_tools": {
+    "gcc": {
+      "version": "16.1.0",
+      "executable": "%LOCALAPPDATA%/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/gcc.exe",
+      "sha256": "e8534323dc63b8d18b83573769256d842ea98499e15a8e648af454d086e529bc",
+      "purpose": "只读使用现有WinLibs；race编译，不修改全局安装"
+    }
+  },
+  "tools": {
+    "go": {
+      "version": "1.27.3",
+      "url": "https://go.dev/dl/go1.27.3.windows-amd64.zip",
+      "sha256": "f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff",
+      "directory": "go/1.27.3",
+      "executable": "go/1.27.3/go/bin/go.exe"
+    },
+    "uv": {
+      "version": "0.13.5",
+      "url": "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-x86_64-pc-windows-msvc.zip",
+      "sha256": "a38b8d1902b7cfbc76b423ba1bb456f623f42064cdc72628b6075b89afd1019a",
+      "directory": "uv/0.13.5",
+      "executable": "uv/0.13.5/uv.exe"
+    },
+    "node": {
+      "version": "24.22.1",
+      "url": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-win-x64.zip",
+      "sha256": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5",
+      "directory": "node/24.22.1",
+      "executable": "node/24.22.1/node-v24.22.1-win-x64/node.exe"
+    },
+    "protoc": {
+      "version": "36.2",
+      "url": "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protoc-36.2-win64.zip",
+      "sha256": "f0c128dc0d8492eceece83bb459a4c0e316764b929ffbf1aa416357fd644edd3",
+      "directory": "protoc/36.2",
+      "executable": "protoc/36.2/bin/protoc.exe"
+    },
+    "gh": {
+      "version": "2.103.2",
+      "url": "https://github.com/cli/cli/releases/download/v2.103.2/gh_2.103.2_windows_amd64.zip",
+      "sha256": "fef9fcdd8fdabd0501ab8b3d99eac976f504ab55d01bef9e8ef428a5d900ddda",
+      "directory": "gh/2.103.2",
+      "executable": "gh/2.103.2/bin/gh.exe"
+    },
+    "dotnet": {
+      "version": "10.0.403",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.403/dotnet-sdk-10.0.403-win-x64.zip",
+      "sha512": "7a114c318fa7f1d9822991b534b2814d0e78386ceda816b371f5141acefe741d87ccb606ede06cadac8f9ac5070e32b708a67bbd1619ff5e5a7858a27874ef48",
+      "directory": "dotnet/10.0.403",
+      "executable": "dotnet/10.0.403/dotnet.exe"
+    },
+    "qemu": {
+      "optional_linux_vm": true,
+      "version": "11.1.0",
+      "url": "https://qemu.weilnetz.de/w64/qemu-w64-setup-20260811.exe",
+      "sha512": "5bcf9eed634e8575a37b74f445af41a2fe4106da512d0c30c368301d4c105037fdfab40a5287367a28a957624cddebbc8c07e16c88ab6634f554cdf3d16bf543",
+      "checksum_url": "https://qemu.weilnetz.de/w64/qemu-w64-setup-20260811.sha512",
+      "format": "nsis",
+      "directory": "qemu/20260811",
+      "executable": "qemu/20260811/qemu-system-x86_64.exe"
+    },
+    "lima": {
+      "optional_linux_vm": true,
+      "version": "2.2.1",
+      "url": "https://github.com/lima-vm/lima/releases/download/v2.2.1/lima-2.2.1-Windows-AMD64.zip",
+      "sha256": "34061dd322daa014c03f1cc8bc253be40596835990a3017426bc2189a3fdd75d",
+      "directory": "lima/2.2.1",
+      "executable": "lima/2.2.1/bin/limactl.exe"
+    },
+    "mongod": {
+      "version": "8.0.34",
+      "url": "https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-8.0.34.zip",
+      "sha256": "6b021a0864494e4decf278b36477a29eb36072432773e4e62c2f42c302630db0",
+      "directory": "mongodb/8.0.34",
+      "executable": "mongodb/8.0.34/mongodb-win32-x86_64-windows-8.0.34/bin/mongod.exe"
+    }
+  },
+  "virtual_machine": {
+    "name": "minimir-dev",
+    "backend": "qemu",
+    "image_url": "https://cloud-images.ubuntu.com/minimal/releases/noble/release-20261017/ubuntu-24.04-minimal-cloudimg-amd64.img",
+    "image_sha256": "b3296484e362ba2e713489a5de6225c719d9500962bde25d15f2f21e512c7658",
+    "template": "conf/toolchain/minimir-dev.windows.lima.yaml"
+  },
+  "native_database": {
+    "directory": "%LOCALAPPDATA%/minimir-mongodb/windows/8.0.34",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "authorization": "用户2026-10-28明确允许Windows专属新副本集替代本机Lima；不接入已有数据库"
+  },
+  "sources": [
+    "https://go.dev/dl/?mode=json&include=all",
+    "https://api.github.com/repos/astral-sh/uv/releases/tags/0.13.5",
+    "https://nodejs.org/dist/v24.22.1/SHASUMS256.txt",
+    "https://api.github.com/repos/protocolbuffers/protobuf/releases/tags/v36.2",
+    "https://api.github.com/repos/cli/cli/releases/tags/v2.103.2",
+    "https://api.github.com/repos/lima-vm/lima/releases/tags/v2.2.1"
+  ]
+}

@@ -186,7 +186,7 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 		cmd := exec.Command(binary, "-config", path, "-mode", mode)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-		cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+		prepareChild(cmd)
 		if e = cmd.Start(); e != nil {
 			return e
 		}
@@ -203,7 +203,7 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 	}
 	for _, child := range children {
 		if child.Process != nil {
-			child.Process.Signal(syscall.SIGTERM)
+			stopChild(child)
 		}
 	}
 	wg.Wait()

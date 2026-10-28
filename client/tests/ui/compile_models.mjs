@@ -1,3 +1,4 @@
+import creatorPaths from '../../../tools/client/creator_paths.cjs';
 import { mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -5,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 
 const root = fileURLToPath(new URL('../../../', import.meta.url));
 const creator = process.env.MINIMIR_CREATOR_APP ?? '/Applications/Cocos/Creator/3.8.8/CocosCreator.app';
-const typescript = path.join(creator, 'Contents/Resources/app.asar.unpacked/node_modules/typescript');
+const typescript = creatorPaths.typescriptRoot;
 const version = JSON.parse(readFileSync(path.join(typescript, 'package.json'), 'utf8')).version;
 if (!version.startsWith('5.8.')) throw new Error('UI纯模型测试使用 Creator 自带 TypeScript 5.8');
 const source = path.join(root, 'client/assets/scripts');

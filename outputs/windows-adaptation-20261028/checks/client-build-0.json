@@ -1,0 +1,12 @@
+{
+  "task": "client-build",
+  "command": [
+    "python3",
+    "tools/client/build.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T11:35:42.977657+00:00",
+  "finished_at": "2026-10-28T11:38:34.725926+00:00",
+  "output": "outputs/windows-adaptation-20261028/checks/client-build-0.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

@@ -1,0 +1,8 @@
+{
+  "prior_fixture_sha256": "a29b5bc355c73f91033ead8f34259217781c7121fdd3908822a13cd73f0cfddb",
+  "expected_prior_fixture_sha256": "a29b5bc355c73f91033ead8f34259217781c7121fdd3908822a13cd73f0cfddb",
+  "metadata_only": true,
+  "current_fixture_sha256": "b5dfa79dd41a6886dd42f9f58cdbdff4b58b8d7d51839407850781e1076c2b68",
+  "changed_field": "_source_evidence.exporter_sha256",
+  "runtime_fields_changed": false
+}
