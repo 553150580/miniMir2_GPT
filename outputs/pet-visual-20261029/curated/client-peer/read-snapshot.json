@@ -1,0 +1,11 @@
+{
+    "client/assets/scripts/app/PetBornModel.ts":  "f74d8ffd7a60fcc696e7890f3254fc5e0f216fd0276345a9b84474ca9dae9dab",
+    "client/assets/scripts/app/WorldAudio.ts":  "62cd83a945f5e88c5776495bc642490e9d1db0b853456beaf969a11c2c6d367e",
+    "client/assets/scripts/app/GameSession.ts":  "763ee5f4f9dd60b4b793a6867cd2534d1a97c327353281318d5e2c560ee1dccf",
+    "client/assets/scripts/app/AppRoot.ts":  "86788434badef4e15c34e590846ae4eaed1908bf5d6c2b343301298f9dc3f9a7",
+    "client/assets/scripts/app/GameWorldView.ts":  "e89348e78a1a42c9d83f29c88c8246dc66d5c4965f27bda793d204385c7ff974",
+    "client/assets/scripts/app/EntityAnimation.ts":  "092754db23b30a3fad54f763c0d6b717d92909ff2b5dd8044a81a20c114dfa44",
+    "client/assets/scripts/app/WorldAssets.ts":  "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "client/assets/scripts/app/BaselineAssembler.ts":  "6ffa576043f7e6187a24e07e9f1913f220189e666f00e4dc703d46c26a00e63b",
+    "Creator3.8.8/cocos/audio/audio-source.ts":  "384f69309c4ec2883de757a5880a70d1d430dabddb3abb0e6f57a6ecf0f3d640"
+}

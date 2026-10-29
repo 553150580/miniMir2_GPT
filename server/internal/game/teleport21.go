@@ -198,6 +198,7 @@ func (w *worker) resolveTeleport21(r *room, origin *worldState, cast pendingCast
 					r.PreviewGeneration++
 				}
 				r.Ready = false
+				r.PetBornReady = nil
 				r.LastTick = at
 				r.LastBroadcast = at
 				r.AwaitUntil = at.Add(time.Duration(f.TownTravel.AckTTLMS) * time.Millisecond)

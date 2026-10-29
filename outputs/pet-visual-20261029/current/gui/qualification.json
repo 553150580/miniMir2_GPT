@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "role_id_sha256": "7645839550b92547dd4ba1c5825b32acb0ab6944866e9a586d84a929d9904e8e",
+  "level": 19,
+  "explicit_count": 2,
+  "book_from_normal_create": true,
+  "skills_seeded": false,
+  "binding_seeded": false,
+  "position_seeded": false,
+  "body_seeded": false,
+  "pack_size_or_price_inferred": false,
+  "only_before_owner": true
+}

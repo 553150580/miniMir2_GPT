@@ -453,6 +453,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		r.PreviewGeneration++
 	}
 	r.Ready, r.LastTick, r.LastBroadcast = false, now, now
+	r.PetBornReady = nil
 	plan.Phase, plan.TargetScene, plan.TargetBaseline = travelCommitted, r.Scene, r.Baseline
 	plan.AckUntil = now.Add(time.Duration(plan.Rules.AckTTLMS) * time.Millisecond)
 	r.AwaitUntil = plan.AckUntil

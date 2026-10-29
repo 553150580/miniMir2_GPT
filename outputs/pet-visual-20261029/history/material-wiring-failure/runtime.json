@@ -1,0 +1,40 @@
+{
+  "pid": 83072,
+  "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\nbserver.exe",
+  "start_ticks": 134377255553120558,
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "run_id": "ca7a3ea669684bfbbcb55edbda6d8033",
+  "argv": [
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\nbserver.exe",
+    "-config",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\conf\\dev\\server.json",
+    "-mode",
+    "supervisor",
+    "-run-id",
+    "ca7a3ea669684bfbbcb55edbda6d8033"
+  ],
+  "database": "minimir_dev_game_test_pet_viz_ca7a3ea669684bfbbcb55edbda6d8033",
+  "purpose": "isolated_pet_visual_gui",
+  "binary_sha256": "cf29720d22f25ab77d799516da06651463c7e8cabafe615d6367ee42122207db",
+  "config_sha256": "3a0744e4c09a03b83669f906fd8c77454f00e18cf2d2a24bb44aa6583393803d",
+  "fixture_sha256": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "rule_version": 18,
+  "project": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-bc8efa68dcd64013adff572d2e420653\\client-project",
+  "creator_report": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\creator-report.json",
+  "ports": {
+    "account": 18110,
+    "game": 18111,
+    "gm": 18112
+  },
+  "static_port": 18082,
+  "artifact_directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-bc8efa68dcd64013adff572d2e420653",
+  "artifact_reused": true,
+  "artifact_proof": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\reused-artifact.json",
+  "health_instances": {
+    "account": "5c1eae134dfa59171935ec8e2800948e",
+    "game": "58632e555fc46008b57a7c7cae3b946f",
+    "gm": "088601214ad74e4d5bbee65082c0d476"
+  },
+  "static_pid": 38428,
+  "static_runtime": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\static-runtime.json"
+}

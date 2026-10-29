@@ -1,0 +1,1 @@
+{"running": true, "health": {"webMobileBuild": true, "developmentOnly": true, "pid": 37100, "run_id": "9e201386484c4568bfbcdf968ca7fca2", "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile", "port": 18080, "account_port": 18100, "game_port": 18101}}

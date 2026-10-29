@@ -1,0 +1,22 @@
+{
+  "input_sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf",
+  "output_sha256": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+  "all_other_cell_values_preserved": true,
+  "cell_differences": [
+    {
+      "sheet": "开发首循环夹具",
+      "row": 4,
+      "column": 3,
+      "only_json_path": "rule_version",
+      "before": 17,
+      "after": 18
+    }
+  ],
+  "formula_count": 460,
+  "all_formulas_preserved": true,
+  "untouched_zip_members": 102,
+  "changed_zip_members": [
+    "xl/worksheets/sheet95.xml"
+  ],
+  "architecture_workbook_unchanged": true
+}

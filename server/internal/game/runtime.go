@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/binary"
+	"errors"
 	"google.golang.org/protobuf/proto"
 	"math"
 	pb "minimir/api/generated/minimirv1"
@@ -110,6 +111,7 @@ type room struct {
 	Auth                  persistence.Auth
 	Conn                  Connection
 	Ready                 bool
+	PetBornReady          *petBornAttachment
 	Travel                *mapTravelPlan
 	TravelHistory         *mapTravelHistory
 	SavedPersonal         *personalWorld
@@ -276,6 +278,7 @@ func (e *Engine) Stop() {
 				if r.Conn != nil {
 					r.Conn.Close("maintenance")
 					r.Conn = nil
+					r.PetBornReady = nil
 				}
 				r.Auto = false
 			}
@@ -291,6 +294,7 @@ func (e *Engine) Stop() {
 			if r.Conn != nil {
 				r.Conn.Close("maintenance")
 				r.Conn = nil
+				r.PetBornReady = nil
 			}
 		}
 	}
@@ -366,6 +370,7 @@ func (w *worker) command(c command) {
 		if c.disconnect {
 			if r.Conn == c.conn {
 				r.Conn = nil
+				r.PetBornReady = nil
 			}
 			return
 		}
@@ -382,6 +387,7 @@ func (w *worker) command(c command) {
 			r.PreviewInFlight = false
 			r.Conn = nil
 			r.Ready = false
+			r.PetBornReady = nil
 			r.Manual = false
 			r.LastTick = time.Now()
 			r.HostSession = domain.ID()
@@ -425,7 +431,7 @@ func (w *worker) command(c command) {
 		if r.Player.HP == 0 {
 			w.deathNotice(r)
 		}
-		w.send(r, p.MsgS2CSyncReady, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
+		w.sendSyncReady(r, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
 		return
 	}
 	if c.frame.ID == p.MsgC2SMapTravelPrepare {
@@ -617,6 +623,7 @@ func (w *worker) join(r *room, c command) {
 			r.Manual = false
 			r.Conn = c.conn
 			r.Ready = false
+			r.PetBornReady = nil
 			r.Baseline = w.e.baseline.Add(1)
 			r.HostMS = 0
 			r.HostSession = ""
@@ -627,6 +634,7 @@ func (w *worker) join(r *room, c command) {
 			}
 			if !c.conn.Alive() {
 				r.Conn = nil
+				r.PetBornReady = nil
 				r.HostSession = domain.ID()
 				transitionEventHosting(r, time.Now(), r.HostSession)
 				w.after(r)
@@ -666,6 +674,7 @@ func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
 }
 func (w *worker) initialize(r *room, role domain.Role) {
 	w.cancelTownNavigation(r)
+	r.PetBornReady = nil
 	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
 	r.worldState = &worldState{}
 	r.PersonalWorld, r.TownWorld = nil, nil
@@ -746,7 +755,7 @@ func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
 	}
 	if !r.Ready {
 		switch id {
-		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CCastStep, p.MsgS2CSkillModeState, p.MsgS2CDeathNotice, p.MsgS2CEntityDisplacement:
+		case p.MsgS2CCastAccepted, p.MsgS2CAttackAccepted, p.MsgS2CCombatImpact, p.MsgS2CCastStep, p.MsgS2CSkillModeState, p.MsgS2CDeathNotice, p.MsgS2CEntityDisplacement, p.MsgS2CPetBorn:
 			return
 		}
 	}
@@ -787,6 +796,25 @@ func (w *worker) baseline(r *room, request ...uint32) {
 	if r.Conn == nil {
 		return
 	}
+	requestID := uint32(0)
+	if len(request) > 0 {
+		requestID = request[0]
+	}
+	chunks, err := w.buildBaseline(r, requestID)
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	for _, chunk := range chunks {
+		w.send(r, p.MsgS2CSceneBaseline, requestID, chunk)
+	}
+}
+
+// 先构造完整组；新生事实与普通同步使用同一实体投影及真实wire分块。
+func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineChunk, error) {
+	if r.Sequence == math.MaxUint64 {
+		return nil, errors.New("场景基线次序耗尽")
+	}
 	r.Sequence++
 	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto(), OwnedPet: w.ownedPetPB(r)}
 	if m, ok := w.currentMap(r); ok {
@@ -815,18 +843,7 @@ func (w *worker) baseline(r *room, request ...uint32) {
 		}
 		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind, PetTraining: petTrainingPB(e), IsPetCorpse: e.IsPetCorpse})
 	}
-	requestID := uint32(0)
-	if len(request) > 0 {
-		requestID = request[0]
-	}
-	chunks, err := splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
-	if err != nil {
-		w.isolateRoom(r)
-		return
-	}
-	for _, chunk := range chunks {
-		w.send(r, p.MsgS2CSceneBaseline, requestID, chunk)
-	}
+	return splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
 }
 func pointPB(p devconfig.Point) *pb.GridPoint { return &pb.GridPoint{X: int32(p.X), Y: int32(p.Y)} }
 func (w *worker) asset(r *room, f wire.Frame) {

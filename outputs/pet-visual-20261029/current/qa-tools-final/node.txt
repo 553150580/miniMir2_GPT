@@ -1,0 +1,22 @@
+✔ 临时库名符合Mongo 63字节限制且与Root资格helper前缀一致 (2.4897ms)
+✔ 隔离身份接受本轮三个新端口和配对工程，拒main端口/旧rule/其它工程 (1.6081ms)
+✔ 原始与复用工程都需真实输入/完整产物摘要，复用精确绑定新run凭据与旧project (62.5938ms)
+✔ 复用证明四个严格true/原报告SHA/当前fixture-public/run缺一不接受 (304.2923ms)
+✔ 复用不只信四个true：当前主源码、隔离输入、已编译产物任何字节漂移均拒绝 (84.8928ms)
+✔ Editor缓存排除必须是同一精确单路径，拒缺失、整个settings及扩大清单 (443.498ms)
+✔ 仅Editor缓存存在/再生值可变，其他当前source/isolated新增遗漏及任意build新文件仍拒绝 (41.9363ms)
+✔ 摘要路径不能通过绝对路径或父级逃逸指向其它工程 (44.3906ms)
+✔ 静态健康须精确配对新run PID/18082/QA代理与原artifact build-root (0.5649ms)
+✔ 只读协议解析保留uint64 binding且拒截断/溢出 (0.2613ms)
+✔ 资格响应必须匹配正常创角回包ID且声明未预置技能/身体/绑定 (2.3668ms)
+✔ 正常初学Recall等待读取实际catalog时序，不要求不存在的cooldown_ms (0.3277ms)
+✔ 正常触屏关闭Auto后等待真实Hosting false；缺失/true/Promise均不能当Boolean完成 (2.5072ms)
+✔ 失败诊断保留部分帧/声道/错误且白名单排除PNG与未知原payload (0.4525ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1042.3616

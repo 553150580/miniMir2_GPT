@@ -13,6 +13,7 @@ import type { AttachmentIdentity } from './MapTravelModel';
 import { RoleBindingModel } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
 import { TeleportModel } from './TeleportModel';
+import { PetBornModel } from './PetBornModel';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
@@ -32,6 +33,9 @@ export const session = {
     entryTravelId: '',
     entryServerTransitionId: '',
     teleport: new TeleportModel(),
+    petBorn: new PetBornModel(),
+    // 表现只量接收后的单调时长，不拿客户端Date与服务器Unix做差。
+    presentationNow: (): number => performance.now(),
     travel: new MapTravelModel(),
     travelState: null as any,
     bindingState: null as RoleBindingObservation | null,
@@ -147,12 +151,18 @@ session.connection.subscribe((packet: Packet) => {
             }
             break;
         }
+        case 30015: {
+            const identity = currentEntryIdentity();
+            if ((session.ready || session.travel.phase === 'quiescing') && session.role && identity && isCurrentEntry(identity) && BigInt(session.entry.resourceVersion.toString()) >= 18n)
+                session.petBorn.accept(packet.value, identity, packet.binding, session.presentationNow());
+            break;
+        }
         case 40008: session.report = packet.value; break;
         case 40005: acceptOperationReceipt(packet); break;
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
@@ -181,6 +191,7 @@ function acceptEntry(packet: Packet): void {
         session.entryServerTransitionId = transitionId;
         if (!forced) session.teleport.bind(currentEntryIdentity()!);
         bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
+        session.petBorn.bind(currentEntryIdentity()!);
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
     } catch (error) { session.ready = false; session.lastError = error instanceof Error ? error.message : String(error); }

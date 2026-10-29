@@ -1,0 +1,29 @@
+{
+  "scope": "read_only_post_freeze_no_go_db_creator",
+  "prior_record": "inputs.json",
+  "source_sha256": {
+    "server/internal/game/pet_born.go": "8cb80a389104f58248194937a8538ce58364b331edf1bba3cbc5435431ea3147",
+    "server/internal/game/pet_born_test.go": "f5e545f70a8fafc3220bea9dd0a7c57ae277f81ed57cbba8d227d7d1ca4e3aed",
+    "server/internal/game/runtime.go": "f040f9036575e8a34f698fb1a564f4dffde4124ad80e3acd83e46d7237404f12",
+    "server/internal/game/summon_pet.go": "b9d5408d0d34406de96a919df30a9641a31daaf3fc132a9a6e560b9754be7bd0",
+    "server/internal/game/baseline.go": "2a35dd9f91bd67b74c0d3078973e930b565ba4c983c0196994061c52cdaa2f6d",
+    "server/internal/game/world_context.go": "0032418762cf2749f3ca9311a29f6f2a2dc1c6be0c4075511ea2c8fd49920e6b",
+    "server/internal/game/pet_corpses.go": "9fd2541e1e32a895a2d6d0c925cd675bd295b7477100f42dcb9e3a53d7fdd9fa",
+    "server/internal/integration/summon_pet_test.go": "15a1df62f26e7de600f2b706cf0c9bc38856831bf243d5ee8c28d02fa9bcb4b2",
+    "server/internal/integration/first_loop_test.go": "ade17fd4342766d591c6db82b571841cc9a60f2568cbc23a4ae35d7a020c67f3",
+    "server/internal/game/pet_lifecycle.go": "2eee3d83564c48d1438f222008f90ee6531d02da32090d01e4b3992acc4b3e3f"
+  },
+  "changes_since_prior": [
+    {
+      "path": "server/internal/game/pet_born.go",
+      "prior_sha256": "03248f88b997788fc8e3235db1c6670439c9259847e57ae1069368ed0e577824",
+      "current_sha256": "8cb80a389104f58248194937a8538ce58364b331edf1bba3cbc5435431ea3147"
+    },
+    {
+      "path": "server/internal/game/pet_born_test.go",
+      "prior_sha256": "35ac38c505efbc4de8b897608bbee58a6476fedcc8b56f68a3b43e6877f883b5",
+      "current_sha256": "f5e545f70a8fafc3220bea9dd0a7c57ae277f81ed57cbba8d227d7d1ca4e3aed"
+    }
+  ],
+  "unchanged_count": 8
+}

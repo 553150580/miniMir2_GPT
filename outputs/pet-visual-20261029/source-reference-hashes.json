@@ -1,0 +1,57 @@
+[
+  {
+    "path": "tools/resources/build_development_assets.py",
+    "current_sha256": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1",
+    "plan_sha256": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1"
+  },
+  {
+    "path": "tools/resources/pet_birth_assets.py",
+    "current_sha256": "b1eba943d993212091ab2ca116a51862a26d508dd773342f84f82814f550209f",
+    "plan_sha256": "b1eba943d993212091ab2ca116a51862a26d508dd773342f84f82814f550209f"
+  },
+  {
+    "path": "tools/resources/test_pet_birth_assets.py",
+    "current_sha256": "8544eef56ee8bc6121f71648fd668e30433cfbafc0a96877a5386101408660a5",
+    "plan_sha256": "8544eef56ee8bc6121f71648fd668e30433cfbafc0a96877a5386101408660a5"
+  },
+  {
+    "path": "tools/client/verify_pet_visual_browser.cjs",
+    "current_sha256": "1c81c3d26c6131578d41073f01f875944eb3fe7e9c7428f51692cc45eb1cf19a",
+    "plan_sha256": "c65f3195d32c37230f965a69ad30ed31670504e9d1ad05ef49fec470a26fdbe0"
+  },
+  {
+    "path": "tools/client/pet_visual_browser.test.cjs",
+    "current_sha256": "a6dc3f2ad155e3cd70e33c0c3861497f7716a40cee7798069ab6e719e3b7a464",
+    "plan_sha256": "bde274383c526851f3aa79c92a186d3a8ca3b9ac6e1b9b5fca8af42877508cb0"
+  },
+  {
+    "path": "tools/client/prepare_pet_visual_qa.py",
+    "current_sha256": "03883b24bb88ebb3a370f9fb68b88f5e8558d3031c58330b6e39a400b52af7fd",
+    "plan_sha256": "e6bbf11cfc823e063c69072a7d028ec701bd06d5f0c81f4a6325fa7e52273bdb"
+  },
+  {
+    "path": "tools/client/test_pet_visual_qa.py",
+    "current_sha256": "ed10d7df02f49e95512a4deb15dea9138e87cc42fed07d96e46a8aa441dfc249",
+    "plan_sha256": "84493bfd14f15b0981929a5cf297300c7ffbf3c667f99e1836dd8a9b4654a24d"
+  },
+  {
+    "path": "tools/client/isolated_creator.py",
+    "current_sha256": "0880d2b020b2ef44f757f02ed2d51871fcda2b1c4bfda6652d99716167a06750",
+    "plan_sha256": "15866d3b860fb9646379ea313a8159d96c38312a0012c9073a7ac9d06772a8ea"
+  },
+  {
+    "path": "tools/client/serve.mjs",
+    "current_sha256": "93e5a825ae078f833a62943cc0d84e1baa2503e621ac6de9e1e374c0388aedbd",
+    "plan_sha256": "6e629d3aef7b4f107b040ef2835ff258375ddfb3c321e0f6e91f9df448d600cf"
+  },
+  {
+    "path": "docs/宠物出生表现与隔离客户端实施边界.md",
+    "current_sha256": "1f51ddba5825ce27e95149b883a31b371f03944cdfeebc5fc16297cba7e371e9",
+    "plan_sha256": "ae1501d219c1dfaf06c88d8a1ab192023b6f6c40b468546d2ba9d4b389193f6e"
+  },
+  {
+    "path": "资料索引/宠物出生表现来源契约.json",
+    "current_sha256": "e0d6080618eb589d87e36c16dba7f0c16e46a9e46acf29a87efc5971ed628aca",
+    "plan_sha256": "e0d6080618eb589d87e36c16dba7f0c16e46a9e46acf29a87efc5971ed628aca"
+  }
+]

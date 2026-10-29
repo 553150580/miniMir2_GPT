@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "artifact_directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-bc8efa68dcd64013adff572d2e420653",
+  "project": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-bc8efa68dcd64013adff572d2e420653\\client-project",
+  "creator_report_sha256": "c43f792757d6a5f971cad69f87a0df5072d5bd6a26e59ab6fbc84822d3e2a987",
+  "project_copy_sha256": "565e3845e681b27e159fa42d4586cc43bc76ed78c9c2c90255c0b1b2ed1f7f63",
+  "public_sha256": "7effa12f579940955c802a3a08b719e5e2b6bf9218064004409d2558523b6cdc",
+  "current_source_matches": true,
+  "isolated_inputs_match": true,
+  "build_outputs_match": true,
+  "source_files": 20299,
+  "build_files": 26053,
+  "runtime_resource_override": false,
+  "creator_rerun": false,
+  "fixture_sha256": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "run_id": "ca7a3ea669684bfbbcb55edbda6d8033"
+}

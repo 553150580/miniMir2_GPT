@@ -1,0 +1,46 @@
+{
+  "copies": [
+    {
+      "source_path": "D:\\123DownLoad\\GoMir2_DS\\.local\\crystal-actors-src\\Data\\Monster\\78.Lib",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Monster/78.Lib",
+      "sha256": "de0033d3a81d04277a679d68a942516c7365c086d27ddd650ae5ea5cfac3a678",
+      "bytes": 382901,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "local_technical_asset_candidate_download_chain_unresolved"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\M65-0.wav",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/M65-0.wav",
+      "sha256": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+      "bytes": 200452,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\078-5.wav",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/078-5.wav",
+      "sha256": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+      "bytes": 265440,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\SoundList.lst",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/SoundList.lst",
+      "sha256": "0250a0ce5790e0f72c64be2f28f423749d9669c242f158c3afaec3de7ad9d52f",
+      "bytes": 10317,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    }
+  ],
+  "contract_sha256": "86135dbf8e2bf3a5b00b3fbc02b6b026bec4c27829d7d740e0aee0d36527fca3",
+  "profile_edit": "仅parameters.rule_version17→18，保持其它业务字段"
+}

@@ -1,0 +1,28 @@
+✖ 真实Session完整Assembler到AppRoot：quiescing仍观察原World出生，取消后不重播且输入始终禁用 (122.3284ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 322.8355
+
+✖ failing tests:
+
+test at client\tests\app\map_travel_runtime.test.cjs:41:1
+✖ 真实Session完整Assembler到AppRoot：quiescing仍观察原World出生，取消后不重播且输入始终禁用 (122.3284ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\map_travel_runtime.test.cjs:53:42)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,1 @@
+{"go_pb_files": 4, "protoc": "libprotoc 36.2", "protoc_gen_go": "protoc-gen-go v1.36.12"}

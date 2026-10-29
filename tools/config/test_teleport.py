@@ -33,7 +33,7 @@ class TeleportProjectionTests(unittest.TestCase):
     def test_current_21_values_and_initializer_are_explicit_source_candidates(self):
         f = self.fixture
         skill = next(row for row in f['skills'] if row['id'] == 21)
-        self.assertEqual(f['rule_version'], 17)
+        self.assertEqual(f['rule_version'], 18)
         self.assertEqual((skill['job_id'], skill['book_item_id'], skill['learn_level'], skill['learned_level'], skill['max_level']), (1, 13, 19, 0, 3))
         self.assertEqual((skill['mp_base_cost'], skill['mp_level_cost'], skill['global_spell_ms'], skill['action_ms'], skill['cooldown_base_ms'], skill['delay_base_ms']), (10, 3, 1800, 600, 1800, 200))
         self.assertEqual(skill['teleport'], {'max_attempts': 200, 'axis_rule': 'map_dimension_divided_by_rank_plus_one', 'landing_rule': 'source_static_walk', 'allow_occupied': True, 'allow_accepted_dead': True, 'check_source_map_at_due': True})

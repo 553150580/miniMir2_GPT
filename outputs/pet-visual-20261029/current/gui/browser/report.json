@@ -1,0 +1,1423 @@
+{
+  "passed": true,
+  "scope": "独立rule18/正常注册道士创角/19级资格与Count2/原书25学习/触屏新召及Recall/健康重入；非购符包规格、自然养成、尸体重召、容量或真机",
+  "runId": "a34997dce6a34424b2b223b44b1f701a",
+  "fixtureHash": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "publicHash": "7effa12f579940955c802a3a08b719e5e2b6bf9218064004409d2558523b6cdc",
+  "manifestHash": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+  "mainInputIdentity": {
+    "projectCopy": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a34997dce6a34424b2b223b44b1f701a\\project-copy.json",
+    "projectCopyHash": "a8db21362f8a5399c62da266f495aeee4df4473a8c05f9317e37dba24769f36f",
+    "clientFileCount": 20298,
+    "configBefore": {
+      "config/development/first-loop.json": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a",
+      "config/development/summon-candidates.json": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33",
+      "config/schema/catalog.json": "e950f03194d183d1d397944b4f04734f303bb5cd351ba4a86f1929aed527946d",
+      "outputs/development-prep-20261026/玩法配置.xlsx": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+      "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+    }
+  },
+  "checks": [
+    "正常注册及Job2创角，未owner资格CAS只设19级与Count2；首入无宠、原书25且无预学技能",
+    "正常40014新召消耗Count1，30015与同birth/scene/基线配对，GPU首中末原帧及两声道真实播放",
+    "卸符后正常30003 Recall，同handle/Life、Count仍1；只新增施法声，不新增Born或出场声",
+    "正常换角新票健康重入保持同birth，不重播出场动作或078-5声音"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x2264001d2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x2264001d2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x2264001d2c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    }
+  ],
+  "protocolErrors": [],
+  "sent": [
+    {
+      "time": 1793266872331,
+      "id": 40014,
+      "skill": 17,
+      "scene": "15533531099763775596"
+    },
+    {
+      "time": 1793266874818,
+      "id": 30003,
+      "skill": 17,
+      "scene": "15533531099763775596"
+    }
+  ],
+  "casts": [
+    {
+      "time": 1793266872354,
+      "binding": "1",
+      "cast": "1",
+      "scene": "15533531099763775596",
+      "skill": 17,
+      "caster": 1,
+      "life": "0"
+    },
+    {
+      "time": 1793266874822,
+      "binding": "1",
+      "cast": "2",
+      "scene": "15533531099763775596",
+      "skill": 17,
+      "caster": 1,
+      "life": "0"
+    }
+  ],
+  "born": [
+    {
+      "time": 1793266872892,
+      "binding": "1",
+      "scene": "15533531099763775596",
+      "baseline": "1",
+      "sequence": "19",
+      "handle": 3,
+      "life": "1",
+      "cast": "1",
+      "skill": 17,
+      "map": "1",
+      "direction": 5,
+      "elapsedMs": 0
+    }
+  ],
+  "entries": [
+    {
+      "binding": "1",
+      "scene": "15533531099763775596",
+      "baseline": "1",
+      "map": "1"
+    },
+    {
+      "binding": "2",
+      "scene": "15533531099763775596",
+      "baseline": "2",
+      "map": "1"
+    }
+  ],
+  "acks": [
+    {
+      "scene": "15533531099763775596",
+      "baseline": "1"
+    },
+    {
+      "scene": "15533531099763775596",
+      "baseline": "2"
+    }
+  ],
+  "states": [
+    {
+      "name": "01-normal-new-role",
+      "time": 1793266870654,
+      "sceneName": "Game",
+      "scene": "15533531099763775596",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [
+        "1"
+      ],
+      "materialBag": [
+        "2"
+      ],
+      "materialEquipped": [],
+      "learned": [],
+      "pets": [],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "112",
+        "position": {
+          "x": 7,
+          "y": 7
+        },
+        "direction": 7,
+        "movementRevision": "1",
+        "attackSequence": 0,
+        "castSequence": 0
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [],
+      "lastError": ""
+    },
+    {
+      "name": "03-fresh-pet",
+      "time": 1793266874159,
+      "sceneName": "Game",
+      "scene": "15533531099763775596",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [],
+      "materialBag": [],
+      "materialEquipped": [
+        "1"
+      ],
+      "learned": [
+        {
+          "skill": 17,
+          "level": 0
+        }
+      ],
+      "pets": [
+        {
+          "handle": 3,
+          "life": "1",
+          "hp": "60",
+          "corpse": false
+        }
+      ],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "100",
+        "position": {
+          "x": 7,
+          "y": 7
+        },
+        "direction": 7,
+        "movementRevision": "1",
+        "attackSequence": 0,
+        "castSequence": 1
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": true,
+            "clipBound": true
+          }
+        ]
+      },
+      "appearance": [
+        {
+          "handle": 3,
+          "life": "1",
+          "definitionId": 2,
+          "action": "standing",
+          "frame": 1,
+          "direction": 5,
+          "frames": [
+            "Mon4:2581"
+          ],
+          "blend": [
+            {
+              "source": 2,
+              "destination": 4
+            }
+          ]
+        }
+      ],
+      "lastError": ""
+    },
+    {
+      "name": "04-unequipped-recall",
+      "time": 1793266876070,
+      "sceneName": "Game",
+      "scene": "15533531099763775596",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [],
+      "materialBag": [
+        "1"
+      ],
+      "materialEquipped": [],
+      "learned": [
+        {
+          "skill": 17,
+          "level": 0
+        }
+      ],
+      "pets": [
+        {
+          "handle": 3,
+          "life": "1",
+          "hp": "60",
+          "corpse": false
+        }
+      ],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "88",
+        "position": {
+          "x": 7,
+          "y": 7
+        },
+        "direction": 7,
+        "movementRevision": "1",
+        "attackSequence": 0,
+        "castSequence": 2
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:2:1:0",
+            "elapsedMs": 0.39999985694885254,
+            "playCalls": 2,
+            "playCallAt": 15533.5,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [
+        {
+          "handle": 3,
+          "life": "1",
+          "definitionId": 2,
+          "action": "standing",
+          "frame": 1,
+          "direction": 5,
+          "frames": [
+            "Mon4:2581"
+          ],
+          "blend": [
+            {
+              "source": 2,
+              "destination": 4
+            }
+          ]
+        }
+      ],
+      "lastError": ""
+    },
+    {
+      "name": "05-healthy-reentry",
+      "time": 1793266883396,
+      "sceneName": "Game",
+      "scene": "15533531099763775596",
+      "baseline": "2",
+      "binding": "2",
+      "ready": true,
+      "level": 19,
+      "books": [],
+      "materialBag": [
+        "1"
+      ],
+      "materialEquipped": [],
+      "learned": [
+        {
+          "skill": 17,
+          "level": 0
+        }
+      ],
+      "pets": [
+        {
+          "handle": 3,
+          "life": "1",
+          "hp": "60",
+          "corpse": false
+        }
+      ],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "88",
+        "position": {
+          "x": 7,
+          "y": 7
+        },
+        "direction": 7,
+        "movementRevision": "1",
+        "attackSequence": 0,
+        "castSequence": 2
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "gestureSource": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [
+        {
+          "handle": 3,
+          "life": "1",
+          "definitionId": 2,
+          "action": "standing",
+          "frame": 0,
+          "direction": 5,
+          "frames": [
+            "Mon4:2580"
+          ],
+          "blend": [
+            {
+              "source": 2,
+              "destination": 4
+            }
+          ]
+        }
+      ],
+      "lastError": ""
+    }
+  ],
+  "gpu": [
+    {
+      "file": "02-appear-frame-0.png",
+      "sha256": "b34d8a65186210c65f5d842c95407293c2e1d96ad8070dd4c4603972f1a525ad",
+      "at": 15663.299999952316,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 0,
+      "direction": 5,
+      "frames": [
+        "Mon4:2860"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    },
+    {
+      "file": "02-appear-frame-4.png",
+      "sha256": "e6d6f2982af3ad4b32ca8e05cbe4164a7d4999550d6f752ed59e54ff916dcb8c",
+      "at": 16068.599999904633,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 4,
+      "direction": 5,
+      "frames": [
+        "Mon4:2864"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    },
+    {
+      "file": "02-appear-frame-9.png",
+      "sha256": "7fea3e24adc82b2f1a61ef90f828617524f6ed45d6dbd2a8a43ca7082cfe00b2",
+      "at": 16612.799999952316,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 9,
+      "direction": 5,
+      "frames": [
+        "Mon4:2869"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    }
+  ],
+  "credentialsWritten": false,
+  "bodySeeded": false,
+  "privateCastInvoked": false,
+  "routeOverride": false,
+  "health": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "fd074bb2daa53596a7cb16148968f004",
+        "game": "cc47cd168fe2399573d3e59f05c5136a",
+        "gm": "acddbea704b6a3b65e49e37eb8af46fd"
+      }
+    },
+    {
+      "phase": "before_reentry",
+      "instances": {
+        "account": "fd074bb2daa53596a7cb16148968f004",
+        "game": "cc47cd168fe2399573d3e59f05c5136a",
+        "gm": "acddbea704b6a3b65e49e37eb8af46fd"
+      }
+    },
+    {
+      "phase": "after_reentry",
+      "instances": {
+        "account": "fd074bb2daa53596a7cb16148968f004",
+        "game": "cc47cd168fe2399573d3e59f05c5136a",
+        "gm": "acddbea704b6a3b65e49e37eb8af46fd"
+      }
+    }
+  ],
+  "artifactIdentity": {
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a34997dce6a34424b2b223b44b1f701a",
+    "reused": false,
+    "proof": null,
+    "proofHash": null,
+    "creatorReport": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a34997dce6a34424b2b223b44b1f701a\\creator-report.json",
+    "creatorReportHash": "b36a47a7adb43720cd6544e476fe12ab76e55721c9e91fd4864c3dbe2f8df0a2",
+    "staticPort": 18082,
+    "staticPid": 83172,
+    "staticRuntime": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a34997dce6a34424b2b223b44b1f701a\\static-runtime.json",
+    "excludedGeneratedEditorCaches": [
+      "settings/v2/packages/information.json"
+    ],
+    "generatedEditorCacheSha256": {
+      "settings/v2/packages/information.json": "33acf5c6708a3b741da6b3b63cc05496c284c94f90a24fecf3e0c3401a5bca1f"
+    }
+  },
+  "qualification": {
+    "passed": true,
+    "role_id_sha256": "7645839550b92547dd4ba1c5825b32acb0ab6944866e9a586d84a929d9904e8e",
+    "level": 19,
+    "explicit_count": 2,
+    "book_from_normal_create": true,
+    "skills_seeded": false,
+    "binding_seeded": false,
+    "position_seeded": false,
+    "body_seeded": false,
+    "pack_size_or_price_inferred": false,
+    "only_before_owner": true
+  },
+  "create": {
+    "request": 3,
+    "job": 2,
+    "slot": 1,
+    "roleHash": "7645839550b92547dd4ba1c5825b32acb0ab6944866e9a586d84a929d9904e8e"
+  },
+  "manualAutoControl": {
+    "touched": true,
+    "authoritativeDisabled": true
+  },
+  "freshObservation": {
+    "samples": [
+      {
+        "at": 15663.299999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 0,
+        "direction": 5,
+        "frames": [
+          "Mon4:2860"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15802.599999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 1,
+        "direction": 5,
+        "frames": [
+          "Mon4:2861"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15859,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 2,
+        "direction": 5,
+        "frames": [
+          "Mon4:2862"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15966.5,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 3,
+        "direction": 5,
+        "frames": [
+          "Mon4:2863"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16068.599999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 4,
+        "direction": 5,
+        "frames": [
+          "Mon4:2864"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16208.700000047684,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 5,
+        "direction": 5,
+        "frames": [
+          "Mon4:2865"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16260,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 6,
+        "direction": 5,
+        "frames": [
+          "Mon4:2866"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16364.299999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 7,
+        "direction": 5,
+        "frames": [
+          "Mon4:2867"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16472.700000047684,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 8,
+        "direction": 5,
+        "frames": [
+          "Mon4:2868"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16612.799999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 9,
+        "direction": 5,
+        "frames": [
+          "Mon4:2869"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      }
+    ],
+    "audio": [
+      {
+        "at": 15092.700000047684,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 15128.899999856949,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": true,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 15663.099999904633,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": true,
+            "clipBound": true
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": true,
+            "clipBound": true
+          }
+        ]
+      },
+      {
+        "at": 16260,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": true,
+            "clipBound": true
+          }
+        ]
+      },
+      {
+        "at": 17248.700000047684,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      }
+    ]
+  },
+  "healthyAutoControl": {
+    "touched": false,
+    "authoritativeDisabled": true
+  },
+  "finalObservation": {
+    "samples": [
+      {
+        "at": 15663.299999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 0,
+        "direction": 5,
+        "frames": [
+          "Mon4:2860"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15802.599999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 1,
+        "direction": 5,
+        "frames": [
+          "Mon4:2861"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15859,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 2,
+        "direction": 5,
+        "frames": [
+          "Mon4:2862"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 15966.5,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 3,
+        "direction": 5,
+        "frames": [
+          "Mon4:2863"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16068.599999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 4,
+        "direction": 5,
+        "frames": [
+          "Mon4:2864"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16208.700000047684,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 5,
+        "direction": 5,
+        "frames": [
+          "Mon4:2865"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16260,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 6,
+        "direction": 5,
+        "frames": [
+          "Mon4:2866"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16364.299999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 7,
+        "direction": 5,
+        "frames": [
+          "Mon4:2867"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16472.700000047684,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 8,
+        "direction": 5,
+        "frames": [
+          "Mon4:2868"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16612.799999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 9,
+        "direction": 5,
+        "frames": [
+          "Mon4:2869"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      }
+    ],
+    "audio": [
+      {
+        "at": 15092.700000047684,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 15128.899999856949,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": true,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 15663.099999904633,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": true,
+            "clipBound": true
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": true,
+            "clipBound": true
+          }
+        ]
+      },
+      {
+        "at": 16260,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": true,
+            "clipBound": true
+          }
+        ]
+      },
+      {
+        "at": 17248.700000047684,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:1:1:0",
+            "elapsedMs": 0.7000000476837158,
+            "playCalls": 1,
+            "playCallAt": 13064.600000143051,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 17599.299999952316,
+        "phase": "recall",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:2:1:0",
+            "elapsedMs": 0.39999985694885254,
+            "playCalls": 2,
+            "playCallAt": 15533.5,
+            "playing": true,
+            "clipBound": true
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 18725,
+        "phase": "recall",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": true,
+        "gestureAt": 11334.5,
+        "gestureSource": "saved_ui_capture",
+        "voices": [
+          {
+            "cue": "summon_skeleton_cast",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:cast:2:1:0",
+            "elapsedMs": 0.39999985694885254,
+            "playCalls": 2,
+            "playCallAt": 15533.5,
+            "playing": false,
+            "clipBound": false
+          },
+          {
+            "cue": "pet_skeleton_born",
+            "identity": "[1,\"1\",\"1:00655237a78695024300d243bf0d359f\",\"15533531099763775596\",\"1\",\"1\",\"\",\"\"]:born:1:3:1",
+            "elapsedMs": 1.4000000953674316,
+            "playCalls": 1,
+            "playCallAt": 13603.100000143051,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      {
+        "at": 24948.299999952316,
+        "phase": "healthy",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "gestureSource": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      }
+    ]
+  },
+  "mainProtectedInputsStable": true,
+  "zeroWarningsVerified": false
+}

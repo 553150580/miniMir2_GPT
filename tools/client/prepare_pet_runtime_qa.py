@@ -46,8 +46,8 @@ def build_fixture(source, ttl_ms):
     if ttl_ms < 12000 or ttl_ms > 15000:
         raise ValueError('本GUI只接受12000–15000ms隔离尸体观察期限')
     value = copy.deepcopy(source)
-    if value['rule_version'] not in (16, 17) or not value['pet_runtime']['enabled'] or value['pet_runtime']['bootstrap_mode'] != 'legacy_untrained_pet':
-        raise ValueError('需要rule16/17且保持关闭17与护符的legacy开发宠物底座')
+    if value['rule_version'] not in (16, 17, 18) or not value['pet_runtime']['enabled'] or value['pet_runtime']['bootstrap_mode'] != 'legacy_untrained_pet':
+        raise ValueError('需要rule16/17/18且保持关闭17与护符的legacy开发宠物底座')
     if value['casting_supply']['enabled'] or any(row['id'] == 17 for row in value['skills']):
         raise ValueError('本GUI不允许开启护符或17')
     pet = value['pet']
@@ -108,8 +108,8 @@ def assert_main_identity():
 
 
 def health(fixture_hash, expected_rule_version):
-    if expected_rule_version not in (16, 17):
-        raise ValueError('尸体QA只接受明确rule16/17')
+    if expected_rule_version not in (16, 17, 18):
+        raise ValueError('尸体QA只接受明确rule16/17/18')
     result = {}
     for mode, port in PORTS.items():
         try:

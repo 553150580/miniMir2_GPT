@@ -1,0 +1,12 @@
+[
+  {
+    "execution": "Python runpy.run_path .work\\pet-visual-20261029\\source-assets\\audit_sources.py under tools/dev.ps1 python3",
+    "exit_code": 0,
+    "stdout_log": "audit-sources.log"
+  },
+  {
+    "execution": "Python runpy.run_path .work\\pet-visual-20261029\\source-assets\\audit_supplement.py under tools/dev.ps1 python3",
+    "exit_code": 0,
+    "stdout_log": "audit-supplement.log"
+  }
+]

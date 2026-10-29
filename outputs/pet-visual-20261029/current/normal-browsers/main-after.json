@@ -1,0 +1,36 @@
+{
+  "running": true,
+  "pid": 16600,
+  "run_id": "9ebd35e5-1279-481f-9a90-6d32b1d23c00",
+  "health": {
+    "account": {
+      "development_only": true,
+      "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "instance": "5fc7a17915d5714da994b7e16c3f6cfb",
+      "mode": "account",
+      "rule_version": 18,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "game": {
+      "development_only": true,
+      "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "instance": "bfada754d5ad2d41441faa48703357e7",
+      "mode": "game",
+      "rule_version": 18,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "gm": {
+      "development_only": true,
+      "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "instance": "74a69720f9955cd68e1dbea0f1e66319",
+      "mode": "gm",
+      "rule_version": 18,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  },
+  "development_only": true,
+  "production_ready": false
+}

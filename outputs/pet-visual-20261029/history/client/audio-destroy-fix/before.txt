@@ -1,0 +1,69 @@
+✖ 真实引擎子树先于AppRoot组件销毁：Safe自清监听，global主动退订，AudioSource与clip只归还一次 (102.2375ms)
+✖ strict isValid不包含Destroying；公开销毁信号在处理器与子树之前完成音频退休 (67.0659ms)
+✖ 排队ToDestroy声道仍须清clip，已毁声道不再stop或重复destroy，异步旧播放不复活 (55.7662ms)
+✔ 同保存Safe的新声道不被旧实例重复dispose退订，完整原WAV与资源owner仍独立 (56.1299ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 524.4119
+
+✖ failing tests:
+
+test at client\tests\app\world_audio_destroy.test.cjs:62:1
+✖ 真实引擎子树先于AppRoot组件销毁：Safe自清监听，global主动退订，AudioSource与clip只归还一次 (102.2375ms)
+  TypeError [Error]: Cannot read properties of null (reading 'off')
+      at Node.off (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:5:30)
+      at Node.off (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:37:110)
+      at WorldAudio.dispose (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:96:24)
+      at ObjectBase.onDestroy (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:59:188)
+      at Object.destroyComp (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:31:154)
+      at ObjectBase._onPreDestroy (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:8:42)
+      at ObjectBase._onPreDestroy (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:59:128)
+      at ObjectBase._destroyImmediate (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:11:31)
+      at ObjectBase._destroyImmediate (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:33:125)
+      at Node._onPreDestroyBase (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:48:22)
+
+test at client\tests\app\world_audio_destroy.test.cjs:69:1
+✖ strict isValid不包含Destroying；公开销毁信号在处理器与子树之前完成音频退休 (67.0659ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:70:178
+      at CallbacksInvoker.emit (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:15:111)
+      at NodeEventProcessor.emit (eval at <anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:18:1), <anonymous>:220:30)
+      at Node.emit (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:5:30)
+      at Node.emit (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:37:158)
+      at Node._onPreDestroyBase (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:34:14)
+      at Node._onPreDestroy (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:39:34)
+      at Node._destroyImmediate (eval at compile (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:5:169), <anonymous>:11:31)
+      at Node._destroyImmediate (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:33:125)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:71:9) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\world_audio_destroy.test.cjs:73:1
+✖ 排队ToDestroy声道仍须清clip，已毁声道不再stop或重复destroy，异步旧播放不复活 (55.7662ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_destroy.test.cjs:75:23)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

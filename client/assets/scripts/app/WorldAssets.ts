@@ -1,4 +1,4 @@
-import { Asset, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
+import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 import { GridProjection } from './GridProjection';
 import { SourceMapAssets } from './SourceMapAssets';
 
@@ -60,6 +60,7 @@ export class WorldAssets {
     mapId = '1';
     get mapBackground(): SpriteFrame | null { return this.background; }
     readonly frames = new Map<string, SpriteFrame>();
+    readonly audioClips = new Map<string, AudioClip>();
     private owned = new Set<Asset>();
     private disposed = false;
     private disposing = false;
@@ -180,6 +181,11 @@ export class WorldAssets {
                 }
             }));
             if (failure) throw failure;
+            // 出场与施法声音只使用已核原音频；与身体帧一样在入场前持有，不能让加载延后服务器出生。
+            if (job === 2) for (const [key, value] of Object.entries(result.manifest.audio ?? {}) as Array<[string, any]>) {
+                if (!/^[a-z0-9_]+$/.test(key) || typeof value.path !== 'string' || !/^audio\/[a-z0-9_]+\.wav$/.test(value.path)) throw new Error('音频资源路径无效');
+                result.audioClips.set(key, result.own(await load<AudioClip>(`development/${value.path.replace(/\.wav$/, '')}`, AudioClip)));
+            }
             return result;
         } catch (error) { result.dispose(); throw error; }
     }
@@ -201,7 +207,7 @@ export class WorldAssets {
             this.releaseSourceInvalidation?.(); this.releaseSourceInvalidation = undefined;
             this.disposed = true; this.background = null;
             for (const asset of Array.from(this.owned)) asset.decRef();
-            this.owned.clear(); this.frames.clear(); this.beforeInvalidation.clear();
+            this.owned.clear(); this.frames.clear(); this.audioClips.clear(); this.beforeInvalidation.clear();
         } finally { this.disposing = false; }
     }
 }

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "--test-name-pattern=quiescing",
+    "client/tests/app/map_travel_runtime.test.cjs"
+  ],
+  "exit_code": 1,
+  "sha256": "ffb27393f1fe60f278c04cf7fc6cd606d52045cd2612a50ad27fce5ab3ea04eb",
+  "production_hashes": {
+    "client\\assets\\scripts\\app\\GameSession.ts": "9c51ce20f2d1cb2e607291cc7e8b0d436466ee36f4935010819799ed9d55e94c",
+    "client\\assets\\scripts\\app\\AppRoot.ts": "e4a3bec40ba815248522200f65d0fde9973f5ccfdec2960d4ac7344a14e52344"
+  }
+}

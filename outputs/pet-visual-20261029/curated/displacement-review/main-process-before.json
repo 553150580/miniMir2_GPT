@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "run_id": "ee8edc85-6a98-422f-aef6-d6d3fe052bef",
+  "pid": 49420,
+  "binary_sha256": "cf29720d22f25ab77d799516da06651463c7e8cabafe615d6367ee42122207db",
+  "log": "D:\\A_Claude\\miniMir2_GPT\\server\\.dev\\runs\\ee8edc85-6a98-422f-aef6-d6d3fe052bef\\server.log",
+  "started_at_unix": 1793247753,
+  "executable": "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe",
+  "start_ticks": 134377213530648727
+}

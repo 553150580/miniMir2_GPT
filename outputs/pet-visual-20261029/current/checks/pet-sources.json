@@ -1,0 +1,13 @@
+{
+  "task": "pet-sources",
+  "command": [
+    "python3",
+    "tools/reference/verify_pet_sources.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T03:32:10.116881+00:00",
+  "finished_at": "2026-10-29T03:32:10.269416+00:00",
+  "output": ".work/pet-visual-20261029/checks/pet-sources.txt",
+  "output_sha256": "10c77cdd08e98634858321fe508ae2a77dee92541dc4b1ab49b622c07f553ea5",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

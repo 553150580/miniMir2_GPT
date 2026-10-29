@@ -1,0 +1,579 @@
+{
+  "scope": "post-Creator只读SHA及实际导入cache核验；未运行Creator/Go/DB",
+  "checked_at_utc": "2026-10-29T04:09:35.961887+00:00",
+  "old_files_unchanged": {
+    "png": 7998,
+    "map_files": 13158,
+    "saved_layout": 10,
+    "resource_meta": 9972
+  },
+  "old_frame_records_unchanged": 3332,
+  "old_effect_records_unchanged": 20,
+  "current_frame_count": 3352,
+  "new_pngs": 20,
+  "new_wavs": 2,
+  "new_meta_count": 23,
+  "new_meta": [
+    {
+      "path": "client/assets/resources/development/audio.meta",
+      "bytes": 169,
+      "sha256": "48d431b860cd1c3226982e840890841c0c638cb26da82a274171d1b490988867",
+      "created_utc": "2026-10-29T03:54:19.159258+00:00",
+      "modified_utc": "2026-10-29T03:54:19.215282+00:00",
+      "importer": "directory",
+      "version": "1.2.0",
+      "uuid": "3b19d383-90f7-49e7-84de-a0dfbad51335"
+    },
+    {
+      "path": "client/assets/resources/development/audio/pet_skeleton_born.wav.meta",
+      "bytes": 222,
+      "sha256": "1e47ad4846ec7151995af5d1406c38e71eef766b6e307445a33215e1df198603",
+      "created_utc": "2026-10-29T03:54:39.324251+00:00",
+      "modified_utc": "2026-10-29T03:54:44.544358+00:00",
+      "importer": "audio-clip",
+      "version": "1.0.0",
+      "uuid": "5b5596f6-677f-4b85-9df7-3f3e116e710c",
+      "imported_asset": {
+        "path": "client/library/5b/5b5596f6-677f-4b85-9df7-3f3e116e710c.json",
+        "sha256": "f7d95663a8c0b42e50c5f58a955932081f00db236e7c729e9fdd8c25c7e03a3a",
+        "serialized_type": "cc.AudioClip",
+        "name": "pet_skeleton_born",
+        "duration_seconds": 1.504512
+      },
+      "imported_native": {
+        "path": "client/library/5b/5b5596f6-677f-4b85-9df7-3f3e116e710c.wav",
+        "sha256": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+        "source_wav_byte_equal": true
+      },
+      "user_data": {
+        "downloadMode": 0
+      }
+    },
+    {
+      "path": "client/assets/resources/development/audio/summon_skeleton_cast.wav.meta",
+      "bytes": 222,
+      "sha256": "75d91a3b1c7bab9a70fa079617e1f7cb2625dfe4a040c9c6969e887e2a32def3",
+      "created_utc": "2026-10-29T03:54:39.325254+00:00",
+      "modified_utc": "2026-10-29T03:54:44.553351+00:00",
+      "importer": "audio-clip",
+      "version": "1.0.0",
+      "uuid": "24730c4d-40a6-46bb-918c-91a2c2547ac5",
+      "imported_asset": {
+        "path": "client/library/24/24730c4d-40a6-46bb-918c-91a2c2547ac5.json",
+        "sha256": "52649cbae0267abdd3ead914a305d04c4bdc38d467144256e6bb93e08496c064",
+        "serialized_type": "cc.AudioClip",
+        "name": "summon_skeleton_cast",
+        "duration_seconds": 1.1361
+      },
+      "imported_native": {
+        "path": "client/library/24/24730c4d-40a6-46bb-918c-91a2c2547ac5.wav",
+        "sha256": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+        "source_wav_byte_equal": true
+      },
+      "user_data": {
+        "downloadMode": 0
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001500.png.meta",
+      "bytes": 2812,
+      "sha256": "a3cd307f6d796de7fffe2236a7098cb3400794cff9fae277ff3794b04c25f1e4",
+      "created_utc": "2026-10-29T03:54:40.160161+00:00",
+      "modified_utc": "2026-10-29T03:54:45.413955+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "037d61cb-2d01-4865-a520-8a3050fa4e48",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001501.png.meta",
+      "bytes": 2859,
+      "sha256": "4678c01f21bf47c3934b097895e49a8286fbef96fe4991a72e509c809df572eb",
+      "created_utc": "2026-10-29T03:54:40.161223+00:00",
+      "modified_utc": "2026-10-29T03:54:45.414939+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "b6fb3d91-423f-4bac-887d-f3395d7d557d",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001502.png.meta",
+      "bytes": 2812,
+      "sha256": "d7c3f228ecdd76442e719dbb115e913d4e365139d729a896161be16e6d06808e",
+      "created_utc": "2026-10-29T03:54:40.162214+00:00",
+      "modified_utc": "2026-10-29T03:54:45.419247+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "ece2f194-ce3a-47c1-bf13-76d15717c31f",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001503.png.meta",
+      "bytes": 2824,
+      "sha256": "a33987dcc14755267b0352e7bfd521a08e3bc11d91d8e5ebb5ad3191515c8030",
+      "created_utc": "2026-10-29T03:54:40.164727+00:00",
+      "modified_utc": "2026-10-29T03:54:45.416281+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "bf2e9c4a-dbe7-4991-ba01-995a12f6843f",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001504.png.meta",
+      "bytes": 2861,
+      "sha256": "8d6984cf8d496e086c9da603c231105e12a45ea1e01404bf4528541a4e825efd",
+      "created_utc": "2026-10-29T03:54:40.165729+00:00",
+      "modified_utc": "2026-10-29T03:54:45.412966+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "827a5326-bed4-4068-96e2-26f853d15c3d",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001505.png.meta",
+      "bytes": 2873,
+      "sha256": "450d88d61c0a300a22a6ed637ad4344b55cb25b752656f2d4c0b4a973c30f1f4",
+      "created_utc": "2026-10-29T03:54:40.165729+00:00",
+      "modified_utc": "2026-10-29T03:54:45.427494+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "10908518-51b2-4bc2-9fe3-fe6f4b0a4c6e",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001506.png.meta",
+      "bytes": 2861,
+      "sha256": "030ee2b3d186c68a8b1d5fb3ae87e703860091c95c4ab5d892b8547130d5c553",
+      "created_utc": "2026-10-29T03:54:40.166731+00:00",
+      "modified_utc": "2026-10-29T03:54:45.430353+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "1630de55-8692-4e79-b9be-c69d4ae09473",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001507.png.meta",
+      "bytes": 2847,
+      "sha256": "3a94549c26d787a07ddb6541c82f595b934f9d14d63e8e1b40ad3e10e22c6568",
+      "created_utc": "2026-10-29T03:54:40.166731+00:00",
+      "modified_utc": "2026-10-29T03:54:45.431857+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "92862708-33e8-40f6-b513-f2d706900edb",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001508.png.meta",
+      "bytes": 2873,
+      "sha256": "64473e939e8f693cfc673573959154a336c65e715281ea75c9ac33a910900437",
+      "created_utc": "2026-10-29T03:54:40.166731+00:00",
+      "modified_utc": "2026-10-29T03:54:45.431857+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "e9ea4e8e-85e0-4f20-881e-4b9d7402db2f",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Magic/frame_001509.png.meta",
+      "bytes": 2812,
+      "sha256": "05430ad1ef223a7c96c9f78b5a15aaa151bd8f1bc5810a8709e877b5a25584de",
+      "created_utc": "2026-10-29T03:54:40.166731+00:00",
+      "modified_utc": "2026-10-29T03:54:45.439778+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "ddf739bc-c462-4fae-be7d-1a67880833b0",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002860.png.meta",
+      "bytes": 2861,
+      "sha256": "937e20afd69ab1541b98d85b432525092b335ffbc6e76e29cf708264058bf1d7",
+      "created_utc": "2026-10-29T03:54:40.811611+00:00",
+      "modified_utc": "2026-10-29T03:54:46.200162+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "eded7ebe-a0b1-4bd4-93af-486c41f6bd63",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002861.png.meta",
+      "bytes": 2861,
+      "sha256": "80ab91d747411491ce279363abe9afef743b5176a8dc066c4c6531712be7f0c5",
+      "created_utc": "2026-10-29T03:54:40.812692+00:00",
+      "modified_utc": "2026-10-29T03:54:46.203152+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "26bc099d-f8fd-4ee9-9bf6-024d92bba4aa",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002862.png.meta",
+      "bytes": 2847,
+      "sha256": "86a966f81bfec81256a1bed60059f2819048c3cf11a2c3888f3505086f7c0e0e",
+      "created_utc": "2026-10-29T03:54:40.813795+00:00",
+      "modified_utc": "2026-10-29T03:54:46.201174+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "0c3c6eaa-8cd5-495e-9884-d47eb784b41f",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002863.png.meta",
+      "bytes": 2873,
+      "sha256": "492037cb76f570b9bc1bcbeaf99f514dd20223743681ce0e4531969d317d01e9",
+      "created_utc": "2026-10-29T03:54:40.814815+00:00",
+      "modified_utc": "2026-10-29T03:54:46.204144+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "bb6d4061-c15d-43bd-b1f7-a77bda7aeb76",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002864.png.meta",
+      "bytes": 2863,
+      "sha256": "52bbf8680ae17f6f9bd8acb3c991c5303c184d37682deb064f18f33b163ad8db",
+      "created_utc": "2026-10-29T03:54:40.815806+00:00",
+      "modified_utc": "2026-10-29T03:54:46.199179+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "1df17da1-55ec-45f9-afae-9cfed062dbf7",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002865.png.meta",
+      "bytes": 2881,
+      "sha256": "560ca777448a15dbb4c07dcf2d7fc0810266dfda9d03f015eef63697c4bffa7d",
+      "created_utc": "2026-10-29T03:54:40.816791+00:00",
+      "modified_utc": "2026-10-29T03:54:46.216900+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "4049c691-4d2d-48b1-96bc-ae6740f9be25",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002866.png.meta",
+      "bytes": 2881,
+      "sha256": "d00dbeec6f58f4b9d1269f25d98840b81935a0e65ec337d344e0a007595bf516",
+      "created_utc": "2026-10-29T03:54:40.816791+00:00",
+      "modified_utc": "2026-10-29T03:54:46.229403+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "adf06e90-5383-4859-85b6-6ca33bcce2e0",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002867.png.meta",
+      "bytes": 2832,
+      "sha256": "3c51a46a048b36991b5a6a3eeb8aff1960bac9295126b4c5556875f62a74f316",
+      "created_utc": "2026-10-29T03:54:40.818296+00:00",
+      "modified_utc": "2026-10-29T03:54:46.214912+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "da615ff7-f963-467c-939f-166f259ad51a",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002868.png.meta",
+      "bytes": 2820,
+      "sha256": "416924ff58f9fd933d38fb896387312f2e1649071e6b3533346c448579aa5c3f",
+      "created_utc": "2026-10-29T03:54:40.819381+00:00",
+      "modified_utc": "2026-10-29T03:54:46.221831+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "b3ad4d47-95b5-4a41-9432-d406bbcbc4a4",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    },
+    {
+      "path": "client/assets/resources/development/frames/Mon4/frame_002869.png.meta",
+      "bytes": 2861,
+      "sha256": "124fd5a66130f022db141ed9585bdc709dd980e8eeab8ca588e6fd7ac0f5010d",
+      "created_utc": "2026-10-29T03:54:40.820368+00:00",
+      "modified_utc": "2026-10-29T03:54:46.230385+00:00",
+      "importer": "image",
+      "version": "1.0.27",
+      "uuid": "4e7a7ea8-a742-4d40-ac23-ec5c6997506a",
+      "sub_importers": {
+        "6c48a": {
+          "importer": "texture",
+          "version": "1.0.22"
+        },
+        "f9941": {
+          "importer": "sprite-frame",
+          "version": "1.0.12"
+        }
+      }
+    }
+  ],
+  "unknown_new_resources": [],
+  "missing_expected_resources": [],
+  "added_resource_sha256": {
+    "client/assets/resources/development/audio.meta": "48d431b860cd1c3226982e840890841c0c638cb26da82a274171d1b490988867",
+    "client/assets/resources/development/audio/pet_skeleton_born.wav": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+    "client/assets/resources/development/audio/pet_skeleton_born.wav.meta": "1e47ad4846ec7151995af5d1406c38e71eef766b6e307445a33215e1df198603",
+    "client/assets/resources/development/audio/summon_skeleton_cast.wav": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+    "client/assets/resources/development/audio/summon_skeleton_cast.wav.meta": "75d91a3b1c7bab9a70fa079617e1f7cb2625dfe4a040c9c6969e887e2a32def3",
+    "client/assets/resources/development/frames/Magic/frame_001500.png": "481d915f5fa11693db19355254dda5bdf4e062efc6e65769091dd64aee224816",
+    "client/assets/resources/development/frames/Magic/frame_001500.png.meta": "a3cd307f6d796de7fffe2236a7098cb3400794cff9fae277ff3794b04c25f1e4",
+    "client/assets/resources/development/frames/Magic/frame_001501.png": "f5b80d7dd08bb39293a147b50ebf09a8c31a7157c70bddfd1744de73cd037bba",
+    "client/assets/resources/development/frames/Magic/frame_001501.png.meta": "4678c01f21bf47c3934b097895e49a8286fbef96fe4991a72e509c809df572eb",
+    "client/assets/resources/development/frames/Magic/frame_001502.png": "8abff439ed7d3e7fc35bf2497eb637dbe1013ab509788665c826d7f0bea06de2",
+    "client/assets/resources/development/frames/Magic/frame_001502.png.meta": "d7c3f228ecdd76442e719dbb115e913d4e365139d729a896161be16e6d06808e",
+    "client/assets/resources/development/frames/Magic/frame_001503.png": "aa385600184c8b9510353eb7a19d33e5ad484f2a9b829bead6f180efdf8681e8",
+    "client/assets/resources/development/frames/Magic/frame_001503.png.meta": "a33987dcc14755267b0352e7bfd521a08e3bc11d91d8e5ebb5ad3191515c8030",
+    "client/assets/resources/development/frames/Magic/frame_001504.png": "bbebee5cd9173aedaa8bce4cb2da195b78668a9ed5a0867dd9d92c9004640620",
+    "client/assets/resources/development/frames/Magic/frame_001504.png.meta": "8d6984cf8d496e086c9da603c231105e12a45ea1e01404bf4528541a4e825efd",
+    "client/assets/resources/development/frames/Magic/frame_001505.png": "aa30b9304f17129d7c9f94e9d94487018928e3a1b20e12186c6907bc05d5c624",
+    "client/assets/resources/development/frames/Magic/frame_001505.png.meta": "450d88d61c0a300a22a6ed637ad4344b55cb25b752656f2d4c0b4a973c30f1f4",
+    "client/assets/resources/development/frames/Magic/frame_001506.png": "bebb187ce6d0b775b6347da822562d33020110486a1be0162fdc649a1943bee1",
+    "client/assets/resources/development/frames/Magic/frame_001506.png.meta": "030ee2b3d186c68a8b1d5fb3ae87e703860091c95c4ab5d892b8547130d5c553",
+    "client/assets/resources/development/frames/Magic/frame_001507.png": "7f56dd340e15d6311827850f0d55d2aa20edbc2cadd1540d2199280ec196686f",
+    "client/assets/resources/development/frames/Magic/frame_001507.png.meta": "3a94549c26d787a07ddb6541c82f595b934f9d14d63e8e1b40ad3e10e22c6568",
+    "client/assets/resources/development/frames/Magic/frame_001508.png": "51569408cf215a8d9bfcc4a0b67d2ac6b464d23f45308917ccd049a2f9cadf7f",
+    "client/assets/resources/development/frames/Magic/frame_001508.png.meta": "64473e939e8f693cfc673573959154a336c65e715281ea75c9ac33a910900437",
+    "client/assets/resources/development/frames/Magic/frame_001509.png": "be85540338bcb6a1e1ed4d80c26cf581dcf508fe6860597ff8a4e0057893bc0c",
+    "client/assets/resources/development/frames/Magic/frame_001509.png.meta": "05430ad1ef223a7c96c9f78b5a15aaa151bd8f1bc5810a8709e877b5a25584de",
+    "client/assets/resources/development/frames/Mon4/frame_002860.png": "c092d22c1bce352dfb5a80507e05847b7543dff8212eb2f16ac37810fdada040",
+    "client/assets/resources/development/frames/Mon4/frame_002860.png.meta": "937e20afd69ab1541b98d85b432525092b335ffbc6e76e29cf708264058bf1d7",
+    "client/assets/resources/development/frames/Mon4/frame_002861.png": "cca81f3d0e43bf57a6e3e479dbaebb0b64e9cb26307e1a2a1eaaac6021430ae5",
+    "client/assets/resources/development/frames/Mon4/frame_002861.png.meta": "80ab91d747411491ce279363abe9afef743b5176a8dc066c4c6531712be7f0c5",
+    "client/assets/resources/development/frames/Mon4/frame_002862.png": "164a00fe16c85567e370a19046b3f971a0eb68d119bee98a732ad73ffd9fa495",
+    "client/assets/resources/development/frames/Mon4/frame_002862.png.meta": "86a966f81bfec81256a1bed60059f2819048c3cf11a2c3888f3505086f7c0e0e",
+    "client/assets/resources/development/frames/Mon4/frame_002863.png": "fa3b375a7c9d0d85caab5a348952a27f4c565d67c0ee762daf9519f60fb3792c",
+    "client/assets/resources/development/frames/Mon4/frame_002863.png.meta": "492037cb76f570b9bc1bcbeaf99f514dd20223743681ce0e4531969d317d01e9",
+    "client/assets/resources/development/frames/Mon4/frame_002864.png": "701651d81a9b19812501d83a89e0daa1eb309aa033a2009898c1939475802233",
+    "client/assets/resources/development/frames/Mon4/frame_002864.png.meta": "52bbf8680ae17f6f9bd8acb3c991c5303c184d37682deb064f18f33b163ad8db",
+    "client/assets/resources/development/frames/Mon4/frame_002865.png": "d391ffcdd7ce26a4948731b9f890276e554529567dff2d6565408f264b54b89d",
+    "client/assets/resources/development/frames/Mon4/frame_002865.png.meta": "560ca777448a15dbb4c07dcf2d7fc0810266dfda9d03f015eef63697c4bffa7d",
+    "client/assets/resources/development/frames/Mon4/frame_002866.png": "df83327541f8cbea209a97260ffdf5bae4510806e88aa2fb903d5160a99eb2a0",
+    "client/assets/resources/development/frames/Mon4/frame_002866.png.meta": "d00dbeec6f58f4b9d1269f25d98840b81935a0e65ec337d344e0a007595bf516",
+    "client/assets/resources/development/frames/Mon4/frame_002867.png": "b2daa0eddff16fb330ad02c86df4c1a4e49db6de86f939b837b69605f44125b0",
+    "client/assets/resources/development/frames/Mon4/frame_002867.png.meta": "3c51a46a048b36991b5a6a3eeb8aff1960bac9295126b4c5556875f62a74f316",
+    "client/assets/resources/development/frames/Mon4/frame_002868.png": "013eb694db0a1a79bb24ea2d267f1a0e42b737120014267e4f381a1db6a1888f",
+    "client/assets/resources/development/frames/Mon4/frame_002868.png.meta": "416924ff58f9fd933d38fb896387312f2e1649071e6b3533346c448579aa5c3f",
+    "client/assets/resources/development/frames/Mon4/frame_002869.png": "11ed475dd70f34407c9a62d51aa03fd9dd98d04f95e9d775db629ea8c33cf337",
+    "client/assets/resources/development/frames/Mon4/frame_002869.png.meta": "124fd5a66130f022db141ed9585bdc709dd980e8eeab8ca588e6fd7ac0f5010d"
+  },
+  "changed_baseline_non_resource_paths": [
+    {
+      "path": "client/assets/resources/development/gameplay.json",
+      "before_sha256": "4b26e94e4ca2a4ccb0675c98e8d7d309a1e22c4bbc7c092ce39022709631a2f4",
+      "current_sha256": "e9c5f452cea372f26b73ef1df0e1e2f31ecbff633ed2ee33e8df075214b38900"
+    },
+    {
+      "path": "client/assets/resources/development/manifest.json",
+      "before_sha256": "8d1ae5ba80c3d0ae09b839789a2e5e4a7dc1f912a181e3633780e7f75f38d7d6",
+      "current_sha256": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b"
+    },
+    {
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "before_sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf",
+      "current_sha256": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697"
+    },
+    {
+      "path": "config/schema/catalog.json",
+      "before_sha256": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
+      "current_sha256": "e950f03194d183d1d397944b4f04734f303bb5cd351ba4a86f1929aed527946d"
+    },
+    {
+      "path": "tools/resources/build_development_assets.py",
+      "before_sha256": "eb5166e800597e98f92017c335b9c33d1b1d76cff7ceb8e8d0e96b54451f4f40",
+      "current_sha256": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1"
+    },
+    {
+      "path": "config/development/first-loop.json",
+      "before_sha256": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+      "current_sha256": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe"
+    },
+    {
+      "path": "config/development/summon-candidates.json",
+      "before_sha256": "7b546e66ae1e5b3bb7b0c83d9c7fc35a2f7d6a03bcb5641d786ddf2a67ff23c8",
+      "current_sha256": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33"
+    }
+  ],
+  "manifest_sha256": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+  "creator_evidence": {
+    "report": "docs/客户端构建检查.json",
+    "report_sha256": "acc43f1941cfad3655ee67af62421662c15790090ec6d244fdc5480bcf8ff159",
+    "creator": "3.8.8",
+    "exit_code": 36,
+    "success": true,
+    "seconds": 121.16,
+    "source_stable_during_build": true,
+    "scene_prefab_layout_preserved": true,
+    "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log",
+    "log_sha256": "4020e8b9deca1fd9ec9762ac400634ddf4b203f23c69f1dbe7e02ef05e17fe34"
+  },
+  "meta_provenance": "Root实际Creator3.8.8导入；before中无这23项，新meta的UUID与实际AudioClip导入cache/原字节native匹配。没有手写meta或将新meta算成旧meta未变。",
+  "claim_limit": "本次只复核文件/真实导入痕迹，不据此宣称GPU/音频/UI/业务/容量已通过"
+}

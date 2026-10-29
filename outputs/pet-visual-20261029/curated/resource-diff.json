@@ -1,0 +1,59 @@
+{
+  "old_frame_records_preserved": 3332,
+  "new_frame_records": 20,
+  "frame_count": 3352,
+  "new_audio": 2,
+  "old_effects_preserved": 20,
+  "other_profiles_and_original_pet_actions_unchanged": true,
+  "unchanged_old_files": {
+    "png": 7998,
+    "map_files": 13158,
+    "saved_layout": 10,
+    "resource_meta": 9972
+  },
+  "added_resources": [
+    "client/assets/resources/development/audio/pet_skeleton_born.wav",
+    "client/assets/resources/development/audio/summon_skeleton_cast.wav",
+    "client/assets/resources/development/frames/Magic/frame_001500.png",
+    "client/assets/resources/development/frames/Magic/frame_001501.png",
+    "client/assets/resources/development/frames/Magic/frame_001502.png",
+    "client/assets/resources/development/frames/Magic/frame_001503.png",
+    "client/assets/resources/development/frames/Magic/frame_001504.png",
+    "client/assets/resources/development/frames/Magic/frame_001505.png",
+    "client/assets/resources/development/frames/Magic/frame_001506.png",
+    "client/assets/resources/development/frames/Magic/frame_001507.png",
+    "client/assets/resources/development/frames/Magic/frame_001508.png",
+    "client/assets/resources/development/frames/Magic/frame_001509.png",
+    "client/assets/resources/development/frames/Mon4/frame_002860.png",
+    "client/assets/resources/development/frames/Mon4/frame_002861.png",
+    "client/assets/resources/development/frames/Mon4/frame_002862.png",
+    "client/assets/resources/development/frames/Mon4/frame_002863.png",
+    "client/assets/resources/development/frames/Mon4/frame_002864.png",
+    "client/assets/resources/development/frames/Mon4/frame_002865.png",
+    "client/assets/resources/development/frames/Mon4/frame_002866.png",
+    "client/assets/resources/development/frames/Mon4/frame_002867.png",
+    "client/assets/resources/development/frames/Mon4/frame_002868.png",
+    "client/assets/resources/development/frames/Mon4/frame_002869.png"
+  ],
+  "changed_tracked_baseline_paths": [
+    "client/assets/resources/development/manifest.json",
+    "outputs/development-prep-20261026/玩法配置.xlsx",
+    "tools/resources/build_development_assets.py"
+  ],
+  "current_hashes": {
+    "tools/resources/build_development_assets.py": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1",
+    "tools/resources/pet_birth_assets.py": "b1eba943d993212091ab2ca116a51862a26d508dd773342f84f82814f550209f",
+    "tools/resources/test_pet_birth_assets.py": "8544eef56ee8bc6121f71648fd668e30433cfbafc0a96877a5386101408660a5",
+    "资料索引/宠物出生表现来源契约.json": "e0d6080618eb589d87e36c16dba7f0c16e46a9e46acf29a87efc5971ed628aca",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
+    "client/assets/resources/development/manifest.json": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+    "资料参考/crystal-supplement/assets/Monster/78.Lib": "de0033d3a81d04277a679d68a942516c7365c086d27ddd650ae5ea5cfac3a678",
+    "资料参考/crystal-supplement/assets/Sound/078-5.wav": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+    "资料参考/crystal-supplement/assets/Sound/M65-0.wav": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+    "资料参考/crystal-supplement/assets/Sound/SoundList.lst": "0250a0ce5790e0f72c64be2f28f423749d9669c242f158c3afaec3de7ad9d52f"
+  },
+  "creator_import_meta": "未猜造meta；待Root统一Creator3.8.8真实导入生成后另验",
+  "claims": "仅来源/生成/字节保留核验；无Creator/GPU/音频播放/UI/业务/容量完成声明"
+}

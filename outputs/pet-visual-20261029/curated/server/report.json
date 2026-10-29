@@ -1,0 +1,362 @@
+{
+  "created_at_utc": "2026-10-29T04:39:38.097943+00:00",
+  "scope": "rule18实际fresh17新生一次S2C事实、完整基线先送达与原SyncReady附件隔离；不是动画/GPU/可听音频验收",
+  "protocol": {
+    "message": "PetBorn",
+    "id": 30015,
+    "fields": 14,
+    "elapsed_clock": "服务器实际born到发送的单调毫秒；负数或uint32溢出丢事实",
+    "body_definition_semantics": "definition_id为实际BodyID"
+  },
+  "behavior": [
+    "仅正规fresh17实际install成功产生局部一次事实；不从CastAccepted、baseline或Owned推导",
+    "原Conn/Auth/角色/Execution/World.Ref/scene/baseline与成功SyncReady enqueue绑定，跨任何身份不迁移",
+    "实际当前World中的精确原Body指针/handle/Life/Def/位置/方向/MovementRevision仍有效才发",
+    "完整精确body基线全组Deliver成功后、同一Sequence且原attachment才发30015",
+    "发送失败只关闭原连接，不回滚宠物或永久扣耗，不重试到新票",
+    "Recall、legacy、到期失败、非观察World、未Ready、旧Life均不积压历史事实",
+    "保持原500ms map-owned执行、2秒普通行动锁、AutoRecall、NoPets、死亡与材料receipt路径"
+  ],
+  "generation_evidence": ".work/pet-visual-20261029/server/protocol",
+  "pure_historical": {
+    "report": ".work/pet-visual-20261029/server/final-focused.json",
+    "exit_code": 0,
+    "passed_nodes": 83,
+    "source_stable": true,
+    "note": "此窄测在最后World.Ref负例/锁修补之前，不能替代最终字节的整包证明"
+  },
+  "first_full_actual": {
+    "report": ".work/pet-visual-20261029/go-full-attempt1/latest.json",
+    "exit_code": 1,
+    "passed_nodes": 979,
+    "skipped_nodes": 0,
+    "failed_tests": [
+      {
+        "package": "minimir/internal/integration",
+        "test": "TestDisplacementSkillsLearningUpgradeCastingAndReconnectMongoWS"
+      },
+      {
+        "package": "minimir/internal/integration",
+        "test": null
+      }
+    ],
+    "source_stable": true,
+    "pet_born_passed_nodes": [
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornNeverSynthesizedForRecallLegacyOrRule17/recall"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornNeverSynthesizedForRecallLegacyOrRule17/legacy"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornNeverSynthesizedForRecallLegacyOrRule17/rule17"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornNeverSynthesizedForRecallLegacyOrRule17"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket/other_world"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket/not_ready"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket/new_connection_without_sync"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket/sync_send_failed"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornFailedDueAndOldLifeHaveNoObservation/dead"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornFailedDueAndOldLifeHaveNoObservation/new_life"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornFailedDueAndOldLifeHaveNoObservation/invalid_static"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornFailedDueAndOldLifeHaveNoObservation"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/baseline_failure"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/fact_failure"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/connection"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/auth"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/scene"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/body_dead"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/body_moved"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact/new_sequence"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/not_ready"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/bad_payload"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/connection"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/auth"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/binding"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment/failed"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornUnreadyFilterAndStateSequenceExhaustionFailClosed"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornSyncReadyWorldIdentityDoesNotFollowUnannouncedWorldChange"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry/complete"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry/second_chunk_failure"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry"
+      },
+      {
+        "package": "minimir/internal/game",
+        "test": "TestPetBornElapsedOverflowNegativeAndDuplicateCannotReplay"
+      }
+    ],
+    "note": "整包真实FAIL保留；唯一旧位移用例把初始化1000误当施法前态，旧日志未记录因果，未将多数通过冒充整包通过"
+  },
+  "focused_real_mongo_ws": {
+    "report": ".work/pet-visual-20261029/displacement-review/focused-report.json",
+    "events": ".work/pet-visual-20261029/displacement-review/focused.events.jsonl",
+    "exit_code": 0,
+    "test_seconds": 45.331,
+    "passed_tests": [
+      "TestDisplacementSkillsLearningUpgradeCastingAndReconnectMongoWS",
+      "TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS"
+    ],
+    "skipped_tests": [],
+    "source_inputs": 164,
+    "source_stable": true,
+    "main_restored_verified": true,
+    "scope": "正常隔离17 Count2/19级/原书业务；鲜活精确30015只有一次且全组baseline先应用，Recall/健康票/冷建无Born；同时验证修正后的8/27正常协议前态",
+    "qualification_exclusions": "不是自然购符/Count包规格、主17开放或完整P0；主仍22技能与材料关闭"
+  },
+  "go_frozen": true,
+  "go_files": 145,
+  "go_marker_matches_current": true,
+  "go_sha256": {
+    "server/.work/combat-area-qa/main.go": "bc951ec2c1a2926733dbafcc49d2ceb96ebb75c7cc19fa75149ea3d6a297ea77",
+    "server/.work/combat-modes-qa/main.go": "53f766272097dc1ce7c5e198187700a87eed1aff2b4b58b30a47a2418bec0b26",
+    "server/.work/combat-status-qa/main.go": "37add8232fe5894fa0000941f884018c813077da49a91393456a6c1c14c094d1",
+    "server/.work/skill-growth-qa/main.go": "f249e4213d1030a09ed4934c9ae2a8b0e669286240180f15c8d491c007670354",
+    "server/.work/skills-qa/main.go": "2496b15c9174becbafb6047c975319f516e403a57b70f9db7fd6fc0df2ba9b0b",
+    "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+    "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
+    "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+    "server/api/generated/minimirv1/world.pb.go": "89de58ec78599e74112929750bd0b3be0f43b9ad770113e01849634bcab7e927",
+    "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+    "server/cmd/toolchain-smoke/main.go": "0f3a3fc9e696c9ffd106e86881d48265c1d1bbdf6d6674ccc83c9613e0d5f0e3",
+    "server/internal/bootstrap/app.go": "36faf9a8d4fafffaebbd63d640ba140248e040392d89383f3ee2215e00733559",
+    "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
+    "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
+    "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+    "server/internal/devconfig/binding_test.go": "a8fb5ba9014ff9831039ca22a587e73cbb52a165a10847dcc3047ac446016d4f",
+    "server/internal/devconfig/buffs.go": "7233169cfe04a7e4769d9b59bed213c1933f56299ce818239658a15cf1c4c3ab",
+    "server/internal/devconfig/buffs_test.go": "69a30bd2dd8be3c37d13e553d2d1cd93dc978d8ed442ffa0f6a8176f0230c683",
+    "server/internal/devconfig/combat.go": "35419bab2801d817c3d3f4795a992d3f4e870d4f00b07bb36c7b014146e6f547",
+    "server/internal/devconfig/combat_modes_test.go": "53ce7a9fafd52e18acad3d9cdcefad90b956d065ec4a57c2c9b1bb72d924a499",
+    "server/internal/devconfig/config.go": "7d15e244eb2960d82f2be6a2384d53726dbe1932c870d9427ad9ad0b23a83a2e",
+    "server/internal/devconfig/displacement.go": "a404224d8f60f914190086294881a5e70296b521e9e6ffe36d0b36d44e33ad89",
+    "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
+    "server/internal/devconfig/displacement_skills_test.go": "81a92512a85992aa69a4684f6e86230112a2aab1bb44e47e4a251390f12e8ffd",
+    "server/internal/devconfig/displacement_test.go": "ecf6c9eeb34fbe1e6056c9e64a6dab113ed592e9041c3d8a689ee757cc403e4a",
+    "server/internal/devconfig/map.go": "6db610ce68b989629ce2fadf6442d69ad733f35b6142b797db3de7ce8ad4d141",
+    "server/internal/devconfig/map_catalog_test.go": "8d3d078cbfc8734cdd93d49d50c6de351d55ac570f967d85f6fb6f0cd35d1fd1",
+    "server/internal/devconfig/map_test.go": "40ff1666a34f9ddf79b52a6ebae593a3b59ccc339d657d47a920d3c278665143",
+    "server/internal/devconfig/pet_runtime.go": "1350d798943e6ef7c4d1addd43e4bcf2621a784b71a848aa7c7bff6dc226ec76",
+    "server/internal/devconfig/pet_runtime_test.go": "e646177ceb87eb2789670f5b58944ea98c1c371d5d1cdd33f7178434c29a27cd",
+    "server/internal/devconfig/platform_test.go": "59c1f24dd579233dec26018047a024c14da9990c33ac60c2b528984c827c7b06",
+    "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+    "server/internal/devconfig/skills.go": "5a864dd75f025dff10899b8388ba88e6a0f3c424cd345fae209cd247832746c8",
+    "server/internal/devconfig/skills_test.go": "457130df4ba1d94b59355d627bc76cc446125d19a543c4a91879434f5d5550e4",
+    "server/internal/devconfig/source_damage_test.go": "08bf73f3cd3cfed3928e002b095710da745816a376d0dd7f0af3818c4b6e55b7",
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+    "server/internal/devconfig/summon_test.go": "9cd09a8ffd086e52e50b78a1fedc697567a980f5c296e4b2a57a2d59e431b06e",
+    "server/internal/devconfig/teleport.go": "a122eb2bfac539d9900e5f1639504ce62c1578a56ff3fad984960665d4fb5366",
+    "server/internal/devconfig/teleport_test.go": "50eab82639c96975d26850fc8f82aa8c7878680d59ab041d25ede5e538115f91",
+    "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
+    "server/internal/devconfig/town_test.go": "10649ad0c21c40d3e496ffac51bb33430903c0c35ba22ee828376b9a20f077b7",
+    "server/internal/domain/model.go": "e8046fa0f73f7ef495aeca7f1d77efa6f4f02343bffe27a327d18f789a09232a",
+    "server/internal/game/attack_clock_test.go": "3db070c27a8ebf90b44cc549df4a54a54e1c94ddb446e8594abe6bbe51aaa5bf",
+    "server/internal/game/baseline.go": "2a35dd9f91bd67b74c0d3078973e930b565ba4c983c0196994061c52cdaa2f6d",
+    "server/internal/game/baseline_test.go": "bf18dbf33645dd41546092b289c35fac2898d6e0cad626b5b83b18605d101f53",
+    "server/internal/game/casting_material.go": "d9753ccab62c6290c5e30232d443d928f62b9f04d7b9bd8e45749ed15461575a",
+    "server/internal/game/combat.go": "7b7a0fa4f3709026cfea6fed81042ac67d4f1a7485dafbe78b85285bf1b4f091",
+    "server/internal/game/combat_modes_magic_test.go": "687a316e44b1d3fbce2a39b0c585735bac50ea01f7e41aadbcb30659aa097864",
+    "server/internal/game/combat_status.go": "efcbb3a3575637172cde71badd4cc11f59e3a025ed672f9a4e82a1c0cebaf17b",
+    "server/internal/game/combat_status_test.go": "72a88d5ad3e8fb6a86292a36fe8ecbe731743e063e874ca024e396bb5c14fe2d",
+    "server/internal/game/displacement_skills.go": "8104f7812b337f31f50da98dc2bc9020abc5b3912ec924aa1a5fe450018f1678",
+    "server/internal/game/displacement_skills_test.go": "00a85c5f1a6d8c46ac163b22ff06c80a97ec478b7e4d58141ae7a3f5eab11179",
+    "server/internal/game/grid_test.go": "794db8c4ce9c33390ba8798e190f23e2d97c9da2c5530cf0e3784b38c9e97b92",
+    "server/internal/game/hell_fire_test.go": "701dbb0a2f3f28838f1a3645b01941b82e64d15dc9df97806b66a6fee927a43f",
+    "server/internal/game/hosting_test.go": "cc6dd8a6530e418310f60525bb32f5e6d1fa1321c0a209f55f8cd22c2a5565e7",
+    "server/internal/game/map_context.go": "a237f752a8307550b485ff44c352f154303ea8b5788d7fb1cc7298f766220ef7",
+    "server/internal/game/map_context_test.go": "8b373c574feff31456c59ec0f94c58574c36d5f19494b66a30fb998943a4db9d",
+    "server/internal/game/map_travel.go": "912b5ab1767349aad648632be7777a0cecc4041a59065b6b328cbba0e150adc1",
+    "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
+    "server/internal/game/map_travel_test.go": "8ccb3925581a58628790b38e34f6828e6fc88a0bd03d13a968dcd6a0acfb2d4e",
+    "server/internal/game/melee.go": "bd97e67941d16a076c3e9a5e524aed73c645220b8d7806c8b56653877c2354f1",
+    "server/internal/game/melee_test.go": "213393851c7681d5042d66326c781c89e8edaba592f0319f327da9bd10d9bd8d",
+    "server/internal/game/movement.go": "fa022e393d183e46475d03d328c8d4602388d6924dd87b750b1b9b8e8e65a023",
+    "server/internal/game/movement_test.go": "74662057cecaad3e817484a953a4e626cc079a7997c743fbf9bc8ce7882d396f",
+    "server/internal/game/movement_ws_test.go": "9c411cc6db19a36457353d73bc9cd52c71124944fab4644703316df1e2f0309a",
+    "server/internal/game/observation_test.go": "c56bf5d1c9a28a85806d3da8160e5106f6fbe523d34982ee58af8b853804ad12",
+    "server/internal/game/pet_born.go": "8cb80a389104f58248194937a8538ce58364b331edf1bba3cbc5435431ea3147",
+    "server/internal/game/pet_born_test.go": "f5e545f70a8fafc3220bea9dd0a7c57ae277f81ed57cbba8d227d7d1ca4e3aed",
+    "server/internal/game/pet_corpses.go": "9fd2541e1e32a895a2d6d0c925cd675bd295b7477100f42dcb9e3a53d7fdd9fa",
+    "server/internal/game/pet_corpses_test.go": "910805dbb337c1954dcdf1c5050932781b4ad2b63dedfc150919c8ce235eb749",
+    "server/internal/game/pet_lifecycle.go": "2eee3d83564c48d1438f222008f90ee6531d02da32090d01e4b3992acc4b3e3f",
+    "server/internal/game/pet_lifecycle_test.go": "f30b630beff59a80a27cf4bafaece1004d6208cfbc24ce5cdcb0185396c61ae8",
+    "server/internal/game/pet_runtime_test.go": "06af526e84308a87e786ba5bc14751060d0d1fb8a31163ea8f5c9a8a8d531ac9",
+    "server/internal/game/pet_training.go": "0b01f3dbbedfdab7f145a30b6448c025747cdb1678d1615895e6d6823fd7ccd7",
+    "server/internal/game/pet_training_test.go": "61891401b6df52241281a2f60a39d0ba9c36874668daeed1dfcdf4ab1ebff59e",
+    "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+    "server/internal/game/potions_test.go": "5bb3b38c43d263a01083e83f65ce8a8f6fd65d561497d3db7e3b46c040b83d6a",
+    "server/internal/game/runtime.go": "f040f9036575e8a34f698fb1a564f4dffde4124ad80e3acd83e46d7237404f12",
+    "server/internal/game/safe_zone_binding.go": "3bd36a7a3e7f31c5c4d210c00a9897e731dbbe4f5c0ac2760d7db132e8d38e6d",
+    "server/internal/game/safe_zone_binding_test.go": "8023ff014ef9b5855f2ee93a28e2a25b88576612682c45c32814f0c2a572a116",
+    "server/internal/game/safe_zone_dash_test.go": "35263334bd8a7ff37b4f85ff49918bf6e3e35d74d7a22796a86b80379ba8d653",
+    "server/internal/game/schedule_order_test.go": "ba09c7e3ffd8b224d99b0b1f679676fbf2c6975e769156d0f5ab1cb0558544f5",
+    "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
+    "server/internal/game/skill_assets_test.go": "997fcbfb5dbb891fe0d2fe3ce3200b7d75e3946bb7a35df3a8c9a56c3f721275",
+    "server/internal/game/skill_cast.go": "76aa922a23a380da6333dc8d0162ad06163ae389ae0db8cea134051cbd4f19da",
+    "server/internal/game/skill_preview_test.go": "c62f36d36366d9a8d324b43352abd6b037ac4006f98d5f8c4cd8ed01de50fab6",
+    "server/internal/game/skills.go": "e7e7dfe4eb61b2d44778a6cbea5d883916b5f11315579b349075c34b88e041dc",
+    "server/internal/game/skills_test.go": "66ac41fc7e0f590cf2782e21cb12a825d0b9f2514fc33ab364ed67b34fac3c46",
+    "server/internal/game/source_pushed_test.go": "ff36628ae009faa20eda6971aca0b39770d9d7145d3de6b0144b068d354552da",
+    "server/internal/game/summon_pet.go": "b9d5408d0d34406de96a919df30a9641a31daaf3fc132a9a6e560b9754be7bd0",
+    "server/internal/game/summon_pet_test.go": "f054c6f750375b92ee2e8989f71a7c4d0c58d6fbcece5abe8cbc934fa96b6bd5",
+    "server/internal/game/teleport21.go": "bd87e3538ddbc3f3b84ef32acac664bdfc95486240f3b5797a17c7d37970c1c7",
+    "server/internal/game/teleport21_navigation_test.go": "88a359a5b6f45dc1805b4e4bd77db0979e2a1081dcf01eb6889d61b325b525b0",
+    "server/internal/game/teleport21_pending_test.go": "1cfe5842faa7e7c68e3af1510a067a8e05f02fa425526ed9c7f14c23892498e0",
+    "server/internal/game/teleport21_test.go": "babb4e6ec13857fd39eb38a238020ab1764420184771612d971ff17317df55e3",
+    "server/internal/game/timeline.go": "e9618880bfc4017c6f4e7eefa8d41b168d080b17e0b2b2d47845e1411e25482b",
+    "server/internal/game/timeline_test.go": "b0bf28a707182bb894d1f2fdd363f4c77e17e5e6e1004593fa72cad88bdffda6",
+    "server/internal/game/town_navigation.go": "76ab6688ee890e20c2705d59f17bfbf2dedbcd96bd2a9fdbabf76dd9b8277544",
+    "server/internal/game/town_navigation_status.go": "4a299ae0becff3533877a9b0a4a9eba331af8055467ba53be2a9705e7a58c807",
+    "server/internal/game/town_navigation_status_test.go": "23db60938cb1fc72ff307a48b2432ebbb4406ea9f05a7d7963111446e83ce3a8",
+    "server/internal/game/town_navigation_test.go": "ccba829bf4d6ad4a4c89b069cee579571aeea78323878213b9f2b0fca34a5e5f",
+    "server/internal/game/world_context.go": "0032418762cf2749f3ca9311a29f6f2a2dc1c6be0c4075511ea2c8fd49920e6b",
+    "server/internal/game/world_context_test.go": "6bda6f6deff04d3c99d38123645acbcf8b1eabad31b780db12f64b66d9024634",
+    "server/internal/integration/binding_test.go": "90dc25c5adc53c01335b7efc9e0598732c486868690228f24a982c08143938d7",
+    "server/internal/integration/combat_area_test.go": "65e99d49febaba1d4203fbbb08e412a721ed081080185c35b14a6e68b857ee55",
+    "server/internal/integration/combat_modes_test.go": "d941f57b28be9df67e7a5f80ce84a9661720a40ee8515ae66f5fcefe60e172cd",
+    "server/internal/integration/combat_status_test.go": "c4f3be1e6d987eb9e3cf167577205f9a196e6c4b27834f9a006a5628d32f9a8b",
+    "server/internal/integration/displacement_skills_test.go": "f51082979fbfc753d60b5872d9e517131cafb10609192e6746eef00469221c95",
+    "server/internal/integration/first_loop_test.go": "ade17fd4342766d591c6db82b571841cc9a60f2568cbc23a4ae35d7a020c67f3",
+    "server/internal/integration/map_travel_test.go": "550e4b69f88c89380995a345aa442f82c5d39499d2b2d201fa41d376dcbaa19e",
+    "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88",
+    "server/internal/integration/pet_runtime_test.go": "e7aa63b3b7851d2aa9c7c2dfb61c10c8f2723da80966a3e35eaffae89e1ee7a6",
+    "server/internal/integration/potions_test.go": "443aa02ef32bed8ec9257110a9f417e2dda4ecda965aaffcfbf569b241cf319e",
+    "server/internal/integration/receipt_migration_test.go": "574235d914dd233d07cc35b519d274b68a9371edb4aecc8fe2711d61cdf2c12c",
+    "server/internal/integration/safe_zone_binding_test.go": "cd215f33dfe6fad130c799d85d856e9ba21c404e5c8a96f999e7eaa438e5cef4",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+    "server/internal/integration/skills_test.go": "f641464ef1e474ecbeadbf05d621772c1876a2a58c46d2d2c2a67436120a65aa",
+    "server/internal/integration/summon_pet_test.go": "15a1df62f26e7de600f2b706cf0c9bc38856831bf243d5ee8c28d02fa9bcb4b2",
+    "server/internal/integration/teleport21_test.go": "60324967c38e49c18c63460abbc163a88281ccc3b671dbf3cb3b28ae669715e2",
+    "server/internal/persistence/assets.go": "8e165fd66bdf1287b9e010d49fc76a18188c57fb6657693fa7d16bf07d7838f7",
+    "server/internal/persistence/auth.go": "0ea57ff14042b4c5dec80bae2a34a0ee7de39fe746b73afce3a41591c463bc36",
+    "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
+    "server/internal/persistence/binding_test.go": "ea95c2740ef54ad6ed25b08890b17d3e646f4e69834bbf52ff0b278bce3c0276",
+    "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
+    "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1",
+    "server/internal/persistence/displacement_preview_test.go": "f469f2ea0bfcc5b4727e8b284d92a0f49a94b735c60ab45cb7ad77767d114649",
+    "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+    "server/internal/persistence/potions_test.go": "7aea97be8fef97af5aa8470c8beb6f32bc5b964542ef88d38fc29b5ae7e0f2e2",
+    "server/internal/persistence/safe_zone_binding.go": "f5e6ed271bc20dd6bb49b28b348d4b3f83bdd7202442ab11a0110904cfb0ebf0",
+    "server/internal/persistence/safe_zone_binding_test.go": "1543eda8e4f1c68da3db2550b4a4b54bc702f8c824067a864b465bac3554c762",
+    "server/internal/persistence/skill_assets.go": "04fe6ba751563b4d782fc7aca96524f5e7c10d19fc83add90c6934522fe1744f",
+    "server/internal/persistence/skill_assets_test.go": "1c5441a13154dd81ff8bcda760b52d6adc6cc3b5b919bf7bf13807877f2260e3",
+    "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+    "server/internal/persistence/skills_test.go": "359ff2de1d68e3d1a31504a49b5bdced2708d98cdcc5f35b5f2c52b23b2fc96e",
+    "server/internal/persistence/store.go": "4885f6cd46d014756e7ae1e74bf17347cb0b60ff19fd73623baae56ec4970fa5",
+    "server/internal/persistence/summon_preview_test.go": "57d7d124030bc77f008a899d557535e713de2ebaf422494736e361fa7cdd3db2",
+    "server/internal/protocol/protocol_ids.go": "3cec4c1b8e50fd827c0481dbeca9285eeb35b2bbeebf23d392a09749352c686e",
+    "server/internal/townnav/blocked_start_test.go": "633d812960f32ba819bc2c025673353b572f62a9864fedc793d2792aba0def35",
+    "server/internal/townnav/nav.go": "c31679895e6d4783555aaeea267270fc6a151d4fd762785ab50d19996a46218e",
+    "server/internal/townnav/nav_test.go": "e1f788ca3c358996dfb604d3ada77ce88fc7c4b4a7c61b496c5f0ff5fe5ad416",
+    "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+    "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+    "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+  },
+  "deadlines_changed": false,
+  "capacity_verified": false,
+  "physical_mobile_verified": false,
+  "next": "根代理最终串行全包真实Mongo/WS race报告作为当前字节的最终业务验收；这里不提前宣称通过"
+}

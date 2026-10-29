@@ -1,0 +1,17 @@
+{
+  "evidence_note": "此JSON转存自首次实际工具输出chunk24dc24（exit0），当时尚未修复；后续重复命令已读到修后TS并在旧预期0处失败，未将其冒充修前输出。",
+  "kind": "只读轻量真实Session/Travel/PetBorn/Assembler重放，连接是内存替身，未运行网络/GPU/音频",
+  "control_ready_birth_accepted": true,
+  "quiescing_old_cast_events": 1,
+  "quiescing_full_baseline_live_birth": true,
+  "quiescing_pending_births": 0,
+  "cancelled_same_attachment_ready": true,
+  "cancelled_same_attachment_birth_playback": null,
+  "finding": "quiescing将ready设false导致30015被永久丢弃；取消旅行保留旧World时缺失本次真实出生表现",
+  "source_sha256": {
+    "client/assets/scripts/app/GameSession.ts": "9c51ce20f2d1cb2e607291cc7e8b0d436466ee36f4935010819799ed9d55e94c",
+    "client/assets/scripts/app/MapTravelModel.ts": "df81cbaa9c04a76f87ac77082c138ee0c37216a008ab699c932eec791bb7115e",
+    "client/assets/scripts/app/PetBornModel.ts": "f74d8ffd7a60fcc696e7890f3254fc5e0f216fd0276345a9b84474ca9dae9dab",
+    "client/assets/scripts/app/AppRoot.ts": "e4a3bec40ba815248522200f65d0fde9973f5ccfdec2960d4ac7344a14e52344"
+  }
+}

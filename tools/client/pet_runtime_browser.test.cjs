@@ -16,7 +16,7 @@ test('实际ready只读JSHandle轮询同步Boolean，Ready及渲染/附着缺一
 test('实际QA健康核验拒绝相同fixtureHash但不同run的三节点instance',async()=>{
  const evidence={ports:{account:18100,game:18101,gm:18102},fixture_sha256:'same-fixture',health_instances:{account:'new-account',game:'new-game',gm:'new-gm'}};let stale=false,actualVersion;
  const fetch=async url=>{const mode=Object.keys(evidence.ports).find(key=>url.includes(':'+evidence.ports[key]+'/'));return{ok:true,async json(){return{fixture_hash:'same-fixture',mode,rule_version:actualVersion,instance:stale&&mode==='game'?'old-game':evidence.health_instances[mode]};}};};
- for(const version of [16,17]){stale=false;actualVersion=version;const verify=new Function('assert','evidence','fetch','expectedRuleVersion',extract('async function verifyQAHealth()','(async()=>{')+';return verifyQAHealth;')(assert,evidence,fetch,String(version));assert.deepEqual(await verify(),evidence.health_instances);stale=true;await assert.rejects(verify(),/本轮节点instance/);stale=false;actualVersion=33-version;await assert.rejects(verify(),'同hash与instance的旧规则不能通过');}
+ for(const version of [16,17,18]){stale=false;actualVersion=version;const verify=new Function('assert','evidence','fetch','expectedRuleVersion',extract('async function verifyQAHealth()','(async()=>{')+';return verifyQAHealth;')(assert,evidence,fetch,String(version));assert.deepEqual(await verify(),evidence.health_instances);stale=true;await assert.rejects(verify(),/本轮节点instance/);stale=false;actualVersion=35-version;await assert.rejects(verify(),'同hash与instance的旧规则不能通过');}
 });
 
 

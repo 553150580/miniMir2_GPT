@@ -12,7 +12,7 @@ const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:
 const moduleLike={exports:{}};
 new Function('require','module','exports',compiled.outputText)(id=>id==='long'?Long:id==='./GameConnection'?{GameConnection:Connection}
     :id==='./BaselineAssembler'?{BaselineAssembler:class{reset(){}accept(value){return value;}}}:id==='./GameErrors'?{protocolErrorMessage:()=>''}
-    :id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):id==='./TeleportModel'?require('../../../.work/ui-tests/app/TeleportModel.js'):id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='./MapTravelModel'?require('../../../.work/ui-tests/app/MapTravelModel.js'):{},moduleLike,moduleLike.exports);
+    :id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):id==='./TeleportModel'?require('../../../.work/ui-tests/app/TeleportModel.js'):id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='./PetBornModel'?require('../../../.work/ui-tests/app/PetBornModel.js'):id==='./MapTravelModel'?require('../../../.work/ui-tests/app/MapTravelModel.js'):{},moduleLike,moduleLike.exports);
 const {session}=moduleLike.exports;
 session.role={job:0,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(1)}};
 test('入场必须显式提供正玩家句柄，缺失或越界不能沿kind或ID1恢复Ready',()=>{

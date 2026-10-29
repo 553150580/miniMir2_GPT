@@ -1,0 +1,87 @@
+{
+  "status": "limited_passed",
+  "required_fields": {
+    "root": [
+      "schema_version",
+      "date",
+      "status",
+      "runtime",
+      "verification",
+      "main_creator",
+      "isolated_creator",
+      "gui"
+    ],
+    "runtime": [
+      "rule_version",
+      "preview",
+      "skills",
+      "summon17_enabled",
+      "casting_supply_enabled",
+      "bootstrap_mode",
+      "legacy_pet_trains",
+      "summon_candidate_runtime_enabled",
+      "summon_candidate_required_rule_version",
+      "table_count",
+      "record_count",
+      "release_blockers",
+      "runtime_ready",
+      "production_ready"
+    ],
+    "verification": [
+      "go_full_mongo_ws_race_passed_including_subtests",
+      "go_skipped",
+      "go_failed",
+      "go_inputs",
+      "go_source_stable",
+      "configuration_python_passed",
+      "javascript_ui_app_passed",
+      "javascript_scene_passed",
+      "javascript_total_passed",
+      "client_inputs",
+      "client_external_engine_inputs",
+      "pb_messages",
+      "pb_long_fields",
+      "pb_boundary_cases",
+      "pb_protocol_ids",
+      "creator_seconds",
+      "creator_exit_code",
+      "saved_layouts_preserved",
+      "source_town_artifact_files_unchanged",
+      "source_added_png_frames",
+      "source_added_wav_files",
+      "source_creator_imported_meta_files",
+      "previous_development_assets_preserved",
+      "gameplay_excel_changed_cells",
+      "only_profile_rule_17_to_18",
+      "architecture_workbook_preserved"
+    ],
+    "main_creator": [
+      "passed",
+      "seconds",
+      "exit_code",
+      "source_stable"
+    ],
+    "isolated_creator": [
+      "passed",
+      "seconds",
+      "exit_code",
+      "source_stable"
+    ],
+    "gui": [
+      "passed",
+      "checks",
+      "errors",
+      "warnings",
+      "privateCastInvoked",
+      "routeOverride",
+      "bodySeeded"
+    ]
+  },
+  "execution": "默认只检查；最终验收后root显式--apply",
+  "script_sha256": "7e8fd81d712cdfe00344171636c01d1598a95b6d6e3cb42a3424b5342830d113",
+  "syntax_checked_without_executing_script": true,
+  "formal_rolling_docs_changed": false,
+  "syntax_checked": true,
+  "script_main_executed": false,
+  "prepared_functions_checked_with_synthetic_report": false
+}

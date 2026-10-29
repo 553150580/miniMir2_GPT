@@ -1,0 +1,831 @@
+{
+  "passed": true,
+  "scope": "真实Creator、正常WS道士触屏安全区绑定提交显示与健康重入；不预置角色数值或改权威坐标；本脚本不验收21，冷重建由独立WS验收，不作真机/容量认证",
+  "expectedRuleVersion": "18",
+  "readyRuleChecks": [
+    {
+      "map": "1",
+      "resourceVersion": "18"
+    },
+    {
+      "map": "2",
+      "resourceVersion": "18"
+    },
+    {
+      "map": "2",
+      "resourceVersion": "18"
+    },
+    {
+      "map": "1",
+      "resourceVersion": "18"
+    }
+  ],
+  "checks": [
+    "正常注册道士与个人图入场，新角色已提交快照为nil绑定；无随机新生或数据库预置",
+    "保存地图按钮及确认面板进入真实城镇；新scene/首视口/ACK就绪，角色和宠物Life保留",
+    "真实触屏进入安全区106后等待独立可信receipt提交；只报一次绑定确认，不推进经济命令",
+    "保存Role面板原Message显示已确认地图中心，未新建或修改固定布局",
+    "同一安全区横向4–5格真实地面往返不产生新receipt或重复提示，避开本人/宠物根命中矩形",
+    "正常换角/新票健康重入保留Town现场与原绑定receipt；快照恢复静默",
+    "返回保留的个人战斗图仍观察原Town绑定中心，未触发21瞬移"
+  ],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "scene": "7458947277651677085",
+      "baseline": "1",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 8,
+      "y": 8,
+      "resourceVersion": "18"
+    },
+    {
+      "scene": "7458947277651677086",
+      "baseline": "2",
+      "map": "2",
+      "kind": 2,
+      "player": 1,
+      "x": 633,
+      "y": 613,
+      "resourceVersion": "18"
+    },
+    {
+      "scene": "7458947277651677086",
+      "baseline": "3",
+      "map": "2",
+      "kind": 2,
+      "player": 1,
+      "x": 650,
+      "y": 631,
+      "resourceVersion": "18"
+    },
+    {
+      "scene": "7458947277651677087",
+      "baseline": "4",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 8,
+      "y": 8,
+      "resourceVersion": "18"
+    }
+  ],
+  "travel": [
+    {
+      "id": "9f30c48a9d17890d1a2cf8665e91db61",
+      "from": "7458947277651677085",
+      "scene": "7458947277651677085",
+      "phase": 1,
+      "map": "2"
+    },
+    {
+      "id": "9f30c48a9d17890d1a2cf8665e91db61",
+      "from": "7458947277651677085",
+      "scene": "7458947277651677086",
+      "phase": 2,
+      "map": "2"
+    },
+    {
+      "id": "6726d76fab418a7e9e3eda0349f75855",
+      "from": "7458947277651677086",
+      "scene": "7458947277651677086",
+      "phase": 1,
+      "map": "1"
+    },
+    {
+      "id": "6726d76fab418a7e9e3eda0349f75855",
+      "from": "7458947277651677086",
+      "scene": "7458947277651677087",
+      "phase": 2,
+      "map": "1"
+    }
+  ],
+  "moves": [
+    {
+      "x": 639,
+      "y": 619
+    },
+    {
+      "x": 645,
+      "y": 625
+    },
+    {
+      "x": 650,
+      "y": 631
+    },
+    {
+      "x": 654,
+      "y": 631
+    },
+    {
+      "x": 650,
+      "y": 631
+    }
+  ],
+  "groundChecks": [
+    {
+      "point": {
+        "x": 639,
+        "y": 619
+      },
+      "x": 648,
+      "y": 724,
+      "world": {
+        "x": -30408,
+        "y": 19632
+      },
+      "projected": {
+        "x": 30696,
+        "y": -19824
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "0",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 645,
+        "y": 625
+      },
+      "x": 648,
+      "y": 724,
+      "world": {
+        "x": -30696,
+        "y": 19824
+      },
+      "projected": {
+        "x": 30984,
+        "y": -20016
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 650,
+        "y": 631
+      },
+      "x": 600,
+      "y": 724,
+      "world": {
+        "x": -30984,
+        "y": 20016
+      },
+      "projected": {
+        "x": 31224,
+        "y": -20208
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 654,
+        "y": 631
+      },
+      "x": 552,
+      "y": 532,
+      "world": {
+        "x": -31224,
+        "y": 20208
+      },
+      "projected": {
+        "x": 31416,
+        "y": -20208
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    },
+    {
+      "point": {
+        "x": 650,
+        "y": 631
+      },
+      "x": 168,
+      "y": 532,
+      "world": {
+        "x": -31416,
+        "y": 20208
+      },
+      "projected": {
+        "x": 31224,
+        "y": -20208
+      },
+      "visible": {
+        "width": 720,
+        "height": 1280
+      },
+      "walkable": true,
+      "withinViewport": true,
+      "ready": true,
+      "overlay": "",
+      "zone": "106",
+      "entityHits": [],
+      "occupiedBy": []
+    }
+  ],
+  "bindingStates": [
+    {
+      "transportBinding": "1",
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "scene": "7458947277651677085",
+      "revision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    {
+      "transportBinding": "1",
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "scene": "7458947277651677086",
+      "revision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    {
+      "transportBinding": "1",
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "scene": "7458947277651677086",
+      "revision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "map": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    {
+      "transportBinding": "2",
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "scene": "7458947277651677086",
+      "revision": "4",
+      "sourceSeq": "1",
+      "binding": {
+        "map": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    {
+      "transportBinding": "2",
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "scene": "7458947277651677087",
+      "revision": "4",
+      "sourceSeq": "1",
+      "binding": {
+        "map": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    }
+  ],
+  "clientBindingPackets": 0,
+  "physicalMobileVerified": false,
+  "bindingVerified": true,
+  "coldRebuildVerified": false,
+  "teleport21Verified": false,
+  "roleSelection": {
+    "job": 2,
+    "status": "创建职业：男道士"
+  },
+  "createdRole": {
+    "job": 2,
+    "slot": 1
+  },
+  "before": {
+    "map": "1",
+    "scene": "7458947277651677085",
+    "baseline": "1",
+    "resourceVersion": "18",
+    "binding": "1",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677085",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "inventoryRevision": "2",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n尚未绑定",
+    "bindingMessages": []
+  },
+  "town": {
+    "map": "2",
+    "scene": "7458947277651677086",
+    "baseline": "2",
+    "resourceVersion": "18",
+    "binding": "1",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 633,
+      "y": 613
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677086",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "inventoryRevision": "2",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n尚未绑定",
+    "bindingMessages": []
+  },
+  "safe": {
+    "map": "2",
+    "scene": "7458947277651677086",
+    "baseline": "2",
+    "resourceVersion": "18",
+    "binding": "1",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677086",
+      "roleRevision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "3",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": [
+      "已绑定至比奇省 (650,631)"
+    ]
+  },
+  "rolePanel": {
+    "map": "2",
+    "scene": "7458947277651677086",
+    "baseline": "2",
+    "resourceVersion": "18",
+    "binding": "1",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677086",
+      "roleRevision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "3",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": [
+      "已绑定至比奇省 (650,631)"
+    ]
+  },
+  "sameCenterRoute": {
+    "candidates": [
+      {
+        "point": {
+          "x": 654,
+          "y": 631
+        },
+        "x": 552,
+        "y": 532,
+        "world": {
+          "x": -31224,
+          "y": 20208
+        },
+        "projected": {
+          "x": 31416,
+          "y": -20208
+        },
+        "visible": {
+          "width": 720,
+          "height": 1280
+        },
+        "walkable": true,
+        "withinViewport": true,
+        "ready": true,
+        "overlay": "",
+        "zone": "106",
+        "entityHits": [],
+        "occupiedBy": []
+      },
+      {
+        "point": {
+          "x": 646,
+          "y": 631
+        },
+        "x": 168,
+        "y": 532,
+        "world": {
+          "x": -31224,
+          "y": 20208
+        },
+        "projected": {
+          "x": 31032,
+          "y": -20208
+        },
+        "visible": {
+          "width": 720,
+          "height": 1280
+        },
+        "walkable": true,
+        "withinViewport": true,
+        "ready": true,
+        "overlay": "",
+        "zone": "106",
+        "entityHits": [],
+        "occupiedBy": []
+      },
+      {
+        "point": {
+          "x": 655,
+          "y": 631
+        },
+        "x": 600,
+        "y": 532,
+        "world": {
+          "x": -31224,
+          "y": 20208
+        },
+        "projected": {
+          "x": 31464,
+          "y": -20208
+        },
+        "visible": {
+          "width": 720,
+          "height": 1280
+        },
+        "walkable": true,
+        "withinViewport": true,
+        "ready": true,
+        "overlay": "",
+        "zone": "106",
+        "entityHits": [],
+        "occupiedBy": []
+      },
+      {
+        "point": {
+          "x": 645,
+          "y": 631
+        },
+        "x": 120,
+        "y": 532,
+        "world": {
+          "x": -31224,
+          "y": 20208
+        },
+        "projected": {
+          "x": 30984,
+          "y": -20208
+        },
+        "visible": {
+          "width": 720,
+          "height": 1280
+        },
+        "walkable": true,
+        "withinViewport": true,
+        "ready": true,
+        "overlay": "",
+        "zone": "106",
+        "entityHits": [],
+        "occupiedBy": []
+      }
+    ],
+    "outbound": {
+      "x": 654,
+      "y": 631
+    },
+    "return": {
+      "x": 650,
+      "y": 631
+    }
+  },
+  "sameCenter": {
+    "map": "2",
+    "scene": "7458947277651677086",
+    "baseline": "2",
+    "resourceVersion": "18",
+    "binding": "1",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677086",
+      "roleRevision": "3",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 2,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "3",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": [
+      "已绑定至比奇省 (650,631)"
+    ]
+  },
+  "reentered": {
+    "map": "2",
+    "scene": "7458947277651677086",
+    "baseline": "3",
+    "resourceVersion": "18",
+    "binding": "2",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 650,
+      "y": 631
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "106",
+    "projection": "source_rectangular",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677086",
+      "roleRevision": "4",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "4",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": []
+  },
+  "returned": {
+    "map": "1",
+    "scene": "7458947277651677087",
+    "baseline": "4",
+    "resourceVersion": "18",
+    "binding": "2",
+    "role": "Townfecde9",
+    "ready": true,
+    "travel": "complete",
+    "position": {
+      "x": 8,
+      "y": 8
+    },
+    "life": "0",
+    "hp": "16",
+    "mp": "13",
+    "pet": {
+      "life": "0",
+      "hp": "60",
+      "mp": "0"
+    },
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:bb710e7af90fca930293ad72344d8ee9",
+      "sceneEpoch": "7458947277651677087",
+      "roleRevision": "4",
+      "sourceSeq": "1",
+      "binding": {
+        "mapId": "2",
+        "center": {
+          "x": 650,
+          "y": 631
+        }
+      },
+      "cause": 1,
+      "safeZoneId": "106",
+      "trusted": true
+    },
+    "inventoryRevision": "4",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n绑定：比奇省 (650,631)",
+    "bindingMessages": []
+  }
+}

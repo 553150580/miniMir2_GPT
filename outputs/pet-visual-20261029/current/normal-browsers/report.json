@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "started_at_utc": "2026-10-29T09:49:17.881596+00:00",
+  "scope": "主rule18真实Creator：正常道士安全区绑定7检查与通用触屏UI6检查；不替代17隔离验收、不验收旧宠尸体、真机或容量",
+  "gui_terminal": {
+    "session": "62716",
+    "session_is_audit_only": true,
+    "report": ".work/pet-visual-20261029/gui/run-a34997dce6a34424b2b223b44b1f701a/report.json",
+    "sha256": "1d8a5379ad683fb043677c9378ae88badf7c2f482d4bb495cb6d9ede9fc2ef4c"
+  },
+  "fixture_sha256": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+  "main_process_or_configuration_modified": false,
+  "direct_database_access": false,
+  "account_scope": "仅既有浏览器工具正常注册/创角及正常协议操作；不直接预置或清理主数据库",
+  "credentials_written": false,
+  "steps": [
+    {
+      "name": "town_binding",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "node",
+        "tools/client/verify_town_travel_browser.cjs",
+        "--report-dir",
+        ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/01-town_binding"
+      ],
+      "report": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/01-town_binding/report.json",
+      "stdout": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/01-town_binding/stdout.txt",
+      "stderr": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/01-town_binding/stderr.txt",
+      "started_at_utc": "2026-10-29T09:49:18.652886+00:00",
+      "exit_code": 0,
+      "seconds": 43.39,
+      "report_sha256": "e3c6ad4cba8c2a22e6e19b7a4d0c0735d66e97ef9a4abeaa69916b10a535d16f",
+      "checks": 7,
+      "errors": [],
+      "warnings": [],
+      "passed": true
+    },
+    {
+      "name": "general_ui",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "node",
+        "tools/client/verify_windows_browser.cjs",
+        "--report-dir",
+        ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/02-general_ui"
+      ],
+      "report": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/02-general_ui/report.json",
+      "stdout": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/02-general_ui/stdout.txt",
+      "stderr": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/02-general_ui/stderr.txt",
+      "started_at_utc": "2026-10-29T09:50:02.616245+00:00",
+      "exit_code": 0,
+      "seconds": 20.839,
+      "report_sha256": "9ca1656df2c69690d0559f74d26455d9bc4d0ba4d4592ff143b723e0b36f9da5",
+      "checks": 6,
+      "errors": [],
+      "warnings": [
+        {
+          "type": "warning",
+          "text": "Unexpected screen orientation: 13"
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "report_directory": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0",
+  "main_before": {
+    "running": true,
+    "pid": 16600,
+    "run_id": "9ebd35e5-1279-481f-9a90-6d32b1d23c00",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "5fc7a17915d5714da994b7e16c3f6cfb",
+        "mode": "account",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "bfada754d5ad2d41441faa48703357e7",
+        "mode": "game",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "74a69720f9955cd68e1dbea0f1e66319",
+        "mode": "gm",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "preview_before": {
+    "webMobileBuild": true,
+    "developmentOnly": true,
+    "pid": 37100,
+    "run_id": "9e201386484c4568bfbcdf968ca7fca2",
+    "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+    "port": 18080,
+    "account_port": 18100,
+    "game_port": 18101,
+    "index_sha256": "e6ac7b953e5200e32fec1f4d0bec7986c9a60bc188665a1c8c20df98c8d70197"
+  },
+  "main_after": {
+    "running": true,
+    "pid": 16600,
+    "run_id": "9ebd35e5-1279-481f-9a90-6d32b1d23c00",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "5fc7a17915d5714da994b7e16c3f6cfb",
+        "mode": "account",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "bfada754d5ad2d41441faa48703357e7",
+        "mode": "game",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "74a69720f9955cd68e1dbea0f1e66319",
+        "mode": "gm",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "main_unchanged": true,
+  "preview_unchanged": true,
+  "protected_inputs_unchanged": true,
+  "finished_at_utc": "2026-10-29T09:50:24.165123+00:00"
+}

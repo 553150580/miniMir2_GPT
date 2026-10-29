@@ -33,6 +33,7 @@ export const MsgC2SAttackIntent: 30011 = 30011;
 export const MsgS2CCastStep: 30012 = 30012;
 export const MsgS2CEntityDisplacement: 30013 = 30013;
 export const MsgS2CTeleportResult: 30014 = 30014;
+export const MsgS2CPetBorn: 30015 = 30015;
 export const MsgC2SEquip: 40001 = 40001;
 export const MsgC2SRecycle: 40002 = 40002;
 export const MsgS2CInventory: 40003 = 40003;

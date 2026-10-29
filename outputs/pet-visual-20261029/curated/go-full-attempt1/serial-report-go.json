@@ -1,0 +1,94 @@
+{
+  "passed": false,
+  "started_at_utc": "2026-10-29T04:00:37.756879+00:00",
+  "steps": [
+    {
+      "task": "go",
+      "exit_code": 1
+    }
+  ],
+  "main_restored": true,
+  "main_before": {
+    "running": true,
+    "pid": 37352,
+    "run_id": "5ab4965e-83e7-48d6-a28b-e19899b027d0",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "f11691b6f007c809366b5b00484790c3",
+        "mode": "account",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "fe75b32fc74470c5d40f8aba88cb03df",
+        "mode": "game",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "ddfddf8a12712a2a794b8437e954d739",
+        "mode": "gm",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "main_stop": {
+    "running": false,
+    "pid": null,
+    "run_id": "5ab4965e-83e7-48d6-a28b-e19899b027d0",
+    "health": {},
+    "development_only": true,
+    "production_ready": false
+  },
+  "go_freeze_verified": true,
+  "error": "go失败，原始日志已保存",
+  "main_after": {
+    "running": true,
+    "pid": 66916,
+    "run_id": "e4db1347-8c94-4c0a-8b02-241e5e1aa906",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "351d210043e2df3d7d57e061af371e44",
+        "mode": "account",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "3974ab55d94b83333dde5e49073055ba",
+        "mode": "game",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+        "instance": "7bd798a9a849bb1b99b134cdec0f3163",
+        "mode": "gm",
+        "rule_version": 18,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "finished_at_utc": "2026-10-29T04:08:57.611226+00:00"
+}

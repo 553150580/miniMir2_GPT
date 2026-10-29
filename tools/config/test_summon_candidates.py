@@ -37,7 +37,7 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in c['skills']],[17])
         self.assertEqual([row['id'] for row in c['books']],[25])
         self.assertEqual(len(c['upgrades']),3)
-        self.assertEqual(f['rule_version'],17)
+        self.assertEqual(f['rule_version'],18)
         self.assertEqual(len(f['skills']),22)
         self.assertFalse(any(row['id']==17 for row in f['skills']))
         self.assertFalse(any(row['id']==25 for row in f['items']))
@@ -121,6 +121,13 @@ class SummonCandidateProjectionTests(unittest.TestCase):
             elif kind=='bootstrap':profile['pet_runtime']['bootstrap_mode']='none'
             else:profile['rule_version']=16
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
+
+    def test_visual_protocol_version_preserves_minimum_summon_contract(self):
+        for version in (17,18):
+            tables=self.changed();self.profile(tables)['rule_version']=version
+            self.assertEqual(self.compile(tables)['required_rule_version'],17)
+        tables=self.changed();self.profile(tables)['rule_version']=19
+        with self.assertRaises(ValueError):self.compile(tables)
 
     def test_definition_link_and_material_cannot_be_guessed(self):
         for kind in ['missing_summon','unknown_key','boolean_id','wrong_id','extra_effect','quantity','unknown_material']:

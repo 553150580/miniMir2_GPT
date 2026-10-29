@@ -134,11 +134,19 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['previewId', 'operation']);
         payload = { previewId: bytes16(item.previewId, stored), operation: operation(item.operation, stored) };
     } else if (id === 40014) {
-        const item = record(input.value, ['sceneEpoch', 'inputSequence', 'skillId', 'targetHandle', 'targetGrid', 'direction', 'materialInstanceId', 'materialVersion', 'casterLife', 'operation']);
-        const grid = record(item.targetGrid, ['x', 'y']), epoch = longValue(item.sceneEpoch, stored), version = longValue(item.materialVersion, stored), life = longValue(item.casterLife, stored);
+        // 17由服务器决定原宠与出生点，正式请求不含目标；旧14/15仍须保留原目标，不能补零坐标或放开任意字段。
+        const summon = input.value != null && typeof input.value === 'object' && (input.value as ObjectValue).skillId === 17;
+        const fields = ['sceneEpoch', 'inputSequence', 'skillId', 'direction', 'materialInstanceId', 'materialVersion', 'casterLife', 'operation'];
+        const item = record(input.value, summon ? fields : fields.concat('targetHandle', 'targetGrid'));
+        const epoch = longValue(item.sceneEpoch, stored), version = longValue(item.materialVersion, stored), life = longValue(item.casterLife, stored);
         const skillId = uint32(item.skillId), inputSequence = uint32(item.inputSequence), direction = uint32(item.direction);
         if (!skillId || !inputSequence || direction > 7 || epoch.isNegative() || epoch.isZero() || version.isNegative() || version.isZero() || life.isNegative()) return invalid('材料施法的原场景、版本、方向或输入序号无效');
-        payload = { sceneEpoch: epoch, inputSequence, skillId, targetHandle: uint32(item.targetHandle), targetGrid: { x: uint32(grid.x), y: uint32(grid.y) }, direction,
+        let target: ObjectValue = {};
+        if (!summon) {
+            const grid = record(item.targetGrid, ['x', 'y']);
+            target = { targetHandle: uint32(item.targetHandle), targetGrid: { x: uint32(grid.x), y: uint32(grid.y) } };
+        }
+        payload = { sceneEpoch: epoch, inputSequence, skillId, ...target, direction,
             materialInstanceId: bytes16(item.materialInstanceId, stored), materialVersion: version, casterLife: life, operation: operation(item.operation, stored) };
     } else if (id === 40015) {
         const item = record(input.value, ['itemInstanceId', 'itemVersion', 'unequip', 'operation']), version = longValue(item.itemVersion, stored);

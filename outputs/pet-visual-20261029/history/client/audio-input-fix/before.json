@@ -1,0 +1,20 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/world_audio_input.test.cjs"
+  ],
+  "exit_code": 1,
+  "sha256": "09e426199b38dde82330f6c8c6aefd1949223c3f44d6a03d422c6554d7a65b06",
+  "source": {
+    "client\\assets\\scripts\\app\\WorldAudio.ts": "62cd83a945f5e88c5776495bc642490e9d1db0b853456beaf969a11c2c6d367e",
+    "client\\assets\\scripts\\app\\GameWorldView.ts": "e89348e78a1a42c9d83f29c88c8246dc66d5c4965f27bda793d204385c7ff974"
+  },
+  "scope": "实际锁定引擎NodeEventProcessor捕获/目标/冒泡代码，回调表/节点/AudioSource替身；未运行GPU/浏览器/硬件声音"
+}

@@ -1,0 +1,14 @@
+{
+  "directory": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0",
+  "summary": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/report.json",
+  "town_binding": {
+    "report": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/01-town_binding/report.json",
+    "checks": "$.checks",
+    "expected_count": 7
+  },
+  "general_ui": {
+    "report": ".work/pet-visual-20261029/normal-browsers/run-cd78bc7be3e14899ba1ffb28c7b82aa0/02-general_ui/report.json",
+    "checks": "$.checks",
+    "expected_count": 6
+  }
+}

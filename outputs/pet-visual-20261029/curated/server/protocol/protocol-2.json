@@ -1,0 +1,12 @@
+{
+  "task": "protocol",
+  "command": [
+    "node",
+    "tools/protocol/generate_client_pb.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T02:53:57.300156+00:00",
+  "finished_at": "2026-10-29T02:53:58.661977+00:00",
+  "output": ".work/pet-visual-20261029/server/protocol/protocol-2.txt",
+  "scope": "仅所列命令，不替代业务、真机或容量验收"
+}

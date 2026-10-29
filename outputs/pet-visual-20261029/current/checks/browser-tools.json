@@ -1,0 +1,14 @@
+{
+  "task": "browser-tools",
+  "command": [
+    "node",
+    "--test",
+    "tools/client/pet_runtime_browser.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:53:30.226689+00:00",
+  "finished_at": "2026-10-29T04:53:30.438900+00:00",
+  "output": ".work/pet-visual-20261029/checks/browser-tools.txt",
+  "output_sha256": "34eccaa8949281b49c2a67f1df2a2f0b5ac128b372a6f2116ec50cb831f74e88",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

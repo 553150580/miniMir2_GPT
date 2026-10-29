@@ -1,0 +1,24 @@
+✔ 真实GameWorldView无body绝不创建；明确事件裁到第3帧，加色材质并在第10帧后恢复普通身体 (16.3677ms)
+✔ 新Life/尸体/同birth新位移取消旧出场，同attachment资源失效不能移交pending给重建view (37.3027ms)
+✔ 正常触屏解锁，真实AudioSource两声道与完整WAV时长；动画结束不会截断新生原声 (23.5134ms)
+✔ 出生声音微任务迟到跨Life不播放；资源归还之前两AudioSource先stop与clip=null (16.6151ms)
+✔ 17起手fresh与Recall每个CastAccepted只发声一次，1136ms原声不被600ms动画截断 (8.6695ms)
+✔ WorldAssets直接释放走真实失效通知，clip引用降0的瞬间已无任何声道绑定 (7.6065ms)
+✔ 实际primary WorldView.prepare + HUD完整owner + WorldView.dispose：保存双Surface在背景ref0前解绑 (4.4071ms)
+✔ 实际WorldAssets直接释放先解绑保存地板/HUD、活body/skill/status，延迟destroy仍无绑定ref0 (4.3656ms)
+✔ 实际apply实体移除、skill/status update过期先同步清帧，已从索引删除的待销毁节点不会漏 (1.5786ms)
+✔ 共享同一Frame的新owner在相同保存节点挂接后，旧Surface/HUD失效回调不能清新owner (1.8123ms)
+✔ 失效通知即使某个消费者失败仍通知其它人且保留资源；重入释放拒绝，移除故障后可重试 (1.5562ms)
+✔ HUD先销毁会同步解绑再退订，不依赖下一帧或世界owner通知 (0.9798ms)
+✔ 实际GameCombatStatus退役徽标先清根及子Sprite，WorldAssets归还保存prefab依赖前无残留绑定 (16.7083ms)
+✔ 真实Creator capture先于Button停冒泡，UI认领不发全局input也能正常解锁，且不吞按钮 (12.4364ms)
+✔ 捕获解锁与未认领地图input fallback去重，Born仍播完整1505ms原声而非1000ms图像 (21.8683ms)
+✔ 旧scope的Safe捕获不解锁；dispose用原root/callback/context/capture退订且先解绑clip (8.9616ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 696.9988

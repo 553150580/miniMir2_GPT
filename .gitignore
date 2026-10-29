@@ -16,6 +16,8 @@ tmp/
 dist/
 build/
 *.log
+# 本阶段白名单内的原始验收日志需要随证据提交。
+!outputs/pet-visual-20261029/**/*.log
 client/library/
 client/temp/
 client/profiles/
@@ -23,6 +25,8 @@ client/local/
 client/native/
 client/.creator/*
 !client/.creator/default-meta.json
+# Creator编辑器问卷服务缓存会自动刷新form标识，不是运行时开屏配置。
+client/settings/v2/packages/information.json
 server/minimir
 outputs/server-dev/nbserver
 conf/dev/*.local.json

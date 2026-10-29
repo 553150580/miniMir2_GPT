@@ -238,3 +238,13 @@ test('材料施法与护符装卸持久保留原实例、Long版本、生命代�
     assert.throws(()=>new PendingOperations().set('roleA',{id:40015,value:{...equip,slot:100}}),{code:'INVALID_OPERATION'});
     assert.throws(()=>new PendingOperations().set('roleA',{id:40015,value:{...equip,unequip:1}}),{code:'INVALID_OPERATION'});
 });
+test('17无目标材料日志重载仍省略坐标，禁止追加target/map；旧14/15不能借此省略原目标',()=>{
+ const large=Long.MAX_UNSIGNED_VALUE,cast={sceneEpoch:large,inputSequence:9,skillId:17,direction:5,materialInstanceId:id(7),materialVersion:large,casterLife:large,operation:pending().value.operation};
+ const storage=new MemoryStorage(),ledger=new PendingOperations(storage,key);ledger.set('roleA',{id:40014,value:cast});const restored=new PendingOperations(storage,key).get('roleA');
+ assert(!('targetHandle'in restored.value));assert(!('targetGrid'in restored.value));assert.equal(restored.value.casterLife.toString(),large.toString());assert.equal(restored.value.materialVersion.toString(),large.toString());
+ for(const extra of [{targetHandle:0},{targetGrid:{x:0,y:0}},{mapId:Long.UONE},{targetHandle:0,targetGrid:{x:0,y:0}},{token:'secret'}])assert.throws(()=>new PendingOperations().set('roleA',{id:40014,value:{...cast,...extra}}),{code:'INVALID_OPERATION'});
+ for(const skillId of [14,15]){
+  assert.throws(()=>new PendingOperations().set('roleA',{id:40014,value:{...cast,skillId}}),{code:'INVALID_OPERATION'});
+  const valid={...cast,skillId,targetHandle:0,targetGrid:{x:8,y:9}};new PendingOperations().set('roleA',{id:40014,value:valid});
+ }
+});

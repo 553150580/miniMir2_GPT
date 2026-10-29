@@ -17,7 +17,7 @@ class SafeZoneBindingProjectionTests(unittest.TestCase):
 
     def test_visit_gate_is_independent_of_initializer_and_required_by_teleport(self):
         fixture=module.fixture_from_rows(self.tables)
-        self.assertEqual(fixture['rule_version'],17)
+        self.assertEqual(fixture['rule_version'],18)
         self.assertEqual(fixture['binding'],{'enabled':False,'start_points':[],'safe_zone_enabled':True})
         self.assertTrue(any(skill['id']==21 for skill in fixture['skills']))
         tables=copy.deepcopy(self.tables);tables['dev_first_loop_profile'][0]['parameters']['binding']['safe_zone_enabled']=False

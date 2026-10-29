@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 69,
+  "message_count": 70,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -35,6 +35,7 @@
     "TeleportResult",
     "PetTrainingState",
     "OwnedPetState",
+    "PetBorn",
     "EntityState",
     "EntityDisplacement",
     "NavigationState",
@@ -76,8 +77,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 140,
-  "int64_boundary_cases": 458,
+  "int64_field_count": 148,
+  "int64_boundary_cases": 482,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -396,6 +397,54 @@
       "field": "hp_max",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "PetBorn",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "baseline_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "state_sequence",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "entity_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "source_cast_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "born_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetBorn",
+      "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
     },
     {
       "message": "EntityState",
@@ -1032,7 +1081,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "7f06d6c8f882da695ba9f5558c52d76fa51dbd870cffebfcd77d4b7af615e2a8"
+      "sha256": "d022411b14ae3364160a8e29a89a16e489b19c8ea23ad01c5682ce9969e18275"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -1042,13 +1091,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "00d24719f8c895c11b36383b1366ea0d7862487156a5dec095cce739bcb90d4f",
-      "bytes": 1120764
+      "sha256": "e60892744f4b2e7da9d1a01d22d7f23a5b7fdc5bafd71c3d9223e88f7dd069b0",
+      "bytes": 1148257
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "a05c164eaccc44d207831a5a9671516105f2dfdf92076d752ddb9ce8399b756a",
-      "bytes": 362360
+      "sha256": "406d1da03c8ed848b0c8eeafd1bc8b2dbc4f1450e4750c33060d2fb6674dc346",
+      "bytes": 368637
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

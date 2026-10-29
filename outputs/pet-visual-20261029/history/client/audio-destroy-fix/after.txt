@@ -1,0 +1,37 @@
+✔ 真实GameWorldView无body绝不创建；明确事件裁到第3帧，加色材质并在第10帧后恢复普通身体 (18.565ms)
+✔ 新Life/尸体/同birth新位移取消旧出场，同attachment资源失效不能移交pending给重建view (41.7718ms)
+✔ 正常触屏解锁，真实AudioSource两声道与完整WAV时长；动画结束不会截断新生原声 (30.778ms)
+✔ 出生声音微任务迟到跨Life不播放；资源归还之前两AudioSource先stop与clip=null (19.9839ms)
+✔ 17起手fresh与Recall每个CastAccepted只发声一次，1136ms原声不被600ms动画截断 (10.885ms)
+✔ WorldAssets直接释放走真实失效通知，clip引用降0的瞬间已无任何声道绑定 (9.9211ms)
+✔ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (18.3291ms)
+✔ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (12ms)
+✔ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (11.0931ms)
+✔ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (10.1131ms)
+✔ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (10.7079ms)
+✔ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (9.9504ms)
+✔ 真实WorldAssets共享帧仅由世界owner归还，旧外观与新外观在ref0前均已解绑 (15.1217ms)
+✔ 128具不同handle的NoMaster尸体与新活宠真实视图共存，初见尸体终帧且逐个退役同步清帧 (21.806ms)
+✔ 实际primary WorldView.prepare + HUD完整owner + WorldView.dispose：保存双Surface在背景ref0前解绑 (4.9756ms)
+✔ 实际WorldAssets直接释放先解绑保存地板/HUD、活body/skill/status，延迟destroy仍无绑定ref0 (4.6723ms)
+✔ 实际apply实体移除、skill/status update过期先同步清帧，已从索引删除的待销毁节点不会漏 (1.6187ms)
+✔ 共享同一Frame的新owner在相同保存节点挂接后，旧Surface/HUD失效回调不能清新owner (1.937ms)
+✔ 失效通知即使某个消费者失败仍通知其它人且保留资源；重入释放拒绝，移除故障后可重试 (1.8109ms)
+✔ HUD先销毁会同步解绑再退订，不依赖下一帧或世界owner通知 (1.8361ms)
+✔ 实际GameCombatStatus退役徽标先清根及子Sprite，WorldAssets归还保存prefab依赖前无残留绑定 (18.1048ms)
+✔ 真实引擎子树先于AppRoot组件销毁：Safe自清监听，global主动退订，AudioSource与clip只归还一次 (196.5757ms)
+✔ strict isValid不包含Destroying；公开销毁信号在处理器与子树之前完成音频退休 (122.9725ms)
+✔ 排队ToDestroy声道仍须清clip，已毁声道不再stop或重复destroy，异步旧播放不复活 (154.4222ms)
+✔ 同保存Safe的新声道不被旧实例重复dispose退订，完整原WAV与资源owner仍独立 (55.8058ms)
+✔ Safe排队销毁时仍同步解绑clip与global，剩余root监听由真实事件处理器自行清空 (51.849ms)
+✔ 真实Creator capture先于Button停冒泡，UI认领不发全局input也能正常解锁，且不吞按钮 (13.7766ms)
+✔ 捕获解锁与未认领地图input fallback去重，Born仍播完整1505ms原声而非1000ms图像 (23.6012ms)
+✔ 旧scope的Safe捕获不解锁；dispose用原root/callback/context/capture退订且先解绑clip (8.5118ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1008.3557

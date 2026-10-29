@@ -1,0 +1,21 @@
+{
+  "pid": 25076,
+  "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+  "start_ticks": 134377282697561982,
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "run_id": "a2e19b4968b142078cd7c78f3ab7829d",
+  "argv": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\client\\serve.mjs",
+    "--instance-id",
+    "a2e19b4968b142078cd7c78f3ab7829d",
+    "--build-root",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d\\client-project\\build\\web-mobile",
+    "--port",
+    "18082",
+    "--account-port",
+    "18110",
+    "--game-port",
+    "18111"
+  ]
+}

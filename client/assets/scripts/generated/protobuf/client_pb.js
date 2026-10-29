@@ -8213,6 +8213,520 @@ $root.minimir = (function() {
             return OwnedPetState;
         })();
 
+        v1.PetBorn = (function() {
+
+            /**
+             * Properties of a PetBorn.
+             * @typedef {Object} minimir.v1.PetBorn.$Properties
+             * @property {Long|null} [scene_epoch] PetBorn scene_epoch
+             * @property {Long|null} [baseline_id] PetBorn baseline_id
+             * @property {Long|null} [state_sequence] PetBorn state_sequence
+             * @property {number|null} [entity_handle] PetBorn entity_handle
+             * @property {Long|null} [entity_life] PetBorn entity_life
+             * @property {number|null} [definition_id] PetBorn definition_id
+             * @property {Long|null} [map_id] PetBorn map_id
+             * @property {Long|null} [source_cast_id] PetBorn source_cast_id
+             * @property {number|null} [source_skill_id] PetBorn source_skill_id
+             * @property {Long|null} [born_at_unix_ms] PetBorn born_at_unix_ms
+             * @property {Long|null} [movement_revision] PetBorn movement_revision
+             * @property {number|null} [direction] PetBorn direction
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] PetBorn role
+             * @property {number|null} [elapsed_ms] PetBorn elapsed_ms
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PetBorn.
+             * @memberof minimir.v1
+             * @interface IPetBorn
+             * @augments minimir.v1.PetBorn.$Properties
+             * @deprecated Use minimir.v1.PetBorn.$Properties instead.
+             */
+
+            /**
+             * Shape of a PetBorn.
+             * @typedef {minimir.v1.PetBorn.$Properties} minimir.v1.PetBorn.$Shape
+             */
+
+            /**
+             * Constructs a new PetBorn.
+             * @memberof minimir.v1
+             * @classdesc Represents a PetBorn.
+             * @constructor
+             * @param {minimir.v1.PetBorn.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PetBorn = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PetBorn scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn baseline_id.
+             * @member {Long} baseline_id
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.baseline_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn state_sequence.
+             * @member {Long} state_sequence
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.state_sequence = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn entity_handle.
+             * @member {number} entity_handle
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.entity_handle = 0;
+
+            /**
+             * PetBorn entity_life.
+             * @member {Long} entity_life
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.entity_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn definition_id.
+             * @member {number} definition_id
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.definition_id = 0;
+
+            /**
+             * PetBorn map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn source_cast_id.
+             * @member {Long} source_cast_id
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.source_cast_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn source_skill_id.
+             * @member {number} source_skill_id
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.source_skill_id = 0;
+
+            /**
+             * PetBorn born_at_unix_ms.
+             * @member {Long} born_at_unix_ms
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.born_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn movement_revision.
+             * @member {Long} movement_revision
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.movement_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetBorn direction.
+             * @member {number} direction
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.direction = 0;
+
+            /**
+             * PetBorn role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.role = null;
+
+            /**
+             * PetBorn elapsed_ms.
+             * @member {number} elapsed_ms
+             * @memberof minimir.v1.PetBorn
+             * @instance
+             */
+            PetBorn.prototype.elapsed_ms = 0;
+
+            /**
+             * Creates a new PetBorn instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {minimir.v1.PetBorn.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PetBorn} PetBorn instance
+             * @type {{
+             *   (properties: minimir.v1.PetBorn.$Shape): minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape;
+             *   (properties?: minimir.v1.PetBorn.$Properties): minimir.v1.PetBorn;
+             * }}
+             */
+            PetBorn.create = function(properties) {
+                return new PetBorn(properties);
+            };
+
+            /**
+             * Encodes the specified PetBorn message. Does not implicitly {@link minimir.v1.PetBorn.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {minimir.v1.PetBorn.$Properties} message PetBorn message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PetBorn.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.baseline_id != null && $Object.hasOwnProperty.call(message, "baseline_id") && (typeof message.baseline_id === "object" ? message.baseline_id.low || message.baseline_id.high : message.baseline_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.baseline_id);
+                if (message.state_sequence != null && $Object.hasOwnProperty.call(message, "state_sequence") && (typeof message.state_sequence === "object" ? message.state_sequence.low || message.state_sequence.high : message.state_sequence !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.state_sequence);
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle") && message.entity_handle !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.entity_handle);
+                if (message.entity_life != null && $Object.hasOwnProperty.call(message, "entity_life") && (typeof message.entity_life === "object" ? message.entity_life.low || message.entity_life.high : message.entity_life !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.entity_life);
+                if (message.definition_id != null && $Object.hasOwnProperty.call(message, "definition_id") && message.definition_id !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.definition_id);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.map_id);
+                if (message.source_cast_id != null && $Object.hasOwnProperty.call(message, "source_cast_id") && (typeof message.source_cast_id === "object" ? message.source_cast_id.low || message.source_cast_id.high : message.source_cast_id !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.source_cast_id);
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id") && message.source_skill_id !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.source_skill_id);
+                if (message.born_at_unix_ms != null && $Object.hasOwnProperty.call(message, "born_at_unix_ms") && (typeof message.born_at_unix_ms === "object" ? message.born_at_unix_ms.low || message.born_at_unix_ms.high : message.born_at_unix_ms !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint64(message.born_at_unix_ms);
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision") && (typeof message.movement_revision === "object" ? message.movement_revision.low || message.movement_revision.high : message.movement_revision !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.movement_revision);
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction") && message.direction !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.direction);
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
+                if (message.elapsed_ms != null && $Object.hasOwnProperty.call(message, "elapsed_ms") && message.elapsed_ms !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.elapsed_ms);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PetBorn message, length delimited. Does not implicitly {@link minimir.v1.PetBorn.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {minimir.v1.PetBorn.$Properties} message PetBorn message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PetBorn.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PetBorn message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape} PetBorn
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PetBorn.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PetBorn();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.baseline_id = value;
+                            else
+                                delete message.baseline_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.state_sequence = value;
+                            else
+                                delete message.state_sequence;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.entity_handle = value;
+                            else
+                                delete message.entity_handle;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.entity_life = value;
+                            else
+                                delete message.entity_life;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.definition_id = value;
+                            else
+                                delete message.definition_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.source_cast_id = value;
+                            else
+                                delete message.source_cast_id;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.source_skill_id = value;
+                            else
+                                delete message.source_skill_id;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.born_at_unix_ms = value;
+                            else
+                                delete message.born_at_unix_ms;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.movement_revision = value;
+                            else
+                                delete message.movement_revision;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.direction = value;
+                            else
+                                delete message.direction;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.elapsed_ms = value;
+                            else
+                                delete message.elapsed_ms;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PetBorn message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape} PetBorn
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PetBorn.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PetBorn message.
+             * @function verify
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PetBorn.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.baseline_id != null && $Object.hasOwnProperty.call(message, "baseline_id"))
+                    if (!$util.isInteger(message.baseline_id) && !(message.baseline_id && $util.isInteger(message.baseline_id.low) && $util.isInteger(message.baseline_id.high)))
+                        return "baseline_id: integer|Long expected";
+                if (message.state_sequence != null && $Object.hasOwnProperty.call(message, "state_sequence"))
+                    if (!$util.isInteger(message.state_sequence) && !(message.state_sequence && $util.isInteger(message.state_sequence.low) && $util.isInteger(message.state_sequence.high)))
+                        return "state_sequence: integer|Long expected";
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle"))
+                    if (!$util.isInteger(message.entity_handle))
+                        return "entity_handle: integer expected";
+                if (message.entity_life != null && $Object.hasOwnProperty.call(message, "entity_life"))
+                    if (!$util.isInteger(message.entity_life) && !(message.entity_life && $util.isInteger(message.entity_life.low) && $util.isInteger(message.entity_life.high)))
+                        return "entity_life: integer|Long expected";
+                if (message.definition_id != null && $Object.hasOwnProperty.call(message, "definition_id"))
+                    if (!$util.isInteger(message.definition_id))
+                        return "definition_id: integer expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.source_cast_id != null && $Object.hasOwnProperty.call(message, "source_cast_id"))
+                    if (!$util.isInteger(message.source_cast_id) && !(message.source_cast_id && $util.isInteger(message.source_cast_id.low) && $util.isInteger(message.source_cast_id.high)))
+                        return "source_cast_id: integer|Long expected";
+                if (message.source_skill_id != null && $Object.hasOwnProperty.call(message, "source_skill_id"))
+                    if (!$util.isInteger(message.source_skill_id))
+                        return "source_skill_id: integer expected";
+                if (message.born_at_unix_ms != null && $Object.hasOwnProperty.call(message, "born_at_unix_ms"))
+                    if (!$util.isInteger(message.born_at_unix_ms) && !(message.born_at_unix_ms && $util.isInteger(message.born_at_unix_ms.low) && $util.isInteger(message.born_at_unix_ms.high)))
+                        return "born_at_unix_ms: integer|Long expected";
+                if (message.movement_revision != null && $Object.hasOwnProperty.call(message, "movement_revision"))
+                    if (!$util.isInteger(message.movement_revision) && !(message.movement_revision && $util.isInteger(message.movement_revision.low) && $util.isInteger(message.movement_revision.high)))
+                        return "movement_revision: integer|Long expected";
+                if (message.direction != null && $Object.hasOwnProperty.call(message, "direction"))
+                    if (!$util.isInteger(message.direction))
+                        return "direction: integer expected";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.elapsed_ms != null && $Object.hasOwnProperty.call(message, "elapsed_ms"))
+                    if (!$util.isInteger(message.elapsed_ms))
+                        return "elapsed_ms: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PetBorn
+             * @function getTypeUrl
+             * @memberof minimir.v1.PetBorn
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PetBorn.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PetBorn";
+            };
+
+            return PetBorn;
+        })();
+
         v1.EntityState = (function() {
 
             /**

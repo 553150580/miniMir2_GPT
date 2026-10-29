@@ -1,0 +1,14 @@
+{
+  "task": "candidate",
+  "command": [
+    "python3",
+    "tools/resources/prepare_summon_candidates.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:52:09.513310+00:00",
+  "finished_at": "2026-10-29T04:52:09.926514+00:00",
+  "output": ".work/pet-visual-20261029/checks/candidate.txt",
+  "output_sha256": "97ee3957a4a86f96448a836e9581cc3a1a8c7ccae4c076479443cec1faf3af82",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

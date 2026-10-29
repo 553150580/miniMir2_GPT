@@ -29,7 +29,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	must(t, err)
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 17 || cfg.Fixture.CastingSupply.Enabled {
+	if cfg.Fixture.RuleVersion != 18 || cfg.Fixture.CastingSupply.Enabled {
 		t.Fatal("必须从主rule17关闭材料的真实配置创建隔离样本")
 	}
 	if _, enabled := cfg.Fixture.Skill(17); enabled {
@@ -118,7 +118,8 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	_, err = store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{"$set": bson.M{"level": 19}, "$push": bson.M{"items": bson.M{"$each": inputs}}})
 	must(t, err)
 	storedRole := func() domain.Role { r, err := store.Role(ctx, roleID); must(t, err); return r }
-	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	birthAudit := &summonBirthAudit{t: t, role: role.Key}
+	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), birthAudit.observe)
 	defer func() { c.close() }()
 	c.auto(false, 1)
 	if c.scene.OwnedPet != nil || travelCount(c.scene, 2) != 0 {
@@ -153,6 +154,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	material := summonWSEquipped(t, c)
 	firstRequest := &pb.CastWithMaterialRequest{SceneEpoch: c.entry.SceneEpoch, CasterLife: c.player().Life, SkillId: 17, Direction: 2,
 		MaterialInstanceId: material.InstanceId, MaterialVersion: material.Version, Operation: c.operation()}
+	birthAudit.allow = true
 	result, accepted := summonWSMaterial(c, firstRequest)
 	if result.ErrorCode != 0 || accepted == nil || accepted.DelayMs != 500 {
 		t.Fatal("真实扣耗未产生唯一500ms受理", result, accepted)
@@ -161,7 +163,13 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	if summonWSEquipped(t, c).Quantity != 1 {
 		t.Fatal("新召没有恰好扣一个Count")
 	}
-	travelUntilWithin(c, 4*time.Second, func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && c.scene.OwnedPet != nil })
+	if len(birthAudit.events) == 0 {
+		travelUntilWithin(c, 4*time.Second, func(wire.Frame) bool { return len(birthAudit.events) == 1 })
+	}
+	birthAudit.allow = false
+	if len(birthAudit.events) != 1 || birthAudit.events[0].SourceCastId != accepted.CastId {
+		t.Fatal("实际新生未产生唯一配对30015", birthAudit.events)
+	}
 	born := proto.Clone(c.scene.OwnedPet).(*pb.OwnedPetState)
 	if c.player().Mp != mp-skill.MPBaseCost {
 		t.Fatal("新召未按已学习0阶恰好扣一次MP", mp, c.player().Mp)
@@ -271,7 +279,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	}
 	oldScene := c.entry.SceneEpoch
 	c.close()
-	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), birthAudit.observe)
 	if c.entry.SceneEpoch != oldScene || c.scene.OwnedPet == nil || c.scene.OwnedPet.MapId != 1 || c.scene.OwnedPet.Life != born.Life || c.scene.OwnedPet.PetTraining.Experience != credit {
 		t.Fatal("健康新票丢失异图原宠/训练或重建世界")
 	}
@@ -284,7 +292,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	c.close()
 	stop()
 	stop = launch()
-	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), birthAudit.observe)
 	if c.scene.OwnedPet != nil || travelCount(c.scene, 2) != 0 || c.entry.SceneEpoch == oldScene {
 		t.Fatal("冷启动恢复了临时宠物/训练或沿用旧执行身份")
 	}
@@ -310,7 +318,89 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	if len(receipts) != 1 || receipts[0].Casting == nil || receipts[0].Casting.Quantity != 1 || receipts[0].Casting.SkillID != 17 {
 		t.Fatal("召唤扣耗未形成唯一typed材料回执", receipts)
 	}
+	if len(birthAudit.events) != 1 {
+		t.Fatal("Recall/健康票/冷建补播新生事实", len(birthAudit.events))
+	}
 	t.Log("真实Mongo/WS通过：明确隔离19级/初始书25/两Count/HP1零伤怪/禁宠Town；正常学习装符→普通fresh拒绝→永久扣1→原Front叠格500ms出生→玩家击杀确认EXP训练→卸符后同图Recall零经济扣耗→NoPets异图Owned与旧回执零二次作用→健康保留/允许图恢复→冷建无宠且永久技能和耗材保留。不是自然购书购符、主包规格或正式17开放。")
+}
+
+// 放在统一readFrame之后观察，资产/旅行/Join内部until也不能吞掉出生事实。
+// 仅保留当前一组、最多64块和2048实体；不把所有周期baseline累计到历史数组。
+type summonBirthAudit struct {
+	t                         *testing.T
+	role                      *pb.RoleKey
+	allow, ready              bool
+	scene, baseline, sequence uint64
+	count                     uint32
+	parts                     map[uint32]*pb.SceneBaselineChunk
+	cast                      uint64
+	events                    []*pb.PetBorn
+}
+
+func (a *summonBirthAudit) observe(c *client, frame wire.Frame) {
+	a.t.Helper()
+	if frame.Error != 0 {
+		return
+	}
+	switch frame.ID {
+	case p.MsgS2CEnterLine:
+		a.ready = false
+		a.parts = nil
+		a.sequence = 0
+		a.scene = c.entry.SceneEpoch
+		a.baseline = c.entry.BaselineId
+	case p.MsgS2CSyncReady:
+		q := &pb.SyncReady{}
+		must(a.t, proto.Unmarshal(frame.Payload, q))
+		if q.SceneEpoch == a.scene && q.BaselineId == a.baseline {
+			a.ready = true
+		}
+	case p.MsgS2CCastAccepted:
+		q := &pb.CastAccepted{}
+		must(a.t, proto.Unmarshal(frame.Payload, q))
+		if q.SkillId == 17 {
+			a.cast = q.CastId
+		}
+	case p.MsgS2CSceneBaseline:
+		q := &pb.SceneBaselineChunk{}
+		must(a.t, proto.Unmarshal(frame.Payload, q))
+		if q.SceneEpoch != a.scene || q.BaselineId != a.baseline {
+			a.t.Fatal("出生观测收到旧附件基线")
+		}
+		if q.StateSequence != a.sequence {
+			a.sequence = q.StateSequence
+			a.count = q.ChunkCount
+			a.parts = map[uint32]*pb.SceneBaselineChunk{}
+		}
+		if q.ChunkCount == 0 || q.ChunkCount > 64 || q.ChunkCount != a.count || q.ChunkIndex >= a.count || a.parts[q.ChunkIndex] != nil {
+			a.t.Fatal("出生观测基线分组非法")
+		}
+		a.parts[q.ChunkIndex] = q
+	case p.MsgS2CPetBorn:
+		q := &pb.PetBorn{}
+		must(a.t, proto.Unmarshal(frame.Payload, q))
+		if !a.allow || !a.ready || len(a.events) != 0 {
+			a.t.Fatal("未Ready/Recall/健康重入或重复30015", q)
+		}
+		if q.SceneEpoch != a.scene || q.BaselineId != a.baseline || q.StateSequence != a.sequence || len(a.parts) != int(a.count) || a.count == 0 ||
+			frame.Binding != c.binding || q.MapId != c.entry.RoomId || q.SourceSkillId != 17 || q.SourceCastId != a.cast || q.BornAtUnixMs == 0 || !proto.Equal(q.Role, a.role) {
+			a.t.Fatal("30015未配对先前完整基线/原附件/角色", q)
+		}
+		var body *pb.EntityState
+		total := 0
+		for _, part := range a.parts {
+			total += len(part.Entities)
+			for _, entity := range part.Entities {
+				if entity.EntityHandle == q.EntityHandle {
+					body = entity
+				}
+			}
+		}
+		if total > 2048 || body == nil || body.EntityKind != 2 || body.IsPetCorpse || body.Hp <= 0 || body.Life != q.EntityLife || body.DefinitionId != q.DefinitionId || body.MovementRevision != q.MovementRevision || body.Direction != q.Direction {
+			a.t.Fatal("30015之前未完整应用精确出生身体", q, body)
+		}
+		a.events = append(a.events, proto.Clone(q).(*pb.PetBorn))
+	}
 }
 
 func summonWSEquipped(t *testing.T, c *client) *pb.ItemView {

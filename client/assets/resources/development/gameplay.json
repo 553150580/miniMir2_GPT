@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 17,
+  "rule_version": 18,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",

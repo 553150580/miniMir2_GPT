@@ -12,6 +12,15 @@ const idle={moving:false,direction:4,stepProgress:1};
 const state=(changes={})=>({direction:4,action:0,attackSequence:0,dead:false,injured:false,...changes});
 const controller=()=>{const value=new EntityAnimation(definitions);value.observe(state(),0);return value;};
 
+test('显式appear按10×100ms及server elapsed裁剪，不占motion hold，普通移动和死亡优先结束',()=>{
+ const value=new EntityAnimation({...definitions,appear:{count:10,duration_ms:100}});value.observe(state(),0);assert.equal(value.sample(0,idle).action,'standing');
+ assert(value.appear(100,300,5));assert.deepEqual(value.sample(100,idle),{action:'appear',direction:5,frame:3});assert.equal(value.playbackUntil,0);
+ value.observe(state({direction:1}),200);assert.equal(value.sample(200,idle).frame,4);assert.equal(value.sample(799,idle).frame,9);assert.equal(value.sample(800,idle).action,'standing');
+ assert(value.appear(900,0,5));assert.equal(value.sample(901,{moving:true,direction:2,stepProgress:.5}).action,'walking');assert.equal(value.sample(902,idle).action,'standing');
+ assert(value.appear(1000,0,5));value.observe(state({dead:true}),1010);assert.equal(value.sample(1010,idle).action,'die');assert.equal(value.appear(1020,0,5),false);
+ assert.equal(controller().appear(0,0,5),false);
+});
+
 test('八方向施法按独立序号完整播放6×100毫秒，重复快照与受击不重启',()=>{
     for(let direction=0;direction<8;direction++){
         const value=new EntityAnimation({...definitions,casting:{count:6,duration_ms:100}});

@@ -3290,6 +3290,180 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a PetBorn.
+         * @deprecated Use minimir.v1.PetBorn.$Properties instead.
+         */
+        interface IPetBorn extends minimir.v1.PetBorn.$Properties {
+        }
+
+        /** Represents a PetBorn. */
+        class PetBorn {
+
+            /**
+             * Constructs a new PetBorn.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PetBorn.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PetBorn scene_epoch. */
+            scene_epoch: Long;
+
+            /** PetBorn baseline_id. */
+            baseline_id: Long;
+
+            /** PetBorn state_sequence. */
+            state_sequence: Long;
+
+            /** PetBorn entity_handle. */
+            entity_handle: number;
+
+            /** PetBorn entity_life. */
+            entity_life: Long;
+
+            /** PetBorn definition_id. */
+            definition_id: number;
+
+            /** PetBorn map_id. */
+            map_id: Long;
+
+            /** PetBorn source_cast_id. */
+            source_cast_id: Long;
+
+            /** PetBorn source_skill_id. */
+            source_skill_id: number;
+
+            /** PetBorn born_at_unix_ms. */
+            born_at_unix_ms: Long;
+
+            /** PetBorn movement_revision. */
+            movement_revision: Long;
+
+            /** PetBorn direction. */
+            direction: number;
+
+            /** PetBorn role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** PetBorn elapsed_ms. */
+            elapsed_ms: number;
+
+            /**
+             * Creates a new PetBorn instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PetBorn instance
+             */
+            static create(properties: minimir.v1.PetBorn.$Shape): minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape;
+            static create(properties?: minimir.v1.PetBorn.$Properties): minimir.v1.PetBorn;
+
+            /**
+             * Encodes the specified PetBorn message. Does not implicitly {@link minimir.v1.PetBorn.verify|verify} messages.
+             * @param message PetBorn message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PetBorn.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PetBorn message, length delimited. Does not implicitly {@link minimir.v1.PetBorn.verify|verify} messages.
+             * @param message PetBorn message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PetBorn.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PetBorn message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape} PetBorn
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape;
+
+            /**
+             * Decodes a PetBorn message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape} PetBorn
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PetBorn & minimir.v1.PetBorn.$Shape;
+
+            /**
+             * Verifies a PetBorn message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PetBorn
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PetBorn {
+
+            /** Properties of a PetBorn. */
+            interface $Properties {
+
+                /** PetBorn scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** PetBorn baseline_id */
+                baseline_id?: (Long|null);
+
+                /** PetBorn state_sequence */
+                state_sequence?: (Long|null);
+
+                /** PetBorn entity_handle */
+                entity_handle?: (number|null);
+
+                /** PetBorn entity_life */
+                entity_life?: (Long|null);
+
+                /** PetBorn definition_id */
+                definition_id?: (number|null);
+
+                /** PetBorn map_id */
+                map_id?: (Long|null);
+
+                /** PetBorn source_cast_id */
+                source_cast_id?: (Long|null);
+
+                /** PetBorn source_skill_id */
+                source_skill_id?: (number|null);
+
+                /** PetBorn born_at_unix_ms */
+                born_at_unix_ms?: (Long|null);
+
+                /** PetBorn movement_revision */
+                movement_revision?: (Long|null);
+
+                /** PetBorn direction */
+                direction?: (number|null);
+
+                /** PetBorn role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** PetBorn elapsed_ms */
+                elapsed_ms?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PetBorn. */
+            type $Shape = minimir.v1.PetBorn.$Properties;
+        }
+
+        /**
          * Properties of an EntityState.
          * @deprecated Use minimir.v1.EntityState.$Properties instead.
          */

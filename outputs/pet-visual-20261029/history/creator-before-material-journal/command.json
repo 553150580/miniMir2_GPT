@@ -1,0 +1,13 @@
+{
+  "task": "build",
+  "command": [
+    "python3",
+    "tools/client/build.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:38:30.039377+00:00",
+  "finished_at": "2026-10-29T04:40:36.480436+00:00",
+  "output": ".work/pet-visual-20261029/checks/build.txt",
+  "output_sha256": "8d6287d18dedb6423c54dee086f60a75574100a64dc30d69b845a40dca5410d7",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

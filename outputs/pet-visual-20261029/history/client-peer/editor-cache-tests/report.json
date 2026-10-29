@@ -1,0 +1,23 @@
+{
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+    "node",
+    "--test",
+    "tools/client/pet_visual_browser.test.cjs"
+  ],
+  "started_at_utc": "2026-10-29T09:22:02.053574+00:00",
+  "seconds": 1.585,
+  "exit_code": 0,
+  "source_sha256": {
+    "tools/client/verify_pet_visual_browser.cjs": "1c81c3d26c6131578d41073f01f875944eb3fe7e9c7428f51692cc45eb1cf19a",
+    "tools/client/pet_visual_browser.test.cjs": "a6dc3f2ad155e3cd70e33c0c3861497f7716a40cee7798069ab6e719e3b7a464"
+  },
+  "source_sha256_after": {
+    "tools/client/verify_pet_visual_browser.cjs": "1c81c3d26c6131578d41073f01f875944eb3fe7e9c7428f51692cc45eb1cf19a",
+    "tools/client/pet_visual_browser.test.cjs": "a6dc3f2ad155e3cd70e33c0c3861497f7716a40cee7798069ab6e719e3b7a464"
+  },
+  "source_stable": true,
+  "scope": "仅隔离GUI工具身份/真实文件摘要/复用/静态health纯边界；未启动浏览器/服务/DB/Go/Creator",
+  "passed": true
+}

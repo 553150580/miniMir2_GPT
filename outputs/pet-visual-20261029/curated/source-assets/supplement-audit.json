@@ -1,0 +1,603 @@
+{
+  "scope": "本轮只读技术资产解析；无下载/联网认证，无来源程序执行，无正式资源写入",
+  "lib": {
+    "path": "D:\\123DownLoad\\GoMir2_DS\\.local\\crystal-actors-src\\Data\\Monster\\78.Lib",
+    "bytes": 382901,
+    "sha256": "de0033d3a81d04277a679d68a942516c7365c086d27ddd650ae5ea5cfac3a678",
+    "version": 3,
+    "image_count": 234,
+    "frame_seek": 382617,
+    "frame_count": 8,
+    "frame_entry_bytes": 35,
+    "frame_table_exact_eof": true,
+    "frames": [
+      {
+        "action_id": 0,
+        "action": "Standing",
+        "start": 0,
+        "count": 4,
+        "skip": 0,
+        "interval_ms": 500,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 4
+      },
+      {
+        "action_id": 1,
+        "action": "Walking",
+        "start": 32,
+        "count": 6,
+        "skip": 0,
+        "interval_ms": 100,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 6
+      },
+      {
+        "action_id": 9,
+        "action": "Attack1",
+        "start": 80,
+        "count": 6,
+        "skip": 0,
+        "interval_ms": 100,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 6
+      },
+      {
+        "action_id": 18,
+        "action": "Struck",
+        "start": 128,
+        "count": 2,
+        "skip": 0,
+        "interval_ms": 200,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 2
+      },
+      {
+        "action_id": 21,
+        "action": "Die",
+        "start": 144,
+        "count": 10,
+        "skip": 0,
+        "interval_ms": 100,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 10
+      },
+      {
+        "action_id": 22,
+        "action": "Dead",
+        "start": 153,
+        "count": 1,
+        "skip": 9,
+        "interval_ms": 1000,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": false,
+        "direction_stride": 10
+      },
+      {
+        "action_id": 27,
+        "action": "Appear",
+        "start": 224,
+        "count": 10,
+        "skip": -10,
+        "interval_ms": 100,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": false,
+        "blend": true,
+        "direction_stride": 0
+      },
+      {
+        "action_id": 28,
+        "action": "Revive",
+        "start": 144,
+        "count": 10,
+        "skip": 0,
+        "interval_ms": 100,
+        "effect_start": 0,
+        "effect_count": 0,
+        "effect_skip": 0,
+        "effect_interval_ms": 0,
+        "reverse": true,
+        "blend": false,
+        "direction_stride": 10
+      }
+    ],
+    "appear_wil_pairs": [
+      {
+        "lib_frame": 224,
+        "wil_frame": 2860,
+        "lib_dimensions": [
+          56,
+          48
+        ],
+        "wil_dimensions": [
+          56,
+          48
+        ],
+        "offset": [
+          -10,
+          -23
+        ],
+        "lib_bgra_sha256": "117e81c4d88b54429267976e2d1b02f312049535a47881a7327e2441437d1e81",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 5,
+        "visible_rgb_mean_difference": 0.7872968980797637
+      },
+      {
+        "lib_frame": 225,
+        "wil_frame": 2861,
+        "lib_dimensions": [
+          68,
+          56
+        ],
+        "wil_dimensions": [
+          68,
+          54
+        ],
+        "offset": [
+          -15,
+          -28
+        ],
+        "lib_bgra_sha256": "6a64080ccd145b2144f73b043e20a635de9cae6294423ecf47258b1e87722035",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.1891891891891893
+      },
+      {
+        "lib_frame": 226,
+        "wil_frame": 2862,
+        "lib_dimensions": [
+          76,
+          60
+        ],
+        "wil_dimensions": [
+          76,
+          60
+        ],
+        "offset": [
+          -21,
+          -32
+        ],
+        "lib_bgra_sha256": "516041f2d8a71b642386d96fb67bb5fdb090f6d9f19494389f11cc196691b11b",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.5270444301352222
+      },
+      {
+        "lib_frame": 227,
+        "wil_frame": 2863,
+        "lib_dimensions": [
+          92,
+          80
+        ],
+        "wil_dimensions": [
+          92,
+          79
+        ],
+        "offset": [
+          -32,
+          -41
+        ],
+        "lib_bgra_sha256": "4cfa13ebb37fe88cb017acfb499a17659ade956df72a50db67d98909c1b5c15b",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.6576002266610002
+      },
+      {
+        "lib_frame": 228,
+        "wil_frame": 2864,
+        "lib_dimensions": [
+          112,
+          92
+        ],
+        "wil_dimensions": [
+          112,
+          91
+        ],
+        "offset": [
+          -29,
+          -53
+        ],
+        "lib_bgra_sha256": "2d84387709863d9639727998c304736e5d52905ed049f7bb06e36b91dcf72831",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.7718966603654693
+      },
+      {
+        "lib_frame": 229,
+        "wil_frame": 2865,
+        "lib_dimensions": [
+          112,
+          120
+        ],
+        "wil_dimensions": [
+          112,
+          119
+        ],
+        "offset": [
+          -31,
+          -77
+        ],
+        "lib_bgra_sha256": "5f08fff6c8b0d5586991b68d2d5a644c1cbc80524a99ee9965b437a363f5dcde",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.7269930287806208
+      },
+      {
+        "lib_frame": 230,
+        "wil_frame": 2866,
+        "lib_dimensions": [
+          120,
+          132
+        ],
+        "wil_dimensions": [
+          120,
+          131
+        ],
+        "offset": [
+          -28,
+          -86
+        ],
+        "lib_bgra_sha256": "c461924f064b3c9169dbf2a44255e2630c320a8ef81eb211c1539c81e9dd05f2",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.81730482347091
+      },
+      {
+        "lib_frame": 231,
+        "wil_frame": 2867,
+        "lib_dimensions": [
+          116,
+          116
+        ],
+        "wil_dimensions": [
+          116,
+          115
+        ],
+        "offset": [
+          -39,
+          -81
+        ],
+        "lib_bgra_sha256": "cb8f6bfa793be03a970c63218f59301e8d2357d7cc28282934c6497e859bbad6",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.897899885983302
+      },
+      {
+        "lib_frame": 232,
+        "wil_frame": 2868,
+        "lib_dimensions": [
+          108,
+          104
+        ],
+        "wil_dimensions": [
+          108,
+          102
+        ],
+        "offset": [
+          -41,
+          -80
+        ],
+        "lib_bgra_sha256": "78dfe6b96c3a81730d74d98b3e10dc4dc07df86858588bcca6891bbaada8320e",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.9166793602437167
+      },
+      {
+        "lib_frame": 233,
+        "wil_frame": 2869,
+        "lib_dimensions": [
+          96,
+          88
+        ],
+        "wil_dimensions": [
+          96,
+          88
+        ],
+        "offset": [
+          -27,
+          -65
+        ],
+        "lib_bgra_sha256": "95cfa0f21ae444cbcb8efdc5981918ba516735680ad364d07d6b91e5ddfc405c",
+        "width_equal": true,
+        "offset_equal": true,
+        "alpha_exact_after_top_crop": true,
+        "additional_bottom_rows_zero": true,
+        "rgba_exact": false,
+        "visible_rgb_max_difference": 7,
+        "visible_rgb_mean_difference": 1.8934786766112068
+      }
+    ],
+    "provenance": "仅在GoMir2_DS的.local/crystal-actors-src中找到本地技术资源；当前CrystalLocal PList下载清单没有该Monster78.Lib，尚未独立证实其历史下载链"
+  },
+  "blend_evidence": {
+    "path": "D:\\A_Claude\\miniMir2_GPT\\资料参考\\crystal\\Client\\MirGraphics\\DXManager.cs",
+    "bytes": 21204,
+    "sha256": "8be0a26cbf3a0112d4602bbd864a5a5af12c2238a0ba4549fb05787bcd428484",
+    "lines": "353–379",
+    "default_normal_blend": "SourceAlpha, One",
+    "library_caller": "MLibrary.cs:692–709 DrawBlend→SetBlend(true,rate)"
+  },
+  "soundlist": {
+    "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\SoundList.lst",
+    "bytes": 10317,
+    "sha256": "0250a0ce5790e0f72c64be2f28f423749d9669c242f158c3afaec3de7ad9d52f",
+    "plist_entry": {
+      "Name": "Sound\\SoundList.lst",
+      "Length": 10317,
+      "Compressed": 10317,
+      "Creation": -8585195970527602866
+    }
+  },
+  "sounds": [
+    {
+      "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\M65-0.wav",
+      "bytes": 200452,
+      "sha256": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "sample_rate": 44100,
+      "frame_count": 50102,
+      "compression": "NONE",
+      "duration_seconds": 1.1360997732426303,
+      "sound_index": 20650,
+      "soundlist_override": null,
+      "plist_entry": {
+        "Name": "Sound\\M65-0.wav",
+        "Length": 200452,
+        "Compressed": 200452,
+        "Creation": -8592005593614775808
+      }
+    },
+    {
+      "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\078-5.wav",
+      "bytes": 265440,
+      "sha256": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+      "channels": 2,
+      "sample_width_bytes": 2,
+      "sample_rate": 44100,
+      "frame_count": 66349,
+      "compression": "NONE",
+      "duration_seconds": 1.5045124716553289,
+      "sound_index": 785,
+      "soundlist_override": null,
+      "plist_entry": {
+        "Name": "Sound\\078-5.wav",
+        "Length": 265440,
+        "Compressed": 265440,
+        "Creation": -8588601232394775808
+      }
+    }
+  ],
+  "sound_download_evidence": {
+    "plist": {
+      "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\PList.json",
+      "bytes": 638068,
+      "sha256": "6821b852126329992a1289a36304ad5a57b28aecd93b86ecfb2a2d3bb9ccd42b"
+    },
+    "verification": {
+      "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources-verification.json",
+      "bytes": 1000,
+      "sha256": "ad9496c0db9fe72008e605f1d70df2d805fbc0400548f4ff338938634597bbd0"
+    },
+    "recorded": {
+      "CheckedAt": "2026-10-15T12:07:45.1898296+08:00",
+      "ManifestUrl": "https://ftp.mirfiles.co.uk/resources/mir2/crystal/patch/PList.gz",
+      "ResourceRoot": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources",
+      "ExpectedCount": 4681,
+      "ValidCount": 4681,
+      "MissingCount": 0
+    },
+    "claim_limit": "PList仅记录Name/Length等，非文件内容签名；本轮只核既有本地日志与实际SHA，未重新联网验签"
+  },
+  "matching_existing_alternate_copies": [
+    {
+      "path": "D:\\123DownLoad\\miniMiro2\\Miro2_GPT\\资料参考\\crystal\\downloads\\client-resources\\Sound\\M65-0.wav",
+      "matches": true
+    },
+    {
+      "path": "D:\\123DownLoad\\miniMiro2\\Miro2_GPT\\资料参考\\crystal\\downloads\\client-resources\\Sound\\078-5.wav",
+      "matches": true
+    },
+    {
+      "path": "D:\\123DownLoad\\miniMiro2\\Miro2_GPT\\资料参考\\crystal\\downloads\\client-resources\\Sound\\SoundList.lst",
+      "matches": true
+    }
+  ],
+  "negative_world_lookup": {
+    "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world",
+    "lib_count": 6,
+    "libraries": [
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\weapon\\0\\library-d1b9230d5c120a1a01af2c39.json",
+        "bytes": 103184,
+        "sha256": "d1b9230d5c120a1a01af2c396f0011f41b468d35b9a39145b1cee395f3fccbaf",
+        "source": {
+          "file": "Data/CWeapon/00.Lib",
+          "bytes": 187856,
+          "sha256": "63e869048da96f2d20ed0203755bd5924f2ee04d0bbd98232979db438674f8ab"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      },
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\weapon\\1\\library-614d0bdfea4b9ae6b50a35b6.json",
+        "bytes": 102231,
+        "sha256": "614d0bdfea4b9ae6b50a35b69621cbab574a931a4ae1cdeb2f79ab44f43a8b6e",
+        "source": {
+          "file": "Data/CWeapon/01.Lib",
+          "bytes": 134743,
+          "sha256": "6c0217139ccd28669b46cf8cdc6da2d0822a84d5431ee4d110dd7d7190bb4882"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      },
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\hair\\0\\library-d8c1cc3587a52aee7a2a2b84.json",
+        "bytes": 103202,
+        "sha256": "d8c1cc3587a52aee7a2a2b84cea0929df61143a4ad5ef99d14ba7ad8966081b3",
+        "source": {
+          "file": "Data/CHair/00.Lib",
+          "bytes": 476194,
+          "sha256": "876288217ef6ad4568a04e57913b892182d1ed6550fdf933dcf932f9a5b85c93"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      },
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\hair\\1\\library-8a379386e884c882d860ea39.json",
+        "bytes": 103849,
+        "sha256": "8a379386e884c882d860ea39a62901bf1e671e062a43e7550ef4c7e00c414c9c",
+        "source": {
+          "file": "Data/CHair/01.Lib",
+          "bytes": 559142,
+          "sha256": "0efbbd32c396acbb3c27ad98e59c383d78622961e091cf46963ac838e5f078b9"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      },
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\body\\0\\library-00f6d618b69485bd9fcbca12.json",
+        "bytes": 104495,
+        "sha256": "00f6d618b69485bd9fcbca12f85ee73245e14eb1c5e1f3c029a3eaf061bfb724",
+        "source": {
+          "file": "Data/CArmour/00.Lib",
+          "bytes": 3335095,
+          "sha256": "456e9564285f381e09b3887995593970c948ddbede8c1800d51224772d73ced7"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      },
+      {
+        "path": "D:\\123DownLoad\\GoMir2\\client\\assets\\world\\players\\classic\\body\\1\\library-da70813b0529283ea588ac94.json",
+        "bytes": 104487,
+        "sha256": "da70813b0529283ea588ac944dc0b77f08faf19b7ebe97c056d21eb2723f94a9",
+        "source": {
+          "file": "Data/CArmour/01.Lib",
+          "bytes": 4529875,
+          "sha256": "39a863bcf540ab3c5c1cbe16b669e0d8548860d882135f921bfd2732cb7cdd99"
+        },
+        "top_level_keys": [
+          "schema_version",
+          "family",
+          "layer",
+          "shape",
+          "source",
+          "atlases",
+          "frames",
+          "empty_frames"
+        ]
+      }
+    ],
+    "monster_directory_present": false,
+    "claim_limit": "只限该world目录；不能据此断言整个硬盘不存在怪物资源"
+  },
+  "mapping_status": "Lib动作表已解析；Mon4原格与该Lib透明轮廓/锚点实证相同，RGB仍有<=7差异；采用Mon4原像素属于跨来源候选，不宣称逐字节相同或完整原服验收",
+  "source_assets_unchanged_after_read": true
+}

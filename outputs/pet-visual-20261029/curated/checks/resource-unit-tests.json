@@ -1,0 +1,17 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\run_python.py",
+    "resource-unit-tests",
+    "tools/resources/test_pet_birth_assets.py"
+  ],
+  "actual_python_argv": [
+    "tools/resources/test_pet_birth_assets.py"
+  ],
+  "started_at": "2026-10-29T03:41:18.759177+00:00",
+  "finished_at": "2026-10-29T03:41:18.819484+00:00",
+  "elapsed_seconds": 0.06030269991606474,
+  "exit_code": 0,
+  "log": "checks/resource-unit-tests.log"
+}

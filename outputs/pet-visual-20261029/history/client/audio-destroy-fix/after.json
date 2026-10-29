@@ -1,0 +1,39 @@
+{
+  "scope": "锁定引擎真实销毁方法/传播与生产WorldAudio、WorldAssets、GameWorldView轻量替身；不代表WS/GPU/浏览器真实播放或硬件听感",
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/world_audio_destroy.test.cjs",
+    "client/tests/app/world_audio_input.test.cjs",
+    "client/tests/app/world_asset_lifecycle.test.cjs",
+    "client/tests/app/pet_born_runtime.test.cjs",
+    "client/tests/app/pet_visual_lifecycle.test.cjs"
+  ],
+  "exit_code": 0,
+  "before": {
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/tests/support/world_runtime.cjs": "f81969d0f650f062ffc6002bcf67454231a284cddfa96f85e2cf787a3dd8afc5",
+    "client/tests/app/world_audio_destroy.test.cjs": "c7a5bd9b4856b2c64e55f55d2753a51e7039e625eaf727dfd8a6fc9e1c575143",
+    "client/tests/app/world_audio_input.test.cjs": "3273754331a2381a97bafcf0962769e9c3ddb2eff54a068fe7ae647789da1833"
+  },
+  "after": {
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/tests/support/world_runtime.cjs": "f81969d0f650f062ffc6002bcf67454231a284cddfa96f85e2cf787a3dd8afc5",
+    "client/tests/app/world_audio_destroy.test.cjs": "c7a5bd9b4856b2c64e55f55d2753a51e7039e625eaf727dfd8a6fc9e1c575143",
+    "client/tests/app/world_audio_input.test.cjs": "3273754331a2381a97bafcf0962769e9c3ddb2eff54a068fe7ae647789da1833"
+  },
+  "log_sha256": "bfd8c737b8bc2f16211c8d0284f0fddbd1805421bb7ec8bdfcd8cc121c714469",
+  "current": {
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/tests/support/world_runtime.cjs": "f81969d0f650f062ffc6002bcf67454231a284cddfa96f85e2cf787a3dd8afc5",
+    "client/tests/app/world_audio_destroy.test.cjs": "c7a5bd9b4856b2c64e55f55d2753a51e7039e625eaf727dfd8a6fc9e1c575143",
+    "client/tests/app/world_audio_input.test.cjs": "3273754331a2381a97bafcf0962769e9c3ddb2eff54a068fe7ae647789da1833"
+  },
+  "stable": true
+}

@@ -1,0 +1,14 @@
+{
+  "task": "client-status",
+  "command": [
+    "python3",
+    "tools/client/dev.py",
+    "status"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T09:56:03.236452+00:00",
+  "finished_at": "2026-10-29T09:56:03.443943+00:00",
+  "output": ".work/pet-visual-20261029/checks/client-status.txt",
+  "output_sha256": "8c78c799f721ea5b8e0e1907fd00a2e07a0407ee25d995d53649388fec3bac66",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

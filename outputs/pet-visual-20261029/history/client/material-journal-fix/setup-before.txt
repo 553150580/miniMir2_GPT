@@ -1,0 +1,60 @@
+✖ 真实Session→AppRoot新召17→持久未决→生产GameConnection发40014，不补客户端坐标（socket替身，非真实WS） (112.9738ms)
+✖ 17未知发送保留无坐标原请求；重建持久日志后只重发原op/Long/材料，不新分经济序号 (84.454ms)
+✖ 旧14仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (61.2157ms)
+✖ 旧15仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (57.3823ms)
+✖ 17实际持久存储失败仍禁止发送，命令推测回退；不绕过原Pending (45.8786ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 652.7269
+
+✖ failing tests:
+
+test at client\tests\app\material_cast_journal.test.cjs:34:1
+✖ 真实Session→AppRoot新召17→持久未决→生产GameConnection发40014，不补客户端坐标（socket替身，非真实WS） (112.9738ms)
+  TypeError [Error]: NavigationIntent_1.NavigationIntent is not a constructor
+      at new AppRoot (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:56:20)
+      at fixture (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:30:12)
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:35:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+
+test at client\tests\app\material_cast_journal.test.cjs:44:1
+✖ 17未知发送保留无坐标原请求；重建持久日志后只重发原op/Long/材料，不新分经济序号 (84.454ms)
+  TypeError [Error]: NavigationIntent_1.NavigationIntent is not a constructor
+      at new AppRoot (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:56:20)
+      at fixture (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:30:12)
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:45:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at client\tests\app\material_cast_journal.test.cjs:54:28
+✖ 旧14仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (61.2157ms)
+  TypeError [Error]: NavigationIntent_1.NavigationIntent is not a constructor
+      at new AppRoot (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:56:20)
+      at fixture (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:30:12)
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:55:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at client\tests\app\material_cast_journal.test.cjs:54:28
+✖ 旧15仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (57.3823ms)
+  TypeError [Error]: NavigationIntent_1.NavigationIntent is not a constructor
+      at new AppRoot (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:56:20)
+      at fixture (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:30:12)
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:55:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at client\tests\app\material_cast_journal.test.cjs:61:1
+✖ 17实际持久存储失败仍禁止发送，命令推测回退；不绕过原Pending (45.8786ms)
+  TypeError [Error]: NavigationIntent_1.NavigationIntent is not a constructor
+      at new AppRoot (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:56:20)
+      at fixture (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:30:12)
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:62:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

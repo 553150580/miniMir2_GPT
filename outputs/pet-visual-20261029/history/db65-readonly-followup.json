@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "read_only": true,
+  "target_database": "minimir_dev_game_test_pet_visual_6d49a00ee9514431b6ffa6bf30846cd8",
+  "name_bytes": 65,
+  "maximum_name_bytes": 63,
+  "database_exists": false,
+  "database_dropped": false,
+  "database_or_user_data_modified": false,
+  "original_failed_report": ".work/pet-visual-20261029/gui/run-6d49a00ee9514431b6ffa6bf30846cd8/report.json",
+  "original_report_sha256": "5f813a916dd75ce114674a24bf05e8414e34632318a432799def90bf8c8d83d8",
+  "original_failure_report_preserved": true,
+  "scope": "仅证明被Mongo命名校验拒绝的65字节名称当前不存在；不改写原QA失败/清理错误，不将其改成GUI成功"
+}

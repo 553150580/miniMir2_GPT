@@ -1,0 +1,19 @@
+{
+  "task": "qa-tools",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/client",
+    "-p",
+    "test_pet*_qa.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:53:29.174747+00:00",
+  "finished_at": "2026-10-29T04:53:30.226432+00:00",
+  "output": ".work/pet-visual-20261029/checks/qa-tools.txt",
+  "output_sha256": "8b715c42c8e8ad1d52ebe49dba9595f458fa3fd2c48627c1439cc9a22b0a6bc9",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

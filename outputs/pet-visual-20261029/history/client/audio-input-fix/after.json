@@ -1,0 +1,25 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/world_audio_input.test.cjs",
+    "client/tests/app/pet_born_runtime.test.cjs",
+    "client/tests/app/world_asset_lifecycle.test.cjs"
+  ],
+  "exit_code": 0,
+  "sha256": "1f893d24c4c9324fa66166d02be756ba407509e0235b845a073fc5f8e8733544",
+  "engine_source_sha256": {
+    "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\input\\input.ts": "dc9fee6f50d98cf753dee0f76ecbb5c463fa6de98e287c5e95d319352be38e38",
+    "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\2d\\event\\pointer-event-dispatcher.ts": "f20eb97eb31d269fddaf5efbb0e48903b97bb058e23a99616d777809690ae1dd",
+    "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\scene-graph\\node-event-processor.ts": "bd802bbbe95833bf758aeff2a15d1774e76c27ced27f7504cc17b7ec93aa004e",
+    "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\scene-graph\\node.ts": "c211c64657814101f86838700841b8f05cc1986db08ea2e4ad91e47db1772452",
+    "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\ui\\button.ts": "97f1aeda3e80c136594600b3c5b9c4ef2d83770e2171696faa5dbec130a91c09"
+  },
+  "scope": "执行真实NodeEventProcessor传播；其它UI分发只读源码；节点/回调表/音频替身，不是GUI/可听输出"
+}

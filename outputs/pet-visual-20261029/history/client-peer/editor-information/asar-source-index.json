@@ -1,0 +1,118 @@
+{
+  "asar": "D:/Program Files/CocosCreator/3.8.8/resources/app.asar",
+  "header_bytes": 19156496,
+  "matches": [
+    {
+      "file": "builtin/information/.workflow.build.ccc",
+      "size": 156,
+      "sha256": "2702bf90b03cddaa7758434237f79cd4263db4360512d967068d4a6d20b7b83e",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/.workflow.clear.ccc",
+      "size": 48,
+      "sha256": "c1f0d104b2f4d4f7f8eefe979906d42f822cf8308478e12998c3da050a17cb69",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/@types/message.d.ts",
+      "size": 739,
+      "sha256": "88d4762dff2672c732dca6948a6d4aa09135e96d5e7ff5fafea0158522507966",
+      "prefix": "import { IDialogAction, IQueryInformation } from './public';\r\n\r\nexport interface message extends EditorMessageMap {\r\n   ",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/@types/public.d.ts",
+      "size": 992,
+      "sha256": "f6fc3959c9229bc59ab5cf3398e30d8f6993463c09552cd2b8c6c00718316ab1",
+      "prefix": "export interface IContribution {\r\n    tags?: string[];\r\n}\r\n\r\n// 某个功能的问卷数据\r\nexport interface IInformationItem {\r\n    // 3",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/dist/browser/index.ccc",
+      "size": 4456,
+      "sha256": "161f42a935d53940c67da5f8d275dcd57e2396beab59255df31d2ec633af1f9b",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/dist/browser/utils.ccc",
+      "size": 3360,
+      "sha256": "223edef3aa13dd1fd8d5dbf146e3ccd15a8d0044319439d95658833ab1a21e65",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/package.json",
+      "size": 797,
+      "sha256": "95e726ae1fa4394a63351ccfd8772c582b85cbb0a974e5f53278eefb3fcc962d",
+      "prefix": "{\r\n    \"name\": \"information\",\r\n    \"title\": \"information\",\r\n    \"version\": \"1.0.1\",\r\n    \"package_version\": 2,\r\n    \"aut",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/static/completed-form.html",
+      "size": 2208,
+      "sha256": "0f78a7567a577c61f0251a5f2048f21941da4b5bcc96fc3b543f0a199e41412c",
+      "prefix": "<html lang=\"zh\" spellcheck=\"false\">\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <title></title>\r\n    <style>\r\n        :root",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/static/network-exception.html",
+      "size": 1912,
+      "sha256": "08ce9725efe0aa01b95681f0b10eeb5386aec35c90324354018667b0ee4fcc3c",
+      "prefix": "<html lang=\"zh\" spellcheck=\"false\">\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <title></title>\r\n    <style>\r\n        :root",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/static/network-failure.html",
+      "size": 4032,
+      "sha256": "942fa27800e9a147c82a5f16b033423512ddb4ffbbed53cf6803ca8010e83a91",
+      "prefix": "<html lang=\"zh\" spellcheck=\"false\">\r\n<head>\r\n    <meta charset=\"utf-8\">\r\n    <title></title>\r\n    <style>\r\n        :root",
+      "hits": []
+    },
+    {
+      "file": "builtin/information/static/survey-form.html",
+      "size": 37551,
+      "sha256": "356fd1f6b3e4eae98c23bbce8fc8de40e766cffb7f721151517b253d0d5f84c8",
+      "prefix": "<html lang=\"zh-CN\" spellcheck=\"false\">\r\n  <head>\r\n    <meta charset=\"utf-8\" />\r\n    <title>插屏设置</title>\r\n    <style>\r\n  ",
+      "hits": [
+        {
+          "offset": 18124,
+          "text": " </div>\r\n      </div>\r\n    </div>\r\n    <script>\r\n      const Questionnaire = {\r\n        data: {\r\n          params: {\r\n            sid: \"\",\r\n          },\r\n          form: {\r\n            sid: \"\",\r\n            industry_type: \"\",\r\n            industry_custom: \"\",\r\n            game_type: \"\",\r\n            project_type: \"\",\r\n            company_name: \"\",\r\n            publish_channel: \"\",\r\n            agreement: false,\r\n            company_name_type: \"tag\",\r\n     "
+        },
+        {
+          "offset": 18179,
+          "text": "const Questionnaire = {\r\n        data: {\r\n          params: {\r\n            sid: \"\",\r\n          },\r\n          form: {\r\n            sid: \"\",\r\n            industry_type: \"\",\r\n            industry_custom: \"\",\r\n            game_type: \"\",\r\n            project_type: \"\",\r\n            company_name: \"\",\r\n            publish_channel: \"\",\r\n            agreement: false,\r\n            company_name_type: \"tag\",\r\n          },\r\n          search() {\r\n            const args ="
+        },
+        {
+          "offset": 31206,
+          "text": "      async userInfo() {\r\n            const info = await this.api.fetch.call(this, {\r\n              url: `/api/form/queryUserInfo?sid=[省略]\r\n            });\r\n\r\n            if (!info) {\r\n              return;\r\n            }\r\n\r\n            if (info.status !== 0) {\r\n              this.elements.failMsg.show.call(this, info.msg);\r\n              return;\r\n            }\r\n\r\n            this.data.form.company_name =\r\n              info.data.compa"
+        },
+        {
+          "offset": 31229,
+          "text": "{\r\n            const info = await this.api.fetch.call(this, {\r\n              url: `/api/form/queryUserInfo?sid=[省略]\r\n            });\r\n\r\n            if (!info) {\r\n              return;\r\n            }\r\n\r\n            if (info.status !== 0) {\r\n              this.elements.failMsg.show.call(this, info.msg);\r\n              return;\r\n            }\r\n\r\n            this.data.form.company_name =\r\n              info.data.company_name || info.data.ta"
+        },
+        {
+          "offset": 32282,
+          "text": "this.$agreementLink.setAttribute(\"href\", info.data[0].url);\r\n          },\r\n          async submit() {\r\n            this.data.form.sid = this.data.params.sid;\r\n            const data = JSON.parse(JSON.stringify(this.data.form));\r\n\r\n            const info = await this.api.fetch.call(this, {\r\n              url: \"/api/questionnaire/submit\",\r\n              method: \"POST\",\r\n              data,\r\n            });\r\n\r\n            if (!info) {\r\n              return;\r\n"
+        },
+        {
+          "offset": 32305,
+          "text": "Attribute(\"href\", info.data[0].url);\r\n          },\r\n          async submit() {\r\n            this.data.form.sid = this.data.params.sid;\r\n            const data = JSON.parse(JSON.stringify(this.data.form));\r\n\r\n            const info = await this.api.fetch.call(this, {\r\n              url: \"/api/questionnaire/submit\",\r\n              method: \"POST\",\r\n              data,\r\n            });\r\n\r\n            if (!info) {\r\n              return;\r\n            }\r\n\r\n      "
+        }
+      ]
+    },
+    {
+      "file": "node_modules/@cocos/creator-types/editor/packages/information/@types/message.d.ts",
+      "size": 739,
+      "sha256": "88d4762dff2672c732dca6948a6d4aa09135e96d5e7ff5fafea0158522507966",
+      "prefix": "import { IDialogAction, IQueryInformation } from './public';\r\n\r\nexport interface message extends EditorMessageMap {\r\n   ",
+      "hits": []
+    },
+    {
+      "file": "node_modules/@cocos/creator-types/editor/packages/information/@types/public.d.ts",
+      "size": 992,
+      "sha256": "f6fc3959c9229bc59ab5cf3398e30d8f6993463c09552cd2b8c6c00718316ab1",
+      "prefix": "export interface IContribution {\r\n    tags?: string[];\r\n}\r\n\r\n// 某个功能的问卷数据\r\nexport interface IInformationItem {\r\n    // 3",
+      "hits": []
+    }
+  ]
+}

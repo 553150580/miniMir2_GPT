@@ -118,6 +118,7 @@ func transitionEventHosting(r *room, at time.Time, session string) {
 
 // 围栏/身份硬失败不能给旧事实升级授权或重新抽奖；只隔离本房间，等待明确恢复。
 func (w *worker) isolateRoom(r *room) {
+	r.PetBornReady = nil
 	w.cancelTownNavigation(r)
 	w.cancelMapTravelOnDetach(r)
 	r.Isolated = true

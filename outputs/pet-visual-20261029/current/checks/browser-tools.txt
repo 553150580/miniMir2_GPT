@@ -1,0 +1,15 @@
+✔ 实际尸体GUI until等待false Promise，只有显式true结束；异常不被吞成成功 (1.0627ms)
+✔ 实际ready只读JSHandle轮询同步Boolean，Ready及渲染/附着缺一不得把Promise当真 (0.844ms)
+✔ 实际QA健康核验拒绝相同fixtureHash但不同run的三节点instance (2.7371ms)
+✔ 实际Cocos采样算法能避开两邻实体覆盖的中心九点，从尸体根矩形外角正常触屏命中 (1.4023ms)
+✔ 实际创角前只读核道士已选中且保存Loading关闭，场景名已切换仍不能提前创建 (0.3238ms)
+✔ 实际场景交互门槛拒绝仅director已切换但AppRoot未绑定或Loading仍遮挡 (0.1894ms)
+✔ 实际EditBox正常触屏必须先切换目标，已有Account输入框可见不能把Password仍写入旧框 (0.2853ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 76.7213

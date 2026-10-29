@@ -1,0 +1,19 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/material_cast_journal.test.cjs",
+    "client/tests/app/pending.test.cjs",
+    "client/tests/app/skill_aim.test.cjs"
+  ],
+  "exit_code": 0,
+  "sha256": "4054ae8f90c83968280b9cf26f81a0c36bf60bb8a0c19992d1660621f0934a99",
+  "pending_source_sha256": "fadc51cedb71d69f070457e0a716afec9fb6d20e28b65741605c3526176d671c",
+  "scope": "真实Session/AppRoot/CastingSupply/PendingOperations/Storage/GameConnection/PB到socket.send替身；不是实际WS/Mongo/GUI"
+}

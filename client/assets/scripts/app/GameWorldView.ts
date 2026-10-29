@@ -1,4 +1,4 @@
-import { Color, EventTouch, game, Graphics, instantiate, isValid, Label, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
+import { Color, EventTouch, game, gfx, Graphics, instantiate, isValid, Label, Material, Node, ProgressBar, Sprite, UITransform, Vec2, Vec3 } from 'cc';
 import { AnimationSample, EntityAnimation, movementDisplayDurationMs } from './EntityAnimation';
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
@@ -14,6 +14,10 @@ import { SourceMapView } from './SourceMapView';
 import type { SourceMapEntityOrder } from './SourceMapView';
 import type { SourceRect } from './SourceMapModel';
 import type { TeleportObservation } from './TeleportModel';
+import type { PetBornPlayback } from './PetBornModel';
+import { WorldAudio } from './WorldAudio';
+import { attachmentKey } from './MapTravelModel';
+import type { AttachmentIdentity } from './MapTravelModel';
 
 interface Visual {
     node: Node;
@@ -26,6 +30,7 @@ interface Visual {
     orderDirection: number;
     pose: AnimationSample | null;
     movement: EntityDisplacement;
+    additive: boolean[];
 }
 // 同一保存World可被下一场景复用；旧owner的迟到解绑不能清理新owner的Surface。
 const surfaceOwners = new WeakMap<Node, GameWorldView>();
@@ -40,6 +45,21 @@ export class GameWorldView {
     private effects?: CombatEffects;
     private statusEffects?: StatusEffects;
     private lastAttackId = 0n;
+    private lastCastSoundId = 0n;
+    private audio?: WorldAudio;
+    private additiveMaterial?: Material;
+    private presentationScope = '';
+    private presentationCurrent: () => boolean = () => false;
+    private retirePresentation: () => void = () => {};
+    get audioAudit() { return this.audio?.audit ?? null; }
+    get petAppearanceAudit() { return Object.freeze(Array.from(this.visuals.values()).filter(value => value.state.entityKind === 2).map(value => Object.freeze({
+        handle: value.state.entityHandle, life: value.state.life.toString(), definitionId: value.state.definitionId, action: value.pose?.action ?? '',
+        frame: value.pose?.frame ?? -1, direction: value.pose?.direction ?? -1, frames: Object.freeze(value.keys.slice()),
+        blend: Object.freeze(value.body.map(sprite => { const target = sprite.getRenderMaterial?.(0)?.passes[0]?.blendState.targets[0];
+            return Object.freeze({ source: target?.blendSrc ?? null, destination: target?.blendDst ?? null }); })) }))); }
+    bindPresentation(identity: AttachmentIdentity, current: () => boolean, retire: () => void = () => {}): void {
+        this.presentationScope = attachmentKey(identity); this.presentationCurrent = current; this.retirePresentation = retire;
+    }
     private visuals = new Map<number, Visual>();
     private projection?: GridProjection;
     private sourceView?: SourceMapView;
@@ -64,12 +84,20 @@ export class GameWorldView {
         if (this.disposed) { assets.dispose(); return; }
         this.assets = assets; this.selected = onSelected;
         this.releaseAssetsInvalidation = assets.onBeforeInvalidation(reason => {
+            this.retirePresentation(); this.audio?.cancelAll();
+            for (const visual of Array.from(this.visuals.values())) visual.animation?.cancelAppearance();
             if (reason !== 'dispose' || this.disposed) return;
             this.releaseVisuals(); this.disposed = true;
             this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined; this.assets = undefined;
         });
         surfaceOwners.set(this.world, this);
         this.manifest = assets.manifest; this.map = assets.map; this.gameplay = assets.gameplay;
+        const soundParent = this.world.getChildByName('Effects');
+        if (soundParent && assets.audioClips?.size) {
+            const inputRoot = this.viewport.parent;
+            if (!inputRoot) throw new Error('音频触屏解锁缺少已保存的Safe根');
+            this.audio = new WorldAudio(assets, soundParent, inputRoot, () => game.totalTime, () => !this.disposed && this.presentationCurrent());
+        }
         this.mapReady = false;
         if (assets.sourceMap) {
             this.projection = new SourceProjection(assets.sourceMap.model);
@@ -124,7 +152,31 @@ export class GameWorldView {
         return this.mapPreparation ?? Promise.reject(new Error('来源地图视口尺寸尚未就绪'));
     }
 
-    acceptCast(event: CastEvent): void { if (!this.disposed) this.effects?.accept(event, game.totalTime); }
+    acceptCast(event: CastEvent): void {
+        if (this.disposed) return;
+        this.effects?.accept(event, game.totalTime);
+        const cue = this.manifest?.effects?.[String(event.skillId)]?.cast_sound;
+        const definition = this.gameplay?.skills?.find((row: any) => row.id === event.skillId);
+        if (!cue || !definition?.active || !this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString() || event.casterLife == null) return;
+        const id = BigInt(event.castId.toString()), visual = this.visuals.get(event.casterHandle);
+        if (id <= this.lastCastSoundId || !visual || visual.state.hp.isZero() || visual.state.life.toString() !== event.casterLife.toString()) return;
+        this.lastCastSoundId = id;
+        this.audio?.play(0, cue, () => !this.disposed && this.presentationCurrent() && this.visuals.get(event.casterHandle) === visual
+            && visual.state.life.toString() === event.casterLife!.toString() && !visual.state.hp.isZero(), game.totalTime + this.manifest.effects[String(event.skillId)].cast.duration_ms,
+            0, `${this.presentationScope}:cast:${event.castId}:${event.casterHandle}:${event.casterLife}`);
+    }
+    presentPetBorn(value: PetBornPlayback): boolean {
+        const event = value.event, visual = this.visuals.get(event.entityHandle), now = game.totalTime;
+        if (this.disposed || !this.presentationCurrent() || event.sceneEpoch !== this.sceneEpoch.toString() || event.mapId !== this.assets?.mapId || !visual
+            || visual.state.entityKind !== 2 || visual.state.isPetCorpse || visual.state.hp.isZero() || visual.state.life.toString() !== event.entityLife
+            || visual.state.definitionId !== event.definitionId || visual.state.movementRevision?.toString() !== event.movementRevision
+            || !visual.animation?.appear(now, value.elapsedMs, event.direction)) return false;
+        const action = visual.profile.layers[0].actions.appear, until = now + action.count * action.duration_ms - value.elapsedMs;
+        if (action.sound) this.audio?.play(1, action.sound, () => !this.disposed && this.presentationCurrent() && this.visuals.get(event.entityHandle) === visual
+            && visual.state.life.toString() === event.entityLife && visual.state.movementRevision?.toString() === event.movementRevision && !visual.state.hp.isZero(),
+            until, value.elapsedMs, `${this.presentationScope}:born:${event.sourceCastId}:${event.entityHandle}:${event.entityLife}`);
+        this.update(0, this.job, this.weaponEquipped); return true;
+    }
     acceptCastStep(event: CastStepEvent): void { if (!this.disposed) this.effects?.step(event, game.totalTime); }
     acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
     acceptDisplacement(event: DisplacementEvent): void {
@@ -211,7 +263,7 @@ export class GameWorldView {
                 const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
                 visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
                     motion: sameLife ? replaced.motion : new EntityMotion(),
-                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null,
+                    animation: profile ? new EntityAnimation(profile.layers[0].actions) : null, keys: [], orderDirection: -1, pose: null, additive: sprites.map(() => false),
                     movement: sameLife ? replaced.movement : new EntityDisplacement(this.sceneEpoch, state.entityHandle) };
                 if (sameLife) {
                     // 换装不降低位移水位、不重播旧攻击；后续新序号仍正常触发新外观动作。
@@ -227,6 +279,7 @@ export class GameWorldView {
                 if (replaced) this.removeVisual(replaced);
             }
             const previous = visual.state;
+            if (previous.movementRevision?.toString() !== state.movementRevision?.toString()) visual.animation?.cancelAppearance();
             if (previous.life?.toString() !== state.life?.toString()) {
                 visual.motion.reset(); visual.animation = visual.profile ? new EntityAnimation(visual.profile.layers[0].actions) : null;
             }
@@ -281,6 +334,7 @@ export class GameWorldView {
         if (this.disposed || !this.assets) return;
         this.weaponEquipped = weaponEquipped;
         const now = game.totalTime;
+        this.audio?.update();
         const audit = _dt > 0 ? this.audit : null;
         if (audit) {
             if (!audit.updates) audit.start = now;
@@ -311,6 +365,11 @@ export class GameWorldView {
             visual.body.forEach((sprite, index) => {
                 const layer = profile.layers[index];
                 const animation = layer.actions[pose.action];
+                const additive = animation.blend === 'additive';
+                if (visual.additive[index] !== additive) {
+                    sprite.customMaterial = additive ? this.getAdditiveMaterial(sprite) : null;
+                    visual.additive[index] = additive;
+                }
                 const keys: string[] = animation.directions[visualDirection].frames;
                 const key = keys[Math.min(keys.length - 1, pose.frame)];
                 const definition = this.manifest.frames[key];
@@ -400,7 +459,20 @@ export class GameWorldView {
         clear(visual.node);
         if (isValid(visual.node, true)) { visual.node.active = false; visual.node.parent = null; visual.node.destroy(); }
     }
+    private getAdditiveMaterial(sprite: Sprite): Material {
+        if (this.additiveMaterial) return this.additiveMaterial;
+        const base = sprite.getSharedMaterial(0); if (!base) throw new Error('实体缺少已保存Sprite材质');
+        const material = new Material();
+        try {
+            material.name = '骷髅新生加色';
+            material.copy(base, { states: { blendState: { targets: [{ blend: true, blendSrc: gfx.BlendFactor.SRC_ALPHA, blendDst: gfx.BlendFactor.ONE,
+                blendSrcAlpha: gfx.BlendFactor.ONE, blendDstAlpha: gfx.BlendFactor.ONE_MINUS_SRC_ALPHA }] } } });
+        } catch (error) { material.destroy(); throw error; }
+        this.additiveMaterial = material; return material;
+    }
     private releaseVisuals(): void {
+        this.retirePresentation(); this.retirePresentation = () => {};
+        this.audio?.dispose(); this.audio = undefined;
         this.mapReady = false; this.sourceView?.dispose(); this.sourceView = undefined; this.mapPreparation = undefined;
         if (isValid(this.viewport, true)) this.viewport.off(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
         this.playerPosition = null;
@@ -408,6 +480,7 @@ export class GameWorldView {
         this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined;
         for (const visual of Array.from(this.visuals.values())) this.removeVisual(visual);
         this.visuals.clear();
+        this.additiveMaterial?.destroy(); this.additiveMaterial = undefined;
         for (const prop of this.props) if (isValid(prop.node, true)) { const sprite = prop.node.getComponent(Sprite); if (sprite) sprite.spriteFrame = null; prop.node.destroy(); }
         this.props.length = 0;
         if (isValid(this.world, true) && surfaceOwners.get(this.world) === this) {

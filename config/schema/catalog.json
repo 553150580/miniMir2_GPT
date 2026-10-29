@@ -47,7 +47,7 @@
     },
     {
       "path": "client/assets/resources/development/manifest.json",
-      "sha256": "8d1ae5ba80c3d0ae09b839789a2e5e4a7dc1f912a181e3633780e7f75f38d7d6"
+      "sha256": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b"
     },
     {
       "path": "client/assets/resources/development/maps/first-map.json",
@@ -108,6 +108,14 @@
     {
       "path": "docs/瞬息移动与世界执行身份实施边界.md",
       "sha256": "fad1a0368c90796657de9496154050dc59e2a46f3601523136106125e8f47a94"
+    },
+    {
+      "path": "资料索引/宠物出生表现来源契约.json",
+      "sha256": "e0d6080618eb589d87e36c16dba7f0c16e46a9e46acf29a87efc5971ed628aca"
+    },
+    {
+      "path": "tools/resources/pet_birth_assets.py",
+      "sha256": "b1eba943d993212091ab2ca116a51862a26d508dd773342f84f82814f550209f"
     }
   ],
   "workbooks": [

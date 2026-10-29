@@ -1,0 +1,24 @@
+{
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\node\\24.22.1\\node-v24.22.1-win-x64\\node.exe",
+    "--test",
+    "tools/client/pet_visual_browser.test.cjs"
+  ],
+  "started_at": "2026-10-29T04:36:55.766Z",
+  "finished_at": "2026-10-29T04:36:55.866Z",
+  "exit_code": 0,
+  "before": {
+    "tools/client/verify_pet_visual_browser.cjs": "c65f3195d32c37230f965a69ad30ed31670504e9d1ad05ef49fec470a26fdbe0",
+    "tools/client/pet_visual_browser.test.cjs": "bde274383c526851f3aa79c92a186d3a8ca3b9ac6e1b9b5fca8af42877508cb0",
+    "tools/client/prepare_pet_visual_qa.py": "e6bbf11cfc823e063c69072a7d028ec701bd06d5f0c81f4a6325fa7e52273bdb"
+  },
+  "after": {
+    "tools/client/verify_pet_visual_browser.cjs": "c65f3195d32c37230f965a69ad30ed31670504e9d1ad05ef49fec470a26fdbe0",
+    "tools/client/pet_visual_browser.test.cjs": "bde274383c526851f3aa79c92a186d3a8ca3b9ac6e1b9b5fca8af42877508cb0",
+    "tools/client/prepare_pet_visual_qa.py": "e6bbf11cfc823e063c69072a7d028ec701bd06d5f0c81f4a6325fa7e52273bdb"
+  },
+  "stable": true,
+  "new_database_prefix": "minimir_dev_game_test_pet_viz_",
+  "new_database_bytes_with_run": 62,
+  "scope": "pure Node only; no DB/Creator/Go/browser"
+}

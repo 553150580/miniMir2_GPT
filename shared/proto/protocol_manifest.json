@@ -422,6 +422,18 @@
       "source_ref": "docs/瞬息移动与世界执行身份实施边界.md；200ms已执行结果，跨图结果与真实入场配对，不接客户端指定坐标"
     },
     {
+      "value": 30015,
+      "name": "MsgS2CPetBorn",
+      "proto_message": "PetBorn",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "docs/职业宠物生命周期与召唤实施边界.md；rule18真实新生及完整基线配对，非受理推算、不补健康重入或异图历史"
+    },
+    {
       "value": 40001,
       "name": "MsgC2SEquip",
       "proto_message": "EquipRequest",

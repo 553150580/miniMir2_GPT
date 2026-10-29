@@ -1,0 +1,19 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/world_audio_destroy.test.cjs"
+  ],
+  "exit_code": 1,
+  "inputs": {
+    "client/assets/scripts/app/WorldAudio.ts": "18dca9f1f8f5e18d1514b937bd50c2520748920ae6e1755e9992ef37db515f0d",
+    "client/tests/app/world_audio_destroy.test.cjs": "f931f5b95ca218df881b4da3bda7c59d90e58df896dd05e6362f418541f2e321"
+  },
+  "log_sha256": "de21eaf549aa264fe091052889a5e094906271d38cfb12ab618c7effb39a1427"
+}

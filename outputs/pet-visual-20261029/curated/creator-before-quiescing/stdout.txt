@@ -1,0 +1,1 @@
+{"creator": "3.8.8", "platform": "web-mobile", "exit_code": 36, "success": true, "scene_prefab_layout_preserved": true, "source_stable_during_build": true, "seconds": 121.16, "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log", "physical_mobile_verified": false}

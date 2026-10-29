@@ -1,5 +1,13 @@
 # 共享协议实现状态
 
+当前rule18共70个PB数据消息、54个消息号、148个64位字段及482个Long边界案例，仍属draft开发合同。新增纯S2C30015 PetBorn；14字段承载精确scene/baseline/state_sequence/handle/Life/definition/map/cast/skill/出生Unix/运动水位/方向/RoleKey/server elapsed。movement_revision=0合法；64位保持Long/BigInt，不上传坐标，不新增经济游标。
+
+PetBorn仅在fresh17真正安装、原current World及成功SyncReady的完整World.Ref/Auth stamp仍匹配、含body完整基线全组发送后发出；非当前或未Ready不积压。旧附着quiescing仍可观察出生，输入门槛不开放；Cancel不重播，新Entry清scope。 客户端消费最多1条pending并保留Life水位；健康基线/Owned/永久回执不补播出生。显示发送失败不回滚宠物或材料，不重投新票。主仍22技能、原商店与初始赠书、legacy免费未训宠及护符关闭；独立17候选required_rule_version=17、runtime_enabled=false，护符包Count单位与售价仍待用户答复。见[阶段验收](../../docs/宠物出生表现与隔离客户端阶段验收.json)。
+
+以下保留各自历史阶段范围；当前运行状态以上述rule18与最新限定验收为准。
+
+rule18新增draft S2C30015 `PetBorn`：只描述17真正安装成功且当时当前World/原附件已成功发送SyncReady的新生。完整匹配身体的baseline全组先发送，再以scene/baseline/state_sequence、handle/Life、definition、map、原cast/skill、角色身份和运动水位配对。movement_revision=0合法。born_at_unix_ms记录真实Spawn处理时刻，elapsed_ms由服务端单调时钟计算，客户端不比较Unix时钟；溢出丢观察事件。Recall、legacy、失败、非当前图或未Ready新生均不积压，不由健康基线/Owned/永久回执补播。显示发送失败不回滚宠物/耗材，也不转投新连接。本条是协议实施契约，非正式验收或入口开放声明。
+
 当前rule17共69个PB数据消息、53个消息号、31个错误码、140个64位字段及458个Long边界案例，无新消息号，仍属draft开发合同。SceneBaselineChunk.owned_pet=10新增OwnedPetState：原活宠handle/Life/definition、实际MapID、HP/上限、训练、recall_skill_ids及follow_suppressed；无落点、预生或尸体，不把异图实体加入entities。
 
 全部分块及退出取消ACK须完全一致并完整组装；同图时交叉核对原实体，64位保持Long。客户端只读召回技能集合选择原CastIntent/材料RPC，服务端重新判断；观察过期则正式拒绝模式变化、不扣符、不伪造经济成功。永久回执仍只记原消耗事实，不能从历史回执排新Recall/新生。主仍22技能/材料关闭，协议能力不授予17或购符，见[阶段验收](../../docs/召唤与跨图宠物规则阶段验收.json)。以下保留历史版本。

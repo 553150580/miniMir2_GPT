@@ -1,0 +1,14 @@
+{
+  "task": "protocol",
+  "command": [
+    "python3",
+    "tools/config/generate_protocol.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:52:09.926781+00:00",
+  "finished_at": "2026-10-29T04:52:10.150256+00:00",
+  "output": ".work/pet-visual-20261029/checks/protocol.txt",
+  "output_sha256": "ac4ef5d3cf1c9cbfc135e86d7e644ebeec7f7afd163ca77c7959f4289a621c38",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "status": "candidate",
+  "is_gameplay_configuration": false,
+  "official_180_restoration_verified": false,
+  "source_programs_executed": false,
+  "source_inputs_read_only": true,
+  "copies": [
+    {
+      "source_path": "D:\\123DownLoad\\GoMir2_DS\\.local\\crystal-actors-src\\Data\\Monster\\78.Lib",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Monster/78.Lib",
+      "sha256": "de0033d3a81d04277a679d68a942516c7365c086d27ddd650ae5ea5cfac3a678",
+      "bytes": 382901,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "local_technical_asset_candidate_download_chain_unresolved"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\M65-0.wav",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/M65-0.wav",
+      "sha256": "575d30ac3f7dec94ed6bb8407607970dd725b6d387ba263edd6843b1c49e51f3",
+      "bytes": 200452,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\078-5.wav",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/078-5.wav",
+      "sha256": "13e6015011d1bfdcd5ff0b094dec72c2eeec05da9eafae43cbbfe31080a0e48a",
+      "bytes": 265440,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    },
+    {
+      "source_path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources\\Sound\\SoundList.lst",
+      "local_reference_path": "资料参考/crystal-supplement/assets/Sound/SoundList.lst",
+      "sha256": "0250a0ce5790e0f72c64be2f28f423749d9669c242f158c3afaec3de7ad9d52f",
+      "bytes": 10317,
+      "copy_mode": "independent_byte_copy",
+      "target_st_nlink": 1,
+      "source_hash_unchanged": true,
+      "source_status": "existing_local_plist_name_length_and_verification_record_not_current_network_authentication"
+    }
+  ],
+  "source_code": [
+    {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/Effect.cs",
+      "sha256": "dd5eafd71993a0ae51cf75a74550f157ba17cb66ae4aeaa835ace3d030e6aa58"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirObjects/MonsterObject.cs",
+      "sha256": "2bb09d7378a198a8fcd24299a8d855dcfbf767413db88fa15054371663fb1c4d"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirGraphics/MLibrary.cs",
+      "sha256": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8"
+    },
+    {
+      "path": "资料参考/crystal/Client/MirGraphics/DXManager.cs",
+      "sha256": "8be0a26cbf3a0112d4602bbd864a5a5af12c2238a0ba4549fb05787bcd428484"
+    },
+    {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398"
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/Monsters/BoneFamiliar.cs",
+      "sha256": "98742b0f0ae55c2f6220834cd589136814abe22caf6ed9a674b8ee677443396b",
+      "lines": [
+        12,
+        25
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "lines": [
+        339,
+        354
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Client/MirSounds/SoundManager.cs",
+      "sha256": "fa7d0592a7abc0d5869145ff152a63d114679a3af605de5b8392b0676cf82765",
+      "lines": [
+        75,
+        95
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Client/MirSounds/SoundList.cs",
+      "sha256": "e880dcc27039fb85e4e88d9b6f4d68858aab2a09f5aff6b9ce1e71ddcb204176",
+      "lines": [
+        13,
+        30
+      ]
+    },
+    {
+      "path": "资料参考/crystal/Client/MirSounds/Libraries/CachedSound.cs",
+      "sha256": "1a258b276a930f9d5af5af22741895c5c812852f70576f91c0b7bee44b8a6524",
+      "lines": [
+        16,
+        37
+      ]
+    }
+  ],
+  "visual_mapping": {
+    "cast": {
+      "skill_id": 17,
+      "source_spell": "SummonSkeleton",
+      "package": "Magic",
+      "parameters_from": "locked PlayerObject Spell effect and Frames.Player Spell; no separately maintained duration"
+    },
+    "birth": {
+      "profile": "pet_skeleton",
+      "package": "Mon4",
+      "raw_start": 2860,
+      "source_library": "资料参考/crystal-supplement/assets/Monster/78.Lib",
+      "source_action": "Appear",
+      "parameters_from": "locked Lib FrameSet count/skip/interval/blend; no separately maintained total duration",
+      "mapping_status": "cross_source_candidate_alpha_and_offsets_equal_rgb_differences_at_most_7"
+    }
+  },
+  "audio_mapping": {
+    "summon_skeleton_cast": {
+      "source": "资料参考/crystal-supplement/assets/Sound/M65-0.wav",
+      "output": "audio/summon_skeleton_cast.wav",
+      "trigger": "accepted_skill_cast"
+    },
+    "pet_skeleton_born": {
+      "source": "资料参考/crystal-supplement/assets/Sound/078-5.wav",
+      "output": "audio/pet_skeleton_born.wav",
+      "trigger": "authoritative_fresh_birth_only"
+    }
+  },
+  "download_evidence": {
+    "sound_files": "既有PList Name/Length与verification记录相符；未进行本轮联网认证，PList不含内容签名",
+    "monster_library": "仅找到本地DS技术资产，未找回对应历史下载清单，不将声音PList证据套用到Lib",
+    "record": {
+      "plist": {
+        "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\PList.json",
+        "bytes": 638068,
+        "sha256": "6821b852126329992a1289a36304ad5a57b28aecd93b86ecfb2a2d3bb9ccd42b"
+      },
+      "verification": {
+        "path": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources-verification.json",
+        "bytes": 1000,
+        "sha256": "ad9496c0db9fe72008e605f1d70df2d805fbc0400548f4ff338938634597bbd0"
+      },
+      "recorded": {
+        "CheckedAt": "2026-10-15T12:07:45.1898296+08:00",
+        "ManifestUrl": "https://ftp.mirfiles.co.uk/resources/mir2/crystal/patch/PList.gz",
+        "ResourceRoot": "D:\\123DownLoad\\CrystalLocal\\downloads\\client-resources",
+        "ExpectedCount": 4681,
+        "ValidCount": 4681,
+        "MissingCount": 0
+      },
+      "claim_limit": "PList仅记录Name/Length等，非文件内容签名；本轮只核既有本地日志与实际SHA，未重新联网验签"
+    }
+  },
+  "scope": "只补来源出生/起手和原声资源；主技能仍22/legacy/materialfalse；健康重观及Recall不重播出生，真实UI/Creator/业务分别验收",
+  "wil_sources": [
+    {
+      "package": "Mon4",
+      "wil_sha256": "6a46fc8d8fd093181bde0a8ceca8c25b8d3faf71752dbf47bbbd0a6e5fad5412",
+      "wix_sha256": "2b3e4372a0fa013fb972c34c4eec14625680e1fc0a5f037ea4c32284eb97680f",
+      "format": "wil_v1_palette256_uncompressed_version0"
+    },
+    {
+      "package": "Magic",
+      "wil_sha256": "be46a0258349b26db9ba7dba595abac1f0767d52fef11d9f508e704f2f6deaac",
+      "wix_sha256": "7f95ff7ba4add42157e10eb0d43ee7c77fd3c5ac3ea1183e39971066a40dfc91",
+      "format": "wil_v1_palette256_uncompressed_version0"
+    }
+  ],
+  "resource_metadata_authority": "本契约只维护跨来源原格/音频映射；count/interval/stride/blend从锁定Lib、起手帧与时长从锁定源码编译，不另维护600或1000。玩法/技术运行数值仍唯一Excel。"
+}

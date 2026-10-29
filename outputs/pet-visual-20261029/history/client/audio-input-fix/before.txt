@@ -1,0 +1,58 @@
+✖ 真实Creator capture先于Button停冒泡，UI认领不发全局input也能正常解锁，且不吞按钮 (12.6716ms)
+✔ 捕获解锁与未认领地图input fallback去重，Born仍播完整1505ms原声而非1000ms图像 (19.6855ms)
+✖ 旧scope的Safe捕获不解锁；dispose用原root/callback/context/capture退订且先解绑clip (7.1036ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 1
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 535.7856
+
+✖ failing tests:
+
+test at client\tests\app\world_audio_input.test.cjs:30:1
+✖ 真实Creator capture先于Button停冒泡，UI认领不发全局input也能正常解锁，且不吞按钮 (12.6716ms)
+  AssertionError [ERR_ASSERTION]: capture必须在目标按钮之前执行
+  
+  false !== true
+  
+      at D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:31:164
+      at D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:25:58
+      at CallbacksInvoker.emit (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:9:85)
+      at NodeEventProcessor.dispatchEvent (eval at <anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:14:1), <anonymous>:254:33)
+      at buttonTouch (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:27:143)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:31:118)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\world_audio_input.test.cjs:40:1
+✖ 旧scope的Safe捕获不解锁；dispose用原root/callback/context/capture退订且先解绑clip (7.1036ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\world_audio_input.test.cjs:41:138)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

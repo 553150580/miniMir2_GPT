@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "before": {
+    "tools/client/prepare_pet_visual_qa.py": "03883b24bb88ebb3a370f9fb68b88f5e8558d3031c58330b6e39a400b52af7fd",
+    "tools/client/isolated_creator.py": "0880d2b020b2ef44f757f02ed2d51871fcda2b1c4bfda6652d99716167a06750",
+    "tools/client/test_pet_visual_qa.py": "ed10d7df02f49e95512a4deb15dea9138e87cc42fed07d96e46a8aa441dfc249",
+    "tools/client/verify_pet_visual_browser.cjs": "1c81c3d26c6131578d41073f01f875944eb3fe7e9c7428f51692cc45eb1cf19a",
+    "tools/client/pet_visual_browser.test.cjs": "a6dc3f2ad155e3cd70e33c0c3861497f7716a40cee7798069ab6e719e3b7a464",
+    "tools/client/serve.mjs": "93e5a825ae078f833a62943cc0d84e1baa2503e621ac6de9e1e374c0388aedbd",
+    "tools/client/prepare_pet_runtime_qa.py": "0118c4b554ba5422e312faa0630bebbb69410b729ac4354c00b9d79c26b07686",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/resources/prepare_first_loop.py": "747a7a701bd35ceebe7fe1c9fe40ffae13ee6623f4defa3bd07cb7fc74ed2e49",
+    "config/development/first-loop.json": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+    "config/development/summon-candidates.json": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33"
+  },
+  "started_utc": "2026-10-29T09:28:18.962116+00:00",
+  "commands": [
+    {
+      "name": "python",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/client",
+        "-p",
+        "test_pet_visual_qa.py"
+      ],
+      "exit_code": 0,
+      "output": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\qa-tools-final\\python.txt",
+      "output_sha256": "6e541fc593cce6100b05f7095662d9169d7ae9b7b063da1a416b95574aa69786"
+    },
+    {
+      "name": "node",
+      "command": [
+        "node",
+        "--test",
+        "tools/client/pet_visual_browser.test.cjs"
+      ],
+      "exit_code": 0,
+      "output": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\qa-tools-final\\node.txt",
+      "output_sha256": "56a31b1ebfd28ccc6afd1f8662fcfcb3c829d5da5f791ca0fcdce7fcd3e93d29"
+    }
+  ],
+  "after": {
+    "tools/client/prepare_pet_visual_qa.py": "03883b24bb88ebb3a370f9fb68b88f5e8558d3031c58330b6e39a400b52af7fd",
+    "tools/client/isolated_creator.py": "0880d2b020b2ef44f757f02ed2d51871fcda2b1c4bfda6652d99716167a06750",
+    "tools/client/test_pet_visual_qa.py": "ed10d7df02f49e95512a4deb15dea9138e87cc42fed07d96e46a8aa441dfc249",
+    "tools/client/verify_pet_visual_browser.cjs": "1c81c3d26c6131578d41073f01f875944eb3fe7e9c7428f51692cc45eb1cf19a",
+    "tools/client/pet_visual_browser.test.cjs": "a6dc3f2ad155e3cd70e33c0c3861497f7716a40cee7798069ab6e719e3b7a464",
+    "tools/client/serve.mjs": "93e5a825ae078f833a62943cc0d84e1baa2503e621ac6de9e1e374c0388aedbd",
+    "tools/client/prepare_pet_runtime_qa.py": "0118c4b554ba5422e312faa0630bebbb69410b729ac4354c00b9d79c26b07686",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/resources/prepare_first_loop.py": "747a7a701bd35ceebe7fe1c9fe40ffae13ee6623f4defa3bd07cb7fc74ed2e49",
+    "config/development/first-loop.json": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+    "config/development/summon-candidates.json": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33"
+  },
+  "inputs_stable": true,
+  "finished_utc": "2026-10-29T09:28:21.110289+00:00"
+}

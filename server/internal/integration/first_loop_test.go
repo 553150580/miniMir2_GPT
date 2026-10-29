@@ -462,14 +462,24 @@ type client struct {
 	death          *pb.DeathNotice
 	roleBinding    *pb.BindingState
 	bindingCommits []*pb.BindingState
+	onFrame        func(*client, wire.Frame)
 }
 
-func join(t *testing.T, address, ticket string) *client {
+func join(t *testing.T, address, ticket string, observers ...func(*client, wire.Frame)) *client {
 	t.Helper()
 	ctx, stop := context.WithTimeout(context.Background(), 80*time.Second)
 	ws, _, err := websocket.Dial(ctx, "ws://"+address+"/ws", nil)
 	must(t, err)
 	c := &client{t: t, ws: ws, ctx: ctx, stop: stop}
+	if len(observers) > 0 {
+		c.onFrame = func(c *client, f wire.Frame) {
+			for _, observe := range observers {
+				if observe != nil {
+					observe(c, f)
+				}
+			}
+		}
+	}
 	c.send(p.MsgC2SEnterLine, &pb.EnterLineRequest{AccountTicket: ticket})
 	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CEnterLine })
 	// 必须先收到完整首基线，客户端才能完成场景加载后ACK；不能用假ACK掩盖握手死锁。
@@ -487,6 +497,9 @@ func join(t *testing.T, address, ticket string) *client {
 	must(t, err)
 	f, err := wire.Decode(raw)
 	must(t, err)
+	if c.onFrame != nil {
+		c.onFrame(c, f)
+	}
 	if f.Request != rejected || f.ID != p.MsgC2SMoveIntent || f.Error != p.CodeLineRecovering {
 		t.Fatalf("ACK前动作没有被门槛阻挡:%v", f)
 	}
@@ -501,6 +514,9 @@ func join(t *testing.T, address, ticket string) *client {
 		must(t, err)
 		f, err = wire.Decode(raw)
 		must(t, err)
+		if c.onFrame != nil {
+			c.onFrame(c, f)
+		}
 		if f.ID == p.MsgS2CSyncReady || f.ID == p.MsgS2CHostingReport {
 			t.Fatal("重复ACK再次发送激活或战报")
 		}
@@ -558,6 +574,11 @@ func (c *client) readFrame() wire.Frame {
 	must(c.t, e)
 	f, e := wire.Decode(b)
 	must(c.t, e)
+	defer func() {
+		if c.onFrame != nil {
+			c.onFrame(c, f)
+		}
+	}()
 	if f.Error != 0 {
 		return f
 	}

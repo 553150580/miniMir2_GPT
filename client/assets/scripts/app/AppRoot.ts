@@ -31,6 +31,7 @@ import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity, TravelContext } from './MapTravelModel';
 import { MapViewportPreparation } from './MapViewportPreparation';
 import { roleBindingText } from './RoleBindingModel';
+import { petAppearDuration } from './PetBornModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -361,6 +362,8 @@ export class AppRoot extends Component {
                 const viewport = this.find('MapViewport'), world = viewport.getChildByName('World')!;
                 const view = new GameWorldView(viewport, world, world.getChildByName('Entities')!, role.name, role.job, entry.sceneEpoch, entry.playerHandle);
                 this.world = view; this.attached = identity;
+                view.bindPresentation(identity, () => !this.disposed && !!session.role && this.world === view && isCurrentEntry(identity),
+                    () => { if (session.role && isCurrentEntry(identity)) session.petBorn.discardPending(); });
                 this.hud!.setMapFrame(assets.background, assets);
                 view.prepare(assets, entity => {
                     if (!this.isWorldCurrent() || this.world !== view || !this.canSendInput()) return;
@@ -586,6 +589,11 @@ export class AppRoot extends Component {
         if (baseline && this.lastBaseline !== baseline.stateSequence.toString()) {
             this.lastBaseline = baseline.stateSequence.toString(); this.world.apply(baseline);
             this.nav.observeAuthority(baseline.navigationState);
+        }
+        const identity = currentEntryIdentity();
+        if ((session.ready || session.travel.phase === 'quiescing') && identity) {
+            const born = session.petBorn.take(identity, baseline, petAppearDuration(this.world.manifest), session.presentationNow());
+            if (born) this.world.presentPetBorn(born);
         }
         const quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,

@@ -1,0 +1,86 @@
+✖ 真实Session→AppRoot新召17→持久未决→生产GameConnection发40014，不补客户端坐标（socket替身，非真实WS） (113.6792ms)
+✖ 17未知发送保留无坐标原请求；重建持久日志后只重发原op/Long/材料，不新分经济序号 (84.2396ms)
+✔ 旧14仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (73.5926ms)
+✔ 旧15仍从材料瞄准经真实日志和编码发送原grid，不因17分支放松字段 (64.8836ms)
+✖ 17实际持久存储失败仍禁止发送，命令推测回退；不绕过原Pending (48.7636ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 663.5561
+
+✖ failing tests:
+
+test at client\tests\app\material_cast_journal.test.cjs:34:1
+✖ 真实Session→AppRoot新召17→持久未决→生产GameConnection发40014，不补客户端坐标（socket替身，非真实WS） (113.6792ms)
+  Error [PendingOperationError]: 未决操作包含缺失或未允许的字段
+      at invalid (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:23:11)
+      at record (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:33:16)
+      at normalize (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:137:22)
+      at PendingOperations.set (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:211:25)
+      at AppRoot.economic (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1227:43)
+      at AppRoot.submitCast (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1088:21)
+      at AppRoot.castSkill (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1127:25)
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:41:15)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    code: 'INVALID_OPERATION',
+    detail: undefined
+  }
+
+test at client\tests\app\material_cast_journal.test.cjs:44:1
+✖ 17未知发送保留无坐标原请求；重建持久日志后只重发原op/Long/材料，不新分经济序号 (84.2396ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /未知/. Input:
+  
+  'PendingOperationError: 未决操作包含缺失或未允许的字段'
+  
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:47:77)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: PendingOperationError: 未决操作包含缺失或未允许的字段
+        at invalid (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:23:11)
+        at record (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:33:16)
+        at normalize (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:137:22)
+        at PendingOperations.set (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:211:25)
+        at AppRoot.economic (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1227:43)
+        at AppRoot.submitCast (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1088:21)
+        at AppRoot.castSkill (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1127:25)
+        at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:47:104)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /未知/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at client\tests\app\material_cast_journal.test.cjs:61:1
+✖ 17实际持久存储失败仍禁止发送，命令推测回退；不绕过原Pending (48.7636ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /保存未决操作失败/. Input:
+  
+  'PendingOperationError: 未决操作包含缺失或未允许的字段'
+  
+      at async TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:63:62)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: PendingOperationError: 未决操作包含缺失或未允许的字段
+        at invalid (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:23:11)
+        at record (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:33:16)
+        at normalize (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:137:22)
+        at PendingOperations.set (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:211:25)
+        at AppRoot.economic (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1227:43)
+        at AppRoot.submitCast (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1088:21)
+        at AppRoot.castSkill (eval at load (D:\A_Claude\miniMir2_GPT\client\tests\app\helpers\session_harness.cjs:8:266), <anonymous>:1127:25)
+        at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\material_cast_journal.test.cjs:63:89)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /保存未决操作失败/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

@@ -1,0 +1,23 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\run_python.py",
+    "resource-check",
+    "tools/resources/build_development_assets.py",
+    "--check",
+    "--source-root",
+    "D:/Mir2/mir2_gxx/assets/legacy/primary_180"
+  ],
+  "actual_python_argv": [
+    "tools/resources/build_development_assets.py",
+    "--check",
+    "--source-root",
+    "D:/Mir2/mir2_gxx/assets/legacy/primary_180"
+  ],
+  "started_at": "2026-10-29T03:04:39.892604+00:00",
+  "finished_at": "2026-10-29T03:04:54.778320+00:00",
+  "elapsed_seconds": 14.885725500062108,
+  "exit_code": 0,
+  "log": "checks/resource-check.log"
+}

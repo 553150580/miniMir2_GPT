@@ -1,0 +1,8 @@
+{
+    "cocos/input/input.ts":  "dc9fee6f50d98cf753dee0f76ecbb5c463fa6de98e287c5e95d319352be38e38",
+    "cocos/2d/event/pointer-event-dispatcher.ts":  "f20eb97eb31d269fddaf5efbb0e48903b97bb058e23a99616d777809690ae1dd",
+    "cocos/scene-graph/node-event-processor.ts":  "bd802bbbe95833bf758aeff2a15d1774e76c27ced27f7504cc17b7ec93aa004e",
+    "cocos/ui/button.ts":  "97f1aeda3e80c136594600b3c5b9c4ef2d83770e2171696faa5dbec130a91c09",
+    "cocos/game/splash-screen.ts":  "9c661d46fef24cefccbb0f67dc6b36273b53ff560a223d88444b9f1b1c2efe36",
+    "cocos/core/settings.ts":  "fd478c11bff0ffabbdf4705964e95fc5062c2074e4572ef5ce05ab5ce78f3205"
+}

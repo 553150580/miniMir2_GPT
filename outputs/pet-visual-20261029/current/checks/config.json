@@ -1,0 +1,14 @@
+{
+  "task": "config",
+  "command": [
+    "python3",
+    "tools/config/export_configs.py",
+    "--check"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:52:08.565770+00:00",
+  "finished_at": "2026-10-29T04:52:08.967891+00:00",
+  "output": ".work/pet-visual-20261029/checks/config.txt",
+  "output_sha256": "bc3d6eb9b4158aa86e1a9838e94a4230e3edb6eb0f6a89c39a6006cc7f29b990",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

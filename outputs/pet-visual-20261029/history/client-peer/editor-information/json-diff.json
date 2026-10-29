@@ -1,0 +1,43 @@
+{
+  "file": "client/settings/v2/packages/information.json",
+  "artifact_file": ".work/pet-visual-20261029/gui/run-425e92f75bf946afb173ef23be024c21/client-project/settings/v2/packages/information.json",
+  "before_sha256": "7021c886e57b3a052cc64c641bb189a0d2612a1fc285ad939e0c1d3b1d1d3f1c",
+  "after_sha256": "33acf5c6708a3b741da6b3b63cc05496c284c94f90a24fecf3e0c3401a5bca1f",
+  "copied_source_sha256": "7021c886e57b3a052cc64c641bb189a0d2612a1fc285ad939e0c1d3b1d1d3f1c",
+  "copied_isolated_sha256": "7021c886e57b3a052cc64c641bb189a0d2612a1fc285ad939e0c1d3b1d1d3f1c",
+  "creator_after_sha256": "33acf5c6708a3b741da6b3b63cc05496c284c94f90a24fecf3e0c3401a5bca1f",
+  "original_bytes_verified": true,
+  "creator_after_bytes_verified": true,
+  "leaf_changes": [
+    {
+      "path": "information.customSplash.customSplash.form",
+      "kind": "URL",
+      "url_without_sid_before": "https://creator-api.cocos.com/api/form/show",
+      "url_without_sid_after": "https://creator-api.cocos.com/api/form/show",
+      "only_sid_changed": true,
+      "sid_values_omitted": true
+    },
+    {
+      "path": "information.removeSplash.removeSplash.form",
+      "kind": "URL",
+      "url_without_sid_before": "https://creator-api.cocos.com/api/form/show",
+      "url_without_sid_after": "https://creator-api.cocos.com/api/form/show",
+      "only_sid_changed": true,
+      "sid_values_omitted": true
+    }
+  ],
+  "exact_two_url_sid_changes": true,
+  "before_top_level_keys": [
+    "__version__",
+    "information"
+  ],
+  "after_top_level_keys": [
+    "__version__",
+    "information"
+  ],
+  "raw_evidence": [
+    "before.raw.json",
+    "after.raw.json"
+  ],
+  "sid_values_printed": false
+}

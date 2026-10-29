@@ -1,0 +1,141 @@
+{
+  "passed": false,
+  "scope": "独立rule18/正常注册道士创角/19级资格与Count2/原书25学习/触屏新召及Recall/健康重入；非购符包规格、自然养成、尸体重召、容量或真机",
+  "runId": "ca7a3ea669684bfbbcb55edbda6d8033",
+  "fixtureHash": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "publicHash": "7effa12f579940955c802a3a08b719e5e2b6bf9218064004409d2558523b6cdc",
+  "manifestHash": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+  "mainInputIdentity": {
+    "projectCopy": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\project-copy.json",
+    "projectCopyHash": "565e3845e681b27e159fa42d4586cc43bc76ed78c9c2c90255c0b1b2ed1f7f63",
+    "clientFileCount": 20299,
+    "configBefore": {
+      "config/development/first-loop.json": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a",
+      "config/development/summon-candidates.json": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33",
+      "config/schema/catalog.json": "e950f03194d183d1d397944b4f04734f303bb5cd351ba4a86f1929aed527946d",
+      "outputs/development-prep-20261026/玩法配置.xlsx": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+      "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+    }
+  },
+  "checks": [
+    "正常注册及Job2创角，未owner资格CAS只设19级与Count2；首入无宠、原书25且无预学技能"
+  ],
+  "errors": [],
+  "warnings": [],
+  "protocolErrors": [],
+  "sent": [],
+  "casts": [],
+  "born": [],
+  "entries": [
+    {
+      "binding": "1",
+      "scene": "3517254571653497036",
+      "baseline": "1",
+      "map": "1"
+    }
+  ],
+  "acks": [
+    {
+      "scene": "3517254571653497036",
+      "baseline": "1"
+    }
+  ],
+  "states": [
+    {
+      "name": "01-normal-new-role",
+      "time": 1793252011196,
+      "scene": "3517254571653497036",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [
+        "1"
+      ],
+      "materialBag": [
+        "2"
+      ],
+      "materialEquipped": [],
+      "learned": [],
+      "pets": [],
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [],
+      "lastError": ""
+    }
+  ],
+  "gpu": [],
+  "credentialsWritten": false,
+  "bodySeeded": false,
+  "privateCastInvoked": false,
+  "routeOverride": false,
+  "health": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "5c1eae134dfa59171935ec8e2800948e",
+        "game": "58632e555fc46008b57a7c7cae3b946f",
+        "gm": "088601214ad74e4d5bbee65082c0d476"
+      }
+    }
+  ],
+  "artifactIdentity": {
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-bc8efa68dcd64013adff572d2e420653",
+    "reused": true,
+    "proof": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\reused-artifact.json",
+    "proofHash": "ebef69481bb2babc2b2621399ef6c329c55af09bcbb4d63cd478b95f4d25e8d6",
+    "creatorReport": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\creator-report.json",
+    "creatorReportHash": "c43f792757d6a5f971cad69f87a0df5072d5bd6a26e59ab6fbc84822d3e2a987",
+    "staticPort": 18082,
+    "staticPid": 38428,
+    "staticRuntime": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-ca7a3ea669684bfbbcb55edbda6d8033\\static-runtime.json"
+  },
+  "qualification": {
+    "passed": true,
+    "role_id_sha256": "1c72c3d520bd05c53816637e427d16f78028e51b0d0a35a7debd1b01237ac69e",
+    "level": 19,
+    "explicit_count": 2,
+    "book_from_normal_create": true,
+    "skills_seeded": false,
+    "binding_seeded": false,
+    "position_seeded": false,
+    "body_seeded": false,
+    "pack_size_or_price_inferred": false,
+    "only_before_owner": true
+  },
+  "create": {
+    "request": 3,
+    "job": 2,
+    "slot": 1,
+    "roleHash": "1c72c3d520bd05c53816637e427d16f78028e51b0d0a35a7debd1b01237ac69e"
+  },
+  "error": "Error: 等待超时：实际GPU首中末出生帧\n    at until (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_visual_browser.cjs:254:184)\n    at async run (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_visual_browser.cjs:305:9)",
+  "mainProtectedInputsStable": true
+}

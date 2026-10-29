@@ -1,0 +1,1 @@
+{"status":"passed","scope":"candidate_static_protobuf_wire_codec_only","message_count":70,"int64_field_count":148,"int64_boundary_cases":482,"bytes_field_count":19,"creator_project_build_verified":false}

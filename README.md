@@ -1,5 +1,9 @@
 # 传奇2竖屏挂机版开发入口
 
+宠物出生表现与隔离客户端已通过rule18限定验收：980项全包Go race（开启真实Mongo/WS，0跳过、164份输入稳定）、101项配置Python、405项JS（389 UI/app、16场景；204份项目输入与另8份锁定引擎源码分别冻结）、70种PB消息/148个64位字段/482个Long边界/54个消息号通过；主Creator409.74秒、独立候选包原真实Creator构建277.01秒，均exit36且输入稳定；仅声明单项Editor缓存排除后的受控全树SHA相等时允许复用真实产物。隔离19级/原书25/Count2后的正常触屏4项、0错误/3警告通过，覆盖学习装备、新生、无符Recall与健康重入。主仍22技能、原商店与初始赠书、legacy免费未训宠及护符关闭；独立17候选required_rule_version=17、runtime_enabled=false，护符包Count单位与售价仍待用户答复。两本Excel仅玩法profile版本17→18的1处单格变更；新增20张原PNG、2段原WAV及23份Creator导入meta，10份保存布局、架构书及冻结旧资源保持。材料未决日志严格区分17无target的8字段与14/15原目标形状，先校验持久化再发40014；落盘前或失败不发送，未知保留原op重查，不补零坐标。声音在保存Safe的TOUCH_END捕获阶段先于Button停冒泡解锁，全局input仅无UI认领触摸fallback；current拒旧scope。Safe公开NODE_DESTROYED提前退休音频，全局input始终主动退订；正常主动释放按原root/context/capture退订根监听，根销毁时由引擎自清事件表。isValid(strict)不含Destroying，另记根退休；排队组件先解绑clip且不重复destroy，实际已毁组件不再触碰，旧释放不清同Safe新声道。两段原WAV按完整剩余时长播放；GPU帧和AudioSource实际播放观察不等于硬件听感或手机真机。唯一可再生Editor问卷缓存settings/v2/packages/information.json以excluded_generated_editor_caches单项数组声明，生成文件另记generated_editor_cache_sha256；原tracked字节与SHA已移.work/quarantine/creator-information-20261029，gitignore只排精确项，其它settings/源/产物严核。源码确认Editor问卷与cache查询，runtime splash另读SettingsCategory.SPLASH_SCREEN；实际.ccc缓存非明文，未声称读出正文form/SID。不改splash或授权，不作授权旁路；旧425 compile36但SID漂移的guard失败保留历史。见[阶段验收](docs/宠物出生表现与隔离客户端阶段验收.json)。
+
+以下保留各自历史阶段范围；当前运行状态以上述rule18与最新限定验收为准。
+
 召唤与跨图宠物规则已通过rule17限定验收：944项全包Go race（开启真实Mongo/WS，0跳过、162份输入稳定）、100项配置Python、374项JS、458个PB边界及122.71秒Creator实构通过。明确隔离输入后的正常协议覆盖原书学习、扣一Count新生、确认EXP训练、升级、无符Recall、NoPets异图驻留、旧回执及冷热边界；Owned完整基线观察支持异图宠物面板。当前主仍22技能、原初始书与商店、legacy免费未训宠及关闭护符，17只在独立关闭目录；护符包数量/售价仍待用户答复。尸体GUI5项、主道士Town7项及通用UI6项通过，后者保留1条方向警告；不把旧宠GUI写成正常17施放。见[阶段验收](docs/召唤与跨图宠物规则阶段验收.json)。
 
 以下保留各自历史阶段范围；当前运行状态以上述rule17与最新验收为准。
@@ -120,13 +124,13 @@ make release-check
 
 ## 当前开发状态
 
-- 宠物底座：rule17接入500ms召唤/Recall、NoPets居民和Owned观察，主人死亡与原身体/训练/三时钟保持；明确隔离的原子材料和升级链已过。主仍免费legacy不训练，17及购符关闭。
+- 宠物底座：rule18补真实fresh出生事件、一次原帧加色出场及原声；完整World.Ref/Auth、原附着/旧Life和quiescing边界保持。主仍legacy不训练，17/购符关闭。
 - 技能：22项开发候选、66条0–3阶升级、24项商店、88条书品质分解。法师19级可正常购书13并学习21；须先Walk取得可信Town绑定。14/15护符入口继续关闭。
 - 瞬移：一次扣MP，200ms动作到期按当前源图禁传和绑定采样；失败不退费、不加状态。成功获得固定30秒Flux，仅后续传送MP增加30%；升级预览明确列基础MP、毫秒时长和百分比。初始随机池仍未认证。
 - 世界与地图：个人17×17菱形与完整来源Town保留现场；唯一角色/宠物在两World间移交，旧地图已释放地狱火和奖励留原World。同Town位移不换scene，原地面目标与累计规划预算保持；源合法闭门落点可按正常出口规则离开。
 - 配置：`dev-teleport-v0.15-89a2e772a9e8`、rule15；98表951记录（candidate452/confirmed393/historical36/unverified70），703项正式阻断。数值只维护两本Excel，`runtime_ready=false`、`production_ready=false`。
-- 验证：944项全包Go race（含真实Mongo/WS）、100项配置Python、374项JS、458个PB边界和122.71秒Creator实构通过；10布局及6572来源资产保持，玩法82格受控编辑、架构书未变。
-- 本机观察：本轮rule17旧宠尸体5项0错误0警告、主道士城镇7项0错误0警告、通用UI6项保留1条方向警告。正常17新生视觉与购书购符/自然养成未验收；隔离WS不作为主包规格或最终1.80认证。
+- 验证：980项全包Go race（含真实Mongo/WS）、101项配置Python、405项JS（项目204份输入，另8份引擎源独立冻结）、482个PB边界；主/独立原真实Creator构建分别409.74/277.01秒通过，只有声明单项Editor缓存排除后的受控全树SHA相等才复用。10布局与冻结旧资源保持；玩法只改1格profile版本，架构书未变。
+- 本机观察：独立rule18候选包正常道士触屏4项通过，0错误/3警告；19级/初始原书25/Count2明确隔离。GPU原帧、真实AudioSource播放与健康不重播已观察，硬件听感、自然购符、尸体后重召GUI及真机/容量另验。
 - 客户端资源：4个scene、6个prefab，原菱形土层、四周4小物与24×0.7名字保持；3332张候选原帧及6572份Town来源JSON/PNG核对。聊天发送仍未实现。
 - 环境：锁定Windows工具链及本任务专属MongoDB8.0.34，回环27119；macOS保留Lima。工具通过tools/dev，不接来源服或已有数据库。
 - 公共城镇AOI/NPC、完整安全区伤害、Run/Turn及Pushed绑定、真实未知提交故障矩阵、长期稳定、完整P0、1.80完整认证、真机及容量继续待验收。

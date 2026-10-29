@@ -90,6 +90,25 @@ message OwnedPetState {
   repeated uint32 recall_skill_ids = 8;
   bool follow_suppressed = 9;
 }
+// 仅真实新生成功且出生时当前附件已SyncReady才发送；完整匹配基线在前，不补播历史。
+// 时间是实际Spawn时刻；elapsed_ms由服务端单调时钟计算，不让客户端比较Unix时钟。
+message PetBorn {
+  uint64 scene_epoch = 1;
+  uint64 baseline_id = 2;
+  uint64 state_sequence = 3;
+  uint32 entity_handle = 4;
+  uint64 entity_life = 5;
+  uint32 definition_id = 6;
+  uint64 map_id = 7;
+  uint64 source_cast_id = 8;
+  uint32 source_skill_id = 9;
+  uint64 born_at_unix_ms = 10;
+  // 0是正规新生的合法初始运动水位。
+  uint64 movement_revision = 11;
+  uint32 direction = 12;
+  RoleKey role = 13;
+  uint32 elapsed_ms = 14;
+}
 message EntityState {
   uint32 entity_handle = 1;
   uint32 entity_kind = 2;

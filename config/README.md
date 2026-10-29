@@ -1,6 +1,14 @@
 # 配置维护与导出
 
-## 当前rule17召唤与地图禁宠候选
+## 当前rule18出生显示协议边界
+
+预览`dev-pet-visual-v0.18-1cc510375fad`，98表965记录、715项正式阻断保持。仅玩法Excel profile版本17→18的1格受控变更，架构书、其它数据及公式保持；主22技能、原商店/赠书、legacy未训宠、护符false、187未知容量不变。独立17候选仍required_rule_version=17/runtime_enabled=false，本阶段不猜护符包Count或售价，不因协议/素材能力开放主17。
+
+新增20张原PNG、2段原WAV和23份Creator真实导入meta来自锁定来源，不新增出生业务延迟配置。500ms业务到期、2000ms走攻就绪、1000ms图像序列、原声音时长各自保留；只有独立局部fixture/public明确纳入17与Count2，不能反写唯一Excel或主public。独立静态端口18082；18081已有服务不接管。仅声明单项Editor缓存排除后的source/input全树、完整build与同源public全树SHA严格相等可复用已真实构建的不变包，TS变化必须重构，不运行时替换资源。唯一可再生Editor问卷缓存settings/v2/packages/information.json以excluded_generated_editor_caches单项数组声明，生成文件另记generated_editor_cache_sha256；原tracked字节与SHA已移.work/quarantine/creator-information-20261029，gitignore只排精确项，其它settings/源/产物严核。源码确认Editor问卷与cache查询，runtime splash另读SettingsCategory.SPLASH_SCREEN；实际.ccc缓存非明文，未声称读出正文form/SID。不改splash或授权，不作授权旁路；旧425 compile36但SID漂移的guard失败保留历史。见[阶段验收](../docs/宠物出生表现与隔离客户端阶段验收.json)。
+
+以下保留各自历史阶段范围；当前运行状态以上述rule18与最新限定验收为准。
+
+## rule17召唤与地图禁宠候选：历史验收
 
 预览`dev-pet-summon-v0.17-9cfc98f544bf`，98表965记录（candidate466/confirmed393/historical36/unverified70）、715项正式阻断。主22技能、原书/升级/商店/初始赠书/材料关闭及legacy宠基础保持；玩法82格受控修改、460公式和其余ZIP成员保持，架构书不变。NoPets与NoTeleport独立，两个现图显式false为技术候选，不反推原服实际政策。
 

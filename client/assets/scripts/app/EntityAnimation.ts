@@ -1,6 +1,6 @@
-export type EntityAction = 'standing' | 'walking' | 'running' | 'attack' | 'struck' | 'die' | 'casting';
+export type EntityAction = 'standing' | 'walking' | 'running' | 'attack' | 'struck' | 'die' | 'casting' | 'appear';
 export interface AnimationDefinition { count: number; duration_ms: number; }
-export type AnimationDefinitions = Record<Exclude<EntityAction, 'casting' | 'running'>, AnimationDefinition> & Partial<Record<'casting' | 'running', AnimationDefinition>>;
+export type AnimationDefinitions = Record<Exclude<EntityAction, 'casting' | 'running' | 'appear'>, AnimationDefinition> & Partial<Record<'casting' | 'running' | 'appear', AnimationDefinition>>;
 export interface AnimationObservation { direction: number; action: number; attackSequence: number; castSequence?: number; dead: boolean; injured: boolean; }
 export interface AnimationMotion { moving: boolean; direction: number; stepProgress: number; movementKind?: number; dashPhase?: number; }
 export interface AnimationSample { action: EntityAction; direction: number; frame: number; }
@@ -33,6 +33,15 @@ export class EntityAnimation {
     private initialCorpse = false;
 
     constructor(private readonly definitions: AnimationDefinitions) {}
+
+    // 仅已验证的真实新生事件能调用；baseline首次观察、换模板与健康重入均不会推断出生。
+    appear(now: number, elapsedMs: number, direction: number): boolean {
+        const definition = this.definitions.appear;
+        if (this.dead || !definition || !Number.isFinite(now) || !Number.isFinite(elapsedMs) || elapsedMs < 0
+            || elapsedMs >= definition.count * definition.duration_ms || direction !== 5) return false;
+        this.begin('appear', now - elapsedMs, direction); return true;
+    }
+    cancelAppearance(): void { if (this.action === 'appear') this.action = 'standing'; }
 
     acceptAttack(sequence: number, direction: number): void {
         if (this.dead || sequence <= this.displacedAttackSequence || sequence <= this.attackSequence) return;
@@ -92,6 +101,7 @@ export class EntityAnimation {
     }
 
     sample(now: number, motion: AnimationMotion): AnimationSample {
+        if (motion.moving) this.cancelAppearance();
         if (motion.moving && motion.movementKind === 2) return { action: 'walking', direction: motion.direction,
             frame: Math.max(0, this.definitions.walking.count - 1 - 2 * Math.floor(motion.stepProgress * 3)) };
         if (motion.moving && motion.movementKind === 3 && this.definitions.running) return { action: 'running', direction: motion.direction,
@@ -101,6 +111,11 @@ export class EntityAnimation {
         if (this.dead) {
             if (this.action !== 'die') this.begin('die', now);
             return this.frame('die', this.initialCorpse ? Infinity : now - this.started, this.actionDirection, false);
+        }
+        if (this.action === 'appear') {
+            const definition = this.definitions.appear!;
+            if (now - this.started < definition.count * definition.duration_ms) return this.frame('appear', now - this.started, this.actionDirection, false);
+            this.action = 'standing';
         }
         if (this.action === 'attack' || this.action === 'struck' || this.action === 'casting') {
             const definition = this.definitions[this.action]!;

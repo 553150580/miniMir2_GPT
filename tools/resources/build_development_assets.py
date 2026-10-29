@@ -11,6 +11,7 @@ import sys
 
 from PIL import Image, ImageDraw, __version__ as PILLOW_VERSION
 import inspect_wil as wil
+import pet_birth_assets
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / 'client/assets/resources/development'
@@ -89,6 +90,11 @@ class Importer:
         if self.check:
             if path.read_text(encoding='utf-8')!=expected:raise ValueError('metadata outdated '+relative)
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(expected,encoding='utf-8',newline='\n')
+    def write_bytes(self,relative,data):
+        path=OUTPUT/relative
+        if path.is_file() and path.read_bytes()==data:return
+        if self.check:raise ValueError('binary asset mismatch '+relative)
+        path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(data)
 
 def parse_map():
     data=MAP_SOURCE.read_bytes();width,height=struct.unpack_from('<HH',data)
@@ -365,12 +371,14 @@ def main():
     statuses={'31':{'idle':effect(3890,3,600),'struck':effect(3900,3,600)}}
     # 通用传送只按显式权威位移播放；本人没有离场光，不混入Blink的1600组。
     teleport={'out':effect(250,10,500),'in':effect(260,10,500),'owner_plays_out':False}
+    audio,birth_evidence=pet_birth_assets.append_assets(ROOT,importer,profiles,effects,DIRECTIONS)
     manifest={'schema_version':1,'purpose':'first_loop_development_candidates','development_only':True,'runtime_ready':False,
               'status':'candidate','official_180_restoration_verified':False,'pillow_version':PILLOW_VERSION,
               'converter':'tools/resources/build_development_assets.py','converter_sha256':sha(Path(__file__)),
               'wil_decoder_sha256':sha(ROOT/'tools/resources/inspect_wil.py'),'map':map_info,'direction_names':DIRECTIONS,
               'coordinate_contract':'Native frame PNGs remain uncropped and unscaled with original WIL offsets. Entity draw origin uses source offsets; authored small map props place the original image bottom center at their explicit collision cell. Historical source_props are not rendered. Only back/middle floor UVs are projected to the authored diamond; source logical y is down.',
               'sources':list(importer.sources.values()),'profiles':profiles,'effects':effects,'statuses':statuses,'teleport':teleport,'frames':importer.frames,
+              'audio':audio,'pet_birth_source':birth_evidence,
               'evidence':[evidence('资料参考/crystal/Client/MirObjects/Frames.cs',23,33,'monster compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/Frames.cs',153,168,'player compact action order/count/interval'),
                           evidence('资料参考/crystal/Client/MirObjects/PlayerObject.cs',1643,1657,'fireball/healing cast Magic frame groups'),

@@ -1,0 +1,22 @@
+{
+  "scope": "QA工具修复后只读复核，不执行测试或启动进程/数据库",
+  "checked_utc": "2026-10-29T04:06:31.940137+00:00",
+  "files": {
+    "tools/client/prepare_pet_visual_qa.py": "d08b26196135cda4ad0efe9e6b90a22c1f5f40f3ee1860c204c60657090398ac",
+    "tools/client/isolated_creator.py": "15866d3b860fb9646379ea313a8159d96c38312a0012c9073a7ac9d06772a8ea",
+    "tools/client/serve.mjs": "6e629d3aef7b4f107b040ef2835ff258375ddfb3c321e0f6e91f9df448d600cf",
+    "tools/client/test_pet_visual_qa.py": "7a99ad5905a1951fee5b3ccc9d568b39bb66b9cc6d8d342485d44a28cc49f7b7",
+    "tools/client/verify_pet_visual_browser.cjs": "9d1c994eb0adf5b94ee0a2c815d23a67db83cbce8bf27b4cec7007d845c382a8"
+  },
+  "prior_findings_resolved": [
+    "static_child_ownership_handoff",
+    "enumerate_complete_build_input_set"
+  ],
+  "new_material_findings": [],
+  "ts_tests_layout_previous_frozen_inputs": 198,
+  "ts_tests_layout_mismatches": [],
+  "qa_peer_sha256": "f6c3dea7aa5915bc3e1b8a617fb27d19bec5f02a1568bf06255980358b7f5ba9",
+  "tests_executed": false,
+  "creator_started": false,
+  "database_started": false
+}

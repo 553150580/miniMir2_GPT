@@ -1,0 +1,40 @@
+{
+  "pid": 21640,
+  "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\nbserver.exe",
+  "start_ticks": 134377315074359000,
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "run_id": "422a443fc2e84cd4a240ed9e2a19b13d",
+  "argv": [
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\nbserver.exe",
+    "-config",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\conf\\dev\\server.json",
+    "-mode",
+    "supervisor",
+    "-run-id",
+    "422a443fc2e84cd4a240ed9e2a19b13d"
+  ],
+  "database": "minimir_dev_game_test_pet_viz_422a443fc2e84cd4a240ed9e2a19b13d",
+  "purpose": "isolated_pet_visual_gui",
+  "binary_sha256": "cf29720d22f25ab77d799516da06651463c7e8cabafe615d6367ee42122207db",
+  "config_sha256": "e3d159256ac5931ccc42ea8300f7d1748fb1d0f55440e3e510e23fbee03f7c8e",
+  "fixture_sha256": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "rule_version": 18,
+  "project": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\client-project",
+  "creator_report": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\creator-report.json",
+  "ports": {
+    "account": 18110,
+    "game": 18111,
+    "gm": 18112
+  },
+  "static_port": 18082,
+  "artifact_directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d",
+  "artifact_reused": false,
+  "artifact_proof": null,
+  "health_instances": {
+    "account": "b6d3eb678c40bef6e06e9efbf0845376",
+    "game": "6d81517092d91858fbbe7ae91462b814",
+    "gm": "d0b577be2344f740d0c0a3628d59289e"
+  },
+  "static_pid": 79580,
+  "static_runtime": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-422a443fc2e84cd4a240ed9e2a19b13d\\static-runtime.json"
+}

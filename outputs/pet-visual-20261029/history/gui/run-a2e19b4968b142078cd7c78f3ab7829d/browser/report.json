@@ -1,0 +1,708 @@
+{
+  "passed": false,
+  "scope": "独立rule18/正常注册道士创角/19级资格与Count2/原书25学习/触屏新召及Recall/健康重入；非购符包规格、自然养成、尸体重召、容量或真机",
+  "runId": "a2e19b4968b142078cd7c78f3ab7829d",
+  "fixtureHash": "536ca7418ede2277ce006a39879d71acaa7ab01b4b86e279e85145a962f76edd",
+  "publicHash": "7effa12f579940955c802a3a08b719e5e2b6bf9218064004409d2558523b6cdc",
+  "manifestHash": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+  "mainInputIdentity": {
+    "projectCopy": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d\\project-copy.json",
+    "projectCopyHash": "5b8637f9a5c153b7af932c095ebf179c4aab83f6bb02875c63984406f239c4d2",
+    "clientFileCount": 20299,
+    "configBefore": {
+      "config/development/first-loop.json": "7ef4efe2173099ddc97476506a450d1b6c29a1c15702106efce99c80ab7656fe",
+      "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a",
+      "config/development/summon-candidates.json": "4e7434aa2e9d80072324698a7bee541a0cc17a63b9c34079b6b88aa670717f33",
+      "config/schema/catalog.json": "e950f03194d183d1d397944b4f04734f303bb5cd351ba4a86f1929aed527946d",
+      "outputs/development-prep-20261026/玩法配置.xlsx": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+      "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+    }
+  },
+  "checks": [
+    "正常注册及Job2创角，未owner资格CAS只设19级与Count2；首入无宠、原书25且无预学技能"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x250c00423800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x250c00423800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x250c00423800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels"
+    }
+  ],
+  "protocolErrors": [],
+  "sent": [
+    {
+      "time": 1793254732443,
+      "id": 40014,
+      "skill": 17,
+      "scene": "15339482138131382247"
+    }
+  ],
+  "casts": [
+    {
+      "time": 1793254732465,
+      "binding": "1",
+      "cast": "1",
+      "scene": "15339482138131382247",
+      "skill": 17,
+      "caster": 1,
+      "life": "0"
+    }
+  ],
+  "born": [
+    {
+      "time": 1793254733017,
+      "binding": "1",
+      "scene": "15339482138131382247",
+      "baseline": "1",
+      "sequence": "22",
+      "handle": 3,
+      "life": "1",
+      "cast": "1",
+      "skill": 17,
+      "map": "1",
+      "direction": 5,
+      "elapsedMs": 0
+    }
+  ],
+  "entries": [
+    {
+      "binding": "1",
+      "scene": "15339482138131382247",
+      "baseline": "1",
+      "map": "1"
+    }
+  ],
+  "acks": [
+    {
+      "scene": "15339482138131382247",
+      "baseline": "1"
+    }
+  ],
+  "states": [
+    {
+      "name": "01-normal-new-role",
+      "time": 1793254730330,
+      "sceneName": "Game",
+      "scene": "15339482138131382247",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [
+        "1"
+      ],
+      "materialBag": [
+        "2"
+      ],
+      "materialEquipped": [],
+      "learned": [],
+      "pets": [],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "112",
+        "position": {
+          "x": 8,
+          "y": 8
+        },
+        "direction": 0,
+        "movementRevision": "0",
+        "attackSequence": 0,
+        "castSequence": 0
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [],
+      "lastError": ""
+    },
+    {
+      "name": "03-fresh-pet",
+      "time": 1793254734250,
+      "sceneName": "Game",
+      "scene": "15339482138131382247",
+      "baseline": "1",
+      "binding": "1",
+      "ready": true,
+      "level": 19,
+      "books": [],
+      "materialBag": [],
+      "materialEquipped": [
+        "1"
+      ],
+      "learned": [
+        {
+          "skill": 17,
+          "level": 0
+        }
+      ],
+      "pets": [
+        {
+          "handle": 3,
+          "life": "1",
+          "hp": "60",
+          "corpse": false
+        }
+      ],
+      "player": {
+        "handle": 1,
+        "life": "0",
+        "hp": "121",
+        "mp": "100",
+        "position": {
+          "x": 8,
+          "y": 8
+        },
+        "direction": 0,
+        "movementRevision": "0",
+        "attackSequence": 0,
+        "castSequence": 1
+      },
+      "hosting": {
+        "autoBattleEnabled": false,
+        "remainHostingSec": 0
+      },
+      "audio": {
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      },
+      "appearance": [
+        {
+          "handle": 3,
+          "life": "1",
+          "definitionId": 2,
+          "action": "standing",
+          "frame": 3,
+          "direction": 5,
+          "frames": [
+            "Mon4:2583"
+          ],
+          "blend": [
+            {
+              "source": 2,
+              "destination": 4
+            }
+          ]
+        }
+      ],
+      "lastError": ""
+    }
+  ],
+  "gpu": [
+    {
+      "file": "02-appear-frame-0.png",
+      "sha256": "46ccf141d4e3562aa2d486a81a96d3e2273b27322ed31b99fb8c077c9aefb082",
+      "at": 16481.39999985695,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 0,
+      "direction": 5,
+      "frames": [
+        "Mon4:2860"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    },
+    {
+      "file": "02-appear-frame-4.png",
+      "sha256": "6410757453489ee31a2633a04146cd5fafceb0a74582973423677aca6808663c",
+      "at": 16882.699999809265,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 4,
+      "direction": 5,
+      "frames": [
+        "Mon4:2864"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    },
+    {
+      "file": "02-appear-frame-9.png",
+      "sha256": "97c4dcfa32e5c67ca1bc8d4a581c322f2db7d627df4ad6113e44b9557e9b0d16",
+      "at": 17381.099999904633,
+      "phase": "fresh",
+      "handle": 3,
+      "life": "1",
+      "definitionId": 2,
+      "action": "appear",
+      "frame": 9,
+      "direction": 5,
+      "frames": [
+        "Mon4:2869"
+      ],
+      "blend": [
+        {
+          "source": 2,
+          "destination": 1
+        }
+      ],
+      "blendConstants": {
+        "source": 2,
+        "destination": 1
+      }
+    }
+  ],
+  "credentialsWritten": false,
+  "bodySeeded": false,
+  "privateCastInvoked": false,
+  "routeOverride": false,
+  "health": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "3b824cc5b10e218872d04a9a88e46b7e",
+        "game": "493b1dbe0b330b4646b449bc704fc171",
+        "gm": "651b023da201113116f76b2ca2e0a028"
+      }
+    }
+  ],
+  "artifactIdentity": {
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d",
+    "reused": false,
+    "proof": null,
+    "proofHash": null,
+    "creatorReport": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d\\creator-report.json",
+    "creatorReportHash": "93ca88e5814dc0090c4d443c301725632864ece2787f944e99f3a38028c83dc6",
+    "staticPort": 18082,
+    "staticPid": 25076,
+    "staticRuntime": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d\\static-runtime.json"
+  },
+  "qualification": {
+    "passed": true,
+    "role_id_sha256": "315172dde956ce1250c8ac9294ff0ab1919e2934fc3474622801b1fb56877a7a",
+    "level": 19,
+    "explicit_count": 2,
+    "book_from_normal_create": true,
+    "skills_seeded": false,
+    "binding_seeded": false,
+    "position_seeded": false,
+    "body_seeded": false,
+    "pack_size_or_price_inferred": false,
+    "only_before_owner": true
+  },
+  "create": {
+    "request": 3,
+    "job": 2,
+    "slot": 1,
+    "roleHash": "315172dde956ce1250c8ac9294ff0ab1919e2934fc3474622801b1fb56877a7a"
+  },
+  "manualAutoControl": {
+    "touched": true,
+    "authoritativeDisabled": true
+  },
+  "error": "Error: 等待超时：两个真实AudioSource均播放\n    at until (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_visual_browser.cjs:295:184)\n    at async run (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_visual_browser.cjs:366:9)",
+  "failureScene": "Game",
+  "failureState": {
+    "time": 1793254764704,
+    "sceneName": "Game",
+    "scene": "15339482138131382247",
+    "baseline": "1",
+    "binding": "1",
+    "ready": true,
+    "level": 19,
+    "books": [],
+    "materialBag": [],
+    "materialEquipped": [
+      "1"
+    ],
+    "learned": [
+      {
+        "skill": 17,
+        "level": 0
+      }
+    ],
+    "pets": [
+      {
+        "handle": 3,
+        "life": "1",
+        "hp": "60",
+        "corpse": false
+      }
+    ],
+    "player": {
+      "handle": 1,
+      "life": "0",
+      "hp": "121",
+      "mp": "100",
+      "position": {
+        "x": 8,
+        "y": 8
+      },
+      "direction": 0,
+      "movementRevision": "0",
+      "attackSequence": 0,
+      "castSequence": 1
+    },
+    "hosting": {
+      "autoBattleEnabled": false,
+      "remainHostingSec": 0
+    },
+    "audio": {
+      "loaded": [
+        "summon_skeleton_cast",
+        "pet_skeleton_born"
+      ],
+      "gestureUnlocked": false,
+      "gestureAt": null,
+      "voices": [
+        {
+          "cue": "",
+          "identity": "",
+          "elapsedMs": 0,
+          "playCalls": 0,
+          "playCallAt": null,
+          "playing": false,
+          "clipBound": true
+        },
+        {
+          "cue": "",
+          "identity": "",
+          "elapsedMs": 0,
+          "playCalls": 0,
+          "playCallAt": null,
+          "playing": false,
+          "clipBound": false
+        }
+      ]
+    },
+    "appearance": [
+      {
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "standing",
+        "frame": 0,
+        "direction": 5,
+        "frames": [
+          "Mon4:2580"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 4
+          }
+        ]
+      }
+    ],
+    "lastError": ""
+  },
+  "failureObservation": {
+    "phase": "fresh",
+    "samples": [
+      {
+        "at": 16481.39999985695,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 0,
+        "direction": 5,
+        "frames": [
+          "Mon4:2860"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16607,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 1,
+        "direction": 5,
+        "frames": [
+          "Mon4:2861"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16690.89999985695,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 2,
+        "direction": 5,
+        "frames": [
+          "Mon4:2862"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16793.39999985695,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 3,
+        "direction": 5,
+        "frames": [
+          "Mon4:2863"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 16882.699999809265,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 4,
+        "direction": 5,
+        "frames": [
+          "Mon4:2864"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 17022.099999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 5,
+        "direction": 5,
+        "frames": [
+          "Mon4:2865"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 17081.599999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 6,
+        "direction": 5,
+        "frames": [
+          "Mon4:2866"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 17179.699999809265,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 7,
+        "direction": 5,
+        "frames": [
+          "Mon4:2867"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 17285.299999952316,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 8,
+        "direction": 5,
+        "frames": [
+          "Mon4:2868"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      },
+      {
+        "at": 17381.099999904633,
+        "phase": "fresh",
+        "handle": 3,
+        "life": "1",
+        "definitionId": 2,
+        "action": "appear",
+        "frame": 9,
+        "direction": 5,
+        "frames": [
+          "Mon4:2869"
+        ],
+        "blend": [
+          {
+            "source": 2,
+            "destination": 1
+          }
+        ]
+      }
+    ],
+    "audio": [
+      {
+        "at": 15873.799999952316,
+        "phase": "fresh",
+        "loaded": [
+          "summon_skeleton_cast",
+          "pet_skeleton_born"
+        ],
+        "gestureUnlocked": false,
+        "gestureAt": null,
+        "voices": [
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": true
+          },
+          {
+            "cue": "",
+            "identity": "",
+            "elapsedMs": 0,
+            "playCalls": 0,
+            "playCallAt": null,
+            "playing": false,
+            "clipBound": false
+          }
+        ]
+      }
+    ],
+    "error": "",
+    "captureFrameIndices": [
+      0,
+      4,
+      9
+    ]
+  },
+  "mainProtectedInputsStable": true
+}

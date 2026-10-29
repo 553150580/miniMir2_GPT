@@ -1,0 +1,19 @@
+{
+  "task": "birth-assets",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/resources",
+    "-p",
+    "test_pet_birth_assets.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:53:28.750268+00:00",
+  "finished_at": "2026-10-29T04:53:29.174483+00:00",
+  "output": ".work/pet-visual-20261029/checks/birth-assets.txt",
+  "output_sha256": "27f754953f32fc4e873af1541e03ff5e0d804efd9efbf793ca960d65e78194f1",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

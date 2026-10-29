@@ -1,0 +1,1429 @@
+
+init **** success
+Arguments:
+  D:\Program Files\CocosCreator\3.8.8\CocosCreator.exe: true
+  no-sandbox: true
+  disable-gpu: true
+  project: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project
+  build: configPath=D:\A_Claude\miniMir2_GPT\conf\creator-build.json
+  dev: false
+  home: C:\Users\55315\.CocosCreator
+ 
+[Package] metrics@1.0.0 enable
+[Package] menu@1.0.0 enable
+[Package] profile@1.0.0 enable
+[Package] project@1.0.6 enable
+[Package] messages@1.0.0 enable
+[Package] utils@1.0.0 enable
+[Package] program@1.0.4 enable
+[Package] tester@1.0.0 enable
+[Package] information@1.0.1 enable
+[Package] preferences@1.0.0 enable
+[EditorQuickCompiler]Version information looks good.
+Note, quick compiler does not get launched.
+engine:compile-builtin-engine-success (83ms)
+Load engine in D:\Program Files\CocosCreator\3.8.8\resources\resources\3d\engine
+Register native engine in D:\Program Files\CocosCreator\3.8.8\resources\resources\3d\engine\native
+[Package] engine@1.0.12 enable
+[Package] programming@1.0.0 enable
+[Package] window@1.0.0 enable
+Request namespace: device-list
+[Package] device@1.0.1 enable
+[Package] ui-kit@1.0.1 enable
+[Package] asset-db@1.0.0 enable
+[Package] scene@1.0.3 enable
+[Package] server@1.0.0 enable
+[Package] preview@1.0.1 enable
+Preview import map: {
+  "imports": {
+    "cc": "cce:/internal/x/cc",
+    "cc/env": "cc/editor/populate-internal-constants",
+    "cce.env": "cc/editor/populate-internal-constants",
+    "cc/userland/macro": "./userland/macro"
+  }
+}
+[Package] animator@1.0.0 enable
+[Build] internalRegister pkg(scene) in android platform success!
+[Package] builder@1.3.9 enable
+[Build] internalRegister pkg(scene) in google-play platform success!
+[Build] internalRegister pkg(scene) in ohos platform success!
+[Build] internalRegister pkg(scene) in harmonyos-next platform success!
+[Build] internalRegister pkg(scene) in huawei-agc platform success!
+[Build] internalRegister pkg(scene) in ios platform success!
+[Build] internalRegister pkg(scene) in windows platform success!
+[Build] internalRegister pkg(scene) in mac platform success!
+[Build] internalRegister pkg(scene) in linux platform success!
+[Build] internalRegister pkg(scene) in openpaas platform success!
+[Build] internalRegister pkg(scene) in alipay-mini-game platform success!
+[Build] internalRegister pkg(scene) in taobao-creative-app platform success!
+[Build] internalRegister pkg(scene) in taobao-mini-game platform success!
+[Build] internalRegister pkg(scene) in bytedance-mini-game platform success!
+[Build] internalRegister pkg(scene) in oppo-mini-game platform success!
+[Build] internalRegister pkg(scene) in huawei-quick-game platform success!
+[Build] internalRegister pkg(scene) in migu-mini-game platform success!
+[Build] internalRegister pkg(scene) in honor-mini-game platform success!
+[Build] internalRegister pkg(scene) in vivo-mini-game platform success!
+[Build] internalRegister pkg(scene) in xiaomi-quick-game platform success!
+[Build] internalRegister pkg(scene) in baidu-mini-game platform success!
+[Build] internalRegister pkg(scene) in wechatgame platform success!
+[Build] internalRegister pkg(scene) in wechatprogram platform success!
+[Build] internalRegister pkg(scene) in link-sure platform success!
+[Build] internalRegister pkg(scene) in qtt platform success!
+[Build] internalRegister pkg(scene) in fb-instant-games platform success!
+[Build] internalRegister pkg(scene) in web-desktop platform success!
+[Build] internalRegister pkg(scene) in web-mobile platform success!
+[Build] internalRegister pkg(scene) in cocos-runtime platform success!
+[Build] internalRegister pkg(scene) in platform-example platform success!
+[Build] internalRegister pkg(scene) in online platform success!
+[Build] internalRegister pkg(scene) in xr-meta platform success!
+[Build] internalRegister pkg(scene) in xr-huaweivr platform success!
+[Build] internalRegister pkg(scene) in xr-pico platform success!
+[Build] internalRegister pkg(scene) in xr-rokid platform success!
+[Build] internalRegister pkg(scene) in xr-monado platform success!
+[Build] internalRegister pkg(scene) in xr-spaces platform success!
+[Build] internalRegister pkg(scene) in xr-seed platform success!
+[Build] internalRegister pkg(scene) in ar-android platform success!
+[Build] internalRegister pkg(scene) in ar-ios platform success!
+[Build] internalRegister pkg(scene) in xr-gsxr platform success!
+[Build] internalRegister pkg(scene) in xr-yvr platform success!
+[Build] internalRegister pkg(scene) in xr-htc platform success!
+[Build] internalRegister pkg(scene) in xr-iqiyi platform success!
+[Build] internalRegister pkg(scene) in xr-skyworth platform success!
+[Build] internalRegister pkg(scene) in xr-ffalcon platform success!
+[Build] internalRegister pkg(scene) in xr-nreal platform success!
+[Build] internalRegister pkg(scene) in xr-inmo platform success!
+[Build] internalRegister pkg(scene) in xr-lenovo platform success!
+[Build] internalRegister pkg(scene) in android-hmi platform success!
+[Build-plugin] register pkg scene: 14ms
+Builder PluginManager init: 14ms
+[Package] shortcuts@1.0.1 enable
+[Package] animation-graph@1.0.0 enable
+[Package] about@1.0.0 enable
+[Package] assets@1.0.0 enable
+[Package] console@1.0.0 enable
+[Package] crash-reporter@1.0.0 enable
+[Package] extension@3.1.4 enable
+[Package] feedback@1.0.0 enable
+[Package] hierarchy@1.0.0 enable
+[Package] inspector@1.0.0 enable
+[Package] light-probe@1.0.4 enable
+[Package] lightmap@1.0.4 enable
+[Package] node-library@1.0.1 enable
+[Package] package-asset@1.0.3 enable
+[Package] process@1.0.0 enable
+[Package] reference-image@1.0.0 enable
+[Package] reflection-probe@1.0.4 enable
+[Package] engine-extends@1.0.0 enable
+[Package] adsense-h5g-plugin@1.0.1 enable
+[Build] internalRegister pkg(adsense-h5g-plugin) in android platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in google-play platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in ohos platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in harmonyos-next platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in huawei-agc platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in ios platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in windows platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in mac platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in linux platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in openpaas platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in alipay-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in taobao-creative-app platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in taobao-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in bytedance-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in oppo-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in huawei-quick-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in migu-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in honor-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in vivo-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xiaomi-quick-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in baidu-mini-game platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in wechatgame platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in wechatprogram platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in link-sure platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in qtt platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in fb-instant-games platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in web-desktop platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in web-mobile platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in cocos-runtime platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in platform-example platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in online platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-meta platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-huaweivr platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-pico platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-rokid platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-monado platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-spaces platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-seed platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in ar-android platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in ar-ios platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-gsxr platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-yvr platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-htc platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-iqiyi platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-skyworth platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-ffalcon platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-nreal platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-inmo platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in xr-lenovo platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in android-hmi platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in web-desktop platform success!
+[Build] internalRegister pkg(adsense-h5g-plugin) in web-mobile platform success!
+[Build-plugin] register pkg adsense-h5g-plugin: 2ms
+[Package] alipay-mini-game@1.0.2 enable
+[Build] internalRegister pkg(alipay-mini-game) in alipay-mini-game platform success!
+[Build-plugin] register pkg alipay-mini-game: 2ms
+[Package] android@1.0.1 enable
+[Build] internalRegister pkg(android) in android platform success!
+[Build] internalRegister pkg(android) in huawei-agc platform success!
+[Build-plugin] register pkg android: 4ms
+[Package] bytedance-mini-game@1.0.3 enable
+[Build] internalRegister pkg(bytedance-mini-game) in bytedance-mini-game platform success!
+[Build-plugin] register pkg bytedance-mini-game: 2ms
+[Package] certificate@1.0.0 enable
+[Package] channel-upload-tools@1.0.0 enable
+[Package] fb-instant-games@1.0.0 enable
+[Build] internalRegister pkg(fb-instant-games) in fb-instant-games platform success!
+[Build-plugin] register pkg fb-instant-games: 2ms
+[Package] google-play@1.0.1 enable
+[Build] internalRegister pkg(google-play) in google-play platform success!
+[Build-plugin] register pkg google-play: 2ms
+[Package] harmonyos-next@1.0.0 enable
+[Build] internalRegister pkg(harmonyos-next) in harmonyos-next platform success!
+[Build-plugin] register pkg harmonyos-next: 2ms
+[Package] honor-mini-game@1.0.0 enable
+[Build] internalRegister pkg(honor-mini-game) in honor-mini-game platform success!
+[Build-plugin] register pkg honor-mini-game: 1ms
+[Package] huawei-agc@1.0.0 enable
+[Build] internalRegister pkg(huawei-agc) in huawei-agc platform success!
+[Build-plugin] register pkg huawei-agc: 1ms
+[Package] huawei-quick-game@1.0.3 enable
+[Build] internalRegister pkg(huawei-quick-game) in huawei-quick-game platform success!
+[Build-plugin] register pkg huawei-quick-game: 2ms
+[Package] ios@1.0.1 enable
+[Build-plugin] register pkg ios: 1ms
+[Package] linux@1.0.0 enable
+平台 linux 不存在，无法添加该平台
+[Package] mac@1.0.0 enable
+[Build-plugin] register pkg mac: 1ms
+[Package] migu-mini-game@1.0.0 enable
+平台 migu-mini-game 不存在，无法添加该平台
+[Package] native@1.0.2 enable
+[Build] internalRegister pkg(native) in ios platform success!
+[Build] internalRegister pkg(native) in android platform success!
+[Build] internalRegister pkg(native) in huawei-agc platform success!
+[Build] internalRegister pkg(native) in windows platform success!
+[Build] internalRegister pkg(native) in mac platform success!
+[Build] internalRegister pkg(native) in google-play platform success!
+[Build] internalRegister pkg(native) in ohos platform success!
+[Build] internalRegister pkg(native) in harmonyos-next platform success!
+平台 linux 不存在，不支持向该平台注册任何内容
+[Build] internalRegister pkg(native) in xr-huaweivr platform success!
+[Build] internalRegister pkg(native) in xr-meta platform success!
+[Build] internalRegister pkg(native) in xr-pico platform success!
+[Build] internalRegister pkg(native) in xr-rokid platform success!
+[Build] internalRegister pkg(native) in xr-monado platform success!
+[Build] internalRegister pkg(native) in ar-android platform success!
+[Build] internalRegister pkg(native) in ar-ios platform success!
+[Build] internalRegister pkg(native) in xr-spaces platform success!
+[Build] internalRegister pkg(native) in xr-seed platform success!
+[Build] internalRegister pkg(native) in xr-gsxr platform success!
+[Build] internalRegister pkg(native) in xr-yvr platform success!
+[Build] internalRegister pkg(native) in xr-htc platform success!
+[Build] internalRegister pkg(native) in xr-iqiyi platform success!
+[Build] internalRegister pkg(native) in xr-skyworth platform success!
+[Build] internalRegister pkg(native) in xr-ffalcon platform success!
+[Build] internalRegister pkg(native) in xr-nreal platform success!
+[Build] internalRegister pkg(native) in xr-inmo platform success!
+[Build] internalRegister pkg(native) in xr-lenovo platform success!
+[Build-plugin] register pkg native: 12ms
+[Package] ohos@1.0.0 enable
+[Build] internalRegister pkg(ohos) in ohos platform success!
+[Build-plugin] register pkg ohos: 3ms
+[Package] oppo-mini-game@1.0.3 enable
+[Build] internalRegister pkg(oppo-mini-game) in oppo-mini-game platform success!
+[Build-plugin] register pkg oppo-mini-game: 2ms
+[Package] runtime-dev-tools@1.0.0 enable
+[Package] taobao-mini-game@1.0.1 enable
+[Build] internalRegister pkg(taobao-mini-game) in taobao-mini-game platform success!
+[Build-plugin] register pkg taobao-mini-game: 2ms
+[Package] vivo-mini-game@1.0.3 enable
+[Build] internalRegister pkg(vivo-mini-game) in vivo-mini-game platform success!
+[Build-plugin] register pkg vivo-mini-game: 1ms
+[Package] web-desktop@1.0.1 enable
+[Build] internalRegister pkg(web-desktop) in web-desktop platform success!
+[Build-plugin] register pkg web-desktop: 1ms
+[Package] web-mobile@1.0.1 enable
+[Build] internalRegister pkg(web-mobile) in web-mobile platform success!
+[Build-plugin] register pkg web-mobile: 1ms
+[Package] wechatgame@1.0.4 enable
+[Build] internalRegister pkg(wechatgame) in wechatgame platform success!
+[Build-plugin] register pkg wechatgame: 1ms
+[Package] wechatprogram@1.0.2 enable
+平台 wechatprogram 不存在，无法添加该平台
+[Package] windows@1.0.1 enable
+[Build] internalRegister pkg(windows) in windows platform success!
+[Build-plugin] register pkg windows: 2ms
+[Package] xiaomi-quick-game@1.0.2 enable
+平台 xiaomi-quick-game 不存在，无法添加该平台
+[builder-ui] card-page 本地服务已启动: http://127.0.0.1:61774/builder-home/
+[builder-ui][ota] {"stage":"schedule","status":"started","env":"prod","intervalMs":3600000,"id":1,"at":"2026-10-29T14:12:33.108+08:00"}
+[Package] builder-ui@1.1.16 enable
+[Package] cocos-service@3.0.9 enable
+[Build] internalRegister pkg(cocos-service) in android platform success!
+[Build] internalRegister pkg(cocos-service) in google-play platform success!
+[Build] internalRegister pkg(cocos-service) in ohos platform success!
+[Build] internalRegister pkg(cocos-service) in harmonyos-next platform success!
+[Build] internalRegister pkg(cocos-service) in huawei-agc platform success!
+[Build] internalRegister pkg(cocos-service) in ios platform success!
+[Build] internalRegister pkg(cocos-service) in windows platform success!
+[Build] internalRegister pkg(cocos-service) in mac platform success!
+[Build] internalRegister pkg(cocos-service) in linux platform success!
+[Build] internalRegister pkg(cocos-service) in openpaas platform success!
+[Build] internalRegister pkg(cocos-service) in alipay-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in taobao-creative-app platform success!
+[Build] internalRegister pkg(cocos-service) in taobao-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in bytedance-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in oppo-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in huawei-quick-game platform success!
+[Build] internalRegister pkg(cocos-service) in migu-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in honor-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in vivo-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in xiaomi-quick-game platform success!
+[Build] internalRegister pkg(cocos-service) in baidu-mini-game platform success!
+[Build] internalRegister pkg(cocos-service) in wechatgame platform success!
+[Build] internalRegister pkg(cocos-service) in wechatprogram platform success!
+[Build] internalRegister pkg(cocos-service) in link-sure platform success!
+[Build] internalRegister pkg(cocos-service) in qtt platform success!
+[Build] internalRegister pkg(cocos-service) in fb-instant-games platform success!
+[Build] internalRegister pkg(cocos-service) in web-desktop platform success!
+[Build] internalRegister pkg(cocos-service) in web-mobile platform success!
+[Build] internalRegister pkg(cocos-service) in cocos-runtime platform success!
+[Build] internalRegister pkg(cocos-service) in platform-example platform success!
+[Build] internalRegister pkg(cocos-service) in online platform success!
+[Build] internalRegister pkg(cocos-service) in xr-meta platform success!
+[Build] internalRegister pkg(cocos-service) in xr-huaweivr platform success!
+[Build] internalRegister pkg(cocos-service) in xr-pico platform success!
+[Build] internalRegister pkg(cocos-service) in xr-rokid platform success!
+[Build] internalRegister pkg(cocos-service) in xr-monado platform success!
+[Build] internalRegister pkg(cocos-service) in xr-spaces platform success!
+[Build] internalRegister pkg(cocos-service) in xr-seed platform success!
+[Build] internalRegister pkg(cocos-service) in ar-android platform success!
+[Build] internalRegister pkg(cocos-service) in ar-ios platform success!
+[Build] internalRegister pkg(cocos-service) in xr-gsxr platform success!
+[Build] internalRegister pkg(cocos-service) in xr-yvr platform success!
+[Build] internalRegister pkg(cocos-service) in xr-htc platform success!
+[Build] internalRegister pkg(cocos-service) in xr-iqiyi platform success!
+[Build] internalRegister pkg(cocos-service) in xr-skyworth platform success!
+[Build] internalRegister pkg(cocos-service) in xr-ffalcon platform success!
+[Build] internalRegister pkg(cocos-service) in xr-nreal platform success!
+[Build] internalRegister pkg(cocos-service) in xr-inmo platform success!
+[Build] internalRegister pkg(cocos-service) in xr-lenovo platform success!
+[Build] internalRegister pkg(cocos-service) in android-hmi platform success!
+[Build-plugin] register pkg cocos-service: 9ms
+[Package] im-plugin@3.0.14 enable
+[Package] openpaas@1.0.0 enable
+[Build] internalRegister pkg(openpaas) in openpaas platform success!
+[Build-plugin] register pkg openpaas: 8ms
+[Package] placeholder@1.0.0 enable
+[builder-ui][ota] {"stage":"check","status":"success","url":"https://download.sudden.ltd/restricted-assets/pink-ide-web/prod/R010/builder-home-0.1.24.zip","version":"1.0.9","channel":"stable","durationMs":1281,"id":2,"at":"2026-10-29T14:12:34.390+08:00"}
+[builder-ui][ota] {"stage":"download","status":"started","url":"https://download.sudden.ltd/restricted-assets/pink-ide-web/prod/R010/builder-home-0.1.24.zip","version":"1.0.9","channel":"stable","id":3,"at":"2026-10-29T14:12:34.391+08:00"}
+[builder-ui][ota] {"stage":"download","status":"success","url":"https://download.sudden.ltd/restricted-assets/pink-ide-web/prod/R010/builder-home-0.1.24.zip","version":"1.0.9","channel":"stable","durationMs":326,"bytes":1966890,"id":4,"at":"2026-10-29T14:12:34.717+08:00"}
+[builder-ui][ota] {"stage":"verify","status":"success","version":"1.0.9","channel":"stable","id":5,"at":"2026-10-29T14:12:34.722+08:00"}
+[builder-ui][ota] {"stage":"activate","status":"success","version":"1.0.9","channel":"stable","durationMs":814,"id":6,"at":"2026-10-29T14:12:35.205+08:00"}
+Start enter command build with options {"configPath":"D:\\A_Claude\\miniMir2_GPT\\conf\\creator-build.json"}
+Read config from path D:\A_Claude\miniMir2_GPT\conf\creator-build.json...
+init builder manager success
+[[Facet.reload]], before lock, count: 1
+[[Facet.reload]], after lock, count: 1
+[[Facet.reload]], before unlock, count: 1
+[[Facet.reload]], after unlock, count: 1
+auto refresh because script compiled or scene changed
+trackTimeEnd failed! Can not find the track time asset-db:worker-startup-database[internal] start
+trackTimeEnd failed! Can not find the track time asset-db:worker-startup-database[assets] start
+asset-db is ready!
+Check and complete build options {
+  name: 'minimir2',
+  platform: 'web-mobile',
+  debug: true,
+  buildPath: 'project://build',
+  outputName: 'web-mobile',
+  startScene: 'ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55',
+  scenes: [
+    {
+      url: 'db://assets/scenes/Boot.scene',
+      uuid: 'ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55'
+    },
+    {
+      url: 'db://assets/scenes/Login.scene',
+      uuid: 'bba723dc-eae5-5372-b190-52314a0cbd31'
+    },
+    {
+      url: 'db://assets/scenes/RoleSelect.scene',
+      uuid: '16605c45-4f9a-59c0-8669-4dea2e7f702d'
+    },
+    {
+      url: 'db://assets/scenes/Game.scene',
+      uuid: '0f1590d8-ab8f-56fb-a232-db0f38f5cbd3'
+    }
+  ],
+  sourceMaps: true,
+  taskName: 'web-mobile',
+  buildMode: 'normal'
+}
+构建参数 mainBundleCompressionType (merge_dep) 校验失败,  compression type(undefined) is invalid for this platform!, 将会使用默认值 "merge_dep"
+start preview settings manager
+2026-10-29 14:14:37 - debug: =================================== build Task (web-mobile) Start ================================
+
+2026-10-29 14:14:37 - debug: Start build task, options:{"name":"minimir2","platform":"web-mobile","debug":true,"buildPath":"project://build","outputName":"web-mobile","startScene":"ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55","scenes":[{"url":"db://assets/scenes/Boot.scene","uuid":"ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55"},{"url":"db://assets/scenes/Login.scene","uuid":"bba723dc-eae5-5372-b190-52314a0cbd31"},{"url":"db://assets/scenes/RoleSelect.scene","uuid":"16605c45-4f9a-59c0-8669-4dea2e7f702d"},{"url":"db://assets/scenes/Game.scene","uuid":"0f1590d8-ab8f-56fb-a232-db0f38f5cbd3"}],"sourceMaps":true,"taskName":"web-mobile","buildMode":"normal","mainBundleCompressionType":"merge_dep","packages":{"adsense-h5g-plugin":{"enableAdsense":false,"enableTestAd":false},"web-mobile":{"useWebGPU":false,"orientation":"auto","embedWebDebugger":false}},"server":"","engineModulesConfigKey":"defaultConfig","mangleProperties":false,"md5Cache":false,"skipCompressTexture":false,"overwriteProjectSettings":{"includeModules":{"gfx-webgl2":"on","physics":"inherit-project-setting","physics-2d":"inherit-project-setting"},"macroConfig":{"cleanupImageCache":"inherit-project-setting"}},"nativeCodeBundleMode":"both","polyfills":{"asyncFunctions":true},"experimentalEraseModules":false,"startSceneAssetBundle":false,"bundleConfigs":[],"inlineEnum":true,"useBuiltinServer":false,"md5CacheOptions":{"excludes":[],"includes":[],"replaceOnly":[],"handleTemplateMd5Link":true},"mainBundleIsRemote":false,"useSplashScreen":true,"bundleCommonChunk":false,"packAutoAtlas":true,"wasmCompressionMode":false,"binGroupConfig":{"threshold":16,"enable":false},"logDest":"project://temp/builder/log/web-mobile2026-10-29 14-12.log"}
+
+2026-10-29 14:14:37 - debug: Build with Cocos Creator 3.8.8
+
+2026-10-29 14:14:37 - debug: cocos-service:(onBeforeBuild) start..., progress: 0%
+
+2026-10-29 14:14:37 - debug: // ---- build task cocos-service：onBeforeBuild ----
+
+2026-10-29 14:14:37 - debug: // ---- build task cocos-service：onBeforeBuild ---- (2ms)
+
+2026-10-29 14:14:37 - debug: cocos-service:(onBeforeBuild) in 2 ms ✓, progress: 2%
+
+2026-10-29 14:14:37 - debug: scene:(onBeforeBuild) start..., progress: 2%
+
+2026-10-29 14:14:37 - debug: // ---- build task scene：onBeforeBuild ----
+
+2026-10-29 14:14:37 - debug: // ---- build task scene：onBeforeBuild ---- (1ms)
+
+2026-10-29 14:14:37 - debug: scene:(onBeforeBuild) in 1 ms ✓, progress: 4%
+
+2026-10-29 14:14:37 - debug: Start lock asset db..., progress: 4%
+
+2026-10-29 14:14:37 - log: Asset DB is paused with build!
+
+2026-10-29 14:14:37 - debug: Query all assets info in project
+
+2026-10-29 14:14:37 - debug: init custom config: keepNodeUuid: false, useCache: true
+
+2026-10-29 14:14:37 - debug: web-mobile:(onAfterInit) start..., progress: 4%
+
+2026-10-29 14:14:37 - debug: // ---- build task web-mobile：onAfterInit ----
+
+2026-10-29 14:14:37 - debug: // ---- build task web-mobile：onAfterInit ---- (1ms)
+
+2026-10-29 14:14:37 - debug: web-mobile:(onAfterInit) in 1 ms ✓, progress: 5%
+
+2026-10-29 14:14:37 - debug: cocos-service:(onAfterInit) start..., progress: 5%
+
+2026-10-29 14:14:37 - debug: // ---- build task cocos-service：onAfterInit ----
+
+2026-10-29 14:14:37 - debug: // ---- build task cocos-service：onAfterInit ---- (2ms)
+
+2026-10-29 14:14:37 - debug: cocos-service:(onAfterInit) in 2 ms ✓, progress: 7%
+
+2026-10-29 14:14:37 - debug: Skip compress image, progress: 0%
+
+2026-10-29 14:14:37 - debug: adsense-h5g-plugin:(onBeforeBundleInit) start..., progress: 7%
+
+2026-10-29 14:14:37 - debug: adsense-h5g-plugin:(onBeforeBundleInit) start..., progress: 0%
+
+2026-10-29 14:14:37 - debug: // ---- build task adsense-h5g-plugin：onBeforeBundleInit ----
+
+2026-10-29 14:14:37 - debug: [adsense-h5g-plugin] remove script success
+
+2026-10-29 14:14:37 - debug: // ---- build task adsense-h5g-plugin：onBeforeBundleInit ---- (2ms)
+
+2026-10-29 14:14:37 - debug(2): adsense-h5g-plugin:(onBeforeBundleInit) in 2 ms ✓, progress: 7%
+
+2026-10-29 14:14:37 - debug(2): Init all bundles start..., progress: 7%
+
+2026-10-29 14:14:37 - debug(2): Num of bundles: 3..., progress: 7%
+
+2026-10-29 14:14:37 - debug(2): web-mobile:(onAfterBundleInit) start..., progress: 7%
+
+2026-10-29 14:14:37 - debug: // ---- build task web-mobile：onAfterBundleInit ----
+
+2026-10-29 14:14:37 - debug: // ---- build task web-mobile：onAfterBundleInit ---- (1ms)
+
+2026-10-29 14:14:37 - debug: web-mobile:(onAfterBundleInit) in 1 ms ✓, progress: 7%
+
+2026-10-29 14:14:37 - debug: web-mobile:(onAfterBundleInit) in 1 ms ✓, progress: 13%
+
+2026-10-29 14:14:37 - debug: 查询 Asset Bundle start, progress: 7%
+
+2026-10-29 14:14:37 - debug: // ---- build task 查询 Asset Bundle ----
+
+2026-10-29 14:14:37 - debug: Init bundle root assets start..., progress: 7%
+
+2026-10-29 14:14:37 - debug: Init bundle root assets start..., progress: 13%
+
+2026-10-29 14:14:37 - debug: Query preload assets/scripts from cc.config.json: 60f7195c-ec2a-45eb-ba94-8955f60e81d0,1c02ae6f-4492-4915-b8f8-7492a3b1e4cd,810e96e4-e456-4468-9b59-f4e8f39732c0,efe8e2a3-eace-427b-b4f1-cb8a937ec77d,e9aa9a3e-5b2b-4ac7-a2c7-073de2b2b24f,8bbdbcdd-5cd4-4100-b6d5-b7c9625b6107,50f4348b-c883-4e2f-8f11-ce233b859fa1,fda095cb-831d-4601-ad94-846013963de8,f92806d7-1768-443f-afe8-12bcde84d0f0,dd3a144d-ab7f-41f0-82b8-2e43a090d496,f0416e68-0200-4b77-a926-4f9d16e494da,970b0598-bcb0-4714-91fb-2e81440dccd8,bcd64cc6-2dd9-43f6-abbe-66318d332032,d930590d-bb92-4cc8-8bd1-23cd027f9edf,a3cd009f-0ab0-420d-9278-b9fdab939bbc,6a2d0734-bd9e-4ddf-946e-caa52498cb75,c27215d8-6835-4b68-bfbb-bdeac6100c04,b5d6115f-0370-4d7c-aad3-c194cc71cf98,871c3b6c-7379-419d-bda3-794b239ab90d,ff9b0199-ce04-4cfe-86cc-6c719f08d6e4,de1c2107-70c8-4021-8459-6399f24d01c6,cbf30902-517f-40dc-af90-a550bac27cf1,5c601d96-e4c7-4698-991b-7ee674b11079
+
+2026-10-29 14:14:38 - debug:   Number of all scenes: 4
+
+2026-10-29 14:14:38 - debug:   Number of all scripts: 71
+
+2026-10-29 14:14:38 - debug:   Number of other assets: 26358
+
+2026-10-29 14:14:38 - debug: Init bundle root assets success..., progress: 7%
+
+2026-10-29 14:14:38 - debug: Init bundle root assets success..., progress: 13%
+
+2026-10-29 14:14:38 - debug: reload all scripts.
+
+2026-10-29 14:14:38 - log: creating executor ...
+
+2026-10-29 14:14:40 - debug: [[Executor]] reload before lock
+
+2026-10-29 14:14:40 - debug: Set detail map pack:///resolution-detail-map.json: {}
+
+2026-10-29 14:14:40 - groupCollapsed: Invalidate all modules
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\93\93ba276ea7b26ffcdc433fab14afc1ed6f05647b.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\93\93ba276ea7b26ffcdc433fab14afc1ed6f05647b.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/base" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgl" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgl2" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-empty" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgpu" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/3d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/animation" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/skeletal-animation" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/sorting" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/rich-text" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/mask" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/graphics" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/ui-skew" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/ui" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/affine-transform" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/sorting-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/particle" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/particle-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-framework" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-cannon" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-physx" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-ammo" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-builtin" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-framework" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d-jsb" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-builtin" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d-wasm" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/intersection-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/primitive" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/profiler" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/geometry-renderer" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/audio" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/video" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/xr" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/light-probe" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/terrain" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/webview" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/tween" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/tiled-map" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/vendor-google" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/spine" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/dragon-bones" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/custom-pipeline" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/custom-pipeline-post-process" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/legacy-pipeline" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/base" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgl" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgl2" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-empty" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/gfx-webgpu" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/3d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/animation" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/skeletal-animation" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/sorting" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/rich-text" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/mask" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/graphics" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/ui-skew" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/ui" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/affine-transform" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/sorting-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/particle" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/particle-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-framework" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-cannon" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-physx" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-ammo" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-builtin" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-framework" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-builtin" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d-wasm" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/intersection-2d" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/primitive" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/profiler" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/geometry-renderer" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/audio" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/video" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/xr" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/light-probe" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/terrain" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/webview" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/tween" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/tiled-map" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/spine" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/dragon-bones" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/custom-pipeline" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/custom-pipeline-post-process" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/legacy-pipeline" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/vendor-google" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/cc-fu/physics-2d-box2d-jsb" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/93/93ba276ea7b26ffcdc433fab14afc1ed6f05647b.js" loaded.
+
+2026-10-29 14:14:40 - debug: Invalidating 'pack:///chunks/93/93ba276ea7b26ffcdc433fab14afc1ed6f05647b.js'
+
+2026-10-29 14:14:40 - groupEnd: Invalidate all modules
+
+2026-10-29 14:14:40 - groupCollapsed: Imports all modules
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/93/93ba276ea7b26ffcdc433fab14afc1ed6f05647b.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6d\6d8fd2b0177941b032ddc0733af48a561fb60657.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6d\6d8fd2b0177941b032ddc0733af48a561fb60657.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6d/6d8fd2b0177941b032ddc0733af48a561fb60657.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\29\29844c488cd57a1a05efba64ae44f63aeb854384.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\29\29844c488cd57a1a05efba64ae44f63aeb854384.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6a\6a5019a719a9014c047e67aa1cf34453ab8392ce.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6a\6a5019a719a9014c047e67aa1cf34453ab8392ce.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\9979cc6ec9be2cf59dfd3ad6db14b0c1cf31f843.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\9979cc6ec9be2cf59dfd3ad6db14b0c1cf31f843.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\72\729238dd2db0de18c49463306e05988d5ccf34eb.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\72\729238dd2db0de18c49463306e05988d5ccf34eb.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\5d\5dcad1328d37d293b91f683b18b8da95cec79690.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\5d\5dcad1328d37d293b91f683b18b8da95cec79690.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9c\9cc892a2badbc80b9dcf506e9e125e6c0876deba.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9c\9cc892a2badbc80b9dcf506e9e125e6c0876deba.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b7\b7753cc9b0accfeb3d6201ddd0b41652a80fd0c2.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b7\b7753cc9b0accfeb3d6201ddd0b41652a80fd0c2.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cc3d8f1bc363b7c1000400d9f0b50cbe0fae5bfa.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cc3d8f1bc363b7c1000400d9f0b50cbe0fae5bfa.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\1a\1a628613e097353a719d5023f2b0a10b793cfb64.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\1a\1a628613e097353a719d5023f2b0a10b793cfb64.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\90\90ee5cf2b9b67ba4fafa604d91e1566536ccd245.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\90\90ee5cf2b9b67ba4fafa604d91e1566536ccd245.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8a\8a879060074e235ef04dfb5cc737e8c9a6414a42.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8a\8a879060074e235ef04dfb5cc737e8c9a6414a42.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7b\7b79b650d169a797691795bc737aecd1ce762ca9.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7b\7b79b650d169a797691795bc737aecd1ce762ca9.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e4\e4225894ab3023f45466bbc900c7d510b924b285.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e4\e4225894ab3023f45466bbc900c7d510b924b285.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d1\d1244daac68332f03a01a42c0a4cddef30074720.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d1\d1244daac68332f03a01a42c0a4cddef30074720.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\58\5832eadda927907725578a8ea940c194883059cd.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\58\5832eadda927907725578a8ea940c194883059cd.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\57\57ccb7095e92d6770e5da7837f0f6b69da1f4a7a.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\57\57ccb7095e92d6770e5da7837f0f6b69da1f4a7a.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\f3\f3e33ae14ed81f0b7aad10c02d29a98533c24cc0.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\f3\f3e33ae14ed81f0b7aad10c02d29a98533c24cc0.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3b\3beb44b50fff7f81caf73c028c909787daef8eff.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3b\3beb44b50fff7f81caf73c028c909787daef8eff.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\df\df723de8dd455517d41ae52b8248b3b50bc01bfe.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\df\df723de8dd455517d41ae52b8248b3b50bc01bfe.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a8\a8ffa131226414e57f7257e4eb3075e53ef678ee.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a8\a8ffa131226414e57f7257e4eb3075e53ef678ee.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\12\121c83dc10cb1ff12658ebac65f680a561514053.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\12\121c83dc10cb1ff12658ebac65f680a561514053.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\92\9266334c132ff36e0157db16805aceb56a675251.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\92\9266334c132ff36e0157db16805aceb56a675251.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\aa\aabcd171d7c6ae007d0daa792c8c479ff7f8c98f.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\aa\aabcd171d7c6ae007d0daa792c8c479ff7f8c98f.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\19\19cf96a99f72fe8f8ad96b4e78e7684902521304.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\19\19cf96a99f72fe8f8ad96b4e78e7684902521304.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\71\71651108ba948ae0af6cf76ddbdda1aa969bd007.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\71\71651108ba948ae0af6cf76ddbdda1aa969bd007.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\24\242fa544145efdd2c1bd64af96b844edfce2f056.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\24\242fa544145efdd2c1bd64af96b844edfce2f056.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\29\2927d3d00c62801e4e83fd282757dc9679dba836.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\29\2927d3d00c62801e4e83fd282757dc9679dba836.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\eb\eb20f608b19d2b7ffd0b5b5531515c6171346320.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\eb\eb20f608b19d2b7ffd0b5b5531515c6171346320.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7d\7d1636819c8414cc28d43b2bb806fb1f9135e7c5.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7d\7d1636819c8414cc28d43b2bb806fb1f9135e7c5.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6c\6c78bc9fb6f2361d11050192c3a3252d5791e2b9.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6c\6c78bc9fb6f2361d11050192c3a3252d5791e2b9.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\f0\f024eb52bf8e5b57786a537db4fa263b3aa74871.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\f0\f024eb52bf8e5b57786a537db4fa263b3aa74871.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\fd\fd1df0f440d79a91aa371a12c0e9e37140838fb7.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\fd\fd1df0f440d79a91aa371a12c0e9e37140838fb7.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\26\2691402a7c2b894e91e4e564923a0e78d67b3ebc.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\26\2691402a7c2b894e91e4e564923a0e78d67b3ebc.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\1c\1c2bb77f697c84166800e1fcbcf2d3e5dfd637da.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\1c\1c2bb77f697c84166800e1fcbcf2d3e5dfd637da.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e7\e70544fcc3ceaff69e16551e7c116da1b62ef9db.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e7\e70544fcc3ceaff69e16551e7c116da1b62ef9db.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d0\d0f25a9918c005004ab1e920acb308e14141046e.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d0\d0f25a9918c005004ab1e920acb308e14141046e.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8d\8d2c21d5ef32fe6f43dcc6d8170824dfb5f248df.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8d\8d2c21d5ef32fe6f43dcc6d8170824dfb5f248df.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9b\9b0777ca2628a6d0e36c5c274140904eef7e5a0c.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9b\9b0777ca2628a6d0e36c5c274140904eef7e5a0c.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e2\e275485fee747075590f954bbe0471601d40ea40.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e2\e275485fee747075590f954bbe0471601d40ea40.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c8\c8bcff367770f3ea00b818bd9fcb5c944168f839.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c8\c8bcff367770f3ea00b818bd9fcb5c944168f839.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\95\9535317cb9f35a13760df86ac363aad0cd20b410.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\95\9535317cb9f35a13760df86ac363aad0cd20b410.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3e\3e1bbcfc3b33c3e30beca913c99da5617a75106c.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3e\3e1bbcfc3b33c3e30beca913c99da5617a75106c.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\71\71b01835d51fa800a4aa725d6e71927917b56c3a.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\71\71b01835d51fa800a4aa725d6e71927917b56c3a.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4a\4a608f462c1faaab42ef5710b137a31786a18195.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4a\4a608f462c1faaab42ef5710b137a31786a18195.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\98\98a6495864011c5ef9970faf57b29a5fae1a936a.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\98\98a6495864011c5ef9970faf57b29a5fae1a936a.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\2c\2c90cbec0721d118ee320862f03e4cae4d224b7b.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\2c\2c90cbec0721d118ee320862f03e4cae4d224b7b.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\37\374ac6400c53be6fc2b64d4eaa7c21af44041e77.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\37\374ac6400c53be6fc2b64d4eaa7c21af44041e77.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\64\64ac6a72b51e4ce3888ef364dfd45bcfe468dab1.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\64\64ac6a72b51e4ce3888ef364dfd45bcfe468dab1.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\49\49f580622a3b6c7dc2f9f107b3a7093aff018bc4.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\49\49f580622a3b6c7dc2f9f107b3a7093aff018bc4.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9f\9f4909f6cd01837a1a28ddb682a45e938459fb65.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\9f\9f4909f6cd01837a1a28ddb682a45e938459fb65.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\59\59d8252baab4607c0b4c030742e60c9aa243f57a.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\59\59d8252baab4607c0b4c030742e60c9aa243f57a.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\bb\bba959ac156cee61ba854a1928010ba7b14bcd0b.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\bb\bba959ac156cee61ba854a1928010ba7b14bcd0b.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7b\7b56f18957e74b6043afa3fdaa135637b0792eec.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\7b\7b56f18957e74b6043afa3fdaa135637b0792eec.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\40\403959a5c0fbd657859e2c2b7ad6943a2f5e6f41.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\40\403959a5c0fbd657859e2c2b7ad6943a2f5e6f41.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\aa\aa02d5a297c0b4d2dd70c1cdafbdf92ba42aeae2.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\aa\aa02d5a297c0b4d2dd70c1cdafbdf92ba42aeae2.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6e\6e432d9e9b99c25e95a716e563913a3c20388eca.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6e\6e432d9e9b99c25e95a716e563913a3c20388eca.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\998fe8b8c49d3c955731b3ecd3df5fa0540ec086.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\998fe8b8c49d3c955731b3ecd3df5fa0540ec086.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a0\a0d063530de23ddade53e1a935bf64c81277c061.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a0\a0d063530de23ddade53e1a935bf64c81277c061.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cceab2f7539eb6c88614fe69d05712401f9b8239.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cceab2f7539eb6c88614fe69d05712401f9b8239.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\45\4577e0376f906e1ef99fabcce80e360bf94b9efd.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\45\4577e0376f906e1ef99fabcce80e360bf94b9efd.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\5b\5b41467dc140e59478801c91fc9fa2c85735dd29.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\5b\5b41467dc140e59478801c91fc9fa2c85735dd29.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\00\007886805d75b76219a636e8ffdfcd05e10be054.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\00\007886805d75b76219a636e8ffdfcd05e10be054.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\db\dbd4ad2e37c1f103b66bf552ebd12e18b194cb1c.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\db\dbd4ad2e37c1f103b66bf552ebd12e18b194cb1c.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\31\319e3c16d7b274aa25d96a7e763a69fea9371010.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\31\319e3c16d7b274aa25d96a7e763a69fea9371010.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e5\e51d844d28b81c55d645b1cb2addeed583819cfa.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e5\e51d844d28b81c55d645b1cb2addeed583819cfa.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8c\8cc32b7fcfd9e15af9471eccabdd42d7582ac4c5.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\8c\8cc32b7fcfd9e15af9471eccabdd42d7582ac4c5.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\74\74ac2621960f23773c6509437ec0b03166d7e7d3.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\74\74ac2621960f23773c6509437ec0b03166d7e7d3.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\ed\ed59fb1091b65bab819e0256db021aba31ebdee7.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\ed\ed59fb1091b65bab819e0256db021aba31ebdee7.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\18\18c07fae35364239950ef7f89f62e41eb6af0d4a.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\18\18c07fae35364239950ef7f89f62e41eb6af0d4a.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d8\d88df9216ff10eb95f3048705c58263306b1695d.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\d8\d88df9216ff10eb95f3048705c58263306b1695d.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b3\b3467920204d64e497486a17abe55d6283f020d0.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b3\b3467920204d64e497486a17abe55d6283f020d0.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c0\c0e9bd4bfaf7e949e2072533eee298c3a16fd7e2.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c0\c0e9bd4bfaf7e949e2072533eee298c3a16fd7e2.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b8\b8508fe4440fee131f1ba2535615d7e257c54a3f.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\b8\b8508fe4440fee131f1ba2535615d7e257c54a3f.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\eb\eb31643558f024e68098105f081cefb1261d3a86.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\eb\eb31643558f024e68098105f081cefb1261d3a86.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\65\654aaeb8cfebef2603211be42b15bfdf136c313b.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\65\654aaeb8cfebef2603211be42b15bfdf136c313b.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4d\4de59328626c0ef3cfad37710008ded99d690271.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4d\4de59328626c0ef3cfad37710008ded99d690271.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\91\91701cf894c54e32f1a8d64c7c51742401c6788d.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\91\91701cf894c54e32f1a8d64c7c51742401c6788d.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a4\a4c58e9c21d1789233809482a49585db7dfd6e71.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a4\a4c58e9c21d1789233809482a49585db7dfd6e71.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c7\c737fef2742133f5ce65c36b65efaf62a0ac174b.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\c7\c737fef2742133f5ce65c36b65efaf62a0ac174b.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\16\160b237468de187f0d5f69aaf946bcc438c23610.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\16\160b237468de187f0d5f69aaf946bcc438c23610.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3c\3c0e64668f28af4d80756cbed058ad5411f472d2.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\3c\3c0e64668f28af4d80756cbed058ad5411f472d2.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\15\157fd8e78e09dd216a268b9d56ed60cb9b676ec4.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\15\157fd8e78e09dd216a268b9d56ed60cb9b676ec4.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6a/6a5019a719a9014c047e67aa1cf34453ab8392ce.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/b7/b7753cc9b0accfeb3d6201ddd0b41652a80fd0c2.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/5d/5dcad1328d37d293b91f683b18b8da95cec79690.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/99/9979cc6ec9be2cf59dfd3ad6db14b0c1cf31f843.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/72/729238dd2db0de18c49463306e05988d5ccf34eb.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/1c/1c2bb77f697c84166800e1fcbcf2d3e5dfd637da.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register UIMgr
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/cc/cc3d8f1bc363b7c1000400d9f0b50cbe0fae5bfa.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register PopupView
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/9c/9cc892a2badbc80b9dcf506e9e125e6c0876deba.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e2/e275485fee747075590f954bbe0471601d40ea40.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register List
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/d1/d1244daac68332f03a01a42c0a4cddef30074720.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/1a/1a628613e097353a719d5023f2b0a10b793cfb64.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register TouchJoystick
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/90/90ee5cf2b9b67ba4fafa604d91e1566536ccd245.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register MapTouchNavigator
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/8a/8a879060074e235ef04dfb5cc737e8c9a6414a42.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/a0/a0d063530de23ddade53e1a935bf64c81277c061.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/65/654aaeb8cfebef2603211be42b15bfdf136c313b.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/4d/4de59328626c0ef3cfad37710008ded99d690271.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/91/91701cf894c54e32f1a8d64c7c51742401c6788d.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/c7/c737fef2742133f5ce65c36b65efaf62a0ac174b.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/a4/a4c58e9c21d1789233809482a49585db7dfd6e71.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/3c/3c0e64668f28af4d80756cbed058ad5411f472d2.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/16/160b237468de187f0d5f69aaf946bcc438c23610.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/15/157fd8e78e09dd216a268b9d56ed60cb9b676ec4.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/c0/c0e9bd4bfaf7e949e2072533eee298c3a16fd7e2.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/74/74ac2621960f23773c6509437ec0b03166d7e7d3.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/ed/ed59fb1091b65bab819e0256db021aba31ebdee7.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/b8/b8508fe4440fee131f1ba2535615d7e257c54a3f.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/18/18c07fae35364239950ef7f89f62e41eb6af0d4a.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/eb/eb31643558f024e68098105f081cefb1261d3a86.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/d8/d88df9216ff10eb95f3048705c58263306b1695d.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/b3/b3467920204d64e497486a17abe55d6283f020d0.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/8c/8cc32b7fcfd9e15af9471eccabdd42d7582ac4c5.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e5/e51d844d28b81c55d645b1cb2addeed583819cfa.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/31/319e3c16d7b274aa25d96a7e763a69fea9371010.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e7/e70544fcc3ceaff69e16551e7c116da1b62ef9db.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/99/998fe8b8c49d3c955731b3ecd3df5fa0540ec086.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/29/2927d3d00c62801e4e83fd282757dc9679dba836.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/92/9266334c132ff36e0157db16805aceb56a675251.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6e/6e432d9e9b99c25e95a716e563913a3c20388eca.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/40/403959a5c0fbd657859e2c2b7ad6943a2f5e6f41.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/d0/d0f25a9918c005004ab1e920acb308e14141046e.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/8d/8d2c21d5ef32fe6f43dcc6d8170824dfb5f248df.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/7b/7b79b650d169a797691795bc737aecd1ce762ca9.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/aa/aabcd171d7c6ae007d0daa792c8c479ff7f8c98f.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/fd/fd1df0f440d79a91aa371a12c0e9e37140838fb7.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/26/2691402a7c2b894e91e4e564923a0e78d67b3ebc.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/9b/9b0777ca2628a6d0e36c5c274140904eef7e5a0c.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/f0/f024eb52bf8e5b57786a537db4fa263b3aa74871.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e4/e4225894ab3023f45466bbc900c7d510b924b285.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/a8/a8ffa131226414e57f7257e4eb3075e53ef678ee.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/4a/4a608f462c1faaab42ef5710b137a31786a18195.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/98/98a6495864011c5ef9970faf57b29a5fae1a936a.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/5b/5b41467dc140e59478801c91fc9fa2c85735dd29.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/c8/c8bcff367770f3ea00b818bd9fcb5c944168f839.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/cc/cceab2f7539eb6c88614fe69d05712401f9b8239.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/45/4577e0376f906e1ef99fabcce80e360bf94b9efd.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/95/9535317cb9f35a13760df86ac363aad0cd20b410.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/58/5832eadda927907725578a8ea940c194883059cd.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/00/007886805d75b76219a636e8ffdfcd05e10be054.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/2c/2c90cbec0721d118ee320862f03e4cae4d224b7b.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/37/374ac6400c53be6fc2b64d4eaa7c21af44041e77.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/64/64ac6a72b51e4ce3888ef364dfd45bcfe468dab1.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/db/dbd4ad2e37c1f103b66bf552ebd12e18b194cb1c.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/49/49f580622a3b6c7dc2f9f107b3a7093aff018bc4.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/9f/9f4909f6cd01837a1a28ddb682a45e938459fb65.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/59/59d8252baab4607c0b4c030742e60c9aa243f57a.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/bb/bba959ac156cee61ba854a1928010ba7b14bcd0b.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/7b/7b56f18957e74b6043afa3fdaa135637b0792eec.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/df/df723de8dd455517d41ae52b8248b3b50bc01bfe.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/3e/3e1bbcfc3b33c3e30beca913c99da5617a75106c.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register GameHUD
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/57/57ccb7095e92d6770e5da7837f0f6b69da1f4a7a.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/71/71b01835d51fa800a4aa725d6e71927917b56c3a.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register GameMessages
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/f3/f3e33ae14ed81f0b7aad10c02d29a98533c24cc0.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/3b/3beb44b50fff7f81caf73c028c909787daef8eff.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/12/121c83dc10cb1ff12658ebac65f680a561514053.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/19/19cf96a99f72fe8f8ad96b4e78e7684902521304.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/24/242fa544145efdd2c1bd64af96b844edfce2f056.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/aa/aa02d5a297c0b4d2dd70c1cdafbdf92ba42aeae2.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/71/71651108ba948ae0af6cf76ddbdda1aa969bd007.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/eb/eb20f608b19d2b7ffd0b5b5531515c6171346320.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/7d/7d1636819c8414cc28d43b2bb806fb1f9135e7c5.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6c/6c78bc9fb6f2361d11050192c3a3252d5791e2b9.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register AppRoot
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/29/29844c488cd57a1a05efba64ae44f63aeb854384.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\55\554c115c82048a9fab36c49711a7ce4551b112d3.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\55\554c115c82048a9fab36c49711a7ce4551b112d3.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e9\e99d6a9b4602bd0c874d84d51ebaf71a9ebeb3c1.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e9\e99d6a9b4602bd0c874d84d51ebaf71a9ebeb3c1.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e9/e99d6a9b4602bd0c874d84d51ebaf71a9ebeb3c1.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register ViewportAdapter
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/55/554c115c82048a9fab36c49711a7ce4551b112d3.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\ea\ea5464593a9dcd0486e8586a38adeb88cfdec364.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\ea\ea5464593a9dcd0486e8586a38adeb88cfdec364.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/ea/ea5464593a9dcd0486e8586a38adeb88cfdec364.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e7\e7d44bb8703309ae505413c03628e7cf49bd4225.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\e7\e7d44bb8703309ae505413c03628e7cf49bd4225.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cc98a8b9f2d8f117e66a3f4318ff11c48a4db949.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\cc\cc98a8b9f2d8f117e66a3f4318ff11c48a4db949.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register ViewStack
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/cc/cc98a8b9f2d8f117e66a3f4318ff11c48a4db949.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register Tab
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/e7/e7d44bb8703309ae505413c03628e7cf49bd4225.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\65\65bf2893dbbfd1bb720f5a58881351bc621ff8ba.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\65\65bf2893dbbfd1bb720f5a58881351bc621ff8ba.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6f\6f403274adf4c70a4c18cb9e825836acfb324ad6.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\6f\6f403274adf4c70a4c18cb9e825836acfb324ad6.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\2c\2cb15cd010195e04574697a8023d958a4befb341.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\2c\2cb15cd010195e04574697a8023d958a4befb341.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a4\a47edadfc6503973d3c2ad2f6b9a718184872c43.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\a4\a47edadfc6503973d3c2ad2f6b9a718184872c43.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4f\4f65a6f66205344bc8ec2c3d1ac80ac68863f4d3.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\4f\4f65a6f66205344bc8ec2c3d1ac80ac68863f4d3.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/engine-export-to-editor/cc/editor/populate-internal-constants" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/4f/4f65a6f66205344bc8ec2c3d1ac80ac68863f4d3.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "cce:/internal/x/engine-export-to-editor/cc/editor/populate-internal-constants" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register BuiltinPipelineSettings
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/2c/2cb15cd010195e04574697a8023d958a4befb341.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/a4/a47edadfc6503973d3c2ad2f6b9a718184872c43.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register BuiltinPipelinePassBuilder
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6f/6f403274adf4c70a4c18cb9e825836acfb324ad6.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register BuiltinDepthOfFieldPass
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/65/65bf2893dbbfd1bb720f5a58881351bc621ff8ba.js" loaded.
+
+2026-10-29 14:14:40 - debug: D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\997a2e91c7474d45fbaa78087de3bc2ec2e78968.js resolved to D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\temp\programming\packer-driver\targets\editor\chunks\99\997a2e91c7474d45fbaa78087de3bc2ec2e78968.js is not in module cache!
+
+2026-10-29 14:14:40 - debug: [[Executor]] Register DebugViewRuntimeControl
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/99/997a2e91c7474d45fbaa78087de3bc2ec2e78968.js" loaded.
+
+2026-10-29 14:14:40 - debug: [[Executor]] Module "pack:///chunks/6d/6d8fd2b0177941b032ddc0733af48a561fb60657.js" loaded.
+
+2026-10-29 14:14:40 - groupEnd: Imports all modules
+
+2026-10-29 14:14:40 - debug: [[Executor]] after unlock
+
+2026-10-29 14:14:40 - debug: Incremental keys: regeneratorRuntime,b2jsb
+
+2026-10-29 14:14:40 - debug: Init bundle share assets start..., progress: 7%
+
+2026-10-29 14:14:40 - debug: Init bundle share assets start..., progress: 13%
+
+2026-10-29 14:14:41 - debug: Init bundle share assets success..., progress: 7%
+
+2026-10-29 14:14:41 - debug: Init bundle share assets success..., progress: 13%
+
+2026-10-29 14:14:41 - debug: handle json group in bundle internal
+
+2026-10-29 14:14:41 - debug: handle json group in bundle internal success
+
+2026-10-29 14:14:41 - debug: handle json group in bundle resources
+
+2026-10-29 14:14:41 - debug: handle json group in bundle main
+
+2026-10-29 14:14:41 - debug: init image compress task 0 in bundle internal
+
+2026-10-29 14:14:41 - debug: handle json group in bundle main success
+
+2026-10-29 14:14:41 - debug: init image compress task 0 in bundle main
+
+2026-10-29 14:14:42 - debug: handle json group in bundle resources success
+
+2026-10-29 14:14:42 - debug: init image compress task 0 in bundle resources
+
+2026-10-29 14:14:42 - debug: // ---- build task 查询 Asset Bundle ---- (4683ms)
+
+2026-10-29 14:14:42 - log: run build task 查询 Asset Bundle success in 4 s√, progress: 12%
+
+2026-10-29 14:14:42 - debug: [Build Memory track]: 查询 Asset Bundle start:555.12MB, end 593.60MB, increase: 38.48MB
+
+2026-10-29 14:14:42 - debug: 查询 Asset Bundle start, progress: 12%
+
+2026-10-29 14:14:42 - debug: // ---- build task 查询 Asset Bundle ----
+
+2026-10-29 14:14:42 - debug: // ---- build task 查询 Asset Bundle ---- (41ms)
+
+2026-10-29 14:14:42 - log: run build task 查询 Asset Bundle success in 41 ms√, progress: 17%
+
+2026-10-29 14:14:42 - debug: [Build Memory track]: 查询 Asset Bundle start:593.64MB, end 598.32MB, increase: 4.69MB
+
+2026-10-29 14:14:42 - debug: 打包脚本 start, progress: 17%
+
+2026-10-29 14:14:42 - debug: // ---- build task 打包脚本 ----
+
+2026-10-29 14:14:42 - log: [buildPolyfillsCommand]enter sub process 42848, 9229, see: chrome://inspect/#devices
+
+[[Facet.reload]], before lock, count: 2
+[[Facet.reload]], after lock, count: 2
+[[Facet.reload]], before unlock, count: 2
+[[Facet.reload]], after unlock, count: 2
+auto refresh because script compiled or scene changed
+2026-10-29 14:14:47 - debug: execute-script-end with buildPolyfillsCommand 4937ms
+
+2026-10-29 14:14:47 - debug: Generate systemJs..., progress: 17%
+
+2026-10-29 14:14:50 - debug: execute-script-end with buildSystemJsCommand 2891ms
+
+2026-10-29 14:14:50 - debug: 构建项目脚本 start..., progress: 17%
+
+2026-10-29 14:14:50 - debug: 构建项目脚本 start..., progress: 13%
+
+2026-10-29 14:14:50 - log: [buildScriptCommand]Create cjs interop url for 'file:///D:/A_Claude/miniMir2_GPT/.work/pet-visual-20261029/gui/run-a2e19b4968b142078cd7c78f3ab7829d/client-project/assets/scripts/generated/protobuf/client_pb.js'
+
+2026-10-29 14:14:57 - log: [buildScriptCommand]Create cjs interop url for 'file:///D:/A_Claude/miniMir2_GPT/.work/pet-visual-20261029/gui/run-a2e19b4968b142078cd7c78f3ab7829d/client-project/assets/scripts/generated/protobuf/client_pb.js'
+
+2026-10-29 14:14:57 - log: [buildScriptCommand]Create cjs interop url for 'file:///D:/A_Claude/miniMir2_GPT/.work/pet-visual-20261029/gui/run-a2e19b4968b142078cd7c78f3ab7829d/client-project/assets/scripts/generated/protobuf/client_pb.js'
+
+Error: [Assets] [buildScriptCommand][BABEL] Note: The code generator has deoptimised the styling of D:\Program Files\CocosCreator\3.8.8\file:\D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\assets\scripts\generated\protobuf\client_pb.js as it exceeds the max of 500KB.
+
+    at console.error (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@sentry\core\src\utils-hoist\instrument\console.ts:40:14)
+    at NewConsole.error (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\builtin\asset-db\dist\worker\console.ccc:1:1536)
+    at NewConsole.error (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\builtin\builder\dist\worker\console.ccc:1:2258)
+    at Socket.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\builtin\builder\dist\worker\worker-pools\sub-process-manager.ccc:1:2820)
+    at Socket.emit (node:events:519:28)
+    at addChunk (node:internal/streams/readable:559:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+    at Socket.Readable.push (node:internal/streams/readable:390:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:191:23)
+Error: 2026-10-29 14:14:59 - error: [buildScriptCommand][BABEL] Note: The code generator has deoptimised the styling of D:\Program Files\CocosCreator\3.8.8\file:\D:\A_Claude\miniMir2_GPT\.work\pet-visual-20261029\gui\run-a2e19b4968b142078cd7c78f3ab7829d\client-project\assets\scripts\generated\protobuf\client_pb.js as it exceeds the max of 500KB.
+
+    at console.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@editor\sentry\dist\main\main.ccc:41:45)
+    at console.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@sentry\core\src\utils-hoist\instrument\console.ts:40:14)
+    at console.error (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@base\electron-logger\lib\browser\index.js:1:1710)
+    at EventEmitter.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\builtin\builder\dist\browser\tasks.ccc:1:10717)
+    at EventEmitter.emit (node:events:519:28)
+    at EventEmitter.emit (node:domain:488:12)
+    at EventEmitter.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@base\electron-worker\lib\browser.ccc:1:2415)
+    at EventEmitter.emit (node:events:519:28)
+    at EventEmitter.emit (node:domain:488:12)
+    at IpcMainImpl.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\node_modules\@base\electron-base-ipc\dist\browser.ccc:1:3556)
+2026-10-29 14:15:05 - log: [buildScriptCommand]Number of non-entry chunks: 3
+
+2026-10-29 14:15:07 - debug: execute-script-end with buildScriptCommand 17867ms
+
+2026-10-29 14:15:07 - debug: Copy externalScripts success!
+
+2026-10-29 14:15:07 - debug: 构建项目脚本 in (17880 ms) √, progress: 17%
+
+2026-10-29 14:15:07 - debug: 构建项目脚本 in (17880 ms) √, progress: 13%
+
+2026-10-29 14:15:07 - debug: 构建引擎脚本 start..., progress: 17%
+
+2026-10-29 14:15:07 - debug: mangleProperties is enabled, found engine-mangle-config.json, use it
+
+2026-10-29 14:15:07 - debug: Error: Exit process with code:null, signal:SIGTERM in task build-script    at ChildProcess.<anonymous> (D:\Program Files\CocosCreator\3.8.8\resources\app.asar\builtin\builder\dist\worker\worker-pools\sub-process-manager.ccc:1:2409)    at ChildProcess.emit (node:events:519:28)    at Process.ChildProcess._handle.onexit (node:internal/child_process:294:12)
+
+2026-10-29 14:15:08 - debug: Use cache engine: {link(C:\Users\55315\AppData\Local\Temp\CocosCreator\3.8.8\builder\engine\ec0e7a212977bf465e4bf539b465c371)}
+
+2026-10-29 14:15:08 - debug: Use cache, md5String: debug=true,sourceMaps=true,includeModules=["2d","affine-transform","animation","audio","base","custom-pipeline","dragon-bones","gfx-webgl","gfx-webgl2","graphics","intersection-2d","mask","particle-2d","physics-2d-box2d","profiler","rich-text","spine-3.8","tiled-map","tween","ui","video","webview","custom-pipeline-builtin-scripts"],engineVersion="3.8.8",platformType="HTML5",split=false,nativeCodeBundleMode="both",targets=undefined,entry="D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine",noDeprecatedFeatures=undefined,loose=true,assetURLFormat="runtime-resolved",flags={"DEBUG":true,"LOAD_BULLET_MANUALLY":false,"LOAD_SPINE_MANUALLY":false,"WEBGPU":false},preserveType=undefined,wasmCompressionMode=false,enableNamedRegisterForSystemJSModuleFormat=undefined,mangleProperties=false,inlineEnum=true,
+
+2026-10-29 14:15:08 - debug: Use cache, options: {  "entry": "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine",  "debug": true,  "mangleProperties": false,  "inlineEnum": true,  "sourceMaps": true,  "includeModules": [    "2d",    "affine-transform",    "animation",    "audio",    "base",    "custom-pipeline",    "dragon-bones",    "gfx-webgl",    "gfx-webgl2",    "graphics",    "intersection-2d",    "mask",    "particle-2d",    "physics-2d-box2d",    "profiler",    "rich-text",    "spine-3.8",    "tiled-map",    "tween",    "ui",    "video",    "webview",    "custom-pipeline-builtin-scripts"  ],  "engineVersion": "3.8.8",  "md5Map": [],  "engineName": "cocos-js",  "output": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-visual-20261029\\gui\\run-a2e19b4968b142078cd7c78f3ab7829d\\client-project\\build\\web-mobile\\cocos-js",  "platformType": "HTML5",  "useCache": true,  "nativeCodeBundleMode": "both",  "wasmCompressionMode": false,  "split": false,  "assetURLFormat": "runtime-resolved",  "flags": {    "DEBUG": true,    "LOAD_BULLET_MANUALLY": false,    "LOAD_SPINE_MANUALLY": false,    "WEBGPU": false  }}
+
+2026-10-29 14:15:08 - debug: 构建引擎脚本 in (155 ms) √, progress: 17%
+
+2026-10-29 14:15:08 - debug: Copy plugin script ..., progress: 17%
+
+2026-10-29 14:15:08 - debug: Generate import-map..., progress: 17%
+
+2026-10-29 14:15:08 - debug: // ---- build task 打包脚本 ---- (25892ms)
+
+2026-10-29 14:15:08 - log: run build task 打包脚本 success in 25 s√, progress: 22%
+
+2026-10-29 14:15:08 - debug: [Build Memory track]: 打包脚本 start:599.60MB, end 284.49MB, increase: -322672.39KB
+
+2026-10-29 14:15:08 - debug: Build Assets start, progress: 22%
+
+2026-10-29 14:15:08 - debug: // ---- build task Build Assets ----
+
+2026-10-29 14:15:08 - debug: Build bundles..., progress: 22%
+
+2026-10-29 14:15:08 - debug: Pack Images start, progress: 22%
+
+2026-10-29 14:15:08 - debug: Pack Images start, progress: 13%
+
+2026-10-29 14:15:08 - debug: Number of pac assets: 1
+
+2026-10-29 14:15:08 - debug: No pack results
+
+2026-10-29 14:15:08 - debug: Compress image start..., progress: 22%
+
+2026-10-29 14:15:08 - debug: Compress image start..., progress: 13%
+
+2026-10-29 14:15:08 - group: Compress image...
+
+2026-10-29 14:15:08 - debug: sort compress task {}
+
+2026-10-29 14:15:08 - debug: Num of all image compress task 0, really: 0, configTasks: 0
+
+2026-10-29 14:15:08 - debug: No image need to compress
+
+2026-10-29 14:15:08 - groupEnd: Compress image...
+
+2026-10-29 14:15:08 - debug: Compress image success..., progress: 22%
+
+2026-10-29 14:15:08 - debug: Compress image success..., progress: 13%
+
+2026-10-29 14:15:08 - debug: Output asset in bundles start, progress: 22%
+
+2026-10-29 14:15:08 - debug: Output asset in bundles start, progress: 13%
+
+2026-10-29 14:15:08 - debug: Handle all json groups in bundle internal
+
+2026-10-29 14:15:08 - debug: handle json group
+
+2026-10-29 14:15:08 - debug: Handle all json groups in bundle resources
+
+2026-10-29 14:15:08 - debug: handle json group
+
+2026-10-29 14:15:09 - debug: Handle all json groups in bundle main
+
+2026-10-29 14:15:09 - debug: handle json group
+
+2026-10-29 14:15:17 - debug: Json group(06375a850) compile success，json number: 6
+
+2026-10-29 14:15:17 - debug: handle single json
+
+2026-10-29 14:15:17 - debug: Json group(0a96bc588) compile success，json number: 6
+
+2026-10-29 14:15:17 - debug: Json group(0482da121) compile success，json number: 6
+
+2026-10-29 14:15:17 - debug: handle single json
+
+2026-10-29 14:15:17 - debug: Json group(04f923b60) compile success，json number: 6
+
+2026-10-29 14:15:17 - debug: handle single json
+
+2026-10-29 14:16:21 - debug: Output asset in bundles success, progress: 22%
+
+2026-10-29 14:16:21 - debug: Output asset in bundles success, progress: 13%
+
+2026-10-29 14:16:21 - debug: Output asset in bundles start, progress: 22%
+
+2026-10-29 14:16:21 - debug: Output asset in bundles start, progress: 13%
+
+2026-10-29 14:16:21 - debug: output config of bundle internal
+
+2026-10-29 14:16:21 - debug: output config of bundle internal success
+
+2026-10-29 14:16:21 - debug: output config of bundle resources
+
+2026-10-29 14:16:21 - debug: output config of bundle resources success
+
+2026-10-29 14:16:21 - debug: output config of bundle main
+
+2026-10-29 14:16:21 - debug: output config of bundle main success
+
+2026-10-29 14:16:21 - debug: Output asset in bundles success, progress: 22%
+
+2026-10-29 14:16:21 - debug: Output asset in bundles success, progress: 13%
+
+2026-10-29 14:16:21 - debug: // ---- build task Build Assets ---- (73762ms)
+
+2026-10-29 14:16:21 - log: run build task Build Assets success in 1 min 13 s√, progress: 27%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: Build Assets start:284.53MB, end 422.60MB, increase: 138.07MB
+
+2026-10-29 14:16:21 - debug: 整理部分构建选项内数据到 settings.json start, progress: 27%
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理部分构建选项内数据到 settings.json ----
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理部分构建选项内数据到 settings.json ---- (7ms)
+
+2026-10-29 14:16:21 - log: run build task 整理部分构建选项内数据到 settings.json success in 7 ms√, progress: 29%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: 整理部分构建选项内数据到 settings.json start:422.69MB, end 422.73MB, increase: 40.61KB
+
+2026-10-29 14:16:21 - debug: 填充脚本数据到 settings.json start, progress: 29%
+
+2026-10-29 14:16:21 - debug: // ---- build task 填充脚本数据到 settings.json ----
+
+2026-10-29 14:16:21 - debug: // ---- build task 填充脚本数据到 settings.json ---- (2ms)
+
+2026-10-29 14:16:21 - log: run build task 填充脚本数据到 settings.json success in 2 ms√, progress: 31%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: 填充脚本数据到 settings.json start:422.77MB, end 422.81MB, increase: 37.09KB
+
+2026-10-29 14:16:21 - debug: 整理部分构建选项内数据到 settings.json start, progress: 31%
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理部分构建选项内数据到 settings.json ----
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理部分构建选项内数据到 settings.json ---- (7ms)
+
+2026-10-29 14:16:21 - log: run build task 整理部分构建选项内数据到 settings.json success in 7 ms√, progress: 32%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: 整理部分构建选项内数据到 settings.json start:422.85MB, end 423.01MB, increase: 163.28KB
+
+2026-10-29 14:16:21 - debug: web-mobile:(onBeforeCompressSettings) start..., progress: 32%
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onBeforeCompressSettings ----
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onBeforeCompressSettings ---- (2ms)
+
+2026-10-29 14:16:21 - debug: web-mobile:(onBeforeCompressSettings) in 2 ms ✓, progress: 34%
+
+2026-10-29 14:16:21 - debug: cocos-service:(onBeforeCompressSettings) start..., progress: 34%
+
+2026-10-29 14:16:21 - debug: // ---- build task cocos-service：onBeforeCompressSettings ----
+
+2026-10-29 14:16:21 - debug: // ---- build task cocos-service：onBeforeCompressSettings ---- (3ms)
+
+2026-10-29 14:16:21 - debug: cocos-service:(onBeforeCompressSettings) in 3 ms ✓, progress: 36%
+
+2026-10-29 14:16:21 - debug: 整理静态模板文件 start, progress: 36%
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理静态模板文件 ----
+
+2026-10-29 14:16:21 - debug: // ---- build task 整理静态模板文件 ---- (109ms)
+
+2026-10-29 14:16:21 - log: run build task 整理静态模板文件 success in 109 ms√, progress: 41%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: 整理静态模板文件 start:423.21MB, end 419.98MB, increase: -3301.79KB
+
+2026-10-29 14:16:21 - debug: cocos-service:(onAfterCompressSettings) start..., progress: 41%
+
+2026-10-29 14:16:21 - debug: // ---- build task cocos-service：onAfterCompressSettings ----
+
+2026-10-29 14:16:21 - debug: // ---- build task cocos-service：onAfterCompressSettings ---- (4ms)
+
+2026-10-29 14:16:21 - debug: cocos-service:(onAfterCompressSettings) in 4 ms ✓, progress: 43%
+
+2026-10-29 14:16:21 - debug: web-mobile:(onBeforeCopyBuildTemplate) start..., progress: 43%
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onBeforeCopyBuildTemplate ----
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onBeforeCopyBuildTemplate ---- (29ms)
+
+2026-10-29 14:16:21 - debug: web-mobile:(onBeforeCopyBuildTemplate) in 29 ms ✓, progress: 45%
+
+2026-10-29 14:16:21 - debug: 给所有的资源加上 MD5 后缀 start, progress: 45%
+
+2026-10-29 14:16:21 - debug: // ---- build task 给所有的资源加上 MD5 后缀 ----
+
+2026-10-29 14:16:21 - debug: // ---- build task 给所有的资源加上 MD5 后缀 ---- (10ms)
+
+2026-10-29 14:16:21 - log: run build task 给所有的资源加上 MD5 后缀 success in 10 ms√, progress: 55%
+
+2026-10-29 14:16:21 - debug: [Build Memory track]: 给所有的资源加上 MD5 后缀 start:423.05MB, end 423.08MB, increase: 36.15KB
+
+2026-10-29 14:16:21 - debug: web-mobile:(onAfterBuild) start..., progress: 55%
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onAfterBuild ----
+
+2026-10-29 14:16:21 - debug: // ---- build task web-mobile：onAfterBuild ---- (3ms)
+
+2026-10-29 14:16:21 - debug: web-mobile:(onAfterBuild) in 3 ms ✓, progress: 56%
+
+2026-10-29 14:16:21 - debug: cocos-service:(onAfterBuild) start..., progress: 56%
+
+2026-10-29 14:16:21 - debug: // ---- build task cocos-service：onAfterBuild ----
+
+2026-10-29 14:16:22 - debug: // ---- build task cocos-service：onAfterBuild ---- (8ms)
+
+2026-10-29 14:16:22 - debug: cocos-service:(onAfterBuild) in 8 ms ✓, progress: 58%
+
+2026-10-29 14:16:22 - debug: adsense-h5g-plugin:(onAfterBuild) start..., progress: 58%
+
+2026-10-29 14:16:22 - debug: // ---- build task adsense-h5g-plugin：onAfterBuild ----
+
+2026-10-29 14:16:22 - debug: // ---- build task adsense-h5g-plugin：onAfterBuild ---- (2ms)
+
+2026-10-29 14:16:22 - debug: adsense-h5g-plugin:(onAfterBuild) in 2 ms ✓, progress: 60%
+
+2026-10-29 14:16:22 - log: Asset DB is resume!
+
+2026-10-29 14:16:22 - debug: builder:build-project-total (104705ms)
+
+2026-10-29 14:16:22 - debug: build task(web-mobile) in 104705!
+
+2026-10-29 14:16:24 - debug: [Build Memory track]: builder:build-project-total start:551.59MB, end 433.52MB, increase: -120894.03KB
+
+2026-10-29 14:16:24 - debug: ================================ build Task (web-mobile) Finished in (1 min 47 s)ms ================================
+

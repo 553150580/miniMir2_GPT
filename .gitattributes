@@ -6,6 +6,7 @@
 *.jpg binary
 *.jpeg binary
 *.gz binary
+*.wav binary
 资料参考/** -text -whitespace
 UI参考图/** -text -whitespace
 # 原始证据、诊断补丁和不可变生成快照不按人工代码改写空白。
@@ -24,3 +25,4 @@ outputs/teleport21-20261029/** -text
 outputs/pet-lifecycle-20261029/** -text
 outputs/pet-runtime-20261029/** -text
 outputs/pet-summon-20261029/** -text
+outputs/pet-visual-20261029/** -text

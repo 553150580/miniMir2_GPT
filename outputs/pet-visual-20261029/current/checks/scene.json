@@ -1,0 +1,14 @@
+{
+  "task": "scene",
+  "command": [
+    "node",
+    "--test",
+    "client/tests/scene/*.test.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T04:52:38.943740+00:00",
+  "finished_at": "2026-10-29T04:52:39.201480+00:00",
+  "output": ".work/pet-visual-20261029/checks/scene.txt",
+  "output_sha256": "9f372e6d68cff7cd2b3f9bf4dfedb8fb9ee964a5af9a1c67decdcfacaf4a1513",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

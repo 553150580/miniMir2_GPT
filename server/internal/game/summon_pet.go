@@ -122,6 +122,7 @@ func (w *worker) resolveSummonPet(r *room, origin *worldState, cast pendingCast,
 	if !ok || !w.installReservedPet(r, spawnWorld, pet, plan.Token) {
 		return
 	}
+	w.publishPetBorn(r, newPetBirthFact(r, spawnWorld, pet, cast, now))
 }
 
 func (w *worker) recallResidentPet(r *room) bool {

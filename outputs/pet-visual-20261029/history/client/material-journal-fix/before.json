@@ -1,0 +1,17 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/material_cast_journal.test.cjs"
+  ],
+  "exit_code": 1,
+  "sha256": "578a25f7c9b1d491c9c72ba20590838c313a1278b9065273f2463128fb4cec93",
+  "pending_source_sha256": "6f1e2c78c6ca8469d81eccc571a910c1d55cf0b7a34a83130f6afabfbf47c79a",
+  "meaning": "真实控制器经journal.set失败，17三项失败而旧14/15正向两项通过；初次替身缺NavigationIntent另存setup-before"
+}
