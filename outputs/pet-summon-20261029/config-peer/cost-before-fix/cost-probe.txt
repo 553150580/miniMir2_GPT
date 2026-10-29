@@ -1,0 +1,6 @@
+=== RUN   TestAuditSummonCatalogRejectsUnderchargedBookFormula
+    summon_cost_peer_overlay_test.go:31: 三个升级阶全部仅需1本书，同时被独立loader和完整Fixture.Validate接受，违反目标阶+1的既定公式
+--- FAIL: TestAuditSummonCatalogRejectsUnderchargedBookFormula (0.03s)
+FAIL
+FAIL	minimir/internal/devconfig	1.768s
+FAIL

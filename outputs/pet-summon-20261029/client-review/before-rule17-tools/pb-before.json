@@ -1,0 +1,11 @@
+{
+  "shared/proto/account.proto": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964",
+  "shared/proto/assets.proto": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23",
+  "shared/proto/common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
+  "shared/proto/world.proto": "a72e8c0c3099b335d9526296a5604a1f25c3c16cdedd5c4534de8bd302dd1bf6",
+  "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+  "server/api/generated/minimirv1/assets.pb.go": "cac1a9996c1816ddfe03efe9be3c8e1482f2c40208b8293db5061a93c0716633",
+  "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+  "server/api/generated/minimirv1/world.pb.go": "4623e3db04dc90813d23c2d3c553893a07579dfe69f03a5c8d3a7b551174d964",
+  "client/assets/scripts/generated/protobuf/client_pb.js": "5982b2f24bcaa6b13ca941472c4233ddc4c44a500a8d853c55441dabc1e840aa"
+}

@@ -368,6 +368,7 @@ func (w *worker) nextTravelBaseline(current uint64) (uint64, bool) {
 func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bool {
 	f := &w.e.Store.Cfg.Fixture
 	target, ok := f.MapByID(plan.TargetMapID)
+	movePet := r.Pet != nil && !mapForbidsPets(target)
 	var monsters []*entity
 	count := 0
 	var preferred *devconfig.Point
@@ -390,13 +391,13 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 	}
 	if !ok || target.SceneKindValue() != plan.TargetKind || !target.Walkable(plan.Position) || count < 0 || count > len(monsters) ||
 		travelOccupied(monsters, count, plan.Position) || r.Scene == math.MaxUint64 || r.Player.MovementRevision == math.MaxUint64 ||
-		r.Pet != nil && r.Pet.MovementRevision == math.MaxUint64 {
+		movePet && r.Pet.MovementRevision == math.MaxUint64 {
 		plan.Phase = travelCancelled
 		w.sendTravelState(r, plan, plan.Request)
 		return false
 	}
 	petPosition := devconfig.Point{}
-	if r.Pet != nil {
+	if movePet {
 		petPosition, ok = travelPetPoint(target, plan.Position, preferred, monsters, count)
 		if !ok {
 			plan.Phase = travelCancelled
@@ -405,7 +406,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		}
 	}
 	moves := uint64(1)
-	if r.Pet != nil {
+	if movePet {
 		moves++
 	}
 	if r.CellEntrySequence > math.MaxUint64-moves {

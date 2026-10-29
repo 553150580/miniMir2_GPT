@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "development_only": true,
   "runtime_enabled": false,
   "budgets": {
@@ -40,6 +40,7 @@
         "tao_min": 0
       },
       "undead": true,
+      "recall_name": "BoneFamiliar",
       "training": {
         "initial_level_by_rank": [
           0,
@@ -178,12 +179,12 @@
       {
         "group": "gameplay",
         "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-        "sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
+        "sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf"
       }
     ],
-    "schema_sha256": "fdaba852a216421494b393692aa7d160409c9d4656aac313f05cdf10c942ca04",
+    "schema_sha256": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
     "source_contract_sha256": "99a583f12645c77eb609c3c0bfa7b59c37bd51aa6c0955d3bee44a52e7a665a3",
-    "generator_sha256": "056ff1921dfcd7121b97f26093935be7543ce0cfe5c140214f8c83d9c4e7b004",
+    "generator_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
     "target_180_verified": false
   }
 }

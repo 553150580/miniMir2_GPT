@@ -29,11 +29,11 @@ class PetRuntimeProjectionTests(unittest.TestCase):
 
     def test_rule16_selects_shared_definition_without_opening_summon_or_training_bootstrap(self):
         f=self.fixture
-        self.assertEqual(f['rule_version'],16)
+        self.assertEqual(f['rule_version'],17)
         self.assertEqual(self.profile(self.tables)['pet_runtime'],{'enabled':True,'bootstrap_mode':'legacy_untrained_pet','definition_ids':[1]})
         self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
         self.assertEqual(f['pet_runtime']['definitions'],pets.compile_definitions(self.tables,[1]))
-        self.assertIsNone(self.definition(self.tables)['summon_skill_id'])
+        self.assertEqual(self.definition(self.tables)['summon_skill_id'],17)
         self.assertEqual(len(f['skills']),22)
         self.assertNotIn(17,[skill['id'] for skill in f['skills']])
         self.assertIs(f['casting_supply']['enabled'],False)
@@ -46,7 +46,7 @@ class PetRuntimeProjectionTests(unittest.TestCase):
         evidence={'source':'unit-test','sha256':'explicit'}
         catalog=pets.build_catalog(self.tables,evidence)
         self.assertIs(catalog['runtime_enabled'],False)
-        self.assertEqual(catalog['schema_version'],1)
+        self.assertEqual(catalog['schema_version'],2)
         self.assertIs(catalog['development_only'],True)
         self.assertEqual(catalog['definitions'],self.fixture['pet_runtime']['definitions'])
         self.assertEqual(catalog['budgets'],self.fixture['pet_runtime']['budgets'])
@@ -177,7 +177,7 @@ class PetRuntimeProjectionTests(unittest.TestCase):
 
     def test_public_hides_training_body_budgets_and_source_metadata(self):
         public=module.public_gameplay(self.fixture)
-        self.assertEqual(public['rule_version'],16)
+        self.assertEqual(public['rule_version'],17)
         self.assertEqual(len(public['pet_profiles']),1)
         serialized=json.dumps(public)
         for field in ['pet_runtime','retained_body_capacity_per_owner','experience_multiplier','source_evidence','corpse_ttl_ms']:

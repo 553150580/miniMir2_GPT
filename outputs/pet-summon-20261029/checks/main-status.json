@@ -1,0 +1,14 @@
+{
+  "task": "main-status",
+  "command": [
+    "python3",
+    "tools/server/dev.py",
+    "status"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T01:43:32.815754+00:00",
+  "finished_at": "2026-10-29T01:43:33.054050+00:00",
+  "output": ".work/pet-summon-20261029/checks/main-status.txt",
+  "output_sha256": "915a9cdd103566bcc82ca027e134bb68ef3e9b5bda5b532d1d62aa626790a296",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

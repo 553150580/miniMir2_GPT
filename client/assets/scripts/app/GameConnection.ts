@@ -160,8 +160,8 @@ export class GameConnection {
         traceInput(inputTraceMessage('send', id, seq, value)); return seq;
     }
 
-    requestNavigationCancel(sceneEpoch: Long, baselineId: Long, inputSequence: number): Promise<any> {
-        const assembly = new NavigationCancelAssembler(sceneEpoch, baselineId);
+    requestNavigationCancel(sceneEpoch: Long, baselineId: Long, inputSequence: number, mapId?: Long): Promise<any> {
+        const assembly = new NavigationCancelAssembler(sceneEpoch, baselineId, mapId);
         return this.request(20006, { sceneEpoch, inputSequence, cancelNavigation: true }, chunk => assembly.accept(chunk));
     }
     request(id: number, value: any, assemble?: (chunk: any) => any | null): Promise<any> {

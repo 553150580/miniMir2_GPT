@@ -8,7 +8,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport":
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet":
 		return true
 	}
 	return false
@@ -86,6 +86,12 @@ func (f *Fixture) ValidateCombat() error {
 		return errors.New("战斗事件或逐杀预算无效")
 	}
 	for _, s := range f.Skills {
+		if s.Behavior == "summon_pet" {
+			if err := validateSummonSkill(s); err != nil {
+				return err
+			}
+			continue // 召唤不判准确或伤害，不能为满足其它技能路径而伪造参数。
+		}
 		if len(s.AccuracyByLevel) != int(s.MaxLevel)+1 {
 			return errors.New("逐阶准确数组不完整")
 		}

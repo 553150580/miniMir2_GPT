@@ -1,0 +1,42 @@
+{
+  "head": "66cb2766cacfb0ed7358bd323a30d59dbbcddd11",
+  "scope": "只读白名单静态来源核对，非DB/运行验收",
+  "files": [
+    {
+      "relative": "Server/MirObjects/HumanObject.cs",
+      "reference": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+      "latest_byte_equal": true
+    },
+    {
+      "relative": "Server/MirObjects/PlayerObject.cs",
+      "reference": "资料参考/crystal/Server/MirObjects/PlayerObject.cs",
+      "sha256": "e8962cb5de45135954e6cdb4f8aefd1a19e878c33df2738fd3e7be364b016d08",
+      "latest_byte_equal": true
+    },
+    {
+      "relative": "Server/MirObjects/MonsterObject.cs",
+      "reference": "资料参考/crystal/Server/MirObjects/MonsterObject.cs",
+      "sha256": "2cc4e673c589ad57452b4682c3bcb155b4b6b3027b1d3ee52a18a5ae1b7df98e",
+      "latest_byte_equal": true
+    },
+    {
+      "relative": "Server/MirObjects/MapObject.cs",
+      "reference": "资料参考/crystal/Server/MirObjects/MapObject.cs",
+      "sha256": "f465ee5fe84bc9fe6ab3ef9dd0c138c8c6b1dee83d1ea5b007cc5cb3afe53f7f",
+      "latest_byte_equal": true
+    },
+    {
+      "relative": "Server/MirEnvir/Map.cs",
+      "reference": "资料参考/crystal/Server/MirEnvir/Map.cs",
+      "sha256": "4df569012db86428b82b3c4994a1b0e982b1da7b5ed0b58dcf1930020ed4d5d1",
+      "latest_byte_equal": true
+    },
+    {
+      "relative": "Server/MirObjects/Monsters/BoneFamiliar.cs",
+      "reference": "资料参考/crystal/Server/MirObjects/Monsters/BoneFamiliar.cs",
+      "sha256": "98742b0f0ae55c2f6220834cd589136814abe22caf6ed9a674b8ee677443396b",
+      "latest_byte_equal": true
+    }
+  ]
+}

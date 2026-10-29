@@ -27,8 +27,8 @@ func TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 16 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
-		t.Fatal("真实用例必须从当前rule16及显式legacy_untrained_pet合同开始")
+	if cfg.Fixture.RuleVersion < 16 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+		t.Fatal("真实用例必须从当前生命周期及显式legacy_untrained_pet合同开始")
 	}
 	if _, enabled := cfg.Fixture.Skill(17); enabled || cfg.Fixture.CastingSupply.Enabled {
 		t.Fatal("本阶段不得开启17或护符")

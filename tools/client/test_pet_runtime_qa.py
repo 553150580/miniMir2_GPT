@@ -19,7 +19,12 @@ class PetGUIStaticTests(unittest.TestCase):
     def test_fixture_copy_changes_only_explicit_isolated_qa_values(self):
         original = json.loads((ROOT / 'config/development/first-loop.json').read_text(encoding='utf-8'))
         saved = copy.deepcopy(original)
+        for version in (16, 17):
+            probe = copy.deepcopy(original)
+            probe['rule_version'] = version  # 纯门禁样本；不会写盘或把主17配置改成16。
+            self.assertEqual(helper.build_fixture(probe, 15000)['rule_version'], version)
         value = helper.build_fixture(original, 15000)
+        self.assertEqual(value['rule_version'], original['rule_version'])
         self.assertEqual(original, saved)
         self.assertEqual(value['pet']['hp'], 1)
         self.assertEqual(value['pet']['attack_max'], 0)
@@ -48,6 +53,19 @@ class PetGUIStaticTests(unittest.TestCase):
         opened['skills'].append({'id': 17})
         with self.assertRaises(ValueError):
             helper.build_fixture(opened, 15000)
+        for change in [lambda value: value.update(rule_version=15), lambda value: value.update(rule_version=18), lambda value: value['casting_supply'].update(enabled=True), lambda value: value['pet_runtime'].update(bootstrap_mode='none')]:
+            probe = copy.deepcopy(original)
+            change(probe)
+            with self.assertRaises(ValueError):
+                helper.build_fixture(probe, 15000)
+        for version in (16, 17):
+            def reply(url, timeout):
+                mode = next(mode for mode, port in helper.PORTS.items() if ':' + str(port) + '/' in url)
+                return io.StringIO(json.dumps({'status': 'ok', 'mode': mode, 'fixture_hash': 'owned', 'rule_version': version, 'instance': 'this-' + mode}))
+            with patch.object(helper.urllib.request, 'urlopen', side_effect=reply):
+                self.assertEqual(len(helper.health('owned', version)), 3)
+                self.assertIsNone(helper.health('owned', 33 - version), '同hash旧规则也不能当当前节点')
+                self.assertIsNone(helper.health('foreign', version))
 
     def test_drop_requires_exact_random_name_root_purpose_and_marker(self):
         run = 'a' * 32

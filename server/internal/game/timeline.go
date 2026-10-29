@@ -151,6 +151,10 @@ func (w *worker) advanceEvents(r *room, now time.Time) {
 }
 
 func (w *worker) resolveDueEvent(r *room, e dueEvent, now time.Time) *worldTransfer {
+	if e.Cast != nil && e.Cast.Summon != nil {
+		w.resolveSummonPet(r, e.World, *e.Cast, now)
+		return nil
+	}
 	if e.Cast != nil && e.Cast.Skill.Behavior == "teleport" {
 		return w.resolveTeleport21(r, e.World, *e.Cast, now)
 	}

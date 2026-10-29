@@ -241,6 +241,9 @@ func (f *Fixture) Validate() error {
 	if err := f.ValidatePetRuntime(); err != nil {
 		return err
 	}
+	if err := f.ValidateSummoning(); err != nil {
+		return err
+	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {
 		return err
 	}

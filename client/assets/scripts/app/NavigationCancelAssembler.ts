@@ -7,7 +7,7 @@ export class NavigationCancelAssembler {
     private sequence: string | null = null;
     private readonly indexes = new Set<number>();
     private complete = false;
-    constructor(private readonly scene: Long, private readonly baseline: Long) {
+    constructor(private readonly scene: Long, private readonly baseline: Long, private readonly mapId?: Long) {
         if (!Long.isLong(scene) || !Long.isLong(baseline) || scene.isZero() || baseline.isZero() || !scene.unsigned && scene.isNegative() || !baseline.unsigned && baseline.isNegative()) throw new Error('导航取消缺少完整基线身份');
     }
     accept(chunk: any): any | null {
@@ -19,7 +19,7 @@ export class NavigationCancelAssembler {
         if (!Number.isInteger(chunk.chunkIndex) || this.indexes.has(chunk.chunkIndex) || this.indexes.size >= 64) throw new Error('导航取消分块重复或超过上限');
         if (!chunk.navigationState || ![0, 4].includes(chunk.navigationState.status)) throw new Error('远端导航取消尚未确认');
         this.sequence = sequence;
-        const value = this.assembler.accept(chunk, this.scene, this.baseline);
+        const value = this.assembler.accept(chunk, this.scene, this.baseline, this.mapId);
         this.indexes.add(chunk.chunkIndex);
         if (!value) return null;
         this.complete = true;

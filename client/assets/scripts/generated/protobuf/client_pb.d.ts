@@ -3146,6 +3146,150 @@ export namespace minimir {
         }
 
         /**
+         * Properties of an OwnedPetState.
+         * @deprecated Use minimir.v1.OwnedPetState.$Properties instead.
+         */
+        interface IOwnedPetState extends minimir.v1.OwnedPetState.$Properties {
+        }
+
+        /** Represents an OwnedPetState. */
+        class OwnedPetState {
+
+            /**
+             * Constructs a new OwnedPetState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.OwnedPetState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** OwnedPetState entity_handle. */
+            entity_handle: number;
+
+            /** OwnedPetState life. */
+            life: Long;
+
+            /** OwnedPetState definition_id. */
+            definition_id: number;
+
+            /** OwnedPetState map_id. */
+            map_id: Long;
+
+            /** OwnedPetState hp. */
+            hp: Long;
+
+            /** OwnedPetState hp_max. */
+            hp_max: Long;
+
+            /** OwnedPetState pet_training. */
+            pet_training?: (minimir.v1.PetTrainingState.$Properties|null);
+
+            /** OwnedPetState recall_skill_ids. */
+            recall_skill_ids: number[];
+
+            /** OwnedPetState follow_suppressed. */
+            follow_suppressed: boolean;
+
+            /**
+             * Creates a new OwnedPetState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns OwnedPetState instance
+             */
+            static create(properties: minimir.v1.OwnedPetState.$Shape): minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape;
+            static create(properties?: minimir.v1.OwnedPetState.$Properties): minimir.v1.OwnedPetState;
+
+            /**
+             * Encodes the specified OwnedPetState message. Does not implicitly {@link minimir.v1.OwnedPetState.verify|verify} messages.
+             * @param message OwnedPetState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.OwnedPetState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified OwnedPetState message, length delimited. Does not implicitly {@link minimir.v1.OwnedPetState.verify|verify} messages.
+             * @param message OwnedPetState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.OwnedPetState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an OwnedPetState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape} OwnedPetState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape;
+
+            /**
+             * Decodes an OwnedPetState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape} OwnedPetState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape;
+
+            /**
+             * Verifies an OwnedPetState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for OwnedPetState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace OwnedPetState {
+
+            /** Properties of an OwnedPetState. */
+            interface $Properties {
+
+                /** OwnedPetState entity_handle */
+                entity_handle?: (number|null);
+
+                /** OwnedPetState life */
+                life?: (Long|null);
+
+                /** OwnedPetState definition_id */
+                definition_id?: (number|null);
+
+                /** OwnedPetState map_id */
+                map_id?: (Long|null);
+
+                /** OwnedPetState hp */
+                hp?: (Long|null);
+
+                /** OwnedPetState hp_max */
+                hp_max?: (Long|null);
+
+                /** OwnedPetState pet_training */
+                pet_training?: (minimir.v1.PetTrainingState.$Properties|null);
+
+                /** OwnedPetState recall_skill_ids */
+                recall_skill_ids?: (number[]|null);
+
+                /** OwnedPetState follow_suppressed */
+                follow_suppressed?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an OwnedPetState. */
+            type $Shape = minimir.v1.OwnedPetState.$Properties;
+        }
+
+        /**
          * Properties of an EntityState.
          * @deprecated Use minimir.v1.EntityState.$Properties instead.
          */
@@ -4031,6 +4175,9 @@ export namespace minimir {
             /** SceneBaselineChunk safe_zone_id. */
             safe_zone_id: Long;
 
+            /** SceneBaselineChunk owned_pet. */
+            owned_pet?: (minimir.v1.OwnedPetState.$Properties|null);
+
             /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @param [properties] Properties to set
@@ -4120,6 +4267,9 @@ export namespace minimir {
 
                 /** SceneBaselineChunk safe_zone_id */
                 safe_zone_id?: (Long|null);
+
+                /** SceneBaselineChunk owned_pet */
+                owned_pet?: (minimir.v1.OwnedPetState.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

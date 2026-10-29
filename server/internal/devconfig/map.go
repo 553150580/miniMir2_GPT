@@ -25,6 +25,7 @@ type MapTemplate struct {
 	CollisionBits    []byte             `json:"collision_bits,omitempty"`
 	SourceStaticBits []byte             `json:"source_static_bits,omitempty"`
 	NoTeleport       *bool              `json:"no_teleport,omitempty"`
+	NoPets           *bool              `json:"no_pets,omitempty"`
 	PlayerSpawn      Point              `json:"player_spawn"`
 	PetSpawn         Point              `json:"pet_spawn"`
 	MonsterSpawns    []Point            `json:"monster_spawns,omitempty"`

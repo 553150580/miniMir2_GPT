@@ -19,7 +19,7 @@ import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
-import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
+import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
@@ -368,7 +368,7 @@ export class AppRoot extends Component {
                     this.selectedTarget = entity.entityHandle;
                     this.combatStatus?.showEntity(entity.entityHandle, entity.life.toString());
                 });
-                const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId });
+                const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, mapId: entry.roomId });
                 this.combatStatus = combatStatus;
                 const releaseStatus = assets.onBeforeInvalidation(reason => {
                     if (reason !== 'dispose') return;
@@ -606,7 +606,8 @@ export class AppRoot extends Component {
             const arrival = session.teleport.takeArrival(this.attached, player.life, player.movementRevision);
             if (arrival) this.world.presentTeleportArrival(arrival);
         }
-        const materialDisabled = !!quick?.definition.material_quantity && this.world.gameplay.casting_supply?.enabled === false;
+        const materialDisabled = !!quick && (needsCastingSupply(this.skillSnapshot(), quick) && this.world.gameplay.casting_supply?.enabled === false
+            || quick.definition.kind === 'summon_pet' && this.skillSnapshot().mapNoPets === true);
         this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready && (!materialDisabled || player?.hp.isZero()));
         const supply = session.inventory?.equipped?.find((entry: any) => entry.slot === this.world!.gameplay.casting_supply?.slot)?.item;
         this.find('UIMgr/Panels/Role/Equip').active = !!supply;
@@ -685,6 +686,7 @@ export class AppRoot extends Component {
         return { ready: session.ready, roleIdentity: session.role ? roleIdentity() : '', job: session.role?.job ?? -1,
             sceneEpoch: session.entry?.sceneEpoch ?? Long.UZERO, ruleVersion: session.entry?.resourceVersion ?? Long.UZERO,
             inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], playerStatuses: player?.statuses,
+            ownedPet: session.baseline?.ownedPet, mapNoPets: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_pets,
             mapNoTeleport: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_teleport, modes, modesReceivedAt: session.skillModesReceivedAt,
             castingSupply: supply ? { name: supplyName ?? '施法护符', quantity: supply.quantity.toString() } : null,
             castingSupplyEnabled: this.world?.gameplay.casting_supply?.enabled, statusDefinitions: this.world?.gameplay.statuses };
@@ -724,12 +726,17 @@ export class AppRoot extends Component {
         if (row.definition.kind === 'teleport') {
             session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id }); return;
         }
-        const intent = { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id,
-            targetHandle, targetGrid: { x: targetGrid.x, y: targetGrid.y }, direction };
-        if (!row.definition.material_quantity) { session.connection.send(30003, intent); return; }
-        const snapshot = this.supplySnapshot(), supply = originalSupply ?? selectedCastingSupply(snapshot, row.definition);
+        const snapshot = this.skillSnapshot();
+        if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) throw new Error('当前地图禁止召唤');
+        // 召唤只上行技能与朝向；原宠匹配、出生坐标和网络期间的模式变化均由服务器裁定。
+        const intent = row.definition.kind === 'summon_pet'
+            ? { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id, direction }
+            : { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId: row.definition.id,
+                targetHandle, targetGrid: { x: targetGrid.x, y: targetGrid.y }, direction };
+        if (isSummonRecall(snapshot, row) || !row.definition.material_quantity) { session.connection.send(30003, intent); return; }
+        const supplySnapshot = this.supplySnapshot(), supply = originalSupply ?? selectedCastingSupply(supplySnapshot, row.definition);
         // 地面瞄准不因无关掉落重选；护符实例/版本/数量仍固定，经济上下文使用提交时修订。
-        validateSupply(supply, snapshot, true, false);
+        validateSupply(supply, supplySnapshot, true, false);
         return this.economic(40014, { ...intent, materialInstanceId: new Uint8Array(supply.instanceId), materialVersion: Long.fromString(supply.version, true),
             casterLife: Long.fromString(supply.life, true) });
     }
@@ -882,7 +889,7 @@ export class AppRoot extends Component {
         try {
             if (session.ready && !session.travel?.blocksInput && !this.attaching && this.isWorldCurrent()) {
                 const entry = session.entry, binding = session.connection.binding.toString(), role = roleIdentity(), generation = session.connection.generation;
-                const ack = await session.connection.requestNavigationCancel(entry.sceneEpoch, entry.baselineId, ++this.inputSequence);
+                const ack = await session.connection.requestNavigationCancel(entry.sceneEpoch, entry.baselineId, ++this.inputSequence, entry.roomId);
                 if (this.disposed || session.entry !== entry || session.connection.generation !== generation || session.connection.binding.toString() !== binding || roleIdentity() !== role
                     || session.entry?.playerHandle !== entry.playerHandle) throw new Error('退出期间连接或角色已变化，请重新退出');
                 if (ack?.sceneEpoch?.toString() !== entry.sceneEpoch.toString() || ack.baselineId?.toString() !== entry.baselineId.toString()

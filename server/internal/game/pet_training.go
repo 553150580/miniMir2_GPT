@@ -9,12 +9,13 @@ import (
 )
 
 type petRuntimeState struct {
-	Definition      devconfig.PetRuntimeDefinition
-	Fighter         devconfig.Fighter
-	Train           bool
-	LegacyUntrained bool
-	Level, Maximum  uint32
-	Experience      uint64
+	Definition       devconfig.PetRuntimeDefinition
+	Fighter          devconfig.Fighter
+	Train            bool
+	LegacyUntrained  bool
+	FollowSuppressed bool
+	Level, Maximum   uint32
+	Experience       uint64
 }
 
 type petTrainingCredit struct {
@@ -44,7 +45,15 @@ func (w *worker) newPet(r *room, definitionID, rank uint32, point devconfig.Poin
 		return nil, false
 	}
 	d, ok := w.e.Store.Cfg.Fixture.PetRuntime.DefinitionByID(definitionID)
-	if !ok || d.OwnerJobID != r.Role.Job || uint64(rank) >= uint64(len(d.Training.InitialLevelByRank)) {
+	if !ok {
+		return nil, false
+	}
+	return w.newPetFromDefinition(r, d, rank, point, now)
+}
+
+func (w *worker) newPetFromDefinition(r *room, definition devconfig.PetRuntimeDefinition, rank uint32, point devconfig.Point, now time.Time) (*entity, bool) {
+	d := definition.Clone()
+	if d.OwnerJobID != r.Role.Job || uint64(rank) >= uint64(len(d.Training.InitialLevelByRank)) {
 		return nil, false
 	}
 	level, maximum := d.Training.InitialLevelByRank[rank], d.Training.MaximumLevelByRank[rank]
@@ -52,7 +61,11 @@ func (w *worker) newPet(r *room, definitionID, rank uint32, point devconfig.Poin
 	if !ok {
 		return nil, false
 	}
-	return &entity{Kind: 2, Def: d.Base.DefinitionID, Pos: point, HP: f.HP, MaxHP: f.HP, MP: f.MP, MaxMP: f.MP,
+	direction := uint32(0)
+	if d.SourceSkillID == 17 {
+		direction = skeletonSpawnDirection
+	}
+	return &entity{Kind: 2, Def: d.Base.DefinitionID, Pos: point, Direction: direction, HP: f.HP, MaxHP: f.HP, MP: f.MP, MaxMP: f.MP,
 		ActionReadyAt: now.Add(time.Duration(d.Lifecycle.SpawnReadyMS) * time.Millisecond),
 		PetRuntime:    &petRuntimeState{Definition: d, Fighter: f, Train: true, Level: level, Maximum: maximum}}, true
 }

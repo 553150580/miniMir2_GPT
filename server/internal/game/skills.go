@@ -23,6 +23,7 @@ type pendingCast struct {
 	LineRemaining     int
 	SkillLevel        uint32
 	BuffDurationMS    int64
+	Summon            *summonPetPlan
 }
 
 func acceptInput(r *room, sequence uint32) bool {

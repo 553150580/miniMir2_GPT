@@ -64,7 +64,7 @@ session.connection.subscribe((packet: Packet) => {
             acceptEntry(packet); break;
         case 5:
             if (session.entry) {
-                const complete = assembler.accept(packet.value, session.entry.sceneEpoch, session.entry.baselineId);
+                const complete = assembler.accept(packet.value, session.entry.sceneEpoch, session.entry.baselineId, session.entry.roomId);
                 if (complete && (!session.baseline || complete.stateSequence.greaterThan(session.baseline.stateSequence))) {
                     session.baseline = complete;
                     if (complete.skillModeState) acceptModes(complete.skillModeState);

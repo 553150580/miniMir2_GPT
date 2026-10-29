@@ -7804,6 +7804,415 @@ $root.minimir = (function() {
             return PetTrainingState;
         })();
 
+        v1.OwnedPetState = (function() {
+
+            /**
+             * Properties of an OwnedPetState.
+             * @typedef {Object} minimir.v1.OwnedPetState.$Properties
+             * @property {number|null} [entity_handle] OwnedPetState entity_handle
+             * @property {Long|null} [life] OwnedPetState life
+             * @property {number|null} [definition_id] OwnedPetState definition_id
+             * @property {Long|null} [map_id] OwnedPetState map_id
+             * @property {Long|null} [hp] OwnedPetState hp
+             * @property {Long|null} [hp_max] OwnedPetState hp_max
+             * @property {minimir.v1.PetTrainingState.$Properties|null} [pet_training] OwnedPetState pet_training
+             * @property {Array.<number>|null} [recall_skill_ids] OwnedPetState recall_skill_ids
+             * @property {boolean|null} [follow_suppressed] OwnedPetState follow_suppressed
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an OwnedPetState.
+             * @memberof minimir.v1
+             * @interface IOwnedPetState
+             * @augments minimir.v1.OwnedPetState.$Properties
+             * @deprecated Use minimir.v1.OwnedPetState.$Properties instead.
+             */
+
+            /**
+             * Shape of an OwnedPetState.
+             * @typedef {minimir.v1.OwnedPetState.$Properties} minimir.v1.OwnedPetState.$Shape
+             */
+
+            /**
+             * Constructs a new OwnedPetState.
+             * @memberof minimir.v1
+             * @classdesc Represents an OwnedPetState.
+             * @constructor
+             * @param {minimir.v1.OwnedPetState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var OwnedPetState = function (properties) {
+                this.recall_skill_ids = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * OwnedPetState entity_handle.
+             * @member {number} entity_handle
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.entity_handle = 0;
+
+            /**
+             * OwnedPetState life.
+             * @member {Long} life
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * OwnedPetState definition_id.
+             * @member {number} definition_id
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.definition_id = 0;
+
+            /**
+             * OwnedPetState map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * OwnedPetState hp.
+             * @member {Long} hp
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.hp = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * OwnedPetState hp_max.
+             * @member {Long} hp_max
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.hp_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * OwnedPetState pet_training.
+             * @member {minimir.v1.PetTrainingState.$Properties|null|undefined} pet_training
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.pet_training = null;
+
+            /**
+             * OwnedPetState recall_skill_ids.
+             * @member {Array.<number>} recall_skill_ids
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.recall_skill_ids = $util.emptyArray;
+
+            /**
+             * OwnedPetState follow_suppressed.
+             * @member {boolean} follow_suppressed
+             * @memberof minimir.v1.OwnedPetState
+             * @instance
+             */
+            OwnedPetState.prototype.follow_suppressed = false;
+
+            /**
+             * Creates a new OwnedPetState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {minimir.v1.OwnedPetState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.OwnedPetState} OwnedPetState instance
+             * @type {{
+             *   (properties: minimir.v1.OwnedPetState.$Shape): minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape;
+             *   (properties?: minimir.v1.OwnedPetState.$Properties): minimir.v1.OwnedPetState;
+             * }}
+             */
+            OwnedPetState.create = function(properties) {
+                return new OwnedPetState(properties);
+            };
+
+            /**
+             * Encodes the specified OwnedPetState message. Does not implicitly {@link minimir.v1.OwnedPetState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {minimir.v1.OwnedPetState.$Properties} message OwnedPetState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            OwnedPetState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle") && message.entity_handle !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.entity_handle);
+                if (message.life != null && $Object.hasOwnProperty.call(message, "life") && (typeof message.life === "object" ? message.life.low || message.life.high : message.life !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.life);
+                if (message.definition_id != null && $Object.hasOwnProperty.call(message, "definition_id") && message.definition_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.definition_id);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.map_id);
+                if (message.hp != null && $Object.hasOwnProperty.call(message, "hp") && (typeof message.hp === "object" ? message.hp.low || message.hp.high : message.hp !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.hp);
+                if (message.hp_max != null && $Object.hasOwnProperty.call(message, "hp_max") && (typeof message.hp_max === "object" ? message.hp_max.low || message.hp_max.high : message.hp_max !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.hp_max);
+                if (message.pet_training != null && $Object.hasOwnProperty.call(message, "pet_training"))
+                    $root.minimir.v1.PetTrainingState.encode(message.pet_training, writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.recall_skill_ids != null && message.recall_skill_ids.length)
+                    writer.uint32(/* id 8, wireType 2 =*/66).uint32s(message.recall_skill_ids);
+                if (message.follow_suppressed != null && $Object.hasOwnProperty.call(message, "follow_suppressed") && message.follow_suppressed !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.follow_suppressed);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified OwnedPetState message, length delimited. Does not implicitly {@link minimir.v1.OwnedPetState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {minimir.v1.OwnedPetState.$Properties} message OwnedPetState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            OwnedPetState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an OwnedPetState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape} OwnedPetState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            OwnedPetState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.OwnedPetState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.entity_handle = value;
+                            else
+                                delete message.entity_handle;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.life = value;
+                            else
+                                delete message.life;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.definition_id = value;
+                            else
+                                delete message.definition_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hp = value;
+                            else
+                                delete message.hp;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hp_max = value;
+                            else
+                                delete message.hp_max;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            message.pet_training = $root.minimir.v1.PetTrainingState.decode(reader, reader.size(), $undefined, _depth + 1, message.pet_training);
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType === 2) {
+                                if (!(message.recall_skill_ids && message.recall_skill_ids.length))
+                                    message.recall_skill_ids = [];
+                                reader.uint32s(message.recall_skill_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.recall_skill_ids && message.recall_skill_ids.length))
+                                message.recall_skill_ids = [];
+                            message.recall_skill_ids.push(reader.uint32());
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.follow_suppressed = value;
+                            else
+                                delete message.follow_suppressed;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an OwnedPetState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.OwnedPetState & minimir.v1.OwnedPetState.$Shape} OwnedPetState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            OwnedPetState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an OwnedPetState message.
+             * @function verify
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            OwnedPetState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.entity_handle != null && $Object.hasOwnProperty.call(message, "entity_handle"))
+                    if (!$util.isInteger(message.entity_handle))
+                        return "entity_handle: integer expected";
+                if (message.life != null && $Object.hasOwnProperty.call(message, "life"))
+                    if (!$util.isInteger(message.life) && !(message.life && $util.isInteger(message.life.low) && $util.isInteger(message.life.high)))
+                        return "life: integer|Long expected";
+                if (message.definition_id != null && $Object.hasOwnProperty.call(message, "definition_id"))
+                    if (!$util.isInteger(message.definition_id))
+                        return "definition_id: integer expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.hp != null && $Object.hasOwnProperty.call(message, "hp"))
+                    if (!$util.isInteger(message.hp) && !(message.hp && $util.isInteger(message.hp.low) && $util.isInteger(message.hp.high)))
+                        return "hp: integer|Long expected";
+                if (message.hp_max != null && $Object.hasOwnProperty.call(message, "hp_max"))
+                    if (!$util.isInteger(message.hp_max) && !(message.hp_max && $util.isInteger(message.hp_max.low) && $util.isInteger(message.hp_max.high)))
+                        return "hp_max: integer|Long expected";
+                if (message.pet_training != null && $Object.hasOwnProperty.call(message, "pet_training")) {
+                    var error = $root.minimir.v1.PetTrainingState.verify(message.pet_training, _depth + 1);
+                    if (error)
+                        return "pet_training." + error;
+                }
+                if (message.recall_skill_ids != null && $Object.hasOwnProperty.call(message, "recall_skill_ids")) {
+                    if (!$Array.isArray(message.recall_skill_ids))
+                        return "recall_skill_ids: array expected";
+                    for (var i = 0; i < message.recall_skill_ids.length; ++i)
+                        if (!$util.isInteger(message.recall_skill_ids[i]))
+                            return "recall_skill_ids: integer[] expected";
+                }
+                if (message.follow_suppressed != null && $Object.hasOwnProperty.call(message, "follow_suppressed"))
+                    if (typeof message.follow_suppressed !== "boolean")
+                        return "follow_suppressed: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for OwnedPetState
+             * @function getTypeUrl
+             * @memberof minimir.v1.OwnedPetState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            OwnedPetState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.OwnedPetState";
+            };
+
+            return OwnedPetState;
+        })();
+
         v1.EntityState = (function() {
 
             /**
@@ -10287,6 +10696,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.SkillModeState.$Properties|null} [skill_mode_state] SceneBaselineChunk skill_mode_state
              * @property {minimir.v1.NavigationState.$Properties|null} [navigation_state] SceneBaselineChunk navigation_state
              * @property {Long|null} [safe_zone_id] SceneBaselineChunk safe_zone_id
+             * @property {minimir.v1.OwnedPetState.$Properties|null} [owned_pet] SceneBaselineChunk owned_pet
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -10392,6 +10802,14 @@ $root.minimir = (function() {
             SceneBaselineChunk.prototype.safe_zone_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * SceneBaselineChunk owned_pet.
+             * @member {minimir.v1.OwnedPetState.$Properties|null|undefined} owned_pet
+             * @memberof minimir.v1.SceneBaselineChunk
+             * @instance
+             */
+            SceneBaselineChunk.prototype.owned_pet = null;
+
+            /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @function create
              * @memberof minimir.v1.SceneBaselineChunk
@@ -10442,6 +10860,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.NavigationState.encode(message.navigation_state, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id") && (typeof message.safe_zone_id === "object" ? message.safe_zone_id.low || message.safe_zone_id.high : message.safe_zone_id !== 0))
                     writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.safe_zone_id);
+                if (message.owned_pet != null && $Object.hasOwnProperty.call(message, "owned_pet"))
+                    $root.minimir.v1.OwnedPetState.encode(message.owned_pet, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -10573,6 +10993,12 @@ $root.minimir = (function() {
                                 delete message.safe_zone_id;
                             continue;
                         }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.owned_pet = $root.minimir.v1.OwnedPetState.decode(reader, reader.size(), $undefined, _depth + 1, message.owned_pet);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -10658,6 +11084,11 @@ $root.minimir = (function() {
                 if (message.safe_zone_id != null && $Object.hasOwnProperty.call(message, "safe_zone_id"))
                     if (!$util.isInteger(message.safe_zone_id) && !(message.safe_zone_id && $util.isInteger(message.safe_zone_id.low) && $util.isInteger(message.safe_zone_id.high)))
                         return "safe_zone_id: integer|Long expected";
+                if (message.owned_pet != null && $Object.hasOwnProperty.call(message, "owned_pet")) {
+                    var error = $root.minimir.v1.OwnedPetState.verify(message.owned_pet, _depth + 1);
+                    if (error)
+                        return "owned_pet." + error;
+                }
                 return null;
             };
 

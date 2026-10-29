@@ -1,0 +1,27 @@
+{
+  "scope": "public16时的中途客户端定向，不称最终rule17配置验收",
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 node client/tests/ui/compile_models.mjs",
+      "exit_code": 0,
+      "seconds": 1.066,
+      "log": ".work/pet-summon-20261029/client-review/intermediate/models.txt",
+      "sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test client/tests/app/owned_pet.test.cjs client/tests/app/combat_status_ui.test.cjs client/tests/app/skill_aim.test.cjs",
+      "exit_code": 0,
+      "seconds": 1.44,
+      "log": ".work/pet-summon-20261029/client-review/intermediate/targeted.txt",
+      "sha256": "1829363d3bfbbd66f7180953ef8f35cbd6be9f13311ef758a99c8e8ec4b4f179"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node tools/client/typecheck.mjs",
+      "exit_code": 0,
+      "seconds": 6.375,
+      "log": ".work/pet-summon-20261029/client-review/intermediate/strict.txt",
+      "sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+    }
+  ],
+  "passed": true
+}

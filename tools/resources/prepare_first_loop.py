@@ -170,7 +170,7 @@ SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpowe
 SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator buff_id material_item_id material_quantity'.split()
 SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked','auto_enabled']
 SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
-SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour','repulsion','shoulder_dash','teleport']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour','repulsion','shoulder_dash','teleport','summon_pet']
 SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self','friendly_self']
 BUFF_BEHAVIORS={'magic_shield':'magic_shield','soul_shield':'max_magic_defence','blessed_armour':'max_physical_defence','teleport':'teleport_mana_penalty'}
 BUFF_ATTRIBUTE_FIELDS='kind value_by_level target_level_divisor target_level_add hit_duration_loss_ms_per_hp'.split()
@@ -211,7 +211,8 @@ def skill_definitions(tables,profile):
                 **{k:row['resource_costs'][k] for k in ['mp_base_cost','mp_level_cost','material_item_id','material_quantity']},
                 **{k:row['damage_parameters'][k] for k in SKILL_DAMAGE_FIELDS},
                 **({'displacement':deepcopy(row['target_rule']['displacement'])} if row['behavior_id'] in ['repulsion','shoulder_dash'] else {}),
-                **({'teleport':deepcopy(row['target_rule']['teleport'])} if row['behavior_id']=='teleport' else {})})
+                **({'teleport':deepcopy(row['target_rule']['teleport'])} if row['behavior_id']=='teleport' else {}),
+                **({'summon':deepcopy(row['target_rule']['summon'])} if row['behavior_id']=='summon_pet' else {})})
         except (KeyError,StopIteration) as error:raise ValueError('技能基础定义缺少实际执行字段：'+str(id)) from error
     return result
 
@@ -289,6 +290,17 @@ def validate_teleport_skill(skill,profile):
     if skill['id']!=21 or skill['job_id']!=1 or skill['learned_level']!=0 or skill['max_level']!=3 or skill['auto_enabled'] or skill['range_cells'] or skill['projectile_ms_per_cell'] or skill['material_item_id'] or skill['material_quantity'] or not skill['buff_id'] or skill['target_kind']!='friendly_self':raise ValueError('瞬息移动须为手动自身无材料0至3阶延迟技能')
     if profile['binding'].get('safe_zone_enabled') is not True:raise ValueError('瞬息移动须先接入可信来源安全区绑定')
 
+def validate_summon_skill(skill,profile):
+    rules=skill['summon']
+    if profile['rule_version']<17 or not isinstance(rules,dict) or set(rules)!={'definition_id'} or type(rules['definition_id']) is not int or not 0<rules['definition_id']<=2**32-1:
+        raise ValueError('召唤须使用rule17及唯一显式宠物定义引用')
+    if skill['id']!=17 or skill['job_id']!=2 or skill['learned_level']!=0 or skill['max_level']!=3 or skill['target_kind']!='friendly_self' or skill['auto_enabled'] or skill['auto_priority'] or skill['range_cells'] or skill['buff_id'] or skill['material_item_id'] not in profile['casting_supply']['item_ids'] or skill['material_quantity']!=1:
+        raise ValueError('骷髅候选须为手动自身0至3阶、仅新生消费一个来源材料；不能夹带状态或自动入口')
+    neutral={key:0 for key in SKILL_DAMAGE_FIELDS}
+    neutral.update(add_caster_level=False,accuracy_by_level=[],max_attack_bonus_by_level=[],ready_proc_numerators=[])
+    if any(skill[key]!=value or type(skill[key]) is not type(value) for key,value in neutral.items()):
+        raise ValueError('召唤没有伤害随机量，全部伤害字段必须显式中性')
+
 def validate_skills(profile,skills):
     """技能参数必须来自当前Excel，不按技能名或来源表临时填运行数值。"""
     import math
@@ -298,10 +310,12 @@ def validate_skills(profile,skills):
         if not isinstance(skill,dict):raise ValueError('技能必须是有类型对象')
         displacement=skill.get('behavior') in ['repulsion','shoulder_dash']
         teleport=skill.get('behavior')=='teleport'
-        expected=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|set(SKILL_ARRAY_FIELDS)|{'name','behavior','target_kind','activation_kind'}|({'displacement'} if displacement else set())|({'teleport'} if teleport else set())
+        summon=skill.get('behavior')=='summon_pet'
+        expected=set(SKILL_INT_FIELDS)|set(SKILL_BOOL_FIELDS)|set(SKILL_ARRAY_FIELDS)|{'name','behavior','target_kind','activation_kind'}|({'displacement'} if displacement else set())|({'teleport'} if teleport else set())|({'summon'} if summon else set())
         if not isinstance(skill,dict) or set(skill)!=expected:raise ValueError('技能字段不完整')
         if displacement:validate_displacement_skill(skill,profile)
         if teleport:validate_teleport_skill(skill,profile)
+        if summon:validate_summon_skill(skill,profile)
         if any(type(skill[k]) is not int or skill[k]<0 or skill[k]>2**32-1 for k in SKILL_INT_FIELDS):raise ValueError('技能字段须为有界非负整数')
         if any(type(skill[k]) is not bool for k in SKILL_BOOL_FIELDS):raise ValueError('技能开关必须是明确布尔值')
         if not isinstance(skill['name'],str) or not skill['name'] or skill['behavior'] not in SKILL_BEHAVIORS or skill['target_kind'] not in SKILL_TARGETS:raise ValueError('技能名称/行为/目标类型不合法')
@@ -311,19 +325,20 @@ def validate_skills(profile,skills):
         if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
         passive=skill['behavior'] in ['fencing','spirit_sword','slaying']
         if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
-        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid','repulsion':'enemy_self','shoulder_dash':'enemy_direction','teleport':'friendly_self'}
+        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid','repulsion':'enemy_self','shoulder_dash':'enemy_direction','teleport':'friendly_self','summon_pet':'friendly_self'}
         if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
         activation={'fencing':'passive','spirit_sword':'passive','slaying':'passive_proc','thrusting':'toggle','half_moon':'toggle','flaming_sword':'charge'}.get(skill['behavior'],'cast')
         if skill['activation_kind']!=activation:raise ValueError('技能激活方式与执行管线不一致')
         if activation=='cast':
-            if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms','auto_min_targets']+([] if displacement else ['delay_base_ms'])):raise ValueError('施法时序或自动策略缺失')
+            if any(skill[k]<=0 for k in ['cooldown_base_ms','global_spell_ms','action_ms']+([] if summon else ['auto_min_targets'])+([] if displacement else ['delay_base_ms'])):raise ValueError('施法时序或自动策略缺失')
+            if summon and skill['auto_min_targets']!=0:raise ValueError('关闭的召唤自动入口不应保留未用目标数量')
             if skill['target_kind'] not in ['enemy_direction','enemy_self','friendly_self'] and skill['range_cells']<=0:raise ValueError('锁定或地面施法缺少射程')
             if skill['target_kind']=='friendly_self' and skill['range_cells']!=0:raise ValueError('自身技能不得附加射程')
         elif activation in ['toggle','charge','passive_proc'] and any(skill[k] for k in ['cooldown_base_ms','global_spell_ms','action_ms','delay_base_ms','projectile_ms_per_cell','auto_priority','auto_min_targets']):raise ValueError('近战模式不得复用施法时钟或自动施法策略')
         if skill['area_radius']>16 or (skill['target_kind'].endswith('_grid') or skill['target_kind']=='enemy_self')!=(skill['area_radius']>0):raise ValueError('区域半径与目标类型不匹配')
         for field in ['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators']:
             value=skill[field]
-            if not isinstance(value,list) or len(value)!=skill['max_level']+1 or any(type(v) is not int or v<0 or v>2**31-1 for v in value):raise ValueError('逐阶数组缺失或越界：'+field)
+            if not isinstance(value,list) or len(value)!=(0 if summon else skill['max_level']+1) or any(type(v) is not int or v<0 or v>2**31-1 for v in value):raise ValueError('逐阶数组缺失或越界：'+field)
         offsets=skill['secondary_direction_offsets']
         if not isinstance(offsets,list) or len(offsets)>8 or any(type(v) is not int or v < -7 or v>7 for v in offsets):raise ValueError('近战旁格朝向无效')
         if len({v%8 for v in offsets})!=len(offsets) or (skill['secondary_distance_cells']==1 and 0 in offsets):raise ValueError('近战旁格重复或覆盖前格')
@@ -332,7 +347,7 @@ def validate_skills(profile,skills):
         if (skill['target_kind']=='enemy_direction' and not displacement)!=(skill['line_cells']>0) or skill['line_cells']>16:raise ValueError('方向技能直线格数无效')
         if skill['behavior']=='hell_fire' and (skill['line_cells']!=4 or not skill['line_stop_on_blocked'] or skill['line_step_ms']<=0):raise ValueError('地狱火必须遵守用户已审定的固定四格与逐格阻挡管线')
         if skill['target_kind']!='enemy_direction' and (skill['line_step_ms'] or skill['line_stop_on_blocked']):raise ValueError('非方向技能不得附加分格传播')
-        if skill['non_undead_divisor']<1:raise ValueError('非亡灵除数必须为正整数')
+        if not summon and skill['non_undead_divisor']<1:raise ValueError('非亡灵除数必须为正整数')
         if activation=='passive_proc':
             if not skill['ready_proc_denominator'] or any(n>skill['ready_proc_denominator'] for n in skill['ready_proc_numerators']):raise ValueError('攻杀准备概率无效')
         elif skill['ready_proc_denominator'] or any(skill['ready_proc_numerators']) or any(skill['max_attack_bonus_by_level']):raise ValueError('非攻杀技能不得附加准备概率或攻击上限')
@@ -355,12 +370,9 @@ def validate_skills(profile,skills):
     expected={(s['job_id'],s['book_item_id']) for s in skills}
     if not isinstance(initial,list) or len(initial)!=len(players) or {r['job_id'] for r in initial}!={p['job_id'] for p in players} or any((r['job_id'],r['item_id']) not in expected for r in initial):raise ValueError('每职业仅赠一本所选同职业技能书，不随开放技能增加赠书')
 
-def skill_economy(tables,profile,skills,items):
-    """书价、页价、分解页数与逐技能消耗分别读取其唯一表，不回填测试缺省。"""
-    economy=deepcopy(profile.get('skill_economy'))
-    if not isinstance(economy,dict) or set(economy)!={'page_item_id','preview_ttl_ms','preview_material_limit'} or any(type(v) is not int or v<=0 for v in economy.values()):raise ValueError('技能经济技术参数缺失')
-    by_item={r['id']:r for r in items};by_skill={r['id']:r for r in skills}
-    if economy['page_item_id'] not in by_item or not by_item[economy['page_item_id']].get('is_skill_page'):raise ValueError('书页物品引用不符')
+def skill_upgrade_definitions(tables,profile,skills):
+    """主技能与关闭候选复用逐阶来源投影，不能为隔离样本改MaxLevel或补低门槛。"""
+    economy=profile['skill_economy'];by_skill={r['id']:r for r in skills}
     upgrades=[]
     for row in tables['game_skill_upgrades']:
         if row['skill_id'] not in by_skill:continue
@@ -373,6 +385,15 @@ def skill_economy(tables,profile,skills,items):
     for skill in skills:
         rows=[r for r in upgrades if r['skill_id']==skill['id']]
         if sorted(r['level'] for r in rows)!=list(range(skill['learned_level']+1,skill['max_level']+1)):raise ValueError('逐技能升级行重复或不连续')
+    return upgrades
+
+def skill_economy(tables,profile,skills,items):
+    """书价、页价、分解页数与逐技能消耗分别读取其唯一表，不回填测试缺省。"""
+    economy=deepcopy(profile.get('skill_economy'))
+    if not isinstance(economy,dict) or set(economy)!={'page_item_id','preview_ttl_ms','preview_material_limit'} or any(type(v) is not int or v<=0 for v in economy.values()):raise ValueError('技能经济技术参数缺失')
+    by_item={r['id']:r for r in items}
+    if economy['page_item_id'] not in by_item or not by_item[economy['page_item_id']].get('is_skill_page'):raise ValueError('书页物品引用不符')
+    upgrades=skill_upgrade_definitions(tables,profile,skills)
     offers=[];seen=set()
     for choice in profile['skill_shop_entries']:
         try:row=next(r for r in tables['game_shop_prices'] if r['id']==choice['offer_id'])
@@ -450,16 +471,25 @@ def validate_map_asset(tables):
     if not isinstance(props,list) or [{k:p.get(k) for k in ['id','frame','x','y']} for p in props]!=expected:raise ValueError('运行装饰不得混入未配置的大树或其它物件')
     return asset
 
-def map_no_teleport_policy(tables,definition,profile):
+def map_policy(tables,definition,profile):
     """每地图唯一全图政策，不能复制到每个安全区或从名称推导缺省值。"""
     if profile['rule_version']<15:return None
     policies=[row for row in tables['game_map_regions'] if row['map_id']==definition['id'] and isinstance(row.get('entry_rules'),dict) and row['entry_rules'].get('region_kind')=='map_policy']
     if len(policies)!=1:raise ValueError('rule15每个运行地图必须有且仅有一条全图政策')
     row=policies[0];rules=row['entry_rules']
     bounds={'min_x':0,'min_y':0,'max_x':definition['width_cells']-1,'max_y':definition['height_cells']-1}
-    if set(rules)!={'region_kind','no_teleport'} or type(rules['no_teleport']) is not bool or row['region_cells']!=bounds or row['monster_pool']:
-        raise ValueError('全图禁传政策必须完整覆盖地图、显式布尔且不混入刷怪')
-    return rules['no_teleport']
+    flags={'no_teleport'}|({'no_pets'} if profile['rule_version']>=17 else set())
+    if set(rules)!={'region_kind'}|flags or any(type(rules[key]) is not bool for key in flags) or row['region_cells']!=bounds or row['monster_pool']:
+        raise ValueError('全图禁传/宠物政策必须按版本完整覆盖地图、显式布尔且不混入刷怪')
+    return rules
+
+def map_no_teleport_policy(tables,definition,profile):
+    rules=map_policy(tables,definition,profile)
+    return None if rules is None else rules['no_teleport']
+
+def map_no_pets_policy(tables,definition,profile):
+    if profile['rule_version']<17:return None
+    return map_policy(tables,definition,profile)['no_pets']
 
 def source_map_catalog(tables,profile):
     """地图配置引用唯一Excel及已冻结来源资产，生成物不另提供可编辑数值。"""
@@ -566,7 +596,8 @@ def source_map_catalog(tables,profile):
         records.append({'id':id,'display_name':definition['display_name'],'resource_key':key,'width':definition['width_cells'],'height':definition['height_cells'],'scene_kind':2,
             'collision_bits':manifest['collision']['runtime_bits'],'player_spawn':deepcopy(definition['spawn_cell']),
             'safe_zones':zones,'source':{'code':geometry['source_map_code'],'sha256':collision['source_hash'],'width':definition['width_cells'],'height':definition['height_cells']},
-            **({'no_teleport':map_no_teleport_policy(tables,definition,profile),'source_static_bits':base64.b64encode(source_static).decode('ascii')} if profile['rule_version']>=15 else {})})
+            **({'no_teleport':map_no_teleport_policy(tables,definition,profile),'source_static_bits':base64.b64encode(source_static).decode('ascii')} if profile['rule_version']>=15 else {}),
+            **({'no_pets':map_no_pets_policy(tables,definition,profile)} if profile['rule_version']>=17 else {})})
         evidence.append({'map_id':str(id),'resource_key':key,'manifest_sha256':config.sha256(asset),'source_sha256':collision['source_hash'],
                          'door_policy':'closed_development_candidate','full_source_map':True,'initial_binding_pool_verified':False})
     if profile['rule_version']>=14 and binding['safe_zone_enabled'] and not records:
@@ -595,6 +626,17 @@ def town_runtime_rules(profile,maps):
     reserved=n['workspaces_per_worker']*workspace+(n['workspaces_per_worker']+n['queue_per_worker'])*n['max_route_cells']*2*word
     if reserved>n['max_memory_bytes_per_worker']:raise ValueError('导航大缓冲预留超过显式每worker内存预算')
     return deepcopy(travel),deepcopy(navigation)
+
+def skill_book_definition(source,skill,profile,*,complete):
+    """技能书共用唯一来源投影；独立候选显式补齐类型固定的非装备中性字段。"""
+    if source['id']!=skill['book_item_id'] or source['item_type']!='skill_book' or type(source['max_stack']) is not int or source['max_stack']<=0:
+        raise ValueError('技能书须引用唯一明确的来源书行，不能补堆叠默认')
+    result={'id':source['id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,
+        'book_skill_id':skill['id'],'attack_bonus':0,'attack_min_bonus':0,'attack_max_bonus':0,'defence_bonus':0,
+        'defence_min_bonus':0,'defence_max_bonus':0,'magic_defence_min_bonus':0,'magic_defence_max_bonus':0,
+        'recycle_gold':0,'stackable':False,'max_stack':source['max_stack'],'drop_quality':profile['skill_book_drop_quality'],'allowed_jobs':[skill['job_id']]}
+    if complete:result.update(attack_speed_bonus=0,is_skill_page=False)
+    return result
 
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
@@ -633,10 +675,7 @@ def fixture_from_rows(tables):
     for skill in skills:
         if any(item['id']==skill['book_item_id'] for item in items):raise ValueError('技能书ID与已有物品冲突')
         source=one('game_items',skill['book_item_id'])
-        items.append({'id':skill['book_item_id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,
-                      'book_skill_id':skill['id'],'attack_bonus':0,'attack_min_bonus':0,'attack_max_bonus':0,'defence_bonus':0,
-                      'defence_min_bonus':0,'defence_max_bonus':0,'magic_defence_min_bonus':0,'magic_defence_max_bonus':0,
-                      'recycle_gold':0,'stackable':False,'max_stack':source['max_stack'],'drop_quality':profile['skill_book_drop_quality'],'allowed_jobs':[skill['job_id']]})
+        items.append(skill_book_definition(source,skill,profile,complete=False))
     source=one('game_items',profile['skill_economy']['page_item_id'])
     items.append({'id':source['id'],'name':source['display_name'],'equipment_slot':0,'is_equipment':False,'is_skill_page':True,
                   'max_stack':source['max_stack'],'recycle_gold':0,'stackable':True,'allowed_jobs':[0,1,2]})
@@ -695,6 +734,8 @@ def fixture_from_rows(tables):
         result['_source_evidence']['source_map_catalog']=catalog_evidence
         if profile['rule_version']>=15:
             result['map']['no_teleport']=map_no_teleport_policy(tables,m,profile)
+        if profile['rule_version']>=17:
+            result['map']['no_pets']=map_no_pets_policy(tables,m,profile)
         if profile['rule_version']>=13:
             result['town_travel'],result['town_navigation']=town_runtime_rules(profile,catalog)
     pet_rules=pet_runtime.compile_runtime(tables,profile)
@@ -756,7 +797,8 @@ def public_gameplay(fixture):
             **({'map_catalog':[{'id':str(row['id']),'name':row['display_name'],'resource_key':row['resource_key'],
                    'width':row['width'],'height':row['height'],'scene_kind':row.get('scene_kind',1),
                    'safe_zones':[{'id':str(zone['id']),'center':deepcopy(zone['center']),'radius':zone['radius']} for zone in row.get('safe_zones',[])],
-                   **({'no_teleport':row['no_teleport']} if fixture['rule_version']>=15 else {})}
+                   **({'no_teleport':row['no_teleport']} if fixture['rule_version']>=15 else {}),
+                   **({'no_pets':row['no_pets']} if fixture['rule_version']>=17 else {})}
                  for row in [fixture['map']]+fixture['maps']],
                 'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {}),
             **({'town_travel':{'enabled':fixture['town_travel']['enabled'],'town_map_id':str(fixture['town_travel']['town_map_id'])}} if fixture['rule_version']>=13 else {})}

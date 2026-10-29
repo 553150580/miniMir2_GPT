@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "development_only": true,
+  "runtime_enabled": false,
+  "required_rule_version": 17,
+  "skills": [
+    {
+      "id": 17,
+      "name": "召唤骷髅",
+      "job_id": 2,
+      "book_item_id": 25,
+      "learn_level": 19,
+      "learned_level": 0,
+      "max_level": 3,
+      "behavior": "summon_pet",
+      "cooldown_base_ms": 1800,
+      "target_kind": "friendly_self",
+      "range_cells": 0,
+      "target_move_tolerance_cells": 0,
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "auto_priority": 0,
+      "auto_min_targets": 0,
+      "auto_enabled": false,
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_stop_on_blocked": false,
+      "activation_kind": "cast",
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "delay_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "secondary_impact_ms": 0,
+      "charge_window_ms": 0,
+      "line_step_ms": 0,
+      "buff_id": 0,
+      "mp_base_cost": 12,
+      "mp_level_cost": 4,
+      "material_item_id": 187,
+      "material_quantity": 1,
+      "accuracy_per_level": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "mpower_base": 0,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 0,
+      "multiplier_bonus_ppm": 0,
+      "accuracy_by_level": [],
+      "healing_stat_multiplier": 0,
+      "add_caster_level": false,
+      "undead_multiplier_ppm": 0,
+      "max_attack_bonus_by_level": [],
+      "ready_proc_denominator": 0,
+      "ready_proc_numerators": [],
+      "non_undead_divisor": 0,
+      "summon": {
+        "definition_id": 1
+      }
+    }
+  ],
+  "books": [
+    {
+      "id": 25,
+      "name": "《召唤骷髅》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 17,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "max_stack": 1,
+      "drop_quality": 1,
+      "allowed_jobs": [
+        2
+      ],
+      "attack_speed_bonus": 0,
+      "is_skill_page": false
+    }
+  ],
+  "upgrades": [
+    {
+      "skill_id": 17,
+      "level": 1,
+      "required_role_level": 19,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 17,
+      "level": 2,
+      "required_role_level": 22,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 17,
+      "level": 3,
+      "required_role_level": 26,
+      "book_costs": [
+        {
+          "item_id": 25,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    }
+  ],
+  "pet_definition_ids": [
+    1
+  ],
+  "source_evidence": {
+    "stage": "review_candidate_only"
+  }
+}

@@ -1,0 +1,4 @@
+=== RUN   TestAuditSummonCatalogRejectsUnderchargedBookFormula
+--- PASS: TestAuditSummonCatalogRejectsUnderchargedBookFormula (0.00s)
+PASS
+ok  	minimir/internal/devconfig	1.574s

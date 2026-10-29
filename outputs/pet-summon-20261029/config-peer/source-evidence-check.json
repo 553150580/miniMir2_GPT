@@ -1,0 +1,28 @@
+{
+  "preview": {
+    "path": "dev-pet-summon-v0.17-9cfc98f544bf",
+    "version": "dev-pet-summon-v0.17-9cfc98f544bf",
+    "content_sha256": "9cfc98f544bf3ffd181004fa6e742375b248bfc5761520026d77f32f105aebd3",
+    "runtime_ready": false
+  },
+  "preview_file_hashes_match": true,
+  "source_evidence_matches_current_inputs": true,
+  "candidate_definition_equals_fixture": true,
+  "main_22_legacy_and_material_closed": true,
+  "pet_schema_version": 2,
+  "summon_required_rule_version": 17,
+  "artifact_sha256": {
+    "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+    "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a",
+    "config/development/summon-candidates.json": "7b546e66ae1e5b3bb7b0c83d9c7fc35a2f7d6a03bcb5641d786ddf2a67ff23c8",
+    "client/assets/resources/development/gameplay.json": "4b26e94e4ca2a4ccb0675c98e8d7d309a1e22c4bbc7c092ce39022709631a2f4"
+  },
+  "reviewed_go_sha256": {
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+    "server/internal/devconfig/pet_runtime.go": "1350d798943e6ef7c4d1addd43e4bcf2621a784b71a848aa7c7bff6dc226ec76",
+    "server/internal/devconfig/summon_test.go": "6fc5c8b319b5de78cfde3a4325fe0c5198467ef34775acc14350f3fb4ea1a03f",
+    "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+    "server/internal/integration/summon_pet_test.go": "d569c21fca0fe62d37aafec944fadca0146517c774e236ca9e5f9f33df772983"
+  }
+}

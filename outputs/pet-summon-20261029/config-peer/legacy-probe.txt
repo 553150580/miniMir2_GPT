@@ -1,0 +1,6 @@
+=== RUN   TestAuditLegacySchemaOneRejectsExplicitEmptyRecallName
+--- PASS: TestAuditLegacySchemaOneRejectsExplicitEmptyRecallName (0.00s)
+=== RUN   TestAuditLegacyRuleSixteenRejectsExplicitEmptyRecallName
+--- PASS: TestAuditLegacyRuleSixteenRejectsExplicitEmptyRecallName (0.01s)
+PASS
+ok  	minimir/internal/devconfig	1.713s

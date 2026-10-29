@@ -1,0 +1,22 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -overlay D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\config-peer\\legacy-overlay.json ./internal/devconfig -run ^TestAuditLegacy -count=1 -v",
+  "exit_code": 0,
+  "mongo_invoked": false,
+  "source_before": {
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "84be6aa8a5bac4e92194de4d6e3cd5f5be1a4d94e0097b8fdaafa7668d0912b8",
+    "server/internal/devconfig/pet_runtime.go": "1350d798943e6ef7c4d1addd43e4bcf2621a784b71a848aa7c7bff6dc226ec76",
+    "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+    "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a"
+  },
+  "source_after": {
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "84be6aa8a5bac4e92194de4d6e3cd5f5be1a4d94e0097b8fdaafa7668d0912b8",
+    "server/internal/devconfig/pet_runtime.go": "1350d798943e6ef7c4d1addd43e4bcf2621a784b71a848aa7c7bff6dc226ec76",
+    "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+    "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a"
+  },
+  "source_stable": true,
+  "overlay_only": true,
+  "recorded_at_utc": "2026-10-29T00:48:29.415431+00:00"
+}

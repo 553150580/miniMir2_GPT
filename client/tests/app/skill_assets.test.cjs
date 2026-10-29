@@ -96,3 +96,15 @@ test('瞬移升级报价明确毫秒时长与传送耗蓝百分比，不回退�
     assert.doesNotMatch(text,/数值对照|道术|持续时间阶数|基础持续时间|伤害减免/);
     assert.deepEqual(preview.stats.map(row=>row.key),['mp_cost','duration_ms','teleport_mana_penalty_percent']);
 });
+
+test('真实召唤升级报价只展示后续新生属性，中文Count/训练/HP不回退数值占位且不改已有宠',()=>{
+ const input=snapshot(),preview=quote(input);preview.skillId=17;preview.stats=[
+  {key:'mp_cost',beforeMin:'12',beforeMax:'12',afterMin:'16',afterMax:'16'},
+  {key:'new_pet_training_level',beforeMin:'0',beforeMax:'0',afterMin:'1',afterMax:'1'},
+  {key:'new_pet_max_training_level',beforeMin:'4',beforeMax:'4',afterMin:'5',afterMax:'5'},
+  {key:'new_pet_material_quantity',beforeMin:'1',beforeMax:'1',afterMin:'1',afterMax:'1'},
+  {key:'new_pet_hp_max',beforeMin:'9007199254740993',beforeMax:'9007199254740993',afterMin:'9007199254740995',afterMax:'9007199254740995'}];
+ const before=JSON.stringify(preview),text=skillQuoteLines(preview,input.definitions).join('');
+ for(const label of ['魔法消耗','新生宠物初始训练等级','新生宠物训练等级上限','每次新召唤护符用量','新生宠物生命上限'])assert(text.includes(label));assert(!text.includes('数值对照'));assert.match(text,/当前值 9007199254740993/);assert.match(text,/下一阶 9007199254740995/);assert.match(text,/升级只影响后续新生宠物/);assert.match(text,/已有宠物召回时保留原训练/);assert.equal(JSON.stringify(preview),before);
+ assert(!skillQuoteLines(quote(input),input.definitions).join('').includes('只影响后续新生'),'普通技能预览不增加召唤说明');
+});

@@ -1,0 +1,56 @@
+{
+  "scope": "rule16/17闭门legacy尸体工具纯回归；所有DB/进程为替身，不开启真实GUI/服务",
+  "python_tests": 8,
+  "cjs_tests": 7,
+  "real_run_started": false,
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 python -m unittest tools.client.test_pet_runtime_qa",
+      "exit_code": 0,
+      "seconds": 0.815,
+      "log": ".work/pet-summon-20261029/gui-review/static-rule17-tools/1.txt",
+      "sha256": "b8bc2f0fdba078364c941906eb6677b3ef8d53c91c99b504bb5d29cb3258102e"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test tools/client/pet_runtime_browser.test.cjs",
+      "exit_code": 0,
+      "seconds": 0.454,
+      "log": ".work/pet-summon-20261029/gui-review/static-rule17-tools/2.txt",
+      "sha256": "f18609b15c14e64c2e8f0577f2300713694121bc6416188c780ab4e27fcedd17"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_pet_runtime_browser.cjs",
+      "exit_code": 0,
+      "seconds": 0.35,
+      "log": ".work/pet-summon-20261029/gui-review/static-rule17-tools/3.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python tools/client/prepare_pet_runtime_qa.py",
+      "exit_code": 0,
+      "seconds": 0.441,
+      "log": ".work/pet-summon-20261029/gui-review/static-rule17-tools/4.txt",
+      "sha256": "8a92b9e92a03ddc1c6eb49e75d09e664089d905d76e3ad07d6368e4faffbdfb3"
+    }
+  ],
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "f32a5bd697a6ff81defa9730849ab5917a435c50a5613eda54941063a4ae095e",
+    "tools/client/verify_pet_runtime_browser.cjs": "b9e7c4b0eb346bf8c7cf59775987894d13c86e323192e0e2848b64eb31bfb539",
+    "tools/client/test_pet_runtime_qa.py": "a1c1d3b1e5df9da2e7ed146de812bb7f9a391a25dd0360335d51ca5006dbeb82",
+    "tools/client/pet_runtime_browser.test.cjs": "634c140bf43568393ee6a8a1c895e642b86212fd13a64a1c10c6aa8e06918419"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "f32a5bd697a6ff81defa9730849ab5917a435c50a5613eda54941063a4ae095e",
+    "tools/client/verify_pet_runtime_browser.cjs": "b9e7c4b0eb346bf8c7cf59775987894d13c86e323192e0e2848b64eb31bfb539",
+    "tools/client/test_pet_runtime_qa.py": "a1c1d3b1e5df9da2e7ed146de812bb7f9a391a25dd0360335d51ca5006dbeb82",
+    "tools/client/pet_runtime_browser.test.cjs": "634c140bf43568393ee6a8a1c895e642b86212fd13a64a1c10c6aa8e06918419"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "f32a5bd697a6ff81defa9730849ab5917a435c50a5613eda54941063a4ae095e",
+    "tools/client/verify_pet_runtime_browser.cjs": "b9e7c4b0eb346bf8c7cf59775987894d13c86e323192e0e2848b64eb31bfb539",
+    "tools/client/test_pet_runtime_qa.py": "a1c1d3b1e5df9da2e7ed146de812bb7f9a391a25dd0360335d51ca5006dbeb82",
+    "tools/client/pet_runtime_browser.test.cjs": "634c140bf43568393ee6a8a1c895e642b86212fd13a64a1c10c6aa8e06918419"
+  },
+  "stable": true,
+  "passed": true
+}

@@ -149,7 +149,7 @@ func (w *worker) resolveTeleport21(r *room, origin *worldState, cast pendingCast
 		transition = domain.ID()
 	}
 	var petPoint *devconfig.Point
-	if r.Pet != nil {
+	if r.Pet != nil && !mapForbidsPets(targetMap) {
 		candidate := r.Pet.Pos
 		if cross {
 			var ok bool

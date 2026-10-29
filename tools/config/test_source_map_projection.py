@@ -95,7 +95,7 @@ class SourceMapProjectionTests(unittest.TestCase):
         self.assertEqual(public['map_catalog'][1]['resource_key'],'source-maps/map-2/manifest')
         self.assertEqual(public['source_map_streaming'],{'load_concurrency':4,'cache_capacity':49})
         for row in public['map_catalog']:
-            self.assertEqual(set(row),{'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport'})
+            self.assertEqual(set(row),{'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport','no_pets'})
             for key in ['source_ref','source','collision_bits','source_sha256','manifest_sha256','initial_binding_pool_verified']:
                 self.assertNotIn(key,row)
 

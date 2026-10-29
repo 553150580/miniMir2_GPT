@@ -148,7 +148,8 @@ export function validateQuotedMaterials(quote: SkillAssetQuote, choices: readonl
     if (spend.some((value, index) => BigInt(value) > BigInt(balance[index]))) throw new Error('报价支出超出当前钱包余额');
 }
 
-const STAT_NAMES: Record<string, string> = { accuracy_bonus: '准确加成', base_power: '技能基础威力', mp_cost: '魔法消耗', max_attack_bonus: '攻击上限加成',
+const STAT_NAMES: Record<string, string> = { new_pet_training_level: '新生宠物初始训练等级', new_pet_max_training_level: '新生宠物训练等级上限',
+    new_pet_material_quantity: '每次新召唤护符用量', new_pet_hp_max: '新生宠物生命上限', accuracy_bonus: '准确加成', base_power: '技能基础威力', mp_cost: '魔法消耗', max_attack_bonus: '攻击上限加成',
     push_distance:'推开距离（格）',dash_distance:'冲撞距离（格）',push_base_success_percent:'基础成功率（%，另加等级差）',monster_damage:'对怪物伤害',
     duration_ms: '持续时间(毫秒)', teleport_mana_penalty_percent: '传送耗蓝加成(%)', damage_reduction_percent: '伤害减免（%）', duration_rank_factor: '持续时间阶数系数（非秒数）', base_duration_seconds: '基础持续时间（秒，另加道术项）', material_quantity: '每次施法护符用量' };
 export function skillQuoteLines(quote: SkillAssetQuote, definitions: readonly SkillAssetDefinition[]): string[] {
@@ -162,6 +163,8 @@ export function skillQuoteLines(quote: SkillAssetQuote, definitions: readonly Sk
         if (stat.afterMin.toString() === stat.afterMax.toString()) lines.push(`下一阶 ${stat.afterMin}`);
         else lines.push(`下一阶下限 ${stat.afterMin}`, `下一阶上限 ${stat.afterMax}`);
     }
+    if (quote.stats.some(stat => ['new_pet_training_level', 'new_pet_max_training_level', 'new_pet_material_quantity', 'new_pet_hp_max'].includes(stat.key)))
+        lines.push('升级只影响后续新生宠物；已有宠物召回时保留原训练。');
     const spend = quote.spend;
     lines.push(`金币支出 ${spend.gold}`, `绑定金币支出 ${spend.boundGold}`,
         `元宝支出 ${yuanbaoText(spend.yuanbaoUnits)}`, `绑定元宝支出 ${yuanbaoText(spend.boundYuanbaoUnits)}`);

@@ -7,6 +7,7 @@ import (
 )
 
 type Skill struct {
+	Summon                    *SkillSummonRules   `json:"summon,omitempty"`
 	Teleport                  *SkillTeleportRules `json:"teleport,omitempty"`
 	Displacement              *SkillDisplacement  `json:"displacement,omitempty"`
 	ID                        uint32              `json:"id"`

@@ -1,0 +1,29 @@
+{
+  "authorization": "root批准最小唯一字段/两图NoPets/关闭17及171–173升级候选；未启17/护符/商店/赠书",
+  "books": [
+    {
+      "group": "architecture",
+      "path": "outputs/development-prep-20261026/架构配置.xlsx",
+      "sha256_before": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+      "sha256_after": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+      "changed_cells": 0
+    },
+    {
+      "group": "gameplay",
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "sha256_before": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f",
+      "sha256_after": "c905af71dd8839b6474c4d53feb70d260bf0d139cc0478f03a0f998ad405729b",
+      "changed_cells": 82
+    }
+  ],
+  "schema_before": "fdaba852a216421494b393692aa7d160409c9d4656aac313f05cdf10c942ca04",
+  "schema_after": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
+  "candidate_review": "candidate-review.json",
+  "cell_diff": "gameplay-cell-diff.json",
+  "formulas_preserved": 460,
+  "preview_sync_not_performed": true,
+  "metadata_correction_report": "metadata-correction-report.json",
+  "final_source_review": "final-source-review.json",
+  "final_gameplay_sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf",
+  "books_scope": "books字段记录首次受控应用；最终状态以上述final_source_review和final_gameplay_sha256为准"
+}

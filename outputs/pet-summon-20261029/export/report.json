@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "name": "preview",
+      "command": [
+        "python3",
+        "tools/config/export_configs.py",
+        "--version",
+        "dev-pet-summon-v0.17"
+      ],
+      "started_at_utc": "2026-10-29T00:41:25.628352+00:00",
+      "exit_code": 0,
+      "output_sha256": "19f3333a1e93f8b97a563c021b6a75a3851c6432e1636915cb5fd5be800ff835"
+    },
+    {
+      "name": "sync",
+      "command": [
+        "python3",
+        "tools/config/sync_bindings.py"
+      ],
+      "started_at_utc": "2026-10-29T00:41:25.956735+00:00",
+      "exit_code": 0,
+      "output_sha256": "5d9be9a3133b542e05b266c60769997916fca5cea4eeb5d0d4a34f708cb238df"
+    }
+  ]
+}

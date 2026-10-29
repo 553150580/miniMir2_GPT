@@ -1,0 +1,30 @@
+{
+  "input_sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f",
+  "output_sha256": "c905af71dd8839b6474c4d53feb70d260bf0d139cc0478f03a0f998ad405729b",
+  "edited_worksheets": [
+    "xl/worksheets/sheet60.xml",
+    "xl/worksheets/sheet51.xml",
+    "xl/worksheets/sheet65.xml",
+    "xl/worksheets/sheet61.xml",
+    "xl/worksheets/sheet57.xml",
+    "xl/worksheets/sheet95.xml"
+  ],
+  "untouched_zip_members_verified": 97,
+  "all_requested_values_readback_equal": true,
+  "edited_cells": 85,
+  "formulas_overwritten": false,
+  "source_workbook_overwritten": false,
+  "normalized_empty_duplicate_rows": [],
+  "unchanged_zip_members": 97,
+  "changed_zip_members": [
+    "xl/worksheets/sheet51.xml",
+    "xl/worksheets/sheet57.xml",
+    "xl/worksheets/sheet60.xml",
+    "xl/worksheets/sheet61.xml",
+    "xl/worksheets/sheet65.xml",
+    "xl/worksheets/sheet95.xml"
+  ],
+  "actual_changed_cells": 82,
+  "all_unrequested_cell_values_preserved": true,
+  "all_formula_nodes_preserved": 460
+}

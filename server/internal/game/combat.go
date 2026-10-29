@@ -251,6 +251,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 				w.isolateRoom(r)
 			}
 		} else if target.Kind == 1 {
+			w.killOwnedPet(r, now)
 			r.DeathID = domain.ID()
 			w.deathNotice(r)
 			if r.Conn == nil {
@@ -399,6 +400,7 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Conn != nil && !r.Ready || r.Travel != nil && r.Travel.Phase == travelCommitted && !r.Travel.Acked {
 		return
 	}
+	skipPetAI := w.tickResidentPetFollow(r, now)
 	a := w.fighter(r, &r.Player)
 	if r.Manual {
 		d := directions[r.ManualDirection]
@@ -433,7 +435,7 @@ func (w *worker) step(r *room, now time.Time) {
 		return
 	}
 	pet := r.worldPet(r.currentWorld())
-	if pet != nil && pet.HP > 0 {
+	if !skipPetAI && pet != nil && pet.HP > 0 && (pet.PetRuntime == nil || !pet.PetRuntime.FollowSuppressed) {
 		if r.Auto && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
 			if target := w.nearest(r, pet); target != nil {
 				if distance(pet.Pos, target.Pos) <= 1 {

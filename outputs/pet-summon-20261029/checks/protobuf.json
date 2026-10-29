@@ -1,0 +1,13 @@
+{
+  "task": "protobuf",
+  "command": [
+    "node",
+    "tools/protocol/verify_client_pb.cjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T01:22:34.432186+00:00",
+  "finished_at": "2026-10-29T01:22:34.581866+00:00",
+  "output": ".work/pet-summon-20261029/checks/protobuf.txt",
+  "output_sha256": "319f75e0b10cfd22b51d7668ba3e1e972be517e4268e0dca4b8174a7a5f94c44",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

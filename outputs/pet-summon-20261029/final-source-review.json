@@ -1,0 +1,18 @@
+{
+  "final_book_sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf",
+  "original_book_sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f",
+  "actual_changed_cells": 82,
+  "all_unrequested_values_preserved": true,
+  "all_formula_nodes_preserved": 460,
+  "changed_zip_members": [
+    "xl/worksheets/sheet51.xml",
+    "xl/worksheets/sheet57.xml",
+    "xl/worksheets/sheet60.xml",
+    "xl/worksheets/sheet61.xml",
+    "xl/worksheets/sheet65.xml",
+    "xl/worksheets/sheet95.xml"
+  ],
+  "unchanged_zip_member_count": 97,
+  "architecture_unchanged": true,
+  "metadata_correction": "metadata-correction-report.json；仅修正旧备注，不改候选数值或范围"
+}

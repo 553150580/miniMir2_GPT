@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
+	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -32,13 +33,31 @@ func (w *worker) materialCast(r *room, frame wire.Frame) {
 		case !acceptInput(r, request.InputSequence):
 			q.CastGateCode = p.CodeStaleInput
 		default:
-			q.CastGateCode = persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture)
-			if q.CastGateCode == 0 {
-				plan, q.CastGateCode = w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, time.Now(), true, request.TargetGrid)
-			}
+			plan, q.CastGateCode = w.prepareMaterialCast(r, q, &request, time.Now())
 		}
 	}
 	w.submitMaterialCast(r, q, plan, request.InputSequence, &frame)
+}
+
+func (w *worker) prepareMaterialCast(r *room, q persistence.AssetRequest, request *pb.CastWithMaterialRequest, now time.Time) (*preparedCast, uint32) {
+	if w.isSummonSkill(request.SkillId) {
+		plan, code := w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
+		if code != 0 {
+			return nil, code
+		}
+		// 乐观模式已过期：走正式失败回执，不耗符，不把材料RPC转为新的Recall。
+		if plan.Summon.Recall {
+			return nil, p.CodeSkillStateBlocked
+		}
+		if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
+			return nil, code
+		}
+		return plan, 0
+	}
+	if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
+		return nil, code
+	}
+	return w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
 }
 
 func (w *worker) applyMaterialReceipt(r *room, receipt persistence.Operation, plan *preparedCast, input uint32, now time.Time) bool {
@@ -60,6 +79,12 @@ func (w *worker) applyMaterialReceipt(r *room, receipt persistence.Operation, pl
 
 // 原随机持续时长和材料身份冻结在job闭包；未知提交只重查同一事务，不重新抽样或再次耗符。
 func (w *worker) submitMaterialCast(r *room, q persistence.AssetRequest, plan *preparedCast, input uint32, frame *wire.Frame) {
+	if plan != nil && (r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64) {
+		q.CastGateCode, plan = p.CodeSkillStateBlocked, nil
+	}
+	if q.CastGateCode == 0 && !w.reserveSummonPet(r, plan, domain.Hex(q.Context.OpId), time.Now()) {
+		q.CastGateCode, plan = p.CodeSkillStateBlocked, nil
+	}
 	r.MaterialGeneration++
 	binding := materialCommitBinding{roleID: r.Role.ID, room: r, auth: r.Auth, scene: r.Scene, life: r.Player.Life, generation: r.MaterialGeneration, conn: r.Conn}
 	r.Pending = true
@@ -120,8 +145,12 @@ func (w *worker) finishMaterialCast(binding materialCommitBinding, q persistence
 	r.PendingRetry = nil
 	r.PendingOperationID = ""
 	r.PendingFingerprint = ""
+	applied := false
 	if err == nil && result.ErrorCode == 0 && r.Auth == binding.auth && r.Scene == binding.scene && r.Player.Life == binding.life {
-		w.applyMaterialReceipt(r, receipt, plan, input, time.Now())
+		applied = w.applyMaterialReceipt(r, receipt, plan, input, time.Now())
+	}
+	if !applied {
+		w.cancelSummonPet(r, plan)
 	}
 	if respond {
 		if err != nil {

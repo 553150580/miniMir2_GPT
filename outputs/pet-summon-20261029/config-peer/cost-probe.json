@@ -1,0 +1,21 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -overlay D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\config-peer\\cost-overlay.json ./internal/devconfig -run ^TestAuditSummonCatalog -count=1 -v",
+  "exit_code": 0,
+  "mongo_invoked": false,
+  "overlay_only": true,
+  "source_before": {
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+    "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+    "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+    "config/development/summon-candidates.json": "7b546e66ae1e5b3bb7b0c83d9c7fc35a2f7d6a03bcb5641d786ddf2a67ff23c8"
+  },
+  "source_after": {
+    "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+    "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+    "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+    "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+    "config/development/summon-candidates.json": "7b546e66ae1e5b3bb7b0c83d9c7fc35a2f7d6a03bcb5641d786ddf2a67ff23c8"
+  },
+  "source_stable": true
+}

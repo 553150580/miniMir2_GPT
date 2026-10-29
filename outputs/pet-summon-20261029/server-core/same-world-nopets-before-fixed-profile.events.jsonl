@@ -1,0 +1,9 @@
+{"Time":"2026-10-29T08:53:32.3384488+08:00","Action":"start","Package":"minimir/internal/game"}
+{"Time":"2026-10-29T08:53:36.2450468+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze"}
+{"Time":"2026-10-29T08:53:36.2450468+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze","Output":"=== RUN   TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze\n","OutputType":"frame"}
+{"Time":"2026-10-29T08:53:36.3255282+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze","Output":"    summon_pet_test.go:606: 同图Teleport错误重复入图NoPets冻结/移动宠物\n","OutputType":"error"}
+{"Time":"2026-10-29T08:53:36.3267563+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze","Output":"--- FAIL: TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze (0.08s)\n","OutputType":"frame"}
+{"Time":"2026-10-29T08:53:36.3267563+08:00","Action":"fail","Package":"minimir/internal/game","Test":"TestSummonPetNoPetsSameWorldTransferDoesNotApplyMapEntryFreeze","Elapsed":0.08}
+{"Time":"2026-10-29T08:53:36.3267563+08:00","Action":"output","Package":"minimir/internal/game","Output":"FAIL\n","OutputType":"frame"}
+{"Time":"2026-10-29T08:53:36.3301821+08:00","Action":"output","Package":"minimir/internal/game","Output":"FAIL\tminimir/internal/game\t3.992s\n","OutputType":"frame"}
+{"Time":"2026-10-29T08:53:36.3301821+08:00","Action":"fail","Package":"minimir/internal/game","Elapsed":3.992}

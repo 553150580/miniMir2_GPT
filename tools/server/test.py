@@ -7,7 +7,7 @@ def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 
 def input_files():
  files=list((ROOT/'server/internal').rglob('*.go'))+list((ROOT/'server/cmd').rglob('*.go'))+list((ROOT/'server/api/generated').rglob('*.go'))
- files += [ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json',ROOT/'config/development/pet-runtime-candidates.json',ROOT/'资料参考/myf/Mir200/Map/0.map',Path(__file__).resolve(),ROOT/'tools/dev',ROOT/'tools/toolchain.py']
+ files += [ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json',ROOT/'config/development/pet-runtime-candidates.json',ROOT/'config/development/summon-candidates.json',ROOT/'资料参考/myf/Mir200/Map/0.map',Path(__file__).resolve(),ROOT/'tools/dev',ROOT/'tools/toolchain.py']
  files += list((ROOT/'conf/toolchain').glob('*.lock.json'))
  files += [p for p in (ROOT/'server/internal').rglob('*') if p.is_file() and 'testdata' in p.parts]
  return sorted(set(files))

@@ -1,0 +1,7 @@
+--- FAIL: TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap (0.00s)
+    map_catalog_test.go:206: 生命周期合同改变了个人初始地图、旧开发宠物模式或随机绑定池
+--- FAIL: TestPetRuntimeSelectedProfileUsesSameCandidateDefinitionsWithoutSummonActivation (0.00s)
+    pet_runtime_test.go:174: 生命周期未选择，或免费bootstrap模式被暗改
+FAIL
+FAIL	minimir/internal/devconfig	1.774s
+FAIL

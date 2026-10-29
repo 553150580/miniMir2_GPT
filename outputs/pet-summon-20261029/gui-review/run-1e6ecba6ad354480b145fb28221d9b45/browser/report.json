@@ -1,0 +1,3698 @@
+{
+  "passed": true,
+  "scope": "独立QA cfg HP1/怪物20高命中/15秒尸体；真实Creator与正常道士UI，非180秒原数值、17召唤、购符、自然成长、冷重建、128容量或手机真机",
+  "expectedRuleVersion": "17",
+  "qaRunId": "1e6ecba6ad354480b145fb28221d9b45",
+  "fixtureHash": "1492df43c52410b20bbdad0f39ef883ecff0eab51977cd1ec20367a4fce85985",
+  "ttlMs": 15000,
+  "checks": [
+    "初始HP1活宠经真实怪物首击成为同handle/Life原尸体，没有第二只活宠或注入body",
+    "正常触屏选中尸体，保存实体详情明确显示宠物尸体",
+    "保存PetPanel不把无主尸体当活宠，也不编造legacy训练级别",
+    "正常换角新票健康重入保留原尸体handle/Life及HP0，未重造免费活宠",
+    "原15秒QA截止继续推进，权威基线移除、Cocos旧节点失效且Sprite帧解绑，保存详情实时变为已离场"
+  ],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "time": 1793237481604,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "map": "1",
+      "player": 1,
+      "resourceVersion": "17"
+    },
+    {
+      "time": 1793237491486,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "map": "1",
+      "player": 1,
+      "resourceVersion": "17"
+    }
+  ],
+  "acks": [
+    {
+      "time": 1793237481979,
+      "scene": "10476980931416762127",
+      "baseline": "1"
+    },
+    {
+      "time": 1793237491527,
+      "scene": "10476980931416762127",
+      "baseline": "2"
+    }
+  ],
+  "observations": [
+    {
+      "time": 1793237481615,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "1",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "1",
+          "hpMax": "1",
+          "corpse": false,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 0
+    },
+    {
+      "time": 1793237481982,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "2",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "1",
+          "hpMax": "1",
+          "corpse": false,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 0
+    },
+    {
+      "time": 1793237482016,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "3",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482328,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "4",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482406,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "5",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482947,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "6",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482948,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "7",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482948,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "8",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237482948,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "9",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237483035,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "10",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237483463,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "11",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237483463,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "12",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237483605,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "13",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237483805,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "14",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484006,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "15",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484007,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "16",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484205,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "17",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484306,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "18",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484417,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "19",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484607,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "20",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237484805,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "21",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485005,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "22",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485205,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "23",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485408,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "24",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485412,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "25",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485605,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "26",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485705,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "27",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237485805,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "28",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237486005,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "29",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237486047,
+      "binding": "1",
+      "scene": "10476980931416762127",
+      "baseline": "1",
+      "sequence": "30",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491486,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "31",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491529,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "32",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491823,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "33",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491823,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "34",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491823,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "35",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237491906,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "36",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237492007,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "37",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237492206,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "38",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237492405,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "39",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237492605,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "40",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237492806,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "41",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493006,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "42",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493007,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "43",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493205,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "44",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493306,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "45",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493405,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "46",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493606,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "47",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237493805,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "48",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494005,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "49",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494205,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "50",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494406,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "51",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494407,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "52",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494605,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "53",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494706,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "54",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237494805,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "55",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495006,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "56",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495205,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "57",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495406,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "58",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495606,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "59",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495835,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "60",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237495836,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "61",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496006,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "62",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496106,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "63",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496206,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "64",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496406,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "65",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496606,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "66",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237496805,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "67",
+      "pets": [
+        {
+          "handle": 2,
+          "life": "0",
+          "hp": "0",
+          "hpMax": "1",
+          "corpse": true,
+          "training": null,
+          "x": 8,
+          "y": 6
+        }
+      ],
+      "monster10": 1
+    },
+    {
+      "time": 1793237497006,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "68",
+      "pets": [],
+      "monster10": 1
+    },
+    {
+      "time": 1793237497007,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "69",
+      "pets": [],
+      "monster10": 1
+    },
+    {
+      "time": 1793237497423,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "70",
+      "pets": [],
+      "monster10": 1
+    },
+    {
+      "time": 1793237497424,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "71",
+      "pets": [],
+      "monster10": 1
+    },
+    {
+      "time": 1793237497424,
+      "binding": "2",
+      "scene": "10476980931416762127",
+      "baseline": "2",
+      "sequence": "72",
+      "pets": [],
+      "monster10": 1
+    }
+  ],
+  "protocolErrors": [],
+  "sent": [
+    {
+      "id": 20001,
+      "request": 6
+    },
+    {
+      "id": 4,
+      "request": 7
+    },
+    {
+      "id": 20006,
+      "request": 8
+    },
+    {
+      "id": 20001,
+      "request": 11
+    },
+    {
+      "id": 4,
+      "request": 12
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01-real-corpse",
+      "file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\gui-review\\run-1e6ecba6ad354480b145fb28221d9b45\\browser\\01-real-corpse.png",
+      "state": {
+        "time": 1793237482042,
+        "ready": true,
+        "scene": "10476980931416762127",
+        "baseline": "1",
+        "binding": "1",
+        "resourceVersion": "17",
+        "hp": "16",
+        "pets": [
+          {
+            "handle": 2,
+            "life": "0",
+            "hp": "0",
+            "corpse": true,
+            "training": null,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "visual": true,
+            "nodeValid": true,
+            "pose": {
+              "action": "die",
+              "direction": 0,
+              "frame": 0
+            },
+            "name": "变异骷髅·尸体"
+          }
+        ],
+        "detail": [],
+        "ui": "",
+        "popup": "",
+        "lastError": ""
+      }
+    },
+    {
+      "name": "02-corpse-details",
+      "file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\gui-review\\run-1e6ecba6ad354480b145fb28221d9b45\\browser\\02-corpse-details.png",
+      "state": {
+        "time": 1793237482381,
+        "ready": true,
+        "scene": "10476980931416762127",
+        "baseline": "1",
+        "binding": "1",
+        "resourceVersion": "17",
+        "hp": "16",
+        "pets": [
+          {
+            "handle": 2,
+            "life": "0",
+            "hp": "0",
+            "corpse": true,
+            "training": null,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "visual": true,
+            "nodeValid": true,
+            "pose": {
+              "action": "die",
+              "direction": 0,
+              "frame": 3
+            },
+            "name": "变异骷髅·尸体"
+          }
+        ],
+        "detail": [
+          "宠物尸体",
+          "位置 8, 6",
+          "生命 0 / 1",
+          "物理攻击 0–0",
+          "物理防御 10–10",
+          "魔法防御 10–10",
+          "魔法攻击 0–0",
+          "道术攻击 0–0",
+          "准确 15 · 敏捷 20",
+          "伤害减免 0%",
+          "未提供训练数据",
+          "移动间隔 1000毫秒",
+          "攻击间隔 1000毫秒"
+        ],
+        "ui": "",
+        "popup": "StatusDetails",
+        "lastError": ""
+      }
+    },
+    {
+      "name": "03-pet-panel",
+      "file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\gui-review\\run-1e6ecba6ad354480b145fb28221d9b45\\browser\\03-pet-panel.png",
+      "state": {
+        "time": 1793237483108,
+        "ready": true,
+        "scene": "10476980931416762127",
+        "baseline": "1",
+        "binding": "1",
+        "resourceVersion": "17",
+        "hp": "16",
+        "pets": [
+          {
+            "handle": 2,
+            "life": "0",
+            "hp": "0",
+            "corpse": true,
+            "training": null,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "visual": true,
+            "nodeValid": true,
+            "pose": {
+              "action": "die",
+              "direction": 0,
+              "frame": 9
+            },
+            "name": "变异骷髅·尸体"
+          }
+        ],
+        "detail": [
+          "当前没有存活宠物"
+        ],
+        "ui": "",
+        "popup": "StatusDetails",
+        "lastError": ""
+      }
+    },
+    {
+      "name": "04-health-corpse",
+      "file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\gui-review\\run-1e6ecba6ad354480b145fb28221d9b45\\browser\\04-health-corpse.png",
+      "state": {
+        "time": 1793237491557,
+        "ready": true,
+        "scene": "10476980931416762127",
+        "baseline": "2",
+        "binding": "2",
+        "resourceVersion": "17",
+        "hp": "16",
+        "pets": [
+          {
+            "handle": 2,
+            "life": "0",
+            "hp": "0",
+            "corpse": true,
+            "training": null,
+            "position": {
+              "x": 8,
+              "y": 6
+            },
+            "visual": true,
+            "nodeValid": true,
+            "pose": {
+              "action": "die",
+              "direction": 0,
+              "frame": 9
+            },
+            "name": "变异骷髅·尸体"
+          }
+        ],
+        "detail": [],
+        "ui": "",
+        "popup": "",
+        "lastError": ""
+      }
+    },
+    {
+      "name": "05-expired-details",
+      "file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-summon-20261029\\gui-review\\run-1e6ecba6ad354480b145fb28221d9b45\\browser\\05-expired-details.png",
+      "state": {
+        "time": 1793237497039,
+        "ready": true,
+        "scene": "10476980931416762127",
+        "baseline": "2",
+        "binding": "2",
+        "resourceVersion": "17",
+        "hp": "16",
+        "pets": [],
+        "detail": [
+          "该实体已离场"
+        ],
+        "ui": "",
+        "popup": "StatusDetails",
+        "lastError": ""
+      }
+    }
+  ],
+  "credentialsWritten": false,
+  "corpseSeeded": false,
+  "trainingVerified": false,
+  "corpseTouchAttempts": [
+    {
+      "time": 1793237482346,
+      "found": true,
+      "sample": {
+        "x": 426.5866666666667,
+        "y": 476,
+        "offset": {
+          "x": 0.2,
+          "y": 0
+        },
+        "hits": [
+          {
+            "handle": 2,
+            "order": 3
+          },
+          {
+            "handle": 10,
+            "order": 2
+          }
+        ]
+      },
+      "visualDiagnostics": [
+        {
+          "handle": 1,
+          "kind": 1,
+          "life": "0",
+          "grid": {
+            "x": 8,
+            "y": 7
+          },
+          "display": {
+            "x": 16.613333333333344,
+            "y": 32.30666666666667
+          },
+          "order": 4,
+          "pose": {
+            "action": "walking",
+            "direction": 0,
+            "frame": 3
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        },
+        {
+          "handle": 2,
+          "kind": 2,
+          "life": "0",
+          "grid": {
+            "x": 8,
+            "y": 6
+          },
+          "display": {
+            "x": 64,
+            "y": 56
+          },
+          "order": 3,
+          "pose": {
+            "action": "die",
+            "direction": 0,
+            "frame": 3
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        },
+        {
+          "handle": 10,
+          "kind": 3,
+          "life": "0",
+          "grid": {
+            "x": 9,
+            "y": 6
+          },
+          "display": {
+            "x": 96,
+            "y": 72
+          },
+          "order": 2,
+          "pose": {
+            "action": "attack",
+            "direction": 4,
+            "frame": 3
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        }
+      ],
+      "candidates": [
+        {
+          "x": 407.38666666666666,
+          "y": 476,
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 476,
+          "offset": {
+            "x": 0.2,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 476,
+          "offset": {
+            "x": -0.2,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 476,
+          "offset": {
+            "x": 0.35,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 476,
+          "offset": {
+            "x": -0.35,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 476,
+          "offset": {
+            "x": 0.45,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 476,
+          "offset": {
+            "x": -0.45,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 450.4,
+          "offset": {
+            "x": 0,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 450.4,
+          "offset": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 450.4,
+          "offset": {
+            "x": -0.2,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 450.4,
+          "offset": {
+            "x": 0.35,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 450.4,
+          "offset": {
+            "x": -0.35,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 450.4,
+          "offset": {
+            "x": 0.45,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 450.4,
+          "offset": {
+            "x": -0.45,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 501.6,
+          "offset": {
+            "x": 0,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 501.6,
+          "offset": {
+            "x": 0.2,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 501.6,
+          "offset": {
+            "x": -0.2,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 501.6,
+          "offset": {
+            "x": 0.35,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 501.6,
+          "offset": {
+            "x": -0.35,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 501.6,
+          "offset": {
+            "x": 0.45,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 501.6,
+          "offset": {
+            "x": -0.45,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.2,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.2,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.35,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.35,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.45,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.45,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 520.8,
+          "offset": {
+            "x": 0,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 520.8,
+          "offset": {
+            "x": 0.2,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 520.8,
+          "offset": {
+            "x": -0.2,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 520.8,
+          "offset": {
+            "x": 0.35,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 520.8,
+          "offset": {
+            "x": -0.35,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 520.8,
+          "offset": {
+            "x": 0.45,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 520.8,
+          "offset": {
+            "x": -0.45,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 418.4,
+          "offset": {
+            "x": 0,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 418.4,
+          "offset": {
+            "x": 0.2,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 418.4,
+          "offset": {
+            "x": -0.2,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 418.4,
+          "offset": {
+            "x": 0.35,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 418.4,
+          "offset": {
+            "x": -0.35,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 418.4,
+          "offset": {
+            "x": 0.45,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            },
+            {
+              "handle": 10,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 418.4,
+          "offset": {
+            "x": -0.45,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 407.38666666666666,
+          "y": 533.6,
+          "offset": {
+            "x": 0,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 426.5866666666667,
+          "y": 533.6,
+          "offset": {
+            "x": 0.2,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 388.18666666666667,
+          "y": 533.6,
+          "offset": {
+            "x": -0.2,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 440.9866666666667,
+          "y": 533.6,
+          "offset": {
+            "x": 0.35,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 373.78666666666663,
+          "y": 533.6,
+          "offset": {
+            "x": -0.35,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 450.5866666666667,
+          "y": 533.6,
+          "offset": {
+            "x": 0.45,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        },
+        {
+          "x": 364.18666666666667,
+          "y": 533.6,
+          "offset": {
+            "x": -0.45,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "time": 1793237491839,
+      "found": true,
+      "sample": {
+        "x": 391.99999999999994,
+        "y": 418.4,
+        "offset": {
+          "x": 0,
+          "y": 0.45
+        },
+        "hits": [
+          {
+            "handle": 2,
+            "order": 2
+          }
+        ]
+      },
+      "visualDiagnostics": [
+        {
+          "handle": 1,
+          "kind": 1,
+          "life": "0",
+          "grid": {
+            "x": 8,
+            "y": 7
+          },
+          "display": {
+            "x": 32,
+            "y": 40
+          },
+          "order": 3,
+          "pose": {
+            "action": "attack",
+            "direction": 1,
+            "frame": 2
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        },
+        {
+          "handle": 2,
+          "kind": 2,
+          "life": "0",
+          "grid": {
+            "x": 8,
+            "y": 6
+          },
+          "display": {
+            "x": 64,
+            "y": 56
+          },
+          "order": 2,
+          "pose": {
+            "action": "die",
+            "direction": 0,
+            "frame": 9
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        },
+        {
+          "handle": 10,
+          "kind": 3,
+          "life": "0",
+          "grid": {
+            "x": 9,
+            "y": 6
+          },
+          "display": {
+            "x": 96,
+            "y": 40
+          },
+          "order": 4,
+          "pose": {
+            "action": "standing",
+            "direction": 3,
+            "frame": 2
+          },
+          "valid": true,
+          "size": {
+            "width": 96,
+            "height": 128
+          }
+        }
+      ],
+      "candidates": [
+        {
+          "x": 391.99999999999994,
+          "y": 476,
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 476,
+          "offset": {
+            "x": 0.2,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 476,
+          "offset": {
+            "x": -0.2,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 476,
+          "offset": {
+            "x": 0.35,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 476,
+          "offset": {
+            "x": -0.35,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 476,
+          "offset": {
+            "x": 0.45,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 476,
+          "offset": {
+            "x": -0.45,
+            "y": 0
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 450.4,
+          "offset": {
+            "x": 0,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 450.4,
+          "offset": {
+            "x": 0.2,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 450.4,
+          "offset": {
+            "x": -0.2,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 450.4,
+          "offset": {
+            "x": 0.35,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 450.4,
+          "offset": {
+            "x": -0.35,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 450.4,
+          "offset": {
+            "x": 0.45,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 450.4,
+          "offset": {
+            "x": -0.45,
+            "y": 0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 501.6,
+          "offset": {
+            "x": 0,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 501.6,
+          "offset": {
+            "x": 0.2,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 501.6,
+          "offset": {
+            "x": -0.2,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 501.6,
+          "offset": {
+            "x": 0.35,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 501.6,
+          "offset": {
+            "x": -0.35,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 501.6,
+          "offset": {
+            "x": 0.45,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 501.6,
+          "offset": {
+            "x": -0.45,
+            "y": -0.2
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.2,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.2,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.35,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.35,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": 0.45,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 431.20000000000005,
+          "offset": {
+            "x": -0.45,
+            "y": 0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 520.8,
+          "offset": {
+            "x": 0,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 520.8,
+          "offset": {
+            "x": 0.2,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 520.8,
+          "offset": {
+            "x": -0.2,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 520.8,
+          "offset": {
+            "x": 0.35,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 520.8,
+          "offset": {
+            "x": -0.35,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 520.8,
+          "offset": {
+            "x": 0.45,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 520.8,
+          "offset": {
+            "x": -0.45,
+            "y": -0.35
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 418.4,
+          "offset": {
+            "x": 0,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 418.4,
+          "offset": {
+            "x": 0.2,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 418.4,
+          "offset": {
+            "x": -0.2,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 418.4,
+          "offset": {
+            "x": 0.35,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 418.4,
+          "offset": {
+            "x": -0.35,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 418.4,
+          "offset": {
+            "x": 0.45,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 418.4,
+          "offset": {
+            "x": -0.45,
+            "y": 0.45
+          },
+          "hits": [
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 391.99999999999994,
+          "y": 533.6,
+          "offset": {
+            "x": 0,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 411.2,
+          "y": 533.6,
+          "offset": {
+            "x": 0.2,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 372.8,
+          "y": 533.6,
+          "offset": {
+            "x": -0.2,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 425.6,
+          "y": 533.6,
+          "offset": {
+            "x": 0.35,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 358.4,
+          "y": 533.6,
+          "offset": {
+            "x": -0.35,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 435.2,
+          "y": 533.6,
+          "offset": {
+            "x": 0.45,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 10,
+              "order": 4
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        },
+        {
+          "x": 348.8,
+          "y": 533.6,
+          "offset": {
+            "x": -0.45,
+            "y": -0.45
+          },
+          "hits": [
+            {
+              "handle": 1,
+              "order": 3
+            },
+            {
+              "handle": 2,
+              "order": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "roleCreationRequests": [
+    {
+      "time": 1793237475450,
+      "job": 2,
+      "slot": 1
+    }
+  ],
+  "roleSelection": {
+    "ready": true,
+    "selectedJob": 2,
+    "status": "创建职业：男道士",
+    "diagnostic": {
+      "scene": "RoleSelect",
+      "app": true,
+      "buttonActive": true,
+      "interactable": true,
+      "loadingActive": false
+    }
+  },
+  "roleSelectionAttempts": [
+    {
+      "time": 1793237475363,
+      "ready": true,
+      "selectedJob": 0,
+      "status": "每个账号来源服最多5个角色",
+      "diagnostic": {
+        "scene": "RoleSelect",
+        "app": true,
+        "buttonActive": true,
+        "interactable": true,
+        "loadingActive": false
+      }
+    },
+    {
+      "time": 1793237475425,
+      "ready": true,
+      "selectedJob": 2,
+      "status": "创建职业：男道士",
+      "diagnostic": {
+        "scene": "RoleSelect",
+        "app": true,
+        "buttonActive": true,
+        "interactable": true,
+        "loadingActive": false
+      }
+    }
+  ],
+  "healthChecks": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "698e18b6dbdc3c7eb4e515f7546ce577",
+        "game": "e158a66472a543df6e2a31e3c6ff8922",
+        "gm": "e9972c107e8ea3b664496216ff8d9035"
+      }
+    },
+    {
+      "phase": "before_health_ticket",
+      "instances": {
+        "account": "698e18b6dbdc3c7eb4e515f7546ce577",
+        "game": "e158a66472a543df6e2a31e3c6ff8922",
+        "gm": "e9972c107e8ea3b664496216ff8d9035"
+      }
+    },
+    {
+      "phase": "after_health_ticket",
+      "instances": {
+        "account": "698e18b6dbdc3c7eb4e515f7546ce577",
+        "game": "e158a66472a543df6e2a31e3c6ff8922",
+        "gm": "e9972c107e8ea3b664496216ff8d9035"
+      }
+    }
+  ],
+  "createdRole": {
+    "job": 2,
+    "slot": 1
+  },
+  "initialAlive": {
+    "time": 1793237481615,
+    "binding": "1",
+    "scene": "10476980931416762127",
+    "baseline": "1",
+    "sequence": "1",
+    "pets": [
+      {
+        "handle": 2,
+        "life": "0",
+        "hp": "1",
+        "hpMax": "1",
+        "corpse": false,
+        "training": null,
+        "x": 8,
+        "y": 6
+      }
+    ],
+    "monster10": 0
+  },
+  "deathAt": 1793237482016,
+  "corpseIdentity": {
+    "handle": 2,
+    "life": "0"
+  },
+  "health": {
+    "at": 1793237491827,
+    "binding": "2"
+  },
+  "expiredAt": 1793237497036,
+  "visualCleanup": {
+    "oldNodeValid": false,
+    "framesBound": 0
+  },
+  "zeroWarningsVerified": true
+}

@@ -1,0 +1,576 @@
+[
+  {
+    "sheet": "地图区域与NPC",
+    "row": 10,
+    "column": 7,
+    "before": "{\"region_kind\":\"map_policy\",\"no_teleport\":false}",
+    "after": "{\"region_kind\":\"map_policy\",\"no_teleport\":false,\"no_pets\":false}"
+  },
+  {
+    "sheet": "地图区域与NPC",
+    "row": 10,
+    "column": 9,
+    "before": "本作17×17个人图开发候选，rule15显式NoTeleport=false；非来源城镇、新生或复活规则",
+    "after": "本作17×17个人图开发候选，rule15显式NoTeleport=false；非来源城镇、新生或复活规则；本任务rule17显式NoPets=false候选，保持当前可携宠地图开发范围；Crystal HumanObject.cs:4401、MonsterObject.cs:1334–1367；不从MYF NOMANNOMON或NoTeleport推定原服NoPets"
+  },
+  {
+    "sheet": "地图区域与NPC",
+    "row": 10,
+    "column": 10,
+    "before": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。",
+    "after": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。 rule17独立no_pets布尔；不加入安全区或ZoneSetHash，受理与Recall到期时点按各自源规则。"
+  },
+  {
+    "sheet": "地图区域与NPC",
+    "row": 11,
+    "column": 7,
+    "before": "{\"region_kind\":\"map_policy\",\"no_teleport\":false}",
+    "after": "{\"region_kind\":\"map_policy\",\"no_teleport\":false,\"no_pets\":false}"
+  },
+  {
+    "sheet": "地图区域与NPC",
+    "row": 11,
+    "column": 9,
+    "before": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价",
+    "after": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价；本任务rule17显式NoPets=false候选，保持当前可携宠地图开发范围；Crystal HumanObject.cs:4401、MonsterObject.cs:1334–1367；不从MYF NOMANNOMON或NoTeleport推定原服NoPets"
+  },
+  {
+    "sheet": "地图区域与NPC",
+    "row": 11,
+    "column": 10,
+    "before": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。",
+    "after": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。 rule17独立no_pets布尔；不加入安全区或ZoneSetHash，受理与Recall到期时点按各自源规则。"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 1,
+    "before": null,
+    "after": 25
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 2,
+    "before": null,
+    "after": "skill_book_17"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 3,
+    "before": null,
+    "after": "《召唤骷髅》"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 4,
+    "before": null,
+    "after": "skill_book"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 5,
+    "before": null,
+    "after": 1
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 7,
+    "before": null,
+    "after": 1
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 8,
+    "before": null,
+    "after": 0
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 9,
+    "before": null,
+    "after": "关闭的召唤候选书；不增加初始赠书或商店，正常学习与升级入口待后续验收"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 11,
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 12,
+    "before": null,
+    "after": "MYF Mud2/DB/ApexM2_stditems.csv:27（Idx25/Stdmode4/原名召唤骷髅）；本任务候选，未新增价格行"
+  },
+  {
+    "sheet": "物品定义",
+    "row": 32,
+    "column": 13,
+    "before": null,
+    "after": "书25只由召唤独立catalog投影，不进入主22技能对应书表；未开17/购符/赠书/升级；护符187数量与售价继续未知。"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 1,
+    "before": null,
+    "after": 17
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 2,
+    "before": null,
+    "after": "source_summon_skeleton"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 3,
+    "before": null,
+    "after": "召唤骷髅"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 4,
+    "before": null,
+    "after": 2
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 5,
+    "before": null,
+    "after": 19
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 6,
+    "before": null,
+    "after": "summon_pet"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 7,
+    "before": null,
+    "after": "{\"kind\":\"friendly_self\",\"range_cells\":0,\"target_move_tolerance_cells\":0,\"area_radius\":0,\"require_line_of_sight\":false,\"auto_priority\":0,\"auto_min_targets\":0,\"secondary_direction_offsets\":[],\"secondary_distance_cells\":0,\"line_cells\":0,\"line_stop_on_blocked\":false,\"activation_kind\":\"cast\",\"auto_enabled\":false,\"summon\":{\"definition_id\":1}}"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 9,
+    "before": null,
+    "after": 1800
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 10,
+    "before": null,
+    "after": "{\"cooldown_reduction_ms\":0,\"global_spell_ms\":1800,\"action_ms\":600,\"delay_base_ms\":500,\"projectile_ms_per_cell\":0,\"secondary_impact_ms\":0,\"charge_window_ms\":0,\"line_step_ms\":0}"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 11,
+    "before": null,
+    "after": "{\"mp_base_cost\":12,\"mp_level_cost\":4,\"items\":[],\"material_item_id\":187,\"material_quantity\":1}"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 12,
+    "before": null,
+    "after": "summon_pet"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 13,
+    "before": null,
+    "after": "[]"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 14,
+    "before": null,
+    "after": "player_male.casting"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 15,
+    "before": null,
+    "after": "development_source_summon_skeleton_v1"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 16,
+    "before": null,
+    "after": false
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 17,
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 18,
+    "before": null,
+    "after": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 19,
+    "before": null,
+    "after": "仅独立候选；同名存活有居民节点先Recall且不耗符，新生才材料1；主22技能不选17。MYF19/23/26与Crystal19/22/26不同，三阶另由171–173候选维护，主升级未选入。"
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 20,
+    "before": null,
+    "after": 25
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 21,
+    "before": null,
+    "after": 0
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 22,
+    "before": null,
+    "after": 3
+  },
+  {
+    "sheet": "技能基础定义",
+    "row": 27,
+    "column": 23,
+    "before": null,
+    "after": "{\"accuracy_per_level\":0,\"power_base\":0,\"power_bonus\":0,\"mpower_base\":0,\"mpower_bonus\":0,\"multiplier_base_ppm\":0,\"multiplier_bonus_ppm\":0,\"accuracy_by_level\":[],\"healing_stat_multiplier\":0,\"add_caster_level\":false,\"undead_multiplier_ppm\":0,\"max_attack_bonus_by_level\":[],\"ready_proc_denominator\":0,\"ready_proc_numerators\":[],\"non_undead_divisor\":0}"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 1,
+    "before": null,
+    "after": 171
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 2,
+    "before": null,
+    "after": 17
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 3,
+    "before": null,
+    "after": 1
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 4,
+    "before": null,
+    "after": "[{\"item_id\":25,\"quantity\":2}]"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 5,
+    "before": null,
+    "after": 5
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 6,
+    "before": null,
+    "after": "{\"native_rank\":1}"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 7,
+    "before": null,
+    "after": true
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 8,
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 9,
+    "before": null,
+    "after": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署；本任务已选Crystal19/22/26作开发候选，明确区别MYF19/23/26；书目标阶+1为既定公式，页数沿已审5/10/20候选"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 10,
+    "before": null,
+    "after": "仅关闭召唤catalog逐阶合同，保证完整Cfg.Validate；不进主22技能升级，不开商店/赠书/随机练功。"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 11,
+    "before": null,
+    "after": 19
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 70,
+    "column": 12,
+    "before": null,
+    "after": 900001
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 1,
+    "before": null,
+    "after": 172
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 2,
+    "before": null,
+    "after": 17
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 3,
+    "before": null,
+    "after": 2
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 4,
+    "before": null,
+    "after": "[{\"item_id\":25,\"quantity\":3}]"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 5,
+    "before": null,
+    "after": 10
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 6,
+    "before": null,
+    "after": "{\"native_rank\":2}"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 7,
+    "before": null,
+    "after": true
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 8,
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 9,
+    "before": null,
+    "after": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署；本任务已选Crystal19/22/26作开发候选，明确区别MYF19/23/26；书目标阶+1为既定公式，页数沿已审5/10/20候选"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 10,
+    "before": null,
+    "after": "仅关闭召唤catalog逐阶合同，保证完整Cfg.Validate；不进主22技能升级，不开商店/赠书/随机练功。"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 11,
+    "before": null,
+    "after": 22
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 71,
+    "column": 12,
+    "before": null,
+    "after": 900001
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 1,
+    "before": null,
+    "after": 173
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 2,
+    "before": null,
+    "after": 17
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 3,
+    "before": null,
+    "after": 3
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 4,
+    "before": null,
+    "after": "[{\"item_id\":25,\"quantity\":4}]"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 5,
+    "before": null,
+    "after": 20
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 6,
+    "before": null,
+    "after": "{\"native_rank\":3}"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 7,
+    "before": null,
+    "after": true
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 8,
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 9,
+    "before": null,
+    "after": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署；本任务已选Crystal19/22/26作开发候选，明确区别MYF19/23/26；书目标阶+1为既定公式，页数沿已审5/10/20候选"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 10,
+    "before": null,
+    "after": "仅关闭召唤catalog逐阶合同，保证完整Cfg.Validate；不进主22技能升级，不开商店/赠书/随机练功。"
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 11,
+    "before": null,
+    "after": 26
+  },
+  {
+    "sheet": "技能逐级扩展",
+    "row": 72,
+    "column": 12,
+    "before": null,
+    "after": 900001
+  },
+  {
+    "sheet": "职业宠物模板",
+    "row": 4,
+    "column": 3,
+    "before": null,
+    "after": 17
+  },
+  {
+    "sheet": "职业宠物模板",
+    "row": 4,
+    "column": 7,
+    "before": "{\"source_skill_id\":17,\"training\":{\"initial_level_by_rank\":[0,1,2,3],\"maximum_level_by_rank\":[4,5,6,7],\"experience_multiplier\":3,\"owner_range_cells\":16,\"experience_basis\":\"owner_actual_granted_experience\",\"grant_phase\":\"confirmed_owner_experience\",\"eligibility\":\"alive_same_world_within_owner_range\",\"max_level_ups_per_grant\":1,\"excess_experience\":\"keep\",\"at_maximum\":\"do_not_accumulate\",\"current_hp_on_growth\":\"keep\"},\"speed\":{\"basis\":\"maximum_training_level\",\"move_reduction_ms_per_level\":130,\"attack_reduction_ms_per_level\":70,\"minimum_move_interval_ms\":400,\"minimum_attack_interval_ms\":400}}",
+    "after": "{\"source_skill_id\":17,\"training\":{\"initial_level_by_rank\":[0,1,2,3],\"maximum_level_by_rank\":[4,5,6,7],\"experience_multiplier\":3,\"owner_range_cells\":16,\"experience_basis\":\"owner_actual_granted_experience\",\"grant_phase\":\"confirmed_owner_experience\",\"eligibility\":\"alive_same_world_within_owner_range\",\"max_level_ups_per_grant\":1,\"excess_experience\":\"keep\",\"at_maximum\":\"do_not_accumulate\",\"current_hp_on_growth\":\"keep\"},\"speed\":{\"basis\":\"maximum_training_level\",\"move_reduction_ms_per_level\":130,\"attack_reduction_ms_per_level\":70,\"minimum_move_interval_ms\":400,\"minimum_attack_interval_ms\":400},\"recall_name\":\"BoneFamiliar\"}"
+  },
+  {
+    "sheet": "职业宠物模板",
+    "row": 4,
+    "column": 11,
+    "before": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用",
+    "after": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用；资料索引/职业宠物补充来源契约.json及crystal-supplement/source-slices/Settings.pet-defaults.json:技术行162 SkeletonName=BoneFamiliar；与MYF变异骷髅是明确跨来源候选，不是客户端display_name"
+  },
+  {
+    "sheet": "职业宠物模板",
+    "row": 4,
+    "column": 12,
+    "before": "rule16仅开启World身体/尸体生命周期；legacy_untrained_pet保留原免费bootstrap属性且不训练。SourceSkillID17仅来源身份，summon_skill_id仍空，17未选入、护符未开；新生或隔离训练另按typed规则。",
+    "after": "rule17主仍原免费legacy_untrained_pet且不训练；summon_skill_id17仅正式候选引用，不加入运行skill_ids。RecallName大小写敏感同名，不由DefinitionID/显示名推断；现有Training.owner_range_cells唯一16兼作源自动Recall范围，未复制第二个16；出生2000/尸体180000不变。"
+  },
+  {
+    "sheet": "开发首循环夹具",
+    "row": 4,
+    "column": 3,
+    "before": "{\"rule_version\":16,\"map_id\":1,\"monster_id\":1,\"pet_id\":1,\"players\":[{\"job_id\":0,\"definition_id\":0,\"hp\":18,\"mp\":14,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":1,\"definition_id\":1,\"hp\":15,\"mp\":17,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":2,\"definition_id\":2,\"hp\":16,\"mp\":13,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":18,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true}],\"inventory_capacity\":32,\"initial_inventory\":[218,218,193,35,36],\"initial_bound_gold\":0,\"allow_free_dev_revive\":true,\"damage_formula\":\"development_source_combat\",\"recycle_test_gold_by_item\":{\"35\":0,\"36\":0,\"193\":400,\"218\":50},\"technical_parameters_notice\":\"rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。\",\"player_stats_source\":\"Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。\",\"damage_scope_notice\":\"开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。\",\"revive_notice\":\"开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。\",\"potions\":{\"tick_ms\":200,\"base_per_tick\":5,\"levels_per_step\":10,\"use_delay_ms\":300,\"queue_cap\":65535,\"effects\":[{\"item_id\":35,\"hp\":20,\"mp\":0},{\"item_id\":36,\"hp\":0,\"mp\":30}]},\"player_growth\":[{\"job_id\":0,\"hp_base\":14,\"mp_base\":11,\"hp_gain\":4,\"hp_gain_rate\":4.5,\"mp_gain\":3.5,\"mp_gain_rate\":0,\"attack_divisor\":5,\"defence_max_divisor\":7,\"magic_divisor\":0,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":1,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":15,\"hp_gain_rate\":1.8,\"mp_gain\":5,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":7,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":2,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":6,\"hp_gain_rate\":2.5,\"mp_gain\":8,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":0,\"tao_divisor\":7,\"magic_defence_min_divisor\":12,\"magic_defence_max_divisor\":6}],\"healing\":{\"tick_ms\":600,\"base_per_tick\":5,\"pet_base_per_tick\":5,\"levels_per_step\":10,\"queue_fraction_divisor\":10,\"queue_cap\":65535},\"initial_skill_books\":[{\"job_id\":1,\"item_id\":7},{\"job_id\":2,\"item_id\":21},{\"job_id\":0,\"item_id\":1}],\"skill_ids\":[1,2,3,4,5,11,23,29,7,12,25,26,10,33,24,9,14,15,31,8,27,21],\"skill_economy\":{\"page_item_id\":900001,\"preview_ttl_ms\":120000,\"preview_material_limit\":32},\"skill_shop_entries\":[{\"offer_id\":6,\"item_id\":7,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":7,\"item_id\":21,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":8,\"item_id\":1,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":3,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":4,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":9,\"item_id\":22,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":10,\"item_id\":12,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":11,\"item_id\":11,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":12,\"item_id\":14,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":13,\"item_id\":32,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":14,\"item_id\":2,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":15,\"item_id\":3,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":16,\"item_id\":4,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":17,\"item_id\":6,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":18,\"item_id\":16,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":19,\"item_id\":20,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":20,\"item_id\":17,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":21,\"item_id\":10,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":22,\"item_id\":28,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":23,\"item_id\":29,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":24,\"item_id\":18,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":25,\"item_id\":8,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":26,\"item_id\":5,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":27,\"item_id\":13,\"required_role_level\":1,\"max_purchase_quantity\":32}],\"recyclable_book_ids\":[7,21,1,22,12,11,14,32,2,3,4,6,16,20,17,10,28,29,18,8,5,13],\"recycle_source_kinds\":[\"monster_drop\"],\"skill_book_drop_quality\":1,\"combat_timing\":{\"player_attack_base_ms\":1400,\"player_attack_speed_step_ms\":60,\"player_attack_level_step_ms\":14,\"player_attack_level_cap_ms\":370,\"player_attack_min_ms\":550,\"player_attack_action_ms\":550,\"player_attack_impact_ms\":300,\"event_capacity\":128,\"kill_queue_capacity\":16,\"player_push_action_ms\":500,\"monster_push_action_ms_per_step\":300,\"monster_push_move_ms_per_step\":500,\"pushed_step_display_ms\":300},\"pet_spawn\":{\"x\":8,\"y\":7},\"casting_supply\":{\"enabled\":false,\"slot\":100,\"item_ids\":[187]},\"map_catalog_ids\":[2],\"binding\":{\"enabled\":false,\"start_points\":[],\"safe_zone_enabled\":true},\"source_map_streaming\":{\"load_concurrency\":4,\"cache_capacity\":49},\"town_travel\":{\"enabled\":true,\"town_map_id\":2,\"plan_ttl_ms\":120000,\"quiesce_ttl_ms\":10000,\"ack_ttl_ms\":120000,\"max_plans_per_scene\":256},\"town_navigation\":{\"enabled\":true,\"work_per_task\":1024,\"work_per_worker_tick\":8192,\"workspaces_per_worker\":1,\"queue_per_worker\":64,\"max_expanded\":490000,\"max_frontier\":65536,\"max_route_cells\":4096,\"max_replans\":3,\"max_dynamic_cells\":2,\"max_memory_bytes_per_worker\":33554432},\"pet_runtime\":{\"enabled\":true,\"bootstrap_mode\":\"legacy_untrained_pet\",\"definition_ids\":[1]}}",
+    "after": "{\"rule_version\":17,\"map_id\":1,\"monster_id\":1,\"pet_id\":1,\"players\":[{\"job_id\":0,\"definition_id\":0,\"hp\":18,\"mp\":14,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":1,\"definition_id\":1,\"hp\":15,\"mp\":17,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":2,\"definition_id\":2,\"hp\":16,\"mp\":13,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":18,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true}],\"inventory_capacity\":32,\"initial_inventory\":[218,218,193,35,36],\"initial_bound_gold\":0,\"allow_free_dev_revive\":true,\"damage_formula\":\"development_source_combat\",\"recycle_test_gold_by_item\":{\"35\":0,\"36\":0,\"193\":400,\"218\":50},\"technical_parameters_notice\":\"rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。；rule17显式NoPets/RecallName与关闭的召唤独立候选，主仍22技能、legacy不训练、材料关闭；不认证17/购符业务。\",\"player_stats_source\":\"Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。\",\"damage_scope_notice\":\"开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。\",\"revive_notice\":\"开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。\",\"potions\":{\"tick_ms\":200,\"base_per_tick\":5,\"levels_per_step\":10,\"use_delay_ms\":300,\"queue_cap\":65535,\"effects\":[{\"item_id\":35,\"hp\":20,\"mp\":0},{\"item_id\":36,\"hp\":0,\"mp\":30}]},\"player_growth\":[{\"job_id\":0,\"hp_base\":14,\"mp_base\":11,\"hp_gain\":4,\"hp_gain_rate\":4.5,\"mp_gain\":3.5,\"mp_gain_rate\":0,\"attack_divisor\":5,\"defence_max_divisor\":7,\"magic_divisor\":0,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":1,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":15,\"hp_gain_rate\":1.8,\"mp_gain\":5,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":7,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":2,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":6,\"hp_gain_rate\":2.5,\"mp_gain\":8,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":0,\"tao_divisor\":7,\"magic_defence_min_divisor\":12,\"magic_defence_max_divisor\":6}],\"healing\":{\"tick_ms\":600,\"base_per_tick\":5,\"pet_base_per_tick\":5,\"levels_per_step\":10,\"queue_fraction_divisor\":10,\"queue_cap\":65535},\"initial_skill_books\":[{\"job_id\":1,\"item_id\":7},{\"job_id\":2,\"item_id\":21},{\"job_id\":0,\"item_id\":1}],\"skill_ids\":[1,2,3,4,5,11,23,29,7,12,25,26,10,33,24,9,14,15,31,8,27,21],\"skill_economy\":{\"page_item_id\":900001,\"preview_ttl_ms\":120000,\"preview_material_limit\":32},\"skill_shop_entries\":[{\"offer_id\":6,\"item_id\":7,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":7,\"item_id\":21,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":8,\"item_id\":1,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":3,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":4,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":9,\"item_id\":22,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":10,\"item_id\":12,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":11,\"item_id\":11,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":12,\"item_id\":14,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":13,\"item_id\":32,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":14,\"item_id\":2,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":15,\"item_id\":3,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":16,\"item_id\":4,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":17,\"item_id\":6,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":18,\"item_id\":16,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":19,\"item_id\":20,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":20,\"item_id\":17,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":21,\"item_id\":10,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":22,\"item_id\":28,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":23,\"item_id\":29,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":24,\"item_id\":18,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":25,\"item_id\":8,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":26,\"item_id\":5,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":27,\"item_id\":13,\"required_role_level\":1,\"max_purchase_quantity\":32}],\"recyclable_book_ids\":[7,21,1,22,12,11,14,32,2,3,4,6,16,20,17,10,28,29,18,8,5,13],\"recycle_source_kinds\":[\"monster_drop\"],\"skill_book_drop_quality\":1,\"combat_timing\":{\"player_attack_base_ms\":1400,\"player_attack_speed_step_ms\":60,\"player_attack_level_step_ms\":14,\"player_attack_level_cap_ms\":370,\"player_attack_min_ms\":550,\"player_attack_action_ms\":550,\"player_attack_impact_ms\":300,\"event_capacity\":128,\"kill_queue_capacity\":16,\"player_push_action_ms\":500,\"monster_push_action_ms_per_step\":300,\"monster_push_move_ms_per_step\":500,\"pushed_step_display_ms\":300},\"pet_spawn\":{\"x\":8,\"y\":7},\"casting_supply\":{\"enabled\":false,\"slot\":100,\"item_ids\":[187]},\"map_catalog_ids\":[2],\"binding\":{\"enabled\":false,\"start_points\":[],\"safe_zone_enabled\":true},\"source_map_streaming\":{\"load_concurrency\":4,\"cache_capacity\":49},\"town_travel\":{\"enabled\":true,\"town_map_id\":2,\"plan_ttl_ms\":120000,\"quiesce_ttl_ms\":10000,\"ack_ttl_ms\":120000,\"max_plans_per_scene\":256},\"town_navigation\":{\"enabled\":true,\"work_per_task\":1024,\"work_per_worker_tick\":8192,\"workspaces_per_worker\":1,\"queue_per_worker\":64,\"max_expanded\":490000,\"max_frontier\":65536,\"max_route_cells\":4096,\"max_replans\":3,\"max_dynamic_cells\":2,\"max_memory_bytes_per_worker\":33554432},\"pet_runtime\":{\"enabled\":true,\"bootstrap_mode\":\"legacy_untrained_pet\",\"definition_ids\":[1]}}"
+  },
+  {
+    "sheet": "开发首循环夹具",
+    "row": 4,
+    "column": 5,
+    "before": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选；本任务rule16宠物驻留/身体/训练候选，数值由PetDefs/Growth及架构预算共同维护",
+    "after": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选；本任务rule16宠物驻留/身体/训练候选，数值由PetDefs/Growth及架构预算共同维护；rule17地图宠物政策与独立召唤候选，同源参数不激活主技能"
+  },
+  {
+    "sheet": "开发首循环夹具",
+    "row": 4,
+    "column": 6,
+    "before": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。 rule16仅旧免费bootstrap的原对象死亡/尸体生命周期，正常17材料召唤仍待用户护符单位决定；不新增初始书。",
+    "after": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。 rule16仅旧免费bootstrap的原对象死亡/尸体生命周期，正常17材料召唤仍待用户护符单位决定；不新增初始书。 rule17主profile不追加技能17/书25/商店/升级/初始赠书；护符187未知值保持。独立catalog含完整三阶候选，不绕过校验。"
+  }
+]

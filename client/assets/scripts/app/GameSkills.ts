@@ -1,7 +1,7 @@
 import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
-import { isDirectionalSkill, isGroundSkill, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
+import { isDirectionalSkill, isGroundSkill, isSummonRecall, needsCastingSupply, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
@@ -35,7 +35,7 @@ export class GameSkills {
         toggle.setIsCheckedWithoutNotify(!!mode?.enabled);
         toggle.interactable = !!(input.ready && current?.learned && usesToggle && mode);
         this.text('ModeToggle/Label', mode ? mode.enabled ? '已开启' : '未开启' : '同步中');
-        const key = JSON.stringify({ ready: input.ready, castingSupplyEnabled: input.castingSupplyEnabled, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId });
+        const key = JSON.stringify({ ready: input.ready, castingSupplyEnabled: input.castingSupplyEnabled, mapNoPets: input.mapNoPets, rows: this.rows.map(row => [row.definition.id, row.status, row.cost, row.canLearn, skillActionLabel(input, row), skillModeStatus(input, row.definition)]), selected: this.selectedId, quick: quickSkillId });
         if (key === this.key) return;
         this.key = key;
         this.list.setItems(this.rows, (node, data) => {
@@ -52,7 +52,8 @@ export class GameSkills {
         const use = this.saved('Use').getComponent(Button)!;
         learn.interactable = !!selected?.canLearn;
         use.interactable = !!(input.ready && selected?.learned && selected.definition.active
-            && (!selected.definition.material_quantity || input.castingSupplyEnabled !== false)
+            && (!needsCastingSupply(input, selected) || input.castingSupplyEnabled !== false)
+            && !(selected.definition.kind === 'summon_pet' && input.mapNoPets)
             && (!['toggle', 'charge'].includes(skillActivation(selected.definition)) || skillMode(input, selected.definition.id))
             && !(skillActivation(selected.definition) === 'charge' && skillMode(input, selected.definition.id)?.ready));
         this.saved('BindQuick').getComponent(Button)!.interactable = !!(selected?.learned && selected.definition.active);
@@ -78,6 +79,7 @@ export class GameSkills {
         if (!row.definition.active) return `${skillPassiveText(row)}${mode ? `\n${mode}` : ''}`;
         if (activation === 'toggle') return `${mode} · 普攻按模式出招`;
         if (activation === 'charge') return `${mode} · 充能消耗魔法 ${row.cost}`;
+        if (row.definition.kind === 'summon_pet') return `魔法消耗 ${row.cost} · ${isSummonRecall(input, row) ? '召回原宠 · 不耗护符' : `新召唤 · 护符${row.definition.material_quantity ?? 0}`}`;
         const displacement=row.definition.displacement, low=displacement?.distance_base_by_level[row.level];
         const target = displacement ? `${row.definition.kind==='repulsion'?'推开':'冲撞'} ${low}–${low!+displacement.distance_random_bound-1}格`
             : row.definition.target_kind === 'friendly_self' ? '仅自身' : row.definition.target_kind === 'enemy_self' ? `自身周围${row.definition.area_radius ?? 0}格`

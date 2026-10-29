@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 16,
+  "rule_version": 17,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -3585,7 +3585,8 @@
       "height": 17,
       "scene_kind": 1,
       "safe_zones": [],
-      "no_teleport": false
+      "no_teleport": false,
+      "no_pets": false
     },
     {
       "id": "2",
@@ -3636,7 +3637,8 @@
           "radius": 10
         }
       ],
-      "no_teleport": false
+      "no_teleport": false,
+      "no_pets": false
     }
   ],
   "source_map_streaming": {

@@ -46,8 +46,8 @@ def build_fixture(source, ttl_ms):
     if ttl_ms < 12000 or ttl_ms > 15000:
         raise ValueError('本GUI只接受12000–15000ms隔离尸体观察期限')
     value = copy.deepcopy(source)
-    if value['rule_version'] != 16 or not value['pet_runtime']['enabled'] or value['pet_runtime']['bootstrap_mode'] != 'legacy_untrained_pet':
-        raise ValueError('需要当前rule16开发宠物底座')
+    if value['rule_version'] not in (16, 17) or not value['pet_runtime']['enabled'] or value['pet_runtime']['bootstrap_mode'] != 'legacy_untrained_pet':
+        raise ValueError('需要rule16/17且保持关闭17与护符的legacy开发宠物底座')
     if value['casting_supply']['enabled'] or any(row['id'] == 17 for row in value['skills']):
         raise ValueError('本GUI不允许开启护符或17')
     pet = value['pet']
@@ -107,13 +107,15 @@ def assert_main_identity():
         raise RuntimeError('main记录指向非本项目原进程，不接管')
 
 
-def health(fixture_hash):
+def health(fixture_hash, expected_rule_version):
+    if expected_rule_version not in (16, 17):
+        raise ValueError('尸体QA只接受明确rule16/17')
     result = {}
     for mode, port in PORTS.items():
         try:
             with urllib.request.urlopen(f'http://127.0.0.1:{port}/healthz', timeout=1) as response:
                 value = json.load(response)
-            if value.get('status') != 'ok' or value.get('mode') != mode or value.get('fixture_hash') != fixture_hash or value.get('rule_version') != 16:
+            if value.get('status') != 'ok' or value.get('mode') != mode or value.get('fixture_hash') != fixture_hash or value.get('rule_version') != expected_rule_version or not isinstance(value.get('instance'), str) or not value['instance']:
                 return None
             result[mode] = value
         except (OSError, ValueError):
@@ -146,6 +148,7 @@ def run(args):
     report['qa_tool_hashes_before'] = {file.relative_to(ROOT).as_posix(): sha(file) for file in tool_files}
     cfg = json.loads((ROOT / 'conf/dev/server.json').read_text(encoding='utf-8'))
     fixture = build_fixture(json.loads((ROOT / 'config/development/first-loop.json').read_text(encoding='utf-8')), args.ttl_ms)
+    report['fixture_rule_version'] = fixture['rule_version']
     fixture_path = directory / 'config/development/first-loop.json'
     save(fixture_path, fixture)
     cfg.update(database=report['database'], fixture_file=str(fixture_path), node_id='pet-gui-' + run_id, run_id=int(run_id[:12], 16) + 1)
@@ -193,13 +196,13 @@ def run(args):
         meta = windows_identity(child.pid)
         if not meta:
             raise RuntimeError('QA进程在身份登记前已退出')
-        meta.update(project_root=str(ROOT), run_id=run_id, argv=argv, database=name, purpose=PURPOSE, binary_sha256=sha(binary), config_sha256=sha(cfg_path), fixture_sha256=sha(fixture_path), corpse_ttl_ms=args.ttl_ms)
+        meta.update(project_root=str(ROOT), run_id=run_id, argv=argv, database=name, purpose=PURPOSE, binary_sha256=sha(binary), config_sha256=sha(cfg_path), fixture_sha256=sha(fixture_path), corpse_ttl_ms=args.ttl_ms, rule_version=fixture['rule_version'])
         save(directory / 'runtime.json', meta)
         deadline = time.monotonic() + 20
         while time.monotonic() < deadline:
             if not windows_owned(meta, binary):
                 raise RuntimeError('QA进程身份变化或启动退出')
-            state = health(sha(fixture_path))
+            state = health(sha(fixture_path), fixture['rule_version'])
             if state:
                 report['qa_health'] = state
                 meta['health_instances'] = {mode: state[mode]['instance'] for mode in PORTS}

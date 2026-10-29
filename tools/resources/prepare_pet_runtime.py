@@ -91,9 +91,12 @@ def compile_definitions(tables, definition_ids):
     if not isinstance(definition_ids, list) or not definition_ids or len(definition_ids) > 256 or any(type(value) is not int or not 0 < value <= 2**32-1 for value in definition_ids) or len(set(definition_ids)) != len(definition_ids):
         raise ValueError('宠物定义选择必须显式、唯一且有界')
     output, body_ids = [], set()
+    version = one(tables, 'dev_first_loop_profile', 1)['parameters']['rule_version']
     for identifier in definition_ids:
         definition = one(tables, 'game_pet_templates', identifier)
-        follow = exact(definition['follow_and_return'], {'source_skill_id', 'training', 'speed'}, '宠物公共规则')
+        follow = exact(definition['follow_and_return'], {'source_skill_id', 'training', 'speed'}|({'recall_name'} if version>=17 else set()), '宠物公共规则')
+        if version>=17 and (not isinstance(follow['recall_name'],str) or not follow['recall_name'].strip()):
+            raise ValueError('rule17来源召回名必须显式非空，不从模板ID或客户端名字推断')
         training = exact(follow['training'], TRAINING_FIELDS, '宠物训练')
         speed = exact(follow['speed'], SPEED_FIELDS, '宠物速度')
         lifecycle = exact(definition['lifetime_and_betrayal'], LIFECYCLE_FIELDS, '宠物生命期限')
@@ -159,6 +162,7 @@ def compile_definitions(tables, definition_ids):
             growth.append({'level': level, **deepcopy(attrs), 'required_experience': required})
         output.append({'id': identifier, 'source_skill_id': source_skill, 'monster_template_id': definition['monster_template_id'],
                        'owner_job_id': base['job_id'], 'resource_key': resource, 'base': base, 'undead': undead,
+                       **({'recall_name':follow['recall_name']} if version>=17 else {}),
                        'training': deepcopy(training), 'speed': deepcopy(speed), 'lifecycle': deepcopy(lifecycle), 'growth': growth})
     return output
 
@@ -179,7 +183,8 @@ def compile_runtime(tables, profile):
 
 def build_catalog(tables, source_evidence):
     ids = [row['id'] for row in tables['game_pet_templates'] if row['record_status'] != 'historical']
-    return {'schema_version': 1, 'development_only': True, 'runtime_enabled': False,
+    version = one(tables, 'dev_first_loop_profile', 1)['parameters']['rule_version']
+    return {'schema_version': 2 if version>=17 else 1, 'development_only': True, 'runtime_enabled': False,
             'budgets': compile_budgets(tables), 'definitions': compile_definitions(tables, ids),
             'source_evidence': deepcopy(source_evidence)}
 

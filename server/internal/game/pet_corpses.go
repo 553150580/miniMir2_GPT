@@ -144,6 +144,17 @@ func (w *worker) expirePetCorpses(r *room, now time.Time) bool {
 			}
 			changed = true
 			ref := referenceIn(world, corpse.Body)
+			// Recall排在主人受理图的共享队列，但动作归原宠物；Despawn须清掉所有World里的该birth动作。
+			for _, queuedWorld := range r.worlds() {
+				keepCasts := queuedWorld.Casts[:0]
+				for _, cast := range queuedWorld.Casts {
+					ownedRecall := cast.Summon != nil && cast.Summon.Recall && cast.Summon.Pet.World.Epoch == ref.World.Epoch && cast.Summon.Pet.Handle == ref.Handle && cast.Summon.Pet.Life == ref.Life
+					if !ownedRecall {
+						keepCasts = append(keepCasts, cast)
+					}
+				}
+				queuedWorld.Casts = keepCasts
+			}
 			attacks := world.Attacks[:0]
 			for _, attack := range world.Attacks {
 				if attack.Caster != ref {

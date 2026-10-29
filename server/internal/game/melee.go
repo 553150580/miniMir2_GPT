@@ -188,7 +188,7 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 		return p.CodeInvalidArgument
 	}
 	// Human.CanAttack只依赖动作与攻击时钟；保留本作截止时间相等即可受理的边界。
-	if r.Pending || r.Isolated || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
+	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
 	s, rank := w.selectedAttack(r, direction, now)
@@ -201,7 +201,7 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 	if front != nil {
 		needed++
 	}
-	if r.eventCount()+needed > w.eventCapacity() || from.AttackSequence == math.MaxUint32 {
+	if r.eventCount()+needed > w.eventCapacity() || uint64(needed) > math.MaxUint64-r.ScheduleID || from.AttackSequence == math.MaxUint32 {
 		return p.CodeSkillStateBlocked
 	}
 	stats := w.fighter(r, from)

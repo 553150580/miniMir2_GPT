@@ -1,0 +1,18 @@
+{
+  "purpose": "召唤升级预览中文字段修复前224输入报告原字节",
+  "files": {
+    "final-before.json": "7737a7b16a5bde32aa26471ea6be638973d476697057b48f5bcc98916ad985d4",
+    "full-ui-app.txt": "228def8ffdaceefe85b64e53c7ffd1f8005be3d32ab10d1eecfe6c965246b68f",
+    "handoff.md": "ecdf6a0b78589a5c8f36702b57357e190cf6f5cee662a2fa32a2318c04485ff3",
+    "implementation.md": "780cd5e78b8db11e1352111cab0508ec5eb342958254c0ef356cb22f8fada1f8",
+    "models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "pb-before.json": "fc013e36bf29ddd31bb45e694027e447fc0c8bfc1aafd66cbc68383279f0ea44",
+    "protocol-check-detail-0.txt": "319f75e0b10cfd22b51d7668ba3e1e972be517e4268e0dca4b8174a7a5f94c44",
+    "protocol-check-detail-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "protocol-check.txt": "203187c53fdc447b70cce3b55eeb2d1eb60e3ad4121dd5a26c534de3e3bea487",
+    "protocol-lint.txt": "67283859d87f6c54bf824384627a3aaab920fe253f9b4b2c6e3f181fac2bff77",
+    "report.json": "51787066e390024a26629f6fd8dfb472b4b948fd7b120695fbcfc3d29124d86c",
+    "run_final.py": "30a2b51f981b0b63f0886ab4f25f2b927a37ff8033a5f59a90feddf58354dc64",
+    "strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+  }
+}

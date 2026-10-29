@@ -166,19 +166,21 @@ func (r *room) eventCount() int {
 // 仅由受信业务在调度边界调用。目的点/宠物规则由调用方选定，核心不发明空格规则。
 func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Point, petPoint *devconfig.Point) bool {
 	m, known := w.worldMap(target)
+	old := r.currentWorld()
+	mapChanged := old != target
+	movePet := r.Pet != nil && !mapForbidsPets(m)
 	if !known || target == nil || r.world(target.Ref) != target || !m.Contains(point) || r.Player.MovementRevision == math.MaxUint64 ||
-		r.Pet != nil && (r.petResidentWorld() == nil || petPoint == nil || !m.Contains(*petPoint) || r.Pet.MovementRevision == math.MaxUint64) {
+		r.Pet != nil && r.petResidentWorld() == nil || movePet && (petPoint == nil || !m.Contains(*petPoint) || r.Pet.MovementRevision == math.MaxUint64) {
 		return false
 	}
 	moves := uint64(1)
-	if r.Pet != nil {
+	if movePet {
 		moves++
 	}
 	if r.CellEntrySequence > math.MaxUint64-moves {
 		return false
 	}
-	old := r.currentWorld()
-	if old != target {
+	if mapChanged {
 		w.cancelTownNavigation(r)
 	}
 	old.PlayerPosition = r.Player.Pos
@@ -195,10 +197,13 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 	}
 	w.beginMovement(r, &r.Player, movementTeleport)
 	w.commitRelocation(r, &r.Player, point)
-	if r.Pet != nil {
+	if movePet {
 		w.beginMovement(r, r.Pet, movementTeleport)
 		r.PetWorld = target.Ref
 		w.commitRelocation(r, r.Pet, *petPoint)
+	}
+	if mapChanged {
+		w.applyPetMapEntryPolicy(r, m)
 	}
 	return true
 }

@@ -1,0 +1,12 @@
+{
+  "tools/resources/prepare_first_loop.py": "6b6c7eec6ecbb885fbcfc4b9dde789ce00f9c88e9b7dc609f4f7dffe45bfecf6",
+  "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+  "tools/resources/prepare_summon_candidates.py": "2b1d93f52eb11b8b847ecd912a45ae3baa01f83041eb08e41132b2acd8ad4287",
+  "tools/config/test_summon_candidates.py": "f08194e7d3ff2be185b942ad31cc1f1685154bb653677f6394bba7f6227dcb39",
+  "tools/config/test_pet_runtime.py": "bf93d0260ef41182a36dcca37869782aa990f639adf823dac030610ef32b632b",
+  "tools/config/test_teleport.py": "15a9b661a93f44d157891edbdeb57be07b2e205b249cbab59549a1cebdef8f1d",
+  "tools/config/test_safe_zone_binding.py": "179a1e7aa3a1ca2a9e8934e37a72cbbce175cb0af9d3d044fda6fb54b7b5efc0",
+  "config/schema/catalog.json": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
+  "outputs/development-prep-20261026/玩法配置.xlsx": "c905af71dd8839b6474c4d53feb70d260bf0d139cc0478f03a0f998ad405729b",
+  "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+}

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "game_frozen": true,
+  "game_source_sha256": {
+    "server/internal/game/casting_material.go": "d9753ccab62c6290c5e30232d443d928f62b9f04d7b9bd8e45749ed15461575a",
+    "server/internal/game/combat.go": "7b7a0fa4f3709026cfea6fed81042ac67d4f1a7485dafbe78b85285bf1b4f091",
+    "server/internal/game/map_travel.go": "b931fd7b3f22abdb39faa508c525a28152a0ef4c419356880ce973c82f01bc59",
+    "server/internal/game/melee.go": "bd97e67941d16a076c3e9a5e524aed73c645220b8d7806c8b56653877c2354f1",
+    "server/internal/game/observation_test.go": "c56bf5d1c9a28a85806d3da8160e5106f6fbe523d34982ee58af8b853804ad12",
+    "server/internal/game/pet_corpses.go": "9fd2541e1e32a895a2d6d0c925cd675bd295b7477100f42dcb9e3a53d7fdd9fa",
+    "server/internal/game/pet_training.go": "0b01f3dbbedfdab7f145a30b6448c025747cdb1678d1615895e6d6823fd7ccd7",
+    "server/internal/game/runtime.go": "68ac3b71b4e96f238013d4cc40932740003582b2b6d8d8f82c904c3b920fb1e1",
+    "server/internal/game/schedule_order_test.go": "ba09c7e3ffd8b224d99b0b1f679676fbf2c6975e769156d0f5ab1cb0558544f5",
+    "server/internal/game/skill_cast.go": "76aa922a23a380da6333dc8d0162ad06163ae389ae0db8cea134051cbd4f19da",
+    "server/internal/game/skills.go": "e7e7dfe4eb61b2d44778a6cbea5d883916b5f11315579b349075c34b88e041dc",
+    "server/internal/game/summon_pet.go": "e439f096d3f0ae3f688b4c60a19a6e00cce33932f9d9bde035faa8193c162853",
+    "server/internal/game/summon_pet_test.go": "f054c6f750375b92ee2e8989f71a7c4d0c58d6fbcece5abe8cbc934fa96b6bd5",
+    "server/internal/game/teleport21.go": "1b8eddbdc21a9855c7c11fa67c74b35bfc4c058e1d3f2189d215f600825ee177",
+    "server/internal/game/timeline.go": "4ccca533bb331d5e353c724d4586eee1ed7e15d91e5ac3b980586328a3cb9705",
+    "server/internal/game/world_context.go": "0032418762cf2749f3ca9311a29f6f2a2dc1c6be0c4075511ea2c8fd49920e6b"
+  },
+  "focused": {
+    "report": "peer-fixes-after.json",
+    "exit_code": 0,
+    "wall_seconds": 16.779,
+    "passed_nodes": 48,
+    "skips": 0,
+    "inputs": 105,
+    "source_stable": true,
+    "source_matches_current_at_report": true
+  },
+  "exploratory_game": {
+    "report": "game-first.json",
+    "exit_code": 1,
+    "passed_nodes": 441,
+    "failed": [
+      "TestLethalStatePushesBeforeBroadcastWindow",
+      "minimir/internal/game"
+    ],
+    "wall_seconds": 145.038,
+    "source_stable": false,
+    "terminal_failure_fixed_in_focused": true
+  },
+  "fixture_sha256": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+  "mongo_run_by_this_agent": false,
+  "main_service_stopped_by_this_agent": false,
+  "final_full_go_mongo_ws": "pending_root_unified_run",
+  "existing_tests_changed": {
+    "server/internal/game/observation_test.go": "Keep exact DeathNotice then baseline two frames; assert rule17 archives original pet and clears OwnedPet in same terminal snapshot."
+  },
+  "historical_fixture_versions_lowered": false,
+  "main_skill17_enabled": false,
+  "main_casting_supply_enabled": false,
+  "complete_p0_or_capacity_verified": false,
+  "notes": "report.md distinguishes actual failures, fixes, pure callback tests and unrun final integration.",
+  "root_refinement_dependencies_changed_since_focused": [],
+  "game_hashes_still_match_current": true,
+  "report_updated_at_utc": "2026-10-29T01:09:21.153957+00:00",
+  "prior_focused_35": {
+    "report": "lethal-and-summon.json",
+    "exit_code": 0,
+    "wall_seconds": 14.762,
+    "passed_nodes": 35,
+    "skips": 0,
+    "inputs": 104,
+    "source_stable": true,
+    "source_matches_current_at_report": true,
+    "checkpoint_note": "Focused inputs were stable and matched at initial report; later root devconfig presence/upgrade preview refinements are covered by the pending unified whole-Go run."
+  },
+  "peer_fixes": {
+    "same_world_nopets": {
+      "before": "same-world-nopets-before.json",
+      "before_refined_case": "same-world-nopets-before-fixed-profile.json",
+      "after": "same-world-nopets-after.json"
+    },
+    "schedule_order": {
+      "before_valid_half_moon25": "schedule-before-valid-profile.json",
+      "after": "schedule-after.json",
+      "initial_harness_wrong_half_moon24": "schedule-before.json"
+    },
+    "frozen_ai_and_initialize": {
+      "before": "frozen-init-before.json",
+      "after": "peer-fixes-after.json"
+    }
+  }
+}

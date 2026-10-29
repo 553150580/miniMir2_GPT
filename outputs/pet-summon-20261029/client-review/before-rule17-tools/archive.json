@@ -1,0 +1,22 @@
+{
+  "purpose": "rule17尸体QA版本门禁修复前224报告与4工具原字节",
+  "files": {
+    "final-before.json": "09257acedfc5a2ec37eab7990a6b669af059b0c95dd2119187a6bb7469ab5b53",
+    "full-ui-app.txt": "32fb73ae8a909f44dbbb04d287f5e931cac3f67dd856a65eb2b2429db7897370",
+    "handoff.md": "bafcdd6d87aeeee90148e94ee1bd93bc0b180b582762edc654f5123cb40a15d4",
+    "implementation.md": "780cd5e78b8db11e1352111cab0508ec5eb342958254c0ef356cb22f8fada1f8",
+    "models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "pb-before.json": "fc013e36bf29ddd31bb45e694027e447fc0c8bfc1aafd66cbc68383279f0ea44",
+    "protocol-check-detail-0.txt": "319f75e0b10cfd22b51d7668ba3e1e972be517e4268e0dca4b8174a7a5f94c44",
+    "protocol-check-detail-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "protocol-check.txt": "4eebcaa21fcad13a1db8fb6d46657a24eebb0952e219d1732c20c57ad3387eaf",
+    "protocol-lint.txt": "67283859d87f6c54bf824384627a3aaab920fe253f9b4b2c6e3f181fac2bff77",
+    "report.json": "d7780960e5546475488b5b56a85d0d8e70554a815706c530a8ed8187b823b88b",
+    "run_final.py": "30a2b51f981b0b63f0886ab4f25f2b927a37ff8033a5f59a90feddf58354dc64",
+    "strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "tools/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/verify_pet_runtime_browser.cjs": "4e6a05e18f43646b9bad6184eae442f4d1fb0a440b2b16f99783b2a9bf937c4a",
+    "tools/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/pet_runtime_browser.test.cjs": "b551290366fea575b89faaeb7e07e488f6c3470fdd70cfecfb084d4a58974959"
+  }
+}

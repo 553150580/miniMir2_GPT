@@ -164,8 +164,10 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	}
 	f.TownTravel, f.TownNavigation = nil, nil
 	f.Map.NoTeleport, f.Map.SourceStaticBits = nil, nil
+	f.Map.NoPets = nil
 	for i := range f.Maps {
 		f.Maps[i].NoTeleport, f.Maps[i].SourceStaticBits = nil, nil
+		f.Maps[i].NoPets = nil
 	}
 	f.Skills = slices.DeleteFunc(f.Skills, func(s devconfig.Skill) bool { return s.ID == 21 })
 	f.Buffs = slices.DeleteFunc(f.Buffs, func(b devconfig.BuffDefinition) bool { return b.ID == buffID || b.Kind == "teleport_mana_penalty" })

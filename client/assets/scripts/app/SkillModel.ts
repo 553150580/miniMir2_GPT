@@ -1,10 +1,11 @@
 import { PotionInteger, PotionItem } from './PotionModel';
+import { OwnedPetState, ownedPetCanRecall } from './OwnedPetModel';
 
 export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
-        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport'; active: boolean; range: number;
+        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport' | 'summon_pet'; active: boolean; range: number;
     displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
@@ -24,6 +25,8 @@ export interface SkillSnapshot {
     castingSupplyEnabled?: boolean;
     playerStatuses?: readonly { teleportManaPenaltyPercent?: number }[];
     mapNoTeleport?: boolean;
+    mapNoPets?: boolean;
+    ownedPet?: OwnedPetState | null;
     statusDefinitions?: readonly { id: number; duration_rule?: { kind?: string; duration_ms?: number; stat_multiplier: number; seconds_by_level: readonly number[] };
         attribute_effects: { value_by_level: readonly number[]; target_level_divisor?: number; target_level_add?: number } }[];
 }
@@ -126,8 +129,16 @@ export function skillModeStatus(snapshot: SkillSnapshot, definition: SkillDefini
     const cooldown = Math.max(0, Math.ceil((state.cooldownRemainingMs - elapsed) / 1000));
     return cooldown ? `冷却 ${cooldown}秒` : activation === 'charge' ? '可充能' : '攻击时有机会准备下一击';
 }
+export function isSummonRecall(snapshot: SkillSnapshot, row: SkillRow): boolean {
+    return row.definition.kind === 'summon_pet' && ownedPetCanRecall(snapshot.ownedPet, row.definition.id);
+}
+export function needsCastingSupply(snapshot: SkillSnapshot, row: SkillRow): boolean {
+    return !!row.definition.material_quantity && !isSummonRecall(snapshot, row);
+}
 export function skillActionLabel(snapshot: SkillSnapshot, row: SkillRow): string {
-    if (row.definition.material_quantity && snapshot.castingSupplyEnabled === false) return '护符未开放';
+    if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '此图禁召';
+    if (isSummonRecall(snapshot, row)) return '召回';
+    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '护符未开放';
     const activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     if (activation === 'toggle') return state?.enabled ? '关闭' : '开启';
     if (activation === 'charge') return state?.ready ? '已就绪' : '充能';
@@ -139,10 +150,11 @@ export function skillPassiveText(row: SkillRow): string {
 }
 // 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
 export function skillQuickLabel(definition: SkillDefinition): string {
-    return ({ teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
+    return ({ summon_pet: '召唤', teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
 }
 export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
-    if (row.definition.material_quantity && snapshot.castingSupplyEnabled === false) return '未开放';
+    if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '禁召';
+    if (needsCastingSupply(snapshot, row) && snapshot.castingSupplyEnabled === false) return '未开放';
     const label = skillQuickLabel(row.definition), activation = skillActivation(row.definition), state = skillMode(snapshot, row.definition.id);
     return activation === 'toggle' && state ? `${label}${state.enabled ? '开' : '关'}` : activation === 'charge' && state?.ready ? `${label}备` : label;
 }
@@ -160,7 +172,11 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
         '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进', '无主宠物尸体不属于友方');
     else if (!definition.active) lines.push(skillPassiveText(row));
-    else if (!definition.displacement && definition.kind !== 'teleport') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    else if (!definition.displacement && definition.kind !== 'teleport' && definition.kind !== 'summon_pet') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    if (definition.kind === 'summon_pet') {
+        lines.push(isSummonRecall(snapshot, row) ? '当前可召回原宠，不消耗护符' : '新召唤由服务器选择出生位置', '召回仍消耗魔法并受动作与冷却限制');
+        if (snapshot.mapNoPets) lines.push('当前地图禁止召唤');
+    }
     if (definition.kind === 'teleport') {
         lines.push('无需选择目标位置，随机移动至绑定地图内', '施法生效时检查当前地图，失败不返还已消耗魔法');
         if (snapshot.mapNoTeleport) lines.push('当前地图禁止传送');
@@ -170,7 +186,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
         lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);
-    if (definition.material_quantity) lines.push(`每次消耗已装入护符 ${definition.material_quantity}份`, snapshot.castingSupplyEnabled === false ? '施法护符暂未开放' : snapshot.castingSupply
+    if (definition.material_quantity) lines.push(`${definition.kind === 'summon_pet' ? '新召唤' : '每次'}消耗已装入护符 ${definition.material_quantity}份`, snapshot.castingSupplyEnabled === false ? '施法护符暂未开放' : snapshot.castingSupply
         ? `当前护符：${snapshot.castingSupply.name} · 余${snapshot.castingSupply.quantity}` : '尚未装入施法护符，请在背包中选择装入');
     lines.push(`${definition.learn_level}级可使用对应技能书学习`, '升级需选择书本与书页，先查看报价');
     return lines;

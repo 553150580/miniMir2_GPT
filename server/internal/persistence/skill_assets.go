@@ -357,6 +357,31 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 	}
 	if p.Kind == 2 {
 		s, _ := f.Skill(p.SkillID)
+		if s.Summon != nil {
+			d, ok := f.PetRuntime.DefinitionByID(s.Summon.DefinitionID)
+			if !ok || uint64(p.From) >= uint64(len(d.Training.InitialLevelByRank)) || uint64(p.To) >= uint64(len(d.Training.InitialLevelByRank)) {
+				return out
+			}
+			beforeLevel, beforeMax := d.Training.InitialLevelByRank[p.From], d.Training.MaximumLevelByRank[p.From]
+			afterLevel, afterMax := d.Training.InitialLevelByRank[p.To], d.Training.MaximumLevelByRank[p.To]
+			before, beforeOK := d.FighterAt(beforeLevel, beforeMax)
+			after, afterOK := d.FighterAt(afterLevel, afterMax)
+			if !beforeOK || !afterOK {
+				return out
+			}
+			comparison := func(key string, before, after int64) *pb.SkillNumericComparison {
+				return &pb.SkillNumericComparison{Key: key, BeforeMin: before, BeforeMax: before, AfterMin: after, AfterMax: after}
+			}
+			// 此比较只描述未来新生；升级技能不会重造或改写现有宠物的训练状态。
+			out.Stats = []*pb.SkillNumericComparison{
+				comparison("mp_cost", s.MPBaseCost+int64(p.From)*s.MPLevelCost, s.MPBaseCost+int64(p.To)*s.MPLevelCost),
+				comparison("new_pet_training_level", int64(beforeLevel), int64(afterLevel)),
+				comparison("new_pet_max_training_level", int64(beforeMax), int64(afterMax)),
+				comparison("new_pet_material_quantity", s.MaterialQuantity, s.MaterialQuantity),
+				comparison("new_pet_hp_max", before.HP, after.HP),
+			}
+			return out
+		}
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		afterMin, afterMax := powerBounds(s, p.To)
 		out.Stats = []*pb.SkillNumericComparison{{Key: "base_power", BeforeMin: beforeMin, BeforeMax: beforeMax, AfterMin: afterMin, AfterMax: afterMax}, {Key: "accuracy_bonus", BeforeMin: s.AccuracyBonus(p.From), BeforeMax: s.AccuracyBonus(p.From), AfterMin: s.AccuracyBonus(p.To), AfterMax: s.AccuracyBonus(p.To)}, {Key: "mp_cost", BeforeMin: s.MPBaseCost + int64(p.From)*s.MPLevelCost, BeforeMax: s.MPBaseCost + int64(p.From)*s.MPLevelCost, AfterMin: s.MPBaseCost + int64(p.To)*s.MPLevelCost, AfterMax: s.MPBaseCost + int64(p.To)*s.MPLevelCost}}

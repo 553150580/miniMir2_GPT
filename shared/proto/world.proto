@@ -76,6 +76,20 @@ message PetTrainingState {
   // 当前级升下一级的总门槛；满级为0，经验可保留来源超额，不代表客户端可以自行升级。
   uint64 next_level_experience = 4;
 }
+// 角色owner唯一活宠的完整观察；异图不加入当前entities，不含预生或无主尸体。
+message OwnedPetState {
+  uint32 entity_handle = 1;
+  // 原开发宠物Life0合法；生命身份不得收窄为Number。
+  uint64 life = 2;
+  uint32 definition_id = 3;
+  uint64 map_id = 4;
+  int64 hp = 5;
+  int64 hp_max = 6;
+  PetTrainingState pet_training = 7;
+  // 服务端按原模板召回名派生；客户端不得由展示名或definition_id猜测。
+  repeated uint32 recall_skill_ids = 8;
+  bool follow_suppressed = 9;
+}
 message EntityState {
   uint32 entity_handle = 1;
   uint32 entity_kind = 2;
@@ -178,6 +192,8 @@ message SceneBaselineChunk {
   NavigationState navigation_state = 8;
   // 当前角色原格对应的来源安全区；0表示区外。仅观察，不授予免疫或永久绑定。
   uint64 safe_zone_id = 9;
+  // 每块元数据完全一致；只有整组基线就绪后才能替换活宠观察。
+  OwnedPetState owned_pet = 10;
 }
 message MoveIntent {
   uint64 scene_epoch = 1;

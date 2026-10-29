@@ -1,0 +1,286 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-29T01:45:01.816192+00:00",
+  "status": "root选定的本阶段终态证据已完整只读核对；无未补查项",
+  "audit_only": true,
+  "new_test_or_db_execution": false,
+  "frozen_inputs_modified": false,
+  "python": {
+    "passed_methods": 100,
+    "failed": 0,
+    "input_count": 14,
+    "before_after_current_equal": true,
+    "evidence": [
+      {
+        "path": ".work/pet-summon-20261029/checks/final/summary.json",
+        "sha256": "c495837bb4091ecb836896c2da9e75c891fcaeac117f6adca6d4f38fbad2e1ce"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/final/commands.json",
+        "sha256": "9c54c4e6bfd6cb66b3cf565a30386efd09c9b03961d84da9851e092ca5c79383"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/final/python.txt",
+        "sha256": "60ec2c081c820cad68505d184a1370138d534f8dc9d61e1f3729ae0ad133d648"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/final/before.json",
+        "sha256": "b9c1dff25dc1ef8069d90e7215811cf38354fa28260ab839b670f38a8f38f810"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/final/after.json",
+        "sha256": "b9c1dff25dc1ef8069d90e7215811cf38354fa28260ab839b670f38a8f38f810"
+      }
+    ]
+  },
+  "go": {
+    "passed_test_nodes": 944,
+    "failed_test_nodes": 0,
+    "skipped_test_nodes": 0,
+    "real_mongo": true,
+    "race": true,
+    "input_count": 162,
+    "before_after_current_equal": true,
+    "finished_at_utc": "2026-10-29T01:27:29.277497+00:00",
+    "events_sha256": "9383eddcce7d3c95563f9847417ec5dc817cdec6b3bc5c1c25ae52bfbbdfdb5d",
+    "command": [
+      "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+      "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+      "go",
+      "test",
+      "-json",
+      "-race",
+      "-p",
+      "1",
+      "./...",
+      "-count=1",
+      "-timeout=600s"
+    ],
+    "summon_ws_reexecuted": [
+      {
+        "test": "TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS",
+        "elapsed_seconds": 12.53
+      }
+    ],
+    "evidence": [
+      {
+        "path": "server/test-results/latest.json",
+        "sha256": "a2eb0e552b75d6a44b22f8bb4d6ca4d2f5f42f45087bb0fe737a414b02ce9c9e"
+      },
+      {
+        "path": "server/test-results/latest.events.jsonl",
+        "sha256": "9383eddcce7d3c95563f9847417ec5dc817cdec6b3bc5c1c25ae52bfbbdfdb5d"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/go.json",
+        "sha256": "aa9e7674b84fce04298c9fd6c52d2e619992c1162430ff9e5818df1aae9241c4"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/go.txt",
+        "sha256": "3d5553c793b6f8d27a20419a0aa88f81818d3e214ce3e40c0ae43c1f4defd549"
+      }
+    ]
+  },
+  "ws": {
+    "selected_run": "run-011627",
+    "passed": true,
+    "exit_code": 0,
+    "wrapper_seconds": 22.426,
+    "case_seconds": 10.54,
+    "package_seconds": 15.962,
+    "input_count": 162,
+    "before_after_current_equal": true,
+    "isolated": {
+      "role_level": 19,
+      "initial_book_id": 25,
+      "explicit_count_units": 2,
+      "monster_hp": 1,
+      "monster_damage": 0,
+      "no_pets_town": true,
+      "bootstrap_mode": "none"
+    },
+    "not_verified": [
+      "正常购符/包规格/售价",
+      "自然1→19",
+      "主profile17开放"
+    ],
+    "evidence": [
+      {
+        "path": ".work/pet-summon-20261029/ws-runtime/run-011627/report.json",
+        "sha256": "d60a915efa009c258f4488ad31497deb07a8e5f57ee541a0e00abaa88139ab75"
+      },
+      {
+        "path": ".work/pet-summon-20261029/ws-runtime/run-011627/output.txt",
+        "sha256": "1398ebe55e693458051ec41b1d797c326b0418a5fa44cdab52ce2f337f59c2d8"
+      }
+    ],
+    "first_failed_premise": {
+      "run": "run-011126",
+      "wrapper_seconds": 17.485,
+      "exit_code": 1,
+      "actual_error": 3203,
+      "expected_error": 3202,
+      "reason": "仍在施法Cooldown前态，不能把冷却拒绝当作NoPets判定失败；后续只调整测试等待前态",
+      "current_drift": [
+        "server/internal/integration/summon_pet_test.go"
+      ],
+      "only_tests_changed": true,
+      "final_full_go_reexecuted_same_ws": true,
+      "evidence": [
+        {
+          "path": ".work/pet-summon-20261029/ws-runtime/run-011126/report.json",
+          "sha256": "21ea5e20bfd0d83cf8fc2690b10284faa320f32ccb2c7e63d830dc076ad3df6a"
+        },
+        {
+          "path": ".work/pet-summon-20261029/ws-runtime/run-011126/output.txt",
+          "sha256": "bbd342ccab21bbeadd4cb0d91af27b2a3f13a359ab2fa39f04aa53a7f6cae501"
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "rule_version": 17,
+    "main_skill_count": 22,
+    "main_summon17_selected": false,
+    "main_material_enabled": false,
+    "bootstrap_mode": "legacy_untrained_pet",
+    "pet_catalog_schema": 2,
+    "summon_catalog_schema": 1,
+    "summon_required_rule": 17,
+    "preview": {
+      "path": "dev-pet-summon-v0.17-9cfc98f544bf",
+      "version": "dev-pet-summon-v0.17-9cfc98f544bf",
+      "content_sha256": "9cfc98f544bf3ffd181004fa6e742375b248bfc5761520026d77f32f105aebd3",
+      "runtime_ready": false
+    },
+    "preview_files_all_match": true,
+    "source_evidence_current": true,
+    "artifact_sha256": {
+      "config/development/first-loop.json": "684268f3d4bd2f035a52681f8f0531b3f85afc19f7ef9fa826ed66a92522fa5d",
+      "config/development/pet-runtime-candidates.json": "ddef286a5defdd00f486cf29ebb45cba4d60715c9c0ef39040c6244e4f165c2a",
+      "config/development/summon-candidates.json": "7b546e66ae1e5b3bb7b0c83d9c7fc35a2f7d6a03bcb5641d786ddf2a67ff23c8",
+      "client/assets/resources/development/gameplay.json": "4b26e94e4ca2a4ccb0675c98e8d7d309a1e22c4bbc7c092ce39022709631a2f4"
+    }
+  },
+  "creator": {
+    "version": "3.8.8",
+    "platform": "web-mobile",
+    "seconds": 122.71,
+    "exit_code": 36,
+    "success": true,
+    "layout_count": 10,
+    "script_count": 64,
+    "all_current_match": true,
+    "evidence": [
+      {
+        "path": "docs/客户端构建检查.json",
+        "sha256": "4e306c6e3752f6b5e38839b5d99ee94913b44efa4504f8604d3b968f28ec15f8"
+      },
+      {
+        "path": ".work/creator-cli.log",
+        "sha256": "73cae809c9a758838005d851aa4fb5975898ed399dfc16030c34fa33af3e0d4c"
+      }
+    ]
+  },
+  "client": {
+    "status": "verified_selected_final",
+    "passed_ui_app": 358,
+    "scene_passed": 16,
+    "javascript_total": 374,
+    "input_count": 224,
+    "before_after_current_frozen_equal": true,
+    "current_drift": [],
+    "five_commands_exit_zero": true,
+    "pb": {
+      "message_count": 69,
+      "int64_field_count": 140,
+      "int64_boundary_cases": 458
+    },
+    "new_protocol_ids": [],
+    "saved_layouts_preserved": true,
+    "evidence": [
+      {
+        "path": ".work/pet-summon-20261029/client-review/report.json",
+        "sha256": "cb6d2656e7efc914c4addcc9dba6df47e78733d5d3473a89a61af4e41e7a4582"
+      },
+      {
+        "path": ".work/pet-summon-20261029/client-review/full-ui-app.txt",
+        "sha256": "d8dd471a0a91a2ed43c8b5b0d74f4b4bd6c187511de99dcf515db093898fa649"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/scene.json",
+        "sha256": "6a0980648c22eb53ba5f42f77952e6e7d48f37d33e115524a4cabec623f2d773"
+      },
+      {
+        "path": ".work/pet-summon-20261029/checks/scene.txt",
+        "sha256": "c24a696994e45ff888acaef2b797b7eb63475003559ee93eefcc2aa1edc6b521"
+      }
+    ]
+  },
+  "gui": {
+    "status": "verified_selected_final",
+    "run_id": "1e6ecba6ad354480b145fb28221d9b45",
+    "checks": 5,
+    "errors": 0,
+    "warnings": 0,
+    "corpse_ttl_ms": 15000,
+    "main_restored": true,
+    "qa_stopped": true,
+    "qa_database_dropped": true,
+    "protected_unchanged": true,
+    "tools_input_count": 4,
+    "tools_before_after_current_equal": true,
+    "tools_current_drift": [],
+    "evidence": [
+      {
+        "path": ".work/pet-summon-20261029/gui-review/final-run.json",
+        "sha256": "1d347850ca3205246940f675a5f7dd3f1d9db630c9018ec218fd3219cbb6864e"
+      },
+      {
+        "path": ".work/pet-summon-20261029/gui-review/run-1e6ecba6ad354480b145fb28221d9b45/report.json",
+        "sha256": "04d8d6b27051b4c824646a08fc6e657b1c9daea91ac8c10f25f32da39df43225"
+      },
+      {
+        "path": ".work/pet-summon-20261029/gui-review/run-1e6ecba6ad354480b145fb28221d9b45/browser/report.json",
+        "sha256": "88147c68a036be1f51a57bd27fa86712371c1bac01e0f7460e3e04c15281f5c9"
+      },
+      {
+        "path": ".work/pet-summon-20261029/gui-review/static-rule17-tools/report.json",
+        "sha256": "787dd878a464013da1c44385f0bb27842954deec8af9717c7db5c920308af8eb"
+      }
+    ]
+  },
+  "town": {
+    "passed": true,
+    "checks": 7,
+    "errors": 0,
+    "warnings": 0,
+    "selection": {
+      "path": ".work/pet-summon-20261029/browser-town-selection.json",
+      "sha256": "c1307beb165941c1594b64bab2675c3df691993ca6d4294cdbc2c51503c4a000"
+    },
+    "report": {
+      "path": ".work/pet-summon-20261029/browser-town/report.json",
+      "sha256": "d7c0e32ab494af26ed65c72ae00307ad7c37a4494188788fbeaa4d5b7bc47123"
+    }
+  },
+  "ui": {
+    "passed": true,
+    "checks": 6,
+    "errors": 0,
+    "warnings": 1,
+    "selection": {
+      "path": ".work/pet-summon-20261029/browser-ui-selection.json",
+      "sha256": "24f582fa5a3fd0d44e119dea9c3a7ceb682f98e50c252e46d8d559d6035701a2"
+    },
+    "report": {
+      "path": ".work/pet-summon-20261029/browser-ui/report.json",
+      "sha256": "bf2c507f6280062bba389b527e3f7a8820b3f2f85e30dfecc9b877bc8c90da4a"
+    }
+  },
+  "limits": [
+    "Count2为明确隔离数量，不是护符购买包或DuraMax换算",
+    "主仍22技能/legacy不训练/材料关闭；候选编译不等于主17正常开放",
+    "手机真机、容量、自然养成与完整三职业不因这些限定证据通过而完成"
+  ]
+}

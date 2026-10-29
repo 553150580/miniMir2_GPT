@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status, Displacement, Teleport bool }
+type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status, Displacement, Teleport, Summon bool }
 
 type preparedCast struct {
 	Scene                                 uint64 // 原附着身份独立于执行actorRef。
@@ -20,6 +20,7 @@ type preparedCast struct {
 	Origin, Point                         devconfig.Point
 	Direction                             uint32
 	Cost, Amount, DelayMS, BuffDurationMS int64
+	Summon                                *summonPetPlan
 }
 
 var skillHandlers = map[string]skillHandler{
@@ -30,7 +31,8 @@ var skillHandlers = map[string]skillHandler{
 	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
 	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
 	"repulsion": {SelfArea: true, Displacement: true}, "shoulder_dash": {Direction: true, Displacement: true},
-	"teleport": {Teleport: true},
+	"teleport":   {Teleport: true},
+	"summon_pet": {Summon: true},
 }
 
 func targetKind(s devconfig.Skill) string {
@@ -131,7 +133,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	if !exists || !learned || !registered || s.JobID != r.Role.Job || level < s.LearnedLevel || level > s.MaxLevel {
 		return nil, p.CodeSkillNotLearned
 	}
-	if handler.Passive || r.Pending || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
+	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[id]) {
@@ -147,7 +149,18 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	}
 	var target *entity
 	var point devconfig.Point
-	if handler.Direction || handler.SelfArea || s.TargetKind == "friendly_self" {
+	var summon *summonPetPlan
+	if handler.Summon {
+		if targetHandle != 0 || len(ground) > 0 && ground[0] != nil {
+			return nil, p.CodeSkillTarget
+		}
+		var code uint32
+		summon, code = w.prepareSummonPet(r, s, direction, now)
+		if code != 0 {
+			return nil, code
+		}
+		point = r.Player.Pos
+	} else if handler.Direction || handler.SelfArea || s.TargetKind == "friendly_self" {
 		if targetHandle != 0 || direction > 7 {
 			return nil, p.CodeSkillTarget
 		}
@@ -187,13 +200,13 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	if r.eventCount()+1 > w.eventCapacity() {
 		return nil, p.CodeSkillStateBlocked
 	}
-	if s.MaterialQuantity > 0 && !materialAllowed {
+	if s.MaterialQuantity > 0 && !materialAllowed && (summon == nil || !summon.Recall) {
 		return nil, p.CodeSkillMaterialRequired
 	}
 	stats := w.fighter(r, &r.Player)
 	amount := int64(0)
 	duration := int64(0)
-	if handler.Teleport {
+	if handler.Teleport || handler.Summon {
 		// 传送没有伤害或治疗随机量，成功后的状态在实际移交完成时才添加。
 	} else if handler.Status {
 		definition, ok := w.e.Store.Cfg.Fixture.Buff(s.BuffID)
@@ -242,19 +255,20 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 		return nil, p.CodeSkillStateBlocked
 	}
 	plan := &preparedCast{Scene: r.Scene, Skill: s, Level: level, Caster: reference(r, &r.Player), Origin: r.Player.Pos, Point: point, Cost: cost, Amount: amount, DelayMS: delay, BuffDurationMS: duration, Direction: r.Player.Direction}
+	plan.Summon = summon
 	if target != nil {
 		plan.Target = reference(r, target)
 	}
-	if handler.Direction {
+	if handler.Direction || handler.Summon {
 		plan.Direction = direction
-	} else if !handler.SelfArea && s.TargetKind != "friendly_self" {
+	} else if !handler.SelfArea && !handler.Summon && s.TargetKind != "friendly_self" {
 		plan.Direction = facing(r.Player.Pos, point, r.Player.Direction)
 	}
 	return plan, 0
 }
 
 func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, now time.Time) uint32 {
-	if plan == nil || plan.Scene != r.Scene || plan.Caster.World != r.currentWorld().Ref || plan.Caster.Life != r.Player.Life || r.Player.HP <= 0 {
+	if plan == nil || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || plan.Scene != r.Scene || plan.Caster.World != r.currentWorld().Ref || plan.Caster.Life != r.Player.Life || r.Player.HP <= 0 || !w.summonPlanCurrent(r, plan) {
 		return p.CodeSkillStateBlocked
 	}
 	s, level := plan.Skill, plan.Level
@@ -278,6 +292,7 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	r.SkillCooldowns[id] = now.Add(time.Duration(s.CooldownBaseMS-int64(level)*s.CooldownReductionMS) * time.Millisecond)
 	handle, life := plan.Target.Handle, plan.Target.Life
 	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
+	event.Summon = plan.Summon
 	if s.Behavior == "hell_fire" {
 		event.LineRemaining = s.LineCells
 	}
@@ -325,6 +340,11 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		if c.Skill.Behavior == "hell_fire" {
 			point := stepPoint(c.TargetPoint, c.Direction, 1)
 			if !w.worldWalkable(world, point) {
+				return
+			}
+			if c.LineRemaining > 1 && r.ScheduleID == math.MaxUint64 {
+				// 已付费地图动作不能回绕为0次序；隔离保留其它原事件，不制造无序后继。
+				w.isolateRoom(r)
 				return
 			}
 			if r.observesWorld(world, c.Scene) {

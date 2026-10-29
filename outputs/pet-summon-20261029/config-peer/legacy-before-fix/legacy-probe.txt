@@ -1,0 +1,9 @@
+=== RUN   TestAuditLegacySchemaOneRejectsExplicitEmptyRecallName
+    summon_peer_overlay_test.go:22: schema1接受了显式recall_name空字符串，旧合同受到新字段污染
+--- FAIL: TestAuditLegacySchemaOneRejectsExplicitEmptyRecallName (0.02s)
+=== RUN   TestAuditLegacyRuleSixteenRejectsExplicitEmptyRecallName
+    summon_peer_overlay_test.go:38: rule16接受了显式recall_name空字符串，旧合同受到新字段污染
+--- FAIL: TestAuditLegacyRuleSixteenRejectsExplicitEmptyRecallName (0.01s)
+FAIL
+FAIL	minimir/internal/devconfig	1.709s
+FAIL

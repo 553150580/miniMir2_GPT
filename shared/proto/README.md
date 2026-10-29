@@ -1,5 +1,9 @@
 # 共享协议实现状态
 
+当前rule17共69个PB数据消息、53个消息号、31个错误码、140个64位字段及458个Long边界案例，无新消息号，仍属draft开发合同。SceneBaselineChunk.owned_pet=10新增OwnedPetState：原活宠handle/Life/definition、实际MapID、HP/上限、训练、recall_skill_ids及follow_suppressed；无落点、预生或尸体，不把异图实体加入entities。
+
+全部分块及退出取消ACK须完全一致并完整组装；同图时交叉核对原实体，64位保持Long。客户端只读召回技能集合选择原CastIntent/材料RPC，服务端重新判断；观察过期则正式拒绝模式变化、不扣符、不伪造经济成功。永久回执仍只记原消耗事实，不能从历史回执排新Recall/新生。主仍22技能/材料关闭，协议能力不授予17或购符，见[阶段验收](../../docs/召唤与跨图宠物规则阶段验收.json)。以下保留历史版本。
+
 当前rule16为68个PB数据消息、53个消息号、31个错误码、136个64位字段及444个Long边界案例，仍为draft开发合同，未新增消息号。`EntityState.pet_training=23`为独立训练等级/上限与uint64经验/门槛，`is_pet_corpse=24`识别无主尸体；模板Level不等于训练等级。主legacy宠不带虚构训练状态；训练EXP可超门槛且单次只升一级，客户端不while重算。
 
 训练和尸体观察均属于同一完整scene/baseline/state_sequence/handle/Life。基线在真实64KiB帧限制内整组预编码分块，单体过大/超过合同则整组拒绝，不删尸体凑包；显式退出等待原request/binding/state完整分块取消确认。64位继续Long/BigInt，不新增经济水位、客户端造宠入口或17技能授权。见[阶段验收](../../docs/宠物尸体与训练引擎阶段验收.json)。以下保留各自历史版本范围。

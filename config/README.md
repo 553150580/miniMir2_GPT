@@ -1,6 +1,14 @@
 # 配置维护与导出
 
-## 当前rule16宠物尸体与训练定义
+## 当前rule17召唤与地图禁宠候选
+
+预览`dev-pet-summon-v0.17-9cfc98f544bf`，98表965记录（candidate466/confirmed393/historical36/unverified70）、715项正式阻断。主22技能、原书/升级/商店/初始赠书/材料关闭及legacy宠基础保持；玩法82格受控修改、460公式和其余ZIP成员保持，架构书不变。NoPets与NoTeleport独立，两个现图显式false为技术候选，不反推原服实际政策。
+
+独立`config/development/summon-candidates.json`由共同Skill/Book/Upgrade投影导出原书25、17及三阶，runtime_enabled=false；缺任一阶不可绕过完整Fixture.Validate。delay500、Count1及spawn2000复用既有唯一字段，不另建数值源。RecallName为明确跨来源候选BoneFamiliar，大小写敏感、不用展示名或定义ID猜同名；pet-runtime独立目录schema2必需此名，历史schema1仅可省略，新键即使空/null也拒。
+
+升级书成本须为唯一原书的目标阶+1；资格采用Crystal19/22/26，MYF19/23/26差异在来源记录保留。候选17不加入主运行选择，不猜护符包Count、售价或来源DuraMax含义，不追加商店/赠书。隔离WS局部19级/原书/升级材料/两Count证明资格后的业务，不能写成正式供给/自然成长/主pack。详见[阶段验收](../docs/召唤与跨图宠物规则阶段验收.json)。以下为历史范围。
+
+## rule16宠物尸体与训练定义：历史验收
 
 当前预览`dev-pet-runtime-v0.16-5f25126dac61`，98表960记录（candidate461/confirmed393/historical36/unverified70）、709项正式阻断，22技能与4状态。两本唯一Excel本轮更新82单元格；PetDefs引用Monster基础属性并登记训练、速度、生命周期，PetGrowthLevels保存0–7级门槛与加成；架构Budget40为跨World共享128身体技术候选。不能用结构通过替代容量认证。
 

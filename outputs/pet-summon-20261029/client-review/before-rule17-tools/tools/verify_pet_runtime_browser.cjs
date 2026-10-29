@@ -1,0 +1,108 @@
+// 仅隔离cfg正常注册/道士创角/触屏观察；不造尸体、不发送导航或战斗私有调用，凭据只在内存。
+const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'../..'),secrets=[];
+const redact=text=>secrets.reduce((value,secret)=>value.split(secret).join('[内存凭据已省略]'),String(text));
+const arg=(name,fallback)=>{const i=process.argv.indexOf(name);return i<0?fallback:process.argv[i+1];};
+const out=path.resolve(root,arg('--report-dir','.work/pet-runtime-20261029/gui-review/browser'));
+assert(out.startsWith(path.join(root,'.work')+path.sep),'产物只能在本项目.work');fs.mkdirSync(out,{recursive:true});assert(!fs.existsSync(path.join(out,'report.json')),'保留旧QA现场，请换新目录');
+const evidencePath=path.resolve(root,arg('--qa-evidence',''));assert(evidencePath.startsWith(path.join(root,'.work')+path.sep),'必须由专属QA helper提供所有权证据');
+const evidence=JSON.parse(fs.readFileSync(evidencePath,'utf8')),ttlMs=Number(arg('--ttl-ms','15000'));
+assert(evidence.project_root===root&&evidence.purpose==='isolated_pet_runtime_gui'&&/^[0-9a-f]{32}$/.test(evidence.run_id)&&evidence.database==='minimir_dev_game_test_pet_gui_'+evidence.run_id,'不是本轮独立QA节点');assert(ttlMs>=12000&&ttlMs<=15000&&evidence.corpse_ttl_ms===ttlMs);
+const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const build=JSON.parse(fs.readFileSync(path.join(root,'docs/客户端构建检查.json'),'utf8'));assert(build.success&&build.scene_prefab_layout_preserved&&build.source_stable_during_build,'需要当前成功Creator实构');
+for(const [file,expected]of Object.entries({...build.asset_hashes,...build.script_hashes}))assert.equal(hash(path.join(root,file)),expected,'构建输入已变化：'+file);
+const qaConfigPath=evidence.argv[evidence.argv.indexOf('-config')+1];assert(path.resolve(qaConfigPath).startsWith(path.dirname(evidencePath)+path.sep)&&hash(qaConfigPath)===evidence.config_sha256,'QA配置身份失效');
+const qaConfig=JSON.parse(fs.readFileSync(qaConfigPath,'utf8'));assert.equal(qaConfig.database,evidence.database);assert(path.resolve(qaConfig.fixture_file).startsWith(path.dirname(evidencePath)+path.sep));assert.equal(hash(qaConfig.fixture_file),evidence.fixture_sha256);assert.notEqual(evidence.fixture_sha256,hash(path.join(root,'config/development/first-loop.json')),'禁止将main原配置当隔离QA');
+const fixture=JSON.parse(fs.readFileSync(path.join(root,'config/development/first-loop.json'),'utf8')),gameplay=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/development/gameplay.json'),'utf8')),expectedRuleVersion=String(fixture.rule_version);
+assert(expectedRuleVersion==='16'&&String(gameplay.rule_version)===expectedRuleVersion&&!fixture.casting_supply.enabled&&!fixture.skills.some(s=>s.id===17),'本QA不开放17/护符');
+const {chromium}=require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT,'browser-tools/node_modules/playwright-core'));
+const pb=require('../../client/assets/scripts/generated/protobuf/client_pb.js').minimir.v1;
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function packet(payload){const b=Buffer.from(payload);if(b.length<6||b.length>65536)return null;let offset=4;const variable=()=>{let value=0n,shift=0n;for(let i=0;i<10;i++){assert(offset<b.length,'帧头截断');const x=b[offset++];value|=BigInt(x&127)<<shift;if(!(x&128))return value;shift+=7n;}throw Error('帧头超长');};const request=Number(variable()),binding=variable().toString(),error=b[1]&1?Number(variable()):0;return{id:b.readUInt16BE(2),request,binding,error,body:b.subarray(offset)};}
+async function until(predicate,label,timeout=30000){const end=Date.now()+timeout;do{if(await predicate()===true)return;await sleep(50);}while(Date.now()<end);throw Error('等待超时：'+label);}
+function sampleCorpseTouch({handle,life}){
+ const a=cc.director.getScene().getComponentsInChildren('AppRoot')[0],v=a.world.visuals.get(handle);
+ if(!v||v.state.life.toString()!==life)throw Error('尸体视图身份已失效');
+ const transform=v.node._uiProps.uiTransformComp,visible=cc.view.getVisibleSize(),canvas=document.querySelector('canvas').getBoundingClientRect(),candidates=[];
+ const visuals=Array.from(a.world.visuals.values()).filter(other=>other.node.activeInHierarchy);
+ const visualDiagnostics=visuals.map(other=>({handle:other.state.entityHandle,kind:other.state.entityKind,life:other.state.life.toString(),grid:other.state.position,display:{x:other.node.position.x,y:other.node.position.y},order:other.node.getSiblingIndex(),pose:other.pose,valid:cc.isValid(other.node,true),size:{width:other.node._uiProps.uiTransformComp.width,height:other.node._uiProps.uiTransformComp.height}}));
+ // Cocos按根矩形命中；两侧邻实体可盖住中心±20%，必须检查保留3像素边距的外角。
+ for(const dy of [0,.2,-.2,.35,-.35,.45,-.45])for(const dx of [0,.2,-.2,.35,-.35,.45,-.45]){
+  const p=transform.convertToWorldSpaceAR(new cc.Vec3(transform.width*dx,transform.height*dy)),hits=[];
+  for(const other of visuals){const t=other.node._uiProps.uiTransformComp,q=t.convertToNodeSpaceAR(p);if(q.x>=-t.anchorPoint.x*t.width&&q.x<=(1-t.anchorPoint.x)*t.width&&q.y>=-t.anchorPoint.y*t.height&&q.y<=(1-t.anchorPoint.y)*t.height)hits.push({handle:other.state.entityHandle,order:other.node.getSiblingIndex()});}
+  hits.sort((a,b)=>b.order-a.order);candidates.push({x:canvas.x+p.x/visible.width*canvas.width,y:canvas.y+(visible.height-p.y)/visible.height*canvas.height,offset:{x:dx,y:dy},hits});
+ }
+ const selected=candidates.find(p=>p.hits[0]?.handle===handle&&p.x>=0&&p.y>=0&&p.x<canvas.width&&p.y<canvas.height);
+ return{found:!!selected,sample:selected??null,visualDiagnostics,candidates};
+}
+function sceneInteractive(name){
+ const scene=window.cc?.director?.getScene();return Boolean(scene?.name===name&&scene.getComponentsInChildren('AppRoot').length&&cc.find('Canvas/Safe')?.activeInHierarchy&&!cc.find('Canvas/Loading')?.activeInHierarchy);
+}
+function readTaoSelection(){
+ const scene=cc.director.getScene(),a=scene?.getComponentsInChildren('AppRoot')[0],button=cc.find('Canvas/Safe/JobTabs/Job2'),loading=cc.find('Canvas/Loading');
+ const status=cc.find('Canvas/Safe/Status')?.getComponent(cc.Label)?.string??'';
+ return{ready:scene?.name==='RoleSelect'&&!!a&&button?.activeInHierarchy===true&&button.getComponent(cc.Button)?.interactable===true&&!loading?.activeInHierarchy,selectedJob:a?.selectedJob,status,diagnostic:{scene:scene?.name,app:!!a,buttonActive:button?.activeInHierarchy,interactable:button?.getComponent(cc.Button)?.interactable,loadingActive:loading?.activeInHierarchy}};
+}
+async function verifyQAHealth(){
+ const values={};assert.deepEqual(evidence.ports,{account:18100,game:18101,gm:18102},'本轮端口合同不匹配');
+ await Promise.all(Object.entries(evidence.ports).map(async([mode,port])=>{const response=await fetch('http://127.0.0.1:'+port+'/healthz',{signal:AbortSignal.timeout(2000)});assert(response.ok);const state=await response.json();assert.equal(state.fixture_hash,evidence.fixture_sha256,'拒绝连接main或非本轮QA');assert.equal(state.mode,mode);assert.equal(String(state.rule_version),expectedRuleVersion);assert(evidence.health_instances?.[mode]);assert.equal(state.instance,evidence.health_instances[mode],'不是本轮节点instance');values[mode]=state.instance;}));return values;
+}
+(async()=>{
+ const initialHealth=await verifyQAHealth();
+ const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-save-password-bubble']});
+ const context=await browser.newContext({viewport:{width:720,height:1280},hasTouch:true,isMobile:true,deviceScaleFactor:1}),page=await context.newPage();
+ const report={passed:false,scope:'独立QA cfg HP1/怪物20高命中/15秒尸体；真实Creator与正常道士UI，非180秒原数值、17召唤、购符、自然成长、冷重建、128容量或手机真机',expectedRuleVersion,qaRunId:evidence.run_id,fixtureHash:evidence.fixture_sha256,ttlMs,checks:[],errors:[],warnings:[],entries:[],acks:[],observations:[],protocolErrors:[],sent:[],screenshots:[],credentialsWritten:false,corpseSeeded:false,trainingVerified:false,corpseTouchAttempts:[],roleCreationRequests:[],roleSelection:null,roleSelectionAttempts:[],healthChecks:[{phase:'startup',instances:initialHealth}]};
+ const batches=new Map();let deathAt=0,firstAlive,corpseIdentity,observed,held;
+ const watchdog=setTimeout(()=>{report.errors.push('GUI工具总预算超时');void page.close().catch(()=>{});},120000);
+ page.on('pageerror',error=>report.errors.push(error.stack||error.message));page.on('console',message=>{if(['warning','error'].includes(message.type()))report.warnings.push({type:message.type(),text:message.text().slice(0,700)});});
+ page.on('request',request=>{try{if(new URL(request.url()).pathname!=='/account/rpc')return;const body=request.postDataBuffer();if(!body)return;const p=packet(body);if(p?.id===10005){const q=pb.CreateRoleRequest.decode(p.body);report.roleCreationRequests.push({time:Date.now(),job:q.job,slot:q.slot});assert.equal(q.job,2,'正常创角上行必须是道士');}}catch(error){report.errors.push('创角只读观察：'+error.message);}});
+ page.on('websocket',socket=>{
+  socket.on('framesent',event=>{try{const p=packet(event.payload);if(!p)return;if([20011,30014].includes(p.id))throw Error('客户端发送了仅S2C状态');if(p.id===30003||p.id===40014){const q=(p.id===30003?pb.CastIntent:pb.CastWithMaterialRequest).decode(p.body);assert.notEqual(q.skill_id,17,'不允许以GUI工具开放17');}if(p.id===4){const q=pb.EnterWorldAck.decode(p.body);report.acks.push({time:Date.now(),scene:q.scene_epoch.toString(),baseline:q.baseline_id.toString()});}report.sent.push({id:p.id,request:p.request});assert(report.sent.length<3000,'发送观察超过工具预算');}catch(error){report.errors.push('发送观察：'+error.message);}});
+  socket.on('framereceived',event=>{try{
+   const p=packet(event.payload);if(!p)return;if(p.error){report.protocolErrors.push({id:p.id,code:p.error});return;}
+   if(p.id===20002){const q=pb.EnterLineResult.decode(p.body);assert.equal(q.resource_version.toString(),expectedRuleVersion);report.entries.push({time:Date.now(),binding:p.binding,scene:q.scene_epoch.toString(),baseline:q.baseline_id.toString(),map:q.room_id.toString(),player:q.player_handle,resourceVersion:q.resource_version.toString()});}
+   if(p.id!==5)return;const q=pb.SceneBaselineChunk.decode(p.body);assert(q.chunk_count>0&&q.chunk_count<=64);const key=[p.binding,q.scene_epoch,q.baseline_id,q.state_sequence].join(':');let batch=batches.get(key);if(!batch){batch={count:q.chunk_count,chunks:new Map()};batches.set(key,batch);}assert.equal(batch.count,q.chunk_count);batch.chunks.set(q.chunk_index,q);if(batch.chunks.size!==batch.count)return;
+   const entities=[];for(let i=0;i<batch.count;i++){assert(batch.chunks.has(i));entities.push(...batch.chunks.get(i).entities);}batches.delete(key);assert(entities.length<=2048);const pets=entities.filter(e=>e.entity_kind===2).map(e=>({handle:e.entity_handle,life:e.life.toString(),hp:e.hp.toString(),hpMax:e.hp_max.toString(),corpse:e.is_pet_corpse,training:e.pet_training===null?null:{level:e.pet_training.training_level,experience:e.pet_training.experience.toString()},x:e.position.x,y:e.position.y}));
+   const record={time:Date.now(),binding:p.binding,scene:q.scene_epoch.toString(),baseline:q.baseline_id.toString(),sequence:q.state_sequence.toString(),pets,monster10:entities.find(e=>e.entity_handle===10)?.attack_sequence??0};report.observations.push(record);assert(report.observations.length<2000&&batches.size<=64,'基线观察超过工具预算');
+   assert(pets.filter(p=>!p.corpse&&BigInt(p.hp)>0n).length<=1,'出现第二只活宠');
+   if(!firstAlive&&pets.some(p=>!p.corpse&&p.hp==='1'))firstAlive=record;
+   const dead=pets.find(p=>p.corpse&&p.hp==='0');if(dead&&!deathAt){deathAt=record.time;corpseIdentity={handle:dead.handle,life:dead.life};}
+  }catch(error){report.errors.push('接收观察：'+error.message);}});
+ });
+ async function scene(name){await page.waitForFunction(sceneInteractive,name,{timeout:60000});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));}
+ async function idle(){await page.waitForFunction(()=>Boolean(!cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.uiActionBusy),null,{timeout:15000});}
+ async function clickNode(expression,argument){const p=await page.evaluate(({expression,argument})=>{const node=Function('argument','return ('+expression+')')(argument);if(!node?.activeInHierarchy)throw Error('节点不可见');const button=node.getComponent(cc.Button);if(button&&!button.interactable)throw Error('按钮不可用');const b=node._uiProps.uiTransformComp.getBoundingBoxToWorld(),v=cc.view.getVisibleSize(),r=document.querySelector('canvas').getBoundingClientRect();return{x:r.x+(b.x+b.width/2)/v.width*r.width,y:r.y+(v.height-b.y-b.height/2)/v.height*r.height};},{expression,argument});await page.touchscreen.tap(p.x,p.y);}
+ async function tap(path){await clickNode('cc.find("Canvas/Safe/"+argument)',path);}
+ async function edit(path,value){await tap(path);const input=page.locator('input:visible');await until(async()=>{if(await input.isVisible())return true;await tap(path);return false;},'保存EditBox正常触屏激活 '+path,5000);await input.fill(value);}
+ async function observe(){await observed?.dispose();observed=await page.evaluateHandle(async()=>{const {session}=await System.import('chunks:///_virtual/GameSession.ts');return session;});}
+ async function ready(){await page.waitForFunction(observed=>{const a=cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];return Boolean(observed.ready&&observed.entry?.roomId.toString()==='1'&&a?.world?.isMapReady&&a.reconciliationStarted&&a.canSendInput());},observed,{timeout:60000});const state=await readState();assert.equal(state.resourceVersion,expectedRuleVersion);}
+ async function readState(){return page.evaluate(observed=>{const a=cc.director.getScene()?.getComponentsInChildren('AppRoot')[0],baseline=observed.baseline,player=baseline?.entities.find(e=>e.entityHandle===observed.entry?.playerHandle);return{time:Date.now(),ready:observed.ready,scene:observed.entry?.sceneEpoch.toString(),baseline:observed.entry?.baselineId.toString(),binding:observed.connection.binding.toString(),resourceVersion:observed.entry?.resourceVersion.toString(),hp:player?.hp.toString(),pets:(baseline?.entities??[]).filter(e=>e.entityKind===2).map(e=>{const visual=a?.world?.visuals.get(e.entityHandle);return{handle:e.entityHandle,life:e.life.toString(),hp:e.hp.toString(),corpse:e.isPetCorpse,training:e.petTraining?{level:e.petTraining.trainingLevel,maximum:e.petTraining.maxTrainingLevel,experience:e.petTraining.experience.toString(),nextLevelExperience:e.petTraining.nextLevelExperience.toString()}:null,position:{x:e.position.x,y:e.position.y},visual:!!visual,nodeValid:visual?cc.isValid(visual.node,true):false,pose:visual?.pose,name:visual?.node.getChildByName('Name')?.getComponent(cc.Label)?.string};}),detail:a?.popup?.top?.name==='StatusDetails'?cc.find('Canvas/Safe/PopupView/Panels/StatusDetails/List').getComponent('List').items:[],ui:a?.ui?.top?.name??'',popup:a?.popup?.top?.name??'',lastError:observed.lastError};},observed);}
+ async function snapshot(name){const state=await readState(),file=path.join(out,name+'.png');await page.screenshot({path:file});report.screenshots.push({name,file,state});return state;}
+ async function closePanels(){for(let i=0;i<8;i++){const state=await readState();if(!state.ui&&!state.popup)return;await page.touchscreen.tap(12,200);await sleep(70);}throw Error('面板未正常返回');}
+ async function entityDetails(){
+  await closePanels();let diagnostic;
+  for(let attempt=0;attempt<6;attempt++){diagnostic=await page.evaluate(sampleCorpseTouch,corpseIdentity);report.corpseTouchAttempts.push({time:Date.now(),...diagnostic});if(diagnostic.found)break;await sleep(60);}
+  assert(diagnostic.found,'没有尸体最上层真实触屏密采样点；完整hits/位置已记录');
+  await page.touchscreen.tap(diagnostic.sample.x,diagnostic.sample.y);await page.waitForFunction(()=>Boolean(cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy),null,{timeout:10000});assert((await readState()).detail.join('').includes('宠物尸体'),'触屏必须选到尸体而非附近怪物/角色');
+ }
+ try{
+  await page.goto('http://127.0.0.1:18080/?petRuntimeQA=1');await scene('Login');
+  const account='pgq'+crypto.randomBytes(6).toString('hex'),password=crypto.randomBytes(12).toString('hex'),name='PG'+crypto.randomBytes(4).toString('hex');secrets.push(account,password);
+  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await idle();await observe();
+  await until(async()=>{const selected=await page.evaluate(readTaoSelection);report.roleSelectionAttempts.push({time:Date.now(),...selected});if(!selected.ready)return false;if(selected.selectedJob===2){report.roleSelection=selected;return true;}await tap('JobTabs/Job2');return false;},'Loading关闭且职业job2普通触屏选择已生效',10000);
+  await edit('Name',name);await tap('Create');await page.waitForFunction(name=>Boolean(cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(label=>label.string.includes(name))),name,{timeout:20000});await idle();
+  const created=await page.evaluate(({session,name})=>{const role=session.roles.find(role=>role.name===name);return role?{job:role.job,slot:role.slot}:null;},{session:observed,name});assert(created&&created.job===2,'正常创建后的目录角色必须是道士');assert.equal(report.roleCreationRequests.length,1);assert.equal(report.roleCreationRequests[0].job,2);report.createdRole=created;
+  await tap('Role0');await idle();await tap('Enter');await scene('Game');await observe();await ready();assert(firstAlive,'首个完整入场基线须有初始活宠；不能用无宠职业继续等待尸体');
+  await until(async()=>Boolean((await readState()).pets.some(p=>p.corpse&&p.hp==='0'&&p.visual)),'真实怪击尸体');assert(firstAlive,'首次完整基线必须观察到原活宠，不能预置尸体');assert(deathAt&&corpseIdentity);const original=firstAlive.pets.find(p=>p.handle===corpseIdentity.handle);assert(original&&!original.corpse&&original.hp==='1'&&original.life===corpseIdentity.life);assert(report.observations.some(o=>o.monster10>0&&o.pets.some(p=>p.corpse)),'尸体须伴随真实怪物攻击序号推进');report.initialAlive=firstAlive;report.deathAt=deathAt;report.corpseIdentity=corpseIdentity;
+  const dead=await snapshot('01-real-corpse');assert(dead.pets.filter(p=>!p.corpse&&BigInt(p.hp)>0n).length===0);assert(dead.pets.find(p=>p.handle===corpseIdentity.handle).name.includes('尸体'));report.checks.push('初始HP1活宠经真实怪物首击成为同handle/Life原尸体，没有第二只活宠或注入body');
+  await entityDetails();await snapshot('02-corpse-details');report.checks.push('正常触屏选中尸体，保存实体详情明确显示宠物尸体');
+  await closePanels();await tap('BottomHUD/Skills/PetPanel');await page.waitForFunction(()=>Boolean(cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy));const panel=await snapshot('03-pet-panel');assert(panel.detail.join('').includes('当前没有存活宠物'));assert(!panel.detail.join('').includes('训练等级'));report.checks.push('保存PetPanel不把无主尸体当活宠，也不编造legacy训练级别');
+  await closePanels();await sleep(Math.max(0,deathAt+4000-Date.now()));assert(Date.now()<deathAt+ttlMs-3000,'健康重入准备已超过受控观察预算');const before=await readState();report.healthChecks.push({phase:'before_health_ticket',instances:await verifyQAHealth()});await tap('BottomHUD/Footer/ChangeRole');await scene('RoleSelect');await page.waitForFunction(name=>Boolean(cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(label=>label.string.includes(name))),name);await tap('Role0');await idle();await tap('Enter');await scene('Game');await observe();await ready();report.healthChecks.push({phase:'after_health_ticket',instances:await verifyQAHealth()});const health=await snapshot('04-health-corpse'),body=health.pets.find(p=>p.handle===corpseIdentity.handle);assert(body&&body.life===corpseIdentity.life&&body.corpse&&body.hp==='0');assert.notEqual(health.binding,before.binding);assert(Date.now()<deathAt+ttlMs-800,'新票应在原尸体期限内完成');report.health={at:Date.now(),binding:health.binding};report.checks.push('正常换角新票健康重入保留原尸体handle/Life及HP0，未重造免费活宠');
+  await entityDetails();held=await page.evaluateHandle(({handle,life})=>{const a=cc.director.getScene().getComponentsInChildren('AppRoot')[0],visual=a.world.visuals.get(handle);if(!visual||visual.state.life.toString()!==life)throw Error('旧尸体引用失效');return{node:visual.node,body:visual.body.slice()};},corpseIdentity);
+  await until(async()=>{const value=await readState();return Boolean(!value.pets.some(p=>p.handle===corpseIdentity.handle)&&value.detail.join('').includes('该实体已离场'));},'原TTL到期移除并撤销详情',ttlMs+2500);
+  report.expiredAt=Date.now();assert(report.expiredAt<deathAt+ttlMs+1800,'尸体不得在新票时刷新TTL');assert(report.expiredAt<report.health.at+ttlMs-500,'移除应早于从健康重入重新计算的期限');const cleanup=await page.evaluate(held=>({oldNodeValid:cc.isValid(held.node,true),framesBound:held.body.filter(sprite=>sprite.spriteFrame!=null).length}),held);assert.equal(cleanup.oldNodeValid,false);assert.equal(cleanup.framesBound,0);report.visualCleanup=cleanup;await snapshot('05-expired-details');report.checks.push('原15秒QA截止继续推进，权威基线移除、Cocos旧节点失效且Sprite帧解绑，保存详情实时变为已离场');
+  assert.equal(report.errors.length,0,report.errors.join('\n'));assert.equal(report.protocolErrors.length,0);report.zeroWarningsVerified=report.warnings.length===0;report.passed=true;
+ }catch(error){report.error=error.stack||String(error);try{if(await page.evaluate(()=>Boolean(['Game','RoleSelect'].includes(window.cc?.director?.getScene()?.name))))await page.screenshot({path:path.join(out,'failure.png')});else report.failureScreenshot='登录前失败不保存可能包含凭据的画面';}catch{}throw error;}
+ finally{clearTimeout(watchdog);try{await observed?.dispose();await held?.dispose();}catch{}fs.writeFileSync(path.join(out,'report.json'),redact(JSON.stringify(report,null,2))+'\n',{encoding:'utf8'});await browser.close();}
+ console.log(JSON.stringify({passed:report.passed,checks:report.checks.length,errors:report.errors.length,warnings:report.warnings.length}));
+})().catch(error=>{console.error(redact(error.stack||error.message));process.exitCode=1;});

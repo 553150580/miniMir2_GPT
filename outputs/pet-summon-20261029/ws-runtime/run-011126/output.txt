@@ -1,0 +1,9 @@
+=== RUN   TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS
+2026/10/29 09:11:20 INFO 开发节点就绪 mode=account address=127.0.0.1:60402 database=minimir_dev_game_test_summon_e4fd1b9c1085c4e7ea3199dc1f520f45 instance=ba902bb65aa3b34d5de55a7689def0a0 runtime_ready=false
+2026/10/29 09:11:20 INFO 开发节点就绪 mode=gm address=127.0.0.1:60404 database=minimir_dev_game_test_summon_e4fd1b9c1085c4e7ea3199dc1f520f45 instance=d5e7b4e03d4c263478e67da91dace1ae runtime_ready=false
+2026/10/29 09:11:21 INFO 开发节点就绪 mode=game address=127.0.0.1:60403 database=minimir_dev_game_test_summon_e4fd1b9c1085c4e7ea3199dc1f520f45 instance=a33878b8754c8d14ab31aeb7fc744525 runtime_ready=false
+    summon_pet_test.go:243: 请求30003/23错误=3203，期望3202
+--- FAIL: TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS (6.06s)
+FAIL
+FAIL	minimir/internal/integration	10.428s
+FAIL

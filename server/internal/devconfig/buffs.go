@@ -189,6 +189,15 @@ func (f *Fixture) ValidateBuffs() error {
 			}
 		}
 		if s.BuffID == 0 {
+			if s.Behavior == "summon_pet" {
+				if err := validateSummonSkill(s); err != nil {
+					return err
+				}
+				if !supplies[s.MaterialItemID] {
+					return errors.New("召唤材料不在独立护符白名单中")
+				}
+				continue
+			}
 			if s.MaterialItemID != 0 || s.MaterialQuantity != 0 {
 				return errors.New("非状态技能不能附加未实现的施法耗材")
 			}

@@ -696,6 +696,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 			return
 		}
 	}
+	w.applyPetMapEntryPolicy(r, &f.Map)
 	for i := 0; i < 8; i++ {
 		def := f.Monsters[i%len(f.Monsters)]
 		hp := def.HP
@@ -787,7 +788,7 @@ func (w *worker) baseline(r *room, request ...uint32) {
 		return
 	}
 	r.Sequence++
-	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto()}
+	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto(), OwnedPet: w.ownedPetPB(r)}
 	if m, ok := w.currentMap(r); ok {
 		if zone, inside := m.SafeZoneAt(r.Player.Pos); inside {
 			out.SafeZoneId = zone.ID

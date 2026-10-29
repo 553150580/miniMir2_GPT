@@ -1,0 +1,15 @@
+{"Time":"2026-10-29T09:04:45.9573812+08:00","Action":"start","Package":"minimir/internal/game"}
+{"Time":"2026-10-29T09:04:49.7888703+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick"}
+{"Time":"2026-10-29T09:04:49.7894561+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick","Output":"=== RUN   TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:49.9241997+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick","Output":"    summon_pet_test.go:641: Frozen自动Recall后同tick多做宠AI，或错误停了整个owner/怪物 1 1\n","OutputType":"error"}
+{"Time":"2026-10-29T09:04:49.9241997+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick","Output":"--- FAIL: TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick (0.14s)\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:49.9247024+08:00","Action":"fail","Package":"minimir/internal/game","Test":"TestSummonPetFrozenRecallSkipsOnlyPetAIInCurrentTick","Elapsed":0.14}
+{"Time":"2026-10-29T09:04:49.9247024+08:00","Action":"run","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce"}
+{"Time":"2026-10-29T09:04:49.9247024+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce","Output":"=== RUN   TestSummonPetInitializeNoPetsFreezesLegacyOnce\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:50.0344425+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce","Output":"    summon_pet_test.go:666: 初始图NoPets未单次应用入图冻结/owner观察\n","OutputType":"error"}
+{"Time":"2026-10-29T09:04:50.0350778+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce","Output":"    summon_pet_test.go:678: 初图冻结宠物仍执行走攻\n","OutputType":"error"}
+{"Time":"2026-10-29T09:04:50.0350778+08:00","Action":"output","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce","Output":"--- FAIL: TestSummonPetInitializeNoPetsFreezesLegacyOnce (0.11s)\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:50.0350778+08:00","Action":"fail","Package":"minimir/internal/game","Test":"TestSummonPetInitializeNoPetsFreezesLegacyOnce","Elapsed":0.11}
+{"Time":"2026-10-29T09:04:50.03558+08:00","Action":"output","Package":"minimir/internal/game","Output":"FAIL\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:50.0413782+08:00","Action":"output","Package":"minimir/internal/game","Output":"FAIL\tminimir/internal/game\t4.083s\n","OutputType":"frame"}
+{"Time":"2026-10-29T09:04:50.0413782+08:00","Action":"fail","Package":"minimir/internal/game","Elapsed":4.084}

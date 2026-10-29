@@ -23096,10 +23096,13 @@
           },
           "no_teleport": {
             "type": "boolean"
+          },
+          "no_pets": {
+            "type": "boolean"
           }
         }
       },
-      "source_ref": "本作17×17个人图开发候选，rule15显式NoTeleport=false；非来源城镇、新生或复活规则"
+      "source_ref": "本作17×17个人图开发候选，rule15显式NoTeleport=false；非来源城镇、新生或复活规则；rule17独立显式NoPets候选"
     },
     {
       "table_id": "game_map_regions",
@@ -23165,10 +23168,13 @@
           },
           "no_teleport": {
             "type": "boolean"
+          },
+          "no_pets": {
+            "type": "boolean"
           }
         }
       },
-      "source_ref": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价"
+      "source_ref": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价；rule17独立显式NoPets候选"
     },
     {
       "table_id": "arch_runtime_budgets",
@@ -23266,10 +23272,13 @@
                 "minimum": 0
               }
             }
+          },
+          "recall_name": {
+            "type": "string"
           }
         }
       },
-      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用"
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用；资料索引/职业宠物补充来源契约.json及crystal-supplement/source-slices/Settings.pet-defaults.json:技术行162 SkeletonName=BoneFamiliar；与MYF变异骷髅是明确跨来源候选，不是客户端display_name"
     },
     {
       "table_id": "game_pet_templates",
@@ -23743,6 +23752,357 @@
         }
       },
       "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 17,
+      "field": "target_rule",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string"
+          },
+          "range_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "target_move_tolerance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "area_radius": {
+            "type": "int",
+            "minimum": 0
+          },
+          "require_line_of_sight": {
+            "type": "boolean"
+          },
+          "auto_priority": {
+            "type": "int",
+            "minimum": 0
+          },
+          "auto_min_targets": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_direction_offsets": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "secondary_distance_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_cells": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_stop_on_blocked": {
+            "type": "boolean"
+          },
+          "activation_kind": {
+            "type": "string"
+          },
+          "auto_enabled": {
+            "type": "boolean"
+          },
+          "summon": {
+            "type": "object",
+            "properties": {
+              "definition_id": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 17,
+      "field": "cast_timing",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "cooldown_reduction_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "global_spell_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "action_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "delay_base_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "projectile_ms_per_cell": {
+            "type": "int",
+            "minimum": 0
+          },
+          "secondary_impact_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "charge_window_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "line_step_ms": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 17,
+      "field": "resource_costs",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp_base_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mp_level_cost": {
+            "type": "int",
+            "minimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "material_item_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "material_quantity": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 17,
+      "field": "effect_ids",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "int",
+          "minimum": 0
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skills",
+      "id": 17,
+      "field": "damage_parameters",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "accuracy_per_level": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "power_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_base": {
+            "type": "int",
+            "minimum": 0
+          },
+          "mpower_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_base_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "multiplier_bonus_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "healing_stat_multiplier": {
+            "type": "int",
+            "minimum": 0
+          },
+          "add_caster_level": {
+            "type": "boolean"
+          },
+          "undead_multiplier_ppm": {
+            "type": "int",
+            "minimum": 0
+          },
+          "max_attack_bonus_by_level": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "ready_proc_denominator": {
+            "type": "int",
+            "minimum": 0
+          },
+          "ready_proc_numerators": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 0
+            }
+          },
+          "non_undead_divisor": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 171,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 171,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 172,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 172,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 173,
+      "field": "book_cost",
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "item_id": {
+              "type": "int",
+              "minimum": 1
+            },
+            "quantity": {
+              "type": "int",
+              "minimum": 1
+            }
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
+    },
+    {
+      "table_id": "game_skill_upgrades",
+      "id": 173,
+      "field": "allowed_numeric_changes",
+      "shape": {
+        "type": "object",
+        "properties": {
+          "native_rank": {
+            "type": "int",
+            "minimum": 1
+          }
+        }
+      },
+      "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署"
     }
   ]
 }

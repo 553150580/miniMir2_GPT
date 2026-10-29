@@ -97,6 +97,20 @@ func TestLethalStatePushesBeforeBroadcastWindow(t *testing.T) {
 	if scene.Entities[0].Hp != 0 || scene.Entities[0].Action != 4 {
 		t.Fatal("立即基线不含HP0/死亡动作")
 	}
+	if w.sourcePetLifecycle() {
+		if r.Pet != nil || scene.OwnedPet != nil {
+			t.Fatal("主人死亡后仍有活动宠物/owner观察")
+		}
+		corpse := false
+		for _, e := range scene.Entities {
+			if e.EntityKind == 2 && e.IsPetCorpse && e.Hp == 0 {
+				corpse = true
+			}
+		}
+		if !corpse {
+			t.Fatal("同一立即终态没有归档原宠物尸体")
+		}
+	}
 	w.step(r, now.Add(100*time.Millisecond))
 	if len(c.frames) != 2 {
 		t.Fatal("死亡早退后的tick重复发送了致死即时基线")

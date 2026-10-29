@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 960,
+  "record_count": 965,
   "status_counts": {
-    "candidate": 461,
+    "candidate": 466,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -407,6 +407,8 @@
     "game_items/5 尚为 candidate",
     "game_items 第31行缺少必填 icon_resource_key",
     "game_items/13 尚为 candidate",
+    "game_items 第32行缺少必填 icon_resource_key",
+    "game_items/25 尚为 candidate",
     "game_equipment/218 尚为 candidate",
     "game_equipment/193 尚为 candidate",
     "game_appearance：有效记录 0 条，至少需要 1 条",
@@ -486,6 +488,8 @@
     "game_skills/27 尚为 candidate",
     "game_skills 第26行缺少必填 range_pattern_id",
     "game_skills/21 尚为 candidate",
+    "game_skills 第27行缺少必填 range_pattern_id",
+    "game_skills/17 尚为 candidate",
     "game_skill_upgrades/11 尚为 candidate",
     "game_skill_upgrades/12 尚为 candidate",
     "game_skill_upgrades/13 尚为 candidate",
@@ -552,6 +556,9 @@
     "game_skill_upgrades/211 尚为 candidate",
     "game_skill_upgrades/212 尚为 candidate",
     "game_skill_upgrades/213 尚为 candidate",
+    "game_skill_upgrades/171 尚为 candidate",
+    "game_skill_upgrades/172 尚为 candidate",
+    "game_skill_upgrades/173 尚为 candidate",
     "game_range_patterns：有效记录 0 条，至少需要 1 条",
     "game_buffs/14 尚为 candidate",
     "game_buffs/15 尚为 candidate",
@@ -561,7 +568,6 @@
     "game_effects/15 尚为 candidate",
     "game_effects/31 尚为 candidate",
     "game_effects/21 尚为 candidate",
-    "game_pet_templates 第4行缺少必填 summon_skill_id",
     "game_pet_templates/1 尚为 candidate",
     "game_pet_growth/1 尚为 candidate",
     "game_pet_growth/2 尚为 candidate",
@@ -725,6 +731,6 @@
   ],
   "workbook_hashes": {
     "architecture": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
-    "gameplay": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
+    "gameplay": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf"
   }
 }

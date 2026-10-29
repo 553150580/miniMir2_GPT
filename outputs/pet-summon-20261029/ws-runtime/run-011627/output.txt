@@ -1,0 +1,11 @@
+=== RUN   TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS
+2026/10/29 09:16:15 INFO 开发节点就绪 mode=gm address=127.0.0.1:62199 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=50b886bd02772a319da8f0fcb4f357e4 runtime_ready=false
+2026/10/29 09:16:15 INFO 开发节点就绪 mode=account address=127.0.0.1:62197 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=50e88ec7c4bf44b42574131c8bbd2c30 runtime_ready=false
+2026/10/29 09:16:16 INFO 开发节点就绪 mode=game address=127.0.0.1:62198 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=cec7f6c27065506f7d310f406346abe9 runtime_ready=false
+2026/10/29 09:16:23 INFO 开发节点就绪 mode=gm address=127.0.0.1:62199 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=696423a3ac269fbea921779d8ebbb4bf runtime_ready=false
+2026/10/29 09:16:23 INFO 开发节点就绪 mode=account address=127.0.0.1:62197 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=9fa7c2b5351539ffdcd1852b36487f05 runtime_ready=false
+2026/10/29 09:16:25 INFO 开发节点就绪 mode=game address=127.0.0.1:62198 database=minimir_dev_game_test_summon_ef8d72753fbff7e738ee98171a7faec2 instance=0aafcf3882b29409f4dc98df380932b6 runtime_ready=false
+    summon_pet_test.go:313: 真实Mongo/WS通过：明确隔离19级/初始书25/两Count/HP1零伤怪/禁宠Town；正常学习装符→普通fresh拒绝→永久扣1→原Front叠格500ms出生→玩家击杀确认EXP训练→卸符后同图Recall零经济扣耗→NoPets异图Owned与旧回执零二次作用→健康保留/允许图恢复→冷建无宠且永久技能和耗材保留。不是自然购书购符、主包规格或正式17开放。
+--- PASS: TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS (10.54s)
+PASS
+ok  	minimir/internal/integration	15.962s

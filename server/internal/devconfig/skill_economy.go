@@ -82,14 +82,14 @@ func (f *Fixture) ValidateSkillEconomy() error {
 	for _, u := range f.SkillUpgrades {
 		s, exists := f.Skill(u.SkillID)
 		key := [2]uint32{u.SkillID, u.Level}
-		if !exists || seen[key] || u.Level <= s.LearnedLevel || u.Level > s.MaxLevel || u.PageCost < 0 {
+		if !exists || seen[key] || u.Level <= s.LearnedLevel || u.Level > s.MaxLevel || u.PageCost < 0 || len(u.BookCosts) != 1 {
 			return errors.New("升级行重复或等级越界")
 		}
 		seen[key] = true
 		items := map[uint32]bool{}
 		for _, c := range u.BookCosts {
 			b, ok := f.Item(c.ItemID)
-			if !ok || b.BookSkillID != s.ID || c.Quantity <= 0 || items[c.ItemID] {
+			if !ok || b.BookSkillID != s.ID || c.ItemID != s.BookItemID || c.Quantity != int64(u.Level)+1 || items[c.ItemID] {
 				return errors.New("升级书本引用或数量无效")
 			}
 			items[c.ItemID] = true

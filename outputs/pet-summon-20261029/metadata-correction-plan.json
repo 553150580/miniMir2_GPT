@@ -1,0 +1,15 @@
+{
+  "workbook": "outputs/development-prep-20261026/玩法配置.xlsx",
+  "group": "gameplay",
+  "input_workbook_sha256": "c905af71dd8839b6474c4d53feb70d260bf0d139cc0478f03a0f998ad405729b",
+  "operations": [
+    {
+      "kind": "update",
+      "table_id": "game_skills",
+      "id": 17,
+      "values": {
+        "note": "仅独立候选；同名存活有居民节点先Recall且不耗符，新生才材料1；主22技能不选17。MYF19/23/26与Crystal19/22/26不同，三阶另由171–173候选维护，主升级未选入。"
+      }
+    }
+  ]
+}

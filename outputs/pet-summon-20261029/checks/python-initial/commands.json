@@ -1,0 +1,9 @@
+[
+  {
+    "command": ".\\tools\\dev.ps1 python3 -m unittest discover -s tools/config -v",
+    "exit_code": 1,
+    "started_at_utc": "2026-10-29T00:29:55.856565+00:00",
+    "elapsed_seconds": 37.329,
+    "output": "python.txt"
+  }
+]

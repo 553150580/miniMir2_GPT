@@ -1,0 +1,51 @@
+[
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_pet_runtime.py",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:51.820248+00:00",
+    "elapsed_seconds": 0.536,
+    "output": "pet-generate.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_summon_candidates.py",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:52.356410+00:00",
+    "elapsed_seconds": 0.523,
+    "output": "summon-generate.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_first_loop.py",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:52.879769+00:00",
+    "elapsed_seconds": 0.694,
+    "output": "fixture-generate.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_pet_runtime.py --check",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:53.573516+00:00",
+    "elapsed_seconds": 0.514,
+    "output": "pet-check.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_summon_candidates.py --check",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:54.087971+00:00",
+    "elapsed_seconds": 0.51,
+    "output": "summon-check.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 tools/resources/prepare_first_loop.py --check",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:54.598530+00:00",
+    "elapsed_seconds": 0.707,
+    "output": "fixture-check.txt"
+  },
+  {
+    "command": ".\\tools\\dev.ps1 python3 -m unittest discover -s tools/config -v",
+    "exit_code": 0,
+    "started_at_utc": "2026-10-29T00:37:55.305630+00:00",
+    "elapsed_seconds": 37.096,
+    "output": "python.txt"
+  }
+]

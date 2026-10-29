@@ -39,6 +39,7 @@ type PetRuntimeDefinition struct {
 	MonsterTemplateID uint32           `json:"monster_template_id"`
 	OwnerJobID        uint32           `json:"owner_job_id"`
 	ResourceKey       string           `json:"resource_key"`
+	RecallName        string           `json:"recall_name,omitempty"`
 	Base              Fighter          `json:"base"`
 	Undead            bool             `json:"undead"`
 	Training          PetTrainingRules `json:"training"`
@@ -121,6 +122,13 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			}
 			known[name] = true
 			value, exists := fields[name]
+			if !exists && kind == reflect.TypeOf(Skill{}) && strings.Contains(field.Tag.Get("json"), ",omitempty") {
+				continue // 技能的独占子合同按behavior选择，其余基础字段仍须完整。
+			}
+			// rule16历史定义尚无召回名；rule17由Fixture版本校验要求该字段非空。
+			if !exists && kind == reflect.TypeOf(PetRuntimeDefinition{}) && field.Name == "RecallName" {
+				continue
+			}
 			if !exists {
 				return errors.New("宠物合同缺少字段：" + name)
 			}
@@ -181,8 +189,26 @@ func LoadPetRuntimeCandidates(path string) (*PetRuntimeCandidateCatalog, error) 
 	if err := decodePetContract(data, &catalog); err != nil {
 		return nil, err
 	}
-	if catalog.SchemaVersion != 1 || !catalog.DevelopmentOnly || catalog.RuntimeEnabled || len(catalog.SourceEvidence) == 0 {
+	if (catalog.SchemaVersion != 1 && catalog.SchemaVersion != 2) || !catalog.DevelopmentOnly || catalog.RuntimeEnabled || len(catalog.SourceEvidence) == 0 {
 		return nil, errors.New("独立宠物候选不能自动启用运行")
+	}
+	if catalog.SchemaVersion == 1 {
+		var old struct {
+			Definitions []map[string]json.RawMessage `json:"definitions"`
+		}
+		if err := json.Unmarshal(data, &old); err != nil {
+			return nil, err
+		}
+		for _, d := range old.Definitions {
+			if _, provided := d["recall_name"]; provided {
+				return nil, errors.New("旧候选目录不能夹带召回名，即使其值为空或null")
+			}
+		}
+	}
+	for _, d := range catalog.Definitions {
+		if catalog.SchemaVersion == 1 && d.RecallName != "" || catalog.SchemaVersion == 2 && !validRecallName(d.RecallName) {
+			return nil, errors.New("独立宠物候选的召回名称与目录版本不匹配")
+		}
 	}
 	if err := validatePetDefinitions(catalog.Budgets, catalog.Definitions); err != nil {
 		return nil, err
@@ -262,6 +288,11 @@ func (d PetRuntimeDefinition) Clone() PetRuntimeDefinition {
 		}
 	}
 	return d
+}
+
+// 训练资格与自动Recall均引用同一个Globals.DataRange，唯一Excel只保存一次数值。
+func (d PetRuntimeDefinition) SourceDataRangeCells() int {
+	return d.Training.OwnerRangeCells
 }
 
 // 训练级与模板Level始终分开；速度减量取出生时冻结的最大训练级。

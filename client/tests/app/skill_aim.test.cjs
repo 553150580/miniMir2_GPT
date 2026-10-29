@@ -165,3 +165,24 @@ test('位移技能各阶描述采用实际唯一投影，不把冲撞写成前�
         assert(summary.includes(`${low}–${low+d.distance_random_bound-1}格`));assert(!summary.includes('前方0格'));
     }
 });
+
+function summonApp(){
+ const h=app();h.session.role.job=2;h.definitions.push({...h.definition(17,'summon_pet','friendly_self'),job_id:2,material_item_id:187,material_quantity:1});h.session.inventory.learnedSkills.push({skillId:17,level:0});h.session.baseline.entities[0].life=Long.UZERO;
+ h.instance.world.gameplay.casting_supply={enabled:false,slot:100,item_ids:[187]};h.instance.world.gameplay.map_catalog=[{id:'1',no_pets:false}];h.instance.nav.setGroundTarget({x:9,y:8});return h;
+}
+const ownedSummon=(changes={})=>({entityHandle:20,definitionId:1,life:Long.UZERO,mapId:Long.fromString('9007199254740993',true),hp:Long.fromInt(60),hpMax:Long.fromInt(60),petTraining:null,recallSkillIds:[17],followSuppressed:false,...changes});
+test('实际AppRoot按异图Owned召回ID免符发普通CastIntent，无body/护符也不误挡，不上传出生坐标',()=>{
+ const {instance,session,row,sent}=summonApp();session.baseline.ownedPet=ownedSummon();instance.economic=()=>{throw Error('Recall不得造经济成功');};instance.castSkill(row(17));
+ assert.equal(sent.length,1);assert.equal(sent[0].id,30003);assert.equal(sent[0].value.skillId,17);assert.equal(sent[0].value.direction,4);assert(!('targetGrid'in sent[0].value));assert(!('targetHandle'in sent[0].value));assert.equal(session.baseline.entities.length,2);assert.deepEqual(instance.nav.state.target,{x:9,y:8});assert.equal(models.skillActionLabel(instance.skillSnapshot(),row(17)),'召回');
+});
+test('实际AppRoot新召仍经原材料RPC，definition或实体展示名不能猜Recall；NoPets拒绝前不发包',async()=>{
+ const {instance,session,row,sent}=summonApp();session.baseline.ownedPet=ownedSummon({recallSkillIds:[]});session.baseline.entities.push({entityHandle:20,entityKind:2,definitionId:1,name:'召唤骷髅',hp:'60',position:{x:2,y:3}});assert.throws(()=>instance.castSkill(row(17)),/护符暂未开放/);assert.equal(sent.length,0);
+ const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.UONE,quantity:Long.fromInt(2),bound:true};session.inventory.equipped=[{slot:100,item}];instance.world.gameplay.casting_supply.enabled=true;const economic=[];instance.economic=(id,value)=>{economic.push({id,value});return Promise.resolve();};await instance.castSkill(row(17));assert.equal(economic.length,1);assert.equal(economic[0].id,40014);assert.deepEqual(economic[0].value.materialInstanceId,item.instanceId);assert(!('targetGrid'in economic[0].value));assert.equal(item.quantity.toString(),'2','客户端不预扣符');
+ instance.world.gameplay.map_catalog[0].no_pets=true;session.baseline.ownedPet=ownedSummon();assert.throws(()=>instance.castSkill(row(17)),/当前地图禁止召唤/);assert.equal(economic.length,1);assert.equal(sent.length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+});
+test('实际GameSkills保存Use按Owned模式刷新，禁材料不挡Recall，NoPets单独禁召且不改描述为每次耗符',()=>{
+ const {instance,row,session}=summonApp();session.baseline.ownedPet=ownedSummon();const {GameSkills}=load(path.join(root,'client/assets/scripts/app/GameSkills.ts'),id=>id==='./SkillModel'?models:{}),nodes=new Map();
+ const node=name=>{if(!nodes.has(name)){const component={string:'',interactable:false,setIsCheckedWithoutNotify(){}};nodes.set(name,{active:true,getComponent:()=>component,component});}return nodes.get(name);};
+ const skills=Object.create(GameSkills.prototype);Object.assign(skills,{panel:{getChildByPath:node},list:{setItems(){}},rows:[],selectedId:17,key:'',quickSkillId:17});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,true);assert.equal(node('Use/Label').component.string,'召回');assert.match(node('Message').component.string,/不耗护符/);
+ session.baseline.ownedPet=ownedSummon({recallSkillIds:[]});skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'护符未开放');session.baseline.ownedPet=ownedSummon();instance.world.gameplay.map_catalog[0].no_pets=true;skills.refresh(instance.skillSnapshot(),17);assert.equal(node('Use').component.interactable,false);assert.equal(node('Use/Label').component.string,'此图禁召');const description=models.skillDescriptionLines(row(17),instance.skillSnapshot()).join('');assert.match(description,/新召唤消耗/);assert(!description.includes('每次消耗'));
+});
