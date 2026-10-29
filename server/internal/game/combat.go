@@ -529,9 +529,13 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 	auth := r.Auth
 	var j job
 	j = job{target: w, run: func() func(*worker) {
-		role, err := w.e.Store.Settle(context.Background(), auth, q)
+		role, receipt, err := w.e.Store.SettleWithReceipt(context.Background(), auth, q)
 		return func(w *worker) {
+			owned := w.rooms[binding.auth.RoleID] == r && r.Auth == binding.auth && !r.Isolated && r.Pending && r.SettlementGeneration == binding.generation && r.PendingOperationID == binding.id && r.PendingFingerprint == binding.fingerprint
 			w.finishSettlement(binding, q, role, err, &j, finished...)
+			if owned && err == nil {
+				w.equipmentRecycleResult(r, receipt)
+			}
 		}
 	}}
 	if !w.submit(j) {
@@ -580,6 +584,9 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 		world.LootUntil = time.Now().Add(500 * time.Millisecond)
 	}
 	w.assets(r)
+	if q.HostingSession != "" && r.Conn != nil && r.Ready {
+		w.send(r, p.MsgS2CHostingReport, 0, r.Role.HostingReport())
+	}
 	w.snapshot(r)
 	w.flushKillFacts(r)
 	w.after(r)

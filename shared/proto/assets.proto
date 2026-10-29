@@ -20,6 +20,9 @@ message ItemView {
   string source_kind = 6;
   string source_id = 7;
   uint32 quality = 8;
+  bool locked = 9;
+  // 强保护位：1锁定，2未确认培养结果，4资产占用，8穿戴中；客户端不可覆盖。
+  uint32 recycle_block_flags = 10;
 }
 message EquippedItem { uint32 slot = 1; ItemView item = 2; }
 // 已学技能属于永久成长；短冷却、施法与治疗队列不保存在此处。
@@ -32,6 +35,45 @@ message InventoryResult {
   uint32 level = 5;
   int64 experience = 6;
   repeated LearnedSkill learned_skills = 7;
+  AutoRecyclePolicy auto_recycle = 8;
+}
+// 永久角色设置，默认关闭。请求revision为期望旧值，成功后由owner递增。
+// protected_item_ids是物品配置ID，按类型保护；max_required_level=0表示不限。
+message AutoRecyclePolicy {
+  bool enabled = 1;
+  repeated uint32 quality_ids = 2;
+  uint32 max_required_level = 3;
+  repeated uint32 protected_item_ids = 4;
+  bool protect_bound = 5;
+  bool protect_unbound = 6;
+  uint64 revision = 7;
+}
+// apply_existing须玩家明确确认；与设置同一事务，不自动开启战斗。
+message SetAutoRecycleRequest {
+  AutoRecyclePolicy policy = 1;
+  bool apply_existing = 2;
+  OperationContext operation = 3;
+}
+message SetItemLockRequest {
+  bytes item_instance_id = 1;
+  uint64 item_version = 2;
+  bool locked = 3;
+  OperationContext operation = 4;
+}
+// 只报告已经提交的原结果。trigger：1逐事件自动回收，2明确应用背包，3手动分解。
+// 来源事件用source_seq，客户端操作用原16字节op_id；不从钱包差值推算。
+message EquipmentRecycleResult {
+  RoleKey role = 1;
+  uint64 role_revision = 2;
+  uint64 source_seq = 3;
+  bytes op_id = 4;
+  uint64 policy_revision = 5;
+  uint64 recycled_count = 6;
+  int64 gold = 7;
+  int64 bound_gold = 8;
+  uint64 discarded_count = 9;
+  string discard_reason = 10;
+  uint32 trigger = 11;
 }
 message EquipRequest { bytes item_instance_id = 1; uint32 slot = 2; OperationContext operation = 3; }
 message RecycleRequest { repeated bytes item_instance_ids = 1; OperationContext operation = 2; }
@@ -115,5 +157,12 @@ message HostingReport {
   repeated ItemView drops = 6;
   uint32 stop_reason = 7;
   uint64 settlement_sequence = 8;
+  uint64 recycle_count = 9;
+  int64 recycle_gold = 10;
+  int64 recycle_bound_gold = 11;
+  uint64 discard_count = 12;
+  string last_discard_reason = 13;
+  // 本次托管原掉物总数；drops最多100条只是入包样本，不能作为总数。
+  uint64 total_drop_count = 14;
 }
 

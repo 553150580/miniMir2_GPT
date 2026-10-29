@@ -61,18 +61,21 @@ type Run struct {
 	State          string    `bson:"state"`
 }
 type Operation struct {
-	ID         string          `bson:"_id"`
-	Digest     string          `bson:"digest"`
-	RoleID     string          `bson:"role_id"`
-	CommandSeq int64           `bson:"command_seq"`
-	SourceSeq  int64           `bson:"source_seq,omitempty"`
-	Revision   int64           `bson:"revision"`
-	Code       uint32          `bson:"code"`
-	Kind       string          `bson:"kind"`
-	Created    time.Time       `bson:"created_at"`
-	Potion     *PotionReceipt  `bson:"potion,omitempty"`
-	Casting    *CastingReceipt `bson:"casting_use,omitempty"`
-	Binding    *BindingReceipt `bson:"binding_use,omitempty"`
+	ID                string                     `bson:"_id"`
+	Digest            string                     `bson:"digest"`
+	RoleID            string                     `bson:"role_id"`
+	CommandSeq        int64                      `bson:"command_seq"`
+	SourceSeq         int64                      `bson:"source_seq,omitempty"`
+	Revision          int64                      `bson:"revision"`
+	Code              uint32                     `bson:"code"`
+	Kind              string                     `bson:"kind"`
+	Created           time.Time                  `bson:"created_at"`
+	Potion            *PotionReceipt             `bson:"potion,omitempty"`
+	Casting           *CastingReceipt            `bson:"casting_use,omitempty"`
+	Binding           *BindingReceipt            `bson:"binding_use,omitempty"`
+	Recycling         *EquipmentRecyclingReceipt `bson:"equipment_recycling,omitempty"`
+	Settlement        *SettlementReceipt         `bson:"settlement,omitempty"`
+	AutoRecyclePolicy *domain.AutoRecyclePolicy  `bson:"auto_recycle_policy,omitempty"`
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -276,6 +279,9 @@ func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 		return r, err
 	}
 	err = bson.Unmarshal(raw, &r)
+	if err == nil && (r.SettlementReceiptStartSeq < 0 || r.SettlementReceiptStartSeq > r.SourceSeq) {
+		return r, Fail(p.CodeOperationConflict, "收益回执界限无效")
+	}
 	if err == nil {
 		_, err = s.restoreBindingTrust(ctx, &r)
 	}

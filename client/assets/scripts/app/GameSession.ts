@@ -14,8 +14,10 @@ import { RoleBindingModel } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
 import { TeleportModel } from './TeleportModel';
 import { PetBornModel } from './PetBornModel';
+import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
+const recycleModel = new EquipmentRecycleModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
 let confirmedCommand = Long.UONE;
 let localOperation: { id: string; connection: number; binding: string; role: string; scene: string; baseline: string; next: Long } | null = null;
@@ -47,6 +49,7 @@ export const session = {
     skillModes: null as SkillModeState | null,
     skillModesReceivedAt: 0,
     report: null as any,
+    recycleNotice: null as import('./AutoRecycleModel').RecycleNotice | null,
     death: null as any,
     ready: false,
     command: Long.UONE,
@@ -103,7 +106,14 @@ session.connection.subscribe((packet: Packet) => {
                 }
             }
             break;
-        case 40003: session.inventory = packet.value; break;
+        case 40003:
+            try {
+                if (session.inventory && packet.value.revision.lessThan(session.inventory.revision)) break;
+                if (packet.value.autoRecycle) packet.value.autoRecycle = observedAutoRecycle(packet.value.autoRecycle);
+                recycleModel.synchronize(packet.value.revision);
+                session.inventory = packet.value;
+            } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); }
+            break;
         case 20011: {
             const identity = currentEntryIdentity();
             if (session.role && identity && isCurrentEntry(identity) && bindingModel.accept(packet.value, identity, packet.binding)) {
@@ -158,11 +168,17 @@ session.connection.subscribe((packet: Packet) => {
             break;
         }
         case 40008: session.report = packet.value; break;
+        case 40018: {
+            const identity = currentEntryIdentity();
+            if ((session.ready || session.travel.phase === 'quiescing') && session.role && identity && isCurrentEntry(identity)
+                && packet.binding.toString() === identity.binding.toString() && recycleModel.accept(packet.value, roleIdentity())) session.recycleNotice = recycleModel.notice;
+            break;
+        }
         case 40005: acceptOperationReceipt(packet); break;
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; recycleModel.detach(); session.recycleNotice = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
@@ -192,6 +208,7 @@ function acceptEntry(packet: Packet): void {
         if (!forced) session.teleport.bind(currentEntryIdentity()!);
         bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
         session.petBorn.bind(currentEntryIdentity()!);
+        recycleModel.attach(roleIdentity()); session.recycleNotice = null;
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
     } catch (error) { session.ready = false; session.lastError = error instanceof Error ? error.message : String(error); }

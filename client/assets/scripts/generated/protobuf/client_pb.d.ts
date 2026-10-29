@@ -6422,6 +6422,12 @@ export namespace minimir {
             /** ItemView quality. */
             quality: number;
 
+            /** ItemView locked. */
+            locked: boolean;
+
+            /** ItemView recycle_block_flags. */
+            recycle_block_flags: number;
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -6508,6 +6514,12 @@ export namespace minimir {
 
                 /** ItemView quality */
                 quality?: (number|null);
+
+                /** ItemView locked */
+                locked?: (boolean|null);
+
+                /** ItemView recycle_block_flags */
+                recycle_block_flags?: (number|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -6761,6 +6773,9 @@ export namespace minimir {
             /** InventoryResult learned_skills. */
             learned_skills: minimir.v1.LearnedSkill.$Properties[];
 
+            /** InventoryResult auto_recycle. */
+            auto_recycle?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -6845,12 +6860,525 @@ export namespace minimir {
                 /** InventoryResult learned_skills */
                 learned_skills?: (minimir.v1.LearnedSkill.$Properties[]|null);
 
+                /** InventoryResult auto_recycle */
+                auto_recycle?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an InventoryResult. */
             type $Shape = minimir.v1.InventoryResult.$Properties;
+        }
+
+        /**
+         * Properties of an AutoRecyclePolicy.
+         * @deprecated Use minimir.v1.AutoRecyclePolicy.$Properties instead.
+         */
+        interface IAutoRecyclePolicy extends minimir.v1.AutoRecyclePolicy.$Properties {
+        }
+
+        /** Represents an AutoRecyclePolicy. */
+        class AutoRecyclePolicy {
+
+            /**
+             * Constructs a new AutoRecyclePolicy.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.AutoRecyclePolicy.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** AutoRecyclePolicy enabled. */
+            enabled: boolean;
+
+            /** AutoRecyclePolicy quality_ids. */
+            quality_ids: number[];
+
+            /** AutoRecyclePolicy max_required_level. */
+            max_required_level: number;
+
+            /** AutoRecyclePolicy protected_item_ids. */
+            protected_item_ids: number[];
+
+            /** AutoRecyclePolicy protect_bound. */
+            protect_bound: boolean;
+
+            /** AutoRecyclePolicy protect_unbound. */
+            protect_unbound: boolean;
+
+            /** AutoRecyclePolicy revision. */
+            revision: Long;
+
+            /**
+             * Creates a new AutoRecyclePolicy instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns AutoRecyclePolicy instance
+             */
+            static create(properties: minimir.v1.AutoRecyclePolicy.$Shape): minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape;
+            static create(properties?: minimir.v1.AutoRecyclePolicy.$Properties): minimir.v1.AutoRecyclePolicy;
+
+            /**
+             * Encodes the specified AutoRecyclePolicy message. Does not implicitly {@link minimir.v1.AutoRecyclePolicy.verify|verify} messages.
+             * @param message AutoRecyclePolicy message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.AutoRecyclePolicy.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified AutoRecyclePolicy message, length delimited. Does not implicitly {@link minimir.v1.AutoRecyclePolicy.verify|verify} messages.
+             * @param message AutoRecyclePolicy message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.AutoRecyclePolicy.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an AutoRecyclePolicy message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape} AutoRecyclePolicy
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape;
+
+            /**
+             * Decodes an AutoRecyclePolicy message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape} AutoRecyclePolicy
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape;
+
+            /**
+             * Verifies an AutoRecyclePolicy message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for AutoRecyclePolicy
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace AutoRecyclePolicy {
+
+            /** Properties of an AutoRecyclePolicy. */
+            interface $Properties {
+
+                /** AutoRecyclePolicy enabled */
+                enabled?: (boolean|null);
+
+                /** AutoRecyclePolicy quality_ids */
+                quality_ids?: (number[]|null);
+
+                /** AutoRecyclePolicy max_required_level */
+                max_required_level?: (number|null);
+
+                /** AutoRecyclePolicy protected_item_ids */
+                protected_item_ids?: (number[]|null);
+
+                /** AutoRecyclePolicy protect_bound */
+                protect_bound?: (boolean|null);
+
+                /** AutoRecyclePolicy protect_unbound */
+                protect_unbound?: (boolean|null);
+
+                /** AutoRecyclePolicy revision */
+                revision?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an AutoRecyclePolicy. */
+            type $Shape = minimir.v1.AutoRecyclePolicy.$Properties;
+        }
+
+        /**
+         * Properties of a SetAutoRecycleRequest.
+         * @deprecated Use minimir.v1.SetAutoRecycleRequest.$Properties instead.
+         */
+        interface ISetAutoRecycleRequest extends minimir.v1.SetAutoRecycleRequest.$Properties {
+        }
+
+        /** Represents a SetAutoRecycleRequest. */
+        class SetAutoRecycleRequest {
+
+            /**
+             * Constructs a new SetAutoRecycleRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SetAutoRecycleRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SetAutoRecycleRequest policy. */
+            policy?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
+
+            /** SetAutoRecycleRequest apply_existing. */
+            apply_existing: boolean;
+
+            /** SetAutoRecycleRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SetAutoRecycleRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SetAutoRecycleRequest instance
+             */
+            static create(properties: minimir.v1.SetAutoRecycleRequest.$Shape): minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape;
+            static create(properties?: minimir.v1.SetAutoRecycleRequest.$Properties): minimir.v1.SetAutoRecycleRequest;
+
+            /**
+             * Encodes the specified SetAutoRecycleRequest message. Does not implicitly {@link minimir.v1.SetAutoRecycleRequest.verify|verify} messages.
+             * @param message SetAutoRecycleRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SetAutoRecycleRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SetAutoRecycleRequest message, length delimited. Does not implicitly {@link minimir.v1.SetAutoRecycleRequest.verify|verify} messages.
+             * @param message SetAutoRecycleRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SetAutoRecycleRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SetAutoRecycleRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape} SetAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape;
+
+            /**
+             * Decodes a SetAutoRecycleRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape} SetAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape;
+
+            /**
+             * Verifies a SetAutoRecycleRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SetAutoRecycleRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SetAutoRecycleRequest {
+
+            /** Properties of a SetAutoRecycleRequest. */
+            interface $Properties {
+
+                /** SetAutoRecycleRequest policy */
+                policy?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
+
+                /** SetAutoRecycleRequest apply_existing */
+                apply_existing?: (boolean|null);
+
+                /** SetAutoRecycleRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SetAutoRecycleRequest. */
+            type $Shape = minimir.v1.SetAutoRecycleRequest.$Properties;
+        }
+
+        /**
+         * Properties of a SetItemLockRequest.
+         * @deprecated Use minimir.v1.SetItemLockRequest.$Properties instead.
+         */
+        interface ISetItemLockRequest extends minimir.v1.SetItemLockRequest.$Properties {
+        }
+
+        /** Represents a SetItemLockRequest. */
+        class SetItemLockRequest {
+
+            /**
+             * Constructs a new SetItemLockRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.SetItemLockRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** SetItemLockRequest item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** SetItemLockRequest item_version. */
+            item_version: Long;
+
+            /** SetItemLockRequest locked. */
+            locked: boolean;
+
+            /** SetItemLockRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new SetItemLockRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns SetItemLockRequest instance
+             */
+            static create(properties: minimir.v1.SetItemLockRequest.$Shape): minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape;
+            static create(properties?: minimir.v1.SetItemLockRequest.$Properties): minimir.v1.SetItemLockRequest;
+
+            /**
+             * Encodes the specified SetItemLockRequest message. Does not implicitly {@link minimir.v1.SetItemLockRequest.verify|verify} messages.
+             * @param message SetItemLockRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.SetItemLockRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified SetItemLockRequest message, length delimited. Does not implicitly {@link minimir.v1.SetItemLockRequest.verify|verify} messages.
+             * @param message SetItemLockRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.SetItemLockRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a SetItemLockRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape} SetItemLockRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape;
+
+            /**
+             * Decodes a SetItemLockRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape} SetItemLockRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape;
+
+            /**
+             * Verifies a SetItemLockRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for SetItemLockRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace SetItemLockRequest {
+
+            /** Properties of a SetItemLockRequest. */
+            interface $Properties {
+
+                /** SetItemLockRequest item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** SetItemLockRequest item_version */
+                item_version?: (Long|null);
+
+                /** SetItemLockRequest locked */
+                locked?: (boolean|null);
+
+                /** SetItemLockRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a SetItemLockRequest. */
+            type $Shape = minimir.v1.SetItemLockRequest.$Properties;
+        }
+
+        /**
+         * Properties of an EquipmentRecycleResult.
+         * @deprecated Use minimir.v1.EquipmentRecycleResult.$Properties instead.
+         */
+        interface IEquipmentRecycleResult extends minimir.v1.EquipmentRecycleResult.$Properties {
+        }
+
+        /** Represents an EquipmentRecycleResult. */
+        class EquipmentRecycleResult {
+
+            /**
+             * Constructs a new EquipmentRecycleResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.EquipmentRecycleResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** EquipmentRecycleResult role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** EquipmentRecycleResult role_revision. */
+            role_revision: Long;
+
+            /** EquipmentRecycleResult source_seq. */
+            source_seq: Long;
+
+            /** EquipmentRecycleResult op_id. */
+            op_id: Uint8Array;
+
+            /** EquipmentRecycleResult policy_revision. */
+            policy_revision: Long;
+
+            /** EquipmentRecycleResult recycled_count. */
+            recycled_count: Long;
+
+            /** EquipmentRecycleResult gold. */
+            gold: Long;
+
+            /** EquipmentRecycleResult bound_gold. */
+            bound_gold: Long;
+
+            /** EquipmentRecycleResult discarded_count. */
+            discarded_count: Long;
+
+            /** EquipmentRecycleResult discard_reason. */
+            discard_reason: string;
+
+            /** EquipmentRecycleResult trigger. */
+            trigger: number;
+
+            /**
+             * Creates a new EquipmentRecycleResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns EquipmentRecycleResult instance
+             */
+            static create(properties: minimir.v1.EquipmentRecycleResult.$Shape): minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape;
+            static create(properties?: minimir.v1.EquipmentRecycleResult.$Properties): minimir.v1.EquipmentRecycleResult;
+
+            /**
+             * Encodes the specified EquipmentRecycleResult message. Does not implicitly {@link minimir.v1.EquipmentRecycleResult.verify|verify} messages.
+             * @param message EquipmentRecycleResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.EquipmentRecycleResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified EquipmentRecycleResult message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRecycleResult.verify|verify} messages.
+             * @param message EquipmentRecycleResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.EquipmentRecycleResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an EquipmentRecycleResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape} EquipmentRecycleResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape;
+
+            /**
+             * Decodes an EquipmentRecycleResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape} EquipmentRecycleResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape;
+
+            /**
+             * Verifies an EquipmentRecycleResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for EquipmentRecycleResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace EquipmentRecycleResult {
+
+            /** Properties of an EquipmentRecycleResult. */
+            interface $Properties {
+
+                /** EquipmentRecycleResult role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** EquipmentRecycleResult role_revision */
+                role_revision?: (Long|null);
+
+                /** EquipmentRecycleResult source_seq */
+                source_seq?: (Long|null);
+
+                /** EquipmentRecycleResult op_id */
+                op_id?: (Uint8Array|null);
+
+                /** EquipmentRecycleResult policy_revision */
+                policy_revision?: (Long|null);
+
+                /** EquipmentRecycleResult recycled_count */
+                recycled_count?: (Long|null);
+
+                /** EquipmentRecycleResult gold */
+                gold?: (Long|null);
+
+                /** EquipmentRecycleResult bound_gold */
+                bound_gold?: (Long|null);
+
+                /** EquipmentRecycleResult discarded_count */
+                discarded_count?: (Long|null);
+
+                /** EquipmentRecycleResult discard_reason */
+                discard_reason?: (string|null);
+
+                /** EquipmentRecycleResult trigger */
+                trigger?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an EquipmentRecycleResult. */
+            type $Shape = minimir.v1.EquipmentRecycleResult.$Properties;
         }
 
         /**
@@ -8528,6 +9056,24 @@ export namespace minimir {
             /** HostingReport settlement_sequence. */
             settlement_sequence: Long;
 
+            /** HostingReport recycle_count. */
+            recycle_count: Long;
+
+            /** HostingReport recycle_gold. */
+            recycle_gold: Long;
+
+            /** HostingReport recycle_bound_gold. */
+            recycle_bound_gold: Long;
+
+            /** HostingReport discard_count. */
+            discard_count: Long;
+
+            /** HostingReport last_discard_reason. */
+            last_discard_reason: string;
+
+            /** HostingReport total_drop_count. */
+            total_drop_count: Long;
+
             /**
              * Creates a new HostingReport instance using the specified properties.
              * @param [properties] Properties to set
@@ -8614,6 +9160,24 @@ export namespace minimir {
 
                 /** HostingReport settlement_sequence */
                 settlement_sequence?: (Long|null);
+
+                /** HostingReport recycle_count */
+                recycle_count?: (Long|null);
+
+                /** HostingReport recycle_gold */
+                recycle_gold?: (Long|null);
+
+                /** HostingReport recycle_bound_gold */
+                recycle_bound_gold?: (Long|null);
+
+                /** HostingReport discard_count */
+                discard_count?: (Long|null);
+
+                /** HostingReport last_discard_reason */
+                last_discard_reason?: (string|null);
+
+                /** HostingReport total_drop_count */
+                total_drop_count?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

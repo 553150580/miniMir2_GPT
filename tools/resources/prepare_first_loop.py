@@ -638,6 +638,31 @@ def skill_book_definition(source,skill,profile,*,complete):
     if complete:result.update(attack_speed_bonus=0,is_skill_page=False)
     return result
 
+def equipment_recycling_rules(profile,items):
+    """开发回收只使用已选装备既有金币候选，不把空正式分解行解释为零。"""
+    if profile['rule_version']<19:
+        if 'equipment_recycling' in profile:
+            raise ValueError('装备自动回收合同须使用rule19及后续版本')
+        return None
+    rules=profile.get('equipment_recycling')
+    if not isinstance(rules,dict) or set(rules)!={'mode','outputs'} or rules['mode']!='development_gold_only':
+        raise ValueError('开发装备回收必须显式选择development_gold_only及完整合同')
+    if not isinstance(rules['outputs'],list) or rules['outputs']:
+        raise ValueError('开发装备回收outputs必须显式空数组，不补造正式副产物')
+    equipment=[item for item in items if item['is_equipment']]
+    if not equipment:
+        raise ValueError('开发装备回收必须引用已选装备')
+    for item in equipment:
+        level=item.get('required_level');gold=item['recycle_gold'];quality=item.get('drop_quality')
+        if type(level) is not int or not 1<=level<=2**32-1:
+            raise ValueError('回收筛选需求等级必须来自唯一装备定义的正整数')
+        if type(gold) is not int or not 0<=gold<=2**63-1:
+            raise ValueError('开发回收金币必须是既有profile中的非负整数候选')
+        if type(quality) is not int or not 0<=quality<=4:
+            raise ValueError('开发回收品质必须来自唯一装备定义，不能缺省为普通')
+    return deepcopy(rules)
+
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',profile['map_id']);collision=one('game_map_collisions',m['collision_id'])
@@ -663,7 +688,16 @@ def fixture_from_rows(tables):
     items=[]
     for r in tables['game_items']:
         if r['id'] not in [35,36,193,218]:continue
-        eq=next((x for x in tables['game_equipment'] if x['item_id']==r['id']),None);attrs=eq['base_attributes'] if eq else {}
+        matches=[x for x in tables['game_equipment'] if x['item_id']==r['id']]
+        if len(matches)>1 or r['item_type']=='equipment' and len(matches)!=1:
+            raise ValueError('已选装备必须有唯一game_equipment定义，不能猜回收资格')
+        eq=matches[0] if matches else None;attrs=eq['base_attributes'] if eq else {}
+        if eq and profile['rule_version']>=19 and 'required_level' not in eq:
+            raise ValueError('已选装备缺少唯一装备表required_level')
+        if eq and profile['rule_version']>=19:
+            quality=eq.get('quality')
+            if type(quality) is not int or not 0<=quality<=4 or type(r.get('quality')) is not int or r['quality']!=quality:
+                raise ValueError('已选game_items与game_equipment品质必须显式且一致')
         items.append({'id':r['id'],'name':r['display_name'],'equipment_slot':0 if eq and eq['equipment_type']=='weapon' else 1 if eq else 0,
                       'is_equipment':eq is not None,'attack_bonus':0,'attack_min_bonus':attrs.get('physical_attack_min',0),
                       'attack_max_bonus':attrs.get('physical_attack_max',0),'defence_bonus':attrs.get('physical_defence_min',0),
@@ -671,7 +705,8 @@ def fixture_from_rows(tables):
                       'magic_defence_min_bonus':attrs.get('magic_defence_min',0),'magic_defence_max_bonus':attrs.get('magic_defence_max',0),
                       'attack_speed_bonus':attrs['attack_speed'] if eq else 0,
                       'recycle_gold':profile['recycle_test_gold_by_item'][str(r['id'])],'stackable':eq is None,
-                      'allowed_jobs':eq['class_restriction'] if eq else [0,1,2]})
+                      'allowed_jobs':eq['class_restriction'] if eq else [0,1,2],
+                      **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {})})
     for skill in skills:
         if any(item['id']==skill['book_item_id'] for item in items):raise ValueError('技能书ID与已有物品冲突')
         source=one('game_items',skill['book_item_id'])
@@ -738,6 +773,16 @@ def fixture_from_rows(tables):
             result['map']['no_pets']=map_no_pets_policy(tables,m,profile)
         if profile['rule_version']>=13:
             result['town_travel'],result['town_navigation']=town_runtime_rules(profile,catalog)
+    recycling=equipment_recycling_rules(profile,items)
+    if recycling is not None:
+        result['equipment_recycling']=recycling
+        result['_source_evidence']['equipment_recycling']={
+            'rules_source':'唯一玩法Excel/开发首循环夹具/parameters.equipment_recycling',
+            'gold_source':'唯一玩法Excel/开发首循环夹具/parameters.recycle_test_gold_by_item；既有来源Price开发事务候选，非正式分解价',
+            'required_level_source':'唯一玩法Excel/game_equipment.required_level',
+            'quality_source':'唯一玩法Excel/game_equipment.quality；须与game_items.quality一致',
+            'formal_recipe_published':False,'formal_recycle_values_consumed':False,
+            'durability_model_implemented':False}
     pet_rules=pet_runtime.compile_runtime(tables,profile)
     if pet_rules is not None:
         if pet_rules['bootstrap_mode']=='legacy_untrained_pet':
@@ -756,7 +801,8 @@ def public_gameplay(fixture):
         effect=effects.get(row['id']) if not row['is_equipment'] else None
         item={'item_id':row['id'],'name':row['name'],'kind':'casting_supply' if row.get('kind')=='casting_supply' else 'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion',
               **({'equip_slot':row['equipment_slot']} if row['is_equipment'] or row.get('kind')=='casting_supply' else {}),
-              'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None}
+              'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None,
+              **({'required_level':row['required_level'],'recycle_gold':row['recycle_gold'],'quality':row['drop_quality']} if row['is_equipment'] and fixture['rule_version']>=19 else {})}
         if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)
@@ -785,6 +831,7 @@ def public_gameplay(fixture):
                 **{key:buff[key] for key in ['target_level_divisor','target_level_add','hit_duration_loss_ms_per_hp']}}})
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
             'skills':skills,'statuses':statuses,'casting_supply':deepcopy(fixture['casting_supply']),
+            **({'equipment_recycling':deepcopy(fixture['equipment_recycling'])} if fixture['rule_version']>=19 else {}),
             'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
             'shop_offers':[{'offer_id':r['id'],'item_id':r['item_id'],'name':next(i['name'] for i in fixture['items'] if i['id']==r['item_id']),
                             'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],

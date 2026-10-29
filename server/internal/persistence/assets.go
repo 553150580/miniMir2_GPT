@@ -3,7 +3,6 @@ package persistence
 import (
 	"context"
 	"errors"
-	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"math"
@@ -34,6 +33,9 @@ type AssetRequest struct {
 	CastGateCode     uint32
 	Unequip          bool
 	SourceSeq        int64
+	AutoRecycle      *pb.AutoRecyclePolicy
+	ApplyExisting    bool
+	Locked           bool
 }
 
 func add(a, b int64) (int64, error) {
@@ -94,6 +96,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return e
 		}
 		sequenceValid := q.SourceSeq == 0 && q.Context.CommandSeq == uint64(r.EconomicSeq+1) || q.SourceSeq > 0 && q.SourceSeq == r.SourceSeq+1
+		if r.Revision == math.MaxInt64 || q.SourceSeq == 0 && r.EconomicSeq == math.MaxInt64 || q.SourceSeq > 0 && r.SourceSeq == math.MaxInt64 {
+			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
+		}
 		if !sequenceValid || q.Context.ExpectedRevision != uint64(r.Revision) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
 			return Fail(p.CodeOperationConflict, "操作序列/版本变化，请刷新后保留原操作身份")
 		}
@@ -102,6 +107,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var potion *PotionReceipt
 		var skillDetails *skillPlan
 		var casting *CastingReceipt
+		var recycling *EquipmentRecyclingReceipt
 		switch q.Kind {
 		case "equip":
 			index := -1
@@ -143,54 +149,17 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				r.Equipped = append(r.Equipped, domain.Equipped{Slot: q.Slot, Item: item})
 			}
 		case "recycle":
-			if len(q.ItemIDs) == 0 || len(q.ItemIDs) > r.Capacity {
-				businessCode = p.CodeInvalidArgument
-				break
+			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture)
+			if e != nil {
+				return e
 			}
-			wanted := map[string]bool{}
-			for _, id := range q.ItemIDs {
-				if wanted[id] {
-					businessCode = p.CodeInvalidArgument
-				}
-				wanted[id] = true
+		case "set_auto_recycle":
+			r, recycling, businessCode, e = setAutoRecycle(r, q, s.Cfg.Fixture)
+			if e != nil {
+				return e
 			}
-			var keep []domain.Item
-			count := 0
-			gold, boundGold := int64(0), int64(0)
-			for _, item := range r.Items {
-				if !wanted[item.ID] {
-					keep = append(keep, item)
-					continue
-				}
-				count++
-				def, ok := s.Cfg.Fixture.Item(item.ItemID)
-				if !ok || !def.IsEquipment || def.RecycleGold < 0 || item.Quantity != 1 {
-					businessCode = p.CodeInvalidArgument
-					continue
-				}
-				if item.Bound {
-					boundGold, e = add(boundGold, def.RecycleGold)
-				} else {
-					gold, e = add(gold, def.RecycleGold)
-				}
-				if e != nil {
-					return e
-				}
-			}
-			if count != len(wanted) {
-				businessCode = p.CodeInvalidArgument
-			}
-			if businessCode == 0 {
-				r.Wallet.Gold, e = add(r.Wallet.Gold, gold)
-				if e != nil {
-					return e
-				}
-				r.Wallet.BoundGold, e = add(r.Wallet.BoundGold, boundGold)
-				if e != nil {
-					return e
-				}
-				r.Items = keep
-			}
+		case "set_item_lock":
+			r, businessCode = setItemLock(r, q, s.Cfg.Fixture)
 		case "claim_hosting":
 			if q.Benefit != 0 && q.Benefit != 1 {
 				businessCode = p.CodeInvalidArgument
@@ -244,6 +213,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		if businessCode != 0 {
 			r = out
+			recycling = nil
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -257,11 +227,17 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if e = s.replace(tc, r, oldRevision); e != nil {
 			return e
 		}
-		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting}
+		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting, Recycling: recycling}
+		if q.Kind == "set_auto_recycle" && businessCode == 0 {
+			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
+		}
 		if _, e = s.DB.Collection("operations").InsertOne(tc, op); e != nil {
 			return e
 		}
 		audit := bson.M{"_id": opID, "role_id": r.ID, "account_id": a.AccountID, "kind": q.Kind, "op_id": domain.Hex(q.Context.OpId), "revision": r.Revision, "result_code": businessCode, "at": time.Now()}
+		if op.AutoRecyclePolicy != nil {
+			audit["auto_recycle_policy"] = op.AutoRecyclePolicy
+		}
 		if skillDetails != nil {
 			audit["preview_id"] = q.PreviewID
 			audit["skill_plan"] = skillDetails
@@ -269,6 +245,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if casting != nil {
 			audit["casting_use"] = casting
 			audit["source_seq"] = q.SourceSeq
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+		}
+		if recycling != nil {
+			audit["recycling"] = recycling
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
@@ -334,109 +315,4 @@ type Settlement struct {
 	TargetHandle     uint32
 	TargetLife       uint64
 	CasterHandle     uint32
-}
-
-func (s *Store) Settle(ctx context.Context, a Auth, q Settlement) (domain.Role, error) {
-	var out domain.Role
-	e := s.tx(ctx, func(tc context.Context) error {
-		if e := s.fence(tc, a); e != nil {
-			return e
-		}
-		r, e := s.Role(tc, a.RoleID)
-		if e != nil {
-			return e
-		}
-		if e = s.checkRole(r, a); e != nil {
-			return e
-		}
-		if r.SourceSeq >= q.SourceSeq {
-			out = r
-			return nil
-		}
-		if r.SourceSeq+1 != q.SourceSeq {
-			return Fail(p.CodeOperationConflict, "收益来源游标缺口")
-		}
-		if q.HostSeconds < 0 || r.HostingSeconds < q.HostSeconds {
-			return Fail(p.CodeOperationConflict, "托管时长不足")
-		}
-		before := r.Revision
-		r.SourceSeq = q.SourceSeq
-		r.HostingSeconds -= q.HostSeconds
-		r.Experience, e = add(r.Experience, q.Experience)
-		if e != nil {
-			return e
-		}
-		for int(r.Level) <= len(s.Cfg.Fixture.Progression.ExpPerLevel) {
-			required := s.Cfg.Fixture.Progression.ExpPerLevel[r.Level-1]
-			if required <= 0 || r.Experience < required {
-				break
-			}
-			r.Experience -= required
-			r.Level++
-		}
-		coin := q.Gold
-		grantedItem := false
-		if q.Item != nil {
-			if len(r.Items) < r.Capacity {
-				r.Items = append(r.Items, *q.Item)
-				grantedItem = true
-			} else {
-				// 首循环未配置玩家自动回收条件，满包明确放弃此物并停止托管，绝不擅自按售价换币。
-				r.PickupStopped = true
-				r.LastDiscardItem = q.Item.ItemID
-				r.LastDiscardBound = q.Item.Bound
-			}
-		}
-		if q.Bound {
-			r.Wallet.BoundGold, e = add(r.Wallet.BoundGold, coin)
-		} else {
-			r.Wallet.Gold, e = add(r.Wallet.Gold, coin)
-		}
-		if e != nil {
-			return e
-		}
-		if q.Kills > 0 {
-			r.NoEquipmentKills = q.NoEquipmentKills
-		}
-		if q.HostingSession != "" {
-			if r.Report.SessionID != q.HostingSession {
-				r.Report = domain.Report{SessionID: q.HostingSession, Drops: []domain.Item{}}
-			}
-			r.Report.UsedSeconds += q.HostSeconds
-			r.Report.Kills += q.Kills
-			r.Report.Experience += q.Experience
-			if q.Bound {
-				r.Report.Earned.BoundGold += coin
-			} else {
-				r.Report.Earned.Gold += coin
-			}
-			if grantedItem && len(r.Report.Drops) < 100 {
-				r.Report.Drops = append(r.Report.Drops, *q.Item)
-			}
-			r.Report.Sequence++
-			if r.PickupStopped {
-				r.Report.StopReason = 3
-			}
-			if q.StopReason != 0 {
-				r.Report.StopReason = q.StopReason
-			}
-			if r.HostingSeconds == 0 && r.Report.StopReason == 0 {
-				r.Report.StopReason = 1
-			}
-		}
-		r.Revision++
-		if e = s.replace(tc, r, before); e != nil {
-			return e
-		}
-		eventAt := q.EventAt
-		if eventAt.IsZero() {
-			eventAt = time.Now()
-		}
-		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, bson.M{"_id": fmt.Sprintf("settle:%s:%d", r.ID, q.SourceSeq), "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": s.Cfg.Fixture.RuleVersion, "config_hash": s.Cfg.Fixture.Hash, "at": time.Now()}); e != nil {
-			return e
-		}
-		out = r
-		return nil
-	})
-	return out, e
 }

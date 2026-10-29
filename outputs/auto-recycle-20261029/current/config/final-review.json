@@ -1,0 +1,88 @@
+{
+  "status": "configuration_passed",
+  "scope": "开发GoldOnly投影与源表一致性；不是正式经济/损坏回收/容量或真实业务验收",
+  "rule_version": 19,
+  "preview": "dev-auto-recycle-v0.19-65ab01055f34",
+  "runtime_ready": false,
+  "release_blockers": 715,
+  "current_hashes": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "569fa67fa2f19c4052e477e6ef13d88e53fa485f2a83f141ef28468748672b38",
+    "tools/resources/prepare_first_loop.py": "5a69574f077aea0c8a50447b3c00e27ae939f2699699812f101d68bc75387577",
+    "tools/resources/prepare_summon_candidates.py": "656e39634c81ea233a3dca91794961430736b8369843b0c2ff87fec934ed92f2",
+    "config/development/first-loop.json": "eb42f7dd2264e0fb0d161f44d336ee4be0169f3227ba4f76a530f0a4274e23db",
+    "config/development/pet-runtime-candidates.json": "43c010e1e38df16d9385c83acb911d56a88679692e877865ac841e2732ddc5c2",
+    "config/development/summon-candidates.json": "72d46f211d4f3bf5807b297c3ae1675e9bf57ebf1fe290bc11067f565df4f43e",
+    "client/assets/resources/development/gameplay.json": "585d9258fe281e81c85840a6669790bc9393eef4beab7d3c4e98bcd6b453fee9",
+    "config/releases/preview_current.json": "371590c24da7292dbadf7ba188ffb36d4623aec241cf3f137dc937c4c1c53cee"
+  },
+  "equipment": [
+    {
+      "id": 218,
+      "required_level": 1,
+      "drop_quality": 0,
+      "recycle_gold": 50
+    },
+    {
+      "id": 193,
+      "required_level": 1,
+      "drop_quality": 0,
+      "recycle_gold": 400
+    }
+  ],
+  "equipment_recycling": {
+    "mode": "development_gold_only",
+    "outputs": []
+  },
+  "all_other_fixture_business_values_preserved": true,
+  "all_other_public_values_preserved": true,
+  "candidate_checks": {
+    "pet-runtime-candidates.json": {
+      "business_data_unchanged": true,
+      "only_source_evidence_changed": true
+    },
+    "summon-candidates.json": {
+      "business_data_unchanged": true,
+      "only_source_evidence_changed": true
+    }
+  },
+  "workbook_review": "candidate-review.json",
+  "python_tests": 111,
+  "python_exit_code": 0,
+  "protected_asset_files": 20084,
+  "protected_asset_missing": [],
+  "protected_asset_changed": [
+    "client/assets/scenes/Game.scene"
+  ],
+  "new_asset_files_not_claimed_unchanged": [
+    "client/assets/scripts/app/AutoRecycleModel.ts.meta",
+    "client/assets/scripts/app/GameAutoRecycle.ts.meta"
+  ],
+  "concurrent_layout_changes_not_claimed_unchanged": [
+    "client/assets/scenes/Game.scene"
+  ],
+  "formal_recycle_table_still_unpublished": true,
+  "raw_logs": [
+    "export-check.stdout.txt",
+    "export.stdout.txt",
+    "fixture-check.stdout.txt",
+    "fixture-generate.stdout.txt",
+    "narrow.stdout.txt",
+    "pet-check.stdout.txt",
+    "pet-generate.stdout.txt",
+    "python-full.stdout.txt",
+    "summon-check.stdout.txt",
+    "summon-generate.stdout.txt",
+    "export-check.stderr.txt",
+    "export.stderr.txt",
+    "fixture-check.stderr.txt",
+    "fixture-generate.stderr.txt",
+    "narrow.stderr.txt",
+    "pet-check.stderr.txt",
+    "pet-generate.stderr.txt",
+    "python-full.stderr.txt",
+    "summon-check.stderr.txt",
+    "summon-generate.stderr.txt"
+  ]
+}

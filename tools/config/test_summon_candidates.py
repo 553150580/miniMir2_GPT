@@ -37,7 +37,7 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in c['skills']],[17])
         self.assertEqual([row['id'] for row in c['books']],[25])
         self.assertEqual(len(c['upgrades']),3)
-        self.assertEqual(f['rule_version'],18)
+        self.assertEqual(f['rule_version'],19)
         self.assertEqual(len(f['skills']),22)
         self.assertFalse(any(row['id']==17 for row in f['skills']))
         self.assertFalse(any(row['id']==25 for row in f['items']))
@@ -123,10 +123,10 @@ class SummonCandidateProjectionTests(unittest.TestCase):
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
 
     def test_visual_protocol_version_preserves_minimum_summon_contract(self):
-        for version in (17,18):
+        for version in (17,18,19):
             tables=self.changed();self.profile(tables)['rule_version']=version
             self.assertEqual(self.compile(tables)['required_rule_version'],17)
-        tables=self.changed();self.profile(tables)['rule_version']=19
+        tables=self.changed();self.profile(tables)['rule_version']=20
         with self.assertRaises(ValueError):self.compile(tables)
 
     def test_definition_link_and_material_cannot_be_guessed(self):

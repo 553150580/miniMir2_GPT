@@ -1,0 +1,8 @@
+{
+  "visual_passed": true,
+  "scope": "人工查看本轮真实Creator页面截图，确认回收数量、分币、跳过锁定与不可撤销说明完整可见；不是手机真机或容量验收",
+  "observation": "03-before-apply-confirm.png中6行文字均在保存Confirm/Message 530x280内完整显示，左右与底部未截断；图中2件回收/450绑定金币/1件锁定保留与原回执及预览一致。",
+  "gui_report_sha256": "dc5d6c574a1bd5e41c92682c7fcf8c20538219da34e4f0bbb6f0f41ccf344261",
+  "image_sha256": "e8fc2216041d32a192667510720b611658e6ef20658907aab0379821bfa182a4",
+  "confirmed_text": "开启自动回收\n同时处理当前背包：预计回收2件\n金币 0，绑定金币 450\n跳过1件：锁定\n穿戴、锁定、未确认预览及占用均保护。\n回收不可撤销，以服务器提交结果为准。"
+}

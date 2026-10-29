@@ -120,7 +120,7 @@ test('真实AppRoot自身魔法盾不误选宠物；友方材料瞄准固定原�
     assert.equal(requests.length,1);assert.equal(requests[0].id,40014);assert.equal(requests[0].value.materialVersion.toString(),'9007199254740993');assert.equal(requests[0].value.casterLife.toString(),'0');
     assert.equal(sent.filter(r=>r.value.skillId===14).length,0);assert.deepEqual(instance.nav.state.target,{x:9,y:8});assert.equal(item.quantity.toString(),'5');assert.equal(session.baseline.entities[0].mp,'100');assert.match(errors[0],/未知/);
     const pending=session.pending.get('roleA');assert(pending);assert.equal(pending.id,40014);const original=pending.value.operation.opId;
-    session.entry.sceneEpoch=Long.fromInt(2,true);session.connection.request=(id,value)=>{requests.push({id,value});return Promise.resolve({opId:original,pending:false,errorCode:0});};
+    session.entry.sceneEpoch=Long.fromInt(2,true);instance.attached.scene='2';session.connection.request=(id,value)=>{requests.push({id,value});return Promise.resolve({opId:original,pending:false,errorCode:0});};
     await instance.submitPending();assert.equal(requests[1].value.sceneEpoch.toString(),'1');assert.deepEqual(requests[1].value.operation.opId,original);assert.equal(session.pending.get('roleA'),null);
 });
 test('真实AppRoot材料瞄准期间原护符变化拒绝，不换用背包；装入确认跨life变化不提交',async()=>{

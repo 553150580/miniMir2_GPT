@@ -179,10 +179,10 @@
       {
         "group": "gameplay",
         "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-        "sha256": "8685fb5a52c26a9b0b4ac3fa5421935a4fc272d45ebf2dffe591ddfb56e9feaf"
+        "sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813"
       }
     ],
-    "schema_sha256": "6ee0afe9ee5b97509af654da12cd463d2ec98dff2251d7b9da82667760928228",
+    "schema_sha256": "569fa67fa2f19c4052e477e6ef13d88e53fa485f2a83f141ef28468748672b38",
     "source_contract_sha256": "99a583f12645c77eb609c3c0bfa7b59c37bd51aa6c0955d3bee44a52e7a665a3",
     "generator_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
     "target_180_verified": false

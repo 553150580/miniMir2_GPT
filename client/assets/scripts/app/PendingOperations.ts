@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -152,6 +152,25 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['itemInstanceId', 'itemVersion', 'unequip', 'operation']), version = longValue(item.itemVersion, stored);
         if (typeof item.unequip !== 'boolean' || version.isNegative() || version.isZero()) return invalid('护符装卸的原版本或动作无效');
         payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), itemVersion: version, unequip: item.unequip, operation: operation(item.operation, stored) };
+    } else if (id === 40016) {
+        const item = record(input.value, ['policy', 'applyExisting', 'operation']);
+        const policy = record(item.policy, ['enabled', 'qualityIds', 'maxRequiredLevel', 'protectedItemIds', 'protectBound', 'protectUnbound', 'revision']);
+        if (typeof item.applyExisting !== 'boolean' || typeof policy.enabled !== 'boolean' || typeof policy.protectBound !== 'boolean' || typeof policy.protectUnbound !== 'boolean') return invalid('自动回收动作与保护条件必须明确');
+        const list = (value: unknown, quality: boolean): number[] => {
+            if (!Array.isArray(value)) return invalid('自动回收ID必须为列表');
+            const result = value.map(uint32);
+            if (new Set(result).size !== result.length || result.some(id => quality ? id > 4 : id === 0)) return invalid('自动回收ID超范围或重复');
+            return result;
+        };
+        const revision = longValue(policy.revision, stored); if (revision.isNegative()) return invalid('策略修订必须为非负Long');
+        payload = { policy: { enabled: policy.enabled, qualityIds: list(policy.qualityIds, true), maxRequiredLevel: uint32(policy.maxRequiredLevel),
+            protectedItemIds: list(policy.protectedItemIds, false), protectBound: policy.protectBound, protectUnbound: policy.protectUnbound, revision },
+            applyExisting: item.applyExisting, operation: operation(item.operation, stored) };
+    } else if (id === 40017) {
+        const item = record(input.value, ['itemInstanceId', 'itemVersion', 'locked', 'operation']);
+        const version = longValue(item.itemVersion, stored);
+        if (typeof item.locked !== 'boolean' || version.isNegative() || version.isZero()) return invalid('装备锁定需要原版本与明确动作');
+        payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), itemVersion: version, locked: item.locked, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

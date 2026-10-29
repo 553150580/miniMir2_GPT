@@ -1,0 +1,20 @@
+{
+  "status": "read_only_review_complete",
+  "scope": "协议/config来源presence/正常UI工具静态复核；未跑Go、DB或浏览器",
+  "initial_toObject_finding": "当前生成PB没有toObject，root已改直接decode+Long.toString；snake_case原先判断已纠正",
+  "no_current_business_blocker_found": true,
+  "ui_paths_and_saved_component_types_match": true,
+  "business_injection_found": false,
+  "suggestions": [
+    "确认前读取Confirm/Message核预计数量/金币及保护原因并截图",
+    "应用后同时等待原40018与Wallet.revision，再取applied快照，避免Inventory先到造成工具误报"
+  ],
+  "source_hashes": {
+    "shared/proto/assets.proto": "4283a8d39cd757514154fb5073c0615b3ddd81ce3ed64b4f3c57ffb491d4d8d3",
+    "shared/proto/protocol_manifest.json": "0178a4c532706b56ee294731ceb59b256d9ca3a38d4cdd524529513e0808fe86",
+    "server/internal/devconfig/equipment_recycling.go": "a3649a281ec97ff72ab3a85a91c8e0e2c645468ba25417159ea7146946f55f71",
+    "tools/client/verify_auto_recycle_browser.cjs": "94e3d3658c551d196edf6a4aa875d87ba8a97c84a7cbf855beb84121ccf22d2b",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "6c4a9677cac8c7dda1100d3a5ada7ce5266303fe3405d23265d4616a7f8efbdc",
+    "client/assets/scenes/Game.scene": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 18,
+  "rule_version": 19,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -1203,6 +1203,10 @@
     "item_ids": [
       187
     ]
+  },
+  "equipment_recycling": {
+    "mode": "development_gold_only",
+    "outputs": []
   },
   "skill_upgrades": [
     {
@@ -3159,7 +3163,10 @@
         1,
         2
       ],
-      "use_enabled": false
+      "use_enabled": false,
+      "required_level": 1,
+      "recycle_gold": 50,
+      "quality": 0
     },
     {
       "item_id": 193,
@@ -3171,7 +3178,10 @@
         1,
         2
       ],
-      "use_enabled": false
+      "use_enabled": false,
+      "required_level": 1,
+      "recycle_gold": 400,
+      "quality": 0
     },
     {
       "item_id": 35,

@@ -602,6 +602,42 @@
       "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议"
     },
     {
+      "value": 40016,
+      "name": "MsgC2SSetAutoRecycle",
+      "proto_message": "SetAutoRecycleRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.2；docs/自动回收与挂机战报实施边界.md；免费永久策略及明确应用当前背包，owner原子提交"
+    },
+    {
+      "value": 40018,
+      "name": "MsgS2CEquipmentRecycleResult",
+      "proto_message": "EquipmentRecycleResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.2/4.12；docs/自动回收与挂机战报实施边界.md；只观察原提交回收与丢弃结果，不重复发资产"
+    },
+    {
+      "value": 40017,
+      "name": "MsgC2SSetItemLock",
+      "proto_message": "SetItemLockRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.2；docs/自动回收与挂机战报实施边界.md；按原实例和版本设置强保护"
+    },
+    {
       "value": 40015,
       "name": "MsgC2SSetCastingSupply",
       "proto_message": "SetCastingSupplyRequest",

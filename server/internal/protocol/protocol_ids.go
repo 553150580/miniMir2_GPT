@@ -50,6 +50,9 @@ const (
 	MsgS2CSkillAssetPreview uint16 = 40012
 	MsgC2SSkillAssetCommit uint16 = 40013
 	MsgC2SCastWithMaterial uint16 = 40014
+	MsgC2SSetAutoRecycle uint16 = 40016
+	MsgS2CEquipmentRecycleResult uint16 = 40018
+	MsgC2SSetItemLock uint16 = 40017
 	MsgC2SSetCastingSupply uint16 = 40015
 	MsgC2SMapTravelPrepare uint16 = 20007
 	MsgS2CMapTravelPlan uint16 = 20008

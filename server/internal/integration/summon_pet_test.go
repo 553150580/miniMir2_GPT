@@ -29,8 +29,8 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	must(t, err)
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 18 || cfg.Fixture.CastingSupply.Enabled {
-		t.Fatal("必须从主rule17关闭材料的真实配置创建隔离样本")
+	if cfg.Fixture.RuleVersion != 19 || cfg.Fixture.CastingSupply.Enabled {
+		t.Fatal("必须从主rule19关闭材料的真实配置创建隔离样本；独立召唤候选仍required17")
 	}
 	if _, enabled := cfg.Fixture.Skill(17); enabled {
 		t.Fatal("主配置不能因候选测试被开启17")

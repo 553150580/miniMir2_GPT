@@ -3,6 +3,8 @@ import { roleBindingMapName } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
 import { teleportFailureText } from './TeleportModel';
 import type { TeleportObservation } from './TeleportModel';
+import type { RecycleNotice } from './AutoRecycleModel';
+import { recycleDiscardText } from './AutoRecycleModel';
 
 export type MessageInteger = string | number | bigint | { toString(): string };
 
@@ -23,6 +25,7 @@ export interface MessageSnapshot {
     bindingState?: RoleBindingObservation | null;
     bindingNotice?: RoleBindingObservation | null;
     teleportNotice?: TeleportObservation | null;
+    recycleNotice?: RecycleNotice | null;
     role?: { name?: string; level?: number } | null;
     inventory?: {
         level?: number;
@@ -93,6 +96,7 @@ export class SystemMessageLog {
     private readonly seenTeleportResults = new Set<string>();
     private readonly seenBindingReceipts = new Set<string>();
     private lastBindingNotice = '';
+    private lastRecycleRevision = 0n;
     private change = 0;
     readonly capacity: number;
 
@@ -120,6 +124,7 @@ export class SystemMessageLog {
             this.binding = ''; this.entered = false; this.wasReady = false; this.lastError = ''; this.lastNavigationNotice = '';
             this.seenReports.clear(); this.resetObservations();
             this.seenBindingReceipts.clear(); this.lastBindingNotice = ''; this.seenTeleportResults.clear();
+            this.lastRecycleRevision = 0n;
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';
         if (binding && binding !== this.binding) {
@@ -142,6 +147,12 @@ export class SystemMessageLog {
         this.observeInventory(snapshot);
         this.observeBinding(snapshot);
         this.observeTeleport(snapshot);
+        const recycled = snapshot.recycleNotice;
+        if (recycled && recycled.role === snapshot.roleIdentity && BigInt(recycled.revision) > this.lastRecycleRevision) {
+            this.lastRecycleRevision = BigInt(recycled.revision);
+            this.append(recycled.trigger === 1 ? '自动回收' : recycled.trigger === 2 ? '背包回收' : '装备分解',
+                `已回收${recycled.count}件，金币${recycled.gold}，绑定金币${recycled.boundGold}` + (recycled.discarded !== '0' ? `；放弃${recycled.discarded}件：${recycleDiscardText(recycled.reason)}` : ''));
+        }
         this.observeWallet(snapshot);
         const player = snapshot.entry?.playerHandle ? snapshot.baseline?.entities?.find(entity => entity.entityHandle === snapshot.entry!.playerHandle) : undefined;
         if (player) {

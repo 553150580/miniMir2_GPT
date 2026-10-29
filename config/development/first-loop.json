@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 18,
+  "rule_version": 19,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -3864,7 +3864,9 @@
         0,
         1,
         2
-      ]
+      ],
+      "required_level": 1,
+      "drop_quality": 0
     },
     {
       "id": 193,
@@ -3886,7 +3888,9 @@
         0,
         1,
         2
-      ]
+      ],
+      "required_level": 1,
+      "drop_quality": 0
     },
     {
       "id": 35,
@@ -6038,6 +6042,15 @@
         "initial_binding_pool_verified": false
       }
     ],
+    "equipment_recycling": {
+      "rules_source": "唯一玩法Excel/开发首循环夹具/parameters.equipment_recycling",
+      "gold_source": "唯一玩法Excel/开发首循环夹具/parameters.recycle_test_gold_by_item；既有来源Price开发事务候选，非正式分解价",
+      "required_level_source": "唯一玩法Excel/game_equipment.required_level",
+      "quality_source": "唯一玩法Excel/game_equipment.quality；须与game_items.quality一致",
+      "formal_recipe_published": false,
+      "formal_recycle_values_consumed": false,
+      "durability_model_implemented": false
+    },
     "workbook_sync": "exported_from_current_unique_excel",
     "source_locks": [
       {
@@ -6159,9 +6172,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697"
+      "sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813"
     },
-    "exporter_sha256": "747a7a701bd35ceebe7fe1c9fe40ffae13ee6623f4defa3bd07cb7fc74ed2e49",
+    "exporter_sha256": "5a69574f077aea0c8a50447b3c00e27ae939f2699699812f101d68bc75387577",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -6173,7 +6186,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697"
+          "sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813"
         }
       ]
     }
@@ -6273,6 +6286,10 @@
     "max_replans": 3,
     "max_dynamic_cells": 2,
     "max_memory_bytes_per_worker": 33554432
+  },
+  "equipment_recycling": {
+    "mode": "development_gold_only",
+    "outputs": []
   },
   "pet_runtime": {
     "enabled": true,

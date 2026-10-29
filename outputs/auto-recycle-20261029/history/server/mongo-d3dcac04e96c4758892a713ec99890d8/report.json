@@ -1,0 +1,54 @@
+{
+  "phase": "mongo",
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+    "go",
+    "test",
+    "-json",
+    "-race",
+    "-count=1",
+    "-p=1",
+    "./internal/integration",
+    "-run",
+    "^TestAutoRecycle(PermanentReceiptsProtectionAndSourceMongo|PolicyLockAndOnlineOfflineMongoWS)$",
+    "-timeout=600s"
+  ],
+  "exit_code": 1,
+  "started_at_utc": "2026-10-29T11:32:33.986902+00:00",
+  "elapsed_seconds": 96.25445120013319,
+  "source_stable": true,
+  "source_count": 176,
+  "passed": false,
+  "passed_tests": [
+    {
+      "Time": "2026-10-29T19:32:47.8991683+08:00",
+      "Action": "pass",
+      "Package": "minimir/internal/integration",
+      "Test": "TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo",
+      "Elapsed": 0.82
+    }
+  ],
+  "failed_tests": [
+    {
+      "Time": "2026-10-29T19:34:09.8796341+08:00",
+      "Action": "fail",
+      "Package": "minimir/internal/integration",
+      "Test": "TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS",
+      "Elapsed": 81.98
+    },
+    {
+      "Time": "2026-10-29T19:34:09.9924421+08:00",
+      "Action": "fail",
+      "Package": "minimir/internal/integration",
+      "Elapsed": 86.803
+    }
+  ],
+  "skipped_tests": [],
+  "mongo_explicit": true,
+  "race": true,
+  "main_service_changed": false,
+  "single_business_deadlines_changed": false,
+  "database_scope": "仅正常创建/删除本阶段随机新库；不接管main或其它库",
+  "events_sha256": "3ab3ca13a7947fa99dd368a57fec2880a9596b2a9abeb7db35d9c1c4a273f31d"
+}

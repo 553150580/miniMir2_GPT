@@ -125,6 +125,9 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			if !exists && kind == reflect.TypeOf(Skill{}) && strings.Contains(field.Tag.Get("json"), ",omitempty") {
 				continue // 技能的独占子合同按behavior选择，其余基础字段仍须完整。
 			}
+			if !exists && kind == reflect.TypeOf(Item{}) && field.Name == "RequiredLevel" {
+				continue // 装备需求等级由rule19装备投影验证；召唤技能书不借此补造需求。
+			}
 			// rule16历史定义尚无召回名；rule17由Fixture版本校验要求该字段非空。
 			if !exists && kind == reflect.TypeOf(PetRuntimeDefinition{}) && field.Name == "RecallName" {
 				continue

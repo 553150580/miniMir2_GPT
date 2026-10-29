@@ -16737,6 +16737,8 @@ $root.minimir = (function() {
              * @property {string|null} [source_kind] ItemView source_kind
              * @property {string|null} [source_id] ItemView source_id
              * @property {number|null} [quality] ItemView quality
+             * @property {boolean|null} [locked] ItemView locked
+             * @property {number|null} [recycle_block_flags] ItemView recycle_block_flags
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -16833,6 +16835,22 @@ $root.minimir = (function() {
             ItemView.prototype.quality = 0;
 
             /**
+             * ItemView locked.
+             * @member {boolean} locked
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.locked = false;
+
+            /**
+             * ItemView recycle_block_flags.
+             * @member {number} recycle_block_flags
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.recycle_block_flags = 0;
+
+            /**
              * Creates a new ItemView instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ItemView
@@ -16880,6 +16898,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 7, wireType 2 =*/58).string(message.source_id);
                 if (message.quality != null && $Object.hasOwnProperty.call(message, "quality") && message.quality !== 0)
                     writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.quality);
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked") && message.locked !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.locked);
+                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags") && message.recycle_block_flags !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.recycle_block_flags);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -17009,6 +17031,24 @@ $root.minimir = (function() {
                                 delete message.quality;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.locked = value;
+                            else
+                                delete message.locked;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.recycle_block_flags = value;
+                            else
+                                delete message.recycle_block_flags;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -17081,6 +17121,12 @@ $root.minimir = (function() {
                 if (message.quality != null && $Object.hasOwnProperty.call(message, "quality"))
                     if (!$util.isInteger(message.quality))
                         return "quality: integer expected";
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked"))
+                    if (typeof message.locked !== "boolean")
+                        return "locked: boolean expected";
+                if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags"))
+                    if (!$util.isInteger(message.recycle_block_flags))
+                        return "recycle_block_flags: integer expected";
                 return null;
             };
 
@@ -17590,6 +17636,7 @@ $root.minimir = (function() {
              * @property {number|null} [level] InventoryResult level
              * @property {Long|null} [experience] InventoryResult experience
              * @property {Array.<minimir.v1.LearnedSkill.$Properties>|null} [learned_skills] InventoryResult learned_skills
+             * @property {minimir.v1.AutoRecyclePolicy.$Properties|null} [auto_recycle] InventoryResult auto_recycle
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -17681,6 +17728,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.learned_skills = $util.emptyArray;
 
             /**
+             * InventoryResult auto_recycle.
+             * @member {minimir.v1.AutoRecyclePolicy.$Properties|null|undefined} auto_recycle
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.auto_recycle = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -17729,6 +17784,8 @@ $root.minimir = (function() {
                 if (message.learned_skills != null && message.learned_skills.length)
                     for (var i = 0; i < message.learned_skills.length; ++i)
                         $root.minimir.v1.LearnedSkill.encode(message.learned_skills[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.auto_recycle != null && $Object.hasOwnProperty.call(message, "auto_recycle"))
+                    $root.minimir.v1.AutoRecyclePolicy.encode(message.auto_recycle, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -17846,6 +17903,12 @@ $root.minimir = (function() {
                             message.learned_skills.push($root.minimir.v1.LearnedSkill.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            message.auto_recycle = $root.minimir.v1.AutoRecyclePolicy.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_recycle);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -17933,6 +17996,11 @@ $root.minimir = (function() {
                             return "learned_skills." + error;
                     }
                 }
+                if (message.auto_recycle != null && $Object.hasOwnProperty.call(message, "auto_recycle")) {
+                    var error = $root.minimir.v1.AutoRecyclePolicy.verify(message.auto_recycle, _depth + 1);
+                    if (error)
+                        return "auto_recycle." + error;
+                }
                 return null;
             };
 
@@ -17951,6 +18019,1369 @@ $root.minimir = (function() {
             };
 
             return InventoryResult;
+        })();
+
+        v1.AutoRecyclePolicy = (function() {
+
+            /**
+             * Properties of an AutoRecyclePolicy.
+             * @typedef {Object} minimir.v1.AutoRecyclePolicy.$Properties
+             * @property {boolean|null} [enabled] AutoRecyclePolicy enabled
+             * @property {Array.<number>|null} [quality_ids] AutoRecyclePolicy quality_ids
+             * @property {number|null} [max_required_level] AutoRecyclePolicy max_required_level
+             * @property {Array.<number>|null} [protected_item_ids] AutoRecyclePolicy protected_item_ids
+             * @property {boolean|null} [protect_bound] AutoRecyclePolicy protect_bound
+             * @property {boolean|null} [protect_unbound] AutoRecyclePolicy protect_unbound
+             * @property {Long|null} [revision] AutoRecyclePolicy revision
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AutoRecyclePolicy.
+             * @memberof minimir.v1
+             * @interface IAutoRecyclePolicy
+             * @augments minimir.v1.AutoRecyclePolicy.$Properties
+             * @deprecated Use minimir.v1.AutoRecyclePolicy.$Properties instead.
+             */
+
+            /**
+             * Shape of an AutoRecyclePolicy.
+             * @typedef {minimir.v1.AutoRecyclePolicy.$Properties} minimir.v1.AutoRecyclePolicy.$Shape
+             */
+
+            /**
+             * Constructs a new AutoRecyclePolicy.
+             * @memberof minimir.v1
+             * @classdesc Represents an AutoRecyclePolicy.
+             * @constructor
+             * @param {minimir.v1.AutoRecyclePolicy.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var AutoRecyclePolicy = function (properties) {
+                this.quality_ids = [];
+                this.protected_item_ids = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AutoRecyclePolicy enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.enabled = false;
+
+            /**
+             * AutoRecyclePolicy quality_ids.
+             * @member {Array.<number>} quality_ids
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.quality_ids = $util.emptyArray;
+
+            /**
+             * AutoRecyclePolicy max_required_level.
+             * @member {number} max_required_level
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.max_required_level = 0;
+
+            /**
+             * AutoRecyclePolicy protected_item_ids.
+             * @member {Array.<number>} protected_item_ids
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.protected_item_ids = $util.emptyArray;
+
+            /**
+             * AutoRecyclePolicy protect_bound.
+             * @member {boolean} protect_bound
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.protect_bound = false;
+
+            /**
+             * AutoRecyclePolicy protect_unbound.
+             * @member {boolean} protect_unbound
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.protect_unbound = false;
+
+            /**
+             * AutoRecyclePolicy revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @instance
+             */
+            AutoRecyclePolicy.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new AutoRecyclePolicy instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {minimir.v1.AutoRecyclePolicy.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.AutoRecyclePolicy} AutoRecyclePolicy instance
+             * @type {{
+             *   (properties: minimir.v1.AutoRecyclePolicy.$Shape): minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape;
+             *   (properties?: minimir.v1.AutoRecyclePolicy.$Properties): minimir.v1.AutoRecyclePolicy;
+             * }}
+             */
+            AutoRecyclePolicy.create = function(properties) {
+                return new AutoRecyclePolicy(properties);
+            };
+
+            /**
+             * Encodes the specified AutoRecyclePolicy message. Does not implicitly {@link minimir.v1.AutoRecyclePolicy.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {minimir.v1.AutoRecyclePolicy.$Properties} message AutoRecyclePolicy message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoRecyclePolicy.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 1, wireType 0 =*/8).bool(message.enabled);
+                if (message.quality_ids != null && message.quality_ids.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).uint32s(message.quality_ids);
+                if (message.max_required_level != null && $Object.hasOwnProperty.call(message, "max_required_level") && message.max_required_level !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.max_required_level);
+                if (message.protected_item_ids != null && message.protected_item_ids.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).uint32s(message.protected_item_ids);
+                if (message.protect_bound != null && $Object.hasOwnProperty.call(message, "protect_bound") && message.protect_bound !== false)
+                    writer.uint32(/* id 5, wireType 0 =*/40).bool(message.protect_bound);
+                if (message.protect_unbound != null && $Object.hasOwnProperty.call(message, "protect_unbound") && message.protect_unbound !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.protect_unbound);
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.revision);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AutoRecyclePolicy message, length delimited. Does not implicitly {@link minimir.v1.AutoRecyclePolicy.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {minimir.v1.AutoRecyclePolicy.$Properties} message AutoRecyclePolicy message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoRecyclePolicy.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AutoRecyclePolicy message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape} AutoRecyclePolicy
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoRecyclePolicy.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.AutoRecyclePolicy();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType === 2) {
+                                if (!(message.quality_ids && message.quality_ids.length))
+                                    message.quality_ids = [];
+                                reader.uint32s(message.quality_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.quality_ids && message.quality_ids.length))
+                                message.quality_ids = [];
+                            message.quality_ids.push(reader.uint32());
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.max_required_level = value;
+                            else
+                                delete message.max_required_level;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType === 2) {
+                                if (!(message.protected_item_ids && message.protected_item_ids.length))
+                                    message.protected_item_ids = [];
+                                reader.uint32s(message.protected_item_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.protected_item_ids && message.protected_item_ids.length))
+                                message.protected_item_ids = [];
+                            message.protected_item_ids.push(reader.uint32());
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.protect_bound = value;
+                            else
+                                delete message.protect_bound;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.protect_unbound = value;
+                            else
+                                delete message.protect_unbound;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AutoRecyclePolicy message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoRecyclePolicy & minimir.v1.AutoRecyclePolicy.$Shape} AutoRecyclePolicy
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoRecyclePolicy.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an AutoRecyclePolicy message.
+             * @function verify
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AutoRecyclePolicy.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.quality_ids != null && $Object.hasOwnProperty.call(message, "quality_ids")) {
+                    if (!$Array.isArray(message.quality_ids))
+                        return "quality_ids: array expected";
+                    for (var i = 0; i < message.quality_ids.length; ++i)
+                        if (!$util.isInteger(message.quality_ids[i]))
+                            return "quality_ids: integer[] expected";
+                }
+                if (message.max_required_level != null && $Object.hasOwnProperty.call(message, "max_required_level"))
+                    if (!$util.isInteger(message.max_required_level))
+                        return "max_required_level: integer expected";
+                if (message.protected_item_ids != null && $Object.hasOwnProperty.call(message, "protected_item_ids")) {
+                    if (!$Array.isArray(message.protected_item_ids))
+                        return "protected_item_ids: array expected";
+                    for (var i = 0; i < message.protected_item_ids.length; ++i)
+                        if (!$util.isInteger(message.protected_item_ids[i]))
+                            return "protected_item_ids: integer[] expected";
+                }
+                if (message.protect_bound != null && $Object.hasOwnProperty.call(message, "protect_bound"))
+                    if (typeof message.protect_bound !== "boolean")
+                        return "protect_bound: boolean expected";
+                if (message.protect_unbound != null && $Object.hasOwnProperty.call(message, "protect_unbound"))
+                    if (typeof message.protect_unbound !== "boolean")
+                        return "protect_unbound: boolean expected";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for AutoRecyclePolicy
+             * @function getTypeUrl
+             * @memberof minimir.v1.AutoRecyclePolicy
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AutoRecyclePolicy.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.AutoRecyclePolicy";
+            };
+
+            return AutoRecyclePolicy;
+        })();
+
+        v1.SetAutoRecycleRequest = (function() {
+
+            /**
+             * Properties of a SetAutoRecycleRequest.
+             * @typedef {Object} minimir.v1.SetAutoRecycleRequest.$Properties
+             * @property {minimir.v1.AutoRecyclePolicy.$Properties|null} [policy] SetAutoRecycleRequest policy
+             * @property {boolean|null} [apply_existing] SetAutoRecycleRequest apply_existing
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetAutoRecycleRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetAutoRecycleRequest.
+             * @memberof minimir.v1
+             * @interface ISetAutoRecycleRequest
+             * @augments minimir.v1.SetAutoRecycleRequest.$Properties
+             * @deprecated Use minimir.v1.SetAutoRecycleRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetAutoRecycleRequest.
+             * @typedef {minimir.v1.SetAutoRecycleRequest.$Properties} minimir.v1.SetAutoRecycleRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SetAutoRecycleRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SetAutoRecycleRequest.
+             * @constructor
+             * @param {minimir.v1.SetAutoRecycleRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SetAutoRecycleRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetAutoRecycleRequest policy.
+             * @member {minimir.v1.AutoRecyclePolicy.$Properties|null|undefined} policy
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @instance
+             */
+            SetAutoRecycleRequest.prototype.policy = null;
+
+            /**
+             * SetAutoRecycleRequest apply_existing.
+             * @member {boolean} apply_existing
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @instance
+             */
+            SetAutoRecycleRequest.prototype.apply_existing = false;
+
+            /**
+             * SetAutoRecycleRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @instance
+             */
+            SetAutoRecycleRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SetAutoRecycleRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetAutoRecycleRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SetAutoRecycleRequest} SetAutoRecycleRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SetAutoRecycleRequest.$Shape): minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape;
+             *   (properties?: minimir.v1.SetAutoRecycleRequest.$Properties): minimir.v1.SetAutoRecycleRequest;
+             * }}
+             */
+            SetAutoRecycleRequest.create = function(properties) {
+                return new SetAutoRecycleRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SetAutoRecycleRequest message. Does not implicitly {@link minimir.v1.SetAutoRecycleRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetAutoRecycleRequest.$Properties} message SetAutoRecycleRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetAutoRecycleRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.policy != null && $Object.hasOwnProperty.call(message, "policy"))
+                    $root.minimir.v1.AutoRecyclePolicy.encode(message.policy, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.apply_existing != null && $Object.hasOwnProperty.call(message, "apply_existing") && message.apply_existing !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.apply_existing);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetAutoRecycleRequest message, length delimited. Does not implicitly {@link minimir.v1.SetAutoRecycleRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {minimir.v1.SetAutoRecycleRequest.$Properties} message SetAutoRecycleRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetAutoRecycleRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetAutoRecycleRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape} SetAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetAutoRecycleRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SetAutoRecycleRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.policy = $root.minimir.v1.AutoRecyclePolicy.decode(reader, reader.size(), $undefined, _depth + 1, message.policy);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.apply_existing = value;
+                            else
+                                delete message.apply_existing;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetAutoRecycleRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetAutoRecycleRequest & minimir.v1.SetAutoRecycleRequest.$Shape} SetAutoRecycleRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetAutoRecycleRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SetAutoRecycleRequest message.
+             * @function verify
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetAutoRecycleRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.policy != null && $Object.hasOwnProperty.call(message, "policy")) {
+                    var error = $root.minimir.v1.AutoRecyclePolicy.verify(message.policy, _depth + 1);
+                    if (error)
+                        return "policy." + error;
+                }
+                if (message.apply_existing != null && $Object.hasOwnProperty.call(message, "apply_existing"))
+                    if (typeof message.apply_existing !== "boolean")
+                        return "apply_existing: boolean expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SetAutoRecycleRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SetAutoRecycleRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetAutoRecycleRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SetAutoRecycleRequest";
+            };
+
+            return SetAutoRecycleRequest;
+        })();
+
+        v1.SetItemLockRequest = (function() {
+
+            /**
+             * Properties of a SetItemLockRequest.
+             * @typedef {Object} minimir.v1.SetItemLockRequest.$Properties
+             * @property {Uint8Array|null} [item_instance_id] SetItemLockRequest item_instance_id
+             * @property {Long|null} [item_version] SetItemLockRequest item_version
+             * @property {boolean|null} [locked] SetItemLockRequest locked
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetItemLockRequest operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a SetItemLockRequest.
+             * @memberof minimir.v1
+             * @interface ISetItemLockRequest
+             * @augments minimir.v1.SetItemLockRequest.$Properties
+             * @deprecated Use minimir.v1.SetItemLockRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a SetItemLockRequest.
+             * @typedef {minimir.v1.SetItemLockRequest.$Properties} minimir.v1.SetItemLockRequest.$Shape
+             */
+
+            /**
+             * Constructs a new SetItemLockRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a SetItemLockRequest.
+             * @constructor
+             * @param {minimir.v1.SetItemLockRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var SetItemLockRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * SetItemLockRequest item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.SetItemLockRequest
+             * @instance
+             */
+            SetItemLockRequest.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * SetItemLockRequest item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.SetItemLockRequest
+             * @instance
+             */
+            SetItemLockRequest.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * SetItemLockRequest locked.
+             * @member {boolean} locked
+             * @memberof minimir.v1.SetItemLockRequest
+             * @instance
+             */
+            SetItemLockRequest.prototype.locked = false;
+
+            /**
+             * SetItemLockRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.SetItemLockRequest
+             * @instance
+             */
+            SetItemLockRequest.prototype.operation = null;
+
+            /**
+             * Creates a new SetItemLockRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {minimir.v1.SetItemLockRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.SetItemLockRequest} SetItemLockRequest instance
+             * @type {{
+             *   (properties: minimir.v1.SetItemLockRequest.$Shape): minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape;
+             *   (properties?: minimir.v1.SetItemLockRequest.$Properties): minimir.v1.SetItemLockRequest;
+             * }}
+             */
+            SetItemLockRequest.create = function(properties) {
+                return new SetItemLockRequest(properties);
+            };
+
+            /**
+             * Encodes the specified SetItemLockRequest message. Does not implicitly {@link minimir.v1.SetItemLockRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {minimir.v1.SetItemLockRequest.$Properties} message SetItemLockRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetItemLockRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.item_instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.item_version);
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked") && message.locked !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.locked);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified SetItemLockRequest message, length delimited. Does not implicitly {@link minimir.v1.SetItemLockRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {minimir.v1.SetItemLockRequest.$Properties} message SetItemLockRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SetItemLockRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a SetItemLockRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape} SetItemLockRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetItemLockRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.SetItemLockRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.locked = value;
+                            else
+                                delete message.locked;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a SetItemLockRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.SetItemLockRequest & minimir.v1.SetItemLockRequest.$Shape} SetItemLockRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SetItemLockRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a SetItemLockRequest message.
+             * @function verify
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SetItemLockRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.locked != null && $Object.hasOwnProperty.call(message, "locked"))
+                    if (typeof message.locked !== "boolean")
+                        return "locked: boolean expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for SetItemLockRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.SetItemLockRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            SetItemLockRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.SetItemLockRequest";
+            };
+
+            return SetItemLockRequest;
+        })();
+
+        v1.EquipmentRecycleResult = (function() {
+
+            /**
+             * Properties of an EquipmentRecycleResult.
+             * @typedef {Object} minimir.v1.EquipmentRecycleResult.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] EquipmentRecycleResult role
+             * @property {Long|null} [role_revision] EquipmentRecycleResult role_revision
+             * @property {Long|null} [source_seq] EquipmentRecycleResult source_seq
+             * @property {Uint8Array|null} [op_id] EquipmentRecycleResult op_id
+             * @property {Long|null} [policy_revision] EquipmentRecycleResult policy_revision
+             * @property {Long|null} [recycled_count] EquipmentRecycleResult recycled_count
+             * @property {Long|null} [gold] EquipmentRecycleResult gold
+             * @property {Long|null} [bound_gold] EquipmentRecycleResult bound_gold
+             * @property {Long|null} [discarded_count] EquipmentRecycleResult discarded_count
+             * @property {string|null} [discard_reason] EquipmentRecycleResult discard_reason
+             * @property {number|null} [trigger] EquipmentRecycleResult trigger
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an EquipmentRecycleResult.
+             * @memberof minimir.v1
+             * @interface IEquipmentRecycleResult
+             * @augments minimir.v1.EquipmentRecycleResult.$Properties
+             * @deprecated Use minimir.v1.EquipmentRecycleResult.$Properties instead.
+             */
+
+            /**
+             * Shape of an EquipmentRecycleResult.
+             * @typedef {minimir.v1.EquipmentRecycleResult.$Properties} minimir.v1.EquipmentRecycleResult.$Shape
+             */
+
+            /**
+             * Constructs a new EquipmentRecycleResult.
+             * @memberof minimir.v1
+             * @classdesc Represents an EquipmentRecycleResult.
+             * @constructor
+             * @param {minimir.v1.EquipmentRecycleResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var EquipmentRecycleResult = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * EquipmentRecycleResult role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.role = null;
+
+            /**
+             * EquipmentRecycleResult role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentRecycleResult source_seq.
+             * @member {Long} source_seq
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.source_seq = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentRecycleResult op_id.
+             * @member {Uint8Array} op_id
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.op_id = $util.newBuffer([]);
+
+            /**
+             * EquipmentRecycleResult policy_revision.
+             * @member {Long} policy_revision
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.policy_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentRecycleResult recycled_count.
+             * @member {Long} recycled_count
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.recycled_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentRecycleResult gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * EquipmentRecycleResult bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * EquipmentRecycleResult discarded_count.
+             * @member {Long} discarded_count
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.discarded_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * EquipmentRecycleResult discard_reason.
+             * @member {string} discard_reason
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.discard_reason = "";
+
+            /**
+             * EquipmentRecycleResult trigger.
+             * @member {number} trigger
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @instance
+             */
+            EquipmentRecycleResult.prototype.trigger = 0;
+
+            /**
+             * Creates a new EquipmentRecycleResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {minimir.v1.EquipmentRecycleResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.EquipmentRecycleResult} EquipmentRecycleResult instance
+             * @type {{
+             *   (properties: minimir.v1.EquipmentRecycleResult.$Shape): minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape;
+             *   (properties?: minimir.v1.EquipmentRecycleResult.$Properties): minimir.v1.EquipmentRecycleResult;
+             * }}
+             */
+            EquipmentRecycleResult.create = function(properties) {
+                return new EquipmentRecycleResult(properties);
+            };
+
+            /**
+             * Encodes the specified EquipmentRecycleResult message. Does not implicitly {@link minimir.v1.EquipmentRecycleResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {minimir.v1.EquipmentRecycleResult.$Properties} message EquipmentRecycleResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentRecycleResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq") && (typeof message.source_seq === "object" ? message.source_seq.low || message.source_seq.high : message.source_seq !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.source_seq);
+                if (message.op_id != null && $Object.hasOwnProperty.call(message, "op_id") && message.op_id.length)
+                    writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.op_id);
+                if (message.policy_revision != null && $Object.hasOwnProperty.call(message, "policy_revision") && (typeof message.policy_revision === "object" ? message.policy_revision.low || message.policy_revision.high : message.policy_revision !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.policy_revision);
+                if (message.recycled_count != null && $Object.hasOwnProperty.call(message, "recycled_count") && (typeof message.recycled_count === "object" ? message.recycled_count.low || message.recycled_count.high : message.recycled_count !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.recycled_count);
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.bound_gold);
+                if (message.discarded_count != null && $Object.hasOwnProperty.call(message, "discarded_count") && (typeof message.discarded_count === "object" ? message.discarded_count.low || message.discarded_count.high : message.discarded_count !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.discarded_count);
+                if (message.discard_reason != null && $Object.hasOwnProperty.call(message, "discard_reason") && message.discard_reason !== "")
+                    writer.uint32(/* id 10, wireType 2 =*/82).string(message.discard_reason);
+                if (message.trigger != null && $Object.hasOwnProperty.call(message, "trigger") && message.trigger !== 0)
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint32(message.trigger);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified EquipmentRecycleResult message, length delimited. Does not implicitly {@link minimir.v1.EquipmentRecycleResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {minimir.v1.EquipmentRecycleResult.$Properties} message EquipmentRecycleResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            EquipmentRecycleResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an EquipmentRecycleResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape} EquipmentRecycleResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentRecycleResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.EquipmentRecycleResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.source_seq = value;
+                            else
+                                delete message.source_seq;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.op_id = value;
+                            else
+                                delete message.op_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.policy_revision = value;
+                            else
+                                delete message.policy_revision;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.recycled_count = value;
+                            else
+                                delete message.recycled_count;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.discarded_count = value;
+                            else
+                                delete message.discarded_count;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.discard_reason = value;
+                            else
+                                delete message.discard_reason;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.trigger = value;
+                            else
+                                delete message.trigger;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an EquipmentRecycleResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.EquipmentRecycleResult & minimir.v1.EquipmentRecycleResult.$Shape} EquipmentRecycleResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            EquipmentRecycleResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an EquipmentRecycleResult message.
+             * @function verify
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            EquipmentRecycleResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq"))
+                    if (!$util.isInteger(message.source_seq) && !(message.source_seq && $util.isInteger(message.source_seq.low) && $util.isInteger(message.source_seq.high)))
+                        return "source_seq: integer|Long expected";
+                if (message.op_id != null && $Object.hasOwnProperty.call(message, "op_id"))
+                    if (!(message.op_id && typeof message.op_id.length === "number" || $util.isString(message.op_id)))
+                        return "op_id: buffer expected";
+                if (message.policy_revision != null && $Object.hasOwnProperty.call(message, "policy_revision"))
+                    if (!$util.isInteger(message.policy_revision) && !(message.policy_revision && $util.isInteger(message.policy_revision.low) && $util.isInteger(message.policy_revision.high)))
+                        return "policy_revision: integer|Long expected";
+                if (message.recycled_count != null && $Object.hasOwnProperty.call(message, "recycled_count"))
+                    if (!$util.isInteger(message.recycled_count) && !(message.recycled_count && $util.isInteger(message.recycled_count.low) && $util.isInteger(message.recycled_count.high)))
+                        return "recycled_count: integer|Long expected";
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.discarded_count != null && $Object.hasOwnProperty.call(message, "discarded_count"))
+                    if (!$util.isInteger(message.discarded_count) && !(message.discarded_count && $util.isInteger(message.discarded_count.low) && $util.isInteger(message.discarded_count.high)))
+                        return "discarded_count: integer|Long expected";
+                if (message.discard_reason != null && $Object.hasOwnProperty.call(message, "discard_reason"))
+                    if (!$util.isString(message.discard_reason))
+                        return "discard_reason: string expected";
+                if (message.trigger != null && $Object.hasOwnProperty.call(message, "trigger"))
+                    if (!$util.isInteger(message.trigger))
+                        return "trigger: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for EquipmentRecycleResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.EquipmentRecycleResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            EquipmentRecycleResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.EquipmentRecycleResult";
+            };
+
+            return EquipmentRecycleResult;
         })();
 
         v1.EquipRequest = (function() {
@@ -22115,6 +23546,12 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.ItemView.$Properties>|null} [drops] HostingReport drops
              * @property {number|null} [stop_reason] HostingReport stop_reason
              * @property {Long|null} [settlement_sequence] HostingReport settlement_sequence
+             * @property {Long|null} [recycle_count] HostingReport recycle_count
+             * @property {Long|null} [recycle_gold] HostingReport recycle_gold
+             * @property {Long|null} [recycle_bound_gold] HostingReport recycle_bound_gold
+             * @property {Long|null} [discard_count] HostingReport discard_count
+             * @property {string|null} [last_discard_reason] HostingReport last_discard_reason
+             * @property {Long|null} [total_drop_count] HostingReport total_drop_count
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -22212,6 +23649,54 @@ $root.minimir = (function() {
             HostingReport.prototype.settlement_sequence = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * HostingReport recycle_count.
+             * @member {Long} recycle_count
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.recycle_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingReport recycle_gold.
+             * @member {Long} recycle_gold
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.recycle_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingReport recycle_bound_gold.
+             * @member {Long} recycle_bound_gold
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.recycle_bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingReport discard_count.
+             * @member {Long} discard_count
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.discard_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingReport last_discard_reason.
+             * @member {string} last_discard_reason
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.last_discard_reason = "";
+
+            /**
+             * HostingReport total_drop_count.
+             * @member {Long} total_drop_count
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.total_drop_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new HostingReport instance using the specified properties.
              * @function create
              * @memberof minimir.v1.HostingReport
@@ -22260,6 +23745,18 @@ $root.minimir = (function() {
                     writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.stop_reason);
                 if (message.settlement_sequence != null && $Object.hasOwnProperty.call(message, "settlement_sequence") && (typeof message.settlement_sequence === "object" ? message.settlement_sequence.low || message.settlement_sequence.high : message.settlement_sequence !== 0))
                     writer.uint32(/* id 8, wireType 0 =*/64).uint64(message.settlement_sequence);
+                if (message.recycle_count != null && $Object.hasOwnProperty.call(message, "recycle_count") && (typeof message.recycle_count === "object" ? message.recycle_count.low || message.recycle_count.high : message.recycle_count !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.recycle_count);
+                if (message.recycle_gold != null && $Object.hasOwnProperty.call(message, "recycle_gold") && (typeof message.recycle_gold === "object" ? message.recycle_gold.low || message.recycle_gold.high : message.recycle_gold !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.recycle_gold);
+                if (message.recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "recycle_bound_gold") && (typeof message.recycle_bound_gold === "object" ? message.recycle_bound_gold.low || message.recycle_bound_gold.high : message.recycle_bound_gold !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.recycle_bound_gold);
+                if (message.discard_count != null && $Object.hasOwnProperty.call(message, "discard_count") && (typeof message.discard_count === "object" ? message.discard_count.low || message.discard_count.high : message.discard_count !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.discard_count);
+                if (message.last_discard_reason != null && $Object.hasOwnProperty.call(message, "last_discard_reason") && message.last_discard_reason !== "")
+                    writer.uint32(/* id 13, wireType 2 =*/106).string(message.last_discard_reason);
+                if (message.total_drop_count != null && $Object.hasOwnProperty.call(message, "total_drop_count") && (typeof message.total_drop_count === "object" ? message.total_drop_count.low || message.total_drop_count.high : message.total_drop_count !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint64(message.total_drop_count);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -22385,6 +23882,60 @@ $root.minimir = (function() {
                                 delete message.settlement_sequence;
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.recycle_count = value;
+                            else
+                                delete message.recycle_count;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.recycle_gold = value;
+                            else
+                                delete message.recycle_gold;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.recycle_bound_gold = value;
+                            else
+                                delete message.recycle_bound_gold;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.discard_count = value;
+                            else
+                                delete message.discard_count;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.last_discard_reason = value;
+                            else
+                                delete message.last_discard_reason;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.total_drop_count = value;
+                            else
+                                delete message.total_drop_count;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -22465,6 +24016,24 @@ $root.minimir = (function() {
                 if (message.settlement_sequence != null && $Object.hasOwnProperty.call(message, "settlement_sequence"))
                     if (!$util.isInteger(message.settlement_sequence) && !(message.settlement_sequence && $util.isInteger(message.settlement_sequence.low) && $util.isInteger(message.settlement_sequence.high)))
                         return "settlement_sequence: integer|Long expected";
+                if (message.recycle_count != null && $Object.hasOwnProperty.call(message, "recycle_count"))
+                    if (!$util.isInteger(message.recycle_count) && !(message.recycle_count && $util.isInteger(message.recycle_count.low) && $util.isInteger(message.recycle_count.high)))
+                        return "recycle_count: integer|Long expected";
+                if (message.recycle_gold != null && $Object.hasOwnProperty.call(message, "recycle_gold"))
+                    if (!$util.isInteger(message.recycle_gold) && !(message.recycle_gold && $util.isInteger(message.recycle_gold.low) && $util.isInteger(message.recycle_gold.high)))
+                        return "recycle_gold: integer|Long expected";
+                if (message.recycle_bound_gold != null && $Object.hasOwnProperty.call(message, "recycle_bound_gold"))
+                    if (!$util.isInteger(message.recycle_bound_gold) && !(message.recycle_bound_gold && $util.isInteger(message.recycle_bound_gold.low) && $util.isInteger(message.recycle_bound_gold.high)))
+                        return "recycle_bound_gold: integer|Long expected";
+                if (message.discard_count != null && $Object.hasOwnProperty.call(message, "discard_count"))
+                    if (!$util.isInteger(message.discard_count) && !(message.discard_count && $util.isInteger(message.discard_count.low) && $util.isInteger(message.discard_count.high)))
+                        return "discard_count: integer|Long expected";
+                if (message.last_discard_reason != null && $Object.hasOwnProperty.call(message, "last_discard_reason"))
+                    if (!$util.isString(message.last_discard_reason))
+                        return "last_discard_reason: string expected";
+                if (message.total_drop_count != null && $Object.hasOwnProperty.call(message, "total_drop_count"))
+                    if (!$util.isInteger(message.total_drop_count) && !(message.total_drop_count && $util.isInteger(message.total_drop_count.low) && $util.isInteger(message.total_drop_count.high)))
+                        return "total_drop_count: integer|Long expected";
                 return null;
             };
 

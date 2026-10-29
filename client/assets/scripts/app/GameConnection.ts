@@ -30,6 +30,8 @@ const codecs: Record<number, MessageType> = {
     40009: pb.UseItemRequest, 40010: pb.LearnSkillRequest,
     40011: pb.SkillAssetPreviewRequest, 40012: pb.SkillAssetPreview, 40013: pb.SkillAssetCommitRequest,
     40014: pb.CastWithMaterialRequest, 40015: pb.SetCastingSupplyRequest,
+    40016: pb.SetAutoRecycleRequest, 40017: pb.SetItemLockRequest,
+    40018: pb.EquipmentRecycleResult,
 };
 
 function variable(value: Long): number[] {

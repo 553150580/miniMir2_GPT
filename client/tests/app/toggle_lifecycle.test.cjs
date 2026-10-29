@@ -31,7 +31,7 @@ const {Toggle}=load(toggleFile,id=>id==='cc.decorator'?decorators:id==='internal
 const trace=[];
 const session={lastError:''};
 const {AppRoot}=load(path.resolve(__dirname,'../../assets/scripts/app/AppRoot.ts'),id=>id==='cc'
-    ?{_decorator:decorators,Button,Toggle,Component:class{},isValid:()=>true,game:{off(){}},Game:{EVENT_HIDE:'hide'}}
+    ?{_decorator:decorators,Button,Toggle,EditBox:{EventType:{TEXT_CHANGED:'text-changed'}},Component:class{},isValid:()=>true,game:{off(){}},Game:{EVENT_HIDE:'hide'}}
     :id.endsWith('/NavigationIntent')?{NavigationIntent:class{}}
     :id==='./GameSession'?{session}
     :id==='./InputTrace'?{traceInput:record=>trace.push(record)}:{});
@@ -64,6 +64,16 @@ test('普通Button仍默认CLICK，清理按注册事件类型移除',()=>{
     assert.equal(root.buttons[0][1],Button.EventType.CLICK);
     toggle.node.emit(Button.EventType.CLICK);assert.equal(clicks,1);
     root.onDestroy();toggle.node.emit(Button.EventType.CLICK);assert.equal(clicks,1);
+});
+test('真实引擎Toggle的自动回收设置回填不触发TOGGLE；普通用户点击仍触发一次',()=>{
+    const Long=require('../../assets/scripts/app/../../../node_modules/long');
+    const {GameAutoRecycle}=load(path.resolve(__dirname,'../../assets/scripts/app/GameAutoRecycle.ts'),id=>id==='cc'?{Toggle,Button,EditBox:class{},Label:class{}}:id==='long'?Long:id==='./AutoRecycleModel'?require('../../../.work/ui-tests/app/AutoRecycleModel.js'):{});
+    const {defaultAutoRecycle}=require('../../../.work/ui-tests/app/AutoRecycleModel.js');const values=new Map();let changed=0;
+    const names=['AutoRecycleEnabled','RecycleProtectBound','RecycleProtectUnbound',...[0,1,2,3,4].map(id=>'RecycleQuality'+id)];
+    for(const name of names){const toggle=new Toggle();toggle.node.on(Toggle.EventType.TOGGLE,()=>changed++);toggle.onEnable();values.set(name,toggle);}
+    const panel={getChildByPath(name){if(!values.has(name))values.set(name,{string:'',interactable:true});return{getComponent:()=>values.get(name)};}};
+    const view=new GameAutoRecycle(panel),policy=defaultAutoRecycle();view.refresh({role:'r',ready:true,policy,definitions:[]},false,false);view.reset();assert.equal(changed,0);
+    values.get('AutoRecycleEnabled').node.emit(Button.EventType.CLICK);assert.equal(changed,1);
 });
 test('真实技能模式Toggle绑定只发送一次最终勾选，发送与拒绝前保持权威值，状态回推不反向发送',()=>{
     for(const restart of [false,true]){

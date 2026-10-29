@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 70,
+  "message_count": 74,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -61,6 +61,10 @@
     "EquippedItem",
     "LearnedSkill",
     "InventoryResult",
+    "AutoRecyclePolicy",
+    "SetAutoRecycleRequest",
+    "SetItemLockRequest",
+    "EquipmentRecycleResult",
     "EquipRequest",
     "RecycleRequest",
     "UseItemRequest",
@@ -77,8 +81,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 148,
-  "int64_boundary_cases": 482,
+  "int64_field_count": 162,
+  "int64_boundary_cases": 528,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -843,6 +847,60 @@
       "cases": 4
     },
     {
+      "message": "AutoRecyclePolicy",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "SetItemLockRequest",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "source_seq",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "policy_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "recycled_count",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "discarded_count",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "UseItemRequest",
       "field": "scene_epoch",
       "type": "uint64",
@@ -967,9 +1025,39 @@
       "field": "settlement_sequence",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "recycle_count",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "recycle_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "recycle_bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingReport",
+      "field": "discard_count",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingReport",
+      "field": "total_drop_count",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 19,
+  "bytes_field_count": 21,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1014,6 +1102,16 @@
     {
       "message": "ItemView",
       "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "SetItemLockRequest",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "EquipmentRecycleResult",
+      "field": "op_id",
       "repeated": false
     },
     {
@@ -1085,19 +1183,19 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "485d6fc6456b13d9a31aa7201f3b524ee931448a626e0020cbec95b88c6dda23"
+      "sha256": "4283a8d39cd757514154fb5073c0615b3ddd81ce3ed64b4f3c57ffb491d4d8d3"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "e60892744f4b2e7da9d1a01d22d7f23a5b7fdc5bafd71c3d9223e88f7dd069b0",
-      "bytes": 1148257
+      "sha256": "991f293192ae3f6f88bde37e29a7a224c3323d35d8508defc1c7aa68c66c5eed",
+      "bytes": 1233143
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "406d1da03c8ed848b0c8eeafd1bc8b2dbc4f1450e4750c33060d2fb6674dc346",
-      "bytes": 368637
+      "sha256": "a6d9a9e5e3859af0c994a2b8ca9a94cffdb8b1f412318609c3eb4817e7aab0d2",
+      "bytes": 393161
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

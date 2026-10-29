@@ -1,5 +1,11 @@
 # 共享协议实现状态
 
+当前rule19为74个PB消息、57个消息号、31个错误码、162个64位字段、528个Long边界。新增40016策略/40017原件锁定两条永久请求及只读40018回收结果；操作沿原op与owner提交，未知不换身份，64位保持Long/BigInt。
+
+自动回收与挂机战报已通过rule19限定开发验收：1022项真实Mongo/WS全包Go race、111项配置Python、425项JS（409 UI/app、16场景；212份项目输入与另9份锁定引擎源码分别冻结）；Creator3.8.8实构121.42秒、exit36，正常新角色触屏6项通过，0错误/1警告。策略默认关闭，设置和明确应用背包分开确认，锁定/穿戴/未确认结果/占用为强保护；在线和托管共用原SourceSeq资产事务，40018只显示已提交事实，健康重入不重播。当前预览`dev-auto-recycle-v0.19-65ab01055f34`；主仍22技能、legacy未训宠、护符关闭及17未开放。木剑50/布衣400仍为开发金币夹具，正式分解、损坏回收、洗炼石与祝福油产出未验收；完整P0、真机与容量继续待验。见[阶段验收](../../docs/自动回收与挂机战报阶段验收.json)。
+
+以下记录保留各自历史阶段范围，当前状态以本节rule19与最新验收为准。
+
 当前rule18共70个PB数据消息、54个消息号、148个64位字段及482个Long边界案例，仍属draft开发合同。新增纯S2C30015 PetBorn；14字段承载精确scene/baseline/state_sequence/handle/Life/definition/map/cast/skill/出生Unix/运动水位/方向/RoleKey/server elapsed。movement_revision=0合法；64位保持Long/BigInt，不上传坐标，不新增经济游标。
 
 PetBorn仅在fresh17真正安装、原current World及成功SyncReady的完整World.Ref/Auth stamp仍匹配、含body完整基线全组发送后发出；非当前或未Ready不积压。旧附着quiescing仍可观察出生，输入门槛不开放；Cancel不重播，新Entry清scope。 客户端消费最多1条pending并保留Life水位；健康基线/Owned/永久回执不补播出生。显示发送失败不回滚宠物或材料，不重投新票。主仍22技能、原商店与初始赠书、legacy免费未训宠及护符关闭；独立17候选required_rule_version=17、runtime_enabled=false，护符包Count单位与售价仍待用户答复。见[阶段验收](../../docs/宠物出生表现与隔离客户端阶段验收.json)。

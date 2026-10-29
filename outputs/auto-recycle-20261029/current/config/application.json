@@ -1,0 +1,7 @@
+{
+  "applied": true,
+  "before_sha256": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+  "after_sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813",
+  "candidate_review": "candidate-review.json",
+  "no_source_numbers_changed": true
+}

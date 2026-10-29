@@ -1,0 +1,36 @@
+{
+  "status": "read_only_review_complete",
+  "current_business_blockers": [],
+  "scope": [
+    "永久扣物/分币/回执事务",
+    "原SourceSeq/opID重试",
+    "旧Auth与Pending代次回调隔离",
+    "未知配方与品质拒绝",
+    "满包处理与明确应用背包恢复",
+    "原件保护与失败切片隔离"
+  ],
+  "evidence": {
+    "settlement": "SettleWithReceipt先fence/checkRole，再按原SourceSeq+完整q摘要查永久回执；角色CAS、operation、audit同事务",
+    "asset_callback": "finishAsset核原room/Auth/generation/PendingID/fingerprint，unknown保留原retry且不发成功收益",
+    "unknown_recipe": "recyclePrice不合法时原件保留；满包仅明确丢弃新增掉物并记bag_full",
+    "capacity_recovery": "明确ApplyExisting可在满包停拾状态执行；成功腾空后AssetWithReceipt清PickupStopped，仍需用户主动恢复Auto",
+    "protected_originals": "locked/pending/reserved/worn共用强保护；回收新切片、锁定复制切片，出错不污染原r"
+  },
+  "limits": [
+    "仅静态源码审查，未运行Go/Mongo/浏览器",
+    "事务响应丢弃/真实UnknownTransaction故障不由此审查认证",
+    "正式分解表/损坏持久/石油/容量不在本轮合同"
+  ],
+  "source_hashes": {
+    "server/internal/persistence/equipment_recycling.go": "40ff058338d69b012b829e55ba4d3c3c3f44e4fed26bbe13adc8e258a7923806",
+    "server/internal/persistence/settlement.go": "b1af3d7c35beeebed749a8024b4de57b7e539e3fa55e601a98fb438b672e7d3a",
+    "server/internal/persistence/assets.go": "5e53c20d833cb9e6d73712094ace3cfabc78e1302862857c66dd704533d1c05b",
+    "server/internal/persistence/store.go": "6abb3bf93f8c3e659914bfe74cd19ec407f21ccbf060012159709484da3c878d",
+    "server/internal/game/auto_recycle.go": "1c6d3dfba5f6aeaf1d58e8a4ec44502eb90ad829d008dc8dc0d6764b9abce0fd",
+    "server/internal/game/asset_result.go": "376199d3bceb2f482c527f4acd192cee6e3a63e0b28df44a1497774d8f18ef40",
+    "server/internal/game/runtime.go": "3bc94ee34fb0a77c0a0a17df4b1bc3ce7d8362d4c09e0bf7a4504cfddbf175dd",
+    "server/internal/game/combat.go": "bae6b34da533226467628889356756e45b88e5d6321952cc960bc8796804651b",
+    "server/internal/domain/auto_recycle.go": "a99f9296942c80885656296bc3ba33c3872ef42cd4faee1e49d58a0e9afc8b2f",
+    "server/internal/domain/model.go": "4d0b4bec87521d8edb11d2443e4544b6343db02d30a027acaf9c2a161912197e"
+  }
+}

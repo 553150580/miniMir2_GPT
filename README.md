@@ -1,5 +1,9 @@
 # 传奇2竖屏挂机版开发入口
 
+自动回收与挂机战报已通过rule19限定开发验收：1022项真实Mongo/WS全包Go race、111项配置Python、425项JS（409 UI/app、16场景；212份项目输入与另9份锁定引擎源码分别冻结）；Creator3.8.8实构121.42秒、exit36，正常新角色触屏6项通过，0错误/1警告。策略默认关闭，设置和明确应用背包分开确认，锁定/穿戴/未确认结果/占用为强保护；在线和托管共用原SourceSeq资产事务，40018只显示已提交事实，健康重入不重播。当前预览`dev-auto-recycle-v0.19-65ab01055f34`；主仍22技能、legacy未训宠、护符关闭及17未开放。木剑50/布衣400仍为开发金币夹具，正式分解、损坏回收、洗炼石与祝福油产出未验收；完整P0、真机与容量继续待验。见[阶段验收](docs/自动回收与挂机战报阶段验收.json)。
+
+以下记录保留各自历史阶段范围，当前状态以本节rule19与最新验收为准。
+
 宠物出生表现与隔离客户端已通过rule18限定验收：980项全包Go race（开启真实Mongo/WS，0跳过、164份输入稳定）、101项配置Python、405项JS（389 UI/app、16场景；204份项目输入与另8份锁定引擎源码分别冻结）、70种PB消息/148个64位字段/482个Long边界/54个消息号通过；主Creator409.74秒、独立候选包原真实Creator构建277.01秒，均exit36且输入稳定；仅声明单项Editor缓存排除后的受控全树SHA相等时允许复用真实产物。隔离19级/原书25/Count2后的正常触屏4项、0错误/3警告通过，覆盖学习装备、新生、无符Recall与健康重入。主仍22技能、原商店与初始赠书、legacy免费未训宠及护符关闭；独立17候选required_rule_version=17、runtime_enabled=false，护符包Count单位与售价仍待用户答复。两本Excel仅玩法profile版本17→18的1处单格变更；新增20张原PNG、2段原WAV及23份Creator导入meta，10份保存布局、架构书及冻结旧资源保持。材料未决日志严格区分17无target的8字段与14/15原目标形状，先校验持久化再发40014；落盘前或失败不发送，未知保留原op重查，不补零坐标。声音在保存Safe的TOUCH_END捕获阶段先于Button停冒泡解锁，全局input仅无UI认领触摸fallback；current拒旧scope。Safe公开NODE_DESTROYED提前退休音频，全局input始终主动退订；正常主动释放按原root/context/capture退订根监听，根销毁时由引擎自清事件表。isValid(strict)不含Destroying，另记根退休；排队组件先解绑clip且不重复destroy，实际已毁组件不再触碰，旧释放不清同Safe新声道。两段原WAV按完整剩余时长播放；GPU帧和AudioSource实际播放观察不等于硬件听感或手机真机。唯一可再生Editor问卷缓存settings/v2/packages/information.json以excluded_generated_editor_caches单项数组声明，生成文件另记generated_editor_cache_sha256；原tracked字节与SHA已移.work/quarantine/creator-information-20261029，gitignore只排精确项，其它settings/源/产物严核。源码确认Editor问卷与cache查询，runtime splash另读SettingsCategory.SPLASH_SCREEN；实际.ccc缓存非明文，未声称读出正文form/SID。不改splash或授权，不作授权旁路；旧425 compile36但SID漂移的guard失败保留历史。见[阶段验收](docs/宠物出生表现与隔离客户端阶段验收.json)。
 
 以下保留各自历史阶段范围；当前运行状态以上述rule18与最新限定验收为准。

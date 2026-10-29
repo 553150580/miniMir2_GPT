@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-pet-summon-v0.17-9cfc98f544bf",
+  "config_version": "dev-auto-recycle-v0.19-65ab01055f34",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

@@ -1,0 +1,398 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "recorded_at_utc": "2026-10-29T12:59:02.263904+00:00",
+  "stage": "开发自动回收、原件保护与逐事件挂机战报",
+  "status": "limited_passed",
+  "scope": "主rule19开发GoldOnly：永久免费策略/锁定/明确应用背包/普通战斗逐事件回收及托管统计；木剑与布衣沿原显式开发金币候选，不发布正式分解经济",
+  "runtime": {
+    "rule_version": 19,
+    "preview": "dev-auto-recycle-v0.19-65ab01055f34",
+    "fixture_sha256": "eb42f7dd2264e0fb0d161f44d336ee4be0169f3227ba4f76a530f0a4274e23db",
+    "skills": 22,
+    "summon17_enabled": false,
+    "casting_supply_enabled": false,
+    "bootstrap_mode": "legacy_untrained_pet",
+    "legacy_pet_trains": false,
+    "summon_candidate_runtime_enabled": false,
+    "summon_candidate_required_rule_version": 17,
+    "equipment_recycling": {
+      "mode": "development_gold_only",
+      "outputs": []
+    },
+    "equipment_candidate_gold": {
+      "218": 50,
+      "193": 400
+    },
+    "table_count": 98,
+    "record_count": 965,
+    "release_blockers": 715,
+    "runtime_ready": false,
+    "production_ready": false
+  },
+  "verification": {
+    "go_full_mongo_ws_race_passed_including_subtests": 1022,
+    "go_skipped": 0,
+    "go_failed": 0,
+    "go_inputs": 175,
+    "go_source_stable": true,
+    "configuration_python_passed": 111,
+    "javascript_ui_app_passed": 409,
+    "javascript_scene_passed": 16,
+    "javascript_total_passed": 425,
+    "client_inputs": 212,
+    "client_external_engine_inputs": 9,
+    "pb_messages": 74,
+    "pb_long_fields": 162,
+    "client_external_font_inputs": 3,
+    "confirmation_text_samples": 21,
+    "confirmation_max_width_px": 501.64453125,
+    "confirmation_max_lines": 8,
+    "confirmation_height_px": 240,
+    "pb_boundary_cases": 528,
+    "pb_protocol_ids": 57,
+    "creator_seconds": 121.42,
+    "creator_exit_code": 36,
+    "gameplay_excel_changed_cells": 1,
+    "formulas_preserved": 460,
+    "untouched_zip_members": 102,
+    "architecture_workbook_preserved": true
+  },
+  "main_creator": {
+    "passed": true,
+    "seconds": 121.42,
+    "exit_code": 36,
+    "source_stable": true,
+    "layout_preserved_during_build": true
+  },
+  "saved_ui_change": {
+    "old_objects": 1053,
+    "new_objects": 137,
+    "changed_existing_indices": [
+      257,
+      425,
+      435,
+      436
+    ],
+    "other_saved_layouts_unchanged": 9
+  },
+  "artifact_preservation": {
+    "old_protected_files": 20084,
+    "png_preserved": 8030,
+    "wav_preserved": 2,
+    "source_town_files_preserved": 13154,
+    "scope": "逐旧文件原字节核对；Game.scene的4处修改和新增脚本meta单列，不称全部布局不变"
+  },
+  "gui": {
+    "passed": true,
+    "checks": [
+      "正常注册与创角，原初始物品，服务端自动回收默认关闭",
+      "保存背包按钮锁定原实例，收到权威锁定与版本更新",
+      "仅保存未来策略不处理既有背包，不暗扣原物品",
+      "明确确认应用当前背包，锁定原件保留、其余原件按原Bound分币一次到账并有40018提交结果",
+      "真实消息Label显示一次已提交中文回收结果",
+      "健康新票重入保持永久策略、锁定原件和已提交资产，没有重复回收"
+    ],
+    "errors": [],
+    "warnings": [
+      {
+        "type": "warning",
+        "text": "Unexpected screen orientation: 13"
+      }
+    ],
+    "touchInput": true,
+    "privateBusinessInvoked": false,
+    "routeOverride": false,
+    "bodySeeded": false,
+    "observed": {
+      "recycled_count": 2,
+      "gold": 0,
+      "bound_gold": 450,
+      "screenshots": 7,
+      "healthy_binding_changed": true
+    },
+    "scope": "主rule19正常注册/新道士、保存UI设置与装备锁、明确应用背包、真实提交结果与健康新票；不预置数据库，不作正式分解经济/真机/容量认证"
+  },
+  "raw_go_counts": {
+    "passed": 1022,
+    "failed": 0,
+    "skipped": 0,
+    "inputs": 175,
+    "raw_package_actions": {
+      "start": 14,
+      "output": 20,
+      "skip": 8,
+      "pass": 6
+    }
+  },
+  "historical_attempts": [
+    {
+      "report": ".work/auto-recycle-20261029/server/mongo-66d5fcdd4b574be8b0330833f96f1649/report.json",
+      "sha256": "5d8ea4a7e4b65e7c01635b9e49eaf10d4c7601b3a18937984a5c58fdacab51eb",
+      "scope": "historical_mongo_attempt_not_current",
+      "passed": false,
+      "failures": [
+        {
+          "Time": "2026-10-29T19:23:09.4767433+08:00",
+          "Action": "fail",
+          "Package": "minimir/internal/integration",
+          "Test": "TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS",
+          "Elapsed": 0.08
+        },
+        {
+          "Time": "2026-10-29T19:23:09.4909823+08:00",
+          "Action": "fail",
+          "Package": "minimir/internal/integration",
+          "Elapsed": 4.759
+        }
+      ]
+    },
+    {
+      "report": ".work/auto-recycle-20261029/server/mongo-d3dcac04e96c4758892a713ec99890d8/report.json",
+      "sha256": "3864b600de79d657f996b56f27d4421efa9374758f8d8c1515cb510d1a9328f3",
+      "scope": "historical_mongo_attempt_not_current",
+      "passed": false,
+      "failures": [
+        {
+          "Time": "2026-10-29T19:34:09.8796341+08:00",
+          "Action": "fail",
+          "Package": "minimir/internal/integration",
+          "Test": "TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS",
+          "Elapsed": 81.98
+        },
+        {
+          "Time": "2026-10-29T19:34:09.9924421+08:00",
+          "Action": "fail",
+          "Package": "minimir/internal/integration",
+          "Elapsed": 86.803
+        }
+      ]
+    },
+    {
+      "report": ".work/auto-recycle-20261029/server/full-1/report.json",
+      "sha256": "797daefb5dbe3a48a2d25d782586a6d87fce0becc48b850651695285630589a7",
+      "scope": "historical_full_go_fixture_adaptation_failure_not_current",
+      "passed": false,
+      "passed_tests_at_that_time": 1020,
+      "failures": [
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": "TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS"
+        },
+        {
+          "package": "minimir/internal/integration",
+          "test": null
+        }
+      ],
+      "inputs_at_that_time": 175
+    },
+    {
+      "report": ".work/auto-recycle-20261029/client/validation-1/report.json",
+      "sha256": "f23877f781592d26a51a61cd1873f5db10060b7b00ea8481b51ef62620c47de3",
+      "scope": "historical_client_validation_not_current",
+      "passed_at_that_time": false
+    },
+    {
+      "report": ".work/auto-recycle-20261029/client/validation-2/report.json",
+      "sha256": "b3927ef633f8bb39559523eab81edac226a17bdeac11ac1173753a1cac8e39ae",
+      "scope": "historical_client_validation_not_current",
+      "passed_at_that_time": true
+    },
+    {
+      "report": ".work/auto-recycle-20261029/browser/run-01/report.json",
+      "sha256": "4d2c99aeda6f3467a8358aa3d11062de534f4d9c5c4a8d99c0f4d4535b55b2b8",
+      "scope": "historical_gui_not_current",
+      "functional_passed_at_that_time": false,
+      "visual_review": null,
+      "note": "原功能passed和人工视觉判断分别保留；run03只记录等待前置不足，不能追认当时按钮disabled原因"
+    },
+    {
+      "report": ".work/auto-recycle-20261029/browser/run-02/report.json",
+      "sha256": "d8ab7c7b8acff9583b2494ff0f4ae98795ba886f418bd857184f59572e7b2115",
+      "scope": "historical_gui_not_current",
+      "functional_passed_at_that_time": true,
+      "visual_review": {
+        "visual_passed": false,
+        "scope": "原run02的6项功能/协议检查通过；确认文字完整可见另验，本观察使该run不能作为最终视觉通过证据",
+        "observed": "03-before-apply-confirm.png中自动回收确认窗末行左右截断；原Confirm/Message宽530高280、font24/lineHeight30且未开启换行。",
+        "resolution": "只调整本阶段确认文案显式短行并核实际Label显示；不修改通用Popup布局。修正后重新冻结客户端、Creator实构和新GUI。",
+        "gui_report_sha256": "d8ab7c7b8acff9583b2494ff0f4ae98795ba886f418bd857184f59572e7b2115",
+        "image_sha256": "05ff0119f133ba0bff036336a17d43a9aaf9e9474eb55846b29dc3758e9ddac5"
+      },
+      "note": "原功能passed和人工视觉判断分别保留；run03只记录等待前置不足，不能追认当时按钮disabled原因"
+    },
+    {
+      "report": ".work/auto-recycle-20261029/browser/run-03/report.json",
+      "sha256": "6b5645f0e23b3cc6839e689789c11b120c433f5e2aea6476698031354c1a7aa4",
+      "scope": "historical_gui_not_current",
+      "functional_passed_at_that_time": false,
+      "visual_review": null,
+      "note": "原功能passed和人工视觉判断分别保留；run03只记录等待前置不足，不能追认当时按钮disabled原因"
+    },
+    {
+      "report": ".work/auto-recycle-20261029/normal-browsers/run-20261029T120151Z-97068399/report.json",
+      "sha256": "4901a0b5117315d0a71b76f5adc49cd5116d7f88cee0d3ef2269662774415263",
+      "scope": "historical_normal_browsers_before_confirmation_text_fix",
+      "passed_at_that_time": true
+    }
+  ],
+  "selectors": {
+    "go_report": {
+      "path": ".work/auto-recycle-20261029/server/full-2/report.json",
+      "sha256": "bf10766508e4e14e93862b03f1236482abba1ba4ba1361b6a70c0e65e73d697e"
+    },
+    "go_events": {
+      "path": ".work/auto-recycle-20261029/server/full-2/events.jsonl",
+      "sha256": "5a3819e18b1c8c162819ccc23af7d30ff505dc30e059073a25bdb2bd8c5252df"
+    },
+    "client_report": {
+      "path": ".work/auto-recycle-20261029/client/validation-3/report.json",
+      "sha256": "3299c710ba0df7b3b22aa2414e39e0c2ce09a02b21a6e7c10db548e4877d8f22"
+    },
+    "creator_report": {
+      "path": ".work/auto-recycle-20261029/creator-2/report.json",
+      "sha256": "a079c4383954728827da4924bf45c777e8f23aad1bbb1e38e0d8fcd1b8155d57"
+    },
+    "gui_report": {
+      "path": ".work/auto-recycle-20261029/browser/run-04/report.json",
+      "sha256": "dc5d6c574a1bd5e41c92682c7fcf8c20538219da34e4f0bbb6f0f41ccf344261"
+    }
+  },
+  "limits": [
+    "50/400仅原Price开发候选，正式game_recycle_values未发布；石/油副产物显式outputs=[]，不是将未知正式行补零",
+    "本轮未接当前/上限持久，损坏回收及修理未验收",
+    "主22技能/legacy不训练/材料false/17closed保持；护符包Count/售价仍待定",
+    "响应丢弃后原ID重试不等于真实UnknownTransaction网络故障注入",
+    "真实主预览触屏观察不代表手机真机、容量、完整P0或全1.80"
+  ],
+  "physical_mobile_verified": false,
+  "capacity_verified": false,
+  "production_ready": false,
+  "evidence_sha256": {
+    "outputs/auto-recycle-20261029/current/go/report.json": "bf10766508e4e14e93862b03f1236482abba1ba4ba1361b6a70c0e65e73d697e",
+    "outputs/auto-recycle-20261029/current/go/events.jsonl.gz": "0664e77f2efc5db8c7a7dec3f833a0ac6783c76bee908057dfbe092b398bafee",
+    "outputs/auto-recycle-20261029/current/client/report.json": "3299c710ba0df7b3b22aa2414e39e0c2ce09a02b21a6e7c10db548e4877d8f22",
+    "outputs/auto-recycle-20261029/current/creator/report.json": "a079c4383954728827da4924bf45c777e8f23aad1bbb1e38e0d8fcd1b8155d57",
+    "outputs/auto-recycle-20261029/current/creator/creator.log": "44e8e51955eb40b17e6003edd6437c927be3ed38a53bf80037c6d199483bbfa4",
+    "outputs/auto-recycle-20261029/current/gui/report.json": "dc5d6c574a1bd5e41c92682c7fcf8c20538219da34e4f0bbb6f0f41ccf344261",
+    "outputs/auto-recycle-20261029/current/client/models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "outputs/auto-recycle-20261029/current/client/full-ui-app.txt": "1e518612d5412ee3f5eb6e3e0c9efca8f0664af03b6f44c7c6b47642d2494e39",
+    "outputs/auto-recycle-20261029/current/client/scene.txt": "db41b7b9e871fa34079acc898afa6d05e92ad6b939534224641977cc29f0f325",
+    "outputs/auto-recycle-20261029/current/client/strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "outputs/auto-recycle-20261029/current/client/protocol-check.txt": "36f71fa0d13a8ca1b8cf2eff2ca5602ca2fff179311461003fa0a5a6761c29ed",
+    "outputs/auto-recycle-20261029/current/client/protocol-lint.txt": "c199110e65c3fdf39ad1f238687b58b8ffce1d42215b840229ea02431e11a7dc",
+    "outputs/auto-recycle-20261029/current/client/protocol-check-0.txt": "c107303bb6af4b8eced20ddf9e4d298e52e9a22554ba2ae96671b66f4194215c",
+    "outputs/auto-recycle-20261029/current/client/protocol-check-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "outputs/auto-recycle-20261029/current/gui/01-locked-equipment.png": "eb4bde2839c82a6e2895ba85f7b7a6ac0a88f3743d6e01bcaf0db9399abe2696",
+    "outputs/auto-recycle-20261029/current/gui/02-future-only.png": "a9fce6235f48f90d30039b4760d953d41a52e8f1c5386a877b007675498c7b7f",
+    "outputs/auto-recycle-20261029/current/gui/03-before-apply-confirm.png": "e8fc2216041d32a192667510720b611658e6ef20658907aab0379821bfa182a4",
+    "outputs/auto-recycle-20261029/current/gui/03-applied.png": "2a39fe39a2e171fa05935c8d234e81fc6138cca8a4a1723c83d707b3d6667800",
+    "outputs/auto-recycle-20261029/current/gui/03-visible-result-message.png": "48c040733db02071b3435d7a0d513dd447d7e873d9c8d0a86a3a780f8da9de6e",
+    "outputs/auto-recycle-20261029/current/gui/04-healthy-reentry.png": "03bf6a71c739fc531e6a19c1e9b47ae693bcab9ad3d09ecbc45803357a4f8ba2",
+    "outputs/auto-recycle-20261029/current/gui/05-taller-settings.png": "1887eac57e1018cc9b6a74ab393ea3efca43114181a90f709364b6b494dfcf81",
+    "outputs/auto-recycle-20261029/current/gui/visual-review.json": "de809792bfd8b3aed8989685c0dc98078dc76ef779506f851c70fe75e91581cc",
+    "outputs/auto-recycle-20261029/current/client/confirmation-review.json": "6a2778e8a61bfe44b648fb4c6a51501f326bf5c7338b7093657f77ed4ab11619",
+    "outputs/auto-recycle-20261029/current/client/confirmation-metrics-14504.json": "95d6e06e5e3317021eb37c7711f87273a11cfe282de53b8d4a9c149f1bf4ab9f",
+    "outputs/auto-recycle-20261029/current/go/wrapper.json": "b86e8910c7fd409ef3949f28a905c0b5ff4cfbe58574f118c7486debb3bad192",
+    "outputs/auto-recycle-20261029/current/go/tool.stdout.txt.gz": "6777ef591dda22a986950c3c04a019a41a3639907dae8aa13065e1d591dbb776",
+    "outputs/auto-recycle-20261029/current/go/tool.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/current/config/application.json": "90833a487f2b302dfcbeeb1c581874bb830d0a4de7e4459eaa8d46ae7f9e8a0a",
+    "outputs/auto-recycle-20261029/current/config/baseline.json.gz": "40af0c2dcfdef829e244e373dde07b353aa123e534eedb1a4b7fd8f7b42839b9",
+    "outputs/auto-recycle-20261029/current/config/candidate-review.json": "75364d2a79943d44d3f7376b0dd2e03ff05c25b3021173b7451dc6d63f45223f",
+    "outputs/auto-recycle-20261029/current/config/candidate-editor-review.json": "90808769722f10e19202a40a038d67732e68d4f707d97383962b2b32f0f0c970",
+    "outputs/auto-recycle-20261029/current/config/edit-plan.json": "e7edf693da4ffa8116b4acefbbd46750146b33e9148dec926e6bc6be0da8f92c",
+    "outputs/auto-recycle-20261029/current/config/final-review.json": "6cecba16dc32ca22fab111842eea53dc34c32e0efaf41234016f9f27cff9fae6",
+    "outputs/auto-recycle-20261029/current/config/python-full.json": "752366cb739c98d03133757eb19eb58cbd450303a8664c749cafd72b561382f6",
+    "outputs/auto-recycle-20261029/current/config/python-full.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/current/config/python-full.stderr.txt": "eb6c17b36db04bc1558743725a0f5f8d0f7c4dafe4e564744e076937972e7570",
+    "outputs/auto-recycle-20261029/current/config/export-check.json": "3fa5dd89a4dfa5f58c76e6a2062451ebfbedcf3c8313e9c1b81eb69f0373f4be",
+    "outputs/auto-recycle-20261029/current/config/export-check.stdout.txt": "b018c0344d9746967f43cda9c076071ae291992b8680be2eb28b8ee89535f90a",
+    "outputs/auto-recycle-20261029/current/config/fixture-check.json": "38f8ca8a4c1a16fc1024e54527ee19c2ffe363c60e9e7fe1f0294afadb0ca317",
+    "outputs/auto-recycle-20261029/current/config/fixture-check.stdout.txt": "9387a45a6b8e9a4578fba3288d5879e5a8bc9fecad4058f4980a7b488e9daae9",
+    "outputs/auto-recycle-20261029/current/config/pet-check.json": "d14ad3e1623c37196ea364be8b4a62c881842e9f1bf3139759d1785702ea99b8",
+    "outputs/auto-recycle-20261029/current/config/pet-check.stdout.txt": "3957779740843340bda2dee53f9fbd3f56d1b1769d83456d840b47d834975ec3",
+    "outputs/auto-recycle-20261029/current/config/summon-check.json": "c69915b465081e21d2394c59a590c5ff40658cf6c7be20097bdc7628bf3e1a1d",
+    "outputs/auto-recycle-20261029/current/config/summon-check.stdout.txt": "8c3406ffa7a83cbe65e43ff78e003afa13359253fa9ddbdbf46e13ba51244a59",
+    "outputs/auto-recycle-20261029/current/client/scene-diff.json": "7b8aeefd0c7172490c2aa3fd5fee02d9fea9cb6bcc7ba2b284321b7e7a899f35",
+    "outputs/auto-recycle-20261029/current/client/before.json": "83d103819a8d4642faad8a6d7bbd93262f1953270d8a91a33bb4811dc37a712c",
+    "outputs/auto-recycle-20261029/current/client/Game.before.scene.gz": "8c7b18e20ade7db6a1dddb598bf66822171933ba4dd33762400431d1c166a238",
+    "outputs/auto-recycle-20261029/current/config-peer/review.json": "0c2838a2afd6434c3676322b11194509079b419d92483646039830a6d0adde79",
+    "outputs/auto-recycle-20261029/current/server-peer/review.json": "03608bd2abcfccc4216544778bd0b17e96256a4f6803dbdd7ad96208cae2ee4d",
+    "outputs/auto-recycle-20261029/before/玩法配置.xlsx": "e44d0cb083c544bf78d447bd286105c7db51e3572b7d95d6e6d61814f3a24697",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/report.json": "5d8ea4a7e4b65e7c01635b9e49eaf10d4c7601b3a18937984a5c58fdacab51eb",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/events.jsonl.gz": "5c232e4e5833b743f9e0ae54d536ba72e283bbfa4405f3d5cc3a923722c33306",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/source-before.json": "2267edab429ac865b30c81adba93e228aff6c6acef5a58a55adece8826fb4c5b",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/source-after.json": "2267edab429ac865b30c81adba93e228aff6c6acef5a58a55adece8826fb4c5b",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/mongodb-status.stdout": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "outputs/auto-recycle-20261029/history/server/mongo-66d5fcdd4b574be8b0330833f96f1649/mongodb-status.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/report.json": "3864b600de79d657f996b56f27d4421efa9374758f8d8c1515cb510d1a9328f3",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/events.jsonl.gz": "274c85c53011696f05cba374b4adf1c9525bdb5cc070e8e0a345781da4f6be19",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/source-before.json": "b58d0a1ad9c41381d70fe710dece0e28651b712a53f82d21775074599f724ff7",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/source-after.json": "b58d0a1ad9c41381d70fe710dece0e28651b712a53f82d21775074599f724ff7",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/mongodb-status.stdout": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "outputs/auto-recycle-20261029/history/server/mongo-d3dcac04e96c4758892a713ec99890d8/mongodb-status.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/server/full-1/report.json": "797daefb5dbe3a48a2d25d782586a6d87fce0becc48b850651695285630589a7",
+    "outputs/auto-recycle-20261029/history/server/full-1/events.jsonl.gz": "89764c33ccbc7c0d91f695b9ef28c6e2532db926386e810b6a5e706d492da4f3",
+    "outputs/auto-recycle-20261029/history/server/full-1/wrapper.json": "c980b06187342c013e5c1e0f02d6a0f34909add1965afdcaad2001d54c442e27",
+    "outputs/auto-recycle-20261029/history/server/full-1/tool.stdout.txt.gz": "86dce49ce51ce15ce0cf778215fa4dcd2ecdc1cde8a54db12de538e2f46a6f06",
+    "outputs/auto-recycle-20261029/history/server/full-1/tool.stderr.txt.gz": "76b02cdf529e5e4f140e532f6b6b50dd2e87fa30d1e34479420d71fed75cc3f3",
+    "outputs/auto-recycle-20261029/history/client/validation-1/report.json": "f23877f781592d26a51a61cd1873f5db10060b7b00ea8481b51ef62620c47de3",
+    "outputs/auto-recycle-20261029/history/client/validation-1/models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "outputs/auto-recycle-20261029/history/client/validation-1/full-ui-app.txt": "900d96c353e70f340f9d54a4eb8d447ca3f088f98988030759eeced1ee93a374",
+    "outputs/auto-recycle-20261029/history/client/validation-1/scene.txt": "12f549732cdcaaab975a7da2ce962863a27c733bfee56db973efec91e311a252",
+    "outputs/auto-recycle-20261029/history/client/validation-1/strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "outputs/auto-recycle-20261029/history/client/validation-1/protocol-check.txt": "e40ffe325609e59b95025525608cb66aea2f06108747dfd6a401c293c660f974",
+    "outputs/auto-recycle-20261029/history/client/validation-1/protocol-lint.txt": "c199110e65c3fdf39ad1f238687b58b8ffce1d42215b840229ea02431e11a7dc",
+    "outputs/auto-recycle-20261029/history/client/validation-2/report.json": "b3927ef633f8bb39559523eab81edac226a17bdeac11ac1173753a1cac8e39ae",
+    "outputs/auto-recycle-20261029/history/client/validation-2/models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "outputs/auto-recycle-20261029/history/client/validation-2/full-ui-app.txt": "29e7e6b6b63604faf916d28e16d7398d2551661a416a4f10523eb142e75f057d",
+    "outputs/auto-recycle-20261029/history/client/validation-2/scene.txt": "325e0dfe5bb4e5d2e338a977aff79d9499ee8d8c2d2108cee7defba84b1cb262",
+    "outputs/auto-recycle-20261029/history/client/validation-2/strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "outputs/auto-recycle-20261029/history/client/validation-2/protocol-check.txt": "cf8277f2ba75f3f34ed9203d4c55c314940f37e5a7c9e7f234f43825e573c387",
+    "outputs/auto-recycle-20261029/history/client/validation-2/protocol-lint.txt": "c199110e65c3fdf39ad1f238687b58b8ffce1d42215b840229ea02431e11a7dc",
+    "outputs/auto-recycle-20261029/history/browser/run-01/report.json": "4d2c99aeda6f3467a8358aa3d11062de534f4d9c5c4a8d99c0f4d4535b55b2b8",
+    "outputs/auto-recycle-20261029/history/browser/run-02/report.json": "d8ab7c7b8acff9583b2494ff0f4ae98795ba886f418bd857184f59572e7b2115",
+    "outputs/auto-recycle-20261029/history/browser/run-02/visual-review.json": "050ff660374b80be67fef2ff130a1cb022e4d542d547f26d9e5d44c9e4f80b28",
+    "outputs/auto-recycle-20261029/history/browser/run-02/01-locked-equipment.png": "8721e3725364e6aff6dbc7009baa557cf6a32a053d125271206b5ab97ad18b08",
+    "outputs/auto-recycle-20261029/history/browser/run-02/02-future-only.png": "6cda722a537fcdc61a67d6b625a17186f464c57f40309508d74328341fac2a3b",
+    "outputs/auto-recycle-20261029/history/browser/run-02/03-applied.png": "d5649004c38fac9b1907443579fc878803d79f073b6b85823e6e93aabca81e88",
+    "outputs/auto-recycle-20261029/history/browser/run-02/03-before-apply-confirm.png": "05ff0119f133ba0bff036336a17d43a9aaf9e9474eb55846b29dc3758e9ddac5",
+    "outputs/auto-recycle-20261029/history/browser/run-02/03-visible-result-message.png": "ccaffbc2e2550f0c3a00385e0589fde15e0b95c1fd49700d996648d0ede6a35e",
+    "outputs/auto-recycle-20261029/history/browser/run-02/04-healthy-reentry.png": "9b6140b80b67acc4958a720f5b81785f2e5d827f839125e9fe58a71350e14154",
+    "outputs/auto-recycle-20261029/history/browser/run-02/05-taller-settings.png": "d194859b3f639b6342342ca1d8490f762fd371502dbe4a012c802497eb142670",
+    "outputs/auto-recycle-20261029/history/browser/run-03/report.json": "6b5645f0e23b3cc6839e689789c11b120c433f5e2aea6476698031354c1a7aa4",
+    "outputs/auto-recycle-20261029/history/browser/run-03/failure.png": "df26278e6a705f04f6d73da4fbe395d52d5a3c5fa11693c259f8a9848f8fccdc",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/report.json": "4901a0b5117315d0a71b76f5adc49cd5116d7f88cee0d3ef2269662774415263",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town.txt": "8590eb6befcdbc9de324300c646aa47857b6824dffd63d0ba1c111ed53401f8d",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui.txt": "5928c10bc7fd0d7a494aeca5adf8ac10e6e4db789a5c235bfaf248c5a4b1b692",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/static-0.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/static-1.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/report.json": "0bd03e0f214a05c3ddd185c14020e2084e4ac5f088ddd7eefd3f707a92f980da",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/01-personal.png": "0238b0d5ab6b090c0f826b9281d4ef7c19be5c1a59cd8a3d86ae2e78aa8cddea",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/02-town-entry.png": "93b3de99d299d5a0be0f1e8dd688875cc2b8706e9c437010dd11ebf44736b4c8",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/03-safe-zone.png": "a8e1641fc8e7233bccf8da1402bdb80ff88ad57aa9c77049daf586c3a4d373c3",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/03a-role-binding.png": "1fa7e578e92d699f41f7c4f0419d767d4fda1457bb5837467f89388d544f498a",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/04-town-reentry.png": "72f2796d66c7790d5c8652dffc85a395d3ded2dcbdff46eaaca8bd3414d96839",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-town/05-personal-return.png": "96a603251cf4c49447f402775d5908a9d272c47f5429de97cc47f202119397b5",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/report.json": "bcdfb95db74e96ed460baff8af77bef9ddb7bc3b346798ea53146d5fe937bff9",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/01-login.png": "637c937fec8b8879a3dfc9e214358d5b6cc6f46ccdd1855f05bfcaf6f295d36f",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/02-game.png": "879fa683d570d6cfea2e80173d5e00544b29ea49dbb9829fda5c41cf389ba299",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/03-navigation-panel.png": "0e907dbe4e613506b4beae01a4ba3973565ab23a74b846e9f6e58b7f60f7bf02",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/04-taller-viewport.png": "2cbe087a19664a270e7810030b49abe589b761ddb7c3b5a14ef46955dfd9871e",
+    "outputs/auto-recycle-20261029/history/normal-browsers/run-20261029T120151Z-97068399/browser-ui/05-healthy-reentry.png": "f80aa15b5eb0ec286c95cc4251a7571f20d9fb80441205172f294c4aefc54db3",
+    "outputs/auto-recycle-20261029/sources/shared/proto/assets.proto": "4283a8d39cd757514154fb5073c0615b3ddd81ce3ed64b4f3c57ffb491d4d8d3",
+    "outputs/auto-recycle-20261029/sources/shared/proto/protocol_manifest.json": "0178a4c532706b56ee294731ceb59b256d9ca3a38d4cdd524529513e0808fe86",
+    "outputs/auto-recycle-20261029/sources/tools/client/verify_auto_recycle_browser.cjs": "a5927154aef4c9cf3a0f58e25de426f36eb98ee3e4e8d86cb9af5a9256588482",
+    "outputs/auto-recycle-20261029/sources/.work/auto-recycle-20261029/finalize_evidence.py": "6ccd902995f93c009109c40251538edc2e8979ba91c06bc1d8e01322650eec72",
+    "outputs/auto-recycle-20261029/evidence-manifest.json": "8d6422bb84a7a86170125b1ff272cbf5b3186504fbe8f4e7677235b209cbc826",
+    "outputs/auto-recycle-20261029/evidence-paths.json": "e37555c783aab8c84c063ba32af9cdc4a9426459c893a1a25b412fa779ad05a7",
+    "outputs/auto-recycle-20261029/README.md": "92f6729ae670a33c26c314e5079df8730effee305a94aeb84d3ef39218e70ed2"
+  },
+  "evidence_file_count": 120
+}

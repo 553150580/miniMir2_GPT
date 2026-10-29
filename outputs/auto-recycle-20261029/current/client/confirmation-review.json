@@ -1,0 +1,20 @@
+{
+  "scope": "确认文字可见性修复；保存尺寸与本机实际字体度量，非新Creator/GPU验收",
+  "changed_since_validation_2": [
+    "client/assets/scripts/app/AutoRecycleModel.ts",
+    "client/tests/app/auto_recycle.test.cjs"
+  ],
+  "validation_3_sha256": "3299c710ba0df7b3b22aa2414e39e0c2ce09a02b21a6e7c10db548e4877d8f22",
+  "metrics_file": ".work/auto-recycle-20261029/client/confirmation-metrics-14504.json",
+  "metrics_sha256": "95d6e06e5e3317021eb37c7711f87273a11cfe282de53b8d4a9c149f1bf4ab9f",
+  "max_width_px": 501.64453125,
+  "max_lines": 8,
+  "line_height_px": 30,
+  "font_files_hashed_only": {
+    "C:\\Windows\\Fonts\\arial.ttf": "b3658eadae55e682b5f69eb64c439c1ecc8f196c0bb8d4756d145d13bc86476a",
+    "C:\\Windows\\Fonts\\msyh.ttc": "d79c55e68b1131eea0cc1c47be4f572d964f28c682e143db2ad09c1e4cb07a3f",
+    "C:\\Windows\\Fonts\\simsun.ttc": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab"
+  },
+  "font_binaries_copied": false,
+  "old_evidence_preserved": true
+}
