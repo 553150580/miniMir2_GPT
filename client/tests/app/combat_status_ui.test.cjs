@@ -8,6 +8,12 @@ const game={totalTime:0},file=path.join(root,'client/assets/scripts/app/GameComb
 const output=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}}),moduleLike={exports:{}};
 new Function('require','module','exports',output.outputText)(id=>id==='cc'?{Button,game,instantiate:()=>saved(path.join(root,'client/assets/resources/prefabs/StatusBadge.prefab'),1),isValid:n=>!!n&&!n.destroyed,Label}:id==='../ui/List'?{List}:id==='./OwnedPetModel'?require('../../../.work/ui-tests/app/OwnedPetModel.js'):id==='./PetTrainingModel'?require('../../../.work/ui-tests/app/PetTrainingModel.js'):id==='./CombatStatusModel'?require('../../../.work/ui-tests/app/CombatStatusModel.js'):{},moduleLike,moduleLike.exports);
 const {GameCombatStatus}=moduleLike.exports;
+test('成长详情复用保存StatusDetails实时更新且保留滚动，旧scope/provider失效和dispose不能读新角色',()=>{
+    const safe=saved(path.join(root,'client/assets/scenes/Game.scene')),details=safe.getChildByPath('PopupView/Panels/StatusDetails/List').getComponent(List);
+    const popup={top:null,show(name){this.top={name};}},controller=new GameCombatStatus(safe,{open(){}},popup,{},1);let current=true,level=1,reads=0;
+    controller.showLiveDetails('角色成长',()=>{reads++;return current?[`当前等级 ${level}`,'权威待用经验 0']:null;});details.offset=170;level=7;controller.update();assert(details.rows.some(line=>line.includes('当前等级 7')));assert.equal(details.offset,170);assert.equal(details.bindings.at(-1),true);
+    current=false;controller.update();assert(details.rows.some(line=>line.includes('附着已变化')));const before=reads;level=8;controller.update();assert.equal(reads,before);controller.dispose();controller.update();controller.showLiveDetails('旧调用',()=>{throw Error('已销毁详情不能调用provider');});assert.equal(reads,before);
+});
 test('真实状态控制器绑定保存UI：0秒徽标仍在、换life点击取新实体，详情滚动和下层列表位置保留',()=>{
     const safe=saved(path.join(root,'client/assets/scenes/Game.scene')),overview=safe.getChildByPath('UIMgr/Panels/CombatStatus/List').getComponent(List),details=safe.getChildByPath('PopupView/Panels/StatusDetails/List').getComponent(List);
     const ui={top:{name:'Skills'},open(name){this.top={name};}},popup={top:null,show(name,value){this.top={name};this.value=value;}},controller=new GameCombatStatus(safe,ui,popup,{},1);

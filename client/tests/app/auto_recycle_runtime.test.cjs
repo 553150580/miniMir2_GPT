@@ -21,7 +21,7 @@ async function fixture(){
  const item=id=>({instanceId:new Uint8Array(16).fill(id),itemId:id===3?193:218,quantity:Long.ONE,version:Long.UONE,quality:0,bound:true,locked:id===1,recycleBlockFlags:id===1?1:0});
  const inventory={revision:Long.fromString('9007199254740994',true),items:[item(1),item(2),item(3)],equipped:[],autoRecycle:model.defaultAutoRecycle()};deliver(40003,0,inventory);
  const storage=new Storage(),key='qa.recycle';s.pending=new PendingOperations(storage,key);
- const cc={_decorator:decorators,Component:class{},Toggle,EditBox,Label,Button};
+ const cc={_decorator:decorators,Component:class{},Toggle,EditBox,Label,Button,Node:{EventType:{TOUCH_END:'touch-end'}}};
  const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='../input/NavigationIntent'?require('../../../.work/ui-tests/input/NavigationIntent.js'):id==='./MapAttachmentCoordinator'?compiled('MapAttachmentCoordinator'):id==='./MapTravelModel'?compiled('MapTravelModel'):{});
  const {GameAutoRecycle}=load('client/assets/scripts/app/GameAutoRecycle.ts',id=>id==='cc'?cc:id==='long'?Long:{});
  const widgets=new Map(),widget=name=>{if(!widgets.has(name))widgets.set(name,{isChecked:false,string:'',interactable:true,enabled:true,setIsCheckedWithoutNotify(value){this.isChecked=value;}});return widgets.get(name);};

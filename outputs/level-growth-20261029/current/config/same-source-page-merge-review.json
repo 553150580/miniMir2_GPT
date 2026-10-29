@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T16:07:05.911710+00:00",
+  "status": "read_only_source_review_complete_no_reachable_blocker_new_validation_required",
+  "scope": "SkillAsset kind4同源完整书页合并只读审查；正常产品补齐，不是QA预置；不是原1085Go/435JS/Creator冻结仍有效或最终阶段通过",
+  "production_or_configuration_changed_by_reviewer": false,
+  "go_database_creator_or_browser_run_by_reviewer": false,
+  "configuration_source": {
+    "workbook": "outputs/development-prep-20261026/玩法配置.xlsx",
+    "sheet": "物品定义",
+    "id_cell": "A11",
+    "max_stack_cell": "E11",
+    "game_items_row": {
+      "id": 900001,
+      "item_key": "skill_page",
+      "display_name": "书页",
+      "item_type": "skill_page",
+      "max_stack": 65535,
+      "effect_list_id": null,
+      "weight": 0,
+      "quality": 0,
+      "description": "技能升级材料，分解产物继承原书绑定；商城书页绑定",
+      "icon_resource_key": null,
+      "record_status": "candidate",
+      "source_ref": "最终策划4.8、5.8；项目自定义物品ID900001，非来源客户端物品编号",
+      "note": "65535为本项目开发计数堆叠上限候选；不合并不同来源/绑定，图标尚待制作。"
+    },
+    "fixture_row": {
+      "id": 900001,
+      "name": "书页",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "is_skill_page": true,
+      "max_stack": 65535,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ]
+    },
+    "projection_ref": "tools/resources/prepare_first_loop.py:761-763",
+    "profile_reference": "skill_economy.page_item_id；引用唯一game_items，不在kind4维护第二个65535",
+    "source_status": "本项目自定义书页ID及65535开发堆叠上限候选；不是MYF护符数量或来源客户端物品编号"
+  },
+  "existing_kind3_and_lineage": {
+    "prepare_ref": "server/internal/persistence/skill_assets.go:164-191",
+    "facts": [
+      "原请求逐原书保存完整Item与ConsumeQuantity；只接受已配品质和monster_drop且SourceID非空",
+      "每个原书独立输出skill_recycle书页，Bound继承该书；不同书不在Kind3自动合并",
+      "提交时为每个新输出分配新实例ID，SourceID写同次Asset op_id十六进制；因此同SourceID代表同次资产操作，不等于同原书ID或同击杀",
+      "原书实例、原书来源、绑定、数量等仍在该操作的skill_plan.materials及audit中；旧Kind3输出不能追认成新Kind4操作"
+    ],
+    "assign_ref": "server/internal/persistence/skill_assets.go:295-320",
+    "receipt_ref": "server/internal/persistence/assets.go:234-248；server/internal/persistence/store.go:63-80",
+    "merge_requirement": "Kind4必须保留原SourceKind/SourceID；新合并op保存完整输入→输出的skill_plan事实，不能把输出SourceID改成新merge op抹除原来源"
+  },
+  "strict_equivalence_contract": {
+    "domain_item_fields_at_read": [
+      "ID",
+      "ItemID",
+      "Quantity",
+      "Bound",
+      "Version",
+      "SourceKind",
+      "SourceID",
+      "Quality",
+      "Locked",
+      "PendingResultID",
+      "ReservationID"
+    ],
+    "normalization": "复制完整domain.Item，只清ID/Quantity/Version，再reflect.DeepEqual完整结构；不手写容易漏未来字段的窄来源key",
+    "required": [
+      "仅已配置definition.IsSkillPage且Stackable/MaxStack>0，同ItemID依该定义自身上限；当前唯一书页为900001。不另硬编码65535或假定未来其它合法页均不可合并。",
+      "至少两个不同原实例，消耗量必须等于各自完整Quantity，Version合法且未耗尽",
+      "SourceID非空，所有其它Item字段完全相同；不同Bound/Quality/SourceKind/SourceID不能混",
+      "角色RecycleBlockFlags(item)==0，包括Locked/PendingResultID/ReservationID/错误同ID穿戴身份；不以客户端看不见隐藏字段为借口绕过",
+      "正数量与checked add；每个输入原stack符合唯一MaxStack，输出按同MaxStack重拆，输出槽位严格少于完整输入槽位",
+      "先释放完整输入再算Capacity；满包可通过有意义合并释放槽，不得要求预留空槽",
+      "不扣钱包、不改技能/经验/SourceSeq；沿现资产EconomicSeq/Revision一次提交，并保存永久receipt/audit"
+    ],
+    "explicit_rejections": [
+      "同一个实例重复两次",
+      "部分扣除冒充完整栈",
+      "空来源ID",
+      "保护或占用",
+      "不同来源/绑定/品质/其它Item元数据",
+      "整数溢出",
+      "不能减少槽位的重排"
+    ]
+  },
+  "quote_operation_boundary": {
+    "quote": "原PreviewSkillAsset保留规范化完整输入，绑定RoleRevision/RuleVersion/ConfigHash/TTL；commit重新build并DeepEqual原plan，锁/数量/版本/来源变化必须拒绝旧报价",
+    "receipt": "AssetWithReceipt在预览查找前读取原op永久回执；同原op与原payload重放返回原结果，换preview或payload冲突；不可重新随机生成输出或再发收益",
+    "unknown": "提交结果未知沿原op_id、原preview/payload重试。新报价不替代未决提交，不把本地超时当取消成功。",
+    "owner": "既有fence/checkRole/revisionCAS与回调拥有者检查必须保持；旧Auth不能消耗新owner页面",
+    "refs": [
+      "server/internal/persistence/skill_assets.go:233-294",
+      "server/internal/persistence/assets.go:53-104、225-248"
+    ]
+  },
+  "reusable_test_harness": {
+    "pure": "server/internal/persistence/skill_assets_test.go:skillEconomyFixture、buildSkillPlan；同文件TestSkillBookRecyclingRequiresKnownDropQualityAndPreservesEachBinding保留旧Kind3两输出断言",
+    "real_mongo_ws": "server/internal/integration/skill_assets_test.go:20-35 skillPreview/skillCommit/skillConfirm；37-66独立随机库/三节点/cleanup；stored()重读永久Role",
+    "receipt_replay": "该文件154-174已覆盖删quote后原op回执与改preview冲突/单一skill_plan audit",
+    "stale_concurrency": "该文件144-148替换quote、278-309同quote并发与过期",
+    "meaningful_new_cases": [
+      "同源不同绑定或品质拒绝，Locked/Pending/Reservation各拒绝",
+      "normalized完整Item只允许ID/Qty/Version不同，验证旧Kind3不变",
+      "满包3→1/3→2合并确实释放槽，2→2与部分消耗拒绝，checked总量溢出拒绝",
+      "输出数量守恒、每栈<=唯一MaxStack、原SourceKind/SourceID保留、钱包技能SourceSeq不变",
+      "提交响应丢弃后原op重试、删除quote后重放仍原输出/audit一次；不称真实UnknownTransaction网络故障注入",
+      "旧quote锁定/版本/RoleRevision变化拒绝，旧Auth与并发op不得二次合并"
+    ]
+  },
+  "client_review_targets": [
+    "保存ItemLock上下文只在真实书页同源等价组展示“合并书页”，无新节点或布局",
+    "仅正常40011预览→保存确认→40013提交，预览明确原实例/数量/来源/绑定/输出槽位，不调用私有业务方法",
+    "数量/版本保持Long/BigInt；客户端可见完整key与保护flags要相同，服务端完整domain.Item校验为最终权威",
+    "未知使用原持久journal op与preview，旧kind3输出不重解释/不本地改库存"
+  ],
+  "baseline_source_snapshot_sha256": {
+    "server/internal/domain/model.go": "ee2de0945a22cc9f49d9ecba13f20d26f218e5dd128d2b8a77111f500838083a",
+    "server/internal/domain/auto_recycle.go": "89363eec62f29246d7c1595603b00700b825113dc9a66293ef82c3110ace89f9",
+    "server/internal/persistence/skill_assets.go": "4120d3f42f8ca720e9c570ddd495ff4445e5f78a65d502804deb43564e14c663",
+    "server/internal/persistence/assets.go": "c16f7932876aaa4eaee84ceca4eb4690d44bf417c0be5a371580fd82202ccc31",
+    "server/internal/persistence/store.go": "56770a86d4b58fa15475dc49d3ed7135a6ea80bcd1da18118378c849da7ac1dd",
+    "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+    "server/internal/persistence/skill_assets_test.go": "1c5441a13154dd81ff8bcda760b52d6adc6cc3b5b919bf7bf13807877f2260e3",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03"
+  },
+  "baseline_source_snapshot_scope": "此为新实现尚未冻结时的只读来源基线；不宣称这些SHA会是最终生产字节",
+  "implementation_review": {
+    "status": "read_only_source_review_complete_no_reachable_blocker",
+    "scope": "只读实际新增代码及有意义反例测试源码；未运行Go/DB/Node/Creator/浏览器，不把旧1085/435/Creator作为新字节验收",
+    "server_findings": [
+      {
+        "id": "S1",
+        "state": "verified_in_source",
+        "fact": "normalizedSkillPage复制完整domain.Item并仅清ID/Quantity/Version；reflect.DeepEqual使其它所有当前/未来结构字段参与比较。",
+        "refs": {
+          "func normalizedSkillPage": [
+            110
+          ],
+          "reflect.DeepEqual(normalizedSkillPage": [
+            132
+          ]
+        }
+      },
+      {
+        "id": "S2",
+        "state": "verified_in_source",
+        "fact": "来源种类仅skill_recycle/npc_shop/monster_drop；SourceID非空；完整各栈、正数/MaxStack/checked add；输出数必须严格小于输入数，再走共用MaxStack拆分/释放输入后的Capacity计算。",
+        "refs": {
+          "func mergeSkillPages": [
+            115
+          ],
+          "switch first.SourceKind": [
+            124
+          ],
+          "outputCount >= int64(len(materials))": [
+            146
+          ],
+          "remaining := len(r.Items)": [
+            270
+          ]
+        }
+      },
+      {
+        "id": "S3",
+        "state": "resolved_in_source_after_review",
+        "fact": "首版手查Locked/Pending/Reservation已补调用r.RecycleBlockFlags，异常同ID穿戴身份也拒绝；只读见对应worn_duplicate负例。",
+        "refs": {
+          "r.RecycleBlockFlags(material.Item)": [
+            255
+          ]
+        }
+      },
+      {
+        "id": "S4",
+        "state": "verified_in_source",
+        "fact": "Kind4新实例保留原SourceID，只有其它kind给新op SourceID；applySkillPlan复制库存/技能/输出切片，kind3仍逐原书两输出不自动合并；typed Operation.Skill保存原实际plan供audit/receipt lineage。",
+        "refs": {
+          "source": "server/internal/persistence/skill_assets.go",
+          "functions": [
+            "applySkillPlan",
+            "cloneSkillPlan"
+          ],
+          "specific_points": [
+            "plan.Outputs=slices.Clone保留预览输出不被提交改写",
+            "plan.Kind!=4才覆盖新SourceID"
+          ],
+          "operation": "server/internal/persistence/assets.go:218-249"
+        },
+        "receipt_refs": "server/internal/persistence/assets.go:234-248；Operation.Skill clone"
+      },
+      {
+        "id": "S5",
+        "state": "suggestion_withdrawn_contract_clarified",
+        "fact": "审查者曾建议强制ItemID==唯一PageItemID；root最新合同经实现者同步是按每个已配IsSkillPage定义自身MaxStack，同ItemID完整等价合并。没有当前有效配置强制只能存在一种IsSkillPage，故不把该建议当缺陷或额外加入默认限制。"
+      }
+    ],
+    "client_findings": [
+      {
+        "id": "C1",
+        "state": "verified_in_source",
+        "fact": "保存Inventory/ItemLock根据所选skill_page上下文显示合并书页；preparePageMerge→共享previewPreparedSkillAsset→40011真实quote→保存SkillQuote确认→economic40013；原装备锁定仍40017，不改10布局。",
+        "refs": {
+          "const selectedPage": [
+            664
+          ],
+          "合并书页": [
+            667
+          ],
+          "preparePageMerge": [
+            26,
+            720
+          ],
+          "private async previewPreparedSkillAsset": [
+            746
+          ],
+          "request(40011": [
+            754
+          ],
+          "this.economic(40013": [
+            767
+          ]
+        }
+      },
+      {
+        "id": "C2",
+        "state": "verified_in_source",
+        "fact": "原Entry身份在报价返回与确认后复核，context冻结ItemID/Qty/Version/Bound/来源/品质/锁/flags及revision/钱包；Kind4再次核完整输入/零扣费/真实输出减少槽位与数量守恒，不猜65535或强称全部成一叠。",
+        "refs": {
+          "function frozenItem": [
+            50
+          ],
+          "function pageMetadata": [
+            97
+          ],
+          "export function validatePageMergeQuote": [
+            131
+          ],
+          "export function validateSkillAssetContext": [
+            183
+          ]
+        },
+        "scope": "客户端可见ItemView字段与保护flags参与校验；隐藏字段的完整domain.Item/保护仍由服务端权威拒绝"
+      },
+      {
+        "id": "C3",
+        "state": "verified_in_source",
+        "fact": "GameConnection.names使用for-in包含PB原型默认false/0，正常未锁页不会仅因proto3省略零值而被错误标缺失；这不是从手造camel/snake payload推断。",
+        "refs": {
+          "for (const key in value)": [
+            51
+          ]
+        }
+      },
+      {
+        "id": "C4",
+        "state": "verified_in_source_existing_permanent_operation_chain",
+        "fact": "新的40013仍进入原economic持久journal、原previewId和原op；未新增合并专用易丢临时提交。提交unknown仍核原op，服务端原receipt先于quote读取；无本地合并或旧Kind3重解释。",
+        "refs": "AppRoot.previewPreparedSkillAsset→economic；既有PendingOperations；AssetWithReceipt原op查询先于commitSkillAsset"
+      },
+      {
+        "id": "C5",
+        "state": "resolved_in_source_after_review",
+        "fact": "fullPageItem已按Store边界收紧为0<Version<MaxInt64；数量保持BigInt且不硬写65535。原宽范围只涉及畸形库存，未发现正常业务反例。"
+      }
+    ],
+    "new_test_source_review": [
+      {
+        "path": "server/internal/persistence/skill_page_merge_test.go",
+        "coverage": "满包/三种来源/完整原件不变、3→2与唯一65535上限、原SourceID/新实例、完整字段差异/保护/半栈/无减格/溢出、旧kind3不变等反例；仅读源码"
+      },
+      {
+        "path": "client/tests/app/skill_page_merge.test.cjs",
+        "coverage": "Long输入、完整key和保护变化、不同来源/绑定/品质/重复ID/真实quote守恒与减格；实际AppRoot→PB/journal链测试由作者继续补；仅读源码"
+      }
+    ],
+    "source_snapshot_sha256": {
+      "server/internal/persistence/skill_assets.go": "3e6a1617e5964a7b00bd1f80c909ac6c84acf9156cbe0b945cbbdbe755b1ec55",
+      "client/assets/scripts/app/SkillAssetsModel.ts": "2fbfdf101c7fb72f2af891356657c1247e5f2c7c76fe42c335af54428464d787",
+      "client/assets/scripts/app/GameSkillAssets.ts": "3fbaa0c15ccaed1e1ad30d52daf79f0b8401e7a4a95c96c739be0eb5386f17ac",
+      "client/assets/scripts/app/AppRoot.ts": "e4bf62fdd6fcea552bb4f22f27097806bd075aaa0dd408b94c6b03190f718d65",
+      "client/assets/scripts/app/GameConnection.ts": "d284bb6daf77614c722719ab070393064b2bcc6249996dd04c83996fd80c6336",
+      "client/assets/scripts/app/PendingOperations.ts": "6baf3e5b722e4377cc0bbc30c14bb339bf0027ca564590b2f82133f90516f0e1",
+      "server/internal/persistence/skill_page_merge_test.go": "2a0c07cde8ba394cefc814db9869355521d08ec1e1b90986f7365c206c36d8f4",
+      "server/internal/integration/skill_assets_test.go": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+      "client/tests/app/skill_page_merge.test.cjs": "4a96887ae4ec7a0326c4f4556c43d9a4c5de2b165a6455438eb8e589a22e0aeb",
+      "server/internal/integration/skill_page_merge_test.go": "998c45c6944ae6d5755715ef3f2ed631f1674a9c4da98f29115162ef6e7880d1",
+      "client/tests/app/skill_page_merge_runtime.test.cjs": "fcca319889919a859796c2618e7236de1b8b9477ad873099a721dcd0fe8c2dfa"
+    },
+    "configuration_unchanged": true,
+    "formal_acceptance_claimed": false,
+    "runtime_tests_run_by_reviewer": false,
+    "typed_receipt_final_check": {
+      "source_refs": [
+        "server/internal/persistence/assets.go:218-249",
+        "server/internal/persistence/skill_assets.go:345-369、372-412",
+        "server/internal/persistence/store.go:63-80"
+      ],
+      "facts": [
+        "业务拒绝清skillDetails，失败op不能伪造成功计划；原资产操作仍消耗规定的EconomicSeq/Revision并永久记录原Code",
+        "成功计划使用克隆后的实际原输入和已分配输出ID/原SourceID，保存Operation.Skill和audit_outbox.skill_plan同事务",
+        "旧op重放仍在quote读取之前核digest/返回原Code，不再次执行applySkillPlan、随机分配输出或追加收益",
+        "新Kind4不更改旧Kind3的逐书输出，也不修改旧永久回执解释"
+      ]
+    },
+    "integration_test_read_review": {
+      "path": "server/internal/integration/skill_page_merge_test.go",
+      "state": "two_test_errors_resolved_before_database_run",
+      "original_findings": [
+        {
+          "fact": "首稿将书页走仅允许equipment的40017锁定，正常链必拒；不是合并生产缺陷",
+          "resolution": "改为原新生装备正常锁定推进RoleRevision使旧页quote stale；页Locked/Pending/Reservation由纯测覆盖，未放开页锁RPC"
+        },
+        {
+          "fact": "首稿健康新票后直接比对入场前Revision，忽略Enter正常+1；不是重放生产缺陷",
+          "resolution": "新join先取reentered，明确Enter +1且Source/Economic/Items/Wallet不变，再断言原op replay不产生额外变化"
+        }
+      ],
+      "current_case_scope": "隔离随机库仅资格前态放四本合法源书与满包，不预置任何书页/quote/receipt；两次拆书和Kind4均走正常WS，测试不证明自然掉书获取",
+      "tests_run_by_reviewer": false
+    },
+    "author_reported_not_independently_rerun": {
+      "client_narrow_nodes": 29,
+      "client_scope": "纯模型/真实生产入口→PB与socket替身/PendingStorage；不等于真实WS或浏览器",
+      "server_scope": "作者报告纯专项与integration无DB compile已通过，真实DB尚待作者受控执行",
+      "source": "本轮实现者协作消息；本审查未读出或捏造最终全包raw计数",
+      "final_full_or_creator_or_gui_claimed": false
+    }
+  },
+  "configuration_before": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "config/development/first-loop.json": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+    "client/assets/resources/development/gameplay.json": "d6ef7409d8227b2c692d3d18c49da79125b5576fbab55325aba73d9485dae477"
+  },
+  "configuration_after": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "config/development/first-loop.json": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+    "client/assets/resources/development/gameplay.json": "d6ef7409d8227b2c692d3d18c49da79125b5576fbab55325aba73d9485dae477"
+  },
+  "review_updated_at_utc": "2026-10-29T16:17:11.251098+00:00"
+}

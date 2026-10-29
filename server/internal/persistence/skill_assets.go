@@ -13,6 +13,7 @@ import (
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
 	"reflect"
+	"slices"
 	"sort"
 	"time"
 )
@@ -31,6 +32,16 @@ type skillPlan struct {
 	Spend     domain.Wallet   `bson:"spend"`
 	Materials []skillMaterial `bson:"materials"`
 	Outputs   []domain.Item   `bson:"outputs"`
+}
+
+func cloneSkillPlan(plan *skillPlan) *skillPlan {
+	if plan == nil {
+		return nil
+	}
+	out := *plan
+	out.Materials = slices.Clone(plan.Materials)
+	out.Outputs = slices.Clone(plan.Outputs)
+	return &out
 }
 
 // 每角色至多一个可替换预览；仅预览允许过期，永久操作回执不受其清理影响。
@@ -94,6 +105,50 @@ func selectSkillMaterials(r domain.Role, q *pb.SkillAssetPreviewRequest, need ma
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i].Item.ID < out[j].Item.ID })
 	return out, 0
+}
+
+// 仅合并身份以外完全同源的完整堆叠；新增实例字段也必须参与比较。
+func normalizedSkillPage(item domain.Item) domain.Item {
+	item.ID, item.Quantity, item.Version = "", 0, 0
+	return item
+}
+
+func mergeSkillPages(materials []skillMaterial, f devconfig.Fixture) ([]domain.Item, uint32) {
+	if len(materials) < 2 {
+		return nil, p.CodeSkillMaterials
+	}
+	first := materials[0].Item
+	definition, known := f.Item(first.ItemID)
+	if !known || !definition.IsSkillPage || !definition.Stackable || definition.MaxStack <= 1 || first.SourceKind == "" || first.SourceID == "" {
+		return nil, p.CodeSkillMaterials
+	}
+	switch first.SourceKind {
+	case "skill_recycle", "npc_shop", "monster_drop":
+	default:
+		return nil, p.CodeSkillMaterials
+	}
+	total := int64(0)
+	for _, material := range materials {
+		item := material.Item
+		if item.Quantity <= 0 || item.Quantity > definition.MaxStack || material.Quantity != item.Quantity || item.Locked || item.PendingResultID != "" || item.ReservationID != "" || !reflect.DeepEqual(normalizedSkillPage(item), normalizedSkillPage(first)) {
+			return nil, p.CodeSkillMaterials
+		}
+		var err error
+		total, err = add(total, item.Quantity)
+		if err != nil {
+			return nil, p.CodeSkillMaterials
+		}
+	}
+	// 无法减少至少一个格子时拒绝；不为重发或排序更换原实例身份。
+	outputCount := total / definition.MaxStack
+	if total%definition.MaxStack != 0 {
+		outputCount++
+	}
+	if outputCount >= int64(len(materials)) {
+		return nil, p.CodeSkillMaterials
+	}
+	first.ID, first.Quantity, first.Version = "", total, 1
+	return []domain.Item{first}, 0
 }
 
 func buildSkillPlan(r domain.Role, q *pb.SkillAssetPreviewRequest, f devconfig.Fixture) (skillPlan, uint32) {
@@ -189,6 +244,24 @@ func buildSkillPlan(r domain.Role, q *pb.SkillAssetPreviewRequest, f devconfig.F
 			// 不同原书独立输出，不合并来源或绑定，防止用堆叠抹掉输入来源。
 			plan.Outputs = append(plan.Outputs, domain.Item{ItemID: rule.PageItemID, Quantity: quantity, Bound: item.Bound, Version: 1, SourceKind: "skill_recycle"})
 		}
+	case 4:
+		if q.OfferId != 0 || q.Quantity != 0 || q.SkillId != 0 {
+			return plan, p.CodeSkillMaterials
+		}
+		materials, code := selectSkillMaterials(r, q, nil, f.SkillEconomy.PreviewMaterialLimit)
+		if code != 0 {
+			return plan, code
+		}
+		for _, material := range materials {
+			if r.RecycleBlockFlags(material.Item) != 0 {
+				return plan, p.CodeSkillMaterials
+			}
+		}
+		outputs, code := mergeSkillPages(materials, f)
+		if code != 0 {
+			return plan, code
+		}
+		plan.Materials, plan.Outputs = materials, outputs
 	default:
 		return plan, p.CodeInvalidArgument
 	}
@@ -292,9 +365,15 @@ func (s *Store) commitSkillAsset(ctx context.Context, r domain.Role, q AssetRequ
 	if !reflect.DeepEqual(plan, quote.Plan) {
 		return r, p.CodeSkillPreviewStale, nil, nil
 	}
+	out, plan := applySkillPlan(r, plan, domain.Hex(q.Context.OpId))
+	return out, 0, &plan, nil
+}
+
+func applySkillPlan(r domain.Role, plan skillPlan, operationID string) (domain.Role, skillPlan) {
 	out := r
 	out.Items = append([]domain.Item(nil), r.Items...)
 	out.Skills = append([]domain.LearnedSkill(nil), r.Skills...)
+	plan.Outputs = slices.Clone(plan.Outputs)
 	consumption := map[string]int64{}
 	for _, m := range plan.Materials {
 		consumption[m.Item.ID] = m.Quantity
@@ -315,7 +394,9 @@ func (s *Store) commitSkillAsset(ctx context.Context, r domain.Role, q AssetRequ
 	out.Items = kept
 	for i, item := range plan.Outputs {
 		item.ID = domain.ID()
-		item.SourceID = domain.Hex(q.Context.OpId)
+		if plan.Kind != 4 {
+			item.SourceID = operationID
+		}
 		out.Items = append(out.Items, item)
 		plan.Outputs[i] = item
 	}
@@ -330,7 +411,7 @@ func (s *Store) commitSkillAsset(ctx context.Context, r domain.Role, q AssetRequ
 			}
 		}
 	}
-	return out, 0, &plan, nil
+	return out, plan
 }
 
 func powerBounds(s devconfig.Skill, rank uint32) (int64, int64) {

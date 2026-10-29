@@ -37,7 +37,7 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in c['skills']],[17])
         self.assertEqual([row['id'] for row in c['books']],[25])
         self.assertEqual(len(c['upgrades']),3)
-        self.assertEqual(f['rule_version'],19)
+        self.assertEqual(f['rule_version'],20)
         self.assertEqual(len(f['skills']),22)
         self.assertFalse(any(row['id']==17 for row in f['skills']))
         self.assertFalse(any(row['id']==25 for row in f['items']))
@@ -81,6 +81,8 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         tables=self.changed();self.profile(tables)['rule_version']=16
         with self.assertRaises(ValueError):pets.compile_definitions(tables,[1])
         del self.pet(tables)['follow_and_return']['recall_name']
+        self.profile(tables).pop('progression')
+        self.profile(tables).pop('equipment_recycling')
         old=pets.build_catalog(tables,{'unit':'legacy16'})
         self.assertEqual(old['schema_version'],1)
         self.assertNotIn('recall_name',old['definitions'][0])
@@ -123,10 +125,12 @@ class SummonCandidateProjectionTests(unittest.TestCase):
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
 
     def test_visual_protocol_version_preserves_minimum_summon_contract(self):
-        for version in (17,18,19):
+        for version in (17,18,19,20):
             tables=self.changed();self.profile(tables)['rule_version']=version
+            if version<20:self.profile(tables).pop('progression')
+            if version<19:self.profile(tables).pop('equipment_recycling')
             self.assertEqual(self.compile(tables)['required_rule_version'],17)
-        tables=self.changed();self.profile(tables)['rule_version']=20
+        tables=self.changed();self.profile(tables)['rule_version']=21
         with self.assertRaises(ValueError):self.compile(tables)
 
     def test_definition_link_and_material_cannot_be_guessed(self):

@@ -4,6 +4,7 @@ import (
 	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
+	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	"time"
 )
@@ -23,6 +24,7 @@ type petTrainingCredit struct {
 	KillID    string
 	SourceSeq int64
 	OwnerEXP  int64
+	ActualEXP int64
 	Amount    uint64
 	Applied   bool
 }
@@ -104,15 +106,28 @@ func (w *worker) preparePetTraining(r *room, credit *petTrainingCredit, q persis
 	if q.Experience < 0 {
 		return false
 	}
+	actual := q.Experience
+	if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
+		contract, err := persistence.GrowthContract(w.e.Store.Cfg.Fixture)
+		if err != nil {
+			return false
+		}
+		_, grant, err := domain.ApplyExperience(r.Role, q.Experience, contract)
+		if err != nil {
+			return false
+		}
+		actual = grant.ActualGranted
+	}
+	credit.ActualEXP = actual
 	if body.PetRuntime.Level >= body.PetRuntime.Maximum {
 		// 后续credit可能在先前grant升满前捕获；来源满级不再累计，不能让无效加法阻塞RoleEXP。
 		credit.SourceSeq, credit.OwnerEXP, credit.Amount = q.SourceSeq, q.Experience, 0
 		return true
 	}
-	if uint64(q.Experience) > math.MaxUint64/body.PetRuntime.Definition.Training.ExperienceMultiplier {
+	if uint64(actual) > math.MaxUint64/body.PetRuntime.Definition.Training.ExperienceMultiplier {
 		return false
 	}
-	amount := uint64(q.Experience) * body.PetRuntime.Definition.Training.ExperienceMultiplier
+	amount := uint64(actual) * body.PetRuntime.Definition.Training.ExperienceMultiplier
 	if body.PetRuntime.Experience > math.MaxUint64-amount {
 		return false
 	}
@@ -120,8 +135,11 @@ func (w *worker) preparePetTraining(r *room, credit *petTrainingCredit, q persis
 	return true
 }
 
-func (w *worker) awardPetTraining(r *room, credit *petTrainingCredit, q persistence.Settlement) bool {
+func (w *worker) awardPetTraining(r *room, credit *petTrainingCredit, q persistence.Settlement, grants ...*persistence.ExperienceGrantReceipt) bool {
 	if credit == nil || credit.Applied || credit.SourceSeq != q.SourceSeq || credit.OwnerEXP != q.Experience || q.SourceSeq <= 0 || q.SourceSeq > r.Role.SourceSeq {
+		return false
+	}
+	if w.e.Store.Cfg.Fixture.RuleVersion >= 20 && (len(grants) != 1 || grants[0] == nil || grants[0].RawExperience != q.Experience || grants[0].ActualGranted < 0 || grants[0].ActualGranted > q.Experience) {
 		return false
 	}
 	credit.Applied = true
@@ -130,6 +148,19 @@ func (w *worker) awardPetTraining(r *room, credit *petTrainingCredit, q persiste
 		return false
 	}
 	state := body.PetRuntime
+	if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
+		actual := grants[0].ActualGranted
+		if state.Level >= state.Maximum {
+			credit.Amount = 0
+		} else {
+			if uint64(actual) > math.MaxUint64/state.Definition.Training.ExperienceMultiplier {
+				w.isolateRoom(r)
+				return false
+			}
+			credit.Amount = uint64(actual) * state.Definition.Training.ExperienceMultiplier
+		}
+		credit.ActualEXP = actual
+	}
 	if credit.Amount == 0 || state.Level >= state.Maximum || state.Experience > math.MaxUint64-credit.Amount {
 		return false
 	}

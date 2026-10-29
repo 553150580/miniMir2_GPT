@@ -127,6 +127,14 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 	fingerprint := Hash(raw)
 	opID := "create:" + a.AccountID + ":" + domain.Hex(q.OpId)
 	r := domain.Role{ID: domain.ID(), AccountID: a.AccountID, Origin: q.OriginServerId, Slot: q.Slot, Job: q.Job, Gender: 0, Name: name, NameKey: strings.ToLower(name), Level: 1, Revision: 1, Capacity: s.Cfg.Fixture.InventoryCapacity, Wallet: domain.Wallet{BoundGold: s.Cfg.Fixture.InitialBoundGold}, Items: []domain.Item{}, Equipped: []domain.Equipped{}}
+	if s.Cfg.Fixture.RuleVersion >= 20 {
+		contract, err := GrowthContract(s.Cfg.Fixture)
+		if err != nil {
+			return nil, err
+		}
+		r.ProgressionFormatVersion = contract.FormatVersion
+		r.ProgressionCurveVersion = contract.CurveVersion
+	}
 	if q.Job == 1 {
 		r.Gender = 1
 	}
@@ -244,6 +252,17 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 			return err
 		}
 		old := r.Revision
+		var migration *ExperienceGrantReceipt
+		if s.Cfg.Fixture.RuleVersion >= 20 {
+			contract, e := GrowthContract(s.Cfg.Fixture)
+			if e != nil {
+				return e
+			}
+			r, migration, err = experienceWithContract(r, 0, contract)
+			if err != nil {
+				return err
+			}
+		}
 		r.Owner = s.Instance
 		r.RunEpoch = s.Epoch
 		r.SessionEpoch++
@@ -254,6 +273,9 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 		}
 		if res.MatchedCount != 1 {
 			return Fail(p.CodeOperationConflict, "角色接管冲突")
+		}
+		if err = s.recordProgressionMigration(tc, r, migration); err != nil {
+			return err
 		}
 		return nil
 	})

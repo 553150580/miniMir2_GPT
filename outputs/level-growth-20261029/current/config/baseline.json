@@ -1,0 +1,26 @@
+{
+  "files": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "569fa67fa2f19c4052e477e6ef13d88e53fa485f2a83f141ef28468748672b38",
+    "tools/resources/prepare_first_loop.py": "5a69574f077aea0c8a50447b3c00e27ae939f2699699812f101d68bc75387577",
+    "tools/resources/prepare_summon_candidates.py": "656e39634c81ea233a3dca91794961430736b8369843b0c2ff87fec934ed92f2",
+    "config/development/first-loop.json": "eb42f7dd2264e0fb0d161f44d336ee4be0169f3227ba4f76a530f0a4274e23db",
+    "client/assets/resources/development/gameplay.json": "585d9258fe281e81c85840a6669790bc9393eef4beab7d3c4e98bcd6b453fee9",
+    "config/development/pet-runtime-candidates.json": "43c010e1e38df16d9385c83acb911d56a88679692e877865ac841e2732ddc5c2",
+    "config/development/summon-candidates.json": "72d46f211d4f3bf5807b297c3ae1675e9bf57ebf1fe290bc11067f565df4f43e",
+    "config/releases/preview_current.json": "371590c24da7292dbadf7ba188ffb36d4623aec241cf3f137dc937c4c1c53cee"
+  },
+  "saved_layouts": {
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Game.scene": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a"
+  }
+}

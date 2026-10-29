@@ -563,7 +563,7 @@
       "economic": false,
       "status": "draft",
       "assignment_source": "development_contract",
-      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览；最终策划4.8及7.4；架构物品完整等价键；同源书页合并kind4"
     },
     {
       "value": 40012,
@@ -575,7 +575,7 @@
       "economic": false,
       "status": "draft",
       "assignment_source": "development_contract",
-      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览；最终策划4.8及7.4；架构物品完整等价键；同源书页合并kind4"
     },
     {
       "value": 40013,
@@ -587,7 +587,7 @@
       "economic": true,
       "status": "draft",
       "assignment_source": "development_contract",
-      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览"
+      "source_ref": "最终策划案4.8；用户2026-10-27技能书目标阶+1；技能获取与升级预览；最终策划4.8及7.4；架构物品完整等价键；同源书页合并kind4"
     },
     {
       "value": 40014,
@@ -612,6 +612,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.2；docs/自动回收与挂机战报实施边界.md；免费永久策略及明确应用当前背包，owner原子提交"
+    },
+    {
+      "value": 40019,
+      "name": "MsgS2CExperienceGrantResult",
+      "proto_message": "ExperienceGrantResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.4/5.1/7.4；等级上限、待用池及原SourceSeq确认经验分账；不授予转生资格"
     },
     {
       "value": 40018,

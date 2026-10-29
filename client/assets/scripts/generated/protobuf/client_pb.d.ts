@@ -6776,6 +6776,9 @@ export namespace minimir {
             /** InventoryResult auto_recycle. */
             auto_recycle?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
 
+            /** InventoryResult progression. */
+            progression?: (minimir.v1.ProgressionState.$Properties|null);
+
             /**
              * Creates a new InventoryResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -6863,12 +6866,357 @@ export namespace minimir {
                 /** InventoryResult auto_recycle */
                 auto_recycle?: (minimir.v1.AutoRecyclePolicy.$Properties|null);
 
+                /** InventoryResult progression */
+                progression?: (minimir.v1.ProgressionState.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an InventoryResult. */
             type $Shape = minimir.v1.InventoryResult.$Properties;
+        }
+
+        /**
+         * Properties of a ProgressionState.
+         * @deprecated Use minimir.v1.ProgressionState.$Properties instead.
+         */
+        interface IProgressionState extends minimir.v1.ProgressionState.$Properties {
+        }
+
+        /** Represents a ProgressionState. */
+        class ProgressionState {
+
+            /**
+             * Constructs a new ProgressionState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ProgressionState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ProgressionState format_version. */
+            format_version: number;
+
+            /** ProgressionState curve_version. */
+            curve_version: string;
+
+            /** ProgressionState level_cap. */
+            level_cap: number;
+
+            /** ProgressionState rebirth_count. */
+            rebirth_count: number;
+
+            /** ProgressionState next_level_experience. */
+            next_level_experience: Long;
+
+            /** ProgressionState pending_experience. */
+            pending_experience: Long;
+
+            /** ProgressionState pending_experience_limit. */
+            pending_experience_limit: Long;
+
+            /** ProgressionState legacy_experience_overflow. */
+            legacy_experience_overflow: Long;
+
+            /** ProgressionState at_cap. */
+            at_cap: boolean;
+
+            /** ProgressionState migration_required. */
+            migration_required: boolean;
+
+            /** ProgressionState rebirth_enabled. */
+            rebirth_enabled: boolean;
+
+            /** ProgressionState catalog_max_level. */
+            catalog_max_level: number;
+
+            /**
+             * Creates a new ProgressionState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ProgressionState instance
+             */
+            static create(properties: minimir.v1.ProgressionState.$Shape): minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape;
+            static create(properties?: minimir.v1.ProgressionState.$Properties): minimir.v1.ProgressionState;
+
+            /**
+             * Encodes the specified ProgressionState message. Does not implicitly {@link minimir.v1.ProgressionState.verify|verify} messages.
+             * @param message ProgressionState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ProgressionState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ProgressionState message, length delimited. Does not implicitly {@link minimir.v1.ProgressionState.verify|verify} messages.
+             * @param message ProgressionState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ProgressionState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ProgressionState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape} ProgressionState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape;
+
+            /**
+             * Decodes a ProgressionState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape} ProgressionState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape;
+
+            /**
+             * Verifies a ProgressionState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ProgressionState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ProgressionState {
+
+            /** Properties of a ProgressionState. */
+            interface $Properties {
+
+                /** ProgressionState format_version */
+                format_version?: (number|null);
+
+                /** ProgressionState curve_version */
+                curve_version?: (string|null);
+
+                /** ProgressionState level_cap */
+                level_cap?: (number|null);
+
+                /** ProgressionState rebirth_count */
+                rebirth_count?: (number|null);
+
+                /** ProgressionState next_level_experience */
+                next_level_experience?: (Long|null);
+
+                /** ProgressionState pending_experience */
+                pending_experience?: (Long|null);
+
+                /** ProgressionState pending_experience_limit */
+                pending_experience_limit?: (Long|null);
+
+                /** ProgressionState legacy_experience_overflow */
+                legacy_experience_overflow?: (Long|null);
+
+                /** ProgressionState at_cap */
+                at_cap?: (boolean|null);
+
+                /** ProgressionState migration_required */
+                migration_required?: (boolean|null);
+
+                /** ProgressionState rebirth_enabled */
+                rebirth_enabled?: (boolean|null);
+
+                /** ProgressionState catalog_max_level */
+                catalog_max_level?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ProgressionState. */
+            type $Shape = minimir.v1.ProgressionState.$Properties;
+        }
+
+        /**
+         * Properties of an ExperienceGrantResult.
+         * @deprecated Use minimir.v1.ExperienceGrantResult.$Properties instead.
+         */
+        interface IExperienceGrantResult extends minimir.v1.ExperienceGrantResult.$Properties {
+        }
+
+        /** Represents an ExperienceGrantResult. */
+        class ExperienceGrantResult {
+
+            /**
+             * Constructs a new ExperienceGrantResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ExperienceGrantResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ExperienceGrantResult role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** ExperienceGrantResult role_revision. */
+            role_revision: Long;
+
+            /** ExperienceGrantResult source_seq. */
+            source_seq: Long;
+
+            /** ExperienceGrantResult curve_version. */
+            curve_version: string;
+
+            /** ExperienceGrantResult raw_experience. */
+            raw_experience: Long;
+
+            /** ExperienceGrantResult accepted_experience. */
+            accepted_experience: Long;
+
+            /** ExperienceGrantResult pooled_experience. */
+            pooled_experience: Long;
+
+            /** ExperienceGrantResult rejected_experience. */
+            rejected_experience: Long;
+
+            /** ExperienceGrantResult level_before. */
+            level_before: number;
+
+            /** ExperienceGrantResult level_after. */
+            level_after: number;
+
+            /** ExperienceGrantResult state. */
+            state?: (minimir.v1.ProgressionState.$Properties|null);
+
+            /** ExperienceGrantResult migrated. */
+            migrated: boolean;
+
+            /** ExperienceGrantResult legacy_level_before. */
+            legacy_level_before: number;
+
+            /** ExperienceGrantResult legacy_level_after. */
+            legacy_level_after: number;
+
+            /** ExperienceGrantResult rule_version. */
+            rule_version: Long;
+
+            /**
+             * Creates a new ExperienceGrantResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ExperienceGrantResult instance
+             */
+            static create(properties: minimir.v1.ExperienceGrantResult.$Shape): minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape;
+            static create(properties?: minimir.v1.ExperienceGrantResult.$Properties): minimir.v1.ExperienceGrantResult;
+
+            /**
+             * Encodes the specified ExperienceGrantResult message. Does not implicitly {@link minimir.v1.ExperienceGrantResult.verify|verify} messages.
+             * @param message ExperienceGrantResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ExperienceGrantResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ExperienceGrantResult message, length delimited. Does not implicitly {@link minimir.v1.ExperienceGrantResult.verify|verify} messages.
+             * @param message ExperienceGrantResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ExperienceGrantResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an ExperienceGrantResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape} ExperienceGrantResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape;
+
+            /**
+             * Decodes an ExperienceGrantResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape} ExperienceGrantResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape;
+
+            /**
+             * Verifies an ExperienceGrantResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ExperienceGrantResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ExperienceGrantResult {
+
+            /** Properties of an ExperienceGrantResult. */
+            interface $Properties {
+
+                /** ExperienceGrantResult role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** ExperienceGrantResult role_revision */
+                role_revision?: (Long|null);
+
+                /** ExperienceGrantResult source_seq */
+                source_seq?: (Long|null);
+
+                /** ExperienceGrantResult curve_version */
+                curve_version?: (string|null);
+
+                /** ExperienceGrantResult raw_experience */
+                raw_experience?: (Long|null);
+
+                /** ExperienceGrantResult accepted_experience */
+                accepted_experience?: (Long|null);
+
+                /** ExperienceGrantResult pooled_experience */
+                pooled_experience?: (Long|null);
+
+                /** ExperienceGrantResult rejected_experience */
+                rejected_experience?: (Long|null);
+
+                /** ExperienceGrantResult level_before */
+                level_before?: (number|null);
+
+                /** ExperienceGrantResult level_after */
+                level_after?: (number|null);
+
+                /** ExperienceGrantResult state */
+                state?: (minimir.v1.ProgressionState.$Properties|null);
+
+                /** ExperienceGrantResult migrated */
+                migrated?: (boolean|null);
+
+                /** ExperienceGrantResult legacy_level_before */
+                legacy_level_before?: (number|null);
+
+                /** ExperienceGrantResult legacy_level_after */
+                legacy_level_after?: (number|null);
+
+                /** ExperienceGrantResult rule_version */
+                rule_version?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an ExperienceGrantResult. */
+            type $Shape = minimir.v1.ExperienceGrantResult.$Properties;
         }
 
         /**
@@ -9074,6 +9422,15 @@ export namespace minimir {
             /** HostingReport total_drop_count. */
             total_drop_count: Long;
 
+            /** HostingReport raw_experience. */
+            raw_experience: Long;
+
+            /** HostingReport rejected_experience. */
+            rejected_experience: Long;
+
+            /** HostingReport pooled_experience. */
+            pooled_experience: Long;
+
             /**
              * Creates a new HostingReport instance using the specified properties.
              * @param [properties] Properties to set
@@ -9178,6 +9535,15 @@ export namespace minimir {
 
                 /** HostingReport total_drop_count */
                 total_drop_count?: (Long|null);
+
+                /** HostingReport raw_experience */
+                raw_experience?: (Long|null);
+
+                /** HostingReport rejected_experience */
+                rejected_experience?: (Long|null);
+
+                /** HostingReport pooled_experience */
+                pooled_experience?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

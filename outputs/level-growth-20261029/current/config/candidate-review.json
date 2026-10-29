@@ -1,0 +1,1708 @@
+{
+  "status": "candidate_applied",
+  "source_before_sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813",
+  "candidate_sha256": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2",
+  "changed_cells": 241,
+  "appended_exp_rows": 30,
+  "profile_cells_changed": 1,
+  "exp_cells_appended": 240,
+  "differences": [
+    {
+      "sheet": "开发首循环夹具",
+      "row": 4,
+      "column": 3,
+      "before": "{\"rule_version\":19,\"map_id\":1,\"monster_id\":1,\"pet_id\":1,\"players\":[{\"job_id\":0,\"definition_id\":0,\"hp\":18,\"mp\":14,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":1,\"definition_id\":1,\"hp\":15,\"mp\":17,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":2,\"definition_id\":2,\"hp\":16,\"mp\":13,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":18,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true}],\"inventory_capacity\":32,\"initial_inventory\":[218,218,193,35,36],\"initial_bound_gold\":0,\"allow_free_dev_revive\":true,\"damage_formula\":\"development_source_combat\",\"recycle_test_gold_by_item\":{\"35\":0,\"36\":0,\"193\":400,\"218\":50},\"technical_parameters_notice\":\"rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。；rule17显式NoPets/RecallName与关闭的召唤独立候选，主仍22技能、legacy不训练、材料关闭；不认证17/购符业务。\",\"player_stats_source\":\"Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。\",\"damage_scope_notice\":\"开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。\",\"revive_notice\":\"开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。\",\"potions\":{\"tick_ms\":200,\"base_per_tick\":5,\"levels_per_step\":10,\"use_delay_ms\":300,\"queue_cap\":65535,\"effects\":[{\"item_id\":35,\"hp\":20,\"mp\":0},{\"item_id\":36,\"hp\":0,\"mp\":30}]},\"player_growth\":[{\"job_id\":0,\"hp_base\":14,\"mp_base\":11,\"hp_gain\":4,\"hp_gain_rate\":4.5,\"mp_gain\":3.5,\"mp_gain_rate\":0,\"attack_divisor\":5,\"defence_max_divisor\":7,\"magic_divisor\":0,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":1,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":15,\"hp_gain_rate\":1.8,\"mp_gain\":5,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":7,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":2,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":6,\"hp_gain_rate\":2.5,\"mp_gain\":8,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":0,\"tao_divisor\":7,\"magic_defence_min_divisor\":12,\"magic_defence_max_divisor\":6}],\"healing\":{\"tick_ms\":600,\"base_per_tick\":5,\"pet_base_per_tick\":5,\"levels_per_step\":10,\"queue_fraction_divisor\":10,\"queue_cap\":65535},\"initial_skill_books\":[{\"job_id\":1,\"item_id\":7},{\"job_id\":2,\"item_id\":21},{\"job_id\":0,\"item_id\":1}],\"skill_ids\":[1,2,3,4,5,11,23,29,7,12,25,26,10,33,24,9,14,15,31,8,27,21],\"skill_economy\":{\"page_item_id\":900001,\"preview_ttl_ms\":120000,\"preview_material_limit\":32},\"skill_shop_entries\":[{\"offer_id\":6,\"item_id\":7,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":7,\"item_id\":21,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":8,\"item_id\":1,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":3,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":4,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":9,\"item_id\":22,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":10,\"item_id\":12,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":11,\"item_id\":11,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":12,\"item_id\":14,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":13,\"item_id\":32,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":14,\"item_id\":2,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":15,\"item_id\":3,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":16,\"item_id\":4,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":17,\"item_id\":6,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":18,\"item_id\":16,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":19,\"item_id\":20,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":20,\"item_id\":17,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":21,\"item_id\":10,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":22,\"item_id\":28,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":23,\"item_id\":29,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":24,\"item_id\":18,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":25,\"item_id\":8,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":26,\"item_id\":5,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":27,\"item_id\":13,\"required_role_level\":1,\"max_purchase_quantity\":32}],\"recyclable_book_ids\":[7,21,1,22,12,11,14,32,2,3,4,6,16,20,17,10,28,29,18,8,5,13],\"recycle_source_kinds\":[\"monster_drop\"],\"skill_book_drop_quality\":1,\"combat_timing\":{\"player_attack_base_ms\":1400,\"player_attack_speed_step_ms\":60,\"player_attack_level_step_ms\":14,\"player_attack_level_cap_ms\":370,\"player_attack_min_ms\":550,\"player_attack_action_ms\":550,\"player_attack_impact_ms\":300,\"event_capacity\":128,\"kill_queue_capacity\":16,\"player_push_action_ms\":500,\"monster_push_action_ms_per_step\":300,\"monster_push_move_ms_per_step\":500,\"pushed_step_display_ms\":300},\"pet_spawn\":{\"x\":8,\"y\":7},\"casting_supply\":{\"enabled\":false,\"slot\":100,\"item_ids\":[187]},\"map_catalog_ids\":[2],\"binding\":{\"enabled\":false,\"start_points\":[],\"safe_zone_enabled\":true},\"source_map_streaming\":{\"load_concurrency\":4,\"cache_capacity\":49},\"town_travel\":{\"enabled\":true,\"town_map_id\":2,\"plan_ttl_ms\":120000,\"quiesce_ttl_ms\":10000,\"ack_ttl_ms\":120000,\"max_plans_per_scene\":256},\"town_navigation\":{\"enabled\":true,\"work_per_task\":1024,\"work_per_worker_tick\":8192,\"workspaces_per_worker\":1,\"queue_per_worker\":64,\"max_expanded\":490000,\"max_frontier\":65536,\"max_route_cells\":4096,\"max_replans\":3,\"max_dynamic_cells\":2,\"max_memory_bytes_per_worker\":33554432},\"pet_runtime\":{\"enabled\":true,\"bootstrap_mode\":\"legacy_untrained_pet\",\"definition_ids\":[1]},\"equipment_recycling\":{\"mode\":\"development_gold_only\",\"outputs\":[]}}",
+      "after": "{\"rule_version\":20,\"map_id\":1,\"monster_id\":1,\"pet_id\":1,\"players\":[{\"job_id\":0,\"definition_id\":0,\"hp\":18,\"mp\":14,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":1,\"definition_id\":1,\"hp\":15,\"mp\":17,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":15,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true},{\"job_id\":2,\"definition_id\":2,\"hp\":16,\"mp\":13,\"attack_min\":0,\"attack_max\":0,\"defence\":0,\"attack_ms\":1386,\"move_ms\":600,\"magic_min\":0,\"magic_max\":0,\"tao_min\":0,\"tao_max\":0,\"defence_min\":0,\"defence_max\":0,\"magic_defence_min\":0,\"magic_defence_max\":0,\"accuracy\":5,\"agility\":18,\"magic_resist\":0,\"magic_resist_weight\":10,\"attack_speed\":0,\"can_push\":true}],\"inventory_capacity\":32,\"initial_inventory\":[218,218,193,35,36],\"initial_bound_gold\":0,\"allow_free_dev_revive\":true,\"damage_formula\":\"development_source_combat\",\"recycle_test_gold_by_item\":{\"35\":0,\"36\":0,\"193\":400,\"218\":50},\"technical_parameters_notice\":\"rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。；rule17显式NoPets/RecallName与关闭的召唤独立候选，主仍22技能、legacy不训练、材料关闭；不认证17/购符业务。\",\"player_stats_source\":\"Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。\",\"damage_scope_notice\":\"开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。\",\"revive_notice\":\"开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。\",\"potions\":{\"tick_ms\":200,\"base_per_tick\":5,\"levels_per_step\":10,\"use_delay_ms\":300,\"queue_cap\":65535,\"effects\":[{\"item_id\":35,\"hp\":20,\"mp\":0},{\"item_id\":36,\"hp\":0,\"mp\":30}]},\"player_growth\":[{\"job_id\":0,\"hp_base\":14,\"mp_base\":11,\"hp_gain\":4,\"hp_gain_rate\":4.5,\"mp_gain\":3.5,\"mp_gain_rate\":0,\"attack_divisor\":5,\"defence_max_divisor\":7,\"magic_divisor\":0,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":1,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":15,\"hp_gain_rate\":1.8,\"mp_gain\":5,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":7,\"tao_divisor\":0,\"magic_defence_min_divisor\":0,\"magic_defence_max_divisor\":0},{\"job_id\":2,\"hp_base\":14,\"mp_base\":13,\"hp_gain\":6,\"hp_gain_rate\":2.5,\"mp_gain\":8,\"mp_gain_rate\":0,\"attack_divisor\":7,\"defence_max_divisor\":0,\"magic_divisor\":0,\"tao_divisor\":7,\"magic_defence_min_divisor\":12,\"magic_defence_max_divisor\":6}],\"healing\":{\"tick_ms\":600,\"base_per_tick\":5,\"pet_base_per_tick\":5,\"levels_per_step\":10,\"queue_fraction_divisor\":10,\"queue_cap\":65535},\"initial_skill_books\":[{\"job_id\":1,\"item_id\":7},{\"job_id\":2,\"item_id\":21},{\"job_id\":0,\"item_id\":1}],\"skill_ids\":[1,2,3,4,5,11,23,29,7,12,25,26,10,33,24,9,14,15,31,8,27,21],\"skill_economy\":{\"page_item_id\":900001,\"preview_ttl_ms\":120000,\"preview_material_limit\":32},\"skill_shop_entries\":[{\"offer_id\":6,\"item_id\":7,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":7,\"item_id\":21,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":8,\"item_id\":1,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":3,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":4,\"item_id\":900001,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":9,\"item_id\":22,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":10,\"item_id\":12,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":11,\"item_id\":11,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":12,\"item_id\":14,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":13,\"item_id\":32,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":14,\"item_id\":2,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":15,\"item_id\":3,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":16,\"item_id\":4,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":17,\"item_id\":6,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":18,\"item_id\":16,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":19,\"item_id\":20,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":20,\"item_id\":17,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":21,\"item_id\":10,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":22,\"item_id\":28,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":23,\"item_id\":29,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":24,\"item_id\":18,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":25,\"item_id\":8,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":26,\"item_id\":5,\"required_role_level\":1,\"max_purchase_quantity\":32},{\"offer_id\":27,\"item_id\":13,\"required_role_level\":1,\"max_purchase_quantity\":32}],\"recyclable_book_ids\":[7,21,1,22,12,11,14,32,2,3,4,6,16,20,17,10,28,29,18,8,5,13],\"recycle_source_kinds\":[\"monster_drop\"],\"skill_book_drop_quality\":1,\"combat_timing\":{\"player_attack_base_ms\":1400,\"player_attack_speed_step_ms\":60,\"player_attack_level_step_ms\":14,\"player_attack_level_cap_ms\":370,\"player_attack_min_ms\":550,\"player_attack_action_ms\":550,\"player_attack_impact_ms\":300,\"event_capacity\":128,\"kill_queue_capacity\":16,\"player_push_action_ms\":500,\"monster_push_action_ms_per_step\":300,\"monster_push_move_ms_per_step\":500,\"pushed_step_display_ms\":300},\"pet_spawn\":{\"x\":8,\"y\":7},\"casting_supply\":{\"enabled\":false,\"slot\":100,\"item_ids\":[187]},\"map_catalog_ids\":[2],\"binding\":{\"enabled\":false,\"start_points\":[],\"safe_zone_enabled\":true},\"source_map_streaming\":{\"load_concurrency\":4,\"cache_capacity\":49},\"town_travel\":{\"enabled\":true,\"town_map_id\":2,\"plan_ttl_ms\":120000,\"quiesce_ttl_ms\":10000,\"ack_ttl_ms\":120000,\"max_plans_per_scene\":256},\"town_navigation\":{\"enabled\":true,\"work_per_task\":1024,\"work_per_worker_tick\":8192,\"workspaces_per_worker\":1,\"queue_per_worker\":64,\"max_expanded\":490000,\"max_frontier\":65536,\"max_route_cells\":4096,\"max_replans\":3,\"max_dynamic_cells\":2,\"max_memory_bytes_per_worker\":33554432},\"pet_runtime\":{\"enabled\":true,\"bootstrap_mode\":\"legacy_untrained_pet\",\"definition_ids\":[1]},\"equipment_recycling\":{\"mode\":\"development_gold_only\",\"outputs\":[]},\"progression\":{\"curve_version\":\"myf_exp_candidate_1_50_v1\",\"operating_level_cap\":50,\"catalog_max_level\":50,\"pending_pool_policy\":\"one_next_level\",\"new_overflow_policy\":\"reject_new_with_receipt\",\"legacy_overflow_policy\":\"preserve_frozen\",\"level_up_resources\":\"source_full_if_alive_original_birth\",\"rebirth_enabled\":false}}"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 1,
+      "before": null,
+      "after": 21
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 2,
+      "before": null,
+      "after": 21
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 3,
+      "before": null,
+      "after": 1100
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:24；[Exp].Level21；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 24,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 1,
+      "before": null,
+      "after": 22
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 2,
+      "before": null,
+      "after": 22
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 3,
+      "before": null,
+      "after": 1200
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:25；[Exp].Level22；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 25,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 1,
+      "before": null,
+      "after": 23
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 2,
+      "before": null,
+      "after": 23
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 3,
+      "before": null,
+      "after": 1300
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:26；[Exp].Level23；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 26,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 1,
+      "before": null,
+      "after": 24
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 2,
+      "before": null,
+      "after": 24
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 3,
+      "before": null,
+      "after": 1400
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:27；[Exp].Level24；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 27,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 1,
+      "before": null,
+      "after": 25
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 2,
+      "before": null,
+      "after": 25
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 3,
+      "before": null,
+      "after": 1500
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:28；[Exp].Level25；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 28,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 1,
+      "before": null,
+      "after": 26
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 2,
+      "before": null,
+      "after": 26
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 3,
+      "before": null,
+      "after": 20000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:29；[Exp].Level26；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 29,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 1,
+      "before": null,
+      "after": 27
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 2,
+      "before": null,
+      "after": 27
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 3,
+      "before": null,
+      "after": 20000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:30；[Exp].Level27；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 30,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 1,
+      "before": null,
+      "after": 28
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 2,
+      "before": null,
+      "after": 28
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 3,
+      "before": null,
+      "after": 20000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:31；[Exp].Level28；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 31,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 1,
+      "before": null,
+      "after": 29
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 2,
+      "before": null,
+      "after": 29
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 3,
+      "before": null,
+      "after": 20000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:32；[Exp].Level29；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 32,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 1,
+      "before": null,
+      "after": 30
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 2,
+      "before": null,
+      "after": 30
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 3,
+      "before": null,
+      "after": 20000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:33；[Exp].Level30；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 33,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 1,
+      "before": null,
+      "after": 31
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 2,
+      "before": null,
+      "after": 31
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 3,
+      "before": null,
+      "after": 30000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:34；[Exp].Level31；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 34,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 1,
+      "before": null,
+      "after": 32
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 2,
+      "before": null,
+      "after": 32
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 3,
+      "before": null,
+      "after": 31000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:35；[Exp].Level32；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 35,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 1,
+      "before": null,
+      "after": 33
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 2,
+      "before": null,
+      "after": 33
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 3,
+      "before": null,
+      "after": 32000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:36；[Exp].Level33；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 36,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 1,
+      "before": null,
+      "after": 34
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 2,
+      "before": null,
+      "after": 34
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 3,
+      "before": null,
+      "after": 33000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:37；[Exp].Level34；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 37,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 1,
+      "before": null,
+      "after": 35
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 2,
+      "before": null,
+      "after": 35
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 3,
+      "before": null,
+      "after": 35000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:38；[Exp].Level35；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 38,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 1,
+      "before": null,
+      "after": 36
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 2,
+      "before": null,
+      "after": 36
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 3,
+      "before": null,
+      "after": 80000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:39；[Exp].Level36；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 39,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 1,
+      "before": null,
+      "after": 37
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 2,
+      "before": null,
+      "after": 37
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 3,
+      "before": null,
+      "after": 160000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:40；[Exp].Level37；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 40,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 1,
+      "before": null,
+      "after": 38
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 2,
+      "before": null,
+      "after": 38
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 3,
+      "before": null,
+      "after": 350000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:41；[Exp].Level38；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 41,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 1,
+      "before": null,
+      "after": 39
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 2,
+      "before": null,
+      "after": 39
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 3,
+      "before": null,
+      "after": 600000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:42；[Exp].Level39；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 42,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 1,
+      "before": null,
+      "after": 40
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 2,
+      "before": null,
+      "after": 40
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 3,
+      "before": null,
+      "after": 900000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:43；[Exp].Level40；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 43,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 1,
+      "before": null,
+      "after": 41
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 2,
+      "before": null,
+      "after": 41
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 3,
+      "before": null,
+      "after": 1200000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:44；[Exp].Level41；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 44,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 1,
+      "before": null,
+      "after": 42
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 2,
+      "before": null,
+      "after": 42
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 3,
+      "before": null,
+      "after": 2400000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:45；[Exp].Level42；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 45,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 1,
+      "before": null,
+      "after": 43
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 2,
+      "before": null,
+      "after": 43
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 3,
+      "before": null,
+      "after": 3600000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:46；[Exp].Level43；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 46,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 1,
+      "before": null,
+      "after": 44
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 2,
+      "before": null,
+      "after": 44
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 3,
+      "before": null,
+      "after": 7200000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:47；[Exp].Level44；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 47,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 1,
+      "before": null,
+      "after": 45
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 2,
+      "before": null,
+      "after": 45
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 3,
+      "before": null,
+      "after": 12000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:48；[Exp].Level45；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 48,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 1,
+      "before": null,
+      "after": 46
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 2,
+      "before": null,
+      "after": 46
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 3,
+      "before": null,
+      "after": 24000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:49；[Exp].Level46；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 49,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 1,
+      "before": null,
+      "after": 47
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 2,
+      "before": null,
+      "after": 47
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 3,
+      "before": null,
+      "after": 38000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:50；[Exp].Level47；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 50,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 1,
+      "before": null,
+      "after": 48
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 2,
+      "before": null,
+      "after": 48
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 3,
+      "before": null,
+      "after": 52000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:51；[Exp].Level48；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 51,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 1,
+      "before": null,
+      "after": 49
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 2,
+      "before": null,
+      "after": 49
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 3,
+      "before": null,
+      "after": 63000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:52；[Exp].Level49；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 52,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 1,
+      "before": null,
+      "after": 50
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 2,
+      "before": null,
+      "after": 50
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 3,
+      "before": null,
+      "after": 75000000
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 4,
+      "before": null,
+      "after": "development_candidate_only"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 5,
+      "before": null,
+      "after": "myf_source_unbalanced"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 6,
+      "before": null,
+      "after": "candidate"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 7,
+      "before": null,
+      "after": "资料参考/myf/Mir200/Exps.ini:53；[Exp].Level50；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+    },
+    {
+      "sheet": "逐级经验",
+      "row": 53,
+      "column": 8,
+      "before": null,
+      "after": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+    }
+  ],
+  "first_20_exp_rows_unchanged": true,
+  "all_other_cells_unchanged": true,
+  "all_460_formulas_preserved": true,
+  "changed_zip_members": [
+    "xl/worksheets/sheet67.xml",
+    "xl/worksheets/sheet95.xml"
+  ],
+  "untouched_zip_members_verified": 101,
+  "architecture_unchanged": true,
+  "source_ini_unchanged": true
+}

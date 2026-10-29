@@ -142,14 +142,12 @@ type Fixture struct {
 		EquipmentPPM       int      `json:"equipment_ppm"`
 		EquipmentGuarantee int      `json:"equipment_guarantee"`
 	} `json:"drops"`
-	Progression struct {
-		ExpPerLevel []int64 `json:"exp_per_level"`
-	} `json:"progression"`
-	InitialInventory   []uint32 `json:"initial_inventory"`
-	InitialBoundGold   int64    `json:"initial_bound_gold"`
-	InventoryCapacity  int      `json:"inventory_capacity"`
-	AllowFreeDevRevive bool     `json:"allow_free_dev_revive"`
-	Hash               string   `json:"-"`
+	Progression        ProgressionRules `json:"progression"`
+	InitialInventory   []uint32         `json:"initial_inventory"`
+	InitialBoundGold   int64            `json:"initial_bound_gold"`
+	InventoryCapacity  int              `json:"inventory_capacity"`
+	AllowFreeDevRevive bool             `json:"allow_free_dev_revive"`
+	Hash               string           `json:"-"`
 }
 type Config struct {
 	Environment        string            `json:"environment"`
@@ -249,6 +247,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateEquipmentRecycling(); err != nil {
+		return err
+	}
+	if err := f.ValidateProgression(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

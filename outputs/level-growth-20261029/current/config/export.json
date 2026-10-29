@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/config/export_configs.py",
+    "--version",
+    "dev-level-growth-v0.20"
+  ],
+  "actual_python": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+  "started_at_utc": "2026-10-29T13:45:44.062558+00:00",
+  "finished_at_utc": "2026-10-29T13:45:44.372062+00:00",
+  "seconds": 0.31,
+  "exit_code": 0,
+  "stdout": "export.stdout.txt",
+  "stderr": "export.stderr.txt"
+}

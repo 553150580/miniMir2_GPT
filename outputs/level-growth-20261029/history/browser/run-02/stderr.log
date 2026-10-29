@@ -1,0 +1,4 @@
+page.evaluate: Target page, context or browser has been closed
+    at state (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:58:21)
+    at grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:76:29)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:112:57)

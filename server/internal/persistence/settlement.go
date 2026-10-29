@@ -20,6 +20,7 @@ type SettlementReceipt struct {
 	ConfigHash  string                    `bson:"config_hash"`
 	GrantedItem bool                      `bson:"granted_item"`
 	Recycling   EquipmentRecyclingReceipt `bson:"recycling"`
+	Experience  *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"`
 }
 
 func (s *Store) Settle(ctx context.Context, a Auth, q Settlement) (domain.Role, error) {
@@ -119,20 +120,33 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 	}
 	out.HostingSeconds -= q.HostSeconds
 	var err error
-	out.Experience, err = add(out.Experience, q.Experience)
-	if err != nil {
-		return r, details, err
-	}
-	for int(out.Level) <= len(f.Progression.ExpPerLevel) {
-		required := f.Progression.ExpPerLevel[out.Level-1]
-		if required <= 0 || out.Experience < required {
-			break
+	actualExperience := q.Experience
+	if f.RuleVersion >= 20 {
+		contract, e := GrowthContract(f)
+		if e != nil {
+			return r, details, e
 		}
-		if out.Level == math.MaxUint32 {
-			return r, details, Fail(p.CodeOperationConflict, "角色等级耗尽")
+		out, details.Experience, err = experienceWithContract(out, q.Experience, contract)
+		if err != nil {
+			return r, details, err
 		}
-		out.Experience -= required
-		out.Level++
+		actualExperience = details.Experience.ActualGranted
+	} else {
+		out.Experience, err = add(out.Experience, q.Experience)
+		if err != nil {
+			return r, details, err
+		}
+		for int(out.Level) <= len(f.Progression.ExpPerLevel) {
+			required := f.Progression.ExpPerLevel[out.Level-1]
+			if required <= 0 || out.Experience < required {
+				break
+			}
+			if out.Level == math.MaxUint32 {
+				return r, details, Fail(p.CodeOperationConflict, "角色等级耗尽")
+			}
+			out.Experience -= required
+			out.Level++
+		}
 	}
 	if q.Kills > 0 || q.Item != nil {
 		out, err = recycleExisting(out, f, &details.Recycling)
@@ -190,9 +204,18 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 			dst   *int64
 			delta int64
 		}{
-			{&report.UsedSeconds, q.HostSeconds}, {&report.Kills, q.Kills}, {&report.Experience, q.Experience}, {&report.Sequence, 1},
+			{&report.UsedSeconds, q.HostSeconds}, {&report.Kills, q.Kills}, {&report.Experience, actualExperience}, {&report.RawExperience, q.Experience}, {&report.Sequence, 1},
 			{&report.RecycleCount, int64(len(details.Recycling.Recycled))}, {&report.RecycleGold, details.Recycling.Gold}, {&report.RecycleBoundGold, details.Recycling.BoundGold}, {&report.DiscardCount, details.Recycling.DiscardedCount},
 			{&report.Earned.Gold, details.Recycling.Gold}, {&report.Earned.BoundGold, details.Recycling.BoundGold},
+		}
+		if details.Experience != nil {
+			fields = append(fields, struct {
+				dst   *int64
+				delta int64
+			}{&report.RejectedExperience, details.Experience.Rejected}, struct {
+				dst   *int64
+				delta int64
+			}{&report.PooledExperience, details.Experience.ToPool})
 		}
 		for _, field := range fields {
 			*field.dst, err = add(*field.dst, field.delta)

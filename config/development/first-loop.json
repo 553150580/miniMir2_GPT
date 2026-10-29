@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 19,
+  "rule_version": 20,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -4483,6 +4483,17 @@
     "equipment_guarantee": 20
   },
   "progression": {
+    "curve_version": "myf_exp_candidate_1_50_v1",
+    "operating_level_cap": 50,
+    "catalog_max_level": 50,
+    "pending_pool_policy": "one_next_level",
+    "new_overflow_policy": "reject_new_with_receipt",
+    "legacy_overflow_policy": "preserve_frozen",
+    "level_up_resources": "source_full_if_alive_original_birth",
+    "rebirth_enabled": false,
+    "initial_level_cap": 50,
+    "rebirth_level_cap_increment": 1,
+    "rebirth_reset_progression": false,
     "exp_per_level": [
       10,
       20,
@@ -4503,7 +4514,37 @@
       800,
       900,
       1000,
-      1000
+      1000,
+      1100,
+      1200,
+      1300,
+      1400,
+      1500,
+      20000,
+      20000,
+      20000,
+      20000,
+      20000,
+      30000,
+      31000,
+      32000,
+      33000,
+      35000,
+      80000,
+      160000,
+      350000,
+      600000,
+      900000,
+      1200000,
+      2400000,
+      3600000,
+      7200000,
+      12000000,
+      24000000,
+      38000000,
+      52000000,
+      63000000,
+      75000000
     ]
   },
   "initial_inventory": [
@@ -5167,6 +5208,253 @@
           "id": 20,
           "source_ref": "../MirServer沉默世界_MYF/Mir200/Exps.ini:23",
           "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。"
+        },
+        {
+          "id": 21,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:24；[Exp].Level21；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 22,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:25；[Exp].Level22；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 23,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:26；[Exp].Level23；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 24,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:27；[Exp].Level24；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 25,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:28；[Exp].Level25；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 26,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:29；[Exp].Level26；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 27,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:30；[Exp].Level27；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 28,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:31；[Exp].Level28；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 29,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:32；[Exp].Level29；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 30,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:33；[Exp].Level30；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 31,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:34；[Exp].Level31；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 32,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:35；[Exp].Level32；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 33,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:36；[Exp].Level33；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 34,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:37；[Exp].Level34；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 35,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:38；[Exp].Level35；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 36,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:39；[Exp].Level36；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 37,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:40；[Exp].Level37；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 38,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:41；[Exp].Level38；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 39,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:42；[Exp].Level39；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 40,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:43；[Exp].Level40；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 41,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:44；[Exp].Level41；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 42,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:45；[Exp].Level42；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 43,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:46；[Exp].Level43；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 44,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:47；[Exp].Level44；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 45,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:48；[Exp].Level45；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 46,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:49；[Exp].Level46；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 47,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:50；[Exp].Level47；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 48,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:51；[Exp].Level48；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 49,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:52；[Exp].Level49；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        },
+        {
+          "id": 50,
+          "source_ref": "资料参考/myf/Mir200/Exps.ini:53；[Exp].Level50；独立副本SHA256=b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+          "note": "仅来源数值开发候选，未验证自然1→50或长期节奏；当前仅15EXP普通怪，不沿旧235天表。INI其它经验处理开关未自动移植；50级下级门槛仅供待用池及未来转生，显式cap禁止自动51。"
+        }
+      ],
+      "game_progression_rules": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 4,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 5,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 8,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": "E50待新战斗/成长目标反推，旧值失效。"
+        },
+        {
+          "id": 9,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 10,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 11,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 14,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 15,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 16,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 17,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 18,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
+        },
+        {
+          "id": 19,
+          "source_ref": "最终策划案.md:189-195、435-443、499-507、586-598；4.4、4.17、4.21、5.1",
+          "note": null
         }
       ],
       "game_drop_pools": [
@@ -6042,6 +6330,15 @@
         "initial_binding_pool_verified": false
       }
     ],
+    "progression": {
+      "curve_source": "唯一玩法Excel/game_exp_levels；来源独立副本资料参考/myf/Mir200/Exps.ini [Exp].Level1–50；不混英雄/药品/酒/宠物经验段",
+      "confirmed_rules_source": "唯一玩法Excel/game_progression_rules：initial_level_cap/rebirth_level_cap_increment/rebirth_reset_progression",
+      "selection_source": "唯一玩法Excel/开发首循环夹具/parameters.progression；不复制初始cap/转生增量规则值",
+      "catalog_last_threshold": "最后一级门槛供待用经验池与未来转生，不授权自动升到下一等级",
+      "balance_verified": false,
+      "natural_level_1_to_50_verified": false,
+      "scope": "当前仅15EXP普通怪；旧235天与理想恒定击杀算术都不是已验收节奏，须按三职业/怪数/装备/有效时长及长期收支重新校准"
+    },
     "equipment_recycling": {
       "rules_source": "唯一玩法Excel/开发首循环夹具/parameters.equipment_recycling",
       "gold_source": "唯一玩法Excel/开发首循环夹具/parameters.recycle_test_gold_by_item；既有来源Price开发事务候选，非正式分解价",
@@ -6172,9 +6469,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813"
+      "sha256": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2"
     },
-    "exporter_sha256": "5a69574f077aea0c8a50447b3c00e27ae939f2699699812f101d68bc75387577",
+    "exporter_sha256": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -6186,7 +6483,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "8a232df4e8ad3199211c5afb6cc18b8e675f51e6c7759d0ebea7cd0c6a6db813"
+          "sha256": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2"
         }
       ]
     }

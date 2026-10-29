@@ -1,0 +1,8 @@
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'锁定装备' !== '合并书页'
+
+    at mergePagesNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:176:162)
+    at async clearBagNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:247:42)
+    at async grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:262:59)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:286:38)

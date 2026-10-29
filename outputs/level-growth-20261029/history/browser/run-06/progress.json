@@ -1,0 +1,653 @@
+{
+  "target": 22,
+  "last": {
+    "time": 1793292930778,
+    "binding": "1",
+    "role": "成长4b6481",
+    "roleKey": "1:2b1c90053b8ba6e6559baa8a9a12333c",
+    "scene": "17698510092359310489",
+    "baseline": "1",
+    "map": "1",
+    "rule": "20",
+    "revision": "481",
+    "wallet": {
+      "revision": "481",
+      "gold": "0",
+      "boundGold": "12330",
+      "yuanbaoUnits": "0",
+      "boundYuanbaoUnits": "0"
+    },
+    "level": 20,
+    "experience": "770",
+    "growth": {
+      "format": 1,
+      "catalog": 50,
+      "curve": "myf_exp_candidate_1_50_v1",
+      "cap": 50,
+      "next": "1000",
+      "pool": "0",
+      "poolCap": "75000000",
+      "legacy": "0",
+      "migration": false,
+      "rebirth": 0
+    },
+    "items": [
+      {
+        "id": "d6265607736221af8d45e8d562b46ec5",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "b785f80a51b81408e0f2f148f3343034",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "ff961a0f29b4fe4049d9db164ed5f1fb",
+        "item": 21,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "184",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "56c3d7f448bb10bf9b98f396f4f5e958",
+        "item": 22,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "225",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "ef2345b1e6982fd4913d97a945eaea29",
+        "item": 3,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "242",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "c6afd281e95c59a20ab7d8afbf9a7964",
+        "item": 4,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "262",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "7b93bbaccd7d4afeafdaaaff3ef2ae25",
+        "item": 10,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "266",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "ae80ca35091dcfff462609fb8dff5e00",
+        "item": 1,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "274",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "24b26587ed6d7a54a030fa93c9b7b418",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "01a0462c7f23121c477c41166bcfbe51",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "70b6d20f4a8ef110f0329d15031fbfc8",
+        "item": 32,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "297",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "8ed67e099c37bf34d055d05f70671425",
+        "item": 20,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "301",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "763890ab40ad609a7dd14e49e2d41cba",
+        "item": 17,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "335",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "d8fe46bf0598a8590720f561aad32c79",
+        "item": 22,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "368",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "c33045115db24bdfe37bbb7e47e29376",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "62b18925af51870efd13d3c80b0159ef",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "022d7071c4be5a4fef426a94688fc188",
+        "item": 20,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "378",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "948809febd0fce86c378fd46dac25a3b",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "5ed0ac284b30811665081d3ae9a4f075",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "b3f7e447459e583326cf2123e0590a01",
+        "item": 1,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "385",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "54b64e75268b6adcfeb25ea958e6d1cb",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "e07d7b777c852832c04ea075d6e28083",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "0f80f01918b0e82a3b531a617f755d37",
+        "item": 6,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "393",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "217c87bfcd5ea76ccf424da3558f89ab",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "984ba16c8a5d4c0d3003b45b23c292d5",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "b2a4582eeca50d08ab6c75da7fefe828",
+        "item": 22,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "403",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "3e7f08df21d5dc35b89c5b4ee779dd2c",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "6924969a1ee8e23e189052d06a3cd849",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "6a0fa2023c7cd541f34aa819730d77c2",
+        "item": 12,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "419",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "3458d60b639c6070114e64d09e141e71",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "b981586eb670b0b1382f67b07e38bf7e",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "03b089c21ef76ba2ca1cc9c93f778b11",
+        "item": 17,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "433",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "840dc8024d356fb72515ff04325bde8d",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "5daf15a825e06a4801812884a9aa1fff",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "7b8e6a2fdcd1fc0cb1e336c355aabc15",
+        "item": 2,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "448",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "98152aad39d46b1f57e33b0e741ac56c",
+        "item": 900001,
+        "quantity": "10",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "skill_recycle",
+        "sourceId": "7c18f5b46f2fe5ba74db517f5680e956",
+        "locked": false,
+        "flags": 0
+      }
+    ],
+    "equipped": [
+      {
+        "slot": 0,
+        "id": "a563122d8fb6ae14db5366afc8ca0ff7",
+        "item": 218,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      },
+      {
+        "slot": 1,
+        "id": "afb4e4c5aba00d57c33e94fe851ed817",
+        "item": 193,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      }
+    ],
+    "skills": [
+      {
+        "id": 2,
+        "level": 0
+      }
+    ],
+    "hp": "130",
+    "maxHp": "130",
+    "mp": "123",
+    "maxMp": "123",
+    "life": "0",
+    "auto": true,
+    "count": 8,
+    "ui": "",
+    "popup": "",
+    "hud": "770 / 1000",
+    "notice": {
+      "role": "1:2b1c90053b8ba6e6559baa8a9a12333c",
+      "revision": "479",
+      "source": "448",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 20,
+      "after": 20,
+      "migrated": false,
+      "legacyBefore": 0,
+      "legacyAfter": 0,
+      "poolFull": false
+    },
+    "detail": [],
+    "error": "",
+    "messages": [
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "19 级 → 20 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      }
+    ]
+  },
+  "receipts": 448
+}

@@ -1,0 +1,14 @@
+test_confirmed_rules_are_unique_required_and_typed_not_profile_defaults (test_level_growth.LevelGrowthProjectionTests.test_confirmed_rules_are_unique_required_and_typed_not_profile_defaults) ... ok
+test_current_curve_matches_only_registered_exp_section_with_explicit_rule_sources (test_level_growth.LevelGrowthProjectionTests.test_current_curve_matches_only_registered_exp_section_with_explicit_rule_sources) ... ok
+test_current_profile_cannot_default_any_policy_or_enable_rebirth (test_level_growth.LevelGrowthProjectionTests.test_current_profile_cannot_default_any_policy_or_enable_rebirth) ... ok
+test_legacy_version_cannot_mix_new_fields_and_keeps_historical_catalog (test_level_growth.LevelGrowthProjectionTests.test_legacy_version_cannot_mix_new_fields_and_keeps_historical_catalog) ... ok
+test_missing_duplicate_extra_or_invalid_level_cannot_be_compressed_to_array (test_level_growth.LevelGrowthProjectionTests.test_missing_duplicate_extra_or_invalid_level_cannot_be_compressed_to_array) ... ok
+test_public_has_one_continuous_experience_catalog_and_no_source_or_second_array (test_level_growth.LevelGrowthProjectionTests.test_public_has_one_continuous_experience_catalog_and_no_source_or_second_array) ... ok
+test_reordering_source_rows_does_not_relabel_levels (test_level_growth.LevelGrowthProjectionTests.test_reordering_source_rows_does_not_relabel_levels) ... ok
+test_schema_rejects_missing_null_bool_and_unknown_nested_profile_fields (test_level_growth.LevelGrowthProjectionTests.test_schema_rejects_missing_null_bool_and_unknown_nested_profile_fields) ... ok
+test_threshold_requires_explicit_positive_excel_exact_integer (test_level_growth.LevelGrowthProjectionTests.test_threshold_requires_explicit_positive_excel_exact_integer) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.349s
+
+OK

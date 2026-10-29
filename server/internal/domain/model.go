@@ -60,58 +60,67 @@ type Equipped struct {
 	Item Item   `bson:"item" json:"item"`
 }
 type Report struct {
-	SessionID         string `bson:"session_id" json:"hosting_session_id"`
-	UsedSeconds       int64  `bson:"used_seconds" json:"used_seconds"`
-	Kills             int64  `bson:"kills" json:"kills"`
-	Experience        int64  `bson:"experience" json:"experience"`
-	Earned            Wallet `bson:"earned" json:"earned"`
-	Drops             []Item `bson:"drops" json:"drops"`
-	StopReason        uint32 `bson:"stop_reason" json:"stop_reason"`
-	Sequence          int64  `bson:"sequence" json:"settlement_sequence"`
-	RecycleCount      int64  `bson:"recycle_count" json:"recycle_count"`
-	RecycleGold       int64  `bson:"recycle_gold" json:"recycle_gold"`
-	RecycleBoundGold  int64  `bson:"recycle_bound_gold" json:"recycle_bound_gold"`
-	DiscardCount      int64  `bson:"discard_count" json:"discard_count"`
-	LastDiscardReason string `bson:"last_discard_reason" json:"last_discard_reason"`
-	TotalDropCount    int64  `bson:"total_drop_count" json:"total_drop_count"`
+	SessionID          string `bson:"session_id" json:"hosting_session_id"`
+	UsedSeconds        int64  `bson:"used_seconds" json:"used_seconds"`
+	Kills              int64  `bson:"kills" json:"kills"`
+	Experience         int64  `bson:"experience" json:"experience"`
+	RawExperience      int64  `bson:"raw_experience" json:"raw_experience"`
+	RejectedExperience int64  `bson:"rejected_experience" json:"rejected_experience"`
+	PooledExperience   int64  `bson:"pooled_experience" json:"pooled_experience"`
+	Earned             Wallet `bson:"earned" json:"earned"`
+	Drops              []Item `bson:"drops" json:"drops"`
+	StopReason         uint32 `bson:"stop_reason" json:"stop_reason"`
+	Sequence           int64  `bson:"sequence" json:"settlement_sequence"`
+	RecycleCount       int64  `bson:"recycle_count" json:"recycle_count"`
+	RecycleGold        int64  `bson:"recycle_gold" json:"recycle_gold"`
+	RecycleBoundGold   int64  `bson:"recycle_bound_gold" json:"recycle_bound_gold"`
+	DiscardCount       int64  `bson:"discard_count" json:"discard_count"`
+	LastDiscardReason  string `bson:"last_discard_reason" json:"last_discard_reason"`
+	TotalDropCount     int64  `bson:"total_drop_count" json:"total_drop_count"`
 }
 type Role struct {
-	ID                        string            `bson:"_id" json:"role_id"`
-	AccountID                 string            `bson:"account_id" json:"account_id"`
-	Origin                    uint64            `bson:"origin_server_id" json:"origin_server_id"`
-	Slot                      uint32            `bson:"slot" json:"slot"`
-	Job                       uint32            `bson:"job" json:"job"`
-	Gender                    uint32            `bson:"gender" json:"gender"`
-	Name                      string            `bson:"name" json:"name"`
-	NameKey                   string            `bson:"name_key" json:"-"`
-	Level                     uint32            `bson:"level" json:"level"`
-	Experience                int64             `bson:"experience" json:"experience"`
-	Revision                  int64             `bson:"revision" json:"revision"`
-	EconomicSeq               int64             `bson:"economic_command_seq" json:"economic_command_seq"`
-	SourceSeq                 int64             `bson:"source_seq" json:"source_seq"`
-	SettlementReceiptStartSeq int64             `bson:"settlement_receipt_start_seq,omitempty" json:"-"`
-	Owner                     string            `bson:"owner_instance" json:"-"`
-	RunEpoch                  int64             `bson:"run_epoch" json:"-"`
-	SessionEpoch              int64             `bson:"session_epoch" json:"binding_epoch"`
-	Wallet                    Wallet            `bson:"wallet" json:"wallet"`
-	Items                     []Item            `bson:"items" json:"items"`
-	Equipped                  []Equipped        `bson:"equipped" json:"equipped"`
-	Capacity                  int               `bson:"capacity" json:"capacity"`
-	PickupStopped             bool              `bson:"pickup_stopped" json:"pickup_stopped"`
-	AutoRecycle               AutoRecyclePolicy `bson:"auto_recycle" json:"auto_recycle"`
-	LastDiscardItem           uint32            `bson:"last_discard_item_id" json:"last_discard_item_id"`
-	LastDiscardBound          bool              `bson:"last_discard_bound" json:"last_discard_bound"`
-	HostingSeconds            int64             `bson:"hosting_seconds" json:"hosting_seconds"`
-	ClaimDay                  string            `bson:"claim_day" json:"-"`
-	ClaimedSeconds            int64             `bson:"claimed_seconds" json:"-"`
-	NoEquipmentKills          int               `bson:"no_equipment_kills" json:"-"`
-	PrivilegeUntil            time.Time         `bson:"privilege_until" json:"-"`
-	HostingCardUntil          time.Time         `bson:"hosting_card_until" json:"-"`
-	Report                    Report            `bson:"hosting_report" json:"hosting_report"`
-	Skills                    []LearnedSkill    `bson:"learned_skills" json:"learned_skills"`
-	Binding                   *RoleBinding      `bson:"binding,omitempty" json:"binding,omitempty"`
-	BindingSourceSeq          int64             `bson:"binding_source_seq,omitempty" json:"-"`
-	BindingSafeZoneID         uint64            `bson:"-" json:"-"`
+	ID                           string            `bson:"_id" json:"role_id"`
+	AccountID                    string            `bson:"account_id" json:"account_id"`
+	Origin                       uint64            `bson:"origin_server_id" json:"origin_server_id"`
+	Slot                         uint32            `bson:"slot" json:"slot"`
+	Job                          uint32            `bson:"job" json:"job"`
+	Gender                       uint32            `bson:"gender" json:"gender"`
+	Name                         string            `bson:"name" json:"name"`
+	NameKey                      string            `bson:"name_key" json:"-"`
+	Level                        uint32            `bson:"level" json:"level"`
+	Experience                   int64             `bson:"experience" json:"experience"`
+	ProgressionFormatVersion     uint32            `bson:"progression_format_version,omitempty" json:"progression_format_version"`
+	ProgressionCurveVersion      string            `bson:"progression_curve_version,omitempty" json:"progression_curve_version"`
+	RebirthCount                 uint32            `bson:"rebirth_count,omitempty" json:"rebirth_count"`
+	PendingExperience            int64             `bson:"pending_experience,omitempty" json:"pending_experience"`
+	LegacyExperienceOverflow     int64             `bson:"legacy_experience_overflow,omitempty" json:"legacy_experience_overflow"`
+	ProgressionMigrationRequired bool              `bson:"progression_migration_required,omitempty" json:"progression_migration_required"`
+	Revision                     int64             `bson:"revision" json:"revision"`
+	EconomicSeq                  int64             `bson:"economic_command_seq" json:"economic_command_seq"`
+	SourceSeq                    int64             `bson:"source_seq" json:"source_seq"`
+	SettlementReceiptStartSeq    int64             `bson:"settlement_receipt_start_seq,omitempty" json:"-"`
+	Owner                        string            `bson:"owner_instance" json:"-"`
+	RunEpoch                     int64             `bson:"run_epoch" json:"-"`
+	SessionEpoch                 int64             `bson:"session_epoch" json:"binding_epoch"`
+	Wallet                       Wallet            `bson:"wallet" json:"wallet"`
+	Items                        []Item            `bson:"items" json:"items"`
+	Equipped                     []Equipped        `bson:"equipped" json:"equipped"`
+	Capacity                     int               `bson:"capacity" json:"capacity"`
+	PickupStopped                bool              `bson:"pickup_stopped" json:"pickup_stopped"`
+	AutoRecycle                  AutoRecyclePolicy `bson:"auto_recycle" json:"auto_recycle"`
+	LastDiscardItem              uint32            `bson:"last_discard_item_id" json:"last_discard_item_id"`
+	LastDiscardBound             bool              `bson:"last_discard_bound" json:"last_discard_bound"`
+	HostingSeconds               int64             `bson:"hosting_seconds" json:"hosting_seconds"`
+	ClaimDay                     string            `bson:"claim_day" json:"-"`
+	ClaimedSeconds               int64             `bson:"claimed_seconds" json:"-"`
+	NoEquipmentKills             int               `bson:"no_equipment_kills" json:"-"`
+	PrivilegeUntil               time.Time         `bson:"privilege_until" json:"-"`
+	HostingCardUntil             time.Time         `bson:"hosting_card_until" json:"-"`
+	Report                       Report            `bson:"hosting_report" json:"hosting_report"`
+	Skills                       []LearnedSkill    `bson:"learned_skills" json:"learned_skills"`
+	Binding                      *RoleBinding      `bson:"binding,omitempty" json:"binding,omitempty"`
+	BindingSourceSeq             int64             `bson:"binding_source_seq,omitempty" json:"-"`
+	BindingSafeZoneID            uint64            `bson:"-" json:"-"`
 }
 
 // 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。
@@ -137,8 +146,11 @@ func (r Role) Skill(id uint32) (uint32, bool) {
 func (r Role) Summary() *pb.RoleSummary {
 	return &pb.RoleSummary{Key: &pb.RoleKey{RoleId: Bytes(r.ID), OriginServerId: r.Origin}, Name: r.Name, Job: r.Job, Gender: r.Gender, Level: r.Level, Slot: r.Slot, AppearanceVersion: 1}
 }
-func (r Role) Inventory() *pb.InventoryResult {
+func (r Role) Inventory(progression ...*pb.ProgressionState) *pb.InventoryResult {
 	p := &pb.InventoryResult{Capacity: uint32(r.Capacity), Revision: uint64(r.Revision), Level: r.Level, Experience: r.Experience, AutoRecycle: r.AutoRecycle.Proto()}
+	if len(progression) > 0 {
+		p.Progression = progression[0]
+	}
 	for _, i := range r.Items {
 		v := i.Proto()
 		v.RecycleBlockFlags = r.RecycleBlockFlags(i)
@@ -156,6 +168,9 @@ func (r Role) Inventory() *pb.InventoryResult {
 }
 func (r Role) HostingReport() *pb.HostingReport {
 	p := &pb.HostingReport{HostingSessionId: Bytes(r.Report.SessionID), UsedSeconds: uint64(r.Report.UsedSeconds), Kills: uint64(r.Report.Kills), Experience: r.Report.Experience, Earned: r.Report.Earned.Proto(r.Report.Sequence), StopReason: r.Report.StopReason, SettlementSequence: uint64(r.Report.Sequence), RecycleCount: uint64(r.Report.RecycleCount), RecycleGold: r.Report.RecycleGold, RecycleBoundGold: r.Report.RecycleBoundGold, DiscardCount: uint64(r.Report.DiscardCount), LastDiscardReason: r.Report.LastDiscardReason, TotalDropCount: uint64(r.Report.TotalDropCount)}
+	p.RawExperience = r.Report.RawExperience
+	p.RejectedExperience = r.Report.RejectedExperience
+	p.PooledExperience = r.Report.PooledExperience
 	for _, i := range r.Report.Drops {
 		p.Drops = append(p.Drops, i.Proto())
 	}

@@ -1,0 +1,520 @@
+{
+  "target": 22,
+  "last": {
+    "time": 1793287036157,
+    "binding": "1",
+    "role": "成长6cf429",
+    "rule": "20",
+    "revision": "361",
+    "level": 19,
+    "experience": "375",
+    "growth": {
+      "format": 1,
+      "catalog": 50,
+      "curve": "myf_exp_candidate_1_50_v1",
+      "cap": 50,
+      "next": "1000",
+      "pool": "0",
+      "poolCap": "75000000",
+      "legacy": "0",
+      "migration": false,
+      "rebirth": 0
+    },
+    "items": [
+      {
+        "id": "4068daf8d630fac13ad60ab6298258ad",
+        "item": 35,
+        "quantity": "1"
+      },
+      {
+        "id": "d23aa6c5fc0e24525e5615d6e908260d",
+        "item": 36,
+        "quantity": "1"
+      },
+      {
+        "id": "739a1c7ba9e70884121c6f2356b26503",
+        "item": 22,
+        "quantity": "1"
+      },
+      {
+        "id": "5b512ff1dbfd5fadb5aa00401ea45f33",
+        "item": 20,
+        "quantity": "1"
+      },
+      {
+        "id": "83aac0f5c7f17d932b980bf9991747b7",
+        "item": 7,
+        "quantity": "1"
+      },
+      {
+        "id": "349914216ea6e6801c14482bde7a2e35",
+        "item": 10,
+        "quantity": "1"
+      },
+      {
+        "id": "2645ddcacfcdbded0257b16e54bb0266",
+        "item": 4,
+        "quantity": "1"
+      },
+      {
+        "id": "ecbcb170e1da9e04d91e89e14723f1c8",
+        "item": 12,
+        "quantity": "1"
+      },
+      {
+        "id": "45faef991ccbf0089872294f0c91509f",
+        "item": 35,
+        "quantity": "1"
+      },
+      {
+        "id": "433f296ae01be81094065c325ad4c672",
+        "item": 2,
+        "quantity": "1"
+      },
+      {
+        "id": "20e014f671dcae9cb1619e30428d4656",
+        "item": 35,
+        "quantity": "1"
+      },
+      {
+        "id": "899114beb221270b294d8b1947fe75fb",
+        "item": 16,
+        "quantity": "1"
+      },
+      {
+        "id": "67e98358d70baed182f12751f474cd97",
+        "item": 32,
+        "quantity": "1"
+      },
+      {
+        "id": "cfa8ac17b1cac15755d84c3cfb2eea9a",
+        "item": 20,
+        "quantity": "1"
+      },
+      {
+        "id": "ee3ce5edd147949671a228c44bfe8006",
+        "item": 17,
+        "quantity": "1"
+      },
+      {
+        "id": "b98ff8f762a7398f9ffd8b6269e4ce7b",
+        "item": 35,
+        "quantity": "1"
+      },
+      {
+        "id": "93a508944162dae004bf4ade0b046ba1",
+        "item": 32,
+        "quantity": "1"
+      },
+      {
+        "id": "be2527db62407803af369ba16e9f2386",
+        "item": 10,
+        "quantity": "1"
+      },
+      {
+        "id": "74791daf4820dba87fc44e4037953122",
+        "item": 16,
+        "quantity": "1"
+      },
+      {
+        "id": "2271667d49f8736d566adb66478528d1",
+        "item": 22,
+        "quantity": "1"
+      },
+      {
+        "id": "f322361f89712f460c603f0f82854a9b",
+        "item": 32,
+        "quantity": "1"
+      },
+      {
+        "id": "31850cf7eb3c19871780c87dd462fcca",
+        "item": 6,
+        "quantity": "1"
+      },
+      {
+        "id": "093fd07ca4f0ea7c49fe978393515616",
+        "item": 21,
+        "quantity": "1"
+      },
+      {
+        "id": "9e794d11ace24db53e05eec874254a4e",
+        "item": 22,
+        "quantity": "1"
+      },
+      {
+        "id": "6b613fd9ad2f3896749dfc056987b31f",
+        "item": 21,
+        "quantity": "1"
+      },
+      {
+        "id": "a93aec360f2c3071a7a8c2a58ea3d503",
+        "item": 36,
+        "quantity": "1"
+      },
+      {
+        "id": "d71d9740828515f77f2c4177f229e951",
+        "item": 32,
+        "quantity": "1"
+      },
+      {
+        "id": "aa3a83b140221f1e3752c3b75fab57a7",
+        "item": 11,
+        "quantity": "1"
+      },
+      {
+        "id": "5983f8a86fbf32e95aeba9c232915895",
+        "item": 6,
+        "quantity": "1"
+      },
+      {
+        "id": "2214b8a58203e656bcca237279edbc25",
+        "item": 32,
+        "quantity": "1"
+      },
+      {
+        "id": "7e621b068572e29bb38866fd9d93ff3a",
+        "item": 36,
+        "quantity": "1"
+      },
+      {
+        "id": "b2bfc3bc0b9aded7f55f5d76146c3945",
+        "item": 2,
+        "quantity": "1"
+      }
+    ],
+    "equipped": [
+      {
+        "slot": 0,
+        "id": "135698b3d98902fb9daf1938ec4e1739",
+        "item": 218,
+        "quantity": "1"
+      },
+      {
+        "slot": 1,
+        "id": "e3ba05d2373a143b1ccb44ec50f9791f",
+        "item": 193,
+        "quantity": "1"
+      }
+    ],
+    "skills": [
+      {
+        "id": 2,
+        "level": 0
+      }
+    ],
+    "hp": "121",
+    "maxHp": "121",
+    "mp": "112",
+    "maxMp": "112",
+    "life": "0",
+    "auto": false,
+    "count": 8,
+    "ui": "",
+    "popup": "",
+    "hud": "375 / 1000",
+    "notice": {
+      "role": "1:c2605898cb371e8103faf0ffd2723b17",
+      "revision": "361",
+      "source": "355",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 19,
+      "after": 19,
+      "migrated": false,
+      "legacyBefore": 0,
+      "legacyAfter": 0,
+      "poolFull": false
+    },
+    "detail": [],
+    "error": "",
+    "messages": [
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "18 级 → 19 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      }
+    ]
+  },
+  "receipts": 355
+}

@@ -1,0 +1,11 @@
+{
+  "classification": "主动终止正常满包导致的QA路径阻塞，非成长业务失败，未完成1至22",
+  "level": 19,
+  "experience": "375",
+  "receipts": 355,
+  "chrome_root_pid": 83088,
+  "node_kept_for_finally": 19820,
+  "main_services_stopped": false,
+  "credential_recovery": false,
+  "tool_sha256": "25b4a8344148c0ae34ad5e110f20d489569bf0ded5c5396b86461865fd8728b1"
+}

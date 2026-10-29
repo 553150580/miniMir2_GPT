@@ -1,0 +1,158 @@
+{
+  "status": "passed_for_stated_read_only_scope",
+  "reviewer_scope": "实现者只读抽核证据和输入相等性；不是独立全代码二审，也未自行重跑Go/Mongo/Chrome",
+  "recorded_at_utc": "2026-10-29T14:54:27.227030+00:00",
+  "current_business_blockers_found": [],
+  "full_go_summary": {
+    "report": ".work/level-growth-20261029/server/full-2/report.json",
+    "report_sha256": "24eef0f54161c1708fb37c5b774047ee4642a5500fe8552f6acce64b49603e7c",
+    "events": ".work/level-growth-20261029/server/full-2/events.jsonl",
+    "events_sha256": "d3779329c6bd16ce6f4e570418ebee41bba6a0da36f9d45f1eb4766b5b8fd0d2",
+    "passed_including_subtests": 1085,
+    "skipped": 0,
+    "failed": 0,
+    "inputs": 184,
+    "before_after_current_equal": true,
+    "latest_report_and_events_byte_equal": true,
+    "mongo_explicit": true,
+    "race": true
+  },
+  "new_real_integration_raw_passes": [
+    {
+      "test": "TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo",
+      "passed": true,
+      "elapsed_seconds": 1.55,
+      "pass_raw_event": {
+        "Time": "2026-10-29T22:45:30.7145393+08:00",
+        "Action": "pass",
+        "Package": "minimir/internal/integration",
+        "Test": "TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo",
+        "Elapsed": 1.55
+      },
+      "raw_observations": [
+        "level_growth_test.go:170: 真实Mongo：新生format1、原装备等级门槛、实际grant/池/拒收、满池仍金币物品、旧21余额无损封存、旧99保级、原Source与新票防重"
+      ]
+    },
+    {
+      "test": "TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS",
+      "passed": true,
+      "elapsed_seconds": 37.54,
+      "pass_raw_event": {
+        "Time": "2026-10-29T22:46:08.2585208+08:00",
+        "Action": "pass",
+        "Package": "minimir/internal/integration",
+        "Test": "TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS",
+        "Elapsed": 37.54
+      },
+      "raw_observations": [
+        "level_growth_test.go:275: 正常施法等待原动作锁: request=13 scene=6130004616531077305 baselineSequence=186 HP=29 MP=65 attackSequence=14 castSequence=0",
+        "level_growth_test.go:275: 正常施法等待原动作锁: request=14 scene=6130004616531077305 baselineSequence=187 HP=29 MP=65 attackSequence=14 castSequence=0",
+        "level_growth_test.go:300: 真实WS加速战斗夹具：自然1→8、原书学习/耗MP→新奖励升级恢复、健康票保留；SourceSeq=19，原曲线=myf_exp_candidate_1_50_v1，非正常主怪效率测量"
+      ]
+    }
+  ],
+  "production_comparison": {
+    "historical_failed_full_report": ".work/level-growth-20261029/server/full-1/report.json",
+    "historical_failed_full_sha256": "1192491938640e5f5a6636d83d851c81687738aa4596bf905d7995442c5184f0",
+    "changed_input_paths": [
+      "server/internal/integration/binding_test.go",
+      "server/internal/integration/level_growth_test.go",
+      "server/internal/integration/summon_pet_test.go"
+    ],
+    "all_other_inputs_unchanged": 181,
+    "production_go_files_compared": 74,
+    "production_go_before_full1_equals_full2_equals_current": true,
+    "production_go_sha256": {
+      "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
+      "server/api/generated/minimirv1/assets.pb.go": "516f0e201cd660a78d9242f0f6509b7069ee8e3ddeadf37621fcb0dbcb576260",
+      "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+      "server/api/generated/minimirv1/world.pb.go": "89de58ec78599e74112929750bd0b3be0f43b9ad770113e01849634bcab7e927",
+      "server/cmd/nbserver/main.go": "5004df24b6a39feeb1c3e1aefc5558cbcd4f200083ab5bf58e60fd0775e0779e",
+      "server/cmd/toolchain-smoke/main.go": "0f3a3fc9e696c9ffd106e86881d48265c1d1bbdf6d6674ccc83c9613e0d5f0e3",
+      "server/internal/bootstrap/app.go": "36faf9a8d4fafffaebbd63d640ba140248e040392d89383f3ee2215e00733559",
+      "server/internal/bootstrap/process_unix.go": "0a5397fa3808ebc3f7f69bb0753a216285a7c58bc046a4d35f6892722106362e",
+      "server/internal/bootstrap/process_windows.go": "85016013e725937e301e6cfe1e25314051d95ad496fae13417bb74fdabe1df6a",
+      "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+      "server/internal/devconfig/binding.go": "c9836abb8ec96231eb4233d93ec186b8ced34a01d3a7deb905b66b34b311f1c4",
+      "server/internal/devconfig/buffs.go": "7233169cfe04a7e4769d9b59bed213c1933f56299ce818239658a15cf1c4c3ab",
+      "server/internal/devconfig/combat.go": "35419bab2801d817c3d3f4795a992d3f4e870d4f00b07bb36c7b014146e6f547",
+      "server/internal/devconfig/config.go": "8e3c6f7eba3241daa79ec221336261189e9e3667b71bfb5ea174da5a09a2c99f",
+      "server/internal/devconfig/displacement.go": "a404224d8f60f914190086294881a5e70296b521e9e6ffe36d0b36d44e33ad89",
+      "server/internal/devconfig/displacement_skills.go": "2bf05eede67d31d3ae2bb7bdc4bb2066a1186b7c82eba16b5ad7f1c02d23a827",
+      "server/internal/devconfig/equipment_recycling.go": "a3649a281ec97ff72ab3a85a91c8e0e2c645468ba25417159ea7146946f55f71",
+      "server/internal/devconfig/map.go": "6db610ce68b989629ce2fadf6442d69ad733f35b6142b797db3de7ce8ad4d141",
+      "server/internal/devconfig/pet_runtime.go": "ae819446f5cdb2723387cac715ca6bb6cfed0dcfc63cf346d816ca6beabda7f9",
+      "server/internal/devconfig/progression.go": "ea4d4bf14e7aaec8b62f057f70583cd27e34072d53643fd0286aafaed04ada5a",
+      "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+      "server/internal/devconfig/skills.go": "5a864dd75f025dff10899b8388ba88e6a0f3c424cd345fae209cd247832746c8",
+      "server/internal/devconfig/summon.go": "d400a9ae2baf2a42ee5a4f3d8334d85c42598ce4e5dcb82979c57906bbccc94c",
+      "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+      "server/internal/devconfig/teleport.go": "a122eb2bfac539d9900e5f1639504ce62c1578a56ff3fad984960665d4fb5366",
+      "server/internal/devconfig/town.go": "6522a8395c1e5d6286db03da066aa8be30ff6d8f296bbe1e977fd8981d5a67e3",
+      "server/internal/domain/auto_recycle.go": "89363eec62f29246d7c1595603b00700b825113dc9a66293ef82c3110ace89f9",
+      "server/internal/domain/model.go": "ee2de0945a22cc9f49d9ecba13f20d26f218e5dd128d2b8a77111f500838083a",
+      "server/internal/domain/progression.go": "607e5e7906714ccdb7d1a985cfeb2142babad84db21b009828ec2829bf032c51",
+      "server/internal/game/asset_result.go": "376199d3bceb2f482c527f4acd192cee6e3a63e0b28df44a1497774d8f18ef40",
+      "server/internal/game/auto_recycle.go": "1c6d3dfba5f6aeaf1d58e8a4ec44502eb90ad829d008dc8dc0d6764b9abce0fd",
+      "server/internal/game/baseline.go": "2a35dd9f91bd67b74c0d3078973e930b565ba4c983c0196994061c52cdaa2f6d",
+      "server/internal/game/casting_material.go": "d9753ccab62c6290c5e30232d443d928f62b9f04d7b9bd8e45749ed15461575a",
+      "server/internal/game/combat.go": "acce5283d293f75aff6bcbc953f3832be0493efe4d33c3ea3f9be9731df76842",
+      "server/internal/game/combat_status.go": "efcbb3a3575637172cde71badd4cc11f59e3a025ed672f9a4e82a1c0cebaf17b",
+      "server/internal/game/displacement_skills.go": "8104f7812b337f31f50da98dc2bc9020abc5b3912ec924aa1a5fe450018f1678",
+      "server/internal/game/map_context.go": "a237f752a8307550b485ff44c352f154303ea8b5788d7fb1cc7298f766220ef7",
+      "server/internal/game/map_travel.go": "912b5ab1767349aad648632be7777a0cecc4041a59065b6b328cbba0e150adc1",
+      "server/internal/game/melee.go": "bd97e67941d16a076c3e9a5e524aed73c645220b8d7806c8b56653877c2354f1",
+      "server/internal/game/movement.go": "fa022e393d183e46475d03d328c8d4602388d6924dd87b750b1b9b8e8e65a023",
+      "server/internal/game/pet_born.go": "8cb80a389104f58248194937a8538ce58364b331edf1bba3cbc5435431ea3147",
+      "server/internal/game/pet_corpses.go": "9fd2541e1e32a895a2d6d0c925cd675bd295b7477100f42dcb9e3a53d7fdd9fa",
+      "server/internal/game/pet_lifecycle.go": "2eee3d83564c48d1438f222008f90ee6531d02da32090d01e4b3992acc4b3e3f",
+      "server/internal/game/pet_training.go": "0d7b2f56afab87cd7f5fa7d6950e36792864dd8bc468493b25b8874ddcd9ca87",
+      "server/internal/game/potions.go": "bd014f16586742ff620a789c776001f7d4a841ee2ed53323937ac4e3c4ed989b",
+      "server/internal/game/progression.go": "19904619fe6304c64c3e809ade38bd4bee98855238704cfc61903f9fbf34209f",
+      "server/internal/game/runtime.go": "7d8b382c17139235e3200c6964e72b6340247eacadcdd0e17544bbd3b57cb6c3",
+      "server/internal/game/safe_zone_binding.go": "3bd36a7a3e7f31c5c4d210c00a9897e731dbbe4f5c0ac2760d7db132e8d38e6d",
+      "server/internal/game/skill_assets.go": "f3dbfe16e4ec6221813c7f6c98acbbf35784ee0fbef176ae000eef2990a1b8df",
+      "server/internal/game/skill_cast.go": "76aa922a23a380da6333dc8d0162ad06163ae389ae0db8cea134051cbd4f19da",
+      "server/internal/game/skills.go": "e7e7dfe4eb61b2d44778a6cbea5d883916b5f11315579b349075c34b88e041dc",
+      "server/internal/game/summon_pet.go": "b9d5408d0d34406de96a919df30a9641a31daaf3fc132a9a6e560b9754be7bd0",
+      "server/internal/game/teleport21.go": "bd87e3538ddbc3f3b84ef32acac664bdfc95486240f3b5797a17c7d37970c1c7",
+      "server/internal/game/timeline.go": "2dbe69b8d713cd5f6c01f1bd761999156e1e40c13d86ecd758dabef3bccf1141",
+      "server/internal/game/town_navigation.go": "76ab6688ee890e20c2705d59f17bfbf2dedbcd96bd2a9fdbabf76dd9b8277544",
+      "server/internal/game/town_navigation_status.go": "4a299ae0becff3533877a9b0a4a9eba331af8055467ba53be2a9705e7a58c807",
+      "server/internal/game/world_context.go": "0032418762cf2749f3ca9311a29f6f2a2dc1c6be0c4075511ea2c8fd49920e6b",
+      "server/internal/persistence/assets.go": "85ee517f233e94dddae3fa3382a6c1b9901a1c71bbb626688f39a0d577840ba3",
+      "server/internal/persistence/auth.go": "ace7e5a65218cc4b48b5b7e42f4d7dc171e73b43a33d656119b69b44636a6143",
+      "server/internal/persistence/binding.go": "37b29f099f61d814a51b50a3806b8e75adaec31e308a6c56aedf3c3221e6a890",
+      "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
+      "server/internal/persistence/equipment_recycling.go": "b7a0dc85ad95dd4b7394a2ead932d3469e7794d80e06afc9f609ace1231d3b62",
+      "server/internal/persistence/lease.go": "07796f6d3d331aa83954737fc86b3346d5d11230e186cc2dbf34c1af9230c0ba",
+      "server/internal/persistence/progression.go": "b5d6622fe0961ea0270b70ad4a826ec990f44aea6ca23c5fec5e6b34171e786a",
+      "server/internal/persistence/safe_zone_binding.go": "f5e6ed271bc20dd6bb49b28b348d4b3f83bdd7202442ab11a0110904cfb0ebf0",
+      "server/internal/persistence/settlement.go": "3a1bb4ff044cdb8e3182b7b6d008ad7d1a048793f1b207c3ac167fb7a355331a",
+      "server/internal/persistence/skill_assets.go": "04fe6ba751563b4d782fc7aca96524f5e7c10d19fc83add90c6934522fe1744f",
+      "server/internal/persistence/skills.go": "fa6a33813e61c3eb7db7b690667b2c068f50e112636d0991a0061a3de1a1aca4",
+      "server/internal/persistence/store.go": "4d17e50956525f698b2208dd6bfc437bfd65b3263c80cfdbefa0deafa8aedf02",
+      "server/internal/protocol/protocol_ids.go": "e55249462b2e6a34446c8772c3aba9e6c4ddcdfbccdb619fd5c26602177c71f2",
+      "server/internal/townnav/nav.go": "c31679895e6d4783555aaeea267270fc6a151d4fd762785ab50d19996a46218e",
+      "server/internal/transport/http.go": "de55e0d1cf9b1fdffa384952c28df5be97c77eebaa6788fb1cf48b96039627f4",
+      "server/internal/transport/ws.go": "fe83dde766f6f1f91aff370647d9e504047f710e7c2b0d281cd81c9fb53017b8",
+      "server/internal/wire/frame.go": "de36d1b23c6cfb5d8bc23790a7b47cd3931901549a9f50ff823a5c9299a97868"
+    },
+    "test_sha256": {
+      "server/internal/integration/binding_test.go": "2e3295f3fab084cac80d26c6524351fb5071591b7e69b525f775e2abd4376788",
+      "server/internal/integration/level_growth_test.go": "bb199b4e7224cce5ae9d6c507e447bdd06e8491ae3a4d355909d6dc9d808c547",
+      "server/internal/integration/summon_pet_test.go": "d6e03588ed373c78d6654d511a7a1f4f24a0cf0d0f2144ed89bb909ed5edb585"
+    }
+  },
+  "scope_limits": [
+    "Mongo直接事务用明确旧21余额、99级和近满池隔离前态验证边界，不称自然1到50",
+    "WS明确HP1/零攻击/零敏加速战斗，仍原15EXP/主候选曲线/正常创角装备学书施法/健康重入；实际终态自然1到8/SourceSeq19，不替代Root正常主怪GUI自然1到22",
+    "raw StateBlocked后按正常协议下一baseline重试，新样本MP/CastSequence不变；旧full1未记录私有动作时钟，不追认当时某个精确计时值",
+    "真正UnknownTransactionCommitResult/网络丢提交故障、真机、容量和成长经济节奏不由本次局部审查认证"
+  ],
+  "read_only_actions": [
+    "读取full1/full2/latest原报告与raw JSONL",
+    "逐项比较184输入before/after/current与生产Go原SHA",
+    "读取两条新集成pass/raw断言观察；只新写本review.json"
+  ]
+}

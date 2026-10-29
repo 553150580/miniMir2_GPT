@@ -19,6 +19,7 @@ build/
 # 本阶段白名单内的原始验收日志需要随证据提交。
 !outputs/pet-visual-20261029/**/*.log
 !outputs/auto-recycle-20261029/**/*.log
+!outputs/level-growth-20261029/**/*.log
 client/library/
 client/temp/
 client/profiles/

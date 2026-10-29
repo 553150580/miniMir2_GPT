@@ -1,0 +1,5 @@
+page.waitForFunction: Timeout 5000ms exceeded.
+    at selectVisibleBook (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:100:20)
+    at async clearBagNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:130:42)
+    at async grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:164:41)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:198:57)

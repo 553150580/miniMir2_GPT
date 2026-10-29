@@ -1,0 +1,206 @@
+{
+  "target": 22,
+  "last": {
+    "time": 1793289089631,
+    "binding": "1",
+    "role": "成长b7a3b7",
+    "rule": "20",
+    "revision": "20",
+    "level": 7,
+    "experience": "0",
+    "growth": {
+      "format": 1,
+      "catalog": 50,
+      "curve": "myf_exp_candidate_1_50_v1",
+      "cap": 50,
+      "next": "70",
+      "pool": "0",
+      "poolCap": "75000000",
+      "legacy": "0",
+      "migration": false,
+      "rebirth": 0
+    },
+    "items": [
+      {
+        "id": "4f218da65d20f49581dd20d7b7ebb5fb",
+        "item": 35,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "cb5a60d6b5535d8f80d22c8ea471f9db",
+        "item": 36,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "82775e27aeca7e20c79a6ae8cc991335",
+        "item": 4,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 1,
+        "sourceKind": "monster_drop",
+        "sourceId": "12",
+        "locked": false,
+        "flags": 0
+      }
+    ],
+    "equipped": [
+      {
+        "slot": 0,
+        "id": "21edcf0192d0736a12b1e635c716d201",
+        "item": 218,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      },
+      {
+        "slot": 1,
+        "id": "b1effe10eebac67222fdfac9de43a188",
+        "item": 193,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      }
+    ],
+    "skills": [
+      {
+        "id": 2,
+        "level": 0
+      }
+    ],
+    "hp": "39",
+    "maxHp": "39",
+    "mp": "26",
+    "maxMp": "26",
+    "life": "0",
+    "auto": true,
+    "count": 8,
+    "ui": "",
+    "popup": "",
+    "hud": "0 / 70",
+    "notice": {
+      "role": "1:93d63ebe84caa4e97975025afbc70f24",
+      "revision": "19",
+      "source": "14",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 6,
+      "after": 7,
+      "migrated": false,
+      "legacyBefore": 0,
+      "legacyAfter": 0,
+      "poolFull": false
+    },
+    "detail": [],
+    "error": "",
+    "messages": [
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "1 级 → 2 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "2 级 → 3 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "3 级 → 4 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "4 级 → 5 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "5 级 → 6 级"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "经验结算",
+        "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+      },
+      {
+        "title": "角色升级",
+        "message": "6 级 → 7 级"
+      }
+    ]
+  },
+  "receipts": 14
+}

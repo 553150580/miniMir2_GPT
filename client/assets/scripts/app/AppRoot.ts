@@ -23,7 +23,7 @@ import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRec
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
-import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
+import { canRecycleBook, pageMergeGroup, preparePageMerge, PreparedSkillAsset, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validatePageMergeQuote, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
 import { GameCombatStatus } from './GameCombatStatus';
 import { captureSupply, CastingSupplySnapshot, selectedCastingSupply, SupplySelection, validateSupply } from './CastingSupplyModel';
 import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachmentCoordinator';
@@ -34,6 +34,7 @@ import { roleBindingText } from './RoleBindingModel';
 import { petAppearDuration } from './PetBornModel';
 import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
+import { equipmentLevelLines, equipmentLevelReason, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -247,6 +248,11 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/Settings/RecycleSave', () => this.saveAutoRecycle(false));
         this.button('UIMgr/Panels/Settings/RecycleApply', () => this.saveAutoRecycle(true));
         this.button('UIMgr/Panels/Inventory/ItemLock', () => this.setItemLock());
+        this.button('UIMgr/Panels/Role/Message', () => {
+            const identity = currentEntryIdentity(); if (!identity || !session.role) return;
+            this.combatStatus?.showLiveDetails('角色成长', () => !this.disposed && isCurrentEntry(identity)
+                ? progressionDetailLines(session.inventory?.level, session.inventory?.experience, session.inventory?.progression) : null);
+        }, Node.EventType.TOUCH_END);
         for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
             this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => { this.ui!.open(panel); this.refreshGame(); });
         }
@@ -312,6 +318,7 @@ export class AppRoot extends Component {
                 const definition = this.world!.gameplay.items.find((item: any) => item.item_id === this.selectedItem.itemId);
                 if (definition?.kind === 'casting_supply') return this.setCastingSupply(false);
                 if (!definition || definition.kind !== 'equipment' || definition.equip_slot == null || definition.equip_slot === 100) throw new Error('该物品不能装备');
+                const reason = equipmentLevelReason(definition, session.inventory?.level, session.role?.job); if (reason) throw new Error(reason);
                 return this.economic(40001, { itemInstanceId: this.selectedItem.instanceId, slot: definition.equip_slot });
             });
             this.button(`UIMgr/Panels/${panel}/Recycle`, async () => {
@@ -377,6 +384,7 @@ export class AppRoot extends Component {
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
             },
             mount: assets => {
+                session.progressionCurve = typeof assets.gameplay.progression?.curve_version === 'string' ? assets.gameplay.progression.curve_version : null;
                 this.combatStatus?.dispose(); this.combatStatus = undefined;
                 this.selectedTarget = null; this.aim = null; this.lastBaseline = ''; this.lastInventory = null; this.reconciliationStarted = false;
                 const viewport = this.find('MapViewport'), world = viewport.getChildByName('World')!;
@@ -617,7 +625,7 @@ export class AppRoot extends Component {
         }
         const quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
-            bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice,
+            bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
@@ -645,15 +653,18 @@ export class AppRoot extends Component {
         const selectedDefinition = this.world.gameplay.items.find((item: any) => item.item_id === this.selectedItem?.itemId);
         const selectedSupply = selectedDefinition?.kind === 'casting_supply', supplyEnabled = this.world.gameplay.casting_supply?.enabled;
         this.text('UIMgr/Panels/Inventory/Equip/Label', selectedSupply ? supplyEnabled ? '装入护符' : '护符未开放' : '装备');
-        this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && (!selectedSupply || supplyEnabled));
+        const equipmentReason = equipmentLevelReason(selectedDefinition, session.inventory?.level, session.role?.job);
+        this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && (selectedSupply ? supplyEnabled : !equipmentReason));
         this.find('UIMgr/Panels/Inventory/Recycle').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem
             && (selectedDefinition?.kind === 'book' || (selectedDefinition?.kind === 'equipment' && !manualRecycleBlockReason(this.selectedItem))));
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
         this.autoRecycle?.refresh(this.recycleSnapshot(), this.economicBusy, this.unresolved || !!session.pending?.get(roleIdentity()));
         const lockButton = this.find('UIMgr/Panels/Inventory/ItemLock').getComponent(Button)!;
-        lockButton.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem && selectedDefinition?.kind === 'equipment' && !((this.selectedItem.recycleBlockFlags ?? 0) & 14));
-        this.text('UIMgr/Panels/Inventory/ItemLock/Label', this.selectedItem?.locked ? '解锁装备' : '锁定装备');
+        const selectedPage = selectedDefinition?.kind === 'skill_page', pageGroup = selectedPage ? pageMergeGroup(this.selectedItem, session.inventory?.items ?? [], this.world.gameplay.items) : null;
+        lockButton.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem
+            && (selectedPage ? !pageGroup?.reason : selectedDefinition?.kind === 'equipment' && !((this.selectedItem.recycleBlockFlags ?? 0) & 14)));
+        this.text('UIMgr/Panels/Inventory/ItemLock/Label', selectedPage ? '合并书页' : this.selectedItem?.locked ? '解锁装备' : '锁定装备');
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
@@ -664,14 +675,19 @@ export class AppRoot extends Component {
                 this.selectedItem = item;
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const book = definition?.kind === 'book' ? `\n${canRecycleBook(item, this.world!.gameplay.skill_book_recycle ?? []) ? '可按白名单拆书为书页' : '此来源或品质不能拆书为书页'}` : '';
-                this.popup!.show('Details', { title: definition?.name ?? '物品详情', message: `数量 ${item.quantity}\n${item.bound ? '绑定物品' : '非绑定物品'}\n来源 ${sourceName(item.sourceKind)}\n品质 ${item.quality ?? 0}${book}${manualRecycleBlockReason(item) ? '\n' + manualRecycleBlockReason(item) : ''}` });
+                const pages = definition?.kind === 'skill_page' ? pageMergeGroup(item, session.inventory?.items ?? [], this.world!.gameplay.items) : null;
+                const merge = pages ? `\n${pages.reason ?? `可查看同源${pages.items.length}叠书页合并报价`}` : '';
+                const requirements = definition ? equipmentLevelLines(definition, session.inventory?.level, session.role?.job) : [];
+                this.popup!.show('Details', { title: definition?.name ?? '物品详情', message: `数量 ${item.quantity}\n${item.bound ? '绑定物品' : '非绑定物品'}\n来源 ${sourceName(item.sourceKind)}\n品质 ${item.quality ?? 0}${requirements.length ? '\n' + requirements.join('\n') : ''}${book}${merge}${manualRecycleBlockReason(item) ? '\n' + manualRecycleBlockReason(item) : ''}` });
             }); }
         }
         this.lastInventory = session.inventory;
         for (const panel of ['Inventory','Role']) {
             const selected = this.world.gameplay.items.find((row: any) => row.item_id === this.selectedItem?.itemId);
             const selection = this.selectedItem ? `当前选择：${selected?.name ?? '物品'}` : '点击条目查看详情并选择物品';
-            this.text(`UIMgr/Panels/${panel}/Message`, selection + (panel === 'Role' ? '\n' + roleBindingText(session.bindingState, this.world.gameplay.map_catalog) : ''));
+            this.text(`UIMgr/Panels/${panel}/Message`, selection + (panel === 'Role' ? '\n' + roleBindingText(session.bindingState, this.world.gameplay.map_catalog)
+                + ((this.world.gameplay.rule_version ?? 0) >= 20 ? '\n' + progressionSummary(session.inventory?.level, session.inventory?.progression) : '')
+                : selectedDefinition?.kind === 'equipment' && equipmentReason ? '\n' + equipmentReason : ''));
         }
         this.text('UIMgr/Panels/Hosting/Message', `剩余托管 ${session.hosting?.remainHostingSec ?? 0} 秒\n在线自动战斗不扣托管时间`);
         const report = session.report;
@@ -699,7 +715,11 @@ export class AppRoot extends Component {
         await this.economic(40016, { policy: preview.policy, applyExisting });
     }
     private async setItemLock(): Promise<void> {
-        this.ensureNotLeaving(); const snapshot = this.recycleSnapshot(), selected = this.selectedItem;
+        this.ensureNotLeaving(); const selected = this.selectedItem;
+        if (selected && this.world?.gameplay.items.some((row: any) => row.item_id === selected.itemId && row.kind === 'skill_page')) {
+            await this.previewPreparedSkillAsset(preparePageMerge(this.skillAssetsSnapshot(), selected)); return;
+        }
+        const snapshot = this.recycleSnapshot();
         if (!snapshot.ready || !selected || !snapshot.definitions.some(row => row.item_id === selected.itemId && row.kind === 'equipment')) throw new Error('先选择背包装备');
         const key = recycleItemKey(selected.instanceId), version = selected.version.toString(), locked = !selected.locked;
         if ((selected.recycleBlockFlags ?? 0) & 14) throw new Error('装备正被穿戴、预览或占用，暂不能更改锁定');
@@ -720,7 +740,13 @@ export class AppRoot extends Component {
 
     private async previewSkillAsset(): Promise<void> {
         this.ensureNotLeaving();
-        const prepared = this.skillAssets!.prepare(); this.skillAssets!.lock(true);
+        await this.previewPreparedSkillAsset(this.skillAssets!.prepare());
+    }
+
+    private async previewPreparedSkillAsset(prepared: PreparedSkillAsset): Promise<void> {
+        this.ensureNotLeaving(); const scope = currentEntryIdentity(), panel = this.skillAssets!;
+        if (!scope || !isCurrentEntry(scope)) throw new Error('原角色场景已变化，请重新预览');
+        panel.lock(true);
         try {
             const request = { ...prepared.request, quantity: Long.fromString(prepared.request.quantity.toString()), materials: prepared.request.materials.map(item => ({
                 instanceId: item.instanceId, version: item.version, quantity: Long.fromString(item.quantity.toString()),
@@ -728,16 +754,18 @@ export class AppRoot extends Component {
             const quote: SkillAssetQuote = await session.connection.request(40011, request);
             if (this.disposed) return;
             const validate = (): void => {
+                if (!isCurrentEntry(scope)) throw new Error('原角色场景已变化，请重新预览');
                 validateSkillAssetContext(prepared.context, quote, this.skillAssetsSnapshot(), Date.now());
                 validateQuotedMaterials(quote, prepared.request.materials, this.skillAssetsSnapshot());
+                if (request.kind === 4) validatePageMergeQuote(quote, prepared.request.materials, this.skillAssetsSnapshot());
                 if (quote.kind !== request.kind || (quote.kind === 1 && (quote.offerId !== request.offerId || quote.quantity.toString() !== request.quantity.toString()))
                     || (quote.kind === 2 && quote.skillId !== request.skillId)) throw new Error('报价与原操作不一致，请重新预览');
             };
             validate();
-            if (!await this.skillAssets!.showQuote(quote) || this.disposed) return;
+            if (!await panel.showQuote(quote) || this.disposed) return;
             validate();
             await this.economic(40013, { previewId: new Uint8Array(quote.previewId) });
-        } finally { if (!this.disposed) this.skillAssets!.lock(false); }
+        } finally { if (!this.disposed && this.skillAssets === panel) panel.lock(false); }
     }
 
     private skillSnapshot(): SkillSnapshot {

@@ -1,0 +1,279 @@
+{
+  "status": "passed_limited_visual_review",
+  "browser_report_sha256": "fe8bda15d0425044ed39197afa6483974ac00f204f87af95de35e23180423bcf",
+  "wrapper_terminal_exit_code": 0,
+  "viewed_images": [
+    {
+      "path": "05-natural-cross21.png",
+      "sha256": "14a25ab87a91fb6201744d6c8cf9ea9b80a88d23d70aacec1d327ea5c97eab1e",
+      "observed": "实际显示22级道士、经验5/1200、角色升级21→22消息；HP149/149、MP146/146，关闭Auto后为手动8怪。"
+    },
+    {
+      "path": "06-level22-details.png",
+      "sha256": "11956d1425d56de29fed3bf9f3f374e52215dfa8d3f39782e2eaf177a67229d9",
+      "observed": "保存滚动成长详情显示等级22/上限50、转生0次、当前经验5、下一阈值1200、待用0/75000000、封存0、转生未开放；可见内容未见截断。"
+    },
+    {
+      "path": "07-healthy-reentry.png",
+      "sha256": "a682fe0ce25fabf34915277d1a14fb878f57355a10f96397df58fe671f3dd32b",
+      "observed": "正常新票重入画面仍22级与经验5/1200、原HP/MP；消息区为进入地图，没有重复角色升级消息。"
+    },
+    {
+      "path": "page-merge-11-quote.png",
+      "sha256": "2a36da6a17774dab7b47347df26cde95deae0685c15b0ae8deec5e037f181e21",
+      "observed": "后段合并确认显示原书页数量5、实际产物10、绑定/拆书所得/品质0及确认取消；可见文本完整，滚读完整性另由实际offset记录证明。"
+    },
+    {
+      "path": "page-merge-11-completed.png",
+      "sha256": "e8c06ba1677f84cd19c080c878eeb3ce548d90828eb723c1a45dae36e2b01e74",
+      "observed": "合并后已正常退出保存面板回到原战场，21级经验1000/1100，随后继续正常打怪跨至22。截图本身不证明槽数，槽数由独立重算实际库存确认。"
+    }
+  ],
+  "browser_checks": 8,
+  "real_experience_receipts": 537,
+  "page_errors": 0,
+  "console_warnings_and_errors": 0,
+  "accepted_experience": "8055",
+  "final_level": 22,
+  "final_experience": "5",
+  "successful_page_merges": 11,
+  "actual_slots_freed": 11,
+  "independent_merge_rechecks": [
+    {
+      "source_id": "86ec748cf5d49d7ee1854f2e22db83ca",
+      "removed_ids": [
+        "0c9d8b1e958ccf6c46369761e882b30b",
+        "fc0781fff957b9193d78558a5258f99c"
+      ],
+      "new_ids": [
+        "92cce872642f8fce3a239e0314643d1a"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "f6d7cb7dcb1f6f8fa6a25f69a574f690",
+      "removed_ids": [
+        "38340a15106a943e068025164d955a3c",
+        "e723ec8a95f5f58efb5185cad545daf8"
+      ],
+      "new_ids": [
+        "e126d2dc30a860832bf8eb0227fb2da6"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "102e22e9a5924a1fec08cb7329744cb7",
+      "removed_ids": [
+        "2d8b79dbb018b33084efc4b5b729ed0f",
+        "ea83caf24e47eba09ae2f258c07575fc"
+      ],
+      "new_ids": [
+        "9ffae4b07965f00ab6425df41821b07c"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "a6b844c682847aad44d946019ee33a3a",
+      "removed_ids": [
+        "bc246e37c3c6dc645f58932bebc85278",
+        "e10a46c641c4fa2b5248f81ae52cb21c"
+      ],
+      "new_ids": [
+        "dacd923cda40769457f04035a3cd1bc9"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "d9a0a384a5d4c8a2d5c3165c80440e9c",
+      "removed_ids": [
+        "05673d18bff6d07e36d949e83fcee664",
+        "fc1b0b0abf357e16482dd49d562eb173"
+      ],
+      "new_ids": [
+        "21a9b628468cddbb12af9b69b102750d"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "80119041dcd7a7b15047b32dad80626f",
+      "removed_ids": [
+        "3ccbb8ecdd06f5e8d6d111e21ecfaa23",
+        "ebc266104794fc7b269acb11c3c1cf2a"
+      ],
+      "new_ids": [
+        "a4fa9cbcc13f6bbc60d304e10638fe55"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "830491e3f3af60c1135c8aedb79a5c13",
+      "removed_ids": [
+        "11efd434be488fab13a54722b21273fa",
+        "fb01ad3c16ebd2e3a487b44d110b1eac"
+      ],
+      "new_ids": [
+        "dcabd24939916327915a71b435c23f0a"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "36c53a9944a6991ead141f073cc2e015",
+      "removed_ids": [
+        "017afb13a67b63d1e107311831ac7cd0",
+        "299b4700b6f6218fc88eaa701895aa52"
+      ],
+      "new_ids": [
+        "90455c758b9a0fecbd2b0096c947f9e4"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "08f2e72ae9375b4c393c1cd2415275f3",
+      "removed_ids": [
+        "57e8b1ded5391cfb4c7c1b08b4a08035",
+        "ecf4d0d47758fd36c5e6c0798263a50f"
+      ],
+      "new_ids": [
+        "1e49f20808306773d309c1c44f7801d0"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "131ccc2b3db14f083e90cefa5fdc2ee0",
+      "removed_ids": [
+        "85c2a917fb558f2be7b9a72b19becda6",
+        "bc7f007c9a024c0627011eba317a37e4"
+      ],
+      "new_ids": [
+        "dd7c9d05d5f67b7b8e4b0f7a3fc3274a"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    },
+    {
+      "source_id": "becebd2f133649dff4abfa8f676fd53b",
+      "removed_ids": [
+        "592c25d70aaa991b264ecdfe4241b7ce",
+        "7467a70593be0d6a939768dbb6d97289"
+      ],
+      "new_ids": [
+        "2ca14e53a9c18bb110847a5baae23e93"
+      ],
+      "input_quantities": [
+        "5",
+        "5"
+      ],
+      "output_quantities": [
+        "10"
+      ],
+      "slots_freed": 1,
+      "source_totals_preserved": true,
+      "actual_outputs_version1_unlocked_flags0": true
+    }
+  ],
+  "source_before_after_actual_current_equal": true,
+  "production_217_before_after_actual_current_equal": true,
+  "tool_before_after_actual_current_equal": true,
+  "health_instances_preserved": true,
+  "scope": "正常新角真实触屏1→7原书学习→22及健康票；11次实际同源页合并。桌面Chrome SwiftShader截图，不证明手机真机、容量、自然1至50周期或数值平衡；保护状态与来源/资产由报告原事实重算，不靠截图推断。",
+  "historical_runs_preserved": [
+    "run-01",
+    "run-02",
+    "run-03",
+    "run-04",
+    "run-05",
+    "run-06",
+    "run-07"
+  ],
+  "qa_database_seeding": false,
+  "private_business_invocation": false
+}

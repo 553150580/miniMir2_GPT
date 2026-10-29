@@ -1,0 +1,129 @@
+{
+  "target": 7,
+  "last": {
+    "time": 1793293375402,
+    "binding": "1",
+    "role": "成长0f6510",
+    "roleKey": "1:9f123e9ce691ecc51a35f3253e4e1077",
+    "scene": "6825340377182742921",
+    "baseline": "2",
+    "map": "1",
+    "rule": "20",
+    "revision": "5",
+    "wallet": {
+      "revision": "5",
+      "gold": "0",
+      "boundGold": "0",
+      "yuanbaoUnits": "0",
+      "boundYuanbaoUnits": "0"
+    },
+    "level": 1,
+    "experience": "0",
+    "growth": {
+      "format": 1,
+      "catalog": 50,
+      "curve": "myf_exp_candidate_1_50_v1",
+      "cap": 50,
+      "next": "10",
+      "pool": "0",
+      "poolCap": "75000000",
+      "legacy": "0",
+      "migration": false,
+      "rebirth": 0
+    },
+    "items": [
+      {
+        "id": "ed97564c952f47def4aaaac890bbf790",
+        "item": 218,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "9b6cdc2ac9178aa6d60fa233d78c79e4",
+        "item": 35,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "2c184e2ad02827211ff74255f4c5cbe0",
+        "item": 36,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 0
+      },
+      {
+        "id": "03575d3da9cd0d0fb1d5635a1738e499",
+        "item": 21,
+        "quantity": "1",
+        "version": "1",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "initial_grant",
+        "sourceId": "3a2d137b848fb6ce53984a27dd8fb74a",
+        "locked": false,
+        "flags": 0
+      }
+    ],
+    "equipped": [
+      {
+        "slot": 0,
+        "id": "4c1600c003ef9844fc4a7a8635f11e7d",
+        "item": 218,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      },
+      {
+        "slot": 1,
+        "id": "7744d3289ee1d6fcb13c6aaf78560116",
+        "item": 193,
+        "quantity": "1",
+        "version": "2",
+        "bound": true,
+        "quality": 0,
+        "sourceKind": "",
+        "sourceId": "",
+        "locked": false,
+        "flags": 8
+      }
+    ],
+    "skills": [],
+    "hp": "16",
+    "maxHp": "16",
+    "mp": "13",
+    "maxMp": "13",
+    "life": "0",
+    "auto": true,
+    "count": 8,
+    "ui": "",
+    "popup": "",
+    "hud": "0 / 10",
+    "notice": null,
+    "detail": [],
+    "error": "",
+    "messages": []
+  },
+  "receipts": 0
+}

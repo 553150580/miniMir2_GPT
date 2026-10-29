@@ -21,6 +21,7 @@ export class GameCombatStatus {
     private scope = '';
     private disposed = false;
     private detail: { kind: 'status' | 'entity' | 'pet'; scope: string; handle?: number; life?: string; id?: number } | null = null;
+    private liveDetail: { read: () => readonly string[] | null; key: string } | null = null;
     constructor(safe: Node, private readonly ui: UIMgr, private readonly popup: PopupView, private readonly template: Prefab, private readonly playerHandle: number, private readonly definitions: readonly StatusDefinition[] = [], private readonly expectedScope?: { sceneEpoch: { toString(): string }; baselineId: { toString(): string }; mapId?: { toString(): string } }) {
         const bar = safe.getChildByPath('MapViewport/BuffBar'), overview = safe.getChildByPath('UIMgr/Panels/CombatStatus/List')?.getComponent(List),
             details = safe.getChildByPath('PopupView/Panels/StatusDetails/List')?.getComponent(List);
@@ -41,6 +42,12 @@ export class GameCombatStatus {
     }
     update(): void {
         if (this.disposed) return;
+        if (this.liveDetail && this.popup.top?.name === 'StatusDetails') {
+            const lines = this.liveDetail.read(), text = lines ?? ['原角色成长附着已变化，请重新打开'];
+            const key = JSON.stringify(text);
+            if (key !== this.liveDetail.key) { this.liveDetail.key = key; this.bind(this.details, text, true); }
+            if (!lines) this.liveDetail = null;
+        }
         const player = this.entities.find(value => value.entityHandle === this.playerHandle), states = player?.statuses ?? [];
         const now = game.totalTime, key = JSON.stringify([this.ready, this.sequence, states.map(row => [row.statusId, statusSeconds(row, this.receivedAt, now)])]);
         if (this.lastSecond === key) return; this.lastSecond = key;
@@ -83,8 +90,14 @@ export class GameCombatStatus {
     openOverview(): void { if (this.disposed) return; this.ui.open('CombatStatus'); this.lastSecond = ''; this.update(); }
     showDetails(title: string, lines: readonly string[]): void {
         if (this.disposed) return;
+        this.liveDetail = null;
         this.detail = null; this.bind(this.details, lines, false);
         this.popup.show('StatusDetails', { title, message: '上下滑动查看，点击半透明背景返回' });
+    }
+    showLiveDetails(title: string, read: () => readonly string[] | null): void {
+        if (this.disposed) return;
+        this.showDetails(title, read() ?? ['成长状态尚未同步']);
+        if (!this.disposed) this.liveDetail = { read, key: '' };
     }
     showEntity(handle: number, life: string): void {
         if (this.disposed) return;
@@ -130,5 +143,5 @@ export class GameCombatStatus {
         for (const sprite of badge.node.getComponentsInChildren(Sprite)) { sprite.spriteFrame = null; sprite.customMaterial = null; }
         badge.node.off(Button.EventType.CLICK, badge.handler, this); badge.node.active = false; badge.node.parent = null; badge.node.destroy();
     }
-    dispose(): void { this.disposed = true; this.entities = []; this.ownedPet = null; this.detail = null; for (const badge of Array.from(this.badges.values())) this.removeBadge(badge); this.badges.clear(); }
+    dispose(): void { this.disposed = true; this.entities = []; this.ownedPet = null; this.detail = null; this.liveDetail = null; for (const badge of Array.from(this.badges.values())) this.removeBadge(badge); this.badges.clear(); }
 }

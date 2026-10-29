@@ -1,0 +1,27 @@
+{
+  "report_directory": ".work/level-growth-20261029/browser/run-01",
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_level_growth_browser.cjs",
+    "--report-dir",
+    ".work/level-growth-20261029/browser/run-01"
+  ],
+  "inputs": {
+    "tools/client/verify_level_growth_browser.cjs": "977e82aaf5a18ebd838b26e2eb1f6d7b5ad17135117af7ce84daccd64252284a",
+    "docs/客户端构建检查.json": "6d88508ed92efa590e68601879178fd6798accb6e221043a879c47210ef81af8",
+    "config/development/first-loop.json": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+    "client/assets/resources/development/gameplay.json": "d6ef7409d8227b2c692d3d18c49da79125b5576fbab55325aba73d9485dae477"
+  },
+  "run_requested": true,
+  "product_source_modified": false,
+  "service_control": false,
+  "database_seeding": false,
+  "started_at": "2026-10-29T14:50:22.130540+00:00",
+  "wrapper_sha256": "f8d5e075a2fd682e59262a8453c8ac9ae629d91a9926a3e84c0a6cdb5a08c1b0"
+}

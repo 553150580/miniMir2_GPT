@@ -76,6 +76,8 @@ type Operation struct {
 	Recycling         *EquipmentRecyclingReceipt `bson:"equipment_recycling,omitempty"`
 	Settlement        *SettlementReceipt         `bson:"settlement,omitempty"`
 	AutoRecyclePolicy *domain.AutoRecyclePolicy  `bson:"auto_recycle_policy,omitempty"`
+	Experience        *ExperienceGrantReceipt    `bson:"experience_grant,omitempty"`
+	Skill             *skillPlan                 `bson:"skill_plan,omitempty"`
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。

@@ -1,0 +1,4 @@
+AssertionError [ERR_ASSERTION]: 普通用药/拆书未释放背包空间
+    at clearBagNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:163:40)
+    at async grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:175:59)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:209:57)

@@ -2,14 +2,11 @@ import { Button, isValid, Label, Node } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
 import { traceInput } from './InputTrace';
-import { adjustPurchaseQuantity, assetId, assetInteger, canRecycleBook, captureSkillAssetContext, MaterialChoice, materialSelectionMatches,
-    ShopOffer, SkillAssetContext, SkillAssetItem, SkillAssetQuote, SkillAssetsSnapshot, SkillMaterialSelection, SkillUpgradeRule,
+import { adjustPurchaseQuantity, assetId, assetInteger, canRecycleBook, captureSkillAssetContext, materialSelectionMatches,
+    ShopOffer, PreparedSkillAsset, SkillAssetItem, SkillAssetQuote, SkillAssetsSnapshot, SkillMaterialSelection, SkillUpgradeRule,
     skillQuoteLines, sourceName, upgradeRequirements, yuanbaoText } from './SkillAssetsModel';
 
-export interface PreparedSkillAsset {
-    context: SkillAssetContext;
-    request: { kind: number; offerId: number; quantity: bigint; skillId: number; materials: MaterialChoice[] };
-}
+export type { PreparedSkillAsset } from './SkillAssetsModel';
 interface RowBinding { item: SkillAssetItem; plus: () => void; minus: () => void; }
 
 // 普通资产面板和覆盖报价列表均只绑定保存的节点及模板，不创建固定布局。
@@ -115,7 +112,7 @@ export class GameSkillAssets {
     showQuote(quote: SkillAssetQuote): Promise<boolean> {
         const input = this.input!;
         this.quoteList.setItems(skillQuoteLines(quote, input.definitions), (node, data) => { node.getChildByName('Text')!.getComponent(Label)!.string = String(data); }, false);
-        return this.popup.confirm('SkillQuote', '请滚动查看全部报价明细，再确认提交。', quote.kind === 1 ? '购买确认' : quote.kind === 2 ? '升级确认' : '拆书确认');
+        return this.popup.confirm('SkillQuote', '请滚动查看全部报价明细，再确认提交。', quote.kind === 1 ? '购买确认' : quote.kind === 2 ? '升级确认' : quote.kind === 4 ? '合并确认' : '拆书确认');
     }
     private renderMaterial(node: Node, item: SkillAssetItem): void {
         let binding = this.rows.get(node);

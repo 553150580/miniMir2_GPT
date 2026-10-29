@@ -1,0 +1,7 @@
+page.evaluate: TypeError: Cannot read properties of null (reading 'getComponent')
+    at eval (eval at evaluate (:370:30), <anonymous>:3:1052)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at state (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:58:21)
+    at auto (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:71:56)
+    at main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:95:91)

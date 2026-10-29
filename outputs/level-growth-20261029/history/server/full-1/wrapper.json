@@ -1,0 +1,25 @@
+{
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+    "python3",
+    "tools/server/test.py",
+    "--mongo",
+    "--race"
+  ],
+  "started_utc": "2026-10-29T14:19:03.100364+00:00",
+  "finished_utc": "2026-10-29T14:29:38.292304+00:00",
+  "exit_code": 1,
+  "passed": false,
+  "tests": 1082,
+  "skipped": 0,
+  "failed": 4,
+  "source_inputs": 184,
+  "stable": true,
+  "files_sha256": {
+    "events.jsonl": "ddbf6058f8dab8e7946cfab153fa3380bc4797e3435a0cc24fe7f25529f9140c",
+    "report.json": "1192491938640e5f5a6636d83d851c81687738aa4596bf905d7995442c5184f0",
+    "tool.stderr.txt": "df241da2b6c2c4f4424f92bd836a0d87a0ec853728d28b4849cd8c77dd007e91",
+    "tool.stdout.txt": "b5ecfa06bd6625037ec2f645d50d817d82c5d32c1e53e605bdd80638dc316c98"
+  }
+}

@@ -619,6 +619,9 @@ func (w *worker) join(r *room, c command) {
 			w.cancelTownNavigation(r)
 			r.Role = role
 			r.Auth = auth
+			if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
+				w.refreshPlayerStats(r)
+			}
 			transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
 			r.InputSequence = 0
 			r.Manual = false
@@ -775,7 +778,12 @@ func (w *worker) assets(r *room) {
 	if r.Conn == nil || !r.Ready {
 		return
 	}
-	w.send(r, p.MsgS2CInventory, 0, r.Role.Inventory())
+	state, err := persistence.ProgressionState(r.Role, w.e.Store.Cfg.Fixture)
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	w.send(r, p.MsgS2CInventory, 0, r.Role.Inventory(state))
 	w.send(r, p.MsgS2CWallet, 0, r.Role.Wallet.Proto(r.Role.Revision))
 	w.hosting(r, 0)
 }

@@ -1,0 +1,9 @@
+{
+  "scope": "额外只读QA触点几何来源，不合入client九份引擎输入统计",
+  "creator": "3.8.8",
+  "source": "D:\\Program Files\\CocosCreator\\3.8.8\\resources\\resources\\3d\\engine\\cocos\\2d\\framework\\ui-transform.ts",
+  "sha256": "7f90de30dd39bae478c505c5588f413b4f9be3da9f9bb7b59ee3ee73a02d985b",
+  "lines": "615-618",
+  "finding": "getBoundingBoxToWorld包含自身与激活子节点；虚拟列表Mask必须按viewport自身UITransform的AR坐标、尺寸和anchor检查，避免overscan扩大可点范围",
+  "production_changed": false
+}

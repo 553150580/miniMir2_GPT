@@ -36,6 +36,40 @@ message InventoryResult {
   int64 experience = 6;
   repeated LearnedSkill learned_skills = 7;
   AutoRecyclePolicy auto_recycle = 8;
+  ProgressionState progression = 9;
+}
+// 只读永久成长观察；缺少目录或遗留超范围角色不凭数组长度猜上限。
+message ProgressionState {
+  uint32 format_version = 1;
+  string curve_version = 2;
+  uint32 level_cap = 3;
+  uint32 rebirth_count = 4;
+  int64 next_level_experience = 5;
+  int64 pending_experience = 6;
+  int64 pending_experience_limit = 7;
+  int64 legacy_experience_overflow = 8;
+  bool at_cap = 9;
+  bool migration_required = 10;
+  bool rebirth_enabled = 11;
+  uint32 catalog_max_level = 12;
+}
+// 原SourceSeq确认后的经验分账；level_before/after只计本次新奖励引起的升级。
+message ExperienceGrantResult {
+  RoleKey role = 1;
+  uint64 role_revision = 2;
+  uint64 source_seq = 3;
+  string curve_version = 4;
+  int64 raw_experience = 5;
+  int64 accepted_experience = 6;
+  int64 pooled_experience = 7;
+  int64 rejected_experience = 8;
+  uint32 level_before = 9;
+  uint32 level_after = 10;
+  ProgressionState state = 11;
+  bool migrated = 12;
+  uint32 legacy_level_before = 13;
+  uint32 legacy_level_after = 14;
+  uint64 rule_version = 15;
 }
 // 永久角色设置，默认关闭。请求revision为期望旧值，成功后由owner递增。
 // protected_item_ids是物品配置ID，按类型保护；max_required_level=0表示不限。
@@ -109,8 +143,9 @@ message CastWithMaterialRequest {
   uint64 caster_life = 9;
   OperationContext operation = 10;
 }
-// kind：1购书/书页，2技能升级，3技能书分解。预览不冻结资产。
 message ItemConsumption { bytes instance_id = 1; uint64 version = 2; int64 quantity = 3; }
+// kind：1购书/书页，2技能升级，3技能书分解，4同源书页合并。预览不冻结资产。
+// 合并保留原来源、绑定与品质；提交仍沿原报价及永久操作身份。
 message SkillAssetPreviewRequest {
   uint32 kind = 1;
   uint32 offer_id = 2;
@@ -164,5 +199,8 @@ message HostingReport {
   string last_discard_reason = 13;
   // 本次托管原掉物总数；drops最多100条只是入包样本，不能作为总数。
   uint64 total_drop_count = 14;
+  int64 raw_experience = 15;
+  int64 rejected_experience = 16;
+  int64 pooled_experience = 17;
 }
 

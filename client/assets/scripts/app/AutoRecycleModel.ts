@@ -121,7 +121,9 @@ export function recycleDiscardText(reason: string): string { return reason === '
 export function autoRecycleReportLines(report: any): string[] {
     if (!report) return ['暂无已提交托管战报'];
     const value = (key: string): bigint => report[key] === undefined ? 0n : integer(report[key], '战报' + key);
+    const splitKnown = report.rawExperience !== undefined && value('rawExperience') === value('experience') + value('rejectedExperience') && value('pooledExperience') <= value('experience');
     return [`托管 ${value('usedSeconds')} 秒，击杀 ${value('kills')}，经验 ${value('experience')}`,
+        ...(splitKnown ? [`原经验 ${value('rawExperience')} · 实际接收 ${value('experience')}`, `计入待用池 ${value('pooledExperience')} · 未接收 ${value('rejectedExperience')}`] : report.rawExperience !== undefined ? ['旧战报未提供完整经验分账，不据此推算'] : []),
         `金币 ${report.earned?.gold?.toString() ?? '0'}，绑定金币 ${report.earned?.boundGold?.toString() ?? '0'}`,
         `自动回收 ${value('recycleCount')} 件 · 金币 ${value('recycleGold')}，绑定金币 ${value('recycleBoundGold')}`,
         `总掉落 ${value('totalDropCount')} 件 · 放弃 ${value('discardCount')} 件${report.lastDiscardReason ? '，原因：' + recycleDiscardText(report.lastDiscardReason) : ''}`,

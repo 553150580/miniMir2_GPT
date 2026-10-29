@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T16:18:46.322859+00:00",
+  "status": "implementation_frozen_real_mongo_not_yet_run",
+  "scope": "SkillAssetPreview.Kind4同源完整书页堆叠合并，复用原预览/提交协议和owner事务",
+  "owned_source_sha256": {
+    "server/internal/persistence/skill_assets.go": "3e6a1617e5964a7b00bd1f80c909ac6c84acf9156cbe0b945cbbdbe755b1ec55",
+    "server/internal/persistence/assets.go": "c16f7932876aaa4eaee84ceca4eb4690d44bf417c0be5a371580fd82202ccc31",
+    "server/internal/persistence/store.go": "56770a86d4b58fa15475dc49d3ed7135a6ea80bcd1da18118378c849da7ac1dd",
+    "server/internal/persistence/skill_page_merge_test.go": "2a0c07cde8ba394cefc814db9869355521d08ec1e1b90986f7365c206c36d8f4",
+    "server/internal/integration/skill_page_merge_test.go": "998c45c6944ae6d5755715ef3f2ed631f1674a9c4da98f29115162ef6e7880d1"
+  },
+  "changes": [
+    "仅>=2个完整原stack，已知IsSkillPage+Stackable+MaxStack>1；版本/数量/所有权/锁/占用/穿戴强保护",
+    "三种登记SourceKind：skill_recycle、npc_shop、monster_drop；非空SourceID；复制Item仅清ID/Quantity/Version后完整DeepEqual",
+    "checked int64求和、按MaxStack输出且严格减少格数；未知/跨源/跨绑定/跨品质/部分stack拒绝",
+    "Kind4保原SourceKind/SourceID/Bound/Quality，新ID/Version1；Kind3仍逐本独立输出",
+    "新成功Operation.Skill保存复制的实际typed materials/outputs；audit保同计划；失败nil、旧历史receipt不补造；原op优先重查不依赖quote存活"
+  ],
+  "checks": {
+    "pure_report": "pure-final/report.json",
+    "pure_report_sha256": "0c984ed628c239a4c152807b10e36df1be05b2c0757db6b59baea34f395f3527",
+    "passed_methods": 12,
+    "passed_nodes": 43,
+    "failed_nodes": 0,
+    "skipped_nodes": 0,
+    "jobs": [
+      {
+        "command": [
+          "powershell",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+          "go",
+          "test",
+          "-json",
+          "./internal/persistence",
+          "-run",
+          "^TestSkill(PageMerge|Upgrade|Shop|Book|Preview|Power)",
+          "-count=1"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 8.343387499917299
+      },
+      {
+        "command": [
+          "powershell",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+          "go",
+          "test",
+          "-json",
+          "./internal/integration",
+          "-run",
+          "^$"
+        ],
+        "exit_code": 0,
+        "elapsed_seconds": 9.977207500021905
+      }
+    ],
+    "source_count": 172,
+    "source_stable": true,
+    "first_and_intermediate_evidence": [
+      "pure-first",
+      "pure-and-compile"
+    ],
+    "real_mongo_executed": false,
+    "real_mongo_test": "TestSkillPageMergeFullBagSourceReceiptsMongoWS",
+    "real_mongo_command": "显式MINIMIR_MONGO_E2E=1，经tools/dev go test -race ./internal/integration -run ^TestSkillPageMergeFullBagSourceReceiptsMongoWS$ -count=1；须Root协调DB窗口及端点所有权核验后执行"
+  },
+  "mongo_test_scope": {
+    "qualification": "仅随机新库正常注册创角后、Enter前准备四本合法品质/来源原书及满包资格；不预置书页/quote/receipt/合并结果，不修改主profile或主DB",
+    "business": "正常WS两批Kind3拆书，各产2个同源原stack；跨SourceID/部分stack拒绝；正常装备锁40017推进RoleRevision使旧页quote失效；解锁后满包Kind4合并释放1格/PickupStopped解除；typedreceipt/audit；删除quote、健康新票后旧op重查零重复消费/改preview冲突",
+    "scope_correction": "书页不支持40017锁；Locked/Pending/Reservation页保护由纯测证明，不伪造正常锁页。健康Enter合法Revision+1单列，原op重放以新Enter后的Role基线比较。",
+    "non_claims": [
+      "尚未真实执行该Mongo/WS用例",
+      "未证明自然掉书获取或自然1到22完整GUI",
+      "未注入真正unknown commit故障；仅设计删除quote后原receipt重放",
+      "未改Excel/devconfig/proto/client或主22技能/17关闭门禁"
+    ]
+  },
+  "peer_review": {
+    "agent": "town_assets_audit",
+    "path": ".work/level-growth-20261029/same-source-page-merge-review.json",
+    "executed_tests": false,
+    "conclusion": "只读关键生产/typed receipt未见当前可达阻断；两处WS前态错误已在DB前修正"
+  }
+}

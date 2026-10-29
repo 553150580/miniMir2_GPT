@@ -1,0 +1,8 @@
+page.evaluate: TypeError: Cannot read properties of null (reading 'anchorPoint')
+    at eval (eval at evaluate (:370:30), <anonymous>:2:175)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at selectVisibleBook (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:88:34)
+    at clearBagNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:140:71)
+    at async grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:175:59)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:209:57)

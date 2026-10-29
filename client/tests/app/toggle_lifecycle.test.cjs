@@ -31,7 +31,7 @@ const {Toggle}=load(toggleFile,id=>id==='cc.decorator'?decorators:id==='internal
 const trace=[];
 const session={lastError:''};
 const {AppRoot}=load(path.resolve(__dirname,'../../assets/scripts/app/AppRoot.ts'),id=>id==='cc'
-    ?{_decorator:decorators,Button,Toggle,EditBox:{EventType:{TEXT_CHANGED:'text-changed'}},Component:class{},isValid:()=>true,game:{off(){}},Game:{EVENT_HIDE:'hide'}}
+    ?{_decorator:decorators,Button,Toggle,Node:{EventType:{TOUCH_END:'touch-end'}},EditBox:{EventType:{TEXT_CHANGED:'text-changed'}},Component:class{},isValid:()=>true,game:{off(){}},Game:{EVENT_HIDE:'hide'}}
     :id.endsWith('/NavigationIntent')?{NavigationIntent:class{}}
     :id==='./GameSession'?{session}
     :id==='./InputTrace'?{traceInput:record=>trace.push(record)}:{});

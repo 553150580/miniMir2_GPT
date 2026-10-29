@@ -1,0 +1,2693 @@
+{
+  "passed": false,
+  "startedAt": "2026-10-29T15:48:01.619Z",
+  "scope": "主rule20正常注册新道士，自然打怪到7级学原初始书并跨21到22；保存成长详情/Long分账/健康重入。满包由本脚本普通触屏用药和白名单拆重复掉落书处理，并非产品新增自动整理。50级池及历史迁移由独立服务端边界夹具验证，本工具不证明自然1至50周期或真机/容量",
+  "checks": [
+    "正常注册新道士为1级0经验，格式1/50级目录，不预置转生或余额",
+    "1级正常角色按保存背包按钮合法穿戴原需求1级木剑和布衣；不足等级拒绝由独立服务端边界验证",
+    "正常8怪自动战斗逐次真实40019奖励升到7级，非旧余额迁移",
+    "自然7级后保存学习入口消费原初始治愈术书，权威已学列表确认",
+    "正常触屏打开已有成长详情，拖动确实推进内置ScrollView，明确上限/待用池/封存/转生关闭"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "error",
+      "text": "getComponent: Type must be non-nil"
+    }
+  ],
+  "receipts": [
+    {
+      "time": 1793288893342,
+      "binding": "1",
+      "revision": "6",
+      "source": "1",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 1,
+      "after": 2,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288894442,
+      "binding": "1",
+      "revision": "7",
+      "source": "2",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 2,
+      "after": 3,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288895433,
+      "binding": "1",
+      "revision": "8",
+      "source": "3",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 3,
+      "after": 3,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288900532,
+      "binding": "1",
+      "revision": "9",
+      "source": "4",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 3,
+      "after": 4,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288901526,
+      "binding": "1",
+      "revision": "10",
+      "source": "5",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 4,
+      "after": 4,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288902629,
+      "binding": "1",
+      "revision": "11",
+      "source": "6",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 4,
+      "after": 4,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288903736,
+      "binding": "1",
+      "revision": "12",
+      "source": "7",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 4,
+      "after": 5,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288905826,
+      "binding": "1",
+      "revision": "13",
+      "source": "8",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 5,
+      "after": 5,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288906933,
+      "binding": "1",
+      "revision": "14",
+      "source": "9",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 5,
+      "after": 5,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288908027,
+      "binding": "1",
+      "revision": "15",
+      "source": "10",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 5,
+      "after": 6,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288909030,
+      "binding": "1",
+      "revision": "16",
+      "source": "11",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 6,
+      "after": 6,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288915525,
+      "binding": "1",
+      "revision": "17",
+      "source": "12",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 6,
+      "after": 6,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288917625,
+      "binding": "1",
+      "revision": "18",
+      "source": "13",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 6,
+      "after": 6,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288919733,
+      "binding": "1",
+      "revision": "19",
+      "source": "14",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 6,
+      "after": 7,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288925933,
+      "binding": "1",
+      "revision": "21",
+      "source": "15",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 7,
+      "after": 7,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288927025,
+      "binding": "1",
+      "revision": "22",
+      "source": "16",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 7,
+      "after": 7,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288929034,
+      "binding": "1",
+      "revision": "23",
+      "source": "17",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 7,
+      "after": 7,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288930033,
+      "binding": "1",
+      "revision": "24",
+      "source": "18",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 7,
+      "after": 7,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288931125,
+      "binding": "1",
+      "revision": "25",
+      "source": "19",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 7,
+      "after": 8,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288932228,
+      "binding": "1",
+      "revision": "26",
+      "source": "20",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 8,
+      "after": 8,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288935329,
+      "binding": "1",
+      "revision": "27",
+      "source": "21",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 8,
+      "after": 8,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288936327,
+      "binding": "1",
+      "revision": "28",
+      "source": "22",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 8,
+      "after": 8,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288942432,
+      "binding": "1",
+      "revision": "29",
+      "source": "23",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 8,
+      "after": 8,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288943428,
+      "binding": "1",
+      "revision": "30",
+      "source": "24",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 8,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288944532,
+      "binding": "1",
+      "revision": "31",
+      "source": "25",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288948633,
+      "binding": "1",
+      "revision": "32",
+      "source": "26",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288951734,
+      "binding": "1",
+      "revision": "33",
+      "source": "27",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288953832,
+      "binding": "1",
+      "revision": "34",
+      "source": "28",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288954926,
+      "binding": "1",
+      "revision": "35",
+      "source": "29",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 9,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    },
+    {
+      "time": 1793288956032,
+      "binding": "1",
+      "revision": "36",
+      "source": "30",
+      "raw": "15",
+      "accepted": "15",
+      "pooled": "0",
+      "rejected": "0",
+      "before": 9,
+      "after": 10,
+      "migrated": false,
+      "cap": 50,
+      "curve": "myf_exp_candidate_1_50_v1"
+    }
+  ],
+  "observations": {
+    "initial": {
+      "time": 1793288890279,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "2",
+      "level": 1,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "10",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "ab581787bb2808d2ad16cb480edec6c5",
+          "item": 218,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "8d2a09f2760b6a12ea5b27d5d564a43f",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "initial_grant",
+          "sourceId": "a21cc323ebbca29bc4e63492b80625f4",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [],
+      "skills": [],
+      "hp": "16",
+      "maxHp": "16",
+      "mp": "13",
+      "maxMp": "13",
+      "life": "0",
+      "auto": false,
+      "count": 1,
+      "ui": "",
+      "popup": "",
+      "hud": "0 / 10",
+      "notice": null,
+      "detail": [],
+      "error": "",
+      "messages": []
+    },
+    "equipped": {
+      "time": 1793288890778,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "4",
+      "level": 1,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "10",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "ab581787bb2808d2ad16cb480edec6c5",
+          "item": 218,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "8d2a09f2760b6a12ea5b27d5d564a43f",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "initial_grant",
+          "sourceId": "a21cc323ebbca29bc4e63492b80625f4",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [],
+      "hp": "16",
+      "maxHp": "16",
+      "mp": "13",
+      "maxMp": "13",
+      "life": "0",
+      "auto": false,
+      "count": 1,
+      "ui": "",
+      "popup": "",
+      "hud": "0 / 10",
+      "notice": null,
+      "detail": [],
+      "error": "",
+      "messages": []
+    },
+    "level7": {
+      "time": 1793288920449,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "19",
+      "level": 7,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "70",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "8d2a09f2760b6a12ea5b27d5d564a43f",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "initial_grant",
+          "sourceId": "a21cc323ebbca29bc4e63492b80625f4",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [],
+      "hp": "39",
+      "maxHp": "39",
+      "mp": "26",
+      "maxMp": "26",
+      "life": "0",
+      "auto": true,
+      "count": 8,
+      "ui": "",
+      "popup": "",
+      "hud": "0 / 70",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "19",
+        "source": "14",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 6,
+        "after": 7,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "6 级 → 7 级"
+        }
+      ]
+    },
+    "learned": {
+      "time": 1793288921008,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "20",
+      "level": 7,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "70",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [
+        {
+          "id": 2,
+          "level": 0
+        }
+      ],
+      "hp": "39",
+      "maxHp": "39",
+      "mp": "26",
+      "maxMp": "26",
+      "life": "0",
+      "auto": false,
+      "count": 8,
+      "ui": "Skills",
+      "popup": "",
+      "hud": "0 / 70",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "19",
+        "source": "14",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 6,
+        "after": 7,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "6 级 → 7 级"
+        }
+      ]
+    },
+    "detail": {
+      "time": 1793288921877,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "20",
+      "level": 7,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "70",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [
+        {
+          "id": 2,
+          "level": 0
+        }
+      ],
+      "hp": "39",
+      "maxHp": "39",
+      "mp": "26",
+      "maxMp": "26",
+      "life": "0",
+      "auto": false,
+      "count": 8,
+      "ui": "Role",
+      "popup": "StatusDetails",
+      "hud": "0 / 70",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "19",
+        "source": "14",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 6,
+        "after": 7,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [
+        "当前等级 7 · 当前上限 50",
+        "已完成转生 0 次",
+        "当前等级经验 0",
+        "下一级经验 70",
+        "待用经验 0 / 75000000",
+        "历史经验封存 0",
+        "经验按权威目录逐级消费",
+        "超出经验池上限的部分不累计",
+        "转生尚未开放；不提供假费用或入口",
+        "成长曲线 myf_exp_candida",
+        "te_1_50_v1",
+        "当前数值为开发候选，不代表自然1至50周",
+        "期或平衡通过"
+      ],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "6 级 → 7 级"
+        }
+      ]
+    },
+    "detailScroll": {
+      "before": 0,
+      "after": 276.0001
+    }
+  },
+  "samples": [
+    {
+      "time": 1793288891309,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "5",
+      "level": 1,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "10",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "ab581787bb2808d2ad16cb480edec6c5",
+          "item": 218,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "8d2a09f2760b6a12ea5b27d5d564a43f",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "initial_grant",
+          "sourceId": "a21cc323ebbca29bc4e63492b80625f4",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [],
+      "hp": "16",
+      "maxHp": "16",
+      "mp": "13",
+      "maxMp": "13",
+      "life": "0",
+      "auto": true,
+      "count": 8,
+      "ui": "",
+      "popup": "",
+      "hud": "0 / 10",
+      "notice": null,
+      "detail": [],
+      "error": "",
+      "messages": []
+    },
+    {
+      "time": 1793288911408,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "16",
+      "level": 6,
+      "experience": "15",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "60",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "8d2a09f2760b6a12ea5b27d5d564a43f",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "initial_grant",
+          "sourceId": "a21cc323ebbca29bc4e63492b80625f4",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [],
+      "hp": "35",
+      "maxHp": "35",
+      "mp": "22",
+      "maxMp": "22",
+      "life": "0",
+      "auto": true,
+      "count": 8,
+      "ui": "",
+      "popup": "",
+      "hud": "15 / 60",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "16",
+        "source": "11",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 6,
+        "after": 6,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        }
+      ]
+    },
+    {
+      "time": 1793288924934,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "20",
+      "level": 7,
+      "experience": "0",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "70",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [
+        {
+          "id": 2,
+          "level": 0
+        }
+      ],
+      "hp": "39",
+      "maxHp": "39",
+      "mp": "26",
+      "maxMp": "26",
+      "life": "0",
+      "auto": true,
+      "count": 8,
+      "ui": "",
+      "popup": "",
+      "hud": "0 / 70",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "19",
+        "source": "14",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 6,
+        "after": 7,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "6 级 → 7 级"
+        }
+      ]
+    },
+    {
+      "time": 1793288945038,
+      "binding": "1",
+      "role": "成长6be539",
+      "rule": "20",
+      "revision": "31",
+      "level": 9,
+      "experience": "15",
+      "growth": {
+        "format": 1,
+        "catalog": 50,
+        "curve": "myf_exp_candidate_1_50_v1",
+        "cap": 50,
+        "next": "90",
+        "pool": "0",
+        "poolCap": "75000000",
+        "legacy": "0",
+        "migration": false,
+        "rebirth": 0
+      },
+      "items": [
+        {
+          "id": "2e520019704da1b647555386b332997c",
+          "item": 35,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "def6aa2694576391295a706630e49e7b",
+          "item": 36,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d898f1250f046cac7c9fbb91d814e5e",
+          "item": 11,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "2",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5d1390c5d24b20d34034d9174f810d81",
+          "item": 32,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "6",
+          "locked": false,
+          "flags": 0
+        },
+        {
+          "id": "5bb5b895d07fbcd0e49b0679bd7b1df3",
+          "item": 21,
+          "quantity": "1",
+          "version": "1",
+          "bound": true,
+          "quality": 1,
+          "sourceKind": "monster_drop",
+          "sourceId": "24",
+          "locked": false,
+          "flags": 0
+        }
+      ],
+      "equipped": [
+        {
+          "slot": 0,
+          "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+          "item": 218,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        },
+        {
+          "slot": 1,
+          "id": "938642b0b13a334d576d6150a1b0b9f5",
+          "item": 193,
+          "quantity": "1",
+          "version": "2",
+          "bound": true,
+          "quality": 0,
+          "sourceKind": "",
+          "sourceId": "",
+          "locked": false,
+          "flags": 8
+        }
+      ],
+      "skills": [
+        {
+          "id": 2,
+          "level": 0
+        }
+      ],
+      "hp": "50",
+      "maxHp": "50",
+      "mp": "35",
+      "maxMp": "35",
+      "life": "0",
+      "auto": true,
+      "count": 8,
+      "ui": "",
+      "popup": "",
+      "hud": "15 / 90",
+      "notice": {
+        "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+        "revision": "31",
+        "source": "25",
+        "raw": "15",
+        "accepted": "15",
+        "pooled": "0",
+        "rejected": "0",
+        "before": 9,
+        "after": 9,
+        "migrated": false,
+        "legacyBefore": 0,
+        "legacyAfter": 0,
+        "poolFull": false
+      },
+      "detail": [],
+      "error": "",
+      "messages": [
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "1 级 → 2 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "2 级 → 3 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "3 级 → 4 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "4 级 → 5 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "5 级 → 6 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "6 级 → 7 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "7 级 → 8 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        },
+        {
+          "title": "角色升级",
+          "message": "8 级 → 9 级"
+        },
+        {
+          "title": "经验结算",
+          "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "time": 1793288890261,
+      "id": 30004,
+      "binding": "1",
+      "request": "8"
+    },
+    {
+      "time": 1793288890470,
+      "id": 40001,
+      "binding": "1",
+      "request": "9"
+    },
+    {
+      "time": 1793288890645,
+      "id": 40001,
+      "binding": "1",
+      "request": "10"
+    },
+    {
+      "time": 1793288891038,
+      "id": 40016,
+      "binding": "1",
+      "request": "11"
+    },
+    {
+      "time": 1793288891174,
+      "id": 30004,
+      "binding": "1",
+      "request": "12"
+    },
+    {
+      "time": 1793288891227,
+      "id": 30004,
+      "binding": "1",
+      "request": "13"
+    },
+    {
+      "time": 1793288891277,
+      "id": 30004,
+      "binding": "1",
+      "request": "14"
+    },
+    {
+      "time": 1793288920470,
+      "id": 30004,
+      "binding": "1",
+      "request": "15"
+    },
+    {
+      "time": 1793288920937,
+      "id": 40010,
+      "binding": "1",
+      "request": "16"
+    },
+    {
+      "time": 1793288924902,
+      "id": 30004,
+      "binding": "1",
+      "request": "17"
+    },
+    {
+      "time": 1793288956137,
+      "id": 30004,
+      "binding": "1",
+      "request": "18"
+    }
+  ],
+  "cleanups": [
+    {
+      "time": 1793288957181,
+      "earlyBookProbe": true,
+      "before": {
+        "time": 1793288957178,
+        "binding": "1",
+        "role": "成长6be539",
+        "rule": "20",
+        "revision": "36",
+        "level": 10,
+        "experience": "0",
+        "growth": {
+          "format": 1,
+          "catalog": 50,
+          "curve": "myf_exp_candidate_1_50_v1",
+          "cap": 50,
+          "next": "100",
+          "pool": "0",
+          "poolCap": "75000000",
+          "legacy": "0",
+          "migration": false,
+          "rebirth": 0
+        },
+        "items": [
+          {
+            "id": "2e520019704da1b647555386b332997c",
+            "item": 35,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 0,
+            "sourceKind": "",
+            "sourceId": "",
+            "locked": false,
+            "flags": 0
+          },
+          {
+            "id": "def6aa2694576391295a706630e49e7b",
+            "item": 36,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 0,
+            "sourceKind": "",
+            "sourceId": "",
+            "locked": false,
+            "flags": 0
+          },
+          {
+            "id": "5d898f1250f046cac7c9fbb91d814e5e",
+            "item": 11,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 1,
+            "sourceKind": "monster_drop",
+            "sourceId": "2",
+            "locked": false,
+            "flags": 0
+          },
+          {
+            "id": "5d1390c5d24b20d34034d9174f810d81",
+            "item": 32,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 1,
+            "sourceKind": "monster_drop",
+            "sourceId": "6",
+            "locked": false,
+            "flags": 0
+          },
+          {
+            "id": "5bb5b895d07fbcd0e49b0679bd7b1df3",
+            "item": 21,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 1,
+            "sourceKind": "monster_drop",
+            "sourceId": "24",
+            "locked": false,
+            "flags": 0
+          },
+          {
+            "id": "7fa910b78f36741226f38b7461ba572d",
+            "item": 14,
+            "quantity": "1",
+            "version": "1",
+            "bound": true,
+            "quality": 1,
+            "sourceKind": "monster_drop",
+            "sourceId": "30",
+            "locked": false,
+            "flags": 0
+          }
+        ],
+        "equipped": [
+          {
+            "slot": 0,
+            "id": "95a249f5f5cb2cb04cbc9af15e097a62",
+            "item": 218,
+            "quantity": "1",
+            "version": "2",
+            "bound": true,
+            "quality": 0,
+            "sourceKind": "",
+            "sourceId": "",
+            "locked": false,
+            "flags": 8
+          },
+          {
+            "slot": 1,
+            "id": "938642b0b13a334d576d6150a1b0b9f5",
+            "item": 193,
+            "quantity": "1",
+            "version": "2",
+            "bound": true,
+            "quality": 0,
+            "sourceKind": "",
+            "sourceId": "",
+            "locked": false,
+            "flags": 8
+          }
+        ],
+        "skills": [
+          {
+            "id": 2,
+            "level": 0
+          }
+        ],
+        "hp": "55",
+        "maxHp": "55",
+        "mp": "40",
+        "maxMp": "40",
+        "life": "0",
+        "auto": false,
+        "count": 8,
+        "ui": "",
+        "popup": "",
+        "hud": "0 / 100",
+        "notice": {
+          "role": "1:772a20baa4d9a8f5ecc92a0c6c4faf0f",
+          "revision": "36",
+          "source": "30",
+          "raw": "15",
+          "accepted": "15",
+          "pooled": "0",
+          "rejected": "0",
+          "before": 9,
+          "after": 10,
+          "migrated": false,
+          "legacyBefore": 0,
+          "legacyAfter": 0,
+          "poolFull": false
+        },
+        "detail": [],
+        "error": "",
+        "messages": [
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "1 级 → 2 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "2 级 → 3 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "3 级 → 4 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "4 级 → 5 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "5 级 → 6 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "6 级 → 7 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "7 级 → 8 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "8 级 → 9 级"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "经验结算",
+            "message": "原经验 15\n实际接收 15\n计入待用池 0\n未接收 0"
+          },
+          {
+            "title": "角色升级",
+            "message": "9 级 → 10 级"
+          }
+        ]
+      },
+      "potions": [],
+      "books": [],
+      "quote": null,
+      "after": null,
+      "selectionTouches": []
+    }
+  ],
+  "skillQuotes": [],
+  "sourceBefore": {
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Game.scene": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+    "client/assets/scripts/app/AppRoot.ts": "2c5841b90dc43ca8cf73bb76c3b9fffc156e4698afcaa82fadb94c8dc74fe8e3",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "1010742ad50ebeeeee16850e431eef974afdaaf8f736f3c25e66f1cded1fe377",
+    "client/assets/scripts/app/BaselineAssembler.ts": "6ffa576043f7e6187a24e07e9f1913f220189e666f00e4dc703d46c26a00e63b",
+    "client/assets/scripts/app/BeamGeometry.ts": "94105e4ee4c89b0dbf53e43d75790a77e375be30a73af4670105db79ec16bc34",
+    "client/assets/scripts/app/CastingSupplyModel.ts": "4519739a00a4e128a1b9602810f07d0e1fe9b05dcf4636f60357bf07210456e2",
+    "client/assets/scripts/app/CastPlayback.ts": "f1594ee8e28fe0a880db5e63cee1c0a63b72e70cab6f3a569356bace529a3d4d",
+    "client/assets/scripts/app/CombatEffects.ts": "33a649fd95d0eaeaeff17f1154d6da8c62730e5f3740a56ed5ef1a40e5c5e65e",
+    "client/assets/scripts/app/CombatStatusModel.ts": "19b0f0d98124c0573bfd1aa1fef4446f0df7c6c46e8b654bfdc9ec20f4332529",
+    "client/assets/scripts/app/EntityAnimation.ts": "092754db23b30a3fad54f763c0d6b717d92909ff2b5dd8044a81a20c114dfa44",
+    "client/assets/scripts/app/EntityDisplacement.ts": "982d3029d92ac0979c63a47225b9abd654dc1dfe2eeb80a69306803a084fd951",
+    "client/assets/scripts/app/EntityHeadAnchor.ts": "6f812e75693ccf200a39b66271c7e51d9ac4df6bb54de6847f72b94be869bfed",
+    "client/assets/scripts/app/EntityMotion.ts": "0d16a8747bcbae49143a8dff8684a0bced983d97f7b1d1a03720017bd4f2db59",
+    "client/assets/scripts/app/GameAutoRecycle.ts": "c501cb85a708c2ddc66f2122279a980dbf18b94cb5dac16c156f224e35bccbd1",
+    "client/assets/scripts/app/GameCombatStatus.ts": "bade6aaf462da44435e9a9d28a1f83e8b0ed70d218fa54d1d503750a7fe339e4",
+    "client/assets/scripts/app/GameConnection.ts": "d284bb6daf77614c722719ab070393064b2bcc6249996dd04c83996fd80c6336",
+    "client/assets/scripts/app/GameErrors.ts": "0ef04069b2337812e81f28e6258af4e12c8e7423da4b3cb7450ca27433890db5",
+    "client/assets/scripts/app/GameHUD.ts": "0710967fe87fc6e0787f5b0965daa5581cbd9d94a241298d58db2d7cd0627de7",
+    "client/assets/scripts/app/GameMessages.ts": "7514845cb11caa209db30fd317bf29d4ef95d1087b4713d53a63eb651dea066b",
+    "client/assets/scripts/app/GameSession.ts": "1fcf9d9749ede03e0302f7883dedf7b8a92d2e34e42052ca8447afc61adc6ed1",
+    "client/assets/scripts/app/GameSkillAssets.ts": "232292e052fae3c28842224f1dfeab4cea51b846d8fe1218748ba3632eaa0b33",
+    "client/assets/scripts/app/GameSkills.ts": "d1bda573179ee16d9109d6c4e666ce1c5fa8fca42f2a98f4ffba7971fb9018e3",
+    "client/assets/scripts/app/GameWorldView.ts": "38f5cb820147bfd20cadca7b303a37b19a233b5ff098f737115fae86cc24a264",
+    "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
+    "client/assets/scripts/app/HudModel.ts": "1331045d75b6b48608e87ff46e6b5bcaca2cb700723dbe95f83972b16fbc972a",
+    "client/assets/scripts/app/InputTrace.ts": "55da40adb82cf3628f32eb3be2e7531d58927b1f4b2b5da547d587ab5a7758f3",
+    "client/assets/scripts/app/LevelGrowthModel.ts": "1e119db25bc520682b76369a48f1ec7ae04f6ae6a57376e317e8a60ef3779137",
+    "client/assets/scripts/app/MapAttachmentCoordinator.ts": "f230ba5c57c543090bd3053615017a63b852b9a74df3905b66541f372f261514",
+    "client/assets/scripts/app/MapSurface.ts": "33474beb2021090df2d41e2f80190f30ec62edfb0b248e1aff6766719bc0270c",
+    "client/assets/scripts/app/MapTravelModel.ts": "df81cbaa9c04a76f87ac77082c138ee0c37216a008ab699c932eec791bb7115e",
+    "client/assets/scripts/app/MapViewportPreparation.ts": "f73deca654f7e1e8d60e30b61442ca152e92f7a5fa47965cb97d1688a3d54d23",
+    "client/assets/scripts/app/NavigationCancelAssembler.ts": "ab5230b940d42b41e2b39637714676b1cc1d3be9c1585ca9d07a30df08fc6e02",
+    "client/assets/scripts/app/OwnedPetModel.ts": "be5817c3059af591d06d1cd83b106d19316ace056aefc51d53a94d9d3f2c2cc3",
+    "client/assets/scripts/app/PendingOperations.ts": "6baf3e5b722e4377cc0bbc30c14bb339bf0027ca564590b2f82133f90516f0e1",
+    "client/assets/scripts/app/PetBornModel.ts": "f74d8ffd7a60fcc696e7890f3254fc5e0f216fd0276345a9b84474ca9dae9dab",
+    "client/assets/scripts/app/PetTrainingModel.ts": "ca765dae58ca3107f73931abbfd450835fc87f730428781b3f1b0cb9ca990ffd",
+    "client/assets/scripts/app/PotionModel.ts": "e5653b4d17a9698bef14449e81f2e8de8cb8e1fdc7ef72c12c6cc80643241670",
+    "client/assets/scripts/app/RoleBindingModel.ts": "379f37c59b9984d93808607be956316116a936e6909d33f0d61e308c62443b2f",
+    "client/assets/scripts/app/SkillAssetsModel.ts": "837b6a130c31ca0f77eb834180bf29bf6aac5fb73c406d2e0e2e2910c6deb60e",
+    "client/assets/scripts/app/SkillModel.ts": "4113096987c10d30ec2c4c1112b66553453e25deab84a0c726d466308d751ba5",
+    "client/assets/scripts/app/SourceChunkCache.ts": "3f789f64957b46b2b40e486d84174c58a07d0324125412a70334c5fcfe3e07c3",
+    "client/assets/scripts/app/SourceMapAssets.ts": "09508893faf6627712aa4b5c70d9506ccb55b62c99f9583cb103af9f95cb2b87",
+    "client/assets/scripts/app/SourceMapModel.ts": "9b3a7b1833ecb5133437b328086a25cc82cc13e2cbaac4ea24e04269dcf75133",
+    "client/assets/scripts/app/SourceMapView.ts": "3b946c540d29bd6a962ba044cf350153e0fdf8f17e01fe0019d2c1574857503d",
+    "client/assets/scripts/app/SourceProjection.ts": "d4a79f81caa3e841c08a145f6271a7ed408638f938c1c9b6963818b0c4d69808",
+    "client/assets/scripts/app/StatusEffects.ts": "cb04912531b341362a71a05e213612516e626ea39b71df889258da2c8653293b",
+    "client/assets/scripts/app/StatusPlayback.ts": "28adbbba05f3a5777203b532170c9ea79121b39e48648c1743ce844c0d6ab940",
+    "client/assets/scripts/app/SystemMessageLog.ts": "8886e92f77eab3320bf59653e15982c09fe1bfecfdb995f052ab9a7573607594",
+    "client/assets/scripts/app/TeleportModel.ts": "35ba57833d8af2ea192910941012324f5fb499f2eb778077ed38d6c87c63ac8b",
+    "client/assets/scripts/app/ViewportAdapter.ts": "3daac6afd51dcf24562886a07f399d5d32b9ba0b7333a39572d91168c533befd",
+    "client/assets/scripts/app/ViewportGeometry.ts": "b9ab0a62a6eb3487a0fd6305a8f9c861a1e8e5e14ad8fd30ccd09d9a55103f30",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/assets/scripts/generated/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "client/assets/scripts/generated/protocol_ids.ts": "6d81fdc0973a310f9afd1b8cc6eeb5107cf94496e0ea17030021b6b4d44bc62e",
+    "client/assets/scripts/input/MapTouchNavigator.ts": "0a5811a1b15aa0c5b82b97bcfad8e8b2d9c8b758ba8cf9e1fc16aea27b025942",
+    "client/assets/scripts/input/NavigationIntent.ts": "6611cfb77ed208d34b865337b9bd1bf866458097f8c0a36c384fa1607b7e0446",
+    "client/assets/scripts/input/TouchJoystick.ts": "df1c030a11e9f1843a89dbda60b3ae2d1ce5242e5b07378fc9016d98586d5a19",
+    "client/assets/scripts/ui/List.ts": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c",
+    "client/assets/scripts/ui/PanelStackState.ts": "dc2fb32609b487d8dc6c59e9792d59c919fff8160c900844fada7f8bc64e4410",
+    "client/assets/scripts/ui/PopupView.ts": "bb6067151c5e73838f0662142551eb36edc0c6dd790e0fff7af3de46d0f368c7",
+    "client/assets/scripts/ui/Tab.ts": "6653d9dab5c13f2ee5cb1a010e95bc86a5ba356a894cfaa33e6fad7a824a0a45",
+    "client/assets/scripts/ui/UIMgr.ts": "36b250a5a48c4720319febbf840c29e23f603d697faacac1a17668cecfb327ac",
+    "client/assets/scripts/ui/ViewStack.ts": "30d9073f1d69c7e5100e65a85b5644801fbdf2a87708a00a6f9deee3e15f3d76",
+    "client/assets/scripts/ui/VirtualListWindow.ts": "a4f8e45fe875d0698432175ecaf16b748120527eca5c1bab9a1d30b22a8910c4",
+    "client/assets/scripts/generated/protobuf/client_pb.d.ts": "24abee193233ab468a78a09ecda2c805abe8098e8caeb64714f45ec97dd02928",
+    "client/assets/scripts/core/scene/CreatorSceneBackend.ts": "47822fd5d393dafe8549f1ba30528ef36d6d5a6a9e624ff90c295c8183e1427a",
+    "client/assets/scripts/core/scene/SceneLoader.ts": "32eea780f68feafb29527ad2f327a882353786e3c4f153b20cc1662e6676a047",
+    "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "374e1f56f0f2aade15b21afed401cf6b4db26653cf48f60aac3f4a1dddd8ab99"
+  },
+  "fixtureSha256": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+  "publicSha256": "d6ef7409d8227b2c692d3d18c49da79125b5576fbab55325aba73d9485dae477",
+  "toolSha256": "648cab6736a6e2a6d63b91f93526dbf812c2907c4d1a024036c664a1eb93348b",
+  "seeded": false,
+  "privateBusinessInvoked": false,
+  "physicalMobileVerified": false,
+  "health": [
+    {
+      "port": 18100,
+      "development_only": true,
+      "fixture_hash": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+      "instance": "528421bbb0d2b0d31adede2d01135d9c",
+      "mode": "account",
+      "rule_version": 20,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18101,
+      "development_only": true,
+      "fixture_hash": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+      "instance": "cd43ca6604084e5f0aca9d5848529bf6",
+      "mode": "game",
+      "rule_version": 20,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18102,
+      "development_only": true,
+      "fixture_hash": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+      "instance": "eedefa1ffd405d9371fc7e9c8f42d10c",
+      "mode": "gm",
+      "rule_version": 20,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  ],
+  "error": "page.evaluate: TypeError: Cannot read properties of null (reading 'anchorPoint')\n    at eval (eval at evaluate (:370:30), <anonymous>:2:175)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at selectVisibleBook (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_level_growth_browser.cjs:88:34)\n    at clearBagNormally (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_level_growth_browser.cjs:140:71)\n    at async grow (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_level_growth_browser.cjs:175:59)\n    at async main (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_level_growth_browser.cjs:209:57)",
+  "finishedAt": "2026-10-29T15:49:17.828Z"
+}

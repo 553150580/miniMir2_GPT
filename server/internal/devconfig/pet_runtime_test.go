@@ -170,7 +170,7 @@ func TestPetRuntimeSelectedProfileUsesSameCandidateDefinitionsWithoutSummonActiv
 	if err != nil {
 		t.Fatal(err)
 	}
-	if cfg.Fixture.RuleVersion != 19 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+	if cfg.Fixture.RuleVersion != 20 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
 		t.Fatal("生命周期未选择，或免费bootstrap模式被暗改")
 	}
 	if _, found := cfg.Fixture.Skill(17); found || cfg.Fixture.CastingSupply.Enabled {

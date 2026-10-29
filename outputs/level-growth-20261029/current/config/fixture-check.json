@@ -1,0 +1,15 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/prepare_first_loop.py",
+    "--check"
+  ],
+  "actual_python": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+  "started_at_utc": "2026-10-29T13:45:44.773569+00:00",
+  "finished_at_utc": "2026-10-29T13:45:45.158849+00:00",
+  "seconds": 0.385,
+  "exit_code": 0,
+  "stdout": "fixture-check.stdout.txt",
+  "stderr": "fixture-check.stderr.txt"
+}

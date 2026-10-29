@@ -1,0 +1,21 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_level_growth.py",
+    "-v"
+  ],
+  "actual_python": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+  "started_at_utc": "2026-10-29T13:44:25.370485+00:00",
+  "finished_at_utc": "2026-10-29T13:44:25.897380+00:00",
+  "seconds": 0.527,
+  "exit_code": 0,
+  "stdout": "narrow.stdout.txt",
+  "stderr": "narrow.stderr.txt"
+}

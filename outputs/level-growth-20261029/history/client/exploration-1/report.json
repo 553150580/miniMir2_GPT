@@ -1,0 +1,37 @@
+{
+  "scope": "定稿前客户端兼容探索，不作为最终输入冻结",
+  "commands": [
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--test",
+        "client/tests/ui/*.test.cjs",
+        "client/tests/app/*.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 8.211,
+      "log_sha256": "3102b7644ff6536414c3e8ebacddb093ccb55e580bcaeeae10c79298912c2a4b"
+    },
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "tools/client/typecheck.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 9.321,
+      "log_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+    }
+  ]
+}

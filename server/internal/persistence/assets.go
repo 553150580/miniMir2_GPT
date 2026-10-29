@@ -133,6 +133,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				businessCode = p.CodeInvalidArgument
 				break
 			}
+			if s.Cfg.Fixture.RuleVersion >= 20 && (def.RequiredLevel == nil || *def.RequiredLevel < 1 || r.Level < *def.RequiredLevel) {
+				businessCode = p.CodeInvalidArgument
+				break
+			}
 			r.Items = append(r.Items[:index], r.Items[index+1:]...)
 			replacement := -1
 			for i, eq := range r.Equipped {
@@ -214,6 +218,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if businessCode != 0 {
 			r = out
 			recycling = nil
+			skillDetails = nil
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -228,6 +233,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			return e
 		}
 		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting, Recycling: recycling}
+		op.Skill = cloneSkillPlan(skillDetails)
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}

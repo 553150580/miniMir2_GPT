@@ -1,0 +1,2 @@
+{"task": "protocol-check", "command": ["node", "tools/protocol/verify_client_pb.cjs"], "exit_code": 0, "started_at": "2026-10-29T14:04:43.866046+00:00", "finished_at": "2026-10-29T14:04:44.067623+00:00", "output": ".work/tasks/protocol-check-0.txt", "scope": "仅所列命令，不替代业务、真机或容量验收"}
+{"task": "protocol-check", "command": ["node", "tools/config/verify_bindings.mjs"], "exit_code": 0, "started_at": "2026-10-29T14:04:44.067928+00:00", "finished_at": "2026-10-29T14:04:45.051072+00:00", "output": ".work/tasks/protocol-check-1.txt", "scope": "仅所列命令，不替代业务、真机或容量验收"}

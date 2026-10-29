@@ -24,7 +24,7 @@ MON_DROPS=ROOT.parent/'MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人
 ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
-           'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_drop_pools','game_drop_entries',
+           'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
            'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -663,6 +663,53 @@ def equipment_recycling_rules(profile,items):
     return deepcopy(rules)
 
 
+PROGRESSION_POLICIES={
+    'curve_version':'myf_exp_candidate_1_50_v1','pending_pool_policy':'one_next_level',
+    'new_overflow_policy':'reject_new_with_receipt','legacy_overflow_policy':'preserve_frozen',
+    'level_up_resources':'source_full_if_alive_original_birth'}
+PROGRESSION_FIELDS=set(PROGRESSION_POLICIES)|{'operating_level_cap','catalog_max_level','rebirth_enabled'}
+
+
+def progression_rules(tables,profile):
+    """等级门槛按当前级索引；第50行可供待用池使用，不靠数组长度决定等级上限。"""
+    if profile['rule_version']<20:
+        if 'progression' in profile:
+            raise ValueError('旧版本不能混入rule20等级与待用池合同')
+        return {'exp_per_level':[r['next_level_exp'] for r in sorted(tables['game_exp_levels'],key=lambda r:r['level'])]}
+    selected=profile.get('progression')
+    if not isinstance(selected,dict) or set(selected)!=PROGRESSION_FIELDS:
+        raise ValueError('rule20 progression缺少显式完整字段或含未知字段')
+    if any(type(selected[k]) is not str or selected[k]!=v for k,v in PROGRESSION_POLICIES.items()) or selected['rebirth_enabled'] is not False:
+        raise ValueError('rule20仅支持明确的来源候选、待用池、旧溢出与资源处理策略，转生仍关闭')
+    for key in ['operating_level_cap','catalog_max_level']:
+        if type(selected[key]) is not int or not 1<=selected[key]<=2**32-1:
+            raise ValueError('等级上限/经验目录末级必须显式正uint32')
+    def confirmed(key,kind):
+        rows=[r for r in tables.get('game_progression_rules',[]) if r.get('rule_key')==key]
+        if len(rows)!=1 or rows[0].get('record_status')!='confirmed' or type(rows[0].get('rule_value')) is not kind:
+            raise ValueError('等级规则必须唯一引用已确认同类型行：'+key)
+        return rows[0]['rule_value']
+    initial=confirmed('initial_level_cap',int);increment=confirmed('rebirth_level_cap_increment',int)
+    reset=confirmed('rebirth_reset_progression',bool)
+    if not 1<=initial<=2**32-1 or not 1<=increment<=2**32-1 or reset is not False or selected['operating_level_cap']!=initial or initial>selected['catalog_max_level']:
+        raise ValueError('运行上限须对应唯一初始等级上限，转生增量/不重置规则不可缺省')
+    rows=tables['game_exp_levels'];maximum=selected['catalog_max_level']
+    if len(rows)!=maximum:
+        raise ValueError('经验目录必须完整覆盖1..catalog_max_level，不能缺级或多级')
+    by_level={}
+    for row in rows:
+        level,value=row.get('level'),row.get('next_level_exp')
+        if type(level) is not int or not 1<=level<=maximum or level in by_level:
+            raise ValueError('经验等级必须是连续唯一的正整数，不能压缩缺级或重编号')
+        if type(value) is not int or not 1<=value<=2**53-1:
+            raise ValueError('经验门槛必须是Excel精确整数范围内的正整数，不接受null/零/负数/溢出')
+        by_level[level]=value
+    if set(by_level)!=set(range(1,maximum+1)):
+        raise ValueError('经验目录不能缺级')
+    return {**deepcopy(selected),'initial_level_cap':initial,'rebirth_level_cap_increment':increment,
+            'rebirth_reset_progression':reset,'exp_per_level':[by_level[n] for n in range(1,maximum+1)]}
+
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',profile['map_id']);collision=one('game_map_collisions',m['collision_id'])
@@ -735,7 +782,7 @@ def fixture_from_rows(tables):
         'items':items,'drops':{'equipment_item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==1],
                              'item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==2],
                              **{key+'_ppm':categories[key] for key in ['empty','gold','item','equipment']},'equipment_guarantee':20},
-        'progression':{'exp_per_level':[r['next_level_exp'] for r in sorted(tables['game_exp_levels'],key=lambda r:r['level'])]},
+        'progression':progression_rules(tables,profile),
         'initial_inventory':profile['initial_inventory'],'initial_bound_gold':profile['initial_bound_gold'],'inventory_capacity':profile['inventory_capacity'],
         '_source_evidence':{'status':'candidate','official_180_restoration_verified':False,
                             'buff_names':buff_names,
@@ -773,6 +820,14 @@ def fixture_from_rows(tables):
             result['map']['no_pets']=map_no_pets_policy(tables,m,profile)
         if profile['rule_version']>=13:
             result['town_travel'],result['town_navigation']=town_runtime_rules(profile,catalog)
+    if profile['rule_version']>=20:
+        result['_source_evidence']['progression']={
+            'curve_source':'唯一玩法Excel/game_exp_levels；来源独立副本资料参考/myf/Mir200/Exps.ini [Exp].Level1–50；不混英雄/药品/酒/宠物经验段',
+            'confirmed_rules_source':'唯一玩法Excel/game_progression_rules：initial_level_cap/rebirth_level_cap_increment/rebirth_reset_progression',
+            'selection_source':'唯一玩法Excel/开发首循环夹具/parameters.progression；不复制初始cap/转生增量规则值',
+            'catalog_last_threshold':'最后一级门槛供待用经验池与未来转生，不授权自动升到下一等级',
+            'balance_verified':False,'natural_level_1_to_50_verified':False,
+            'scope':'当前仅15EXP普通怪；旧235天与理想恒定击杀算术都不是已验收节奏，须按三职业/怪数/装备/有效时长及长期收支重新校准'}
     recycling=equipment_recycling_rules(profile,items)
     if recycling is not None:
         result['equipment_recycling']=recycling
@@ -839,6 +894,7 @@ def public_gameplay(fixture):
             'items':items,
             'jobs':[{'job_id':p['job_id'],'name':['战士','法师','道士'][p['job_id']],'profile':'player_female' if p['job_id']==1 else 'player_male','can_push':p['can_push']} for p in fixture['players']],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
+            **({'progression':{key:deepcopy(value) for key,value in fixture['progression'].items() if key!='exp_per_level'}} if fixture['rule_version']>=20 else {}),
             'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']],
             'pet_profiles':[{'definition_id':fixture['pet']['definition_id'],'name':'变异骷髅','profile':'pet_skeleton','job_id':2,'can_push':fixture['pet']['can_push']}],
             **({'map_catalog':[{'id':str(row['id']),'name':row['display_name'],'resource_key':row['resource_key'],

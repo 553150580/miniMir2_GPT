@@ -17637,6 +17637,7 @@ $root.minimir = (function() {
              * @property {Long|null} [experience] InventoryResult experience
              * @property {Array.<minimir.v1.LearnedSkill.$Properties>|null} [learned_skills] InventoryResult learned_skills
              * @property {minimir.v1.AutoRecyclePolicy.$Properties|null} [auto_recycle] InventoryResult auto_recycle
+             * @property {minimir.v1.ProgressionState.$Properties|null} [progression] InventoryResult progression
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -17736,6 +17737,14 @@ $root.minimir = (function() {
             InventoryResult.prototype.auto_recycle = null;
 
             /**
+             * InventoryResult progression.
+             * @member {minimir.v1.ProgressionState.$Properties|null|undefined} progression
+             * @memberof minimir.v1.InventoryResult
+             * @instance
+             */
+            InventoryResult.prototype.progression = null;
+
+            /**
              * Creates a new InventoryResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.InventoryResult
@@ -17786,6 +17795,8 @@ $root.minimir = (function() {
                         $root.minimir.v1.LearnedSkill.encode(message.learned_skills[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
                 if (message.auto_recycle != null && $Object.hasOwnProperty.call(message, "auto_recycle"))
                     $root.minimir.v1.AutoRecyclePolicy.encode(message.auto_recycle, writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.progression != null && $Object.hasOwnProperty.call(message, "progression"))
+                    $root.minimir.v1.ProgressionState.encode(message.progression, writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -17909,6 +17920,12 @@ $root.minimir = (function() {
                             message.auto_recycle = $root.minimir.v1.AutoRecyclePolicy.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_recycle);
                             continue;
                         }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            message.progression = $root.minimir.v1.ProgressionState.decode(reader, reader.size(), $undefined, _depth + 1, message.progression);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -18001,6 +18018,11 @@ $root.minimir = (function() {
                     if (error)
                         return "auto_recycle." + error;
                 }
+                if (message.progression != null && $Object.hasOwnProperty.call(message, "progression")) {
+                    var error = $root.minimir.v1.ProgressionState.verify(message.progression, _depth + 1);
+                    if (error)
+                        return "progression." + error;
+                }
                 return null;
             };
 
@@ -18019,6 +18041,1011 @@ $root.minimir = (function() {
             };
 
             return InventoryResult;
+        })();
+
+        v1.ProgressionState = (function() {
+
+            /**
+             * Properties of a ProgressionState.
+             * @typedef {Object} minimir.v1.ProgressionState.$Properties
+             * @property {number|null} [format_version] ProgressionState format_version
+             * @property {string|null} [curve_version] ProgressionState curve_version
+             * @property {number|null} [level_cap] ProgressionState level_cap
+             * @property {number|null} [rebirth_count] ProgressionState rebirth_count
+             * @property {Long|null} [next_level_experience] ProgressionState next_level_experience
+             * @property {Long|null} [pending_experience] ProgressionState pending_experience
+             * @property {Long|null} [pending_experience_limit] ProgressionState pending_experience_limit
+             * @property {Long|null} [legacy_experience_overflow] ProgressionState legacy_experience_overflow
+             * @property {boolean|null} [at_cap] ProgressionState at_cap
+             * @property {boolean|null} [migration_required] ProgressionState migration_required
+             * @property {boolean|null} [rebirth_enabled] ProgressionState rebirth_enabled
+             * @property {number|null} [catalog_max_level] ProgressionState catalog_max_level
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ProgressionState.
+             * @memberof minimir.v1
+             * @interface IProgressionState
+             * @augments minimir.v1.ProgressionState.$Properties
+             * @deprecated Use minimir.v1.ProgressionState.$Properties instead.
+             */
+
+            /**
+             * Shape of a ProgressionState.
+             * @typedef {minimir.v1.ProgressionState.$Properties} minimir.v1.ProgressionState.$Shape
+             */
+
+            /**
+             * Constructs a new ProgressionState.
+             * @memberof minimir.v1
+             * @classdesc Represents a ProgressionState.
+             * @constructor
+             * @param {minimir.v1.ProgressionState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ProgressionState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ProgressionState format_version.
+             * @member {number} format_version
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.format_version = 0;
+
+            /**
+             * ProgressionState curve_version.
+             * @member {string} curve_version
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.curve_version = "";
+
+            /**
+             * ProgressionState level_cap.
+             * @member {number} level_cap
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.level_cap = 0;
+
+            /**
+             * ProgressionState rebirth_count.
+             * @member {number} rebirth_count
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.rebirth_count = 0;
+
+            /**
+             * ProgressionState next_level_experience.
+             * @member {Long} next_level_experience
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.next_level_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ProgressionState pending_experience.
+             * @member {Long} pending_experience
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.pending_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ProgressionState pending_experience_limit.
+             * @member {Long} pending_experience_limit
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.pending_experience_limit = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ProgressionState legacy_experience_overflow.
+             * @member {Long} legacy_experience_overflow
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.legacy_experience_overflow = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ProgressionState at_cap.
+             * @member {boolean} at_cap
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.at_cap = false;
+
+            /**
+             * ProgressionState migration_required.
+             * @member {boolean} migration_required
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.migration_required = false;
+
+            /**
+             * ProgressionState rebirth_enabled.
+             * @member {boolean} rebirth_enabled
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.rebirth_enabled = false;
+
+            /**
+             * ProgressionState catalog_max_level.
+             * @member {number} catalog_max_level
+             * @memberof minimir.v1.ProgressionState
+             * @instance
+             */
+            ProgressionState.prototype.catalog_max_level = 0;
+
+            /**
+             * Creates a new ProgressionState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {minimir.v1.ProgressionState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ProgressionState} ProgressionState instance
+             * @type {{
+             *   (properties: minimir.v1.ProgressionState.$Shape): minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape;
+             *   (properties?: minimir.v1.ProgressionState.$Properties): minimir.v1.ProgressionState;
+             * }}
+             */
+            ProgressionState.create = function(properties) {
+                return new ProgressionState(properties);
+            };
+
+            /**
+             * Encodes the specified ProgressionState message. Does not implicitly {@link minimir.v1.ProgressionState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {minimir.v1.ProgressionState.$Properties} message ProgressionState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ProgressionState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.format_version != null && $Object.hasOwnProperty.call(message, "format_version") && message.format_version !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.format_version);
+                if (message.curve_version != null && $Object.hasOwnProperty.call(message, "curve_version") && message.curve_version !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.curve_version);
+                if (message.level_cap != null && $Object.hasOwnProperty.call(message, "level_cap") && message.level_cap !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.level_cap);
+                if (message.rebirth_count != null && $Object.hasOwnProperty.call(message, "rebirth_count") && message.rebirth_count !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.rebirth_count);
+                if (message.next_level_experience != null && $Object.hasOwnProperty.call(message, "next_level_experience") && (typeof message.next_level_experience === "object" ? message.next_level_experience.low || message.next_level_experience.high : message.next_level_experience !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.next_level_experience);
+                if (message.pending_experience != null && $Object.hasOwnProperty.call(message, "pending_experience") && (typeof message.pending_experience === "object" ? message.pending_experience.low || message.pending_experience.high : message.pending_experience !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.pending_experience);
+                if (message.pending_experience_limit != null && $Object.hasOwnProperty.call(message, "pending_experience_limit") && (typeof message.pending_experience_limit === "object" ? message.pending_experience_limit.low || message.pending_experience_limit.high : message.pending_experience_limit !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.pending_experience_limit);
+                if (message.legacy_experience_overflow != null && $Object.hasOwnProperty.call(message, "legacy_experience_overflow") && (typeof message.legacy_experience_overflow === "object" ? message.legacy_experience_overflow.low || message.legacy_experience_overflow.high : message.legacy_experience_overflow !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.legacy_experience_overflow);
+                if (message.at_cap != null && $Object.hasOwnProperty.call(message, "at_cap") && message.at_cap !== false)
+                    writer.uint32(/* id 9, wireType 0 =*/72).bool(message.at_cap);
+                if (message.migration_required != null && $Object.hasOwnProperty.call(message, "migration_required") && message.migration_required !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.migration_required);
+                if (message.rebirth_enabled != null && $Object.hasOwnProperty.call(message, "rebirth_enabled") && message.rebirth_enabled !== false)
+                    writer.uint32(/* id 11, wireType 0 =*/88).bool(message.rebirth_enabled);
+                if (message.catalog_max_level != null && $Object.hasOwnProperty.call(message, "catalog_max_level") && message.catalog_max_level !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.catalog_max_level);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ProgressionState message, length delimited. Does not implicitly {@link minimir.v1.ProgressionState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {minimir.v1.ProgressionState.$Properties} message ProgressionState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ProgressionState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ProgressionState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape} ProgressionState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ProgressionState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ProgressionState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.format_version = value;
+                            else
+                                delete message.format_version;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.curve_version = value;
+                            else
+                                delete message.curve_version;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level_cap = value;
+                            else
+                                delete message.level_cap;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.rebirth_count = value;
+                            else
+                                delete message.rebirth_count;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.next_level_experience = value;
+                            else
+                                delete message.next_level_experience;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.pending_experience = value;
+                            else
+                                delete message.pending_experience;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.pending_experience_limit = value;
+                            else
+                                delete message.pending_experience_limit;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.legacy_experience_overflow = value;
+                            else
+                                delete message.legacy_experience_overflow;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.at_cap = value;
+                            else
+                                delete message.at_cap;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.migration_required = value;
+                            else
+                                delete message.migration_required;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.rebirth_enabled = value;
+                            else
+                                delete message.rebirth_enabled;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.catalog_max_level = value;
+                            else
+                                delete message.catalog_max_level;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ProgressionState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ProgressionState & minimir.v1.ProgressionState.$Shape} ProgressionState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ProgressionState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ProgressionState message.
+             * @function verify
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ProgressionState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.format_version != null && $Object.hasOwnProperty.call(message, "format_version"))
+                    if (!$util.isInteger(message.format_version))
+                        return "format_version: integer expected";
+                if (message.curve_version != null && $Object.hasOwnProperty.call(message, "curve_version"))
+                    if (!$util.isString(message.curve_version))
+                        return "curve_version: string expected";
+                if (message.level_cap != null && $Object.hasOwnProperty.call(message, "level_cap"))
+                    if (!$util.isInteger(message.level_cap))
+                        return "level_cap: integer expected";
+                if (message.rebirth_count != null && $Object.hasOwnProperty.call(message, "rebirth_count"))
+                    if (!$util.isInteger(message.rebirth_count))
+                        return "rebirth_count: integer expected";
+                if (message.next_level_experience != null && $Object.hasOwnProperty.call(message, "next_level_experience"))
+                    if (!$util.isInteger(message.next_level_experience) && !(message.next_level_experience && $util.isInteger(message.next_level_experience.low) && $util.isInteger(message.next_level_experience.high)))
+                        return "next_level_experience: integer|Long expected";
+                if (message.pending_experience != null && $Object.hasOwnProperty.call(message, "pending_experience"))
+                    if (!$util.isInteger(message.pending_experience) && !(message.pending_experience && $util.isInteger(message.pending_experience.low) && $util.isInteger(message.pending_experience.high)))
+                        return "pending_experience: integer|Long expected";
+                if (message.pending_experience_limit != null && $Object.hasOwnProperty.call(message, "pending_experience_limit"))
+                    if (!$util.isInteger(message.pending_experience_limit) && !(message.pending_experience_limit && $util.isInteger(message.pending_experience_limit.low) && $util.isInteger(message.pending_experience_limit.high)))
+                        return "pending_experience_limit: integer|Long expected";
+                if (message.legacy_experience_overflow != null && $Object.hasOwnProperty.call(message, "legacy_experience_overflow"))
+                    if (!$util.isInteger(message.legacy_experience_overflow) && !(message.legacy_experience_overflow && $util.isInteger(message.legacy_experience_overflow.low) && $util.isInteger(message.legacy_experience_overflow.high)))
+                        return "legacy_experience_overflow: integer|Long expected";
+                if (message.at_cap != null && $Object.hasOwnProperty.call(message, "at_cap"))
+                    if (typeof message.at_cap !== "boolean")
+                        return "at_cap: boolean expected";
+                if (message.migration_required != null && $Object.hasOwnProperty.call(message, "migration_required"))
+                    if (typeof message.migration_required !== "boolean")
+                        return "migration_required: boolean expected";
+                if (message.rebirth_enabled != null && $Object.hasOwnProperty.call(message, "rebirth_enabled"))
+                    if (typeof message.rebirth_enabled !== "boolean")
+                        return "rebirth_enabled: boolean expected";
+                if (message.catalog_max_level != null && $Object.hasOwnProperty.call(message, "catalog_max_level"))
+                    if (!$util.isInteger(message.catalog_max_level))
+                        return "catalog_max_level: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ProgressionState
+             * @function getTypeUrl
+             * @memberof minimir.v1.ProgressionState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ProgressionState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ProgressionState";
+            };
+
+            return ProgressionState;
+        })();
+
+        v1.ExperienceGrantResult = (function() {
+
+            /**
+             * Properties of an ExperienceGrantResult.
+             * @typedef {Object} minimir.v1.ExperienceGrantResult.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] ExperienceGrantResult role
+             * @property {Long|null} [role_revision] ExperienceGrantResult role_revision
+             * @property {Long|null} [source_seq] ExperienceGrantResult source_seq
+             * @property {string|null} [curve_version] ExperienceGrantResult curve_version
+             * @property {Long|null} [raw_experience] ExperienceGrantResult raw_experience
+             * @property {Long|null} [accepted_experience] ExperienceGrantResult accepted_experience
+             * @property {Long|null} [pooled_experience] ExperienceGrantResult pooled_experience
+             * @property {Long|null} [rejected_experience] ExperienceGrantResult rejected_experience
+             * @property {number|null} [level_before] ExperienceGrantResult level_before
+             * @property {number|null} [level_after] ExperienceGrantResult level_after
+             * @property {minimir.v1.ProgressionState.$Properties|null} [state] ExperienceGrantResult state
+             * @property {boolean|null} [migrated] ExperienceGrantResult migrated
+             * @property {number|null} [legacy_level_before] ExperienceGrantResult legacy_level_before
+             * @property {number|null} [legacy_level_after] ExperienceGrantResult legacy_level_after
+             * @property {Long|null} [rule_version] ExperienceGrantResult rule_version
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an ExperienceGrantResult.
+             * @memberof minimir.v1
+             * @interface IExperienceGrantResult
+             * @augments minimir.v1.ExperienceGrantResult.$Properties
+             * @deprecated Use minimir.v1.ExperienceGrantResult.$Properties instead.
+             */
+
+            /**
+             * Shape of an ExperienceGrantResult.
+             * @typedef {minimir.v1.ExperienceGrantResult.$Properties} minimir.v1.ExperienceGrantResult.$Shape
+             */
+
+            /**
+             * Constructs a new ExperienceGrantResult.
+             * @memberof minimir.v1
+             * @classdesc Represents an ExperienceGrantResult.
+             * @constructor
+             * @param {minimir.v1.ExperienceGrantResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ExperienceGrantResult = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ExperienceGrantResult role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.role = null;
+
+            /**
+             * ExperienceGrantResult role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ExperienceGrantResult source_seq.
+             * @member {Long} source_seq
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.source_seq = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ExperienceGrantResult curve_version.
+             * @member {string} curve_version
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.curve_version = "";
+
+            /**
+             * ExperienceGrantResult raw_experience.
+             * @member {Long} raw_experience
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.raw_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ExperienceGrantResult accepted_experience.
+             * @member {Long} accepted_experience
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.accepted_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ExperienceGrantResult pooled_experience.
+             * @member {Long} pooled_experience
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.pooled_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ExperienceGrantResult rejected_experience.
+             * @member {Long} rejected_experience
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.rejected_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ExperienceGrantResult level_before.
+             * @member {number} level_before
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.level_before = 0;
+
+            /**
+             * ExperienceGrantResult level_after.
+             * @member {number} level_after
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.level_after = 0;
+
+            /**
+             * ExperienceGrantResult state.
+             * @member {minimir.v1.ProgressionState.$Properties|null|undefined} state
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.state = null;
+
+            /**
+             * ExperienceGrantResult migrated.
+             * @member {boolean} migrated
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.migrated = false;
+
+            /**
+             * ExperienceGrantResult legacy_level_before.
+             * @member {number} legacy_level_before
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.legacy_level_before = 0;
+
+            /**
+             * ExperienceGrantResult legacy_level_after.
+             * @member {number} legacy_level_after
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.legacy_level_after = 0;
+
+            /**
+             * ExperienceGrantResult rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @instance
+             */
+            ExperienceGrantResult.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new ExperienceGrantResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {minimir.v1.ExperienceGrantResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ExperienceGrantResult} ExperienceGrantResult instance
+             * @type {{
+             *   (properties: minimir.v1.ExperienceGrantResult.$Shape): minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape;
+             *   (properties?: minimir.v1.ExperienceGrantResult.$Properties): minimir.v1.ExperienceGrantResult;
+             * }}
+             */
+            ExperienceGrantResult.create = function(properties) {
+                return new ExperienceGrantResult(properties);
+            };
+
+            /**
+             * Encodes the specified ExperienceGrantResult message. Does not implicitly {@link minimir.v1.ExperienceGrantResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {minimir.v1.ExperienceGrantResult.$Properties} message ExperienceGrantResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ExperienceGrantResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq") && (typeof message.source_seq === "object" ? message.source_seq.low || message.source_seq.high : message.source_seq !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.source_seq);
+                if (message.curve_version != null && $Object.hasOwnProperty.call(message, "curve_version") && message.curve_version !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.curve_version);
+                if (message.raw_experience != null && $Object.hasOwnProperty.call(message, "raw_experience") && (typeof message.raw_experience === "object" ? message.raw_experience.low || message.raw_experience.high : message.raw_experience !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.raw_experience);
+                if (message.accepted_experience != null && $Object.hasOwnProperty.call(message, "accepted_experience") && (typeof message.accepted_experience === "object" ? message.accepted_experience.low || message.accepted_experience.high : message.accepted_experience !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.accepted_experience);
+                if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience") && (typeof message.pooled_experience === "object" ? message.pooled_experience.low || message.pooled_experience.high : message.pooled_experience !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.pooled_experience);
+                if (message.rejected_experience != null && $Object.hasOwnProperty.call(message, "rejected_experience") && (typeof message.rejected_experience === "object" ? message.rejected_experience.low || message.rejected_experience.high : message.rejected_experience !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.rejected_experience);
+                if (message.level_before != null && $Object.hasOwnProperty.call(message, "level_before") && message.level_before !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.level_before);
+                if (message.level_after != null && $Object.hasOwnProperty.call(message, "level_after") && message.level_after !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.level_after);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    $root.minimir.v1.ProgressionState.encode(message.state, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
+                if (message.migrated != null && $Object.hasOwnProperty.call(message, "migrated") && message.migrated !== false)
+                    writer.uint32(/* id 12, wireType 0 =*/96).bool(message.migrated);
+                if (message.legacy_level_before != null && $Object.hasOwnProperty.call(message, "legacy_level_before") && message.legacy_level_before !== 0)
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint32(message.legacy_level_before);
+                if (message.legacy_level_after != null && $Object.hasOwnProperty.call(message, "legacy_level_after") && message.legacy_level_after !== 0)
+                    writer.uint32(/* id 14, wireType 0 =*/112).uint32(message.legacy_level_after);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.rule_version);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ExperienceGrantResult message, length delimited. Does not implicitly {@link minimir.v1.ExperienceGrantResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {minimir.v1.ExperienceGrantResult.$Properties} message ExperienceGrantResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ExperienceGrantResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an ExperienceGrantResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape} ExperienceGrantResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ExperienceGrantResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ExperienceGrantResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.source_seq = value;
+                            else
+                                delete message.source_seq;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.curve_version = value;
+                            else
+                                delete message.curve_version;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.raw_experience = value;
+                            else
+                                delete message.raw_experience;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.accepted_experience = value;
+                            else
+                                delete message.accepted_experience;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.pooled_experience = value;
+                            else
+                                delete message.pooled_experience;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rejected_experience = value;
+                            else
+                                delete message.rejected_experience;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level_before = value;
+                            else
+                                delete message.level_before;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.level_after = value;
+                            else
+                                delete message.level_after;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.state = $root.minimir.v1.ProgressionState.decode(reader, reader.size(), $undefined, _depth + 1, message.state);
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.migrated = value;
+                            else
+                                delete message.migrated;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.legacy_level_before = value;
+                            else
+                                delete message.legacy_level_before;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.legacy_level_after = value;
+                            else
+                                delete message.legacy_level_after;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an ExperienceGrantResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ExperienceGrantResult & minimir.v1.ExperienceGrantResult.$Shape} ExperienceGrantResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ExperienceGrantResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an ExperienceGrantResult message.
+             * @function verify
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ExperienceGrantResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.source_seq != null && $Object.hasOwnProperty.call(message, "source_seq"))
+                    if (!$util.isInteger(message.source_seq) && !(message.source_seq && $util.isInteger(message.source_seq.low) && $util.isInteger(message.source_seq.high)))
+                        return "source_seq: integer|Long expected";
+                if (message.curve_version != null && $Object.hasOwnProperty.call(message, "curve_version"))
+                    if (!$util.isString(message.curve_version))
+                        return "curve_version: string expected";
+                if (message.raw_experience != null && $Object.hasOwnProperty.call(message, "raw_experience"))
+                    if (!$util.isInteger(message.raw_experience) && !(message.raw_experience && $util.isInteger(message.raw_experience.low) && $util.isInteger(message.raw_experience.high)))
+                        return "raw_experience: integer|Long expected";
+                if (message.accepted_experience != null && $Object.hasOwnProperty.call(message, "accepted_experience"))
+                    if (!$util.isInteger(message.accepted_experience) && !(message.accepted_experience && $util.isInteger(message.accepted_experience.low) && $util.isInteger(message.accepted_experience.high)))
+                        return "accepted_experience: integer|Long expected";
+                if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience"))
+                    if (!$util.isInteger(message.pooled_experience) && !(message.pooled_experience && $util.isInteger(message.pooled_experience.low) && $util.isInteger(message.pooled_experience.high)))
+                        return "pooled_experience: integer|Long expected";
+                if (message.rejected_experience != null && $Object.hasOwnProperty.call(message, "rejected_experience"))
+                    if (!$util.isInteger(message.rejected_experience) && !(message.rejected_experience && $util.isInteger(message.rejected_experience.low) && $util.isInteger(message.rejected_experience.high)))
+                        return "rejected_experience: integer|Long expected";
+                if (message.level_before != null && $Object.hasOwnProperty.call(message, "level_before"))
+                    if (!$util.isInteger(message.level_before))
+                        return "level_before: integer expected";
+                if (message.level_after != null && $Object.hasOwnProperty.call(message, "level_after"))
+                    if (!$util.isInteger(message.level_after))
+                        return "level_after: integer expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state")) {
+                    var error = $root.minimir.v1.ProgressionState.verify(message.state, _depth + 1);
+                    if (error)
+                        return "state." + error;
+                }
+                if (message.migrated != null && $Object.hasOwnProperty.call(message, "migrated"))
+                    if (typeof message.migrated !== "boolean")
+                        return "migrated: boolean expected";
+                if (message.legacy_level_before != null && $Object.hasOwnProperty.call(message, "legacy_level_before"))
+                    if (!$util.isInteger(message.legacy_level_before))
+                        return "legacy_level_before: integer expected";
+                if (message.legacy_level_after != null && $Object.hasOwnProperty.call(message, "legacy_level_after"))
+                    if (!$util.isInteger(message.legacy_level_after))
+                        return "legacy_level_after: integer expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ExperienceGrantResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.ExperienceGrantResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ExperienceGrantResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ExperienceGrantResult";
+            };
+
+            return ExperienceGrantResult;
         })();
 
         v1.AutoRecyclePolicy = (function() {
@@ -23552,6 +24579,9 @@ $root.minimir = (function() {
              * @property {Long|null} [discard_count] HostingReport discard_count
              * @property {string|null} [last_discard_reason] HostingReport last_discard_reason
              * @property {Long|null} [total_drop_count] HostingReport total_drop_count
+             * @property {Long|null} [raw_experience] HostingReport raw_experience
+             * @property {Long|null} [rejected_experience] HostingReport rejected_experience
+             * @property {Long|null} [pooled_experience] HostingReport pooled_experience
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -23697,6 +24727,30 @@ $root.minimir = (function() {
             HostingReport.prototype.total_drop_count = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * HostingReport raw_experience.
+             * @member {Long} raw_experience
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.raw_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingReport rejected_experience.
+             * @member {Long} rejected_experience
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.rejected_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingReport pooled_experience.
+             * @member {Long} pooled_experience
+             * @memberof minimir.v1.HostingReport
+             * @instance
+             */
+            HostingReport.prototype.pooled_experience = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
              * Creates a new HostingReport instance using the specified properties.
              * @function create
              * @memberof minimir.v1.HostingReport
@@ -23757,6 +24811,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 13, wireType 2 =*/106).string(message.last_discard_reason);
                 if (message.total_drop_count != null && $Object.hasOwnProperty.call(message, "total_drop_count") && (typeof message.total_drop_count === "object" ? message.total_drop_count.low || message.total_drop_count.high : message.total_drop_count !== 0))
                     writer.uint32(/* id 14, wireType 0 =*/112).uint64(message.total_drop_count);
+                if (message.raw_experience != null && $Object.hasOwnProperty.call(message, "raw_experience") && (typeof message.raw_experience === "object" ? message.raw_experience.low || message.raw_experience.high : message.raw_experience !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).int64(message.raw_experience);
+                if (message.rejected_experience != null && $Object.hasOwnProperty.call(message, "rejected_experience") && (typeof message.rejected_experience === "object" ? message.rejected_experience.low || message.rejected_experience.high : message.rejected_experience !== 0))
+                    writer.uint32(/* id 16, wireType 0 =*/128).int64(message.rejected_experience);
+                if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience") && (typeof message.pooled_experience === "object" ? message.pooled_experience.low || message.pooled_experience.high : message.pooled_experience !== 0))
+                    writer.uint32(/* id 17, wireType 0 =*/136).int64(message.pooled_experience);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -23936,6 +24996,33 @@ $root.minimir = (function() {
                                 delete message.total_drop_count;
                             continue;
                         }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.raw_experience = value;
+                            else
+                                delete message.raw_experience;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rejected_experience = value;
+                            else
+                                delete message.rejected_experience;
+                            continue;
+                        }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.pooled_experience = value;
+                            else
+                                delete message.pooled_experience;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -24034,6 +25121,15 @@ $root.minimir = (function() {
                 if (message.total_drop_count != null && $Object.hasOwnProperty.call(message, "total_drop_count"))
                     if (!$util.isInteger(message.total_drop_count) && !(message.total_drop_count && $util.isInteger(message.total_drop_count.low) && $util.isInteger(message.total_drop_count.high)))
                         return "total_drop_count: integer|Long expected";
+                if (message.raw_experience != null && $Object.hasOwnProperty.call(message, "raw_experience"))
+                    if (!$util.isInteger(message.raw_experience) && !(message.raw_experience && $util.isInteger(message.raw_experience.low) && $util.isInteger(message.raw_experience.high)))
+                        return "raw_experience: integer|Long expected";
+                if (message.rejected_experience != null && $Object.hasOwnProperty.call(message, "rejected_experience"))
+                    if (!$util.isInteger(message.rejected_experience) && !(message.rejected_experience && $util.isInteger(message.rejected_experience.low) && $util.isInteger(message.rejected_experience.high)))
+                        return "rejected_experience: integer|Long expected";
+                if (message.pooled_experience != null && $Object.hasOwnProperty.call(message, "pooled_experience"))
+                    if (!$util.isInteger(message.pooled_experience) && !(message.pooled_experience && $util.isInteger(message.pooled_experience.low) && $util.isInteger(message.pooled_experience.high)))
+                        return "pooled_experience: integer|Long expected";
                 return null;
             };
 

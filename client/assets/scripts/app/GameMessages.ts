@@ -78,7 +78,7 @@ export class GameMessages extends Component {
         const latest = this.log.messages.slice(-2);
         for (let index = 0; index < this.lines.length; index++) {
             const line = this.lines[index];
-            if (line) line.string = latest[index] ? `[${latest[index].title}] ${latest[index].message}` : '轻触查看系统消息';
+            if (line) line.string = latest[index] ? `[${latest[index].title}] ${latest[index].preview ?? latest[index].message}` : '轻触查看系统消息';
         }
         this.pending = true; this.flush();
     }
@@ -111,7 +111,7 @@ export class GameMessages extends Component {
             this.list.setItems(filtered, (node, data) => {
                 const item = data as SystemMessage;
                 const label = node.getChildByName('Text')?.getComponent(Label);
-                if (label) label.string = `${item.title}\n${item.message}`;
+                if (label) label.string = `${item.title}\n${item.preview ?? item.message}`;
             }, true);
             if (this.queryChanged) this.scroll.scrollToTop(0);
             else if (!this.renderedOnce || nearBottom) this.list.scrollToIndex(filtered.length - 1);

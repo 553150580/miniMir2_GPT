@@ -49,6 +49,7 @@ type killFact struct {
 	InstanceID          string
 	Prepared            bool
 	PetTraining         *petTrainingCredit
+	ProgressionActor    actorRef
 }
 
 func (w *worker) sourceTimeline() bool {
@@ -346,6 +347,9 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 		point = r.Player.Pos
 	}
 	fact := killFact{ID: domain.ID(), World: world.Ref, Order: r.FactOrder, DropPoint: point, Target: referenceIn(world, m), Caster: referenceIn(world, caster), Monster: *m.Monster, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
+	if world == r.currentWorld() {
+		fact.ProgressionActor = referenceIn(world, &r.Player)
+	}
 	fact.PetTraining = w.capturePetTraining(r, fact.ID)
 	if len(f.Drops.EquipmentItemIDs) > 0 {
 		fact.EquipmentID = f.Drops.EquipmentItemIDs[w.draw(int64(len(f.Drops.EquipmentItemIDs)))]
@@ -384,12 +388,12 @@ func (w *worker) flushKillFacts(r *room) {
 		w.isolateRoom(r)
 		return
 	}
-	w.settleInWorld(r, world, fact.DropPoint, q, func() {
-		w.finishKillFact(r, fact.ID, q)
+	w.settleInWorldReceipt(r, world, fact.DropPoint, q, fact.ProgressionActor, func(receipt persistence.Operation) {
+		w.finishKillFact(r, fact.ID, q, receipt)
 	})
 }
 
-func (w *worker) finishKillFact(r *room, id string, q persistence.Settlement) {
+func (w *worker) finishKillFact(r *room, id string, q persistence.Settlement, receipt ...persistence.Operation) {
 	if len(r.KillFacts) == 0 || r.KillFacts[0].ID != id {
 		return
 	}
@@ -398,7 +402,20 @@ func (w *worker) finishKillFact(r *room, id string, q persistence.Settlement) {
 		w.isolateRoom(r)
 		return
 	}
-	w.awardPetTraining(r, credit, q)
+	if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
+		if len(receipt) != 1 {
+			w.isolateRoom(r)
+			return
+		}
+		grant, ok := experienceReceipt(q, receipt[0])
+		if !ok {
+			w.isolateRoom(r)
+			return
+		}
+		w.awardPetTraining(r, credit, q, grant)
+	} else {
+		w.awardPetTraining(r, credit, q)
+	}
 	r.KillFacts[0] = killFact{}
 	r.KillFacts = r.KillFacts[1:]
 }

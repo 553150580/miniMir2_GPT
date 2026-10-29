@@ -508,15 +508,29 @@ func (w *worker) settle(r *room, q persistence.Settlement, finished ...func()) {
 }
 
 type settlementBinding struct {
-	room            *room
-	auth            persistence.Auth
-	world           worldRef
-	point           devconfig.Point
-	generation      uint64
-	id, fingerprint string
+	room             *room
+	auth             persistence.Auth
+	world            worldRef
+	point            devconfig.Point
+	generation       uint64
+	id, fingerprint  string
+	progressionActor actorRef
+	sourceBefore     int64
 }
 
 func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, finished ...func()) {
+	var actor actorRef
+	if world == r.currentWorld() {
+		actor = referenceIn(world, &r.Player)
+	}
+	w.settleInWorldReceipt(r, world, point, q, actor, func(_ persistence.Operation) {
+		if len(finished) > 0 {
+			finished[0]()
+		}
+	})
+}
+
+func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, actor actorRef, finished func(persistence.Operation)) {
 	r.SettlementGeneration++
 	raw, err := json.Marshal(q)
 	if err != nil {
@@ -524,6 +538,7 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 		return
 	}
 	binding := settlementBinding{room: r, auth: r.Auth, world: world.Ref, point: point, generation: r.SettlementGeneration, id: fmt.Sprintf("settle:%d", q.SourceSeq), fingerprint: persistence.Hash(raw)}
+	binding.progressionActor, binding.sourceBefore = actor, r.Role.SourceSeq
 	r.Pending = true
 	r.PendingOperationID, r.PendingFingerprint = binding.id, binding.fingerprint
 	auth := r.Auth
@@ -531,11 +546,7 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 	j = job{target: w, run: func() func(*worker) {
 		role, receipt, err := w.e.Store.SettleWithReceipt(context.Background(), auth, q)
 		return func(w *worker) {
-			owned := w.rooms[binding.auth.RoleID] == r && r.Auth == binding.auth && !r.Isolated && r.Pending && r.SettlementGeneration == binding.generation && r.PendingOperationID == binding.id && r.PendingFingerprint == binding.fingerprint
-			w.finishSettlement(binding, q, role, err, &j, finished...)
-			if owned && err == nil {
-				w.equipmentRecycleResult(r, receipt)
-			}
+			w.finishSettlementReceipt(binding, q, role, receipt, err, &j, finished)
 		}
 	}}
 	if !w.submit(j) {

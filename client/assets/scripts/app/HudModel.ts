@@ -1,4 +1,6 @@
 import { GridProjection, ProjectionGeometry } from './GridProjection';
+import Long from 'long';
+import { progressionMeter, ProgressionState } from './LevelGrowthModel';
 // HUD 只投影已同步的数据；金额和数量先用整数处理，避免64位值经Number丢失精度。
 export type HudInteger = bigint | number | string | { toString(): string };
 
@@ -6,7 +8,7 @@ export interface HudInput {
     playerHandle: number;
     role: { name?: string; job?: number; level?: number } | null;
     wallet: { gold?: HudInteger; boundGold?: HudInteger; yuanbaoUnits?: HudInteger; boundYuanbaoUnits?: HudInteger } | null;
-    inventory: { level?: number; experience?: HudInteger; items?: Array<{ itemId: number; quantity: HudInteger }> } | null;
+    inventory: { level?: number; experience?: HudInteger; progression?: ProgressionState | null; items?: Array<{ itemId: number; quantity: HudInteger }> } | null;
     baseline: { entities: Array<{ entityHandle: number; entityKind: number; position: { x: number; y: number }; hp: HudInteger; hpMax: HudInteger; mp: HudInteger; mpMax: HudInteger }>; safeZoneId?: string | bigint | { toString(): string } } | null;
     hosting?: unknown;
     report?: unknown;
@@ -15,7 +17,7 @@ export interface HudInput {
     auto: boolean;
     count: number;
     quickSkillLabel?: string;
-    gameplay: { jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
+    gameplay: { rule_version?: number; progression?: { curve_version: string }; jobs?: Array<{ job_id: number; name: string }>; items?: Array<{ item_id: number; kind: string }>; experience?: Array<{ level: number; next_level_exp: HudInteger }> } | null;
     map: ({ name?: string; width: number; height: number; scene_kind?: number } & Partial<ProjectionGeometry>) | null;
 }
 
@@ -81,6 +83,9 @@ export function createHudState(input: HudInput) {
     const level = input.inventory?.level ?? input.role?.level;
     const next = input.gameplay?.experience?.find(row => row.level === level)?.next_level_exp;
     const experience = input.inventory?.experience;
+    const publishedCurve = input.gameplay?.progression?.curve_version;
+    const growth = (input.gameplay?.rule_version ?? 0) >= 20 ? progressionMeter(level, Long.isLong(experience) ? experience : undefined,
+        typeof publishedCurve === 'string' && input.inventory?.progression?.curveVersion === publishedCurve ? input.inventory.progression : null) : null;
     const dead = player != null && hudInteger(player.hp) <= 0n;
     const town = input.map?.scene_kind === 2;
     const inSafeZone = input.baseline?.safeZoneId != null && hudInteger(input.baseline.safeZoneId) > 0n;
@@ -96,8 +101,8 @@ export function createHudState(input: HudInput) {
         hpText: `${hudAmount(player?.hp)}/${hudAmount(player?.hpMax)}`,
         mpText: `${hudAmount(player?.mp)}/${hudAmount(player?.mpMax)}`,
         hp: hudRatio(player?.hp, player?.hpMax), mp: hudRatio(player?.mp, player?.mpMax),
-        experienceText: next == null ? `经验 ${hudAmount(experience)}` : `${hudAmount(experience)} / ${hudAmount(next)}`,
-        experience: hudRatio(experience, next),
+        experienceText: growth?.text ?? (next == null ? `经验 ${hudAmount(experience)}` : `${hudAmount(experience)} / ${hudAmount(next)}`),
+        experience: growth?.ratio ?? hudRatio(experience, next),
         redPotionCount: hudItemCount(input, 35), bluePotionCount: hudItemCount(input, 36),
         objective: !input.ready ? '场景同步中' : dead ? '角色已倒下 · 点击复活' : town ? `${inSafeZone ? '安全区 · ' : ''}城镇漫步` : `${input.auto ? '自动战斗' : '手动战斗'} · ${input.count}只怪物`,
         auto: input.auto ? '自动' : '手动', count: `${input.count}怪`, attack: dead ? '复活' : '攻击',

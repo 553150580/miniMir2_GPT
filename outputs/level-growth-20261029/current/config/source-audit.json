@@ -1,0 +1,329 @@
+{
+  "status": "read_only_source_audit",
+  "recorded_at_utc": "2026-10-29T13:23:08.705668+00:00",
+  "configuration_changed": false,
+  "source_program_or_database_used": false,
+  "source": {
+    "original": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\MirServer沉默世界_MYF\\Mir200\\Exps.ini",
+    "copy": "资料参考/myf/Mir200/Exps.ini",
+    "sha256": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01",
+    "bytes": 117004,
+    "independent_copy_st_nlink": 1,
+    "source_st_nlink": 1,
+    "original_equals_copy": true,
+    "section": "Exp",
+    "records": 1000,
+    "level_min": 1,
+    "level_max": 1000
+  },
+  "current_unique_tables": {
+    "game_exp_levels": {
+      "rows": 20,
+      "levels": [
+        1,
+        20
+      ],
+      "status": "candidate",
+      "measurement_version": "myf_source_unbalanced",
+      "source_matches_existing_20_rows": true
+    },
+    "game_equipment": [
+      {
+        "id": 218,
+        "required_level": 1,
+        "quality": 0,
+        "stage": 0,
+        "original_durability_u": 4000,
+        "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220",
+        "record_status": "candidate"
+      },
+      {
+        "id": 193,
+        "required_level": 1,
+        "quality": 0,
+        "stage": 0,
+        "original_durability_u": 10000,
+        "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195",
+        "record_status": "candidate"
+      }
+    ],
+    "game_items_count": 29,
+    "game_job_growth_rows": 0,
+    "game_stages": [
+      {
+        "id": 0,
+        "stage_key": "T1",
+        "required_level_min": 1,
+        "required_level_max": 10
+      },
+      {
+        "id": 1,
+        "stage_key": "T2",
+        "required_level_min": 11,
+        "required_level_max": 20
+      },
+      {
+        "id": 2,
+        "stage_key": "T3",
+        "required_level_min": 21,
+        "required_level_max": 30
+      },
+      {
+        "id": 3,
+        "stage_key": "T4",
+        "required_level_min": 31,
+        "required_level_max": 40
+      },
+      {
+        "id": 4,
+        "stage_key": "T5",
+        "required_level_min": 41,
+        "required_level_max": 50
+      }
+    ]
+  },
+  "exp_21_50_source_candidates_only": [
+    {
+      "level": 21,
+      "next_level_exp_candidate": 1100,
+      "section": "Exp",
+      "source_key": "Level21",
+      "line": 24
+    },
+    {
+      "level": 22,
+      "next_level_exp_candidate": 1200,
+      "section": "Exp",
+      "source_key": "Level22",
+      "line": 25
+    },
+    {
+      "level": 23,
+      "next_level_exp_candidate": 1300,
+      "section": "Exp",
+      "source_key": "Level23",
+      "line": 26
+    },
+    {
+      "level": 24,
+      "next_level_exp_candidate": 1400,
+      "section": "Exp",
+      "source_key": "Level24",
+      "line": 27
+    },
+    {
+      "level": 25,
+      "next_level_exp_candidate": 1500,
+      "section": "Exp",
+      "source_key": "Level25",
+      "line": 28
+    },
+    {
+      "level": 26,
+      "next_level_exp_candidate": 20000,
+      "section": "Exp",
+      "source_key": "Level26",
+      "line": 29
+    },
+    {
+      "level": 27,
+      "next_level_exp_candidate": 20000,
+      "section": "Exp",
+      "source_key": "Level27",
+      "line": 30
+    },
+    {
+      "level": 28,
+      "next_level_exp_candidate": 20000,
+      "section": "Exp",
+      "source_key": "Level28",
+      "line": 31
+    },
+    {
+      "level": 29,
+      "next_level_exp_candidate": 20000,
+      "section": "Exp",
+      "source_key": "Level29",
+      "line": 32
+    },
+    {
+      "level": 30,
+      "next_level_exp_candidate": 20000,
+      "section": "Exp",
+      "source_key": "Level30",
+      "line": 33
+    },
+    {
+      "level": 31,
+      "next_level_exp_candidate": 30000,
+      "section": "Exp",
+      "source_key": "Level31",
+      "line": 34
+    },
+    {
+      "level": 32,
+      "next_level_exp_candidate": 31000,
+      "section": "Exp",
+      "source_key": "Level32",
+      "line": 35
+    },
+    {
+      "level": 33,
+      "next_level_exp_candidate": 32000,
+      "section": "Exp",
+      "source_key": "Level33",
+      "line": 36
+    },
+    {
+      "level": 34,
+      "next_level_exp_candidate": 33000,
+      "section": "Exp",
+      "source_key": "Level34",
+      "line": 37
+    },
+    {
+      "level": 35,
+      "next_level_exp_candidate": 35000,
+      "section": "Exp",
+      "source_key": "Level35",
+      "line": 38
+    },
+    {
+      "level": 36,
+      "next_level_exp_candidate": 80000,
+      "section": "Exp",
+      "source_key": "Level36",
+      "line": 39
+    },
+    {
+      "level": 37,
+      "next_level_exp_candidate": 160000,
+      "section": "Exp",
+      "source_key": "Level37",
+      "line": 40
+    },
+    {
+      "level": 38,
+      "next_level_exp_candidate": 350000,
+      "section": "Exp",
+      "source_key": "Level38",
+      "line": 41
+    },
+    {
+      "level": 39,
+      "next_level_exp_candidate": 600000,
+      "section": "Exp",
+      "source_key": "Level39",
+      "line": 42
+    },
+    {
+      "level": 40,
+      "next_level_exp_candidate": 900000,
+      "section": "Exp",
+      "source_key": "Level40",
+      "line": 43
+    },
+    {
+      "level": 41,
+      "next_level_exp_candidate": 1200000,
+      "section": "Exp",
+      "source_key": "Level41",
+      "line": 44
+    },
+    {
+      "level": 42,
+      "next_level_exp_candidate": 2400000,
+      "section": "Exp",
+      "source_key": "Level42",
+      "line": 45
+    },
+    {
+      "level": 43,
+      "next_level_exp_candidate": 3600000,
+      "section": "Exp",
+      "source_key": "Level43",
+      "line": 46
+    },
+    {
+      "level": 44,
+      "next_level_exp_candidate": 7200000,
+      "section": "Exp",
+      "source_key": "Level44",
+      "line": 47
+    },
+    {
+      "level": 45,
+      "next_level_exp_candidate": 12000000,
+      "section": "Exp",
+      "source_key": "Level45",
+      "line": 48
+    },
+    {
+      "level": 46,
+      "next_level_exp_candidate": 24000000,
+      "section": "Exp",
+      "source_key": "Level46",
+      "line": 49
+    },
+    {
+      "level": 47,
+      "next_level_exp_candidate": 38000000,
+      "section": "Exp",
+      "source_key": "Level47",
+      "line": 50
+    },
+    {
+      "level": 48,
+      "next_level_exp_candidate": 52000000,
+      "section": "Exp",
+      "source_key": "Level48",
+      "line": 51
+    },
+    {
+      "level": 49,
+      "next_level_exp_candidate": 63000000,
+      "section": "Exp",
+      "source_key": "Level49",
+      "line": 52
+    },
+    {
+      "level": 50,
+      "next_level_exp_candidate": 75000000,
+      "section": "Exp",
+      "source_key": "Level50",
+      "line": 53
+    }
+  ],
+  "boundary_findings": [
+    {
+      "source": "server/internal/persistence/settlement.go:126-135",
+      "finding": "当前20个门槛实际可升到21；直接追加50门槛会升到51。先用已有game_progression_rules/initial_level_cap=50，明确50行下级门槛供待用经验池及未来转生，不靠array长度隐式限级。"
+    },
+    {
+      "source": "tools/resources/prepare_first_loop.py:738,841",
+      "finding": "按level排序后压为位置数组且public重新enumerate；未来须严格校验连续1..N、唯一level、正整数、范围/上限/池，拒缺级、重复级和隐式重编号。"
+    },
+    {
+      "source": "server/internal/persistence/assets.go:124-134",
+      "finding": "当前穿戴尚未核RequiredLevel，扩高阶装备前必须服务端重查角色等级。"
+    },
+    {
+      "source": "server/internal/devconfig/config.go:59-79",
+      "finding": "当前装备增量无MC/SC；来源海魂230 L232、降魔235 L237、骨玉248 L250、龙纹249 L251有明确Mc/Mc2或Sc/Sc2，需共用属性管线，不能只投DC冒充三职成长。"
+    }
+  ],
+  "arithmetic_sanity_only": {
+    "assumption": "沿本作当前LevelN解释为N升N+1，只有现15EXP稻草人，无卡/任务额外经验，8槽完美秒杀的理论上界2880kill/h；不是实际升级周期预测",
+    "sum_thresholds_1_through_49": 205764450,
+    "minimum_kills_at_15_exp": 13717630,
+    "optimistic_hours": 4763.065972222223,
+    "optimistic_days_at_6_hours": 793.8443287037037
+  },
+  "planning_boundaries": {
+    "final_design_5_1": "最终策划案.md:588-598；235天、每2秒1杀与E50=30116333已废为现行节奏；三职×1/4/8怪×低中高装×6/12/24h实测，实际击杀/移动/死亡/药耗/有效时长反推经验与等级档",
+    "final_design_5_12": "最终策划案.md:849-869；85.66/85.17及1800kill标准组合仅历史v0.2模型，不能替代本轮新技能/幸运/绑定/真实装备与回收重算；等级经济档1-19/20-29等不同于装备T1每十级，不能自动共用索引。",
+    "equipment_source_status": "MYF静态CSV含更高NeedLevel/DC/MC/SC/AC/MAC/DuraMax候选，但Need条件/Stdmode/属性复用/性别身份/图像要单独映射；Color不能作quality，Price不能作正式分解。",
+    "recommended_next_slice": "先显式50级上限/待用经验池/连续经验目录校验，再登记T1-T5有来源装备与MC/SC/等级门禁并补真实可获得渠道；Source21-50只作未平衡候选，分层战斗与长期收支样本完成后才发布节奏。主17/护符包决策不借此默默开启。"
+  },
+  "source_hash_after": "b3682dc6194a880790fdbc6e1e8846a784dfa40fda3432e763b40878efef2d01"
+}

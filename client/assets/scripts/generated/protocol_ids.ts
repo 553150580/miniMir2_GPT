@@ -49,6 +49,7 @@ export const MsgS2CSkillAssetPreview: 40012 = 40012;
 export const MsgC2SSkillAssetCommit: 40013 = 40013;
 export const MsgC2SCastWithMaterial: 40014 = 40014;
 export const MsgC2SSetAutoRecycle: 40016 = 40016;
+export const MsgS2CExperienceGrantResult: 40019 = 40019;
 export const MsgS2CEquipmentRecycleResult: 40018 = 40018;
 export const MsgC2SSetItemLock: 40017 = 40017;
 export const MsgC2SSetCastingSupply: 40015 = 40015;

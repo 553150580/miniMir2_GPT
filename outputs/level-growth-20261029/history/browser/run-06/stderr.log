@@ -1,0 +1,6 @@
+page.waitForFunction: Timeout 10000ms exceeded.
+    at selectInventoryInstance (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:134:28)
+    at async mergePagesNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:156:70)
+    at async clearBagNormally (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:228:42)
+    at async grow (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:243:59)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_level_growth_browser.cjs:277:57)

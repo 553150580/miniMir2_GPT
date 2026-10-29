@@ -1,0 +1,15 @@
+{
+  "scope": "原task输出在新完整验证前的原字节快照，须核具体输入摘要后解释历史范围",
+  "files": [
+    {
+      "original": ".work\\tasks\\protocol-check-0.txt",
+      "saved": ".work\\level-growth-20261029\\client\\validation-3\\protocol-artifacts\\protocol-check-0.txt",
+      "sha256": "da54abf462e838c9f5867926e8620c00503dfa71b1403d21ba31154367e7438c"
+    },
+    {
+      "original": ".work\\tasks\\protocol-check-1.txt",
+      "saved": ".work\\level-growth-20261029\\client\\validation-3\\protocol-artifacts\\protocol-check-1.txt",
+      "sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91"
+    }
+  ]
+}

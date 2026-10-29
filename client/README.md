@@ -1,10 +1,14 @@
 # 客户端
 
+自然成长与待用经验已通过rule20限定开发验收：1122项真实Mongo/WS全包Go race、120项配置Python、444项JS（428 UI/app、16场景；217份项目输入与另9份锁定引擎源码分别冻结）；Creator3.8.8实构126.98秒、exit36，10份保存布局不变。正常新道士原装备、原书、原稻草人奖励自然升至22级并跨过旧21级断点；独立明确前态另验50级有界池、满池金币物品继续、原Source回执、旧余额无损封存与旧高等级保留。40019只显示确认后的原奖励/实际接收/入池/拒收，战报和宠物训练使用实际新经验；升级只恢复原场景原出生的存活角色一次，迁移和健康新票不回血或重播。装备提交校验权威需求等级，Role复用保存的可滚动成长详情。kind4沿40011/12/13真实报价手动合并同源书页，保留来源/绑定/品质及总数，完整输入输出写原typed回执与审计；背包复用上下文按钮，10布局不变。当前预览`dev-level-growth-v0.20-ed0b55518991`；MYF经验目录仍为开发候选，不代表自然1至50周期或平衡通过；现有满包额外停战/托管仍须按4.2对齐，不据此认证完整容量策略。转生挑战/费用、完整装备内容、护符规格、真机、容量及完整P0仍待完成。见[阶段验收](../docs/自然成长与待用经验阶段验收.json)。
+
+以下记录保留各自历史阶段范围，当前以本节rule20与最新验收为准。
+
 自动回收与挂机战报已通过rule19限定开发验收：1022项真实Mongo/WS全包Go race、111项配置Python、425项JS（409 UI/app、16场景；212份项目输入与另9份锁定引擎源码分别冻结）；Creator3.8.8实构121.42秒、exit36，正常新角色触屏6项通过，0错误/1警告。策略默认关闭，设置和明确应用背包分开确认，锁定/穿戴/未确认结果/占用为强保护；在线和托管共用原SourceSeq资产事务，40018只显示已提交事实，健康重入不重播。当前预览`dev-auto-recycle-v0.19-65ab01055f34`；主仍22技能、legacy未训宠、护符关闭及17未开放。木剑50/布衣400仍为开发金币夹具，正式分解、损坏回收、洗炼石与祝福油产出未验收；完整P0、真机与容量继续待验。见[阶段验收](../docs/自动回收与挂机战报阶段验收.json)。
 
 以下记录保留各自历史阶段范围，当前状态以本节rule19与最新验收为准。
 
-本目录是Creator3.8.8工程，保存Boot/Login/RoleSelect/Game四个scene及六个prefab，当前为rule19、22项开发候选技能（含瞬息移动21）。完整来源城镇以目录2按原生48×32矩形格和视口分块加载；个人地图1继续17×17菱形。来源小地图在保存槽内等比显示，动态地图对象实例化保存的MapProp；固定布局不由生成器覆盖。
+本目录是Creator3.8.8工程，保存Boot/Login/RoleSelect/Game四个scene及六个prefab，当前为rule20、22项开发候选技能（含瞬息移动21）。完整来源城镇以目录2按原生48×32矩形格和视口分块加载；个人地图1继续17×17菱形。来源小地图在保存槽内等比显示，动态地图对象实例化保存的MapProp；固定布局不由生成器覆盖。
 
 当前rule18新生表现通过405项JS（389 UI/app、16场景）及482个PB边界；204份项目输入与另8份锁定引擎源码分别冻结，不合并冒称同一输入集。主Creator409.74秒、独立候选包原真实构建277.01秒，10份保存布局与旧资源保持。PetBorn仅在fresh17真正安装、原current World及成功SyncReady的完整World.Ref/Auth stamp仍匹配、含body完整基线全组发送后发出；非当前或未Ready不积压。旧附着quiescing仍可观察出生，输入门槛不开放；Cancel不重播，新Entry清scope。 Session最多保留1条pending，资源/visual更换保留消费水位；baseline/Owned首次出现不能推断出生，也不创建身体。原出场10帧×100ms加色，17施法Magic原帧600ms，原WAV独立完整播放。隔离正常触屏4项0错误/3警告，覆盖学习、装备、新生、卸符Recall与健康重入。材料未决日志严格区分17无target的8字段与14/15原目标形状，先校验持久化再发40014；落盘前或失败不发送，未知保留原op重查，不补零坐标。独立静态端口18082；18081已有服务不接管。仅声明单项Editor缓存排除后的source/input全树、完整build与同源public全树SHA严格相等可复用已真实构建的不变包，TS变化必须重构，不运行时替换资源。唯一可再生Editor问卷缓存settings/v2/packages/information.json以excluded_generated_editor_caches单项数组声明，生成文件另记generated_editor_cache_sha256；原tracked字节与SHA已移.work/quarantine/creator-information-20261029，gitignore只排精确项，其它settings/源/产物严核。源码确认Editor问卷与cache查询，runtime splash另读SettingsCategory.SPLASH_SCREEN；实际.ccc缓存非明文，未声称读出正文form/SID。不改splash或授权，不作授权旁路；旧425 compile36但SID漂移的guard失败保留历史。主仍22技能、原商店与初始赠书、legacy免费未训宠及护符关闭；独立17候选required_rule_version=17、runtime_enabled=false，护符包Count单位与售价仍待用户答复。声音在保存Safe的TOUCH_END捕获阶段先于Button停冒泡解锁，全局input仅无UI认领触摸fallback；current拒旧scope。Safe公开NODE_DESTROYED提前退休音频，全局input始终主动退订；正常主动释放按原root/context/capture退订根监听，根销毁时由引擎自清事件表。isValid(strict)不含Destroying，另记根退休；排队组件先解绑clip且不重复destroy，实际已毁组件不再触碰，旧释放不清同Safe新声道。两段原WAV按完整剩余时长播放；GPU帧和AudioSource实际播放观察不等于硬件听感或手机真机。见[阶段验收](../docs/宠物出生表现与隔离客户端阶段验收.json)。
 

@@ -15,9 +15,11 @@ import type { RoleBindingObservation } from './RoleBindingModel';
 import { TeleportModel } from './TeleportModel';
 import { PetBornModel } from './PetBornModel';
 import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
+import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 const recycleModel = new EquipmentRecycleModel();
+const experienceModel = new ExperienceGrantModel();
 let quiescingReady: { entry: any; binding: string; connection: number; ready: boolean } | null = null;
 let confirmedCommand = Long.UONE;
 let localOperation: { id: string; connection: number; binding: string; role: string; scene: string; baseline: string; next: Long } | null = null;
@@ -50,6 +52,8 @@ export const session = {
     skillModesReceivedAt: 0,
     report: null as any,
     recycleNotice: null as import('./AutoRecycleModel').RecycleNotice | null,
+    experienceNotice: null as import('./LevelGrowthModel').ExperienceNotice | null,
+    progressionCurve: null as string | null,
     death: null as any,
     ready: false,
     command: Long.UONE,
@@ -110,7 +114,9 @@ session.connection.subscribe((packet: Packet) => {
             try {
                 if (session.inventory && packet.value.revision.lessThan(session.inventory.revision)) break;
                 if (packet.value.autoRecycle) packet.value.autoRecycle = observedAutoRecycle(packet.value.autoRecycle);
+                if (packet.value.progression) packet.value.progression = observedProgression(packet.value.progression);
                 recycleModel.synchronize(packet.value.revision);
+                experienceModel.synchronize(packet.value.revision);
                 session.inventory = packet.value;
             } catch (error) { session.lastError = error instanceof Error ? error.message : String(error); }
             break;
@@ -174,11 +180,19 @@ session.connection.subscribe((packet: Packet) => {
                 && packet.binding.toString() === identity.binding.toString() && recycleModel.accept(packet.value, roleIdentity())) session.recycleNotice = recycleModel.notice;
             break;
         }
+        case 40019: {
+            const identity = currentEntryIdentity(), curve = session.progressionCurve;
+            if ((session.ready || session.travel.phase === 'quiescing') && session.role && identity && isCurrentEntry(identity)
+                && packet.binding.toString() === identity.binding.toString() && BigInt(session.entry.resourceVersion.toString()) >= 20n
+                && typeof curve === 'string' && session.inventory?.progression?.curveVersion === curve
+                && experienceModel.accept(packet.value, roleIdentity(), session.entry.resourceVersion, curve)) session.experienceNotice = experienceModel.notice;
+            break;
+        }
         case 40005: acceptOperationReceipt(packet); break;
     }
     notify();
 });
-session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; recycleModel.detach(); session.recycleNotice = null; quiescingReady = null; localOperation = null; notify(); });
+session.connection.onStatus(message => { session.lastError = message; session.ready = false; session.travel.reset(); session.teleport.clear(); session.petBorn.clear(); bindingModel.clear(); session.bindingState = null; session.bindingNotice = null; recycleModel.detach(); session.recycleNotice = null; experienceModel.detach(); session.experienceNotice = null; session.progressionCurve = null; quiescingReady = null; localOperation = null; notify(); });
 
 function acceptEntry(packet: Packet): void {
     const value = packet.value;
@@ -209,6 +223,8 @@ function acceptEntry(packet: Packet): void {
         bindingModel.bind(currentEntryIdentity()!); session.bindingState = null; session.bindingNotice = null;
         session.petBorn.bind(currentEntryIdentity()!);
         recycleModel.attach(roleIdentity()); session.recycleNotice = null;
+        experienceModel.attach(roleIdentity()); session.experienceNotice = null;
+        session.progressionCurve = null;
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
     } catch (error) { session.ready = false; session.lastError = error instanceof Error ? error.message : String(error); }

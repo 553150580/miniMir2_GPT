@@ -1,6 +1,6 @@
 import { PotionInteger, PotionItem } from './PotionModel';
 
-export interface SkillAssetItem extends PotionItem { sourceKind?: string; sourceId?: string; quality?: number; }
+export interface SkillAssetItem extends PotionItem { sourceKind?: string; sourceId?: string; quality?: number; locked?: boolean; recycleBlockFlags?: number; }
 export interface SkillAssetDefinition { item_id: number; name: string; kind: string; skill_id?: number; }
 export interface ShopOffer {
     offer_id: number; item_id: number; name: string; quantity: number; currency_kind: 'gold' | 'ingot' | 'bound_ingot';
@@ -20,13 +20,17 @@ export interface SkillAssetsSnapshot {
     offers: readonly ShopOffer[]; upgrades: readonly SkillUpgradeRule[]; recycle: readonly SkillBookRecycleRule[];
 }
 export interface MaterialChoice { instanceId: Uint8Array; version: PotionInteger; quantity: bigint; }
+export interface PreparedSkillAsset {
+    context: SkillAssetContext;
+    request: { kind: number; offerId: number; quantity: bigint; skillId: number; materials: MaterialChoice[] };
+}
 export interface SkillAssetQuote {
     previewId: Uint8Array; kind: number; ruleVersion: PotionInteger; configHash: string; roleRevision: PotionInteger; expiresAtUnixMs: PotionInteger;
     skillId: number; fromLevel: number; toLevel: number; offerId: number; quantity: PotionInteger;
     spend: AssetWallet; materials: readonly { item: SkillAssetItem; consumeQuantity: PotionInteger }[]; outputs: readonly SkillAssetItem[];
     stats: readonly { key: string; beforeMin: PotionInteger; beforeMax: PotionInteger; afterMin: PotionInteger; afterMax: PotionInteger }[];
 }
-interface FrozenItem { id: string; version: string; quantity: string; bound: boolean; sourceKind: string; sourceId: string; quality: number; }
+interface FrozenItem { id: string; itemId: number; version: string; quantity: string; bound: boolean; sourceKind: string; sourceId: string; quality: number; locked: boolean; recycleBlockFlags: number; }
 export interface SkillAssetContext {
     roleIdentity: string; sceneEpoch: string; ruleVersion: string; revision: string; walletRevision: string;
     wallet: readonly string[]; materials: readonly FrozenItem[];
@@ -44,8 +48,9 @@ export function sourceName(value: string | undefined): string {
     return ({ npc_shop: 'NPC书店', initial: '开发初始补给', initial_grant: '开发初始补给', monster_drop: '怪物掉落', skill_recycle: '拆书所得' } as Record<string, string>)[value ?? ''] ?? '未知来源';
 }
 function frozenItem(item: SkillAssetItem): FrozenItem {
-    return { id: assetId(item.instanceId), version: assetInteger(item.version).toString(), quantity: assetInteger(item.quantity).toString(),
-        bound: item.bound, sourceKind: item.sourceKind ?? '', sourceId: item.sourceId ?? '', quality: item.quality ?? 0 };
+    return { id: assetId(item.instanceId), itemId: item.itemId, version: assetInteger(item.version).toString(), quantity: assetInteger(item.quantity).toString(),
+        bound: item.bound, sourceKind: item.sourceKind ?? '', sourceId: item.sourceId ?? '', quality: item.quality ?? 0,
+        locked: item.locked ?? false, recycleBlockFlags: item.recycleBlockFlags ?? 0 };
 }
 function walletValues(wallet: AssetWallet): string[] { return [wallet.gold, wallet.boundGold, wallet.yuanbaoUnits, wallet.boundYuanbaoUnits].map(value => assetInteger(value).toString()); }
 
@@ -85,6 +90,65 @@ export class SkillMaterialSelection {
 export function canRecycleBook(item: SkillAssetItem, rules: readonly SkillBookRecycleRule[]): boolean {
     return assetInteger(item.quantity) > 0n && !!item.sourceId && rules.some(rule => rule.item_id === item.itemId && rule.book_quality === (item.quality ?? 0)
         && rule.allowed_source_kinds.includes(item.sourceKind ?? ''));
+}
+
+// 合并只认已知同源原实例；容量与最终叠数由服务端真实报价决定。
+const PAGE_SOURCES = new Set(['skill_recycle', 'npc_shop', 'monster_drop']);
+function pageMetadata(item: SkillAssetItem): string | null {
+    if (!Number.isInteger(item.itemId) || item.itemId < 1 || item.itemId > 0xffffffff || typeof item.bound !== 'boolean'
+        || !Number.isInteger(item.quality) || item.quality! < 0 || item.quality! > 4 || item.locked !== false || item.recycleBlockFlags !== 0
+        || !PAGE_SOURCES.has(item.sourceKind ?? '') || typeof item.sourceId !== 'string' || !item.sourceId.trim()) return null;
+    return JSON.stringify([item.itemId, item.bound, item.quality, item.sourceKind, item.sourceId, item.locked, item.recycleBlockFlags]);
+}
+function fullPageItem(item: SkillAssetItem): boolean {
+    const id = assetId(item.instanceId), quantity = assetInteger(item.quantity), version = assetInteger(item.version);
+    return !/^0+$/.test(id) && pageMetadata(item) !== null && quantity > 0n && quantity <= 0x7fffffffffffffffn && version > 0n && version < 0x7fffffffffffffffn;
+}
+export function pageMergeGroup(selected: SkillAssetItem | null, items: readonly SkillAssetItem[], definitions: readonly SkillAssetDefinition[]): { items: readonly SkillAssetItem[]; reason: string | null } {
+    const unavailable = (reason: string): { items: readonly SkillAssetItem[]; reason: string } => ({ items: [], reason });
+    if (!selected || !definitions.some(row => row.item_id === selected.itemId && row.kind === 'skill_page')) return unavailable('先选择背包中的书页');
+    try {
+        if (selected.locked || selected.recycleBlockFlags) return unavailable('书页受到保护，不能合并');
+        if (!fullPageItem(selected)) return unavailable('书页来源或原实例资料不完整');
+        const key = assetId(selected.instanceId), original = items.find(item => assetId(item.instanceId) === key);
+        if (!original || JSON.stringify(frozenItem(original)) !== JSON.stringify(frozenItem(selected))) return unavailable('所选书页已变化，请重新选择');
+        const metadata = pageMetadata(selected), seen = new Set<string>(), group: SkillAssetItem[] = [];
+        for (const item of items) {
+            if (pageMetadata(item) !== metadata) continue;
+            if (!fullPageItem(item)) continue;
+            const id = assetId(item.instanceId); if (seen.has(id)) return unavailable('书页原实例标识重复');
+            seen.add(id); group.push(item);
+        }
+        return group.length >= 2 ? { items: group, reason: null } : unavailable('没有同来源、绑定与品质的可合并书页');
+    } catch { return unavailable('书页来源或原实例资料不完整'); }
+}
+export function preparePageMerge(snapshot: SkillAssetsSnapshot, selected: SkillAssetItem | null): PreparedSkillAsset {
+    const group = pageMergeGroup(selected, snapshot.inventory?.items ?? [], snapshot.definitions);
+    if (group.reason) throw new Error(group.reason);
+    const materials = group.items.map(item => ({ instanceId: new Uint8Array(item.instanceId), version: item.version, quantity: assetInteger(item.quantity) }));
+    return { context: captureSkillAssetContext(snapshot, materials), request: { kind: 4, offerId: 0, quantity: 0n, skillId: 0, materials } };
+}
+export function validatePageMergeQuote(quote: SkillAssetQuote, choices: readonly MaterialChoice[], snapshot: SkillAssetsSnapshot): void {
+    validateQuotedMaterials(quote, choices, snapshot);
+    const invalid = (): never => { throw new Error('合并报价与同源完整书页不一致，请重新预览'); };
+    if (quote.kind !== 4 || choices.length < 2 || !quote.outputs.length || quote.outputs.length >= choices.length
+        || quote.skillId !== 0 || quote.offerId !== 0 || assetInteger(quote.quantity) !== 0n || quote.stats.length
+        || walletValues(quote.spend).some(value => value !== '0')) invalid();
+    const first = quote.materials[0]?.item, metadata = first && pageMetadata(first);
+    if (!first || metadata === null || !snapshot.definitions.some(row => row.item_id === first.itemId && row.kind === 'skill_page')) invalid();
+    let before = 0n, after = 0n;
+    for (const value of quote.materials) {
+        const original = snapshot.inventory?.items.find(item => assetId(item.instanceId) === assetId(value.item.instanceId));
+        if (!original || !fullPageItem(original) || pageMetadata(original) !== metadata || pageMetadata(value.item) !== metadata
+            || !fullPageItem(value.item) || assetInteger(value.consumeQuantity) !== assetInteger(value.item.quantity)) invalid();
+        before += assetInteger(value.consumeQuantity);
+    }
+    for (const item of quote.outputs) {
+        const quantity = assetInteger(item.quantity);
+        if (pageMetadata(item) !== metadata || quantity <= 0n || quantity > 0x7fffffffffffffffn) invalid();
+        after += quantity;
+    }
+    if (before !== after) invalid();
 }
 export function adjustPurchaseQuantity(current: bigint, delta: number, maximum: number): bigint {
     if (!Number.isSafeInteger(delta) || !Number.isSafeInteger(maximum) || maximum < 1) throw new Error('商品购买数量配置无效');
@@ -155,6 +219,7 @@ const STAT_NAMES: Record<string, string> = { new_pet_training_level: '新生宠�
 export function skillQuoteLines(quote: SkillAssetQuote, definitions: readonly SkillAssetDefinition[]): string[] {
     const name = (id: number): string => definitions.find(row => row.item_id === id)?.name ?? `物品${id}`;
     const lines: string[] = [];
+    if (quote.kind === 4) lines.push(`原有${quote.materials.length}叠 → 报价${quote.outputs.length}叠`, '合并后来源、绑定与品质保持不变');
     if (quote.kind === 2) lines.push(`技能等级 ${quote.fromLevel} → ${quote.toLevel}`);
     for (const stat of quote.stats) {
         lines.push(STAT_NAMES[stat.key] ?? '数值对照');

@@ -5,6 +5,7 @@ import { teleportFailureText } from './TeleportModel';
 import type { TeleportObservation } from './TeleportModel';
 import type { RecycleNotice } from './AutoRecycleModel';
 import { recycleDiscardText } from './AutoRecycleModel';
+import type { ExperienceNotice, ProgressionState } from './LevelGrowthModel';
 
 export type MessageInteger = string | number | bigint | { toString(): string };
 
@@ -12,6 +13,7 @@ export interface SystemMessage {
     readonly id: number;
     readonly title: string;
     readonly message: string;
+    readonly preview?: string;
 }
 
 interface ItemObservation {
@@ -26,12 +28,14 @@ export interface MessageSnapshot {
     bindingNotice?: RoleBindingObservation | null;
     teleportNotice?: TeleportObservation | null;
     recycleNotice?: RecycleNotice | null;
+    experienceNotice?: ExperienceNotice | null;
     role?: { name?: string; level?: number } | null;
     inventory?: {
         level?: number;
         experience?: MessageInteger;
         items?: readonly ItemObservation[];
         equipped?: readonly { item?: ItemObservation | null }[];
+        progression?: ProgressionState | null;
     } | null;
     wallet?: Partial<Record<'gold' | 'boundGold' | 'yuanbaoUnits' | 'boundYuanbaoUnits', MessageInteger>> | null;
     baseline?: { entities?: readonly { entityHandle: number; entityKind: number; hp?: MessageInteger; life?: MessageInteger }[] } | null;
@@ -45,7 +49,7 @@ export interface MessageSnapshot {
         drops?: readonly ItemObservation[];
     } | null;
     entry?: { sceneEpoch?: MessageInteger; baselineId?: MessageInteger; playerHandle?: number } | null;
-    gameplay?: { items?: readonly { item_id: number; name: string }[]; map_catalog?: readonly { id: string; name?: string }[] } | null;
+    gameplay?: { rule_version?: number; items?: readonly { item_id: number; name: string }[]; map_catalog?: readonly { id: string; name?: string }[] } | null;
     map?: { name?: string } | null;
     ready: boolean;
     lastError?: string;
@@ -97,6 +101,7 @@ export class SystemMessageLog {
     private readonly seenBindingReceipts = new Set<string>();
     private lastBindingNotice = '';
     private lastRecycleRevision = 0n;
+    private lastExperienceRevision = 0n;
     private change = 0;
     readonly capacity: number;
 
@@ -125,6 +130,7 @@ export class SystemMessageLog {
             this.seenReports.clear(); this.resetObservations();
             this.seenBindingReceipts.clear(); this.lastBindingNotice = ''; this.seenTeleportResults.clear();
             this.lastRecycleRevision = 0n;
+            this.lastExperienceRevision = 0n;
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';
         if (binding && binding !== this.binding) {
@@ -147,6 +153,14 @@ export class SystemMessageLog {
         this.observeInventory(snapshot);
         this.observeBinding(snapshot);
         this.observeTeleport(snapshot);
+        const experience = snapshot.experienceNotice;
+        if (experience && experience.role === snapshot.roleIdentity && BigInt(experience.revision) > this.lastExperienceRevision) {
+            this.lastExperienceRevision = BigInt(experience.revision);
+            this.append('经验结算', `原经验 ${experience.raw}\n实际接收 ${experience.accepted}\n计入待用池 ${experience.pooled}\n未接收 ${experience.rejected}`, '经验已提交，轻触查看分账');
+            if (experience.after > experience.before) this.append('角色升级', `${experience.before} 级 → ${experience.after} 级`);
+            if (experience.migrated) this.append('历史成长整理', `历史等级 ${experience.legacyBefore} → ${experience.legacyAfter}\n封存余额以角色成长详情为准`, '历史成长已整理，封存余额可查');
+            if (experience.poolFull && experience.rejected !== '0') this.append('待用经验池已满', `本次未接收 ${experience.rejected} 经验\n战斗和掉落仍正常，超额经验不累计`, '经验池已满，超额经验不再累计');
+        }
         const recycled = snapshot.recycleNotice;
         if (recycled && recycled.role === snapshot.roleIdentity && BigInt(recycled.revision) > this.lastRecycleRevision) {
             this.lastRecycleRevision = BigInt(recycled.revision);
@@ -179,8 +193,8 @@ export class SystemMessageLog {
             experience: integer(snapshot.inventory.experience), items: itemTotals(snapshot) };
         const previous = this.previousInventory;
         if (previous) {
-            if (current.level !== previous.level) this.append(current.level > previous.level ? '角色升级' : '等级更新', `${previous.level} 级 → ${current.level} 级`);
-            if (current.experience !== previous.experience) {
+            if ((snapshot.gameplay?.rule_version ?? 0) < 20 && current.level !== previous.level) this.append(current.level > previous.level ? '角色升级' : '等级更新', `${previous.level} 级 → ${current.level} 级`);
+            if ((snapshot.gameplay?.rule_version ?? 0) < 20 && current.experience !== previous.experience) {
                 const delta = current.experience - previous.experience;
                 if (current.level === previous.level && delta > 0n) this.append('经验获得', `经验 +${delta}`);
                 else this.append('经验进度', `${current.level} 级，当前经验 ${current.experience}`);
@@ -253,8 +267,8 @@ export class SystemMessageLog {
         this.append('瞬移未完成', message);
     }
 
-    private append(title: string, message: string): void {
-        this.entries.push({ id: ++this.serial, title, message });
+    private append(title: string, message: string, preview?: string): void {
+        this.entries.push({ id: ++this.serial, title, message, ...(preview ? { preview } : {}) });
         if (this.entries.length > this.capacity) this.entries.splice(0, this.entries.length - this.capacity);
         this.change++;
     }
