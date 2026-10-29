@@ -1,0 +1,5 @@
+{
+  "server/internal/integration/summon_pet_test.go": "d6e03588ed373c78d6654d511a7a1f4f24a0cf0d0f2144ed89bb909ed5edb585",
+  "server/internal/integration/level_growth_test.go": "bb199b4e7224cce5ae9d6c507e447bdd06e8491ae3a4d355909d6dc9d808c547",
+  "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88"
+}

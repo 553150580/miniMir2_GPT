@@ -7,7 +7,7 @@
   "source_stable_during_build": true,
   "asset_hashes": {
     "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
-    "client/assets/scenes/Game.scene": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
     "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
     "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
     "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
@@ -18,8 +18,8 @@
     "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a"
   },
   "script_hashes": {
-    "client/assets/scripts/app/AppRoot.ts": "e4bf62fdd6fcea552bb4f22f27097806bd075aaa0dd408b94c6b03190f718d65",
-    "client/assets/scripts/app/AutoRecycleModel.ts": "1010742ad50ebeeeee16850e431eef974afdaaf8f736f3c25e66f1cded1fe377",
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
     "client/assets/scripts/app/BaselineAssembler.ts": "6ffa576043f7e6187a24e07e9f1913f220189e666f00e4dc703d46c26a00e63b",
     "client/assets/scripts/app/BeamGeometry.ts": "94105e4ee4c89b0dbf53e43d75790a77e375be30a73af4670105db79ec16bc34",
     "client/assets/scripts/app/CastingSupplyModel.ts": "4519739a00a4e128a1b9602810f07d0e1fe9b05dcf4636f60357bf07210456e2",
@@ -33,7 +33,7 @@
     "client/assets/scripts/app/GameAutoRecycle.ts": "c501cb85a708c2ddc66f2122279a980dbf18b94cb5dac16c156f224e35bccbd1",
     "client/assets/scripts/app/GameCombatStatus.ts": "bade6aaf462da44435e9a9d28a1f83e8b0ed70d218fa54d1d503750a7fe339e4",
     "client/assets/scripts/app/GameConnection.ts": "d284bb6daf77614c722719ab070393064b2bcc6249996dd04c83996fd80c6336",
-    "client/assets/scripts/app/GameErrors.ts": "0ef04069b2337812e81f28e6258af4e12c8e7423da4b3cb7450ca27433890db5",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
     "client/assets/scripts/app/GameHUD.ts": "0710967fe87fc6e0787f5b0965daa5581cbd9d94a241298d58db2d7cd0627de7",
     "client/assets/scripts/app/GameMessages.ts": "7514845cb11caa209db30fd317bf29d4ef95d1087b4713d53a63eb651dea066b",
     "client/assets/scripts/app/GameSession.ts": "1fcf9d9749ede03e0302f7883dedf7b8a92d2e34e42052ca8447afc61adc6ed1",
@@ -88,7 +88,7 @@
     "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
     "client/assets/scripts/generated/protobuf/client_pb.js": "374e1f56f0f2aade15b21afed401cf6b4db26653cf48f60aac3f4a1dddd8ab99"
   },
-  "seconds": 126.98,
+  "seconds": 120.57,
   "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log",
   "physical_mobile_verified": false
 }

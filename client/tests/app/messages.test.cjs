@@ -118,22 +118,24 @@ test('日志有界且可按中文检索，不改变已存消息或产生伪时�
     assert.deepEqual(Object.keys(log.messages[0]), ['id', 'title', 'message']);
 });
 
-test('自动战斗满包拒绝显示解决办法，其他协议上下文不误报满包', () => {
-    assert.equal(protocolErrorMessage(30004, 2103), '背包已满，整理后再开启自动战斗');
+test('Town或未知地图的2103是场景禁止，不能再推断满包关闭Auto', () => {
+    assert.equal(protocolErrorMessage(30004, 2103), '当前场景不允许调整自动战斗');
     assert.equal(protocolErrorMessage(30004, 1001), '操作失败，错误码1001');
-    assert.equal(protocolErrorMessage(10001, 2103), '操作失败，错误码2103');
+    assert.equal(protocolErrorMessage(10001, 2103), '当前场景不允许此操作');
 });
 
-test('一次满包错误的订阅与请求回执不重复刷屏，旧两种文案也归并', () => {
+test('同一场景禁止错误的订阅与请求回执去重，旧无上下文错误只归并通用解释', () => {
     const log = new SystemMessageLog();
     log.observe(state());
     for (let index = 0; index < 30; index++) {
         log.observe(state({ lastError: '服务端拒绝：2103' }));
         log.observe(state({ lastError: '操作失败，错误码2103' }));
-        log.observe(state({ lastError: protocolErrorMessage(30004, 2103) }));
     }
     assert.deepEqual(log.messages.filter(item => item.title === '提示').map(item => item.message),
-        ['背包已满，整理后再开启自动战斗']);
+        ['当前场景不允许此操作']);
+    for (let index = 0; index < 30; index++) log.observe(state({ lastError: protocolErrorMessage(30004, 2103) }));
+    assert.equal(log.messages.filter(item => item.message === '当前场景不允许调整自动战斗').length, 1);
+    assert(!log.messages.some(item => /满包|背包已满|再开启/.test(item.message)));
     log.observe(state({ lastError: '连接已关闭' }));
     assert.equal(log.messages.at(-1).message, '连接已关闭');
 });

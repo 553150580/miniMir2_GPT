@@ -1,0 +1,1 @@
+{"status": "candidate_reviewed_not_applied", "changed_cells": 1, "formulas_preserved": 460, "untouched_zip_members_verified": 102, "candidate_sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0", "applied": true}

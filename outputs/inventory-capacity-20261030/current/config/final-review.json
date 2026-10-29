@@ -1,0 +1,140 @@
+{
+  "status": "configuration_complete_and_frozen",
+  "recorded_at_utc": "2026-10-29T17:52:05.036758+00:00",
+  "rule_version": 21,
+  "preview": "dev-inventory-capacity-v0.21-ed0b55518991",
+  "python_tests": 120,
+  "changed_workbook_cells": 1,
+  "only_profile_rule_20_to_21": true,
+  "formulas_preserved": 460,
+  "untouched_zip_members_verified": 102,
+  "architecture_workbook_preserved": true,
+  "schema_unchanged": true,
+  "all_runtime_gameplay_values_other_than_rule_version_unchanged": true,
+  "independent_candidate_payloads_unchanged": true,
+  "go_ts_generated_type_bytes_unchanged": true,
+  "sync_record_matches_new_release": true,
+  "main_skill_count": 22,
+  "summon17_enabled": false,
+  "casting_supply_enabled": false,
+  "bootstrap_mode": "legacy_untrained_pet",
+  "summon_candidate_required_rule_version": 17,
+  "summon_candidate_runtime_enabled": false,
+  "legacy_rule20_contract_tests_unchanged": true,
+  "current_devconfig_assertions_changed": [
+    "server/internal/devconfig/map_catalog_test.go",
+    "server/internal/devconfig/pet_runtime_test.go",
+    "server/internal/devconfig/summon_test.go"
+  ],
+  "commands": [
+    {
+      "name": "candidate",
+      "report": "candidate.json",
+      "exit_code": 0,
+      "seconds": 1.543
+    },
+    {
+      "name": "apply",
+      "report": "apply.json",
+      "exit_code": 0,
+      "seconds": 1.329
+    },
+    {
+      "name": "export-check",
+      "report": "export-check.json",
+      "exit_code": 0,
+      "seconds": 0.81
+    },
+    {
+      "name": "pet-generate",
+      "report": "pet-generate.json",
+      "exit_code": 0,
+      "seconds": 0.783
+    },
+    {
+      "name": "summon-generate",
+      "report": "summon-generate.json",
+      "exit_code": 0,
+      "seconds": 0.768
+    },
+    {
+      "name": "fixture-generate",
+      "report": "fixture-generate.json",
+      "exit_code": 0,
+      "seconds": 0.958
+    },
+    {
+      "name": "export",
+      "report": "export.json",
+      "exit_code": 0,
+      "seconds": 0.865
+    },
+    {
+      "name": "pet-check",
+      "report": "pet-check.json",
+      "exit_code": 0,
+      "seconds": 0.733
+    },
+    {
+      "name": "summon-check",
+      "report": "summon-check.json",
+      "exit_code": 0,
+      "seconds": 0.729
+    },
+    {
+      "name": "fixture-check",
+      "report": "fixture-check.json",
+      "exit_code": 0,
+      "seconds": 1.006
+    },
+    {
+      "name": "python-full",
+      "report": "python-full.json",
+      "exit_code": 0,
+      "seconds": 44.488
+    },
+    {
+      "name": "sync-bindings",
+      "report": "sync-bindings.json",
+      "exit_code": 0,
+      "seconds": 0.563
+    },
+    {
+      "name": "verify-bindings",
+      "report": "verify-bindings.json",
+      "exit_code": 0,
+      "seconds": 1.527
+    }
+  ],
+  "current_hashes": {
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "client/assets/scripts/generated/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "conf/toolchain/config-binding-sync.json": "16ba48618c4f7af47b117fc5add29cf3336c5840c85a4eb4dd937ad32ac5447d",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "config/development/pet-runtime-candidates.json": "f77eb019f21811062aee59299a8b0eb32a6de69cf2e6f5dbf4a8ad3f2da38117",
+    "config/development/summon-candidates.json": "ab4bb552ac8e133d6384dce303dfa91ff0f412fb0cb6741edd6f18dd19318477",
+    "config/releases/dev-inventory-capacity-v0.21-ed0b55518991/client.json": "ad11d71e4ef1ba94435500f45adfb6f471c1dfc240bf87621961f3a40c0e081b",
+    "config/releases/dev-inventory-capacity-v0.21-ed0b55518991/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "config/releases/dev-inventory-capacity-v0.21-ed0b55518991/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "config/releases/dev-inventory-capacity-v0.21-ed0b55518991/manifest.json": "65d7bbcfcf366a22db5c43062ccf1968e3fd5ab0a9968be970025ed250f348b7",
+    "config/releases/dev-inventory-capacity-v0.21-ed0b55518991/server.json": "10b1da1c70b4a5470dcc46e7cba088bf9953b9649f49873b5ad661edc73bf316",
+    "config/releases/preview_current.json": "31adeb38b6a5c3d2e3c6682b6e171433b53bd0fce880f0ec83115903267f3e1c",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "server/internal/configtypes/config_types.go": "0c76ee187448189b3d01857a6419b0a82bc551c3c1667c62d7213274610a8c1f",
+    "server/internal/devconfig/map_catalog_test.go": "0aa388ce031ebf127997b7a007e3da83562c74488877f5e5bf1d7ef00fbe6959",
+    "server/internal/devconfig/pet_runtime_test.go": "6305cbb397b86345dece69334b0a40a4a0c57decf6e9df3c6e04f102f10e53a4",
+    "server/internal/devconfig/summon_test.go": "f6dba0a46cf80b7e0b7268f0709c9e786046ff46cc03df31619acf8d5ff03150",
+    "tools/config/test_equipment_recycling.py": "8bf819eb6c67c998977a943e2a2067354b8001ca17029ffe88d05fdf4c874647",
+    "tools/config/test_level_growth.py": "9dc55fee23a9025b4a633deefd392a7fe75e59411889e3f4bf192bf948f1dbb5",
+    "tools/config/test_pet_runtime.py": "4cb4a0cb5073057537d90eac7bd1b96ea395d94f0611a03270f4c2eb3fe533f8",
+    "tools/config/test_safe_zone_binding.py": "6781293322fb7e5529e977da9fdb7339887fe7f5fdabc0c4723abd655b373e6a",
+    "tools/config/test_summon_candidates.py": "b4b8c1c207c6abac0f263ca039371761f3f3205e187bcf1b4957ccb1e99b0eed",
+    "tools/config/test_teleport.py": "13d06485467556a6925388516dee70179632347a06e8100fd16565021c48089c",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+    "tools/resources/prepare_summon_candidates.py": "301033c4473648b7435397a1c98a6340df827d04bf0ac8f068542eb556d844b5"
+  },
+  "scope": "配置/投影/类型一致性及Python校验，不表示stage21满包业务、Creator、GUI、Mongo或容量验收"
+}

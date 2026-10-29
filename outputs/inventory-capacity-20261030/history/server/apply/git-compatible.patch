@@ -1,0 +1,612 @@
+diff --git a/server/internal/game/combat.go b/server/internal/game/combat.go
+--- a/server/internal/game/combat.go
++++ b/server/internal/game/combat.go
+@@ -373,7 +373,7 @@
+ 			return
+ 		}
+ 	}
+-	if offline && (r.Role.HostingSeconds <= 0 || r.Role.PickupStopped || !r.Auto) {
++	if offline && (r.Role.HostingSeconds <= 0 || !r.Auto) {
+ 		return
+ 	}
+ 	if offline {
+@@ -580,11 +580,6 @@
+ 	if len(finished) > 0 {
+ 		finished[0]()
+ 	}
+-	if r.Role.PickupStopped {
+-		for _, world := range r.worlds() {
+-			world.Auto = false
+-		}
+-	}
+ 	if q.Item != nil {
+ 		world := r.world(binding.world)
+ 		if world == nil {
+diff --git a/server/internal/game/full_bag_policy_test.go b/server/internal/game/full_bag_policy_test.go
+new file mode 100644
+--- /dev/null
++++ b/server/internal/game/full_bag_policy_test.go
+@@ -0,0 +1,177 @@
++package game
++
++import (
++	"encoding/json"
++	"fmt"
++	"google.golang.org/protobuf/proto"
++	pb "minimir/api/generated/minimirv1"
++	"minimir/internal/domain"
++	"minimir/internal/persistence"
++	p "minimir/internal/protocol"
++	"minimir/internal/wire"
++	"testing"
++	"time"
++)
++
++// 独立战斗/容量资格；不代表自然养成速度或正式掉率验收。
++func fullBagPolicyWorker(t *testing.T) (*worker, *room, *capturedConnection) {
++	t.Helper()
++	w, r, c := stageBWorker(t, 0)
++	r.Pet = nil
++	r.Role.ID = domain.ID()
++	r.Auth.RoleID = r.Role.ID
++	r.Role.Revision, r.Role.SourceSeq, r.Role.EconomicSeq = 10, 4, 5
++	r.Role.Capacity, r.Role.HostingSeconds, r.Role.PickupStopped = 1, 3, true
++	r.Role.ProgressionFormatVersion = 1
++	r.Role.ProgressionCurveVersion = w.e.Store.Cfg.Fixture.Progression.CurveVersion
++	r.Role.AutoRecycle = domain.AutoRecyclePolicy{}
++	r.Role.Items = []domain.Item{{ID: domain.ID(), ItemID: 218, Quantity: 1, Version: 1, Locked: true}}
++	r.Role.Skills = nil
++	r.Auto = true
++	r.HostSession = domain.ID()
++	w.rooms = map[string]*room{r.Role.ID: r}
++	w.e.jobs = make(chan job, 8)
++	definition := w.e.Store.Cfg.Fixture.Monsters[0]
++	definition.AttackMin, definition.AttackMax, definition.Agility = 0, 0, 0
++	r.Monsters[0].Monster = &definition
++	w.roll = func(int64) int64 { return 0 }
++	return w, r, c
++}
++
++func TestFullBagNormalAutoIntentRemainsAvailable(t *testing.T) {
++	w, r, c := fullBagPolicyWorker(t)
++	for index, enabled := range []bool{false, true} {
++		c.frames = nil
++		request := uint32(index + 1)
++		w.command(command{role: r.Role.ID, conn: c, frame: wire.Message(p.MsgC2SAutoBattle, request, uint64(r.Auth.SessionEpoch), &pb.AutoBattleIntent{SceneEpoch: r.Scene, Enabled: enabled, MonsterCount: 1})})
++		if r.Auto != enabled || !r.Role.PickupStopped || len(c.frames) < 2 || c.frames[0].ID != p.MsgS2CHostingState || c.frames[0].Request != request || c.frames[0].Error != 0 {
++			t.Fatal("拾取阻塞仍拒绝普通Auto，或自动清除容量事实", r.Auto, c.frames)
++		}
++		var state pb.HostingState
++		if err := proto.Unmarshal(c.frames[0].Payload, &state); err != nil || state.AutoBattleEnabled != enabled || state.RemainHostingSec != 3 {
++			t.Fatal("Auto响应不是当前真实hosting状态", state, err)
++		}
++	}
++}
++
++func TestFullBagConfirmedSettlementKeepsEveryWorldAutoIntent(t *testing.T) {
++	w, r, _ := fullBagPolicyWorker(t)
++	original := r.currentWorld()
++	r.PersonalWorld = original
++	r.TownWorld = r.newWorld(2)
++	r.TownWorld.Auto = false
++	r.Pending = true
++	r.SettlementGeneration = 1
++	r.PendingOperationID, r.PendingFingerprint = "original-source", "original-digest"
++	b := settlementBinding{room: r, auth: r.Auth, world: original.Ref, generation: 1, id: r.PendingOperationID, fingerprint: r.PendingFingerprint}
++	q := persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1}
++	next := r.Role
++	next.Revision++
++	next.SourceSeq = q.SourceSeq
++	w.finishSettlement(b, q, next, nil, &job{})
++	if r.Pending || !original.Auto || r.TownWorld.Auto || !r.Role.PickupStopped {
++		t.Fatal("满包结果关闭了当前或休眠World的Auto")
++	}
++}
++
++func TestFullBagActualAttackStillReleasesKillFactOnlineAndOffline(t *testing.T) {
++	for _, offline := range []bool{false, true} {
++		t.Run(fmt.Sprint(offline), func(t *testing.T) {
++			w, r, _ := fullBagPolicyWorker(t)
++			if offline {
++				r.Conn = nil
++			}
++			m := r.Monsters[0]
++			m.HP, m.MaxHP = 1, 1
++			now := time.Unix(1800000000, 0)
++			r.LastTick = now.Add(-100 * time.Millisecond)
++			w.step(r, now)
++			if r.Player.AttackSequence != 1 || len(r.Attacks) != 1 || m.HP != 1 {
++				t.Fatal("满包Auto未真正释放普通攻击，或伤害提前发生")
++			}
++			w.step(r, r.Attacks[0].Due)
++			if m.HP != 0 || len(r.KillFacts) != 1 || !r.Pending || len(w.e.jobs) != 1 {
++				t.Fatal("满包后的真实命中未进入原永久事实单槽")
++			}
++			q := w.killSettlement(r, r.KillFacts[0])
++			if q.Kills != 1 || q.Experience != m.Monster.Exp || q.SourceSeq != 5 || r.Role.SourceSeq != 4 || offline && (q.HostingSession != r.HostSession || r.HostMS <= 0) {
++				t.Fatal("满包kill的EXP/原来源/离线时钟被截断", q)
++			}
++		})
++	}
++}
++
++func TestFullBagOfflineChargesOriginalSlotAndStopsNewAIAtZero(t *testing.T) {
++	w, r, _ := fullBagPolicyWorker(t)
++	r.Conn = nil
++	r.Role.HostingSeconds, r.HostMS = 1, 900
++	now := time.Unix(1800000000, 0)
++	r.LastTick = now.Add(-100 * time.Millisecond)
++	w.step(r, now)
++	q := persistence.Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: r.HostSession}
++	raw, err := json.Marshal(q)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if !r.Pending || len(w.e.jobs) != 1 || r.HostMS != 0 || r.Role.HostingSeconds != 1 || r.PendingFingerprint != persistence.Hash(raw) {
++		t.Fatal("满包未进入原扣秒事务，或提交前先减余额")
++	}
++	retry := <-w.e.jobs // 只取原job身份，不执行DB；下方模拟既有完成回调。
++	b := settlementBinding{room: r, auth: r.Auth, world: r.currentWorld().Ref, generation: r.SettlementGeneration, id: r.PendingOperationID, fingerprint: r.PendingFingerprint}
++	next := r.Role
++	next.HostingSeconds, next.SourceSeq = 0, q.SourceSeq
++	next.Revision++
++	w.finishSettlement(b, q, next, persistence.Fail(p.CodeOperationPending, "unknown"), &retry)
++	w.step(r, r.RetryAt.Add(-time.Nanosecond))
++	if !r.Pending || r.Role.HostingSeconds != 1 || r.Role.SourceSeq != 4 || len(w.e.jobs) != 0 || r.Player.AttackSequence != 0 {
++		t.Fatal("未知扣秒重复分配或提前放开战斗")
++	}
++	w.finishSettlement(b, q, next, nil, &retry)
++	w.step(r, r.LastTick.Add(100*time.Millisecond))
++	if r.Pending || r.Role.HostingSeconds != 0 || !r.Auto || r.Player.AttackSequence != 0 || len(w.e.jobs) != 0 {
++		t.Fatal("余额0仍新增离线AI/重复扣时，或篡改用户Auto意图")
++	}
++}
++
++func TestFullBagDoesNotBypassOwnerAndLifeSafetyGates(t *testing.T) {
++	for _, reason := range []string{"pending", "dead", "not_ready", "stopped", "isolated", "unknown_map", "offline_zero", "offline_auto_off", "town"} {
++		t.Run(reason, func(t *testing.T) {
++			w, r, _ := fullBagPolicyWorker(t)
++			switch reason {
++			case "pending":
++				r.Pending = true
++			case "dead":
++				r.Player.HP = 0
++			case "not_ready":
++				r.Ready = false
++			case "stopped":
++				w.e.stopped.Store(true)
++			case "isolated":
++				r.Isolated = true
++			case "unknown_map":
++				r.MapID = ^uint64(0)
++			case "offline_zero":
++				r.Conn, r.Role.HostingSeconds = nil, 0
++			case "offline_auto_off":
++				r.Conn, r.Auto = nil, false
++			case "town":
++				r.Conn, r.MapID, r.MonsterCount, r.Monsters = nil, 2, 0, nil
++				m, known := w.e.Store.Cfg.Fixture.MapByID(2)
++				if !known {
++					t.Fatal("当前目录缺少Town")
++				}
++				r.Player.Pos = m.PlayerSpawn
++			}
++			now := time.Unix(1800000000, 0)
++			r.AwaitUntil = now.Add(time.Minute)
++			r.LastTick = now.Add(-100 * time.Millisecond)
++			w.step(r, now)
++			if r.Player.AttackSequence != 0 || len(r.Attacks) != 0 || len(r.Casts) != 0 || len(w.e.jobs) != 0 || r.HostMS != 0 || r.Role.SourceSeq != 4 {
++				t.Fatal("容量修复绕过了原安全屏障", reason)
++			}
++			if reason == "dead" && r.Player.HP != 0 || reason == "pending" && !r.Pending {
++				t.Fatal("容量修复复活玩家或清除了原Pending", reason)
++			}
++		})
++	}
++}
+diff --git a/server/internal/game/hosting_test.go b/server/internal/game/hosting_test.go
+--- a/server/internal/game/hosting_test.go
++++ b/server/internal/game/hosting_test.go
+@@ -23,27 +23,7 @@
+ func (c *capturedConnection) SetBinding(uint64)         {}
+ func (c *capturedConnection) Binding() uint64           { return 3 }
+ 
+-func TestFullBagAutoRejectPushesActualHosting(t *testing.T) {
+-	conn := &capturedConnection{}
+-	r := &room{Conn: conn, Ready: true, Scene: 20, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{PickupStopped: true, HostingSeconds: 42, Revision: 7}, worldState: &worldState{MonsterCount: 1, Auto: false}}
+-	w := &worker{rooms: map[string]*room{"role": r}}
+-	f := wire.Message(p.MsgC2SAutoBattle, 9, 3, &pb.AutoBattleIntent{SceneEpoch: 20, Enabled: true, MonsterCount: 8})
+-	w.command(command{role: "role", conn: conn, frame: f})
+-	if len(conn.frames) != 2 || conn.frames[0].ID != p.MsgC2SAutoBattle || conn.frames[0].Request != 9 || conn.frames[0].Error != p.CodeLineForbidden {
+-		t.Fatalf("满包拒绝没有沿原请求返回错误:%v", conn.frames)
+-	}
+-	push := conn.frames[1]
+-	state := &pb.HostingState{}
+-	if err := proto.Unmarshal(push.Payload, state); err != nil {
+-		t.Fatal(err)
+-	}
+-	if push.ID != p.MsgS2CHostingState || push.Request != 0 || state.AutoBattleEnabled || state.RemainHostingSec != 42 || state.StateRevision != 7 {
+-		t.Fatalf("满包拒绝后未补真实hosting:%v %v", push, state)
+-	}
+-	if r.Auto || r.MonsterCount != 1 {
+-		t.Fatal("被拒绝的自动战斗请求改变了场景状态")
+-	}
+-}
++// 满包拒绝Auto的旧测试完整字节留在阶段历史；普通Auto按独立容量政策测试。
+ 
+ func TestDeadPlayerCountChangePushesSnapshotWithoutReset(t *testing.T) {
+ 	conn := &capturedConnection{}
+diff --git a/server/internal/game/map_travel_ack_test.go b/server/internal/game/map_travel_ack_test.go
+--- a/server/internal/game/map_travel_ack_test.go
++++ b/server/internal/game/map_travel_ack_test.go
+@@ -20,6 +20,7 @@
+ 	if r.MapID != 1 || r.Ready || r.Travel.Acked {
+ 		t.Fatal("未进入新个人场景待ACK阶段")
+ 	}
++	r.Role.PickupStopped = true // 容量修复不放开新场景资源ACK前的战斗。
+ 	r.Player.ActionReadyAt = now
+ 	m := r.Monsters[0]
+ 	m.Pos = devconfig.Point{X: r.Player.Pos.X + 1, Y: r.Player.Pos.Y}
+diff --git a/server/internal/game/runtime.go b/server/internal/game/runtime.go
+--- a/server/internal/game/runtime.go
++++ b/server/internal/game/runtime.go
+@@ -543,11 +543,6 @@
+ 			w.failure(r, c.frame, p.CodeInvalidArgument)
+ 			return
+ 		}
+-		if q.Enabled && r.Role.PickupStopped {
+-			w.failure(r, c.frame, p.CodeLineForbidden)
+-			w.hosting(r, 0)
+-			return
+-		}
+ 		if m, ok := w.currentMap(r); !ok || m.SceneKindValue() == devconfig.SceneKindTown {
+ 			w.failure(r, c.frame, p.CodeLineForbidden)
+ 			w.hosting(r, c.frame.Request)
+diff --git a/server/internal/integration/auto_recycle_test.go b/server/internal/integration/auto_recycle_test.go
+--- a/server/internal/integration/auto_recycle_test.go
++++ b/server/internal/integration/auto_recycle_test.go
+@@ -276,13 +276,41 @@
+ 	var events []*pb.EquipmentRecycleResult
+ 	phase := "enter"
+ 	attacks, positiveImpacts := 0, 0
++	pendingAttacks := map[uint32]bool{}
++	observedDeaths := map[string]bool{}
++	lastExperienceSource := uint64(0)
+ 	observe := func(c *client, f wire.Frame) {
++		if f.Error == 0 && f.ID == p.MsgS2CSceneBaseline && c.scene != nil {
++			for _, body := range c.scene.Entities {
++				if body.EntityKind == 3 && body.Hp == 0 {
++					observedDeaths[fmt.Sprintf("%d:%d", body.EntityHandle, body.Life)] = true
++				}
++			}
++		}
++		if f.Error == 0 && f.ID == p.MsgS2CExperienceGrantResult {
++			var grant pb.ExperienceGrantResult
++			must(t, proto.Unmarshal(f.Payload, &grant))
++			if grant.RawExperience > 0 && grant.SourceSeq > lastExperienceSource {
++				lastExperienceSource = grant.SourceSeq
++			}
++		}
+ 		if f.Error == 0 && f.ID == p.MsgS2CAttackAccepted {
+ 			attacks++
++			var attack pb.AttackAccepted
++			must(t, proto.Unmarshal(f.Payload, &attack))
++			if attack.CasterHandle == c.entry.GetPlayerHandle() && attack.TargetHandle != 0 {
++				if len(pendingAttacks) >= cfg.Fixture.CombatTiming.EventCapacity {
++					t.Fatal("有效目标攻击超过原事件容量")
++				}
++				pendingAttacks[attack.AttackSequence] = true
++			}
+ 		}
+ 		if f.Error == 0 && f.ID == p.MsgS2CCombatImpact {
+ 			var hit pb.CombatImpact
+ 			must(t, proto.Unmarshal(f.Payload, &hit))
++			if hit.CasterHandle == c.entry.GetPlayerHandle() && hit.AttackSequence != 0 {
++				delete(pendingAttacks, hit.AttackSequence)
++			}
+ 			if hit.Amount > 0 {
+ 				positiveImpacts++
+ 			}
+@@ -298,6 +326,24 @@
+ 	}
+ 	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observe)
+ 	defer func() { c.close() }()
++	stopAutoAndDrain := func() {
++		c.auto(false, 8)
++		for len(pendingAttacks) > 0 {
++			c.read() // 有效目标攻击包括miss/cancel终态；空挥未加入集合。
++		}
++		// Impact早于事件批末的死亡基线；先用同请求基线越过此前全部帧，
++		// 不把该请求本身当永久Pending屏障。
++		request := c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, CancelNavigation: true})
++		c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && f.Request == request })
++		// 此段新角色无施法/绑定来源，在线SourceSeq仅为实际kill；以刚刚
++		// 完整观察到的原怪死亡数等EXP确认，不在命中后猜永久Pending已完成。
++		for lastExperienceSource < uint64(len(observedDeaths)) {
++			c.read()
++		}
++		if len(pendingAttacks) != 0 {
++			t.Fatal("Auto已关闭并收束后新增攻击")
++		}
++	}
+ 	defer func() {
+ 		if t.Failed() {
+ 			stored, e := inspection.Role(context.Background(), roleID)
+@@ -340,10 +386,39 @@
+ 	discard := untilResult(func(x *pb.EquipmentRecycleResult) bool { return x.Trigger == 1 && x.DiscardedCount == 1 })
+ 	full, err := inspection.Role(ctx, roleID)
+ 	must(t, err)
+-	if !full.PickupStopped || full.SourceSeq != int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 {
+-		t.Fatal("默认关闭未按原满包规则停止", full, discard)
+-	}
+-	c.auto(false, 8)
++	if !full.PickupStopped || full.SourceSeq < int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 || c.hosting == nil || !c.hosting.AutoBattleEnabled {
++		t.Fatal("默认关闭未真实弃物，或满包关闭了Auto", full, discard)
++	}
++	phase = "full_bag_continues_actual_kill_experience"
++	continued := c.until(func(f wire.Frame) bool {
++		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
++			return false
++		}
++		var grant pb.ExperienceGrantResult
++		must(t, proto.Unmarshal(f.Payload, &grant))
++		return grant.SourceSeq > discard.SourceSeq && grant.AcceptedExperience > 0
++	})
++	_ = continued
++	stopAutoAndDrain()
++	full, err = inspection.Role(ctx, roleID)
++	must(t, err)
++	if !full.PickupStopped || full.SourceSeq <= int64(discard.SourceSeq) || c.hosting.AutoBattleEnabled {
++		t.Fatal("首弃物后未继续原kill/EXP，或正常关闭Auto失效", full)
++	}
++	// 仍未腾格，使用正常意图重新开启，必须成功且再产生真实kill确认。
++	beforeRestart := full.SourceSeq
++	c.auto(true, 8)
++	c.until(func(f wire.Frame) bool {
++		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
++			return false
++		}
++		var grant pb.ExperienceGrantResult
++		must(t, proto.Unmarshal(f.Payload, &grant))
++		return grant.SourceSeq > uint64(beforeRestart) && grant.AcceptedExperience > 0
++	})
++	stopAutoAndDrain()
++	full, err = inspection.Role(ctx, roleID)
++	must(t, err)
+ 	var wood []*pb.ItemView
+ 	for _, item := range c.inventory.Items {
+ 		if item.ItemId == 218 {
+diff --git a/server/internal/integration/full_bag_policy_test.go b/server/internal/integration/full_bag_policy_test.go
+new file mode 100644
+--- /dev/null
++++ b/server/internal/integration/full_bag_policy_test.go
+@@ -0,0 +1,121 @@
++package integration
++
++import (
++	"context"
++	"fmt"
++	"go.mongodb.org/mongo-driver/v2/bson"
++	pb "minimir/api/generated/minimirv1"
++	"minimir/internal/devconfig"
++	"minimir/internal/domain"
++	"minimir/internal/persistence"
++	p "minimir/internal/protocol"
++	"os"
++	"reflect"
++	"testing"
++	"time"
++)
++
++func TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo(t *testing.T) {
++	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
++		t.Skip("显式真实Mongo满包连续来源/托管账")
++	}
++	cfg, err := devconfig.Load("../../../conf/dev/server.json")
++	must(t, err)
++	if cfg.Fixture.RuleVersion < 21 {
++		t.Fatal("本候选须在下一阶段唯一Excel受控升级后应用")
++	}
++	cfg.Database = "minimir_dev_game_test_" + domain.ID()
++	ctx := context.Background()
++	authority, err := persistence.Open(ctx, cfg)
++	must(t, err)
++	owner, err := persistence.Open(ctx, cfg)
++	must(t, err)
++	t.Cleanup(func() {
++		cleanup, cancel := context.WithTimeout(context.Background(), 10*time.Second)
++		defer cancel()
++		must(t, authority.DB.Drop(cleanup))
++		owner.Close(cleanup)
++		authority.Close(cleanup)
++	})
++	must(t, authority.Singleton(ctx, "account"))
++	grant, err := authority.ApproveGame(ctx, cfg.NodeID, owner.Instance, cfg.RunID)
++	must(t, err)
++	owner.Epoch = grant.Epoch
++	login, err := authority.Login(ctx, "full_policy_"+domain.ID()[:8], "test_123456", true)
++	must(t, err)
++	account, err := authority.Authenticate(ctx, login.AccountToken)
++	must(t, err)
++	key, err := authority.CreateRole(ctx, account, &pb.CreateRoleRequest{OriginServerId: 1, Slot: 1, Job: 0, Name: "满包来源" + domain.ID()[:5], OpId: domain.Bytes(domain.ID())})
++	must(t, err)
++	roleID := domain.Hex(key.Key.RoleId)
++	initial, err := authority.Role(ctx, roleID)
++	must(t, err)
++	var original domain.Item
++	for _, item := range initial.Items {
++		if definition, ok := cfg.Fixture.Item(item.ItemID); ok && definition.IsEquipment {
++			original = item
++			break
++		}
++	}
++	if original.ID == "" {
++		t.Fatal("缺少真实新生装备资格")
++	}
++	original.Locked = true
++	// 仅隔离库入场资格：1格已满、受保护原件、3秒余额；不预置收益/回执。
++	_, err = authority.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{"$set": bson.M{"capacity": 1, "items": []domain.Item{original}, "hosting_seconds": 3, "pickup_stopped": true}})
++	must(t, err)
++	ticket, err := authority.IssueTicket(ctx, account, key.Key)
++	must(t, err)
++	r, auth, err := owner.Enter(ctx, ticket.Ticket)
++	must(t, err)
++	before := r
++	monster := cfg.Fixture.Monsters[0]
++	if monster.Exp <= 0 || monster.GoldMin <= 0 || len(cfg.Fixture.Drops.ItemIDs) == 0 {
++		t.Fatal("本例需要当前怪物真实EXP/金币与普通道具候选")
++	}
++	requests := []persistence.Settlement{}
++	var firstReceipt persistence.Operation
++	for index := 0; index < 3; index++ {
++		q := persistence.Settlement{SourceSeq: r.SourceSeq + 1, Kills: 1, Experience: monster.Exp, HostSeconds: 1, HostingSession: "full-session", NoEquipmentKills: r.NoEquipmentKills + 1, EventAt: time.Now()}
++		if index == 1 {
++			q.Gold = monster.GoldMin // 来源分支独立：不伪造一次kill同时掉金掉物。
++		} else {
++			itemID := cfg.Fixture.Drops.ItemIDs[0]
++			q.Item = &domain.Item{ID: domain.ID(), ItemID: itemID, Quantity: 1, Version: 1, SourceKind: "monster_drop", SourceID: fmt.Sprint(q.SourceSeq)}
++		}
++		out, receipt, err := owner.SettleWithReceipt(ctx, auth, q)
++		must(t, err)
++		if !reflect.DeepEqual(out.Items, before.Items) || out.SourceSeq != q.SourceSeq || out.EconomicSeq != before.EconomicSeq || out.HostingSeconds != r.HostingSeconds-1 || receipt.Settlement == nil || receipt.Settlement.Experience.ActualGranted != monster.Exp {
++			t.Fatal("真实满包来源没有继续接收EXP/扣时或修改了原保护件", out, receipt)
++		}
++		if q.Item != nil && (receipt.Settlement.GrantedItem || receipt.Settlement.Recycling.DiscardedCount != 1 || receipt.Settlement.Recycling.DiscardReason != "bag_full") {
++			t.Fatal("真实原物品没有弃掉并记录原因", receipt)
++		}
++		if index < 2 && out.Report.StopReason != 0 || index == 2 && out.Report.StopReason != 1 {
++			t.Fatal("真实报告把满包当停止或遮住余额耗尽", out.Report)
++		}
++		if index == 0 {
++			firstReceipt = receipt
++		}
++		requests = append(requests, q)
++		r = out
++	}
++	if r.Report.Kills != 3 || r.Report.UsedSeconds != 3 || r.Report.Experience != monster.Exp*3 || r.Report.DiscardCount != 2 || r.Report.TotalDropCount != 2 || len(r.Report.Drops) != 0 || r.Wallet.Gold != before.Wallet.Gold+monster.GoldMin {
++		t.Fatal("真实EXP/金币/弃物/托管分账不符", r)
++	}
++	after := r
++	replayed, receipt, err := owner.SettleWithReceipt(ctx, auth, requests[0])
++	must(t, err)
++	if !reflect.DeepEqual(receipt, firstReceipt) || replayed.Revision != after.Revision || replayed.SourceSeq != after.SourceSeq || replayed.HostingSeconds != 0 || replayed.Wallet != after.Wallet {
++		t.Fatal("旧来源核对重复扣时或重复收益")
++	}
++	changed := requests[0]
++	changed.Gold++
++	if _, _, err := owner.SettleWithReceipt(ctx, auth, changed); persistence.Code(err) != p.CodeOperationConflict {
++		t.Fatal("同来源改内容未拒绝", err)
++	}
++	if _, _, err := owner.SettleWithReceipt(ctx, auth, persistence.Settlement{SourceSeq: after.SourceSeq + 1, HostSeconds: 1, HostingSession: "full-session"}); persistence.Code(err) != p.CodeOperationConflict {
++		t.Fatal("余额0仍允许超扣托管", err)
++	}
++	t.Log("真实Mongo范围：隔离满包资格，原Store逐事件连续EXP/金币/弃物/扣时、余额0与原receipt防重；实际AI/WS由另一用例验证，不伪称正常掉率采样")
++}
+diff --git a/server/internal/persistence/equipment_recycling_test.go b/server/internal/persistence/equipment_recycling_test.go
+--- a/server/internal/persistence/equipment_recycling_test.go
++++ b/server/internal/persistence/equipment_recycling_test.go
+@@ -210,7 +210,7 @@
+ 	r.Items = []domain.Item{item}
+ 	incoming := recycleItem(35, true)
+ 	out, receipt, err := applySettlement(r, Settlement{SourceSeq: 5, Kills: 1, HostingSession: "session", Item: &incoming}, f)
+-	if err != nil || !out.PickupStopped || len(out.Items) != 1 || out.Items[0].ID != item.ID || receipt.Recycling.DiscardReason != "bag_full" || out.Report.DiscardCount != 1 || out.Report.TotalDropCount != 1 || len(out.Report.Drops) != 0 || out.Report.RecycleCount != 0 || out.Report.StopReason != 3 {
++	if err != nil || !out.PickupStopped || len(out.Items) != 1 || out.Items[0].ID != item.ID || receipt.Recycling.DiscardReason != "bag_full" || out.Report.DiscardCount != 1 || out.Report.TotalDropCount != 1 || len(out.Report.Drops) != 0 || out.Report.RecycleCount != 0 || out.Report.StopReason != 0 {
+ 		t.Fatal(out, receipt, err)
+ 	}
+ }
+diff --git a/server/internal/persistence/full_bag_policy_test.go b/server/internal/persistence/full_bag_policy_test.go
+new file mode 100644
+--- /dev/null
++++ b/server/internal/persistence/full_bag_policy_test.go
+@@ -0,0 +1,72 @@
++package persistence
++
++import (
++	"minimir/internal/domain"
++	"reflect"
++	"testing"
++)
++
++func TestFullBagContinuousEventsKeepExperienceGoldAndHostingCharges(t *testing.T) {
++	f, r := growthFixture(t), recycleRole()
++	r.ProgressionFormatVersion, r.ProgressionCurveVersion = 1, f.Progression.CurveVersion
++	r.Capacity, r.HostingSeconds, r.PickupStopped = 1, 3, true
++	protected := recycleItem(218, true)
++	protected.Locked = true
++	r.Items = []domain.Item{protected}
++	before := r
++	for index := 0; index < 3; index++ {
++		q := Settlement{SourceSeq: r.SourceSeq + 1, Kills: 1, Experience: 7, HostSeconds: 1, HostingSession: "full-session", NoEquipmentKills: r.NoEquipmentKills + 1}
++		if index == 1 {
++			q.Gold = 30 // 金币事件与物品事件分开，不造每kill同时掉金掉物的规则。
++		} else {
++			incoming := recycleItem(35, false)
++			q.Item = &incoming
++		}
++		out, receipt, err := applySettlement(r, q, f)
++		if err != nil || !reflect.DeepEqual(out.Items, before.Items) || out.SourceSeq != q.SourceSeq || out.Revision != r.Revision+1 || out.EconomicSeq != before.EconomicSeq || out.HostingSeconds != r.HostingSeconds-1 || receipt.Experience.ActualGranted != q.Experience {
++			t.Fatal("满包阻断合法收益/扣时或改变保护原件", out, receipt, err)
++		}
++		if q.Item != nil && (receipt.GrantedItem || receipt.Recycling.DiscardedCount != 1 || receipt.Recycling.DiscardReason != "bag_full") {
++			t.Fatal("无法入包的新物品没有真实弃掉并记录原因", receipt)
++		}
++		if q.Item == nil && receipt.Recycling.DiscardedCount != 0 {
++			t.Fatal("金币事件伪造弃物")
++		}
++		if index < 2 && out.Report.StopReason != 0 || index == 2 && out.Report.StopReason != 1 {
++			t.Fatal("满包被误记为停机或遮住真实余额耗尽", out.Report)
++		}
++		r = out
++	}
++	if r.Level != 3 || r.Experience != 1 || r.Wallet.Gold != 30 || r.Report.Kills != 3 || r.Report.Experience != 21 || r.Report.RawExperience != 21 || r.Report.DiscardCount != 2 || r.Report.TotalDropCount != 2 || len(r.Report.Drops) != 0 || r.Report.UsedSeconds != 3 || !r.PickupStopped {
++		t.Fatal("逐事件EXP/金币/弃物/实际托管账不符", r)
++	}
++}
++
++func TestFullBagNoDropStillSweepsCommittedPolicyBeforeCapacity(t *testing.T) {
++	f, r := growthFixture(t), recycleRole()
++	r.ProgressionFormatVersion, r.ProgressionCurveVersion = 1, f.Progression.CurveVersion
++	r.Capacity, r.PickupStopped = 1, true
++	r.Items = []domain.Item{recycleItem(218, true)}
++	out, receipt, err := applySettlement(r, Settlement{SourceSeq: 5, Kills: 1, Experience: 7, HostingSession: "sweep"}, f)
++	if err != nil || len(out.Items) != 0 || out.PickupStopped || out.Wallet.BoundGold != 50 || len(receipt.Recycling.Recycled) != 1 || out.Report.StopReason != 0 {
++		t.Fatal("旧拾取阻塞阻止了后续kill按已提交策略先回收", out, receipt, err)
++	}
++}
++
++func TestFullBagLegacyReportRemainsHistoricalUntilTrueTerminalReason(t *testing.T) {
++	for _, death := range []bool{false, true} {
++		f, r := growthFixture(t), recycleRole()
++		r.ProgressionFormatVersion, r.ProgressionCurveVersion = 1, f.Progression.CurveVersion
++		r.HostingSeconds = 1
++		r.Report = domain.Report{SessionID: "old-session", StopReason: 3}
++		q := Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: "old-session"}
++		want := uint32(1)
++		if death {
++			q.StopReason, want = 2, 2
++		}
++		out, _, err := applySettlement(r, q, f)
++		if err != nil || out.Report.StopReason != want || r.Report.StopReason != 3 {
++			t.Fatal("旧满包状态遮住真实终态，或改写原输入历史", out.Report, err)
++		}
++	}
++}
+diff --git a/server/internal/persistence/settlement.go b/server/internal/persistence/settlement.go
+--- a/server/internal/persistence/settlement.go
++++ b/server/internal/persistence/settlement.go
+@@ -243,13 +243,11 @@
+ 		if details.Recycling.DiscardedCount > 0 {
+ 			report.LastDiscardReason = details.Recycling.DiscardReason
+ 		}
+-		if out.PickupStopped {
+-			report.StopReason = 3
+-		}
+ 		if q.StopReason != 0 {
+ 			report.StopReason = q.StopReason
+ 		}
+-		if out.HostingSeconds == 0 && report.StopReason == 0 {
++		// 旧报告3保留历史；真正耗尽时不能让旧容量原因遮住新终态。原回执不改写。
++		if out.HostingSeconds == 0 && (report.StopReason == 0 || report.StopReason == 3) {
+ 			report.StopReason = 1
+ 		}
+ 		out.Report = report

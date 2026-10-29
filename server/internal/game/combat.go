@@ -373,7 +373,7 @@ func (w *worker) step(r *room, now time.Time) {
 			return
 		}
 	}
-	if offline && (r.Role.HostingSeconds <= 0 || r.Role.PickupStopped || !r.Auto) {
+	if offline && (r.Role.HostingSeconds <= 0 || !r.Auto) {
 		return
 	}
 	if offline {
@@ -579,11 +579,6 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 	}
 	if len(finished) > 0 {
 		finished[0]()
-	}
-	if r.Role.PickupStopped {
-		for _, world := range r.worlds() {
-			world.Auto = false
-		}
 	}
 	if q.Item != nil {
 		world := r.world(binding.world)

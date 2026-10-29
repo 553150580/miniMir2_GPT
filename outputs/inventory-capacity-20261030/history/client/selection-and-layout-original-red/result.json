@@ -1,0 +1,19 @@
+{
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "tools/dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/inventory_context.test.cjs",
+    "client/tests/app/inventory_layout.test.cjs"
+  ],
+  "exit_code": 1,
+  "scope": "对已原字节保存的stage20 AppRoot/Game做反例重放，非声称修改前另一次当前生产运行",
+  "app_sha256": "e4bf62fdd6fcea552bb4f22f27097806bd075aaa0dd408b94c6b03190f718d65",
+  "scene_sha256": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6",
+  "log_sha256": "a334bab06b614785b78720148232657a2d2470389b8ce65e2016aea60955c565"
+}

@@ -1,0 +1,18 @@
+{
+  "original_sha256": "d9326ba9b46b2cc25c9c3c6f5fbbe5af635701625e7c1d72b84131e6e2fe3f4a",
+  "corrected_sha256": "913e5fe47706913a6b05d35f7381db2212e8c63102b77fb981a1bdda1d2b22ea",
+  "only_change": "为3个新增文件加入new file mode 100644 Git元数据；所有候选Go正文逐SHA保持",
+  "candidate_body_sha256": {
+    "server/internal/game/combat.go": "933ec51b41cc93023361015f609b6e56cbeb1b8e8f1faee808f9716d64d2455c",
+    "server/internal/game/runtime.go": "cefa1d63d575d2c6fe9b32af83d296af07d1a45ba5cd4035d69e94d1e1690368",
+    "server/internal/persistence/settlement.go": "fafca4966cacca6c7dfaec814baa611542112341c6e7956e1ec8df5f1d6058d3",
+    "server/internal/game/hosting_test.go": "dd475b072372f31ead28b830ce043f06a2fd7a6e410324f966560ef7919ce947",
+    "server/internal/persistence/equipment_recycling_test.go": "c8e360261441bbf14fd2d01d8eff8a5e77db594d44ee3502bd686bd641f19335",
+    "server/internal/game/map_travel_ack_test.go": "dcb8e48df8b17b97ccc7b8e9dd506a97e8ecb72ff676128e8fe681cd060caf74",
+    "server/internal/integration/auto_recycle_test.go": "3f086b2fa5ced598da615f3e5a39748d4f0c6cdab8b68c8ceb09df257309850e",
+    "server/internal/game/full_bag_policy_test.go": "d8e5fae09c1a87bd37ebbb3bb51c533f189eedd9d46f9001efdfcd68a884ef57",
+    "server/internal/integration/full_bag_policy_test.go": "51be78b8dec45fa8a54535dec2d9c4d5adfe4345e63da217d1caef710e494e33",
+    "server/internal/persistence/full_bag_policy_test.go": "1abeb346c5304bb67ab87e77e2b27a0b72c11e0ffe912a02812fcdf217baa2b2"
+  },
+  "candidate_bodies_unchanged": true
+}

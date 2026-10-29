@@ -24,7 +24,7 @@ class LevelGrowthProjectionTests(unittest.TestCase):
             m=re.fullmatch(r'Level(\d+)=(\d+)',line.strip())
             if section=='Exp' and m:source[int(m[1])]=int(m[2])
         r=self.fixture['progression']
-        self.assertEqual(self.fixture['rule_version'],20)
+        self.assertEqual(self.fixture['rule_version'],21)
         self.assertEqual(r['exp_per_level'],[source[n] for n in range(1,51)])
         self.assertEqual(len(r['exp_per_level']),50)
         for key in ['initial_level_cap','rebirth_level_cap_increment','rebirth_reset_progression']:

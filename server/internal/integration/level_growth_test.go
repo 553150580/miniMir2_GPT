@@ -27,8 +27,8 @@ func TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 20 {
-		t.Fatal("必须使用当前rule20完整成长配置")
+	if cfg.Fixture.RuleVersion != 21 {
+		t.Fatal("必须使用当前rule21完整成长配置")
 	}
 	// 仅隔离定义把原衣服门槛调到7以验证真正事务门禁，不向主目录增加装备。
 	seven := uint32(7)
@@ -176,8 +176,8 @@ func TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS(t *testing
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 20 {
-		t.Fatal("必须是当前主rule20")
+	if cfg.Fixture.RuleVersion != 21 {
+		t.Fatal("必须是当前主rule21")
 	}
 	// 明确加速战斗资格，仅HP1/零攻击/零敏；经验15、主曲线、动作/刷新/掉率/保底均保持。
 	cfg.Fixture.Monsters[0].HP = 1

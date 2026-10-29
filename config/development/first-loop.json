@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 20,
+  "rule_version": 21,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -6469,7 +6469,7 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2"
+      "sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0"
     },
     "exporter_sha256": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
     "pet_runtime_inputs": {
@@ -6483,7 +6483,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2"
+          "sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0"
         }
       ]
     }

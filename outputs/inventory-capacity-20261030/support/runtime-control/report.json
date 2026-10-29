@@ -1,0 +1,41 @@
+{
+  "started_at_utc": "2026-10-29T18:46:57.895224+00:00",
+  "commands": [
+    {
+      "name": "stop",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "stop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.931,
+      "stdout": ".work/inventory-capacity-20261030/runtime-control/stop.stdout.txt",
+      "stdout_sha256": "2c7ef34a424cdd8c6d43253254afb5689a53df56edafaf80023a03f22e9babfb",
+      "stderr": ".work/inventory-capacity-20261030/runtime-control/stop.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "start",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "start"
+      ],
+      "exit_code": 0,
+      "seconds": 8.316,
+      "stdout": ".work/inventory-capacity-20261030/runtime-control/start.stdout.txt",
+      "stdout_sha256": "9ed03d15f7ba3a9ca11b5596f148ffbbe5bf02abf19effddd62b1c09762447f1",
+      "stderr": ".work/inventory-capacity-20261030/runtime-control/start.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "仅重启本任务已登记后端；沿受控PID/身份核验，不操作数据库或其它服务",
+  "other_ports_touched": [],
+  "passed": true,
+  "finished_at_utc": "2026-10-29T18:47:07.163541+00:00"
+}

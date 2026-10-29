@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "stage": "rule21普通满包政策",
+  "status": "read_only_review_complete_no_production_blocker_with_coverage_boundary",
+  "head": "5b6be439c013d16c4ca0bf0372c294e47b29a141",
+  "reviewer_executed_tests": false,
+  "reviewer_started_database_or_browser_or_creator": false,
+  "production_files_modified_by_reviewer": [],
+  "policy_basis": [
+    {"path": "最终策划案.md", "lines": [95, 101, 103, 105], "meaning": "真实普通怪事件、在线与托管同规则；只扣实际离线托管，不以固定速率补造收益"},
+    {"path": "最终策划案.md", "lines": [125, 127, 129], "meaning": "普通满包先按策略回收，无法入包只弃新增物并记录原因；挑战待领队列和地面临时物另有范围"},
+    {"path": "最终策划案.md", "lines": [1084, 1090, 1091], "meaning": "永久原事件回执保留，未知沿原ID核对，旧owner和失租不得继续授权"}
+  ],
+  "production_conclusions": [
+    {"path": "server/internal/game/runtime.go", "lines": [407, 446, 450, 540], "result": "只移除PickupStopped对正常Auto意图的拒绝；原Conn/Session/Ready/quiescing及Town限制未变"},
+    {"path": "server/internal/game/combat.go", "lines": [272, 300, 318, 342, 353, 369, 376, 379, 400], "result": "满包不再阻止离线新AI与原扣时；停止/隔离、Pending原重试、死亡、Town、余额0、Auto关闭与资源ACK仍阻止新增AI"},
+    {"path": "server/internal/game/combat.go", "lines": [558, 563, 568, 580], "result": "确认结算后不再跨World关闭用户Auto；旧room/Auth/generation/id/fingerprint所有权检查及unknown保留原job不变"},
+    {"path": "server/internal/persistence/settlement.go", "lines": [45, 52, 58, 70, 78, 82, 89, 97], "result": "围栏、角色CAS、原SourceSeq连续性、相同指纹回执重放及资产/回执/audit同事务保持；未引入新永久奖励路径"},
+    {"path": "server/internal/persistence/settlement.go", "lines": [151, 157, 174, 183, 197, 243, 246, 249], "result": "原策略仍先回收再处理新物；仅无空间新增物记bag_full，原件不因容量修复被吞。新事件不再把满包写成StopReason3；旧报告3保持历史，实际余额0转1，显式死亡2优先；原永久回执不改写"}
+  ],
+  "evidence_layers": [
+    {"path": "server/internal/game/full_bag_policy_test.go", "lines": [17, 77, 104, 136], "scope": "独立角色/怪物前态的纯game测试；实际step释放普通攻击、到期命中、捕获killFact并占永久job单槽。扣秒unknown由手动回调模拟，不执行DB，不是自然养成或网络故障注入"},
+    {"path": "server/internal/persistence/full_bag_policy_test.go", "lines": [9, 45, 56], "scope": "纯applySettlement输入三次独立收益、1秒扣时/7EXP等隔离值；证明分账算法与旧报告兼容，不证明AI时钟或真实Mongo"},
+    {"path": "server/internal/integration/full_bag_policy_test.go", "lines": [64, 78, 86, 107, 117, 120], "scope": "显式随机库前态，直接Store.SettleWithReceipt提交3次来源；EXP/金币来自当前怪物定义，验证实际事务/回执防重/余额零。不是正常AI producer、实际掉率采样或满包离线WS端到端"},
+    {"path": "server/internal/integration/auto_recycle_test.go", "lines": [230, 232, 237, 327, 386, 393, 407, 456, 483], "scope": "正常注册/创角/WS/装备/Auto，隔离初始物品填包与怪物1HP/0攻/0敏；首弃后在线真实kill/EXP和满包重启Auto。后半离线开始前已applyExisting腾格，验证离线回收，不能称为离线满包AI完整证明"}
+  ],
+  "findings": [
+    {
+      "id": "offline_full_bag_ws_coverage",
+      "severity": "coverage_boundary",
+      "production_defect_confirmed": false,
+      "path": "server/internal/integration/auto_recycle_test.go",
+      "lines": [456, 483],
+      "detail": "当前真实WS的满包连续kill段在线运行；离线段已清包。离线满包由game真实producer纯测试与Store真实事务测试分层覆盖，尚非同一真实WS原事件全链路。",
+      "minimum_recommendation": "若本阶段声明实际离线满包连续收益/扣时端到端，应在仍满包且Auto正常开启时真实断线，等待原HostSession的kill/EXP/弃物/扣时已提交事实并核原receipt；否则正式报告明确分层范围即可。是否扩测由Root决定。"
+    }
+  ],
+  "historical_static_finding_correction": {
+    "original_history_preserved": true,
+    "history_path": ".work/level-growth-20261029/next-full-bag-policy/iterations/before-ws-drain-order",
+    "original_assumption": "最后致死Impact可以先于本次死亡基线，导致等待EXP时观察到旧死亡数",
+    "correction": "原静读遗漏combat.go265–268在applyDamage内部立即snapshot。当前普通近战producer先广播致死现场，再由timeline.go321发Impact；事件批末另有snapshot。因此该顺序前提不足以构成这条producer的确定反例。",
+    "counterexample_executed": false,
+    "proven_red_green": false,
+    "production_race_fix_claim_allowed": false,
+    "retained_defence": "stopAutoAndDrain的terminal→同request基线→更新后的死亡数EXP水位→攻击集合空仍是正确收束防护，不能追认修复了已复现生产竞态。",
+    "notified": ["/root", "/root/town_server_audit"]
+  },
+  "limits": [
+    "本审查未运行Go、Mongo、浏览器或Creator；不据静读宣称测试通过。",
+    "3秒/1HP/0攻/固定纯测试随机等均为明确隔离前态，不是主运行数值、自然掉率或效率平衡验收。",
+    "当前仍为22技能、legacy未训宠、材料关闭和独立17候选；正式洗炼石与祝福油、损坏回收、挑战队列、真机及整体容量未由本轮代码审查覆盖。",
+    "客户端保存View修正尚在编辑，不纳入本次冻结SHA或通过范围。"
+  ],
+  "source_sha256": {
+    "server/internal/game/combat.go": "933ec51b41cc93023361015f609b6e56cbeb1b8e8f1faee808f9716d64d2455c",
+    "server/internal/game/runtime.go": "cefa1d63d575d2c6fe9b32af83d296af07d1a45ba5cd4035d69e94d1e1690368",
+    "server/internal/game/timeline.go": "2dbe69b8d713cd5f6c01f1bd761999156e1e40c13d86ecd758dabef3bccf1141",
+    "server/internal/game/progression.go": "19904619fe6304c64c3e809ade38bd4bee98855238704cfc61903f9fbf34209f",
+    "server/internal/game/full_bag_policy_test.go": "d8e5fae09c1a87bd37ebbb3bb51c533f189eedd9d46f9001efdfcd68a884ef57",
+    "server/internal/game/hosting_test.go": "dd475b072372f31ead28b830ce043f06a2fd7a6e410324f966560ef7919ce947",
+    "server/internal/game/map_travel_ack_test.go": "dcb8e48df8b17b97ccc7b8e9dd506a97e8ecb72ff676128e8fe681cd060caf74",
+    "server/internal/persistence/settlement.go": "fafca4966cacca6c7dfaec814baa611542112341c6e7956e1ec8df5f1d6058d3",
+    "server/internal/persistence/full_bag_policy_test.go": "1abeb346c5304bb67ab87e77e2b27a0b72c11e0ffe912a02812fcdf217baa2b2",
+    "server/internal/persistence/equipment_recycling_test.go": "c8e360261441bbf14fd2d01d8eff8a5e77db594d44ee3502bd686bd641f19335",
+    "server/internal/integration/auto_recycle_test.go": "3f086b2fa5ced598da615f3e5a39748d4f0c6cdab8b68c8ceb09df257309850e",
+    "server/internal/integration/full_bag_policy_test.go": "51be78b8dec45fa8a54535dec2d9c4d5adfe4345e63da217d1caef710e494e33"
+  }
+}

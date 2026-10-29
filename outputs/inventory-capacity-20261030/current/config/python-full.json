@@ -1,0 +1,39 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "started_at_utc": "2026-10-29T17:49:47.008998+00:00",
+  "finished_at_utc": "2026-10-29T17:50:31.496803+00:00",
+  "seconds": 44.488,
+  "exit_code": 0,
+  "stdout": "python-full.stdout.txt",
+  "stderr": "python-full.stderr.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "aff9a2a1795a49f2ebf3f1e1483c29abeea86a415f620c97c9747504f7048053"
+}

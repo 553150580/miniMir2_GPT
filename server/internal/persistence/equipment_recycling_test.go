@@ -210,7 +210,7 @@ func TestSettlementFullBagDiscardsOnlyIncomingAndRecordsExactReason(t *testing.T
 	r.Items = []domain.Item{item}
 	incoming := recycleItem(35, true)
 	out, receipt, err := applySettlement(r, Settlement{SourceSeq: 5, Kills: 1, HostingSession: "session", Item: &incoming}, f)
-	if err != nil || !out.PickupStopped || len(out.Items) != 1 || out.Items[0].ID != item.ID || receipt.Recycling.DiscardReason != "bag_full" || out.Report.DiscardCount != 1 || out.Report.TotalDropCount != 1 || len(out.Report.Drops) != 0 || out.Report.RecycleCount != 0 || out.Report.StopReason != 3 {
+	if err != nil || !out.PickupStopped || len(out.Items) != 1 || out.Items[0].ID != item.ID || receipt.Recycling.DiscardReason != "bag_full" || out.Report.DiscardCount != 1 || out.Report.TotalDropCount != 1 || len(out.Report.Drops) != 0 || out.Report.RecycleCount != 0 || out.Report.StopReason != 0 {
 		t.Fatal(out, receipt, err)
 	}
 }

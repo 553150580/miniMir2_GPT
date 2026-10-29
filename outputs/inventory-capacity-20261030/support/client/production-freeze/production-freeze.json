@@ -1,0 +1,100 @@
+{
+  "status": "production_and_tests_frozen_for_root_full_validation",
+  "narrow_report": ".work/inventory-capacity-20261030/client/narrow/report.json",
+  "narrow_report_sha256": "240f2b6ca8439531f1d3bb218cf6d85ea8ad7c4f39c97bf562b6e3436652f624",
+  "commands": [
+    {
+      "name": "models",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/dev.ps1",
+        "node",
+        "client/tests/ui/compile_models.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 1.438,
+      "log": ".work/inventory-capacity-20261030/client/narrow/models.log",
+      "log_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+    },
+    {
+      "name": "narrow",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/dev.ps1",
+        "node",
+        "--test",
+        "client/tests/app/inventory_context.test.cjs",
+        "client/tests/app/inventory_layout.test.cjs",
+        "client/tests/app/messages.test.cjs",
+        "client/tests/app/auto_recycle.test.cjs",
+        "client/tests/app/skill_page_merge_runtime.test.cjs",
+        "client/tests/app/map_travel_runtime.test.cjs",
+        "client/tests/app/skill_assets_scroll.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 2.702,
+      "log": ".work/inventory-capacity-20261030/client/narrow/narrow.log",
+      "log_sha256": "ffebb93a5b720d38bff547bcc4f8a120c9a83f6eedbac425d7d9ae5e6d5a656f"
+    },
+    {
+      "name": "strict",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/dev.ps1",
+        "node",
+        "tools/client/typecheck.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 10.54,
+      "log": ".work/inventory-capacity-20261030/client/narrow/strict.log",
+      "log_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+    }
+  ],
+  "counts": {
+    "tests": 59,
+    "pass": 59,
+    "fail": 0,
+    "skipped": 0
+  },
+  "before_after_current_equal": true,
+  "frozen_files": {
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/tests/app/inventory_context.test.cjs": "abeea391cab68c7e36975a6d593f4296f741ee6b724cbe6803579866daf74b67",
+    "client/tests/app/inventory_layout.test.cjs": "1bd916ee07a6aa2853e03122b2eef08ef7f488528645f521bf61e1d7164b17c2",
+    "client/tests/app/messages.test.cjs": "96a3fbbe96202efb684de18428a2cf0beb6011235ceca48eeb025b7bf6ccfe02",
+    "client/tests/app/auto_recycle.test.cjs": "c86bdc88ed4d5540fd334fb3f8f83818e589f4490acd940449355a03eaed791a"
+  },
+  "current_rechecked": {
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/tests/app/inventory_context.test.cjs": "abeea391cab68c7e36975a6d593f4296f741ee6b724cbe6803579866daf74b67",
+    "client/tests/app/inventory_layout.test.cjs": "1bd916ee07a6aa2853e03122b2eef08ef7f488528645f521bf61e1d7164b17c2",
+    "client/tests/app/messages.test.cjs": "96a3fbbe96202efb684de18428a2cf0beb6011235ceca48eeb025b7bf6ccfe02",
+    "client/tests/app/auto_recycle.test.cjs": "c86bdc88ed4d5540fd334fb3f8f83818e589f4490acd940449355a03eaed791a"
+  },
+  "intentional_layout_changes": [
+    "client/assets/scenes/Game.scene"
+  ],
+  "other_nine_layouts_byte_identical": true,
+  "old_source_counterexample_report": ".work/inventory-capacity-20261030/client/selection-and-layout-original-red/result.json",
+  "layout_diff": ".work/inventory-capacity-20261030/client/layout-diff.json",
+  "patch_sha256": "3abd4ed42f46e09cc39957b99a14d468a7ae55641c44f82af84e3bdf9a610934",
+  "scope": "普通满包持续战斗提示、2103场景禁止解释、历史stopReason3；保存View/Widget避固定按钮+当次选择只刷新上下文，不重绑List、不改offset/nav/场景消费者/未决核对。未启动Creator/GUI。"
+}

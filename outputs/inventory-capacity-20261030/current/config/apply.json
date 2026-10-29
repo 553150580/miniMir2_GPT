@@ -1,0 +1,27 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    ".work\\inventory-capacity-20261030\\config\\author_configuration.py",
+    "--apply"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    ".work\\inventory-capacity-20261030\\config\\author_configuration.py",
+    "--apply"
+  ],
+  "started_at_utc": "2026-10-29T17:49:18.726173+00:00",
+  "finished_at_utc": "2026-10-29T17:49:20.055177+00:00",
+  "seconds": 1.329,
+  "exit_code": 0,
+  "stdout": "apply.stdout.txt",
+  "stderr": "apply.stderr.txt",
+  "stdout_sha256": "77182d33dbcc6d1b2f59e72b33bfe0b8c45413e9fe60505db3e7970f12d618fa",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

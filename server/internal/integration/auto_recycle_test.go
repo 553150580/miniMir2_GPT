@@ -276,13 +276,41 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	var events []*pb.EquipmentRecycleResult
 	phase := "enter"
 	attacks, positiveImpacts := 0, 0
+	pendingAttacks := map[uint32]bool{}
+	observedDeaths := map[string]bool{}
+	lastExperienceSource := uint64(0)
 	observe := func(c *client, f wire.Frame) {
+		if f.Error == 0 && f.ID == p.MsgS2CSceneBaseline && c.scene != nil {
+			for _, body := range c.scene.Entities {
+				if body.EntityKind == 3 && body.Hp == 0 {
+					observedDeaths[fmt.Sprintf("%d:%d", body.EntityHandle, body.Life)] = true
+				}
+			}
+		}
+		if f.Error == 0 && f.ID == p.MsgS2CExperienceGrantResult {
+			var grant pb.ExperienceGrantResult
+			must(t, proto.Unmarshal(f.Payload, &grant))
+			if grant.RawExperience > 0 && grant.SourceSeq > lastExperienceSource {
+				lastExperienceSource = grant.SourceSeq
+			}
+		}
 		if f.Error == 0 && f.ID == p.MsgS2CAttackAccepted {
 			attacks++
+			var attack pb.AttackAccepted
+			must(t, proto.Unmarshal(f.Payload, &attack))
+			if attack.CasterHandle == c.entry.GetPlayerHandle() && attack.TargetHandle != 0 {
+				if len(pendingAttacks) >= cfg.Fixture.CombatTiming.EventCapacity {
+					t.Fatal("有效目标攻击超过原事件容量")
+				}
+				pendingAttacks[attack.AttackSequence] = true
+			}
 		}
 		if f.Error == 0 && f.ID == p.MsgS2CCombatImpact {
 			var hit pb.CombatImpact
 			must(t, proto.Unmarshal(f.Payload, &hit))
+			if hit.CasterHandle == c.entry.GetPlayerHandle() && hit.AttackSequence != 0 {
+				delete(pendingAttacks, hit.AttackSequence)
+			}
 			if hit.Amount > 0 {
 				positiveImpacts++
 			}
@@ -298,6 +326,24 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	}
 	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observe)
 	defer func() { c.close() }()
+	stopAutoAndDrain := func() {
+		c.auto(false, 8)
+		for len(pendingAttacks) > 0 {
+			c.read() // 有效目标攻击包括miss/cancel终态；空挥未加入集合。
+		}
+		// Impact早于事件批末的死亡基线；先用同请求基线越过此前全部帧，
+		// 不把该请求本身当永久Pending屏障。
+		request := c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, CancelNavigation: true})
+		c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && f.Request == request })
+		// 此段新角色无施法/绑定来源，在线SourceSeq仅为实际kill；以刚刚
+		// 完整观察到的原怪死亡数等EXP确认，不在命中后猜永久Pending已完成。
+		for lastExperienceSource < uint64(len(observedDeaths)) {
+			c.read()
+		}
+		if len(pendingAttacks) != 0 {
+			t.Fatal("Auto已关闭并收束后新增攻击")
+		}
+	}
 	defer func() {
 		if t.Failed() {
 			stored, e := inspection.Role(context.Background(), roleID)
@@ -340,10 +386,39 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	discard := untilResult(func(x *pb.EquipmentRecycleResult) bool { return x.Trigger == 1 && x.DiscardedCount == 1 })
 	full, err := inspection.Role(ctx, roleID)
 	must(t, err)
-	if !full.PickupStopped || full.SourceSeq != int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 {
-		t.Fatal("默认关闭未按原满包规则停止", full, discard)
+	if !full.PickupStopped || full.SourceSeq < int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 || c.hosting == nil || !c.hosting.AutoBattleEnabled {
+		t.Fatal("默认关闭未真实弃物，或满包关闭了Auto", full, discard)
 	}
-	c.auto(false, 8)
+	phase = "full_bag_continues_actual_kill_experience"
+	continued := c.until(func(f wire.Frame) bool {
+		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
+			return false
+		}
+		var grant pb.ExperienceGrantResult
+		must(t, proto.Unmarshal(f.Payload, &grant))
+		return grant.SourceSeq > discard.SourceSeq && grant.AcceptedExperience > 0
+	})
+	_ = continued
+	stopAutoAndDrain()
+	full, err = inspection.Role(ctx, roleID)
+	must(t, err)
+	if !full.PickupStopped || full.SourceSeq <= int64(discard.SourceSeq) || c.hosting.AutoBattleEnabled {
+		t.Fatal("首弃物后未继续原kill/EXP，或正常关闭Auto失效", full)
+	}
+	// 仍未腾格，使用正常意图重新开启，必须成功且再产生真实kill确认。
+	beforeRestart := full.SourceSeq
+	c.auto(true, 8)
+	c.until(func(f wire.Frame) bool {
+		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
+			return false
+		}
+		var grant pb.ExperienceGrantResult
+		must(t, proto.Unmarshal(f.Payload, &grant))
+		return grant.SourceSeq > uint64(beforeRestart) && grant.AcceptedExperience > 0
+	})
+	stopAutoAndDrain()
+	full, err = inspection.Role(ctx, roleID)
+	must(t, err)
 	var wood []*pb.ItemView
 	for _, item := range c.inventory.Items {
 		if item.ItemId == 218 {

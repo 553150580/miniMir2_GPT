@@ -1,0 +1,27 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/prepare_first_loop.py",
+    "--check"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/prepare_first_loop.py",
+    "--check"
+  ],
+  "started_at_utc": "2026-10-29T17:49:25.708852+00:00",
+  "finished_at_utc": "2026-10-29T17:49:26.714354+00:00",
+  "seconds": 1.006,
+  "exit_code": 0,
+  "stdout": "fixture-check.stdout.txt",
+  "stderr": "fixture-check.stderr.txt",
+  "stdout_sha256": "2b875845f9204cd0150e310e038dcc4b9cf89f732ad39cfcee8aeb8e1651e06f",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -20,6 +20,7 @@ func TestTravelReturnDoesNotCreateNewCombatBeforeResourceACK(t *testing.T) {
 	if r.MapID != 1 || r.Ready || r.Travel.Acked {
 		t.Fatal("未进入新个人场景待ACK阶段")
 	}
+	r.Role.PickupStopped = true // 容量修复不放开新场景资源ACK前的战斗。
 	r.Player.ActionReadyAt = now
 	m := r.Monsters[0]
 	m.Pos = devconfig.Point{X: r.Player.Pos.X + 1, Y: r.Player.Pos.Y}

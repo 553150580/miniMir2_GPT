@@ -1,0 +1,168 @@
+✖ 同一保存List选择回调立即更新合并上下文，不等notify、不重绑或移动滚动、不消费场景事件和未决操作 (321.4193ms)
+✖ 当次选择区分普通装备、已锁装备与受保护或缺同源的书页 (133.8198ms)
+✖ 虚拟旧行只按同原ID读取当前物品；已消失条目清上下文且不偷偷选择其它实例 (115.775ms)
+✖ 保存Mask与全部固定按钮不相交，原失败触点位于可见列表外，固定控件原尺寸保持 (2.6053ms)
+✖ 保存Widget约束和初始Content顶对齐一致，ScrollView与List共用真View而非宿主高度 (4.2142ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 0
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 861.2621
+
+✖ failing tests:
+
+test at client\tests\app\inventory_context.test.cjs:39:1
+✖ 同一保存List选择回调立即更新合并上下文，不等notify、不重绑或移动滚动、不消费场景事件和未决操作 (321.4193ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '锁定装备' !== '合并书页'
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_context.test.cjs:42:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '锁定装备',
+    expected: '合并书页',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\inventory_context.test.cjs:48:1
+✖ 当次选择区分普通装备、已锁装备与受保护或缺同源的书页 (133.8198ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_context.test.cjs:50:66)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\inventory_context.test.cjs:58:1
+✖ 虚拟旧行只按同原ID读取当前物品；已消失条目清上下文且不偷偷选择其它实例 (115.775ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      bound: true,
+      instanceId: Uint8Array(16) [
+        1,
+        1,
+  ...
+        high: 0,
+  +     low: 5,
+  -     low: 7,
+        unsigned: false
+      },
+      recycleBlockFlags: 0,
+      sourceId: 'same-source',
+      sourceKind: 'skill_recycle',
+      version: Long {
+        high: 0,
+  +     low: 1,
+  -     low: 2,
+        unsigned: true
+      }
+    }
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_context.test.cjs:61:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {
+      instanceId: Uint8Array(16) [
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1
+      ],
+      itemId: 900001,
+      version: { low: 1, high: 0, unsigned: true },
+      quantity: { low: 5, high: 0, unsigned: false },
+      bound: true,
+      quality: 0,
+      sourceKind: 'skill_recycle',
+      sourceId: 'same-source',
+      locked: false,
+      recycleBlockFlags: 0
+    },
+    expected: {
+      instanceId: Uint8Array(16) [
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1
+      ],
+      itemId: 900001,
+      version: { low: 2, high: 0, unsigned: true },
+      quantity: { low: 7, high: 0, unsigned: false },
+      bound: true,
+      quality: 0,
+      sourceKind: 'skill_recycle',
+      sourceId: 'same-source',
+      locked: false,
+      recycleBlockFlags: 0
+    },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\inventory_layout.test.cjs:19:1
+✖ 保存Mask与全部固定按钮不相交，原失败触点位于可见列表外，固定控件原尺寸保持 (2.6053ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -44 !== 12
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_layout.test.cjs:21:41)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -44,
+    expected: 12,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at client\tests\app\inventory_layout.test.cjs:31:1
+✖ 保存Widget约束和初始Content顶对齐一致，ScrollView与List共用真View而非宿主高度 (4.2142ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(widget)
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_layout.test.cjs:34:5)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

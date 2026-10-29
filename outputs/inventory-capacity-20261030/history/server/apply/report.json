@@ -1,0 +1,103 @@
+{
+  "steps": [
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "git",
+        "apply",
+        "--check",
+        ".work\\inventory-capacity-20261030\\server\\apply\\original-d932.patch"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 0.5706696000415832
+    },
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "git",
+        "apply",
+        "--check",
+        ".work\\inventory-capacity-20261030\\server\\apply\\git-compatible.patch"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.5161679999437183
+    },
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "git",
+        "apply",
+        ".work\\inventory-capacity-20261030\\server\\apply\\git-compatible.patch"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.5077004998456687
+    },
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "gofmt",
+        "-w",
+        "server/internal/game/combat.go",
+        "server/internal/game/runtime.go",
+        "server/internal/persistence/settlement.go",
+        "server/internal/game/hosting_test.go",
+        "server/internal/persistence/equipment_recycling_test.go",
+        "server/internal/game/map_travel_ack_test.go",
+        "server/internal/integration/auto_recycle_test.go",
+        "server/internal/game/full_bag_policy_test.go",
+        "server/internal/integration/full_bag_policy_test.go",
+        "server/internal/persistence/full_bag_policy_test.go"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.6475216001272202
+    }
+  ],
+  "before_sha256": {
+    "server/internal/game/combat.go": "acce5283d293f75aff6bcbc953f3832be0493efe4d33c3ea3f9be9731df76842",
+    "server/internal/game/runtime.go": "7d8b382c17139235e3200c6964e72b6340247eacadcdd0e17544bbd3b57cb6c3",
+    "server/internal/persistence/settlement.go": "3a1bb4ff044cdb8e3182b7b6d008ad7d1a048793f1b207c3ac167fb7a355331a",
+    "server/internal/game/hosting_test.go": "cc6dd8a6530e418310f60525bb32f5e6d1fa1321c0a209f55f8cd22c2a5565e7",
+    "server/internal/persistence/equipment_recycling_test.go": "25ea48a7647b81056665491a8d09f733e581c9bcd595313d8a9feaf9c9a6f130",
+    "server/internal/game/map_travel_ack_test.go": "a9e3d9dec682e90fdcc3a8e1519a12fb187725953efe3a39e0f637461d41e96f",
+    "server/internal/integration/auto_recycle_test.go": "c1c1db67e37ff535734df056bd37a0b336bb4fdd7d669f455854b13e98c7f715",
+    "server/internal/game/full_bag_policy_test.go": null,
+    "server/internal/integration/full_bag_policy_test.go": null,
+    "server/internal/persistence/full_bag_policy_test.go": null
+  },
+  "after_gofmt_sha256": {
+    "server/internal/game/combat.go": "933ec51b41cc93023361015f609b6e56cbeb1b8e8f1faee808f9716d64d2455c",
+    "server/internal/game/runtime.go": "cefa1d63d575d2c6fe9b32af83d296af07d1a45ba5cd4035d69e94d1e1690368",
+    "server/internal/persistence/settlement.go": "fafca4966cacca6c7dfaec814baa611542112341c6e7956e1ec8df5f1d6058d3",
+    "server/internal/game/hosting_test.go": "dd475b072372f31ead28b830ce043f06a2fd7a6e410324f966560ef7919ce947",
+    "server/internal/persistence/equipment_recycling_test.go": "c8e360261441bbf14fd2d01d8eff8a5e77db594d44ee3502bd686bd641f19335",
+    "server/internal/game/map_travel_ack_test.go": "dcb8e48df8b17b97ccc7b8e9dd506a97e8ecb72ff676128e8fe681cd060caf74",
+    "server/internal/integration/auto_recycle_test.go": "3f086b2fa5ced598da615f3e5a39748d4f0c6cdab8b68c8ceb09df257309850e",
+    "server/internal/game/full_bag_policy_test.go": "d8e5fae09c1a87bd37ebbb3bb51c533f189eedd9d46f9001efdfcd68a884ef57",
+    "server/internal/integration/full_bag_policy_test.go": "51be78b8dec45fa8a54535dec2d9c4d5adfe4345e63da217d1caef710e494e33",
+    "server/internal/persistence/full_bag_policy_test.go": "1abeb346c5304bb67ab87e77e2b27a0b72c11e0ffe912a02812fcdf217baa2b2"
+  },
+  "approved_candidate_body_match_before_gofmt": true,
+  "original_patch_sha256": "d9326ba9b46b2cc25c9c3c6f5fbbe5af635701625e7c1d72b84131e6e2fe3f4a",
+  "git_compatible_patch_sha256": "913e5fe47706913a6b05d35f7381db2212e8c63102b77fb981a1bdda1d2b22ea",
+  "metadata_only_correction": true
+}

@@ -1,0 +1,26 @@
+{
+  "head": "5b6be439c013d16c4ca0bf0372c294e47b29a141",
+  "recorded_at_utc": "2026-10-29T17:48:50.994888+00:00",
+  "files": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "d100e923b40e483e7c19361be178f078c04939475714159ca1733f8418d490b2",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "tools/resources/prepare_summon_candidates.py": "0eaaacd09690d4653aea6bc56306d64223420000ffce0bd3c58cadfa8a99f64b",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+    "config/development/first-loop.json": "e375244e6656d78dbe776514cd4621f6f863c7d9a774849e843c09285c13785e",
+    "client/assets/resources/development/gameplay.json": "d6ef7409d8227b2c692d3d18c49da79125b5576fbab55325aba73d9485dae477",
+    "config/development/pet-runtime-candidates.json": "f40197b9fe2676a0739abb3a2cdc1b2332af36f1467f503691dae4d1b0a0bd34",
+    "config/development/summon-candidates.json": "70416fbcfb9bd3f3ff4ead56de98fe49e1e81939529089e87e8f23ba1bc45a92",
+    "config/releases/preview_current.json": "5fe809ad5d2e33d78eba42045dd6cf6406e844f5d444c4b9089cbeec978191d7",
+    "tools/config/test_level_growth.py": "4bb6a06b53a947252fce2d59261b96ec23ea96d61011551a215663e922ddd5db",
+    "tools/config/test_equipment_recycling.py": "ff0b27aab50ab1ade848f9a56641a8d77d76a2673621a42fa82f9be6f9b1d81b",
+    "tools/config/test_safe_zone_binding.py": "6fa81d6e1215fe05459178ec056d48b85ce5c114e542240805d13778b8874bd1",
+    "tools/config/test_pet_runtime.py": "b7acea9d43d723e8086922d6ebf4a6e119e356d6ad2662108a0b6ce78bf2cebd",
+    "tools/config/test_summon_candidates.py": "45a4f7ccf2152dcd1a8561bff75260a2bddc081128659f2fe6d4d3bede525262",
+    "tools/config/test_teleport.py": "54425dd29763142d5cc1a765bb4a345db7c0d5130b2048c661ff89475eb8a662",
+    "server/internal/devconfig/map_catalog_test.go": "a79eb162e3a2291738fb35a6a88d21db07e2e4cac9e534907b453165338befbc",
+    "server/internal/devconfig/pet_runtime_test.go": "157de7e478c830309ed6d159de20882c62153fc252bf93095a60045e35abef47",
+    "server/internal/devconfig/summon_test.go": "2135439e067f23c563985713f6dc93779c09f4fd15b2af6e49319bff2e03d18c"
+  }
+}

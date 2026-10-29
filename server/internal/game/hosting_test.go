@@ -23,27 +23,7 @@ func (c *capturedConnection) RoleID() string            { return "role" }
 func (c *capturedConnection) SetBinding(uint64)         {}
 func (c *capturedConnection) Binding() uint64           { return 3 }
 
-func TestFullBagAutoRejectPushesActualHosting(t *testing.T) {
-	conn := &capturedConnection{}
-	r := &room{Conn: conn, Ready: true, Scene: 20, Auth: persistence.Auth{SessionEpoch: 3}, Role: domain.Role{PickupStopped: true, HostingSeconds: 42, Revision: 7}, worldState: &worldState{MonsterCount: 1, Auto: false}}
-	w := &worker{rooms: map[string]*room{"role": r}}
-	f := wire.Message(p.MsgC2SAutoBattle, 9, 3, &pb.AutoBattleIntent{SceneEpoch: 20, Enabled: true, MonsterCount: 8})
-	w.command(command{role: "role", conn: conn, frame: f})
-	if len(conn.frames) != 2 || conn.frames[0].ID != p.MsgC2SAutoBattle || conn.frames[0].Request != 9 || conn.frames[0].Error != p.CodeLineForbidden {
-		t.Fatalf("满包拒绝没有沿原请求返回错误:%v", conn.frames)
-	}
-	push := conn.frames[1]
-	state := &pb.HostingState{}
-	if err := proto.Unmarshal(push.Payload, state); err != nil {
-		t.Fatal(err)
-	}
-	if push.ID != p.MsgS2CHostingState || push.Request != 0 || state.AutoBattleEnabled || state.RemainHostingSec != 42 || state.StateRevision != 7 {
-		t.Fatalf("满包拒绝后未补真实hosting:%v %v", push, state)
-	}
-	if r.Auto || r.MonsterCount != 1 {
-		t.Fatal("被拒绝的自动战斗请求改变了场景状态")
-	}
-}
+// 满包拒绝Auto的旧测试完整字节留在阶段历史；普通Auto按独立容量政策测试。
 
 func TestDeadPlayerCountChangePushesSnapshotWithoutReset(t *testing.T) {
 	conn := &capturedConnection{}

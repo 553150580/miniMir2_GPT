@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "source_whitelist_frozen_not_applied",
+  "formal_target": "docs/普通满包与背包触屏阶段验收.json",
+  "archive_target": "outputs/inventory-capacity-20261030",
+  "default_mode": "check_only_no_docs_or_outputs_write",
+  "apply_requires_root_explicit_final_authorization": true,
+  "current_selectors": {
+    "go_report": "可由--go-report选择go/full-N/report.json",
+    "go_events": "--go-events或所选Go同目录events.jsonl",
+    "client_report": "--client-report选择client/full-N/report.json及6命令stdout/stderr和协议子报告",
+    "creator_report": "--creator-report选择creator/full-N/report.json及creator.log/wrapper原输出",
+    "gui_report": "--gui-report必须显式选择本阶段正常UI真正终态"
+  },
+  "required_preflight": [
+    "Go完整--mongo --race --json ./...、原events重新计数0fail/0Test skip，before=after=当前完整工具输入集合",
+    "全包raw包含TestFullBagOfflineCombatAndChargingMongoWS、原在线WS与Store满包事务方法真正PASS，不能以直接Store事务冒充AI/WS",
+    "client完整输入动态重扫、9个精确Creator源码与3个精确系统字体分别核SHA；6命令原stdout/stderr及PB子报告通过并按raw计数",
+    "Creator3.8.8真实退出36，包装全输入与脚本/10布局current一致，保存原日志；不从生成成功推导GUI通过",
+    "唯一书只C4 profile20→21、460公式/102未编辑ZIP/架构书保持，profile其余数字与门禁不变；新preview与绑定sync一致",
+    "Game.scene只允许4个旧对象字段及新增Widget1190，其他9布局相对HEAD不变；构建期间10布局全部保持",
+    "正常GUI实际创建角色/真实触屏选择与即时上下文、满包仍真实奖励和Auto、正确剩余时长/重入，必须核observations/health身份与源码和工具before/after/current",
+    "最终peer以最终Go SHA更新；旧静读finding原字节仍在history且明确并非实证红绿"
+  ],
+  "explicit_whitelist": {
+    "current": ["selected Go report/events/wrapper/started/两原输出", "selected client report/started/6命令两输出及protocol子报告", "selected Creator report/log/wrapper/started/两输出", "selected normal GUI report/raw/wrapper/明确截图"],
+    "configuration": ["config/final-review.json及作者/审证/应用单格报告", "config/13个真实命令report/stdout/stderr", "config/before/原玩法配置.xlsx仅一份"],
+    "peer_and_layout": ["最终server-peer/review.json", "client/before.json", "client/layout-diff.json", "support/server/go-frozen.json及peer刷新源码", "三个owner窄Mongo/WS报告与raw只按当时范围保留", "client production-freeze/narrow及原日志，不替代最终完整client"],
+    "history_required": ["server/apply/report与两patch/格式proof/4命令两输出，保留首check失败", "server/mongo-store-1原report/events/stderr及专属ownership检查", "server/mongo-offline-full-ws-1原report/events/stderr/ownership：注册账号21字节被既有6至20门禁拒绝，未进入满包业务，非生产缺陷", "history/server-peer/before-offline-ws/review.json原b68feab字节", "通过--history-report选择的后续失败及非最终full报告，保留raw和截图"],
+    "support_only": ["--support-report明确选择的作者窄测，scope不升级成完整当前验收"],
+    "source_snapshots": ["本finalizer", "stage_checks.py", "verify_index.py", "update_docs.py", "本白名单计划", "正常GUI验证工具；只保必要源码，不复制整套inputs"]
+  },
+  "storage": "大JSON/text/events无损gzip，manifest同时保raw/file SHA和字节数，selectors仍指原始报告原SHA",
+  "excluded": ["整个.work递归", "client-project", "library", "temp", "build", "node_modules", "二进制可执行/来源图像包", "引擎源码实体", "系统字体实体", "账号密码/Token/ticket等凭据"],
+  "pending_exact_interfaces": [],
+  "final_selection": {"go": "go/full-2", "client": "client/full-2", "creator": "creator/full-1", "gui": "browser/run-01", "scope": "原终态已齐；本计划不执行归档，Root用最终check后才显式apply"},
+  "final_scope_notes": ["正常GUI按新binding首Inventory revision拒历史、允许真正新40018/40019，Auto保持On至最终正常Off；不硬比重入EXP/receipt数量，零托管GUI不算收费验证", "真实原AppRoot/Game反例单独绑定baseline5b6源码与actual.log，非声称修改前另一次live运行，不混入client/full-1四旧布局hash失败", "全Go full-1原失败保留；包总预算900只扩大整组场景总预算，不改单项RPC/事务/租约/连接时限。Stage21不宣称手机、整体容量、自然经济平衡或完整P0。"],
+  "scope_limits": ["50/400仍为development_gold_only，outputs=[]；正式洗炼石与祝福油、损坏回收未验", "主22/legacy免费未训宠/护符false/17closed保持", "隔离低HP/短余额/满包资格不能认证自然效率、手机、整体容量、P0或全1.80", "原drain静态finding遗漏致死立即snapshot，未运行反例，不是已复现生产修复"]
+}

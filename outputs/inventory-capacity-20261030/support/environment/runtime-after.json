@@ -1,0 +1,47 @@
+{
+  "recorded_at_utc": "2026-10-29T18:47:20.021755+00:00",
+  "label": "after",
+  "ports": {
+    "18080": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 30764,
+      "run_id": "d8d822fa9b9248ab99432521abc26d37",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    },
+    "18100": {
+      "development_only": true,
+      "fixture_hash": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+      "instance": "d2b82fe69ccd5bf4d5cd6f09d3f930fd",
+      "mode": "account",
+      "rule_version": 21,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18101": {
+      "development_only": true,
+      "fixture_hash": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+      "instance": "389e36f8a8cd77d6b63e9b7ce4e4244f",
+      "mode": "game",
+      "rule_version": 21,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18102": {
+      "development_only": true,
+      "fixture_hash": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+      "instance": "fb156cc1ff85ef2ce6c1aa6991092633",
+      "mode": "gm",
+      "rule_version": 21,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  },
+  "scope": "开发实例身份及实际HTTP可达性，非业务或容量验收",
+  "current_disk_fixture_sha256": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+  "current_disk_public_sha256": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+  "loaded_runtime_matches_current_disk_fixture": true
+}

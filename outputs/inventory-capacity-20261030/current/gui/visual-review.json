@@ -1,0 +1,88 @@
+{
+  "status": "passed_with_scope",
+  "reviewed_at_utc": "2026-10-29T18:58:34.810784+00:00",
+  "method": "作者通过 view_image 实际逐张查看以下10张原PNG；非像素脚本或文件存在检查替代人工复核。",
+  "browser_report_sha256": "4b2aa84498f1ecea9b88c1a4c3b8200049433bfbe8428d2b590cb1cfc08c9975",
+  "wrapper_result_sha256": "b453986c7cf081806f26f5791a6ba85ab3cf584c0fa4e79d35a5757a614ed9f3",
+  "images": [
+    {
+      "path": "01-equipped-normal-auto.png",
+      "sha256": "bf641c38de275fa080ce96aeb8519b2374240c64b92c8dff77b54332fbbcbb6d",
+      "actual_observation": "正常1级道士、原场景与原宠、自动战斗8只怪物显示；未据截图推断装备数值。"
+    },
+    {
+      "path": "02-normal-book-learn.png",
+      "sha256": "40b9dce3657a5f28fb7bf8c72fb6034944c2855392367fab4976f540b1e9ee54",
+      "actual_observation": "7级职业技能面板明确显示治愈术已学，保存按钮和列表可见。"
+    },
+    {
+      "path": "03-first-bag-full.png",
+      "sha256": "8dfc4fb19abcf8f81af8e615b2f3bffaef09921ff0fc52e65834056460333849",
+      "actual_observation": "16级60/700经验、自动勾选与8怪显示；底部已有实际弃物和经验消息预览。"
+    },
+    {
+      "path": "04-full-bag-continued.png",
+      "sha256": "124facaea401d665033447de72034053aef4853b178b23b922158d7764ecb933",
+      "actual_observation": "仍自动勾选与8怪，经验可见增长至390/700；未由画面差值代替40019凭据。"
+    },
+    {
+      "path": "05-last-row-details-return.png",
+      "sha256": "885520d38aa1a6976168c2c223b7328c7b7a87151ec91ffd9828f1332846ffd3",
+      "actual_observation": "末行精神力战法完整可见；行底与锁定装备按钮分离，装备/分解按钮独立，详情关闭后仍在末尾。"
+    },
+    {
+      "path": "06-tall-inventory.png",
+      "sha256": "bbbd4f3b6329cfc1850d9a9eec66b2dc2821ba73b8411a8091138c9f79069963",
+      "actual_observation": "720×1600：背包面板保持固定尺寸居中，末行和锁定/装备/分解按钮无重叠。"
+    },
+    {
+      "path": "06-wide-inventory.png",
+      "sha256": "7823ca22c7f75ea3e54097ba24322c2fd86ba70142952a8e6d3861f0be9be51c",
+      "actual_observation": "960×1280：背包面板保持固定尺寸居中，末行和锁定/装备/分解按钮无重叠。"
+    },
+    {
+      "path": "07-book-quote.png",
+      "sha256": "7c679afe45cd109475e76a4e71eb0f038d345d3cd6f0e3767bfd71ee820738ad",
+      "actual_observation": "拆书确认完整滚读后的列表末段、来源/品质/实际数量5+5及底部确认/取消均清楚可见。"
+    },
+    {
+      "path": "08-immediate-merge-quote.png",
+      "sha256": "8fea6c42280d55e1536069a09e83332b2737e82cba5dd93f8383a5961711cd67",
+      "actual_observation": "合并确认完整滚读后的列表末段，实际消耗原书页数量5、输出10、来源/品质与未冻结说明可见；本轮正常取消未提交合并。"
+    },
+    {
+      "path": "09-healthy-auto-on.png",
+      "sha256": "54cdf5aa6c35dd569c16e25dcaa0d50c38c690f686ef25e58378080a0be0d62d",
+      "actual_observation": "健康新票后仍自动勾选、8只怪物和675/700经验；角色与宠物可见，折叠消息有新弃物及经验预览。"
+    }
+  ],
+  "verified_scope": [
+    "本轮保存View与固定上下文/装备/分解按钮的几何分离，720×1280、720×1600、960×1280三个桌面Chrome模拟尺寸。",
+    "列表末行可见与详情返回位置保持；同事件标签/交互性与offset不变另以实际只读事件观察记录证明。",
+    "真实正常新角色成长、原书学习、满包后仍战斗及健康票仍自动的可见状态，与实际40018/40019分账证据交叉核对。",
+    "保存拆书/合并报价末端及确认/取消可见；全文由正常滚读记录与原报价条目证明，单张末端截图不宣称同时显示全文。"
+  ],
+  "limitations": [
+    "底部GameMessages为既有折叠预览，长弃物说明在预览中截取；本轮没有把折叠截图写成展开态完整消息全文已验证。",
+    "桌面Chrome模拟触屏与窗口尺寸，不代表物理手机真机或所有分辨率认证。",
+    "初始托管余额为0；本GUI不验证离线收费，独立Mongo/WS结果由主代理另外引用。",
+    "本次合并报价正常取消以保留满包前态，不重复声称本阶段GUI完成实际Kind4合并提交；此前rule20实际Kind4证据保留独立范围。"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "Unexpected screen orientation: 13"
+    },
+    {
+      "type": "warning",
+      "text": "Unexpected screen orientation: 13"
+    },
+    {
+      "type": "warning",
+      "text": "Unexpected screen orientation: 13"
+    }
+  ],
+  "raw_report_unchanged": true,
+  "product_or_tool_source_modified": false
+}

@@ -1,5 +1,5 @@
 {
-  "config_version": "dev-level-growth-v0.20-ed0b55518991",
+  "config_version": "dev-inventory-capacity-v0.21-ed0b55518991",
   "server": "server/internal/configtypes/config_types.go",
   "client": "client/assets/scripts/generated/config_types.ts",
   "runtime_ready": false,

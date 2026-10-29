@@ -20,6 +20,7 @@ build/
 !outputs/pet-visual-20261029/**/*.log
 !outputs/auto-recycle-20261029/**/*.log
 !outputs/level-growth-20261029/**/*.log
+!outputs/inventory-capacity-20261030/**/*.log
 client/library/
 client/temp/
 client/profiles/

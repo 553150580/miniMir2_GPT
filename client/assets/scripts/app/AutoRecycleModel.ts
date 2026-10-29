@@ -117,7 +117,7 @@ export function autoRecyclePolicyText(policy: AutoRecyclePolicy | null): string 
     if (!policy) return '等待服务端自动回收设置';
     return `已生效：${policy.enabled ? '开启' : '关闭'} · 修订${policy.revision}\n品质：${policy.qualityIds.map(id => RECYCLE_QUALITY_NAMES[id]).join('、') || '未选择'} · 需求等级${policy.maxRequiredLevel === 0 ? '不限' : '≤' + policy.maxRequiredLevel}`;
 }
-export function recycleDiscardText(reason: string): string { return reason === 'bag_full' ? '背包已满，自动回收后仍无空间' : reason ? '其它服务器丢弃原因（待核验）' : ''; }
+export function recycleDiscardText(reason: string): string { return reason === 'bag_full' ? '背包已满，未能入包的新掉落已放弃' : reason ? '其它服务器丢弃原因（待核验）' : ''; }
 export function autoRecycleReportLines(report: any): string[] {
     if (!report) return ['暂无已提交托管战报'];
     const value = (key: string): bigint => report[key] === undefined ? 0n : integer(report[key], '战报' + key);
@@ -127,7 +127,7 @@ export function autoRecycleReportLines(report: any): string[] {
         `金币 ${report.earned?.gold?.toString() ?? '0'}，绑定金币 ${report.earned?.boundGold?.toString() ?? '0'}`,
         `自动回收 ${value('recycleCount')} 件 · 金币 ${value('recycleGold')}，绑定金币 ${value('recycleBoundGold')}`,
         `总掉落 ${value('totalDropCount')} 件 · 放弃 ${value('discardCount')} 件${report.lastDiscardReason ? '，原因：' + recycleDiscardText(report.lastDiscardReason) : ''}`,
-        `停止状态：${({ 0: '仍可继续', 1: '托管时长耗尽', 2: '角色倒下', 3: '背包无可用空间' } as Record<number, string>)[report.stopReason ?? 0] ?? '服务器已停止托管'} · 掉落列表最多100条，仅为样本`, '以上均为原托管区间已提交事实，不重新判定绑定'];
+        `停止状态：${({ 0: '未记录停止', 1: '托管时长耗尽', 2: '角色倒下', 3: '旧版记录：曾因满包停止' } as Record<number, string>)[report.stopReason ?? 0] ?? '服务器已停止托管'} · 掉落列表最多100条，仅为样本`, '以上均为原托管区间已提交事实，不重新判定绑定'];
 }
 export interface RecycleNotice { readonly role: string; readonly revision: string; readonly identity: string; readonly trigger: number;
     readonly count: string; readonly gold: string; readonly boundGold: string; readonly discarded: string; readonly reason: string; }

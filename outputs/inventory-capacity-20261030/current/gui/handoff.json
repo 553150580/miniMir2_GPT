@@ -1,0 +1,288 @@
+{
+  "status": "passed",
+  "run_directory": ".work/inventory-capacity-20261030/browser/run-01",
+  "exec_session_id": 11551,
+  "exec_terminal_exit_code": 0,
+  "report_sha256": "4b2aa84498f1ecea9b88c1a4c3b8200049433bfbe8428d2b590cb1cfc08c9975",
+  "visual_review_sha256": "50de7958b3910194b38a6a97a07186908cb81123d83ddab116d9a5134837f761",
+  "wrapper_result_sha256": "b453986c7cf081806f26f5791a6ba85ab3cf584c0fa4e79d35a5757a614ed9f3",
+  "checks": 8,
+  "errors": 0,
+  "warnings": 3,
+  "experience_receipts": 215,
+  "recycle_results": 6,
+  "after_full_proof": {
+    "firstSource": "174",
+    "laterDiscards": [
+      {
+        "time": 1793300104636,
+        "binding": "1",
+        "role": "1:3bff8477af780e517b1a6f0d30142566",
+        "revision": "194",
+        "source": "189",
+        "op": "",
+        "policyRevision": "0",
+        "count": "0",
+        "gold": "0",
+        "boundGold": "0",
+        "discarded": "1",
+        "reason": "bag_full",
+        "trigger": 1
+      },
+      {
+        "time": 1793300105936,
+        "binding": "1",
+        "role": "1:3bff8477af780e517b1a6f0d30142566",
+        "revision": "195",
+        "source": "190",
+        "op": "",
+        "policyRevision": "0",
+        "count": "0",
+        "gold": "0",
+        "boundGold": "0",
+        "discarded": "1",
+        "reason": "bag_full",
+        "trigger": 1
+      },
+      {
+        "time": 1793300115435,
+        "binding": "1",
+        "role": "1:3bff8477af780e517b1a6f0d30142566",
+        "revision": "201",
+        "source": "196",
+        "op": "",
+        "policyRevision": "0",
+        "count": "0",
+        "gold": "0",
+        "boundGold": "0",
+        "discarded": "1",
+        "reason": "bag_full",
+        "trigger": 1
+      }
+    ],
+    "acceptedBefore": "2610",
+    "acceptedAfter": "2940",
+    "receiptsBefore": 174,
+    "receiptsAfter": 196
+  },
+  "new_binding_first_inventory": {
+    "time": 1793300158176,
+    "binding": "2",
+    "revision": "206",
+    "itemCount": 32
+  },
+  "new_binding_progress": {
+    "before": "2985",
+    "after": "3225"
+  },
+  "same_event_last_row": {
+    "time": 1793300122240,
+    "id": "f931da16dfe9615f848e67ba900e80ed",
+    "item": 22,
+    "label": "锁定装备",
+    "interactable": false,
+    "touchBefore": {
+      "time": 1793300122239,
+      "offset": 1890
+    },
+    "offset": 1890,
+    "selectedId": "f931da16dfe9615f848e67ba900e80ed"
+  },
+  "same_event_page": {
+    "time": 1793300145039,
+    "id": "c0c8c2dcc34ba343e5c5788138f2fc2a",
+    "item": 900001,
+    "label": "合并书页",
+    "interactable": true,
+    "touchBefore": {
+      "time": 1793300145038,
+      "offset": 1890
+    },
+    "offset": 1890,
+    "selectedId": "c0c8c2dcc34ba343e5c5788138f2fc2a"
+  },
+  "geometry": {
+    "initial": {
+      "window": {
+        "width": 720,
+        "height": 1280
+      },
+      "panel": {
+        "width": 660,
+        "height": 820
+      },
+      "view": {
+        "left": -300,
+        "right": 300,
+        "bottom": -214,
+        "top": 200,
+        "width": 600,
+        "height": 414
+      },
+      "itemLock": {
+        "left": -100,
+        "right": 100,
+        "bottom": -280,
+        "top": -226,
+        "width": 200,
+        "height": 54
+      },
+      "equip": {
+        "left": -275,
+        "right": -15,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "recycle": {
+        "left": 15,
+        "right": 275,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "rowHeight": 72,
+      "offset": 0
+    },
+    "tall": {
+      "window": {
+        "width": 720,
+        "height": 1600
+      },
+      "panel": {
+        "width": 660,
+        "height": 820
+      },
+      "view": {
+        "left": -300,
+        "right": 300,
+        "bottom": -214,
+        "top": 200,
+        "width": 600,
+        "height": 414
+      },
+      "itemLock": {
+        "left": -100,
+        "right": 100,
+        "bottom": -280,
+        "top": -226,
+        "width": 200,
+        "height": 54
+      },
+      "equip": {
+        "left": -275,
+        "right": -15,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "recycle": {
+        "left": 15,
+        "right": 275,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "rowHeight": 72,
+      "offset": 1890
+    },
+    "wide": {
+      "window": {
+        "width": 960,
+        "height": 1280
+      },
+      "panel": {
+        "width": 660,
+        "height": 820
+      },
+      "view": {
+        "left": -300,
+        "right": 300,
+        "bottom": -214,
+        "top": 200,
+        "width": 600,
+        "height": 414
+      },
+      "itemLock": {
+        "left": -100,
+        "right": 100,
+        "bottom": -280,
+        "top": -226,
+        "width": 200,
+        "height": 54
+      },
+      "equip": {
+        "left": -275,
+        "right": -15,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "recycle": {
+        "left": 15,
+        "right": 275,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "rowHeight": 72,
+      "offset": 1890
+    },
+    "restored": {
+      "window": {
+        "width": 720,
+        "height": 1280
+      },
+      "panel": {
+        "width": 660,
+        "height": 820
+      },
+      "view": {
+        "left": -300,
+        "right": 300,
+        "bottom": -214,
+        "top": 200,
+        "width": 600,
+        "height": 414
+      },
+      "itemLock": {
+        "left": -100,
+        "right": 100,
+        "bottom": -280,
+        "top": -226,
+        "width": 200,
+        "height": 54
+      },
+      "equip": {
+        "left": -275,
+        "right": -15,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "recycle": {
+        "left": 15,
+        "right": 275,
+        "bottom": -355,
+        "top": -295,
+        "width": 260,
+        "height": 60
+      },
+      "rowHeight": 72,
+      "offset": 1890
+    }
+  },
+  "source_before_after_equal": true,
+  "health_before_after_equal": true,
+  "tool_sha256": "c404a48241fd1e91e770cb710fe554ca8a12de4c6ff66cb1ad982100649daa3d",
+  "main_backend_and_static_not_stopped_by_this_run": true,
+  "database_or_service_control": false,
+  "follow_up": "无活跃QA会话，数据库/Chrome窗口交还主代理。所有产品与工具冻结字节未改。"
+}

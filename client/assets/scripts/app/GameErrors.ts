@@ -1,12 +1,12 @@
 import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNotLearned, CodeSkillResource, CodeSkillStateBlocked, CodeSkillTarget,
     CodeSkillPreviewStale, CodeSkillMaterials, CodeSkillUpgradeBlocked, CodeSkillBookSource, CodeSkillPurchaseBlocked,
-    CodeSkillMaterialRequired, CodeSkillMaterialChanged } from '../generated/protocol_ids';
+    CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden } from '../generated/protocol_ids';
 
-const FULL_BAG_AUTO_MESSAGE = '背包已满，整理后再开启自动战斗';
+const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。
 export function protocolErrorMessage(messageId: number, errorCode: number): string {
-    if (messageId === 30004 && errorCode === 2103) return FULL_BAG_AUTO_MESSAGE;
+    if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
     if (errorCode === CodeItemUseBlocked) return '角色倒下或当前状态不能使用药品';
     if (errorCode === CodeItemUseCooldown) return '药品使用过快，请稍后再试';
     if (errorCode === CodeSkillNotLearned) return '尚未学会该技能';
@@ -26,7 +26,7 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
 
 export function normalizeGameErrorMessage(message: string): string {
     const text = message.trim();
-    // 兼容当前会话中的旧错误文案；现有协议的 2103 仅用于满包拒绝自动战斗。
-    if (text === '服务端拒绝：2103' || text === '操作失败，错误码2103') return FULL_BAG_AUTO_MESSAGE;
+    // 旧通用错误没有原消息或地图身份，不能反推为满包。
+    if (text === '服务端拒绝：2103' || text === '操作失败，错误码2103') return SCENE_FORBIDDEN_MESSAGE;
     return text;
 }

@@ -1,0 +1,68 @@
+{
+  "status": "frozen_after_historical_layout_projection_fix",
+  "before": {
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/tests/app/inventory_context.test.cjs": "abeea391cab68c7e36975a6d593f4296f741ee6b724cbe6803579866daf74b67",
+    "client/tests/app/inventory_layout.test.cjs": "f04553e0094571c5a9a68cb13c7626faeb33c00f240662004de3db9b35dca0f9",
+    "client/tests/app/messages.test.cjs": "96a3fbbe96202efb684de18428a2cf0beb6011235ceca48eeb025b7bf6ccfe02",
+    "client/tests/app/auto_recycle.test.cjs": "c86bdc88ed4d5540fd334fb3f8f83818e589f4490acd940449355a03eaed791a",
+    "client/tests/app/hud_layout.test.cjs": "88812d6228f2f67c4a3030ad9fc16c05d843ea438493fac7d37703fb4b8eb456",
+    "client/tests/app/combat_status.test.cjs": "9a29bdbbf15bd9fa44276492bb4138828a1ad920eacc87a1dc16fa0b434b826c",
+    "client/tests/app/helpers/auto_recycle_layout.cjs": "139e1e802b0b0b408650d09625ea5fc488ba9dcbd90b310c3d2ff6565a1161bc"
+  },
+  "after": {
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/tests/app/inventory_context.test.cjs": "abeea391cab68c7e36975a6d593f4296f741ee6b724cbe6803579866daf74b67",
+    "client/tests/app/inventory_layout.test.cjs": "f04553e0094571c5a9a68cb13c7626faeb33c00f240662004de3db9b35dca0f9",
+    "client/tests/app/messages.test.cjs": "96a3fbbe96202efb684de18428a2cf0beb6011235ceca48eeb025b7bf6ccfe02",
+    "client/tests/app/auto_recycle.test.cjs": "c86bdc88ed4d5540fd334fb3f8f83818e589f4490acd940449355a03eaed791a",
+    "client/tests/app/hud_layout.test.cjs": "88812d6228f2f67c4a3030ad9fc16c05d843ea438493fac7d37703fb4b8eb456",
+    "client/tests/app/combat_status.test.cjs": "9a29bdbbf15bd9fa44276492bb4138828a1ad920eacc87a1dc16fa0b434b826c",
+    "client/tests/app/helpers/auto_recycle_layout.cjs": "139e1e802b0b0b408650d09625ea5fc488ba9dcbd90b310c3d2ff6565a1161bc"
+  },
+  "current": {
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameErrors.ts": "8adedb404ae0fab2a215bf6c72ece619ecb2cfd7847d6008403e740dc5949010",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/tests/app/inventory_context.test.cjs": "abeea391cab68c7e36975a6d593f4296f741ee6b724cbe6803579866daf74b67",
+    "client/tests/app/inventory_layout.test.cjs": "f04553e0094571c5a9a68cb13c7626faeb33c00f240662004de3db9b35dca0f9",
+    "client/tests/app/messages.test.cjs": "96a3fbbe96202efb684de18428a2cf0beb6011235ceca48eeb025b7bf6ccfe02",
+    "client/tests/app/auto_recycle.test.cjs": "c86bdc88ed4d5540fd334fb3f8f83818e589f4490acd940449355a03eaed791a",
+    "client/tests/app/hud_layout.test.cjs": "88812d6228f2f67c4a3030ad9fc16c05d843ea438493fac7d37703fb4b8eb456",
+    "client/tests/app/combat_status.test.cjs": "9a29bdbbf15bd9fa44276492bb4138828a1ad920eacc87a1dc16fa0b434b826c",
+    "client/tests/app/helpers/auto_recycle_layout.cjs": "139e1e802b0b0b408650d09625ea5fc488ba9dcbd90b310c3d2ff6565a1161bc"
+  },
+  "stable": true,
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "tools/dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/hud_layout.test.cjs",
+    "client/tests/app/combat_status.test.cjs",
+    "client/tests/app/inventory_layout.test.cjs",
+    "client/tests/app/inventory_context.test.cjs"
+  ],
+  "exit_code": 0,
+  "counts": {
+    "tests": 28,
+    "pass": 28,
+    "fail": 0,
+    "skipped": 0
+  },
+  "log_sha256": "33dd13c00996f29e1f681ffd482851a96233a2bd25b08f2ba50c13ab0888f21a",
+  "production_same_as_previous_freeze": true,
+  "previous_strict_report": ".work/inventory-capacity-20261030/client/narrow/report.json",
+  "normalization_scope": "当前4旧对象精确字段+1190唯一Widget严格核验；只还原对应历史字段，四对象归档旧hash另核，733/963/973/988旧整段hash完全未改，其它字段仍受原断言保护。新几何独立按实际值测试。"
+}

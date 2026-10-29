@@ -55,7 +55,9 @@ test('实际中文验收名与12汉字名字有足够单行宽度，24字号不�
     assert(6*label._fontSize>140,'保留6汉字超过旧140宽度的真实裁切触发条件');
 });
 function previousLayout(count){
-    const saved=structuredClone(scene.slice(0,count));
+    const projection=structuredClone(scene);
+    require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
+    const saved=projection.slice(0,count);
     require('./helpers/auto_recycle_layout.cjs')(saved);
     for(const value of saved)if(value._children)value._children=value._children.filter(ref=>ref.__id__<count);
     // 本阶段唯一有意调整的旧地图几何：World原像素1倍及菱形+土层包围盒。

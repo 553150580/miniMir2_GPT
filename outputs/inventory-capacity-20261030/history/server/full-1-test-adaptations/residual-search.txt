@@ -1,0 +1,18 @@
+client/tests/app\auto_recycle.test.cjs:55: assert(!text.includes('因满包停止'));assert(!text.includes('再开启自动战斗'));
+client/tests/app\auto_recycle.test.cjs:56: assert(model.autoRecycleReportLines({...current,stopReason:3}).join('\n').includes('旧版记录：曾因满包停止'));
+client/assets/scripts/app\AutoRecycleModel.ts:130:        `停止状态：${({ 0: '未记录停止', 1: '托管时长耗尽', 2: '角色倒下', 3: '旧版记录：曾因满包停止' } as Record<number, string>)[report.stopReason ?? 0] ?? '服务器已停止托管'} · 掉落列表最多100条，仅为样本`, '以上均为原托管区间已提交事实，不重新判定绑定'];
+server/internal\persistence\settlement.go:250:		if out.HostingSeconds == 0 && (report.StopReason == 0 || report.StopReason == 3) {
+server/internal\persistence\skill_assets_test.go:239:		t.Fatal("满包购买未拒绝")
+server/internal\persistence\full_bag_policy_test.go:61:		r.Report = domain.Report{SessionID: "old-session", StopReason: 3}
+server/internal\persistence\full_bag_policy_test.go:68:		if err != nil || out.Report.StopReason != want || r.Report.StopReason != 3 {
+server/internal\integration\auto_recycle_test.go:350:			t.Logf("失败观察 phase=%s attacks=%d positive_impacts=%d recycle_events=%d player=%v hosting=%v inventory_revision=%d bag=%d policy=%v；永久role_read_error=%v rev=%d source=%d econ=%d no_equipment_kills=%d pickup_stopped=%t bag=%d report=%+v", phase, attacks, positiveImpacts, len(events), c.player(), c.hosting, c.inventory.GetRevision(), len(c.inventory.GetItems()), c.inventory.GetAutoRecycle(), e, stored.Revision, stored.SourceSeq, stored.EconomicSeq, stored.NoEquipmentKills, stored.PickupStopped, len(stored.Items), stored.Report)
+server/internal\integration\auto_recycle_test.go:389:	if !full.PickupStopped || full.SourceSeq < int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 || c.hosting == nil || !c.hosting.AutoBattleEnabled {
+server/internal\integration\auto_recycle_test.go:405:	if !full.PickupStopped || full.SourceSeq <= int64(discard.SourceSeq) || c.hosting.AutoBattleEnabled {
+server/internal\integration\auto_recycle_test.go:447:	if !unchanged.PickupStopped || unchanged.SourceSeq != full.SourceSeq || len(unchanged.Items) != len(full.Items) || unchanged.AutoRecycle.Revision != 1 {
+server/internal\integration\auto_recycle_test.go:461:	if released.PickupStopped || c.hosting.AutoBattleEnabled || len(released.Items) != len(full.Items)-int(expectedSweep) || applied.RecycledCount != expectedSweep || applied.BoundGold != int64(expectedSweep)*50 || applied.Gold != 0 || released.SourceSeq != full.SourceSeq || released.AutoRecycle.Revision != 2 {
+server/internal\integration\full_bag_policy_test.go:95:			t.Fatal("真实报告把满包当停止或遮住余额耗尽", out.Report)
+server/internal\integration\full_bag_offline_test.go:185:	if !offline.PickupStopped || len(offline.Items) != offline.Capacity || offline.AutoRecycle.Enabled || offline.HostingSeconds >= before.HostingSeconds || before.HostingSeconds-offline.HostingSeconds != offline.Report.UsedSeconds || offline.Report.StopReason != 0 || offline.Report.LastDiscardReason != "bag_full" || len(offline.Report.Drops) != 0 || offline.Report.RecycleCount != 0 {
+server/internal\integration\skill_page_merge_test.go:227:	t.Logf("通过：隔离满包资格%d格，正常两批拆书各2本×%d页；跨来源/部分stack拒绝，装备锁推进revision使旧预览失效，满包合并释放1格且不自动开战，typed原计划/审计、删除报价后健康新票原op不重复消耗。页强保护由纯测覆盖，未证明自然掉书获取。", initial.Capacity, rule.PagesPerBook)
+server/internal\game\full_bag_policy_test.go:47:		if r.Auto != enabled || !r.Role.PickupStopped || len(c.frames) < 2 || c.frames[0].ID != p.MsgS2CHostingState || c.frames[0].Request != request || c.frames[0].Error != 0 {
+server/internal\game\full_bag_policy_test.go:72:	if r.Pending || !original.Auto || r.TownWorld.Auto || !r.Role.PickupStopped {
+server/internal\game\hosting_test.go:26:// 满包拒绝Auto的旧测试完整字节留在阶段历史；普通Auto按独立容量政策测试。

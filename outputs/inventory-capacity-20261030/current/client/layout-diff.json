@@ -1,0 +1,20 @@
+{
+  "base_sha256": "c3a1937bd2be3b913de18766ef1e453cc86bd2946c5df91aab3f92120a3797f6",
+  "after_sha256": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+  "old_objects": 1190,
+  "new_objects": 1191,
+  "modified_old_indices": [
+    270,
+    271,
+    273,
+    274
+  ],
+  "new_component_index": 1190,
+  "unchanged_other_old_objects": true,
+  "view_panel_rect": {
+    "top": 200,
+    "bottom": -214
+  },
+  "item_lock_top": -226,
+  "gap": 12
+}

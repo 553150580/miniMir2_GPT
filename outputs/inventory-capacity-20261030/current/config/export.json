@@ -1,0 +1,29 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/config/export_configs.py",
+    "--version",
+    "dev-inventory-capacity-v0.21"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/config/export_configs.py",
+    "--version",
+    "dev-inventory-capacity-v0.21"
+  ],
+  "started_at_utc": "2026-10-29T17:49:23.378344+00:00",
+  "finished_at_utc": "2026-10-29T17:49:24.243291+00:00",
+  "seconds": 0.865,
+  "exit_code": 0,
+  "stdout": "export.stdout.txt",
+  "stderr": "export.stderr.txt",
+  "stdout_sha256": "0168dba2da364ba088ac7a67526a29dc758d7f97edbaff2e11f0fd830d7bde94",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

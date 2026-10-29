@@ -543,11 +543,6 @@ func (w *worker) command(c command) {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
 			return
 		}
-		if q.Enabled && r.Role.PickupStopped {
-			w.failure(r, c.frame, p.CodeLineForbidden)
-			w.hosting(r, 0)
-			return
-		}
 		if m, ok := w.currentMap(r); !ok || m.SceneKindValue() == devconfig.SceneKindTown {
 			w.failure(r, c.frame, p.CodeLineForbidden)
 			w.hosting(r, c.frame.Request)

@@ -46,8 +46,15 @@ test('真实Session Inventory后同revision回收消息不误去重；旧binding
 });
 test('战报保留Long完整值、原绑定分账与总掉落，100条仅样本，死亡/满包原因不混用',()=>{
  const r={usedSeconds:Long.UONE,kills:Long.UONE,experience:Long.ONE,recycleCount:Long.MAX_UNSIGNED_VALUE,recycleGold:Long.fromInt(50),recycleBoundGold:Long.fromInt(400),discardCount:Long.UONE,lastDiscardReason:'bag_full',totalDropCount:Long.fromInt(1000,true),stopReason:2,drops:Array(100).fill({})};
- const text=model.autoRecycleReportLines(r).join('\n');assert(text.includes(Long.MAX_UNSIGNED_VALUE.toString()));assert(text.includes('总掉落 1000'));assert(text.includes('仅为样本'));assert(text.includes('角色倒下'));assert(text.includes('自动回收后仍无空间'));
+ const text=model.autoRecycleReportLines(r).join('\n');assert(text.includes(Long.MAX_UNSIGNED_VALUE.toString()));assert(text.includes('总掉落 1000'));assert(text.includes('仅为样本'));assert(text.includes('角色倒下'));assert(text.includes('未能入包的新掉落已放弃'));
  assert(!model.recycleDiscardText('future_reason').includes('背包已满'));
+});
+test('旧stopReason3明确保留为历史，当前弃物不反推停战或清除Long统计',()=>{
+ const current={stopReason:0,discardCount:Long.MAX_UNSIGNED_VALUE,lastDiscardReason:'bag_full',totalDropCount:Long.MAX_UNSIGNED_VALUE};
+ const text=model.autoRecycleReportLines(current).join('\n');assert(text.includes('未记录停止'));assert(text.includes(Long.MAX_UNSIGNED_VALUE.toString()));
+ assert(!text.includes('因满包停止'));assert(!text.includes('再开启自动战斗'));
+ assert(model.autoRecycleReportLines({...current,stopReason:3}).join('\n').includes('旧版记录：曾因满包停止'));
+ assert(model.autoRecycleReportLines({...current,stopReason:1}).join('\n').includes('托管时长耗尽'));
 });
 test('系统回收提示只来自权威40018观察，不从钱包变多或物品消失推测，重复仅一条',()=>{
  const {SystemMessageLog}=require('../../../.work/ui-tests/app/SystemMessageLog.js'),log=new SystemMessageLog(),role=snapshot().role;
@@ -55,6 +62,16 @@ test('系统回收提示只来自权威40018观察，不从钱包变多或物品
  log.observe(base);log.observe({...base,wallet:{boundGold:Long.fromInt(50)}});assert.equal(log.messages.filter(x=>x.title==='自动回收').length,0);
  const m=new model.EquipmentRecycleModel();m.attach(role);m.synchronize(Long.fromInt(10,true));assert(m.accept(result(),role));log.observe({...base,recycleNotice:m.notice});log.observe({...base,recycleNotice:m.notice});
  assert.equal(log.messages.filter(x=>x.title==='自动回收').length,1);assert(log.messages.find(x=>x.title==='自动回收').message.includes('绑定金币50'));
+});
+test('满包弃物40018保留完整Long且按提交去重，不产生关闭或必须重开Auto提示',()=>{
+ const {SystemMessageLog}=require('../../../.work/ui-tests/app/SystemMessageLog.js'),log=new SystemMessageLog(),role=snapshot().role,m=new model.EquipmentRecycleModel();
+ const base={roleIdentity:role,ready:true,role:{name:'角色'},entry:{sceneEpoch:'1',baselineId:'1'},inventory:{level:1,experience:Long.ZERO,items:[]},hosting:{autoBattleEnabled:true},auto:true};
+ log.observe(base);m.attach(role);m.synchronize(Long.fromInt(10,true));
+ assert(m.accept(result(11,{recycledCount:Long.UZERO,gold:Long.ZERO,boundGold:Long.ZERO,discardedCount:Long.MAX_UNSIGNED_VALUE,discardReason:'bag_full'}),role));
+ for(let i=0;i<50;i++)log.observe({...base,recycleNotice:m.notice});
+ const messages=log.messages.filter(x=>x.title==='自动回收');assert.equal(messages.length,1);assert(messages[0].message.includes(Long.MAX_UNSIGNED_VALUE.toString()));
+ assert(messages[0].message.includes('未能入包的新掉落已放弃'));assert(!/关闭|再开启|停止自动/.test(messages[0].message));assert.equal(base.hosting.autoBattleEnabled,true);
+ assert(!m.accept(result(11,{discardedCount:Long.UONE,discardReason:'bag_full'}),role),'同提交不能被改小重报');
 });
 test('确认文字按保存Label真实尺寸与本机字体度量覆盖32格主配置边界，安全原因完整且不截行',{skip:process.platform!=='win32'},()=>{
  const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');

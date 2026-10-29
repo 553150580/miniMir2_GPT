@@ -202,7 +202,7 @@ func TestCurrentFixtureCatalogMetadataDoesNotChangeInitialPersonalMap(t *testing
 		t.Fatal(err)
 	}
 	f := &cfg.Fixture
-	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion != 20 || f.Map.NoPets == nil || *f.Map.NoPets || f.Binding == nil || f.Binding.Enabled || !f.SafeZoneBindingEnabled() || f.PetRuntime == nil || !f.PetRuntime.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+	if f.Map.ID != 1 || f.Map.SceneKindValue() != SceneKindPersonal || f.RuleVersion != 21 || f.Map.NoPets == nil || *f.Map.NoPets || f.Binding == nil || f.Binding.Enabled || !f.SafeZoneBindingEnabled() || f.PetRuntime == nil || !f.PetRuntime.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
 		t.Fatal("生命周期合同改变了个人初始地图、旧开发宠物模式或随机绑定池")
 	}
 	for _, id := range []uint64{1, 2} {

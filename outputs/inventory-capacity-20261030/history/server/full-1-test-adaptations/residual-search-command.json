@@ -1,0 +1,19 @@
+[
+  "rg",
+  "-n",
+  "-e",
+  "StopReason\\s*(?:!=|==|:|=)\\s*3",
+  "-e",
+  "stopReason\\s*(?:!=|==|:)\\s*3",
+  "-e",
+  "满包.*(?:停止|拒绝)",
+  "-e",
+  "背包已满.*自动战斗",
+  "-e",
+  "PickupStopped.*Auto|Auto.*PickupStopped",
+  "-e",
+  "RuleVersion\\s*!=\\s*20|当前.*rule20|主rule20",
+  "server/internal",
+  "client/assets/scripts/app",
+  "client/tests/app"
+]

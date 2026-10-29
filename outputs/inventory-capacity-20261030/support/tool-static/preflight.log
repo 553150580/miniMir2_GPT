@@ -1,0 +1,12 @@
+{
+  "passed": 5,
+  "checks": [
+    "全部8个原PB decoder存在，实际字段匹配",
+    "原PB观察保持超过Number安全范围的Long及Source/op分支",
+    "工具实际geometry回调使用保存自身AR矩形，不把子树bounds当Mask",
+    "只读同事件观察器记录触屏前后offset与即时文本，不触发业务函数",
+    "工具保持正常触屏、同水位Long判断及凭据脱敏边界"
+  ],
+  "tool_sha256": "c404a48241fd1e91e770cb710fe554ca8a12de4c6ff66cb1ad982100649daa3d",
+  "scope": "纯工具PB/静态保存几何与只读回调替身预检，不是Creator或真实GUI"
+}

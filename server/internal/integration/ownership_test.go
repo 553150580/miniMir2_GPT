@@ -9,6 +9,7 @@ import (
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -89,18 +90,19 @@ func TestMongoOwnershipFence(t *testing.T) {
 	if guards != 32 {
 		t.Fatalf("换代guard数=%d", guards)
 	}
-	// 满包不是任意按Price回收：不发币、不入袋，记录业务原因并停止托管。
+	// 满包不是任意按Price回收：不发币、不入袋，单列实际弃物。
+	// 本例没有领取托管余额，HostingSeconds=0，终止原因应是耗尽1而非满包3。
 	_, err = authority.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": replay.ID}, bson.M{"$set": bson.M{"capacity": len(replay.Items)}})
 	must(t, err)
 	full, err := next.Settle(ctx, newAuth, persistence.Settlement{SourceSeq: replay.SourceSeq + 1, Bound: true, Item: &domain.Item{ID: domain.ID(), ItemID: 218, Quantity: 1, Bound: true, Version: 1}, HostingSession: domain.ID()})
 	must(t, err)
-	if !full.PickupStopped || full.LastDiscardItem != 218 || full.Report.StopReason != 3 || full.Wallet.BoundGold != replay.Wallet.BoundGold || len(full.Items) != len(replay.Items) {
-		t.Fatalf("满包未明确停止或擅自换币:%+v", full)
+	if !full.PickupStopped || full.LastDiscardItem != 218 || !full.LastDiscardBound || full.HostingSeconds != 0 || full.Report.StopReason != 1 || full.Report.DiscardCount != 1 || full.Report.LastDiscardReason != "bag_full" || full.Report.TotalDropCount != 1 || full.Wallet != replay.Wallet || len(full.Items) != len(replay.Items) || !reflect.DeepEqual(full.Items, replay.Items) {
+		t.Fatalf("满包弃物/余额0原因不符，或擅改钱包/原库存:%+v", full)
 	}
 	released, result, err := next.Asset(ctx, newAuth, persistence.AssetRequest{Kind: "recycle", Fingerprint: "test_full_bag_release", Context: &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: uint64(full.EconomicSeq + 1), ExpectedRevision: uint64(full.Revision), ExpectedRuleVersion: cfg.Fixture.RuleVersion}, ItemIDs: []string{full.Items[0].ID}})
 	must(t, err)
 	if result.ErrorCode != 0 || released.PickupStopped {
-		t.Fatal("清理背包后没有解除容量停止状态")
+		t.Fatal("清理背包后没有解除拾取阻塞状态")
 	}
 	must(t, next.Release(ctx, "game"))
 	t.Log("通过：有效owner拒抢、停止→32组guard换代、旧owner写被拒、旧session被拒、原收益游标只提交一次")

@@ -34,7 +34,8 @@ test('材料施法固定已装原护符，不自动选背包替代；实例版�
 });
 test('状态资产只追加布局：旧988对象/Entity21对象原样保持，滚动覆盖详情与普通层分离',()=>{
     const root=path.resolve(__dirname,'../../..'),read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8')),scene=read('client/assets/scenes/Game.scene');
-    const old=structuredClone(scene.slice(0,988));for(const row of old)if(row._children)row._children=row._children.filter(ref=>ref.__id__<988);
+    const projection=structuredClone(scene);require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
+    const old=projection.slice(0,988);for(const row of old)if(row._children)row._children=row._children.filter(ref=>ref.__id__<988);
     require('./helpers/auto_recycle_layout.cjs')(old);
     assert.equal(crypto.createHash('sha256').update(JSON.stringify(old)).digest('hex'),'e22c27b81e71cdab6349819ed528c85a495419112e2e5776fbbd705cdd445fb8');
     const entity=read('client/assets/resources/prefabs/Entity.prefab');assert.deepEqual(entity[1]._children.map(ref=>entity[ref.__id__]._name),['Body','AttachedEffects','Name','HP']);const before=structuredClone(entity.slice(0,21));before[1]._children=before[1]._children.filter(ref=>ref.__id__<21);

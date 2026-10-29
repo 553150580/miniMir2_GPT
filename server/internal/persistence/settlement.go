@@ -243,13 +243,11 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 		if details.Recycling.DiscardedCount > 0 {
 			report.LastDiscardReason = details.Recycling.DiscardReason
 		}
-		if out.PickupStopped {
-			report.StopReason = 3
-		}
 		if q.StopReason != 0 {
 			report.StopReason = q.StopReason
 		}
-		if out.HostingSeconds == 0 && report.StopReason == 0 {
+		// 旧报告3保留历史；真正耗尽时不能让旧容量原因遮住新终态。原回执不改写。
+		if out.HostingSeconds == 0 && (report.StopReason == 0 || report.StopReason == 3) {
 			report.StopReason = 1
 		}
 		out.Report = report

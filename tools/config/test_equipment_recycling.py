@@ -23,7 +23,7 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
 
     def test_current_development_contract_preserves_prices_and_other_stage_gates(self):
         f=self.fixture
-        self.assertEqual(f['rule_version'],20)
+        self.assertEqual(f['rule_version'],21)
         self.assertEqual(f['equipment_recycling'],{'mode':'development_gold_only','outputs':[]})
         self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400)])
         self.assertEqual(len(f['skills']),22)

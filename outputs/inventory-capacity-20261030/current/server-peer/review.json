@@ -1,0 +1,346 @@
+{
+  "schema_version": 1,
+  "stage": "rule21普通满包政策",
+  "status": "read_only_review_complete_no_blocker_full_mongo_race_raw_current_verified",
+  "head": "5b6be439c013d16c4ca0bf0372c294e47b29a141",
+  "reviewer_executed_tests": false,
+  "reviewer_started_database_or_browser_or_creator": false,
+  "production_files_modified_by_reviewer": [],
+  "policy_basis": [
+    {
+      "path": "最终策划案.md",
+      "lines": [
+        95,
+        101,
+        103,
+        105
+      ],
+      "meaning": "真实普通怪事件、在线与托管同规则；只扣实际离线托管，不以固定速率补造收益"
+    },
+    {
+      "path": "最终策划案.md",
+      "lines": [
+        125,
+        127,
+        129
+      ],
+      "meaning": "普通满包先按策略回收，无法入包只弃新增物并记录原因；挑战待领队列和地面临时物另有范围"
+    },
+    {
+      "path": "最终策划案.md",
+      "lines": [
+        1084,
+        1090,
+        1091
+      ],
+      "meaning": "永久原事件回执保留，未知沿原ID核对，旧owner和失租不得继续授权"
+    }
+  ],
+  "production_conclusions": [
+    {
+      "path": "server/internal/game/runtime.go",
+      "lines": [
+        407,
+        446,
+        450,
+        540
+      ],
+      "result": "只移除PickupStopped对正常Auto意图的拒绝；原Conn/Session/Ready/quiescing及Town限制未变"
+    },
+    {
+      "path": "server/internal/game/combat.go",
+      "lines": [
+        272,
+        300,
+        318,
+        342,
+        353,
+        369,
+        376,
+        379,
+        400
+      ],
+      "result": "满包不再阻止离线新AI与原扣时；停止/隔离、Pending原重试、死亡、Town、余额0、Auto关闭与资源ACK仍阻止新增AI"
+    },
+    {
+      "path": "server/internal/game/combat.go",
+      "lines": [
+        558,
+        563,
+        568,
+        580
+      ],
+      "result": "确认结算后不再跨World关闭用户Auto；旧room/Auth/generation/id/fingerprint所有权检查及unknown保留原job不变"
+    },
+    {
+      "path": "server/internal/persistence/settlement.go",
+      "lines": [
+        45,
+        52,
+        58,
+        70,
+        78,
+        82,
+        89,
+        97
+      ],
+      "result": "围栏、角色CAS、原SourceSeq连续性、相同指纹回执重放及资产/回执/audit同事务保持；未引入新永久奖励路径"
+    },
+    {
+      "path": "server/internal/persistence/settlement.go",
+      "lines": [
+        151,
+        157,
+        174,
+        183,
+        197,
+        243,
+        246,
+        249
+      ],
+      "result": "原策略仍先回收再处理新物；仅无空间新增物记bag_full，原件不因容量修复被吞。新事件不再把满包写成StopReason3；旧报告3保持历史，实际余额0转1，显式死亡2优先；原永久回执不改写"
+    }
+  ],
+  "evidence_layers": [
+    {
+      "path": "server/internal/game/full_bag_policy_test.go",
+      "lines": [
+        17,
+        77,
+        104,
+        136
+      ],
+      "scope": "独立角色/怪物前态的纯game测试；实际step释放普通攻击、到期命中、捕获killFact并占永久job单槽。扣秒unknown由手动回调模拟，不执行DB，不是自然养成或网络故障注入"
+    },
+    {
+      "path": "server/internal/persistence/full_bag_policy_test.go",
+      "lines": [
+        9,
+        45,
+        56
+      ],
+      "scope": "纯applySettlement输入三次独立收益、1秒扣时/7EXP等隔离值；证明分账算法与旧报告兼容，不证明AI时钟或真实Mongo"
+    },
+    {
+      "path": "server/internal/integration/full_bag_policy_test.go",
+      "lines": [
+        64,
+        78,
+        86,
+        107,
+        117,
+        120
+      ],
+      "scope": "显式随机库前态，直接Store.SettleWithReceipt提交3次来源；EXP/金币来自当前怪物定义，验证实际事务/回执防重/余额零。不是正常AI producer、实际掉率采样或满包离线WS端到端"
+    },
+    {
+      "path": "server/internal/integration/auto_recycle_test.go",
+      "lines": [
+        230,
+        232,
+        237,
+        327,
+        386,
+        393,
+        407,
+        456,
+        483
+      ],
+      "scope": "正常注册/创角/WS/装备/Auto，隔离初始物品填包与怪物1HP/0攻/0敏；首弃后在线真实kill/EXP和满包重启Auto。后半离线开始前已applyExisting腾格，验证离线回收，不能称为离线满包AI完整证明"
+    },
+    {
+      "path": "server/internal/integration/full_bag_offline_test.go",
+      "lines": [
+        43,
+        61,
+        107,
+        130,
+        140,
+        167,
+        180,
+        188,
+        205,
+        230,
+        235,
+        237
+      ],
+      "scope": "正常Create/Equip/Claim及原报价购书填满；Auto开启且首实际弃物后正常close，后台真实离线满包继续；固定SourceSeq/HostSession逐审计与typed原回执核对并健康新票同scene/Life，不补播旧弃物。测试中500初始绑金来自offer8实际报价，消费回0，1HP/零攻/零敏均为明确局部资格，非主数值或新经济来源。"
+    }
+  ],
+  "findings": [],
+  "historical_static_finding_correction": {
+    "original_history_preserved": true,
+    "history_path": ".work/level-growth-20261029/next-full-bag-policy/iterations/before-ws-drain-order",
+    "original_assumption": "最后致死Impact可以先于本次死亡基线，导致等待EXP时观察到旧死亡数",
+    "correction": "原静读遗漏combat.go265–268在applyDamage内部立即snapshot。当前普通近战producer先广播致死现场，再由timeline.go321发Impact；事件批末另有snapshot。因此该顺序前提不足以构成这条producer的确定反例。",
+    "counterexample_executed": false,
+    "proven_red_green": false,
+    "production_race_fix_claim_allowed": false,
+    "retained_defence": "stopAutoAndDrain的terminal→同request基线→更新后的死亡数EXP水位→攻击集合空仍是正确收束防护，不能追认修复了已复现生产竞态。",
+    "notified": [
+      "/root",
+      "/root/town_server_audit"
+    ]
+  },
+  "limits": [
+    "本审查未运行Go、Mongo、浏览器或Creator；不据静读宣称测试通过。",
+    "3秒/1HP/0攻/固定纯测试随机等均为明确隔离前态，不是主运行数值、自然掉率或效率平衡验收。",
+    "当前仍为22技能、legacy未训宠、材料关闭和独立17候选；正式洗炼石与祝福油、损坏回收、挑战队列、真机及整体容量未由本轮代码审查覆盖。",
+    "客户端保存View修正尚在编辑，不纳入本次冻结SHA或通过范围。",
+    "窄测与最终冻结的具体测试文件差异逐报告列明：新offline账号长度修正，以及full-1终态后另3文件旧当前版本/StopReason断言适配；生产三文件和实际WS方法不借此放宽。窄测before/after稳定不等于最终全190 current。全包Go终态由Root另选，不能用本窄测追认。"
+  ],
+  "source_sha256": {
+    "server/internal/game/combat.go": "933ec51b41cc93023361015f609b6e56cbeb1b8e8f1faee808f9716d64d2455c",
+    "server/internal/game/runtime.go": "cefa1d63d575d2c6fe9b32af83d296af07d1a45ba5cd4035d69e94d1e1690368",
+    "server/internal/game/timeline.go": "2dbe69b8d713cd5f6c01f1bd761999156e1e40c13d86ecd758dabef3bccf1141",
+    "server/internal/game/progression.go": "19904619fe6304c64c3e809ade38bd4bee98855238704cfc61903f9fbf34209f",
+    "server/internal/game/full_bag_policy_test.go": "d8e5fae09c1a87bd37ebbb3bb51c533f189eedd9d46f9001efdfcd68a884ef57",
+    "server/internal/game/hosting_test.go": "dd475b072372f31ead28b830ce043f06a2fd7a6e410324f966560ef7919ce947",
+    "server/internal/game/map_travel_ack_test.go": "dcb8e48df8b17b97ccc7b8e9dd506a97e8ecb72ff676128e8fe681cd060caf74",
+    "server/internal/persistence/settlement.go": "fafca4966cacca6c7dfaec814baa611542112341c6e7956e1ec8df5f1d6058d3",
+    "server/internal/persistence/full_bag_policy_test.go": "1abeb346c5304bb67ab87e77e2b27a0b72c11e0ffe912a02812fcdf217baa2b2",
+    "server/internal/persistence/equipment_recycling_test.go": "c8e360261441bbf14fd2d01d8eff8a5e77db594d44ee3502bd686bd641f19335",
+    "server/internal/integration/auto_recycle_test.go": "3f086b2fa5ced598da615f3e5a39748d4f0c6cdab8b68c8ceb09df257309850e",
+    "server/internal/integration/full_bag_policy_test.go": "7f4ead6df6a493a3b00410efcf7e10cd51e8419b909fb6b8e352a51a0557f926",
+    "server/internal/integration/full_bag_offline_test.go": "82f3a511b4df67746c2fe4bc9cb19f1977036a939a0d91fc11122447c1a0a9f6",
+    "server/internal/integration/level_growth_test.go": "9d1ee4973658f9ca3dad43b6c4ceafbc9b3e3fce795c5a96b0f95ec67616767e",
+    "server/internal/integration/ownership_test.go": "cd93eb3bf7de2259f1dfe927642ce11bfaf9d809aba585d412248bce4d002f5b",
+    "server/internal/integration/summon_pet_test.go": "e71a0755c190e825ab93817281f5cda7f751195e03f0fbee435e69f7ba04e725"
+  },
+  "recorded_at_utc": "2026-10-29T18:46:34.404349+00:00",
+  "resolved_findings": [
+    {
+      "id": "offline_full_bag_ws_coverage",
+      "state": "closed_by_independent_actual_ws",
+      "evidence": ".work/inventory-capacity-20261030/server/mongo-offline-full-ws-2/report.json",
+      "scope": "正常断线后的原满包Auto由后台实际AI产生同一HostingSession的kill、EXP、扣时与弃物；不是直接Store提交或注入body。仅隔离前态下业务全链，不认证自然效率或容量。"
+    }
+  ],
+  "narrow_evidence_verified": [
+    {
+      "report": ".work/inventory-capacity-20261030/server/mongo-store-2/report.json",
+      "report_sha256": "9d67e06dac6805c2aea1614aa9f3bf49af08b053dfb01a5e9759fdf926f49ccc",
+      "events": ".work/inventory-capacity-20261030/server/mongo-store-2/events.jsonl",
+      "events_sha256": "68ee329bd0c764783a67074f5addec4159306c70e3e4752488754a6b50b68cb1",
+      "method": "TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo",
+      "method_seconds": 0.71,
+      "runner_seconds": 14.13563059992157,
+      "exit_code": 0,
+      "actual_mongo_and_race": true,
+      "inputs": 190,
+      "before_after_equal": true,
+      "differences_from_final_freeze": [
+        "server/internal/integration/full_bag_offline_test.go",
+        "server/internal/integration/level_growth_test.go",
+        "server/internal/integration/ownership_test.go",
+        "server/internal/integration/summon_pet_test.go"
+      ],
+      "scope": "owner_executed_narrow_raw_recounted_by_read_only_peer_not_final_full_go"
+    },
+    {
+      "report": ".work/inventory-capacity-20261030/server/mongo-auto-ws-1/report.json",
+      "report_sha256": "43a4a59dab561d35cf0589e994d7eb5539581e94e6f34fc16e41013f58bbb1c6",
+      "events": ".work/inventory-capacity-20261030/server/mongo-auto-ws-1/events.jsonl",
+      "events_sha256": "3de5a945a24dfcd95a086e33cc9eb4b6293575e771fa8da77e775e3118afa297",
+      "method": "TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS",
+      "method_seconds": 117.05,
+      "runner_seconds": 129.56832770002075,
+      "exit_code": 0,
+      "actual_mongo_and_race": true,
+      "inputs": 190,
+      "before_after_equal": true,
+      "differences_from_final_freeze": [
+        "server/internal/integration/full_bag_offline_test.go",
+        "server/internal/integration/level_growth_test.go",
+        "server/internal/integration/ownership_test.go",
+        "server/internal/integration/summon_pet_test.go"
+      ],
+      "scope": "owner_executed_narrow_raw_recounted_by_read_only_peer_not_final_full_go"
+    },
+    {
+      "report": ".work/inventory-capacity-20261030/server/mongo-offline-full-ws-2/report.json",
+      "report_sha256": "8acd088299eb432739c4c61c933f5d8f416133c5fec27532f73bf4269f598b77",
+      "events": ".work/inventory-capacity-20261030/server/mongo-offline-full-ws-2/events.jsonl",
+      "events_sha256": "521caeb7f64f7c0033cd5a5f6864cb33a9b3f1bfd7ddf6f85f6940aacb138c2c",
+      "method": "TestFullBagOfflineCombatAndChargingMongoWS",
+      "method_seconds": 33.32,
+      "runner_seconds": 46.38973030005582,
+      "exit_code": 0,
+      "actual_mongo_and_race": true,
+      "inputs": 190,
+      "before_after_equal": true,
+      "differences_from_final_freeze": [
+        "server/internal/integration/level_growth_test.go",
+        "server/internal/integration/ownership_test.go",
+        "server/internal/integration/summon_pet_test.go"
+      ],
+      "scope": "owner_executed_narrow_raw_recounted_by_read_only_peer_not_final_full_go"
+    }
+  ],
+  "offline_ws_observed_narrow_only": {
+    "source_seq": 19,
+    "kills": 2,
+    "used_seconds": 3,
+    "discard_count": 1,
+    "actual_experience": 30,
+    "raw_experience": 30,
+    "gold": 0,
+    "bound_gold": 30,
+    "scene": 5215274942314300568,
+    "life": 0,
+    "same_scene": true,
+    "same_life": true,
+    "scope": "仅mongo-offline-full-ws-2原日志这一次随机观察，不作为后续full Go或GUI固定期待"
+  },
+  "go_freeze": {
+    "path": ".work/inventory-capacity-20261030/server/go-frozen.json",
+    "sha256": "a1f987f9c4c40ac4c6534efb8545c16f9d3616665fcbfa366aefb6afca1331d8",
+    "production_and_tests_go_files": 171,
+    "runtime_inputs": 190,
+    "owned_paths": 14,
+    "all_runtime_current_sha_verified": true,
+    "final_full_go_status": "raw_verified_passed"
+  },
+  "test_only_adaptations_after_failed_full_1": {
+    "changed_paths": [
+      "server/internal/integration/level_growth_test.go",
+      "server/internal/integration/ownership_test.go",
+      "server/internal/integration/summon_pet_test.go"
+    ],
+    "before_marker": ".work/inventory-capacity-20261030/server/full-1-test-adaptations/go-frozen-before.json",
+    "before_marker_sha256": "11bd15b31fe33194f2058f3a11b43a2156b8ccb4b14686454e8222d767c8c156",
+    "current_marker_sha256": "a1f987f9c4c40ac4c6534efb8545c16f9d3616665fcbfa366aefb6afca1331d8",
+    "before_original_sources_sha256_verified": {
+      "server/internal/integration/summon_pet_test.go": "d6e03588ed373c78d6654d511a7a1f4f24a0cf0d0f2144ed89bb909ed5edb585",
+      "server/internal/integration/level_growth_test.go": "bb199b4e7224cce5ae9d6c507e447bdd06e8491ae3a4d355909d6dc9d808c547",
+      "server/internal/integration/ownership_test.go": "f73ff6e0261897bf5a1b0e0dadb2c44aed9ac0b54910531b3842d090d6be2d88"
+    },
+    "all_other_runtime_inputs_unchanged": true,
+    "production_three_files_unchanged": true,
+    "scope": "两份当前主配置测试guard/文案改21；旧ownership例无托管余额，预期由满包3改真正耗尽1并加强四钱包/原库存/弃物事实，不放宽实现或事务"
+  },
+  "historical_review": {
+    "path": ".work/inventory-capacity-20261030/history/server-peer/before-offline-ws/review.json",
+    "sha256": "b68feab89f456ca611744c6193c19316fd1c8446c120760c877c8c6468fdde3e",
+    "original_bytes_preserved": true
+  },
+  "selected_full_go": {
+    "report": ".work/inventory-capacity-20261030/go/full-2/report.json",
+    "report_sha256": "2271437ff0d5c54b5f1fabc08a46e9289b1fb63a664cb0792ac0d07842472d73",
+    "events_sha256": "c61aaa5a36f9b4cbde7d0d1071bfbf90b9784cfdd777151db0b3dd8e50baf616",
+    "wrapper_sha256": "9be70be1b1e9393e7b3f13061a5d6a1121bcc4c580832454bbbeb7cc8f34b51d",
+    "counts": {
+      "passed": 1142,
+      "failed": 0,
+      "skipped": 0,
+      "inputs": 190,
+      "required_integration_tests": [
+        "TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS",
+        "TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo",
+        "TestFullBagOfflineCombatAndChargingMongoWS"
+      ]
+    },
+    "source_before_after_marker_current_equal": true,
+    "scope": "Root实际执行完整Mongo/WS race；本peer只读独立重数raw并核当前输入，不冒称自己重跑"
+  }
+}

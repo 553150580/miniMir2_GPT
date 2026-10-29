@@ -1,0 +1,85 @@
+{
+  "status": "qa_tool_prepared_not_run",
+  "tool": "tools/client/verify_inventory_capacity_browser.cjs",
+  "tool_sha256_before": "c404a48241fd1e91e770cb710fe554ca8a12de4c6ff66cb1ad982100649daa3d",
+  "tool_sha256_after": "c404a48241fd1e91e770cb710fe554ca8a12de4c6ff66cb1ad982100649daa3d",
+  "tool_sha256_current": "c404a48241fd1e91e770cb710fe554ca8a12de4c6ff66cb1ad982100649daa3d",
+  "commands": [
+    {
+      "name": "syntax",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/dev.ps1",
+        "node",
+        "--check",
+        "tools/client/verify_inventory_capacity_browser.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/inventory-capacity-20261030/tool-static/syntax.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "preflight",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "tools/dev.ps1",
+        "node",
+        ".work/inventory-capacity-20261030/tool-static/preflight.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/inventory-capacity-20261030/tool-static/preflight.log",
+      "log_sha256": "e110c923766a256675399864a438ee20f3346e9c2a9190f15dae585213ca5884"
+    }
+  ],
+  "preflight_checks": 5,
+  "actual_gui_run": false,
+  "source_client_report": ".work/inventory-capacity-20261030/client/full-2/report.json",
+  "source_client_report_sha256": "c6adae3a5b3d0f3f2c0f41955a16d7fa3307bdfd457db2b58cd0e1a38bb16598",
+  "production_219_before_after_current_equal": true,
+  "historical_level_growth_tool_sha256": "dc46a27a1e2225d28dfc84b672673714b0fcf2d35e189a3b3417ae4e6d53295f",
+  "historical_tool_archive_equal": true,
+  "bounded_observation": "自然到7级12min；自然满包25min；各继续奖励/健康票180s；每20s保存真实progress；首错误保留现场，不种角色或改变数值",
+  "report_core_fields": [
+    "passed",
+    "expectedRuleVersion",
+    "sourceBefore",
+    "sourceAfter",
+    "creatorReportSha256",
+    "toolSha256",
+    "toolSha256After",
+    "fixtureSha256",
+    "publicSha256",
+    "health",
+    "healthAfter",
+    "checks",
+    "errors",
+    "warnings",
+    "seeded",
+    "privateBusinessInvoked",
+    "touchInput",
+    "routeOverride",
+    "bodySeeded",
+    "physicalMobileVerified",
+    "offlineChargingVerifiedByThisGui"
+  ],
+  "screenshots": [
+    "01-equipped-normal-auto.png",
+    "02-normal-book-learn.png",
+    "03-first-bag-full.png",
+    "04-full-bag-continued.png",
+    "05-last-row-details-return.png",
+    "06-tall-inventory.png",
+    "06-wide-inventory.png",
+    "07-book-quote.png",
+    "08-immediate-merge-quote.png",
+    "09-healthy-auto-on.png"
+  ]
+}
