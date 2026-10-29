@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/config/sync_bindings.py"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/config/sync_bindings.py"
+  ],
+  "started_at_utc": "2026-10-29T19:31:51.824173+00:00",
+  "finished_at_utc": "2026-10-29T19:31:52.431631+00:00",
+  "seconds": 0.607,
+  "exit_code": 0,
+  "stdout": "sync-bindings.stdout.txt",
+  "stderr": "sync-bindings.stderr.txt",
+  "stdout_sha256": "172d8b8526b63b96103f151797f202b5af484ad887a036c05d4af53d2557830a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

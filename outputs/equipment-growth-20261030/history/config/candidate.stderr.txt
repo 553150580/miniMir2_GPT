@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "D:\A_Claude\miniMir2_GPT\.work\equipment-growth-20261030\config\author_configuration.py", line 135, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "D:\A_Claude\miniMir2_GPT\.work\equipment-growth-20261030\config\author_configuration.py", line 93, in main
+    selected,errors,_,_=config.collect(candidate_schema,{'gameplay':candidate})
+                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\A_Claude\miniMir2_GPT\tools\config\export_configs.py", line 194, in collect
+    raise ValueError("多个工作簿时请在临时根目录测试，不允许模糊 --workbook 覆盖")
+ValueError: 多个工作簿时请在临时根目录测试，不允许模糊 --workbook 覆盖

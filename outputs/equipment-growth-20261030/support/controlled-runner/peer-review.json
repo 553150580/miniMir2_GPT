@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T20:59:22.825964+00:00",
+  "status": "no_blocker_in_read_only_scope",
+  "scope": "只读审固定任务/启动批准/Windows身份/实际退出及原probe证据；未运行runner、cutover、服务、数据库或重测试，不代替最终Go/切主/GUI验收",
+  "source_sha256": {
+    ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+    ".work/equipment-growth-20261030/controlled_job_probe_review.py": "505a3c95a02edbef82c5368b1b37d326f203be99d710911f5437de6fb75276b6",
+    ".work/equipment-growth-20261030/cutover.py": "ed07059fd28023b842466176a6dde3f19eb7706d13a188e0ba488465b4997980",
+    ".work/equipment-growth-20261030/controlled-job-review/report.json": "38d698a7ff4efbecee787af5a4dc33b6567bfdaa7070b840e808701fa024cbbc",
+    ".work/equipment-growth-20261030/finalize_evidence.py": "5e6e4cb4703f1000bccf4aa0b78bacb38ae606eb39720338739c4dba0ea3bd64",
+    ".work/equipment-growth-20261030/curate-plan.json": "de755294c27dada159b9c44734858bfcf2b8559884ce95edcbafc632ad721daa"
+  },
+  "source_lines": {
+    "controlled_job.py": {
+      "fixed_task_and_directory": [
+        44,
+        66
+      ],
+      "locked_python": [
+        69,
+        78
+      ],
+      "exact_original_argv_and_win_identity": [
+        81,
+        108
+      ],
+      "status_no_automatic_restart": [
+        111,
+        139
+      ],
+      "start_pid_approval_and_directory_exclusive": [
+        142,
+        173
+      ],
+      "worker_source_recheck_fixed_command_wait_and_terminal": [
+        176,
+        243
+      ]
+    }
+  },
+  "original_probe_contract": {
+    "passed": true,
+    "task": "probe",
+    "phase": "probe-01",
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "worker_pid": 73052,
+    "worker_start_ticks": 134377809201845105,
+    "task_pid": 10068,
+    "task_start_ticks": 134377809204027100,
+    "exit_code": 0,
+    "worker_exit_code": 0,
+    "source_stable": true,
+    "automatic_restart": false,
+    "terminal_sha256": "d3833783d6df153e00d7899a7a773f1724c49c59479ff1ecbb781d49d1c5a4e9",
+    "seconds": 2.121,
+    "source_inputs": 6
+  },
+  "guard_negative_cases": [
+    "failed_exit",
+    "mixed_approved_worker",
+    "changed_source_after"
+  ],
+  "findings": [],
+  "limits": [
+    "只读核现有probe原件，未重新启动probe",
+    "同一phase拒重用不等于通用多任务调度器互斥；本次只授权Root单次cutover-01",
+    "最终publication门禁必须原cutover-01的8文件完整、terminal双exit0且sourceStable，并另核原ed070切换10命令/候选main/Mongo身份"
+  ]
+}

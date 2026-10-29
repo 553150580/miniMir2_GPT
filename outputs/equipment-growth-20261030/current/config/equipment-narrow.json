@@ -1,0 +1,39 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_equipment_foundation.py",
+    "-v"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/config",
+    "-p",
+    "test_equipment_foundation.py",
+    "-v"
+  ],
+  "started_at_utc": "2026-10-29T19:30:42.095618+00:00",
+  "finished_at_utc": "2026-10-29T19:30:45.109938+00:00",
+  "seconds": 3.014,
+  "exit_code": 0,
+  "stdout": "equipment-narrow.stdout.txt",
+  "stderr": "equipment-narrow.stderr.txt",
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "232282abdf6bbf9c1b64ce2bb81d0696f574477236db5f7dbd52a3e49cacb4fc"
+}

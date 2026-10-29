@@ -1,0 +1,248 @@
+{
+  "status": "read_only_implementation_design_not_applied",
+  "current_stage": 21,
+  "baseline": {
+    "expected_head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+    "observed_head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+    "tracked_worktree_clean_at_start": true,
+    "observed_head_at_completion": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+    "git_status_porcelain_at_completion": "",
+    "tracked_worktree_clean_at_completion": true
+  },
+  "scope": {
+    "production_excel_formal_docs_changed": false,
+    "tests_database_browser_creator_or_services_started": false,
+    "method": "只读代码、配置、策划及既有只读报告；本文件是实现者的下一阶段设计，不是新功能验收，也不是全代码独立二审。",
+    "prior_audit": ".work/inventory-capacity-20261030/next-equipment-mcsc-readonly.json"
+  },
+  "conclusion": "应交付正常获取装备→查看单件基础属性→穿戴/换件/真正卸下→权威总属性与新施法生效→健康重入/冷建保留的完整玩家闭环。仅给当前木剑/布衣补四个零字段仍只是管线基础，不构成装备成长，更不能称T031完成。普通卸装当前缺失；MC/SC聚合、单件展示、合法目录供给及明确卸装意图必须一起设计。",
+  "product_rules": [
+    {
+      "source": "docs/架构适配与规则优先级.md:65-74",
+      "rule": "最终策划决定产品；技术源码及旧数据只作可追溯参考。缺失或未核验字段不填造值，不把来源映射/结构通过当业务或平衡验收。"
+    },
+    {
+      "source": "最终策划案.md:113-121",
+      "rule": "10部位；品质0..4；阶段由需求等级决定。同件itemID不按性别拆分，保留职业和等级门槛，穿戴不自动绑定；不同职业按有效强度和获取难度对齐，不简单相加DC/MC/SC。强化是部位成长，空部位无装备基础可放大。"
+    },
+    {
+      "source": "最终策划案.md:123-129",
+      "rule": "持久/损坏/修理与正式分解是另外的完整合同，当前实例尚无持久；不能把本次基础属性接通冒称已实现。普通满包沿当前21：先自动回收，仍满只弃新增掉落，战斗及托管继续；用户主动卸装不得偷偷分解或丢弃原装备。"
+    },
+    {
+      "source": "最终策划案.md:754-785",
+      "rule": "唯一属性单位、来源、阶段、叠加与舍入；装备应是主要战斗贡献。固定技能和同等级下的穿脱差异应可解释；20%/30%等仅候选预算，不能把它们当本次MC/SC基础值上限。三职业×1/4/8怪×低中高装备×6/12/24小时等完整预算矩阵仍未完成。"
+    },
+    {
+      "source": "docs/开发阶段与验收清单.md:124",
+      "rule": "T031当前仅基础属性部分实现，仍包含装备阶段/品质/词条/10部位强化/外观/持久修理等更大范围。"
+    }
+  ],
+  "current_code": [
+    {
+      "location": "server/internal/devconfig/config.go:58-81",
+      "finding": "Item只有DC/AC/MAC及攻速加成，没有MagicMinBonus/MagicMaxBonus/TaoMinBonus/TaoMaxBonus。Fighter本身已具有MagicMin/Max和TaoMin/Max。"
+    },
+    {
+      "location": "tools/resources/prepare_first_loop.py:66-79,735-756,850-863",
+      "finding": "装备提取/运行投影缺MC/SC，当前硬选35/36/193/218；新增Excel装备行不会自动成为运行目录。public只投影身份、职业、槽位、等级/品质/回收展示，未投影单件基础属性。slot目前weapon映射0、其它装备直接1，只适用现有weapon/armour，不能复用为任意新饰品。"
+    },
+    {
+      "location": "server/internal/game/combat.go:129-156",
+      "finding": "玩家fighter按角色等级基础→普通装备→被动→状态聚合，排除护符槽100；只加DC/AC/MAC/攻速，没有MC/SC。宠物使用冻结实体Fighter或legacy Pet，不应因主人换武器而改既有宠物模板/训练快照。"
+    },
+    {
+      "location": "server/internal/game/skill_cast.go:206-267;server/internal/devconfig/skills.go:113-128",
+      "finding": "MC伤害/MC时长、SC治疗/SC时长的实际消费点已存在。Amount和BuffDurationMS在受理时冻结，使用原技能float32及RoundToEven规则；不需要另造简化伤害公式或在到期时重抽装备值。"
+    },
+    {
+      "location": "server/internal/persistence/assets.go:84-154,218-269",
+      "finding": "装备走原AssetWithReceipt：先回查原op，再核owner、序号、RoleRevision和rule；正常equip只从背包取指定实例、按职业/槽位/已知需求等级校验后换槽。没有普通unequip。新穿入实例Version++，被替换回背包的旧件当前不递增版本；现分支尚未像护符移动核完整原ItemVersion/数量/版本上限。受理后的业务失败按现合同仍落失败op并推进一次Revision/EconomicSeq，库存恢复；受理前陈旧版本/围栏错误不推进。"
+    },
+    {
+      "location": "server/internal/persistence/casting_supply.go:77-142",
+      "finding": "护符已有原实例版本、满包卸下拒绝、输入和被替换原件各+Version、切片复制的可复用实现模式；槽100属于材料消耗，不应拿该协议或slot做普通装备卸装的旁路。"
+    },
+    {
+      "location": "server/internal/game/runtime.go:853-896,955-985;server/internal/game/asset_result.go:20-64",
+      "finding": "输入按消息ID+原始payload冻结fingerprint；原Pending job保留unknown重试，回调核原room/Auth/generation/op/fingerprint。合法回调采用最新Role后refresh、OperationResult、Inventory/assets和baseline。新穿脱应复用此链，不开同步DB或第二永久队列。"
+    },
+    {
+      "location": "server/internal/game/skills.go:55-67;server/internal/game/progression.go:38-52",
+      "finding": "普通refresh只重算MaxHP/MaxMP并向下clamp，学习/升级/装备回调已复用；真正经验升级另有原ActorRef/World/Life存活恢复路径，装备绝不能调用该恢复路径。"
+    },
+    {
+      "location": "shared/proto/assets.proto:13-39,112;server/internal/game/combat_status.go:250-254",
+      "finding": "Inventory已给完整物品/穿戴槽/角色版本与等级；CombatAttributes已有DC/MC/SC/AC/MAC。当前EquipRequest只有instance/slot/operation，不表达卸下。ItemView无四项基础数值，但本阶段无实例随机词条，可从同版本public静态定义展示，无需复制四项到每实例PB。"
+    },
+    {
+      "location": "client/assets/scripts/app/AppRoot.ts:314-322,649-674,689-694;client/assets/scripts/app/PendingOperations.ts:108-111",
+      "finding": "Role普通装备按钮隐藏，现Role/Equip只用于卸护符；普通装备没有卸下UI。Role和背包共用selectedItem，刷新只在背包找原ID；新卸装必须区分location/slot/id/version，不能让Role选择误驱动背包操作。40001未决日志严格只接受原三字段，新意图需同步兼容原持久形状且保持原请求字节。"
+    }
+  ],
+  "proposed_contract": {
+    "status": "提交Root审定的接口建议，尚未写生产",
+    "configuration": {
+      "unique_excel_base_attributes_and_public": [
+        "magic_attack_min",
+        "magic_attack_max",
+        "spirit_attack_min",
+        "spirit_attack_max"
+      ],
+      "fixture_item_fields": {
+        "MagicMinBonus": "magic_min_bonus",
+        "MagicMaxBonus": "magic_max_bonus",
+        "TaoMinBonus": "tao_min_bonus",
+        "TaoMaxBonus": "tao_max_bonus"
+      },
+      "mapping": "Mc/Mc2→MagicMin/Max；Sc/Sc2→TaoMin/Max；不再增加平行flat别名。当前218/193四项均为显式0。",
+      "validation": [
+        "新版本对被选装备四端点必须显式存在且非null、整数、非负、min<=max；0是有效数值，missing不是0。合并现Item.UnmarshalJSON入口，不能重复定义。",
+        "非装备/书/书页/护符不能借新字段加属性；所有候选完整零字段及版本兼容检查同步，独立召唤required17不被擅自升版或入主目录。",
+        "校验当前可用槽位映射、职业、RequiredLevel、quality与每件显式来源；双手镯/双戒指未来须明确允许槽位集合，不能仅复用单个EquipmentSlot或把未知类型当衣服。",
+        "聚合范围须覆盖本次实际开放槽位、成长、被动和选中状态；使用checked add/multiply并保证max-min+1、SC倍率、base+power及float32转换前安全，不发明平衡上限或靠静默clamp掩盖整数回绕。",
+        "新增装备选择、掉落/商店引用、基础属性、需求、允许职业、明确回收资格全部从唯一Excel/profile投影，移除硬编码选择造成的旁路。"
+      ]
+    },
+    "normal_equipment_intent": {
+      "recommendation": "扩现40001 EquipRequest，而非增加新消息ID或隐式toggle：新增bool unequip和uint64 item_version（字段号须Root锁定；建议4/5）。原instance_id、slot、operation继续。AssetRequest已有Unequip/ItemVersion可复用。",
+      "semantics": "unequip=false只允许从背包穿入/同槽替换；true只允许指定槽的同一原实例、原版本移入背包。绝不以当前所在位置猜动作；护符仍走40015/slot100。",
+      "compatibility": "历史已提交op必须先按原payload digest回执，不能因新字段缺失而拒原成功重放。客户端原三字段Pending日志必须按原形状、原字节继续重试；不能自动补字段改fingerprint、换op或清unknown。新协议与新版本受理按明确原版本严格校验，旧未提交且版本已变沿原冲突/人工重同步语义处理。",
+      "no_new_wire_needed": [
+        "角色MC/SC汇总继续CombatAttributes",
+        "完整穿戴和背包状态继续InventoryResult",
+        "成功/失败/unknown继续OperationResult及原查询/重试",
+        "单件固定基础数值走同版本public白名单，不重复放ItemView"
+      ],
+      "necessary_wire_change": "当前协议无法表达普通卸装，因此若交付真正穿脱，至少须增加明确意图；不能宣称完全零协议改动。"
+    },
+    "atomic_transfer": {
+      "helper": "建议独立纯equipEquipment(r,q,f)返回新Role、typed EquipmentReceipt与businessCode；先完整验证，再复制Items/Equipped切片，供Asset同事务唯一入口使用。",
+      "preconditions": [
+        "原角色唯一持有，合法32hex实例ID、数量1、正版本且版本不超过MaxInt64；新请求item_version匹配；不得存在重复实例/重复普通槽/背包与穿戴交叉同ID。",
+        "已知装备定义、合法槽位、职业和需求等级；质量0..4且当前简单实例与已选定义quality一致。不把未知实例状态当普通无词条装备继续套价/加成。",
+        "PendingResultID/ReservationID等资产占用先拒移动；Locked是回收保护，不擅自新增‘锁定不能穿脱’产品规则。所有成功路径完整保留Bound/SourceKind/SourceID/Quality/Locked及未来字段，不穿戴绑定、不换实例ID。",
+        "穿入与被替换原件每次位置迁移各Version+1；卸下原件+1；修改前检查所有相关Version上限。旧件不丢、不合并、不复制成第二件。",
+        "满包换件先移出背包新件，回包旧件容量中性；真正卸下需要一格，满包拒绝保留原穿戴，不自动回收/弃物，也不自动开关Auto。"
+      ],
+      "permanent_watermarks": "成功按原Asset一次Revision+1/EconomicSeq+1，SourceSeq不变；业务失败沿原失败op规则，所有库存/穿戴/钱包不变；重放原op不再移物或推进水位。",
+      "typed_receipt": "建议Operation新增可选Equipment *EquipmentReceipt，冻结动作、槽、各原件before/after完整实例及原rule/config；同事务audit保存同一快照。历史op无此字段保持历史未知，不伪造。该项是内部持久追溯，不要求新S2C。",
+      "unknown_and_authority": "沿原owner单Pending及原q/job；提交未知不先采用out Role，不重新生成意图/版本/实例，不追加第二次移物。旧Auth/slot/generation回调不能释放新Pending；健康新票查询原op后使用当前Inventory，不能凭旧receipt覆盖新装备。"
+    },
+    "fighter_and_refresh": [
+      "仅现唯一fighter在装备阶段把四项加到Magic/Tao，再走现被动/状态；slot100不加，原DC/AC/MAC不双加，非法/重复穿戴不能让聚合绕过事务验证。",
+      "普通攻击继续DC；MC伤害和相关状态时长、SC治疗及相关时长继续现公式、样本共享/先后与舍入。常量区间变成0..1依法可能增加一次w.draw，测试不能要求不同数据消耗同样随机数；不能新增额外属性重抽。",
+      "新cast按提交采用后的属性；原accepted Amount/Duration、旧World projectile/hellfire等继续原冻结值，不随换装重算；永久Role变化与attachment Scene分离。",
+      "装备/卸装/学习/升级回调及健康入场复用refreshPlayerStats，再发完整Inventory与baseline；不补HP/MP、不复活、不更换Life、不清CD/Buff/导航/DeathID。宠物已冻结Fighter不变。冷建资源沿现冷建合同另记。"
+    ],
+    "client": [
+      "public投影有类型的基础DC/MC/SC/AC/MAC/攻速、需求等级/职业/品质，详情按同源元数据展示；权威总览仍读baseline，不从钱包差值、当前伤害或原CSV推属性。64位继续Long/BigInt或经过明确安全整数范围校验。",
+      "保存Role/Inventory几何布局中增加普通卸装动作；分别保存{location,slot,id,version}选择，异步刷新核同一身份与版本，失败/unknown不本地移格、不清别人新选择；原Pending与busy边界不绕过。",
+      "满包卸装明确失败提示，换件可执行；锁定回收保护仍可穿脱但不得回收，待确认/占用态禁止移动；普通装备与护符入口清晰区分。"
+    ]
+  },
+  "source_and_content_preconditions": [
+    {
+      "item": 220,
+      "status": "来源事实可用、尚未选择入主",
+      "facts": "同组source agent白名单重读MYF ApexM2_stditems.csv:222：乌木剑Stdmode5/Shape34/Looks43/Need0/NeedLevel1/DC4..8/MC0..1/SC0..0/Price3000，四重载AC/MAC及Anicount均0。",
+      "limits": "Price3000不是已批准回收价；220当前未在唯一运行目录，当前GoldOnly资格仅218=50/193=400。若开放220，要先明确唯一回收合同；不得偷填3000。SC0不是有效SC装备成长。"
+    },
+    {
+      "supply": "同组source agent更正后的实读：独立稻草人MonItems物理行13为1/60乌木剑；其先前1/200记忆值错误，不能沿用。",
+      "limits": "这是原来源条目，不直接覆盖本作类别65/20/10/5与20保底；新增运行供给要在唯一profile选定，并走正常击杀掉落/真实NPC报价购买等已授权入口。"
+    },
+    {
+      "unknown": "武器Stdmode5/6及非零Ac/Ac2/Mac/Mac2重载、八荒Anicount27尚缺相同Apex消费证据。",
+      "limits": "不猜准确/攻速/幸运，不默认所有重载归零后称完整还原。Shape/Looks到图标/三职业动作需要逐件图像身份核验，不用Shape×步幅、Looks−1或−10000自动推导。"
+    },
+    {
+      "decision_needed": "若下一阶段要称三职业可用装备成长，除已有DC木剑/衣服及MC候选外，需有来源已核、实际可获取且SC非零的选中内容；未选前只可做隔离SC管线测试。",
+      "limits": "本审查不新增SC武器或任何数值，不臆造同价平衡，不把字段接通、来源复制或结构校验称完整T1/T031。"
+    }
+  ],
+  "meaningful_acceptance": [
+    "配置：四字段逐一missing/null/类型错误/负值/min>max/整数超界；非装备非零；职业/slot/质量/等级来源缺失；每槽最大和+成长+被动+状态/随机区间及乘法中间值安全；当前218/193显式零不改变旧表现。",
+    "纯事务：穿入、换件、空槽卸下、错误槽/职业/等级/版本/数量/重复ID、full swap成功和full unequip拒绝、Version上限、reservation/pending拒绝；锁定不被回收且穿脱原字段不变；失败不局部改片。",
+    "战斗：MC上下端0/1样本验证新法术伤害及来源时长；SC隔离非零端验证治疗/时长且MC不混入治疗；原accepted cast/旧World事件冻结；DC普通攻击不误吃MC/SC；未扩大本次行为。",
+    "回调：原job unknown重试/原op变内容冲突、旧Auth/generation callback、成功重放与后续新装备并存；Role/Economic各一次、Source不变，typed snapshot独立拷贝不被后续换装修改。",
+    "资源与Life：受伤/空MP/HP0换件与卸下仅clamp不补满、不复活；保留CD/Buff/导航/Life/DeathID及现宠物Fighter；学习升级/健康新票/冷建按各自既定规则刷新。",
+    "真实MongoWS：正常注册创角→正常来源获取所选装备→满包换件→真正卸下/满包拒绝→完整Inventory+baseline→新施法实际MC/SC影响→原opunknown/replay→健康票与完整冷建；资格前态与正常供给分开标明，不通过直接写Equipped替代业务。",
+    "正常触屏：从背包和Role分别选择/详情/穿换卸；按钮及异步选择身份正确、未决重入不重复移物，查看单件数值和权威总属性；固定scene/prefab和其它布局不变。",
+    "有效强度：同等级同技能做主武器穿/脱/换件下可解释的新技能输出/治疗/时长与生存药耗对比；只声明实际选中内容和样本，不称三职业平衡、完整T1–T5或6/12/24小时预算完成。"
+  ],
+  "existing_test_evidence_by_source_only": [
+    {
+      "file": "server/internal/game/skills_test.go:229-237",
+      "coverage": "被动/衣服AC/MAC不重复叠加；本轮未执行。"
+    },
+    {
+      "file": "server/internal/integration/level_growth_test.go:89-105",
+      "coverage": "正常Asset低于/达到明确等级时拒绝/允许穿戴；本轮未执行。"
+    },
+    {
+      "file": "server/internal/integration/first_loop_test.go:111-113,173-186",
+      "coverage": "无性别穿戴门禁及原equip op重放/改内容冲突；不是普通卸装或MC/SC验证，本轮未执行。"
+    },
+    {
+      "file": "server/internal/persistence/casting_supply_test.go:22-44,94-100",
+      "coverage": "护符版本化穿脱/换件与满包拒绝可参考，不能替普通装备验收，本轮未执行。"
+    }
+  ],
+  "safe_parallel_ownership": {
+    "source_data": "唯一Excel/schema/profile目录/装备基础四字段/供给与回收资格/public/candidate零值，选中内容和资源来源核验；不兼改game。",
+    "server": "devconfig Item/唯一Unmarshal入口/校验；persistence普通穿脱核与typed receipt；game唯一fighter/原回调刷新及意义测试；避免Root与server agent同时改assets/runtime。",
+    "protocol_client": "Root统一40001字段及生成；客户端Pending旧形状兼容、静态详情/总览复用、Role与Bag选择/真正卸装保存UI及触屏检查。",
+    "coordination": "先锁定字段名、卸装意图和新旧Pending语义，再写；目录/供给/回收及资源未核前不要先启新装备冒称闭环。"
+  },
+  "remaining_t031": [
+    "10完整部位及左右槽语义",
+    "T1–T5实际供给/职业有效强度对齐",
+    "品质词条/洗炼与部位强化",
+    "固定职业外观完整映射",
+    "持久/损坏/修理及正式分解副产物",
+    "全来源预算和完整经济/真机矩阵"
+  ],
+  "peer_messages": {
+    "source": "town_assets_audit提供源字段及1/60更正；本报告未代其宣称源外观已核。",
+    "client": "town_rules_audit确认现Role无普通卸装、40001严格原shape及共享selectedItem；本报告未代其修改或跑客户端验证。"
+  },
+  "observed_source_sha256_at_completion": {
+    "AGENTS.md": "45d6ace799705a65f135ab06981dbfed3b9be2d20874e6164804635d7a58d403",
+    "最终策划案.md": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4",
+    "docs/架构适配与规则优先级.md": "20055c0ba0b5f073c6dcf7777a227fb4d8b55dc200489e0546a19004cd60b8bc",
+    "docs/开发阶段与验收清单.md": "bf9d68e75c0b511b7b27af7beef5094f366de0817e80593da0e26d63c3d8a43d",
+    ".work/inventory-capacity-20261030/next-equipment-mcsc-readonly.json": "2dade9ca29d665c1ebcaf71771f7e337d54886ed47f19debaa662e9964e4308e",
+    ".work/level-growth-20261029/next-equipment-pipeline.json": "f282811cdfb56a979c9e7a0ac439c078202a50ce69bccf5bf3a70c303e341cd2",
+    ".work/level-growth-20261029/next-weapon-semantics.json": "bea99e896d8ea754a7e197e3fcecff5ccce9734efe8f54d86ab9e586ecf747a4",
+    "server/internal/devconfig/config.go": "8e3c6f7eba3241daa79ec221336261189e9e3667b71bfb5ea174da5a09a2c99f",
+    "server/internal/devconfig/equipment_recycling.go": "a3649a281ec97ff72ab3a85a91c8e0e2c645468ba25417159ea7146946f55f71",
+    "server/internal/devconfig/skills.go": "5a864dd75f025dff10899b8388ba88e6a0f3c424cd345fae209cd247832746c8",
+    "server/internal/devconfig/summon_candidates.go": "333d45a13a0ec5879d7c8b5b83345fccf0eb535b6feeb8f3a952014ed1ad1419",
+    "server/internal/game/combat.go": "933ec51b41cc93023361015f609b6e56cbeb1b8e8f1faee808f9716d64d2455c",
+    "server/internal/game/skills.go": "e7e7dfe4eb61b2d44778a6cbea5d883916b5f11315579b349075c34b88e041dc",
+    "server/internal/game/skill_cast.go": "76aa922a23a380da6333dc8d0162ad06163ae389ae0db8cea134051cbd4f19da",
+    "server/internal/game/combat_status.go": "efcbb3a3575637172cde71badd4cc11f59e3a025ed672f9a4e82a1c0cebaf17b",
+    "server/internal/game/asset_result.go": "376199d3bceb2f482c527f4acd192cee6e3a63e0b28df44a1497774d8f18ef40",
+    "server/internal/game/runtime.go": "cefa1d63d575d2c6fe9b32af83d296af07d1a45ba5cd4035d69e94d1e1690368",
+    "server/internal/game/progression.go": "19904619fe6304c64c3e809ade38bd4bee98855238704cfc61903f9fbf34209f",
+    "server/internal/persistence/assets.go": "c16f7932876aaa4eaee84ceca4eb4690d44bf417c0be5a371580fd82202ccc31",
+    "server/internal/persistence/casting_supply.go": "844c866152170acc52e62b181a45db6eac725314d4a884a34830b42c970e23bd",
+    "server/internal/persistence/store.go": "56770a86d4b58fa15475dc49d3ed7135a6ea80bcd1da18118378c849da7ac1dd",
+    "server/internal/domain/model.go": "ee2de0945a22cc9f49d9ecba13f20d26f218e5dd128d2b8a77111f500838083a",
+    "shared/proto/assets.proto": "ed75b73e2c33378a105d7b6fb81af1f92679f2a4141c8769bb852390e6663957",
+    "shared/proto/world.proto": "d022411b14ae3364160a8e29a89a16e489b19c8ea23ad01c5682ce9969e18275",
+    "shared/proto/protocol_manifest.json": "68960c61aa44191ec6332dae3927b469dcd475a3da99ae33254a60dbc405ba3f",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/PendingOperations.ts": "6baf3e5b722e4377cc0bbc30c14bb339bf0027ca564590b2f82133f90516f0e1",
+    "client/assets/scripts/app/CombatStatusModel.ts": "19b0f0d98124c0573bfd1aa1fef4446f0df7c6c46e8b654bfdc9ec20f4332529",
+    "server/internal/game/skills_test.go": "66ac41fc7e0f590cf2782e21cb12a825d0b9f2514fc33ab364ed67b34fac3c46",
+    "server/internal/integration/level_growth_test.go": "9d1ee4973658f9ca3dad43b6c4ceafbc9b3e3fce795c5a96b0f95ec67616767e",
+    "server/internal/integration/first_loop_test.go": "ade17fd4342766d591c6db82b571841cc9a60f2568cbc23a4ae35d7a020c67f3",
+    "server/internal/persistence/casting_supply_test.go": "4ace4e7abef6f8a6abaff6aebf34cf5fdf78ba767b4892e1e50788f1b62509c1"
+  },
+  "evidence_limits": "SHA是本次完成时只读观察；本轮没有执行新测试、没有生成before-after测试稳定性证明，也没有将旧通过改称新功能通过。"
+}

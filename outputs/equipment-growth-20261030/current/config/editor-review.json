@@ -1,0 +1,14 @@
+{
+  "input_sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+  "output_sha256": "96c8c4401b92b4908642fef8081e8f4a1d1bf0f5187ef8e54d08f0b1915500e8",
+  "edited_worksheets": [
+    "xl/worksheets/sheet52.xml",
+    "xl/worksheets/sheet95.xml"
+  ],
+  "untouched_zip_members_verified": 101,
+  "all_requested_values_readback_equal": true,
+  "edited_cells": 6,
+  "formulas_overwritten": false,
+  "source_workbook_overwritten": false,
+  "normalized_empty_duplicate_rows": []
+}

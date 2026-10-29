@@ -204,6 +204,9 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 		return nil, p.CodeSkillMaterialRequired
 	}
 	stats := w.fighter(r, &r.Player)
+	if r.Isolated || w.e.Store.Cfg.Fixture.RuleVersion >= 22 && !w.e.Store.Cfg.Fixture.EquipmentMagicArithmeticSafe(stats) {
+		return nil, p.CodeSkillStateBlocked
+	}
 	amount := int64(0)
 	duration := int64(0)
 	if handler.Teleport || handler.Summon {

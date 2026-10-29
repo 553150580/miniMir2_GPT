@@ -56,29 +56,35 @@ type Monster struct {
 	Undead    bool   `json:"undead"`
 }
 type Item struct {
-	ID                   uint32   `json:"id"`
-	Name                 string   `json:"name"`
-	EquipmentSlot        uint32   `json:"equipment_slot"`
-	IsEquipment          bool     `json:"is_equipment"`
-	AttackBonus          int64    `json:"attack_bonus"`
-	AttackMinBonus       int64    `json:"attack_min_bonus"`
-	AttackMaxBonus       int64    `json:"attack_max_bonus"`
-	AttackSpeedBonus     int64    `json:"attack_speed_bonus"`
-	DefenceBonus         int64    `json:"defence_bonus"`
-	RecycleGold          int64    `json:"recycle_gold"`
-	RequiredLevel        *uint32  `json:"required_level,omitempty"`
-	Stackable            bool     `json:"stackable"`
-	AllowedJobs          []uint32 `json:"allowed_jobs"`
-	BookSkillID          uint32   `json:"book_skill_id"`
-	IsSkillPage          bool     `json:"is_skill_page"`
-	DropQuality          uint32   `json:"drop_quality"`
-	MaxStack             int64    `json:"max_stack"`
-	DefenceMinBonus      int64    `json:"defence_min_bonus"`
-	DefenceMaxBonus      int64    `json:"defence_max_bonus"`
-	MagicDefenceMinBonus int64    `json:"magic_defence_min_bonus"`
-	MagicDefenceMaxBonus int64    `json:"magic_defence_max_bonus"`
-	recycleGoldExplicit  bool
-	dropQualityExplicit  bool
+	ID                     uint32   `json:"id"`
+	Name                   string   `json:"name"`
+	EquipmentSlot          uint32   `json:"equipment_slot"`
+	IsEquipment            bool     `json:"is_equipment"`
+	AttackBonus            int64    `json:"attack_bonus"`
+	AttackMinBonus         int64    `json:"attack_min_bonus"`
+	AttackMaxBonus         int64    `json:"attack_max_bonus"`
+	MagicMinBonus          int64    `json:"magic_min_bonus"`
+	MagicMaxBonus          int64    `json:"magic_max_bonus"`
+	TaoMinBonus            int64    `json:"tao_min_bonus"`
+	TaoMaxBonus            int64    `json:"tao_max_bonus"`
+	EquipmentStage         uint32   `json:"equipment_stage"`
+	AttackSpeedBonus       int64    `json:"attack_speed_bonus"`
+	DefenceBonus           int64    `json:"defence_bonus"`
+	RecycleGold            int64    `json:"recycle_gold"`
+	RequiredLevel          *uint32  `json:"required_level,omitempty"`
+	Stackable              bool     `json:"stackable"`
+	AllowedJobs            []uint32 `json:"allowed_jobs"`
+	BookSkillID            uint32   `json:"book_skill_id"`
+	IsSkillPage            bool     `json:"is_skill_page"`
+	DropQuality            uint32   `json:"drop_quality"`
+	MaxStack               int64    `json:"max_stack"`
+	DefenceMinBonus        int64    `json:"defence_min_bonus"`
+	DefenceMaxBonus        int64    `json:"defence_max_bonus"`
+	MagicDefenceMinBonus   int64    `json:"magic_defence_min_bonus"`
+	MagicDefenceMaxBonus   int64    `json:"magic_defence_max_bonus"`
+	recycleGoldExplicit    bool
+	dropQualityExplicit    bool
+	equipmentStatsExplicit [5]bool
 }
 type PotionEffect struct {
 	ItemID uint32 `json:"item_id"`
@@ -250,6 +256,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateProgression(); err != nil {
+		return err
+	}
+	if err := f.ValidateEquipmentStats(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

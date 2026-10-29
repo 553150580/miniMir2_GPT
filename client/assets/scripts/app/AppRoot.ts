@@ -34,7 +34,9 @@ import { roleBindingText } from './RoleBindingModel';
 import { petAppearDuration } from './PetBornModel';
 import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
-import { equipmentLevelLines, equipmentLevelReason, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
+import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
+import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
+import { combatAttributeLines } from './CombatStatusModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -58,6 +60,7 @@ export class AppRoot extends Component {
     private selectedRole = -1;
     private selectedJob = 0;
     private selectedItem: any = null;
+    private selectedEquipped: EquippedSelection | null = null;
     private selectedTarget: number | null = null;
     private aim: { skillId: number; role: string; scene: string; rule: string; supply?: SupplySelection } | null = null;
     private inputSequence = 0;
@@ -110,7 +113,8 @@ export class AppRoot extends Component {
     }
 
     update(dt: number): void {
-        this.world?.update(dt, session.role?.job ?? 0, !!session.inventory?.equipped?.some((entry: any) => entry.slot === 0));
+        if (this.attached && session.entry) this.world?.observeEquipment(this.attached, session.entry.playerHandle, session.inventory);
+        this.world?.update(dt, session.role?.job ?? 0);
         this.combatStatus?.update();
         if (!this.canSendInput()) return;
         this.moveTimer += dt;
@@ -291,7 +295,12 @@ export class AppRoot extends Component {
         });
         this.button('MapViewport/Aiming/Cancel', () => this.cancelAim());
         this.button('MapViewport/BuffBar/Overview', () => this.combatStatus!.openOverview());
-        this.button('UIMgr/Panels/Role/Equip', () => this.setCastingSupply(true));
+        this.button('UIMgr/Panels/Role/Equip', () => this.changeEquipment(true));
+        this.button('UIMgr/Panels/Role/Recycle', () => {
+            const identity = currentEntryIdentity(); if (!identity) return;
+            this.combatStatus?.showLiveDetails('战斗属性', () => !this.disposed && isCurrentEntry(identity)
+                ? combatAttributeLines(session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle)?.combatAttributes) : null);
+        });
         for (const [path, kind] of [['Shop', 1], ['Upgrade', 2], ['Salvage', 3]] as const) this.button(`UIMgr/Panels/Skills/${path}`, () => {
             const selected = this.skills?.selected;
             if (kind === 2 && !selected?.learned) throw new Error('先学会并选择要升级的技能');
@@ -312,15 +321,8 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/Hosting/Leave', () => this.leave(true));
         this.button('UIMgr/Panels/Hosting/Claim', () => this.economic(40006, { benefitKind: 0 }));
         for (const panel of ['Inventory','Role']) {
-            if (panel === 'Role') { this.find('UIMgr/Panels/Role/Equip').active = false; this.find('UIMgr/Panels/Role/Recycle').active = false; continue; }
-            this.button(`UIMgr/Panels/${panel}/Equip`, () => {
-                if (!this.selectedItem) throw new Error('先选择物品');
-                const definition = this.world!.gameplay.items.find((item: any) => item.item_id === this.selectedItem.itemId);
-                if (definition?.kind === 'casting_supply') return this.setCastingSupply(false);
-                if (!definition || definition.kind !== 'equipment' || definition.equip_slot == null || definition.equip_slot === 100) throw new Error('该物品不能装备');
-                const reason = equipmentLevelReason(definition, session.inventory?.level, session.role?.job); if (reason) throw new Error(reason);
-                return this.economic(40001, { itemInstanceId: this.selectedItem.instanceId, slot: definition.equip_slot });
-            });
+            if (panel === 'Role') continue;
+            this.button(`UIMgr/Panels/${panel}/Equip`, () => this.changeEquipment(false));
             this.button(`UIMgr/Panels/${panel}/Recycle`, async () => {
                 if (!this.selectedItem) throw new Error('先选择物品');
                 const definition = this.world!.gameplay.items.find((item: any) => item.item_id === this.selectedItem.itemId);
@@ -645,10 +647,6 @@ export class AppRoot extends Component {
         const materialDisabled = !!quick && (needsCastingSupply(this.skillSnapshot(), quick) && this.world.gameplay.casting_supply?.enabled === false
             || quick.definition.kind === 'summon_pet' && this.skillSnapshot().mapNoPets === true);
         this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready && (!materialDisabled || player?.hp.isZero()));
-        const supply = session.inventory?.equipped?.find((entry: any) => entry.slot === this.world!.gameplay.casting_supply?.slot)?.item;
-        this.find('UIMgr/Panels/Role/Equip').active = !!supply;
-        this.text('UIMgr/Panels/Role/Equip/Label', this.world.gameplay.casting_supply?.enabled ? '卸下护符' : '护符未开放');
-        this.find('UIMgr/Panels/Role/Equip').getComponent(Button)!.interactable = !!(session.ready && this.world.gameplay.casting_supply?.enabled && supply);
         this.refreshInventoryContext();
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
@@ -658,12 +656,21 @@ export class AppRoot extends Component {
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
             const list = this.find(`UIMgr/Panels/${panel}/List`).getComponent(List)!;
             const items = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
-            list.setItems(items, (node, item: any) => { const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId); node.getChildByName('Text')!.getComponent(Label)!.string = `${definition?.name ?? item.itemId} ×${item.quantity} ${item.bound ? '绑定' : '非绑定'}`; }, true);
+            list.setItems(items, (node, item: any) => {
+                const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
+                const worn = panel === 'Role' ? session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId)) : null;
+                const part = worn ? `${definition?.kind === 'casting_supply' ? '护符' : equipmentSlotName(worn.slot)} · ` : '';
+                node.getChildByName('Text')!.getComponent(Label)!.string = `${part}${definition?.name ?? item.itemId} ×${item.quantity} ${item.bound ? '绑定' : '非绑定'}`;
+            }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
                 const currentItems = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
                 const item = currentItems.find((row: any) => selected?.instanceId instanceof Uint8Array && row.instanceId.toString() === selected.instanceId.toString());
-                this.selectedItem = item ?? null;
+                if (panel === 'Inventory') this.selectedItem = item ?? null;
+                else {
+                    const worn = item && session.inventory?.equipped?.find((entry: any) => entry.item === item);
+                    this.selectedEquipped = worn ? { slot: worn.slot, item: worn.item } : null;
+                }
                 this.refreshInventoryContext();
                 if (!item) { this.popup!.show('Details', { title: '物品已变化', message: '所选物品已离开此列表\n请重新选择。' }); return; }
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
@@ -671,6 +678,17 @@ export class AppRoot extends Component {
                 const pages = definition?.kind === 'skill_page' ? pageMergeGroup(item, session.inventory?.items ?? [], this.world!.gameplay.items) : null;
                 const merge = pages ? `\n${pages.reason ?? `可查看同源${pages.items.length}叠书页合并报价`}` : '';
                 const requirements = definition ? equipmentLevelLines(definition, session.inventory?.level, session.role?.job) : [];
+                if (definition?.kind === 'equipment' && this.combatStatus) {
+                    const identity = currentEntryIdentity(), id = new Uint8Array(item.instanceId);
+                    this.combatStatus.showLiveDetails(definition.name, () => {
+                        if (this.disposed || !identity || !isCurrentEntry(identity)) return null;
+                        const current = (panel === 'Inventory' ? session.inventory?.items : session.inventory?.equipped?.map((entry: any) => entry.item))
+                            ?.find((value: any) => recycleItemKey(value.instanceId) === recycleItemKey(id));
+                        if (!current) return ['原装备已离开此列表，请重新选择'];
+                        const currentDefinition = this.world?.gameplay.items.find((row: any) => row.item_id === current.itemId);
+                        return equipmentDetailLines(currentDefinition, current, session.inventory?.level, session.role?.job, panel === 'Role');
+                    }); return;
+                }
                 this.popup!.show('Details', { title: definition?.name ?? '物品详情', message: `数量 ${item.quantity}\n${item.bound ? '绑定物品' : '非绑定物品'}\n来源 ${sourceName(item.sourceKind)}\n品质 ${item.quality ?? 0}${requirements.length ? '\n' + requirements.join('\n') : ''}${book}${merge}${manualRecycleBlockReason(item) ? '\n' + manualRecycleBlockReason(item) : ''}` });
             }); }
         }
@@ -690,11 +708,16 @@ export class AppRoot extends Component {
     private refreshInventoryContext(): void {
         if (this.disposed || !this.world) return;
         if (this.lastInventory !== session.inventory && this.selectedItem) this.selectedItem = session.inventory?.items.find((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString()) ?? null;
+        if (this.selectedEquipped) {
+            const selected = this.selectedEquipped;
+            const current = session.inventory?.equipped?.find((entry: any) => entry.slot === selected.slot && recycleItemKey(entry.item.instanceId) === recycleItemKey(selected.item.instanceId));
+            this.selectedEquipped = current ? { slot: current.slot, item: current.item } : null;
+        }
         const selectedDefinition = this.world.gameplay.items.find((item: any) => item.item_id === this.selectedItem?.itemId);
         const selectedSupply = selectedDefinition?.kind === 'casting_supply', supplyEnabled = this.world.gameplay.casting_supply?.enabled;
         this.text('UIMgr/Panels/Inventory/Equip/Label', selectedSupply ? supplyEnabled ? '装入护符' : '护符未开放' : '装备');
-        const equipmentReason = equipmentLevelReason(selectedDefinition, session.inventory?.level, session.role?.job);
-        this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && (selectedSupply ? supplyEnabled : !equipmentReason));
+        const equipmentReason = equipmentActionReason(this.equipmentSnapshot(), this.selectedItem, false);
+        this.find('UIMgr/Panels/Inventory/Equip').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && (selectedSupply ? supplyEnabled : !equipmentReason));
         this.find('UIMgr/Panels/Inventory/Recycle').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem
             && (selectedDefinition?.kind === 'book' || (selectedDefinition?.kind === 'equipment' && !manualRecycleBlockReason(this.selectedItem))));
         const lockButton = this.find('UIMgr/Panels/Inventory/ItemLock').getComponent(Button)!;
@@ -702,13 +725,44 @@ export class AppRoot extends Component {
         lockButton.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && this.selectedItem
             && (selectedPage ? !pageGroup?.reason : selectedDefinition?.kind === 'equipment' && !((this.selectedItem.recycleBlockFlags ?? 0) & 14)));
         this.text('UIMgr/Panels/Inventory/ItemLock/Label', selectedPage ? '合并书页' : this.selectedItem?.locked ? '解锁装备' : '锁定装备');
+        const worn = this.selectedEquipped, wornDefinition = this.world.gameplay.items.find((row: any) => row.item_id === worn?.item.itemId);
+        const wornSupply = wornDefinition?.kind === 'casting_supply';
+        this.find('UIMgr/Panels/Role/Equip').active = true;
+        this.find('UIMgr/Panels/Role/Recycle').active = true;
+        this.text('UIMgr/Panels/Role/Equip/Label', wornSupply ? supplyEnabled ? '卸下护符' : '护符未开放' : '卸下装备');
+        this.text('UIMgr/Panels/Role/Recycle/Label', '战斗属性');
+        this.find('UIMgr/Panels/Role/Equip').getComponent(Button)!.interactable = !!(session.ready && !this.economicBusy && !this.unresolved && worn
+            && (wornSupply ? supplyEnabled : !equipmentActionReason(this.equipmentSnapshot(), worn.item, true, worn.slot)));
+        this.find('UIMgr/Panels/Role/Recycle').getComponent(Button)!.interactable = !!session.ready;
         for (const panel of ['Inventory','Role']) {
-            const selected = this.world.gameplay.items.find((row: any) => row.item_id === this.selectedItem?.itemId);
-            const selection = this.selectedItem ? `当前选择：${selected?.name ?? '物品'}` : '点击条目查看详情并选择物品';
+            const item = panel === 'Inventory' ? this.selectedItem : this.selectedEquipped?.item;
+            const selected = this.world.gameplay.items.find((row: any) => row.item_id === item?.itemId);
+            const selection = item ? `当前选择：${selected?.name ?? '物品'}` : panel === 'Role' ? '选择已穿戴装备可查看或卸下' : '点击条目查看详情并选择物品';
             this.text(`UIMgr/Panels/${panel}/Message`, selection + (panel === 'Role' ? '\n' + roleBindingText(session.bindingState, this.world.gameplay.map_catalog)
                 + ((this.world.gameplay.rule_version ?? 0) >= 20 ? '\n' + progressionSummary(session.inventory?.level, session.inventory?.progression) : '')
                 : selectedDefinition?.kind === 'equipment' && equipmentReason ? '\n' + equipmentReason : ''));
         }
+    }
+
+    private equipmentSnapshot(): EquipmentSnapshot {
+        const identity = currentEntryIdentity();
+        return { ready: session.ready, scope: identity && isCurrentEntry(identity) ? attachmentKey(identity) : '', roleIdentity: session.role ? roleIdentity() : '',
+            ruleVersion: session.entry?.resourceVersion ?? Long.UZERO, level: session.inventory?.level ?? 0, job: session.role?.job ?? -1,
+            items: session.inventory?.items ?? [], equipped: session.inventory?.equipped ?? [], definitions: this.world?.gameplay.items ?? [] };
+    }
+
+    private async changeEquipment(unequip: boolean): Promise<void> {
+        this.ensureNotLeaving();
+        const item = unequip ? this.selectedEquipped?.item : this.selectedItem;
+        const definition = this.world?.gameplay.items.find((row: any) => row.item_id === item?.itemId);
+        if (definition?.kind === 'casting_supply') return this.setCastingSupply(unequip);
+        if (!item) throw new Error(unequip ? '先选择已穿戴装备' : '先选择背包装备');
+        const preview = createEquipmentPreview(this.equipmentSnapshot(), item, unequip, unequip ? this.selectedEquipped!.slot : undefined);
+        if (!await this.popup!.confirm('Confirm', equipmentConfirmation(preview, definition!.name), unequip ? '卸下装备' : '穿戴装备')) return;
+        if (this.disposed) return;
+        validateEquipmentPreview(preview, this.equipmentSnapshot());
+        await this.economic(40001, { itemInstanceId: new Uint8Array(preview.itemInstanceId), slot: preview.slot,
+            unequip: preview.unequip, itemVersion: preview.itemVersion });
     }
 
     private recycleSnapshot(): AutoRecycleSnapshot {
@@ -811,8 +865,10 @@ export class AppRoot extends Component {
     private async setCastingSupply(unequip: boolean): Promise<void> {
         const snapshot = this.supplySnapshot();
         if (!snapshot.config?.enabled) throw new Error('施法护符暂未开放');
+        const selectedWorn = this.selectedEquipped;
         const item = unequip
-            ? snapshot.inventory?.equipped.find(entry => entry.slot === snapshot.config?.slot)?.item
+            ? snapshot.inventory?.equipped.find(entry => entry.slot === selectedWorn?.slot && entry.slot === snapshot.config?.slot
+                && recycleItemKey(entry.item.instanceId) === recycleItemKey(selectedWorn!.item.instanceId))?.item
             : snapshot.inventory?.items.find(value => this.selectedItem?.instanceId?.length === 16 && value.instanceId.length === 16
                 && value.instanceId.every((byte, index) => byte === this.selectedItem.instanceId[index]));
         if (!item) throw new Error(unequip ? '尚未装入护符' : '先在背包选择施法护符');

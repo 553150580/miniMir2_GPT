@@ -108,7 +108,7 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	if cloth == nil {
 		t.Fatal("缺少布衣开发样例")
 	}
-	equippedCloth := female.asset(p.MsgC2SEquip, &pb.EquipRequest{Operation: female.operation(), ItemInstanceId: cloth.InstanceId, Slot: 1})
+	equippedCloth := female.asset(p.MsgC2SEquip, &pb.EquipRequest{Operation: female.operation(), ItemInstanceId: cloth.InstanceId, Slot: 1, ItemVersion: cloth.Version})
 	if equippedCloth.ErrorCode != 0 {
 		t.Fatalf("非法引入性别穿戴门槛:%v", equippedCloth)
 	}
@@ -170,7 +170,7 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	if sword == nil || spare == nil {
 		t.Fatal("缺少来源明确的开发木剑样例")
 	}
-	equip := &pb.EquipRequest{Operation: c.operation(), ItemInstanceId: sword.InstanceId, Slot: 0}
+	equip := &pb.EquipRequest{Operation: c.operation(), ItemInstanceId: sword.InstanceId, Slot: 0, ItemVersion: sword.Version}
 	res := c.asset(p.MsgC2SEquip, equip)
 	if res.ErrorCode != 0 {
 		t.Fatalf("装备失败: %v", res)

@@ -1,0 +1,28 @@
+{
+  "head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+  "recorded_at_utc": "2026-10-29T19:28:06.949384+00:00",
+  "files": {
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "tools/resources/prepare_summon_candidates.py": "301033c4473648b7435397a1c98a6340df827d04bf0ac8f068542eb556d844b5",
+    "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "config/development/pet-runtime-candidates.json": "f77eb019f21811062aee59299a8b0eb32a6de69cf2e6f5dbf4a8ad3f2da38117",
+    "config/development/summon-candidates.json": "ab4bb552ac8e133d6384dce303dfa91ff0f412fb0cb6741edd6f18dd19318477",
+    "config/releases/preview_current.json": "31adeb38b6a5c3d2e3c6682b6e171433b53bd0fce880f0ec83115903267f3e1c",
+    "tools/config/test_level_growth.py": "9dc55fee23a9025b4a633deefd392a7fe75e59411889e3f4bf192bf948f1dbb5",
+    "tools/config/test_equipment_recycling.py": "8bf819eb6c67c998977a943e2a2067354b8001ca17029ffe88d05fdf4c874647",
+    "tools/config/test_safe_zone_binding.py": "6781293322fb7e5529e977da9fdb7339887fe7f5fdabc0c4723abd655b373e6a",
+    "tools/config/test_pet_runtime.py": "4cb4a0cb5073057537d90eac7bd1b96ea395d94f0611a03270f4c2eb3fe533f8",
+    "tools/config/test_summon_candidates.py": "b4b8c1c207c6abac0f263ca039371761f3f3205e187bcf1b4957ccb1e99b0eed",
+    "tools/config/test_teleport.py": "13d06485467556a6925388516dee70179632347a06e8100fd16565021c48089c",
+    "server/internal/devconfig/map_catalog_test.go": "0aa388ce031ebf127997b7a007e3da83562c74488877f5e5bf1d7ef00fbe6959",
+    "server/internal/devconfig/pet_runtime_test.go": "6305cbb397b86345dece69334b0a40a4a0c57decf6e9df3c6e04f102f10e53a4",
+    "server/internal/devconfig/summon_test.go": "f6dba0a46cf80b7e0b7268f0709c9e786046ff46cc03df31619acf8d5ff03150",
+    "server/internal/integration/level_growth_test.go": "9d1ee4973658f9ca3dad43b6c4ceafbc9b3e3fce795c5a96b0f95ec67616767e",
+    "server/internal/integration/summon_pet_test.go": "e71a0755c190e825ab93817281f5cda7f751195e03f0fbee435e69f7ba04e725"
+  }
+}

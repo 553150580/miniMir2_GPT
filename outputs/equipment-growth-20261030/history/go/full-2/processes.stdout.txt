@@ -1,0 +1,30 @@
+[
+    {
+        "ProcessId":  2736,
+        "ParentProcessId":  31524,
+        "CreationDate":  "\/Date(1793299626422)\/",
+        "Name":  "nbserver.exe",
+        "CommandLine":  "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode supervisor -run-id efb91e02-6145-4a44-9394-a4fb48de3684"
+    },
+    {
+        "ProcessId":  22116,
+        "ParentProcessId":  2736,
+        "CreationDate":  "\/Date(1793299626543)\/",
+        "Name":  "nbserver.exe",
+        "CommandLine":  "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode account"
+    },
+    {
+        "ProcessId":  24400,
+        "ParentProcessId":  2736,
+        "CreationDate":  "\/Date(1793299626546)\/",
+        "Name":  "nbserver.exe",
+        "CommandLine":  "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode game"
+    },
+    {
+        "ProcessId":  67688,
+        "ParentProcessId":  2736,
+        "CreationDate":  "\/Date(1793299626550)\/",
+        "Name":  "nbserver.exe",
+        "CommandLine":  "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode gm"
+    }
+]

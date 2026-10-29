@@ -89,3 +89,6 @@ export const CodeSkillBookSource: 3304 = 3304;
 export const CodeSkillPurchaseBlocked: 3305 = 3305;
 export const CodeSkillMaterialRequired: 3207 = 3207;
 export const CodeSkillMaterialChanged: 3208 = 3208;
+export const CodeEquipmentBagFull: 3401 = 3401;
+export const CodeEquipmentChanged: 3402 = 3402;
+export const CodeEquipmentBlocked: 3403 = 3403;

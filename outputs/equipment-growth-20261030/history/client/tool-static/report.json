@@ -1,0 +1,170 @@
+{
+  "started_at_utc": "2026-10-29T20:04:46.184227+00:00",
+  "before": {
+    "tools/client/verify_equipment_browser.cjs": "7fdac212bfb39a4bbf0da7d12fa5e38cdd70aeb116dd60f12430582ef3e90000",
+    "tools/client/test_equipment_browser.cjs": "5070d8093469c1000150a45f409c4cd09e9bb44523eeafd5ed1db3085426f068",
+    ".work/equipment-growth-20261030/browser/run-01/run.py": "bc738c86a416c65fa494b0782314e8f51dd8a7b24eb747ac711ff6a5a16ba12a",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "d688a35216bcf25ec5b5bd10d8aa42669b0007089eb167c20027d8a5ab9b8f10"
+  },
+  "commands": [
+    {
+      "name": "syntax",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--check",
+        "tools/client/verify_equipment_browser.cjs"
+      ],
+      "exit_code": 0,
+      "log": "syntax.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "preflight",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "tools/client/verify_equipment_browser.cjs",
+        "--preflight"
+      ],
+      "exit_code": 0,
+      "log": "preflight.log",
+      "log_sha256": "deefe2f2af47d64f9e7b6dddf04ba0f2bd5ab7e67922299f3f9dfbf8b0ad2cde"
+    },
+    {
+      "name": "pure-tests",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--test",
+        "tools/client/test_equipment_browser.cjs"
+      ],
+      "exit_code": 0,
+      "log": "pure-tests.log",
+      "log_sha256": "60c2bc7e86866557ede6d8c2db6a8765f6356824f4ec9861ae882b088c15adda"
+    },
+    {
+      "name": "wrapper-dry-run",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "python3",
+        ".work/equipment-growth-20261030/browser/run-01/run.py"
+      ],
+      "exit_code": 0,
+      "log": "wrapper-dry-run.log",
+      "log_sha256": "eac8975c5add6534b37edffcaae7cc2555ba45e7a48b27718bad12cdecaf7b74"
+    }
+  ],
+  "chrome_started": false,
+  "creator_started": false,
+  "service_control": false,
+  "database_control": false,
+  "after": {
+    "tools/client/verify_equipment_browser.cjs": "7fdac212bfb39a4bbf0da7d12fa5e38cdd70aeb116dd60f12430582ef3e90000",
+    "tools/client/test_equipment_browser.cjs": "5070d8093469c1000150a45f409c4cd09e9bb44523eeafd5ed1db3085426f068",
+    ".work/equipment-growth-20261030/browser/run-01/run.py": "bc738c86a416c65fa494b0782314e8f51dd8a7b24eb747ac711ff6a5a16ba12a",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "d688a35216bcf25ec5b5bd10d8aa42669b0007089eb167c20027d8a5ab9b8f10"
+  },
+  "current": {
+    "tools/client/verify_equipment_browser.cjs": "7fdac212bfb39a4bbf0da7d12fa5e38cdd70aeb116dd60f12430582ef3e90000",
+    "tools/client/test_equipment_browser.cjs": "5070d8093469c1000150a45f409c4cd09e9bb44523eeafd5ed1db3085426f068",
+    ".work/equipment-growth-20261030/browser/run-01/run.py": "bc738c86a416c65fa494b0782314e8f51dd8a7b24eb747ac711ff6a5a16ba12a",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "d688a35216bcf25ec5b5bd10d8aa42669b0007089eb167c20027d8a5ab9b8f10"
+  },
+  "stable": true,
+  "client_full_report_sha256": "6510c8b1042ae3e3ecb3ecaa792944bd59de3e1081512e0119b0f89f567969d6",
+  "client_input_count": 224,
+  "client_current_equals_root_before_and_after": true,
+  "tool_test_count": 4,
+  "passed": true,
+  "run_command_when_authorized": ".\\tools\\dev.ps1 python3 .work/equipment-growth-20261030/browser/run-01/run.py --run",
+  "execution_gate": "只备不跑。静态预检不验证当前主服务；实际GUI须Root明确给窗口，且真实构建doc含候选build_root、输入SHA/loaded public/三health均rule22。当前rule21预览不能计本阶段通过。",
+  "report_contract": {
+    "root_fields": [
+      "expectedRuleVersion",
+      "creatorBuildRoot",
+      "creatorReportSha256",
+      "sourceBefore",
+      "sourceAfter",
+      "fixtureSha256",
+      "publicSha256",
+      "loadedPublicCanonicalSha256",
+      "toolSha256",
+      "toolSha256After",
+      "healthBefore",
+      "healthAfter",
+      "checks",
+      "errors",
+      "warnings",
+      "operations",
+      "results",
+      "inventories",
+      "entries",
+      "createdJobs",
+      "observations",
+      "selections",
+      "screenshots"
+    ],
+    "observations": [
+      "initial",
+      "02-cloth",
+      "lockOriginalSword",
+      "groundNavigation",
+      "03-first-weapon",
+      "04-replace",
+      "05-unequip",
+      "emptySlotAutoOn",
+      "emptySlotAutoOff",
+      "06-restore",
+      "combatAttributes",
+      "beforeReentry",
+      "reentry"
+    ],
+    "action_fields": [
+      "touch",
+      "before",
+      "lines",
+      "scroll",
+      "open",
+      "sameEvent",
+      "afterDetailsReturn",
+      "confirmation",
+      "request",
+      "result",
+      "after"
+    ],
+    "limits": [
+      "不种满包；满包/旧品质迁出/MC SC非零端点引用独立WS",
+      "不启220/装备店/新武器Shape",
+      "3固定手机模拟尺寸不在本GUI重做；沿Root10布局保持和上阶段适配证据",
+      "仅记录真实截图，终态后仍需实际view_image"
+    ]
+  },
+  "finished_at_utc": "2026-10-29T20:04:48.316222+00:00"
+}

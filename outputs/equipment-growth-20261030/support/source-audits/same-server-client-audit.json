@@ -1,0 +1,727 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T19:39:06.583507+00:00",
+  "status": "read_only_asset_audit_not_runtime_selection",
+  "client_directory": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）",
+  "same_distribution_directory_as_server": true,
+  "same_server_runtime_resource_precedence_certified": false,
+  "archives": [
+    {
+      "name": "MirServer沉默世界_沐夜风群服修复版.rar",
+      "bytes": 45589489,
+      "content_read": false,
+      "executed": false
+    },
+    {
+      "name": "沉默世界GXX登录器配置器.rar",
+      "bytes": 34869590,
+      "content_read": false,
+      "executed": false
+    },
+    {
+      "name": "沉默世界完整客户端（带单机登录器）.rar",
+      "bytes": 1866026286,
+      "content_read": false,
+      "executed": false
+    }
+  ],
+  "inventory": {
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data": {
+      "files": 286,
+      "extensions": {
+        ".wil": 46,
+        ".wix": 46,
+        ".wzl": 90,
+        ".wzx": 90,
+        ".dat": 9,
+        ".set": 2,
+        ".idx": 1,
+        ".bmp": 1,
+        ".atr": 1
+      }
+    },
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data": {
+      "files": 52,
+      "extensions": {
+        ".pak": 51,
+        ".dat": 1
+      }
+    }
+  },
+  "art_files": [
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wil",
+      "bytes": 154896,
+      "sha256": "b81f3f76c96a184717f50293f9853283dd0314a7d127e95c44885681dcd3fce6",
+      "header_hex": "23494c49422076312e302d57454d41444520456e7465727461696e6d656e7420696e632e00000000293d40002502000000010000000400000000000000008000",
+      "header_family": "#ILIB_v1_WIL"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.WIX",
+      "bytes": 2244,
+      "sha256": "0e0e2fdac28f097266bc382ecb2663d10f5eb931eaf3b5c9cbc7476778122ace",
+      "header_hex": "1957454d41444520456e7465727461696e6d656e7420696e632e4b0068884000c0fa9201c0fa9201832d40002502000038040000400500009c06000004070000",
+      "header_family": "0x19_WEMADE_WIX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzl",
+      "bytes": 83381,
+      "sha256": "647dedba6e47080b9941f4e5e0a56978248e593e3d3b019fd3f9e554043e497c",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d0000000000000000000000007479ae519a2de640000000002502000000000000000000000000000000000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzx",
+      "bytes": 2244,
+      "sha256": "e671dae18a84a8d530e8799086509649eeb0b45a136502aa9885ccb841ccdcbd",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d0000000000000000000000007479ae519a2de64000000000250200004000000006010000f101000053020000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wil",
+      "bytes": 355768,
+      "sha256": "7d47a7863224b6fb04d4141d96909bf014cac91f0995152307a234b1225ece84",
+      "header_hex": "23494c49422076312e302d57454d41444520456e7465727461696e6d656e7420696e632e00000000293d40002502000000010000000400000000000000008000",
+      "header_family": "#ILIB_v1_WIL"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.WIX",
+      "bytes": 2244,
+      "sha256": "7e420ebcf8a620c8c90d4d9ad30950999fc33e18738a86c7840ef9f42d95c0d1",
+      "header_hex": "1957454d41444520456e7465727461696e6d656e7420696e632eb20007e445005c020e001301000001000000250200003804000020070000a80a0000c40b0000",
+      "header_family": "0x19_WEMADE_WIX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzl",
+      "bytes": 172562,
+      "sha256": "67b9712c1ab3f48bfc47cf958484d872943841cdf440e5e0812895060ae0b53f",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000ba6947519a2de640000000002502000000000000000000000000000000000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzx",
+      "bytes": 2244,
+      "sha256": "31caba6a78f0d69e21e4f72ff7179cf1b01c339e5e3e12b0909693f89da6306e",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000ba6947519a2de640000000002502000040000000c2010000cb0300008d040000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wil",
+      "bytes": 776076,
+      "sha256": "dc4986c1bb09317084d578623b6ee3a964b55442b1949a60891c474878624a5b",
+      "header_hex": "23494c49422076312e302d57454d41444520456e7465727461696e6d656e7420696e632e00000000293d40002502000000010000000400000000000000008000",
+      "header_family": "#ILIB_v1_WIL"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wix",
+      "bytes": 2244,
+      "sha256": "3fcf786c9732e568a152d0017c28b9727dbfdad2d7d14732ea2a2b609c1970d8",
+      "header_hex": "1957454d41444520456e7465727461696e6d656e7420696e632eae000000000000000000d89747008c7d4b002502000038040000400400004804000050040000",
+      "header_family": "0x19_WEMADE_WIX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzl",
+      "bytes": 265266,
+      "sha256": "6904e9c8e594d676cd193f219c66dc3b217e3f97a527e2190ec3939510038a91",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000bff7864c9a2de640000000002502000000000000000000000000000000000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzx",
+      "bytes": 2244,
+      "sha256": "c3272f656ca7099aea2a0868b8ad9e9c8338c734f8456d77ecac97a9b08832fb",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000bff7864c9a2de640000000002502000000000000000000000000000000000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wil",
+      "bytes": 33956284,
+      "sha256": "8dc1aa80456b6f7b296befa7c1c4ddedebd7550fb0cdd44b00b58efdd965bdb6",
+      "header_hex": "23494c49422076312e302d57454d41444520456e7465727461696e6d656e7420696e632e00000000553f400010a4000000010000000400000000000000008000",
+      "header_family": "#ILIB_v1_WIL"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wix",
+      "bytes": 168048,
+      "sha256": "aaa0134fb000d376b93cba47cb10bd01b2ace6b914003115cd99fd2b2f2ea2f1",
+      "header_hex": "1957454d41444520456e7465727461696e6d656e7420696e632e4305871e47006f170000a8a24800e60c2f0010a400003804000044040000500400005c040000",
+      "header_family": "0x19_WEMADE_WIX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzl",
+      "bytes": 7436062,
+      "sha256": "12bf649ec0c53a5c9add56244d2875a06f6a90d9bc010ff62e27f67333f1dedf",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000dec9f64b9a2de6400000000010a4000000000000000000000000000000000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzx",
+      "bytes": 168048,
+      "sha256": "5e885e9bffc50e12dcf91716e08b4cf43bc8d57131aa99a5a3684477ac67d25c",
+      "header_hex": "137777772e7368616e646167616d65732e636f6d000000000000000000000000dec9f64b9a2de6400000000010a40000400000005c0000007800000094000000",
+      "header_family": "shandagames_com_WZL_WZX"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems.Pak",
+      "bytes": 138155,
+      "sha256": "17383733b0841ce593fde0af6605fc9102d163ca14053479beddd1dbc3857c4a",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe05352e93fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems1.Pak",
+      "bytes": 727570,
+      "sha256": "7077c7547c66c04133f8d861fab01f01846ce72a2188cad6205e9ca47bc4ad67",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe05382ef3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems2.pak",
+      "bytes": 2099640,
+      "sha256": "082e66adfe4d8b4a4ff0a046ab2d58e6fa2ca18b3ee43442752b8de5c088dea5",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0539afc3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum.Pak",
+      "bytes": 57251006,
+      "sha256": "fba8b2163ff24ae4fad7b8ab4f616d4ead318a780d14db07923cd207a7f23d3a",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0531ab23fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum10.Pak",
+      "bytes": 42860850,
+      "sha256": "5124a140cd84db3731b942a7aae5440ac863270ebdea64edbff7d4f34408cde7",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe053fad73fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum11.Pak",
+      "bytes": 79735661,
+      "sha256": "613d3271861670a9e7e5179e61a8ddef87a0c9a683409833072a40ebc83449f8",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0537a893fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\humeffect4.Pak",
+      "bytes": 3129929,
+      "sha256": "a0484d4fdc2b397d6724a46bbcfd7d567e86c5e92cc659b5e9cabc0a8830924d",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe05302ec3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items.Pak",
+      "bytes": 270919,
+      "sha256": "405991747723e117cafbf81c3c9aba144962a57e169b26c99d6f406c1b3313b9",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe05352e93fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items1.Pak",
+      "bytes": 1273327,
+      "sha256": "4f72a9a34ec497517aeaaa1b25a82079057e244781c61971100505e2fa163b96",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe05382ef3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items2.pak",
+      "bytes": 11774455,
+      "sha256": "f7a6520b83ea5814e89928c046d864fac0b815363867dc0bdb6827e3dd840b10",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0539afc3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon.Pak",
+      "bytes": 49199530,
+      "sha256": "afe5190b879b25a9637a098dd0ad0e89ac07e92bb8585acfb7ebdbfff8317a12",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe053da5d3fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon10.Pak",
+      "bytes": 51195164,
+      "sha256": "7bdee58a8b903c6f6ec8c57633908196e61e96eb11fd1548edbeda9136911303",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0536a743fdaa673fc65",
+      "header_family": "GEEPAK3"
+    },
+    {
+      "path": "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon11.Pak",
+      "bytes": 55328216,
+      "sha256": "3224b961fbace0547db4fa7f96a38e480692152abfb240ff147debb97c4fe23e",
+      "header_hex": "0747454550414b33000082eca869106485bfa8c1f92152b07a5cf7755324f0706dc971750af57413b4ac57120cf9a4404674bc7ddd3fe0536a743fdaa673fc65",
+      "header_family": "GEEPAK3"
+    }
+  ],
+  "source_before": {
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wil": "b81f3f76c96a184717f50293f9853283dd0314a7d127e95c44885681dcd3fce6",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.WIX": "0e0e2fdac28f097266bc382ecb2663d10f5eb931eaf3b5c9cbc7476778122ace",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzl": "647dedba6e47080b9941f4e5e0a56978248e593e3d3b019fd3f9e554043e497c",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzx": "e671dae18a84a8d530e8799086509649eeb0b45a136502aa9885ccb841ccdcbd",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wil": "7d47a7863224b6fb04d4141d96909bf014cac91f0995152307a234b1225ece84",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.WIX": "7e420ebcf8a620c8c90d4d9ad30950999fc33e18738a86c7840ef9f42d95c0d1",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzl": "67b9712c1ab3f48bfc47cf958484d872943841cdf440e5e0812895060ae0b53f",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzx": "31caba6a78f0d69e21e4f72ff7179cf1b01c339e5e3e12b0909693f89da6306e",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wil": "dc4986c1bb09317084d578623b6ee3a964b55442b1949a60891c474878624a5b",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wix": "3fcf786c9732e568a152d0017c28b9727dbfdad2d7d14732ea2a2b609c1970d8",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzl": "6904e9c8e594d676cd193f219c66dc3b217e3f97a527e2190ec3939510038a91",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzx": "c3272f656ca7099aea2a0868b8ad9e9c8338c734f8456d77ecac97a9b08832fb",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wil": "8dc1aa80456b6f7b296befa7c1c4ddedebd7550fb0cdd44b00b58efdd965bdb6",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wix": "aaa0134fb000d376b93cba47cb10bd01b2ace6b914003115cd99fd2b2f2ea2f1",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzl": "12bf649ec0c53a5c9add56244d2875a06f6a90d9bc010ff62e27f67333f1dedf",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzx": "5e885e9bffc50e12dcf91716e08b4cf43bc8d57131aa99a5a3684477ac67d25c",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems.Pak": "17383733b0841ce593fde0af6605fc9102d163ca14053479beddd1dbc3857c4a",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems1.Pak": "7077c7547c66c04133f8d861fab01f01846ce72a2188cad6205e9ca47bc4ad67",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems2.pak": "082e66adfe4d8b4a4ff0a046ab2d58e6fa2ca18b3ee43442752b8de5c088dea5",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum.Pak": "fba8b2163ff24ae4fad7b8ab4f616d4ead318a780d14db07923cd207a7f23d3a",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum10.Pak": "5124a140cd84db3731b942a7aae5440ac863270ebdea64edbff7d4f34408cde7",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum11.Pak": "613d3271861670a9e7e5179e61a8ddef87a0c9a683409833072a40ebc83449f8",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\humeffect4.Pak": "a0484d4fdc2b397d6724a46bbcfd7d567e86c5e92cc659b5e9cabc0a8830924d",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items.Pak": "405991747723e117cafbf81c3c9aba144962a57e169b26c99d6f406c1b3313b9",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items1.Pak": "4f72a9a34ec497517aeaaa1b25a82079057e244781c61971100505e2fa163b96",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items2.pak": "f7a6520b83ea5814e89928c046d864fac0b815363867dc0bdb6827e3dd840b10",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon.Pak": "afe5190b879b25a9637a098dd0ad0e89ac07e92bb8585acfb7ebdbfff8317a12",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon10.Pak": "7bdee58a8b903c6f6ec8c57633908196e61e96eb11fd1548edbeda9136911303",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon11.Pak": "3224b961fbace0547db4fa7f96a38e480692152abfb240ff147debb97c4fe23e"
+  },
+  "source_after": {
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wil": "b81f3f76c96a184717f50293f9853283dd0314a7d127e95c44885681dcd3fce6",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.WIX": "0e0e2fdac28f097266bc382ecb2663d10f5eb931eaf3b5c9cbc7476778122ace",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzl": "647dedba6e47080b9941f4e5e0a56978248e593e3d3b019fd3f9e554043e497c",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\DnItems.wzx": "e671dae18a84a8d530e8799086509649eeb0b45a136502aa9885ccb841ccdcbd",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wil": "7d47a7863224b6fb04d4141d96909bf014cac91f0995152307a234b1225ece84",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.WIX": "7e420ebcf8a620c8c90d4d9ad30950999fc33e18738a86c7840ef9f42d95c0d1",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzl": "67b9712c1ab3f48bfc47cf958484d872943841cdf440e5e0812895060ae0b53f",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Items.wzx": "31caba6a78f0d69e21e4f72ff7179cf1b01c339e5e3e12b0909693f89da6306e",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wil": "dc4986c1bb09317084d578623b6ee3a964b55442b1949a60891c474878624a5b",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wix": "3fcf786c9732e568a152d0017c28b9727dbfdad2d7d14732ea2a2b609c1970d8",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzl": "6904e9c8e594d676cd193f219c66dc3b217e3f97a527e2190ec3939510038a91",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\stateitem.wzx": "c3272f656ca7099aea2a0868b8ad9e9c8338c734f8456d77ecac97a9b08832fb",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wil": "8dc1aa80456b6f7b296befa7c1c4ddedebd7550fb0cdd44b00b58efdd965bdb6",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wix": "aaa0134fb000d376b93cba47cb10bd01b2ace6b914003115cd99fd2b2f2ea2f1",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzl": "12bf649ec0c53a5c9add56244d2875a06f6a90d9bc010ff62e27f67333f1dedf",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\Data\\Weapon.wzx": "5e885e9bffc50e12dcf91716e08b4cf43bc8d57131aa99a5a3684477ac67d25c",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems.Pak": "17383733b0841ce593fde0af6605fc9102d163ca14053479beddd1dbc3857c4a",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems1.Pak": "7077c7547c66c04133f8d861fab01f01846ce72a2188cad6205e9ca47bc4ad67",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\DnItems2.pak": "082e66adfe4d8b4a4ff0a046ab2d58e6fa2ca18b3ee43442752b8de5c088dea5",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum.Pak": "fba8b2163ff24ae4fad7b8ab4f616d4ead318a780d14db07923cd207a7f23d3a",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum10.Pak": "5124a140cd84db3731b942a7aae5440ac863270ebdea64edbff7d4f34408cde7",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Hum11.Pak": "613d3271861670a9e7e5179e61a8ddef87a0c9a683409833072a40ebc83449f8",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\humeffect4.Pak": "a0484d4fdc2b397d6724a46bbcfd7d567e86c5e92cc659b5e9cabc0a8830924d",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items.Pak": "405991747723e117cafbf81c3c9aba144962a57e169b26c99d6f406c1b3313b9",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items1.Pak": "4f72a9a34ec497517aeaaa1b25a82079057e244781c61971100505e2fa163b96",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Items2.pak": "f7a6520b83ea5814e89928c046d864fac0b815363867dc0bdb6827e3dd840b10",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon.Pak": "afe5190b879b25a9637a098dd0ad0e89ac07e92bb8585acfb7ebdbfff8317a12",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon10.Pak": "7bdee58a8b903c6f6ec8c57633908196e61e96eb11fd1548edbeda9136911303",
+    "D:\\123DownLoad\\20231121沉默世界【沐夜风】群服毕业版\\沉默世界完整客户端（带单机登录器）\\沉默世界补丁\\data\\Weapon11.Pak": "3224b961fbace0547db4fa7f96a38e480692152abfb240ff147debb97c4fe23e"
+  },
+  "source_stable": true,
+  "probes": [
+    {
+      "package": "Items",
+      "frame_count": 549,
+      "current_tool_supported": false,
+      "current_tool_error": "WIX签名或长度不支持",
+      "audit_variant": "0x19_WEMADE_index48_wil_palette256_version0",
+      "all_index_frame_bounds_checked": true,
+      "palette_sha256": "89ac12668439e024b6e7db8ca90d2521ab289a83ce3c5023c57617971aa34bf3",
+      "same_engine_numbering_or_action_mapping_certified": false
+    },
+    {
+      "package": "stateitem",
+      "frame_count": 549,
+      "current_tool_supported": false,
+      "current_tool_error": "WIX签名或长度不支持",
+      "audit_variant": "0x19_WEMADE_index48_wil_palette256_version0",
+      "all_index_frame_bounds_checked": true,
+      "palette_sha256": "89ac12668439e024b6e7db8ca90d2521ab289a83ce3c5023c57617971aa34bf3",
+      "same_engine_numbering_or_action_mapping_certified": false
+    },
+    {
+      "package": "DnItems",
+      "frame_count": 549,
+      "current_tool_supported": false,
+      "current_tool_error": "WIX签名或长度不支持",
+      "audit_variant": "0x19_WEMADE_index48_wil_palette256_version0",
+      "all_index_frame_bounds_checked": true,
+      "palette_sha256": "89ac12668439e024b6e7db8ca90d2521ab289a83ce3c5023c57617971aa34bf3",
+      "same_engine_numbering_or_action_mapping_certified": false
+    },
+    {
+      "package": "Weapon",
+      "frame_count": 42000,
+      "current_tool_supported": false,
+      "current_tool_error": "WIX签名或长度不支持",
+      "audit_variant": "0x19_WEMADE_index48_wil_palette256_version0",
+      "all_index_frame_bounds_checked": true,
+      "palette_sha256": "89ac12668439e024b6e7db8ca90d2521ab289a83ce3c5023c57617971aa34bf3",
+      "same_engine_numbering_or_action_mapping_certified": false
+    }
+  ],
+  "samples": [
+    {
+      "package": "Items",
+      "raw_frame": 42,
+      "frame_index": 42,
+      "source_offset": 29472,
+      "width": 40,
+      "height": 35,
+      "offset_x": 7,
+      "offset_y": -44,
+      "pixel_bytes": 1400,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/Items_000042.png",
+      "png_sha256": "0a0b4d0e79f56589972ed39699ea9b428cd22e4ebb9edd2a6375bea93689ae00",
+      "rgba_sha256": "b434a333fa10772208a3908ee68efe998331803c1fe1c0ab6ea11bec54f1d168",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "adjacent_comparison_only"
+    },
+    {
+      "package": "Items",
+      "raw_frame": 43,
+      "frame_index": 43,
+      "source_offset": 30880,
+      "width": 36,
+      "height": 30,
+      "offset_x": 7,
+      "offset_y": -44,
+      "pixel_bytes": 1080,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/Items_000043.png",
+      "png_sha256": "cc1c3fe4497a9347ea54ebc735f62c05cc7394db8d10b1615e33aaaedf8ad081",
+      "rgba_sha256": "b48a54b686e8198165af24ba6eaf54a3f06bab7d6a0d2c1cecba8ab3b63b326c",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "Looks43_direct_index_hypothesis_not_consumer_proof"
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 42,
+      "frame_index": 42,
+      "source_offset": 49376,
+      "width": 56,
+      "height": 118,
+      "offset_x": 25,
+      "offset_y": -1,
+      "pixel_bytes": 6608,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/stateitem_000042.png",
+      "png_sha256": "4c2fe99f39a5b29db1c769279592313abbcffbd671b1de5f1858ae6003ef3d29",
+      "rgba_sha256": "7162548431f4248467a97e0dda1d8d17687824db4acde243bb08950ec049371f",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "adjacent_comparison_only"
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 43,
+      "frame_index": 43,
+      "source_offset": 55992,
+      "width": 40,
+      "height": 94,
+      "offset_x": 29,
+      "offset_y": -13,
+      "pixel_bytes": 3760,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/stateitem_000043.png",
+      "png_sha256": "c99b98440dba7d146917f44d4b851de2c107ace87a6b8169e136a09a8b1f82d7",
+      "rgba_sha256": "6a1b1fcd565496dddf85dba11dca726ed17e4f867df206eddcb886fe69849d8d",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "Looks43_direct_index_hypothesis_not_consumer_proof"
+    },
+    {
+      "package": "DnItems",
+      "raw_frame": 43,
+      "frame_index": 43,
+      "source_offset": 20428,
+      "width": 36,
+      "height": 30,
+      "offset_x": 7,
+      "offset_y": -44,
+      "pixel_bytes": 1080,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/DnItems_000043.png",
+      "png_sha256": "cc1c3fe4497a9347ea54ebc735f62c05cc7394db8d10b1615e33aaaedf8ad081",
+      "rgba_sha256": "b48a54b686e8198165af24ba6eaf54a3f06bab7d6a0d2c1cecba8ab3b63b326c",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "Looks43_direct_index_hypothesis_not_consumer_proof"
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 40800,
+      "frame_index": 40800,
+      "source_offset": 32426636,
+      "width": 12,
+      "height": 46,
+      "offset_x": 33,
+      "offset_y": -42,
+      "pixel_bytes": 552,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/Weapon_040800.png",
+      "png_sha256": "14df4267a791ced18dd0f413d1da0a42efb76df7d923ad7e35e0bc6001cd9bc1",
+      "rgba_sha256": "21f04407d82248792762136f08c65ca59ee913b7c399e97bef4fa1cc54fa139c",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "Shape34_times1200_hypothesis_only_not_certified"
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 41400,
+      "frame_index": 41400,
+      "source_offset": 33191460,
+      "width": 12,
+      "height": 46,
+      "offset_x": 33,
+      "offset_y": -42,
+      "pixel_bytes": 552,
+      "declared_empty": false,
+      "placeholder_texture_null_by_crystal": false,
+      "png": ".work/equipment-growth-20261030/same-server-samples/Weapon_041400.png",
+      "png_sha256": "14df4267a791ced18dd0f413d1da0a42efb76df7d923ad7e35e0bc6001cd9bc1",
+      "rgba_sha256": "21f04407d82248792762136f08c65ca59ee913b7c399e97bef4fa1cc54fa139c",
+      "native_pixel_roundtrip": true,
+      "crop_scale_recolor": false,
+      "mapping_status": "Shape34_times1200_hypothesis_only_not_certified"
+    }
+  ],
+  "same_server_wil_wzl_raw_index_comparison": [
+    {
+      "package": "Items",
+      "raw_frame": 42,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 12109,
+      "compressed_bytes": 248,
+      "decoded_index_bytes": 1400,
+      "decoded_index_sha256": "a81adbb1a34bd00e8fc05776c3e3b2299fc81cb10b4bcfe05aa5fbff46dc95f0",
+      "native_wil_index_sha256": "a81adbb1a34bd00e8fc05776c3e3b2299fc81cb10b4bcfe05aa5fbff46dc95f0",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "Items",
+      "raw_frame": 43,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 12373,
+      "compressed_bytes": 194,
+      "decoded_index_bytes": 1080,
+      "decoded_index_sha256": "f1a0261237e9deef470522bb03e0f57942241961b4a1f4f8126eec518d719890",
+      "native_wil_index_sha256": "f1a0261237e9deef470522bb03e0f57942241961b4a1f4f8126eec518d719890",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 42,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 8942,
+      "compressed_bytes": 838,
+      "decoded_index_bytes": 6608,
+      "decoded_index_sha256": "65a853abf460ba43d57414435c1dde9ebfbc0da7b766cebea56d7a95619abe48",
+      "native_wil_index_sha256": "65a853abf460ba43d57414435c1dde9ebfbc0da7b766cebea56d7a95619abe48",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 43,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 9796,
+      "compressed_bytes": 733,
+      "decoded_index_bytes": 3760,
+      "decoded_index_sha256": "ca74b6eac778fde650ac282547a629a4c2eddfbc2be6b476034ec8b28f49aaba",
+      "native_wil_index_sha256": "ca74b6eac778fde650ac282547a629a4c2eddfbc2be6b476034ec8b28f49aaba",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "DnItems",
+      "raw_frame": 43,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 7431,
+      "compressed_bytes": 194,
+      "decoded_index_bytes": 1080,
+      "decoded_index_sha256": "f1a0261237e9deef470522bb03e0f57942241961b4a1f4f8126eec518d719890",
+      "native_wil_index_sha256": "f1a0261237e9deef470522bb03e0f57942241961b4a1f4f8126eec518d719890",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 40800,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 7016562,
+      "compressed_bytes": 221,
+      "decoded_index_bytes": 552,
+      "decoded_index_sha256": "ce52471fadced6d7c018517c7bcce41c0dda0d61694dc085f01535415cd4d11c",
+      "native_wil_index_sha256": "ce52471fadced6d7c018517c7bcce41c0dda0d61694dc085f01535415cd4d11c",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 41400,
+      "wzx_zero_index": false,
+      "parity_checked": true,
+      "format_tag": 3,
+      "source_offset": 7226312,
+      "compressed_bytes": 221,
+      "decoded_index_bytes": 552,
+      "decoded_index_sha256": "ce52471fadced6d7c018517c7bcce41c0dda0d61694dc085f01535415cd4d11c",
+      "native_wil_index_sha256": "ce52471fadced6d7c018517c7bcce41c0dda0d61694dc085f01535415cd4d11c",
+      "same_raw_palette_indices": true,
+      "palette_or_alpha_equivalence_certified": false
+    }
+  ],
+  "named180_same_frame_rgba_comparison": [
+    {
+      "package": "Items",
+      "raw_frame": 42,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/Items_000042.png",
+      "primary_sample_sha256": "0a0b4d0e79f56589972ed39699ea9b428cd22e4ebb9edd2a6375bea93689ae00",
+      "same_dimensions": true,
+      "same_rgba": true
+    },
+    {
+      "package": "Items",
+      "raw_frame": 43,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/Items_000043.png",
+      "primary_sample_sha256": "cc1c3fe4497a9347ea54ebc735f62c05cc7394db8d10b1615e33aaaedf8ad081",
+      "same_dimensions": true,
+      "same_rgba": true
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 42,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/stateitem_000042.png",
+      "primary_sample_sha256": "4c2fe99f39a5b29db1c769279592313abbcffbd671b1de5f1858ae6003ef3d29",
+      "same_dimensions": true,
+      "same_rgba": true
+    },
+    {
+      "package": "stateitem",
+      "raw_frame": 43,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/stateitem_000043.png",
+      "primary_sample_sha256": "c99b98440dba7d146917f44d4b851de2c107ace87a6b8169e136a09a8b1f82d7",
+      "same_dimensions": true,
+      "same_rgba": true
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 40800,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/Weapon_040800.png",
+      "primary_sample_sha256": "a9566ac37689e9c9e6bb91ebabf7ea6344042601b382633d2b421040d45d38a8",
+      "same_dimensions": false,
+      "same_rgba": false
+    },
+    {
+      "package": "Weapon",
+      "raw_frame": 41400,
+      "primary_sample": ".work/equipment-growth-20261030/source-samples/Weapon_041400.png",
+      "primary_sample_sha256": "691d72db645c81dcc4a5e7084674d9ff2a6861b3e91ae07bc150dc084b7452b0",
+      "same_dimensions": false,
+      "same_rgba": false
+    }
+  ],
+  "pillow_version": "13.0.0",
+  "manual_visual_inspection": {
+    "method": "view_image原格，未裁切/缩放/重绘",
+    "frames": [
+      "Items:43",
+      "stateitem:43",
+      "Weapon:40800",
+      "Weapon:41400"
+    ],
+    "observation": "Items/State43为棕色木剑形；Weapon两个假设帧为细长浅蓝/金属柄武器，不能据此认定乌木身体。两个Weapon帧原像素相同。"
+  },
+  "code_evidence": [
+    {
+      "path": "资料参考/crystal/LibraryEditor/Graphics/WeMadeLibrary.cs",
+      "sha256": "b4c0a65012cd8446de035dbfbcc96641c88d484ebafd69c9495b1a2d00cbed06",
+      "lines": [
+        [
+          42,
+          47
+        ],
+        [
+          97,
+          108
+        ],
+        [
+          112,
+          148
+        ],
+        [
+          157,
+          170
+        ],
+        [
+          223,
+          235
+        ],
+        [
+          313,
+          332
+        ],
+        [
+          377,
+          394
+        ],
+        [
+          442,
+          470
+        ]
+      ],
+      "scope": "Crystal技术格式证据，非Apex/GXX运行编号、覆盖优先级或目标1.80认证"
+    },
+    {
+      "path": "tools/resources/inspect_wil.py",
+      "sha256": "b46f5ffea9996fd71ea60515d41248b7dd2010faea7411bd7544843cc3dfc17f",
+      "lines": [
+        [
+          66,
+          121
+        ],
+        [
+          124,
+          136
+        ]
+      ],
+      "scope": "当前生产解码器严格拒该WIX签名；未放宽生产工具，仅审计变体"
+    }
+  ],
+  "tool_sha256": "8e0c331c6f5211ba45c8d625b51635a355f6d60f28538676fe2f8703a3de5536",
+  "production_converter_modified": false,
+  "runtime_assets_modified": false,
+  "remaining_unknowns": [
+    "MYF/GXX对同目录WIL/WZL/补丁GEEPAK3的真实资源优先级",
+    "Looks43实际消费编号是否直接等于原frame43",
+    "Shape34实际包分段/性别/动作步幅，不能用乘1200认证",
+    "GEEPAK3格式/密钥证据或原始资产导出，不猜密钥或绕过保护",
+    "同服候选与目标1.80外观是否匹配及完整方向/动作验收"
+  ],
+  "forbidden_sources_read": false,
+  "source_programs_executed": false,
+  "network_or_database_used": false,
+  "scope": "找到了同服完整客户端与补丁；不再称原件缺失。格式/原像素有限审计不等于编号、外观或目标版本认证；220仍未选入运行配置。"
+}

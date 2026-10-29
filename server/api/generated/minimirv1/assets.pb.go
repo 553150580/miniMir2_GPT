@@ -1067,11 +1067,15 @@ func (x *EquipmentRecycleResult) GetTrigger() uint32 {
 	return 0
 }
 
+// 方向必须显式给出，不按是否已穿戴隐式切换；slot100仍由独立护符协议处理。
+// rule22新操作同时核对原实例版本；旧请求/回执保留原字段与指纹，不补造版本。
 type EquipRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	ItemInstanceId []byte                 `protobuf:"bytes,1,opt,name=item_instance_id,json=itemInstanceId,proto3" json:"item_instance_id,omitempty"`
 	Slot           uint32                 `protobuf:"varint,2,opt,name=slot,proto3" json:"slot,omitempty"`
 	Operation      *OperationContext      `protobuf:"bytes,3,opt,name=operation,proto3" json:"operation,omitempty"`
+	Unequip        bool                   `protobuf:"varint,4,opt,name=unequip,proto3" json:"unequip,omitempty"`
+	ItemVersion    uint64                 `protobuf:"varint,5,opt,name=item_version,json=itemVersion,proto3" json:"item_version,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -1125,6 +1129,20 @@ func (x *EquipRequest) GetOperation() *OperationContext {
 		return x.Operation
 	}
 	return nil
+}
+
+func (x *EquipRequest) GetUnequip() bool {
+	if x != nil {
+		return x.Unequip
+	}
+	return false
+}
+
+func (x *EquipRequest) GetItemVersion() uint64 {
+	if x != nil {
+		return x.ItemVersion
+	}
+	return 0
 }
 
 type RecycleRequest struct {
@@ -2357,11 +2375,13 @@ const file_assets_proto_rawDesc = "" +
 	"\x0fdiscarded_count\x18\t \x01(\x04R\x0ediscardedCount\x12%\n" +
 	"\x0ediscard_reason\x18\n" +
 	" \x01(\tR\rdiscardReason\x12\x18\n" +
-	"\atrigger\x18\v \x01(\rR\atrigger\"\x88\x01\n" +
+	"\atrigger\x18\v \x01(\rR\atrigger\"\xc5\x01\n" +
 	"\fEquipRequest\x12(\n" +
 	"\x10item_instance_id\x18\x01 \x01(\fR\x0eitemInstanceId\x12\x12\n" +
 	"\x04slot\x18\x02 \x01(\rR\x04slot\x12:\n" +
-	"\toperation\x18\x03 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
+	"\toperation\x18\x03 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12\x18\n" +
+	"\aunequip\x18\x04 \x01(\bR\aunequip\x12!\n" +
+	"\fitem_version\x18\x05 \x01(\x04R\vitemVersion\"x\n" +
 	"\x0eRecycleRequest\x12*\n" +
 	"\x11item_instance_ids\x18\x01 \x03(\fR\x0fitemInstanceIds\x12:\n" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xb0\x01\n" +

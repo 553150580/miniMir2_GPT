@@ -1,0 +1,13 @@
+✔ 真实22目录/全部PB类型与版本/回执字段预检，保存节点和View保持，不启动浏览器 (7.4519ms)
+✔ 实际HTTP创角帧保留protobuf默认战士0；其它认证消息在正文解码前过滤且不返回身份数据 (0.6747ms)
+✔ 协议观察request/binding和原Item Long不经过Number；新请求和真实new_revision字段完整保留 (0.6632ms)
+✔ 实际waitForFunction回调均同步；原ID容器等待在bag/worn上真返回bool，不把Promise或错误进制当成功 (25.2588ms)
+✔ 业务只经普通触屏，禁止种数据/私有业务调用/路由改写，严格原件保护位与版本观察 (0.2977ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 216.831

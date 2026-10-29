@@ -1,0 +1,1 @@
+{"output": "D:\\A_Claude\\miniMir2_GPT\\config\\releases\\dev-equipment-foundation-v0.22-626627111e9a", "runtime_ready": false, "release_blocker_count": 744}

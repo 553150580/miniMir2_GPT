@@ -32,6 +32,7 @@ function fixture() {
     const count = inventory.setItemsCount;
     return { app, s, shown, node, inventory, count, consumed: () => consumed, pendingReads: () => pendingReads,
         select(item) { inventory.node.emit('list-item-click', 0, item); },
+        selectEquipped(item) { node('UIMgr/Panels/Role/List').component.node.emit('list-item-click', 0, item); },
         label: () => node('UIMgr/Panels/Inventory/ItemLock/Label').component.string,
         enabled: () => node('UIMgr/Panels/Inventory/ItemLock').component.interactable };
 }
@@ -62,4 +63,24 @@ test('虚拟旧行只按同原ID读取当前物品；已消失条目清上下文
     f.s.inventory.items = f.s.inventory.items.filter(x => x !== current); f.select(old);
     assert.equal(f.app.selectedItem, null); assert.equal(f.enabled(), false); assert.equal(f.shown.at(-1).title, '物品已变化');
     assert.equal(f.s.connection.sent.length, 0); assert.deepEqual(f.app.nav.state.target, { x: 9, y: 9 });
+});
+
+test('Role已穿戴选择与背包上下文隔离，当次显示卸下而不重绑列表或丢任一offset',()=>{
+    const f=fixture(),bag=f.s.inventory.items[0],worn={...f.s.inventory.items[2],instanceId:bytes(8),quantity:Long.ONE,recycleBlockFlags:8};f.s.inventory.equipped=[{slot:0,item:worn}];f.select(bag);
+    const role=f.node('UIMgr/Panels/Role/List').component,count=role.setItemsCount;f.selectEquipped(worn);
+    assert.equal(f.app.selectedItem,bag);assert.equal(f.app.selectedEquipped.item,worn);assert.equal(f.app.selectedEquipped.slot,0);
+    assert.equal(f.label(),'合并书页');assert.equal(f.node('UIMgr/Panels/Role/Equip/Label').component.string,'卸下装备');assert.equal(f.node('UIMgr/Panels/Role/Equip').component.interactable,true);
+    assert.equal(f.inventory.offset,517);assert.equal(role.offset,517);assert.equal(role.setItemsCount,count);assert.equal(f.inventory.setItemsCount,f.count);assert.equal(f.pendingReads(),0);assert.equal(f.consumed(),0);
+});
+
+test('Inventory刷新保留仍在原slot的Role选择，新版本实时重取；原已穿戴消失不改成同类背包实例',()=>{
+    const f=fixture(),worn={...f.s.inventory.items[2],instanceId:bytes(8),quantity:Long.ONE,recycleBlockFlags:8};f.s.inventory.equipped=[{slot:0,item:worn}];f.selectEquipped(worn);
+    const updated={...worn,version:Long.fromInt(2,true)};f.s.inventory={...f.s.inventory,revision:Long.fromInt(2,true),equipped:[{slot:0,item:updated}]};f.app.refreshInventoryContext();assert.equal(f.app.selectedEquipped.item,updated);assert.equal(f.app.selectedItem,null);
+    f.s.inventory={...f.s.inventory,equipped:[]};f.app.refreshInventoryContext();assert.equal(f.app.selectedEquipped,null);assert.equal(f.node('UIMgr/Panels/Role/Equip').component.interactable,false);assert.equal(f.app.selectedItem,null);
+});
+
+test('实际装备条目打开保存滚动详情provider保留单件属性/来源；当前容器实时重取且旧Entry失效',()=>{
+    const f=fixture(),definition=f.app.world.gameplay.items.find(row=>row.item_id===218);definition.equipment_stage=0;definition.base_attributes={physical_attack_min:1,physical_attack_max:3,magic_attack_min:0,magic_attack_max:1,spirit_attack_min:0,spirit_attack_max:2,physical_defence_min:0,physical_defence_max:0,magic_defence_min:0,magic_defence_max:0,attack_speed:0};
+    const worn={...f.s.inventory.items[2],instanceId:bytes(8),quantity:Long.ONE,recycleBlockFlags:8};f.s.inventory.equipped=[{slot:0,item:worn}];let read;f.app.combatStatus={showLiveDetails(title,provider){assert.equal(title,'木剑');read=provider;}};f.selectEquipped(worn);
+    assert(read().includes('已穿戴装备'));assert(read().includes('魔法攻击 0–1'));assert(read().includes('道术攻击 0–2'));assert(read().some(line=>line.startsWith('来源 ')));f.s.inventory.equipped=[];assert.deepEqual(read(),['原装备已离开此列表，请重新选择']);f.s.entry={...f.s.entry,sceneEpoch:f.s.entry.sceneEpoch.add(1)};assert.equal(read(),null);assert.equal(f.inventory.offset,517);
 });

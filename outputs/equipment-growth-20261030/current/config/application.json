@@ -1,0 +1,8 @@
+{
+  "applied": true,
+  "before_sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+  "after_sha256": "96c8c4401b92b4908642fef8081e8f4a1d1bf0f5187ef8e54d08f0b1915500e8",
+  "schema_before_sha256": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+  "schema_after_sha256": "132fb5043dd0192f75090a74cfa2888aa01d1b8071fb730aa0f40ed678346012",
+  "only_reviewed_cells_and_schema_applied": true
+}

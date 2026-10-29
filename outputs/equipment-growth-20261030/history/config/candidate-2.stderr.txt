@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\A_Claude\miniMir2_GPT\.work\equipment-growth-20261030\config\author_configuration.py", line 137, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "D:\A_Claude\miniMir2_GPT\.work\equipment-growth-20261030\config\author_configuration.py", line 105, in main
+    assert {(d['sheet'],d['row'],d['column']) for d in diff}=={('装备定义',row,col) for row in [4,5] for col in [9,15]}|{('开发首循环夹具',4,col) for col in [3,5]}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

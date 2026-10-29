@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T21:18:23.246029+00:00",
+  "scope": "唯一共享Go测试文件在配置130检查冻结后补3处正常Equip请求原实例版本；原配置报告与130日志不改，旧130不宣称覆盖新Go源；新字节由真实完整Go3锁定及两条成长测试原PASS证明",
+  "original_configuration_report": {
+    "path": ".work/equipment-growth-20261030/config/final-review.json",
+    "sha256": "a65b2b56f7aea010f110133ee6e493e9982d35e5957fcb3a714dafd3389b06e5",
+    "python_tests": 130
+  },
+  "shared_test": {
+    "path": "server/internal/integration/level_growth_test.go",
+    "configuration_sha256": "ddd46cea404761e8a288279a0724b7d4269c9b7448c1d663ec3183b9c654342c",
+    "go3_sha256": "c1b7a7e1ffa2fc044c53017bb05822a282d6d997dffae22a534375dda163200d",
+    "reconstruction_remove": [
+      {
+        "utf8": ", ItemVersion: uint64(cloth.Version)",
+        "occurrences": 2
+      },
+      {
+        "utf8": ", ItemVersion: wood.Version",
+        "occurrences": 1
+      }
+    ],
+    "total_insertions": 3
+  },
+  "go3": {
+    "report_path": ".work/equipment-growth-20261030/go/full-3/report.json",
+    "report_sha256": "a922746463223c2da886cdc85db65c6e57eaceb3078f2a258f5d26bf913dbd3f",
+    "events_path": ".work/equipment-growth-20261030/go/full-3/events.jsonl",
+    "events_sha256": "c209fd1235344b06043e1407b4ddb9c4b5c226bf7c7b2f9303a5fb516b4f12cd",
+    "required_raw_passes": [
+      {
+        "package": "minimir/internal/integration",
+        "test": "TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo"
+      },
+      {
+        "package": "minimir/internal/integration",
+        "test": "TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS"
+      }
+    ]
+  },
+  "invariants": {
+    "other_configuration_inputs": "strict_original_hashes",
+    "original_report_or_logs_rewritten": false,
+    "python130_covers_new_go_test_bytes": false
+  }
+}

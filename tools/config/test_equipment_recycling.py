@@ -23,7 +23,7 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
 
     def test_current_development_contract_preserves_prices_and_other_stage_gates(self):
         f=self.fixture
-        self.assertEqual(f['rule_version'],21)
+        self.assertEqual(f['rule_version'],22)
         self.assertEqual(f['equipment_recycling'],{'mode':'development_gold_only','outputs':[]})
         self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400)])
         self.assertEqual(len(f['skills']),22)
@@ -37,7 +37,7 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
 
     def test_required_level_and_gold_follow_their_existing_unique_cells(self):
         tables=self.changed();before=copy.deepcopy(tables)
-        next(r for r in tables['game_equipment'] if r['item_id']==218)['required_level']=37
+        next(r for r in tables['game_equipment'] if r['item_id']==218).update(required_level=37,stage=3)
         self.profile(tables)['recycle_test_gold_by_item']['218']=73
         f=module.fixture_from_rows(tables)
         item=next(r for r in f['items'] if r['id']==218)

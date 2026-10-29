@@ -1,0 +1,9 @@
+{
+  "preserved_evidence_files": 368,
+  "formal_sha256": "bff61d8e615be130707a5c3ef0a8817db260a93f00bdb790ff1bff45ce6e7506",
+  "scope": "仅保留本任务第二版归档和报告；未改任何产品、测试、原日志或Git index",
+  "source": "D:\\A_Claude\\miniMir2_GPT\\outputs\\equipment-growth-20261030",
+  "archive": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\history\\pre-pathmap-fix\\archive",
+  "formal": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\history\\pre-pathmap-fix\\formal-report.json",
+  "script_sha256": "81fb982ae74379f62c9765756158c90378b5b2a215b7a996dfe12bd787272a8c"
+}

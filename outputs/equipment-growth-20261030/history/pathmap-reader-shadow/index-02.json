@@ -1,0 +1,12 @@
+{
+  "scope": "实际index96104终态返回的结构化观察，非独立原stdout；不是产品业务失败",
+  "execution_session": 96104,
+  "exit_code": 1,
+  "verifier_source_sha256": "910e5e9ebc650145ce5e3fc0fa64fe1984c9d10957f160f1e6faada128342d36",
+  "error": "共享迁移证据未绑定index原blob：.work/equipment-growth-20261030/config/shared-test-transition.json",
+  "actual_pathmap_contains_source": true,
+  "mapped_archive_path": "outputs/equipment-growth-20261030/support/config/shared-test-transition.json",
+  "mapped_raw_sha256": "c47208ab758d5ca96f4e9de085863575c994de54feec6bfbd44878bd8d9eb221",
+  "root_cause": "外部字体检查循环的paths局部变量覆盖了原归档路径映射，transition_raw误在字体列表中查找；需分离archive_paths/external_paths变量",
+  "original_archive_preserved": ".work/equipment-growth-20261030/history/pre-pathmap-fix/preservation.json"
+}

@@ -1,0 +1,14 @@
+{
+  "preserved_evidence_files": 378,
+  "formal_sha256": "97b0f45940013e4fbc90879d1f3b90650310adf2d97a977553cac0866e9a6f72",
+  "scope": "只追加精确Creator已验元数据-text例外；产品/元数据/原日志/既有档案不变",
+  "scan": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\index-differences.json",
+  "files_scanned": 835,
+  "only_difference": "client/assets/scripts/app/EquipmentModel.ts.meta",
+  "meta_working_sha256": "25d0876c535d2e431d995c1e873c0292c8af1073ce1cd5f33351700ded661e3e",
+  "normalized_index_sha256": "b34a3fbad55957467cfd6e199d81ca739aef6e15bb2b83564a74274b2357625e",
+  "metadata_json_values_equal": true,
+  "exact_second_append": "client/assets/scripts/app/EquipmentModel.ts.meta -text\n",
+  "attributes_after_sha256": "d278504d449285e20319dfb09dbc1d8e0ca6c7a9ec414efa8b475154af285bec",
+  "script_sha256": "6d0db504c360f6faf2a22003102a637229ef8f224eca49e2ca0c73b9871a3f9e"
+}

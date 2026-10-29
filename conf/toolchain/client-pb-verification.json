@@ -83,8 +83,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 176,
-  "int64_boundary_cases": 581,
+  "int64_field_count": 177,
+  "int64_boundary_cases": 584,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -969,6 +969,12 @@
       "cases": 3
     },
     {
+      "message": "EquipRequest",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "UseItemRequest",
       "field": "scene_epoch",
       "type": "uint64",
@@ -1269,19 +1275,19 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "ed75b73e2c33378a105d7b6fb81af1f92679f2a4141c8769bb852390e6663957"
+      "sha256": "e20008d97ed9e168db3cb8ec6eb0ef430f385f99016392c8509ccc464503ef8e"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "374e1f56f0f2aade15b21afed401cf6b4db26653cf48f60aac3f4a1dddd8ab99",
-      "bytes": 1295682
+      "sha256": "d688a35216bcf25ec5b5bd10d8aa42669b0007089eb167c20027d8a5ab9b8f10",
+      "bytes": 1298309
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "24abee193233ab468a78a09ecda2c805abe8098e8caeb64714f45ec97dd02928",
-      "bytes": 408310
+      "sha256": "ee314a68fbcdaeb623494f6df0dd546ce946e8378413cd236d7ed5b9aef4f4d0",
+      "bytes": 408642
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

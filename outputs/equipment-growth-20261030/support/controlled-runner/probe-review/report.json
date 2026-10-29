@@ -1,0 +1,282 @@
+{
+  "passed": true,
+  "scope": "真实固定2秒无业务probe；未执行cutover/服务/网络/数据库操作",
+  "source_before": {
+    ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+    "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+    "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+    "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90",
+    ".work/equipment-growth-20261030/cutover.py": "ed07059fd28023b842466176a6dde3f19eb7706d13a188e0ba488465b4997980"
+  },
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "start",
+        "probe",
+        "--phase",
+        "probe-01"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/controlled-job-review/01-start.stdout.log",
+      "stdout_sha256": "00bf22d0a65f266e65b9f0bdc5ad3d22c6d30392060a6ab4e508ff4e400597e7",
+      "stderr": ".work/equipment-growth-20261030/controlled-job-review/01-start.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "status",
+        "probe",
+        "--phase",
+        "probe-01"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/controlled-job-review/02-live.stdout.log",
+      "stdout_sha256": "33d2a32533d9e92273cda52b675b60f1de1529c2f7c31b3e31df595605419e2c",
+      "stderr": ".work/equipment-growth-20261030/controlled-job-review/02-live.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "status",
+        "probe",
+        "--phase",
+        "probe-01"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/controlled-job-review/03-poll-1.stdout.log",
+      "stdout_sha256": "fc2321a165052c409525fc25276c9764098b1a013f5b5a0fb178e4f4a6395520",
+      "stderr": ".work/equipment-growth-20261030/controlled-job-review/03-poll-1.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "status",
+        "probe",
+        "--phase",
+        "probe-01"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/controlled-job-review/03-poll-2.stdout.log",
+      "stdout_sha256": "ab2355b2165506b4383997c9282dd149f97cd18cee2f60c9dbe9a441a7d42a15",
+      "stderr": ".work/equipment-growth-20261030/controlled-job-review/03-poll-2.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "checks": [
+    "start实际登记原PID/映像/创建时钟/run_id，并返回live",
+    "status实际CIM命令行+创建时钟核对同一worker，2秒probe尚活跃",
+    "同一worker真正退出且terminal为子任务exit0；原日志/源码前后相同",
+    "纯分支：缺原PID且无终态只能stopped_without_terminal，不冒称成功/重启",
+    "纯分支：任意任务、越界目录和任务/阶段不一致均拒绝",
+    "已存在精确phase目录拒绝重用，不覆盖原日志或再启动"
+  ],
+  "start": {
+    "status": "started",
+    "live": true,
+    "task": "probe",
+    "phase": "probe-01",
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "worker": {
+      "pid": 73052,
+      "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "start_ticks": 134377809201845105,
+      "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+      "task": "probe",
+      "phase": "probe-01",
+      "project_root": "D:\\A_Claude\\miniMir2_GPT",
+      "argv": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "_worker",
+        "probe",
+        "--phase",
+        "probe-01",
+        "--run-id",
+        "27dabb38323247b7b8de4d65aa106c8a"
+      ]
+    },
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled-jobs\\probe-01",
+    "source_before": {
+      ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+      "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+      "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+      "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+      "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+      "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90"
+    }
+  },
+  "live": {
+    "task": "probe",
+    "phase": "probe-01",
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled-jobs\\probe-01",
+    "observed_at_utc": "2026-10-29T20:55:21.150695+00:00",
+    "live": true,
+    "worker": {
+      "pid": 73052,
+      "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "start_ticks": 134377809201845105,
+      "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+      "task": "probe",
+      "phase": "probe-01",
+      "project_root": "D:\\A_Claude\\miniMir2_GPT",
+      "argv": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "_worker",
+        "probe",
+        "--phase",
+        "probe-01",
+        "--run-id",
+        "27dabb38323247b7b8de4d65aa106c8a"
+      ]
+    },
+    "actual_identity": {
+      "pid": 73052,
+      "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "start_ticks": 134377809201845105
+    },
+    "terminal_present": false,
+    "status": "live",
+    "passed": false
+  },
+  "completed": {
+    "task": "probe",
+    "phase": "probe-01",
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled-jobs\\probe-01",
+    "observed_at_utc": "2026-10-29T20:55:22.605435+00:00",
+    "live": false,
+    "worker": {
+      "pid": 73052,
+      "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "start_ticks": 134377809201845105,
+      "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+      "task": "probe",
+      "phase": "probe-01",
+      "project_root": "D:\\A_Claude\\miniMir2_GPT",
+      "argv": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+        "_worker",
+        "probe",
+        "--phase",
+        "probe-01",
+        "--run-id",
+        "27dabb38323247b7b8de4d65aa106c8a"
+      ]
+    },
+    "actual_identity": {
+      "pid": 73052,
+      "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "start_ticks": 134377809201845105
+    },
+    "terminal_present": true,
+    "status": "completed",
+    "passed": true,
+    "terminal": {
+      "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+      "task": "probe",
+      "phase": "probe-01",
+      "worker": {
+        "pid": 73052,
+        "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "start_ticks": 134377809201845105,
+        "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+        "task": "probe",
+        "phase": "probe-01",
+        "project_root": "D:\\A_Claude\\miniMir2_GPT",
+        "argv": [
+          "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+          "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+          "_worker",
+          "probe",
+          "--phase",
+          "probe-01",
+          "--run-id",
+          "27dabb38323247b7b8de4d65aa106c8a"
+        ]
+      },
+      "started_at_utc": "2026-10-29T20:55:20.303687+00:00",
+      "source_before": {
+        ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+        "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+        "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+        "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+        "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+        "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90"
+      },
+      "passed": true,
+      "exit_code": 0,
+      "automatic_restart": false,
+      "probe_duration_seconds": 2,
+      "task_command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+        "-c",
+        "import time; print(\"fixed probe started\", flush=True); time.sleep(2); print(\"fixed probe completed\", flush=True)"
+      ],
+      "source_after": {
+        ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+        "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+        "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+        "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+        "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+        "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90"
+      },
+      "source_stable": true,
+      "finished_at_utc": "2026-10-29T20:55:22.424940+00:00",
+      "seconds": 2.121,
+      "worker_exit_code": 0,
+      "stdout_sha256": "aca0a5efc334e74385365d4e606bd6c3dab3636c1e3c25b3fc704e08208f31a6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "terminal_sha256": "d3833783d6df153e00d7899a7a773f1724c49c59479ff1ecbb781d49d1c5a4e9"
+  },
+  "missing_terminal_pure_branch": {
+    "task": "probe",
+    "phase": "probe-missing-terminal",
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "directory": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled-jobs\\probe-missing-terminal",
+    "observed_at_utc": "2026-10-29T20:55:22.641202+00:00",
+    "live": false,
+    "worker": null,
+    "actual_identity": null,
+    "terminal_present": false,
+    "status": "stopped_without_terminal",
+    "passed": false,
+    "reason": "没有原 PID 身份或原 run_id 进程，且没有实际终态；不会自动重启"
+  },
+  "rejected_arguments": [
+    [
+      "other",
+      "probe-02"
+    ],
+    [
+      "probe",
+      "../escape"
+    ],
+    [
+      "cutover",
+      "probe-02"
+    ]
+  ],
+  "source_after": {
+    ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+    "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+    "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+    "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90",
+    ".work/equipment-growth-20261030/cutover.py": "ed07059fd28023b842466176a6dde3f19eb7706d13a188e0ba488465b4997980"
+  }
+}

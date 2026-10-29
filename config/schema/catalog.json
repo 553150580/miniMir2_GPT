@@ -4733,7 +4733,11 @@
           "title": "配方与外观类型",
           "type": "string",
           "required": true,
-          "target": "both"
+          "target": "both",
+          "enum_values": [
+            "weapon",
+            "armour"
+          ]
         },
         {
           "name": "class_restriction",
@@ -13331,7 +13335,7 @@
           "minimum": 0
         }
       },
-      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220"
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
     },
     {
       "table_id": "game_equipment",
@@ -13368,10 +13372,30 @@
           "attack_speed": {
             "type": "int",
             "minimum": 0
+          },
+          "magic_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "magic_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
           }
         }
       },
-      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220"
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
     },
     {
       "table_id": "game_equipment",
@@ -13385,7 +13409,7 @@
           "minimum": 0
         }
       },
-      "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195"
+      "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
     },
     {
       "table_id": "game_equipment",
@@ -13422,10 +13446,30 @@
           "attack_speed": {
             "type": "int",
             "minimum": 0
+          },
+          "magic_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "magic_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
           }
         }
       },
-      "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195"
+      "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
     },
     {
       "table_id": "game_maps",
@@ -14546,10 +14590,18 @@
                 "type": "boolean"
               }
             }
+          },
+          "base_item_ids": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
           }
         }
       },
-      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；本任务rule16仅选择PetRuntime定义及bootstrap模式，训练/尸体数值不进profile；本任务rule19开发自动回收仅复用原profile金币候选、副产物显式空数组；最终策划案.md:113–129；不发布正式分解表或损坏回收规则；本任务rule20仅来源经验1–50候选及显式上限/待用池/旧溢出/同生命升级资源策略；上限/每转增量/不重置读取唯一game_progression_rules已定行；转生关闭，不认证自然成长周期"
+      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；本任务rule16仅选择PetRuntime定义及bootstrap模式，训练/尸体数值不进profile；本任务rule19开发自动回收仅复用原profile金币候选、副产物显式空数组；最终策划案.md:113–129；不发布正式分解表或损坏回收规则；本任务rule20仅来源经验1–50候选及显式上限/待用池/旧溢出/同生命升级资源策略；上限/每转增量/不重置读取唯一game_progression_rules已定行；转生关闭，不认证自然成长周期；本任务rule22装备基础合同：base_item_ids只选择原4物品；MC/SC来自唯一装备行；装备阶段按floor((required_level−1)/10)校验；不选入乌木剑220，不新增回收价或外观"
     },
     {
       "table_id": "game_skill_upgrades",

@@ -7757,6 +7757,12 @@ export namespace minimir {
             /** EquipRequest operation. */
             operation?: (minimir.v1.OperationContext.$Properties|null);
 
+            /** EquipRequest unequip. */
+            unequip: boolean;
+
+            /** EquipRequest item_version. */
+            item_version: Long;
+
             /**
              * Creates a new EquipRequest instance using the specified properties.
              * @param [properties] Properties to set
@@ -7828,6 +7834,12 @@ export namespace minimir {
 
                 /** EquipRequest operation */
                 operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** EquipRequest unequip */
+                unequip?: (boolean|null);
+
+                /** EquipRequest item_version */
+                item_version?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

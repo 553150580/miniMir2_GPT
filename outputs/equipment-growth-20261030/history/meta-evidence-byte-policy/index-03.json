@@ -1,0 +1,17 @@
+{
+  "scope": "实际index96907终态返回及835文件批量扫描的结构化观察，非独立原stdout；不是产品回归失败",
+  "execution_session": 96907,
+  "exit_code": 1,
+  "verifier_source_sha256": "5bdf6ac78028adbbc025fcc33508b792a739fc9220f51135289aeb5aa099fe5c",
+  "error": "暂存/当前/冻结原字节不符：client/assets/scripts/app/EquipmentModel.ts.meta",
+  "complete_changed_and_tested_files_scan": ".work/equipment-growth-20261030/index-differences.json",
+  "scan_file_count": 835,
+  "only_difference": "client/assets/scripts/app/EquipmentModel.ts.meta",
+  "working_bytes": 180,
+  "working_sha256": "25d0876c535d2e431d995c1e873c0292c8af1073ce1cd5f33351700ded661e3e",
+  "index_bytes": 171,
+  "normalized_index_sha256": "b34a3fbad55957467cfd6e199d81ca739aef6e15bb2b83564a74274b2357625e",
+  "only_crlf_normalization": true,
+  "metadata_json_values_equal": true,
+  "old_archive_preserved_at": ".work/equipment-growth-20261030/history/pre-meta-eol-policy/preservation.json"
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "path": "tools/config/test_level_growth.py",
+    "before_sha256": "9dc55fee23a9025b4a633deefd392a7fe75e59411889e3f4bf192bf948f1dbb5",
+    "after_sha256": "b7eff323d9c8463587939d525df534ec5b2bd543d4f0f9e6d37cb5310bb8f4f7",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "tools/config/test_equipment_recycling.py",
+    "before_sha256": "8bf819eb6c67c998977a943e2a2067354b8001ca17029ffe88d05fdf4c874647",
+    "after_sha256": "eeae3565fea07df199daa2569169de56de2ffabeaa31153f0d55db4ac519d524",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "tools/config/test_safe_zone_binding.py",
+    "before_sha256": "6781293322fb7e5529e977da9fdb7339887fe7f5fdabc0c4723abd655b373e6a",
+    "after_sha256": "b54710bcf346615bafc95affd9e2891b7a225fcf6e7570951e64a549af1ca824",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "tools/config/test_pet_runtime.py",
+    "before_sha256": "4cb4a0cb5073057537d90eac7bd1b96ea395d94f0611a03270f4c2eb3fe533f8",
+    "after_sha256": "d873d53d266e8c2fa6a885d18ef1b95e2a959c62b3c8f7cdb815cb2ead6ad1a4",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "tools/config/test_summon_candidates.py",
+    "before_sha256": "b4b8c1c207c6abac0f263ca039371761f3f3205e187bcf1b4957ccb1e99b0eed",
+    "after_sha256": "a7ad94a072a2e76b4673b80de3f6153c2d755328bd0b6f16926ebfcd2f194012",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "tools/config/test_teleport.py",
+    "before_sha256": "13d06485467556a6925388516dee70179632347a06e8100fd16565021c48089c",
+    "after_sha256": "9d7783ea7552d8daea4767db975c28661f59836b146a5dfb3892052dd42d3032",
+    "scope": "仅current版本；装备level37样本同步其唯一stage3；候选支持22并拒23"
+  },
+  {
+    "path": "server/internal/devconfig/map_catalog_test.go",
+    "before_sha256": "0aa388ce031ebf127997b7a007e3da83562c74488877f5e5bf1d7ef00fbe6959",
+    "after_sha256": "b31252744cb87dd095ad51b441a154cf683c4c21a8d23c7203c08c1ab5fa6361",
+    "current_guard_replacements": 1,
+    "scope": "仅当前主fixture22门禁，不改历史合同或业务断言"
+  },
+  {
+    "path": "server/internal/devconfig/pet_runtime_test.go",
+    "before_sha256": "6305cbb397b86345dece69334b0a40a4a0c57decf6e9df3c6e04f102f10e53a4",
+    "after_sha256": "2a1c7b39233e2bf3a93186c4d11c5b5a20d31734ed0838edf6a1e4c5283f99e4",
+    "current_guard_replacements": 1,
+    "scope": "仅当前主fixture22门禁，不改历史合同或业务断言"
+  },
+  {
+    "path": "server/internal/devconfig/summon_test.go",
+    "before_sha256": "f6dba0a46cf80b7e0b7268f0709c9e786046ff46cc03df31619acf8d5ff03150",
+    "after_sha256": "18fc1c76864896e9ad4601922595888b5ab1ae19bf4539e9e40697e107b0e997",
+    "current_guard_replacements": 1,
+    "scope": "仅当前主fixture22门禁，不改历史合同或业务断言"
+  },
+  {
+    "path": "server/internal/integration/level_growth_test.go",
+    "before_sha256": "9d1ee4973658f9ca3dad43b6c4ceafbc9b3e3fce795c5a96b0f95ec67616767e",
+    "after_sha256": "ddd46cea404761e8a288279a0724b7d4269c9b7448c1d663ec3183b9c654342c",
+    "current_guard_replacements": 2,
+    "scope": "仅当前主fixture22门禁，不改历史合同或业务断言"
+  },
+  {
+    "path": "server/internal/integration/summon_pet_test.go",
+    "before_sha256": "e71a0755c190e825ab93817281f5cda7f751195e03f0fbee435e69f7ba04e725",
+    "after_sha256": "0dcbbbe4e9fffc49b6b999e4bd3dabf7057b2d3615ea8c56134a1179cc0b1a5f",
+    "current_guard_replacements": 1,
+    "scope": "仅当前主fixture22门禁，不改历史合同或业务断言"
+  }
+]

@@ -710,6 +710,54 @@ def progression_rules(tables,profile):
             'rebirth_reset_progression':reset,'exp_per_level':[by_level[n] for n in range(1,maximum+1)]}
 
 
+EQUIPMENT_ATTRIBUTE_BONUSES={
+    'physical_attack_min':'attack_min_bonus','physical_attack_max':'attack_max_bonus',
+    'physical_defence_min':'defence_min_bonus','physical_defence_max':'defence_max_bonus',
+    'magic_defence_min':'magic_defence_min_bonus','magic_defence_max':'magic_defence_max_bonus',
+    'attack_speed':'attack_speed_bonus','magic_attack_min':'magic_min_bonus','magic_attack_max':'magic_max_bonus',
+    'spirit_attack_min':'tao_min_bonus','spirit_attack_max':'tao_max_bonus'}
+
+
+def selected_base_items(tables,profile):
+    """rule22从唯一profile选择基础物品；旧版本固定四项仅保留明确历史合同。"""
+    if profile['rule_version']<22:
+        if 'base_item_ids' in profile:raise ValueError('base_item_ids须使用rule22合同，不得混入历史版本')
+        ids=[35,36,193,218]
+    else:
+        ids=profile.get('base_item_ids')
+        if not isinstance(ids,list) or not ids or any(type(id) is not int or not 0<id<=2**53-1 for id in ids) or len(set(ids))!=len(ids):
+            raise ValueError('rule22 base_item_ids必须显式非空、唯一且为正整数，不补原四项默认')
+    selected=[]
+    for id in ids:
+        matches=[row for row in tables['game_items'] if row['id']==id]
+        if len(matches)!=1 or matches[0]['item_type'] not in ('equipment','potion'):
+            raise ValueError('基础物品必须唯一存在且为装备或药品，书/页/材料由各自唯一选择维护')
+        selected.append(matches[0])
+    # 按唯一物品表原行序保持历史实例选择顺序；profile只裁决选入集合。
+    return [row for row in tables['game_items'] if row['id'] in ids]
+
+
+def equipment_foundation(eq,profile):
+    """装备基础属性必须有来源的完整显式值；阶段取唯一row.stage并核需求等级公式。"""
+    if eq['equipment_type'] not in ('weapon','armour'):
+        raise ValueError('未知equipment_type不能按armour处理')
+    if profile['rule_version']<22:
+        if any(eq['base_attributes'].get(key,0)!=0 for key in ('magic_attack_min','magic_attack_max','spirit_attack_min','spirit_attack_max')):
+            raise ValueError('装备MC/SC非零属性须使用rule22合同')
+        return {}
+    attrs=eq.get('base_attributes')
+    if not isinstance(attrs,dict) or set(attrs)!=set(EQUIPMENT_ATTRIBUTE_BONUSES):
+        raise ValueError('rule22装备base_attributes必须显式完整11字段白名单，不补零或透传未知字段')
+    if any(type(value) is not int or not 0<=value<=2**53-1 for value in attrs.values()):
+        raise ValueError('装备基础属性必须是非负Excel精确整数，不能null/布尔或溢出')
+    for prefix in ('physical_attack','magic_attack','spirit_attack','physical_defence','magic_defence'):
+        if attrs[prefix+'_min']>attrs[prefix+'_max']:raise ValueError('装备基础属性上下限倒置')
+    level,stage=eq.get('required_level'),eq.get('stage')
+    if type(level) is not int or not 1<=level<=2**32-1 or type(stage) is not int or stage!=(level-1)//10:
+        raise ValueError('equipment_stage必须来自唯一row.stage并符合floor((required_level−1)/10)')
+    return {'equipment_stage':stage,**{EQUIPMENT_ATTRIBUTE_BONUSES[key]:attrs[key] for key in ('magic_attack_min','magic_attack_max','spirit_attack_min','spirit_attack_max')}}
+
+
 def fixture_from_rows(tables):
     one=lambda table,id:next(r for r in tables[table] if r['id']==id)
     profile=one('dev_first_loop_profile',1)['parameters'];m=one('game_maps',profile['map_id']);collision=one('game_map_collisions',m['collision_id'])
@@ -733,12 +781,13 @@ def fixture_from_rows(tables):
         'magic_resist':0,'magic_resist_weight':resist_weight,
         'attack_speed':0,'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms'],'undead':r['attributes']['undead'],'can_push':r['attributes']['can_push']}
     items=[]
-    for r in tables['game_items']:
-        if r['id'] not in [35,36,193,218]:continue
+    for r in selected_base_items(tables,profile):
         matches=[x for x in tables['game_equipment'] if x['item_id']==r['id']]
         if len(matches)>1 or r['item_type']=='equipment' and len(matches)!=1:
             raise ValueError('已选装备必须有唯一game_equipment定义，不能猜回收资格')
         eq=matches[0] if matches else None;attrs=eq['base_attributes'] if eq else {}
+        if eq and r['item_type']!='equipment':raise ValueError('非装备物品不能复用装备定义')
+        foundation=equipment_foundation(eq,profile) if eq else {}
         if eq and profile['rule_version']>=19 and 'required_level' not in eq:
             raise ValueError('已选装备缺少唯一装备表required_level')
         if eq and profile['rule_version']>=19:
@@ -753,7 +802,7 @@ def fixture_from_rows(tables):
                       'attack_speed_bonus':attrs['attack_speed'] if eq else 0,
                       'recycle_gold':profile['recycle_test_gold_by_item'][str(r['id'])],'stackable':eq is None,
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2],
-                      **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {})})
+                      **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {}),**foundation})
     for skill in skills:
         if any(item['id']==skill['book_item_id'] for item in items):raise ValueError('技能书ID与已有物品冲突')
         source=one('game_items',skill['book_item_id'])
@@ -838,6 +887,14 @@ def fixture_from_rows(tables):
             'quality_source':'唯一玩法Excel/game_equipment.quality；须与game_items.quality一致',
             'formal_recipe_published':False,'formal_recycle_values_consumed':False,
             'durability_model_implemented':False}
+    if profile['rule_version']>=22:
+        result['_source_evidence']['equipment_foundation']={
+            'selection_source':'唯一玩法Excel/dev_first_loop_profile.parameters.base_item_ids',
+            'base_item_ids':deepcopy(profile['base_item_ids']),
+            'attributes_source':'唯一玩法Excel/game_equipment.base_attributes；MC/SC逐列取来源Mc/Mc2/Sc/Sc2',
+            'stage_source':'唯一玩法Excel/game_equipment.stage；floor((required_level−1)/10)',
+            'equipment_sources':[{'item_id':row['item_id'],'source_ref':row['source_ref']} for row in tables['game_equipment'] if row['item_id'] in profile['base_item_ids']],
+            'appearance_mapping_verified':False,'formal_recycle_recipe_published':False}
     pet_rules=pet_runtime.compile_runtime(tables,profile)
     if pet_rules is not None:
         if pet_rules['bootstrap_mode']=='legacy_untrained_pet':
@@ -858,6 +915,8 @@ def public_gameplay(fixture):
               **({'equip_slot':row['equipment_slot']} if row['is_equipment'] or row.get('kind')=='casting_supply' else {}),
               'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None,
               **({'required_level':row['required_level'],'recycle_gold':row['recycle_gold'],'quality':row['drop_quality']} if row['is_equipment'] and fixture['rule_version']>=19 else {})}
+        if row['is_equipment'] and fixture['rule_version']>=22:
+            item.update(equipment_stage=row['equipment_stage'],base_attributes={key:row[bonus] for key,bonus in EQUIPMENT_ATTRIBUTE_BONUSES.items()})
         if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)

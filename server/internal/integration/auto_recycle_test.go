@@ -357,7 +357,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	// 来源level1战士空手DC=0，正常装备原木剑才具备杀怪前态；不改最低伤害。
 	phase = "equip_original_wood"
 	wornID := append([]byte(nil), c.inventory.Items[0].InstanceId...)
-	res := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wornID, Slot: 0, Operation: c.operation()})
+	res := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wornID, Slot: 0, ItemVersion: c.inventory.Items[0].Version, Operation: c.operation()})
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
 	}

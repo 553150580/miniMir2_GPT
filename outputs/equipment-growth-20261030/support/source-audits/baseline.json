@@ -1,0 +1,33 @@
+{
+  "head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+  "files": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "tools/resources/prepare_summon_candidates.py": "301033c4473648b7435397a1c98a6340df827d04bf0ac8f068542eb556d844b5",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "config/development/pet-runtime-candidates.json": "f77eb019f21811062aee59299a8b0eb32a6de69cf2e6f5dbf4a8ad3f2da38117",
+    "config/development/summon-candidates.json": "ab4bb552ac8e133d6384dce303dfa91ff0f412fb0cb6741edd6f18dd19318477",
+    "config/releases/preview_current.json": "31adeb38b6a5c3d2e3c6682b6e171433b53bd0fce880f0ec83115903267f3e1c",
+    "shared/proto/assets.proto": "ed75b73e2c33378a105d7b6fb81af1f92679f2a4141c8769bb852390e6663957",
+    "shared/proto/protocol_manifest.json": "68960c61aa44191ec6332dae3927b469dcd475a3da99ae33254a60dbc405ba3f",
+    "conf/toolchain/client-pb-verification.json": "d937fc606b811289748d316b9b79aa9c534d58d08183e6d148d9f64b6d0ed19a",
+    "conf/toolchain/go-pb-generation.json": "6e30e82f5098e3d3a8a25167f80133b402860f02b20198697988523a16800c61",
+    "conf/toolchain/config-binding-sync.json": "16ba48618c4f7af47b117fc5add29cf3336c5840c85a4eb4dd937ad32ac5447d"
+  },
+  "saved_layouts": {
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a"
+  },
+  "scope": "阶段22修改前原态；不将阶段21通过追认为新阶段验收"
+}

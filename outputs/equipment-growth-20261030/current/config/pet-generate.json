@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/prepare_pet_runtime.py"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/resources/prepare_pet_runtime.py"
+  ],
+  "started_at_utc": "2026-10-29T19:30:53.578103+00:00",
+  "finished_at_utc": "2026-10-29T19:30:54.227598+00:00",
+  "seconds": 0.65,
+  "exit_code": 0,
+  "stdout": "pet-generate.stdout.txt",
+  "stderr": "pet-generate.stderr.txt",
+  "stdout_sha256": "09f1de1c5320fde5c2784e39d785d3161cfc67eb04b0e1be85156ec74ee7f276",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

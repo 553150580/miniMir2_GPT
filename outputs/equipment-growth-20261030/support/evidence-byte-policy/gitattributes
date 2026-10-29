@@ -1,0 +1,33 @@
+# 工程文本在各宿主保持LF；参考副本按原字节保存，禁止Git改写换行或编码。
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.xlsx binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gz binary
+*.wav binary
+资料参考/** -text -whitespace
+UI参考图/** -text -whitespace
+# 原始证据、诊断补丁和不可变生成快照不按人工代码改写空白。
+outputs/** -whitespace
+config/releases/** -whitespace
+# 历史失败现场和原始命令输出保留字节，维持报告中已有的事件摘要。
+outputs/windows-adaptation-20261028/historical-*/** -text
+outputs/windows-adaptation-20261028/checks/*.txt -text
+# 阶段证据直接核对字节摘要，跨平台检出时保留原始换行。
+outputs/development-displacement-skills-20261028/** -text
+outputs/role-binding-foundation-20261028/** -text
+outputs/source-town-foundation-20261029/** -text
+outputs/town-travel-20261029/** -text
+outputs/safe-zone-binding-20261029/** -text
+outputs/teleport21-20261029/** -text
+outputs/pet-lifecycle-20261029/** -text
+outputs/pet-runtime-20261029/** -text
+outputs/pet-summon-20261029/** -text
+outputs/pet-visual-20261029/** -text
+outputs/auto-recycle-20261029/** -text
+outputs/level-growth-20261029/** -text
+outputs/inventory-capacity-20261030/** -text
+outputs/equipment-growth-20261030/** -text
+client/assets/scripts/app/EquipmentModel.ts.meta -text

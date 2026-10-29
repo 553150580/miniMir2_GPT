@@ -1,0 +1,759 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-29T19:22:15.811592+00:00",
+  "head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+  "status": "read_only_source_audit_no_runtime_or_workbook_change",
+  "scope": "下一阶段乌木220及装备成长前置；只确认原列/源像素/当前门禁，不是新装备候选配置或目标1.80认证",
+  "production_or_excel_or_schema_changed": false,
+  "new_runtime_catalog_created": false,
+  "source_program_or_deployment_or_account_database_or_external_network_used": false,
+  "previous_audits": [
+    {
+      "path": ".work/level-growth-20261029/next-content-audit.json",
+      "sha256": "d798811ae6f2eb187be3a42e97339e510f8ddfddcab5ca686ba1bd5ecc804bab",
+      "status": "historical_rule20_context_not_current_workbook"
+    },
+    {
+      "path": ".work/level-growth-20261029/next-weapon-semantics.json",
+      "sha256": "bea99e896d8ea754a7e197e3fcecff5ccce9734efe8f54d86ab9e586ecf747a4",
+      "status": "historical_rule20_context_not_current_workbook"
+    },
+    {
+      "path": ".work/level-growth-20261029/next-equipment-pipeline.json",
+      "sha256": "f282811cdfb56a979c9e7a0ac439c078202a50ce69bccf5bf3a70c303e341cd2",
+      "status": "historical_rule20_context_not_current_workbook"
+    }
+  ],
+  "source_220": {
+    "path": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv",
+    "encoding": "utf-8-sig",
+    "sha256": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7",
+    "physical_line": 222,
+    "line_raw_sha256": "b6ed38739ae3f66fc698643a4848682c6a3cba5bddb48dc1e15a3e0410db9ec9",
+    "raw": {
+      "Idx": "220",
+      "Name": "乌木剑",
+      "Stdmode": "5",
+      "Shape": "34",
+      "Weight": "8",
+      "Anicount": "0",
+      "Source": "0",
+      "Reserved": "0",
+      "Looks": "43",
+      "DuraMax": "7000",
+      "Ac": "0",
+      "Ac2": "0",
+      "Mac": "0",
+      "Mac2": "0",
+      "Dc": "4",
+      "Dc2": "8",
+      "Mc": "0",
+      "Mc2": "1",
+      "Sc": "0",
+      "Sc2": "0",
+      "Need": "0",
+      "NeedLevel": "1",
+      "Price": "3000",
+      "Stock": "5",
+      "Color": "255",
+      "OverLap": "0",
+      "HP": "0",
+      "MP": "0",
+      "Value1": "0",
+      "Value2": "0",
+      "Value3": "0",
+      "Value4": "0",
+      "Value5": "0",
+      "Value6": "0",
+      "Value7": "0",
+      "Value8": "0",
+      "Value9": "0",
+      "Value10": "0",
+      "Value11": "0",
+      "Value12": "0",
+      "Value13": "0",
+      "Value14": "0",
+      "Value15": "0",
+      "Value16": "0",
+      "Value17": "0",
+      "Value18": "0",
+      "Value19": "0",
+      "Value20": "0",
+      "Light": "0",
+      "Horse": "0",
+      "Element": "0",
+      "Expand1": "0",
+      "Expand2": "0",
+      "Expand3": "0",
+      "Expand4": "0",
+      "Expand5": "0",
+      "InsuranceCurrency": "0",
+      "InsuranceGold": "0",
+      "Element1": "0",
+      "Element2": "0",
+      "Element3": "0",
+      "Element4": "0",
+      "Element5": "0",
+      "Element6": "0",
+      "Element7": "0",
+      "Element8": "0",
+      "Element9": "0",
+      "Element10": "0",
+      "Element11": "0",
+      "Element12": "0",
+      "Element13": "0",
+      "Element14": "0",
+      "Element15": "0",
+      "Element16": "0",
+      "Element17": "0",
+      "Element18": "0",
+      "Element19": "0",
+      "Element20": "0",
+      "Element21": "",
+      "Element22": "",
+      "Element23": "",
+      "Element24": "",
+      "Element25": "None",
+      "Element26": "None"
+    },
+    "confirmed_columns": {
+      "DC": [
+        4,
+        8
+      ],
+      "MC": [
+        0,
+        1
+      ],
+      "SC": [
+        0,
+        0
+      ],
+      "Need": 0,
+      "NeedLevel": 1,
+      "Price": 3000,
+      "Shape": 34,
+      "Looks": 43,
+      "DuraMax": 7000,
+      "Weight": 8,
+      "Stdmode": 5,
+      "Anicount": 0,
+      "Ac_Ac2_Mac_Mac2": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "clarifications": [
+      "需求等级1对应Need=0/NeedLevel=1，不是原Need=1",
+      "Shape34/Looks43，不能互换",
+      "DuraMax7000是原列事实；未据此认证本作完整持久损坏、修理或药修经济",
+      "Color255不转成本作品质，原行没有本作职业白名单或T1枚举"
+    ]
+  },
+  "price_usage": {
+    "raw_fact": "Price列3000",
+    "apex_same_version_price_consumer_found": false,
+    "current_project_evidence": [
+      "tools/resources/prepare_first_loop.py:135、754、836：既有50/400显式profile借Price做开发金币事务，不是正式分解价",
+      "game_recycle_values唯一行gold_distribution=null，正式配方未审；220没有开发回收值或NPC报价行"
+    ],
+    "prohibited_inferences": [
+      "不能把3000自动写入RecycleGold",
+      "不能把未知配方写0以让物品被吞",
+      "不能据Price/Stock直接开放装备商店、卖店或配额",
+      "Crystal独立ItemInfo.Price行为不能替代Apex同引擎消费合同"
+    ]
+  },
+  "weapon_field_semantics": {
+    "same_apex_consumer_or_manual_found": false,
+    "status": "unknown_preserved",
+    "sources": [
+      ".work/level-growth-20261029/next-weapon-semantics.json",
+      "资料参考/crystal/Shared/Data/ItemData.cs:99-118、641-675",
+      "资料参考/crystal/Server/MirObjects/HumanObject.cs:1831-1847",
+      "资料参考/crystal/Client/MirObjects/PlayerObject.cs:552-586"
+    ],
+    "conclusions": [
+      "Stdmode5/6差异不能从Crystal ItemType反推；尤其不能据5限制战士或据6限制法师。",
+      "武器Ac/Ac2/Mac/Mac2重载与Anicount含义仍未补同引擎证据；乌木这些列恰为0，八荒27和木剑Ac2=3不能静默归零或当防御/攻速。",
+      "Crystal直接Info.Image→Items索引及Shape→CWeapons独立库可作其自身技术参考，不能证明MYF Looks/Shape到当前WIL编号。"
+    ]
+  },
+  "current_unique_inputs": {
+    "rule_version": 21,
+    "workbook_sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "architecture_sha256": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "schema_sha256": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "counts": {
+      "game_items": 29,
+      "game_equipment": 2,
+      "game_appearance": 0,
+      "game_recycle_values": 1
+    },
+    "selected_equipment": [
+      {
+        "id": 218,
+        "item_id": 218,
+        "equipment_type": "weapon",
+        "class_restriction": [
+          0,
+          1,
+          2
+        ],
+        "required_level": 1,
+        "quality": 0,
+        "stage": 0,
+        "base_attributes": {
+          "physical_attack_min": 2,
+          "physical_attack_max": 5,
+          "physical_defence_min": 0,
+          "physical_defence_max": 0,
+          "magic_defence_min": 0,
+          "magic_defence_max": 0,
+          "attack_speed": 0
+        },
+        "original_durability_u": 4000,
+        "weight": 7,
+        "craft_bonus_strengthenable": false,
+        "record_status": "candidate",
+        "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220",
+        "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 品质0、阶段0是开发夹具对接本项目枚举的工程选择；不把来源Color当品质。 首组开发装备未接额外攻速词条，本轮明确attack_speed=0适配；不证明源服全部词条。"
+      },
+      {
+        "id": 193,
+        "item_id": 193,
+        "equipment_type": "armour",
+        "class_restriction": [
+          0,
+          1,
+          2
+        ],
+        "required_level": 1,
+        "quality": 0,
+        "stage": 0,
+        "base_attributes": {
+          "physical_attack_min": 0,
+          "physical_attack_max": 0,
+          "physical_defence_min": 2,
+          "physical_defence_max": 2,
+          "magic_defence_min": 0,
+          "magic_defence_max": 1,
+          "attack_speed": 0
+        },
+        "original_durability_u": 10000,
+        "weight": 5,
+        "craft_bonus_strengthenable": false,
+        "record_status": "candidate",
+        "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195",
+        "note": "来源原名布衣(男)。本作无性别穿戴门槛，不新增男女装备分类，同itemID按职业固定外观；允许职业[0,1,2]是目标规则适配。女法师衣服外观映射仍待正式资源验收。仅development候选，未通过目标1.80行为或数值验收。 首组开发装备未接额外攻速词条，本轮明确attack_speed=0适配；不证明源服全部词条。"
+      }
+    ],
+    "item220_present": false,
+    "equipment220_present": false,
+    "development_recycle_gold": {
+      "35": 0,
+      "36": 0,
+      "193": 400,
+      "218": 50
+    },
+    "formal_recycle_values": [
+      {
+        "id": 1,
+        "equipment_stage": 0,
+        "quality": 0,
+        "gold_distribution": null,
+        "broken_gold": 0,
+        "stone_probability_ppm": null,
+        "broken_byproducts": null,
+        "oil_probability_formula": null,
+        "rewards_combinable": null,
+        "record_status": "candidate",
+        "source_ref": "最终策划案.md:125；用户2026-10-26开发闭环授权",
+        "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 正式金币分布未知仍空；开发测试仅在独立夹具授权引用来源售价，不能冒充本表已核验回收价。"
+      }
+    ],
+    "profile_equipment_drops": [
+      218,
+      193
+    ],
+    "main_skills": 22,
+    "summon17_enabled": false,
+    "casting_supply_enabled": false,
+    "bootstrap_mode": "legacy_untrained_pet"
+  },
+  "current_admission_blockers": [
+    {
+      "path": "tools/resources/prepare_first_loop.py",
+      "lines": [
+        737,
+        748,
+        754,
+        655
+      ],
+      "detail": "主物品循环固定35/36/193/218；既有属性只投影DC/AC/MAC与attack_speed，没有MC/SC四上下限；每装备强索引profile金币并要求明确整数。"
+    },
+    {
+      "path": "server/internal/devconfig/equipment_recycling.go",
+      "lines": [
+        25,
+        33,
+        48
+      ],
+      "detail": "missing/null与明确0已分开，但ValidateEquipmentRecycling现在强制每个装备EquipmentRecycleKnown；所以正常准入无配方装备尚缺合同，不可直接绕过Validate做假运行。"
+    },
+    {
+      "path": "server/internal/persistence/equipment_recycling.go",
+      "lines": [
+        69,
+        73,
+        84,
+        95
+      ],
+      "detail": "运行回收保护已有recipe_unknown返回；要让新可穿装备合法无配方，应显式拆开装备准入与回收资格，保留原件并跳过，不填0或3000。"
+    },
+    {
+      "path": "client/assets/scripts/app/GameWorldView.ts",
+      "lines": [
+        73,
+        333,
+        376
+      ],
+      "detail": "当前Weapon层仅weaponEquipped布尔显示；尚无按itemID/职业固定外观挑选的完整资源身份。"
+    }
+  ],
+  "drop_source": {
+    "path": "资料参考/myf/Mir200/Envir/MonItems/稻草人.txt",
+    "encoding": "gb18030",
+    "sha256": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179",
+    "physical_lf_line": 13,
+    "raw_line": "1/60    乌木剑",
+    "source_legacy_probability": "1/60",
+    "adopted_runtime_probability": false,
+    "current_policy": "原类别65/20/10/5、装备保底20及已选子集由唯一Excel维护；新增220入等权子集会改变每件供给及可回收金币结构，须明确选择并验收。",
+    "communication_erratum": "此前向server协作消息误记1/200，已立即更正为本次原文1/60；不采用聊天记忆作数据源。"
+  },
+  "native_assets": {
+    "primary_probes": [
+      {
+        "package": "Items",
+        "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Items.wil",
+        "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Items.WIX",
+        "wil_sha256": "514bf9c405b8502569d0dec2451d2b8bfd074ad43920a93ed7ca74b1dfe9d76f",
+        "wix_sha256": "f3836dcb652f23f257fb0ef14673ed1e14fc3249039ddeabd0c2ba407500a8b4",
+        "registered_hash_match": true,
+        "format": "wil_v1_palette256_uncompressed_version0",
+        "frame_count": 1218,
+        "native_frames": [
+          {
+            "frame_index": 42,
+            "source_offset": 29472,
+            "width": 40,
+            "height": 35,
+            "offset_x": 7,
+            "offset_y": -44,
+            "pixel_bytes": 1400,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "b434a333fa10772208a3908ee68efe998331803c1fe1c0ab6ea11bec54f1d168"
+          },
+          {
+            "frame_index": 43,
+            "source_offset": 30880,
+            "width": 36,
+            "height": 30,
+            "offset_x": 7,
+            "offset_y": -44,
+            "pixel_bytes": 1080,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "b48a54b686e8198165af24ba6eaf54a3f06bab7d6a0d2c1cecba8ab3b63b326c"
+          }
+        ],
+        "source_before_after_equal": true,
+        "item_identity_mapping_certified": false
+      },
+      {
+        "package": "stateitem",
+        "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\stateitem.wil",
+        "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\stateitem.wix",
+        "wil_sha256": "520a61d3c2fef2aa8ad97b8d510ddcea319975cb360dd9ecbfe5cb4b62b99675",
+        "wix_sha256": "76520ad761f3f069d799f364d1193bb4a3c90836f1b48845b17393770a5c220e",
+        "registered_hash_match": true,
+        "format": "wil_v1_palette256_uncompressed_version0",
+        "frame_count": 1218,
+        "native_frames": [
+          {
+            "frame_index": 42,
+            "source_offset": 49406,
+            "width": 56,
+            "height": 118,
+            "offset_x": 26,
+            "offset_y": -1,
+            "pixel_bytes": 6608,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "7162548431f4248467a97e0dda1d8d17687824db4acde243bb08950ec049371f"
+          },
+          {
+            "frame_index": 43,
+            "source_offset": 56022,
+            "width": 40,
+            "height": 94,
+            "offset_x": 30,
+            "offset_y": -13,
+            "pixel_bytes": 3760,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "6a1b1fcd565496dddf85dba11dca726ed17e4f867df206eddcb886fe69849d8d"
+          }
+        ],
+        "source_before_after_equal": true,
+        "item_identity_mapping_certified": false
+      },
+      {
+        "package": "DnItems",
+        "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\DnItems.wil",
+        "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\DnItems.WIX",
+        "wil_sha256": "552ade5b7cfc54e1f11cb8596b001261b5881de52aa588096b7ccbe5bf27ae7c",
+        "wix_sha256": "20d0623ed2679d2d2a2820da1a2d829dd8e67f733e658d4fd8d43be7f60544c6",
+        "registered_hash_match": true,
+        "format": "wil_v1_palette256_uncompressed_version0",
+        "frame_count": 1218,
+        "native_frames": [
+          {
+            "frame_index": 42,
+            "source_offset": 19024,
+            "width": 40,
+            "height": 35,
+            "offset_x": 7,
+            "offset_y": -44,
+            "pixel_bytes": 1400,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "b434a333fa10772208a3908ee68efe998331803c1fe1c0ab6ea11bec54f1d168"
+          },
+          {
+            "frame_index": 43,
+            "source_offset": 20432,
+            "width": 36,
+            "height": 30,
+            "offset_x": 7,
+            "offset_y": -44,
+            "pixel_bytes": 1080,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "b48a54b686e8198165af24ba6eaf54a3f06bab7d6a0d2c1cecba8ab3b63b326c"
+          }
+        ],
+        "source_before_after_equal": true,
+        "item_identity_mapping_certified": false
+      },
+      {
+        "package": "Weapon",
+        "wil_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Weapon.wil",
+        "wix_path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\primary_180\\Data\\Weapon.wix",
+        "wil_sha256": "44b604dac6bf3dd5739bcb37cdce55d72879f09d7576d091c7ac717e63bc0e1e",
+        "wix_sha256": "40c9a5384a53ce10aaaeae11e56c78168f64e616a0378c0385cd2df7ab6ff6dd",
+        "registered_hash_match": true,
+        "format": "wil_v1_palette256_uncompressed_version0",
+        "frame_count": 45600,
+        "native_frames": [
+          {
+            "frame_index": 1200,
+            "source_offset": 15480,
+            "width": 8,
+            "height": 8,
+            "offset_x": 36,
+            "offset_y": -19,
+            "pixel_bytes": 64,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "616c4b0002d15a38ba361b94ef5e70eb6bcb97c0070fa8ed76b355fca9a7388d"
+          },
+          {
+            "frame_index": 1800,
+            "source_offset": 181968,
+            "width": 4,
+            "height": 11,
+            "offset_x": 36,
+            "offset_y": -21,
+            "pixel_bytes": 44,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "4aa0462b278b55c2129f22353d3d6b3913f9417bc47741b71b5b316de890fbfc"
+          },
+          {
+            "frame_index": 40800,
+            "source_offset": 32428592,
+            "width": 12,
+            "height": 40,
+            "offset_x": 34,
+            "offset_y": -41,
+            "pixel_bytes": 480,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "cd2125f9a80c87afca1f5fd674f36316aeba85800113f7e41c7096898dfa716a"
+          },
+          {
+            "frame_index": 40801,
+            "source_offset": 32429080,
+            "width": 12,
+            "height": 44,
+            "offset_x": 34,
+            "offset_y": -46,
+            "pixel_bytes": 528,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "50e746f8bdbc6f2a325750ad362ab290bdb03cd8ab149775e227c8c95e369daf"
+          },
+          {
+            "frame_index": 41400,
+            "source_offset": 33497124,
+            "width": 12,
+            "height": 41,
+            "offset_x": 32,
+            "offset_y": -42,
+            "pixel_bytes": 492,
+            "declared_empty": false,
+            "empty_reason": null,
+            "small_frame_pixels_le_4": false,
+            "png_path": null,
+            "rgba_sha256": "f6af081007391c68bd2e0148561c55c2856c21f8bddc57604a6dbd3a38d59408"
+          }
+        ],
+        "source_before_after_equal": true,
+        "item_identity_mapping_certified": false
+      }
+    ],
+    "legacy_manifest": {
+      "path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\manifest.json",
+      "sha256": "dad83db23735d52ec75d342c60822058cc703ce5da762f34c73894c12b0c5a55"
+    },
+    "accessible_original_files": [
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\DnItems.wil",
+        "priority": 1,
+        "registered_sha256": "552ade5b7cfc54e1f11cb8596b001261b5881de52aa588096b7ccbe5bf27ae7c",
+        "current_sha256": "552ade5b7cfc54e1f11cb8596b001261b5881de52aa588096b7ccbe5bf27ae7c",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\DnItems.WIX",
+        "priority": 1,
+        "registered_sha256": "20d0623ed2679d2d2a2820da1a2d829dd8e67f733e658d4fd8d43be7f60544c6",
+        "current_sha256": "20d0623ed2679d2d2a2820da1a2d829dd8e67f733e658d4fd8d43be7f60544c6",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\Items.wil",
+        "priority": 1,
+        "registered_sha256": "514bf9c405b8502569d0dec2451d2b8bfd074ad43920a93ed7ca74b1dfe9d76f",
+        "current_sha256": "514bf9c405b8502569d0dec2451d2b8bfd074ad43920a93ed7ca74b1dfe9d76f",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\Items.WIX",
+        "priority": 1,
+        "registered_sha256": "f3836dcb652f23f257fb0ef14673ed1e14fc3249039ddeabd0c2ba407500a8b4",
+        "current_sha256": "f3836dcb652f23f257fb0ef14673ed1e14fc3249039ddeabd0c2ba407500a8b4",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\stateitem.wil",
+        "priority": 1,
+        "registered_sha256": "520a61d3c2fef2aa8ad97b8d510ddcea319975cb360dd9ecbfe5cb4b62b99675",
+        "current_sha256": "520a61d3c2fef2aa8ad97b8d510ddcea319975cb360dd9ecbfe5cb4b62b99675",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\stateitem.wix",
+        "priority": 1,
+        "registered_sha256": "76520ad761f3f069d799f364d1193bb4a3c90836f1b48845b17393770a5c220e",
+        "current_sha256": "76520ad761f3f069d799f364d1193bb4a3c90836f1b48845b17393770a5c220e",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\Weapon.wil",
+        "priority": 1,
+        "registered_sha256": "44b604dac6bf3dd5739bcb37cdce55d72879f09d7576d091c7ac717e63bc0e1e",
+        "current_sha256": "44b604dac6bf3dd5739bcb37cdce55d72879f09d7576d091c7ac717e63bc0e1e",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\Miro2_1.80\\传奇1.80客户端\\Data\\Weapon.wix",
+        "priority": 1,
+        "registered_sha256": "40c9a5384a53ce10aaaeae11e56c78168f64e616a0378c0385cd2df7ab6ff6dd",
+        "current_sha256": "40c9a5384a53ce10aaaeae11e56c78168f64e616a0378c0385cd2df7ab6ff6dd",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\miniMiro2\\Miro2_IPA_GPT\\参考资料\\LOMCN\\mir19-client\\Data\\Weapon.wil",
+        "priority": 2,
+        "registered_sha256": "b5c83a9904488e5c7b66bc1d50ea7beb06e2abe0647de44e8485f5fc759c5b8a",
+        "current_sha256": "b5c83a9904488e5c7b66bc1d50ea7beb06e2abe0647de44e8485f5fc759c5b8a",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      },
+      {
+        "path": "D:\\123DownLoad\\miniMiro2\\Miro2_IPA_GPT\\参考资料\\LOMCN\\mir19-client\\Data\\Weapon.WIX",
+        "priority": 2,
+        "registered_sha256": "ab6152ea9df7678ebd2c31adfdb446cefc4a84678338cd807f979fc4b348cd02",
+        "current_sha256": "ab6152ea9df7678ebd2c31adfdb446cefc4a84678338cd807f979fc4b348cd02",
+        "original_accessible": true,
+        "matches_manifest": true,
+        "original_manifest_visual_semantics": "待逐外观/动作/音效验收"
+      }
+    ],
+    "samples_index": ".work/equipment-growth-20261030/source-samples/index.json",
+    "sample_pixel_transforms": [],
+    "source_asset_bytes_unchanged": true,
+    "visual_observation": {
+      "method": "本agent通过view_image实际查看6张原生解码PNG，未缩放/裁切/改色",
+      "Items42_State42": "弯头杖样；不能为了Looks43改取42",
+      "Items43_State43": "木色直剑样，可支持明确跨来源图标候选，尚无同版本MYF映射消费者证明",
+      "Weapon40800_41400": "饰柄金属武器样，未据外观认证为乌木；两个索引只为排查Shape34×1200/+600假说，绝非正式映射",
+      "item_name_to_pixels_certified": false
+    },
+    "fallback_weapon": {
+      "path": "D:\\Mir2\\mir2_gxx\\assets\\legacy\\fallback_mir19\\Data\\Weapon.wil",
+      "sha256": "b5c83a9904488e5c7b66bc1d50ea7beb06e2abe0647de44e8485f5fc759c5b8a",
+      "index_sha256": "ab6152ea9df7678ebd2c31adfdb446cefc4a84678338cd807f979fc4b348cd02",
+      "signature": "0x19 WEMADE Entertainment inc.",
+      "decoder_support": false,
+      "reason": "未识别的WIL签名；只支持内嵌256色板的v1.0未压缩格式",
+      "scope": "该备用mir19不是primary_180；现inspect_wil只支持#ILIB v1内嵌256色未压缩，不能硬改header套读。"
+    },
+    "wzx_scope": "所白名单核的primary_180及可访问原目录四个命名包为WIL/WIX；fallback镜像也只有Weapon WIL/WIX，gxx data只有ui_android.psk。未在这些命名包看到WZX/WZL；不声称整个外部来源树不存在。",
+    "official_180_item_mapping_verified": false
+  },
+  "existing_resource_contract": {
+    "source": "tools/resources/build_development_assets.py:22-29、313-321；现development/manifest.json",
+    "profiles": {
+      "player_male": {
+        "Hum": 1200,
+        "Weapon": 1200,
+        "Hair": 1200
+      },
+      "player_female": {
+        "Hum": 1800,
+        "Weapon": 1800,
+        "Hair": 1800
+      }
+    },
+    "adaptation_status": "既有固定开发profile，不是木剑/乌木/衣服逐件源映射",
+    "direction_and_offsets": "八向动作按profile元数据；原PNG保留WIL offsets，direction层顺序；新外观须覆盖各动作/八向、遮挡与锚点，不能只认证一帧。",
+    "icon_status": "game_items.icon_resource_key现装备为空；build_hud_assets.py:176-192已明确Looks不可直接等同该1.80 Items，药水3/4仅通用入口候选。",
+    "fixed_job_identity": "最终策划案.md:115：男战士/女法师/男道士，同itemID不拆性别物品或性别穿戴限制。"
+  },
+  "complete_usable_prerequisites": [
+    "唯一game_items与game_equipment明确新增选择/职业/需求/品质/阶段；DC4–8/MC0–1/SC0–0逐列来源可用，未使用属性显式适配，不由缺省补0。",
+    "四MC/SC bonus从唯一装备定义经fixture/严格Go类型/fighter累加/战斗实际作用，并公开同源基础属性供单件详情；有溢出与原身体/Life/unknown保护。",
+    "正常来源入口必须明确（掉落子集或有审定报价的通用商店）；现book-only报价/UI不能冒充装备商店。不能增初始赠220绕过自然获得。",
+    "装备替换及真正卸装均走原资产事务/完整背包归属/满包失败原件保留/原op重放；当前真正卸装入口仍缺。",
+    "先解决无回收配方装备合法准入并recipe_unknown保留；不把正式空表或Price3000当0/3000回收定义。",
+    "图标可在明确candidate选择后引用原Items/StateItem帧；角色body须有可靠库/动作映射或明确共同开发外观适配，不冒称乌木原服外观。",
+    "正常可获得→详情→穿上实际DC/MC变化/真实伤害→卸下恢复→健康票保持；SC成长需要另一个真实SC装备，不能因乌木MC就声称三职业MC/SC全完成。"
+  ],
+  "decisions_or_unknowns": [
+    "Root需确定本轮采用哪些明确基础属性/职业白名单和供给入口，保留非已解释Apex字段。",
+    "尚无Apex同版本Stdmode/Shape/Looks消费源码或可信字段手册；官方1.80全映射认证仍unknown。",
+    "是否接受Items/StateItem43作为明确跨来源候选，以及body继续共同开发profile还是先补真实外观；不能靠Shape乘法默认。",
+    "没有乌木回收配方；正式洗炼石与祝福油、损坏、修理、词条、10部位强化和经济平衡不属于这条来源事实的自动授权。"
+  ],
+  "non_claims": [
+    "本报告不是配置候选编译、业务测试、Creator或正常GUI验收",
+    "未运行来源程序、部署指令、账号库、Go/DB/Creator或外网",
+    "没有新增生产配置/Excel/schema/PNG资源，仅.work原生解码样例和研究报告"
+  ],
+  "inputs_before": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "资料参考/myf/Mud2/DB/ApexM2_stditems.csv": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7",
+    "资料参考/myf/Mir200/Envir/MonItems/稻草人.txt": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "client/assets/resources/development/manifest.json": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+    "tools/resources/inspect_wil.py": "b46f5ffea9996fd71ea60515d41248b7dd2010faea7411bd7544843cc3dfc17f",
+    "tools/resources/build_development_assets.py": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1",
+    "tools/resources/build_hud_assets.py": "6dabfbc09bcf81a92fc160c613795ea3c4b5c4ab2722a28ddc41e8c6579ea276",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "server/internal/devconfig/equipment_recycling.go": "a3649a281ec97ff72ab3a85a91c8e0e2c645468ba25417159ea7146946f55f71",
+    "server/internal/persistence/equipment_recycling.go": "b7a0dc85ad95dd4b7394a2ead932d3469e7794d80e06afc9f609ace1231d3b62",
+    "server/internal/persistence/assets.go": "c16f7932876aaa4eaee84ceca4eb4690d44bf417c0be5a371580fd82202ccc31",
+    "client/assets/scripts/app/GameWorldView.ts": "38f5cb820147bfd20cadca7b303a37b19a233b5ff098f737115fae86cc24a264",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "资料参考/crystal/Shared/Data/ItemData.cs": "8d0d549f299edd9c9379a3876f04ea2f9e827f0f703e7bca1eecfd8379fbf9f0",
+    "资料参考/crystal/Server/MirObjects/HumanObject.cs": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+    "资料参考/crystal/Client/MirObjects/PlayerObject.cs": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a",
+    "资料参考/crystal/Client/MirGraphics/MLibrary.cs": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8",
+    "资料参考/crystal/Client/MirObjects/ItemObject.cs": "c6425569d159b670fc6e1ed0622030e016ebbc2244c6dc139dec4a5a3da68a44",
+    "资料参考/crystal/LibraryEditor/Graphics/WeMadeLibrary.cs": "b4c0a65012cd8446de035dbfbcc96641c88d484ebafd69c9495b1a2d00cbed06"
+  },
+  "inputs_after": {
+    "outputs/development-prep-20261026/玩法配置.xlsx": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "资料参考/myf/Mud2/DB/ApexM2_stditems.csv": "0b9674a23753fd19b614b9dc22d100d0c4c799f77a5a2e22dc5a17e424f283a7",
+    "资料参考/myf/Mir200/Envir/MonItems/稻草人.txt": "c924475dbe941d900fd9f19dc74616f1fd3faac49a1f8cf2e6e7234a2b4a8179",
+    "config/schema/catalog.json": "0bedef40f5c4be595e1327fa48f1b55580887043c636ac849e0b45bdc891e9c2",
+    "config/development/first-loop.json": "959c4148b457d1c9c8d0a73e5b4bac1c4ea59c3a55090c1d98902364031e8ac1",
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "client/assets/resources/development/manifest.json": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+    "tools/resources/inspect_wil.py": "b46f5ffea9996fd71ea60515d41248b7dd2010faea7411bd7544843cc3dfc17f",
+    "tools/resources/build_development_assets.py": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1",
+    "tools/resources/build_hud_assets.py": "6dabfbc09bcf81a92fc160c613795ea3c4b5c4ab2722a28ddc41e8c6579ea276",
+    "tools/resources/prepare_first_loop.py": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "server/internal/devconfig/equipment_recycling.go": "a3649a281ec97ff72ab3a85a91c8e0e2c645468ba25417159ea7146946f55f71",
+    "server/internal/persistence/equipment_recycling.go": "b7a0dc85ad95dd4b7394a2ead932d3469e7794d80e06afc9f609ace1231d3b62",
+    "server/internal/persistence/assets.go": "c16f7932876aaa4eaee84ceca4eb4690d44bf417c0be5a371580fd82202ccc31",
+    "client/assets/scripts/app/GameWorldView.ts": "38f5cb820147bfd20cadca7b303a37b19a233b5ff098f737115fae86cc24a264",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "资料参考/crystal/Shared/Data/ItemData.cs": "8d0d549f299edd9c9379a3876f04ea2f9e827f0f703e7bca1eecfd8379fbf9f0",
+    "资料参考/crystal/Server/MirObjects/HumanObject.cs": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+    "资料参考/crystal/Client/MirObjects/PlayerObject.cs": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a",
+    "资料参考/crystal/Client/MirGraphics/MLibrary.cs": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8",
+    "资料参考/crystal/Client/MirObjects/ItemObject.cs": "c6425569d159b670fc6e1ed0622030e016ebbc2244c6dc139dec4a5a3da68a44",
+    "资料参考/crystal/LibraryEditor/Graphics/WeMadeLibrary.cs": "b4c0a65012cd8446de035dbfbcc96641c88d484ebafd69c9495b1a2d00cbed06"
+  },
+  "production_and_reference_inputs_unchanged": true,
+  "git_status_after": ""
+}

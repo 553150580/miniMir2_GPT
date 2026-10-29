@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 21,
+  "rule_version": 22,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -3166,7 +3166,21 @@
       "use_enabled": false,
       "required_level": 1,
       "recycle_gold": 50,
-      "quality": 0
+      "quality": 0,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 2,
+        "physical_attack_max": 5,
+        "physical_defence_min": 0,
+        "physical_defence_max": 0,
+        "magic_defence_min": 0,
+        "magic_defence_max": 0,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      }
     },
     {
       "item_id": 193,
@@ -3181,7 +3195,21 @@
       "use_enabled": false,
       "required_level": 1,
       "recycle_gold": 400,
-      "quality": 0
+      "quality": 0,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 0,
+        "physical_attack_max": 0,
+        "physical_defence_min": 2,
+        "physical_defence_max": 2,
+        "magic_defence_min": 0,
+        "magic_defence_max": 1,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      }
     },
     {
       "item_id": 35,

@@ -40,7 +40,7 @@ func LoadSummonCandidates(path string) (*SummonCandidateCatalog, error) {
 		book.EquipmentSlot != 0 || len(book.AllowedJobs) != 1 || book.AllowedJobs[0] != s.JobID || c.PetDefinitionIDs[0] != s.Summon.DefinitionID {
 		return nil, errors.New("召唤候选的原书、职业及宠物模板引用不一致")
 	}
-	for _, value := range []int64{book.AttackBonus, book.AttackMinBonus, book.AttackMaxBonus, book.AttackSpeedBonus, book.DefenceBonus, book.RecycleGold, book.DefenceMinBonus, book.DefenceMaxBonus, book.MagicDefenceMinBonus, book.MagicDefenceMaxBonus} {
+	for _, value := range []int64{book.AttackBonus, book.AttackMinBonus, book.AttackMaxBonus, book.AttackSpeedBonus, book.DefenceBonus, book.RecycleGold, book.DefenceMinBonus, book.DefenceMaxBonus, book.MagicDefenceMinBonus, book.MagicDefenceMaxBonus, book.MagicMinBonus, book.MagicMaxBonus, book.TaoMinBonus, book.TaoMaxBonus, int64(book.EquipmentStage)} {
 		if value != 0 {
 			return nil, errors.New("召唤原书不能夹带装备属性或未实现的回收收入")
 		}

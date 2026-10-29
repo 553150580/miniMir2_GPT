@@ -1,0 +1,21 @@
+{
+  "scope": "从实际工具返回整理的结构化观察；不是独立原stdout文件，也不将归档工具错误认作产品业务失败",
+  "execution_session": 29601,
+  "terminal_observed_at_utc": "2026-10-29T21:24:50+00:00",
+  "test_exit_code": 1,
+  "finalizer_source_sha256": "26e484832f05259bdab114a02fa17a44d56aebdd5aa8cdc5ef52f682f4707edb",
+  "failed_gate": "gui_evidence:loadedPublicCanonicalSha256",
+  "error_type": "ValueError",
+  "error_message": "实际客户端加载的完整public不同",
+  "shared_test_transition_gate_passed": true,
+  "formal_report_written": false,
+  "formal_archive_written": false,
+  "independent_node_comparison": {
+    "source": "实际tools/dev node执行；对源文件JSON.parse后JSON.stringify计算摘要",
+    "raw_file_parsed_object_sha256": "4ce6f40e580b17276c5f5a77a6a77bb2ae3ea35d11022ba4179890719b373299",
+    "observed_gui_runtime_object_sha256": "44da4016f03227d1b89d0fa30dbbfb623193d02f2b1a6472be068489fa5109bf",
+    "hashes_equal": false
+  },
+  "runtime_public_content_changed_proven": false,
+  "next_evidence": "保留run02及其真实深比较断言；补公共JsonAsset只读原始快照，须匹配原GUI观测摘要并用Node逐字段深比较源文件，不能跳过内容校验"
+}

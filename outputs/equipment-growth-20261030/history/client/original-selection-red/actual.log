@@ -1,0 +1,113 @@
+✖ Role已穿戴选择与背包上下文隔离，当次显示卸下而不重绑列表或丢任一offset (223.9975ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 404.7515
+
+✖ failing tests:
+
+test at client\tests\app\inventory_context.test.cjs:68:1
+✖ Role已穿戴选择与背包上下文隔离，当次显示卸下而不重绑列表或丢任一offset (223.9975ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be reference-equal to "expected":
+  + actual - expected
+  
+    {
+      bound: true,
+      instanceId: Uint8Array(16) [
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8,
+  +     8
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1,
+  -     1
+      ],
+  +   itemId: 218,
+  -   itemId: 900001,
+      locked: false,
+      quality: 0,
+      quantity: Long {
+        high: 0,
+  +     low: 1,
+  -     low: 5,
+        unsigned: false
+      },
+  +   recycleBlockFlags: 8,
+  -   recycleBlockFlags: 0,
+      sourceId: 'same-source',
+      sourceKind: 'skill_recycle',
+      version: Long {
+        high: 0,
+        low: 1,
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\inventory_context.test.cjs:71:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {
+      instanceId: Uint8Array(16) [
+        8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8, 8, 8,
+        8, 8, 8, 8
+      ],
+      itemId: 218,
+      version: { low: 1, high: 0, unsigned: true },
+      quantity: { low: 1, high: 0, unsigned: false },
+      bound: true,
+      quality: 0,
+      sourceKind: 'skill_recycle',
+      sourceId: 'same-source',
+      locked: false,
+      recycleBlockFlags: 8
+    },
+    expected: {
+      instanceId: Uint8Array(16) [
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1, 1, 1,
+        1, 1, 1, 1
+      ],
+      itemId: 900001,
+      version: { low: 1, high: 0, unsigned: true },
+      quantity: { low: 5, high: 0, unsigned: false },
+      bound: true,
+      quality: 0,
+      sourceKind: 'skill_recycle',
+      sourceId: 'same-source',
+      locked: false,
+      recycleBlockFlags: 0
+    },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

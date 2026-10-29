@@ -127,7 +127,7 @@ func TestFullBagOfflineCombatAndChargingMongoWS(t *testing.T) {
 	if wood == nil {
 		t.Fatal("缺少原木剑")
 	}
-	result := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wood.InstanceId, Slot: 0, Operation: c.operation()})
+	result := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wood.InstanceId, Slot: 0, ItemVersion: wood.Version, Operation: c.operation()})
 	c.inventoryAt(result.NewRevision)
 	if result.ErrorCode != 0 {
 		t.Fatal("正常装备失败", result)

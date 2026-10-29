@@ -106,9 +106,16 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
     if (!ALLOWED_IDS.has(id)) return invalid('不允许持久化此消息');
     let payload: ObjectValue;
     if (id === 40001) {
-        const item = record(input.value, ['itemInstanceId', 'slot', 'operation']);
+        // 旧未决请求保持原三字段和原op，不能在恢复时补新版本或把穿戴解释成开关。
+        const oldShape = input.value != null && typeof input.value === 'object' && Object.keys(input.value).length === 3;
+        const item = record(input.value, oldShape ? ['itemInstanceId', 'slot', 'operation'] : ['itemInstanceId', 'slot', 'unequip', 'itemVersion', 'operation']);
         payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), slot: uint32(item.slot),
             operation: operation(item.operation, stored) };
+        if (!oldShape) {
+            const version = longValue(item.itemVersion, stored);
+            if (typeof item.unequip !== 'boolean' || version.isNegative() || version.isZero()) return invalid('装备穿脱需要原版本与明确动作');
+            payload.unequip = item.unequip; payload.itemVersion = version;
+        }
     } else if (id === 40002) {
         const item = record(input.value, ['itemInstanceIds', 'operation']);
         if (!Array.isArray(item.itemInstanceIds) || !item.itemInstanceIds.length || item.itemInstanceIds.length > MAX_BYTES) {

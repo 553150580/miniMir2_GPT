@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "status": "prepared_contracts_reviewed_not_executed_final_evidence_pending",
+  "output": "outputs/equipment-growth-20261030",
+  "formal": "docs/基础装备属性与正常穿脱阶段验收.json",
+  "core_selectors": ["go_report", "go_events", "client_report", "creator_report", "gui_report", "publication_report"],
+  "current": [
+    "明确选择的完整Go --mongo --race原report/events/wrapper及stdout/stderr，逐raw Test/subtest重数且0skip/0fail/完整输入before=after=current",
+    "明确选择的完整client六命令原日志/PB子报告，Node spec或TAP计数；项目全集/9引擎/3字体分别严格当前核对，计数从实际原报告派生",
+    "Creator3.8.8真实exit36、10布局及脚本保持、candidate-files/build config与原主包before/after清单；数万构建产物只存清单不复制",
+    "Root受控copy+rename报告、直接ports health前后原快照及8主命令+2额外status原logs；只接受无失败/回滚的completed终态，候选/main全树逐SHA配对，Mongo九项身份相等且不重启",
+    "实际controlled-jobs/cutover-01必须launch/spawn/worker/approved/task/terminal/stdout/stderr完整配对；固定ed070任务、PID映像/创建时钟/run_id、Python原字节及完整源码前后/current一致、子与worker实际exit0，缺terminal不通过；不以runner成功替代切主及业务门禁",
+    "最终正常UI原report/run.py/tool-at-start/visual-review/handoff及实际截图；工具sourceBefore/After/current、fixture/public、原角色票与穿脱原实例/版本/容器逐项核"
+    ,"实际公开JsonAsset只读快照原JSON.stringify字节SHA必须等于原run02 loaded摘要44da；绑定当前public原SHA/完整client输入/同cutover实例，锁定Node独立全字段deepStrictEqual复验，不以Python序列化格式或跳过hash替代"
+  ],
+  "configuration": "config/final-review.json及130日志原字节保持；仅level_growth_test.go在该快照后新增3处ItemVersion，独立shared-test-transition精确剔2处cloth/1处wood重建旧SHA，并绑定当前Go3SHA及两条原rawPASS；归档器与index共用同一bytes校验，其余配置哈希仍逐字节严格。旧130不宣称检查过新Go源；6格/460公式/101未编辑ZIP/架构书、无220/新回收价或外观不变",
+  "support_scope": [
+    "只读源审计与13张原格技术PNG；同服Data与补丁存在不等于Shape/Looks实际编号、PAK覆盖或目标1.80认证",
+    "appearance-consumer-review v1/v2原字节及额外peer审计，仅下一美术来源support；v1的MYF前提范围偏窄由v2澄清，不改写旧报告。MYF原外观与目标1.80可追溯差异路线分别登记，均未认证或开放220",
+    "作者窄pure/Store/主零WS/非零两职隔离WS及旧穿戴兼容补测；不以旧source全集或隔离资格代替最终全包/current主服自然成长",
+    "client生产窄测、原21 AppRoot选择反例、strict/models；明确重放原source日期和scope，不冒称阶段21当时实跑",
+    "tool-static-4为本轮仅HTTP创角观察修复后的当前工具语法/5项真实PB、包头/Long与保存节点纯预检；4命令固定8原stdout/stderr按SHA配对，源码与tests各自归档，不计浏览器通过"
+    ,"固定2秒受控probe真实start/live/completed报告、全部命令原logs与8份任务元数据/日志，以及private runner/probe-review源和独立只读peer；仅支持进程身份与原终态留痕，不代表执行cutover或业务通过"
+    ,"public-snapshot-probe原probe.cjs/run.py/report/wrapper/stdout/stderr/loaded-public.json归support；只读保存Login公开resources.load，无登录/触屏/业务/数据库写入，不算新增6项GUI业务或替代原run02"
+  ],
+  "history": [
+    "config/candidate和candidate-2作者脚本真实接口/坐标断言失败，非产品失败",
+    "server/history/before-legacy-fix原marker/report与legacy-pure-before真实失败；最终只选新冻结全Go，原失败不重写",
+    "所有非最终go/client/creator full-*原终态与raw/events/wrapper；Go full-1真实1134pass/79Test+4package fail及候选兼容根因只读审计默认归history，最终Go默认full-3；GUI失败或部分结果原状态保留",
+    "Go full-2原启动与两个0字节日志、interruption.json及processes/server-owned/mongo-owned三项只读probe原stdout/stderr全部归history；没有report/wrapper，原因未知，不计通过或业务失败；record_interruption.py按原SHA归sources",
+    "原纯测试fixture适配前态和任何工具错误，以明确CLI --history-report固定报告加入，不追认为生产复现或最终通过",
+    "client/tool-static、tool-static-2与tool-static-3旧静态报告及原log原样保留，不能用旧tool摘要代表current",
+    "browser/run-01为正常HTTP创角10005未被WS-only观察捕获的QA工具失败，0个40001，原report/图审false/截图保留；最终只可选择新run真实完整PASS，不能追认run01通过",
+    "client/original-selection-red按原actual_log_sha256核并保actual.log；其baseline/source与原报告范围保持，不冒称阶段21当时执行"
+    ,"finalizer-diagnostics/check-01真实共享测试hash不一致工具预检失败、原ebe归档器及原index源保留；不是产品失败，不改写原配置报告或130日志"
+    ,"check-02是实际终态返回整理的derived结构化观察，不是独立原stdout；原26e源保持。其Python重序列化摘要假设失败不能证明public字段变化，实际快照与Node全字段对拍独立补证，原GUI及旧摘要不改"
+  ],
+  "excluded": ["client-project", "library", "temp", "build", "node_modules", "整inputs重复树", "exe/dll/lib/WIL/WIX/WZL/WZX/PAK/RAR原包", "引擎源码与字体副本", "凭据/账号数据库/来源部署或指令"],
+  "encoding": "核心小报告原字节；大JSON/log/txt与JSONL可无损gzip，manifest同时保存raw/file SHA与bytes，索引需从实际staged blob解压核",
+  "readiness": "AST/字段静读、真实run02轻量6项门禁/16PNG哈希及公开JsonAsset原快照+锁定Node全字段复验已通过；不将补充快照算重做UI。归档白名单352原件仅计划核对未复制。完整Go/client/Creator/布局/主候选树等既有门禁仍由Root最终整体check执行；Publication锁Go selector full-3的ed07059及直接4ports/10命令、原controlled terminal0。full-2中断不补造终态，原full-1/2及run02/旧摘要保持；未执行整体--check/--apply、未写正式报告、未stage/commit"
+}

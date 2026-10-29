@@ -1,0 +1,56 @@
+{
+  "run_id": "dfc505f0e731431f8b6075b5d2d56b77",
+  "task": "cutover",
+  "phase": "cutover-01",
+  "worker": {
+    "pid": 42496,
+    "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "start_ticks": 134377811399774213,
+    "run_id": "dfc505f0e731431f8b6075b5d2d56b77",
+    "task": "cutover",
+    "phase": "cutover-01",
+    "project_root": "D:\\A_Claude\\miniMir2_GPT",
+    "argv": [
+      "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+      "_worker",
+      "cutover",
+      "--phase",
+      "cutover-01",
+      "--run-id",
+      "dfc505f0e731431f8b6075b5d2d56b77"
+    ]
+  },
+  "started_at_utc": "2026-10-29T20:59:00.107393+00:00",
+  "source_before": {
+    ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+    "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+    "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+    "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90",
+    ".work/equipment-growth-20261030/cutover.py": "ed07059fd28023b842466176a6dde3f19eb7706d13a188e0ba488465b4997980"
+  },
+  "passed": true,
+  "exit_code": 0,
+  "automatic_restart": false,
+  "task_command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\cutover.py"
+  ],
+  "source_after": {
+    ".work/equipment-growth-20261030/controlled_job.py": "3c40395f94b1219f5ba0221cd0b0c2836186b11788e4a6d8482dc22281206df3",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/dev": "0fedbd146203f8dedcc83a247dafee5156fc33c61de36b08e637f8921db6dcc2",
+    "tools/dev.ps1": "7dd7440300a9ca9d3631c36a233978496d7ad7e3a0f10ccd0a701666b06e9383",
+    "tools/toolchain.py": "6acb22b06795557f0b190d9730c9e5c497a44c3d5439a3b532829e1fe4cc90a3",
+    "conf/toolchain/windows-amd64.lock.json": "0bd4b86f43451c4d86a41cf0c58f1f85c250e852fcc43340cddbcb8dfc451c90",
+    ".work/equipment-growth-20261030/cutover.py": "ed07059fd28023b842466176a6dde3f19eb7706d13a188e0ba488465b4997980"
+  },
+  "source_stable": true,
+  "finished_at_utc": "2026-10-29T21:03:37.104858+00:00",
+  "seconds": 276.997,
+  "worker_exit_code": 0,
+  "stdout_sha256": "09fa461d6969f72ba475caa7b5bd71bd34fd1bf85d3dcdcef0bd09477a12adbf",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

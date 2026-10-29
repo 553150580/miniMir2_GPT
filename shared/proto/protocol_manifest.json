@@ -443,7 +443,7 @@
       "economic": true,
       "status": "draft",
       "assignment_source": "development_contract",
-      "source_ref": "首个可玩闭环协议准备；新分配编号，尚未发布"
+      "source_ref": "首个可玩闭环协议准备；rule22追加显式unequip方向及原item_version，保留旧请求/回执字节语义；最终策划4.2、5.10、7.4"
     },
     {
       "value": 40002,
@@ -969,6 +969,30 @@
       "display_zh": "护符实例或数量已变化，请刷新",
       "status": "draft",
       "source_ref": "最终策划4.8/7.4；2026-10-28防御状态与护符永久消费开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3401,
+      "name": "CodeEquipmentBagFull",
+      "display_zh": "背包没有空位，请整理后再卸下装备",
+      "status": "draft",
+      "source_ref": "最终策划4.2、7.4；rule22普通装备明确穿脱开发协议",
+      "active_in_scope": true
+    },
+    {
+      "value": 3402,
+      "name": "CodeEquipmentChanged",
+      "display_zh": "装备实例或版本已变化，请重新选择",
+      "status": "draft",
+      "source_ref": "最终策划4.2、7.4；rule22原实例与位置迁移版本校验",
+      "active_in_scope": true
+    },
+    {
+      "value": 3403,
+      "name": "CodeEquipmentBlocked",
+      "display_zh": "该装备有未确认结果或正在被占用",
+      "status": "draft",
+      "source_ref": "最终策划4.2、7.4；rule22保留未确认结果及资产占用保护，锁定不阻止正常穿脱",
       "active_in_scope": true
     }
   ]

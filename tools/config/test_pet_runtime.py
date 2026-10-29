@@ -29,7 +29,7 @@ class PetRuntimeProjectionTests(unittest.TestCase):
 
     def test_rule16_selects_shared_definition_without_opening_summon_or_training_bootstrap(self):
         f=self.fixture
-        self.assertEqual(f['rule_version'],21)
+        self.assertEqual(f['rule_version'],22)
         self.assertEqual(self.profile(self.tables)['pet_runtime'],{'enabled':True,'bootstrap_mode':'legacy_untrained_pet','definition_ids':[1]})
         self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
         self.assertEqual(f['pet_runtime']['definitions'],pets.compile_definitions(self.tables,[1]))
@@ -177,7 +177,7 @@ class PetRuntimeProjectionTests(unittest.TestCase):
 
     def test_public_hides_training_body_budgets_and_source_metadata(self):
         public=module.public_gameplay(self.fixture)
-        self.assertEqual(public['rule_version'],21)
+        self.assertEqual(public['rule_version'],22)
         self.assertEqual(len(public['pet_profiles']),1)
         serialized=json.dumps(public)
         for field in ['pet_runtime','retained_body_capacity_per_owner','experience_multiplier','source_evidence','corpse_ttl_ms']:

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "--test-name-pattern=Role已穿戴选择与背包上下文隔离",
+    "client/tests/app/inventory_context.test.cjs"
+  ],
+  "source_override": ".work/equipment-growth-20261030/client/original/AppRoot.ts",
+  "source_sha256": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+  "exit_code": 1,
+  "expected_exit_code": 1,
+  "scope": "实际归档rule21源码+新测试在轻量节点/Session替身上运行；不是原阶段当时执行，也不是WS或GUI。",
+  "actual_log_sha256": "4b6b5dad2f7e289806da982ecff4452a33635058ae32c29bd95b2eea4e1c792c"
+}

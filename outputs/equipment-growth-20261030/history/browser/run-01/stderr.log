@@ -1,0 +1,5 @@
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(report.createdJobs.length===1&&report.createdJobs[0]===0)
+
+    at main (D:\A_Claude\miniMir2_GPT\tools\client\verify_equipment_browser.cjs:62:401)

@@ -1,0 +1,10 @@
+{
+  "ast_parse_passed": true,
+  "stop_only_plaintext": [
+    "client-stop",
+    "rollback-client-stop"
+  ],
+  "sha256": "f27f7ab81e7a57909c337ec494f72e22e765b4efadf56fc81769b19006dcf476",
+  "lines": 265,
+  "executed": false
+}

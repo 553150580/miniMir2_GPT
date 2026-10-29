@@ -109,7 +109,15 @@ message EquipmentRecycleResult {
   string discard_reason = 10;
   uint32 trigger = 11;
 }
-message EquipRequest { bytes item_instance_id = 1; uint32 slot = 2; OperationContext operation = 3; }
+// 方向必须显式给出，不按是否已穿戴隐式切换；slot100仍由独立护符协议处理。
+// rule22新操作同时核对原实例版本；旧请求/回执保留原字段与指纹，不补造版本。
+message EquipRequest {
+  bytes item_instance_id = 1;
+  uint32 slot = 2;
+  OperationContext operation = 3;
+  bool unequip = 4;
+  uint64 item_version = 5;
+}
 message RecycleRequest { repeated bytes item_instance_ids = 1; OperationContext operation = 2; }
 // 药品只作用于原场景；永久消耗由角色owner确认，临时药效不持久化。
 message UseItemRequest {

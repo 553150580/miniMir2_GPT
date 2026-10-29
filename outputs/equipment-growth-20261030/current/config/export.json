@@ -1,0 +1,29 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    "tools/config/export_configs.py",
+    "--version",
+    "dev-equipment-foundation-v0.22"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    "tools/config/export_configs.py",
+    "--version",
+    "dev-equipment-foundation-v0.22"
+  ],
+  "started_at_utc": "2026-10-29T19:30:55.712698+00:00",
+  "finished_at_utc": "2026-10-29T19:30:56.423510+00:00",
+  "seconds": 0.711,
+  "exit_code": 0,
+  "stdout": "export.stdout.txt",
+  "stderr": "export.stderr.txt",
+  "stdout_sha256": "7a3f514b678cc8b49ca556b7529a9c914d57c16f7e0e83457392632b44464f12",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

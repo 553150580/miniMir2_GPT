@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 21,
+  "rule_version": 22,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -3866,7 +3866,12 @@
         2
       ],
       "required_level": 1,
-      "drop_quality": 0
+      "drop_quality": 0,
+      "equipment_stage": 0,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0
     },
     {
       "id": 193,
@@ -3890,7 +3895,12 @@
         2
       ],
       "required_level": 1,
-      "drop_quality": 0
+      "drop_quality": 0,
+      "equipment_stage": 0,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0
     },
     {
       "id": 35,
@@ -4740,12 +4750,12 @@
       "game_equipment": [
         {
           "id": 218,
-          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220",
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统",
           "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 品质0、阶段0是开发夹具对接本项目枚举的工程选择；不把来源Color当品质。 首组开发装备未接额外攻速词条，本轮明确attack_speed=0适配；不证明源服全部词条。"
         },
         {
           "id": 193,
-          "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195",
+          "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统",
           "note": "来源原名布衣(男)。本作无性别穿戴门槛，不新增男女装备分类，同itemID按职业固定外观；允许职业[0,1,2]是目标规则适配。女法师衣服外观映射仍待正式资源验收。仅development候选，未通过目标1.80行为或数值验收。 首组开发装备未接额外攻速词条，本轮明确attack_speed=0适配；不证明源服全部词条。"
         }
       ],
@@ -6263,7 +6273,7 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选；本任务rule16宠物驻留/身体/训练候选，数值由PetDefs/Growth及架构预算共同维护；rule17地图宠物政策与独立召唤候选，同源参数不激活主技能",
+          "source_ref": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选；本任务rule16宠物驻留/身体/训练候选，数值由PetDefs/Growth及架构预算共同维护；rule17地图宠物政策与独立召唤候选，同源参数不激活主技能；本任务rule22装备基础合同：base_item_ids只选择原4物品；MC/SC来自唯一装备行；装备阶段按floor((required_level−1)/10)校验；不选入乌木剑220，不新增回收价或外观",
           "note": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。 rule16仅旧免费bootstrap的原对象死亡/尸体生命周期，正常17材料召唤仍待用户护符单位决定；不新增初始书。 rule17主profile不追加技能17/书25/商店/升级/初始赠书；护符187未知值保持。独立catalog含完整三阶候选，不绕过校验。"
         }
       ],
@@ -6347,6 +6357,29 @@
       "formal_recipe_published": false,
       "formal_recycle_values_consumed": false,
       "durability_model_implemented": false
+    },
+    "equipment_foundation": {
+      "selection_source": "唯一玩法Excel/dev_first_loop_profile.parameters.base_item_ids",
+      "base_item_ids": [
+        35,
+        36,
+        193,
+        218
+      ],
+      "attributes_source": "唯一玩法Excel/game_equipment.base_attributes；MC/SC逐列取来源Mc/Mc2/Sc/Sc2",
+      "stage_source": "唯一玩法Excel/game_equipment.stage；floor((required_level−1)/10)",
+      "equipment_sources": [
+        {
+          "item_id": 218,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
+        },
+        {
+          "item_id": 193,
+          "source_ref": "最终策划案.md:113-115、485-497（4.2、4.20）；资料参考/myf/Mud2/DB/ApexM2_stditems.csv:195；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
+        }
+      ],
+      "appearance_mapping_verified": false,
+      "formal_recycle_recipe_published": false
     },
     "workbook_sync": "exported_from_current_unique_excel",
     "source_locks": [
@@ -6469,9 +6502,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0"
+      "sha256": "96c8c4401b92b4908642fef8081e8f4a1d1bf0f5187ef8e54d08f0b1915500e8"
     },
-    "exporter_sha256": "8d829c4a475659f055f339c6874f62602e671bcc4d169367379a30632f491e03",
+    "exporter_sha256": "2d610f9209033a4421beee2a6f56752945c214a237c214493778087369ed0f83",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -6483,7 +6516,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "4bb5849a04d33e12ffaf2cb4cff87e05d976e47e5c963c3be75fbe8de5ed46c0"
+          "sha256": "96c8c4401b92b4908642fef8081e8f4a1d1bf0f5187ef8e54d08f0b1915500e8"
         }
       ]
     }

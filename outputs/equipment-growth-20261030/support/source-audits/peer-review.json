@@ -1,0 +1,35 @@
+{
+  "status": "read_only_narrow_peer_no_current_blocker",
+  "recorded_at_utc": "2026-10-29T19:41:47.646446+00:00",
+  "source_hashes": {
+    "server/internal/devconfig/equipment_stats.go": "92b8c5721e6f51f26e6a56d123a649a236cfedd6daea5fd0ded386f7f92afbba",
+    "server/internal/persistence/equipment.go": "f561d8f630c56d5456825c73fc47943ed22cab07545270bd4c3f9935e3f71fe5",
+    "client/assets/scripts/app/EquipmentModel.ts": "f535386bd33e3cd232ccd82813eea5f9d0a92bfccc4443af86d5be37bb9076bf",
+    "client/assets/scripts/app/AppRoot.ts": "1690d90b82cae050867fdfb9ae669ed98e074ae8d27f0b696d960cfdaa5d34d7",
+    "client/assets/scripts/app/PendingOperations.ts": "8702c2448ddc293f964d99b799a30de367337bac7f6ff56860cdf206789ac2f8"
+  },
+  "scope": "实现中指定新模块静读；未运行Go/DB/Creator/浏览器，非全代码独立验收",
+  "checked": [
+    "5字段presence及旧规则中性兼容",
+    "按槽最坏MC/SC整数检查及已有状态秒转ms门禁",
+    "原物品ID/版本/容器/slot/数量/品质/占用与满包swap、unequip",
+    "双向Version推进、原typed快照和同op重放路径",
+    "客户端11键属性白名单、原scope确认和无关EXP推进"
+  ],
+  "nonblocking_followups": [
+    {
+      "path": "server/internal/persistence/equipment.go:38",
+      "finding": "仍需EquipmentRecycleKnown，未来无配方装备准入必须拆开；当前仅218/193不会触发新差异"
+    },
+    {
+      "path": "client/assets/scripts/app/EquipmentModel.ts:24",
+      "finding": "UI版本上界建议与Store的0<Version<MaxInt64同步；当前正常版本不受影响"
+    },
+    {
+      "path": "client/assets/scripts/app/EquipmentModel.ts:77",
+      "finding": "attack_speed安全整数检查后建议显式非负，与唯一表合同同步；当前0不受影响"
+    }
+  ],
+  "production_modified": false,
+  "test_executed": false
+}

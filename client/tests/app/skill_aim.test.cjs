@@ -101,7 +101,7 @@ test('真实AppRoot普通攻击只发送朝向AttackIntent，空挥同样可操�
 test('真实AppRoot将屏幕摇杆八方向转成逻辑方向发送，原生摇杆向量不被地图旋转修改',()=>{
     const {instance,session,sent}=app(),{GridProjection}=require('../../../.work/ui-tests/app/GridProjection.js');
     const projection=new GridProjection({width:17,height:17,tile_width:64,tile_height:32,soil_thickness_px:48});
-    instance.world.logicalDirection=(x,y)=>projection.logicalDirectionFromScreen(x,y);instance.world.update=()=>{};
+    instance.world.logicalDirection=(x,y)=>projection.logicalDirectionFromScreen(x,y);instance.world.update=()=>{};instance.world.observeEquipment=(_identity,handle,inventory)=>{assert.equal(handle,session.entry.playerHandle);assert.equal(inventory,session.inventory);};
     const screens=[[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
     screens.forEach(([x,y],index)=>{instance.nav.setJoystick({x,y});instance.update(.2);assert.equal(sent[index].id,20006);assert.equal(sent[index].value.direction,(index+7)%8);assert.deepEqual(instance.nav.state.direction,{x,y});});
 });

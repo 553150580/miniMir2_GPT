@@ -29,3 +29,5 @@ outputs/pet-visual-20261029/** -text
 outputs/auto-recycle-20261029/** -text
 outputs/level-growth-20261029/** -text
 outputs/inventory-capacity-20261030/** -text
+outputs/equipment-growth-20261030/** -text
+client/assets/scripts/app/EquipmentModel.ts.meta -text

@@ -894,6 +894,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.Context = x.Operation
 		q.ItemID = domain.Hex(x.ItemInstanceId)
 		q.Slot = x.Slot
+		q.Unequip, q.ItemVersion = x.Unequip, x.ItemVersion
 	case p.MsgC2SRecycle:
 		var x pb.RecycleRequest
 		if proto.Unmarshal(f.Payload, &x) != nil {

@@ -1,0 +1,19 @@
+{
+  "pid": 42496,
+  "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+  "start_ticks": 134377811399774213,
+  "run_id": "dfc505f0e731431f8b6075b5d2d56b77",
+  "task": "cutover",
+  "phase": "cutover-01",
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "argv": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+    "_worker",
+    "cutover",
+    "--phase",
+    "cutover-01",
+    "--run-id",
+    "dfc505f0e731431f8b6075b5d2d56b77"
+  ]
+}

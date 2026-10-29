@@ -1,12 +1,15 @@
 import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNotLearned, CodeSkillResource, CodeSkillStateBlocked, CodeSkillTarget,
     CodeSkillPreviewStale, CodeSkillMaterials, CodeSkillUpgradeBlocked, CodeSkillBookSource, CodeSkillPurchaseBlocked,
-    CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden } from '../generated/protocol_ids';
+    CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。
 export function protocolErrorMessage(messageId: number, errorCode: number): string {
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
+    if (errorCode === CodeEquipmentBagFull) return '背包空间不足，装备保持原位';
+    if (errorCode === CodeEquipmentChanged) return '原装备或所在部位已变化，请重新选择';
+    if (errorCode === CodeEquipmentBlocked) return '当前职业、等级或装备状态不允许穿脱';
     if (errorCode === CodeItemUseBlocked) return '角色倒下或当前状态不能使用药品';
     if (errorCode === CodeItemUseCooldown) return '药品使用过快，请稍后再试';
     if (errorCode === CodeSkillNotLearned) return '尚未学会该技能';

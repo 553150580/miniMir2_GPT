@@ -108,50 +108,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var skillDetails *skillPlan
 		var casting *CastingReceipt
 		var recycling *EquipmentRecyclingReceipt
+		var equipment *EquipmentReceipt
 		switch q.Kind {
 		case "equip":
-			index := -1
-			for i, item := range r.Items {
-				if item.ID == q.ItemID {
-					index = i
-					break
-				}
-			}
-			if index < 0 {
-				businessCode = p.CodeInvalidArgument
-				break
-			}
-			item := r.Items[index]
-			def, ok := s.Cfg.Fixture.Item(item.ItemID)
-			eligible := len(def.AllowedJobs) == 0
-			for _, job := range def.AllowedJobs {
-				if job == r.Job {
-					eligible = true
-				}
-			}
-			if !ok || !def.IsEquipment || def.EquipmentSlot != q.Slot || q.Slot > 9 || !eligible {
-				businessCode = p.CodeInvalidArgument
-				break
-			}
-			if s.Cfg.Fixture.RuleVersion >= 20 && (def.RequiredLevel == nil || *def.RequiredLevel < 1 || r.Level < *def.RequiredLevel) {
-				businessCode = p.CodeInvalidArgument
-				break
-			}
-			r.Items = append(r.Items[:index], r.Items[index+1:]...)
-			replacement := -1
-			for i, eq := range r.Equipped {
-				if eq.Slot == q.Slot {
-					replacement = i
-					r.Items = append(r.Items, eq.Item)
-					break
-				}
-			}
-			item.Version++
-			if replacement >= 0 {
-				r.Equipped[replacement] = domain.Equipped{Slot: q.Slot, Item: item}
-			} else {
-				r.Equipped = append(r.Equipped, domain.Equipped{Slot: q.Slot, Item: item})
-			}
+			r, equipment, businessCode = equipEquipment(r, q, s.Cfg.Fixture)
 		case "recycle":
 			r, recycling, businessCode, e = recycleManual(r, q.ItemIDs, s.Cfg.Fixture)
 			if e != nil {
@@ -219,6 +179,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			r = out
 			recycling = nil
 			skillDetails = nil
+			equipment = nil
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -234,6 +195,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting, Recycling: recycling}
 		op.Skill = cloneSkillPlan(skillDetails)
+		op.Equipment = cloneEquipmentReceipt(equipment)
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -247,6 +209,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if skillDetails != nil {
 			audit["preview_id"] = q.PreviewID
 			audit["skill_plan"] = skillDetails
+		}
+		if equipment != nil {
+			audit["equipment"] = cloneEquipmentReceipt(equipment)
 		}
 		if casting != nil {
 			audit["casting_use"] = casting

@@ -1,0 +1,23 @@
+{
+  "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+  "worker": {
+    "pid": 73052,
+    "executable": "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+    "start_ticks": 134377809201845105,
+    "run_id": "27dabb38323247b7b8de4d65aa106c8a",
+    "task": "probe",
+    "phase": "probe-01",
+    "project_root": "D:\\A_Claude\\miniMir2_GPT",
+    "argv": [
+      "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\managed\\cpython-3.14.9-windows-x86_64-none\\python.exe",
+      "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\controlled_job.py",
+      "_worker",
+      "probe",
+      "--phase",
+      "probe-01",
+      "--run-id",
+      "27dabb38323247b7b8de4d65aa106c8a"
+    ]
+  },
+  "approved_at_utc": "2026-10-29T20:55:20.326974+00:00"
+}

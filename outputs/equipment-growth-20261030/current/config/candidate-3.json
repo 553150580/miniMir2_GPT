@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "python3",
+    ".work/equipment-growth-20261030/config/author_configuration.py"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "python3",
+    ".work/equipment-growth-20261030/config/author_configuration.py"
+  ],
+  "started_at_utc": "2026-10-29T19:28:30.930711+00:00",
+  "finished_at_utc": "2026-10-29T19:28:32.149770+00:00",
+  "seconds": 1.219,
+  "exit_code": 0,
+  "stdout": "candidate-3.stdout.txt",
+  "stderr": "candidate-3.stderr.txt",
+  "stdout_sha256": "b9064ee7b2e2c17e89d77769748563e16c726a6381c846a78390aed8a9c5a28a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

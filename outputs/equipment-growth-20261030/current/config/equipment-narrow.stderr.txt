@@ -1,0 +1,15 @@
+test_all_five_min_max_ranges_are_ordered (test_equipment_foundation.EquipmentFoundationTests.test_all_five_min_max_ranges_are_ordered) ... ok
+test_current_source_selection_and_four_explicit_zeros (test_equipment_foundation.EquipmentFoundationTests.test_current_source_selection_and_four_explicit_zeros) ... ok
+test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade (test_equipment_foundation.EquipmentFoundationTests.test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade) ... ok
+test_mc_sc_projection_uses_unique_equipment_values_and_public_whitelist (test_equipment_foundation.EquipmentFoundationTests.test_mc_sc_projection_uses_unique_equipment_values_and_public_whitelist) ... ok
+test_rule22_attributes_never_fill_missing_or_accept_untyped_unknown_values (test_equipment_foundation.EquipmentFoundationTests.test_rule22_attributes_never_fill_missing_or_accept_untyped_unknown_values) ... ok
+test_schema_requires_each_new_key_and_profile_selection_without_null_or_extras (test_equipment_foundation.EquipmentFoundationTests.test_schema_requires_each_new_key_and_profile_selection_without_null_or_extras) ... ok
+test_selection_comes_from_profile_not_fixed_four_or_all_equipment (test_equipment_foundation.EquipmentFoundationTests.test_selection_comes_from_profile_not_fixed_four_or_all_equipment) ... ok
+test_selection_is_required_unique_known_typed_and_not_another_item_pipeline (test_equipment_foundation.EquipmentFoundationTests.test_selection_is_required_unique_known_typed_and_not_another_item_pipeline) ... ok
+test_stage_uses_row_and_exact_requirement_formula_at_boundaries (test_equipment_foundation.EquipmentFoundationTests.test_stage_uses_row_and_exact_requirement_formula_at_boundaries) ... ok
+test_unknown_equipment_type_is_rejected_including_legacy (test_equipment_foundation.EquipmentFoundationTests.test_unknown_equipment_type_is_rejected_including_legacy) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.430s
+
+OK

@@ -1,0 +1,21 @@
+{
+  "recorded_at_utc": "2026-10-29T21:57:29.376297+00:00",
+  "scope": "原355归档及正式报告原字节保留；仅追加本阶段Git -text规则，未改任何产品、数值或原日志",
+  "original_formal_sha256": "efe772be279f25ad7ba661c262e2cfb041abb3c9445169227c98ae933b1ac9c6",
+  "original_evidence_files": 355,
+  "backup_archive": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\history\\pre-eol-policy\\archive",
+  "backup_formal": "D:\\A_Claude\\miniMir2_GPT\\.work\\equipment-growth-20261030\\history\\pre-eol-policy\\formal-report.json",
+  "gitattributes_before_sha256": "da5a722d187c456b15b31bc6150040d88b812bac11345c484b128f8be2b0f54f",
+  "gitattributes_after_sha256": "f138d9711b185e4ab0aa02513bbeb1ee074c6243eb89dda6e4d21b3b4f32559d",
+  "exact_append_utf8": "outputs/equipment-growth-20261030/** -text\n",
+  "sample": {
+    "path": "outputs/equipment-growth-20261030/current/client/protocol-check.stdout.txt",
+    "working_bytes": 725,
+    "index_bytes": 723,
+    "working_sha256": "2f80580f66f77526ad7a00f92867af65f7d1f01afe0723855f33b32189d77f37",
+    "normalized_index_sha256": "035f61ab68be93320ca592c94b0d20908460ffcc0bd3c42300b3d5efdd9d6e26",
+    "only_crlf_normalization": true
+  },
+  "script_sha256": "866f777223c8c7578fe319fd536a910b8ecfad5c1dc6028f3fa9b684998a4cca",
+  "git_index_modified_by_this_script": false
+}

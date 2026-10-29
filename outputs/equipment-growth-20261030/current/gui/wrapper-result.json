@@ -1,0 +1,38 @@
+{
+  "report_directory": ".work/equipment-growth-20261030/browser/run-02",
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_equipment_browser.cjs",
+    "--report-dir",
+    ".work/equipment-growth-20261030/browser/run-02"
+  ],
+  "inputs": {
+    "tools/client/verify_equipment_browser.cjs": "dc1e28b0cf2f826108bc853d94b969beb69fd80ac97fb4c6f69782cddd24fee5",
+    "docs/客户端构建检查.json": "aae9b1c8565ccfc431ed58dbcac958d164d536d0f00512b715a3bfd79db97101",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78"
+  },
+  "run_requested": true,
+  "product_source_modified": false,
+  "service_control": false,
+  "database_seeding": false,
+  "started_at": "2026-10-29T21:08:46.829035+00:00",
+  "finished_at": "2026-10-29T21:09:34.992398+00:00",
+  "exit_code": 0,
+  "inputs_after": {
+    "tools/client/verify_equipment_browser.cjs": "dc1e28b0cf2f826108bc853d94b969beb69fd80ac97fb4c6f69782cddd24fee5",
+    "docs/客户端构建检查.json": "aae9b1c8565ccfc431ed58dbcac958d164d536d0f00512b715a3bfd79db97101",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78"
+  },
+  "inputs_stable": true,
+  "stdout_sha256": "cee90db3af2edee2853a0ddf3fe03911e76524e0907526a48ddd791c8a255951",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "browser_report_sha256": "5047e1088bc77c206475ca877c396a98eb5d288eb2ac61cd63143be6dd72a292"
+}

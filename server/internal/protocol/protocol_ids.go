@@ -94,4 +94,7 @@ const (
 	CodeSkillPurchaseBlocked uint32 = 3305
 	CodeSkillMaterialRequired uint32 = 3207
 	CodeSkillMaterialChanged uint32 = 3208
+	CodeEquipmentBagFull uint32 = 3401
+	CodeEquipmentChanged uint32 = 3402
+	CodeEquipmentBlocked uint32 = 3403
 )

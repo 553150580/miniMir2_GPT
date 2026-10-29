@@ -1,0 +1,1 @@
+{"config_version": "dev-equipment-foundation-v0.22-626627111e9a", "server": "server/internal/configtypes/config_types.go", "client": "client/assets/scripts/generated/config_types.ts", "runtime_ready": false, "generated_only": true}

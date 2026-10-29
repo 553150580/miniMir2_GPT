@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"slices"
 	"strings"
 )
 
@@ -127,6 +128,9 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			}
 			if !exists && kind == reflect.TypeOf(Item{}) && field.Name == "RequiredLevel" {
 				continue // 装备需求等级由rule19装备投影验证；召唤技能书不借此补造需求。
+			}
+			if !exists && kind == reflect.TypeOf(Item{}) && slices.Contains(equipmentStatFields[:], name) {
+				continue // 旧17非装备原书可缺新装备字段；rule22实际装备仍由presence验证，存在null仍拒。
 			}
 			// rule16历史定义尚无召回名；rule17由Fixture版本校验要求该字段非空。
 			if !exists && kind == reflect.TypeOf(PetRuntimeDefinition{}) && field.Name == "RecallName" {

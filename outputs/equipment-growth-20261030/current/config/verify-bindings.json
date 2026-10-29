@@ -1,0 +1,25 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "node",
+    "tools/config/verify_bindings.mjs"
+  ],
+  "actual_command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "tools/config/verify_bindings.mjs"
+  ],
+  "started_at_utc": "2026-10-29T19:31:52.433040+00:00",
+  "finished_at_utc": "2026-10-29T19:31:53.771622+00:00",
+  "seconds": 1.339,
+  "exit_code": 0,
+  "stdout": "verify-bindings.stdout.txt",
+  "stderr": "verify-bindings.stderr.txt",
+  "stdout_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

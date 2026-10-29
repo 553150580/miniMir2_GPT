@@ -1,0 +1,484 @@
+{
+  "status": "readonly_design_audit",
+  "observed_at_utc": "2026-10-29T19:18:35.288026+00:00",
+  "head": "2a5616ac883c91336edb227d7bbf87e9cfe64791",
+  "rule_version": 21,
+  "scope": {
+    "production_modified": false,
+    "tests_modified": false,
+    "saved_layout_modified": false,
+    "gui_executed": false,
+    "creator_executed": false,
+    "database_executed": false,
+    "previous_stage_freeze_reused": false,
+    "evidence_kind": "本阶段重新读取源码/保存场景/公开JSON；SHA仅为审计时输入摘要，不是构建前后冻结或运行通过证明。"
+  },
+  "product_rules": [
+    {
+      "fact": "10部位；品质0–4；T1–T5由需求等级分段，不能用一把新武器宣称完整装备成长完成。",
+      "refs": [
+        {
+          "path": "最终策划案.md",
+          "line": 113
+        }
+      ]
+    },
+    {
+      "fact": "同一itemID不按性别拆属性或供给；男战士、女法师、男道士固定职业形象选择外观，保留职业/等级条件。",
+      "refs": [
+        {
+          "path": "最终策划案.md",
+          "line": 115
+        }
+      ]
+    },
+    {
+      "fact": "统一属性来源/阶段/单位/叠加/取整，装备更换须对输出、生存与消耗有实际影响，不用简单属性求和比较三职业。",
+      "refs": [
+        {
+          "path": "最终策划案.md",
+          "line": 756,
+          "end_line": 768
+        },
+        {
+          "path": "最终策划案.md",
+          "line": 774,
+          "end_line": 785
+        }
+      ]
+    },
+    {
+      "fact": "固定UI保存scene/prefab，PopupView分层返回保留下层滚动，字号至少24，高/宽屏增加地图空间而不拉伸控件。",
+      "refs": [
+        {
+          "path": "client/AGENTS.md",
+          "line": 9,
+          "end_line": 25
+        }
+      ]
+    }
+  ],
+  "current_catalog": {
+    "equipment": [
+      {
+        "item_id": 218,
+        "name": "木剑",
+        "kind": "equipment",
+        "equip_slot": 0,
+        "allowed_jobs": [
+          0,
+          1,
+          2
+        ],
+        "use_enabled": false,
+        "required_level": 1,
+        "recycle_gold": 50,
+        "quality": 0
+      },
+      {
+        "item_id": 193,
+        "name": "布衣",
+        "kind": "equipment",
+        "equip_slot": 1,
+        "allowed_jobs": [
+          0,
+          1,
+          2
+        ],
+        "use_enabled": false,
+        "required_level": 1,
+        "recycle_gold": 400,
+        "quality": 0
+      }
+    ],
+    "equipment_offer_count": 0,
+    "jobs": [
+      {
+        "job_id": 0,
+        "name": "战士",
+        "profile": "player_male",
+        "can_push": true
+      },
+      {
+        "job_id": 1,
+        "name": "法师",
+        "profile": "player_female",
+        "can_push": true
+      },
+      {
+        "job_id": 2,
+        "name": "道士",
+        "profile": "player_male",
+        "can_push": true
+      }
+    ],
+    "fact": "当前public21只有木剑218/布衣193且均需求1、quality0、三职业可穿；没有装备商品或单件DC/MC/SC/AC/MAC基础属性投影。",
+    "refs": [
+      {
+        "path": "client/assets/resources/development/gameplay.json",
+        "line": 1
+      }
+    ]
+  },
+  "facts": [
+    {
+      "id": "equip_entry",
+      "fact": "Inventory/Equip按当前public职业/需求等级检查后发送40001；只有穿戴意图。Role普通Equip/Recycle先隐藏，Role/Equip后来只用于护符卸下40015。普通装备没有可用卸下入口。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 294
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 314,
+          "end_line": 338
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 648,
+          "end_line": 651
+        },
+        {
+          "path": "shared/proto/assets.proto",
+          "line": 112
+        }
+      ]
+    },
+    {
+      "id": "selection_origin",
+      "fact": "Inventory与Role共用selectedItem；Role的显示数据来自equipped但选择只保存item、不保留slot/列表来源。refreshInventoryContext在Inventory对象变化时仅从背包重取该ID；同一选择也更新两面板Message与背包按钮。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 658,
+          "end_line": 674
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 689,
+          "end_line": 710
+        }
+      ],
+      "inference": "有更多部位、普通卸装和装备比较后，共享选择会丢已穿戴来源并误驱动背包按钮；需要显式来源/slot，不能靠当前popup或itemID猜。此结论为代码审查，不冒称本轮GUI已复现。"
+    },
+    {
+      "id": "per_item_details",
+      "fact": "保存Details当前只显示数量/绑定/来源/品质/需求/保护原因；需求不满足仍可查看，穿戴按钮给出中文原因。没有单件装备基础属性或与同槽已穿戴比较。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 669,
+          "end_line": 674
+        },
+        {
+          "path": "client/assets/scripts/app/LevelGrowthModel.ts",
+          "line": 8,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "aggregate_attributes",
+      "fact": "当前SceneBaseline EntityState已有CombatAttributes，总DC/MC/SC/AC/MAC、准确/敏捷和减免可以经保存BuffBar/Overview→CombatStatus或点击角色→StatusDetails查看。Role面板本身展示选择、绑定与成长摘要，不展示这些总属性。",
+      "refs": [
+        {
+          "path": "shared/proto/world.proto",
+          "line": 136
+        },
+        {
+          "path": "shared/proto/world.proto",
+          "line": 188,
+          "end_line": 201
+        },
+        {
+          "path": "client/assets/scripts/app/CombatStatusModel.ts",
+          "line": 9,
+          "end_line": 18
+        },
+        {
+          "path": "client/assets/scripts/app/CombatStatusModel.ts",
+          "line": 40,
+          "end_line": 50
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 293
+        },
+        {
+          "path": "client/assets/scripts/app/GameCombatStatus.ts",
+          "line": 68,
+          "end_line": 76
+        },
+        {
+          "path": "client/assets/scripts/app/GameCombatStatus.ts",
+          "line": 122,
+          "end_line": 139
+        }
+      ]
+    },
+    {
+      "id": "shop_view",
+      "fact": "Skills/Shop打开kind1；OffersList/数量+/−/Preview/SkillQuote/Confirm已保存且可复用。现GameSkillAssets标题固定技能书店，商品行固定产物绑定、Message/Quote固定NPC技能书不可拆；不是已支持通用装备商店。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 294,
+          "end_line": 303
+        },
+        {
+          "path": "client/assets/scripts/app/GameSkillAssets.ts",
+          "line": 71,
+          "end_line": 85
+        },
+        {
+          "path": "client/assets/scripts/app/GameSkillAssets.ts",
+          "line": 96,
+          "end_line": 115
+        },
+        {
+          "path": "client/assets/scripts/app/SkillAssetsModel.ts",
+          "line": 240,
+          "end_line": 244
+        }
+      ]
+    },
+    {
+      "id": "shop_server_catalog",
+      "fact": "当前服务端商店配置校验只允许技能书、书页或已开放护符，拒装备；kind1报价有真实币种分摊、输出绑定/来源和数量，提交仍需服务端扩展与严格配置，不仅改客户端列表。",
+      "refs": [
+        {
+          "path": "server/internal/devconfig/skill_economy.go",
+          "line": 98,
+          "end_line": 104
+        },
+        {
+          "path": "server/internal/persistence/skill_assets.go",
+          "line": 159,
+          "end_line": 187
+        }
+      ]
+    },
+    {
+      "id": "economic_scope",
+      "fact": "可复用40011预览→40012报价→保存SkillQuote确认→40013持久操作。确认前后严格复核当前Entry、role/scene/rule/revision/wallet/materials、报价ID/过期；40013先写journal再网络发送，Unknown原op重查。40001 journal目前严格只允许instanceId/slot/operation，新增卸装字段必须同步迁移/校验。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 757,
+          "end_line": 779
+        },
+        {
+          "path": "client/assets/scripts/app/SkillAssetsModel.ts",
+          "line": 174,
+          "end_line": 197
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 953,
+          "end_line": 984
+        },
+        {
+          "path": "client/assets/scripts/app/PendingOperations.ts",
+          "line": 103,
+          "end_line": 111
+        }
+      ]
+    },
+    {
+      "id": "appearance",
+      "fact": "创建职业固定名称男战士/女法师/男道士；public jobs将战士/道士映射player_male，法师player_female。manifest当前Hum/Weapon/Hair分别只取male1200或female1800固定基址。WorldAssets.profile仅按职业，GameWorldView仅以是否有slot0装备决定显示固定Weapon层，不按itemID、Shape或Looks选择武器/衣服。",
+      "refs": [
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 40
+        },
+        {
+          "path": "client/assets/scripts/app/AppRoot.ts",
+          "line": 153,
+          "end_line": 158
+        },
+        {
+          "path": "tools/resources/build_development_assets.py",
+          "line": 22,
+          "end_line": 29
+        },
+        {
+          "path": "tools/resources/build_development_assets.py",
+          "line": 310,
+          "end_line": 324
+        },
+        {
+          "path": "client/assets/scripts/app/WorldAssets.ts",
+          "line": 193,
+          "end_line": 197
+        },
+        {
+          "path": "client/assets/scripts/app/GameWorldView.ts",
+          "line": 365,
+          "end_line": 380
+        }
+      ],
+      "limitation": "现profile明确development_only/candidate且official_180_animation_acceptance=false；不能从Shape或Looks未经实证直接乘常数，也不能把新武器仍画旧图写成该装备外观已还原。资源映射由assets同阶段独立核验。"
+    }
+  ],
+  "saved_ui": {
+    "scene": "client/assets/scenes/Game.scene",
+    "inventory": {
+      "panel_node": 257,
+      "panel_size": [
+        660,
+        820
+      ],
+      "view_node": 270,
+      "view_transform": 271,
+      "view_size": [
+        600,
+        414
+      ],
+      "view_y_in_list": 28,
+      "lock_node": 1183,
+      "equip_node": 284,
+      "recycle_node": 291
+    },
+    "role": {
+      "panel_node": 298,
+      "panel_size": [
+        660,
+        820
+      ],
+      "list_node": 308,
+      "view_node": 311,
+      "view_transform": 312,
+      "view_size": [
+        600,
+        470
+      ],
+      "equip_node": 325,
+      "recycle_node": 332,
+      "geometry_fact": "Role List中心y−35、View高470，底−270；两个既存按钮中心y−325、高60，顶−295，已有25逻辑像素间距。不同于上一阶段Inventory的ItemLock遮挡，不需要为Role盲目复制缩View。"
+    },
+    "shop": {
+      "panel_node": 800,
+      "panel_size": [
+        660,
+        820
+      ],
+      "offers_list_node": 810,
+      "offers_view_size": [
+        600,
+        400
+      ],
+      "quantity_node": 919,
+      "preview_node": 827,
+      "quote_panel_node": 878,
+      "quote_size": [
+        600,
+        940
+      ],
+      "quote_list_size": [
+        540,
+        560
+      ]
+    },
+    "function_pages": {
+      "page0_node": 395,
+      "page0_existing_buttons": [
+        "Role",
+        "Inventory",
+        "Hosting",
+        "Report",
+        "Messages",
+        "Settings"
+      ],
+      "page1_node": 407,
+      "page1_existing_children": [
+        "Text"
+      ]
+    },
+    "minimum_increment_recommendation": [
+      "优先复用Role/Equip为“卸下所选”，按显式已穿戴选择分派普通卸装或原护符40015；复用Role/Recycle为“战斗属性”打开保存滚动StatusDetails，不恢复穿戴中分解。无需新增Role按钮或更改其View。",
+      "装备详情改走既有StatusDetails滚动List；不要把多条基础属性和比较强塞入短Details/Role Message。列表行只保留名称/部位/已穿戴标识/绑定等短信息。",
+      "在Functions/Pages/Page1追加一个保存Button“装备商店”，复用原SkillAssets商品/数量/报价面板；书店入口只看书类，装备商店只看显式equipment类，标题和说明跟随业务上下文。此为建议的一处新增保存入口，当前未编辑。",
+      "如果产品决定统一商店入口，可保存一个普通商店入口并用现OffersList全部显式商品，无需复制商店面板；不要把装备藏在“技能书店”标题下。分类标签只有商品数量实际需要时再保存，不生成runtime固定节点。",
+      "保持Inventory新View/Widget、所有HUD、地图、字体及其余9份布局；若追加保存入口，独立记录Game.scene对象/字段白名单并复核高/宽屏与真实AR Mask。"
+    ]
+  },
+  "minimum_complete_client_slice": [
+    {
+      "step": 1,
+      "action": "唯一Excel/公开目录提供已核MC武器及SC装备的itemID、基础上下限、职业/需求、部位、品质、可获得入口与价格/绑定；未知字段保留未知。",
+      "boundary": "MC与SC不能只给面板字段；必须至少有正常玩家能获得并真正参与已选技能属性管线的具体装备。只上乌木MC不能称SC成长也完成。"
+    },
+    {
+      "step": 2,
+      "action": "正常金币购买或明确掉落→Inventory实际ItemView；用户普通点击可见基础DC/MC/SC/AC/MAC、需求/部位、保护/绑定、来源，另列同槽当前装备作对照。",
+      "boundary": "只显示来源基础和服务器当前总属性；不把本地属性差当最终伤害、回血或金币收益。未知实例词条/幸运/损坏不可填0冒充已实现。"
+    },
+    {
+      "step": 3,
+      "action": "Inventory选择→显式穿戴操作→原journal→服务端完整Inventory+baseline确认；Role实际列出已穿戴slot，打开战斗属性见真实MC/SC变化。",
+      "boundary": "不乐观搬动物品或写属性；列表来源/slot/id/version与当前Entry、revision分开保存。职业/等级不满足可看不可穿。"
+    },
+    {
+      "step": 4,
+      "action": "同槽替换→原装备返包；Role选择→明确卸下→返包，再普通重新穿戴。",
+      "boundary": "满包不得丢装或偷偷回收；替换/卸下空间规则按服务端原子结果。卸下不得解释为旧Equip重发的toggle，Unknown保持原操作方向及身份。"
+    },
+    {
+      "step": 5,
+      "action": "法师、道士分别用正常已学MC/SC技能观察穿戴/卸下的真实区间与资源表现；健康新票/换角色后仅当前角色显示当前装备和总属性。",
+      "boundary": "不要求依赖尚未开放护符的14/15/17作为道士唯一验证；可用已开放治愈等经来源明确使用SC的技能。具体技能选择仍由server/source审查锁定。"
+    }
+  ],
+  "protocol_and_data_minimum": {
+    "aggregate_attribute_pb": "现CombatAttributes已有MC/SC，无需为了显示另造统计PB。",
+    "per_equipment_data": "固定基础属性可由同源public equipment元数据投影，属性名/单位与server唯一基础管线一致；若以后有实例词条/幸运/持久，则必须服务端按实例投影真实字段，不能继续只读itemID。",
+    "unequip": "建议扩现EquipRequest显式bool unequip，携带原instance/slot并由Operation.expectedRevision兜底；或另独立明确定向请求。最终字段由root/server定稿，当前未修改协议。新增字段需要journal旧记录默认穿戴、新记录显式方向，禁止隐式反转。",
+    "shop": "40011/12/13容器可复用；需要服务器允许equipment商品及正确输出quality/非堆叠数量/绑定/容量，而不是只换UI标题。客户端报价必须检查offer/item/quantity/实例输出真实一致，不假定装备购买数量总生成一叠。",
+    "selection": "建议显式selectedInventory及selectedEquipped{slot,id,version}，事件当次只刷新本面板上下文；Inventory替换不清Role当前仍合法选择，Role选择不能启用背包回收/锁定。",
+    "unknown": "持久化前禁发、原op重查/重传，旧角色/旧Entry晚回执不清新选择或新操作；健康新票先Inventory水位，实际资产以当前服务器快照/typedreceipt为准。"
+  },
+  "meaningful_test_and_gui_plan": {
+    "unit_actual_classes": [
+      "实际AppRoot两列表事件：已穿戴选择不污染背包；同ID新version/已换槽/已消失立即无效；当次按钮文字/可用性更新但不重绑List或丢offset。",
+      "明确穿/脱方向的PendingOperations严格shape、保存/重建/Unknown原op，不把旧equip请求重放成unequip；持久化失败不发包。",
+      "单件基础属性与CombatStatus真实MC/SC/上下限Long展示，未知定义不补0；等级/职业门禁、当前同槽对照正确。",
+      "装备店真实报价：绑定分币/数量/品质/来源/输出，钱包/role/scene/rule/revision变化与过期均拒提交；书店与拆书规则保持。",
+      "装备外观资源更换若纳入：同handle/Life换资源正确退役旧帧引用、不重置移动或cast；迟到旧资源仅释放自身，头顶锚和方向图层不抖。"
+    ],
+    "saved_scene_checks": "仅追加获准保存入口/既有文字和显式字段，其他对象保持；Role原25间距与Inventory原12间距独立核；关闭Details/Quote保留底层列表offset；720×1280/720×1600/960×1280。",
+    "normal_gui": "正常新法师与道士→原装备/正常Auto获取货币→可见商店实际购入→原实例详情→穿戴/同槽替换/明确卸下/再穿→真实总MC/SC与技能作用→满包卸装或替换被安全处理→健康新票保持，原Long、receipt和source前后SHA留证。没有GM资格就不把高等级装备演示当自然成长。",
+    "not_run_in_this_audit": true
+  },
+  "pending_decisions_and_limits": [
+    "具体MC/SC装备目录、属性、正常价格/掉落、阶段/品质需root按同源Excel选择，不能从source Price或默认乘数自行认定已平衡。",
+    "乌木220 source Shape34/Looks43只是assets提供的待独立资源核验结论，本报告未解WIL或执行逐帧认证；不替assets报告填认证。",
+    "本切片不同时宣称10部位/T1–T5、强化/洗炼/幸运/持久修理、正式分解或完整1.80外观已完成。",
+    "所有建议仅设计；当前未运行模型测试、Creator或GUI，不复用rule21构建/输入冻结充当本新阶段验收。"
+  ],
+  "audit_input_sha256": {
+    "AGENTS.md": "45d6ace799705a65f135ab06981dbfed3b9be2d20874e6164804635d7a58d403",
+    "client/AGENTS.md": "293e3236d70063c5062577e3b0a92fd239294a5ea0beaa25f250bb7f6479ccd7",
+    "最终策划案.md": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4",
+    "docs/架构适配与规则优先级.md": "20055c0ba0b5f073c6dcf7777a227fb4d8b55dc200489e0546a19004cd60b8bc",
+    "docs/开发阶段与验收清单.md": "bf9d68e75c0b511b7b27af7beef5094f366de0817e80593da0e26d63c3d8a43d",
+    "client/assets/scenes/Game.scene": "67620c61844e795352607802c1ffbb9852cc32b94ea0b29109f9fe0b13c20b2c",
+    "client/assets/scripts/app/AppRoot.ts": "1604c48f013bc2c06b56a9f217554c1f9dbf873f7083dab2ad3b9e59386338f4",
+    "client/assets/scripts/app/GameSkillAssets.ts": "3fbaa0c15ccaed1e1ad30d52daf79f0b8401e7a4a95c96c739be0eb5386f17ac",
+    "client/assets/scripts/app/SkillAssetsModel.ts": "2fbfdf101c7fb72f2af891356657c1247e5f2c7c76fe42c335af54428464d787",
+    "client/assets/scripts/app/GameCombatStatus.ts": "bade6aaf462da44435e9a9d28a1f83e8b0ed70d218fa54d1d503750a7fe339e4",
+    "client/assets/scripts/app/CombatStatusModel.ts": "19b0f0d98124c0573bfd1aa1fef4446f0df7c6c46e8b654bfdc9ec20f4332529",
+    "client/assets/scripts/app/LevelGrowthModel.ts": "1e119db25bc520682b76369a48f1ec7ae04f6ae6a57376e317e8a60ef3779137",
+    "client/assets/scripts/app/PendingOperations.ts": "6baf3e5b722e4377cc0bbc30c14bb339bf0027ca564590b2f82133f90516f0e1",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "client/assets/scripts/app/GameWorldView.ts": "38f5cb820147bfd20cadca7b303a37b19a233b5ff098f737115fae86cc24a264",
+    "client/assets/resources/development/gameplay.json": "f7ebcbc2b908d11c2b1c227dad9fe281d84eeea348d3775ebaf4320293dd33b4",
+    "client/assets/resources/development/manifest.json": "5c5059f7a25c1821f0fd3704c697bf240361693ea883bf8a30e1c1a0a75e136b",
+    "shared/proto/assets.proto": "ed75b73e2c33378a105d7b6fb81af1f92679f2a4141c8769bb852390e6663957",
+    "shared/proto/world.proto": "d022411b14ae3364160a8e29a89a16e489b19c8ea23ad01c5682ce9969e18275",
+    "tools/resources/build_development_assets.py": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1",
+    "server/internal/devconfig/skill_economy.go": "ed8ef8178a8d48c129feb4f0a43259dc712b2a32fef3a0af6097c434e9ab9faa",
+    "server/internal/persistence/skill_assets.go": "3e6a1617e5964a7b00bd1f80c909ac6c84acf9156cbe0b945cbbdbe755b1ec55"
+  }
+}

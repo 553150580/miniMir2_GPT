@@ -1,0 +1,99 @@
+{
+  "status": "stopped_without_terminal_report",
+  "accepted_as_pass": false,
+  "test_exit_code": null,
+  "observed_at_utc": "2026-10-29T20:45:42.226189+00:00",
+  "specific_cause_proven": false,
+  "scope": "原执行句柄及实际检查/测试进程均缺失；原终态未写出，不能认作通过或业务失败；未停止任何进程或清理数据库",
+  "prior_tool_observation": {
+    "functions_cell": "1650 not found",
+    "exec_session": "80419 Unknown process id"
+  },
+  "commands": [
+    {
+      "name": "processes",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Get-CimInstance Win32_Process -Filter \"name='python.exe' OR name='go.exe' OR name='integration.test.exe' OR name='persistence.test.exe' OR name='game.test.exe' OR name='devconfig.test.exe' OR name='nbserver.exe'\" | Where-Object { $_.Name -match '[.]test[.]exe$' -or $_.Name -eq 'nbserver.exe' -or $_.CommandLine -match 'stage_checks[.]py go|tools/server/test[.]py|go[.]exe test -json' } | Select-Object ProcessId,ParentProcessId,CreationDate,Name,CommandLine | ConvertTo-Json -Depth 3"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/go/full-2/processes.stdout.txt",
+      "stdout_sha256": "2a74a9276a6191839094fd3bb5980728f75373bfa4cc5bde441961d2f1214e44",
+      "stderr": ".work/equipment-growth-20261030/go/full-2/processes.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-owned",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/go/full-2/server-owned.stdout.txt",
+      "stdout_sha256": "9ed03d15f7ba3a9ca11b5596f148ffbbe5bf02abf19effddd62b1c09762447f1",
+      "stderr": ".work/equipment-growth-20261030/go/full-2/server-owned.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "mongo-owned",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/equipment-growth-20261030/go/full-2/mongo-owned.stdout.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr": ".work/equipment-growth-20261030/go/full-2/mongo-owned.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "source_count": 197,
+  "source_stable_since_start": true,
+  "latest_report_is_older_attempt": true,
+  "latest_report_sha256": "dc2e3de931f3e8afcecb70e70652c9c2c47df1cdc412680444e8cf26577fc1e9",
+  "preserved_original_files": {
+    "full-mongo-race.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "full-mongo-race.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "started.json": "4fc653c2152af8297d0d3d7d9465df1c4e60020fc7ecb8406bf039790f63fe59"
+  },
+  "live_main_processes": [
+    {
+      "ProcessId": 2736,
+      "ParentProcessId": 31524,
+      "CreationDate": "/Date(1793299626422)/",
+      "Name": "nbserver.exe",
+      "CommandLine": "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode supervisor -run-id efb91e02-6145-4a44-9394-a4fb48de3684"
+    },
+    {
+      "ProcessId": 22116,
+      "ParentProcessId": 2736,
+      "CreationDate": "/Date(1793299626543)/",
+      "Name": "nbserver.exe",
+      "CommandLine": "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode account"
+    },
+    {
+      "ProcessId": 24400,
+      "ParentProcessId": 2736,
+      "CreationDate": "/Date(1793299626546)/",
+      "Name": "nbserver.exe",
+      "CommandLine": "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode game"
+    },
+    {
+      "ProcessId": 67688,
+      "ParentProcessId": 2736,
+      "CreationDate": "/Date(1793299626550)/",
+      "Name": "nbserver.exe",
+      "CommandLine": "D:\\A_Claude\\miniMir2_GPT\\server\\bin\\nbserver.exe -config D:\\A_Claude\\miniMir2_GPT\\conf\\dev\\server.json -mode gm"
+    }
+  ],
+  "owned_mongo_pid": 5640,
+  "script_sha256": "0935f1147e9f5225547f359edab5b7c2ee0e3fcc04d3347411dd3f5da952bb11"
+}

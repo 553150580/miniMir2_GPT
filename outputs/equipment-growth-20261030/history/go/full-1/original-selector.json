@@ -1,0 +1,34 @@
+{
+  "scope": "实际full-1失败原件，只保存指针和原SHA；最终归档须复制这些原字节/无损gzip，不修改原状态",
+  "passed": false,
+  "source_inputs": 196,
+  "passed_tests_including_subtests": 1134,
+  "failed_tests_including_subtests": 79,
+  "failed_packages": 4,
+  "files": {
+    ".work/equipment-growth-20261030/go/full-1/report.json": {
+      "sha256": "dc2e3de931f3e8afcecb70e70652c9c2c47df1cdc412680444e8cf26577fc1e9",
+      "bytes": 219867
+    },
+    ".work/equipment-growth-20261030/go/full-1/events.jsonl": {
+      "sha256": "b2c9553881e08e0fa90ec9f93ef8ea0449db93c0067836ac7b1d87a8ed593948",
+      "bytes": 1228300
+    },
+    ".work/equipment-growth-20261030/go/full-1/wrapper.json": {
+      "sha256": "720c1c1fe32c7bf70ed8557aa33aebb7ae5afe79d41fc730c316a4ddaaa306c6",
+      "bytes": 46744
+    },
+    ".work/equipment-growth-20261030/go/full-1/started.json": {
+      "sha256": "15386545edd460ac10cae9b54141fc15ddc157ab363e44772bd8339f84b0506b",
+      "bytes": 23039
+    },
+    ".work/equipment-growth-20261030/go/full-1/full-mongo-race.stdout.txt": {
+      "sha256": "b354bce2905459f78412318ac47d332d68adcea6f3fa8561a6dfbf193807882f",
+      "bytes": 166742
+    },
+    ".work/equipment-growth-20261030/go/full-1/full-mongo-race.stderr.txt": {
+      "sha256": "7d83735ba0a8189bff566041bfb6ae21082bc6c3883c96d453e2f2f153c7bd61",
+      "bytes": 1233400
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "status": "read_only_support_source_audit_verified_not_runtime_certified",
+  "recorded_at_utc": "2026-10-29T20:39:07.461859+00:00",
+  "reports": {
+    "appearance-consumer-review.json": "42ed6b1da64a895ceb806686da82fd0809e80920403a3166b72e34c5ef255e75",
+    "appearance-consumer-review-v2.json": "42bd8a9a62aca2432c5750ca0e8fb3e1240332bf5172954532feaead39dea430"
+  },
+  "source_files_sha_verified": {
+    "v1": 12,
+    "v2": 13
+  },
+  "referenced_manifests_verified": 1,
+  "referenced_weapon_library_json_sha_verified": 2,
+  "original_source_reports_preserved": [
+    {
+      "path": ".work/equipment-growth-20261030/source-audit.json",
+      "sha256": "a6ded2afcc18b85be411e9998b0e608a53ac1b9d1e6d60b5933055eec9575867"
+    },
+    {
+      "path": ".work/equipment-growth-20261030/same-server-client-audit.json",
+      "sha256": "250ba24d839109e656f29549c09500731a48dffb9425f5151c1442c8f71a9af4"
+    }
+  ],
+  "v1_original_bytes_preserved": true,
+  "v2_only_declared_scope_clarification": true,
+  "evidence_agreement": "两套可读消费链均按Shape选择独立库，然后在库内按动作/方向/性别索引；不能据此证明raw WIL乘1200、减1或女600公式",
+  "scope_clarification": "还原MYF原外观才需其字段/发布客户端/PAK优先级桥接；本作可另按可追溯目标1.80定义到同参考实际库消费映射登记差异，两条路线本轮均未完整认证",
+  "runtime220_enabled": false,
+  "main_runtime_or_excel_changed": false,
+  "source_program_or_go_db_browser_executed": false,
+  "limits": "额外support来源研究，不作为stage22主运行/完整1.80/220或三职业完整成长通过证据。未重新探帧/导出资源。"
+}

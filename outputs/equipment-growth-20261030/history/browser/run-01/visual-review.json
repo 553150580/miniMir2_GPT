@@ -1,0 +1,16 @@
+{
+  "visual_passed": false,
+  "report_sha256": "6babb7aeded59de622bc9857cf9bd763ddf7fb6d88e66cac23f8e67fc98d1d95",
+  "screenshots": [
+    "failure.png"
+  ],
+  "screenshot_sha256": {
+    "failure.png": "1356376cc286d45694b4a08874b7c33c2ac4b715bc90a33382a28fbe9846a79a"
+  },
+  "actually_viewed": true,
+  "observations": [
+    "实际截图为正常Game场景：1级战士、生命18/18、魔法14/14、空手站在原个人地图；HUD和保存按钮可读，截图范围未见遮挡。",
+    "本轮尚未打开装备详情或执行任何40001，不能据本图证明11属性、穿脱、替换或健康重入。"
+  ],
+  "scope": "仅失败现场GPU截图审阅，不是真机验收；QA把HTTP创角错误地仅在WS观察，断言未通过。"
+}

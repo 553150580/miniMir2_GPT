@@ -1,0 +1,18 @@
+{
+  "scope": "从实际index verifier工具返回及独立Git原blob读取整理的结构化观察，不冒称独立原stdout",
+  "verifier_source_sha256": "01409b682a32f19cb78277d28692a8baa48afcf7b8ac7517ae2197966c9ec31f",
+  "command": "tools/dev python3 .work/equipment-growth-20261030/verify_index.py --report .work/equipment-growth-20261030/index-review.json",
+  "exit_code": 1,
+  "passed": false,
+  "error": "归档index/file/正式SHA不同：outputs/equipment-growth-20261030/current/client/protocol-check.stdout.txt",
+  "path": "outputs/equipment-growth-20261030/current/client/protocol-check.stdout.txt",
+  "working_bytes": 725,
+  "working_sha256": "2f80580f66f77526ad7a00f92867af65f7d1f01afe0723855f33b32189d77f37",
+  "normalized_index_bytes": 723,
+  "normalized_index_sha256": "035f61ab68be93320ca592c94b0d20908460ffcc0bd3c42300b3d5efdd9d6e26",
+  "exact_crlf_normalization_reproduced": true,
+  "raw_normalized_index_blob_preserved_at": ".work/equipment-growth-20261030/history/pre-eol-policy/normalized-index-sample.txt",
+  "original_archive_and_report_preserved": ".work/equipment-growth-20261030/history/pre-eol-policy/preservation.json",
+  "product_test_failure": false,
+  "global_git_settings_modified": false
+}

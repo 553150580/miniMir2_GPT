@@ -1,0 +1,447 @@
+{
+  "status": "read_only_follow_up_research_not_stage22_admission",
+  "recorded_at_utc": "2026-10-29T20:32:29.587401+00:00",
+  "scope": {
+    "production_modified": false,
+    "qa_tool_modified": false,
+    "resource_exported": false,
+    "runtime_catalog_modified": false,
+    "source_program_executed": false,
+    "pak_key_or_cipher_attempted": false,
+    "artifact_certification": false,
+    "sources": "只读明确的人物渲染/库索引/Frame数据代码及已存在审计；不重复资源包全文件摘要或像素提取。"
+  },
+  "input_reports": [
+    {
+      "path": ".work/equipment-growth-20261030/source-audit.json",
+      "sha256": "a6ded2afcc18b85be411e9998b0e608a53ac1b9d1e6d60b5933055eec9575867"
+    },
+    {
+      "path": ".work/equipment-growth-20261030/same-server-client-audit.json",
+      "sha256": "250ba24d839109e656f29549c09500731a48dffb9425f5151c1442c8f71a9af4"
+    }
+  ],
+  "evidence": {
+    "product": {
+      "path": "最终策划案.md",
+      "line": 113,
+      "end_line": 115,
+      "sha256": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4"
+    },
+    "crystal_item_server": {
+      "path": "资料参考/crystal/Server/MirObjects/HumanObject.cs",
+      "line": 1825,
+      "end_line": 1847,
+      "sha256": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c"
+    },
+    "crystal_item_client": {
+      "path": "资料参考/crystal/Client/MirObjects/UserObject.cs",
+      "line": 227,
+      "end_line": 244,
+      "sha256": "bd7be3c8902f6a275074b14cb9c38f751f48c83695e9818a7755f4edab087659"
+    },
+    "crystal_class_substitution": {
+      "path": "资料参考/crystal/Shared/Functions/Functions.cs",
+      "line": 342,
+      "end_line": 387,
+      "sha256": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278"
+    },
+    "crystal_class_family": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "line": 41,
+      "end_line": 53,
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "crystal_gender_wire": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "line": 114,
+      "end_line": 121,
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "crystal_classic_libraries": {
+      "path": "资料参考/crystal/Client/MirGraphics/MLibrary.cs",
+      "line": 85,
+      "end_line": 92,
+      "sha256": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8"
+    },
+    "crystal_library_names": {
+      "path": "资料参考/crystal/Client/MirGraphics/MLibrary.cs",
+      "line": 196,
+      "end_line": 214,
+      "sha256": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8"
+    },
+    "crystal_classic_renderer": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "line": 547,
+      "end_line": 591,
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "crystal_frame_stride": {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "line": 203,
+      "end_line": 242,
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    },
+    "crystal_draw_frame": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "line": 750,
+      "end_line": 762,
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "crystal_draw_weapon": {
+      "path": "资料参考/crystal/Client/MirObjects/PlayerObject.cs",
+      "line": 5056,
+      "end_line": 5073,
+      "sha256": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a"
+    },
+    "crystal_draw_image": {
+      "path": "资料参考/crystal/Client/MirGraphics/MLibrary.cs",
+      "line": 658,
+      "end_line": 670,
+      "sha256": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8"
+    },
+    "crystal_frame_data": {
+      "path": "资料参考/crystal/Client/MirGraphics/MLibrary.cs",
+      "line": 520,
+      "end_line": 546,
+      "sha256": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8"
+    },
+    "crystal_player_frame_container": {
+      "path": "资料参考/crystal/Client/MirObjects/Frames.cs",
+      "line": 3,
+      "end_line": 13,
+      "sha256": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16"
+    },
+    "crystal_gender_enum": {
+      "path": "资料参考/crystal/Shared/Enums.cs",
+      "line": 818,
+      "end_line": 821,
+      "sha256": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398"
+    },
+    "reference_model": {
+      "path": "D:/123DownLoad/GoMir2/client/assets/scripts/core/player-art/model.ts",
+      "line": 54,
+      "end_line": 70,
+      "sha256": "9fe404b7a17d28db60c03885c23d315d031ec60acf7505c99b083dd9301e7052"
+    },
+    "reference_validation": {
+      "path": "D:/123DownLoad/GoMir2/client/assets/scripts/core/player-art/model.ts",
+      "line": 16,
+      "end_line": 40,
+      "sha256": "9fe404b7a17d28db60c03885c23d315d031ec60acf7505c99b083dd9301e7052"
+    },
+    "reference_stream": {
+      "path": "D:/123DownLoad/GoMir2/client/assets/scripts/core/player-art/player-stream.ts",
+      "line": 32,
+      "end_line": 43,
+      "sha256": "10c0683ce792d133fc283154eace68e2a928d66be13a2a4ad01bdb520ba34052"
+    },
+    "reference_loader": {
+      "path": "D:/123DownLoad/GoMir2/client/assets/scripts/ui/player-art-view.ts",
+      "line": 19,
+      "end_line": 30,
+      "sha256": "d052aa6f4fd3aaf6dd0baaf51fc42a72303fa297ec60dd655fc19e9cc236785c"
+    },
+    "current_wil_candidate": {
+      "path": "tools/resources/build_development_assets.py",
+      "line": 21,
+      "end_line": 29,
+      "sha256": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1"
+    }
+  },
+  "crystal_actual_consumer": {
+    "item_to_shape": "服务端Looks_Weapon及客户端UserObject.Weapon均取Functions.GetRealItem后的realItem.Shape；不是客户端直接拿MYF原CSV字段。",
+    "library_selection": "Warrior/Taoist/Wizard常规非变身分支：Weapon>=0时CWeapons[Weapon]，没有Shape-1，也没有Shape*1200；Weapon<0不画。",
+    "library_naming": "CWeapons由CWeaponPath初始化；library[i] = MLibrary(path + i.ToString(\"00\") + suffix)。Shape34在该体系选索引34/文件名34.Lib，不是33.Lib或全局40800帧。Shape0是合法索引，不代表统一未穿戴。",
+    "local_frame_formula": "DrawFrame = Frame.Start + (Frame.Count + Frame.Skip) * Direction + FrameIndex；DrawWeapon用DrawFrame + WeaponOffSet，在所选独立库内直接取_images[index]。",
+    "classic_gender": {
+      "enum": {
+        "male": 0,
+        "female": 1
+      },
+      "weapon_offset": [
+        0,
+        416
+      ],
+      "armour_offset": [
+        0,
+        808
+      ],
+      "hair_offset": [
+        0,
+        808
+      ]
+    },
+    "special_branches": "变身、刺客/弓手、挖取时CWeapons[1]、钓鱼独立库与-632偏移等另有分支，不将其常数移入本作三职普通武器；未将来源额外职业/坐骑开放。",
+    "frame_data_limit": "MLibrary v3按嵌入FrameSet读Start/Count/Skip等。此C#副本FrameSet.Player静态仅new容器，PlayerObject构造使用它；本轮未补出其全部初始化来源，也未解武器Lib具体动作表，故公式已证不等于具体34.Lib动作/像素已认证。"
+  },
+  "gomir2_reference_actual_consumer": {
+    "nature": "独立Creator架构参考客户端，不是MYF/Apex发布客户端源码。",
+    "look_contract": "wire/对象look.weapon_shape直接作为manifest.families.classic.layers.weapon[String(shape)]键；shape==-1跳过武器，缺shape映射返回undefined，不试相邻编号。",
+    "library_selection": "读取该键file的独立library.json；player-stream再用library.frames[String(request.index)]，并经库layer/shape身份校验。",
+    "local_frame_formula": "index = action.start + pose.direction * (action.count + action.skip) + frame_order[phase] + gender_offsets[layer][look.gender]。loop/once/hold分别按manifest时长取phase，shape不进入帧号算式。",
+    "observed_manifest": {
+      "path": "D:/123DownLoad/GoMir2/client/assets/world/players/manifest.json",
+      "sha256": "ca09fced16fdb1519acd2ee9496b10105d0562f77f068058de95e9c358d4a7c9",
+      "schema_version": 2,
+      "class_ids": [
+        0,
+        1,
+        2
+      ],
+      "gender_offsets": {
+        "body": [
+          0,
+          808
+        ],
+        "hair": [
+          0,
+          808
+        ],
+        "weapon": [
+          0,
+          416
+        ]
+      },
+      "weapon_shapes": {
+        "0": {
+          "file": "classic/weapon/0/library-d1b9230d5c120a1a01af2c39.json",
+          "sha256": "d1b9230d5c120a1a01af2c396f0011f41b468d35b9a39145b1cee395f3fccbaf"
+        },
+        "1": {
+          "file": "classic/weapon/1/library-614d0bdfea4b9ae6b50a35b6.json",
+          "sha256": "614d0bdfea4b9ae6b50a35b69621cbab574a931a4ae1cdeb2f79ab44f43a8b6e"
+        }
+      },
+      "actions": {
+        "attack1": {
+          "start": 136,
+          "count": 6,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "attack2": {
+          "start": 184,
+          "count": 6,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "attack3": {
+          "start": 232,
+          "count": 8,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "dead": {
+          "start": 387,
+          "count": 1,
+          "skip": 3,
+          "interval_ms": 1000,
+          "source_reverse": false,
+          "play_mode": "hold",
+          "frame_order": [
+            0
+          ]
+        },
+        "die": {
+          "start": 384,
+          "count": 4,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "revive": {
+          "start": 384,
+          "count": 4,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": true,
+          "play_mode": "once",
+          "frame_order": [
+            3,
+            2,
+            1,
+            0
+          ]
+        },
+        "run": {
+          "start": 80,
+          "count": 6,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "spell": {
+          "start": 296,
+          "count": 6,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "stance": {
+          "start": 128,
+          "count": 1,
+          "skip": 0,
+          "interval_ms": 1000,
+          "source_reverse": false,
+          "play_mode": "hold",
+          "frame_order": [
+            0
+          ]
+        },
+        "stand": {
+          "start": 0,
+          "count": 4,
+          "skip": 0,
+          "interval_ms": 500,
+          "source_reverse": false,
+          "play_mode": "loop",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "struck": {
+          "start": 360,
+          "count": 3,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2
+          ]
+        },
+        "walk": {
+          "start": 32,
+          "count": 6,
+          "skip": 0,
+          "interval_ms": 100,
+          "source_reverse": false,
+          "play_mode": "once",
+          "frame_order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        }
+      }
+    },
+    "shape34_available": "当前该参考manifest仅武器shape0、1；34未声明，模型应判不支持。它不能提供MYF Shape34→raw WIL body的桥接。"
+  },
+  "arithmetic_hypotheses_not_adopted": [
+    {
+      "hypothesis": "MYF Shape34直接乘1200",
+      "male_candidate": 40800,
+      "female_plus600_candidate": 41400,
+      "status": "不能由已读Crystal/GoMir2消费代码证明；先前像素探针也没有认证乌木身体。"
+    },
+    {
+      "hypothesis": "(MYF Shape34-1)乘1200",
+      "male_candidate": 39600,
+      "female_plus600_candidate": 40200,
+      "status": "已读两个消费链均不减1；不能因前一个假设看起来不对就选择此编号。本轮未导出或按图片观感认证。"
+    },
+    {
+      "hypothesis": "把Crystal紧凑库female+416混入旧WIL每外观块+600",
+      "status": "不同库布局；当前本作WIL候选standing方向stride8/attack起200，参考紧凑JSON standing stride4/attack1起136，不能混算。"
+    }
+  ],
+  "identity_and_class_boundary": {
+    "product_fact": "最终策划L115固定男战士/女法师/男道士，同一itemID不拆男女装备或属性；外观映射不得改变职业/等级/掉落/绑定/交易身份。",
+    "source_fact": "Crystal从对象包取Class/Gender，常规三职共用CWeapons且按Gender偏移；GoMir2仅验证class_id属于[0,1,2]和gender0/1，不把职业自动换成固定性别。",
+    "non_adopted_source_rule": "Crystal GetRealItem可因ClassBased/LevelBased按Name前缀、职业和等级替换realItem，还保RequiredGender条件；这是来源自身规则，不允许据此把本作同itemID属性/供给拆成多件或恢复性别门槛。",
+    "future_mapping_candidate": "如未来独立库及MYF字段桥接均证实，同装备可按本作固定职业性别选择已核男性/女性像素，保留同一物品身份；目前不能据此开放220。"
+  },
+  "can_prove": [
+    "Crystal和GoMir2已读消费函数均是Shape选独立图库，局部动作/方向/性别偏移选帧；不是两个假设的全局乘法。",
+    "Crystal这条链不执行Shape-1，GoMir2缺shape映射明确不支持；未知不可用邻库替代。",
+    "本作现有1200/1800固定WIL候选与上述紧凑图库采用不同布局常数，必须独立对应。"
+  ],
+  "cannot_prove": [
+    "MYF/Apex/GXX正式客户端是否先对Shape/Look进行转换或由补丁PAK覆盖，以及文件优先级。",
+    "MYF220的Shape34是否等于Crystal CWeapons34或GoMir2 wire.weapon_shape34；同名字段不是编号映射证据。",
+    "原WIL 39600/40200/40800/41400何组代表乌木身体；本轮未提取新PNG、未凭像素相似选组。",
+    "Items/StateItems原43像素相同只能加强图标/详情候选，不授予武器身体/方向/动作/偏移/绘制顺序全套认证。",
+    "完整1.80、所有职业衣服裸装/武器款式/性别映射或装备成长业务验收。"
+  ],
+  "stage22_unchanged": "本报告是下一内容研究；stage22仍只218/193原零MC/SC基础、显式穿脱与现候选Weapon层开关，220/装备店/新资源均未开放。Root给正常GUI窗口时优先执行冻结工具。",
+  "source_sha256_current": {
+    "最终策划案.md": "679aa14b24cbde9c606dbd12756b64430715947cb9f89991d6b1f58bb8ea4bb4",
+    "资料参考/crystal/Server/MirObjects/HumanObject.cs": "da406ed3f9e2cbc79d9759871410cfaf08b9b17a1e507631e68f2679c105958c",
+    "资料参考/crystal/Client/MirObjects/UserObject.cs": "bd7be3c8902f6a275074b14cb9c38f751f48c83695e9818a7755f4edab087659",
+    "资料参考/crystal/Shared/Functions/Functions.cs": "255e0ff5de9d9dec47e356f4049def61b5b607fd9664b74dd86944ecebee2278",
+    "资料参考/crystal/Client/MirObjects/PlayerObject.cs": "e4eacf5249d41aaf35c4cd6a905cae9ab1ef0edb68379a5dee2fcfe4b1f9c20a",
+    "资料参考/crystal/Client/MirGraphics/MLibrary.cs": "afda6ebb7a163d745d6398ea5c92ce80524daa6fb85c6167a09514867cf6f8c8",
+    "资料参考/crystal/Client/MirObjects/Frames.cs": "0750381f2b0fb51cc841a67d0a3fb1724b40dd4dd213acd50adb2a382f329f16",
+    "资料参考/crystal/Shared/Enums.cs": "63c8f63b436b27dc941e90e9eece792de2d4b89dcb932f2e23fb7428a993d398",
+    "D:/123DownLoad/GoMir2/client/assets/scripts/core/player-art/model.ts": "9fe404b7a17d28db60c03885c23d315d031ec60acf7505c99b083dd9301e7052",
+    "D:/123DownLoad/GoMir2/client/assets/scripts/core/player-art/player-stream.ts": "10c0683ce792d133fc283154eace68e2a928d66be13a2a4ad01bdb520ba34052",
+    "D:/123DownLoad/GoMir2/client/assets/scripts/ui/player-art-view.ts": "d052aa6f4fd3aaf6dd0baaf51fc42a72303fa297ec60dd655fc19e9cc236785c",
+    "tools/resources/build_development_assets.py": "565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1"
+  }
+}

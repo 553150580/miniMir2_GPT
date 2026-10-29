@@ -1,0 +1,15 @@
+{
+  "read_only": true,
+  "files_checked": 835,
+  "differences": [
+    {
+      "path": "client/assets/scripts/app/EquipmentModel.ts.meta",
+      "working_sha256": "25d0876c535d2e431d995c1e873c0292c8af1073ce1cd5f33351700ded661e3e",
+      "index_sha256": "b34a3fbad55957467cfd6e199d81ca739aef6e15bb2b83564a74274b2357625e",
+      "working_bytes": 180,
+      "index_bytes": 171,
+      "only_crlf_normalization": true
+    }
+  ],
+  "scope": "当前阶段全部暂存路径与Go/client受测输入；不代替完整index门禁或原资源核验"
+}

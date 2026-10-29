@@ -1,6 +1,7 @@
 package devconfig
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 )
@@ -26,6 +27,13 @@ func (i *Item) UnmarshalJSON(data []byte) error {
 	quality, hasQuality := fields["drop_quality"]
 	decoded.recycleGoldExplicit = hasGold && string(gold) != "null"
 	decoded.dropQualityExplicit = hasQuality && string(quality) != "null"
+	for n, name := range equipmentStatFields {
+		value, exists := fields[name]
+		if exists && bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
+			return errors.New("装备基础属性不能为null：" + name)
+		}
+		decoded.equipmentStatsExplicit[n] = exists
+	}
 	*i = Item(decoded)
 	return nil
 }

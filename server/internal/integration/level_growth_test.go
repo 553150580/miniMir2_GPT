@@ -27,7 +27,7 @@ func TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 21 {
+	if cfg.Fixture.RuleVersion != 22 {
 		t.Fatal("必须使用当前rule21完整成长配置")
 	}
 	// 仅隔离定义把原衣服门槛调到7以验证真正事务门禁，不向主目录增加装备。
@@ -87,7 +87,7 @@ func TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo(t *testing.T) {
 		return result, op
 	}
 	before := r
-	result, _ := asset(persistence.AssetRequest{Kind: "equip", ItemID: cloth.ID, Slot: 1})
+	result, _ := asset(persistence.AssetRequest{Kind: "equip", ItemID: cloth.ID, Slot: 1, ItemVersion: uint64(cloth.Version)})
 	if result.ErrorCode == 0 || !reflect.DeepEqual(r.Items, before.Items) || len(r.Equipped) != 0 || r.SourceSeq != before.SourceSeq {
 		t.Fatal("未到装备来源需求等级仍穿戴或部分移物")
 	}
@@ -100,7 +100,7 @@ func TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo(t *testing.T) {
 	if r.Level != 7 || r.Experience != 0 || op.Settlement.Experience.ActualGranted != toSeven {
 		t.Fatal("明确边界奖励未按主曲线到7")
 	}
-	result, _ = asset(persistence.AssetRequest{Kind: "equip", ItemID: cloth.ID, Slot: 1})
+	result, _ = asset(persistence.AssetRequest{Kind: "equip", ItemID: cloth.ID, Slot: 1, ItemVersion: uint64(cloth.Version)})
 	if result.ErrorCode != 0 || len(r.Equipped) != 1 || r.Equipped[0].Item.ID != cloth.ID {
 		t.Fatal("达到真实需求等级后未正常穿戴")
 	}
@@ -176,7 +176,7 @@ func TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS(t *testing
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 21 {
+	if cfg.Fixture.RuleVersion != 22 {
 		t.Fatal("必须是当前主rule21")
 	}
 	// 明确加速战斗资格，仅HP1/零攻击/零敏；经验15、主曲线、动作/刷新/掉率/保底均保持。
@@ -246,7 +246,7 @@ func TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS(t *testing
 	if wood == nil || book == nil {
 		t.Fatal("初始原武器/原职业书缺失")
 	}
-	res := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wood.InstanceId, Slot: 0, Operation: c.operation()})
+	res := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wood.InstanceId, Slot: 0, ItemVersion: wood.Version, Operation: c.operation()})
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
 	}

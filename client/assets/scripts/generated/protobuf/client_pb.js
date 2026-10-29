@@ -20419,6 +20419,8 @@ $root.minimir = (function() {
              * @property {Uint8Array|null} [item_instance_id] EquipRequest item_instance_id
              * @property {number|null} [slot] EquipRequest slot
              * @property {minimir.v1.OperationContext.$Properties|null} [operation] EquipRequest operation
+             * @property {boolean|null} [unequip] EquipRequest unequip
+             * @property {Long|null} [item_version] EquipRequest item_version
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -20475,6 +20477,22 @@ $root.minimir = (function() {
             EquipRequest.prototype.operation = null;
 
             /**
+             * EquipRequest unequip.
+             * @member {boolean} unequip
+             * @memberof minimir.v1.EquipRequest
+             * @instance
+             */
+            EquipRequest.prototype.unequip = false;
+
+            /**
+             * EquipRequest item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.EquipRequest
+             * @instance
+             */
+            EquipRequest.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new EquipRequest instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EquipRequest
@@ -20512,6 +20530,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.slot);
                 if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
                     $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.unequip != null && $Object.hasOwnProperty.call(message, "unequip") && message.unequip !== false)
+                    writer.uint32(/* id 4, wireType 0 =*/32).bool(message.unequip);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.item_version);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -20593,6 +20615,24 @@ $root.minimir = (function() {
                             message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
                             continue;
                         }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.unequip = value;
+                            else
+                                delete message.unequip;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -20652,6 +20692,12 @@ $root.minimir = (function() {
                     if (error)
                         return "operation." + error;
                 }
+                if (message.unequip != null && $Object.hasOwnProperty.call(message, "unequip"))
+                    if (typeof message.unequip !== "boolean")
+                        return "unequip: boolean expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
                 return null;
             };
 

@@ -1,0 +1,39 @@
+{
+  "18080": {
+    "webMobileBuild": true,
+    "developmentOnly": true,
+    "pid": 53128,
+    "run_id": "1b4cec4070eb4e5b8a1def0d8a43c855",
+    "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+    "port": 18080,
+    "account_port": 18100,
+    "game_port": 18101
+  },
+  "18100": {
+    "development_only": true,
+    "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "instance": "d0b8a25771c380d822a3a62caa852a55",
+    "mode": "account",
+    "rule_version": 22,
+    "runtime_ready": false,
+    "status": "ok"
+  },
+  "18101": {
+    "development_only": true,
+    "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "instance": "c5a7685882633eaa5877b9b4b1720257",
+    "mode": "game",
+    "rule_version": 22,
+    "runtime_ready": false,
+    "status": "ok"
+  },
+  "18102": {
+    "development_only": true,
+    "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "instance": "1faad00464d8a31a2401510ebac288d3",
+    "mode": "gm",
+    "rule_version": 22,
+    "runtime_ready": false,
+    "status": "ok"
+  }
+}

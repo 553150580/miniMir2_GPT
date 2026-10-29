@@ -29,7 +29,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	must(t, err)
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 21 || cfg.Fixture.CastingSupply.Enabled {
+	if cfg.Fixture.RuleVersion != 22 || cfg.Fixture.CastingSupply.Enabled {
 		t.Fatal("必须从主rule21关闭材料的真实配置创建隔离样本；独立召唤候选仍required17")
 	}
 	if _, enabled := cfg.Fixture.Skill(17); enabled {

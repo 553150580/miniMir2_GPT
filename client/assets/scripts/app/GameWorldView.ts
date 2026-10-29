@@ -58,7 +58,15 @@ export class GameWorldView {
         blend: Object.freeze(value.body.map(sprite => { const target = sprite.getRenderMaterial?.(0)?.passes[0]?.blendState.targets[0];
             return Object.freeze({ source: target?.blendSrc ?? null, destination: target?.blendDst ?? null }); })) }))); }
     bindPresentation(identity: AttachmentIdentity, current: () => boolean, retire: () => void = () => {}): void {
+        if (this.presentationScope !== attachmentKey(identity)) this.weaponEquipped = true;
         this.presentationScope = attachmentKey(identity); this.presentationCurrent = current; this.retirePresentation = retire;
+    }
+    observeEquipment(identity: AttachmentIdentity, playerHandle: number, inventory: { equipped: readonly { slot: number; item: { itemId: number } }[] } | null): boolean {
+        if (this.disposed || !this.assets || !this.presentationCurrent() || this.presentationScope !== attachmentKey(identity)
+            || playerHandle !== this.playerHandle || !inventory || !Array.isArray(inventory.equipped)) return false;
+        const weapon = inventory.equipped.find(entry => entry.slot === 0);
+        if (weapon && !this.gameplay.items.some((row: any) => row.item_id === weapon.item.itemId && row.kind === 'equipment' && row.equip_slot === 0)) return false;
+        this.weaponEquipped = !!weapon; return true;
     }
     private visuals = new Map<number, Visual>();
     private projection?: GridProjection;
@@ -70,7 +78,8 @@ export class GameWorldView {
     private disposed = false;
     private selected: (entity: any) => void = () => {};
     private playerPosition: { x: number; y: number } | null = null;
-    private weaponEquipped = false;
+    // 未取得当前附着库存时沿用既有候选层；只有明确空槽才能隐藏自己的武器。
+    private weaponEquipped = true;
     // 仅显式开发验收网址输出入场及后续两个窗口，不创建诊断UI或读取输入框。
     private audit = typeof location !== 'undefined' && new URLSearchParams(location.search).get('renderQA') === '1'
         ? { stage: 'initial', start: 0, last: 0, updates: 0, maxGap: 0, changedFrames: 0, intermediate: [0, 0, 0, 0] } : null;
@@ -175,7 +184,7 @@ export class GameWorldView {
         if (action.sound) this.audio?.play(1, action.sound, () => !this.disposed && this.presentationCurrent() && this.visuals.get(event.entityHandle) === visual
             && visual.state.life.toString() === event.entityLife && visual.state.movementRevision?.toString() === event.movementRevision && !visual.state.hp.isZero(),
             until, value.elapsedMs, `${this.presentationScope}:born:${event.sourceCastId}:${event.entityHandle}:${event.entityLife}`);
-        this.update(0, this.job, this.weaponEquipped); return true;
+        this.update(0, this.job); return true;
     }
     acceptCastStep(event: CastStepEvent): void { if (!this.disposed) this.effects?.step(event, game.totalTime); }
     acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
@@ -191,7 +200,7 @@ export class GameWorldView {
         visual.state = { ...visual.state, position: visual.movement.position, direction: event.facingDirection,
             movementRevision: event.movementRevision, movementKind: event.kind };
         this.effects?.displacement(event, now, event.entityHandle === this.playerHandle);
-        this.update(0, this.job, this.weaponEquipped);
+        this.update(0, this.job);
     }
     presentTeleportArrival(result: TeleportObservation): void {
         const player = this.visuals.get(this.playerHandle);
@@ -306,7 +315,7 @@ export class GameWorldView {
         for (const [id, visual] of Array.from(this.visuals)) if (!alive.has(id)) { this.removeVisual(visual); this.visuals.delete(id); }
         if (baseline.stateSequence != null) this.statusEffects?.observe(baseline.stateSequence, baseline.entities, now);
         // 首帧定位同样走显示模型；后续快照绝不直接设置节点为新格坐标。
-        this.update(0, this.job, this.weaponEquipped);
+        this.update(0, this.job);
     }
 
     // 镜头跟随显示位置，避免权威格跳变抵消实体插值；窗口变化仍能独立重夹。
@@ -330,9 +339,8 @@ export class GameWorldView {
             Math.max(-rangeY, Math.min(rangeY, -point.y * scale.y)), this.world.position.z);
     }
 
-    update(_dt: number, _job: number, weaponEquipped: boolean): void {
+    update(_dt: number, _job: number): void {
         if (this.disposed || !this.assets) return;
-        this.weaponEquipped = weaponEquipped;
         const now = game.totalTime;
         this.audio?.update();
         const audit = _dt > 0 ? this.audit : null;
@@ -373,7 +381,7 @@ export class GameWorldView {
                 const keys: string[] = animation.directions[visualDirection].frames;
                 const key = keys[Math.min(keys.length - 1, pose.frame)];
                 const definition = this.manifest.frames[key];
-                const visible = !(layer.package === 'Weapon' && !weaponEquipped) && !definition.declared_empty;
+                const visible = !(visual.state.entityKind === 1 && visual.state.entityHandle === this.playerHandle && layer.package === 'Weapon' && !this.weaponEquipped) && !definition.declared_empty;
                 if (sprite.node.active !== visible) sprite.node.active = visible;
                 if (!visible || visual.keys[index] === key) return;
                 // 所有非空动作帧已在取票前加载；播放中不清空Sprite或发异步资源请求。

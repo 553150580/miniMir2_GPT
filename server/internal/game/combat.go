@@ -135,6 +135,15 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 				continue
 			}
 			def, _ := f.Item(item.Item.ItemID)
+			if f.RuleVersion >= 22 {
+				var valid bool
+				a, valid = def.AddEquipmentBonuses(a)
+				if !valid {
+					w.isolateRoom(r)
+					return devconfig.Fighter{}
+				}
+				continue
+			}
 			a.AttackMin += def.AttackBonus + def.AttackMinBonus
 			a.AttackMax += def.AttackBonus + def.AttackMaxBonus
 			a.AttackSpeed += def.AttackSpeedBonus
@@ -151,6 +160,10 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 			}
 		}
 		if w.sourceTimeline() {
+			if f.RuleVersion >= 22 && !f.EquipmentArithmeticSafe(a) {
+				w.isolateRoom(r)
+				return devconfig.Fighter{}
+			}
 			a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
 		}
 		return statusFighter(e, a)

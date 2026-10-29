@@ -1,0 +1,62 @@
+{
+  "status": "read_only_root_cause_confirmed_minimal_go_compatibility_fix_authorized",
+  "recorded_at_utc": "2026-10-29T20:26:25.349561+00:00",
+  "candidate_path": "config/development/summon-candidates.json",
+  "candidate_sha256": "7587dadd23abe137a1e365b63ded0cfcef54d87458ca9e4f7303e950cdde4901",
+  "candidate_payload_unchanged_from_baseline": true,
+  "candidate_schema_version": 1,
+  "candidate_required_rule_version": 17,
+  "runtime_enabled": false,
+  "book_id": 25,
+  "book_is_equipment": false,
+  "new_equipment_fields_absent_as_legacy_neutral_contract": [
+    "equipment_stage",
+    "magic_max_bonus",
+    "magic_min_bonus",
+    "tao_max_bonus",
+    "tao_min_bonus"
+  ],
+  "unique_item25_is_skill_book": true,
+  "selected_equipment_ids": [
+    218,
+    193
+  ],
+  "root_cause": {
+    "path": "server/internal/devconfig/pet_runtime.go:123-136",
+    "detail": "requirePetFields反射共享Item，将rule22新增无omitempty字段误作旧rule17书的必需字段；JSON生成器及唯一表未丢装备来源数字"
+  },
+  "additional_neutral_guard_required": {
+    "path": "server/internal/devconfig/summon_candidates.go:43",
+    "detail": "兼容缺失后仍须拒绝候选书新4bonus和stage非零；现Item.Unmarshal的null拒绝与rule22 EquipmentStatsKnown presence保持"
+  },
+  "minimal_fix_paths": [
+    "server/internal/devconfig/pet_runtime.go",
+    "server/internal/devconfig/summon_candidates.go",
+    "server/internal/devconfig/equipment_compat_test.go"
+  ],
+  "config_generator_or_workbook_regeneration_required": false,
+  "python130_scope": "原投影/schema检查通过，不覆盖真实Go旧候选decode；原final-review不修改",
+  "configuration_final_review_sha256": "a65b2b56f7aea010f110133ee6e493e9982d35e5957fcb3a714dafd3389b06e5",
+  "full_go1_report_sha256": "dc2e3de931f3e8afcecb70e70652c9c2c47df1cdc412680444e8cf26577fc1e9",
+  "raw_counts": {
+    "passed_tests_including_subtests": 1134,
+    "failed_tests_including_subtests": 79,
+    "failed_packages": 4,
+    "matching_error_output_lines_by_package": {
+      "minimir/internal/devconfig": 1,
+      "minimir/internal/game": 66,
+      "minimir/internal/integration": 1,
+      "minimir/internal/persistence": 1
+    }
+  },
+  "read_only_review_ran_go_or_database": false,
+  "full_go_failure_is_actual_not_reconstructed": true,
+  "cutover_selector_only_change": {
+    "before_sha256": "f27f7ab81e7a57909c337ec494f72e22e765b4efadf56fc81769b19006dcf476",
+    "after_sha256": "d8a5230b5bf5f38e0cfd0bbf818e6f1537671c33203d377077f5f66d57c78524",
+    "before": "go/full-1",
+    "after": "go/full-2",
+    "reverse_single_replacement_matches_before_sha": true
+  },
+  "limits": "只读根因审查及原全包失败留痕，不代表最小修复或full-2已实测通过；当前主仍21未切换"
+}
