@@ -1,0 +1,19 @@
+{
+  "environment": "development",
+  "account_address": "127.0.0.1:18100",
+  "game_address": "127.0.0.1:18101",
+  "gm_address": "127.0.0.1:18102",
+  "mongo_uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
+  "mongo_uri_by_platform": {
+    "windows": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true"
+  },
+  "database": "minimir_dev_game_test_pet_gui_b9b82c89c8f04a4fb648ee594947b352",
+  "fixture_file": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-runtime-20261029\\gui-review\\run-b9b82c89c8f04a4fb648ee594947b352\\config\\development\\first-loop.json",
+  "node_id": "pet-gui-b9b82c89c8f04a4fb648ee594947b352",
+  "origin_id": 1,
+  "run_id": 204200672348401,
+  "allowed_origins": [
+    "127.0.0.1:*",
+    "localhost:*"
+  ]
+}

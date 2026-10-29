@@ -26,6 +26,7 @@ type worldState struct {
 	LootUntil      time.Time
 	Casts          []pendingCast
 	Attacks        []pendingAttack
+	PetCorpses     []*petCorpse
 }
 
 // 由到期业务选择一次目的地；核心在该事件与批后缀之间提交。无统一死亡取消门禁。
@@ -132,7 +133,7 @@ func (w *worker) resolveInWorld(r *room, world *worldState, ref actorRef) *entit
 		all = append([]*entity{&r.Player}, all...)
 		all = append(all, world.Loot...)
 	}
-	all = append(all[:len(all):len(all)], r.worldPet(world))
+	all = append(all[:len(all):len(all)], r.petBodies(world)...)
 	for _, e := range all {
 		if e != nil && e.Handle == ref.Handle && e.Life == ref.Life {
 			return e

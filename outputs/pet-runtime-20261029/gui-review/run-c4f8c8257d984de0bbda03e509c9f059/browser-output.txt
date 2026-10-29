@@ -1,0 +1,6 @@
+locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('input:visible') to be visible[22m
+
+    at edit (D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:73:104)
+    at async D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:88:3

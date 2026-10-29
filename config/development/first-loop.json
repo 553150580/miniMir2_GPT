@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 15,
+  "rule_version": 16,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -4809,8 +4809,252 @@
       "game_pet_templates": [
         {
           "id": 1,
-          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json",
-          "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 只给道士开发夹具注入宠物，召唤资格/技能耗材未实现，不开放正式召唤。"
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用",
+          "note": "rule16仅开启World身体/尸体生命周期；legacy_untrained_pet保留原免费bootstrap属性且不训练。SourceSkillID17仅来源身份，summon_skill_id仍空，17未选入、护符未开；新生或隔离训练另按typed规则。"
+        }
+      ],
+      "game_pet_growth": [
+        {
+          "id": 1,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 2,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 3,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 4,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 5,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 6,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 7,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        },
+        {
+          "id": 8,
+          "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37",
+          "note": "属性只保存相对monster基础的增量；阈值只在本表维护，倍率及资格只在PetDefs维护；仅终态7阈值明确null，不从模板Level15推断训练等级。"
+        }
+      ],
+      "arch_runtime_budgets": [
+        {
+          "id": 1,
+          "source_ref": "架构方案.md §4.1 L198–204",
+          "note": "worker数量仅实验起点；与DB组无对应关系"
+        },
+        {
+          "id": 2,
+          "source_ref": "架构方案.md §4.1 L206",
+          "note": "软时间预算共同生效"
+        },
+        {
+          "id": 3,
+          "source_ref": "架构方案.md §4.1 L206",
+          "note": "软预算；复杂计算需拆分"
+        },
+        {
+          "id": 4,
+          "source_ref": "架构方案.md §4.2 L213",
+          "note": "按策划共享调度，非每个人实例独立执行池"
+        },
+        {
+          "id": 5,
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "策划§7.5 L1122另有20/5起步建议；采用当前架构候选并实测"
+        },
+        {
+          "id": 6,
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "不是account离线时重新授权"
+        },
+        {
+          "id": 7,
+          "source_ref": "架构方案.md §6.2 L344",
+          "note": "至少提前3秒；实现需数据库时间与本地保守截止"
+        },
+        {
+          "id": 8,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不能跨升级/权益/配置/交易顺序边界"
+        },
+        {
+          "id": 9,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不得丢保底、限额或业务身份"
+        },
+        {
+          "id": 10,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "只合并可验证等价连续事件"
+        },
+        {
+          "id": 11,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "失败项有界拆分，未知原身份对账"
+        },
+        {
+          "id": 12,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "短事务预算"
+        },
+        {
+          "id": 13,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不在事务里等队列"
+        },
+        {
+          "id": 14,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "同组串行、多run公平"
+        },
+        {
+          "id": 15,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "与连接池上限分别控制"
+        },
+        {
+          "id": 16,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "同时受字节上限限制"
+        },
+        {
+          "id": 17,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "不是永久库存容量"
+        },
+        {
+          "id": 18,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "跨组需一次性申请完整组集"
+        },
+        {
+          "id": 19,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "达到配额有界拒绝"
+        },
+        {
+          "id": 20,
+          "source_ref": "架构方案.md §6.3 L357",
+          "note": "提交未知不能用超时直接退款"
+        },
+        {
+          "id": 21,
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "大型基线分块"
+        },
+        {
+          "id": 22,
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "分配前检查总长/解压预算"
+        },
+        {
+          "id": 23,
+          "source_ref": "架构方案.md §8.1 L426",
+          "note": "未识别版本/flags拒绝"
+        },
+        {
+          "id": 24,
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "候选配额，完成/隔离通道需保留"
+        },
+        {
+          "id": 25,
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "数量和字节共同限制"
+        },
+        {
+          "id": 26,
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "不能饿死内部控制"
+        },
+        {
+          "id": 27,
+          "source_ref": "架构方案.md §19.1 L1021",
+          "note": "同时验证等待年龄"
+        },
+        {
+          "id": 28,
+          "source_ref": "架构方案.md §19.1 L1017",
+          "note": "性能目标未测；不强加普通实例固定tick"
+        },
+        {
+          "id": 29,
+          "source_ref": "架构方案.md §19.1 L1018",
+          "note": "不是全网RTT保证"
+        },
+        {
+          "id": 30,
+          "source_ref": "架构方案.md §19.1 L1019",
+          "note": "排队/DB/回执分别计量"
+        },
+        {
+          "id": 31,
+          "source_ref": "架构方案.md §19.1 L1016；最终策划案.md §10.3 L1260",
+          "note": "容量待压测，不是当前承载"
+        },
+        {
+          "id": 32,
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "普通个人地图不使用公共人数配置"
+        },
+        {
+          "id": 33,
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "先基于玩法许可与实际广播预算"
+        },
+        {
+          "id": 34,
+          "source_ref": "架构方案.md §19.1 L1015",
+          "note": "不承诺500全同屏"
+        },
+        {
+          "id": 35,
+          "source_ref": "架构方案.md §19.1 L1011",
+          "note": "Mongo/机器人/指标机独立"
+        },
+        {
+          "id": 36,
+          "source_ref": "架构方案.md §19.1 L1011",
+          "note": "仅可复现实验起点"
+        },
+        {
+          "id": 37,
+          "source_ref": "架构方案.md §19.1 L1024",
+          "note": "混合角色轮换和跨档归档，未执行"
+        },
+        {
+          "id": 38,
+          "source_ref": "架构方案.md §19.2 L1043",
+          "note": "每客户端对每Mongo服务端；另计监控连接"
+        },
+        {
+          "id": 39,
+          "source_ref": "架构方案.md §19.2 L1043",
+          "note": "不能被业务队列阻塞"
+        },
+        {
+          "id": 40,
+          "source_ref": "本任务rule16技术候选；docs/职业宠物生命周期与召唤实施边界.md",
+          "note": "包括同owner全部World的活动宠、尸体及待新生reservation；满额只拒新生不拒死亡，不丢弃未过期原尸体。101仅180s/1800ms典型源路径估计，不证明通用上界或整机容量。"
         }
       ],
       "game_exp_levels": [
@@ -5701,8 +5945,8 @@
       "dev_first_loop_profile": [
         {
           "id": 1,
-          "source_ref": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选",
-          "note": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。"
+          "source_ref": "rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；既有首循环、状态、绑定及城镇来源继续按各基础表来源；本任务rule15原World执行与连接scene解耦技术开发候选；本任务rule16宠物驻留/身体/训练候选，数值由PetDefs/Growth及架构预算共同维护",
+          "note": "rule15选入21及正常购书/原书升级候选，初始仅赠原三职业一本，不随新增技能增加赠书。随机新生池仍关闭；只有已核证明资格可施放21。 rule16仅旧免费bootstrap的原对象死亡/尸体生命周期，正常17材料召唤仍待用户护符单位决定；不新增初始书。"
         }
       ],
       "game_drop_categories": [
@@ -5729,7 +5973,7 @@
       ]
     },
     "player_stats": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。",
-    "technical_parameters": "rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。",
+    "technical_parameters": "rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。",
     "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
     "potion_effects": {
@@ -5881,9 +6125,24 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
+      "sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
     },
-    "exporter_sha256": "893b9b3570bd0d78b3b5f4a3c5f6835f415b19df671a958253b5e0608e19f337"
+    "exporter_sha256": "0afd8994dcea59268ce847c6d33114f371222a21ef2601b05f9ae062caadc301",
+    "pet_runtime_inputs": {
+      "compiler_sha256": "056ff1921dfcd7121b97f26093935be7543ce0cfe5c140214f8c83d9c4e7b004",
+      "workbooks": [
+        {
+          "group": "architecture",
+          "path": "outputs/development-prep-20261026/架构配置.xlsx",
+          "sha256": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+        },
+        {
+          "group": "gameplay",
+          "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+          "sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
+        }
+      ]
+    }
   },
   "maps": [
     {
@@ -5979,5 +6238,175 @@
     "max_replans": 3,
     "max_dynamic_cells": 2,
     "max_memory_bytes_per_worker": 33554432
+  },
+  "pet_runtime": {
+    "enabled": true,
+    "bootstrap_mode": "legacy_untrained_pet",
+    "budgets": {
+      "retained_body_capacity_per_owner": 128,
+      "full_policy": "reject_birth_without_discarding_corpses"
+    },
+    "definitions": [
+      {
+        "id": 1,
+        "source_skill_id": 17,
+        "monster_template_id": 2,
+        "owner_job_id": 2,
+        "resource_key": "pet_skeleton",
+        "base": {
+          "job_id": 2,
+          "definition_id": 2,
+          "level": 15,
+          "hp": 60,
+          "mp": 0,
+          "attack_min": 10,
+          "attack_max": 20,
+          "defence": 10,
+          "defence_min": 10,
+          "defence_max": 10,
+          "magic_defence_min": 10,
+          "magic_defence_max": 10,
+          "accuracy": 15,
+          "agility": 20,
+          "attack_ms": 1000,
+          "move_ms": 1000,
+          "magic_resist_weight": 10,
+          "can_push": true,
+          "attack_speed": 0,
+          "magic_max": 0,
+          "magic_min": 0,
+          "magic_resist": 0,
+          "tao_max": 0,
+          "tao_min": 0
+        },
+        "undead": true,
+        "training": {
+          "initial_level_by_rank": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "maximum_level_by_rank": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "experience_multiplier": 3,
+          "owner_range_cells": 16,
+          "experience_basis": "owner_actual_granted_experience",
+          "grant_phase": "confirmed_owner_experience",
+          "eligibility": "alive_same_world_within_owner_range",
+          "max_level_ups_per_grant": 1,
+          "excess_experience": "keep",
+          "at_maximum": "do_not_accumulate",
+          "current_hp_on_growth": "keep"
+        },
+        "speed": {
+          "basis": "maximum_training_level",
+          "move_reduction_ms_per_level": 130,
+          "attack_reduction_ms_per_level": 70,
+          "minimum_move_interval_ms": 400,
+          "minimum_attack_interval_ms": 400
+        },
+        "lifecycle": {
+          "corpse_ttl_ms": 180000,
+          "spawn_ready_ms": 2000,
+          "live_expiry": "no_tame_expiry",
+          "cold_enter": "do_not_restore_temporary_pet"
+        },
+        "growth": [
+          {
+            "level": 0,
+            "hp_bonus": 0,
+            "attack_min_bonus": 0,
+            "attack_max_bonus": 0,
+            "defence_min_bonus": 0,
+            "defence_max_bonus": 0,
+            "magic_defence_min_bonus": 0,
+            "magic_defence_max_bonus": 0,
+            "required_experience": 20000
+          },
+          {
+            "level": 1,
+            "hp_bonus": 20,
+            "attack_min_bonus": 1,
+            "attack_max_bonus": 1,
+            "defence_min_bonus": 2,
+            "defence_max_bonus": 2,
+            "magic_defence_min_bonus": 2,
+            "magic_defence_max_bonus": 2,
+            "required_experience": 40000
+          },
+          {
+            "level": 2,
+            "hp_bonus": 40,
+            "attack_min_bonus": 2,
+            "attack_max_bonus": 2,
+            "defence_min_bonus": 4,
+            "defence_max_bonus": 4,
+            "magic_defence_min_bonus": 4,
+            "magic_defence_max_bonus": 4,
+            "required_experience": 60000
+          },
+          {
+            "level": 3,
+            "hp_bonus": 60,
+            "attack_min_bonus": 3,
+            "attack_max_bonus": 3,
+            "defence_min_bonus": 6,
+            "defence_max_bonus": 6,
+            "magic_defence_min_bonus": 6,
+            "magic_defence_max_bonus": 6,
+            "required_experience": 80000
+          },
+          {
+            "level": 4,
+            "hp_bonus": 80,
+            "attack_min_bonus": 4,
+            "attack_max_bonus": 4,
+            "defence_min_bonus": 8,
+            "defence_max_bonus": 8,
+            "magic_defence_min_bonus": 8,
+            "magic_defence_max_bonus": 8,
+            "required_experience": 100000
+          },
+          {
+            "level": 5,
+            "hp_bonus": 100,
+            "attack_min_bonus": 5,
+            "attack_max_bonus": 5,
+            "defence_min_bonus": 10,
+            "defence_max_bonus": 10,
+            "magic_defence_min_bonus": 10,
+            "magic_defence_max_bonus": 10,
+            "required_experience": 120000
+          },
+          {
+            "level": 6,
+            "hp_bonus": 120,
+            "attack_min_bonus": 6,
+            "attack_max_bonus": 6,
+            "defence_min_bonus": 12,
+            "defence_max_bonus": 12,
+            "magic_defence_min_bonus": 12,
+            "magic_defence_max_bonus": 12,
+            "required_experience": 140000
+          },
+          {
+            "level": 7,
+            "hp_bonus": 140,
+            "attack_min_bonus": 7,
+            "attack_max_bonus": 7,
+            "defence_min_bonus": 14,
+            "defence_max_bonus": 14,
+            "magic_defence_min_bonus": 14,
+            "magic_defence_max_bonus": 14,
+            "required_experience": null
+          }
+        ]
+      }
+    ]
   }
 }

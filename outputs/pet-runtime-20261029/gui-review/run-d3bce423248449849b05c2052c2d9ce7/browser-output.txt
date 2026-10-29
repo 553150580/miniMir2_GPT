@@ -1,0 +1,3 @@
+Error: 等待超时：真实怪击尸体
+    at until (D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:22:165)
+    at async D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:83:3

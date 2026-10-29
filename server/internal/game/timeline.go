@@ -48,6 +48,7 @@ type killFact struct {
 	Gold                int64
 	InstanceID          string
 	Prepared            bool
+	PetTraining         *petTrainingCredit
 }
 
 func (w *worker) sourceTimeline() bool {
@@ -340,6 +341,7 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 		point = r.Player.Pos
 	}
 	fact := killFact{ID: domain.ID(), World: world.Ref, Order: r.FactOrder, DropPoint: point, Target: referenceIn(world, m), Caster: referenceIn(world, caster), Monster: *m.Monster, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
+	fact.PetTraining = w.capturePetTraining(r, fact.ID)
 	if len(f.Drops.EquipmentItemIDs) > 0 {
 		fact.EquipmentID = f.Drops.EquipmentItemIDs[w.draw(int64(len(f.Drops.EquipmentItemIDs)))]
 	}
@@ -365,6 +367,10 @@ func (w *worker) flushKillFacts(r *room) {
 	head.Prepared = true
 	fact := *head
 	q := w.killSettlement(r, fact)
+	if !w.preparePetTraining(r, fact.PetTraining, q) {
+		w.isolateRoom(r)
+		return
+	}
 	world := r.world(fact.World)
 	if world == nil && fact.World == (worldRef{}) {
 		world = r.currentWorld()
@@ -374,10 +380,22 @@ func (w *worker) flushKillFacts(r *room) {
 		return
 	}
 	w.settleInWorld(r, world, fact.DropPoint, q, func() {
-		if len(r.KillFacts) > 0 && r.KillFacts[0].ID == fact.ID {
-			r.KillFacts = r.KillFacts[1:]
-		}
+		w.finishKillFact(r, fact.ID, q)
 	})
+}
+
+func (w *worker) finishKillFact(r *room, id string, q persistence.Settlement) {
+	if len(r.KillFacts) == 0 || r.KillFacts[0].ID != id {
+		return
+	}
+	credit := r.KillFacts[0].PetTraining
+	if credit != nil && credit.KillID != id {
+		w.isolateRoom(r)
+		return
+	}
+	w.awardPetTraining(r, credit, q)
+	r.KillFacts[0] = killFact{}
+	r.KillFacts = r.KillFacts[1:]
 }
 
 func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {

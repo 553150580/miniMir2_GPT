@@ -200,6 +200,7 @@ func TestSafeZoneBindingPendingStopsPetAndPreservesReleasedEventsUntilReceipt(t 
 	r.Manual = true
 	r.ManualDirection = facing(r.Player.Pos, goal, 0)
 	r.LastTick = now.Add(-100 * time.Millisecond)
+	pet := r.Pet
 	petBefore := *r.Pet
 	event := pendingAttack{Caster: reference(r, &r.Player), Target: reference(r, r.Pet), Due: now.Add(time.Second), Amount: 1000, Defence: defenceAC, Sequence: 4, Order: 11}
 	r.Attacks = []pendingAttack{event}
@@ -215,7 +216,7 @@ func TestSafeZoneBindingPendingStopsPetAndPreservesReleasedEventsUntilReceipt(t 
 	role, receipt := safeBindingCommitted(r, fact)
 	w.finishSafeZoneBinding(fact, role, receipt, nil, nil)
 	w.advanceEvents(r, now.Add(2*time.Second))
-	if len(r.Attacks) != 0 || r.Pet.HP != 0 || r.Role.SourceSeq != 8 {
+	if len(r.Attacks) != 0 || pet.HP != 0 || r.Pet != nil || !pet.IsPetCorpse || w.resolve(r, event.Target) != pet || r.Role.SourceSeq != 8 {
 		t.Fatal("绑定终态后原事件没有按原身份结算一次")
 	}
 }

@@ -1,0 +1,11 @@
+test_drop_requires_exact_random_name_root_purpose_and_marker (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_drop_requires_exact_random_name_root_purpose_and_marker) ... ok
+test_fixture_copy_changes_only_explicit_isolated_qa_values (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_fixture_copy_changes_only_explicit_isolated_qa_values) ... ok
+test_foreign_database_marker_is_preserved_but_owned_nodes_still_stop_and_main_restores (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_foreign_database_marker_is_preserved_but_owned_nodes_still_stop_and_main_restores) ... ok
+test_lost_process_identity_never_stops_drops_or_replaces_foreign_listener (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_lost_process_identity_never_stops_drops_or_replaces_foreign_listener) ... ok
+test_real_helper_control_flow_stops_then_drops_only_marker_db_then_restores_main (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_real_helper_control_flow_stops_then_drops_only_marker_db_then_restores_main) ... ok
+test_unsupported_ttl_or_open_skill_rejected (tools.client.test_pet_runtime_qa.PetGUIStaticTests.test_unsupported_ttl_or_open_skill_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.236s
+
+OK

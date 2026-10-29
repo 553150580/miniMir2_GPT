@@ -23,7 +23,17 @@ func observedWorker(t *testing.T, r *room) *worker {
 			m.Monster = &cfg.Fixture.Monsters[0]
 		}
 	}
-	return &worker{e: &Engine{Store: &persistence.Store{Cfg: cfg}}, rooms: map[string]*room{"role": r}}
+	w := &worker{e: &Engine{Store: &persistence.Store{Cfg: cfg}}, rooms: map[string]*room{"role": r}}
+	if r.Pet != nil && w.petRuntimeEnabled() {
+		if r.Pet.Def == 0 {
+			r.Pet.Def = cfg.Fixture.Pet.DefinitionID
+		}
+		r.PetWorld = r.currentWorld().Ref
+		if !w.attachLegacyPetState(r.Pet) {
+			t.Fatal("手造观察room不能附着合法legacy_untrained宠物定义")
+		}
+	}
+	return w
 }
 func observedRoom() (*room, *capturedConnection) {
 	c := &capturedConnection{}

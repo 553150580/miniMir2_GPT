@@ -1,0 +1,89 @@
+{
+  "passed": false,
+  "scope": "真实Creator、正常WS道士触屏安全区绑定提交显示与健康重入；不预置角色数值或改权威坐标；本脚本不验收21，冷重建由独立WS验收，不作真机/容量认证",
+  "expectedRuleVersion": "16",
+  "readyRuleChecks": [
+    {
+      "map": "1",
+      "resourceVersion": "16"
+    }
+  ],
+  "checks": [],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "scene": "2186263549293836415",
+      "baseline": "1",
+      "map": "1",
+      "kind": 1,
+      "player": 1,
+      "x": 8,
+      "y": 8,
+      "resourceVersion": "16"
+    }
+  ],
+  "travel": [],
+  "moves": [],
+  "groundChecks": [],
+  "bindingStates": [
+    {
+      "transportBinding": "1",
+      "role": "1:b25eda27d58c60b8c7c7325a4cb78f21",
+      "scene": "2186263549293836415",
+      "revision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    }
+  ],
+  "clientBindingPackets": 0,
+  "physicalMobileVerified": false,
+  "bindingVerified": false,
+  "coldRebuildVerified": false,
+  "teleport21Verified": false,
+  "before": {
+    "map": "1",
+    "scene": "2186263549293836415",
+    "baseline": "1",
+    "resourceVersion": "16",
+    "binding": "1",
+    "role": "Townb8ee4a",
+    "ready": true,
+    "travel": "idle",
+    "position": {
+      "x": 7,
+      "y": 7
+    },
+    "life": "0",
+    "hp": "18",
+    "mp": "14",
+    "zone": "0",
+    "projection": "isometric_diamond",
+    "nav": {
+      "target": null,
+      "direction": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "render": true,
+    "roleBinding": {
+      "role": "1:b25eda27d58c60b8c7c7325a4cb78f21",
+      "sceneEpoch": "2186263549293836415",
+      "roleRevision": "2",
+      "sourceSeq": "0",
+      "binding": null,
+      "cause": 1,
+      "safeZoneId": "0",
+      "trusted": false
+    },
+    "inventoryRevision": "2",
+    "economicCommand": "1",
+    "roleText": "点击条目查看详情并选择物品\n尚未绑定",
+    "bindingMessages": []
+  },
+  "error": "AssertionError [ERR_ASSERTION]: 正常道士入场必须有现存宠物\n    at D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_town_travel_browser.cjs:77:71"
+}

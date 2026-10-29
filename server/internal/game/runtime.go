@@ -91,6 +91,8 @@ type entity struct {
 	MovementRevision uint64
 	MovementKind     uint32
 	CellEntry        uint64
+	PetRuntime       *petRuntimeState
+	IsPetCorpse      bool
 }
 type room struct {
 	*worldState
@@ -119,6 +121,8 @@ type room struct {
 	Pet                   *entity
 	PetWorld              worldRef
 	PetLifeSequence       uint64
+	PetHandleSequence     uint32
+	PendingPetBirth       *petBirthReservation
 	Manual                bool
 	ManualDirection       uint32
 	Pending               bool
@@ -667,6 +671,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.PersonalWorld, r.TownWorld = nil, nil
 	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
 	r.Pet, r.PetWorld, r.PetLifeSequence = nil, worldRef{}, 0
+	r.PetHandleSequence, r.PendingPetBirth = petHandle, nil
 	f := &w.e.Store.Cfg.Fixture
 	r.MapID = f.Map.ID
 	player, _ := f.Player(role.Job)
@@ -683,9 +688,13 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
 	w.refreshPlayerStats(r)
 	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP
-	if role.Job == f.Pet.JobID {
+	if role.Job == f.Pet.JobID && (!w.petRuntimeEnabled() || f.PetRuntime.BootstrapMode == "legacy_untrained_pet") {
 		r.Pet = &entity{Handle: 2, Kind: 2, Def: f.Pet.DefinitionID, Pos: f.Map.PetSpawn, HP: f.Pet.HP, MaxHP: f.Pet.HP, MP: f.Pet.MP, MaxMP: f.Pet.MP}
 		r.PetWorld = r.currentWorld().Ref
+		if w.petRuntimeEnabled() && !w.attachLegacyPetState(r.Pet) {
+			w.isolateRoom(r)
+			return
+		}
 	}
 	for i := 0; i < 8; i++ {
 		def := f.Monsters[i%len(f.Monsters)]
@@ -788,6 +797,9 @@ func (w *worker) baseline(r *room, request ...uint32) {
 	if pet := r.worldPet(r.currentWorld()); pet != nil {
 		entities = append(entities, pet)
 	}
+	for _, corpse := range r.currentWorld().PetCorpses {
+		entities = append(entities, corpse.Body)
+	}
 	entities = append(entities, r.Monsters[:r.MonsterCount]...)
 	entities = append(entities, r.Loot...)
 	for _, e := range entities {
@@ -800,13 +812,20 @@ func (w *worker) baseline(r *room, request ...uint32) {
 			attackMS = uint32(stats.AttackMS)
 			attributes = w.combatAttributesPB(r, e)
 		}
-		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind})
+		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind, PetTraining: petTrainingPB(e), IsPetCorpse: e.IsPetCorpse})
 	}
 	requestID := uint32(0)
 	if len(request) > 0 {
 		requestID = request[0]
 	}
-	w.send(r, p.MsgS2CSceneBaseline, requestID, out)
+	chunks, err := splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
+	if err != nil {
+		w.isolateRoom(r)
+		return
+	}
+	for _, chunk := range chunks {
+		w.send(r, p.MsgS2CSceneBaseline, requestID, chunk)
+	}
 }
 func pointPB(p devconfig.Point) *pb.GridPoint { return &pb.GridPoint{X: int32(p.X), Y: int32(p.Y)} }
 func (w *worker) asset(r *room, f wire.Frame) {

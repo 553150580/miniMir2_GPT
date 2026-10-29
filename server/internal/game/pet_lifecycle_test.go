@@ -74,8 +74,17 @@ func TestPetResidentTargetsAndCurrentMovementStayInWorld(t *testing.T) {
 	}
 }
 
-func TestPetBirthAcrossCorpseRetirementAndEmptySlot(t *testing.T) {
+// 仅这组显式旧清槽合同降为历史rule15；常规观察/World/技能helper保持当前运行规则。
+func legacyPetRule15(w *worker, r *room) {
+	w.e.Store.Cfg.Fixture.RuleVersion, w.e.Store.Cfg.Fixture.PetRuntime = 15, nil
+	if r.Pet != nil {
+		r.Pet.PetRuntime, r.Pet.IsPetCorpse = nil, false
+	}
+}
+
+func TestLegacyPetBirthAcrossCorpseRetirementAndEmptySlot(t *testing.T) {
 	w, r, _, personal, town, _ := worldWorker(t)
+	legacyPetRule15(w, r)
 	r.PetWorld = personal.Ref
 	corpse := r.Pet
 	corpse.Life, corpse.HP, corpse.Action = 9, 0, 4
@@ -117,8 +126,9 @@ func TestPetBirthAcrossCorpseRetirementAndEmptySlot(t *testing.T) {
 	}
 }
 
-func TestPetBirthRejectsOverflowAndForeignWorldWithoutPartialMutation(t *testing.T) {
+func TestLegacyPetBirthRejectsOverflowAndForeignWorldWithoutPartialMutation(t *testing.T) {
 	w, r, _, personal, _, _ := worldWorker(t)
+	legacyPetRule15(w, r)
 	r.PetWorld = personal.Ref
 	if _, ok := w.retirePet(r, reference(r, r.Pet)); !ok {
 		t.Fatal("fixture退役失败")
@@ -146,6 +156,7 @@ func TestPetBirthRejectsOverflowAndForeignWorldWithoutPartialMutation(t *testing
 
 func TestPetResidencyZeroCompatibilityNeverFallsBackFromUnknownWorld(t *testing.T) {
 	w, r, _, personal, town, _ := worldWorker(t)
+	r.PetWorld = worldRef{} // 显式零值旧手造前态；正式fixture由helper明确填当前World。
 	if r.PetWorld != (worldRef{}) || r.worldPet(personal) != r.Pet {
 		t.Fatal("旧手造fixture零身份兼容失效")
 	}
@@ -160,8 +171,9 @@ func TestPetResidencyZeroCompatibilityNeverFallsBackFromUnknownWorld(t *testing.
 	}
 }
 
-func TestPetMigrationKeepsUniqueCorpseAndIndependentResidency(t *testing.T) {
+func TestLegacyPetMigrationKeepsUniqueCorpseAndIndependentResidency(t *testing.T) {
 	w, r, _, personal, town, _ := worldWorker(t)
+	legacyPetRule15(w, r)
 	r.PetWorld = personal.Ref
 	pet := r.Pet
 	pet.HP, pet.Life, pet.HealAmount = 0, 7, 9
@@ -216,8 +228,9 @@ func TestPetOldWorldReleasedAttackResolvesResidentWithoutSceneProjection(t *test
 	}
 }
 
-func TestPetCorpseRemainsVisibleOnlyInResidentWorld(t *testing.T) {
+func TestLegacyPetCorpseRemainsVisibleOnlyInResidentWorld(t *testing.T) {
 	w, r, c, personal, town, _ := worldWorker(t)
+	legacyPetRule15(w, r)
 	r.PetWorld = personal.Ref
 	r.Pet.HP, r.Pet.Action = 0, 4
 	for _, world := range []*worldState{personal, town, personal} {
@@ -307,9 +320,9 @@ func TestPetMapTravelReturnNeverAppliesPreviousBirthPosition(t *testing.T) {
 			}
 			r.Ready = true
 			old := r.Pet
-			old.HP = 0
-			if _, ok := w.retirePet(r, reference(r, old)); !ok {
-				t.Fatal("旧尸体未显式退役")
+			w.applyDamageInWorld(r, r.currentWorld(), &r.Player, old, old.HP, now)
+			if r.Pet != nil || !old.IsPetCorpse {
+				t.Fatal("旧宠未按当前规则成为World尸体")
 			}
 			world, position := r.currentWorld(), old.Pos
 			expected, ok := travelPetPoint(m, personal.PlayerPosition, nil, personal.Monsters, personal.MonsterCount)
@@ -319,8 +332,10 @@ func TestPetMapTravelReturnNeverAppliesPreviousBirthPosition(t *testing.T) {
 			if resident == "personal" {
 				world, position, expected = personal, points[1], points[1]
 			}
-			pet := &entity{Handle: petHandle, Kind: 2, Def: old.Def, Pos: position, HP: 10, MaxHP: 10}
-			if !w.installPet(r, world, pet) || pet.Life <= old.Life {
+			r.Role.Job = w.e.Store.Cfg.Fixture.Pet.JobID
+			definition, _ := w.e.Store.Cfg.Fixture.PetRuntime.DefinitionByBodyID(old.Def)
+			pet, made := w.newPet(r, definition.ID, 0, position, now)
+			if !made || !w.installPet(r, world, pet) || pet.Life <= old.Life {
 				t.Fatal("新生安装失败")
 			}
 			prepareTravelAt(w, r, 2, travelToPersonal, now.Add(time.Second))
@@ -337,8 +352,9 @@ func TestPetTownArrivalKeepsDestinationResidentPosition(t *testing.T) {
 	r.PersonalWorld = r.currentWorld()
 	r.PetWorld = r.PersonalWorld.Ref
 	old := r.Pet
-	if _, ok := w.retirePet(r, reference(r, old)); !ok {
-		t.Fatal("fixture退役失败")
+	w.applyDamageInWorld(r, r.PersonalWorld, &r.Player, old, old.HP, now)
+	if r.Pet != nil || !old.IsPetCorpse {
+		t.Fatal("当前规则死亡归档失败")
 	}
 	r.TownWorld = r.newWorld(2)
 	m, _ := w.worldMap(r.TownWorld)
@@ -355,8 +371,10 @@ func TestPetTownArrivalKeepsDestinationResidentPosition(t *testing.T) {
 	if position == nil {
 		t.Fatal("fixture缺少独立Town落点")
 	}
-	pet := &entity{Handle: petHandle, Kind: 2, Def: old.Def, Pos: *position, HP: 10, MaxHP: 10}
-	if !w.installPet(r, r.TownWorld, pet) {
+	r.Role.Job = w.e.Store.Cfg.Fixture.Pet.JobID
+	definition, _ := w.e.Store.Cfg.Fixture.PetRuntime.DefinitionByBodyID(old.Def)
+	pet, made := w.newPet(r, definition.ID, 0, *position, now)
+	if !made || !w.installPet(r, r.TownWorld, pet) {
 		t.Fatal("目的图安装失败")
 	}
 	prepareTravelAt(w, r, 1, travelToTown, now)

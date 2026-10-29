@@ -156,6 +156,7 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	teleport, _ := f.Skill(21)
 	bookID, buffID := teleport.BookItemID, teleport.BuffID
 	f.RuleVersion = 12
+	f.PetRuntime = nil // 历史初始化合同不混入rule16生命周期能力。
 	if f.Binding != nil {
 		binding := *f.Binding
 		binding.SafeZoneEnabled = nil

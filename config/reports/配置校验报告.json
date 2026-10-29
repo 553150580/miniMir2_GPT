@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 951,
+  "record_count": 960,
   "status_counts": {
-    "candidate": 452,
+    "candidate": 461,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -52,6 +52,7 @@
     "arch_runtime_budgets/37 尚为 candidate",
     "arch_runtime_budgets/38 尚为 candidate",
     "arch_runtime_budgets/39 尚为 candidate",
+    "arch_runtime_budgets/40 尚为 candidate",
     "game_warehouse_rules 第15行缺少必填 rule_value",
     "game_warehouse_rules/14 尚为 unverified",
     "game_warehouse_rules 第16行缺少必填 rule_value",
@@ -561,10 +562,15 @@
     "game_effects/31 尚为 candidate",
     "game_effects/21 尚为 candidate",
     "game_pet_templates 第4行缺少必填 summon_skill_id",
-    "game_pet_templates 第4行缺少必填 follow_and_return",
-    "game_pet_templates 第4行缺少必填 lifetime_and_betrayal",
     "game_pet_templates/1 尚为 candidate",
-    "game_pet_growth：有效记录 0 条，至少需要 1 条",
+    "game_pet_growth/1 尚为 candidate",
+    "game_pet_growth/2 尚为 candidate",
+    "game_pet_growth/3 尚为 candidate",
+    "game_pet_growth/4 尚为 candidate",
+    "game_pet_growth/5 尚为 candidate",
+    "game_pet_growth/6 尚为 candidate",
+    "game_pet_growth/7 尚为 candidate",
+    "game_pet_growth/8 尚为 candidate",
     "game_exp_levels/1 尚为 candidate",
     "game_exp_levels/2 尚为 candidate",
     "game_exp_levels/3 尚为 candidate",
@@ -718,7 +724,7 @@
     "game_server_rules/10.rule_value 的JSON领域结构仍待核验"
   ],
   "workbook_hashes": {
-    "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
-    "gameplay": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
+    "architecture": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "gameplay": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
   }
 }

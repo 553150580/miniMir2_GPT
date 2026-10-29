@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-29T00:07:56.028120+00:00",
+  "mode": "只读既有日志/JSON/当前摘要；未运行DB、Go或Python测试；未改冻结输入",
+  "scope": "rule16尸体生命周期、定义/训练引擎与完整传输；17/购符/正常新生入口未开放",
+  "python_configuration": {
+    "test_methods": 90,
+    "exit_code": 0,
+    "input_count": 12,
+    "before_after_stable": true,
+    "current_drift": [],
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/checks/summary.json",
+        "sha256": "9e75c0a017b9be8931e233e3ae3854dded5c54486ebbd50639d94d68cc42c1a9"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/commands.json",
+        "sha256": "a054267ff6a55ad824c1f530a2147c9c275a54ca44a2eab453d508619bcd1a09"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/python-configuration.txt",
+        "sha256": "e7d5a9f4bfeab8f0dbae233f3c3045fef3ca49c38d8bedf7fc3f70e124e4fbcb"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/inputs-before.json",
+        "sha256": "90a1a729585e07af51e7227268904a4776c5b525b60896860690b1c78cb6cb2d"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/inputs-after.json",
+        "sha256": "90a1a729585e07af51e7227268904a4776c5b525b60896860690b1c78cb6cb2d"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/candidate-check.txt",
+        "sha256": "45cc9360c7563dfb090375ba8c1050800c91cb310d34fc2caf037c1ba1ded7ee"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/fixture-check.txt",
+        "sha256": "093a013ee60d5447d88572c50365ce5077de0afcdf0a4ef1244a230139b32e2a"
+      }
+    ]
+  },
+  "standalone_real_mongo_ws": {
+    "test_methods": 1,
+    "pass": 1,
+    "skip": 0,
+    "exit_code": 0,
+    "race": true,
+    "isolated_corpse_ttl_ms": 10000,
+    "case_elapsed_seconds": 14.85,
+    "package_elapsed_seconds": 20.338,
+    "wrapper_elapsed_seconds": 27.114,
+    "input_count": 137,
+    "before_after_stable": true,
+    "current_drift": [
+      "server/internal/integration/binding_test.go",
+      "server/internal/integration/teleport21_test.go"
+    ],
+    "drift_scope_note": "执行期间稳定；其后其它集成测试的变更由最终全Go重新覆盖，不能把此清单的137项说成全部当前字节",
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-result.json",
+        "sha256": "3a9ae49d1450dba64d8f3b6d686534cecb6efd652637f31f7bd8321b218257c5"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws.txt",
+        "sha256": "cb7bad99cfb42f14fe77dc4e5405a3eebdfb88f91bdfc645656b9b630b9c42f9"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-before.json",
+        "sha256": "38d662120393a987320cd3d7270d6734a42af30a70c3ed2f00cf436eb8551913"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-after.json",
+        "sha256": "38d662120393a987320cd3d7270d6734a42af30a70c3ed2f00cf436eb8551913"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/review.md",
+        "sha256": "239f987fc77f42f150727b1ebb21876acb4c2d7b03e66f5104d79e32346bf6ce"
+      }
+    ]
+  },
+  "latest_full_go": {
+    "passed_test_nodes": 852,
+    "failed_test_nodes": 0,
+    "skipped_test_nodes": 0,
+    "exit_code": 0,
+    "real_mongo": true,
+    "race": true,
+    "source_count": 153,
+    "before_after_stable": true,
+    "current_drift": [],
+    "fixture_sha256": "25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0",
+    "events_sha256": "026c7fa928ace3094346fd5d1265e32a30858134289fca04d907e94026afc1b6",
+    "started_at_utc": "2026-10-28T23:58:58.239956+00:00",
+    "finished_at_utc": "2026-10-29T00:05:58.117494+00:00",
+    "command": [
+      "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+      "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+      "go",
+      "test",
+      "-json",
+      "-race",
+      "-p",
+      "1",
+      "./...",
+      "-count=1",
+      "-timeout=600s"
+    ],
+    "pet_ws_reexecuted": [
+      {
+        "test": "TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS",
+        "elapsed_seconds": 17.12,
+        "package": "minimir/internal/integration"
+      }
+    ],
+    "missing_manifest_items": [],
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/checks/go.json",
+        "sha256": "00673dbf47e274884ea2b0355843b9dd498c9e22f2e7a4f1204a4df3b448eff1"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/go.txt",
+        "sha256": "c9af6674d853784e6be4420db49af0b6294591325a88b9e4a1066d670dbcf845"
+      },
+      {
+        "path": "server/test-results/latest.json",
+        "sha256": "4d016f825e4d2b37a1fc837c99abe19f1c84ccccffacef72c1d11ec6ea66e4ff"
+      },
+      {
+        "path": "server/test-results/latest.events.jsonl",
+        "sha256": "026c7fa928ace3094346fd5d1265e32a30858134289fca04d907e94026afc1b6"
+      }
+    ]
+  },
+  "client": {
+    "input_count": 220,
+    "before_after_current_frozen_equal": true,
+    "current_drift": [],
+    "ui_app_counts": {
+      "tests": 348,
+      "pass": 348,
+      "fail": 0,
+      "skipped": 0
+    },
+    "pb": {
+      "message_count": 68,
+      "int64_field_count": 136,
+      "int64_boundary_cases": 444
+    },
+    "fixture_sha256": "25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0",
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/client-review/report.json",
+        "sha256": "d3f1b4e2e1c8af553b5d64a578e658552ab6214a55abababc791ea02fdfcc74b"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/client-review/full-ui-app.txt",
+        "sha256": "71d5827ea10aede5d27c9182ec5bfbbe392848cc464bdd11b67acd026f55d9a8"
+      }
+    ]
+  },
+  "selected_browser_evidence": {
+    "town": {
+      "pass": true,
+      "checks": 7,
+      "errors": 0,
+      "warnings": 0,
+      "report_directory": "browser-town-final",
+      "selection": {
+        "path": ".work/pet-runtime-20261029/browser-town-selection.json",
+        "sha256": "e26d97b08526b46326c2096161a7f7d30723bf345313de24c85709bc45a83459"
+      },
+      "selected_report": {
+        "path": ".work/pet-runtime-20261029/browser-town-final/report.json",
+        "sha256": "3e805ed1d3797d88e4b2f96f17d3d61d6beb97efced561ff35bfcb63729ae0c8"
+      }
+    },
+    "ui": {
+      "pass": true,
+      "checks": 6,
+      "errors": 0,
+      "warnings": 1,
+      "report_directory": "browser-ui-final-2",
+      "selection": {
+        "path": ".work/pet-runtime-20261029/browser-ui-selection.json",
+        "sha256": "d3ed74d01b519f58f2178bf79d59ad13d1b5cc279a17caac98f9274166e0a7fd"
+      },
+      "selected_report": {
+        "path": ".work/pet-runtime-20261029/browser-ui-final-2/report.json",
+        "sha256": "4af01a7ba3327b2154a124a8186953ecfead50cf08d765cda43041de68c0a909"
+      }
+    },
+    "corpse_gui": {
+      "pass": true,
+      "checks": 5,
+      "errors": 0,
+      "warnings": 0,
+      "run_id": "fae0a7a32d924a0cadc240c9e3a2f812",
+      "corpse_ttl_ms": 15000,
+      "main_restored": true,
+      "qa_database_dropped": true,
+      "qa_stopped": true,
+      "protected_unchanged": true,
+      "selection": {
+        "path": ".work/pet-runtime-20261029/gui-review/final-run.json",
+        "sha256": "97709a14203e22a89c989281f55214e4e055efe91f3efddb6d268f377684d488"
+      },
+      "selected_report": {
+        "path": ".work/pet-runtime-20261029/gui-review/run-fae0a7a32d924a0cadc240c9e3a2f812/report.json",
+        "sha256": "bea98ea872c9f3d3cde6ebdfed4254c82e1f0a011b8371dddd9baf5196ea3aed"
+      },
+      "raw_browser_report": {
+        "path": ".work/pet-runtime-20261029/gui-review/run-fae0a7a32d924a0cadc240c9e3a2f812/browser/report.json",
+        "sha256": "1c8d87328adaad5dbe25e4a9d9ed20860d79b412d93fc897752b62e50e713324"
+      },
+      "tools_report_directory": "static-final-editbox",
+      "tools_report": {
+        "path": ".work/pet-runtime-20261029/gui-review/static-final-editbox/report.json",
+        "sha256": "4c4bbc8b67dd70b556f867581a5b413730bb8ab7217773c08637368f27f543be"
+      },
+      "tools_input_count": 4,
+      "tools_before_after_current_equal": true,
+      "tools_current_drift": []
+    }
+  },
+  "configuration": {
+    "runtime_rule_version": 16,
+    "candidate_runtime_enabled": false,
+    "candidate_runtime_same_definitions_and_budgets": true,
+    "legacy_untrained": "legacy_untrained_pet",
+    "skill17_selected": false,
+    "material_enabled": false,
+    "main_corpse_ttl_ms": 180000,
+    "body_budget": {
+      "retained_body_capacity_per_owner": 128,
+      "full_policy": "reject_birth_without_discarding_corpses"
+    },
+    "final_artifact_sha256": {
+      "config/development/pet-runtime-candidates.json": "ec35705ef18bef6f481a141b3343c9d80d613d472515c653d189070251815743",
+      "config/development/first-loop.json": "25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0",
+      "client/assets/resources/development/gameplay.json": "bbb332641299bae29f46c311a7d7465cbbdb8037a354eb60d27d642cdf225fab"
+    }
+  },
+  "document_review": {
+    "document": {
+      "path": "docs/职业宠物生命周期与召唤实施边界.md",
+      "sha256": "8ddd7022444c70eb8b6258c6bc75edd3482a2710b8ae29e29b99e83b02b544a6"
+    },
+    "product_blockers": [],
+    "suggested_clarifications": []
+  },
+  "evidence_limitations": [
+    "独立WS验证局部HP1/宠攻击0/怪伤20与命中255/长怪动作/TTL10秒，不冒称主180秒或17自然业务验收",
+    "NoMaster友方grid过滤由game专项覆盖，WS未施放材料关闭的14/15",
+    "原始before反例与中间失败不得与最终成功合并计数；Enter版本基线错误不是产品缺陷",
+    "容量、手机真机、护符单位、正常17/Recall、自然训练成长与完整三职业未因本轮通过而完成"
+  ],
+  "evidence_findings": []
+}

@@ -1,0 +1,7 @@
+{
+  "passed": false,
+  "checks": [],
+  "errors": [],
+  "warnings": [],
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input:visible') to be visible\u001b[22m\n"
+}

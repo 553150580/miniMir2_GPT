@@ -1,0 +1,24 @@
+{
+  "workbook": "outputs/development-prep-20261026/架构配置.xlsx",
+  "group": "architecture",
+  "input_workbook_sha256": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+  "operations": [
+    {
+      "kind": "append",
+      "table_id": "arch_runtime_budgets",
+      "id": 40,
+      "values": {
+        "id": 40,
+        "record_status": "candidate",
+        "source_ref": "本任务rule16技术候选；docs/职业宠物生命周期与召唤实施边界.md",
+        "note": "包括同owner全部World的活动宠、尸体及待新生reservation；满额只拒新生不拒死亡，不丢弃未过期原尸体。101仅180s/1800ms典型源路径估计，不证明通用上界或整机容量。",
+        "code": "retained_pet_body_capacity_per_owner",
+        "value": 128,
+        "value_unit": "身体/owner",
+        "applicability": "同owner全部保留World的宠物身体与新生预留",
+        "adaptation_status": "adapt",
+        "verification_status": "pending"
+      }
+    }
+  ]
+}

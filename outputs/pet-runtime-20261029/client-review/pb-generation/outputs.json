@@ -1,0 +1,16 @@
+{
+  "command": [
+    ".\\tools\\dev.ps1",
+    "task",
+    "protocol"
+  ],
+  "exit_code": 0,
+  "sha256": {
+    "shared/proto/world.proto": "a72e8c0c3099b335d9526296a5604a1f25c3c16cdedd5c4534de8bd302dd1bf6",
+    "server/api/generated/minimirv1/world.pb.go": "4623e3db04dc90813d23c2d3c553893a07579dfe69f03a5c8d3a7b551174d964",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "5982b2f24bcaa6b13ca941472c4233ddc4c44a500a8d853c55441dabc1e840aa",
+    "client/assets/scripts/generated/protobuf/client_pb.d.ts": "7737dc74a52faa6433b368d96b26337e78fc1ccae89e6b509948958ae53e18a7",
+    "conf/toolchain/go-pb-generation.json": "460da99e7bddf9e71ca9edd677e5a353fe21d2f567fe15732319315aa4fd48a8",
+    "conf/toolchain/client-pb-verification.json": "15c8b09464bca2c38e45cdf637f07d43e825923dcda143d77ab61323c08a2cea"
+  }
+}

@@ -1,0 +1,32 @@
+# rule16服务端corpse/training/baseline只读peer
+
+2026-10-29。只读当前实现、diff、相关断言及纯经济Settle代码；仅执行dev包装的读取/rg/git diff。未修改生产或测试，未运行Go/overlay/wholeGo/服务/Creator。read-snapshot.json是读取时摘要，server仍在补narrow，不声明冻结稳定，也不把作者测试结果当作我执行结果。
+
+## 结论
+
+当前rule16普通数值路径未发现新的尸体复制、幽灵、训练转送新宠或分片丢实体问题。发现一项uint64训练极值预检与AtMaximum语义不一致的静态反例，已同步root与server-core，等待其决策/反例收束。17/购符未开放，以下不构成召唤业务、真实网络未知注入、128GPU/真机或容量验收。
+
+## 实质边界候选：排队credit跨满级后应跳过新增经验溢出预检
+
+pet_training.go83–99的preparePetTraining对找到的原body直接校验experience+amount；102–129的awardPetTraining却在state.Level>=Maximum时不再累积。若同批A/B在未满级时都捕获资格，A确认后刚满级并保留大excess，准备B仍可能因不会实际发生的加法溢出而返回false；timeline.flushKillFacts据此isolateRoom。此时已有excess应保留且B不累积，不能让无需执行的累积阻断已确认角色EXP后缀。
+
+精确静态前态：训练level3/max4/EXP0，已捕获A/B；A角色EXP6148914691236517205（小于MaxInt64）、倍率3得到MaxUint64，按单次if扣当前门槛80000后升max4并保留18446744073709471615。B角色EXP100000、amount300000，此时当前prepare相加溢出，但award按max语义本会忽略它。两笔永久角色EXP之和仍在MaxInt64内。此为合法整数API/排队奖励边界；当前真实怪物EXP15不可能近期累出这种规模，所以没有声称现有正常GUI可达，也没有擅自运行overlay。建议补真实prepare/finish链反例，在已满级时保留credit确认身份而不做新增经验累积预检。
+
+## 已核的实现
+
+- 原对象与TTL：pet_corpses.go113–129只将原r.Pet指针转交原World并标记IsPetCorpse，不重建/克隆或改handle/Life/HP；随后清活动slot。TTL从实际死亡now加冻结定义的毫秒数。132–165遍历全部保留World，以绝对ExpiresAt清理；Pending/Isolated保留原安全冻结，不刷新截止、不唤醒休眠怪物。旧caster自身动作在Despawn清理，旧目标引用在后续解析自然失效。
+- NoMaster：world_context.resolveInWorld纳入目标World的petBodies而不是新当前World；baseline只列当前World尸体。友方治疗/区域/状态候选仍只用r.worldPet，applyBuff额外拒IsPetCorpse，故14/15 AllowDeadTargets没有授权无主旧尸体。cellObjects保留尸体原入格顺序，free/Town occupancy按HP>0才阻挡，不把旧尸体当活动宠或空气墙。
+- 预约/容量：retainedPetBodies统计两个World全部尸体+唯一活动宠+在途birth预约；128是保留身体总预算，不能写成128尸体之外再加活动宠/预约。reserve同token幂等，不同token不能抢占/取消；install匹配ExecutionEpoch/PlayerLife后消耗预约且只分配一次新birth。满预算允许合法死亡转交（净身体数不变），拒绝额外新生而不丢尸体。cancel按原token/epoch，旧计划不清新预约。mapTravel quiescing明确等待PendingPetBirth。
+- 句柄：availablePetHandle从单调PetHandleSequence之后选，不重用已过TTL的旧handle；跳过玩家、固定10..17怪物预分配和掉落1000，同时扫描所有World现存怪/掉落/宠物身体。出生/handle/cell溢出预检在安装前，跨nil生命周期不回绕。与客户端仍仅缓存selectedTarget handle的当前合同相容；未来若改复用必须同时升级选择身份。
+- 训练资格：capturePetTraining在kill事实发生时取主人当前World内存活、范围内、未满级的唯一合格宠物，符合“不是必须最后一击，也不是必须在死亡怪地图”的来源。actorRef冻结原handle/Life/执行epoch；findPetBirth跨World找同一出生，所以健康迁移仍保留身份，换宠不转送旧经验。死后的原body可兑现先前已冻结资格但不复活，TTL消失则不从永久回执重造对象；这是确认后应用的已登记适配。
+- 确认链：killFact ID绑定credit，prepare冻结SourceSeq/OwnerEXP/Amount；finishSettlement沿原Auth/room/PendingGeneration/id/fingerprint，对unknown保留原job，不先发训练；finishKillFact只处理当前同ID队首，credit.Applied及SourceSeq/EXP一致性防重复回调。Settle把q.Experience完整加到角色EXP，当前没有隐藏比例/上限截断，所以该q作为实际授予依据一致。成长只做一次if、保留carry、更新Fighter/MaxHP/MaxMP而不SetHP满值；已满级award不累积，现有excess保持（上述prepare极值待收束）。
+- 冻结定义：DefinitionByID/BodyID返回Clone，成长阈值指针也复制；FighterAt以训练级决定成长、以Maximum决定速度，不混入模板Level。legacy bootstrap保持原Fixture.Pet统计、不自动冒出训练0级。
+- 分片：baseline.go先完整构造并检查全部合法分块后才发，真实wire头包含request/binding，按PB repeated字段tag+length+entity实际size预算，再最终实际编码复验；单实体/整份2048/块数64/重复handle越界拒绝且不发半套。base.Clone保留scene/baseline/stateSequence、safeZone、SkillMode、Navigation到每块，最后一次统一chunkCount/Index，与客户端取消ACK组装要求一致；未删除尸体或状态换取包长。当前最坏128完整status属性反例确实准备了超过单帧的数据并检查保真，本文只读其断言，不冒称执行。
+
+## 后续17的门禁仍须在业务层实现
+
+factory/install/reserve是受信原语，未代替17原图capturedFront成功/当前图fallback、主人Node/Info/HP与Life、NoPets、同名召回不扣符等来源规则。预约遇新Life/冷隔离/失败/事件被清理必须沿原token释放，不能遗留额度；install本身不应该被当成已核所有来源资格的业务入口。当前17仍关闭，不能把以上底座与组件通过写成购符召唤闭环完成。
+
+## 后续补审：queued max credit最小修复
+
+server-core已将上述极值落实为TestPetRuntimeQueuedCreditAtMaximumDoesNotRejectIgnoredExperience，并保留真实修前FAIL记录maximum-credit-before.txt；本审查仍只读代码/断言，不冒称我运行。新pet_training.go91–106先拒负RoleEXP；当先前grant已升至Maximum时只绑定原SourceSeq/OwnerEXP并令Amount0，直接通过预检；未满级仍完整校验乘法/累加溢出。award继续消费Applied而不改满级carry，没有改原EXP、队列次序或经济水位。新增测试126–150明确A/B均提前捕获、A精确达到max并保留18446744073709471615、B忽略新增训练且Applied一次。静态补审与来源AtMaximum语义一致，原提出边界在新diff中已消除，未发现其它当前rule16实质阻断。最终narrow/game-race仍由server-core执行记录，本报告不提前代其宣称终态。

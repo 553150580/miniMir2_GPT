@@ -4,6 +4,13 @@ import argparse,datetime,hashlib,json,os,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def input_files():
+ files=list((ROOT/'server/internal').rglob('*.go'))+list((ROOT/'server/cmd').rglob('*.go'))+list((ROOT/'server/api/generated').rglob('*.go'))
+ files += [ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json',ROOT/'config/development/pet-runtime-candidates.json',ROOT/'资料参考/myf/Mir200/Map/0.map',Path(__file__).resolve(),ROOT/'tools/dev',ROOT/'tools/toolchain.py']
+ files += list((ROOT/'conf/toolchain').glob('*.lock.json'))
+ files += [p for p in (ROOT/'server/internal').rglob('*') if p.is_file() and 'testdata' in p.parts]
+ return sorted(set(files))
 def main():
  p=argparse.ArgumentParser();p.add_argument('--mongo',action='store_true');p.add_argument('--race',action='store_true');p.add_argument('--integration-only',action='store_true');p.add_argument('--timeout-seconds',type=int,default=600 if os.name=='nt' else 180);p.add_argument('--package-parallelism',type=int,default=1 if os.name=='nt' else None);a=p.parse_args()
  if not 1<=a.timeout_seconds<=3600:p.error('测试包总时限必须在1–3600秒；单项RPC和业务时限不变')
@@ -22,10 +29,8 @@ def main():
  # Windows QEMU TCG 的累计执行较慢；只扩展测试包总预算，不改变单项RPC/业务deadline。
  cmd+=['./internal/integration' if a.integration_only else './...','-count=1',f'-timeout={a.timeout_seconds}s']
  env=dict(os.environ);env['MINIMIR_MONGO_E2E']='1' if a.mongo else '0'
- files=list((ROOT/'server/internal').rglob('*.go'))+list((ROOT/'server/cmd/nbserver').rglob('*.go'))+list((ROOT/'server/api/generated').rglob('*.go'))+[ROOT/'server/go.mod',ROOT/'server/go.sum',ROOT/'conf/dev/server.json',ROOT/'config/development/first-loop.json']
- # 源语言对拍的压缩期望也是测试输入；冻结检查同时覆盖生成PB与所有testdata。
- files=sorted(set(files+[p for p in (ROOT/'server/internal').rglob('*') if p.is_file() and 'testdata' in p.parts]))
- before={x.relative_to(ROOT).as_posix():sha(x) for x in sorted(files)}
+ # 冻结业务输入和受控工具选择链；结束时重扫，以识别期间新增/删除的源码或testdata。
+ before={x.relative_to(ROOT).as_posix():sha(x) for x in input_files()}
  started=datetime.datetime.now(datetime.timezone.utc).isoformat()
  result=subprocess.run(cmd,cwd=ROOT,env=env,capture_output=True,text=True,timeout=a.timeout_seconds+120)
  directory=ROOT/'server/test-results';directory.mkdir(exist_ok=True)
@@ -37,7 +42,7 @@ def main():
  passed=[{'package':e.get('Package'),'test':e['Test']} for e in events if e.get('Action')=='pass' and e.get('Test')]
  skipped=[{'package':e.get('Package'),'test':e['Test']} for e in events if e.get('Action')=='skip' and e.get('Test')]
  failed=[{'package':e.get('Package'),'test':e.get('Test')} for e in events if e.get('Action') in ('fail','build-fail')]
- after={x.relative_to(ROOT).as_posix():sha(x) for x in sorted(files)}
+ after={x.relative_to(ROOT).as_posix():sha(x) for x in input_files()}
  changed=before!=after
  report={'schema_version':1,'started_at_utc':started,'finished_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'command':cmd,'mongo_e2e_explicit':a.mongo,'race_detector':a.race,'exit_code':result.returncode,'passed':result.returncode==0 and not changed,'source_changed_during_test':changed,'passed_tests':passed,'skipped_tests':skipped,'fixture':{'path':'config/development/first-loop.json','sha256':sha(ROOT/'config/development/first-loop.json'),'candidate_only':True,'runtime_ready':False},'source_sha256':before,'source_sha256_after':after,'events_sha256':sha(directory/'latest.events.jsonl'),'production_ready':False}
  report.update(failed_tests=failed,package_timeout_seconds=a.timeout_seconds,package_parallelism=a.package_parallelism,single_rpc_and_business_deadlines_changed=False,capacity_verified=False)

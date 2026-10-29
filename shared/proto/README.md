@@ -1,5 +1,9 @@
 # 共享协议实现状态
 
+当前rule16为68个PB数据消息、53个消息号、31个错误码、136个64位字段及444个Long边界案例，仍为draft开发合同，未新增消息号。`EntityState.pet_training=23`为独立训练等级/上限与uint64经验/门槛，`is_pet_corpse=24`识别无主尸体；模板Level不等于训练等级。主legacy宠不带虚构训练状态；训练EXP可超门槛且单次只升一级，客户端不while重算。
+
+训练和尸体观察均属于同一完整scene/baseline/state_sequence/handle/Life。基线在真实64KiB帧限制内整组预编码分块，单体过大/超过合同则整组拒绝，不删尸体凑包；显式退出等待原request/binding/state完整分块取消确认。64位继续Long/BigInt，不新增经济水位、客户端造宠入口或17技能授权。见[阶段验收](../../docs/宠物尸体与训练引擎阶段验收.json)。以下保留各自历史版本范围。
+
 当前rule15协议67个PB数据消息、53个消息号、31个错误码、134个64位字段及438个Long边界案例，仍属draft开发合同。新增纯S2C 30014 `TeleportResult`，含RoleKey、原/新scene、cast、Life、实际地图/落点/运动水位、outcome及transition_id；客户端不上传传送目的点。
 
 `EnterLineResult.server_transition_id`与跨图成功结果严格配对，正常健康票为空且不补播历史。`EntityStatusState.teleport_mana_penalty_percent`为权威传送耗蓝加成，同图仍用30013；64位保持Long/BigInt。绑定沿20011观察已提交永久事实，原经济command/Pending合同保持。跨图资源/首视口、ACK、SyncReady逐项门禁，见[瞬移阶段验收](../../docs/瞬息移动与世界执行身份阶段验收.json)。

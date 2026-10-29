@@ -104,8 +104,12 @@ def apply(plan_path,output):
         if append and row_number is not None or not append and row_number is None:raise ValueError('记录存在状态与编辑种类不符')
         if append:
             if set(operation['values'])!={f['name'] for f in table['fields']}:raise ValueError('追加记录必须提供全部字段，未知值保持空白')
-            row_number=max(raw[name])+1
-            template=next(r for r in rows if int(r.getAttribute('r'))==max(n for n in raw[name] if n>=4))
+            data_rows=[n for n in raw[name] if n>=4]
+            row_number=max(raw[name])+1 if data_rows else 4
+            # 首次填空表只借第3行的行高/单元格style，不复制类型说明或公式值。
+            template_number=max(data_rows) if data_rows else 3
+            template=next((r for r in rows if int(r.getAttribute('r'))==template_number),None)
+            if template is None:raise ValueError('空表追加缺少第3行样式模板')
             row=next((r for r in rows if int(r.getAttribute('r'))==row_number),None)
             if row is not None:
                 if has_row_data(row):raise ValueError('追加目标已有未识别的内容，禁止覆盖')

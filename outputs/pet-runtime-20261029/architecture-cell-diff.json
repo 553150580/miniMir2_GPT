@@ -1,0 +1,72 @@
+[
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "id",
+    "before": null,
+    "after": 40
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "record_status",
+    "before": null,
+    "after": "candidate"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "source_ref",
+    "before": null,
+    "after": "本任务rule16技术候选；docs/职业宠物生命周期与召唤实施边界.md"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "note",
+    "before": null,
+    "after": "包括同owner全部World的活动宠、尸体及待新生reservation；满额只拒新生不拒死亡，不丢弃未过期原尸体。101仅180s/1800ms典型源路径估计，不证明通用上界或整机容量。"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "code",
+    "before": null,
+    "after": "retained_pet_body_capacity_per_owner"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "value",
+    "before": null,
+    "after": 128
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "value_unit",
+    "before": null,
+    "after": "身体/owner"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "applicability",
+    "before": null,
+    "after": "同owner全部保留World的宠物身体与新生预留"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "adaptation_status",
+    "before": null,
+    "after": "adapt"
+  },
+  {
+    "table_id": "arch_runtime_budgets",
+    "id": 40,
+    "field": "verification_status",
+    "before": null,
+    "after": "pending"
+  }
+]

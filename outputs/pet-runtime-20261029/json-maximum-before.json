@@ -1,0 +1,23 @@
+{
+  "defect": "maximum被静默忽略",
+  "cases": [
+    {
+      "shape": {
+        "type": "int",
+        "minimum": 1,
+        "maximum": 128
+      },
+      "value": 129,
+      "actual_errors": []
+    },
+    {
+      "shape": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "value": 1.5,
+      "actual_errors": []
+    }
+  ]
+}

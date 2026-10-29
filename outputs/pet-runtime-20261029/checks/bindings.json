@@ -1,0 +1,13 @@
+{
+  "task": "bindings",
+  "command": [
+    "node",
+    "tools/config/verify_bindings.mjs"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T23:31:24.085770+00:00",
+  "finished_at": "2026-10-28T23:31:24.917445+00:00",
+  "output": ".work/pet-runtime-20261029/checks/bindings.txt",
+  "output_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

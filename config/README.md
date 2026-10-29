@@ -1,5 +1,13 @@
 # 配置维护与导出
 
+## 当前rule16宠物尸体与训练定义
+
+当前预览`dev-pet-runtime-v0.16-5f25126dac61`，98表960记录（candidate461/confirmed393/historical36/unverified70）、709项正式阻断，22技能与4状态。两本唯一Excel本轮更新82单元格；PetDefs引用Monster基础属性并登记训练、速度、生命周期，PetGrowthLevels保存0–7级门槛与加成；架构Budget40为跨World共享128身体技术候选。不能用结构通过替代容量认证。
+
+`tools/resources/prepare_pet_runtime.py`同一个编译器生成`config/development/pet-runtime-candidates.json`与主fixture的`pet_runtime`。独立候选文件始终runtime_enabled=false；主profile显式enabled和legacy_untrained_pet，原免费宠不训练。rule16必需完整typed对象，缺失/null/未知字段拒绝，成长表终态required_experience必须显式null为唯一例外；raw目录同样严格读取，无零值补缺。17未在skill_ids，护符Count单位和售价保持未知；不从DuraMax猜张数，不添加初始召唤书或材料商店。JSON schema的maximum现在实际执行，空表首行编辑保留原类型及公式结构，相关反例已验。
+
+尸体TTL180000ms、训练范围/增量/门槛和速度均由唯一表投影，game不散落第二份数值。来源映射与AI23/模板对应仍为跨来源开发候选。主配置与隔离HP1/10秒WS、HP1/15秒GUI分别验收，见[阶段验收](../docs/宠物尸体与训练引擎阶段验收.json)。以下保留历史规则范围。
+
 ## 数据源
 
 正式开发配置源为 `outputs/development-prep-20261026/玩法配置.xlsx` 和 `架构配置.xlsx`。工作簿目录页显示记录状态与表覆盖。配置域按最终策划5.11拆分，架构实验参数单独维护。
@@ -17,7 +25,7 @@
 
 每条记录均保留 `source_ref` 和 `note`；导出时剔除它们和其它 `target=none` 字段。来源是既有文档章节/行号、用户已确认规则或提取记录，状态不能代替来源证据。参数修改需要同步其证据；关闭发布缺口需要填写具体报告或批准变更引用。
 
-## 当前rule15瞬息移动与世界执行身份
+## rule15瞬息移动与世界执行身份：历史验收
 
 当前预览`dev-teleport-v0.15-89a2e772a9e8`，98表951记录、703项正式阻断，22项技能与4项状态；结构通过不等于正式发布。唯一Excel增加书13/技能21/成功后置效果21/固定Flux21、商店27/三阶升级及分解选择。初始赠书与随机池保持原门禁，`binding.enabled=false/start_points=[]/safe_zone_enabled=true`。
 

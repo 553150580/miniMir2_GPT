@@ -1,0 +1,15 @@
+{
+  "task": "go",
+  "command": [
+    "python3",
+    "tools/server/test.py",
+    "--mongo",
+    "--race"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T23:58:55.770576+00:00",
+  "finished_at": "2026-10-29T00:05:58.198319+00:00",
+  "output": ".work/pet-runtime-20261029/checks/go.txt",
+  "output_sha256": "c9af6674d853784e6be4420db49af0b6294591325a88b9e4a1066d670dbcf845",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

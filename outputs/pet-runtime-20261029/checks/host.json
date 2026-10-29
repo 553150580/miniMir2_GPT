@@ -1,0 +1,19 @@
+{
+  "task": "host",
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/environment",
+    "-p",
+    "test_*.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T23:31:24.917695+00:00",
+  "finished_at": "2026-10-28T23:31:26.173882+00:00",
+  "output": ".work/pet-runtime-20261029/checks/host.txt",
+  "output_sha256": "ad30f6c4853c8a350e1103ae6ef627d1a02c3bdf99480b43cc30c4b6e85e521e",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

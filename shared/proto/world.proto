@@ -68,6 +68,14 @@ message TeleportResult {
   uint32 outcome = 9;
   string transition_id = 10;
 }
+// 临时宠物训练观察；跟随实体handle/Life和完整基线，不能由客户端授予经验或等级。
+message PetTrainingState {
+  uint32 training_level = 1;
+  uint32 max_training_level = 2;
+  uint64 experience = 3;
+  // 当前级升下一级的总门槛；满级为0，经验可保留来源超额，不代表客户端可以自行升级。
+  uint64 next_level_experience = 4;
+}
 message EntityState {
   uint32 entity_handle = 1;
   uint32 entity_kind = 2;
@@ -97,6 +105,9 @@ message EntityState {
   uint64 movement_revision = 21;
   // 0初始、1普通走、2被推、3冲撞、4传送、5冲撞失败；纯观察身份。
   uint32 movement_kind = 22;
+  PetTrainingState pet_training = 23;
+  // World-owned旧宠尸体：无主人，仅用于显示和旧引用解析，不能作为当前宠物或友方候选。
+  bool is_pet_corpse = 24;
 }
 // 仅描述已提交的真实路径；不授予客户端移动能力，也不重放进场前的旧事件。
 message EntityDisplacement {

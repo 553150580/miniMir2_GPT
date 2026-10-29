@@ -1,6 +1,6 @@
 {
-  "path": "dev-teleport-v0.15-89a2e772a9e8",
-  "version": "dev-teleport-v0.15-89a2e772a9e8",
-  "content_sha256": "89a2e772a9e82891f0945a0d9c4f90f897aab721679e96e8d0a24a0b45d60a3a",
+  "path": "dev-pet-runtime-v0.16-5f25126dac61",
+  "version": "dev-pet-runtime-v0.16-5f25126dac61",
+  "content_sha256": "5f25126dac61552387680a912bd7d73250cf8554b46aeeb47bce91807033f2fa",
   "runtime_ready": false
 }

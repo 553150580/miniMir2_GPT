@@ -1,0 +1,32 @@
+{
+  "pid": 42320,
+  "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-runtime-20261029\\gui-review\\run-fae0a7a32d924a0cadc240c9e3a2f812\\nbserver.exe",
+  "start_ticks": 134377051806856190,
+  "project_root": "D:\\A_Claude\\miniMir2_GPT",
+  "run_id": "fae0a7a32d924a0cadc240c9e3a2f812",
+  "argv": [
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-runtime-20261029\\gui-review\\run-fae0a7a32d924a0cadc240c9e3a2f812\\nbserver.exe",
+    "-config",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\pet-runtime-20261029\\gui-review\\run-fae0a7a32d924a0cadc240c9e3a2f812\\conf\\dev\\server.json",
+    "-mode",
+    "supervisor",
+    "-run-id",
+    "fae0a7a32d924a0cadc240c9e3a2f812"
+  ],
+  "database": "minimir_dev_game_test_pet_gui_fae0a7a32d924a0cadc240c9e3a2f812",
+  "purpose": "isolated_pet_runtime_gui",
+  "binary_sha256": "01c2a3dba1ac312f08a8e88a844923d6bcb7c04264a827f0af8680126d639383",
+  "config_sha256": "624f6dce35a3f1fb8e7a2903d6d7c5d158bec17283c8b5036b5fd882e7f5287d",
+  "fixture_sha256": "929a842ab10d5c01b9a63741ce20ac85a5898b437052e7b23a99c79ab43781ba",
+  "corpse_ttl_ms": 15000,
+  "health_instances": {
+    "account": "a13084c9774575bea7e8586702226efc",
+    "game": "949bbcc7b9a9e75e2a70c39adb09d5ea",
+    "gm": "1edba14d662e5e01e519988f28645319"
+  },
+  "ports": {
+    "account": 18100,
+    "game": 18101,
+    "gm": 18102
+  }
+}

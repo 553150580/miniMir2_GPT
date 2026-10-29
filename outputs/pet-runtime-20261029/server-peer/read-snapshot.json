@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-28T23:07:45.234195+00:00",
+  "scope": "static read while server narrow tests ongoing; not a stable freeze or executed test report",
+  "sha256": {
+    "server/internal/game/pet_corpses.go": "bb7bbb2a19d3314ddabd9c92b9a3fd90762c80679a3495ffc7f9f4769d5e5f2f",
+    "server/internal/game/pet_training.go": "aebded1e6bef34490d9bfaf73920ca259a3175f95b8f9e05bb35f87c7faf1bfe",
+    "server/internal/game/pet_lifecycle.go": "2eee3d83564c48d1438f222008f90ee6531d02da32090d01e4b3992acc4b3e3f",
+    "server/internal/game/baseline.go": "2a35dd9f91bd67b74c0d3078973e930b565ba4c983c0196994061c52cdaa2f6d",
+    "server/internal/game/combat.go": "c2ff0ac1475df2da8363c6591ba1b830dabfa48c38d7578aadc2e903e445c1b8",
+    "server/internal/game/combat_status.go": "efcbb3a3575637172cde71badd4cc11f59e3a025ed672f9a4e82a1c0cebaf17b",
+    "server/internal/game/displacement_skills.go": "8104f7812b337f31f50da98dc2bc9020abc5b3912ec924aa1a5fe450018f1678",
+    "server/internal/game/world_context.go": "c42f94f5592c90fb5571a17f1e130c9eb86a7a7f186dca162799cd8d749ad36a",
+    "server/internal/game/runtime.go": "71d5234496f0f7278b485e832fea365fb83bee3c9ed47bb9bf24e8800ecb0cf7",
+    "server/internal/game/map_travel.go": "99c425ab7fcb7d73016c5699155dfa454dfc95188323824bf06077d4cf258f02",
+    "server/internal/game/timeline.go": "9d2273fc761ffdd5209ed7dfd8b75af9d41d287f72a8ae862674ee041860ca86",
+    "server/internal/game/pet_training_test.go": "61891401b6df52241281a2f60a39d0ba9c36874668daeed1dfcdf4ab1ebff59e",
+    "server/internal/game/pet_corpses_test.go": "910805dbb337c1954dcdf1c5050932781b4ad2b63dedfc150919c8ce235eb749",
+    "server/internal/game/baseline_test.go": "bf18dbf33645dd41546092b289c35fac2898d6e0cad626b5b83b18605d101f53",
+    "server/internal/game/pet_runtime_test.go": "06af526e84308a87e786ba5bc14751060d0d1fb8a31163ea8f5c9a8a8d531ac9",
+    "server/internal/devconfig/pet_runtime.go": "40996ab41a892d42919d8758aaceb1f657853244130ba6500423893e658ec9c6"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "status": "real_mongo_ws_race_pass_frozen",
+  "compile_command": ".\\tools\\dev.ps1 go test ./internal/integration -run ^$ -count=1",
+  "compile_exit_code": 0,
+  "test_path": "server/internal/integration/pet_runtime_test.go",
+  "test_sha256": "edd5d55a3b4f2b940dfa526266cea1fb49b9361b0876f24c8ac4215682140906",
+  "scope": "只新增此测试；真实Mongo/WS未执行；NoMaster friendly_grid过滤留game专项；未启17/护符",
+  "isolated_cfg": {
+    "pet_hp": 1,
+    "pet_attack": [
+      0,
+      0
+    ],
+    "definition_base": "同步legacy Fighter",
+    "corpse_ttl_ms": 10000,
+    "pet_spawn": [
+      8,
+      6
+    ],
+    "monster_front": [
+      8,
+      5
+    ],
+    "monster_attack": [
+      20,
+      20
+    ],
+    "monster_accuracy": 255,
+    "monster_attack_ms": 600000,
+    "monster_move_ms": 600000
+  },
+  "final_compile_evidence": "compile-result.json及compile.txt",
+  "final_execution_evidence": "real-mongo-ws-result.json/real-mongo-ws.txt/before/after",
+  "revision_contract": "每次合法Enter的SessionEpoch/Revision各恰+1，其余来源/经济/经验不变",
+  "stable_input_count": 137
+}

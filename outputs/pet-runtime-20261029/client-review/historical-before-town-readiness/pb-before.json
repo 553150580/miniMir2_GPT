@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-28T22:43:11.826137+00:00",
+  "sha256": {
+    "shared/proto/world.proto": "e82932ce6413edbe3844a1987d438e52f8f10016debbd61b52bfae2f669c6926",
+    "server/api/generated/minimirv1/world.pb.go": "f687d9c888779d7331d517126f9cbff1880d5c30d7b819c4a053af0db91691af",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "81eafc1aca8fdcd0032679a500e8504b54058fb8b86854868d915d097e263af3",
+    "client/assets/scripts/generated/protobuf/client_pb.d.ts": "3fab283256024421709b536746f4f5454fe353c9ec1d10bcbf724c87c7fdf992",
+    "conf/toolchain/go-pb-generation.json": "7ad790eaf057fb9e4cb5ecf11c89afd1f8dc57e8bad9ea81c318c6f9e7f03df1",
+    "conf/toolchain/client-pb-verification.json": "8b59252353ffeb4d00dfee5b030d1e05d11e9a3fe966e4145b0f2bd171a9db77"
+  }
+}

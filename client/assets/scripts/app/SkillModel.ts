@@ -48,7 +48,7 @@ export interface SkillRow {
     definition: SkillDefinition; learned: boolean; level: number; canLearn: boolean; cost: number; status: string;
 }
 export interface SkillEntity {
-    entityHandle: number; entityKind: number; hp: PotionInteger; mp?: PotionInteger;
+    entityHandle: number; entityKind: number; hp: PotionInteger; mp?: PotionInteger; isPetCorpse?: boolean;
     position: { x: number; y: number }; direction: number;
 }
 export interface SkillLearnPreview {
@@ -158,7 +158,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         '受到实际伤害会缩短持续时间', '已有魔法盾时重施仍消耗魔法，但不刷新', '角色倒下后魔法盾解除');
     else if (definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') lines.push(`轻触地面选择中心，友方范围半径${definition.area_radius ?? 0}格`,
         definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
-        '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进');
+        '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进', '无主宠物尸体不属于友方');
     else if (!definition.active) lines.push(skillPassiveText(row));
     else if (!definition.displacement && definition.kind !== 'teleport') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
     if (definition.kind === 'teleport') {
@@ -211,10 +211,10 @@ export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[
     if (targetKind !== 'enemy_entity' && targetKind !== 'friendly_entity') throw new Error('该技能需要选择地面位置');
     const friendly = targetKind === 'friendly_entity';
     const distance = (target: SkillEntity): number => Math.max(Math.abs(target.position.x - player.position.x), Math.abs(target.position.y - player.position.y));
-    const legal = (target: SkillEntity): boolean => integer(target.hp) > 0n
+    const legal = (target: SkillEntity): boolean => !target.isPetCorpse && integer(target.hp) > 0n
         && (friendly ? target.entityHandle === playerHandle || target.entityKind === 2 : target.entityKind === 3);
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
-    if (selected && integer(selected.hp) === 0n && (friendly
+    if (selected && (selected.isPetCorpse || integer(selected.hp) === 0n) && (friendly
         ? selected.entityHandle === playerHandle || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;
     if (!target && friendly) target = player;

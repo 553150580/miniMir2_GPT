@@ -244,7 +244,7 @@ export class GameWorldView {
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId, state.entityHandle === this.playerHandle ? this.playerName : '', this.job, this.gameplay);
             name.active = !!displayName;
-            name.getComponent(Label)!.string = displayName;
+            name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体` : displayName;
             const hp = visual.node.getChildByName('HP')!;
             hp.active = state.entityKind !== 4;
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0

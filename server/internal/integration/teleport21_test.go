@@ -27,8 +27,8 @@ func TestTeleport21LearningBindingAndHealthyColdEntryMongoWS(t *testing.T) {
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
 	skill, exists := cfg.Fixture.Skill(21)
-	if cfg.Fixture.RuleVersion != 15 || !exists || skill.BookItemID != 13 || skill.Teleport == nil || !cfg.Fixture.SafeZoneBindingEnabled() {
-		t.Fatal("真实唯一Excel尚未显式选择rule15/21/正常安全区绑定")
+	if cfg.Fixture.RuleVersion < 15 || !exists || skill.BookItemID != 13 || skill.Teleport == nil || !cfg.Fixture.SafeZoneBindingEnabled() {
+		t.Fatal("真实唯一Excel尚未显式选择21/正常安全区绑定合同")
 	}
 	cfg.Database = "minimir_dev_game_test_teleport_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)

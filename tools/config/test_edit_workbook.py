@@ -52,6 +52,34 @@ class WorkbookEditTests(unittest.TestCase):
         self.assertEqual(config.read_xlsx(output)['样例'][5][2],'再次编辑')
         self.assertEqual(config.read_xlsx(output)['样例'][4][3],2)
 
+    def test_first_append_to_empty_table_uses_row_three_style_without_copying_metadata(self):
+        self.write_book('')
+        with zipfile.ZipFile(self.book) as archive:
+            members={name:archive.read(name) for name in archive.namelist()}
+        document=minidom.parseString(members['xl/worksheets/sheet1.xml'])
+        data=document.getElementsByTagNameNS(editor.MAIN,'sheetData')[0]
+        old=next(row for row in editor.children(data,'row') if row.getAttribute('r')=='4')
+        data.removeChild(old)
+        header=minidom.parseString(f'<row xmlns="{editor.MAIN}" r="3" ht="81"><c r="A3" s="7" t="inlineStr"><is><t>整数类型说明</t></is></c><c r="B3" s="8" t="inlineStr"><is><t>字符串类型说明</t></is></c><c r="C3"><f>1+1</f><v>2</v></c></row>').documentElement
+        data.appendChild(document.importNode(header,True))
+        members['xl/worksheets/sheet1.xml']=document.toxml(encoding='utf-8')
+        with zipfile.ZipFile(self.book,'w') as archive:
+            for name,value in members.items():archive.writestr(name,value)
+        before=self.book.read_bytes()
+        output,report=self.apply('append',1,'第一条宠物成长')
+        self.assertEqual(self.book.read_bytes(),before)
+        parsed=config.read_xlsx(output)['样例']
+        self.assertEqual(parsed[4],{1:1,2:'第一条宠物成长'})
+        self.assertEqual(parsed[3][1],'整数类型说明')
+        self.assertEqual(parsed[3][3],2)
+        with zipfile.ZipFile(output) as archive:
+            after=minidom.parseString(archive.read('xl/worksheets/sheet1.xml'))
+            row=next(row for row in after.getElementsByTagNameNS(editor.MAIN,'row') if row.getAttribute('r')=='4')
+            self.assertEqual(row.getAttribute('ht'),'81')
+            self.assertEqual([cell.getAttribute('s') for cell in editor.children(row,'c')],['7','8'])
+            self.assertFalse(row.getElementsByTagNameNS(editor.MAIN,'f'))
+            self.assertEqual(archive.read('preserved/unknown.xml'),members['preserved/unknown.xml'])
+
     def test_explicit_repair_keeps_populated_row_style_and_all_values(self):
         self.write_book('<row r="5" ht="15"><c r="A5" s="0"/><c r="B5" s="0"/></row><row r="5" ht="196"><c r="A5" s="0"><v>2</v></c><c r="B5" s="0" t="inlineStr"><is><t>已有数据</t></is></c></row>')
         before=self.book.read_bytes();output,report=self.apply('update',2,'小地图字段',repair=True)

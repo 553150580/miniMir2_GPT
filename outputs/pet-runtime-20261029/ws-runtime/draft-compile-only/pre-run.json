@@ -1,0 +1,33 @@
+{
+  "status": "test_written_compile_only_waiting_root_before_real_mongo",
+  "compile_command": ".\\tools\\dev.ps1 go test ./internal/integration -run ^$ -count=1",
+  "compile_exit_code": 0,
+  "test_path": "server/internal/integration/pet_runtime_test.go",
+  "test_sha256": "bc74f8cefb64a1d2b2271a9afbf79293118837a2a0375c1ad43d03efc559f2e0",
+  "scope": "只新增此测试；真实Mongo/WS未执行；NoMaster friendly_grid过滤留game专项；未启17/护符",
+  "isolated_cfg": {
+    "pet_hp": 1,
+    "pet_attack": [
+      0,
+      0
+    ],
+    "definition_base": "同步legacy Fighter",
+    "corpse_ttl_ms": 3000,
+    "pet_spawn": [
+      8,
+      6
+    ],
+    "monster_front": [
+      8,
+      5
+    ],
+    "monster_attack": [
+      20,
+      20
+    ],
+    "monster_accuracy": 255,
+    "monster_attack_ms": 600000,
+    "monster_move_ms": 600000
+  },
+  "final_compile_evidence": "compile-result.json及compile.txt"
+}

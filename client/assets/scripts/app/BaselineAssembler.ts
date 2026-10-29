@@ -1,4 +1,5 @@
 import Long from 'long';
+import { validatePetObservation } from './PetTrainingModel';
 
 // 有界组装当前连接的基线；预加载完成不能替代完整基线确认。
 export class BaselineAssembler {
@@ -41,7 +42,8 @@ export class BaselineAssembler {
             skillModeState ??= this.chunks.get(index).skillModeState;
             navigationState ??= this.chunks.get(index).navigationState;
             for (const entity of this.chunks.get(index).entities) {
-                if (!Number.isInteger(entity.entityHandle) || entity.entityHandle < 1 || handles.has(entity.entityHandle)) throw new Error('基线实体句柄无效或重复');
+                if (!Number.isInteger(entity.entityHandle) || entity.entityHandle < 1 || entity.entityHandle > 0xffffffff || handles.has(entity.entityHandle)) throw new Error('基线实体句柄无效或重复');
+                validatePetObservation(entity);
                 handles.add(entity.entityHandle); entities.push(entity);
                 if (entities.length > 2048) throw new Error('场景基线实体总数越界');
             }

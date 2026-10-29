@@ -1,0 +1,1 @@
+{"prepared": true, "run_started": false, "ownership": "project root + Windows executable/start_ticks + per-run marker database; unknown processes rejected", "ports": {"account": 18100, "game": 18101, "gm": 18102}, "scope": "仅静态准备；--run才允许受控节点/专属DB/浏览器及finally恢复main"}

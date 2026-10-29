@@ -156,6 +156,9 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 		return statusFighter(e, a)
 	}
 	if e.Kind == 2 {
+		if e.PetRuntime != nil {
+			return statusFighter(e, e.PetRuntime.Fighter)
+		}
 		return statusFighter(e, f.Pet)
 	}
 	return statusFighter(e, e.Monster.Fighter)
@@ -243,6 +246,10 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 			} else {
 				w.kill(r, target, now, from)
 			}
+		} else if target.Kind == 2 && target == r.Pet && w.petRuntimeEnabled() {
+			if !w.archivePetDeath(r, world, referenceIn(world, target), now) {
+				w.isolateRoom(r)
+			}
 		} else if target.Kind == 1 {
 			r.DeathID = domain.ID()
 			w.deathNotice(r)
@@ -298,6 +305,9 @@ func (w *worker) step(r *room, now time.Time) {
 			}
 		}
 		return
+	}
+	if w.expirePetCorpses(r, now) {
+		w.snapshot(r)
 	}
 	w.expireModes(r, now)
 	// A28：本作统一在本帧事件前处理全部实体状态；按实际处理时钟离散扣时，不回造Due历史。
@@ -429,11 +439,11 @@ func (w *worker) step(r *room, now time.Time) {
 				if distance(pet.Pos, target.Pos) <= 1 {
 					w.attack(r, pet, target, now)
 				} else {
-					w.move(r, pet, target.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
+					w.move(r, pet, target.Pos, now, w.fighter(r, pet).MoveMS)
 				}
 			}
 		} else if distance(pet.Pos, r.Player.Pos) > 2 {
-			w.move(r, pet, r.Player.Pos, now, w.e.Store.Cfg.Fixture.Pet.MoveMS)
+			w.move(r, pet, r.Player.Pos, now, w.fighter(r, pet).MoveMS)
 		}
 	}
 	if r.Pending || r.Isolated {

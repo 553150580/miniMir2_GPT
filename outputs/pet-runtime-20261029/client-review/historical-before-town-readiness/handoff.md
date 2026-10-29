@@ -1,0 +1,11 @@
+# rule16客户端交付
+
+生产TS与测试已冻结。最终fixture25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0、public rule16，216份输入before/after/current及额外current_frozen一致；10份保存scene/prefab未变。实际命令、退出码、耗时及日志SHA见report.json。模型编译、348项UI/app(0fail/0skip)、严格Creator声明类型、两项protocol-check及protocol-lint均pass；PB68数据消息/136个64位字段/444边界，消息号仍53。
+
+协议追加EntityState.pet_training23/is_pet_corpse24，无新消息号；训练4字段与服务器已对齐。EXP与门槛保持Long，不根据carry本地升级。无主尸体不进入活宠/友方实体选择；14/15地面友方资格仍由服务器判。保存PetPanel与StatusDetails只展示当前观察；legacy不编造级别，实体详情按scope+handle+Life实时重取。分块退出须调用GameConnection.requestNavigationCancel，不能沿generic request提前消费第一块；同请求64块以内完整组装才可确认，旧Entry完成不关闭新附着。
+
+测试中的PB→Connection→Session是真实codec/连接/Session加假socket；视图与保存UI是真实TS组件加轻量Cocos替身。128尸体是编码/模型/组件样本，不是GPU、真机或内存容量验收。未启动Creator、服务或真实浏览器；17、购符及真正召唤仍关闭。root后续统一实构/GUI。
+
+保留targeted-1的.work模型输出Long解析失败与full-intermediate-1新增说明断言前漏重编失败历史，未把它们当产品故障或伪造修前执行证据。已修测试编译入口，仅链接项目锁定Long到.work，无新依赖安装或版本更改。
+
+计数补充：服务端RetainedBodyCapacityPerOwner=128包括所有尸体、活动宠和预约，并非128尸体之外还可加新宠。客户端“128尸体+1活宠”是129宠物实体的合成协议/组件探针，仍在2048客户端硬边界内；不把它写成当前服务端可产生的正常人口。服务端合法满预算通常是127尸体+1活宠或128尸体无活宠。

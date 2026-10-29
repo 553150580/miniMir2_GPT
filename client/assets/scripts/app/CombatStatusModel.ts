@@ -1,4 +1,5 @@
 import { PotionInteger } from './PotionModel';
+import type { PetTrainingState } from './PetTrainingModel';
 
 export interface EntityStatusState {
     statusId: number; sourceSkillId: number; skillLevel: number; remainingMs: number;
@@ -12,7 +13,9 @@ export interface CombatAttributes {
 }
 export interface CombatEntity {
     entityHandle: number; entityKind: number; definitionId?: number; life: PotionInteger;
-    hp: PotionInteger; statuses?: readonly EntityStatusState[]; combatAttributes?: CombatAttributes | null;
+    hp: PotionInteger; hpMax?: PotionInteger; position?: { x: number; y: number };
+    moveIntervalMs?: number; attackIntervalMs?: number; isPetCorpse?: boolean; petTraining?: PetTrainingState | null;
+    statuses?: readonly EntityStatusState[]; combatAttributes?: CombatAttributes | null;
 }
 export interface StatusDefinition { id: number; name: string; short_name: string; }
 const NAMES: Record<number, string> = { 14: '幽灵盾', 15: '神圣战甲术', 31: '魔法盾' };

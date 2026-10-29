@@ -13707,45 +13707,48 @@
       "shape": {
         "type": "object",
         "properties": {
-          "hp": {
+          "kind": {
+            "type": "string"
+          },
+          "owner_job_id": {
             "type": "int",
             "minimum": 0
           },
-          "mp": {
-            "type": "int",
-            "minimum": 0
+          "neutral_attributes": {
+            "type": "object",
+            "properties": {
+              "attack_speed": {
+                "type": "int",
+                "minimum": 0
+              },
+              "magic_max": {
+                "type": "int",
+                "minimum": 0
+              },
+              "magic_min": {
+                "type": "int",
+                "minimum": 0
+              },
+              "magic_resist": {
+                "type": "int",
+                "minimum": 0
+              },
+              "tao_max": {
+                "type": "int",
+                "minimum": 0
+              },
+              "tao_min": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
           },
-          "physical_attack_min": {
-            "type": "int",
-            "minimum": 0
-          },
-          "physical_attack_max": {
-            "type": "int",
-            "minimum": 0
-          },
-          "physical_defence_min": {
-            "type": "int",
-            "minimum": 0
-          },
-          "physical_defence_max": {
-            "type": "int",
-            "minimum": 0
-          },
-          "magic_defence": {
-            "type": "int",
-            "minimum": 0
-          },
-          "accuracy": {
-            "type": "int",
-            "minimum": 0
-          },
-          "agility": {
-            "type": "int",
-            "minimum": 0
+          "magic_resist_weight_source": {
+            "type": "string"
           }
         }
       },
-      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json"
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用"
     },
     {
       "table_id": "game_drop_pools",
@@ -14462,10 +14465,28 @@
                 "minimum": 1
               }
             }
+          },
+          "pet_runtime": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "bootstrap_mode": {
+                "type": "string"
+              },
+              "definition_ids": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 0
+                }
+              }
+            }
           }
         }
       },
-      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证"
+      "source_ref": "用户2026-10-26授权1-5开发；../SuprcodeCrystal/Shared/BaseStats.cs:14-68,200-239；level=1逐项Calculate；空手0..0；HumanObject.cs:186,1766-1768 attack=1400-14=1386,move=600；docs/药品与技能实施边界.md:P01–P06（候选药品类型与单位契约，数值只在Excel维护）；rule15源码开发候选；Crystal Server/MirEnvir/Envir.cs:654–656、MirDatabase/MagicInfo.cs:18,219–221、MirObjects/HumanObject.cs:186,3375–3397,3424–3451,3537–3540,6096–6107、MirObjects/PlayerObject.cs:4633–4647；非目标1.80完整认证；本任务rule16仅选择PetRuntime定义及bootstrap模式，训练/尸体数值不进profile"
     },
     {
       "table_id": "game_skill_upgrades",
@@ -23148,6 +23169,580 @@
         }
       },
       "source_ref": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价"
+    },
+    {
+      "table_id": "arch_runtime_budgets",
+      "id": 40,
+      "field": "value",
+      "rule_key": null,
+      "shape": {
+        "type": "int",
+        "minimum": 1,
+        "maximum": 128
+      },
+      "source_ref": "rule16软件支持上限；数据仅由架构Excel预算40维护"
+    },
+    {
+      "table_id": "game_pet_templates",
+      "id": 1,
+      "field": "follow_and_return",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "source_skill_id": {
+            "type": "int",
+            "minimum": 0
+          },
+          "training": {
+            "type": "object",
+            "properties": {
+              "initial_level_by_rank": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 0
+                }
+              },
+              "maximum_level_by_rank": {
+                "type": "array",
+                "items": {
+                  "type": "int",
+                  "minimum": 0
+                }
+              },
+              "experience_multiplier": {
+                "type": "int",
+                "minimum": 0
+              },
+              "owner_range_cells": {
+                "type": "int",
+                "minimum": 0
+              },
+              "experience_basis": {
+                "type": "string"
+              },
+              "grant_phase": {
+                "type": "string"
+              },
+              "eligibility": {
+                "type": "string"
+              },
+              "max_level_ups_per_grant": {
+                "type": "int",
+                "minimum": 0
+              },
+              "excess_experience": {
+                "type": "string"
+              },
+              "at_maximum": {
+                "type": "string"
+              },
+              "current_hp_on_growth": {
+                "type": "string"
+              }
+            }
+          },
+          "speed": {
+            "type": "object",
+            "properties": {
+              "basis": {
+                "type": "string"
+              },
+              "move_reduction_ms_per_level": {
+                "type": "int",
+                "minimum": 0
+              },
+              "attack_reduction_ms_per_level": {
+                "type": "int",
+                "minimum": 0
+              },
+              "minimum_move_interval_ms": {
+                "type": "int",
+                "minimum": 0
+              },
+              "minimum_attack_interval_ms": {
+                "type": "int",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用"
+    },
+    {
+      "table_id": "game_pet_templates",
+      "id": 1,
+      "field": "lifetime_and_betrayal",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "corpse_ttl_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "spawn_ready_ms": {
+            "type": "int",
+            "minimum": 0
+          },
+          "live_expiry": {
+            "type": "string"
+          },
+          "cold_enter": {
+            "type": "string"
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37；本任务选择BoneFamiliar/AI23行为的跨MYF候选；Crystal MonsterObject.cs:584–599,689–704,734–736,966–1005,1205–1215；MapObject.cs:358–375；不认证MYF Race100等于AI23；MYF Monster.csv:381基础模板由monster_template_id唯一引用"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 1,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 1,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 2,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 2,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 3,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 3,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 4,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 4,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 5,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 5,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 6,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 6,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 7,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 7,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 8,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "hp_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min_bonus": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max_bonus": {
+            "type": "int",
+            "minimum": 0
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
+    },
+    {
+      "table_id": "game_pet_growth",
+      "id": 8,
+      "field": "required_conditions",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "required_experience": {
+            "type": "null"
+          }
+        }
+      },
+      "source_ref": "本任务rule16开发候选；资料索引/职业宠物补充来源契约.json；Crystal MonsterObject.cs:811–833,3502–3515；PlayerObject.cs:895–899；Shared/Globals.cs:37"
     }
   ]
 }

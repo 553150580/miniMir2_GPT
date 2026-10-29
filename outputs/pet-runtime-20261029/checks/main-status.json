@@ -1,0 +1,14 @@
+{
+  "task": "main-status",
+  "command": [
+    "python3",
+    "tools/server/dev.py",
+    "status"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T00:06:47.358729+00:00",
+  "finished_at": "2026-10-29T00:06:47.568241+00:00",
+  "output": ".work/pet-runtime-20261029/checks/main-status.txt",
+  "output_sha256": "214e5de2ad8b5b0c173ec7610b53316668ed9aa91b8cba49e7bf3b0422d83f0d",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

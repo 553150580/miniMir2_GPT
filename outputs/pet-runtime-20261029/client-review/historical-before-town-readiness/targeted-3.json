@@ -1,0 +1,16 @@
+{
+  "command": [
+    "powershell",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/transport.test.cjs",
+    "client/tests/app/pet_runtime.test.cjs",
+    "client/tests/app/combat_status.test.cjs"
+  ],
+  "exit_code": 0
+}

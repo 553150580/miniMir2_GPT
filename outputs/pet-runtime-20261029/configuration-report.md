@@ -1,0 +1,20 @@
+# rule16宠物配置本轮记录
+
+本轮已按root逐格审阅与授权应用两本唯一Excel：玩法72格、架构10格。原玩法460个公式、架构30个公式节点完整保留；其它实际单元格值均未改变。玩法仅3个工作表XML变化，架构仅1个工作表XML变化，其余116个ZIP成员逐字保留。独立复核记录见 `candidate-review.json`、两份`cell-diff.json`与`application-report.json`。
+
+rule16仅选择原pet_id1的身体/尸体及训练定义，保留原免费bootstrap的全部Fighter属性并明确不训练。技能仍22项，17未选入，summon_skill_id仍空，护符187没有改动，购符与初始书没有变化。source_skill_id17只是来源身份。NoPets、Recall、正常召唤与最低新生间隔没有写入本轮合同。128是同owner保留身体/尸体/预留的软件支持预算，不是整机容量验收。
+
+新编译器从PetDefs继承描述读取Monster模板基础，从Growth读取0–7逐级增量及阈值，从架构预算40读取身体预算。魔闪权重只允许既有三职业共享同值；中性0由Excel描述显式给出。独立candidate保持runtime_enabled=false，与fixture使用同一个compile_definitions/compile_budgets。fixture证据同时记录两书SHA及新编译器SHA。
+
+两个必要工具缺陷均保留修前证据：`empty-sheet-before.txt`是真实空Growth首条append失败；`json-maximum-before.json`证明JSON maximum原先未执行。空表追加只借第3行样式，不复制表头值或公式，已有表追加行为保持；maximum补充不改变原minimum、严格int/number与布尔区别或既有null策略。
+
+最终真实命令及退出码、输出保存在`checks/commands.json`及对应txt；候选生成、fixture/public生成和两次--check均exit0，完整配置90项测试通过。`checks/inputs-before.json`与`inputs-after.json`覆盖12个相关源输入，摘要相同。`checks/summary.json`确认candidate与fixture定义/预算完全一致。此前未保存的试跑不替代这些最终日志。
+
+最终摘要：
+
+- first-loop：25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0
+- public gameplay：bbb332641299bae29f46c311a7d7465cbbdb8037a354eb60d27d642cdf225fab
+- 独立candidate：ec35705ef18bef6f481a141b3343c9d80d613d472515c653d189070251815743
+- 新编译器：056ff1921dfcd7121b97f26093935be7543ce0cfe5c140214f8c83d9c4e7b004
+
+以上源码、输入及生成物已统一冻结。preview_current未修改，最终preview/sync、Go/Mongo/WS、客户端及Creator验收由root统一执行；本记录不把配置生成和纯Python测试写成业务或容量验收。

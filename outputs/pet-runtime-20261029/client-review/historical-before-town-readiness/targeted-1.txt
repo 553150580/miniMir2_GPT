@@ -1,0 +1,121 @@
+node:internal/modules/cjs/loader:1568
+  throw err;
+  ^
+
+Error: Cannot find module 'long'
+Require stack:
+- D:\A_Claude\miniMir2_GPT\.work\ui-tests\app\PetTrainingModel.js
+- D:\A_Claude\miniMir2_GPT\client\tests\app\combat_status_ui.test.cjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.require (node:internal/modules/cjs/loader:1674:12)
+    at require (node:internal/modules/helpers:157:16)
+    at Object.<anonymous> (D:\A_Claude\miniMir2_GPT\.work\ui-tests\app\PetTrainingModel.js:9:32)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'D:\\A_Claude\\miniMir2_GPT\\.work\\ui-tests\\app\\PetTrainingModel.js',
+    'D:\\A_Claude\\miniMir2_GPT\\client\\tests\\app\\combat_status_ui.test.cjs'
+  ]
+}
+
+Node.js v24.22.1
+✖ client\tests\app\combat_status_ui.test.cjs (319.219ms)
+✔ 真实AppRoot初次Town重入使用Entry.roomId替换默认primary，首视口完成前绝不ACK (174.6124ms)
+✔ 真实AppRoot同Game场景旅行重挂新world，预备租约持续到真实新视口完成，旧摇杆不能发送 (124.7722ms)
+✔ 真实AppRoot旧加载晚于新scene完成时只释放自身资源，不ACK旧scene或覆盖新world (82.0305ms)
+✔ 真实AppRoot旅行目标准备失败只cancel原计划；原world、HP、导航目标与经济Pending保持 (68.0073ms)
+✔ 真实AppRoot提交响应未知时保持输入屏障与目标资源，核对使用原id；服务端取消后恢复原world (62.1222ms)
+✔ 真实AppRoot准备中丢失角色/连接后迟到资源仍释放，不升级授权取消、不重挂原world (51.0914ms)
+✔ 真实AppRoot导航status5仅当前目标产生一次系统消息，不发送新移动或改写最后错误 (45.3251ms)
+✔ 真实AppRoot Town刷新不发送AutoBattle，按钮禁用；回个人按真实baseline恢复自动状态和怪数 (49.2566ms)
+✔ 真实AppRoot销毁立即移除基线/旅行等待者，不保留旧ACK监听 (51.6842ms)
+✔ 真实AppRoot Prepare明确拒绝解除本地锁，网络未知只沿原id重查后取消，不生成新旅行 (44.5648ms)
+✔ 真实AppRoot Prepare重查直接返回phase4终态时不再补cancel或陷入回执超时 (50.7522ms)
+✔ 真实AppRoot状态资源失效回调捕获旧controller，迟到旧通知不清新地图controller (43.8897ms)
+✔ 真实AppRoot私有API并发：旧资源/确认迟到的finally只处理原owner，不清新计划资源、Loading或输入 (93.7133ms)
+✔ 真实AppRoot旧reconcile明确错误迟到不reset新计划，finally不清新owner或隐藏新Loading (39.7213ms)
+✔ 真实AppRoot复用保存Role Message展示未知/nil/legacy/trusted，提交观察透传消息区而不改布局或地图 (37.2025ms)
+✔ 真实AppRoot退出只接受完整取消观察；等待期间新Entry使旧完成不能关闭新附着 (86.9154ms)
+node:internal/modules/cjs/loader:1568
+  throw err;
+  ^
+
+Error: Cannot find module 'long'
+Require stack:
+- D:\A_Claude\miniMir2_GPT\.work\ui-tests\app\PetTrainingModel.js
+- D:\A_Claude\miniMir2_GPT\client\tests\app\pet_runtime.test.cjs
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1564:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1118:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1142:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1169:12)
+    at Module._load (node:internal/modules/cjs/loader:1341:5)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19)
+    at Module.require (node:internal/modules/cjs/loader:1674:12)
+    at require (node:internal/modules/helpers:157:16)
+    at Object.<anonymous> (D:\A_Claude\miniMir2_GPT\.work\ui-tests\app\PetTrainingModel.js:9:32)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'D:\\A_Claude\\miniMir2_GPT\\.work\\ui-tests\\app\\PetTrainingModel.js',
+    'D:\\A_Claude\\miniMir2_GPT\\client\\tests\\app\\pet_runtime.test.cjs'
+  ]
+}
+
+Node.js v24.22.1
+✖ client\tests\app\pet_runtime.test.cjs (233.6283ms)
+✔ 同handle定义变化即使映射同profile也退役旧visual，权威位置与原导航标记保留 (15.4645ms)
+✔ 同handle实际profile变化重建层数头顶与新动作，不沿用旧骷髅帧 (13.6367ms)
+✔ 新Life且新profile从新落点恢复，旧Life攻击/位移不能进入新visual (9.6189ms)
+✔ 同profile新Life沿用节点但重置旧倒地与运动，保持既有复生语义 (8.6317ms)
+✔ 同Life换profile保留位移高水位、附体节点和播放时钟，不重播旧攻击 (8.9668ms)
+✔ 替换新Life在旧父节点destroy前同步解绑附体帧，旧触屏回调不能选中新visual (8.245ms)
+✔ 真实WorldAssets共享帧仅由世界owner归还，旧外观与新外观在ref0前均已解绑 (8.4513ms)
+✔ 128具不同handle的NoMaster尸体与新活宠真实视图共存，初见尸体终帧且逐个退役同步清帧 (32.1995ms)
+✔ 安全区观察保留uint64且同一基线的全部块必须一致 (2.4044ms)
+✔ 旅行四消息与导航失败终态保留完整64位身份，Plan过期时间保持int64 (6.046ms)
+✔ 绑定纯S2C保存完整RoleKey、receipt SourceSeq和地图中心，nil/legacy/trusted状态不混淆 (1.3351ms)
+✔ 入场显式player_handle保留uint32边界，不由entity_kind推断主人 (0.5107ms)
+✔ 显式位移及导航目标revision的所有64位身份往返精确，分块保留首块导航状态 (1.6721ms)
+✔ 真实逐格CastStep保留64位场景/施法/生命和原格，空有效格不需要target字段 (0.5878ms)
+✔ 同一基线的导航分块必须一致，含重复块与大revision，下一序列独立恢复 (0.6248ms)
+✔ 战士模式、朝向空挥及受理阶数/生命按新PB往返，模式基线跨分块仍完整恢复 (2.0913ms)
+✔ 物品来源品质与技能报价字段精确往返，未知旧来源保持空值，报价提交只携原ID (2.7432ms)
+✔ 攻击受理、命中与出生代次保留Long精度，治疗入队不被改成直接回血数值 (1.0532ms)
+✔ 学习0级状态、原书学习请求及施法事件大ID按新PB定义精确往返 (1.0263ms)
+✔ 药品使用帧保留原实例、最大64位场景代次与经济操作身份 (0.4622ms)
+✔ 应用帧与snake_case协议往返：大ID、64位水位和bytes保持精确 (0.5274ms)
+✔ MP、默认0和嵌套装备使用同一PB数据定义 (0.5497ms)
+✔ 截断、超长、未知版本和变长整数溢出被拒绝 (0.2138ms)
+✔ 同宽更高只增加逻辑视口高度，同高更宽只增加宽度 (0.2586ms)
+✔ 乱序基线必须全部到齐，过期代次和序列不能触发就绪 (0.3685ms)
+✔ 同序号的快照不能抢经济回执，旧绑定被隔离，自动状态等待对应响应 (21.1806ms)
+✔ 防御状态/属性及材料施法/装卸精确保留64位，完整空状态不会成为保留指令 (1.7102ms)
+✔ 旧socket迟到open不能在新连接发送旧票；同步发送失败立即清理Pending与计时器 (0.5763ms)
+✔ 纯S2C瞬移结果与Entry独立迁移ID保留全部uint64，不上传落点 (0.7445ms)
+✔ TemporalFlux实际传送耗蓝字段独立于减伤，不混用战斗属性 (0.2889ms)
+✔ 训练嵌套PB与尸体标识保留完整uint64，128具真实编码样本可经有界基线组装 (5.7689ms)
+✔ 真实GameConnection取消导航等同请求全部分块；周期/旧binding碎片不能抢确认，关闭拒绝未完成请求 (1.4652ms)
+✔ 真实GameConnection取消响应混序列或重复块立即拒绝并归还Pending，不降格成第一块成功 (0.8889ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 49
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1419.8357
+
+✖ failing tests:
+
+test at client\tests\app\combat_status_ui.test.cjs:1:1
+✖ client\tests\app\combat_status_ui.test.cjs (319.219ms)
+  'test failed'
+
+test at client\tests\app\pet_runtime.test.cjs:1:1
+✖ client\tests\app\pet_runtime.test.cjs (233.6283ms)
+  'test failed'

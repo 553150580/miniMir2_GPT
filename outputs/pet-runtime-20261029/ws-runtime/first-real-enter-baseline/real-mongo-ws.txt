@@ -1,0 +1,9 @@
+=== RUN   TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS
+2026/10/29 07:11:16 INFO 开发节点就绪 mode=account address=127.0.0.1:61091 database=minimir_dev_game_test_pet_ed4cff295efb2b749156c1edf01ebdcd instance=2eb36c5df11779fe6d849ec8c2b0b732 runtime_ready=false
+2026/10/29 07:11:16 INFO 开发节点就绪 mode=gm address=127.0.0.1:61093 database=minimir_dev_game_test_pet_ed4cff295efb2b749156c1edf01ebdcd instance=22387b9d82198235215a98f17db2df7a runtime_ready=false
+2026/10/29 07:11:17 INFO 开发节点就绪 mode=game address=127.0.0.1:61092 database=minimir_dev_game_test_pet_ed4cff295efb2b749156c1edf01ebdcd instance=14051e2fe0c6801df8d3b1cba1cc6c1f runtime_ready=false
+    pet_runtime_test.go:106: 首次真实怪物击杀宠物宠物死亡/期限推进了永久revision: 1 -> 2
+--- FAIL: TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS (2.00s)
+FAIL
+FAIL	minimir/internal/integration	6.310s
+FAIL

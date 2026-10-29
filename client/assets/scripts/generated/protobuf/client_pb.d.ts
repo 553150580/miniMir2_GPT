@@ -3032,6 +3032,120 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a PetTrainingState.
+         * @deprecated Use minimir.v1.PetTrainingState.$Properties instead.
+         */
+        interface IPetTrainingState extends minimir.v1.PetTrainingState.$Properties {
+        }
+
+        /** Represents a PetTrainingState. */
+        class PetTrainingState {
+
+            /**
+             * Constructs a new PetTrainingState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PetTrainingState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PetTrainingState training_level. */
+            training_level: number;
+
+            /** PetTrainingState max_training_level. */
+            max_training_level: number;
+
+            /** PetTrainingState experience. */
+            experience: Long;
+
+            /** PetTrainingState next_level_experience. */
+            next_level_experience: Long;
+
+            /**
+             * Creates a new PetTrainingState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PetTrainingState instance
+             */
+            static create(properties: minimir.v1.PetTrainingState.$Shape): minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape;
+            static create(properties?: minimir.v1.PetTrainingState.$Properties): minimir.v1.PetTrainingState;
+
+            /**
+             * Encodes the specified PetTrainingState message. Does not implicitly {@link minimir.v1.PetTrainingState.verify|verify} messages.
+             * @param message PetTrainingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PetTrainingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PetTrainingState message, length delimited. Does not implicitly {@link minimir.v1.PetTrainingState.verify|verify} messages.
+             * @param message PetTrainingState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PetTrainingState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PetTrainingState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape} PetTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape;
+
+            /**
+             * Decodes a PetTrainingState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape} PetTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape;
+
+            /**
+             * Verifies a PetTrainingState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PetTrainingState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PetTrainingState {
+
+            /** Properties of a PetTrainingState. */
+            interface $Properties {
+
+                /** PetTrainingState training_level */
+                training_level?: (number|null);
+
+                /** PetTrainingState max_training_level */
+                max_training_level?: (number|null);
+
+                /** PetTrainingState experience */
+                experience?: (Long|null);
+
+                /** PetTrainingState next_level_experience */
+                next_level_experience?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PetTrainingState. */
+            type $Shape = minimir.v1.PetTrainingState.$Properties;
+        }
+
+        /**
          * Properties of an EntityState.
          * @deprecated Use minimir.v1.EntityState.$Properties instead.
          */
@@ -3115,6 +3229,12 @@ export namespace minimir {
 
             /** EntityState movement_kind. */
             movement_kind: number;
+
+            /** EntityState pet_training. */
+            pet_training?: (minimir.v1.PetTrainingState.$Properties|null);
+
+            /** EntityState is_pet_corpse. */
+            is_pet_corpse: boolean;
 
             /**
              * Creates a new EntityState instance using the specified properties.
@@ -3244,6 +3364,12 @@ export namespace minimir {
 
                 /** EntityState movement_kind */
                 movement_kind?: (number|null);
+
+                /** EntityState pet_training */
+                pet_training?: (minimir.v1.PetTrainingState.$Properties|null);
+
+                /** EntityState is_pet_corpse */
+                is_pet_corpse?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

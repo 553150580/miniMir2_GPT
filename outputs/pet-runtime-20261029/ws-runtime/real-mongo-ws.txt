@@ -1,0 +1,11 @@
+=== RUN   TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS
+2026/10/29 07:12:57 INFO 开发节点就绪 mode=gm address=127.0.0.1:50202 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=84f1eae7b74544224a93a8145fbcf5c2 runtime_ready=false
+2026/10/29 07:12:57 INFO 开发节点就绪 mode=account address=127.0.0.1:50200 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=8a27d703586dc9b83186d8d021f9b75e runtime_ready=false
+2026/10/29 07:12:58 INFO 开发节点就绪 mode=game address=127.0.0.1:50201 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=5d660df3f2579b707a921a119fb2b106 runtime_ready=false
+2026/10/29 07:13:09 INFO 开发节点就绪 mode=gm address=127.0.0.1:50202 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=6d08c759bca7cf2e242b5be03df97603 runtime_ready=false
+2026/10/29 07:13:09 INFO 开发节点就绪 mode=account address=127.0.0.1:50200 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=63031302083e12cf98e86789990d7905 runtime_ready=false
+2026/10/29 07:13:11 INFO 开发节点就绪 mode=game address=127.0.0.1:50201 database=minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840 instance=89844cb5eb11ac0931bbb6e227a74afc runtime_ready=false
+    pet_runtime_test.go:191: 通过真实Mongo/WS宠物生命周期：随机库minimir_dev_game_test_pet_c744cc273c83ca50ecd8bb1aadab7840；道士正常初始宠物由怪物首击死亡，同handle/Life原尸体、无第二活宠、健康新票原scene/尸体/TTL、到期移除、未到期停服后仅legacy免费新建；角色文档无临时宠物字段且宠物死亡零killEXP/经济奖励。隔离HP1/宠攻击0/怪伤20与命中255/怪动作600000ms/前格/TTL10000ms仅局部cfg，不是主180秒、训练或17正常耗符验收；NoMaster友方过滤由game专项覆盖。
+--- PASS: TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS (14.85s)
+PASS
+ok  	minimir/internal/integration	20.338s

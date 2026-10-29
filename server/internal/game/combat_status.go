@@ -107,6 +107,11 @@ func (w *worker) tickStatuses(r *room, now time.Time) bool {
 	for _, world := range w.reactiveWorlds(r) {
 		all = append(all, world.Monsters...)
 	}
+	for _, world := range r.worlds() {
+		for _, corpse := range world.PetCorpses {
+			all = append(all, corpse.Body)
+		}
+	}
 	return tickEntityStatuses(all, now)
 }
 
@@ -152,7 +157,7 @@ func tickEntityStatuses(all []*entity, now time.Time) bool {
 
 func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time) bool {
 	definition, exists := w.e.Store.Cfg.Fixture.Buff(c.Skill.BuffID)
-	if !exists || !definition.AllowDeadTargets && target.HP <= 0 {
+	if !exists || target.IsPetCorpse || !definition.AllowDeadTargets && target.HP <= 0 {
 		return false
 	}
 	if old := target.Statuses[definition.ID]; old != nil && old.TargetLife == target.Life {

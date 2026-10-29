@@ -1,0 +1,10 @@
+{
+  "command": ".\\tools\\dev.ps1 go test ./internal/integration -run ^$ -count=1 -timeout 90s -v",
+  "started_at_utc": "2026-10-28T23:10:48.093695+00:00",
+  "elapsed_seconds": 6.602,
+  "exit_code": 0,
+  "real_mongo_ws": false,
+  "inputs_stable": true,
+  "changed_inputs": [],
+  "output": "compile.txt"
+}

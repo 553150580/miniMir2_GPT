@@ -65,3 +65,10 @@ test('真实WorldAssets共享帧仅由世界owner归还，旧外观与新外观�
  f.setProfile(f.second);f.apply([f.pet({definitionId:3})],100);const current=f.view.visuals.get(2),newKey=current.body[0].spriteFrame.key,newFrame=owned(newKey);f.assets.frames.set(newKey,newFrame);current.body[0].spriteFrame=newFrame;watched.push(...current.body);
  assert.equal(oldFrame.refs,1);assert.equal(newFrame.refs,1);assert.equal(previous.body[0].spriteFrame,null);f.view.dispose();for(const frame of [oldFrame,newFrame]){assert.equal(frame.refs,0);assert.deepEqual(frame.violations,[]);}
 });
+
+
+test('128具不同handle的NoMaster尸体与新活宠真实视图共存，初见尸体终帧且逐个退役同步清帧',()=>{
+ const f=fixture(),corpses=Array.from({length:128},(_,i)=>f.pet({entityHandle:100+i,hp:Long.ZERO,isPetCorpse:true,life:Long.fromInt(i+1,true)})),live=f.pet({entityHandle:300,life:Long.fromInt(129,true)});f.apply([...corpses,live]);assert.equal(f.view.visuals.size,129);
+ for(const corpse of corpses){const visual=f.view.visuals.get(corpse.entityHandle);assert.equal(visual.pose.action,'die');assert.equal(visual.pose.frame,f.skeleton.layers[0].actions.die.count-1);}const previous=f.view.visuals.get(100),active=f.view.visuals.get(300);assert.equal(active.pose.action,'standing');
+ f.apply([live],100);assert.equal(f.view.visuals.size,1);assert.equal(f.view.visuals.get(300),active);assertRetired(previous);f.view.dispose();assertRetired(active);
+});

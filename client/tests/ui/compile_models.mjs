@@ -1,5 +1,5 @@
 import creatorPaths from '../../../tools/client/creator_paths.cjs';
-import { mkdirSync, readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, realpathSync, symlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -12,9 +12,14 @@ if (!version.startsWith('5.8.')) throw new Error('UI纯模型测试使用 Creato
 const source = path.join(root, 'client/assets/scripts');
 const output = path.join(root, '.work/ui-tests');
 mkdirSync(output, { recursive: true });
-const result = spawnSync(process.execPath, [path.join(typescript, 'lib/tsc.js'), '--strict', '--noEmitOnError',
+// 输出位于.work而非client目录；只链接项目已锁定Long供编译后的纯模型解析，不安装或复制依赖。
+const longSource = path.join(root, 'client/node_modules/long'), longOutput = path.join(output, 'node_modules/long');
+mkdirSync(path.dirname(longOutput), { recursive: true });
+if (!existsSync(longOutput)) symlinkSync(longSource, longOutput, process.platform === 'win32' ? 'junction' : 'dir');
+if (realpathSync(longOutput) !== realpathSync(longSource)) throw new Error('模型测试Long依赖指向了其它版本');
+const result = spawnSync(process.execPath, [path.join(typescript, 'lib/tsc.js'), '--strict', '--noEmitOnError', '--esModuleInterop',
     '--target', 'ES2020', '--lib', 'ES2020', '--module', 'commonjs', '--rootDir', source, '--outDir', output,
-    ...['ui/PanelStackState.ts', 'ui/VirtualListWindow.ts', 'input/NavigationIntent.ts', 'app/GridProjection.ts', 'app/SourceMapModel.ts', 'app/SourceChunkCache.ts', 'app/SourceProjection.ts', 'app/MapTravelModel.ts', 'app/RoleBindingModel.ts', 'app/TeleportModel.ts', 'app/MapAttachmentCoordinator.ts', 'app/BeamGeometry.ts', 'app/EntityHeadAnchor.ts', 'app/CombatStatusModel.ts', 'app/StatusPlayback.ts', 'app/CastingSupplyModel.ts', 'app/HudModel.ts', 'app/SystemMessageLog.ts', 'app/PotionModel.ts', 'app/SkillModel.ts', 'app/CastPlayback.ts', 'app/SkillAssetsModel.ts'].map(file => path.join(source, file)),
+    ...['ui/PanelStackState.ts', 'ui/VirtualListWindow.ts', 'input/NavigationIntent.ts', 'app/GridProjection.ts', 'app/SourceMapModel.ts', 'app/SourceChunkCache.ts', 'app/SourceProjection.ts', 'app/MapTravelModel.ts', 'app/PetTrainingModel.ts', 'app/NavigationCancelAssembler.ts', 'app/RoleBindingModel.ts', 'app/TeleportModel.ts', 'app/MapAttachmentCoordinator.ts', 'app/BeamGeometry.ts', 'app/EntityHeadAnchor.ts', 'app/CombatStatusModel.ts', 'app/StatusPlayback.ts', 'app/CastingSupplyModel.ts', 'app/HudModel.ts', 'app/SystemMessageLog.ts', 'app/PotionModel.ts', 'app/SkillModel.ts', 'app/CastPlayback.ts', 'app/SkillAssetsModel.ts'].map(file => path.join(source, file)),
 ], { cwd: root, stdio: 'inherit' });
 if (result.error) throw result.error;
 if (result.status !== 0) process.exit(result.status ?? 1);

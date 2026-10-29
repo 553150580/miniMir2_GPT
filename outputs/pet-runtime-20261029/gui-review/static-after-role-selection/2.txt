@@ -1,0 +1,13 @@
+✔ 实际尸体GUI until等待false Promise，只有显式true结束；异常不被吞成成功 (0.8126ms)
+✔ 实际ready只读JSHandle轮询同步Boolean，Ready及渲染/附着缺一不得把Promise当真 (0.23ms)
+✔ 实际QA健康核验拒绝相同fixtureHash但不同run的三节点instance (1.25ms)
+✔ 实际Cocos采样算法能避开两邻实体覆盖的中心九点，从尸体根矩形外角正常触屏命中 (0.5923ms)
+✔ 实际创角前只读核道士已选中且保存Loading关闭，场景名已切换仍不能提前创建 (0.2222ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55.6633

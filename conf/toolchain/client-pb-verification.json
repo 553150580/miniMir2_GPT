@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 67,
+  "message_count": 68,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -33,6 +33,7 @@
     "RoleBindingPoint",
     "BindingState",
     "TeleportResult",
+    "PetTrainingState",
     "EntityState",
     "EntityDisplacement",
     "NavigationState",
@@ -74,8 +75,8 @@
     "BuyHostingTimeRequest",
     "HostingReport"
   ],
-  "int64_field_count": 134,
-  "int64_boundary_cases": 438,
+  "int64_field_count": 136,
+  "int64_boundary_cases": 444,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -356,6 +357,18 @@
     {
       "message": "TeleportResult",
       "field": "movement_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetTrainingState",
+      "field": "experience",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PetTrainingState",
+      "field": "next_level_experience",
       "type": "uint64",
       "cases": 3
     },
@@ -994,7 +1007,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "e82932ce6413edbe3844a1987d438e52f8f10016debbd61b52bfae2f669c6926"
+      "sha256": "a72e8c0c3099b335d9526296a5604a1f25c3c16cdedd5c4534de8bd302dd1bf6"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -1004,13 +1017,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "81eafc1aca8fdcd0032679a500e8504b54058fb8b86854868d915d097e263af3",
-      "bytes": 1080937
+      "sha256": "5982b2f24bcaa6b13ca941472c4233ddc4c44a500a8d853c55441dabc1e840aa",
+      "bytes": 1098250
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "3fab283256024421709b536746f4f5454fe353c9ec1d10bcbf724c87c7fdf992",
-      "bytes": 350802
+      "sha256": "7737dc74a52faa6433b368d96b26337e78fc1ccae89e6b509948958ae53e18a7",
+      "bytes": 356328
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

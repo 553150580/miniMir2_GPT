@@ -2,6 +2,7 @@ import clientPb from '../generated/protobuf/client_pb.js';
 import Long from 'long';
 import { protocolErrorMessage } from './GameErrors';
 import { inputTraceMessage, traceInput } from './InputTrace';
+import { NavigationCancelAssembler } from './NavigationCancelAssembler';
 
 const pb = clientPb.minimir.v1;
 type MessageType = { encode(value: any): { finish(): Uint8Array }; decode(value: Uint8Array): any };
@@ -90,7 +91,7 @@ export class GameConnection {
     private socket?: WebSocket;
     private listeners = new Set<(packet: Packet) => void>();
     private statusListeners = new Set<(status: string) => void>();
-    private pending = new Map<number, { responses: readonly number[]; ok: (value: any) => void; fail: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
+    private pending = new Map<number, { responses: readonly number[]; assemble?: (chunk: any) => any | null; ok: (value: any) => void; fail: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
     get generation(): number { return this.lifecycle; }
     get connected(): boolean { return this.socket?.readyState === WebSocket.OPEN; }
 
@@ -128,8 +129,16 @@ export class GameConnection {
                 if (!packet.error) traceInput(inputTraceMessage('receive', packet.id, packet.seq, packet.value));
                 const pending = this.pending.get(packet.seq);
                 if (pending && (packet.error || pending.responses.includes(packet.id))) {
-                    this.pending.delete(packet.seq); clearTimeout(pending.timer);
-                    if (packet.error) pending.fail(new ProtocolResponseError(packet.id, packet.error)); else pending.ok(packet.value);
+                    try {
+                        const value = packet.error ? null : pending.assemble ? pending.assemble(packet.value) : packet.value;
+                        if (packet.error || value !== null) {
+                            this.pending.delete(packet.seq); clearTimeout(pending.timer);
+                            if (packet.error) pending.fail(new ProtocolResponseError(packet.id, packet.error)); else pending.ok(value);
+                        }
+                    } catch (error) {
+                        this.pending.delete(packet.seq); clearTimeout(pending.timer);
+                        pending.fail(error instanceof Error ? error : new Error(String(error))); throw error;
+                    }
                 }
                 for (const listener of Array.from(this.listeners)) listener(packet);
             } catch (error) { this.report(error instanceof Error ? error.message : String(error)); }
@@ -151,14 +160,19 @@ export class GameConnection {
         traceInput(inputTraceMessage('send', id, seq, value)); return seq;
     }
 
-    request(id: number, value: any): Promise<any> {
+    requestNavigationCancel(sceneEpoch: Long, baselineId: Long, inputSequence: number): Promise<any> {
+        const assembly = new NavigationCancelAssembler(sceneEpoch, baselineId);
+        return this.request(20006, { sceneEpoch, inputSequence, cancelNavigation: true }, chunk => assembly.accept(chunk));
+    }
+    request(id: number, value: any, assemble?: (chunk: any) => any | null): Promise<any> {
         if (this.socket?.readyState !== WebSocket.OPEN) return Promise.reject(new Error('游戏尚未连接'));
         const seq = ++this.sequence;
         const cancelNavigation = id === 20006 && value?.cancelNavigation === true;
+        if (cancelNavigation && !assemble) return Promise.reject(new Error('导航取消必须等待匹配的完整基线'));
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
             const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005];
-            this.pending.set(seq, { responses, ok, fail, timer });
+            this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {
                 this.socket!.send(encodePacket(id, seq, this.binding, value));
                 traceInput(inputTraceMessage('send', id, seq, value));

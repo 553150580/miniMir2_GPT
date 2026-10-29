@@ -1,0 +1,14 @@
+✔ 真实状态控制器绑定保存UI：0秒徽标仍在、换life点击取新实体，详情滚动和下层列表位置保留 (4.5496ms)
+✔ 实际保存宠物面板与实体详情按完整scope/handle/Life实时重取，训练Long/属性变化保持滚动，旧尸体不计活宠 (5.5438ms)
+✔ 训练Long精确显示、单次升级超额合法；满级保留经验，legacy不编造等级 (1.6859ms)
+✔ 不同handle的128尸体与活宠完整分块，重复handle不同Life仍拒绝且非法活尸体不入基线 (3.5263ms)
+✔ 实体友方治疗拒绝NoMaster尸体含错误活HP标识，自动选择不会把Kind2尸体当活宠 (0.44ms)
+✔ 退出取消仅完整同scope同序列的匹配RPC块可确认，乱序合法且旧碎片不能补齐 (0.4362ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 223.7553

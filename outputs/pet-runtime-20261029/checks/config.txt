@@ -1,0 +1,1 @@
+{"structure_valid": true, "runtime_ready": false, "table_count": 98, "record_count": 960, "status_counts": {"candidate": 461, "confirmed": 393, "historical": 36, "unverified": 70}}

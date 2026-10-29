@@ -33,6 +33,9 @@ func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) boo
 
 func cellObjects(r *room, point devconfig.Point) []*entity {
 	all := []*entity{&r.Player, r.worldPet(r.currentWorld())}
+	for _, corpse := range r.currentWorld().PetCorpses {
+		all = append(all, corpse.Body)
+	}
 	all = append(all, r.Monsters[:r.MonsterCount]...)
 	result := []*entity{}
 	for _, e := range all {

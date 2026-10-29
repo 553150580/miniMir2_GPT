@@ -1,0 +1,10 @@
+{
+  "command": ".\\tools\\dev.ps1 go test -race ./internal/integration -run ^TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS$ -count=1 -timeout 90s -v",
+  "started_at_utc": "2026-10-28T23:11:04.957417+00:00",
+  "elapsed_seconds": 13.629,
+  "exit_code": 1,
+  "real_mongo_ws": true,
+  "inputs_stable": true,
+  "changed_inputs": [],
+  "output": "real-mongo-ws.txt"
+}

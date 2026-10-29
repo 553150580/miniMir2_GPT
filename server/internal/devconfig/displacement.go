@@ -8,6 +8,9 @@ import (
 
 // 在夹具入口记录布尔字段是否显式提供，避免嵌入Fighter的Monster解码丢失外层字段。
 func (f *Fixture) UnmarshalJSON(data []byte) error {
+	if err := validatePetRuntimePresence(data); err != nil {
+		return err
+	}
 	type plainFixture Fixture
 	var value plainFixture
 	if err := json.Unmarshal(data, &value); err != nil {

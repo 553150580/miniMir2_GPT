@@ -1,0 +1,51 @@
+{
+  "purpose": "正常EditBox目标切换+场景加载层+职业身份+真实尸体密采样；仅QA工具",
+  "python_tests": 8,
+  "cjs_tests": 7,
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_pet_runtime_browser.cjs",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final-editbox/1.txt",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test tools/client/pet_runtime_browser.test.cjs",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final-editbox/2.txt",
+      "log_sha256": "295f3dab078b99e22c5aac95af02bb7944efd4a24b0b8edbe42ea0132b31534e"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python -m unittest tools.client.test_pet_runtime_qa",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final-editbox/3.txt",
+      "log_sha256": "3128c940d51237fb8322524aba0ea59a9d32b4cdcbd4a42f2161b1cb0adb38ce"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python tools/client/prepare_pet_runtime_qa.py",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final-editbox/4.txt",
+      "log_sha256": "8a92b9e92a03ddc1c6eb49e75d09e664089d905d76e3ad07d6368e4faffbdfb3"
+    }
+  ],
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4e6a05e18f43646b9bad6184eae442f4d1fb0a440b2b16f99783b2a9bf937c4a",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "b551290366fea575b89faaeb7e07e488f6c3470fdd70cfecfb084d4a58974959"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4e6a05e18f43646b9bad6184eae442f4d1fb0a440b2b16f99783b2a9bf937c4a",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "b551290366fea575b89faaeb7e07e488f6c3470fdd70cfecfb084d4a58974959"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4e6a05e18f43646b9bad6184eae442f4d1fb0a440b2b16f99783b2a9bf937c4a",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "b551290366fea575b89faaeb7e07e488f6c3470fdd70cfecfb084d4a58974959"
+  },
+  "stable": true,
+  "passed": true
+}

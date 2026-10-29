@@ -1,0 +1,1831 @@
+{
+  "passed": false,
+  "scope": "独立QA cfg HP1/怪物20高命中/15秒尸体；真实Creator与正常道士UI，非180秒原数值、17召唤、购符、自然成长、冷重建、128容量或手机真机",
+  "expectedRuleVersion": "16",
+  "qaRunId": "d3bce423248449849b05c2052c2d9ce7",
+  "fixtureHash": "929a842ab10d5c01b9a63741ce20ac85a5898b437052e7b23a99c79ab43781ba",
+  "ttlMs": 15000,
+  "checks": [],
+  "errors": [],
+  "warnings": [],
+  "entries": [
+    {
+      "time": 1793231003038,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "map": "1",
+      "player": 1,
+      "resourceVersion": "16"
+    }
+  ],
+  "acks": [
+    {
+      "time": 1793231003380,
+      "scene": "17312509971261758540",
+      "baseline": "1"
+    }
+  ],
+  "observations": [
+    {
+      "time": 1793231003042,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "1",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231003382,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "2",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231003437,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "3",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231003637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "4",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231003837,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "5",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004038,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "6",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004039,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "7",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "8",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004337,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "9",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "10",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "11",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231004836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "12",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "13",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "14",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "15",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005437,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "16",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "17",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005736,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "18",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231005836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "19",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006037,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "20",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "21",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "22",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "23",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "24",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231006837,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "25",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "26",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007137,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "27",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "28",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "29",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "30",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231007836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "31",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "32",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "33",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "34",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "35",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008536,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "36",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "37",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231008836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "38",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "39",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009235,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "40",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "41",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "42",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "43",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "44",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231009936,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "45",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231010036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "46",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231010236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "47",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231010436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "48",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231010636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "49",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231010836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "50",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "51",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011037,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "52",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "53",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011336,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "54",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "55",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "56",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231011836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "57",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "58",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "59",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "60",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012437,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "61",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "62",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012736,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "63",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231012836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "64",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "65",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "66",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "67",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "68",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "69",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231013837,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "70",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "71",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014136,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "72",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "73",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "74",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "75",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231014836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "76",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "77",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "78",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "79",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "80",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015536,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "81",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "82",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231015836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "83",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "84",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "85",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "86",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "87",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "88",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "89",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231016936,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "90",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231017035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "91",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231017236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "92",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231017436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "93",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231017636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "94",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231017836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "95",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "96",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018037,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "97",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "98",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018336,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "99",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "100",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "101",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231018836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "102",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "103",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "104",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "105",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019437,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "106",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "107",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019736,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "108",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231019835,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "109",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "110",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020235,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "111",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "112",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "113",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "114",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231020836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "115",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "116",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021136,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "117",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "118",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "119",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "120",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231021835,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "121",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "122",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "123",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "124",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "125",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022536,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "126",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "127",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231022836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "128",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "129",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023235,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "130",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "131",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "132",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "133",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "134",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231023936,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "135",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231024036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "136",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231024236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "137",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231024436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "138",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231024636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "139",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231024836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "140",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "141",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025037,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "142",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025235,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "143",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025336,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "144",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "145",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "146",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231025836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "147",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "148",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "149",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "150",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "151",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "152",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026736,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "153",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231026836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "154",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "155",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "156",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "157",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "158",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "159",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231027836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "160",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "161",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028136,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "162",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "163",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "164",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "165",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231028835,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "166",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "167",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "168",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029237,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "169",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029435,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "170",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029536,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "171",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "172",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231029836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "173",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "174",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "175",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "176",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "177",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030637,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "178",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "179",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231030935,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "180",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231031035,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "181",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231031236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "182",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231031436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "183",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231031636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "184",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231031836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "185",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "186",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "187",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "188",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032336,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "189",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "190",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032636,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "191",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231032836,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "192",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231033036,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "193",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231033236,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "194",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231033436,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "195",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231033437,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "196",
+      "pets": [],
+      "monster10": 0
+    },
+    {
+      "time": 1793231033668,
+      "binding": "1",
+      "scene": "17312509971261758540",
+      "baseline": "1",
+      "sequence": "197",
+      "pets": [],
+      "monster10": 0
+    }
+  ],
+  "protocolErrors": [],
+  "sent": [
+    {
+      "id": 20001,
+      "request": 6
+    },
+    {
+      "id": 4,
+      "request": 7
+    }
+  ],
+  "screenshots": [],
+  "credentialsWritten": false,
+  "corpseSeeded": false,
+  "trainingVerified": false,
+  "corpseTouchAttempts": [],
+  "healthChecks": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "220ed4692194bc4408a031e27a5f4a61",
+        "game": "9ed4bd4d6eb015f888023eb1b948e3ce",
+        "gm": "173ad0715890d329921dcea8a0cec759"
+      }
+    }
+  ],
+  "error": "Error: 等待超时：真实怪击尸体\n    at until (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_runtime_browser.cjs:22:165)\n    at async D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_runtime_browser.cjs:83:3"
+}

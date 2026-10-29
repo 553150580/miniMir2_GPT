@@ -7519,6 +7519,291 @@ $root.minimir = (function() {
             return TeleportResult;
         })();
 
+        v1.PetTrainingState = (function() {
+
+            /**
+             * Properties of a PetTrainingState.
+             * @typedef {Object} minimir.v1.PetTrainingState.$Properties
+             * @property {number|null} [training_level] PetTrainingState training_level
+             * @property {number|null} [max_training_level] PetTrainingState max_training_level
+             * @property {Long|null} [experience] PetTrainingState experience
+             * @property {Long|null} [next_level_experience] PetTrainingState next_level_experience
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PetTrainingState.
+             * @memberof minimir.v1
+             * @interface IPetTrainingState
+             * @augments minimir.v1.PetTrainingState.$Properties
+             * @deprecated Use minimir.v1.PetTrainingState.$Properties instead.
+             */
+
+            /**
+             * Shape of a PetTrainingState.
+             * @typedef {minimir.v1.PetTrainingState.$Properties} minimir.v1.PetTrainingState.$Shape
+             */
+
+            /**
+             * Constructs a new PetTrainingState.
+             * @memberof minimir.v1
+             * @classdesc Represents a PetTrainingState.
+             * @constructor
+             * @param {minimir.v1.PetTrainingState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PetTrainingState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PetTrainingState training_level.
+             * @member {number} training_level
+             * @memberof minimir.v1.PetTrainingState
+             * @instance
+             */
+            PetTrainingState.prototype.training_level = 0;
+
+            /**
+             * PetTrainingState max_training_level.
+             * @member {number} max_training_level
+             * @memberof minimir.v1.PetTrainingState
+             * @instance
+             */
+            PetTrainingState.prototype.max_training_level = 0;
+
+            /**
+             * PetTrainingState experience.
+             * @member {Long} experience
+             * @memberof minimir.v1.PetTrainingState
+             * @instance
+             */
+            PetTrainingState.prototype.experience = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PetTrainingState next_level_experience.
+             * @member {Long} next_level_experience
+             * @memberof minimir.v1.PetTrainingState
+             * @instance
+             */
+            PetTrainingState.prototype.next_level_experience = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new PetTrainingState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {minimir.v1.PetTrainingState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PetTrainingState} PetTrainingState instance
+             * @type {{
+             *   (properties: minimir.v1.PetTrainingState.$Shape): minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape;
+             *   (properties?: minimir.v1.PetTrainingState.$Properties): minimir.v1.PetTrainingState;
+             * }}
+             */
+            PetTrainingState.create = function(properties) {
+                return new PetTrainingState(properties);
+            };
+
+            /**
+             * Encodes the specified PetTrainingState message. Does not implicitly {@link minimir.v1.PetTrainingState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {minimir.v1.PetTrainingState.$Properties} message PetTrainingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PetTrainingState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.training_level != null && $Object.hasOwnProperty.call(message, "training_level") && message.training_level !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.training_level);
+                if (message.max_training_level != null && $Object.hasOwnProperty.call(message, "max_training_level") && message.max_training_level !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.max_training_level);
+                if (message.experience != null && $Object.hasOwnProperty.call(message, "experience") && (typeof message.experience === "object" ? message.experience.low || message.experience.high : message.experience !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.experience);
+                if (message.next_level_experience != null && $Object.hasOwnProperty.call(message, "next_level_experience") && (typeof message.next_level_experience === "object" ? message.next_level_experience.low || message.next_level_experience.high : message.next_level_experience !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.next_level_experience);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PetTrainingState message, length delimited. Does not implicitly {@link minimir.v1.PetTrainingState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {minimir.v1.PetTrainingState.$Properties} message PetTrainingState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PetTrainingState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PetTrainingState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape} PetTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PetTrainingState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PetTrainingState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.training_level = value;
+                            else
+                                delete message.training_level;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.max_training_level = value;
+                            else
+                                delete message.max_training_level;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.experience = value;
+                            else
+                                delete message.experience;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.next_level_experience = value;
+                            else
+                                delete message.next_level_experience;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PetTrainingState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PetTrainingState & minimir.v1.PetTrainingState.$Shape} PetTrainingState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PetTrainingState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PetTrainingState message.
+             * @function verify
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PetTrainingState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.training_level != null && $Object.hasOwnProperty.call(message, "training_level"))
+                    if (!$util.isInteger(message.training_level))
+                        return "training_level: integer expected";
+                if (message.max_training_level != null && $Object.hasOwnProperty.call(message, "max_training_level"))
+                    if (!$util.isInteger(message.max_training_level))
+                        return "max_training_level: integer expected";
+                if (message.experience != null && $Object.hasOwnProperty.call(message, "experience"))
+                    if (!$util.isInteger(message.experience) && !(message.experience && $util.isInteger(message.experience.low) && $util.isInteger(message.experience.high)))
+                        return "experience: integer|Long expected";
+                if (message.next_level_experience != null && $Object.hasOwnProperty.call(message, "next_level_experience"))
+                    if (!$util.isInteger(message.next_level_experience) && !(message.next_level_experience && $util.isInteger(message.next_level_experience.low) && $util.isInteger(message.next_level_experience.high)))
+                        return "next_level_experience: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PetTrainingState
+             * @function getTypeUrl
+             * @memberof minimir.v1.PetTrainingState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PetTrainingState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PetTrainingState";
+            };
+
+            return PetTrainingState;
+        })();
+
         v1.EntityState = (function() {
 
             /**
@@ -7546,6 +7831,8 @@ $root.minimir = (function() {
              * @property {minimir.v1.CombatAttributes.$Properties|null} [combat_attributes] EntityState combat_attributes
              * @property {Long|null} [movement_revision] EntityState movement_revision
              * @property {number|null} [movement_kind] EntityState movement_kind
+             * @property {minimir.v1.PetTrainingState.$Properties|null} [pet_training] EntityState pet_training
+             * @property {boolean|null} [is_pet_corpse] EntityState is_pet_corpse
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -7755,6 +8042,22 @@ $root.minimir = (function() {
             EntityState.prototype.movement_kind = 0;
 
             /**
+             * EntityState pet_training.
+             * @member {minimir.v1.PetTrainingState.$Properties|null|undefined} pet_training
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.pet_training = null;
+
+            /**
+             * EntityState is_pet_corpse.
+             * @member {boolean} is_pet_corpse
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.is_pet_corpse = false;
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -7831,6 +8134,10 @@ $root.minimir = (function() {
                     writer.uint32(/* id 21, wireType 0 =*/168).uint64(message.movement_revision);
                 if (message.movement_kind != null && $Object.hasOwnProperty.call(message, "movement_kind") && message.movement_kind !== 0)
                     writer.uint32(/* id 22, wireType 0 =*/176).uint32(message.movement_kind);
+                if (message.pet_training != null && $Object.hasOwnProperty.call(message, "pet_training"))
+                    $root.minimir.v1.PetTrainingState.encode(message.pet_training, writer.uint32(/* id 23, wireType 2 =*/186).fork(), _depth + 1).ldelim();
+                if (message.is_pet_corpse != null && $Object.hasOwnProperty.call(message, "is_pet_corpse") && message.is_pet_corpse !== false)
+                    writer.uint32(/* id 24, wireType 0 =*/192).bool(message.is_pet_corpse);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -8079,6 +8386,21 @@ $root.minimir = (function() {
                                 delete message.movement_kind;
                             continue;
                         }
+                    case 23: {
+                            if (wireType !== 2)
+                                break;
+                            message.pet_training = $root.minimir.v1.PetTrainingState.decode(reader, reader.size(), $undefined, _depth + 1, message.pet_training);
+                            continue;
+                        }
+                    case 24: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.is_pet_corpse = value;
+                            else
+                                delete message.is_pet_corpse;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -8203,6 +8525,14 @@ $root.minimir = (function() {
                 if (message.movement_kind != null && $Object.hasOwnProperty.call(message, "movement_kind"))
                     if (!$util.isInteger(message.movement_kind))
                         return "movement_kind: integer expected";
+                if (message.pet_training != null && $Object.hasOwnProperty.call(message, "pet_training")) {
+                    var error = $root.minimir.v1.PetTrainingState.verify(message.pet_training, _depth + 1);
+                    if (error)
+                        return "pet_training." + error;
+                }
+                if (message.is_pet_corpse != null && $Object.hasOwnProperty.call(message, "is_pet_corpse"))
+                    if (typeof message.is_pet_corpse !== "boolean")
+                        return "is_pet_corpse: boolean expected";
                 return null;
             };
 

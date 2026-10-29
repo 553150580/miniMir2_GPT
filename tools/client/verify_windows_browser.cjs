@@ -16,6 +16,9 @@ assert(build.success&&build.scene_prefab_layout_preserved&&build.source_stable_d
 for(const [file,expected]of Object.entries({...build.asset_hashes,...build.script_hashes})){
  assert.equal(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'),expected,'构建后源码或保存布局有变化：'+file);
 }
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function until(predicate,label,timeout=30000){const end=Date.now()+timeout;do{if(await predicate()===true)return;await sleep(50);}while(Date.now()<end);throw Error('等待超时：'+label);}
+function sceneInteractive(name){const scene=window.cc?.director?.getScene();return Boolean(scene?.name===name&&scene.getComponentsInChildren('AppRoot').length&&cc.find('Canvas/Safe')?.activeInHierarchy&&!cc.find('Canvas/Loading')?.activeInHierarchy);}
 function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;let offset=4;function variable(){let n=0n,s=0n;for(let i=0;i<10;i++){const x=b[offset++];n|=BigInt(x&127)<<s;if(!(x&128))return n;s+=7n}throw Error('invalid header')}const seq=Number(variable()),binding=variable().toString(),error=b[1]&1?Number(variable()):0;return{id:b.readUInt16BE(2),seq,binding,error,body:b.subarray(offset)}}
 (async()=>{
  const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
@@ -31,9 +34,9 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
   }catch(e){errors.push('QA协议观察:'+e.message)}};
   socket.on('framesent',event=>inspect('send',event));socket.on('framereceived',event=>inspect('receive',event));
  });
- async function scene(name){await page.waitForFunction(name=>window.cc?.director?.getScene()?.name===name,name,{timeout:60000})}
+ async function scene(name){await page.waitForFunction(sceneInteractive,name,{timeout:60000});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))))}
  async function tap(suffix){const point=await page.evaluate(suffix=>{const node=cc.find('Canvas/Safe/'+suffix);if(!node||!node.activeInHierarchy)throw Error('节点不可交互:'+suffix);const box=node._uiProps.uiTransformComp.getBoundingBoxToWorld(),visible=cc.view.getVisibleSize(),rect=document.querySelector('canvas').getBoundingClientRect();return{x:rect.x+(box.x+box.width/2)/visible.width*rect.width,y:rect.y+(visible.height-box.y-box.height/2)/visible.height*rect.height}},suffix);await page.touchscreen.tap(point.x,point.y)}
- async function edit(suffix,value){await tap(suffix);const input=page.locator('input:visible');await input.waitFor();await input.fill(value)}
+ async function edit(path,value){await tap(path);const input=page.locator('input:visible');await until(async()=>{if(await input.isVisible())return true;await tap(path);return false;},'保存EditBox正常触屏激活 '+path,5000);await input.fill(value);}
  async function nav(){return page.evaluate(()=>{const app=cc.director.getScene().getComponentsInChildren('AppRoot')[0];return app?.nav?.state})}
  async function ground(x,y){const point=await page.evaluate(({x,y})=>{const app=cc.director.getScene().getComponentsInChildren('AppRoot')[0],w=app.world,local=w.projection.project(x,y),p=w.world._uiProps.uiTransformComp.convertToWorldSpaceAR(new cc.Vec3(local.x,local.y)),v=cc.view.getVisibleSize(),r=document.querySelector('canvas').getBoundingClientRect();return{x:r.x+p.x/v.width*r.width,y:r.y+(v.height-p.y)/v.height*r.height}}, {x,y});assert(point.x>=0&&point.x<=page.viewportSize().width&&point.y>=128&&point.y<=page.viewportSize().height-344,'目标地面不在可见战斗区');await page.touchscreen.tap(point.x,point.y);await page.waitForFunction(({x,y})=>{const a=cc.director.getScene().getComponentsInChildren('AppRoot')[0],t=a?.nav?.state?.target;return t?.x===x&&t?.y===y},{x,y},{timeout:10000})}
  try{

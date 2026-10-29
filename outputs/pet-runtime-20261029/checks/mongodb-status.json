@@ -1,0 +1,14 @@
+{
+  "task": "mongodb-status",
+  "command": [
+    "python3",
+    "tools/environment/mongodb_dev.py",
+    "status"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-29T00:06:47.568600+00:00",
+  "finished_at": "2026-10-29T00:06:50.273842+00:00",
+  "output": ".work/pet-runtime-20261029/checks/mongodb-status.txt",
+  "output_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

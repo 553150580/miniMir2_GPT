@@ -88,6 +88,25 @@ class ConfigurationTests(unittest.TestCase):
         self.assertTrue(exporter.validate_json_shape({'seconds':-1},contract,'purchase'))
         self.assertEqual(exporter.validate_json_shape({'seconds':0},contract,'purchase'),[])
 
+    def test_nested_numeric_maximum_is_enforced_without_loosening_minimum_or_types(self):
+        for kind,high in [('int',128),('number',1.5)]:
+            contract={'type':kind,'minimum':1,'maximum':high}
+            with self.subTest(kind=kind):
+                self.assertEqual(exporter.validate_json_shape(high,contract,'budget'),[])
+                self.assertTrue(any('不得超过' in x for x in exporter.validate_json_shape(high+1,contract,'budget')))
+                self.assertTrue(any('不得低于' in x for x in exporter.validate_json_shape(0,contract,'budget')))
+                for bad in [True,False,None,'1',float('inf')]:
+                    self.assertTrue(exporter.validate_json_shape(bad,contract,'budget'))
+        self.assertTrue(exporter.validate_json_shape(1.5,{'type':'int','maximum':128},'budget'))
+        self.assertEqual(exporter.validate_json_shape(1.25,{'type':'number','maximum':128},'budget'),[])
+
+    def test_optional_null_contract_keeps_explicit_union_and_terminal_semantics(self):
+        contract={'any_of':[{'type':'int','minimum':1,'maximum':128},{'type':'null'}]}
+        self.assertEqual(exporter.validate_json_shape(None,contract,'terminal'),[])
+        self.assertEqual(exporter.validate_json_shape(128,contract,'terminal'),[])
+        for bad in [129,0,True,'1']:
+            self.assertTrue(exporter.validate_json_shape(bad,contract,'terminal'))
+
     def test_displacement_boolean_contracts_require_explicit_true_or_false(self):
         contracts=[]
         for contract in self.schema['json_contracts']:

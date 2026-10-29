@@ -1,0 +1,113 @@
+{
+  "scope": "工具静态准备、6项Python控制流替身+2项CJS等待；没有真实节点/DB/浏览器动作",
+  "commands": [
+    {
+      "name": "prepare-only",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "python",
+        "tools/client/prepare_pet_runtime_qa.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.474,
+      "log": ".work/pet-runtime-20261029/gui-review/static/prepare-only.txt",
+      "sha256": "8a92b9e92a03ddc1c6eb49e75d09e664089d905d76e3ad07d6368e4faffbdfb3"
+    },
+    {
+      "name": "browser-syntax",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--check",
+        "tools/client/verify_pet_runtime_browser.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.353,
+      "log": ".work/pet-runtime-20261029/gui-review/static/browser-syntax.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "helper-tests",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "python",
+        "-m",
+        "unittest",
+        "tools/client/test_pet_runtime_qa.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.761,
+      "log": ".work/pet-runtime-20261029/gui-review/static/helper-tests.txt",
+      "sha256": "ac7a08ea78e66b78a88514f0eaf9eb97fb50b0317f56f68c3f739f0ed545a9c4"
+    },
+    {
+      "name": "browser-tests",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--test",
+        "tools/client/pet_runtime_browser.test.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.424,
+      "log": ".work/pet-runtime-20261029/gui-review/static/browser-tests.txt",
+      "sha256": "c090b9f16c85c75b0bb7b4b528bf5f1c71641e6af4b524f625ecddd6d7b7b241"
+    }
+  ],
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "74d5af057b82345dff51d0d92ba431a86d3d634da89ad8c6ac230baea01c4739",
+    "tools/client/verify_pet_runtime_browser.cjs": "beeff07f42677385267970176eef6c900c918bd8b4293ec41c913da3b5dd857a",
+    "tools/client/test_pet_runtime_qa.py": "bfbbd85fc7357df63b9a6e0f503545e9735ff6014dde12b20a3dde1f36e1a3f1",
+    "tools/client/pet_runtime_browser.test.cjs": "7fd66aefc41f6b49e493a0d0880d0f1c6e977536d08b78544f58d1b9f5331c27"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "74d5af057b82345dff51d0d92ba431a86d3d634da89ad8c6ac230baea01c4739",
+    "tools/client/verify_pet_runtime_browser.cjs": "beeff07f42677385267970176eef6c900c918bd8b4293ec41c913da3b5dd857a",
+    "tools/client/test_pet_runtime_qa.py": "bfbbd85fc7357df63b9a6e0f503545e9735ff6014dde12b20a3dde1f36e1a3f1",
+    "tools/client/pet_runtime_browser.test.cjs": "7fd66aefc41f6b49e493a0d0880d0f1c6e977536d08b78544f58d1b9f5331c27"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "74d5af057b82345dff51d0d92ba431a86d3d634da89ad8c6ac230baea01c4739",
+    "tools/client/verify_pet_runtime_browser.cjs": "beeff07f42677385267970176eef6c900c918bd8b4293ec41c913da3b5dd857a",
+    "tools/client/test_pet_runtime_qa.py": "bfbbd85fc7357df63b9a6e0f503545e9735ff6014dde12b20a3dde1f36e1a3f1",
+    "tools/client/pet_runtime_browser.test.cjs": "7fd66aefc41f6b49e493a0d0880d0f1c6e977536d08b78544f58d1b9f5331c27"
+  },
+  "stable": true,
+  "real_qa_started": false,
+  "lf_verified": {
+    "tools/client/prepare_pet_runtime_qa.py": true,
+    "tools/client/verify_pet_runtime_browser.cjs": true,
+    "tools/client/test_pet_runtime_qa.py": true,
+    "tools/client/pet_runtime_browser.test.cjs": true
+  },
+  "usage": [
+    ".\\tools\\dev.ps1",
+    "python",
+    "tools/client/prepare_pet_runtime_qa.py",
+    "--run",
+    "--report-dir",
+    ".work/pet-runtime-20261029/gui-review"
+  ],
+  "awaiting_root_go_terminal": true
+}

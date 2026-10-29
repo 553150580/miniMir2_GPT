@@ -315,7 +315,7 @@ func (w *worker) progressMapTravel(r *room, now time.Time) bool {
 	if plan.Phase != travelQuiescing {
 		return false
 	}
-	if r.Pending || r.PendingRetry != nil || len(r.KillFacts) != 0 || len(r.Waiting) != 0 || r.eventCount() != 0 {
+	if r.Pending || r.PendingRetry != nil || r.PendingPetBirth != nil || len(r.KillFacts) != 0 || len(r.Waiting) != 0 || r.eventCount() != 0 {
 		return true
 	}
 	return w.finishMapTravel(r, plan, now)

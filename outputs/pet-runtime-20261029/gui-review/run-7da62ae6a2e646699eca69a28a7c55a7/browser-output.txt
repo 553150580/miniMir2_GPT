@@ -1,0 +1,6 @@
+page.evaluate: Error: 没有尸体最上层真实触屏采样点
+    at eval (eval at evaluate (:370:30), <anonymous>:1:1101)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at entityDetails (D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:58:77)
+    at async D:\A_Claude\miniMir2_GPT\tools\client\verify_pet_runtime_browser.cjs:68:3

@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "development_only": true,
+  "runtime_enabled": false,
+  "budgets": {
+    "retained_body_capacity_per_owner": 128,
+    "full_policy": "reject_birth_without_discarding_corpses"
+  },
+  "definitions": [
+    {
+      "id": 1,
+      "source_skill_id": 17,
+      "monster_template_id": 2,
+      "owner_job_id": 2,
+      "resource_key": "pet_skeleton",
+      "base": {
+        "job_id": 2,
+        "definition_id": 2,
+        "level": 15,
+        "hp": 60,
+        "mp": 0,
+        "attack_min": 10,
+        "attack_max": 20,
+        "defence": 10,
+        "defence_min": 10,
+        "defence_max": 10,
+        "magic_defence_min": 10,
+        "magic_defence_max": 10,
+        "accuracy": 15,
+        "agility": 20,
+        "attack_ms": 1000,
+        "move_ms": 1000,
+        "magic_resist_weight": 10,
+        "can_push": true,
+        "attack_speed": 0,
+        "magic_max": 0,
+        "magic_min": 0,
+        "magic_resist": 0,
+        "tao_max": 0,
+        "tao_min": 0
+      },
+      "undead": true,
+      "training": {
+        "initial_level_by_rank": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "maximum_level_by_rank": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "experience_multiplier": 3,
+        "owner_range_cells": 16,
+        "experience_basis": "owner_actual_granted_experience",
+        "grant_phase": "confirmed_owner_experience",
+        "eligibility": "alive_same_world_within_owner_range",
+        "max_level_ups_per_grant": 1,
+        "excess_experience": "keep",
+        "at_maximum": "do_not_accumulate",
+        "current_hp_on_growth": "keep"
+      },
+      "speed": {
+        "basis": "maximum_training_level",
+        "move_reduction_ms_per_level": 130,
+        "attack_reduction_ms_per_level": 70,
+        "minimum_move_interval_ms": 400,
+        "minimum_attack_interval_ms": 400
+      },
+      "lifecycle": {
+        "corpse_ttl_ms": 180000,
+        "spawn_ready_ms": 2000,
+        "live_expiry": "no_tame_expiry",
+        "cold_enter": "do_not_restore_temporary_pet"
+      },
+      "growth": [
+        {
+          "level": 0,
+          "hp_bonus": 0,
+          "attack_min_bonus": 0,
+          "attack_max_bonus": 0,
+          "defence_min_bonus": 0,
+          "defence_max_bonus": 0,
+          "magic_defence_min_bonus": 0,
+          "magic_defence_max_bonus": 0,
+          "required_experience": 20000
+        },
+        {
+          "level": 1,
+          "hp_bonus": 20,
+          "attack_min_bonus": 1,
+          "attack_max_bonus": 1,
+          "defence_min_bonus": 2,
+          "defence_max_bonus": 2,
+          "magic_defence_min_bonus": 2,
+          "magic_defence_max_bonus": 2,
+          "required_experience": 40000
+        },
+        {
+          "level": 2,
+          "hp_bonus": 40,
+          "attack_min_bonus": 2,
+          "attack_max_bonus": 2,
+          "defence_min_bonus": 4,
+          "defence_max_bonus": 4,
+          "magic_defence_min_bonus": 4,
+          "magic_defence_max_bonus": 4,
+          "required_experience": 60000
+        },
+        {
+          "level": 3,
+          "hp_bonus": 60,
+          "attack_min_bonus": 3,
+          "attack_max_bonus": 3,
+          "defence_min_bonus": 6,
+          "defence_max_bonus": 6,
+          "magic_defence_min_bonus": 6,
+          "magic_defence_max_bonus": 6,
+          "required_experience": 80000
+        },
+        {
+          "level": 4,
+          "hp_bonus": 80,
+          "attack_min_bonus": 4,
+          "attack_max_bonus": 4,
+          "defence_min_bonus": 8,
+          "defence_max_bonus": 8,
+          "magic_defence_min_bonus": 8,
+          "magic_defence_max_bonus": 8,
+          "required_experience": 100000
+        },
+        {
+          "level": 5,
+          "hp_bonus": 100,
+          "attack_min_bonus": 5,
+          "attack_max_bonus": 5,
+          "defence_min_bonus": 10,
+          "defence_max_bonus": 10,
+          "magic_defence_min_bonus": 10,
+          "magic_defence_max_bonus": 10,
+          "required_experience": 120000
+        },
+        {
+          "level": 6,
+          "hp_bonus": 120,
+          "attack_min_bonus": 6,
+          "attack_max_bonus": 6,
+          "defence_min_bonus": 12,
+          "defence_max_bonus": 12,
+          "magic_defence_min_bonus": 12,
+          "magic_defence_max_bonus": 12,
+          "required_experience": 140000
+        },
+        {
+          "level": 7,
+          "hp_bonus": 140,
+          "attack_min_bonus": 7,
+          "attack_max_bonus": 7,
+          "defence_min_bonus": 14,
+          "defence_max_bonus": 14,
+          "magic_defence_min_bonus": 14,
+          "magic_defence_max_bonus": 14,
+          "required_experience": null
+        }
+      ]
+    }
+  ],
+  "source_evidence": {
+    "stage": "review_candidate_only",
+    "workbooks": {
+      "architecture": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+      "gameplay": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
+    }
+  }
+}

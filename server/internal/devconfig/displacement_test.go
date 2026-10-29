@@ -22,6 +22,12 @@ func displacementFixtureJSON(t *testing.T) map[string]any {
 		actor.(map[string]any)["can_push"] = false
 	}
 	raw["pet"].(map[string]any)["can_push"] = false
+	// rule16的继承定义与旧bootstrap应一致；只改同一个隔离前态，不退回旧版本。
+	if rules, ok := raw["pet_runtime"].(map[string]any); ok {
+		for _, definition := range rules["definitions"].([]any) {
+			definition.(map[string]any)["base"].(map[string]any)["can_push"] = false
+		}
+	}
 	for _, actor := range raw["monsters"].([]any) {
 		actor.(map[string]any)["can_push"] = false
 	}

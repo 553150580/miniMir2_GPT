@@ -6,7 +6,7 @@ class Node{constructor(name){this.name=name;this.children=[];this.parts=new Map(
 function saved(file,start){const s=JSON.parse(fs.readFileSync(file));const build=id=>{const row=s[id],n=new Node(row._name);for(const c of row._components??[]){const data=s[c.__id__];if(data.__type__==='cc.Label')n.parts.set(Label,{string:data._string});if(data.__type__==='cc.Button')n.parts.set(Button,{});if(data.__type__==='39a82802rlT3Z9OWj3G8DOj')n.parts.set(List,new List());}for(const child of row._children??[])build(child.__id__).parent=n;return n;};return build(start??s.findIndex(r=>r.__type__==='cc.Node'&&r._name==='Safe'));}
 const game={totalTime:0},file=path.join(root,'client/assets/scripts/app/GameCombatStatus.ts');
 const output=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}}),moduleLike={exports:{}};
-new Function('require','module','exports',output.outputText)(id=>id==='cc'?{Button,game,instantiate:()=>saved(path.join(root,'client/assets/resources/prefabs/StatusBadge.prefab'),1),isValid:n=>!!n&&!n.destroyed,Label}:id==='../ui/List'?{List}:id==='./CombatStatusModel'?require('../../../.work/ui-tests/app/CombatStatusModel.js'):{},moduleLike,moduleLike.exports);
+new Function('require','module','exports',output.outputText)(id=>id==='cc'?{Button,game,instantiate:()=>saved(path.join(root,'client/assets/resources/prefabs/StatusBadge.prefab'),1),isValid:n=>!!n&&!n.destroyed,Label}:id==='../ui/List'?{List}:id==='./PetTrainingModel'?require('../../../.work/ui-tests/app/PetTrainingModel.js'):id==='./CombatStatusModel'?require('../../../.work/ui-tests/app/CombatStatusModel.js'):{},moduleLike,moduleLike.exports);
 const {GameCombatStatus}=moduleLike.exports;
 test('真实状态控制器绑定保存UI：0秒徽标仍在、换life点击取新实体，详情滚动和下层列表位置保留',()=>{
     const safe=saved(path.join(root,'client/assets/scenes/Game.scene')),overview=safe.getChildByPath('UIMgr/Panels/CombatStatus/List').getComponent(List),details=safe.getChildByPath('PopupView/Panels/StatusDetails/List').getComponent(List);
@@ -19,4 +19,16 @@ test('真实状态控制器绑定保存UI：0秒徽标仍在、换life点击取�
     controller.refresh(baseline('2','1',[buff(0)]),true);badge.events.get('click')();assert(details.rows.some(s=>s.includes('伤害减免 30%')),'不能仍用旧life闭包打开已结束状态');
     popup.top=null;controller.refresh(baseline('3','1',[]),true);assert.equal(badge.destroyed,true);assert.equal(overview.offset,130);assert.equal(ui.top.name,'Skills');
     controller.openOverview();assert.equal(ui.top.name,'CombatStatus');controller.dispose();
+});
+
+
+test('实际保存宠物面板与实体详情按完整scope/handle/Life实时重取，训练Long/属性变化保持滚动，旧尸体不计活宠',()=>{
+ const {Long}=require('./helpers/session_harness.cjs'),safe=saved(path.join(root,'client/assets/scenes/Game.scene')),overview=safe.getChildByPath('UIMgr/Panels/CombatStatus/List').getComponent(List),details=safe.getChildByPath('PopupView/Panels/StatusDetails/List').getComponent(List),ui={open(){}},popup={top:null,show(name,value){this.top={name};this.value=value;}},scope={sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true)},c=new GameCombatStatus(safe,ui,popup,{},1,[],scope);
+ const pet=(changes={})=>({entityHandle:20,entityKind:2,life:Long.UONE,hp:Long.fromInt(50),hpMax:Long.fromInt(100),position:{x:8,y:8},statuses:[],petTraining:{trainingLevel:1,maxTrainingLevel:7,experience:Long.fromString('9007199254740993',true),nextLevelExperience:Long.fromInt(40000,true)},...changes});
+ const corpse=pet({entityHandle:19,hp:Long.ZERO,isPetCorpse:true,statuses:[{statusId:14,skillLevel:0,remainingMs:1000,maxPhysicalDefenceBonus:'0',maxMagicDefenceBonus:'0',damageReductionPercent:0}]}),baseline=(seq,entities,changes={})=>({...scope,stateSequence:Long.fromInt(seq,true),entities,...changes});
+ c.refresh(baseline(1,[corpse,pet()]),true);c.showPet();assert.equal(popup.value.title,'宠物');assert.match(details.rows.join(''),/9007199254740993/);assert.match(overview.rows.join(''),/宠物尸体 1具/);assert(!overview.rows.join('').includes('幽灵盾'));details.offset=123;
+ c.refresh(baseline(2,[corpse,pet({hpMax:Long.fromInt(120),petTraining:{trainingLevel:2,maxTrainingLevel:7,experience:Long.fromInt(1,true),nextLevelExperience:Long.fromInt(60000,true)}})]),true);assert.match(details.rows.join(''),/训练等级 2 \/ 7/);assert.match(details.rows.join(''),/生命 50 \/ 120/);assert.equal(details.offset,123);
+ c.refresh(baseline(1,[pet()]),true);assert.match(details.rows.join(''),/训练等级 2 \/ 7/);c.refresh(baseline(99,[pet()],{sceneEpoch:Long.fromInt(2,true)}),true);assert.match(details.rows.join(''),/训练等级 2 \/ 7/);
+ c.showEntity(19,'1');assert.match(details.rows.join(''),/宠物尸体/);c.refresh(baseline(3,[pet({entityHandle:21,life:Long.fromInt(2,true)})]),true);assert.match(details.rows.join(''),/该实体已离场/);c.showPet();assert.match(details.rows.join(''),/训练等级 1 \/ 7/);
+ c.refresh(baseline(4,[pet({entityHandle:21,petTraining:null})]),true);assert.match(details.rows.join(''),/未提供训练数据/);assert(!details.rows.join('').includes('训练等级'));c.refresh(baseline(5,[]),true);assert.match(details.rows.join(''),/当前没有存活宠物/);const old=details.rows.slice();c.dispose();c.refresh(baseline(6,[pet()]),true);c.showPet();assert.deepEqual(details.rows,old);
 });

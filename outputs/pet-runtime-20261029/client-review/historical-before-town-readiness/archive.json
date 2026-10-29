@@ -1,0 +1,28 @@
+{
+  "purpose": "工具就绪修复前216输入报告/日志原字节副本",
+  "files": {
+    "awaiting-public16-source-snapshot.json": "c7f7719836d12ce7f448b85f2ca7b42fcd53ca492334f64388b8f3cab2f37255",
+    "final-before.json": "117cad34c9979841d758f07eee35b008131b814bdae74cd4e0dd74241c1f222b",
+    "full-intermediate-1.json": "ee5c371ab45cafabbd6aa2683acf4002865c28dacf21dc0a2243ca9389949a1e",
+    "full-intermediate-1.txt": "8168b13a0cd8c5a44aa4710a3489e65240bf9927049417fa35f9e7a49f260be8",
+    "full-ui-app.txt": "c3af1b017a28df109d6600cc7cb7e6038be6e143175adef3f5fab4dcc496ec67",
+    "handoff.md": "989e5b0eed28427af5260e77e6712c47a542ecd7e4a57cda212253bc6a9b2cc9",
+    "models.txt": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "pb-before.json": "ffaf7170ddbdf2588a07347b4f3aca9e79a8e1b695fba96abc3b932a37c02704",
+    "protocol-check-detail-0.txt": "b019a309fdc6a85782088e09c220f29a99c50734bef799ad0fbc58c101eee799",
+    "protocol-check-detail-1.txt": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "protocol-check.txt": "42fa80f177d720be82a31ec795afc8a4ec020d60634d106e6e23fa49318375d1",
+    "protocol-lint.txt": "67283859d87f6c54bf824384627a3aaab920fe253f9b4b2c6e3f181fac2bff77",
+    "report.json": "a5a97ea98537971f86b9f31f8a0ee8531bca4b0d9cb4900b3f65cd1f668e02e5",
+    "run_final.py": "0eeb1cad7589e8d6cce3b1666441d56cf81afee804d960722334f0a2be602bf8",
+    "strict-intermediate.json": "93bad0195e1682a8a8a8324ffa9abeb2f261f30b9daab12bbfe9f79e8c4fccd6",
+    "strict-intermediate.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "strict.txt": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "targeted-1.json": "c8476f3e0b547716ac875ed99edebfca4e6037101b72fb77bdf0ec66a6761f1e",
+    "targeted-1.txt": "dbe22ff80440b99a50f691eb79f19cd6a9668518e1654220bfda5649128beaca",
+    "targeted-2.json": "71bcc0b02f0c06e43e533206b5c8c628135f0426f5e21250775efae39cdfa156",
+    "targeted-2.txt": "c6023d359604c103f5d825b7a7a5b5ce66e3bd6d13dcaae6d635297925746c8d",
+    "targeted-3.json": "8a61ebeaa96722abb8b62283ed8cd6e9af68b312af49dc73bc7cd1ceec40675d",
+    "targeted-3.txt": "c9e68ac19a505598dc43fd44e3644e5ee1f35614aeb82904bdae9bcf9b4e7916"
+  }
+}

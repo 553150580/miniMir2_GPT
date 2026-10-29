@@ -14,6 +14,8 @@ import sys
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools/config'))
 import export_configs as config
+sys.path.insert(0,str(ROOT/'tools/resources'))
+import prepare_pet_runtime as pet_runtime
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -22,7 +24,7 @@ MON_DROPS=ROOT.parent/'MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人
 ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
-           'game_monster_spawns','game_pet_templates','game_exp_levels','game_drop_pools','game_drop_entries',
+           'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_drop_pools','game_drop_entries',
            'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -695,6 +697,13 @@ def fixture_from_rows(tables):
             result['map']['no_teleport']=map_no_teleport_policy(tables,m,profile)
         if profile['rule_version']>=13:
             result['town_travel'],result['town_navigation']=town_runtime_rules(profile,catalog)
+    pet_rules=pet_runtime.compile_runtime(tables,profile)
+    if pet_rules is not None:
+        if pet_rules['bootstrap_mode']=='legacy_untrained_pet':
+            selected=next((row for row in pet_rules['definitions'] if row['id']==profile['pet_id']),None)
+            if selected is None or selected['base']!={key:value for key,value in result['pet'].items() if key!='undead'} or selected['undead']!=result['pet']['undead']:
+                raise ValueError('旧免费bootstrap必须与同源PetRuntime基础属性逐字段一致')
+        result['pet_runtime']=pet_rules
     return result
 
 def public_gameplay(fixture):
@@ -770,6 +779,10 @@ def main():
         book=ROOT/next(w['path'] for w in schema['workbooks'] if w['group']=='gameplay')
         fixture['_source_evidence']['workbook']={'path':book.relative_to(ROOT).as_posix(),'sha256':config.sha256(book)}
         fixture['_source_evidence']['exporter_sha256']=config.sha256(Path(__file__))
+        if fixture['rule_version']>=16:
+            fixture['_source_evidence']['pet_runtime_inputs']={
+                'compiler_sha256':config.sha256(Path(pet_runtime.__file__)),
+                'workbooks':[{'group':w['group'],'path':w['path'],'sha256':config.sha256(ROOT/w['path'])} for w in schema['workbooks']]}
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)

@@ -1,0 +1,35 @@
+{
+  "passed": false,
+  "scope": "独立QA cfg HP1/怪物20高命中/15秒尸体；真实Creator与正常道士UI，非180秒原数值、17召唤、购符、自然成长、冷重建、128容量或手机真机",
+  "expectedRuleVersion": "16",
+  "qaRunId": "b9b82c89c8f04a4fb648ee594947b352",
+  "fixtureHash": "929a842ab10d5c01b9a63741ce20ac85a5898b437052e7b23a99c79ab43781ba",
+  "ttlMs": 15000,
+  "checks": [],
+  "errors": [],
+  "warnings": [],
+  "entries": [],
+  "acks": [],
+  "observations": [],
+  "protocolErrors": [],
+  "sent": [],
+  "screenshots": [],
+  "credentialsWritten": false,
+  "corpseSeeded": false,
+  "trainingVerified": false,
+  "corpseTouchAttempts": [],
+  "roleCreationRequests": [],
+  "roleSelection": null,
+  "healthChecks": [
+    {
+      "phase": "startup",
+      "instances": {
+        "account": "20b287d6032973786625eee58be2de28",
+        "game": "32d4deb5d2f4256e0da790b24c2a29eb",
+        "gm": "9e83fa9d14ccd048f8c2354311c46dd8"
+      }
+    }
+  ],
+  "error": "Error: 等待超时：Loading关闭且道士职业普通触屏选择已生效\n    at until (D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_runtime_browser.cjs:22:165)\n    at async D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_pet_runtime_browser.cjs:89:3",
+  "failureScreenshot": "登录前失败不保存可能包含凭据的画面"
+}

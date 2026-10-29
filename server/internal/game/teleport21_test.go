@@ -19,8 +19,8 @@ import (
 func teleport21Worker(t *testing.T) (*worker, *room, *capturedConnection, devconfig.Skill, time.Time) {
 	t.Helper()
 	w, r, c := stageBWorker(t, 1, 21, 1, 9)
-	if w.e.Store.Cfg.Fixture.RuleVersion != 15 {
-		t.Fatal("本组需真实唯一Excel rule15输入")
+	if w.e.Store.Cfg.Fixture.RuleVersion < 15 {
+		t.Fatal("本组需真实唯一Excel rule15及后续的21合同")
 	}
 	s, ok := w.e.Store.Cfg.Fixture.Skill(21)
 	if !ok || s.Behavior != "teleport" || s.Teleport == nil || s.DelayBaseMS != 200 || s.Teleport.MaxAttempts != 200 {

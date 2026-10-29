@@ -276,3 +276,45 @@ test('纯S2C瞬移结果与Entry独立迁移ID保留全部uint64，不上传落�
 test('TemporalFlux实际传送耗蓝字段独立于减伤，不混用战斗属性',()=>{
  const value=decodePacket(encodePacket(5,0,Long.UONE,{entities:[{entityHandle:7,statuses:[{statusId:21,remainingMs:30000,teleportManaPenaltyPercent:30,damageReductionPercent:0,casterLife:Long.MAX_UNSIGNED_VALUE}]}]})).value.entities[0].statuses[0];assert.equal(value.teleportManaPenaltyPercent,30);assert.equal(value.damageReductionPercent,0);assert.equal(value.casterLife.toString(),Long.MAX_UNSIGNED_VALUE.toString());
 });
+
+
+test('训练嵌套PB与尸体标识保留完整uint64，128具真实编码样本可经有界基线组装',()=>{
+ const large=Long.MAX_UNSIGNED_VALUE,corpses=Array.from({length:128},(_,i)=>({entityHandle:100+i,entityKind:2,isPetCorpse:true,hp:Long.ZERO,hpMax:Long.fromInt(100),life:large,petTraining:{trainingLevel:1,maxTrainingLevel:7,experience:large,nextLevelExperience:Long.fromString('9007199254740993',true)}}));
+ const bytes=encodePacket(5,0,Long.UONE,{sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:1,entities:corpses});assert(bytes.length<=65536);const decoded=decodePacket(bytes).value,complete=new BaselineAssembler().accept(decoded,Long.UONE,Long.UONE);assert.equal(complete.entities.length,128);assert.equal(complete.entities[0].isPetCorpse,true);assert.equal(complete.entities[127].petTraining.experience.toString(),'18446744073709551615');assert.equal(complete.entities[0].petTraining.nextLevelExperience.toString(),'9007199254740993');assert.equal(Long.isLong(complete.entities[0].petTraining.experience),true);
+});
+
+test('真实GameConnection取消导航等同请求全部分块；周期/旧binding碎片不能抢确认，关闭拒绝未完成请求',async()=>{
+ const original=global.WebSocket,oldLocation=global.location;let socket;
+ class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}
+ global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const c=new GameConnection(),deliver=(id,seq,binding,value)=>{const bytes=encodePacket(id,seq,binding,value);socket.onmessage({data:bytes.buffer});};
+ try{
+  const connecting=c.connect('测试票');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,Long.fromInt(5,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});await connecting;
+  const chunk=(i)=>({sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2,chunkIndex:i,navigationState:{status:4,revision:Long.UONE},entities:[{entityHandle:i+1}]});let resolved=false;const wait=c.requestNavigationCancel(Long.UONE,Long.UONE,10).then(value=>{resolved=true;return value;}),seq=decodePacket(socket.sent.at(-1)).seq;
+  deliver(5,0,Long.fromInt(5,true),chunk(0));deliver(5,seq,Long.fromInt(4,true),chunk(0));deliver(5,seq,Long.fromInt(5,true),chunk(1));await Promise.resolve();assert.equal(resolved,false);assert.equal(c.pending.size,1);
+  deliver(5,seq,Long.fromInt(5,true),chunk(0));const complete=await wait;assert.equal(complete.assembledNavigationCancel,true);assert.equal(complete.entities.length,2);assert.equal(c.pending.size,0);
+  const old=c.requestNavigationCancel(Long.UONE,Long.UONE,11),rejected=assert.rejects(old,/关闭/);c.close();await rejected;assert.equal(c.pending.size,0);
+ }finally{c.close();global.WebSocket=original;global.location=oldLocation;}
+});
+
+test('真实GameConnection取消响应混序列或重复块立即拒绝并归还Pending，不降格成第一块成功',async()=>{
+ for(const change of [{stateSequence:Long.fromInt(2,true)},{chunkIndex:0}]){
+  const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const c=new GameConnection(),deliver=(seq,value)=>{const b=encodePacket(5,seq,Long.UONE,value);socket.onmessage({data:b.buffer});};
+  try{const connecting=c.connect('票');socket.readyState=1;socket.onopen();await Promise.resolve();const entry=encodePacket(20002,decodePacket(socket.sent.at(-1)).seq,Long.UONE,{sceneEpoch:Long.UONE,baselineId:Long.UONE});socket.onmessage({data:entry.buffer});await connecting;
+   const wait=c.requestNavigationCancel(Long.UONE,Long.UONE,3),rejected=assert.rejects(wait,/分块/),seq=decodePacket(socket.sent.at(-1)).seq,chunk={sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2,navigationState:{status:4},entities:[]};deliver(seq,{...chunk,chunkIndex:0});deliver(seq,{...chunk,chunkIndex:1,...change});await rejected;assert.equal(c.pending.size,0);
+  }finally{c.close();global.WebSocket=original;global.location=oldLocation;}
+ }
+});
+
+
+test('实际PB→GameConnection→Session完整基线只在当前scope呈现训练，缺块/旧scene不替换宠物或提前Ready',async()=>{
+ const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+ const {session}=load('GameSession');session.role={job:2,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(9)}};const c=session.connection,deliver=(id,seq,value)=>{const bytes=encodePacket(id,seq,Long.fromInt(9,true),value);socket.onmessage({data:bytes.buffer});};
+ try{
+  const connecting=c.connect('观察测试票');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,{sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),roomId:Long.UONE,sceneKind:1,resourceVersion:Long.fromInt(16,true),playerHandle:7,nextEconomicCommandSeq:Long.UONE});await connecting;
+  const common={sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),stateSequence:Long.UONE,chunkCount:2},pet={entityHandle:200,entityKind:2,life:Long.UONE,hp:Long.fromInt(10),petTraining:{trainingLevel:1,maxTrainingLevel:7,experience:Long.MAX_UNSIGNED_VALUE,nextLevelExperience:Long.fromInt(40000,true)}};
+  deliver(5,0,{...common,chunkIndex:0,entities:[{entityHandle:7,entityKind:1,life:Long.UZERO,hp:Long.fromInt(100)}]});assert.equal(session.baseline,null);assert.equal(session.ready,false);
+  deliver(5,0,{...common,sceneEpoch:Long.fromInt(3,true),chunkIndex:1,entities:[pet]});assert.equal(session.baseline,null);
+  deliver(5,0,{...common,chunkIndex:1,entities:[pet,{entityHandle:100,entityKind:2,life:Long.UZERO,hp:Long.ZERO,isPetCorpse:true}]});assert.equal(session.ready,false);assert.equal(session.baseline.entities.find(e=>e.entityHandle===200).petTraining.experience.toString(),Long.MAX_UNSIGNED_VALUE.toString());assert.equal(session.baseline.entities.find(e=>e.entityHandle===100).isPetCorpse,true);
+  deliver(6,0,{sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),nextEconomicCommandSeq:Long.UONE});assert.equal(session.ready,true);const baseline=session.baseline;deliver(5,0,{...common,sceneEpoch:Long.fromInt(3,true),chunkIndex:0,entities:[]});assert.equal(session.baseline,baseline);assert.equal(session.command.toString(),'1');
+ }finally{c.close();global.WebSocket=original;global.location=oldLocation;}
+});

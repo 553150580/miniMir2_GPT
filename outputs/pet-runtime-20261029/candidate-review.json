@@ -1,0 +1,161 @@
+{
+  "source_books_unchanged": true,
+  "source_schema_unchanged": true,
+  "input_book_sha256": {
+    "architecture": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+    "gameplay": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb"
+  },
+  "editor_reviews": {
+    "architecture": {
+      "input_sha256": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+      "output_sha256": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+      "edited_worksheets": [
+        "xl/worksheets/sheet3.xml"
+      ],
+      "untouched_zip_members_verified": 16,
+      "all_requested_values_readback_equal": true,
+      "edited_cells": 10,
+      "formulas_overwritten": false,
+      "source_workbook_overwritten": false,
+      "normalized_empty_duplicate_rows": [],
+      "all_unrequested_cell_values_preserved": true,
+      "all_formula_nodes_preserved": 30,
+      "full_workbook_changed_cell_count": 10,
+      "actual_changed_cells": 10
+    },
+    "gameplay": {
+      "input_sha256": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb",
+      "output_sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f",
+      "edited_worksheets": [
+        "xl/worksheets/sheet65.xml",
+        "xl/worksheets/sheet66.xml",
+        "xl/worksheets/sheet95.xml"
+      ],
+      "untouched_zip_members_verified": 100,
+      "all_requested_values_readback_equal": true,
+      "edited_cells": 72,
+      "formulas_overwritten": false,
+      "source_workbook_overwritten": false,
+      "normalized_empty_duplicate_rows": [],
+      "all_unrequested_cell_values_preserved": true,
+      "all_formula_nodes_preserved": 460,
+      "full_workbook_changed_cell_count": 72,
+      "actual_changed_cells": 72
+    }
+  },
+  "json_contracts_added": [
+    [
+      "arch_runtime_budgets",
+      40,
+      "value"
+    ],
+    [
+      "game_pet_templates",
+      1,
+      "follow_and_return"
+    ],
+    [
+      "game_pet_templates",
+      1,
+      "lifetime_and_betrayal"
+    ],
+    [
+      "game_pet_growth",
+      1,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      1,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      2,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      2,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      3,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      3,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      4,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      4,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      5,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      5,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      6,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      6,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      7,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      7,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      8,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      8,
+      "required_conditions"
+    ]
+  ],
+  "json_contracts_replaced": [
+    [
+      "game_pet_templates",
+      1,
+      "base_attributes"
+    ],
+    [
+      "dev_first_loop_profile",
+      1,
+      "parameters"
+    ]
+  ],
+  "stage_semantic_checks": "PASS",
+  "runtime_enabled_in_independent_catalog": false,
+  "fixture_rule_version": 16,
+  "legacy_bootstrap_fighter_unchanged": true,
+  "skills_22_and_supply_unchanged": true,
+  "pending": "root逐格审阅后才应用唯一book/schema；CLI最终生成与--check待应用后执行"
+}

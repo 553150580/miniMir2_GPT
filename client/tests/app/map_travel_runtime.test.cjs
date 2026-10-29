@@ -135,3 +135,13 @@ test('真实AppRoot复用保存Role Message展示未知/nil/legacy/trusted，提
     s.connection.deliver(40003,{revision:Long.fromInt(11,true),items:[],equipped:[]});s.connection.deliver(20011,{...observation,sceneEpoch:reentry.sceneEpoch,roleRevision:Long.fromInt(11,true),sourceSeq:Long.fromInt(9,true),binding:{mapId:Long.fromInt(2,true),center:{x:650,y:631}},cause:2,safeZoneId:Long.fromInt(106,true),trusted:true});t.realRefresh();
     const text=t.getNode('UIMgr/Panels/Role/Message').getComponent().string;assert.match(text,/绑定：比奇省 \(650,631\)/);assert(!text.includes('历史记录'));assert.equal(presented.bindingState,s.bindingState);assert.equal(presented.bindingNotice,s.bindingNotice);assert.equal(t.a.world.map.width,700);t.a.attachment.dispose();
 });
+
+
+test('真实AppRoot退出只接受完整取消观察；等待期间新Entry使旧完成不能关闭新附着',async()=>{
+ for(const replacement of [false,true]){
+  const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');await t.a.attachCurrentEntry();let closed=0,changed=0;s.connection.close=()=>{closed++;};t.a.changeScene=async()=>{changed++;};const pending=deferred();s.connection.requestNavigationCancel=(scene,baseline,input)=>{assert.equal(scene.toString(),'1');assert.equal(baseline.toString(),'1');assert(input>0);return pending.promise;};
+  const task=t.a.leave(false),check=replacement?assert.rejects(task,/退出期间/):task;await flush();assert.equal(closed,0);assert.equal(changed,0);
+  if(replacement){s.connection.deliver(20002,entry('2'));t.baseline(s.entry);}
+  pending.resolve({sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.fromInt(2,true),chunkCount:2,chunkIndex:1,assembledNavigationCancel:true,navigationState:{status:4,revision:Long.UONE},entities:[]});await check;assert.equal(closed,replacement?0:1);assert.equal(changed,replacement?0:1);t.a.attachment.dispose();
+ }
+});

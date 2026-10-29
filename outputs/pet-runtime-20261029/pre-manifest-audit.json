@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-28T23:29:01.959006+00:00",
+  "mode": "只读既有日志/JSON/当前摘要；未运行DB、Go或Python测试；未改冻结输入",
+  "scope": "rule16尸体生命周期、定义/训练引擎与完整传输；17/购符/正常新生入口未开放",
+  "python_configuration": {
+    "test_methods": 90,
+    "exit_code": 0,
+    "input_count": 12,
+    "before_after_stable": true,
+    "current_drift": [],
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/checks/summary.json",
+        "sha256": "9e75c0a017b9be8931e233e3ae3854dded5c54486ebbd50639d94d68cc42c1a9"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/commands.json",
+        "sha256": "a054267ff6a55ad824c1f530a2147c9c275a54ca44a2eab453d508619bcd1a09"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/python-configuration.txt",
+        "sha256": "e7d5a9f4bfeab8f0dbae233f3c3045fef3ca49c38d8bedf7fc3f70e124e4fbcb"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/inputs-before.json",
+        "sha256": "90a1a729585e07af51e7227268904a4776c5b525b60896860690b1c78cb6cb2d"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/inputs-after.json",
+        "sha256": "90a1a729585e07af51e7227268904a4776c5b525b60896860690b1c78cb6cb2d"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/candidate-check.txt",
+        "sha256": "45cc9360c7563dfb090375ba8c1050800c91cb310d34fc2caf037c1ba1ded7ee"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/fixture-check.txt",
+        "sha256": "093a013ee60d5447d88572c50365ce5077de0afcdf0a4ef1244a230139b32e2a"
+      }
+    ]
+  },
+  "standalone_real_mongo_ws": {
+    "test_methods": 1,
+    "pass": 1,
+    "skip": 0,
+    "exit_code": 0,
+    "race": true,
+    "isolated_corpse_ttl_ms": 10000,
+    "case_elapsed_seconds": 14.85,
+    "package_elapsed_seconds": 20.338,
+    "wrapper_elapsed_seconds": 27.114,
+    "input_count": 137,
+    "before_after_stable": true,
+    "current_drift": [
+      "server/internal/integration/binding_test.go",
+      "server/internal/integration/teleport21_test.go"
+    ],
+    "drift_scope_note": "执行期间稳定；其后其它集成测试的变更由最终全Go重新覆盖，不能把此清单的137项说成全部当前字节",
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-result.json",
+        "sha256": "3a9ae49d1450dba64d8f3b6d686534cecb6efd652637f31f7bd8321b218257c5"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws.txt",
+        "sha256": "cb7bad99cfb42f14fe77dc4e5405a3eebdfb88f91bdfc645656b9b630b9c42f9"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-before.json",
+        "sha256": "38d662120393a987320cd3d7270d6734a42af30a70c3ed2f00cf436eb8551913"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/real-mongo-ws-after.json",
+        "sha256": "38d662120393a987320cd3d7270d6734a42af30a70c3ed2f00cf436eb8551913"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/ws-runtime/review.md",
+        "sha256": "239f987fc77f42f150727b1ebb21876acb4c2d7b03e66f5104d79e32346bf6ce"
+      }
+    ]
+  },
+  "latest_full_go": {
+    "passed_test_nodes": 852,
+    "failed_test_nodes": 0,
+    "skipped_test_nodes": 0,
+    "exit_code": 0,
+    "real_mongo": true,
+    "race": true,
+    "source_count": 137,
+    "before_after_stable": true,
+    "current_drift": [],
+    "fixture_sha256": "25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0",
+    "events_sha256": "ce8152d581f896eae02e21d8e78cbe1dcf94932ca0f5cdca2f4adf3f598d30bd",
+    "command": [
+      "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+      "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+      "go",
+      "test",
+      "-json",
+      "-race",
+      "-p",
+      "1",
+      "./...",
+      "-count=1",
+      "-timeout=600s"
+    ],
+    "pet_ws_reexecuted": [
+      {
+        "test": "TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS",
+        "elapsed_seconds": 16.68,
+        "package": "minimir/internal/integration"
+      }
+    ],
+    "missing_manifest_items": [
+      "config/development/pet-runtime-candidates.json",
+      "tools/server/test.py"
+    ],
+    "evidence": [
+      {
+        "path": ".work/pet-runtime-20261029/checks/go.json",
+        "sha256": "b6f2f7fdcc302abef841d81809bb7a4ea810748899eae05474e2a14cb23aedf3"
+      },
+      {
+        "path": ".work/pet-runtime-20261029/checks/go.txt",
+        "sha256": "81b18e9831901c2fb45a3a0e334733652ede250c85744a941abf853633008f88"
+      },
+      {
+        "path": "server/test-results/latest.json",
+        "sha256": "7c0d5497db80b3768a5461a18bd0cbed8342c0b84e5eddb7863f4a2290a25148"
+      },
+      {
+        "path": "server/test-results/latest.events.jsonl",
+        "sha256": "ce8152d581f896eae02e21d8e78cbe1dcf94932ca0f5cdca2f4adf3f598d30bd"
+      }
+    ]
+  },
+  "configuration": {
+    "runtime_rule_version": 16,
+    "candidate_runtime_enabled": false,
+    "candidate_runtime_same_definitions_and_budgets": true,
+    "legacy_untrained": "legacy_untrained_pet",
+    "skill17_selected": false,
+    "material_enabled": false,
+    "main_corpse_ttl_ms": 180000,
+    "body_budget": {
+      "retained_body_capacity_per_owner": 128,
+      "full_policy": "reject_birth_without_discarding_corpses"
+    },
+    "final_artifact_sha256": {
+      "config/development/pet-runtime-candidates.json": "ec35705ef18bef6f481a141b3343c9d80d613d472515c653d189070251815743",
+      "config/development/first-loop.json": "25744e787f51a8a83da09bee443f70de0d3b2eff2fbead4e679505b0f742a4f0",
+      "client/assets/resources/development/gameplay.json": "bbb332641299bae29f46c311a7d7465cbbdb8037a354eb60d27d642cdf225fab"
+    }
+  },
+  "document_review": {
+    "document": {
+      "path": "docs/职业宠物生命周期与召唤实施边界.md",
+      "sha256": "8ddd7022444c70eb8b6258c6bc75edd3482a2710b8ae29e29b99e83b02b544a6"
+    },
+    "product_blockers": [],
+    "suggested_clarifications": [
+      {
+        "line": 9,
+        "text": "本阶段拟将…推进为原书学习、合法材料与主动施放",
+        "suggestion": "改为“后续17阶段目标”，避免与本轮rule16底座验收混读"
+      },
+      {
+        "line": 43,
+        "text": "选入运行仍须唯一Excel候选",
+        "suggestion": "可明确DataRange16已落PetDefs训练定义，本轮legacy不训练；保留正常17入口未启用边界"
+      }
+    ]
+  },
+  "evidence_limitations": [
+    "独立WS验证局部HP1/宠攻击0/怪伤20与命中255/长怪动作/TTL10秒，不冒称主180秒或17自然业务验收",
+    "NoMaster友方grid过滤由game专项覆盖，WS未施放材料关闭的14/15",
+    "原始before反例与中间失败不得与最终成功合并计数；Enter版本基线错误不是产品缺陷",
+    "容量、手机真机、护符单位、正常17/Recall、自然训练成长与完整三职业未因本轮通过而完成"
+  ],
+  "evidence_findings": [
+    {
+      "kind": "manifest_scope",
+      "severity": "证据口径",
+      "message": "最新全Go报告未含候选JSON/测试驱动脚本，当前驱动代码已包含；旧137报告只能声称其实际列明范围稳定，不能当成新清单通过"
+    }
+  ]
+}

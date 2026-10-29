@@ -1,0 +1,8 @@
+{
+  "utc": "2026-10-28T23:08:37.596473+00:00",
+  "scope": "post-fix readonly, no test execution or frozen assertion",
+  "sha256": {
+    "server/internal/game/pet_training.go": "03cadbbcbc7c8d0a787a9c38e4c9a486944da496c47d93f3bc20f5bea83d171f",
+    "server/internal/game/pet_training_test.go": "61891401b6df52241281a2f60a39d0ba9c36874668daeed1dfcdf4ab1ebff59e"
+  }
+}

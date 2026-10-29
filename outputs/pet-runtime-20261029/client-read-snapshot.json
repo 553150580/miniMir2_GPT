@@ -1,0 +1,16 @@
+{
+  "utc": "2026-10-28T22:37:06.682862+00:00",
+  "scope": "read-only design, not freeze or executed tests",
+  "sha256": {
+    "shared/proto/world.proto": "e82932ce6413edbe3844a1987d438e52f8f10016debbd61b52bfae2f669c6926",
+    "client/assets/scripts/app/BaselineAssembler.ts": "77e82ffa97f752426545c8c061d4d98c29e1c8182284a9e217b45168de802af8",
+    "client/assets/scripts/app/GameWorldView.ts": "689b90a1f122f0ea4d099cf20e118c8f29799aae1999a77c933bae66e62f57fd",
+    "client/assets/scripts/app/SkillModel.ts": "8309b3ca0d4e1c5c9988f9951d169faf88600bfe465828faecbf7e3c202b65f2",
+    "client/assets/scripts/app/GameCombatStatus.ts": "f13e1bf75f254d4b179d6df55e58965557f0912f0543111e5e1d260a35db0b33",
+    "client/assets/scripts/app/CombatStatusModel.ts": "6b1735c6761d247e880d0c3cf7467e3e1dd2cd1bb98d48d21259634b71531d58",
+    "client/assets/scripts/app/GameSession.ts": "06841532f2f3289eb3f86092e978a00558bf03d18cadbffe5033132f0e1b9276",
+    "client/assets/scripts/app/GameConnection.ts": "90f0ee7448adda91f7ce7c5d923f7a266de5df4e7b16d3fff445bbe817d751a9",
+    "client/assets/scripts/app/AppRoot.ts": "4030847aec93ac1664bc6932cb786f34f6cf2cdafc3e759f8548ae0808e511d8",
+    "server/internal/game/runtime.go": "a6c033180c33b1919374a48aa7db55d6aeef35bce39585fddab1c39360f378fa"
+  }
+}

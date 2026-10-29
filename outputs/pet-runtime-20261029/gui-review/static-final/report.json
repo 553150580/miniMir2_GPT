@@ -1,0 +1,51 @@
+{
+  "purpose": "场景交互等待/职业身份只读确认/真实尸体密采样；仅QA工具",
+  "python_tests": 8,
+  "cjs_tests": 6,
+  "commands": [
+    {
+      "command": ".\\tools\\dev.ps1 node --check tools/client/verify_pet_runtime_browser.cjs",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final/1.txt",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 node --test tools/client/pet_runtime_browser.test.cjs",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final/2.txt",
+      "log_sha256": "6af0972887db5f33999d37f15a769bb8086e4b466d8522af86a4cd4bcb135055"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python -m unittest tools.client.test_pet_runtime_qa",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final/3.txt",
+      "log_sha256": "c175778b4fd94da97b305d0975915097158370c1b4b1152097c30c9e003b522f"
+    },
+    {
+      "command": ".\\tools\\dev.ps1 python tools/client/prepare_pet_runtime_qa.py",
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-final/4.txt",
+      "log_sha256": "8a92b9e92a03ddc1c6eb49e75d09e664089d905d76e3ad07d6368e4faffbdfb3"
+    }
+  ],
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "2e426887fb6cf019e6aad6f4cdb36d90b9a175375de92d97105543f0b49aa3fc",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "c12424b93d32f1bfe8754ef3ff19f95f41bda65d843b6c0a6b8a57d0eede361f"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "2e426887fb6cf019e6aad6f4cdb36d90b9a175375de92d97105543f0b49aa3fc",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "c12424b93d32f1bfe8754ef3ff19f95f41bda65d843b6c0a6b8a57d0eede361f"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "2e426887fb6cf019e6aad6f4cdb36d90b9a175375de92d97105543f0b49aa3fc",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "c12424b93d32f1bfe8754ef3ff19f95f41bda65d843b6c0a6b8a57d0eede361f"
+  },
+  "stable": true,
+  "passed": true
+}

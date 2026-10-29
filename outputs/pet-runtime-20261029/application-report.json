@@ -1,0 +1,146 @@
+{
+  "authorization": "root已审82cells后授权应用；maximum负测14项通过后执行",
+  "workbooks": [
+    {
+      "group": "architecture",
+      "path": "outputs/development-prep-20261026/架构配置.xlsx",
+      "source_before_sha256": "b4cfd1336a200fa0bae8791c001ab6a189a729cf2999e630ad98120ae8bdc4ab",
+      "candidate_sha256": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+      "changed_cells": 10,
+      "unchanged_zip_member_count": 16,
+      "changed_zip_members": [
+        "xl/worksheets/sheet3.xml"
+      ],
+      "all_original_formula_nodes_preserved": 30,
+      "source_after_sha256": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888"
+    },
+    {
+      "group": "gameplay",
+      "path": "outputs/development-prep-20261026/玩法配置.xlsx",
+      "source_before_sha256": "157788372fe9db2a8dc800f23ddea90295e8f80acca5a22ce5863e852da7ebfb",
+      "candidate_sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f",
+      "changed_cells": 72,
+      "unchanged_zip_member_count": 100,
+      "changed_zip_members": [
+        "xl/worksheets/sheet65.xml",
+        "xl/worksheets/sheet66.xml",
+        "xl/worksheets/sheet95.xml"
+      ],
+      "all_original_formula_nodes_preserved": 460,
+      "source_after_sha256": "1777b7ebed851b645cd10355874762f9aa74c741d57291112d78cbc6fa88973f"
+    }
+  ],
+  "schema_before_sha256": "fe4f37185f97ae6785df2bbd75ee4cbc6750e6393c4db7bf8bb416e7e9e1e5ef",
+  "schema_after_sha256": "fdaba852a216421494b393692aa7d160409c9d4656aac313f05cdf10c942ca04",
+  "schema_json_contracts_added": [
+    [
+      "arch_runtime_budgets",
+      40,
+      "value"
+    ],
+    [
+      "game_pet_templates",
+      1,
+      "follow_and_return"
+    ],
+    [
+      "game_pet_templates",
+      1,
+      "lifetime_and_betrayal"
+    ],
+    [
+      "game_pet_growth",
+      1,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      1,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      2,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      2,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      3,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      3,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      4,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      4,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      5,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      5,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      6,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      6,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      7,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      7,
+      "required_conditions"
+    ],
+    [
+      "game_pet_growth",
+      8,
+      "attributes"
+    ],
+    [
+      "game_pet_growth",
+      8,
+      "required_conditions"
+    ]
+  ],
+  "schema_json_contracts_replaced": [
+    [
+      "game_pet_templates",
+      1,
+      "base_attributes"
+    ],
+    [
+      "dev_first_loop_profile",
+      1,
+      "parameters"
+    ]
+  ],
+  "preview_current_untouched": true,
+  "other_cells_and_formula_proof": "candidate-review.json及两份cell-diff/editor-review"
+}

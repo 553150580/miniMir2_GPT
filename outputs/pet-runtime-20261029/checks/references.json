@@ -1,0 +1,13 @@
+{
+  "task": "references",
+  "command": [
+    "python3",
+    "tools/reference/verify_copies.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-10-28T23:27:45.796791+00:00",
+  "finished_at": "2026-10-28T23:27:46.031011+00:00",
+  "output": ".work/pet-runtime-20261029/checks/references.txt",
+  "output_sha256": "faeab5026b7c83d041651bb78d64615477197be065b3d71aa4efbdd9d187be85",
+  "scope": "仅本项检查；生成与静态测试不等于实际业务、真机或容量验收"
+}

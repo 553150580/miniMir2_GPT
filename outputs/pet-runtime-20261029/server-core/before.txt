@@ -1,0 +1,7 @@
+Command: .\tools\dev.ps1 go test ./internal/game -run '^TestPetRuntimeDeath' -count=1
+Exit: 1; wall 8.0521697s; Go 4.594s
+--- FAIL: TestPetRuntimeDeathReleasesActivityWithoutDestroyingOriginalBody (0.00s)
+    pet_runtime_test.go:39: 真实死亡仍占活动Pet槽，无法在保留原尸体时新生
+FAIL
+FAIL	minimir/internal/game	4.594s
+FAIL

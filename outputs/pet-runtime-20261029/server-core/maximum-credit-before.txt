@@ -1,0 +1,9 @@
+Command: .\tools\dev.ps1 go test ./internal/game -run '^TestPetRuntimeQueuedCreditAtMaximum' -count=1
+Exit1; wall8.5633044s; Go4.780s
+--- FAIL: TestPetRuntimeQueuedCreditAtMaximumDoesNotRejectIgnoredExperience (0.01s)
+    pet_training_test.go:143: 已满级的在途credit应忽略训练，不因本不会累积的经验溢出拒绝原RoleEXP
+FAIL
+FAIL	minimir/internal/game	4.780s
+FAIL
+
+由rules只读审查提出后真实复现；先前407节点完整game-race通过为此极值修正前，原日志保留不覆盖。

@@ -25,7 +25,6 @@ import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
 import { canRecycleBook, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
 import { GameCombatStatus } from './GameCombatStatus';
-import { combatAttributeLines, statusLines } from './CombatStatusModel';
 import { captureSupply, CastingSupplySnapshot, selectedCastingSupply, SupplySelection, validateSupply } from './CastingSupplyModel';
 import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachmentCoordinator';
 import { attachmentKey } from './MapTravelModel';
@@ -284,11 +283,11 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Minus', () => this.skillAssets!.adjustPurchase(-1));
         this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus', () => this.skillAssets!.adjustPurchase(1));
         for (const [path, title, message] of [
-            ['BottomHUD/Skills/PetPanel','宠物','宠物会跟随角色并参与战斗。宠物管理暂未开放。'],
             ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
             ['BottomHUD/QuickNav/Quest','任务','任务系统暂未开放。'],
             ['MapViewport/Mission','战斗状态','点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。'],
         ] as const) this.button(path, () => this.popup!.show('Help', { title, message }));
+        this.button('BottomHUD/Skills/PetPanel', () => this.combatStatus?.showPet());
         this.button('UIMgr/Panels/Settings/Help', () => this.popup!.show('Help', { title: '操作帮助', message: '左下摇杆控制八方向，轻触空地寻路。打开面板和聊天保留地面目标，主动方向接管才终止原寻路。点击半透明背景返回。'
             + (session.role?.job === 0 ? '\n刺杀、半月需手动开启；烈火需手动充能。自动战斗仅使用已开启的模式和已就绪的烈火。' : '') }));
         this.button('UIMgr/Panels/Hosting/Leave', () => this.leave(true));
@@ -367,11 +366,9 @@ export class AppRoot extends Component {
                     if (!this.isWorldCurrent() || this.world !== view || !this.canSendInput()) return;
                     if (this.consumeGround(entity.position)) return;
                     this.selectedTarget = entity.entityHandle;
-                    this.combatStatus?.showDetails('实体详情', [`${({ 1: '角色', 2: '宠物', 3: '怪物', 4: '掉落' } as Record<number, string>)[entity.entityKind] ?? '实体'}`, `位置 ${entity.position.x}, ${entity.position.y}`,
-                        `生命 ${entity.hp} / ${entity.hpMax}`, ...combatAttributeLines(entity.combatAttributes),
-                        ...(entity.statuses ?? []).flatMap((status: any) => statusLines(status, game.totalTime, game.totalTime, view.gameplay.statuses))]);
+                    this.combatStatus?.showEntity(entity.entityHandle, entity.life.toString());
                 });
-                const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses);
+                const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId });
                 this.combatStatus = combatStatus;
                 const releaseStatus = assets.onBeforeInvalidation(reason => {
                     if (reason !== 'dispose') return;
@@ -884,12 +881,12 @@ export class AppRoot extends Component {
         this.releaseInput(); this.leaving = true; this.nav.setInputBlocked(true);
         try {
             if (session.ready && !session.travel?.blocksInput && !this.attaching && this.isWorldCurrent()) {
-                const entry = session.entry, binding = session.connection.binding.toString(), role = roleIdentity();
-                const ack = await session.connection.request(20006, { sceneEpoch: entry.sceneEpoch, inputSequence: ++this.inputSequence, cancelNavigation: true });
-                if (this.disposed || session.entry !== entry || session.connection.binding.toString() !== binding || roleIdentity() !== role
+                const entry = session.entry, binding = session.connection.binding.toString(), role = roleIdentity(), generation = session.connection.generation;
+                const ack = await session.connection.requestNavigationCancel(entry.sceneEpoch, entry.baselineId, ++this.inputSequence);
+                if (this.disposed || session.entry !== entry || session.connection.generation !== generation || session.connection.binding.toString() !== binding || roleIdentity() !== role
                     || session.entry?.playerHandle !== entry.playerHandle) throw new Error('退出期间连接或角色已变化，请重新退出');
                 if (ack?.sceneEpoch?.toString() !== entry.sceneEpoch.toString() || ack.baselineId?.toString() !== entry.baselineId.toString()
-                    || ack.chunkCount !== 1 || ack.chunkIndex !== 0 || !ack.navigationState || ![0, 4].includes(ack.navigationState.status)) throw new Error('远端导航取消尚未得到完整确认，请重新退出');
+                    || ack.assembledNavigationCancel !== true || !ack.navigationState || ![0, 4].includes(ack.navigationState.status)) throw new Error('远端导航取消尚未得到完整确认，请重新退出');
                 const latest = session.baseline;
                 if (latest && BigInt(latest.stateSequence.toString()) > BigInt(ack.stateSequence.toString())
                     && latest.navigationState && (![0, 4].includes(latest.navigationState.status)

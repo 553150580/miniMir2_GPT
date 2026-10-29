@@ -1,0 +1,59 @@
+{
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4bcc2011477589862407f37e83d06a7f9bf4b2d2923e14ac4c4678d9f4b0bb5e",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "18948658dc9ab1a3f4e118a6b5e16552e4fe37d70ff1c64069c10ae4a4d19a73"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4bcc2011477589862407f37e83d06a7f9bf4b2d2923e14ac4c4678d9f4b0bb5e",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "18948658dc9ab1a3f4e118a6b5e16552e4fe37d70ff1c64069c10ae4a4d19a73"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "4bcc2011477589862407f37e83d06a7f9bf4b2d2923e14ac4c4678d9f4b0bb5e",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "18948658dc9ab1a3f4e118a6b5e16552e4fe37d70ff1c64069c10ae4a4d19a73"
+  },
+  "stable": true,
+  "commands": [
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--check",
+        "tools/client/verify_pet_runtime_browser.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-dense-sampling/browser-syntax.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--test",
+        "tools/client/pet_runtime_browser.test.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-dense-sampling/browser-tests.txt",
+      "sha256": "629ab673830473a12be87fe194fa74c41e1edb8dea5f774f7576b5b24d11cf31"
+    }
+  ],
+  "node_tests": 4,
+  "python_tests_prior": 8,
+  "unchanged_python_inputs": true,
+  "scope": "仅QA触屏密采样+邻矩形覆盖反例；未动产品TS/Go"
+}

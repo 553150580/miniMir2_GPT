@@ -1,0 +1,11 @@
+✔ 实际尸体GUI until等待false Promise，只有显式true结束；异常不被吞成成功 (0.6776ms)
+✔ 实际ready只读JSHandle轮询同步Boolean，Ready及渲染/附着缺一不得把Promise当真 (0.1921ms)
+✔ 实际QA健康核验拒绝相同fixtureHash但不同run的三节点instance (1.5716ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 51.0937

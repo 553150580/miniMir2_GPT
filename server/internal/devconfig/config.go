@@ -111,6 +111,7 @@ type Fixture struct {
 	Maps              []MapTemplate         `json:"maps,omitempty"`
 	Players           []Fighter             `json:"players"`
 	Pet               Fighter               `json:"pet"`
+	PetRuntime        *PetRuntimeRules      `json:"pet_runtime,omitempty"`
 	Monsters          []Monster             `json:"monsters"`
 	Items             []Item                `json:"items"`
 	Potions           PotionRules           `json:"potions"`
@@ -235,6 +236,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateTeleport(); err != nil {
+		return err
+	}
+	if err := f.ValidatePetRuntime(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

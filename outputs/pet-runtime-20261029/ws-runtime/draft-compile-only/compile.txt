@@ -1,0 +1,3 @@
+testing: warning: no tests to run
+PASS
+ok  	minimir/internal/integration	5.113s [no tests to run]

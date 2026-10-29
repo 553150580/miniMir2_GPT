@@ -142,6 +142,8 @@ def validate_json_shape(value, shape, location):
     errors = []
     if "minimum" in shape and isinstance(value, (int, float)) and value < shape["minimum"]:
         errors.append(f"{location} 不得低于 {shape['minimum']}")
+    if "maximum" in shape and isinstance(value, (int, float)) and value > shape["maximum"]:
+        errors.append(f"{location} 不得超过 {shape['maximum']}")
     if typ == "object":
         expected = shape["properties"]
         if set(value) != set(expected):

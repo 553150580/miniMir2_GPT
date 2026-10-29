@@ -1,0 +1,101 @@
+{
+  "scope": "原启动失败后工具marker/unknown/health-instance修复静态回归；无真实节点或DB job",
+  "before": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "b3feba55fe0a21f16782095b434141ede0d9870bd3a272b6fb4b9f0dbb25cfa2",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "62ee195cededfc23c3de7191e0bde3bf1acf080858dec629be46835335635f8b"
+  },
+  "after": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "b3feba55fe0a21f16782095b434141ede0d9870bd3a272b6fb4b9f0dbb25cfa2",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "62ee195cededfc23c3de7191e0bde3bf1acf080858dec629be46835335635f8b"
+  },
+  "current": {
+    "tools/client/prepare_pet_runtime_qa.py": "e6f791ab105076f26584e12b349f6611fc38faa51d9e011402d52bc6d2c32a97",
+    "tools/client/verify_pet_runtime_browser.cjs": "b3feba55fe0a21f16782095b434141ede0d9870bd3a272b6fb4b9f0dbb25cfa2",
+    "tools/client/test_pet_runtime_qa.py": "2c42afdbf080a2d3ca8c25e663f83b8d5a4f17ae9628575bb77f4911f80e79c6",
+    "tools/client/pet_runtime_browser.test.cjs": "62ee195cededfc23c3de7191e0bde3bf1acf080858dec629be46835335635f8b"
+  },
+  "stable": true,
+  "commands": [
+    {
+      "name": "prepare-only",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "python",
+        "tools/client/prepare_pet_runtime_qa.py"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-marker-fix/prepare-only.txt",
+      "sha256": "8a92b9e92a03ddc1c6eb49e75d09e664089d905d76e3ad07d6368e4faffbdfb3"
+    },
+    {
+      "name": "browser-syntax",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--check",
+        "tools/client/verify_pet_runtime_browser.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-marker-fix/browser-syntax.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "helper-tests",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "python",
+        "-m",
+        "unittest",
+        "tools/client/test_pet_runtime_qa.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-marker-fix/helper-tests.txt",
+      "sha256": "f5fc988c1d7882836b761e50f5a2c0549c867046fd8fb9d370577ae15ad3aa41"
+    },
+    {
+      "name": "browser-tests",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+        "node",
+        "--test",
+        "tools/client/pet_runtime_browser.test.cjs"
+      ],
+      "exit_code": 0,
+      "log": ".work/pet-runtime-20261029/gui-review/static-after-marker-fix/browser-tests.txt",
+      "sha256": "44472f976b5b615cef4d565d87417f7740c0ab74d8306eb8bf85b859f4723ed1"
+    }
+  ],
+  "python_tests": 8,
+  "node_tests": 3,
+  "lf_verified": {
+    "tools/client/prepare_pet_runtime_qa.py": true,
+    "tools/client/verify_pet_runtime_browser.cjs": true,
+    "tools/client/test_pet_runtime_qa.py": true,
+    "tools/client/pet_runtime_browser.test.cjs": true
+  }
+}

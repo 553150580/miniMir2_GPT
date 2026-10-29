@@ -15,6 +15,7 @@ const walkable=(x,y)=>x>=0&&y>=0&&x<700&&y<700&&!(bits[(y*700+x)>>3]&(1<<((y*700
 function nearby(x,y){for(let r=0;r<=2;r++)for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++)if(Math.max(Math.abs(dx),Math.abs(dy))===r&&walkable(x+dx,y+dy))return{x:x+dx,y:y+dy};throw Error('观察路径没有来源可走落点');}
 function clearGroundSample(sample,zone){return Boolean(sample.walkable&&sample.withinViewport&&sample.ready&&!sample.overlay&&!sample.entityHits.length&&!sample.occupiedBy.length&&(zone===undefined||sample.zone===zone));}
 function selectSameCenterGround(samples,zone){const found=samples.find(sample=>clearGroundSample(sample,zone));assert(found,'同区候选没有真实可轻触地面：'+JSON.stringify(samples));return found.point;}
+function sceneInteractive(name){const scene=window.cc?.director?.getScene();return Boolean(scene?.name===name&&scene.getComponentsInChildren('AppRoot').length&&cc.find('Canvas/Safe')?.activeInHierarchy&&!cc.find('Canvas/Loading')?.activeInHierarchy);}
 function packet(value){const b=Buffer.from(value);if(b.length<6)return null;let offset=4;const variable=()=>{let n=0n,s=0n;for(let i=0;i<10;i++){const x=b[offset++];n|=BigInt(x&127)<<s;if(!(x&128))return n;s+=7n;}throw Error('invalid header');};const request=Number(variable()),binding=variable().toString(),error=b[1]&1?Number(variable()):0;return{id:b.readUInt16BE(2),request,binding,error,body:b.subarray(offset)};}
 (async()=>{
  const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
@@ -30,7 +31,7 @@ function packet(value){const b=Buffer.from(value);if(b.length<6)return null;let 
    if(p.id===20011){const q=pb.BindingState.decode(p.body);report.bindingStates.push({transportBinding:p.binding,role:q.role.origin_server_id.toString()+':'+Buffer.from(q.role.role_id).toString('hex'),scene:q.scene_epoch.toString(),revision:q.role_revision.toString(),sourceSeq:q.source_seq.toString(),binding:q.binding?{map:q.binding.map_id.toString(),center:{x:q.binding.center.x,y:q.binding.center.y}}:null,cause:q.cause,safeZoneId:q.safe_zone_id.toString(),trusted:q.trusted});}
   }catch(e){report.errors.push('QA协议观察：'+e.message);}});
  });
- async function scene(name){await page.waitForFunction(name=>window.cc?.director?.getScene()?.name===name,name,{timeout:60000});}
+ async function scene(name){await page.waitForFunction(sceneInteractive,name,{timeout:60000});await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));}
  async function tap(suffix){const p=await page.evaluate(suffix=>{const n=cc.find('Canvas/Safe/'+suffix);if(!n||!n.activeInHierarchy)throw Error('节点不可交互：'+suffix);const b=n._uiProps.uiTransformComp.getBoundingBoxToWorld(),v=cc.view.getVisibleSize(),r=document.querySelector('canvas').getBoundingClientRect();return{x:r.x+(b.x+b.width/2)/v.width*r.width,y:r.y+(v.height-b.y-b.height/2)/v.height*r.height};},suffix);await page.touchscreen.tap(p.x,p.y);}
  async function edit(suffix,value){await tap(suffix);const e=page.locator('input:visible');await e.waitFor();await e.fill(value);}
  async function ready(map){
@@ -72,7 +73,11 @@ function packet(value){const b=Buffer.from(value);if(b.length<6)return null;let 
  }
  try{
   await page.goto('http://127.0.0.1:18080/?townTravelQA=1');await scene('Login');const account='tqa'+crypto.randomBytes(5).toString('hex'),password=crypto.randomBytes(9).toString('hex');
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await tap('JobTabs/Job2');await edit('Name','Town'+crypto.randomBytes(3).toString('hex'));await tap('Create');await page.waitForFunction(()=>cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l=>l.string.includes('Town')));await tap('Enter');await scene('Game');await ready('1');
+  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await tap('JobTabs/Job2');
+  await page.waitForFunction(()=>Boolean(cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.selectedJob===2),null,{timeout:10000});report.roleSelection=await page.evaluate(()=>{const a=cc.director.getScene().getComponentsInChildren('AppRoot')[0];return{job:a.selectedJob,status:cc.find('Canvas/Safe/Status').getComponent(cc.Label).string};});
+  const roleName='Town'+crypto.randomBytes(3).toString('hex');await edit('Name',roleName);await tap('Create');await page.waitForFunction(name=>Boolean(cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l=>l.string.includes(name))),roleName);
+  report.createdRole=await page.evaluate(async name=>{const {session}=await System.import('chunks:///_virtual/GameSession.ts'),role=session.roles.find(role=>role.name===name);return role?{job:role.job,slot:role.slot}:null;},roleName);assert.equal(report.createdRole?.job,2,'目录确认正常创建的角色职业必须为道士');
+  await tap('Role0');await tap('Enter');await scene('Game');await ready('1');
   if(await page.evaluate(()=>cc.find('Canvas/Safe/MapViewport/Actions/Auto').getComponent(cc.Toggle).isChecked))await tap('MapViewport/Actions/Auto');
   await observedBinding();report.before=await snapshot('01-personal');assert(report.before.pet,'正常道士入场必须有现存宠物');assert.equal(report.before.roleBinding.binding,null);assert.equal(report.before.roleBinding.sourceSeq,'0');assert.equal(report.before.roleBinding.trusted,false);assert.match(report.before.roleText,/尚未绑定/);report.checks.push('正常注册道士与个人图入场，新角色已提交快照为nil绑定；无随机新生或数据库预置');
   await travel('2');report.town=await snapshot('02-town-entry');assert.equal(report.town.projection,'source_rectangular');assert.deepEqual(report.town.position,{x:633,y:613});assert.equal(report.town.zone,'0');assert.equal(report.town.life,report.before.life);assert.equal(report.town.pet.life,report.before.pet.life);report.checks.push('保存地图按钮及确认面板进入真实城镇；新scene/首视口/ACK就绪，角色和宠物Life保留');
