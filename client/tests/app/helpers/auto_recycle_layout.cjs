@@ -23,3 +23,12 @@ module.exports.normalizeInventoryViewport=function normalizeInventoryViewport(sc
  for(const [index,hash]of Object.entries(frozen))assert.equal(require('node:crypto').createHash('sha256').update(JSON.stringify(scene[index])).digest('hex'),hash,'View四个旧对象含未授权字段变化');
  return scene;
 };
+
+// 后续确认窗仅启用正文换行；历史前缀先验证当前合同，再还原这一明确差异。
+module.exports.normalizeConfirmTextWrap=function normalizeConfirmTextWrap(scene){
+ assert.equal(scene[481]._name,'Message');assert.equal(scene[481]._parent.__id__,474);
+ assert.equal(scene[474]._name,'Confirm');assert.equal(scene[483].__type__,'cc.Label');
+ assert.equal(scene[483].node.__id__,481);assert.equal(scene[483]._enableWrapText,true);
+ assert.equal(scene[483]._fontSize,24);assert.equal(scene[483]._lineHeight,30);assert.equal(scene[483]._overflow,1);
+ scene[483]._enableWrapText=false;return scene;
+};

@@ -15,7 +15,7 @@
     "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
     "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
     "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
-    "client/assets/scenes/Game.scene": "6836321182f61e7ee9fb037226c2db75cb05a370709dba3e064a3a4a08a025d3",
+    "client/assets/scenes/Game.scene": "54ea883928706356f4877ddb0addc0ffddfd295370730efaf90612cb43fe74f4",
     "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
     "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b"
   },
@@ -93,10 +93,10 @@
     "client/assets/scripts/ui/ViewStack.ts": "30d9073f1d69c7e5100e65a85b5644801fbdf2a87708a00a6f9deee3e15f3d76",
     "client/assets/scripts/ui/VirtualListWindow.ts": "a4f8e45fe875d0698432175ecaf16b748120527eca5c1bab9a1d30b22a8910c4"
   },
-  "build_root": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\candidate\\web-mobile",
-  "build_config": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\creator-build-candidate.json",
+  "build_root": "D:\\A_Claude\\miniMir2_GPT\\.work\\map-confirm-wrap-20261030\\creator\\full-1\\candidate\\web-mobile",
+  "build_config": "D:\\A_Claude\\miniMir2_GPT\\.work\\map-confirm-wrap-20261030\\creator\\full-1\\creator-build-candidate.json",
   "original_build_config_sha256": "7f1e54dfc59f896ab2384775124654481082b669605990c94dd51e8042383836",
-  "build_config_sha256": "c45a5e213f3f1f819378e3c9b29900364358b89ed1495105e137dca87a039fde",
+  "build_config_sha256": "73debfeb60220227180397fca8d52fa6ad649dbdc2bb1e8d6bf3db770fcbd479",
   "command": [
     "D:\\Program Files\\CocosCreator\\3.8.8\\CocosCreator.exe",
     "--no-sandbox",
@@ -104,12 +104,12 @@
     "--project",
     "D:\\A_Claude\\miniMir2_GPT\\client",
     "--build",
-    "configPath=D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\creator-build-candidate.json"
+    "configPath=D:\\A_Claude\\miniMir2_GPT\\.work\\map-confirm-wrap-20261030\\creator\\full-1\\creator-build-candidate.json"
   ],
-  "artifact_manifest": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\candidate-files.json",
-  "artifact_manifest_sha256": "312b618a60475e532f4f317b49f862fc775129de8431a14e231e92d2040d6893",
+  "artifact_manifest": "D:\\A_Claude\\miniMir2_GPT\\.work\\map-confirm-wrap-20261030\\creator\\full-1\\candidate-files.json",
+  "artifact_manifest_sha256": "65e36bd1a4128da8b38516702a96a634cf175e33984d1c13de698e41c787f93e",
   "artifact_file_count": 26053,
-  "seconds": 231.48,
+  "seconds": 228.17,
   "log": "D:\\A_Claude\\miniMir2_GPT\\.work\\creator-cli.log",
   "physical_mobile_verified": false,
   "scope": "真实Creator同源构建；仅构建配置输出路径更改，不等于主预览切换或GUI验收"

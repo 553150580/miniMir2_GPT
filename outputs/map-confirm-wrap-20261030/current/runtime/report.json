@@ -1,0 +1,202 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "backend-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/backend-before.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/backend-before.stderr.txt",
+      "stdout_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "static-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/static-before.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/static-before.stderr.txt",
+      "stdout_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "static-stop",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "stop"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/static-stop.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/static-stop.stderr.txt",
+      "stdout_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "static-start",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "start"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/static-start.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/static-start.stderr.txt",
+      "stdout_sha256": "ad09d1dcb0b66de0cf4b248511192dd220ab72f1db17abd5c8bd574c2cf75756",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "static-after",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/static-after.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/static-after.stderr.txt",
+      "stdout_sha256": "3df2521cc21b6139cbe37552d47fa6038e7bafdb619db1b7a9389028809b5183",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "backend-after",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/map-confirm-wrap-20261030/runtime/backend-after.stdout.txt",
+      "stderr": ".work/map-confirm-wrap-20261030/runtime/backend-after.stderr.txt",
+      "stdout_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "started_at_utc": "2026-10-30T06:13:53.718104+00:00",
+  "backend_restarted": false,
+  "mongo_restarted": false,
+  "rollback_attempted": false,
+  "backend_before": {
+    "running": true,
+    "pid": 29720,
+    "run_id": "6661b319-4600-4957-b442-43f8287f92ed",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "e564527f61ccb55def2bf5b612c7319b",
+        "mode": "account",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "03678a7ec241d28c98f4d5a6b93a10b4",
+        "mode": "game",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "22eb3ec74fcf05df81d5a1058952fdb8",
+        "mode": "gm",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "static_before": {
+    "running": true,
+    "health": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 38580,
+      "run_id": "be04fce8667f459a9bb91155835db89e",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    }
+  },
+  "served_candidate_exact_match": true,
+  "artifact_files": 26053,
+  "candidate_manifest_sha256": "65e36bd1a4128da8b38516702a96a634cf175e33984d1c13de698e41c787f93e",
+  "backend_after": {
+    "running": true,
+    "pid": 29720,
+    "run_id": "6661b319-4600-4957-b442-43f8287f92ed",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "e564527f61ccb55def2bf5b612c7319b",
+        "mode": "account",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "03678a7ec241d28c98f4d5a6b93a10b4",
+        "mode": "game",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "22eb3ec74fcf05df81d5a1058952fdb8",
+        "mode": "gm",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "static_after": {
+    "running": true,
+    "health": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 15248,
+      "run_id": "8d1f690e89b242a69862bce208d71e23",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    }
+  },
+  "artifact_transfer": "同卷rename，历史Creator build_root已搬入client/build/web-mobile，原路径不再存在",
+  "finished_at_utc": "2026-10-30T06:14:12.053336+00:00"
+}

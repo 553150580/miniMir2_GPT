@@ -8,6 +8,7 @@ const base='UIMgr/Panels/Warehouse/',bounds=n=>({l:n._lpos.x-size(n).width/2,r:n
 const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.b<b.t&&a.t>b.b;
 test('仓库只追加保存子树与Functions入口；原1191对象只父children各追加一次，原地图/HUD/ItemLock全部字节语义保持',()=>{
  assert.equal(scene.length,1373);const projected=structuredClone(scene.slice(0,1191));
+ require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projected);
  for(const parent of [253,395]){assert.equal(scene[parent]._children.filter(x=>x.__id__>=1191).length,1);projected[parent]._children=projected[parent]._children.filter(x=>x.__id__<1191);}
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(projected)).digest('hex'),'373823584fe100fa7d5e53150f5660cb242e87ba7055d7a75e54ca34e6669675');
  assert.equal(index('UIMgr/Panels/Warehouse'),1191);assert(index('UIMgr/Panels/Functions/Pages/Page0/Warehouse')>=1191);assert.equal(component(node('UIMgr/Panels/Inventory/List/View'),'cc.UITransform')._contentSize.height,414);

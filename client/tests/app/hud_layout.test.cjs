@@ -56,6 +56,7 @@ test('实际中文验收名与12汉字名字有足够单行宽度，24字号不�
 });
 function previousLayout(count){
     const projection=structuredClone(scene);
+    require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projection);
     require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
     const saved=projection.slice(0,count);
     require('./helpers/auto_recycle_layout.cjs')(saved);

@@ -16013,7 +16013,7 @@
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_overflow": 1,
-    "_enableWrapText": false,
+    "_enableWrapText": true,
     "_color": {
       "__type__": "cc.Color",
       "r": 218,

@@ -1,0 +1,14 @@
+{
+  "base": "103384e87ed65e9f96364974a718838cd1fa85e4",
+  "path": "client/assets/scenes/Game.scene",
+  "node_path": "Canvas/Safe/PopupView/Panels/Confirm/Message",
+  "object_index": 483,
+  "only_field": "_enableWrapText",
+  "before": false,
+  "after": true,
+  "before_sha256": "6836321182f61e7ee9fb037226c2db75cb05a370709dba3e064a3a4a08a025d3",
+  "after_sha256": "54ea883928706356f4877ddb0addc0ffddfd295370730efaf90612cb43fe74f4",
+  "other_object_fields_and_raw_text_preserved": true,
+  "font_size": 24,
+  "logic_changed": false
+}

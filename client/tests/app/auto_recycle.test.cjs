@@ -78,7 +78,7 @@ test('确认文字按保存Label真实尺寸与本机字体度量覆盖32格主�
  const scene=JSON.parse(fs.readFileSync('client/assets/scenes/Game.scene','utf8')),deref=ref=>scene[ref.__id__];
  let node=scene.find(value=>value.__type__==='cc.Node'&&value._name==='Safe');for(const name of ['PopupView','Panels','Confirm','Message'])node=node._children.map(deref).find(value=>value._name===name);
  const label=node._components.map(deref).find(value=>value.__type__==='cc.Label'),size=node._components.map(deref).find(value=>value.__type__==='cc.UITransform')._contentSize;
- assert.equal(label._enableWrapText,false);assert.equal(label._isSystemFontUsed,true);assert.equal(label._fontSize,24);assert.equal(label._lineHeight,30);
+ assert.equal(label._enableWrapText,true);assert.equal(label._isSystemFontUsed,true);assert.equal(label._fontSize,24);assert.equal(label._lineHeight,30);
  const gameplay=JSON.parse(fs.readFileSync('client/assets/resources/development/gameplay.json','utf8')),definitions=gameplay.items.filter(row=>row.kind==='equipment');
  assert.equal(definitions.length,2);assert(definitions.every(row=>row.quality===0&&row.required_level===1));
  const samples=[model.createAutoRecyclePreview(snapshot(),policy(),true)];

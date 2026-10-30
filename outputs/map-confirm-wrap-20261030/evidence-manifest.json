@@ -1,0 +1,439 @@
+{
+  "baseline": "103384e87ed65e9f96364974a718838cd1fa85e4",
+  "files": [
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/full-ui-app.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/full-ui-app.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/full-ui-app.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/full-ui-app.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "075fd9100f95a1ea8d7cf855d12946e7cafe0fa6f39f673f82bb1fae6c7dc66e",
+      "file_sha256": "075fd9100f95a1ea8d7cf855d12946e7cafe0fa6f39f673f82bb1fae6c7dc66e"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/models.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/models.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/models.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/models.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+      "file_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/report.json",
+      "encoding": "identity",
+      "raw_sha256": "980f5248a0d96a7eb799f073c2b2701a8888e3ea94163b6afeb86a8b9c62770a",
+      "file_sha256": "980f5248a0d96a7eb799f073c2b2701a8888e3ea94163b6afeb86a8b9c62770a"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-1/started.json",
+      "target": "outputs/map-confirm-wrap-20261030/history/client/full-1/started.json",
+      "encoding": "identity",
+      "raw_sha256": "7cf24973ee8829be419381a988d5eeac1d5149f44aac22588a217fa34bb1b150",
+      "file_sha256": "7cf24973ee8829be419381a988d5eeac1d5149f44aac22588a217fa34bb1b150"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/full-ui-app.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/full-ui-app.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/full-ui-app.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/full-ui-app.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "5502fd0041b8eecd52fcf3146ec4d45bd42db3f47d7ed5434ed480dc0b217427",
+      "file_sha256": "5502fd0041b8eecd52fcf3146ec4d45bd42db3f47d7ed5434ed480dc0b217427"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/models.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/models.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/models.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/models.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+      "file_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/protocol-check.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/protocol-check.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/protocol-check.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/protocol-check.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "6546594429458d6e728776fa54b76d5083e814d0ab5bb04a334efeaa1ac99b26",
+      "file_sha256": "6546594429458d6e728776fa54b76d5083e814d0ab5bb04a334efeaa1ac99b26"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/protocol-lint.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/protocol-lint.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/protocol-lint.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/protocol-lint.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6",
+      "file_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/report.json",
+      "encoding": "identity",
+      "raw_sha256": "30219d2880c374eab8317f868d0954fe616a9eacb6b5b652dcdf40c499c7bbe5",
+      "file_sha256": "30219d2880c374eab8317f868d0954fe616a9eacb6b5b652dcdf40c499c7bbe5"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/scene.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/scene.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/scene.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/scene.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "d61b92ddf54ab6f06df20c1c69fd148afaad8819d4f99ced98b94f63c1fe42cb",
+      "file_sha256": "d61b92ddf54ab6f06df20c1c69fd148afaad8819d4f99ced98b94f63c1fe42cb"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/started.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/started.json",
+      "encoding": "identity",
+      "raw_sha256": "2deb9d19c534748e99c88be0f3e4cdbae45a44a3c8a56c3560b9e10d72eeeb1c",
+      "file_sha256": "2deb9d19c534748e99c88be0f3e4cdbae45a44a3c8a56c3560b9e10d72eeeb1c"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/strict.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/strict.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/client/full-2/strict.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/client/full-2/strict.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+      "file_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/candidate-files.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/candidate-files.json.gz",
+      "encoding": "gzip",
+      "raw_sha256": "65e36bd1a4128da8b38516702a96a634cf175e33984d1c13de698e41c787f93e",
+      "file_sha256": "f2865415d79c2fc6f4dbb3e27b35231cde63dfdf1033b0fa529625e6108be973"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/creator-build-candidate.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/creator-build-candidate.json",
+      "encoding": "identity",
+      "raw_sha256": "73debfeb60220227180397fca8d52fa6ad649dbdc2bb1e8d6bf3db770fcbd479",
+      "file_sha256": "73debfeb60220227180397fca8d52fa6ad649dbdc2bb1e8d6bf3db770fcbd479"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/creator.log",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/creator.log",
+      "encoding": "identity",
+      "raw_sha256": "20a2028d0df5ab5a04d507b27e0201436237cf225952b6f115b80b5855f93484",
+      "file_sha256": "20a2028d0df5ab5a04d507b27e0201436237cf225952b6f115b80b5855f93484"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/creator.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/creator.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/creator.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/creator.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "991b576f2507446980d082632d1de37c845b193ea4f2e727c586100fc70957c8",
+      "file_sha256": "991b576f2507446980d082632d1de37c845b193ea4f2e727c586100fc70957c8"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/report.json",
+      "encoding": "identity",
+      "raw_sha256": "f74c86cc0e9c05701f7d648f1e59c8566a4e21a7efc905e32d238235ae902eb2",
+      "file_sha256": "f74c86cc0e9c05701f7d648f1e59c8566a4e21a7efc905e32d238235ae902eb2"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/served-build-after.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/served-build-after.json.gz",
+      "encoding": "gzip",
+      "raw_sha256": "925eef26932b18d896f54944aa52dd77504f25cfaa7ed5aff211998ba3ecaca3",
+      "file_sha256": "136c34dbbb8ede3e271742ba69cc4992ea7489cf46f79a074ba332aa083ad13d"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/served-build-before.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/served-build-before.json.gz",
+      "encoding": "gzip",
+      "raw_sha256": "925eef26932b18d896f54944aa52dd77504f25cfaa7ed5aff211998ba3ecaca3",
+      "file_sha256": "136c34dbbb8ede3e271742ba69cc4992ea7489cf46f79a074ba332aa083ad13d"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/started.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/started.json",
+      "encoding": "identity",
+      "raw_sha256": "e6aa495035c8b2d2f9b22241b9597bffc2f17af7a65d8d38f1396b0dad741315",
+      "file_sha256": "e6aa495035c8b2d2f9b22241b9597bffc2f17af7a65d8d38f1396b0dad741315"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/creator/full-1/wrapper.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/creator/full-1/wrapper.json",
+      "encoding": "identity",
+      "raw_sha256": "86960312a90fdfcdc80277f5ca68e137d51bbee9475e89d62d075b5ed2630e9e",
+      "file_sha256": "86960312a90fdfcdc80277f5ca68e137d51bbee9475e89d62d075b5ed2630e9e"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/backend-after.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/backend-after.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/backend-after.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/backend-after.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+      "file_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/backend-before.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/backend-before.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/backend-before.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/backend-before.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+      "file_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/report.json",
+      "encoding": "identity",
+      "raw_sha256": "7417200f0cca634646c878af82bc6b3bfb35c24ad03f8dba9077afa4c14723db",
+      "file_sha256": "7417200f0cca634646c878af82bc6b3bfb35c24ad03f8dba9077afa4c14723db"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-after.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-after.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-after.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-after.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "3df2521cc21b6139cbe37552d47fa6038e7bafdb619db1b7a9389028809b5183",
+      "file_sha256": "3df2521cc21b6139cbe37552d47fa6038e7bafdb619db1b7a9389028809b5183"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-before.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-before.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-before.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-before.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851",
+      "file_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-start.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-start.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-start.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-start.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "ad09d1dcb0b66de0cf4b248511192dd220ab72f1db17abd5c8bd574c2cf75756",
+      "file_sha256": "ad09d1dcb0b66de0cf4b248511192dd220ab72f1db17abd5c8bd574c2cf75756"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-stop.stderr.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-stop.stderr.txt",
+      "encoding": "identity",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/runtime/static-stop.stdout.txt",
+      "target": "outputs/map-confirm-wrap-20261030/current/runtime/static-stop.stdout.txt",
+      "encoding": "identity",
+      "raw_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64",
+      "file_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-01/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/history/browser/run-01/report.json",
+      "encoding": "identity",
+      "raw_sha256": "ba42f60e228339027ec1a93539d8a11036c0d13eb63016c6c052d7f79d252b73",
+      "file_sha256": "ba42f60e228339027ec1a93539d8a11036c0d13eb63016c6c052d7f79d252b73"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-01/tool-at-run.cjs",
+      "target": "outputs/map-confirm-wrap-20261030/history/browser/run-01/tool-at-run.cjs",
+      "encoding": "identity",
+      "raw_sha256": "8e1df3e5553be5e8df5059c52e154c13fb3fdeb5e63fdd03dacab64b535e2042",
+      "file_sha256": "8e1df3e5553be5e8df5059c52e154c13fb3fdeb5e63fdd03dacab64b535e2042"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-02/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/history/browser/run-02/report.json",
+      "encoding": "identity",
+      "raw_sha256": "c0f58f6f3eab3760e8d214cbcf99520ac3a00b91eeb6bb62cc74b53269720098",
+      "file_sha256": "c0f58f6f3eab3760e8d214cbcf99520ac3a00b91eeb6bb62cc74b53269720098"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-02/tool-at-run.cjs",
+      "target": "outputs/map-confirm-wrap-20261030/history/browser/run-02/tool-at-run.cjs",
+      "encoding": "identity",
+      "raw_sha256": "7222506e4665c8dcb7031e3cab80a9b1ed0b59d56095cf161b4326b3b5f3dd3f",
+      "file_sha256": "7222506e4665c8dcb7031e3cab80a9b1ed0b59d56095cf161b4326b3b5f3dd3f"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/report.json",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/report.json",
+      "encoding": "identity",
+      "raw_sha256": "090b27ba42c112f728500e1668846f790f6929119decfa793c5c168226076716",
+      "file_sha256": "090b27ba42c112f728500e1668846f790f6929119decfa793c5c168226076716"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/town-720x1280.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/town-720x1280.png",
+      "encoding": "identity",
+      "raw_sha256": "e6e7ff2676163a268b0c77364cc3e0dc59c5a1bf35d7b141c4534bf14b8dece4",
+      "file_sha256": "e6e7ff2676163a268b0c77364cc3e0dc59c5a1bf35d7b141c4534bf14b8dece4"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/town-1024x1280.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/town-1024x1280.png",
+      "encoding": "identity",
+      "raw_sha256": "f7141e73a011630526d84a0027b3cf18063c3b1a934e14de47367cba2bb0e75b",
+      "file_sha256": "f7141e73a011630526d84a0027b3cf18063c3b1a934e14de47367cba2bb0e75b"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/town-720x1600.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/town-720x1600.png",
+      "encoding": "identity",
+      "raw_sha256": "89fa232633128626b739f99659db33baaf5591b19641d58a7b6f509bc21372a2",
+      "file_sha256": "89fa232633128626b739f99659db33baaf5591b19641d58a7b6f509bc21372a2"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/personal-720x1280.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/personal-720x1280.png",
+      "encoding": "identity",
+      "raw_sha256": "b7f6458a6fe80b911048f3184033a83ce8ec5ab93681a475e11fc4ab796d7454",
+      "file_sha256": "b7f6458a6fe80b911048f3184033a83ce8ec5ab93681a475e11fc4ab796d7454"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/personal-1024x1280.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/personal-1024x1280.png",
+      "encoding": "identity",
+      "raw_sha256": "061d2d4eadd2bdde79bfff0db1d69b5146d31927fa4eb1158795aeb48e6ec5f5",
+      "file_sha256": "061d2d4eadd2bdde79bfff0db1d69b5146d31927fa4eb1158795aeb48e6ec5f5"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/personal-720x1600.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/personal-720x1600.png",
+      "encoding": "identity",
+      "raw_sha256": "b9eab118ca9aba9304cadf5060ff8b72d03f038a70af0ad193219352c55bdd4e",
+      "file_sha256": "b9eab118ca9aba9304cadf5060ff8b72d03f038a70af0ad193219352c55bdd4e"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/browser/run-03/warehouse-confirm.png",
+      "target": "outputs/map-confirm-wrap-20261030/current/browser/run-03/warehouse-confirm.png",
+      "encoding": "identity",
+      "raw_sha256": "2d006871e2085c58e2498af4d82a31fe759f6854090906ed53a7f4c79b86a41b",
+      "file_sha256": "2d006871e2085c58e2498af4d82a31fe759f6854090906ed53a7f4c79b86a41b"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/edit-report.json",
+      "target": "outputs/map-confirm-wrap-20261030/sources/edit-report.json",
+      "encoding": "identity",
+      "raw_sha256": "fb7e53c977fd19e479d4ba5bd8dbbbfb6277043d5546e7c06f73b03f2ab1c394",
+      "file_sha256": "fb7e53c977fd19e479d4ba5bd8dbbbfb6277043d5546e7c06f73b03f2ab1c394"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/edit_saved_label.py",
+      "target": "outputs/map-confirm-wrap-20261030/sources/edit_saved_label.py",
+      "encoding": "identity",
+      "raw_sha256": "a2de5d66e89d78a9aa0e43bfdab8c82b5d749e8a2686a9c207992712435606e0",
+      "file_sha256": "a2de5d66e89d78a9aa0e43bfdab8c82b5d749e8a2686a9c207992712435606e0"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/stage_checks.py",
+      "target": "outputs/map-confirm-wrap-20261030/sources/stage_checks.py",
+      "encoding": "identity",
+      "raw_sha256": "bd46d335c6a6b76a9a17e589a38a15396fd07c7183c6243988be1d782ed1f3d0",
+      "file_sha256": "bd46d335c6a6b76a9a17e589a38a15396fd07c7183c6243988be1d782ed1f3d0"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/build_candidate.py",
+      "target": "outputs/map-confirm-wrap-20261030/sources/build_candidate.py",
+      "encoding": "identity",
+      "raw_sha256": "867a8fa1310aa74bacac38a73e8d74113c4849c8f12c2d9901eda4c1f67a9d77",
+      "file_sha256": "867a8fa1310aa74bacac38a73e8d74113c4849c8f12c2d9901eda4c1f67a9d77"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/publish_static.py",
+      "target": "outputs/map-confirm-wrap-20261030/sources/publish_static.py",
+      "encoding": "identity",
+      "raw_sha256": "12dd58d40e9072c69e7ac81dc4030c85585c6978cb42d0515ddce9ac2bd5f7e6",
+      "file_sha256": "12dd58d40e9072c69e7ac81dc4030c85585c6978cb42d0515ddce9ac2bd5f7e6"
+    },
+    {
+      "source": ".work/map-confirm-wrap-20261030/accept.py",
+      "target": "outputs/map-confirm-wrap-20261030/sources/accept.py",
+      "encoding": "identity",
+      "raw_sha256": "79c0d86f2d96b06390b1721c776de04f0dde6d61ade5095a58fff7233680b642",
+      "file_sha256": "79c0d86f2d96b06390b1721c776de04f0dde6d61ade5095a58fff7233680b642"
+    },
+    {
+      "source": "tools/client/verify_confirm_wrap_browser.cjs",
+      "target": "outputs/map-confirm-wrap-20261030/sources/verify_confirm_wrap_browser.cjs",
+      "encoding": "identity",
+      "raw_sha256": "9d7c63ed949fb540474a22ee26bbd5cbe16393d69454bf8fc444a6018cc7a478",
+      "file_sha256": "9d7c63ed949fb540474a22ee26bbd5cbe16393d69454bf8fc444a6018cc7a478"
+    }
+  ]
+}
