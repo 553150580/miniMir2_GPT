@@ -156,6 +156,7 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	teleport, _ := f.Skill(21)
 	bookID, buffID := teleport.BookItemID, teleport.BuffID
 	f.RuleVersion = 12
+	f.Warehouses = nil                                                                                    // 历史rule12不携带rule23仓储合同。
 	f.Progression = devconfig.ProgressionRules{ExpPerLevel: slices.Clone(f.Progression.ExpPerLevel[:20])} // 保留历史20阈值，不混入rule20上限/池合同。
 	f.EquipmentRecycling = nil                                                                            // rule19开发回收合同不能带回历史rule12初始化样本。
 	f.PetRuntime = nil                                                                                    // 历史初始化合同不混入rule16生命周期能力。

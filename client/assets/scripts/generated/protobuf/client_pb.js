@@ -25196,6 +25196,2023 @@ $root.minimir = (function() {
             return HostingReport;
         })();
 
+        v1.WarehouseQuery = (function() {
+
+            /**
+             * Properties of a WarehouseQuery.
+             * @typedef {Object} minimir.v1.WarehouseQuery.$Properties
+             * @property {number|null} [scope] WarehouseQuery scope
+             * @property {Long|null} [start_slot] WarehouseQuery start_slot
+             * @property {number|null} [limit] WarehouseQuery limit
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehouseQuery.
+             * @memberof minimir.v1
+             * @interface IWarehouseQuery
+             * @augments minimir.v1.WarehouseQuery.$Properties
+             * @deprecated Use minimir.v1.WarehouseQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehouseQuery.
+             * @typedef {minimir.v1.WarehouseQuery.$Properties} minimir.v1.WarehouseQuery.$Shape
+             */
+
+            /**
+             * Constructs a new WarehouseQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehouseQuery.
+             * @constructor
+             * @param {minimir.v1.WarehouseQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehouseQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehouseQuery scope.
+             * @member {number} scope
+             * @memberof minimir.v1.WarehouseQuery
+             * @instance
+             */
+            WarehouseQuery.prototype.scope = 0;
+
+            /**
+             * WarehouseQuery start_slot.
+             * @member {Long} start_slot
+             * @memberof minimir.v1.WarehouseQuery
+             * @instance
+             */
+            WarehouseQuery.prototype.start_slot = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseQuery limit.
+             * @member {number} limit
+             * @memberof minimir.v1.WarehouseQuery
+             * @instance
+             */
+            WarehouseQuery.prototype.limit = 0;
+
+            /**
+             * Creates a new WarehouseQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {minimir.v1.WarehouseQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehouseQuery} WarehouseQuery instance
+             * @type {{
+             *   (properties: minimir.v1.WarehouseQuery.$Shape): minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape;
+             *   (properties?: minimir.v1.WarehouseQuery.$Properties): minimir.v1.WarehouseQuery;
+             * }}
+             */
+            WarehouseQuery.create = function(properties) {
+                return new WarehouseQuery(properties);
+            };
+
+            /**
+             * Encodes the specified WarehouseQuery message. Does not implicitly {@link minimir.v1.WarehouseQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {minimir.v1.WarehouseQuery.$Properties} message WarehouseQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.scope);
+                if (message.start_slot != null && $Object.hasOwnProperty.call(message, "start_slot") && (typeof message.start_slot === "object" ? message.start_slot.low || message.start_slot.high : message.start_slot !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.start_slot);
+                if (message.limit != null && $Object.hasOwnProperty.call(message, "limit") && message.limit !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.limit);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehouseQuery message, length delimited. Does not implicitly {@link minimir.v1.WarehouseQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {minimir.v1.WarehouseQuery.$Properties} message WarehouseQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehouseQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape} WarehouseQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehouseQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.start_slot = value;
+                            else
+                                delete message.start_slot;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.limit = value;
+                            else
+                                delete message.limit;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehouseQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape} WarehouseQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehouseQuery message.
+             * @function verify
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehouseQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.start_slot != null && $Object.hasOwnProperty.call(message, "start_slot"))
+                    if (!$util.isInteger(message.start_slot) && !(message.start_slot && $util.isInteger(message.start_slot.low) && $util.isInteger(message.start_slot.high)))
+                        return "start_slot: integer|Long expected";
+                if (message.limit != null && $Object.hasOwnProperty.call(message, "limit"))
+                    if (!$util.isInteger(message.limit))
+                        return "limit: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehouseQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehouseQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehouseQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehouseQuery";
+            };
+
+            return WarehouseQuery;
+        })();
+
+        v1.WarehouseItem = (function() {
+
+            /**
+             * Properties of a WarehouseItem.
+             * @typedef {Object} minimir.v1.WarehouseItem.$Properties
+             * @property {Long|null} [slot] WarehouseItem slot
+             * @property {minimir.v1.ItemView.$Properties|null} [item] WarehouseItem item
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehouseItem.
+             * @memberof minimir.v1
+             * @interface IWarehouseItem
+             * @augments minimir.v1.WarehouseItem.$Properties
+             * @deprecated Use minimir.v1.WarehouseItem.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehouseItem.
+             * @typedef {minimir.v1.WarehouseItem.$Properties} minimir.v1.WarehouseItem.$Shape
+             */
+
+            /**
+             * Constructs a new WarehouseItem.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehouseItem.
+             * @constructor
+             * @param {minimir.v1.WarehouseItem.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehouseItem = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehouseItem slot.
+             * @member {Long} slot
+             * @memberof minimir.v1.WarehouseItem
+             * @instance
+             */
+            WarehouseItem.prototype.slot = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseItem item.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} item
+             * @memberof minimir.v1.WarehouseItem
+             * @instance
+             */
+            WarehouseItem.prototype.item = null;
+
+            /**
+             * Creates a new WarehouseItem instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {minimir.v1.WarehouseItem.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehouseItem} WarehouseItem instance
+             * @type {{
+             *   (properties: minimir.v1.WarehouseItem.$Shape): minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape;
+             *   (properties?: minimir.v1.WarehouseItem.$Properties): minimir.v1.WarehouseItem;
+             * }}
+             */
+            WarehouseItem.create = function(properties) {
+                return new WarehouseItem(properties);
+            };
+
+            /**
+             * Encodes the specified WarehouseItem message. Does not implicitly {@link minimir.v1.WarehouseItem.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {minimir.v1.WarehouseItem.$Properties} message WarehouseItem message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseItem.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && (typeof message.slot === "object" ? message.slot.low || message.slot.high : message.slot !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.slot);
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item"))
+                    $root.minimir.v1.ItemView.encode(message.item, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehouseItem message, length delimited. Does not implicitly {@link minimir.v1.WarehouseItem.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {minimir.v1.WarehouseItem.$Properties} message WarehouseItem message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseItem.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehouseItem message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape} WarehouseItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseItem.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehouseItem();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.item = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.item);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehouseItem message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape} WarehouseItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseItem.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehouseItem message.
+             * @function verify
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehouseItem.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot) && !(message.slot && $util.isInteger(message.slot.low) && $util.isInteger(message.slot.high)))
+                        return "slot: integer|Long expected";
+                if (message.item != null && $Object.hasOwnProperty.call(message, "item")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.item, _depth + 1);
+                    if (error)
+                        return "item." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehouseItem
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehouseItem
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehouseItem.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehouseItem";
+            };
+
+            return WarehouseItem;
+        })();
+
+        v1.WarehousePage = (function() {
+
+            /**
+             * Properties of a WarehousePage.
+             * @typedef {Object} minimir.v1.WarehousePage.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] WarehousePage role
+             * @property {number|null} [scope] WarehousePage scope
+             * @property {Long|null} [revision] WarehousePage revision
+             * @property {Long|null} [capacity] WarehousePage capacity
+             * @property {Long|null} [start_slot] WarehousePage start_slot
+             * @property {number|null} [limit] WarehousePage limit
+             * @property {Array.<minimir.v1.WarehouseItem.$Properties>|null} [items] WarehousePage items
+             * @property {Long|null} [gold] WarehousePage gold
+             * @property {Long|null} [yuanbao_units] WarehousePage yuanbao_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehousePage.
+             * @memberof minimir.v1
+             * @interface IWarehousePage
+             * @augments minimir.v1.WarehousePage.$Properties
+             * @deprecated Use minimir.v1.WarehousePage.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehousePage.
+             * @typedef {minimir.v1.WarehousePage.$Properties} minimir.v1.WarehousePage.$Shape
+             */
+
+            /**
+             * Constructs a new WarehousePage.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehousePage.
+             * @constructor
+             * @param {minimir.v1.WarehousePage.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehousePage = function (properties) {
+                this.items = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehousePage role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.role = null;
+
+            /**
+             * WarehousePage scope.
+             * @member {number} scope
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.scope = 0;
+
+            /**
+             * WarehousePage revision.
+             * @member {Long} revision
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehousePage capacity.
+             * @member {Long} capacity
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.capacity = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehousePage start_slot.
+             * @member {Long} start_slot
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.start_slot = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehousePage limit.
+             * @member {number} limit
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.limit = 0;
+
+            /**
+             * WarehousePage items.
+             * @member {Array.<minimir.v1.WarehouseItem.$Properties>} items
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.items = $util.emptyArray;
+
+            /**
+             * WarehousePage gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WarehousePage yuanbao_units.
+             * @member {Long} yuanbao_units
+             * @memberof minimir.v1.WarehousePage
+             * @instance
+             */
+            WarehousePage.prototype.yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new WarehousePage instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {minimir.v1.WarehousePage.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehousePage} WarehousePage instance
+             * @type {{
+             *   (properties: minimir.v1.WarehousePage.$Shape): minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape;
+             *   (properties?: minimir.v1.WarehousePage.$Properties): minimir.v1.WarehousePage;
+             * }}
+             */
+            WarehousePage.create = function(properties) {
+                return new WarehousePage(properties);
+            };
+
+            /**
+             * Encodes the specified WarehousePage message. Does not implicitly {@link minimir.v1.WarehousePage.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {minimir.v1.WarehousePage.$Properties} message WarehousePage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehousePage.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.scope);
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision") && (typeof message.revision === "object" ? message.revision.low || message.revision.high : message.revision !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.revision);
+                if (message.capacity != null && $Object.hasOwnProperty.call(message, "capacity") && (typeof message.capacity === "object" ? message.capacity.low || message.capacity.high : message.capacity !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.capacity);
+                if (message.start_slot != null && $Object.hasOwnProperty.call(message, "start_slot") && (typeof message.start_slot === "object" ? message.start_slot.low || message.start_slot.high : message.start_slot !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.start_slot);
+                if (message.limit != null && $Object.hasOwnProperty.call(message, "limit") && message.limit !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.limit);
+                if (message.items != null && message.items.length)
+                    for (var i = 0; i < message.items.length; ++i)
+                        $root.minimir.v1.WarehouseItem.encode(message.items[i], writer.uint32(/* id 7, wireType 2 =*/58).fork(), _depth + 1).ldelim();
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.gold);
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units") && (typeof message.yuanbao_units === "object" ? message.yuanbao_units.low || message.yuanbao_units.high : message.yuanbao_units !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.yuanbao_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehousePage message, length delimited. Does not implicitly {@link minimir.v1.WarehousePage.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {minimir.v1.WarehousePage.$Properties} message WarehousePage message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehousePage.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehousePage message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape} WarehousePage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehousePage.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehousePage();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.revision = value;
+                            else
+                                delete message.revision;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.capacity = value;
+                            else
+                                delete message.capacity;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.start_slot = value;
+                            else
+                                delete message.start_slot;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.limit = value;
+                            else
+                                delete message.limit;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.items && message.items.length))
+                                message.items = [];
+                            message.items.push($root.minimir.v1.WarehouseItem.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_units = value;
+                            else
+                                delete message.yuanbao_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehousePage message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape} WarehousePage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehousePage.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehousePage message.
+             * @function verify
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehousePage.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.revision != null && $Object.hasOwnProperty.call(message, "revision"))
+                    if (!$util.isInteger(message.revision) && !(message.revision && $util.isInteger(message.revision.low) && $util.isInteger(message.revision.high)))
+                        return "revision: integer|Long expected";
+                if (message.capacity != null && $Object.hasOwnProperty.call(message, "capacity"))
+                    if (!$util.isInteger(message.capacity) && !(message.capacity && $util.isInteger(message.capacity.low) && $util.isInteger(message.capacity.high)))
+                        return "capacity: integer|Long expected";
+                if (message.start_slot != null && $Object.hasOwnProperty.call(message, "start_slot"))
+                    if (!$util.isInteger(message.start_slot) && !(message.start_slot && $util.isInteger(message.start_slot.low) && $util.isInteger(message.start_slot.high)))
+                        return "start_slot: integer|Long expected";
+                if (message.limit != null && $Object.hasOwnProperty.call(message, "limit"))
+                    if (!$util.isInteger(message.limit))
+                        return "limit: integer expected";
+                if (message.items != null && $Object.hasOwnProperty.call(message, "items")) {
+                    if (!$Array.isArray(message.items))
+                        return "items: array expected";
+                    for (var i = 0; i < message.items.length; ++i) {
+                        var error = $root.minimir.v1.WarehouseItem.verify(message.items[i], _depth + 1);
+                        if (error)
+                            return "items." + error;
+                    }
+                }
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units"))
+                    if (!$util.isInteger(message.yuanbao_units) && !(message.yuanbao_units && $util.isInteger(message.yuanbao_units.low) && $util.isInteger(message.yuanbao_units.high)))
+                        return "yuanbao_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehousePage
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehousePage
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehousePage.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehousePage";
+            };
+
+            return WarehousePage;
+        })();
+
+        v1.WarehouseAction = (function() {
+
+            /**
+             * Properties of a WarehouseAction.
+             * @typedef {Object} minimir.v1.WarehouseAction.$Properties
+             * @property {number|null} [scope] WarehouseAction scope
+             * @property {number|null} [action] WarehouseAction action
+             * @property {Long|null} [warehouse_revision] WarehouseAction warehouse_revision
+             * @property {Long|null} [warehouse_slot] WarehouseAction warehouse_slot
+             * @property {Uint8Array|null} [item_instance_id] WarehouseAction item_instance_id
+             * @property {Long|null} [item_version] WarehouseAction item_version
+             * @property {Long|null} [quantity] WarehouseAction quantity
+             * @property {number|null} [currency] WarehouseAction currency
+             * @property {Long|null} [amount] WarehouseAction amount
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] WarehouseAction operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehouseAction.
+             * @memberof minimir.v1
+             * @interface IWarehouseAction
+             * @augments minimir.v1.WarehouseAction.$Properties
+             * @deprecated Use minimir.v1.WarehouseAction.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehouseAction.
+             * @typedef {minimir.v1.WarehouseAction.$Properties} minimir.v1.WarehouseAction.$Shape
+             */
+
+            /**
+             * Constructs a new WarehouseAction.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehouseAction.
+             * @constructor
+             * @param {minimir.v1.WarehouseAction.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehouseAction = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehouseAction scope.
+             * @member {number} scope
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.scope = 0;
+
+            /**
+             * WarehouseAction action.
+             * @member {number} action
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.action = 0;
+
+            /**
+             * WarehouseAction warehouse_revision.
+             * @member {Long} warehouse_revision
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.warehouse_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseAction warehouse_slot.
+             * @member {Long} warehouse_slot
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.warehouse_slot = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseAction item_instance_id.
+             * @member {Uint8Array} item_instance_id
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.item_instance_id = $util.newBuffer([]);
+
+            /**
+             * WarehouseAction item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseAction quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WarehouseAction currency.
+             * @member {number} currency
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.currency = 0;
+
+            /**
+             * WarehouseAction amount.
+             * @member {Long} amount
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.amount = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WarehouseAction operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.WarehouseAction
+             * @instance
+             */
+            WarehouseAction.prototype.operation = null;
+
+            /**
+             * Creates a new WarehouseAction instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {minimir.v1.WarehouseAction.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehouseAction} WarehouseAction instance
+             * @type {{
+             *   (properties: minimir.v1.WarehouseAction.$Shape): minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape;
+             *   (properties?: minimir.v1.WarehouseAction.$Properties): minimir.v1.WarehouseAction;
+             * }}
+             */
+            WarehouseAction.create = function(properties) {
+                return new WarehouseAction(properties);
+            };
+
+            /**
+             * Encodes the specified WarehouseAction message. Does not implicitly {@link minimir.v1.WarehouseAction.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {minimir.v1.WarehouseAction.$Properties} message WarehouseAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseAction.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.scope);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.action);
+                if (message.warehouse_revision != null && $Object.hasOwnProperty.call(message, "warehouse_revision") && (typeof message.warehouse_revision === "object" ? message.warehouse_revision.low || message.warehouse_revision.high : message.warehouse_revision !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.warehouse_revision);
+                if (message.warehouse_slot != null && $Object.hasOwnProperty.call(message, "warehouse_slot") && (typeof message.warehouse_slot === "object" ? message.warehouse_slot.low || message.warehouse_slot.high : message.warehouse_slot !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.warehouse_slot);
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id") && message.item_instance_id.length)
+                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.item_instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.item_version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.quantity);
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency") && message.currency !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.currency);
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount") && (typeof message.amount === "object" ? message.amount.low || message.amount.high : message.amount !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.amount);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehouseAction message, length delimited. Does not implicitly {@link minimir.v1.WarehouseAction.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {minimir.v1.WarehouseAction.$Properties} message WarehouseAction message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseAction.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehouseAction message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape} WarehouseAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseAction.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehouseAction();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.warehouse_revision = value;
+                            else
+                                delete message.warehouse_revision;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.warehouse_slot = value;
+                            else
+                                delete message.warehouse_slot;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.item_instance_id = value;
+                            else
+                                delete message.item_instance_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.currency = value;
+                            else
+                                delete message.currency;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.amount = value;
+                            else
+                                delete message.amount;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehouseAction message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape} WarehouseAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseAction.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehouseAction message.
+             * @function verify
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehouseAction.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.warehouse_revision != null && $Object.hasOwnProperty.call(message, "warehouse_revision"))
+                    if (!$util.isInteger(message.warehouse_revision) && !(message.warehouse_revision && $util.isInteger(message.warehouse_revision.low) && $util.isInteger(message.warehouse_revision.high)))
+                        return "warehouse_revision: integer|Long expected";
+                if (message.warehouse_slot != null && $Object.hasOwnProperty.call(message, "warehouse_slot"))
+                    if (!$util.isInteger(message.warehouse_slot) && !(message.warehouse_slot && $util.isInteger(message.warehouse_slot.low) && $util.isInteger(message.warehouse_slot.high)))
+                        return "warehouse_slot: integer|Long expected";
+                if (message.item_instance_id != null && $Object.hasOwnProperty.call(message, "item_instance_id"))
+                    if (!(message.item_instance_id && typeof message.item_instance_id.length === "number" || $util.isString(message.item_instance_id)))
+                        return "item_instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.currency != null && $Object.hasOwnProperty.call(message, "currency"))
+                    if (!$util.isInteger(message.currency))
+                        return "currency: integer expected";
+                if (message.amount != null && $Object.hasOwnProperty.call(message, "amount"))
+                    if (!$util.isInteger(message.amount) && !(message.amount && $util.isInteger(message.amount.low) && $util.isInteger(message.amount.high)))
+                        return "amount: integer|Long expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehouseAction
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehouseAction
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehouseAction.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehouseAction";
+            };
+
+            return WarehouseAction;
+        })();
+
+        v1.WarehouseItemChange = (function() {
+
+            /**
+             * Properties of a WarehouseItemChange.
+             * @typedef {Object} minimir.v1.WarehouseItemChange.$Properties
+             * @property {Long|null} [slot] WarehouseItemChange slot
+             * @property {minimir.v1.ItemView.$Properties|null} [before] WarehouseItemChange before
+             * @property {minimir.v1.ItemView.$Properties|null} [after] WarehouseItemChange after
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehouseItemChange.
+             * @memberof minimir.v1
+             * @interface IWarehouseItemChange
+             * @augments minimir.v1.WarehouseItemChange.$Properties
+             * @deprecated Use minimir.v1.WarehouseItemChange.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehouseItemChange.
+             * @typedef {minimir.v1.WarehouseItemChange.$Properties} minimir.v1.WarehouseItemChange.$Shape
+             */
+
+            /**
+             * Constructs a new WarehouseItemChange.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehouseItemChange.
+             * @constructor
+             * @param {minimir.v1.WarehouseItemChange.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehouseItemChange = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehouseItemChange slot.
+             * @member {Long} slot
+             * @memberof minimir.v1.WarehouseItemChange
+             * @instance
+             */
+            WarehouseItemChange.prototype.slot = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseItemChange before.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} before
+             * @memberof minimir.v1.WarehouseItemChange
+             * @instance
+             */
+            WarehouseItemChange.prototype.before = null;
+
+            /**
+             * WarehouseItemChange after.
+             * @member {minimir.v1.ItemView.$Properties|null|undefined} after
+             * @memberof minimir.v1.WarehouseItemChange
+             * @instance
+             */
+            WarehouseItemChange.prototype.after = null;
+
+            /**
+             * Creates a new WarehouseItemChange instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {minimir.v1.WarehouseItemChange.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehouseItemChange} WarehouseItemChange instance
+             * @type {{
+             *   (properties: minimir.v1.WarehouseItemChange.$Shape): minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape;
+             *   (properties?: minimir.v1.WarehouseItemChange.$Properties): minimir.v1.WarehouseItemChange;
+             * }}
+             */
+            WarehouseItemChange.create = function(properties) {
+                return new WarehouseItemChange(properties);
+            };
+
+            /**
+             * Encodes the specified WarehouseItemChange message. Does not implicitly {@link minimir.v1.WarehouseItemChange.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {minimir.v1.WarehouseItemChange.$Properties} message WarehouseItemChange message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseItemChange.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot") && (typeof message.slot === "object" ? message.slot.low || message.slot.high : message.slot !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.slot);
+                if (message.before != null && $Object.hasOwnProperty.call(message, "before"))
+                    $root.minimir.v1.ItemView.encode(message.before, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.after != null && $Object.hasOwnProperty.call(message, "after"))
+                    $root.minimir.v1.ItemView.encode(message.after, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehouseItemChange message, length delimited. Does not implicitly {@link minimir.v1.WarehouseItemChange.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {minimir.v1.WarehouseItemChange.$Properties} message WarehouseItemChange message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseItemChange.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehouseItemChange message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape} WarehouseItemChange
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseItemChange.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehouseItemChange();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.slot = value;
+                            else
+                                delete message.slot;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.before = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.before);
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.after = $root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1, message.after);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehouseItemChange message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape} WarehouseItemChange
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseItemChange.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehouseItemChange message.
+             * @function verify
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehouseItemChange.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.slot != null && $Object.hasOwnProperty.call(message, "slot"))
+                    if (!$util.isInteger(message.slot) && !(message.slot && $util.isInteger(message.slot.low) && $util.isInteger(message.slot.high)))
+                        return "slot: integer|Long expected";
+                if (message.before != null && $Object.hasOwnProperty.call(message, "before")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.before, _depth + 1);
+                    if (error)
+                        return "before." + error;
+                }
+                if (message.after != null && $Object.hasOwnProperty.call(message, "after")) {
+                    var error = $root.minimir.v1.ItemView.verify(message.after, _depth + 1);
+                    if (error)
+                        return "after." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehouseItemChange
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehouseItemChange
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehouseItemChange.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehouseItemChange";
+            };
+
+            return WarehouseItemChange;
+        })();
+
+        v1.WarehouseActionResult = (function() {
+
+            /**
+             * Properties of a WarehouseActionResult.
+             * @typedef {Object} minimir.v1.WarehouseActionResult.$Properties
+             * @property {minimir.v1.RoleKey.$Properties|null} [role] WarehouseActionResult role
+             * @property {Long|null} [role_revision] WarehouseActionResult role_revision
+             * @property {Uint8Array|null} [op_id] WarehouseActionResult op_id
+             * @property {number|null} [scope] WarehouseActionResult scope
+             * @property {number|null} [action] WarehouseActionResult action
+             * @property {Long|null} [warehouse_revision] WarehouseActionResult warehouse_revision
+             * @property {Long|null} [capacity] WarehouseActionResult capacity
+             * @property {Array.<minimir.v1.WarehouseItemChange.$Properties>|null} [changes] WarehouseActionResult changes
+             * @property {Long|null} [gold] WarehouseActionResult gold
+             * @property {Long|null} [yuanbao_units] WarehouseActionResult yuanbao_units
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WarehouseActionResult.
+             * @memberof minimir.v1
+             * @interface IWarehouseActionResult
+             * @augments minimir.v1.WarehouseActionResult.$Properties
+             * @deprecated Use minimir.v1.WarehouseActionResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a WarehouseActionResult.
+             * @typedef {minimir.v1.WarehouseActionResult.$Properties} minimir.v1.WarehouseActionResult.$Shape
+             */
+
+            /**
+             * Constructs a new WarehouseActionResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a WarehouseActionResult.
+             * @constructor
+             * @param {minimir.v1.WarehouseActionResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WarehouseActionResult = function (properties) {
+                this.changes = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WarehouseActionResult role.
+             * @member {minimir.v1.RoleKey.$Properties|null|undefined} role
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.role = null;
+
+            /**
+             * WarehouseActionResult role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseActionResult op_id.
+             * @member {Uint8Array} op_id
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.op_id = $util.newBuffer([]);
+
+            /**
+             * WarehouseActionResult scope.
+             * @member {number} scope
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.scope = 0;
+
+            /**
+             * WarehouseActionResult action.
+             * @member {number} action
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.action = 0;
+
+            /**
+             * WarehouseActionResult warehouse_revision.
+             * @member {Long} warehouse_revision
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.warehouse_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseActionResult capacity.
+             * @member {Long} capacity
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.capacity = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WarehouseActionResult changes.
+             * @member {Array.<minimir.v1.WarehouseItemChange.$Properties>} changes
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.changes = $util.emptyArray;
+
+            /**
+             * WarehouseActionResult gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WarehouseActionResult yuanbao_units.
+             * @member {Long} yuanbao_units
+             * @memberof minimir.v1.WarehouseActionResult
+             * @instance
+             */
+            WarehouseActionResult.prototype.yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new WarehouseActionResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {minimir.v1.WarehouseActionResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WarehouseActionResult} WarehouseActionResult instance
+             * @type {{
+             *   (properties: minimir.v1.WarehouseActionResult.$Shape): minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape;
+             *   (properties?: minimir.v1.WarehouseActionResult.$Properties): minimir.v1.WarehouseActionResult;
+             * }}
+             */
+            WarehouseActionResult.create = function(properties) {
+                return new WarehouseActionResult(properties);
+            };
+
+            /**
+             * Encodes the specified WarehouseActionResult message. Does not implicitly {@link minimir.v1.WarehouseActionResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {minimir.v1.WarehouseActionResult.$Properties} message WarehouseActionResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseActionResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role"))
+                    $root.minimir.v1.RoleKey.encode(message.role, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.op_id != null && $Object.hasOwnProperty.call(message, "op_id") && message.op_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.op_id);
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope") && message.scope !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.scope);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.action);
+                if (message.warehouse_revision != null && $Object.hasOwnProperty.call(message, "warehouse_revision") && (typeof message.warehouse_revision === "object" ? message.warehouse_revision.low || message.warehouse_revision.high : message.warehouse_revision !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.warehouse_revision);
+                if (message.capacity != null && $Object.hasOwnProperty.call(message, "capacity") && (typeof message.capacity === "object" ? message.capacity.low || message.capacity.high : message.capacity !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.capacity);
+                if (message.changes != null && message.changes.length)
+                    for (var i = 0; i < message.changes.length; ++i)
+                        $root.minimir.v1.WarehouseItemChange.encode(message.changes[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.gold);
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units") && (typeof message.yuanbao_units === "object" ? message.yuanbao_units.low || message.yuanbao_units.high : message.yuanbao_units !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.yuanbao_units);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WarehouseActionResult message, length delimited. Does not implicitly {@link minimir.v1.WarehouseActionResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {minimir.v1.WarehouseActionResult.$Properties} message WarehouseActionResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WarehouseActionResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WarehouseActionResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape} WarehouseActionResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseActionResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WarehouseActionResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.role = $root.minimir.v1.RoleKey.decode(reader, reader.size(), $undefined, _depth + 1, message.role);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.op_id = value;
+                            else
+                                delete message.op_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.scope = value;
+                            else
+                                delete message.scope;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.warehouse_revision = value;
+                            else
+                                delete message.warehouse_revision;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.capacity = value;
+                            else
+                                delete message.capacity;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.changes && message.changes.length))
+                                message.changes = [];
+                            message.changes.push($root.minimir.v1.WarehouseItemChange.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.yuanbao_units = value;
+                            else
+                                delete message.yuanbao_units;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WarehouseActionResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape} WarehouseActionResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WarehouseActionResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WarehouseActionResult message.
+             * @function verify
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WarehouseActionResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.role != null && $Object.hasOwnProperty.call(message, "role")) {
+                    var error = $root.minimir.v1.RoleKey.verify(message.role, _depth + 1);
+                    if (error)
+                        return "role." + error;
+                }
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.op_id != null && $Object.hasOwnProperty.call(message, "op_id"))
+                    if (!(message.op_id && typeof message.op_id.length === "number" || $util.isString(message.op_id)))
+                        return "op_id: buffer expected";
+                if (message.scope != null && $Object.hasOwnProperty.call(message, "scope"))
+                    if (!$util.isInteger(message.scope))
+                        return "scope: integer expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.warehouse_revision != null && $Object.hasOwnProperty.call(message, "warehouse_revision"))
+                    if (!$util.isInteger(message.warehouse_revision) && !(message.warehouse_revision && $util.isInteger(message.warehouse_revision.low) && $util.isInteger(message.warehouse_revision.high)))
+                        return "warehouse_revision: integer|Long expected";
+                if (message.capacity != null && $Object.hasOwnProperty.call(message, "capacity"))
+                    if (!$util.isInteger(message.capacity) && !(message.capacity && $util.isInteger(message.capacity.low) && $util.isInteger(message.capacity.high)))
+                        return "capacity: integer|Long expected";
+                if (message.changes != null && $Object.hasOwnProperty.call(message, "changes")) {
+                    if (!$Array.isArray(message.changes))
+                        return "changes: array expected";
+                    for (var i = 0; i < message.changes.length; ++i) {
+                        var error = $root.minimir.v1.WarehouseItemChange.verify(message.changes[i], _depth + 1);
+                        if (error)
+                            return "changes." + error;
+                    }
+                }
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.yuanbao_units != null && $Object.hasOwnProperty.call(message, "yuanbao_units"))
+                    if (!$util.isInteger(message.yuanbao_units) && !(message.yuanbao_units && $util.isInteger(message.yuanbao_units.low) && $util.isInteger(message.yuanbao_units.high)))
+                        return "yuanbao_units: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WarehouseActionResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.WarehouseActionResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WarehouseActionResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WarehouseActionResult";
+            };
+
+            return WarehouseActionResult;
+        })();
+
         return v1;
     })();
 

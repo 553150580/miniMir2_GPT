@@ -60,6 +60,10 @@ const (
 	MsgC2SMapTravelCommit uint16 = 20009
 	MsgS2CMapTravelState uint16 = 20010
 	MsgS2CBindingState uint16 = 20011
+	MsgC2SWarehouseQuery uint16 = 40020
+	MsgS2CWarehousePage uint16 = 40021
+	MsgC2SWarehouseAction uint16 = 40022
+	MsgS2CWarehouseActionResult uint16 = 40023
 )
 
 const (
@@ -97,4 +101,8 @@ const (
 	CodeEquipmentBagFull uint32 = 3401
 	CodeEquipmentChanged uint32 = 3402
 	CodeEquipmentBlocked uint32 = 3403
+	CodeWarehouseFull uint32 = 3501
+	CodeWarehouseChanged uint32 = 3502
+	CodeWarehouseBlocked uint32 = 3503
+	CodeWarehousePrivilegeRequired uint32 = 3504
 )

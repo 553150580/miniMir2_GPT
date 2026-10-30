@@ -720,6 +720,54 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "docs/安全区永久绑定实施边界.md；纯已提交观察，不授予客户端设置坐标权限"
+    },
+    {
+      "value": 40020,
+      "name": "MsgC2SWarehouseQuery",
+      "proto_message": "WarehouseQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.1/7.1；个人及永久origin共享仓储原子转移"
+    },
+    {
+      "value": 40021,
+      "name": "MsgS2CWarehousePage",
+      "proto_message": "WarehousePage",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.1/7.1；个人及永久origin共享仓储原子转移"
+    },
+    {
+      "value": 40022,
+      "name": "MsgC2SWarehouseAction",
+      "proto_message": "WarehouseAction",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.1/7.1；个人及永久origin共享仓储原子转移"
+    },
+    {
+      "value": 40023,
+      "name": "MsgS2CWarehouseActionResult",
+      "proto_message": "WarehouseActionResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.1/7.1；个人及永久origin共享仓储原子转移"
     }
   ],
   "error_codes": [
@@ -993,6 +1041,38 @@
       "display_zh": "该装备有未确认结果或正在被占用",
       "status": "draft",
       "source_ref": "最终策划4.2、7.4；rule22保留未确认结果及资产占用保护，锁定不阻止正常穿脱",
+      "active_in_scope": true
+    },
+    {
+      "value": 3501,
+      "name": "CodeWarehouseFull",
+      "display_zh": "仓库或背包没有空位",
+      "status": "draft",
+      "source_ref": "最终策划案4.1/7.1；rule23双仓储",
+      "active_in_scope": true
+    },
+    {
+      "value": 3502,
+      "name": "CodeWarehouseChanged",
+      "display_zh": "仓库或物品版本变化",
+      "status": "draft",
+      "source_ref": "最终策划案4.1/7.1；rule23双仓储",
+      "active_in_scope": true
+    },
+    {
+      "value": 3503,
+      "name": "CodeWarehouseBlocked",
+      "display_zh": "物品状态或仓储动作不允许",
+      "status": "draft",
+      "source_ref": "最终策划案4.1/7.1；rule23双仓储",
+      "active_in_scope": true
+    },
+    {
+      "value": 3504,
+      "name": "CodeWarehousePrivilegeRequired",
+      "display_zh": "当前角色特权无效，不能访问共享仓库",
+      "status": "draft",
+      "source_ref": "最终策划案4.1/7.1；rule23双仓储",
       "active_in_scope": true
     }
   ]

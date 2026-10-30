@@ -1,0 +1,5 @@
+Error: 没有实际Mask内行几何，不能猜滚动方向
+    at scrollBackForTarget (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:14:707)
+    at select (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:62:3283)
+    at async gotoSlot (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:64:190)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:76:3)

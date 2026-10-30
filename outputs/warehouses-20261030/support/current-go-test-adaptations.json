@@ -1,0 +1,59 @@
+{
+  "applied": true,
+  "files": [
+    {
+      "path": "server/internal/devconfig/equipment_compat_test.go",
+      "before_sha256": "7fd65965f082a801d5809bd4174779339bef844a91d73f93d09c778e7484fce5",
+      "after_sha256": "4c4a31adc72c2e32cd55d6f93fe2fbac2595ccad775194e78784d7b10c23249b",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/devconfig/map_catalog_test.go",
+      "before_sha256": "b31252744cb87dd095ad51b441a154cf683c4c21a8d23c7203c08c1ab5fa6361",
+      "after_sha256": "4eaf5cf110c21bf0c64f02d52545204325646636560ef94e4d0d02941110e8c1",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/devconfig/summon_test.go",
+      "before_sha256": "18fc1c76864896e9ad4601922595888b5ab1ae19bf4539e9e40697e107b0e997",
+      "after_sha256": "c4641a7ad14a613ce921cb2d9a6aa5f6550a3ef79f8d7255721d11d3f027b8fa",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/devconfig/pet_runtime_test.go",
+      "before_sha256": "2a1c7b39233e2bf3a93186c4d11c5b5a20d31734ed0838edf6a1e4c5283f99e4",
+      "after_sha256": "8168297df14157f240e1dd217884ef75604a9940d2c6a52a20f45577d0f8ab2c",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/integration/equipment_test.go",
+      "before_sha256": "6a6784247e3aaa108f4d8985e8b2b3f3edaa7893405873b04f39034c8d36398b",
+      "after_sha256": "4905df128490f8072296c505b58e0bb02d94598326c91f7fb540ea6dec70c3e1",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/integration/level_growth_test.go",
+      "before_sha256": "c1b7a7e1ffa2fc044c53017bb05822a282d6d997dffae22a534375dda163200d",
+      "after_sha256": "1adf581986dee9e4bd9e6de10de59198a3422cb12d5809b8e130629d88e8a9f6",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/integration/summon_pet_test.go",
+      "before_sha256": "0dcbbbe4e9fffc49b6b999e4bd3dabf7057b2d3615ea8c56134a1179cc0b1a5f",
+      "after_sha256": "262191bd17383203fa5e7adbc902772943cf49e1ad26dc28216fc7b584e9094a",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/game/equipment_test.go",
+      "before_sha256": "9dfd737f26c173921b8e8ac4f7271cdd683913e168e517e54762c7c0e9b8195c",
+      "after_sha256": "b0ec6a5476cc988e8c734086eb5b54d58451d50b6648f7c305518d2be494c708",
+      "changes": "当前配置版本22→23；原装备/成长/关闭候选断言保持"
+    },
+    {
+      "path": "server/internal/integration/binding_test.go",
+      "before_sha256": "2e3295f3fab084cac80d26c6524351fb5071591b7e69b525f775e2abd4376788",
+      "after_sha256": "b2ac35ffd9859997e3ee06a65ba2cbf54126081d301d79fcd2925b344438ef99",
+      "changes": "历史完整Validate夹具明确移除未来仓储字段；保留所有原校验"
+    }
+  ]
+}

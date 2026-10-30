@@ -1,0 +1,253 @@
+{
+  "status": "go_frozen_after_test_only_skill_readiness_fix_root_full2_pending",
+  "baseline_head": "d2dab71909d4c389482be9b95d9594db76310eeb",
+  "go_frozen": {
+    "path": ".work/warehouses-20261030/server/go-frozen.json",
+    "sha256": "9f88cc4e852d228ad2a5b9537df69ea02780dd02a070c492e47e93a0b649bd89",
+    "go_count": 187,
+    "input_count": 206,
+    "all_current_match": true
+  },
+  "checks": {
+    "pure-1": {
+      "report": ".work/warehouses-20261030/server/pure-1/report.json",
+      "report_sha256": "dc7d94deab047514b1c0697cba56e55e1211acd940e25d40d939b36b7689dd50",
+      "exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 60.59751740004867,
+      "input_count": 205,
+      "inputs_stable": true,
+      "test_passes": [
+        {
+          "test": "TestWarehouseRulesExplicitBoundedAndLegacyDisabled",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseSplitConservesCompleteOriginalIdentity",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseIdentityUsesPermanentRoleOrigin",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseExplicitActionsRejectUnrelatedFields",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReceiptSnapshotsDoNotAliasLaterState",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadDoesNotFreezeCombatAndCannotClearPermanentPending",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadStaleAndExpiredNeverLeaksContent/old-conn",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadStaleAndExpiredNeverLeaksContent/old-scene",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadStaleAndExpiredNeverLeaksContent/expired",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadStaleAndExpiredNeverLeaksContent/new-query",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseReadStaleAndExpiredNeverLeaksContent",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseCommittedReplayExpiresWithoutContentOrNewEffects/expired",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseCommittedReplayExpiresWithoutContentOrNewEffects/active",
+          "elapsed": 0
+        },
+        {
+          "test": "TestWarehouseCommittedReplayExpiresWithoutContentOrNewEffects",
+          "elapsed": 0
+        }
+      ],
+      "failed_tests": [],
+      "skip_count": 0,
+      "current_common_inputs_match": false,
+      "current_additions": [
+        "server/internal/integration/warehouses_concurrency_test.go"
+      ],
+      "current_changed_paths": [
+        "server/internal/integration/skill_assets_test.go"
+      ]
+    },
+    "store-1": {
+      "report": ".work/warehouses-20261030/server/store-1/report.json",
+      "report_sha256": "9d162d29769edc173e51345d0a39598c5a68e19008915e01010d617bb566efbf",
+      "exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 16.737732500070706,
+      "input_count": 205,
+      "inputs_stable": true,
+      "test_passes": [
+        {
+          "test": "TestWarehouseTransactionsSplitsLegacyReceiptsAndFencesMongo",
+          "elapsed": 1.1
+        }
+      ],
+      "failed_tests": [],
+      "skip_count": 0,
+      "current_common_inputs_match": false,
+      "current_additions": [
+        "server/internal/integration/warehouses_concurrency_test.go"
+      ],
+      "current_changed_paths": [
+        "server/internal/integration/skill_assets_test.go"
+      ]
+    },
+    "ws-1": {
+      "report": ".work/warehouses-20261030/server/ws-1/report.json",
+      "report_sha256": "e44a504f8942b9f3127ea23c44e5fd1c859107f544dc4c251c2593d337be4ecc",
+      "exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 24.407245400128886,
+      "input_count": 205,
+      "inputs_stable": true,
+      "test_passes": [
+        {
+          "test": "TestWarehousesTwoRolesAtomicTransferAndReconnectMongoWS",
+          "elapsed": 11.52
+        }
+      ],
+      "failed_tests": [],
+      "skip_count": 0,
+      "current_common_inputs_match": false,
+      "current_additions": [
+        "server/internal/integration/warehouses_concurrency_test.go"
+      ],
+      "current_changed_paths": [
+        "server/internal/integration/skill_assets_test.go"
+      ]
+    },
+    "additional-1": {
+      "report": ".work/warehouses-20261030/server/additional-1/report.json",
+      "report_sha256": "7279eedc6637f6215e99930a3f509a476764582c77e6641af464347243454bf8",
+      "exit_code": 1,
+      "passed": false,
+      "elapsed_seconds": 9.137612400110811,
+      "input_count": 206,
+      "inputs_stable": true,
+      "test_passes": [],
+      "failed_tests": [
+        {
+          "ImportPath": "minimir/internal/integration [minimir/internal/integration.test]",
+          "Action": "build-fail"
+        },
+        {
+          "Time": "2026-10-30T07:11:01.0999507+08:00",
+          "Action": "fail",
+          "Package": "minimir/internal/integration",
+          "Elapsed": 0,
+          "FailedBuild": "minimir/internal/integration [minimir/internal/integration.test]"
+        }
+      ],
+      "skip_count": 0,
+      "current_common_inputs_match": false,
+      "current_additions": [],
+      "current_changed_paths": [
+        "server/internal/integration/skill_assets_test.go",
+        "server/internal/integration/warehouses_concurrency_test.go"
+      ]
+    },
+    "additional-2": {
+      "report": ".work/warehouses-20261030/server/additional-2/report.json",
+      "report_sha256": "1576473f87ca5f5bd35e5b4f95c35ff1952168b0781a39b818813d0eabdbd56a",
+      "exit_code": 0,
+      "passed": true,
+      "elapsed_seconds": 15.428055200027302,
+      "input_count": 206,
+      "inputs_stable": true,
+      "test_passes": [
+        {
+          "test": "TestWarehouseConcurrentFifthRoleAndSixthRejectedMongoHTTP",
+          "elapsed": 0.79
+        },
+        {
+          "test": "TestWarehousePermanentOriginsShareRunButNotAssetsMongo",
+          "elapsed": 1.15
+        }
+      ],
+      "failed_tests": [],
+      "skip_count": 0,
+      "current_common_inputs_match": false,
+      "current_additions": [],
+      "current_changed_paths": [
+        "server/internal/integration/skill_assets_test.go"
+      ]
+    }
+  },
+  "scope": [
+    "个人role独立仓：虚拟0、完整/部分物品原子存取、非绑元宝扩页；无存币、无自动合堆、无产品最大页数。",
+    "共享account+永久origin仓：本角色Until有效读写，仅非绑物/金币/元宝，普通品质不套CanTrade；无到期提现。",
+    "原owner/fence/CAS/原op先回执/同事务warehouse及role流水，手动EconomicSeq不占SourceSeq；unknown沿原job，旧回调不释放新Pending。",
+    "Query有界只读snapshot不建立空仓、不写guard、不占Pending；原Conn/Auth/Scene/代次和发送时Until复核。",
+    "完整旧物不受当前需求等级/职业/当前DropQuality/旧空来源阻挡，不授予新穿/回收；部分拆分须当前已知stack规则，新UID确定于原op、原余量v+1。",
+    "两角色真实非绑Auto掉物、最后格/同UID争抢一胜、5角色同时附着/同角色新票；普通协议仓储健康/完整stop-launch冷建持久。",
+    "新增HTTP并发两个op抢第5槽+第6槽拒绝/原op稳定，新增同account双origin共run/owner但持久资产不互通真实事务。"
+  ],
+  "qualified_preconditions": {
+    "store": "已创建角色在首次Enter前明确旧quality4/锁/空来源持有物、17页堆叠、实际Until和已有资金；不是自然获取。满包和最大版本为单独明确存档前态。",
+    "ws": "主概率/20保底/业务时限未改；局部已选怪HP1/0攻/Agility0加速、真实Until及已有金/元宝资格。争抢物确由正常Equip/Auto产生。49槽为旧容量资格，不注入竞争结果。完整setup曾存随机库test_qualification_setup，cleanup真实删除；永久证据为冻结测试源码+原日志/UID数量守恒断言，未声称独立保留49UID JSON。",
+    "origin": "两条origin_routes均指相同run/node/owner的既成路由资格，正常各origin slot1创建/票/Enter。隔离已确认奖励用于本层存取，不冒充运营合服过程或自然掉物；WS另验证自然事件路径。"
+  },
+  "failure_history": [
+    {
+      "attempt": "additional-1",
+      "classification": "new_test_vet_format_error",
+      "fact": "NodeID为string，t.Logf用%d导致build-fail，未进入Mongo用例；仅该格式改%s。原report/raw保留。"
+    },
+    {
+      "attempt": "early_unarchived_exploratory_unit_tool_return",
+      "classification": "synthetic_empty_fighter_refresh_boundary",
+      "fact": "最初两子例检查仓储不改身体失败；该helper没有玩家Fighter，通用asset刷新会clamp。仓储业务不改任何已穿属性，因此仓储完成路径明确不调用refreshPlayerStats；未声称主有效配置发生过回血/伤害。该轮仅工具返回，无完整输入冻结报告，不充当验收。"
+    }
+  ],
+  "limitations": [
+    "未运行全包，Root19646真实终态为最终业务依据；前三窄206前只205输入，其后新增并发测试文件，生产共同输入完全相同。",
+    "没有主特权赠送/主元宝铸币，未启自然付费渠道、仓库手续费、到期取款或自动合堆。",
+    "未验证容量/性能/手机真机；分页不是总仓容量承诺。",
+    "未改主服务/Creator/浏览器/主数据库，窄Mongo只随机新测试库并真实drop。",
+    "原四业务窄PASS之后仅旧技能经济测试末尾caller变动；最新单条窄PASS当前206。旧业务报告自身稳定，但不是当前全字节全包通过，最终以Root full2为准。"
+  ],
+  "root_full_go": "full1_terminal_failed_one_old_skill_case_preserved_full2_not_yet_run",
+  "source_files_implemented": [
+    "server/internal/devconfig/config.go",
+    "server/internal/devconfig/warehouses.go",
+    "server/internal/devconfig/warehouses_test.go",
+    "server/internal/persistence/assets.go",
+    "server/internal/persistence/store.go",
+    "server/internal/persistence/warehouses.go",
+    "server/internal/persistence/warehouses_test.go",
+    "server/internal/game/runtime.go",
+    "server/internal/game/asset_result.go",
+    "server/internal/game/warehouses.go",
+    "server/internal/game/warehouses_test.go",
+    "server/internal/integration/warehouses_test.go",
+    "server/internal/integration/warehouses_ws_test.go",
+    "server/internal/integration/warehouses_concurrency_test.go",
+    "shared/proto/assets.proto",
+    "shared/proto/protocol_manifest.json"
+  ],
+  "regression_review": {
+    "path": ".work/warehouses-20261030/server/skill-economy-regression-review.json",
+    "sha256": "62e8a659cad28e7090cffad9f835f1508b6ff1328a8482c00a10106bf10bb887"
+  },
+  "latest_narrow": {
+    "path": ".work/warehouses-20261030/server/skills-ready-1/report.json",
+    "sha256": "8abe100d8fc679af70a5cd76cda9b6c5dcc488eefa459e5b50b96a47c1f4d8eb"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "read_only": true,
+  "reviewed_source_sha256": "31ac3e5da97300a139fbb1e0e8148d7023532708de639d7e1f04a77be789d330",
+  "current_source_sha256": "648078da12bb5ee402290b2a5966f3d57b6e50b8fda393ba3231e88184e01ef8",
+  "only_changes": [
+    "go/full-1→go/full-2",
+    "client/full-1→client/full-3",
+    "creator/full-1→creator/full-3"
+  ],
+  "selected_attempts": {
+    "go": "2",
+    "client": "3",
+    "creator": "3"
+  },
+  "all_other_source_bytes_equal": true,
+  "script_executed": false,
+  "normal_wrapper_sha256": "ad2d17207dc327a905b29c56f3ff8fa90070cd2510341941301f05ff6ea0030c",
+  "normal_wrapper_only_change": "Creator selector full-2→full-3",
+  "preserved_before": {
+    ".work/warehouses-20261030/cutover.py": "ea67d08a2fd388d24eb9b2f6e83dd5c84574aab770a04c8b8c072fed7d0cd72f",
+    ".work/warehouses-20261030/browser/normal/run-01/run.py": "00f2da47fa7375e9798c7919b84051804a23937796f6d3565208624b51ac5510"
+  }
+}

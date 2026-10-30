@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -178,6 +178,26 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const version = longValue(item.itemVersion, stored);
         if (typeof item.locked !== 'boolean' || version.isNegative() || version.isZero()) return invalid('装备锁定需要原版本与明确动作');
         payload = { itemInstanceId: bytes16(item.itemInstanceId, stored), itemVersion: version, locked: item.locked, operation: operation(item.operation, stored) };
+    } else if (id === 40022) {
+        const item = record(input.value, ['scope', 'action', 'warehouseRevision', 'warehouseSlot', 'itemInstanceId', 'itemVersion', 'quantity', 'currency', 'amount', 'operation']);
+        const scope = uint32(item.scope), action = uint32(item.action), currency = uint32(item.currency);
+        const revision = longValue(item.warehouseRevision, stored), slot = longValue(item.warehouseSlot, stored),
+            version = longValue(item.itemVersion, stored), quantity = longValue(item.quantity, stored), amount = longValue(item.amount, stored);
+        let identity: Uint8Array;
+        if (stored) {
+            const tag = record(item.itemInstanceId, ['$type', 'hex']);
+            identity = tag.$type === 'Bytes16' && tag.hex === '' ? new Uint8Array(0) : bytes16(item.itemInstanceId, true);
+        } else identity = item.itemInstanceId instanceof Uint8Array && item.itemInstanceId.length === 0 ? new Uint8Array(0) : bytes16(item.itemInstanceId, false);
+        if (![1, 2].includes(scope) || ![1, 2, 3, 4, 5].includes(action) || [revision, slot, version, quantity, amount].some(value => BigInt(value.toString()) < 0n)
+            || BigInt(quantity.toString()) > 0x7fffffffffffffffn || BigInt(amount.toString()) > 0x7fffffffffffffffn) return invalid('仓库动作或64位字段无效');
+        if (action <= 2) {
+            if (identity.length !== 16 || version.isZero() || BigInt(version.toString()) >= 0x7fffffffffffffffn || quantity.isZero() || currency !== 0 || !amount.isZero()) return invalid('仓库存取需要明确原实例、版本及数量');
+        } else {
+            if (identity.length || !slot.isZero() || !version.isZero() || !quantity.isZero()) return invalid('仓库非物品动作不能混入物品字段');
+            if (action === 5 ? scope !== 1 || currency !== 0 || !amount.isZero() : scope !== 2 || ![1, 2].includes(currency) || amount.isZero()) return invalid('仓库币种或扩页范围无效');
+        }
+        payload = { scope, action, warehouseRevision: revision, warehouseSlot: slot, itemInstanceId: identity, itemVersion: version,
+            quantity, currency, amount, operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

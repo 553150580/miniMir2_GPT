@@ -1,0 +1,252 @@
+{
+  "started_at_utc": "2026-10-29T22:54:04.051220+00:00",
+  "passed": true,
+  "scope": "实际唯一表配置导出/投影与Python配置全套；不替代Go、GUI、Creator、业务或容量验收",
+  "input_source_sha256": {
+    "config/schema/catalog.json": "020904d334049b2c467d185984e41927d915791304ab6331a56de7123e6532cf",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "9f008a6dd6a55ccc23b3c3d6c3085c684f6d50e1875439f9313d5e42f57026f1",
+    "shared/proto/protocol_manifest.json": "64b0d32a49fdb0c537740f705ebe5e10cd2751622ee2ef092fe28fb044458d57",
+    "tools/config/edit_workbook.py": "98f3452f036568f43cbdbf414c086c2f6083fdeaa5f2ddab80fd01f44d625df9",
+    "tools/config/export_configs.py": "305104c57f0e1dabbd3e0fcb583437431292cd1b39bcdeb3de344517f367b35d",
+    "tools/config/generate_protocol.py": "b45346ce88ffe27fe43fef9c579cf7d3889577aee9c422191720d611bac82fee",
+    "tools/config/generate_schema_docs.py": "13e633e68ba0559810624613f67e1335d7bbd61e30ae711f6b8942eddf5d15f4",
+    "tools/config/source_locations.py": "1f757b1aadc60983ce419acd5674004f4736b140e7692570eaf8c93b78bbf6e5",
+    "tools/config/sync_bindings.py": "83d730cee3678766f0012e6e9bd402437cf58da44d4c986c72eb6384971cfafb",
+    "tools/config/test_edit_workbook.py": "a46e93e92de965d5cb50b4139a6e3ae6bda1e286b8cb194d5cbc7b5c1ef3abf5",
+    "tools/config/test_equipment_foundation.py": "eafa81a0ae3c864a003b116e533fa31dd74b6fbae0174753f70494e056861bc1",
+    "tools/config/test_equipment_recycling.py": "6355c7fa6459589c944cfea54aa374a4ad1d3fdef100f05d1cde3f6ff76daa6e",
+    "tools/config/test_export.py": "96a3e8f642bf8a72205a0646a6aa442975fbd57583bf106dc0dd4d73eee4ecd0",
+    "tools/config/test_first_loop.py": "d96c738ce308817213b7e6622a714013c94950b8557226e18d45c0b293ec92f7",
+    "tools/config/test_level_growth.py": "480b011d07ea2d0f7a24ca98a5606e8298ffecd9541ccc6a8c865455c84eca2d",
+    "tools/config/test_pet_runtime.py": "fe8c60163c5b997355e3d66cf224cc7cdb8e47b26e832a27318908331044ad52",
+    "tools/config/test_safe_zone_binding.py": "69ff91051b62cbfc5dbcd2cd7b8f401f0af9481c7a98d96ec326d8337d720a2c",
+    "tools/config/test_source_locations.py": "b43c30f66d6945178707f306536f44f2c36506111d7600b2bd7a9306797d9404",
+    "tools/config/test_source_map_projection.py": "0531e223bbd5d64daab28c5349e211d296a31a01173cbe01aba631fd213361d7",
+    "tools/config/test_summon_candidates.py": "c3fa19af5522fc4d8a2de505f44e255950b27da50d58141f6a0c30c9c5e17737",
+    "tools/config/test_teleport.py": "6a68d0e9c6fbedc1c2baea0d6cb8217c2fcda4845cd33ac13201e1f08049f464",
+    "tools/config/test_town_runtime.py": "2556f14b190d40c0ccb09d1d837d217b67b355e5c24a92d327095d095715136c",
+    "tools/config/test_warehouses.py": "f93266be4c2a9ce725c00737b9d8d7e4bf1c5f24382701810dba11295f455d12",
+    "tools/resources/prepare_first_loop.py": "1c9cf66b01134022574ac317fba100b3d47047bd48f2a3beb152aff1df792b5f",
+    "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+    "tools/resources/prepare_summon_candidates.py": "f42ba77ac91f2ca10eaef3387ce2ed6bdba91cc9e159b38d1ff21da6a6d25b05"
+  },
+  "commands": [
+    {
+      "name": "export",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/config/export_configs.py",
+        "--version",
+        "dev-warehouses-v0.23"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9364793000277132,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/export.stdout.txt",
+      "stdout_sha256": "2f94c5863d3dd9d4b85b7a7d339ec813f767646acd0927b9c242ca14fb7a2715",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/export.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sync-bindings",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/config/sync_bindings.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.20749730011448264,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/sync-bindings.stdout.txt",
+      "stdout_sha256": "feba6354f2f1737dae69e1747e44774e678fd8343425f81b7284f0ddb53111a7",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/sync-bindings.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fixture",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_first_loop.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7485809000208974,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/fixture.stdout.txt",
+      "stdout_sha256": "53574657918f96c1bd0e37c92a2c04b742dbb41d39ff919af84ff569206b4ddf",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/fixture.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "pet-candidates",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_pet_runtime.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.9123952998779714,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/pet-candidates.stdout.txt",
+      "stdout_sha256": "09f1de1c5320fde5c2784e39d785d3161cfc67eb04b0e1be85156ec74ee7f276",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/pet-candidates.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "summon-candidates",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_summon_candidates.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3893067000899464,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/summon-candidates.stdout.txt",
+      "stdout_sha256": "7810c3edb06733ba29ef8b104a57b7381161b1a0bf025bd8e33359b0778f88ed",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/summon-candidates.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "export-check",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/config/export_configs.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4501079998444766,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/export-check.stdout.txt",
+      "stdout_sha256": "8547821b808baa8604b75b4ae7f0e729a88eb65e781c7810eca90641c38c3a12",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/export-check.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "fixture-check",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_first_loop.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6991745000705123,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/fixture-check.stdout.txt",
+      "stdout_sha256": "f753a415490e2473d8ed1026b8f7d2eeee6f3693e31f3837bb0e0c6be6043b4b",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/fixture-check.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "pet-check",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_pet_runtime.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3649456000421196,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/pet-check.stdout.txt",
+      "stdout_sha256": "45cc9360c7563dfb090375ba8c1050800c91cb310d34fc2caf037c1ba1ded7ee",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/pet-check.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "summon-check",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/resources/prepare_summon_candidates.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3506513999309391,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/summon-check.stdout.txt",
+      "stdout_sha256": "97ee3957a4a86f96448a836e9581cc3a1a8c7ccae4c076479443cec1faf3af82",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/summon-check.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "bindings-check",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "node",
+        "tools/config/verify_bindings.mjs"
+      ],
+      "exit_code": 0,
+      "seconds": 4.3320499998517334,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/bindings-check.stdout.txt",
+      "stdout_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/bindings-check.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "python-full",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/config",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "seconds": 60.25597360008396,
+      "stdout": ".work/warehouses-20261030/configuration-run-01/python-full.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ".work/warehouses-20261030/configuration-run-01/python-full.stderr.txt",
+      "stderr_sha256": "8e385094e7f25fd14b79fec6ceb97d42792be8f2669a76b5f8fbdd132659be74"
+    }
+  ],
+  "input_source_sha256_after": {
+    "config/schema/catalog.json": "020904d334049b2c467d185984e41927d915791304ab6331a56de7123e6532cf",
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "9f008a6dd6a55ccc23b3c3d6c3085c684f6d50e1875439f9313d5e42f57026f1",
+    "shared/proto/protocol_manifest.json": "64b0d32a49fdb0c537740f705ebe5e10cd2751622ee2ef092fe28fb044458d57",
+    "tools/config/edit_workbook.py": "98f3452f036568f43cbdbf414c086c2f6083fdeaa5f2ddab80fd01f44d625df9",
+    "tools/config/export_configs.py": "305104c57f0e1dabbd3e0fcb583437431292cd1b39bcdeb3de344517f367b35d",
+    "tools/config/generate_protocol.py": "b45346ce88ffe27fe43fef9c579cf7d3889577aee9c422191720d611bac82fee",
+    "tools/config/generate_schema_docs.py": "13e633e68ba0559810624613f67e1335d7bbd61e30ae711f6b8942eddf5d15f4",
+    "tools/config/source_locations.py": "1f757b1aadc60983ce419acd5674004f4736b140e7692570eaf8c93b78bbf6e5",
+    "tools/config/sync_bindings.py": "83d730cee3678766f0012e6e9bd402437cf58da44d4c986c72eb6384971cfafb",
+    "tools/config/test_edit_workbook.py": "a46e93e92de965d5cb50b4139a6e3ae6bda1e286b8cb194d5cbc7b5c1ef3abf5",
+    "tools/config/test_equipment_foundation.py": "eafa81a0ae3c864a003b116e533fa31dd74b6fbae0174753f70494e056861bc1",
+    "tools/config/test_equipment_recycling.py": "6355c7fa6459589c944cfea54aa374a4ad1d3fdef100f05d1cde3f6ff76daa6e",
+    "tools/config/test_export.py": "96a3e8f642bf8a72205a0646a6aa442975fbd57583bf106dc0dd4d73eee4ecd0",
+    "tools/config/test_first_loop.py": "d96c738ce308817213b7e6622a714013c94950b8557226e18d45c0b293ec92f7",
+    "tools/config/test_level_growth.py": "480b011d07ea2d0f7a24ca98a5606e8298ffecd9541ccc6a8c865455c84eca2d",
+    "tools/config/test_pet_runtime.py": "fe8c60163c5b997355e3d66cf224cc7cdb8e47b26e832a27318908331044ad52",
+    "tools/config/test_safe_zone_binding.py": "69ff91051b62cbfc5dbcd2cd7b8f401f0af9481c7a98d96ec326d8337d720a2c",
+    "tools/config/test_source_locations.py": "b43c30f66d6945178707f306536f44f2c36506111d7600b2bd7a9306797d9404",
+    "tools/config/test_source_map_projection.py": "0531e223bbd5d64daab28c5349e211d296a31a01173cbe01aba631fd213361d7",
+    "tools/config/test_summon_candidates.py": "c3fa19af5522fc4d8a2de505f44e255950b27da50d58141f6a0c30c9c5e17737",
+    "tools/config/test_teleport.py": "6a68d0e9c6fbedc1c2baea0d6cb8217c2fcda4845cd33ac13201e1f08049f464",
+    "tools/config/test_town_runtime.py": "2556f14b190d40c0ccb09d1d837d217b67b355e5c24a92d327095d095715136c",
+    "tools/config/test_warehouses.py": "f93266be4c2a9ce725c00737b9d8d7e4bf1c5f24382701810dba11295f455d12",
+    "tools/resources/prepare_first_loop.py": "1c9cf66b01134022574ac317fba100b3d47047bd48f2a3beb152aff1df792b5f",
+    "tools/resources/prepare_pet_runtime.py": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
+    "tools/resources/prepare_summon_candidates.py": "f42ba77ac91f2ca10eaef3387ce2ed6bdba91cc9e159b38d1ff21da6a6d25b05"
+  },
+  "python_tests": 140,
+  "finished_at_utc": "2026-10-29T22:55:14.040583+00:00",
+  "generated_sha256": {
+    "config/development/first-loop.json": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+    "client/assets/resources/development/gameplay.json": "602edda1d9135b037c2bb6f0f6f9cb0c5f1d8d41e4bc17662532c574d839c3e0",
+    "config/development/pet-runtime-candidates.json": "fea8541439bdf403992cc84eeee59a173cce944a55b67fb2c8de07ce4331cb03",
+    "config/development/summon-candidates.json": "f63dfd745b97fc548d761773b9ed763b41d1a16ed2362e16d740c139f7a26054",
+    "config/releases/preview_current.json": "d2dbfd027963c8f1271dec6ab31afe7df43d0c42e6e028fa2ad42db287c94f7a",
+    "config/reports/配置校验报告.json": "0577616bba05a601a7e0282f85538693e9eb951025f34270219404dedbb194d2"
+  }
+}

@@ -488,6 +488,8 @@ func (w *worker) command(c command) {
 		w.materialCast(r, c.frame)
 	case p.MsgC2SSkillAssetPreview:
 		w.skillAssetPreview(r, c.frame)
+	case p.MsgC2SWarehouseQuery:
+		w.warehouseQuery(r, c.frame)
 	case p.MsgC2SMoveIntent:
 		var q pb.MoveIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 || q.CancelNavigation && (q.Destination != nil || q.ReleaseJoystick || q.Direction != 0) {
@@ -576,7 +578,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -854,6 +856,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	reviveID := ""
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SWarehouseAction:
+		var x pb.WarehouseAction
+		if proto.Unmarshal(f.Payload, &x) != nil {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.Warehouse = "warehouse", x.Operation, &x
 	case p.MsgC2SSetAutoRecycle:
 		var x pb.SetAutoRecycleRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || x.Policy == nil {
@@ -988,7 +997,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction:
 		return true
 	}
 	return false
@@ -996,6 +1005,11 @@ func economic(id uint16) bool {
 func operationContext(f wire.Frame) *pb.OperationContext {
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SWarehouseAction:
+		q := &pb.WarehouseAction{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SSetAutoRecycle:
 		q := &pb.SetAutoRecycleRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {

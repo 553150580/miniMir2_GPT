@@ -1,0 +1,22 @@
+{
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+    "go",
+    "test",
+    "-json",
+    "-race",
+    "-p",
+    "1",
+    "./internal/devconfig",
+    "./internal/persistence",
+    "./internal/game",
+    "-run",
+    "^TestWarehouse",
+    "-count=1",
+    "-timeout=180s"
+  ],
+  "cwd": "D:\\A_Claude\\miniMir2_GPT",
+  "mongo": false,
+  "business_deadlines_changed": false
+}

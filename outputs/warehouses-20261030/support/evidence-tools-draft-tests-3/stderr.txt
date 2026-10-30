@@ -1,0 +1,12 @@
+test_actual_index_blob_collect_is_bytes_default_is_digest (__main__.EvidenceSafetyTests.test_actual_index_blob_collect_is_bytes_default_is_digest) ... ok
+test_actual_recorded_successful_fragments_pass_item_and_fresh_revision_gates (__main__.EvidenceSafetyTests.test_actual_recorded_successful_fragments_pass_item_and_fresh_revision_gates) ... ok
+test_archive_applies_only_to_patched_temporary_target_and_roundtrips_raw (__main__.EvidenceSafetyTests.test_archive_applies_only_to_patched_temporary_target_and_roundtrips_raw) ... ok
+test_client_protocol_report_path_matches_actual_producer_argv_exactly (__main__.EvidenceSafetyTests.test_client_protocol_report_path_matches_actual_producer_argv_exactly) ... ok
+test_pathmap_identity_gzip_and_direct_index_preserve_original_crlf (__main__.EvidenceSafetyTests.test_pathmap_identity_gzip_and_direct_index_preserve_original_crlf) ... ok
+test_unreviewed_gui_contract_cannot_pass_even_if_reports_absent (__main__.EvidenceSafetyTests.test_unreviewed_gui_contract_cannot_pass_even_if_reports_absent) ... ok
+test_withdraw_cannot_leave_same_uid_in_loaded_warehouse_and_bag (__main__.EvidenceSafetyTests.test_withdraw_cannot_leave_same_uid_in_loaded_warehouse_and_bag) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.275s
+
+OK

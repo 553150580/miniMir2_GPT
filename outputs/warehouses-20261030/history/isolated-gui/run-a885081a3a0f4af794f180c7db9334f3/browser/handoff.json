@@ -1,0 +1,9 @@
+{
+  "browser_passed": false,
+  "report_sha256": "97f73f56ee558b7c196cb8a0163aa1b5df5531d3afd4289730355289616d6cc0",
+  "visual_review_sha256": "f80a0cc6ae923a94c0791ae1b5e29c4e97c64f303663ab2769169d2d2c510629",
+  "reviewed_screenshots": 11,
+  "scope": "第二真实隔离失败，清理/主服务保持由原父report证明。原子存入前半成功不等于完整双仓通过。",
+  "current_issue": "List即时恢复offset未同步刷新可见池",
+  "root_followup": "新完整client3/Creator3后另起新UUID，不改本报告或原图"
+}

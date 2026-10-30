@@ -1,0 +1,139 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "server-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/recovery-before-publication/server-before.stdout.txt",
+      "stderr": ".work/warehouses-20261030/recovery-before-publication/server-before.stderr.txt",
+      "stdout_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "mongo-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/recovery-before-publication/mongo-before.stdout.txt",
+      "stderr": ".work/warehouses-20261030/recovery-before-publication/mongo-before.stderr.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-start-rule22",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "start"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/recovery-before-publication/server-start-rule22.stdout.txt",
+      "stderr": ".work/warehouses-20261030/recovery-before-publication/server-start-rule22.stderr.txt",
+      "stdout_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "mongo-after",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/recovery-before-publication/mongo-after.stdout.txt",
+      "stderr": ".work/warehouses-20261030/recovery-before-publication/mongo-after.stderr.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "只恢复本任务已退出的rule22后端；不修改主静态包、不重启Mongo、不改永久配置",
+  "started_at_utc": "2026-10-30T04:49:13.755234+00:00",
+  "mongo_before": {
+    "backend": "windows_native",
+    "running": true,
+    "listener_verified": true,
+    "ownership_verified": true,
+    "pid": 5640,
+    "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+    "version": "8.0.34",
+    "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+    "project_key": "1e81949e1d3b",
+    "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "endpoint_verified": true,
+    "production_ready": false
+  },
+  "restored_backend": {
+    "running": true,
+    "pid": 18548,
+    "run_id": "3b58943d-5582-44d4-8e6e-b5d47d9cc384",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+        "instance": "be2af7a3e33c1b8bae5ead600304839b",
+        "mode": "account",
+        "rule_version": 22,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+        "instance": "2e06b88e6b4569daca8f56801d20f406",
+        "mode": "game",
+        "rule_version": 22,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+        "instance": "35844287a05430320526180edaa9ea3a",
+        "mode": "gm",
+        "rule_version": 22,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  },
+  "disk_rule23_restored": true,
+  "mongo_after": {
+    "backend": "windows_native",
+    "running": true,
+    "listener_verified": true,
+    "ownership_verified": true,
+    "pid": 5640,
+    "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+    "version": "8.0.34",
+    "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+    "project_key": "1e81949e1d3b",
+    "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "endpoint_verified": true,
+    "production_ready": false
+  },
+  "preserved_preflight_failure": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/report.json",
+  "preserved_preflight_sha256": "38ec4a72bc0ac2df36c1b3bb7a3f29c4c4fdaba7547c1f8d00c5cb876af03a04",
+  "finished_at_utc": "2026-10-30T04:49:29.286347+00:00"
+}

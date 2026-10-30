@@ -1,0 +1,29 @@
+{
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "--test",
+    "client/tests/app/list_scroll_restore.test.cjs"
+  ],
+  "exit_code": 1,
+  "before": {
+    "client/assets/scripts/ui/List.ts": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c",
+    "client/assets/scripts/app/GameWarehouse.ts": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e",
+    "client/tests/app/list_scroll_restore.test.cjs": "8b899d71bbc49e235066e8827107e8718f57f7c6fd7c62de92b8834dcb830115",
+    "client/tests/app/helpers/list_restore_harness.cjs": "73cf29ebb0879196eaf2198d57bf4ce995e34a96839d56d5b929f481332838e5"
+  },
+  "after": {
+    "client/assets/scripts/ui/List.ts": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c",
+    "client/assets/scripts/app/GameWarehouse.ts": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e",
+    "client/tests/app/list_scroll_restore.test.cjs": "8b899d71bbc49e235066e8827107e8718f57f7c6fd7c62de92b8834dcb830115",
+    "client/tests/app/helpers/list_restore_harness.cjs": "73cf29ebb0879196eaf2198d57bf4ce995e34a96839d56d5b929f481332838e5"
+  },
+  "stdout_sha256": "ec36e62160d245aaff40bc2161cf3df6b0001641d1206bf9790b1159f3423db4",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "scope": "真实List/仓库控制器+锁定引擎即时滚动方法，无DB/Creator；先前探索的contentSize缺失是替身错误，不作为本产品反例"
+}

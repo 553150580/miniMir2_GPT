@@ -1,0 +1,77 @@
+{
+  "started_at_utc": "2026-10-30T04:39:23.862435+00:00",
+  "commands": [
+    {
+      "name": "mongo-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 2.631,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/mongo-before.stdout.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr": ".work/warehouses-20261030/runtime-control/mongo-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 0.197,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/server-before.stdout.txt",
+      "stdout_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d",
+      "stderr": ".work/warehouses-20261030/runtime-control/server-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 0.211,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-before.stdout.txt",
+      "stdout_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "phase": "preflight",
+  "passed": false,
+  "scope": "候选真实产物切换及本任务受控起停；Mongo仅status，不接来源服或其它服务",
+  "other_ports_touched": [],
+  "rollback_attempted": false,
+  "rollback_restored": false,
+  "saved_layout_changes": {
+    "unchanged_saved_layouts": 9,
+    "intentionally_extended_layouts": [
+      "client/assets/scenes/Game.scene"
+    ],
+    "original_scene_objects": 1191,
+    "appended_scene_objects": 182,
+    "old_object_fields_preserved_except_declared_child_append": true
+  },
+  "error": {
+    "type": "URLError",
+    "message": "<urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>",
+    "phase": "preflight"
+  },
+  "finished_at_utc": "2026-10-30T04:39:54.431538+00:00"
+}

@@ -56,8 +56,8 @@ func TestEquipmentSummonRaw17AndMarshalRoundtripRemainNeutral(t *testing.T) {
 		if e != nil {
 			t.Fatal(e)
 		}
-		if cfg.Fixture.RuleVersion != 22 {
-			t.Fatal("必须保持主rule22")
+		if cfg.Fixture.RuleVersion != 23 {
+			t.Fatal("必须保持主rule23")
 		}
 		if _, found := cfg.Fixture.Skill(17); found {
 			t.Fatal("主profile意外开放17")

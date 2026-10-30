@@ -1,0 +1,15 @@
+{
+  "head": "d2dab71909d4c389482be9b95d9594db76310eeb",
+  "recorded_at_utc": "2026-10-29T22:51:15.670268+00:00",
+  "files": {
+    "outputs/development-prep-20261026/架构配置.xlsx": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
+    "outputs/development-prep-20261026/玩法配置.xlsx": "96c8c4401b92b4908642fef8081e8f4a1d1bf0f5187ef8e54d08f0b1915500e8",
+    "config/schema/catalog.json": "132fb5043dd0192f75090a74cfa2888aa01d1b8071fb730aa0f40ed678346012",
+    "tools/resources/prepare_first_loop.py": "2d610f9209033a4421beee2a6f56752945c214a237c214493778087369ed0f83",
+    "tools/resources/prepare_summon_candidates.py": "89436a664e86bbda2040891c25ce77d0cb5a206a0b141641954527e598b576e3",
+    "config/development/first-loop.json": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+    "client/assets/resources/development/gameplay.json": "62c093b02e46712b3c2d25380d19650f5bdd9f8f5907c017de4fdc75b5202b78",
+    "config/releases/preview_current.json": "ced0ff46e68db15141054a0569a5fd4b3ec85db4e8d2f62bde688623dbfd410f",
+    ".gitattributes": "d278504d449285e20319dfb09dbc1d8e0ca6c7a9ec414efa8b475154af285bec"
+  }
+}

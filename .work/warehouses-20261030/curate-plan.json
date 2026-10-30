@@ -1,0 +1,358 @@
+{
+  "schema_version": 1,
+  "status": "draft_no_apply_no_formal_report_created",
+  "baseline": "d2dab71909d4c389482be9b95d9594db76310eeb",
+  "output": "outputs/warehouses-20261030",
+  "formal": "docs/双仓储与五角色并发阶段验收.json",
+  "private_sources": [
+    ".work/warehouses-20261030/adapt_current_go_tests.py",
+    ".work/warehouses-20261030/author_configuration.py",
+    ".work/warehouses-20261030/inspect_configuration.py",
+    ".work/warehouses-20261030/run_configuration_checks.py",
+    ".work/warehouses-20261030/build_candidate.py",
+    ".work/warehouses-20261030/stage_checks.py",
+    ".work/warehouses-20261030/cutover.py",
+    ".work/warehouses-20261030/finalize_evidence.py",
+    ".work/warehouses-20261030/verify_index.py",
+    ".work/warehouses-20261030/stage_verified.py",
+    ".work/warehouses-20261030/source-allowlist.json",
+    ".work/warehouses-20261030/curate-plan.json",
+    ".work/warehouses-20261030/test_evidence_tools.py",
+    ".work/warehouses-20261030/update_documents.py",
+    ".work/warehouses-20261030/browser/run_static.py",
+    ".work/warehouses-20261030/prepare_final_selectors.py",
+    ".work/warehouses-20261030/add_scroll_engine_input.py",
+    ".work/warehouses-20261030/record_visual_review.py",
+    ".work/warehouses-20261030/recover_old_preview.py",
+    ".work/warehouses-20261030/record_preflight_history.py"
+  ],
+  "history_reports": [
+    {
+      "path": ".work/warehouses-20261030/go/full-1/report.json",
+      "scope": "historical_full_go_failed_one_skill_economy_caller_guard_not_observed_not_production_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/additional-1/report.json",
+      "scope": "historical_additional_vet_failure_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/narrow-1/report.json",
+      "scope": "historical_author_narrow_79_before_component_scope_defence"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests/report.json",
+      "scope": "historical_pure_wrong_expected_database_length58_actual60_not_product_failure"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-2/report.json",
+      "scope": "historical_pure12_before_extra_source_and_cleanup_guards"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-final/report.json",
+      "scope": "historical_pure14_before_full_go_command_guard"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/full-1/report.json",
+      "scope": "historical_full_client492_before_two_product_copy_edits"
+    },
+    {
+      "path": ".work/warehouses-20261030/creator/full-1/report.json",
+      "scope": "historical_real_creator384.77_before_two_product_copy_edits_not_final_candidate"
+    },
+    {
+      "path": ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/report.json",
+      "scope": "historical_actual_isolated_gui_failed_partial_slot_touch_cleanup_pass_database_retained_not_business_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/report.json",
+      "scope": "historical_actual_browser_target31_overscan_direction_failure_and_personal_world_damage_not_final_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/full-2/report.json",
+      "scope": "historical_actual_full_client492_before_List_product_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/creator/full-2/report.json",
+      "scope": "historical_actual_Creator292.44_candidate_before_List_product_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/list-restore-before/report.json",
+      "scope": "actual_product_List_restore_four_red_before_fixed_source_no_report_rewrite"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/static-2/report.json",
+      "scope": "historical_QA_tool_static_only_before_current_receipt_conservation_gates"
+    },
+    {
+      "path": ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/report.json",
+      "scope": "actual_second_isolated_parent_business_fail_cleanup_true_database_retained"
+    },
+    {
+      "path": ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/report.json",
+      "scope": "actual_second_GUI_fail_current_page_pool_blank_after_last_store_no_full_GUI_pass"
+    }
+  ],
+  "history_files": [
+    {
+      "path": ".work/warehouses-20261030/evidence-tool-history/before-package-skip-fix/verify_index.py",
+      "scope": "historical_private_index_reader_wrongly_rejected_8_packages_without_tests_not_skipped_test_cases_not_product_failure"
+    },
+    {
+      "path": ".work/warehouses-20261030/evidence-tool-history/before-stdlib-xlsx/finalize_evidence.py",
+      "scope": "historical_private_finalizer_rejected_uninstalled_openpyxl_dependency_then_changed_to_existing_stdlib_xlsx_reader_not_product_failure"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/history/before-skill-economy-ready/go-frozen.json",
+      "scope": "historical_original_before_test_caller_only_adaptation"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/history/before-skill-economy-ready/handoff.json",
+      "scope": "historical_original_before_test_caller_only_adaptation"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/history/before-skill-economy-ready/skill_assets_test.go",
+      "scope": "historical_original_before_test_caller_only_adaptation"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/tools/client/verify_warehouses_browser.cjs",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/tools/client/test_warehouses_browser.cjs",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/client/assets/scripts/app/WarehouseModel.ts",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/client/assets/scripts/app/GameWarehouse.ts",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/static-1/report.json",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/report-contract.json",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/client/production-freeze.json",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/preserved.json",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/first-isolated-df974/normal-run-01.py",
+      "scope": "preserved_original_first_failed_gui_tool_and_two_product_copy_source_not_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/report-contract-2.json",
+      "scope": "historical_producer_contract2_not_final_actual_GUI_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/source-sha256.json",
+      "scope": "exact_original_QA_sources_before_receipt_conservation_gate_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/verify_warehouses_browser.cjs",
+      "scope": "exact_original_QA_source_for_second_actual_failed_GUI"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/test_warehouses_browser.cjs",
+      "scope": "exact_original_QA_tests_before_receipt_conservation_gate_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/selectors-before/cutover.py",
+      "scope": "original_selector2_source_not_executed_final_publication"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/selectors-before/browser/normal/run-01/run.py",
+      "scope": "original_normal_GUI_creator2_selector_not_executed_final_GUI"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-scroll-3/before/.work/warehouses-20261030/stage_checks.py",
+      "scope": "original_exact_9engine_private_checker_before_scroll_engine_append"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-scroll-3/before/tools/client/prepare_warehouses_qa.py",
+      "scope": "original_exact_045784_helper_before_single_scroll_engine_append"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/list-restore-before/client/assets/scripts/app/GameWarehouse.ts",
+      "scope": "actual_product_List_restore_four_red_source_before_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/list-restore-before/client/assets/scripts/ui/List.ts",
+      "scope": "actual_product_List_restore_four_red_source_before_fix"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/list-restore-before/client/tests/app/list_scroll_restore.test.cjs",
+      "scope": "actual_product_List_restore_red_test_source"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/list-restore-before/client/tests/app/helpers/list_restore_harness.cjs",
+      "scope": "actual_product_List_restore_red_harness_source"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/report.json",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/relocation.json",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stdout.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stderr.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stdout.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stderr.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stdout.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    },
+    {
+      "path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stderr.txt",
+      "scope": "actual_failed_preflight_relocated_original_raw_bytes_explicit_relocation_map_not_pass"
+    }
+  ],
+  "support_reports": [
+    {
+      "path": ".work/warehouses-20261030/recovery-before-publication/report.json",
+      "scope": "actual_owned_rule22_backend_recovery_before_new_publication_disk23_restored_mongo_identity_unchanged_not_uptime_acceptance"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/pure-1/report.json",
+      "scope": "author_narrow205_not_full_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/store-1/report.json",
+      "scope": "author_real_mongo_narrow205_not_full_current"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/ws-1/report.json",
+      "scope": "author_real_ws_narrow205_49_qualification_source_and_raw_assertions_only"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/additional-2/report.json",
+      "scope": "author_real_concurrency_mongo_http206_before_test_caller_change"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/skills-ready-1/report.json",
+      "scope": "author_original_ws_test_caller_fix206_no_3202_observed_in_this_sample"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/narrow-2/report.json",
+      "scope": "author_component81_original_UI_source_before_product_copy_edit_not_final_full"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-final-2/report.json",
+      "scope": "historical_qa_tool14_pure_before_single_scroll_engine_append_not_runtime_validation"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/static-1/report.json",
+      "scope": "QA_static_tool_pure_only_not_GUI"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-scroll-3/report.json",
+      "scope": "original14_qa_safety_and_prepare_pass_only_one_scroll_engine_file_added_no_runtime"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/narrow-3/report.json",
+      "scope": "author_actual_List_GW88_narrow_repo32_stable_engine_current_only_not_original_external_before"
+    },
+    {
+      "path": ".work/warehouses-20261030/evidence-tools-draft-tests-3/report.json",
+      "scope": "private_7_pure_reader_gzip_EOL_argv_current_bag_page_fresh_revision_tests_not_product_or_stage_full_check"
+    }
+  ],
+  "support_files": [
+    {
+      "path": ".work/warehouses-20261030/server/go-frozen.json",
+      "scope": "author_or_peer_limited_scope"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/handoff.json",
+      "scope": "author_or_peer_limited_scope"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/skill-economy-regression-review.json",
+      "scope": "author_or_peer_limited_scope"
+    },
+    {
+      "path": ".work/warehouses-20261030/server/qa-tool-peer-review.json",
+      "scope": "author_or_peer_limited_scope"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/report-contract.json",
+      "scope": "frozen_actual_gui_producer_contract_not_execution"
+    },
+    {
+      "path": ".work/warehouses-20261030/cutover-selector-review.json",
+      "scope": "source_transition_explanation_exact_bytes_not_new_business_test"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/production-freeze-text-fix.json",
+      "scope": "source_transition_explanation_exact_bytes_not_new_business_test"
+    },
+    {
+      "path": ".work/warehouses-20261030/cutover-selector-review-3.json",
+      "scope": "exact_go2_client3_creator3_selector_inverse_to_reviewed31ac_not_execution"
+    },
+    {
+      "path": ".work/warehouses-20261030/client/production-freeze-list-fix.json",
+      "scope": "actual_list_restore_product_red_green_author_narrow_not_full3_or_GUI"
+    },
+    {
+      "path": ".work/warehouses-20261030/browser/receipt-conservation-review.json",
+      "scope": "QA_evidence_gate_only_raw15_node_pass_original_wrapper_misfalse_preserved_not_product_fix"
+    }
+  ],
+  "excluded": [
+    "entire .work",
+    "client-project",
+    "library",
+    "temp",
+    "build/candidate/served/backup artifacts",
+    "node_modules",
+    "executables",
+    "WIL/WIX/WZL/WZX/PAK",
+    "source DB/account data",
+    "passwords/tokens",
+    "external engine and font bodies",
+    "entire old phase archive"
+  ],
+  "retained_instead": [
+    "explicit reports/logs/screenshots/source code",
+    "candidate file manifest only",
+    "gzip raw+wrapper SHA/bytes",
+    "source/qualification semantics and limitation alongside original failures"
+  ],
+  "pending_contracts": [
+    "selected Go2/client3/Creator3 real terminals/current snapshots, exact reverse reviewed cutover selector3",
+    "current GUI producer contract3/static3; both selected successful actual GUI terminals and images still mandatory",
+    "runtime-control actual22_to23 with Mongo9 same identities",
+    "no full stage check/apply executed by helper author"
+  ],
+  "git_attributes": {
+    "base_sha256": "d278504d449285e20319dfb09dbc1d8e0ca6c7a9ec414efa8b475154af285bec",
+    "append": "outputs/warehouses-20261030/** -text\n",
+    "new_meta": "source LF, no extra EOL ignore"
+  },
+  "qualification_limit": "WS49资格只有对应测试源和raw断言，没有逐UID原JSON；独立GUI资格若实际执行，另归其真实before/after文件",
+  "publication_timing": "creator.seconds含真实Creator进程和后段SHA；wrapper还含构建前SHA，不称纯编译时长"
+}

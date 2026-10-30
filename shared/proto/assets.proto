@@ -212,3 +212,48 @@ message HostingReport {
   int64 pooled_experience = 17;
 }
 
+
+// scope：1角色个人仓，2账号与永久入口共享仓。客户端不提供仓库归属键。
+// 所有仓位从0开始，limit必须明确且不超过当前配置的分页窗口。
+message WarehouseQuery { uint32 scope = 1; uint64 start_slot = 2; uint32 limit = 3; }
+message WarehouseItem { uint64 slot = 1; ItemView item = 2; }
+message WarehousePage {
+  RoleKey role = 1;
+  uint32 scope = 2;
+  uint64 revision = 3;
+  uint64 capacity = 4;
+  uint64 start_slot = 5;
+  uint32 limit = 6;
+  repeated WarehouseItem items = 7;
+  int64 gold = 8;
+  int64 yuanbao_units = 9;
+}
+// action：1存物、2取物、3存币、4取币、5个人扩页；currency：1金币、2元宝整数单位。
+// 存取物指定原完整实例及数量；不自动合并其它堆叠。其它动作必须清空无关字段。
+message WarehouseAction {
+  uint32 scope = 1;
+  uint32 action = 2;
+  uint64 warehouse_revision = 3;
+  uint64 warehouse_slot = 4;
+  bytes item_instance_id = 5;
+  uint64 item_version = 6;
+  int64 quantity = 7;
+  uint32 currency = 8;
+  int64 amount = 9;
+  OperationContext operation = 10;
+}
+message WarehouseItemChange { uint64 slot = 1; ItemView before = 2; ItemView after = 3; }
+// 仅已提交回执的事实，不从钱包差值猜结果；健康重入不补播历史。
+// warehouse_revision/余额为原提交截面，客户端不得用旧回执覆盖较新的页面。
+message WarehouseActionResult {
+  RoleKey role = 1;
+  uint64 role_revision = 2;
+  bytes op_id = 3;
+  uint32 scope = 4;
+  uint32 action = 5;
+  uint64 warehouse_revision = 6;
+  uint64 capacity = 7;
+  repeated WarehouseItemChange changes = 8;
+  int64 gold = 9;
+  int64 yuanbao_units = 10;
+}

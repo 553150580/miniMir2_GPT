@@ -1,0 +1,23 @@
+✔ 实际rule23目录、五项配置、16个PB观察类型及保存仓库节点预检，不启动Chrome (11.4107ms)
+✔ 真实GameConnection编码与PB往返保留warehouse/slot/version/quantity全部Long，原回执变化可读 (4.9288ms)
+✔ Query拒绝观察实际原40020/3504，不能误认正常Page40021或资产40005 (0.7395ms)
+✔ HTTP-only正常10005/10006创角匹配原职业0和2，认证正文/非本端口先过滤，不记录凭据 (1.9235ms)
+✔ 页面与原件观察保留显式零、原来源/锁，部分数量与完整版本分开核验 (3.5241ms)
+✔ overscan首行虽在复用池但在Mask上方时必须向前回滚，不能拿pool最小index当可见首行 (0.6083ms)
+✔ 所有waitForFunction同步布尔，不把async Promise当就绪；选取等待实际原UID/仓位 (35.4503ms)
+✔ 触屏选择采样在找点之后紧邻touch，业务不私调且完整loaded JsonAsset原字节只按Node语义对比 (0.971ms)
+✔ 真实观察合同支持整件/部分存取、货币双向及扩页，全部只核当前背包和已加载页 (17.576ms)
+✔ 全取原UID仍留在仓且同时回背包必须拒绝，不能只认原receipt after=null (1.6801ms)
+✔ receipt before必须等于真实前页，不能只相信自述原件或缺少的仓位 (1.1887ms)
+✔ 不相干原件、余堆身份与数量、当前UID唯一都属于守恒，不能接受旁路吞物或复制 (2.2126ms)
+✔ fresh请求与40005/40023必须同request binding op role scope action，角色和仓版本都严格+1 (1.8149ms)
+✔ 币种/扩页不能混入物品变化、扣绑定钱包、误动其它币种或发生负余额 (6.7916ms)
+✔ 方向计算失败前已保留实际rows/view/offset，诊断失败独立保留而不覆盖原错误 (0.1928ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 549.4291

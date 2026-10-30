@@ -1,0 +1,7 @@
+{
+  "scope": "second isolated GUI QA source bytes before receipt conservation correction",
+  "sha256": {
+    "tools/client/verify_warehouses_browser.cjs": "0ce913182d4d872fe20838329522f39ec16d5417a897a24006cbe6d7f0effa85",
+    "tools/client/test_warehouses_browser.cjs": "d0b56003f23b4ccaa4563996b83c31dc1ad50474549e0b66634d1e8ad7807bf2"
+  }
+}

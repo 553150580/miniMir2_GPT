@@ -36,7 +36,10 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 	if err == nil && role.Revision >= r.Role.Revision {
 		r.Role = role
 		transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
-		w.refreshPlayerStats(r)
+		// 仓储只迁移背包及仓库，不改变已穿属性或任何临时身体状态。
+		if q.Kind != "warehouse" {
+			w.refreshPlayerStats(r)
+		}
 	}
 	if err != nil {
 		result.ErrorCode = persistence.Code(err)
@@ -56,6 +59,11 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 	w.assets(r)
 	if err == nil && result.ErrorCode == 0 {
 		w.equipmentRecycleResult(r, receipt)
+		if receipt.Warehouse != nil && (receipt.Warehouse.Scope != persistence.WarehouseShared || r.Role.PrivilegeUntil.After(time.Now())) {
+			if observed := receipt.Warehouse.Proto(r.Role, receipt); observed != nil {
+				w.send(r, p.MsgS2CWarehouseActionResult, f.Request, observed)
+			}
+		}
 	}
 	w.snapshot(r)
 	if revived {

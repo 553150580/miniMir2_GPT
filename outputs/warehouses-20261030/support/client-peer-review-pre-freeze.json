@@ -1,0 +1,30 @@
+{
+  "status": "read_only_no_confirmed_normal_entry_blocker_pending_author_freeze",
+  "scope": "完整仓储客户端接线静读；未执行测试、环境或编辑作者文件",
+  "source_sha256": {
+    "client/assets/scripts/app/WarehouseModel.ts": "a560212f3643687210616a0a9b8b1b52e187bf154841ccbccb8d4af03dc5bb52",
+    "client/assets/scripts/app/GameWarehouse.ts": "93205bc0df6bc28a677ef251abbdc0a49c6a37c14381c848fad3b8bffaf5bfd3",
+    "client/assets/scripts/app/GameConnection.ts": "7c83cc7d5fbc5a31a7e49b5e5102b58f1dcbd3ebf59dbf22f485a8b578043d3d",
+    "client/assets/scripts/app/PendingOperations.ts": "6894725c6b687226e2eff5049faa5ea3160400e6eedf21a2a5afd4e144784197",
+    "client/assets/scripts/app/AppRoot.ts": "96d89e45488eb9f78267e5f55ffc072feb67c6d0d3d0bb362bcfd9e56b44f82a",
+    "client/assets/scripts/app/GameSession.ts": "c684c84de2c60552a4bce70b2f3ab6c46c540d69086ae4fa805f40e16dd81848"
+  },
+  "checked": [
+    "40022 request resolves by40005 terminal, not optional40023",
+    "persist original economic journal before send; unknown keeps original operation",
+    "entry/socket/request identity checks before original-op clearing",
+    "WarehousePager binds full attachment and query ticket; receipt does not write pages",
+    "Long quantities/currency exact; yuanbao display10 internal units; expansion only unbound wallet",
+    "fixed UI uses saved nodes/components; only dynamic List rows"
+  ],
+  "finding_and_erratum": [
+    {
+      "initial_claim": "shared40022 in flight can switch personal tab and late3504 misses shared cache cleanup",
+      "status": "normal_UI_reachability_claim_withdrawn",
+      "reason": "read AppRoot.button later: uiActionBusy gates those tabs throughout returned warehouseAction Promise; original static claim omitted full producer entry gate",
+      "reproduced": false,
+      "author_followup": "explicit originalScope + scope-local Pager invalidation component defence, injectable class test only; not normal UI product red-green"
+    }
+  ],
+  "remaining": "await author narrow2/final freeze; only re-read originalScope/invalidate small change, no expanded audit"
+}

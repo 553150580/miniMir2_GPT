@@ -1,0 +1,1 @@
+{"config_version": "dev-warehouses-v0.23-b7f58f9af6ee", "server": "server/internal/configtypes/config_types.go", "client": "client/assets/scripts/generated/config_types.ts", "runtime_ready": false, "generated_only": true}

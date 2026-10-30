@@ -1,0 +1,49 @@
+{
+  "status": "production_refrozen_after_two_copy_only_changes",
+  "recorded_at_utc": "2026-10-30T00:00:44.645948+00:00",
+  "scope": "仅原物品确认末句玩家文案、详情删除技术版本行；仓储业务/保存布局/测试均未改变。Root重新完整客户端与Creator后另记，不称旧实构当前通过。",
+  "previous_freeze": ".work/warehouses-20261030/client/production-freeze.json",
+  "previous_freeze_sha256": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715",
+  "owned_files": {
+    "client/assets/scripts/app/WarehouseModel.ts": "a0439fafec400fc76c602bf5b279ab89144464aa5ea8948372943d9ad109b20d",
+    "client/assets/scripts/app/WarehouseModel.ts.meta": "090865ef669776a2a675d30962beeea2ce92da381215964e4aeafa12cde8a77d",
+    "client/assets/scripts/app/GameWarehouse.ts": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e",
+    "client/assets/scripts/app/GameWarehouse.ts.meta": "55a01953a62335c6a65de58ee9b12e50c3292145d9063a0f63614342456863ae",
+    "client/assets/scripts/app/AppRoot.ts": "96d89e45488eb9f78267e5f55ffc072feb67c6d0d3d0bb362bcfd9e56b44f82a",
+    "client/assets/scripts/app/GameSession.ts": "c684c84de2c60552a4bce70b2f3ab6c46c540d69086ae4fa805f40e16dd81848",
+    "client/assets/scripts/app/GameConnection.ts": "7c83cc7d5fbc5a31a7e49b5e5102b58f1dcbd3ebf59dbf22f485a8b578043d3d",
+    "client/assets/scripts/app/PendingOperations.ts": "6894725c6b687226e2eff5049faa5ea3160400e6eedf21a2a5afd4e144784197",
+    "client/assets/scripts/app/GameErrors.ts": "1725c2adef71bcae331a0f6a4ab949c3cfcdc80fd15a773b883bbde1800b069f",
+    "client/assets/scripts/app/SystemMessageLog.ts": "82822e68cd1134eb5031746e69d198707b88f141fd39598c01e5906f34e979c6",
+    "client/tests/app/warehouse.test.cjs": "1e08dc42542c012b05d24f8eac347f166a466ed46a7ca69ee115a33c54ae9d17",
+    "client/tests/app/warehouse_view.test.cjs": "6e5f6fddbd9d6e38f5b8ee6eb2281c1d6e2665f71725007d207b5e9e738e26fe",
+    "client/tests/app/warehouse_runtime.test.cjs": "d066dc0b6420686b0454c01af796b29471730e441f32858f0876e561e3efc2d3",
+    "client/tests/app/warehouse_layout.test.cjs": "f4f74143aa14431fa86d5dd49891f3ad67ae3197b7257890796e5b969ce4883d",
+    "client/tests/app/helpers/warehouse_harness.cjs": "476c2b4e147e1491ef4ba66985bc1484cd6eef9a293044c6db291498a2802ec6",
+    "client/tests/app/helpers/session_harness.cjs": "e4966dd8dbdc6abdb252e1843caf88c5d821d76410701505d5ba42f5002357f7",
+    "client/tests/app/combat_session.test.cjs": "1c49a519cbdff82f329f7a81eb40e87741323a0757c9d58b454e5d8489c8159e",
+    "client/tests/ui/compile_models.mjs": "d937222de47505f56f3b74ecf3b1750be1c54c2335c3bd56c7e978d7cff48271",
+    "client/assets/scenes/Game.scene": "6836321182f61e7ee9fb037226c2db75cb05a370709dba3e064a3a4a08a025d3"
+  },
+  "exact_copy_only_diff": {
+    "client/assets/scripts/app/WarehouseModel.ts": {
+      "before_sha256": "a560212f3643687210616a0a9b8b1b52e187bf154841ccbccb8d4af03dc5bb52",
+      "after_sha256": "a0439fafec400fc76c602bf5b279ab89144464aa5ea8948372943d9ad109b20d",
+      "before_text": "'确认后核对原实例与版本'",
+      "after_text": "'物品发生变化时，请刷新后重新确认'",
+      "only_exact_replacement": true
+    },
+    "client/assets/scripts/app/GameWarehouse.ts": {
+      "before_sha256": "93205bc0df6bc28a677ef251abbdc0a49c6a37c14381c848fad3b8bffaf5bfd3",
+      "after_sha256": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e",
+      "before_text": "`来源 ${sourceName(item.sourceKind)}`, `版本 ${item.version}`,",
+      "after_text": "`来源 ${sourceName(item.sourceKind)}`,",
+      "only_exact_replacement": true
+    }
+  },
+  "remaining_17_files_unchanged": true,
+  "tests_unchanged": true,
+  "saved_layout_unchanged": true,
+  "go_changed": false,
+  "root_full_revalidation_required": true
+}

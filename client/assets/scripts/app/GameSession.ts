@@ -8,7 +8,7 @@ import { protocolErrorMessage } from './GameErrors';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { acceptsSkillModeState, SkillModeState } from './SkillModel';
 import type { DisplacementEvent } from './EntityDisplacement';
-import { MapTravelModel, travelInteger } from './MapTravelModel';
+import { attachmentKey, MapTravelModel, travelInteger } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
 import { RoleBindingModel } from './RoleBindingModel';
 import type { RoleBindingObservation } from './RoleBindingModel';
@@ -16,6 +16,8 @@ import { TeleportModel } from './TeleportModel';
 import { PetBornModel } from './PetBornModel';
 import { EquipmentRecycleModel, observedAutoRecycle } from './AutoRecycleModel';
 import { ExperienceGrantModel, observedProgression } from './LevelGrowthModel';
+import { WarehouseReceiptGuard } from './WarehouseModel';
+import type { WarehouseReceipt } from './WarehouseModel';
 const assembler = new BaselineAssembler();
 const bindingModel = new RoleBindingModel();
 const recycleModel = new EquipmentRecycleModel();
@@ -53,6 +55,9 @@ export const session = {
     report: null as any,
     recycleNotice: null as import('./AutoRecycleModel').RecycleNotice | null,
     experienceNotice: null as import('./LevelGrowthModel').ExperienceNotice | null,
+    warehouseReceipts: new WarehouseReceiptGuard(),
+    warehouseResult: null as WarehouseReceipt | null,
+    warehouseNotice: null as { role: string; op: string; scope: number; action: number; scene: string; baseline: string } | null,
     progressionCurve: null as string | null,
     death: null as any,
     ready: false,
@@ -188,6 +193,16 @@ session.connection.subscribe((packet: Packet) => {
                 && experienceModel.accept(packet.value, roleIdentity(), session.entry.resourceVersion, curve)) session.experienceNotice = experienceModel.notice;
             break;
         }
+        case 40023: {
+            const identity = currentEntryIdentity();
+            if (session.role && identity && isCurrentEntry(identity) && packet.binding.toString() === identity.binding.toString()
+                && session.warehouseReceipts.accept(packet.value, attachmentKey(identity), roleIdentity())) {
+                session.warehouseResult = packet.value;
+                session.warehouseNotice = { role: roleIdentity(), op: bytesIdentity(packet.value.opId), scope: packet.value.scope, action: packet.value.action,
+                    scene: identity.scene.toString(), baseline: identity.baseline.toString() };
+            }
+            break;
+        }
         case 40005: acceptOperationReceipt(packet); break;
     }
     notify();
@@ -225,6 +240,7 @@ function acceptEntry(packet: Packet): void {
         recycleModel.attach(roleIdentity()); session.recycleNotice = null;
         experienceModel.attach(roleIdentity()); session.experienceNotice = null;
         session.progressionCurve = null;
+        session.warehouseReceipts.bind(attachmentKey(currentEntryIdentity()!)); session.warehouseResult = null; session.warehouseNotice = null;
         session.inventory = null; session.wallet = null; session.hosting = null; session.report = null; session.death = null; session.skillModes = null; session.skillModesReceivedAt = 0;
         confirmedCommand = value.nextEconomicCommandSeq ?? Long.UONE; session.command = confirmedCommand; localOperation = null;
     } catch (error) { session.ready = false; session.lastError = error instanceof Error ? error.message : String(error); }

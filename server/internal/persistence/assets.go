@@ -5,6 +5,7 @@ import (
 	"errors"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"google.golang.org/protobuf/proto"
 	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
@@ -36,6 +37,7 @@ type AssetRequest struct {
 	AutoRecycle      *pb.AutoRecyclePolicy
 	ApplyExisting    bool
 	Locked           bool
+	Warehouse        *pb.WarehouseAction
 }
 
 func add(a, b int64) (int64, error) {
@@ -109,7 +111,17 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var casting *CastingReceipt
 		var recycling *EquipmentRecyclingReceipt
 		var equipment *EquipmentReceipt
+		var warehouse *WarehouseReceipt
 		switch q.Kind {
+		case "warehouse":
+			if q.Warehouse == nil || !proto.Equal(q.Warehouse.Operation, q.Context) {
+				businessCode = p.CodeInvalidArgument
+				break
+			}
+			r, warehouse, businessCode, e = s.applyWarehouse(tc, r, q.Warehouse)
+			if e != nil {
+				return e
+			}
 		case "equip":
 			r, equipment, businessCode = equipEquipment(r, q, s.Cfg.Fixture)
 		case "recycle":
@@ -180,6 +192,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			recycling = nil
 			skillDetails = nil
 			equipment = nil
+			warehouse = nil
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -196,6 +209,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op := Operation{ID: opID, Digest: q.Fingerprint, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: r.Revision, Code: businessCode, Kind: q.Kind, Created: time.Now(), Potion: potion, Casting: casting, Recycling: recycling}
 		op.Skill = cloneSkillPlan(skillDetails)
 		op.Equipment = cloneEquipmentReceipt(equipment)
+		op.Warehouse = cloneWarehouseReceipt(warehouse)
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -212,6 +226,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		if equipment != nil {
 			audit["equipment"] = cloneEquipmentReceipt(equipment)
+		}
+		if warehouse != nil {
+			audit["warehouse"] = cloneWarehouseReceipt(warehouse)
 		}
 		if casting != nil {
 			audit["casting_use"] = casting

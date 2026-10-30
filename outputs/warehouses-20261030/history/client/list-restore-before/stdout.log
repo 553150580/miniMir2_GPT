@@ -1,0 +1,65 @@
+✖ 引擎0时长不派滚动事件：真实List清页后直接恢复底层offset会空白，公开恢复API须同步重建末行池 (2.2979ms)
+✖ 真实GameWarehouse提交后清页/查询/恢复2420：末仓位29立即可见且点击绑定原物，不等待额外拖动事件 (36.72ms)
+✖ 真实两仓切换恢复各自末页滚动后都保有Mask内条目，恢复不改变选择/renderer或超出池预算 (28.6219ms)
+✖ 恢复偏移按当前内容界限钳制，拒非有限值，退休节点不再写偏移或碰旧行 (0.3796ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 385.042
+
+✖ failing tests:
+
+test at client\tests\app\list_scroll_restore.test.cjs:8:1
+✖ 引擎0时长不派滚动事件：真实List清页后直接恢复底层offset会空白，公开恢复API须同步重建末行池 (2.2979ms)
+  TypeError [Error]: v.list.restoreScrollOffset is not a function
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\list_scroll_restore.test.cjs:12:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at client\tests\app\list_scroll_restore.test.cjs:14:1
+✖ 真实GameWarehouse提交后清页/查询/恢复2420：末仓位29立即可见且点击绑定原物，不等待额外拖动事件 (36.72ms)
+  AssertionError [ERR_ASSERTION]: 新查询后原末仓位不能空白
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\list_scroll_restore.test.cjs:16:132)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at client\tests\app\list_scroll_restore.test.cjs:19:1
+✖ 真实两仓切换恢复各自末页滚动后都保有Mask内条目，恢复不改变选择/renderer或超出池预算 (28.6219ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(v.store.visible().includes(29))
+  
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\list_scroll_restore.test.cjs:20:279)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at client\tests\app\list_scroll_restore.test.cjs:22:1
+✖ 恢复偏移按当前内容界限钳制，拒非有限值，退休节点不再写偏移或碰旧行 (0.3796ms)
+  TypeError [Error]: v.list.restoreScrollOffset is not a function
+      at TestContext.<anonymous> (D:\A_Claude\miniMir2_GPT\client\tests\app\list_scroll_restore.test.cjs:23:80)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

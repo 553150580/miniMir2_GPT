@@ -79,6 +79,7 @@ type Operation struct {
 	Experience        *ExperienceGrantReceipt    `bson:"experience_grant,omitempty"`
 	Skill             *skillPlan                 `bson:"skill_plan,omitempty"`
 	Equipment         *EquipmentReceipt          `bson:"equipment,omitempty"`
+	Warehouse         *WarehouseReceipt          `bson:"warehouse,omitempty"`
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -132,11 +133,12 @@ func (s *Store) Migrate(ctx context.Context) error {
 		return fmt.Errorf("迁移永久操作回执索引失败: %w", e)
 	}
 	indexes := map[string][]mongo.IndexModel{
-		"accounts":       {{Keys: bson.D{{Key: "name", Value: 1}}, Options: options.Index().SetUnique(true)}},
-		"roles":          {{Keys: bson.D{{Key: "account_id", Value: 1}, {Key: "origin_server_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}, {Keys: bson.D{{Key: "name_key", Value: 1}}, Options: options.Index().SetUnique(true)}},
-		"account_tokens": {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
-		"entry_tickets":  {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
-		"skill_quotes":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"accounts":        {{Keys: bson.D{{Key: "name", Value: 1}}, Options: options.Index().SetUnique(true)}},
+		"roles":           {{Keys: bson.D{{Key: "account_id", Value: 1}, {Key: "origin_server_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}, {Keys: bson.D{{Key: "name_key", Value: 1}}, Options: options.Index().SetUnique(true)}},
+		"account_tokens":  {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"entry_tickets":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"skill_quotes":    {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"warehouse_items": {{Keys: bson.D{{Key: "warehouse_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}},
 	}
 	for name, models := range indexes {
 		if _, e = s.DB.Collection(name).Indexes().CreateMany(ctx, models); e != nil {

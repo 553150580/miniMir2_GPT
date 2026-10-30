@@ -25,7 +25,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','dev_first_loop_profile']
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile']
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -718,6 +718,46 @@ EQUIPMENT_ATTRIBUTE_BONUSES={
     'spirit_attack_min':'tao_min_bonus','spirit_attack_max':'tao_max_bonus'}
 
 
+def warehouse_rules(tables,profile):
+    """双仓容量和费用只取已定规则；查询窗口是显式开发技术参数。"""
+    if profile['rule_version']<23:
+        if 'warehouses' in profile:raise ValueError('仓储启用参数必须使用rule23合同')
+        return None
+    selected=profile.get('warehouses')
+    if not isinstance(selected,dict) or set(selected)!={'enabled','query_page_limit'} or selected['enabled'] is not True:
+        raise ValueError('rule23仓储必须显式启用并声明完整查询窗口，不能补默认值')
+    limit=selected['query_page_limit']
+    if type(limit) is not int or not 0<limit<=2**32-1:
+        raise ValueError('仓储查询窗口必须是正uint32整数')
+    def confirmed(key,typ):
+        rows=[row for row in tables.get('game_warehouse_rules',[]) if row.get('rule_key')==key]
+        if len(rows)!=1 or rows[0].get('record_status')!='confirmed' or type(rows[0].get('rule_value')) is not typ:
+            raise ValueError('仓储须使用唯一已定且类型正确的规则：'+key)
+        return deepcopy(rows[0]['rule_value'])
+    policies={'shared_warehouse_requires_active_privilege':True,
+              'shared_warehouse_allowed':['unbound_items','gold','ingot'],
+              'shared_warehouse_origin_isolation_survives_merge':True,
+              'shared_warehouse_modify_items':False,
+              'personal_warehouse_stores_currency':False,
+              'personal_warehouse_accepts_bound_items':True,
+              'allow_shared_warehouse_normal_fine_unbound_equipment':True}
+    for key,value in policies.items():
+        if confirmed(key,type(value))!=value:raise ValueError('仓储产品规则尚未适配：'+key)
+    mapping={'personal_initial_slots':'personal_warehouse_initial_slots',
+             'personal_expansion_slots':'personal_warehouse_page_slots',
+             'personal_expansion_yuanbao_units':'personal_warehouse_page_price_ingot_u',
+             'shared_slots':'shared_warehouse_slots'}
+    result={key:confirmed(source,int) for key,source in mapping.items()}
+    if any(not 0<value<=2**53-1 for value in result.values()):
+        raise ValueError('仓储容量和扩页费用必须是正Excel精确整数')
+    if result['personal_initial_slots']%result['personal_expansion_slots']:
+        raise ValueError('个人初始容量须对应完整扩展页，不补零散默认格')
+    # 单次窗口不得超过一整页或固定共享仓；总容量仍按已购页数增长。
+    if limit>max(result['personal_expansion_slots'],result['shared_slots']):
+        raise ValueError('仓储单次查询超过已声明的页/共享仓有界窗口')
+    return {**result,'query_page_limit':limit}
+
+
 def selected_base_items(tables,profile):
     """rule22从唯一profile选择基础物品；旧版本固定四项仅保留明确历史合同。"""
     if profile['rule_version']<22:
@@ -895,6 +935,14 @@ def fixture_from_rows(tables):
             'stage_source':'唯一玩法Excel/game_equipment.stage；floor((required_level−1)/10)',
             'equipment_sources':[{'item_id':row['item_id'],'source_ref':row['source_ref']} for row in tables['game_equipment'] if row['item_id'] in profile['base_item_ids']],
             'appearance_mapping_verified':False,'formal_recycle_recipe_published':False}
+    warehouses=warehouse_rules(tables,profile)
+    if warehouses is not None:
+        result['warehouses']=warehouses
+        result['_source_evidence']['warehouses']={
+            'confirmed_rules_source':'唯一玩法Excel/角色与仓库规则；容量/费用/特权/绑定/origin规则保持已定值',
+            'technical_window_source':'唯一玩法Excel/开发首循环夹具/parameters.warehouses.query_page_limit，开发候选，不是总容量上限',
+            'unverified_reward_queue_unchanged':True,
+            'payment_or_privilege_granted':False}
     pet_rules=pet_runtime.compile_runtime(tables,profile)
     if pet_rules is not None:
         if pet_rules['bootstrap_mode']=='legacy_untrained_pet':
@@ -946,6 +994,7 @@ def public_gameplay(fixture):
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
             'skills':skills,'statuses':statuses,'casting_supply':deepcopy(fixture['casting_supply']),
             **({'equipment_recycling':deepcopy(fixture['equipment_recycling'])} if fixture['rule_version']>=19 else {}),
+            **({'warehouses':deepcopy(fixture['warehouses'])} if fixture['rule_version']>=23 else {}),
             'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
             'shop_offers':[{'offer_id':r['id'],'item_id':r['item_id'],'name':next(i['name'] for i in fixture['items'] if i['id']==r['item_id']),
                             'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],

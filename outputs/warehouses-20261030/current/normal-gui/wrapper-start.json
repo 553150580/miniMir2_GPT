@@ -1,0 +1,33 @@
+{
+  "report_directory": ".work/warehouses-20261030/browser/normal/run-01",
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_warehouses_browser.cjs",
+    "--url",
+    "http://127.0.0.1:18080/",
+    "--creator-report",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\report.json",
+    "--report-dir",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\browser\\normal\\run-01"
+  ],
+  "inputs_before": {
+    "tools/client/verify_warehouses_browser.cjs": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3",
+    ".work/warehouses-20261030/creator/full-3/report.json": "2638526c3d06d0ba82fd7caf9a53033da48a56daf374d42e658020ceb9749610",
+    "config/development/first-loop.json": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+    "client/assets/resources/development/gameplay.json": "602edda1d9135b037c2bb6f0f6f9cb0c5f1d8d41e4bc17662532c574d839c3e0"
+  },
+  "run_requested": true,
+  "service_control": false,
+  "database_seeding": false,
+  "product_source_modified": false,
+  "missing_inputs_dry_run_only": [],
+  "expected_creator_report": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\report.json",
+  "started_at": "2026-10-30T04:57:36.916588+00:00",
+  "wrapper_sha256": "ad2d17207dc327a905b29c56f3ff8fa90070cd2510341941301f05ff6ea0030c"
+}

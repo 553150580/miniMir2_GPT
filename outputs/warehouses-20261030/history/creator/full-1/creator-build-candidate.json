@@ -1,0 +1,27 @@
+{
+  "name": "minimir2",
+  "platform": "web-mobile",
+  "debug": true,
+  "buildPath": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-1\\candidate",
+  "outputName": "web-mobile",
+  "startScene": "ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55",
+  "scenes": [
+    {
+      "url": "db://assets/scenes/Boot.scene",
+      "uuid": "ca5eee0f-642b-5ab1-b49d-a6ba62fa8b55"
+    },
+    {
+      "url": "db://assets/scenes/Login.scene",
+      "uuid": "bba723dc-eae5-5372-b190-52314a0cbd31"
+    },
+    {
+      "url": "db://assets/scenes/RoleSelect.scene",
+      "uuid": "16605c45-4f9a-59c0-8669-4dea2e7f702d"
+    },
+    {
+      "url": "db://assets/scenes/Game.scene",
+      "uuid": "0f1590d8-ab8f-56fb-a232-db0f38f5cbd3"
+    }
+  ],
+  "sourceMaps": true
+}

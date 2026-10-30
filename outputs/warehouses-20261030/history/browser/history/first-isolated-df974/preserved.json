@@ -1,0 +1,17 @@
+{
+  "copied_original_bytes": {
+    "tools/client/verify_warehouses_browser.cjs": "df97447d821bab8c0d449262321b66316f31636d07c1d411f7bd6e698d162810",
+    "tools/client/test_warehouses_browser.cjs": "9e23402857ba52d3ec22d56f5b95fe9b549aae7b625cc3e1f662d68145118249",
+    "client/assets/scripts/app/WarehouseModel.ts": "a560212f3643687210616a0a9b8b1b52e187bf154841ccbccb8d4af03dc5bb52",
+    "client/assets/scripts/app/GameWarehouse.ts": "93205bc0df6bc28a677ef251abbdc0a49c6a37c14381c848fad3b8bffaf5bfd3",
+    ".work/warehouses-20261030/browser/static-1/report.json": "662342fc2de19d935f9c9d5b650b42115355083b14b749dc59af6b122af5ce21",
+    ".work/warehouses-20261030/browser/report-contract.json": "f9390d54e01655b0d77aa4266a61bcbeeabdda5a622e6625ce458d7723cd0a70",
+    ".work/warehouses-20261030/client/production-freeze.json": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715"
+  },
+  "first_run_original_paths_not_modified": {
+    ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/report.json": "0ca95d74572609ad23c6b057cc36b1c7eb723364cf3297a72dc1f2906edd36f4",
+    ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/report.json": "56d3bf4473b528499b3beed0c93c1c6ac0910b9a99ff780eab77d789dbae2939",
+    ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/failure.png": "a056184560360c0e365e153b24ce198a499f607e9076bf331bb976a5f862bf57"
+  },
+  "scope": "首轮工具overscan方向失败与战斗图耗时死亡；个人三check及七次前半提交不是完整GUI通过"
+}

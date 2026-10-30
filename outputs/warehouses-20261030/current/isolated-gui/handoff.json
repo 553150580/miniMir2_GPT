@@ -1,0 +1,12 @@
+{
+  "browser_passed": true,
+  "report_sha256": "dd7f64e1aec07ce0e42bd71356ff7e35002632b2f36745b016c5cda5b6d16081",
+  "visual_review_sha256": "7a94e700a44e88ff92a8b6a94bf076c86cd76c0d2a8c4662e139ac049333a2df",
+  "reviewed_screenshots": 27,
+  "scope": "Root已逐张实际view_image检查本轮720×1280 Chrome仓储控件、原列表与确认文字；不是手机真机，也不宣称所有历史界面无问题。",
+  "known_visual_limitations": [
+    "00-town-confirm.png中原MapTravel确认Message单长行左右截断，保留旧源并单列后续修复；不是本轮仓储新增控件。"
+  ],
+  "natural_paid_chain_verified": false,
+  "physical_mobile_verified": false
+}

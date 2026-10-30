@@ -9564,5 +9564,767 @@ export namespace minimir {
             /** Shape of a HostingReport. */
             type $Shape = minimir.v1.HostingReport.$Properties;
         }
+
+        /**
+         * Properties of a WarehouseQuery.
+         * @deprecated Use minimir.v1.WarehouseQuery.$Properties instead.
+         */
+        interface IWarehouseQuery extends minimir.v1.WarehouseQuery.$Properties {
+        }
+
+        /** Represents a WarehouseQuery. */
+        class WarehouseQuery {
+
+            /**
+             * Constructs a new WarehouseQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehouseQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehouseQuery scope. */
+            scope: number;
+
+            /** WarehouseQuery start_slot. */
+            start_slot: Long;
+
+            /** WarehouseQuery limit. */
+            limit: number;
+
+            /**
+             * Creates a new WarehouseQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehouseQuery instance
+             */
+            static create(properties: minimir.v1.WarehouseQuery.$Shape): minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape;
+            static create(properties?: minimir.v1.WarehouseQuery.$Properties): minimir.v1.WarehouseQuery;
+
+            /**
+             * Encodes the specified WarehouseQuery message. Does not implicitly {@link minimir.v1.WarehouseQuery.verify|verify} messages.
+             * @param message WarehouseQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehouseQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehouseQuery message, length delimited. Does not implicitly {@link minimir.v1.WarehouseQuery.verify|verify} messages.
+             * @param message WarehouseQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehouseQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehouseQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape} WarehouseQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape;
+
+            /**
+             * Decodes a WarehouseQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape} WarehouseQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehouseQuery & minimir.v1.WarehouseQuery.$Shape;
+
+            /**
+             * Verifies a WarehouseQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehouseQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehouseQuery {
+
+            /** Properties of a WarehouseQuery. */
+            interface $Properties {
+
+                /** WarehouseQuery scope */
+                scope?: (number|null);
+
+                /** WarehouseQuery start_slot */
+                start_slot?: (Long|null);
+
+                /** WarehouseQuery limit */
+                limit?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehouseQuery. */
+            type $Shape = minimir.v1.WarehouseQuery.$Properties;
+        }
+
+        /**
+         * Properties of a WarehouseItem.
+         * @deprecated Use minimir.v1.WarehouseItem.$Properties instead.
+         */
+        interface IWarehouseItem extends minimir.v1.WarehouseItem.$Properties {
+        }
+
+        /** Represents a WarehouseItem. */
+        class WarehouseItem {
+
+            /**
+             * Constructs a new WarehouseItem.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehouseItem.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehouseItem slot. */
+            slot: Long;
+
+            /** WarehouseItem item. */
+            item?: (minimir.v1.ItemView.$Properties|null);
+
+            /**
+             * Creates a new WarehouseItem instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehouseItem instance
+             */
+            static create(properties: minimir.v1.WarehouseItem.$Shape): minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape;
+            static create(properties?: minimir.v1.WarehouseItem.$Properties): minimir.v1.WarehouseItem;
+
+            /**
+             * Encodes the specified WarehouseItem message. Does not implicitly {@link minimir.v1.WarehouseItem.verify|verify} messages.
+             * @param message WarehouseItem message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehouseItem.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehouseItem message, length delimited. Does not implicitly {@link minimir.v1.WarehouseItem.verify|verify} messages.
+             * @param message WarehouseItem message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehouseItem.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehouseItem message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape} WarehouseItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape;
+
+            /**
+             * Decodes a WarehouseItem message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape} WarehouseItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehouseItem & minimir.v1.WarehouseItem.$Shape;
+
+            /**
+             * Verifies a WarehouseItem message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehouseItem
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehouseItem {
+
+            /** Properties of a WarehouseItem. */
+            interface $Properties {
+
+                /** WarehouseItem slot */
+                slot?: (Long|null);
+
+                /** WarehouseItem item */
+                item?: (minimir.v1.ItemView.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehouseItem. */
+            type $Shape = minimir.v1.WarehouseItem.$Properties;
+        }
+
+        /**
+         * Properties of a WarehousePage.
+         * @deprecated Use minimir.v1.WarehousePage.$Properties instead.
+         */
+        interface IWarehousePage extends minimir.v1.WarehousePage.$Properties {
+        }
+
+        /** Represents a WarehousePage. */
+        class WarehousePage {
+
+            /**
+             * Constructs a new WarehousePage.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehousePage.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehousePage role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** WarehousePage scope. */
+            scope: number;
+
+            /** WarehousePage revision. */
+            revision: Long;
+
+            /** WarehousePage capacity. */
+            capacity: Long;
+
+            /** WarehousePage start_slot. */
+            start_slot: Long;
+
+            /** WarehousePage limit. */
+            limit: number;
+
+            /** WarehousePage items. */
+            items: minimir.v1.WarehouseItem.$Properties[];
+
+            /** WarehousePage gold. */
+            gold: Long;
+
+            /** WarehousePage yuanbao_units. */
+            yuanbao_units: Long;
+
+            /**
+             * Creates a new WarehousePage instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehousePage instance
+             */
+            static create(properties: minimir.v1.WarehousePage.$Shape): minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape;
+            static create(properties?: minimir.v1.WarehousePage.$Properties): minimir.v1.WarehousePage;
+
+            /**
+             * Encodes the specified WarehousePage message. Does not implicitly {@link minimir.v1.WarehousePage.verify|verify} messages.
+             * @param message WarehousePage message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehousePage.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehousePage message, length delimited. Does not implicitly {@link minimir.v1.WarehousePage.verify|verify} messages.
+             * @param message WarehousePage message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehousePage.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehousePage message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape} WarehousePage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape;
+
+            /**
+             * Decodes a WarehousePage message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape} WarehousePage
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehousePage & minimir.v1.WarehousePage.$Shape;
+
+            /**
+             * Verifies a WarehousePage message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehousePage
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehousePage {
+
+            /** Properties of a WarehousePage. */
+            interface $Properties {
+
+                /** WarehousePage role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** WarehousePage scope */
+                scope?: (number|null);
+
+                /** WarehousePage revision */
+                revision?: (Long|null);
+
+                /** WarehousePage capacity */
+                capacity?: (Long|null);
+
+                /** WarehousePage start_slot */
+                start_slot?: (Long|null);
+
+                /** WarehousePage limit */
+                limit?: (number|null);
+
+                /** WarehousePage items */
+                items?: (minimir.v1.WarehouseItem.$Properties[]|null);
+
+                /** WarehousePage gold */
+                gold?: (Long|null);
+
+                /** WarehousePage yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehousePage. */
+            type $Shape = minimir.v1.WarehousePage.$Properties;
+        }
+
+        /**
+         * Properties of a WarehouseAction.
+         * @deprecated Use minimir.v1.WarehouseAction.$Properties instead.
+         */
+        interface IWarehouseAction extends minimir.v1.WarehouseAction.$Properties {
+        }
+
+        /** Represents a WarehouseAction. */
+        class WarehouseAction {
+
+            /**
+             * Constructs a new WarehouseAction.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehouseAction.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehouseAction scope. */
+            scope: number;
+
+            /** WarehouseAction action. */
+            action: number;
+
+            /** WarehouseAction warehouse_revision. */
+            warehouse_revision: Long;
+
+            /** WarehouseAction warehouse_slot. */
+            warehouse_slot: Long;
+
+            /** WarehouseAction item_instance_id. */
+            item_instance_id: Uint8Array;
+
+            /** WarehouseAction item_version. */
+            item_version: Long;
+
+            /** WarehouseAction quantity. */
+            quantity: Long;
+
+            /** WarehouseAction currency. */
+            currency: number;
+
+            /** WarehouseAction amount. */
+            amount: Long;
+
+            /** WarehouseAction operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new WarehouseAction instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehouseAction instance
+             */
+            static create(properties: minimir.v1.WarehouseAction.$Shape): minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape;
+            static create(properties?: minimir.v1.WarehouseAction.$Properties): minimir.v1.WarehouseAction;
+
+            /**
+             * Encodes the specified WarehouseAction message. Does not implicitly {@link minimir.v1.WarehouseAction.verify|verify} messages.
+             * @param message WarehouseAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehouseAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehouseAction message, length delimited. Does not implicitly {@link minimir.v1.WarehouseAction.verify|verify} messages.
+             * @param message WarehouseAction message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehouseAction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehouseAction message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape} WarehouseAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape;
+
+            /**
+             * Decodes a WarehouseAction message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape} WarehouseAction
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehouseAction & minimir.v1.WarehouseAction.$Shape;
+
+            /**
+             * Verifies a WarehouseAction message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehouseAction
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehouseAction {
+
+            /** Properties of a WarehouseAction. */
+            interface $Properties {
+
+                /** WarehouseAction scope */
+                scope?: (number|null);
+
+                /** WarehouseAction action */
+                action?: (number|null);
+
+                /** WarehouseAction warehouse_revision */
+                warehouse_revision?: (Long|null);
+
+                /** WarehouseAction warehouse_slot */
+                warehouse_slot?: (Long|null);
+
+                /** WarehouseAction item_instance_id */
+                item_instance_id?: (Uint8Array|null);
+
+                /** WarehouseAction item_version */
+                item_version?: (Long|null);
+
+                /** WarehouseAction quantity */
+                quantity?: (Long|null);
+
+                /** WarehouseAction currency */
+                currency?: (number|null);
+
+                /** WarehouseAction amount */
+                amount?: (Long|null);
+
+                /** WarehouseAction operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehouseAction. */
+            type $Shape = minimir.v1.WarehouseAction.$Properties;
+        }
+
+        /**
+         * Properties of a WarehouseItemChange.
+         * @deprecated Use minimir.v1.WarehouseItemChange.$Properties instead.
+         */
+        interface IWarehouseItemChange extends minimir.v1.WarehouseItemChange.$Properties {
+        }
+
+        /** Represents a WarehouseItemChange. */
+        class WarehouseItemChange {
+
+            /**
+             * Constructs a new WarehouseItemChange.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehouseItemChange.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehouseItemChange slot. */
+            slot: Long;
+
+            /** WarehouseItemChange before. */
+            before?: (minimir.v1.ItemView.$Properties|null);
+
+            /** WarehouseItemChange after. */
+            after?: (minimir.v1.ItemView.$Properties|null);
+
+            /**
+             * Creates a new WarehouseItemChange instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehouseItemChange instance
+             */
+            static create(properties: minimir.v1.WarehouseItemChange.$Shape): minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape;
+            static create(properties?: minimir.v1.WarehouseItemChange.$Properties): minimir.v1.WarehouseItemChange;
+
+            /**
+             * Encodes the specified WarehouseItemChange message. Does not implicitly {@link minimir.v1.WarehouseItemChange.verify|verify} messages.
+             * @param message WarehouseItemChange message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehouseItemChange.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehouseItemChange message, length delimited. Does not implicitly {@link minimir.v1.WarehouseItemChange.verify|verify} messages.
+             * @param message WarehouseItemChange message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehouseItemChange.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehouseItemChange message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape} WarehouseItemChange
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape;
+
+            /**
+             * Decodes a WarehouseItemChange message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape} WarehouseItemChange
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehouseItemChange & minimir.v1.WarehouseItemChange.$Shape;
+
+            /**
+             * Verifies a WarehouseItemChange message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehouseItemChange
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehouseItemChange {
+
+            /** Properties of a WarehouseItemChange. */
+            interface $Properties {
+
+                /** WarehouseItemChange slot */
+                slot?: (Long|null);
+
+                /** WarehouseItemChange before */
+                before?: (minimir.v1.ItemView.$Properties|null);
+
+                /** WarehouseItemChange after */
+                after?: (minimir.v1.ItemView.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehouseItemChange. */
+            type $Shape = minimir.v1.WarehouseItemChange.$Properties;
+        }
+
+        /**
+         * Properties of a WarehouseActionResult.
+         * @deprecated Use minimir.v1.WarehouseActionResult.$Properties instead.
+         */
+        interface IWarehouseActionResult extends minimir.v1.WarehouseActionResult.$Properties {
+        }
+
+        /** Represents a WarehouseActionResult. */
+        class WarehouseActionResult {
+
+            /**
+             * Constructs a new WarehouseActionResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WarehouseActionResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WarehouseActionResult role. */
+            role?: (minimir.v1.RoleKey.$Properties|null);
+
+            /** WarehouseActionResult role_revision. */
+            role_revision: Long;
+
+            /** WarehouseActionResult op_id. */
+            op_id: Uint8Array;
+
+            /** WarehouseActionResult scope. */
+            scope: number;
+
+            /** WarehouseActionResult action. */
+            action: number;
+
+            /** WarehouseActionResult warehouse_revision. */
+            warehouse_revision: Long;
+
+            /** WarehouseActionResult capacity. */
+            capacity: Long;
+
+            /** WarehouseActionResult changes. */
+            changes: minimir.v1.WarehouseItemChange.$Properties[];
+
+            /** WarehouseActionResult gold. */
+            gold: Long;
+
+            /** WarehouseActionResult yuanbao_units. */
+            yuanbao_units: Long;
+
+            /**
+             * Creates a new WarehouseActionResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WarehouseActionResult instance
+             */
+            static create(properties: minimir.v1.WarehouseActionResult.$Shape): minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape;
+            static create(properties?: minimir.v1.WarehouseActionResult.$Properties): minimir.v1.WarehouseActionResult;
+
+            /**
+             * Encodes the specified WarehouseActionResult message. Does not implicitly {@link minimir.v1.WarehouseActionResult.verify|verify} messages.
+             * @param message WarehouseActionResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WarehouseActionResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WarehouseActionResult message, length delimited. Does not implicitly {@link minimir.v1.WarehouseActionResult.verify|verify} messages.
+             * @param message WarehouseActionResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WarehouseActionResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WarehouseActionResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape} WarehouseActionResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape;
+
+            /**
+             * Decodes a WarehouseActionResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape} WarehouseActionResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WarehouseActionResult & minimir.v1.WarehouseActionResult.$Shape;
+
+            /**
+             * Verifies a WarehouseActionResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WarehouseActionResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WarehouseActionResult {
+
+            /** Properties of a WarehouseActionResult. */
+            interface $Properties {
+
+                /** WarehouseActionResult role */
+                role?: (minimir.v1.RoleKey.$Properties|null);
+
+                /** WarehouseActionResult role_revision */
+                role_revision?: (Long|null);
+
+                /** WarehouseActionResult op_id */
+                op_id?: (Uint8Array|null);
+
+                /** WarehouseActionResult scope */
+                scope?: (number|null);
+
+                /** WarehouseActionResult action */
+                action?: (number|null);
+
+                /** WarehouseActionResult warehouse_revision */
+                warehouse_revision?: (Long|null);
+
+                /** WarehouseActionResult capacity */
+                capacity?: (Long|null);
+
+                /** WarehouseActionResult changes */
+                changes?: (minimir.v1.WarehouseItemChange.$Properties[]|null);
+
+                /** WarehouseActionResult gold */
+                gold?: (Long|null);
+
+                /** WarehouseActionResult yuanbao_units */
+                yuanbao_units?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WarehouseActionResult. */
+            type $Shape = minimir.v1.WarehouseActionResult.$Properties;
+        }
     }
 }

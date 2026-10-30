@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "unit",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/client",
+        "-p",
+        "test_warehouses_qa.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": ".work\\warehouses-20261030\\qa-tool-tests-final\\unit.stdout.txt",
+      "stderr": ".work\\warehouses-20261030\\qa-tool-tests-final\\unit.stderr.txt"
+    },
+    {
+      "name": "prepare",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "tools/client/prepare_warehouses_qa.py"
+      ],
+      "exit_code": 0,
+      "stdout": ".work\\warehouses-20261030\\qa-tool-tests-final\\prepare.stdout.txt",
+      "stderr": ".work\\warehouses-20261030\\qa-tool-tests-final\\prepare.stderr.txt"
+    }
+  ],
+  "before": {
+    "tools\\client\\prepare_warehouses_qa.py": "58de33babfe558878940cf87f3fb36693bd660e68789829e0484f4e3d2890c48",
+    "tools\\client\\test_warehouses_qa.py": "736fbac0997880055cbdbcd16b9edde1a8d39834533d400e7f4a6d1808115080"
+  },
+  "after": {
+    "tools\\client\\prepare_warehouses_qa.py": "58de33babfe558878940cf87f3fb36693bd660e68789829e0484f4e3d2890c48",
+    "tools\\client\\test_warehouses_qa.py": "736fbac0997880055cbdbcd16b9edde1a8d39834533d400e7f4a6d1808115080"
+  },
+  "scope": "14项纯安全边界与无参数静态准备；未启动Go/Mongo/服务/Creator/浏览器"
+}

@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 76,
+  "message_count": 82,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -81,10 +81,16 @@
     "SkillAssetCommitRequest",
     "ClaimHostingTimeRequest",
     "BuyHostingTimeRequest",
-    "HostingReport"
+    "HostingReport",
+    "WarehouseQuery",
+    "WarehouseItem",
+    "WarehousePage",
+    "WarehouseAction",
+    "WarehouseItemChange",
+    "WarehouseActionResult"
   ],
-  "int64_field_count": 177,
-  "int64_boundary_cases": 584,
+  "int64_field_count": 195,
+  "int64_boundary_cases": 644,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1147,9 +1153,117 @@
       "field": "pooled_experience",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "WarehouseQuery",
+      "field": "start_slot",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseItem",
+      "field": "slot",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehousePage",
+      "field": "revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehousePage",
+      "field": "capacity",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehousePage",
+      "field": "start_slot",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehousePage",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WarehousePage",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "warehouse_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "warehouse_slot",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "amount",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WarehouseItemChange",
+      "field": "slot",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "warehouse_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "capacity",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "yuanbao_units",
+      "type": "int64",
+      "cases": 4
     }
   ],
-  "bytes_field_count": 21,
+  "bytes_field_count": 23,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1255,6 +1369,16 @@
       "message": "HostingReport",
       "field": "hosting_session_id",
       "repeated": false
+    },
+    {
+      "message": "WarehouseAction",
+      "field": "item_instance_id",
+      "repeated": false
+    },
+    {
+      "message": "WarehouseActionResult",
+      "field": "op_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -1275,19 +1399,19 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "e20008d97ed9e168db3cb8ec6eb0ef430f385f99016392c8509ccc464503ef8e"
+      "sha256": "ca65e8ada5b58b741499f2ff56f42c5272d17ea773349c6be8ab4b0b5da2d5df"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "d688a35216bcf25ec5b5bd10d8aa42669b0007089eb167c20027d8a5ab9b8f10",
-      "bytes": 1298309
+      "sha256": "b63f159f6a572fd7783df1090c950914c3927fc7734ce9c8a5d78098b4e77672",
+      "bytes": 1402459
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "ee314a68fbcdaeb623494f6df0dd546ce946e8378413cd236d7ed5b9aef4f4d0",
-      "bytes": 408642
+      "sha256": "c3e65f6e549ad961042d04ffba9e91d1e689ae40a52cb8c8647e8ad468998f3c",
+      "bytes": 441118
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

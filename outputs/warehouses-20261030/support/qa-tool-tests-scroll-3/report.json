@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "unit",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools/client",
+        "-p",
+        "test_warehouses_qa.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/qa-tool-tests-scroll-3/unit.stdout.txt",
+      "stderr": ".work/warehouses-20261030/qa-tool-tests-scroll-3/unit.stderr.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "c9651c138336bf02701438240b4d7b93ca282194090f2be7c2bf7478191bbc00"
+    },
+    {
+      "name": "prepare",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "tools/client/prepare_warehouses_qa.py"
+      ],
+      "exit_code": 0,
+      "stdout": ".work/warehouses-20261030/qa-tool-tests-scroll-3/prepare.stdout.txt",
+      "stderr": ".work/warehouses-20261030/qa-tool-tests-scroll-3/prepare.stderr.txt",
+      "stdout_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "before": {
+    ".work/warehouses-20261030/stage_checks.py": "1b320b9b5cc43e441db1fd960eb90db43ffe81965f9bca6c2891a03dbf05911f",
+    "tools/client/prepare_warehouses_qa.py": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053"
+  },
+  "after": {
+    ".work/warehouses-20261030/stage_checks.py": "0ab9f1e983c272a03fdf11dfdee855cc223029c88f742fbaf70f677e9e986786",
+    "tools/client/prepare_warehouses_qa.py": "2f657a4d95e4d743040dd9f3bafafa283e7e8539107f1ca3b708c27d5b8f3906"
+  },
+  "only_change": "ENGINE_FILES追加ui/scroll-view.ts，其它原字节逐字保持",
+  "scope": "外部依赖冻结与14项纯安全边界；无环境、DB、浏览器或产品检查"
+}

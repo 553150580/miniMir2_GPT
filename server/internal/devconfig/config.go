@@ -110,6 +110,7 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 }
 
 type Fixture struct {
+	Warehouses         *WarehouseRules          `json:"warehouses,omitempty"`
 	SchemaVersion      int                      `json:"schema_version"`
 	RuleVersion        uint64                   `json:"rule_version"`
 	DevelopmentOnly    bool                     `json:"development_only"`
@@ -259,6 +260,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateEquipmentStats(); err != nil {
+		return err
+	}
+	if err := f.ValidateWarehouses(); err != nil {
 		return err
 	}
 	if err := f.ValidateDisplacementFoundation(); err != nil {

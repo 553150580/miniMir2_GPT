@@ -1,0 +1,32 @@
+{
+  "report_directory": ".work/warehouses-20261030/browser/normal/run-01",
+  "command": [
+    "powershell.exe",
+    "-NoProfile",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-File",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+    "node",
+    "D:\\A_Claude\\miniMir2_GPT\\tools\\client\\verify_warehouses_browser.cjs",
+    "--url",
+    "http://127.0.0.1:18080/",
+    "--creator-report",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\report.json",
+    "--report-dir",
+    "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\browser\\normal\\run-01"
+  ],
+  "inputs_before": {
+    "tools/client/verify_warehouses_browser.cjs": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3",
+    "config/development/first-loop.json": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+    "client/assets/resources/development/gameplay.json": "602edda1d9135b037c2bb6f0f6f9cb0c5f1d8d41e4bc17662532c574d839c3e0"
+  },
+  "run_requested": false,
+  "service_control": false,
+  "database_seeding": false,
+  "product_source_modified": false,
+  "missing_inputs_dry_run_only": [
+    ".work/warehouses-20261030/creator/full-3/report.json"
+  ],
+  "expected_creator_report": "D:\\A_Claude\\miniMir2_GPT\\.work\\warehouses-20261030\\creator\\full-3\\report.json"
+}

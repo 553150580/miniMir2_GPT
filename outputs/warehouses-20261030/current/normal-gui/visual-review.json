@@ -1,0 +1,51 @@
+{
+  "visual_passed": true,
+  "reviewer": "Root",
+  "reviewed_at_utc": "2026-10-30T05:01:43.637047+00:00",
+  "report_sha256": "fafc619ecbeb288d6058d5c5569f3612523b6eaaa78fd419106520c8afe7a301",
+  "screenshots": [
+    "00-town-confirm.png",
+    "00-town-entry.png",
+    "01-personal-empty.png",
+    "01-locked-item-details.png",
+    "01-locked-item-details-bottom.png",
+    "02-personal-store-confirm.png",
+    "02-personal-stored.png",
+    "03-personal-cancel-confirm.png",
+    "04-personal-last-confirm.png",
+    "04-last-slot-stored.png",
+    "05-personal-last-return-confirm.png",
+    "06-healthy-personal.png",
+    "07-personal-return-confirm.png",
+    "07-personal-returned.png",
+    "08-shared-permission-denied.png"
+  ],
+  "screenshot_sha256": {
+    "00-town-confirm.png": "e7a3cb750519d1ebd3d8ed08acb53e4f5e9547a566382977512e80d87de9991f",
+    "00-town-entry.png": "ac9e341ac6f191c8fe3716a1a5065860d8a6b46d8ae58c61f2e0eff445c25fc3",
+    "01-personal-empty.png": "fc61a1a5eac21465027c76f661b586b6fccf17425326b25e04a5f2567d393146",
+    "01-locked-item-details.png": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382",
+    "01-locked-item-details-bottom.png": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382",
+    "02-personal-store-confirm.png": "0c1fddc09cc120babfe0a65960b2ea8eb0b366df6098cb13835d93bb6e2163d5",
+    "02-personal-stored.png": "497b588e55feaa369b77ae70e3367739214cc7838fd59f620ed47cd98bd72ce0",
+    "03-personal-cancel-confirm.png": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4",
+    "04-personal-last-confirm.png": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4",
+    "04-last-slot-stored.png": "586a0b46d08181c26219843bff0cefd3240cc9922a7baea69dd647b6549caeb6",
+    "05-personal-last-return-confirm.png": "5196eb8baf3560832acf07eb3c3857dd1137bccf94304292df1fae7ae64d32f5",
+    "06-healthy-personal.png": "810721b34eb564b06e5e354d57f6047c5348416406553024388d3d1ab05ef070",
+    "07-personal-return-confirm.png": "27e0daa87b42c6a3230e7d71ba4e06230d31460c76f1b60bc5124e65e57556be",
+    "07-personal-returned.png": "7253465f90143f14eac4c588bef012a8cabb79f4a80f4ed80e4e943e43394c37",
+    "08-shared-permission-denied.png": "90c420707e8e605110ed8a0d17c632ed173ea8130046ee7ff96eef83010dbadc"
+  },
+  "actual_view_image_count": 15,
+  "scope": "Root已逐张实际view_image检查本轮720×1280 Chrome仓储控件、原列表与确认文字；不是手机真机，也不宣称所有历史界面无问题。",
+  "findings": [
+    "个人双列表、物品详情、数量、存取与取消确认可读，无控件遮挡；末格提交后列表可见，取出原位确认正确。",
+    "健康重入画面角色仍存活，原仓库内容由正常UI重新查询；图像只证明表现，资产和绑定以原WS观察为准。",
+    "普通角色共享权限拒绝按本轮真实提示展示，未采用隔离权益或资金资格。"
+  ],
+  "known_visual_limitations": [
+    "00-town-confirm.png中原MapTravel确认Message单长行左右截断，保留旧源并单列后续修复；不是本轮仓储新增控件。"
+  ],
+  "physical_mobile_verified": false
+}

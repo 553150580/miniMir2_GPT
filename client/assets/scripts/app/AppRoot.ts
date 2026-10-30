@@ -37,6 +37,8 @@ import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, c
 import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
 import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
 import { combatAttributeLines } from './CombatStatusModel';
+import { GameWarehouse, WarehouseInput } from './GameWarehouse';
+import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -54,6 +56,7 @@ export class AppRoot extends Component {
     private skills?: GameSkills;
     private skillAssets?: GameSkillAssets;
     private autoRecycle?: GameAutoRecycle;
+    private warehouse?: GameWarehouse;
     private combatStatus?: GameCombatStatus;
     private ui?: UIMgr;
     private popup?: PopupView;
@@ -221,6 +224,8 @@ export class AppRoot extends Component {
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
         this.autoRecycle = new GameAutoRecycle(this.find('UIMgr/Panels/Settings'));
+        this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
+        const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
         const cast = (event: CastEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCast(event); };
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
         const castStep = (event: CastStepEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCastStep(event); };
@@ -244,6 +249,23 @@ export class AppRoot extends Component {
     }
 
     private bindGameButtons(): void {
+        this.button('UIMgr/Panels/Functions/Pages/Page0/Warehouse', async () => { this.ui!.open('Warehouse'); await this.warehouse!.open(1); });
+        this.button('UIMgr/Panels/Warehouse/Personal', () => this.warehouse!.open(1));
+        this.button('UIMgr/Panels/Warehouse/Shared', () => this.warehouse!.open(2));
+        this.button('UIMgr/Panels/Warehouse/Refresh', () => this.warehouse!.reload());
+        this.button('UIMgr/Panels/Warehouse/Previous', () => this.warehouse!.turnPage(-1));
+        this.button('UIMgr/Panels/Warehouse/Next', () => this.warehouse!.turnPage(1));
+        this.button('UIMgr/Panels/Warehouse/Gold', () => this.warehouse!.chooseCurrency(1));
+        this.button('UIMgr/Panels/Warehouse/Yuanbao', () => this.warehouse!.chooseCurrency(2));
+        for (const [name, action] of [['DepositItem', 1], ['WithdrawItem', 2], ['DepositMoney', 3], ['WithdrawMoney', 4], ['Expand', 5]] as const)
+            this.button('UIMgr/Panels/Warehouse/' + name, () => this.warehouseAction(action));
+        this.button('UIMgr/Panels/Warehouse/Details', () => {
+            const warehouse = this.warehouse!, source = warehouse.snapshot.attachment, details = warehouse.detail(this.world!.gameplay.items);
+            this.combatStatus!.showLiveDetails(details.title, () => {
+                if (this.disposed || this.warehouse !== warehouse || warehouse.snapshot.attachment !== source) return null;
+                try { return warehouse.detail(this.world!.gameplay.items).lines; } catch { return ['原物品已变化，请返回重新选择']; }
+            });
+        });
         for (const name of ['AutoRecycleEnabled', 'RecycleProtectBound', 'RecycleProtectUnbound', ...[0, 1, 2, 3, 4].map(id => 'RecycleQuality' + id)])
             this.button('UIMgr/Panels/Settings/' + name, () => { this.autoRecycle!.markDirty(); this.refreshGame(); }, Toggle.EventType.TOGGLE);
         for (const name of ['RecycleMaxLevel', 'RecycleProtectedTypes']) this.button('UIMgr/Panels/Settings/' + name,
@@ -627,7 +649,7 @@ export class AppRoot extends Component {
         }
         const quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
-            bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice,
+            bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice, warehouseNotice: session.warehouseNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
@@ -651,6 +673,7 @@ export class AppRoot extends Component {
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
         this.autoRecycle?.refresh(this.recycleSnapshot(), this.economicBusy, this.unresolved || !!session.pending?.get(roleIdentity()));
+        this.warehouse?.refresh(this.warehouseInput());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
         if (this.lastInventory !== session.inventory && this.selectedItem && !session.inventory?.items?.some((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString())) this.selectedItem = null;
         if (this.lastInventory !== session.inventory) for (const panel of ['Inventory','Role']) {
@@ -741,6 +764,28 @@ export class AppRoot extends Component {
             this.text(`UIMgr/Panels/${panel}/Message`, selection + (panel === 'Role' ? '\n' + roleBindingText(session.bindingState, this.world.gameplay.map_catalog)
                 + ((this.world.gameplay.rule_version ?? 0) >= 20 ? '\n' + progressionSummary(session.inventory?.level, session.inventory?.progression) : '')
                 : selectedDefinition?.kind === 'equipment' && equipmentReason ? '\n' + equipmentReason : ''));
+        }
+    }
+
+    private warehouseInput(): WarehouseInput {
+        const identity = currentEntryIdentity(), role = session.role ? roleIdentity() : '';
+        return { ready: session.ready && !this.attaching && !this.leaving, attachment: identity && isCurrentEntry(identity) ? attachmentKey(identity) : '',
+            role, rule: session.entry?.resourceVersion.toString() ?? '', config: warehouseConfig(this.world?.gameplay.warehouses),
+            inventory: session.inventory?.items ?? [], wallet: session.wallet, definitions: this.world?.gameplay.items ?? [],
+            writeBlocked: this.economicBusy || this.unresolved || !!(role && session.pending?.get(role)) };
+    }
+    private async warehouseAction(action: number): Promise<void> {
+        this.ensureNotLeaving();
+        const warehouse = this.warehouse!, preview = warehouse.prepare(action);
+        if (!await this.popup!.confirm('Confirm', warehouse.confirmation(preview, this.world!.gameplay.items), '仓库操作确认')) return;
+        if (this.disposed) return;
+        validateWarehousePreview(preview, warehouse.snapshot);
+        try {
+            await this.economic(40022, preview.request);
+            if (!this.disposed && this.warehouse === warehouse && this.warehouseInput().attachment === preview.attachment) await warehouse.committed(preview.request.scope);
+        } catch (error) {
+            if (!this.disposed && this.warehouse === warehouse && this.warehouseInput().attachment === preview.attachment) warehouse.rejected(error, preview.request.scope);
+            throw error;
         }
     }
 
@@ -1023,6 +1068,8 @@ export class AppRoot extends Component {
         const pending = ledger?.get(role);
         if (!pending || this.economicBusy) return;
         this.economicBusy = true;
+        if (pending.id === 40022 && identity && isCurrentEntry(identity)) session.warehouseReceipts.expect(attachmentKey(identity),
+            (pending.value.operation as { opId: Uint8Array }).opId, pending.value as unknown as WarehouseRequest);
         let result: any;
         try {
             result = await session.connection.request(pending.id, pending.value);
@@ -1038,7 +1085,10 @@ export class AppRoot extends Component {
         }
         if (result.pending) { this.unresolved = true; throw new Error('操作仍在处理中，请重新认证查询结果'); }
         ledger!.clear(role); this.unresolved = false;
-        if (result.errorCode) throw new Error(protocolErrorMessage(pending.id, result.errorCode));
+        if (result.errorCode) {
+            if (pending.id === 40022) session.warehouseReceipts.cancel(expected);
+            throw new ProtocolResponseError(pending.id, result.errorCode);
+        }
         this.status('操作已由服务端确认');
     }
 

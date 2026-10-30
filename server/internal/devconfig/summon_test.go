@@ -34,7 +34,7 @@ func TestSummonCandidatesPreserveSourceAndClosedProfile(t *testing.T) {
 		t.Fatal(err)
 	}
 	f := cfg.Fixture
-	if f.RuleVersion != 22 || len(f.Skills) != 22 || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+	if f.RuleVersion != 23 || len(f.Skills) != 22 || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
 		t.Fatal("候选载入不能开启主profile或更换免费开发宠物模式")
 	}
 	if _, ok := f.Skill(17); ok {

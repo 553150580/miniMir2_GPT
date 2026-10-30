@@ -1,0 +1,4 @@
+Error: 原条目没有可用真实触点
+    at select (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:60:3025)
+    at async gotoSlot (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:62:190)
+    at async main (D:\A_Claude\miniMir2_GPT\tools\client\verify_warehouses_browser.cjs:81:37)

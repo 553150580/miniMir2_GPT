@@ -1,0 +1,1 @@
+{"prepared": true, "run_started": false, "ports": {"account": 18110, "game": 18111, "gm": 18112}, "static_port": 18082, "database_prefix": "minimir_dev_game_test_whgui_", "database_dropped": false, "main_stop_supported": false, "scope": "只准备工具；--run才编译QA专属binary并启动两个新进程，绝不停止主服务"}

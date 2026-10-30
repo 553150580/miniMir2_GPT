@@ -1,0 +1,39 @@
+{
+  "original_report_path": ".work/warehouses-20261030/runtime-control/report.json",
+  "preserved_report_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/report.json",
+  "original_report_raw_sha256": "38ec4a72bc0ac2df36c1b3bb7a3f29c4c4fdaba7547c1f8d00c5cb876af03a04",
+  "original_report_unchanged": true,
+  "reason": "原后端已退出导致第一次preflight拒绝；原目录完整搬入history后才允许第二次同源切换。旧报告引用按本映射解析，不能误读重试的新同名日志。",
+  "logs": [
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/mongo-before.stdout.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stdout.txt",
+      "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+    },
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/mongo-before.stderr.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/server-before.stdout.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stdout.txt",
+      "raw_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d"
+    },
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/server-before.stderr.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/client-before.stdout.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stdout.txt",
+      "raw_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835"
+    },
+    {
+      "original_path": ".work/warehouses-20261030/runtime-control/client-before.stderr.txt",
+      "preserved_path": ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stderr.txt",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

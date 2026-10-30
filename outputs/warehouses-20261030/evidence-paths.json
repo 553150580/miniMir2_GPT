@@ -1,0 +1,2726 @@
+{
+  ".work/warehouses-20261030/go/full-2/report.json": {
+    "path": "outputs/warehouses-20261030/current/go/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "07dd86e3fce1903d74b424e648c022ed8235b2a70ea65079a43d09dbd489fd31",
+    "file_sha256": "fa1f0e74ad405463774bf8d529b7489f458a97a7cda5bc5f8fd1a52ea18038c6"
+  },
+  ".work/warehouses-20261030/go/full-2/wrapper.json": {
+    "path": "outputs/warehouses-20261030/current/go/wrapper.json",
+    "encoding": "identity",
+    "raw_sha256": "4cfe30dd452f61b6640db2a4aef44ae1df57904127f7316fbbd0b13d7b4bb131",
+    "file_sha256": "4cfe30dd452f61b6640db2a4aef44ae1df57904127f7316fbbd0b13d7b4bb131"
+  },
+  ".work/warehouses-20261030/go/full-2/started.json": {
+    "path": "outputs/warehouses-20261030/current/go/started.json",
+    "encoding": "identity",
+    "raw_sha256": "c746bf9fe0b11bfe58965c6478b899f169266d534f2577a20a06dde2bcc6b105",
+    "file_sha256": "c746bf9fe0b11bfe58965c6478b899f169266d534f2577a20a06dde2bcc6b105"
+  },
+  ".work/warehouses-20261030/go/full-2/events.jsonl": {
+    "path": "outputs/warehouses-20261030/current/go/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "ca7649a69513dc46f595d00f5597fb43e949783f6ca5d406bf01f5ca0840399d",
+    "file_sha256": "cc66622f6b7a7d4c88fb3b6361259c428e76ab59b69387b321a5c681d598f11d"
+  },
+  ".work/warehouses-20261030/go/full-2/full-mongo-race.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/go/full-mongo-race.stdout.txt.gz",
+    "encoding": "gzip",
+    "raw_sha256": "135ec0d916536fff657c18a14b1d12c90f98e2c0b75f21649dee23af3c241421",
+    "file_sha256": "14d8d4f045493ac761b7975e677e210728a40f1511d5ecab12d92c808bf1a612"
+  },
+  ".work/warehouses-20261030/go/full-2/full-mongo-race.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/go/full-mongo-race.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/report.json": {
+    "path": "outputs/warehouses-20261030/current/client/report.json",
+    "encoding": "identity",
+    "raw_sha256": "b20121f85c83fe870d2c8dc78b651fe53fcc34df5657f95df7e7396c64d5dcc2",
+    "file_sha256": "b20121f85c83fe870d2c8dc78b651fe53fcc34df5657f95df7e7396c64d5dcc2"
+  },
+  ".work/warehouses-20261030/client/full-3/started.json": {
+    "path": "outputs/warehouses-20261030/current/client/started.json",
+    "encoding": "identity",
+    "raw_sha256": "b085bd009e9c5aafec69650d9ea544b1c52ef71d4e98d2048630cb39d8c800eb",
+    "file_sha256": "b085bd009e9c5aafec69650d9ea544b1c52ef71d4e98d2048630cb39d8c800eb"
+  },
+  ".work/warehouses-20261030/client/full-3/models.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/models.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "file_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+  },
+  ".work/warehouses-20261030/client/full-3/models.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/models.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/full-ui-app.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/full-ui-app.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "1347f010f66793f9749bc2bd8fcb5fef0d5a28b80dc815ba0ee89cc554972f00",
+    "file_sha256": "1347f010f66793f9749bc2bd8fcb5fef0d5a28b80dc815ba0ee89cc554972f00"
+  },
+  ".work/warehouses-20261030/client/full-3/full-ui-app.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/full-ui-app.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/scene.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/scene.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "c73e9043af753acebf07477898f283538e9d39082b6d02910281b708779e10bf",
+    "file_sha256": "c73e9043af753acebf07477898f283538e9d39082b6d02910281b708779e10bf"
+  },
+  ".work/warehouses-20261030/client/full-3/scene.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/scene.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/strict.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/strict.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "file_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+  },
+  ".work/warehouses-20261030/client/full-3/strict.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/strict.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "2df35e9ef051d219500a17013b47e1e20dac9063ed41aeb094a284098145cb98",
+    "file_sha256": "2df35e9ef051d219500a17013b47e1e20dac9063ed41aeb094a284098145cb98"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol-lint.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol-lint.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6",
+    "file_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol-lint.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol-lint.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/creator/full-3/report.json": {
+    "path": "outputs/warehouses-20261030/current/creator/report.json",
+    "encoding": "identity",
+    "raw_sha256": "2638526c3d06d0ba82fd7caf9a53033da48a56daf374d42e658020ceb9749610",
+    "file_sha256": "2638526c3d06d0ba82fd7caf9a53033da48a56daf374d42e658020ceb9749610"
+  },
+  ".work/warehouses-20261030/creator/full-3/wrapper.json": {
+    "path": "outputs/warehouses-20261030/current/creator/wrapper.json",
+    "encoding": "identity",
+    "raw_sha256": "e39d83242bd4ef83d703474c5b5473907ac4292543577063e21a17bacec7e7a0",
+    "file_sha256": "e39d83242bd4ef83d703474c5b5473907ac4292543577063e21a17bacec7e7a0"
+  },
+  ".work/warehouses-20261030/creator/full-3/started.json": {
+    "path": "outputs/warehouses-20261030/current/creator/started.json",
+    "encoding": "identity",
+    "raw_sha256": "4f7b387a7885da95d4a539db4d71343c6b289c293f83bcc66897d9e17fbc4895",
+    "file_sha256": "4f7b387a7885da95d4a539db4d71343c6b289c293f83bcc66897d9e17fbc4895"
+  },
+  ".work/warehouses-20261030/creator/full-3/creator.log": {
+    "path": "outputs/warehouses-20261030/current/creator/creator.log",
+    "encoding": "identity",
+    "raw_sha256": "45c15fad2b18052786fea273ca9d2a8c4aa9835f853235ead973a3e564234ad4",
+    "file_sha256": "45c15fad2b18052786fea273ca9d2a8c4aa9835f853235ead973a3e564234ad4"
+  },
+  ".work/warehouses-20261030/creator/full-3/candidate-files.json": {
+    "path": "outputs/warehouses-20261030/current/creator/candidate-files.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "312b618a60475e532f4f317b49f862fc775129de8431a14e231e92d2040d6893",
+    "file_sha256": "6ac52709ed6cfbd81927101f2471f4b85ba87a7e2b02864d46033e22d72240fd"
+  },
+  ".work/warehouses-20261030/creator/full-3/creator-build-candidate.json": {
+    "path": "outputs/warehouses-20261030/current/creator/creator-build-candidate.json",
+    "encoding": "identity",
+    "raw_sha256": "c45a5e213f3f1f819378e3c9b29900364358b89ed1495105e137dca87a039fde",
+    "file_sha256": "c45a5e213f3f1f819378e3c9b29900364358b89ed1495105e137dca87a039fde"
+  },
+  ".work/warehouses-20261030/creator/full-3/served-build-before.json": {
+    "path": "outputs/warehouses-20261030/current/creator/served-build-before.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-3/served-build-after.json": {
+    "path": "outputs/warehouses-20261030/current/creator/served-build-after.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-3/creator.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/creator/creator.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "598820409f32c725c4f98800aa6c63439aba37d3ae88288dc9a46879106ceba8",
+    "file_sha256": "598820409f32c725c4f98800aa6c63439aba37d3ae88288dc9a46879106ceba8"
+  },
+  ".work/warehouses-20261030/creator/full-3/creator.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/creator/creator.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/report.json": {
+    "path": "outputs/warehouses-20261030/current/publication/report.json",
+    "encoding": "identity",
+    "raw_sha256": "0a1d827d186bc6f6f2920ce4c78eebedfa3b2cc54ab67d48f0cd6af19d5cdc11",
+    "file_sha256": "0a1d827d186bc6f6f2920ce4c78eebedfa3b2cc54ab67d48f0cd6af19d5cdc11"
+  },
+  ".work/warehouses-20261030/runtime-control/mongo-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/mongo-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/runtime-control/mongo-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/mongo-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/server-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f",
+    "file_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f"
+  },
+  ".work/warehouses-20261030/runtime-control/server-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/client-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835",
+    "file_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835"
+  },
+  ".work/warehouses-20261030/runtime-control/client-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/server-stop.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-stop.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "750796e2dc8aa0f9a1cb9bb1ea8bcef9701ca278ea850efd731b4b7336525cc5",
+    "file_sha256": "750796e2dc8aa0f9a1cb9bb1ea8bcef9701ca278ea850efd731b4b7336525cc5"
+  },
+  ".work/warehouses-20261030/runtime-control/server-stop.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-stop.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/client-stop.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-stop.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64",
+    "file_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64"
+  },
+  ".work/warehouses-20261030/runtime-control/client-stop.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-stop.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/client-stopped-status.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-stopped-status.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "523f44ef92f6635426c510248a979305fad0cada3ce15387d50e72c8c851a506",
+    "file_sha256": "523f44ef92f6635426c510248a979305fad0cada3ce15387d50e72c8c851a506"
+  },
+  ".work/warehouses-20261030/runtime-control/client-stopped-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-stopped-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/server-start.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-start.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+    "file_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b"
+  },
+  ".work/warehouses-20261030/runtime-control/server-start.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/server-start.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/client-start.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-start.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "a7b2cceea29c0f3d791ce928e9b43a590129753ed80a904ca4fb7badbeffc983",
+    "file_sha256": "a7b2cceea29c0f3d791ce928e9b43a590129753ed80a904ca4fb7badbeffc983"
+  },
+  ".work/warehouses-20261030/runtime-control/client-start.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-start.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/client-after.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-after.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851",
+    "file_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851"
+  },
+  ".work/warehouses-20261030/runtime-control/client-after.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/client-after.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-control/mongo-after.stdout.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/mongo-after.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/runtime-control/mongo-after.stderr.txt": {
+    "path": "outputs/warehouses-20261030/current/publication/mongo-after.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/report.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "fafc619ecbeb288d6058d5c5569f3612523b6eaaa78fd419106520c8afe7a301",
+    "file_sha256": "6cbce930adac720f14e9cdfbb95ea46c9fd5841a386a95d608ee830a8d4f761c"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/visual-review.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/visual-review.json",
+    "encoding": "identity",
+    "raw_sha256": "cf932a6f3711fa661b904d785cfec4b164a7e3ef6c63a76e88e9704b5b055002",
+    "file_sha256": "cf932a6f3711fa661b904d785cfec4b164a7e3ef6c63a76e88e9704b5b055002"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/handoff.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/handoff.json",
+    "encoding": "identity",
+    "raw_sha256": "a4ef08c4055131f77fc34181fad81f983e87e4b1adeb2ab8e3710bceac89a2f0",
+    "file_sha256": "a4ef08c4055131f77fc34181fad81f983e87e4b1adeb2ab8e3710bceac89a2f0"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/run.py": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/run.py",
+    "encoding": "identity",
+    "raw_sha256": "ad2d17207dc327a905b29c56f3ff8fa90070cd2510341941301f05ff6ea0030c",
+    "file_sha256": "ad2d17207dc327a905b29c56f3ff8fa90070cd2510341941301f05ff6ea0030c"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/tool-at-start.cjs": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/tool-at-start.cjs",
+    "encoding": "identity",
+    "raw_sha256": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3",
+    "file_sha256": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/loaded-public.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/loaded-public.json",
+    "encoding": "identity",
+    "raw_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67",
+    "file_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/stdout.log": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "df985c65d73815f0f66c14bcf74568fab35e862d07aa29a8e2d11bff213787df",
+    "file_sha256": "df985c65d73815f0f66c14bcf74568fab35e862d07aa29a8e2d11bff213787df"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/stderr.log": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/00-town-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/00-town-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "e7a3cb750519d1ebd3d8ed08acb53e4f5e9547a566382977512e80d87de9991f",
+    "file_sha256": "e7a3cb750519d1ebd3d8ed08acb53e4f5e9547a566382977512e80d87de9991f"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/00-town-entry.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/00-town-entry.png",
+    "encoding": "identity",
+    "raw_sha256": "ac9e341ac6f191c8fe3716a1a5065860d8a6b46d8ae58c61f2e0eff445c25fc3",
+    "file_sha256": "ac9e341ac6f191c8fe3716a1a5065860d8a6b46d8ae58c61f2e0eff445c25fc3"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/01-personal-empty.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/01-personal-empty.png",
+    "encoding": "identity",
+    "raw_sha256": "fc61a1a5eac21465027c76f661b586b6fccf17425326b25e04a5f2567d393146",
+    "file_sha256": "fc61a1a5eac21465027c76f661b586b6fccf17425326b25e04a5f2567d393146"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/01-locked-item-details.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/01-locked-item-details.png",
+    "encoding": "identity",
+    "raw_sha256": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382",
+    "file_sha256": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/01-locked-item-details-bottom.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/01-locked-item-details-bottom.png",
+    "encoding": "identity",
+    "raw_sha256": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382",
+    "file_sha256": "fe0d39a6983b09f28a6f3f84026dd5a6ac4f3b535521beb0a70f9958626af382"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/02-personal-store-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/02-personal-store-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "0c1fddc09cc120babfe0a65960b2ea8eb0b366df6098cb13835d93bb6e2163d5",
+    "file_sha256": "0c1fddc09cc120babfe0a65960b2ea8eb0b366df6098cb13835d93bb6e2163d5"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/02-personal-stored.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/02-personal-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "497b588e55feaa369b77ae70e3367739214cc7838fd59f620ed47cd98bd72ce0",
+    "file_sha256": "497b588e55feaa369b77ae70e3367739214cc7838fd59f620ed47cd98bd72ce0"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/03-personal-cancel-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/03-personal-cancel-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4",
+    "file_sha256": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/04-personal-last-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/04-personal-last-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4",
+    "file_sha256": "b7771e4aa4338bc52b021b4a96ce8cd44c4e95a9092566591a1bfe7bda13eaf4"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/04-last-slot-stored.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/04-last-slot-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "586a0b46d08181c26219843bff0cefd3240cc9922a7baea69dd647b6549caeb6",
+    "file_sha256": "586a0b46d08181c26219843bff0cefd3240cc9922a7baea69dd647b6549caeb6"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/05-personal-last-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/05-personal-last-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "5196eb8baf3560832acf07eb3c3857dd1137bccf94304292df1fae7ae64d32f5",
+    "file_sha256": "5196eb8baf3560832acf07eb3c3857dd1137bccf94304292df1fae7ae64d32f5"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/06-healthy-personal.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/06-healthy-personal.png",
+    "encoding": "identity",
+    "raw_sha256": "810721b34eb564b06e5e354d57f6047c5348416406553024388d3d1ab05ef070",
+    "file_sha256": "810721b34eb564b06e5e354d57f6047c5348416406553024388d3d1ab05ef070"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/07-personal-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/07-personal-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "27e0daa87b42c6a3230e7d71ba4e06230d31460c76f1b60bc5124e65e57556be",
+    "file_sha256": "27e0daa87b42c6a3230e7d71ba4e06230d31460c76f1b60bc5124e65e57556be"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/07-personal-returned.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/07-personal-returned.png",
+    "encoding": "identity",
+    "raw_sha256": "7253465f90143f14eac4c588bef012a8cabb79f4a80f4ed80e4e943e43394c37",
+    "file_sha256": "7253465f90143f14eac4c588bef012a8cabb79f4a80f4ed80e4e943e43394c37"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/08-shared-permission-denied.png": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/screenshots/08-shared-permission-denied.png",
+    "encoding": "identity",
+    "raw_sha256": "90c420707e8e605110ed8a0d17c632ed173ea8130046ee7ff96eef83010dbadc",
+    "file_sha256": "90c420707e8e605110ed8a0d17c632ed173ea8130046ee7ff96eef83010dbadc"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/report.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "dd7f64e1aec07ce0e42bd71356ff7e35002632b2f36745b016c5cda5b6d16081",
+    "file_sha256": "64044ee99a6e6708942d34bbf4ba8883f09b33e5e2c149ce525542a6330d39c6"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/visual-review.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/visual-review.json",
+    "encoding": "identity",
+    "raw_sha256": "7a94e700a44e88ff92a8b6a94bf076c86cd76c0d2a8c4662e139ac049333a2df",
+    "file_sha256": "7a94e700a44e88ff92a8b6a94bf076c86cd76c0d2a8c4662e139ac049333a2df"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/handoff.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/handoff.json",
+    "encoding": "identity",
+    "raw_sha256": "1fd0b9c0bbccca81063982c8d2f78443cc1ae16a0f42b473b7078344809612bd",
+    "file_sha256": "1fd0b9c0bbccca81063982c8d2f78443cc1ae16a0f42b473b7078344809612bd"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/loaded-public.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/loaded-public.json",
+    "encoding": "identity",
+    "raw_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67",
+    "file_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/qualify.stdout.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/qualify.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "cc8fb22daabc5b8515019d61b7ff97cfe764dd22a9e265f9c00d2333550659fd",
+    "file_sha256": "cc8fb22daabc5b8515019d61b7ff97cfe764dd22a9e265f9c00d2333550659fd"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/qualify.stderr.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/qualify.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/00-town-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/00-town-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "d1540db44f8293941056024d54886e3e35b429f63faa99101b920ddf2c627cd5",
+    "file_sha256": "d1540db44f8293941056024d54886e3e35b429f63faa99101b920ddf2c627cd5"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/00-town-entry.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/00-town-entry.png",
+    "encoding": "identity",
+    "raw_sha256": "b0f0b18e446efd48cdaad4d61887865ad0802869fa793baf8284dcf4b6ff5d8b",
+    "file_sha256": "b0f0b18e446efd48cdaad4d61887865ad0802869fa793baf8284dcf4b6ff5d8b"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/01-personal-empty.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/01-personal-empty.png",
+    "encoding": "identity",
+    "raw_sha256": "972593b5a17fa71c9d41f0f3dd6b36b75f0c214d34e24ada47591d2cf2034cb1",
+    "file_sha256": "972593b5a17fa71c9d41f0f3dd6b36b75f0c214d34e24ada47591d2cf2034cb1"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/01-locked-item-details.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/01-locked-item-details.png",
+    "encoding": "identity",
+    "raw_sha256": "f7464540e562d074f74b644f0c6ee89ff8c97858c81b6b4188f1b4ec0b889a95",
+    "file_sha256": "f7464540e562d074f74b644f0c6ee89ff8c97858c81b6b4188f1b4ec0b889a95"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/01-locked-item-details-bottom.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/01-locked-item-details-bottom.png",
+    "encoding": "identity",
+    "raw_sha256": "f7464540e562d074f74b644f0c6ee89ff8c97858c81b6b4188f1b4ec0b889a95",
+    "file_sha256": "f7464540e562d074f74b644f0c6ee89ff8c97858c81b6b4188f1b4ec0b889a95"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/02-personal-store-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/02-personal-store-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "d7b56b242f2b829e821eb4111a88c8288f1a3e2fa62490563e3ad9250490ea86",
+    "file_sha256": "d7b56b242f2b829e821eb4111a88c8288f1a3e2fa62490563e3ad9250490ea86"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/02-personal-stored.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/02-personal-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "86599cb8e61771475e2c0af385c6c9e2429ea97b3890cabefebcde60062423ea",
+    "file_sha256": "86599cb8e61771475e2c0af385c6c9e2429ea97b3890cabefebcde60062423ea"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/03-personal-cancel-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/03-personal-cancel-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "5e9b751a612b8e0d46410b502945d942c3cabbe7f85b573df2102e3925d9a5f1",
+    "file_sha256": "5e9b751a612b8e0d46410b502945d942c3cabbe7f85b573df2102e3925d9a5f1"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/04-personal-last-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/04-personal-last-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "5e9b751a612b8e0d46410b502945d942c3cabbe7f85b573df2102e3925d9a5f1",
+    "file_sha256": "5e9b751a612b8e0d46410b502945d942c3cabbe7f85b573df2102e3925d9a5f1"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/04-last-slot-stored.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/04-last-slot-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "790c548078629cb3a3ae6eef6ed346334be0e36c367666099df77229bece86a2",
+    "file_sha256": "790c548078629cb3a3ae6eef6ed346334be0e36c367666099df77229bece86a2"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/05-personal-last-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/05-personal-last-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "95899af5e235be06fbc8efa95dd8697fe5cc6edf524017f6e8fdcbe41bfaf9f4",
+    "file_sha256": "95899af5e235be06fbc8efa95dd8697fe5cc6edf524017f6e8fdcbe41bfaf9f4"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/06-healthy-personal.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/06-healthy-personal.png",
+    "encoding": "identity",
+    "raw_sha256": "e61422b7692c7b6812a944984a1194271f867d9914a16cc983fd63e92eeefadb",
+    "file_sha256": "e61422b7692c7b6812a944984a1194271f867d9914a16cc983fd63e92eeefadb"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/07-personal-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/07-personal-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "aa89c76f399eb2ac8449c79b7320cdd452a0c128eb47c41fc8537a27bb06c059",
+    "file_sha256": "aa89c76f399eb2ac8449c79b7320cdd452a0c128eb47c41fc8537a27bb06c059"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/07-personal-returned.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/07-personal-returned.png",
+    "encoding": "identity",
+    "raw_sha256": "def3c177260c2329f6d6108689a648ff6eeefe3dcc8d741fdcba71b430479ef9",
+    "file_sha256": "def3c177260c2329f6d6108689a648ff6eeefe3dcc8d741fdcba71b430479ef9"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/08-shared-whole-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/08-shared-whole-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "9eba25c271223fd3b097059f386e34d504faffd65106f4f6a28f255e01fb71ff",
+    "file_sha256": "9eba25c271223fd3b097059f386e34d504faffd65106f4f6a28f255e01fb71ff"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/09-shared-partial-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/09-shared-partial-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "c7af74c6155eb76e240d2b81be73c260558623343a90beb1a9919f32646a39ba",
+    "file_sha256": "c7af74c6155eb76e240d2b81be73c260558623343a90beb1a9919f32646a39ba"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/09-partial-stored.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/09-partial-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "e14333197e23f117f338843df8c8f77873c0d1d6d486bef5c4e727e12b0b9fff",
+    "file_sha256": "e14333197e23f117f338843df8c8f77873c0d1d6d486bef5c4e727e12b0b9fff"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/10-shared-partial-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/10-shared-partial-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "fee6c854224936ae079c1aac01e97b860484fca02b32131006218108c134e621",
+    "file_sha256": "fee6c854224936ae079c1aac01e97b860484fca02b32131006218108c134e621"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/11-Gold-deposit-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/11-Gold-deposit-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "84ba41b8d3d51e63677f7d9f4711b35600834334bd51bb9457c48b7198bfd420",
+    "file_sha256": "84ba41b8d3d51e63677f7d9f4711b35600834334bd51bb9457c48b7198bfd420"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/11-Gold-withdraw-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/11-Gold-withdraw-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "c916855015fc864af8d84d48683d6c7e1e7b03233484f1c4da9cd14ddab67f7e",
+    "file_sha256": "c916855015fc864af8d84d48683d6c7e1e7b03233484f1c4da9cd14ddab67f7e"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/11-Yuanbao-deposit-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/11-Yuanbao-deposit-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "ea9c6365e5d92f2ae05ebe3d6427dd9002c88587887c1e961c6b72238de37b93",
+    "file_sha256": "ea9c6365e5d92f2ae05ebe3d6427dd9002c88587887c1e961c6b72238de37b93"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/11-Yuanbao-withdraw-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/11-Yuanbao-withdraw-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "5341e87945b54eef8cd6630074eb50ee3c11ba0fab6181d48d6af276157927da",
+    "file_sha256": "5341e87945b54eef8cd6630074eb50ee3c11ba0fab6181d48d6af276157927da"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/12-personal-expand-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/12-personal-expand-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "122fb014efd1e00a953f50afba6e37611a4c6425035aa3b276ec364eb36fe7b3",
+    "file_sha256": "122fb014efd1e00a953f50afba6e37611a4c6425035aa3b276ec364eb36fe7b3"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/12-expanded.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/12-expanded.png",
+    "encoding": "identity",
+    "raw_sha256": "ef683704ce1d798c4fde38d51594accedf52fc389a9aa511a7fcc54b69c2ed62",
+    "file_sha256": "ef683704ce1d798c4fde38d51594accedf52fc389a9aa511a7fcc54b69c2ed62"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/13-expanded-last-confirm.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/13-expanded-last-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "b7bcc4f44cae47eedc7f1f0162a6775bed4b791b4230994ea2475ad51e7ea2c9",
+    "file_sha256": "b7bcc4f44cae47eedc7f1f0162a6775bed4b791b4230994ea2475ad51e7ea2c9"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/14-healthy-expanded.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/14-healthy-expanded.png",
+    "encoding": "identity",
+    "raw_sha256": "e2396ad48b41ce3ed40f3d6858a02a0a29bdd258e476f3597fa62d361c95eb49",
+    "file_sha256": "e2396ad48b41ce3ed40f3d6858a02a0a29bdd258e476f3597fa62d361c95eb49"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser/15-shared-persisted.png": {
+    "path": "outputs/warehouses-20261030/current/isolated-gui/screenshots/15-shared-persisted.png",
+    "encoding": "identity",
+    "raw_sha256": "4844ffddd65196889a20405aeb10d364047222da79ba782b675ff6b0262b4cac",
+    "file_sha256": "4844ffddd65196889a20405aeb10d364047222da79ba782b675ff6b0262b4cac"
+  },
+  ".work/warehouses-20261030/browser/report-contract-3.json": {
+    "path": "outputs/warehouses-20261030/support/gui-producer-contract.json",
+    "encoding": "identity",
+    "raw_sha256": "183852eb6578ec2779b933ee9663b064f9c0b142aa0933039d7971fe57eed540",
+    "file_sha256": "183852eb6578ec2779b933ee9663b064f9c0b142aa0933039d7971fe57eed540"
+  },
+  ".work/warehouses-20261030/browser/static-3/report.json": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/report.json",
+    "encoding": "identity",
+    "raw_sha256": "88e397a0de93fe150ad3283ade29ca06c8f3b4c9253b07f2c6ad6ec1293295a0",
+    "file_sha256": "88e397a0de93fe150ad3283ade29ca06c8f3b4c9253b07f2c6ad6ec1293295a0"
+  },
+  ".work/warehouses-20261030/browser/static-3/1.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/1.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/1.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/1.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/2.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/2.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/2.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/2.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/3.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/3.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4",
+    "file_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4"
+  },
+  ".work/warehouses-20261030/browser/static-3/3.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/3.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/4.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/4.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "4a40f65cfdb0bff50a26be5f5cfacfb0a6a6656581e32006c8a7da41dcf0b1ef",
+    "file_sha256": "4a40f65cfdb0bff50a26be5f5cfacfb0a6a6656581e32006c8a7da41dcf0b1ef"
+  },
+  ".work/warehouses-20261030/browser/static-3/4.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/4.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-3/5.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/5.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "cb6cd5af6f39e467760eafefa1cbd2c305221539c8767739d6cb63832b8a64aa",
+    "file_sha256": "cb6cd5af6f39e467760eafefa1cbd2c305221539c8767739d6cb63832b8a64aa"
+  },
+  ".work/warehouses-20261030/browser/static-3/5.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/gui-tool-static-current/5.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/wrapper-start.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/wrapper-start.json",
+    "encoding": "identity",
+    "raw_sha256": "237849a4e83b104a4a01a95cd30de56279b13b1190f2d5bfa1112897a49aab02",
+    "file_sha256": "237849a4e83b104a4a01a95cd30de56279b13b1190f2d5bfa1112897a49aab02"
+  },
+  ".work/warehouses-20261030/browser/normal/run-01/wrapper-result.json": {
+    "path": "outputs/warehouses-20261030/current/normal-gui/wrapper-result.json",
+    "encoding": "identity",
+    "raw_sha256": "4f09c5e17a662a2258f5fb225f92c72399b9ba7f2a17db409698d46c3dd3a421",
+    "file_sha256": "4f09c5e17a662a2258f5fb225f92c72399b9ba7f2a17db409698d46c3dd3a421"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/report.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "0b84acce1520d19db50fca16820c7e85d53fa59147962fb8ee9eb1fc4cc3452a",
+    "file_sha256": "951a932e4bebb96056f1f4dfeba04238c4b9a90cc1533f2be54adb309ce77f7f"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/runtime.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "306e8a1c8d83e8189690ef2f2150fda6bd7a5ac6579a5d488e5721346c17a0fa",
+    "file_sha256": "306e8a1c8d83e8189690ef2f2150fda6bd7a5ac6579a5d488e5721346c17a0fa"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/static-runtime.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/static-runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "c1c2e07fee615b7d3a1b2b6f690de320c4f6fac40982ae2fec016713034fa01d",
+    "file_sha256": "c1c2e07fee615b7d3a1b2b6f690de320c4f6fac40982ae2fec016713034fa01d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/build.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/build.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/node-path.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/node-path.log",
+    "encoding": "identity",
+    "raw_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d",
+    "file_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/browser.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/browser.log",
+    "encoding": "identity",
+    "raw_sha256": "8cf84209fa1fcd90d72ae48fe6433142ebce5f64458f9e155b2e7dcb6158e652",
+    "file_sha256": "8cf84209fa1fcd90d72ae48fe6433142ebce5f64458f9e155b2e7dcb6158e652"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/server.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/server.log",
+    "encoding": "identity",
+    "raw_sha256": "1ff0a25669885359857eac66e584f6842189731171be76a1b9a509eb486e059d",
+    "file_sha256": "1ff0a25669885359857eac66e584f6842189731171be76a1b9a509eb486e059d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/static.log": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/static.log",
+    "encoding": "identity",
+    "raw_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2",
+    "file_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-aa9839cf51b84c7c8f6da51e8a1c5564/qualifications/58a6ba7b2a263a6aa7e5b22ae3a43c07.json": {
+    "path": "outputs/warehouses-20261030/current/isolated-parent/qualification.json",
+    "encoding": "identity",
+    "raw_sha256": "7ac4e3699014712e5c507f9572f6588e00a4f87d198d4b9545741df44e153747",
+    "file_sha256": "7ac4e3699014712e5c507f9572f6588e00a4f87d198d4b9545741df44e153747"
+  },
+  ".work/warehouses-20261030/runtime-before.json": {
+    "path": "outputs/warehouses-20261030/current/publication/runtime-before.json",
+    "encoding": "identity",
+    "raw_sha256": "1e8fad6dedb1b44434ba1dfad4ef1002c4a9e72a11aa7551686cc4434cbda8c4",
+    "file_sha256": "1e8fad6dedb1b44434ba1dfad4ef1002c4a9e72a11aa7551686cc4434cbda8c4"
+  },
+  ".work/warehouses-20261030/runtime-after.json": {
+    "path": "outputs/warehouses-20261030/current/publication/runtime-after.json",
+    "encoding": "identity",
+    "raw_sha256": "ccd16e7dc3e6a00a4c75b5d9f8ebb40f7507e27120c5704649be2dc428e2bd47",
+    "file_sha256": "ccd16e7dc3e6a00a4c75b5d9f8ebb40f7507e27120c5704649be2dc428e2bd47"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol/protocol-check-0.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol/protocol-check-0.txt",
+    "encoding": "identity",
+    "raw_sha256": "9d500568d53112df01f93bdb1c1a23e9c4f004f5265fb1bafc486ed0296777d6",
+    "file_sha256": "9d500568d53112df01f93bdb1c1a23e9c4f004f5265fb1bafc486ed0296777d6"
+  },
+  ".work/warehouses-20261030/client/full-3/protocol/protocol-check-1.txt": {
+    "path": "outputs/warehouses-20261030/current/client/protocol/protocol-check-1.txt",
+    "encoding": "identity",
+    "raw_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "file_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91"
+  },
+  ".work/warehouses-20261030/configuration-run-01/report.json": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/report.json",
+    "encoding": "identity",
+    "raw_sha256": "3f9f87ebe69301c14f6d566a024cada86712f62dc0d35bfd13bb8901ef120a48",
+    "file_sha256": "3f9f87ebe69301c14f6d566a024cada86712f62dc0d35bfd13bb8901ef120a48"
+  },
+  ".work/warehouses-20261030/configuration-run-01/export.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/export.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "2f94c5863d3dd9d4b85b7a7d339ec813f767646acd0927b9c242ca14fb7a2715",
+    "file_sha256": "2f94c5863d3dd9d4b85b7a7d339ec813f767646acd0927b9c242ca14fb7a2715"
+  },
+  ".work/warehouses-20261030/configuration-run-01/export.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/export.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/sync-bindings.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/sync-bindings.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "feba6354f2f1737dae69e1747e44774e678fd8343425f81b7284f0ddb53111a7",
+    "file_sha256": "feba6354f2f1737dae69e1747e44774e678fd8343425f81b7284f0ddb53111a7"
+  },
+  ".work/warehouses-20261030/configuration-run-01/sync-bindings.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/sync-bindings.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/fixture.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/fixture.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "53574657918f96c1bd0e37c92a2c04b742dbb41d39ff919af84ff569206b4ddf",
+    "file_sha256": "53574657918f96c1bd0e37c92a2c04b742dbb41d39ff919af84ff569206b4ddf"
+  },
+  ".work/warehouses-20261030/configuration-run-01/fixture.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/fixture.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/pet-candidates.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/pet-candidates.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "09f1de1c5320fde5c2784e39d785d3161cfc67eb04b0e1be85156ec74ee7f276",
+    "file_sha256": "09f1de1c5320fde5c2784e39d785d3161cfc67eb04b0e1be85156ec74ee7f276"
+  },
+  ".work/warehouses-20261030/configuration-run-01/pet-candidates.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/pet-candidates.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/summon-candidates.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/summon-candidates.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "7810c3edb06733ba29ef8b104a57b7381161b1a0bf025bd8e33359b0778f88ed",
+    "file_sha256": "7810c3edb06733ba29ef8b104a57b7381161b1a0bf025bd8e33359b0778f88ed"
+  },
+  ".work/warehouses-20261030/configuration-run-01/summon-candidates.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/summon-candidates.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/export-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/export-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "8547821b808baa8604b75b4ae7f0e729a88eb65e781c7810eca90641c38c3a12",
+    "file_sha256": "8547821b808baa8604b75b4ae7f0e729a88eb65e781c7810eca90641c38c3a12"
+  },
+  ".work/warehouses-20261030/configuration-run-01/export-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/export-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/fixture-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/fixture-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "f753a415490e2473d8ed1026b8f7d2eeee6f3693e31f3837bb0e0c6be6043b4b",
+    "file_sha256": "f753a415490e2473d8ed1026b8f7d2eeee6f3693e31f3837bb0e0c6be6043b4b"
+  },
+  ".work/warehouses-20261030/configuration-run-01/fixture-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/fixture-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/pet-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/pet-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "45cc9360c7563dfb090375ba8c1050800c91cb310d34fc2caf037c1ba1ded7ee",
+    "file_sha256": "45cc9360c7563dfb090375ba8c1050800c91cb310d34fc2caf037c1ba1ded7ee"
+  },
+  ".work/warehouses-20261030/configuration-run-01/pet-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/pet-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/summon-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/summon-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "97ee3957a4a86f96448a836e9581cc3a1a8c7ccae4c076479443cec1faf3af82",
+    "file_sha256": "97ee3957a4a86f96448a836e9581cc3a1a8c7ccae4c076479443cec1faf3af82"
+  },
+  ".work/warehouses-20261030/configuration-run-01/summon-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/summon-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/bindings-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/bindings-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91",
+    "file_sha256": "2012d12a44590f2ea7fe6b1018ddbfba270a4aec0e3dcd0293c570300ca61d91"
+  },
+  ".work/warehouses-20261030/configuration-run-01/bindings-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/bindings-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/python-full.stdout.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/python-full.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/configuration-run-01/python-full.stderr.txt": {
+    "path": "outputs/warehouses-20261030/configuration/run-01/python-full.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "8e385094e7f25fd14b79fec6ceb97d42792be8f2669a76b5f8fbdd132659be74",
+    "file_sha256": "8e385094e7f25fd14b79fec6ceb97d42792be8f2669a76b5f8fbdd132659be74"
+  },
+  ".work/warehouses-20261030/configuration-baseline.json": {
+    "path": "outputs/warehouses-20261030/support/configuration-baseline.json",
+    "encoding": "identity",
+    "raw_sha256": "8f2a83112972f114838c0c468df90fa9e3217d63936c5676665a587e4b3c436b",
+    "file_sha256": "8f2a83112972f114838c0c468df90fa9e3217d63936c5676665a587e4b3c436b"
+  },
+  ".work/warehouses-20261030/configuration-edit-plan.json": {
+    "path": "outputs/warehouses-20261030/support/configuration-edit-plan.json",
+    "encoding": "identity",
+    "raw_sha256": "1745d4733a1c495aa270c2243684c7a01b4a66afc71a6acb8209074d5fbfc9ed",
+    "file_sha256": "1745d4733a1c495aa270c2243684c7a01b4a66afc71a6acb8209074d5fbfc9ed"
+  },
+  ".work/warehouses-20261030/configuration-editor-report.json": {
+    "path": "outputs/warehouses-20261030/support/configuration-editor-report.json",
+    "encoding": "identity",
+    "raw_sha256": "57e629a5293edaa64689a930ecf687bb50297ade9f4dced32740b80a7598e0fc",
+    "file_sha256": "57e629a5293edaa64689a930ecf687bb50297ade9f4dced32740b80a7598e0fc"
+  },
+  ".work/warehouses-20261030/configuration-review.json": {
+    "path": "outputs/warehouses-20261030/support/configuration-review.json",
+    "encoding": "identity",
+    "raw_sha256": "ef29673184d5dc4319b5de598eea5644a34274367df85ed18943849a0b7b2c68",
+    "file_sha256": "ef29673184d5dc4319b5de598eea5644a34274367df85ed18943849a0b7b2c68"
+  },
+  ".work/warehouses-20261030/current-go-test-adaptations.json": {
+    "path": "outputs/warehouses-20261030/support/current-go-test-adaptations.json",
+    "encoding": "identity",
+    "raw_sha256": "1bda65597a3045d677bb891efa682414b8c78e9974dde6332024e435b9cf57a1",
+    "file_sha256": "1bda65597a3045d677bb891efa682414b8c78e9974dde6332024e435b9cf57a1"
+  },
+  ".work/warehouses-20261030/client/production-freeze.json": {
+    "path": "outputs/warehouses-20261030/support/client/production-freeze.json",
+    "encoding": "identity",
+    "raw_sha256": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715",
+    "file_sha256": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715"
+  },
+  ".work/warehouses-20261030/client-peer-review-pre-freeze.json": {
+    "path": "outputs/warehouses-20261030/support/client-peer-review-pre-freeze.json",
+    "encoding": "identity",
+    "raw_sha256": "64c5b7a0a753cd07ab8fa13c1e56adbfe0386baf14b1adcea3085c3eba3468d0",
+    "file_sha256": "64c5b7a0a753cd07ab8fa13c1e56adbfe0386baf14b1adcea3085c3eba3468d0"
+  },
+  ".work/warehouses-20261030/client-peer-review-final.json": {
+    "path": "outputs/warehouses-20261030/support/client-peer-review-final.json",
+    "encoding": "identity",
+    "raw_sha256": "dfa782318308ef72ae26506372c39387b694eda154a874bb5f9b2954db36e72e",
+    "file_sha256": "dfa782318308ef72ae26506372c39387b694eda154a874bb5f9b2954db36e72e"
+  },
+  ".work/warehouses-20261030/qa-runner-handoff-final.json": {
+    "path": "outputs/warehouses-20261030/support/qa-runner-handoff-final.json",
+    "encoding": "identity",
+    "raw_sha256": "c8a49de7315e709d63038fa9a77faf18e772483545f09f6216b6c7bd3d9734b8",
+    "file_sha256": "c8a49de7315e709d63038fa9a77faf18e772483545f09f6216b6c7bd3d9734b8"
+  },
+  ".work/warehouses-20261030/adapt_current_go_tests.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/adapt_current_go_tests.py",
+    "encoding": "identity",
+    "raw_sha256": "f1e1d9db2fa59585fa9011682dbfd9df38a5bc5f7c62e53f8b868b711bb951c3",
+    "file_sha256": "f1e1d9db2fa59585fa9011682dbfd9df38a5bc5f7c62e53f8b868b711bb951c3"
+  },
+  ".work/warehouses-20261030/author_configuration.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/author_configuration.py",
+    "encoding": "identity",
+    "raw_sha256": "d37218195634dd1dc0f895a102384bfa1a512c5850c1b68fbd0f79b8bcc44b70",
+    "file_sha256": "d37218195634dd1dc0f895a102384bfa1a512c5850c1b68fbd0f79b8bcc44b70"
+  },
+  ".work/warehouses-20261030/inspect_configuration.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/inspect_configuration.py",
+    "encoding": "identity",
+    "raw_sha256": "db296bf73974d5cefc1da16ef2204ae86d4d0cb897e6ae8336946bacd6702d09",
+    "file_sha256": "db296bf73974d5cefc1da16ef2204ae86d4d0cb897e6ae8336946bacd6702d09"
+  },
+  ".work/warehouses-20261030/run_configuration_checks.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/run_configuration_checks.py",
+    "encoding": "identity",
+    "raw_sha256": "e95bedba954483da479af01959865f74a732afc214a2ca32f3fe9ef159a8e777",
+    "file_sha256": "e95bedba954483da479af01959865f74a732afc214a2ca32f3fe9ef159a8e777"
+  },
+  ".work/warehouses-20261030/build_candidate.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/build_candidate.py",
+    "encoding": "identity",
+    "raw_sha256": "867a8fa1310aa74bacac38a73e8d74113c4849c8f12c2d9901eda4c1f67a9d77",
+    "file_sha256": "867a8fa1310aa74bacac38a73e8d74113c4849c8f12c2d9901eda4c1f67a9d77"
+  },
+  ".work/warehouses-20261030/stage_checks.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/stage_checks.py",
+    "encoding": "identity",
+    "raw_sha256": "0ab9f1e983c272a03fdf11dfdee855cc223029c88f742fbaf70f677e9e986786",
+    "file_sha256": "0ab9f1e983c272a03fdf11dfdee855cc223029c88f742fbaf70f677e9e986786"
+  },
+  ".work/warehouses-20261030/cutover.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/cutover.py",
+    "encoding": "identity",
+    "raw_sha256": "648078da12bb5ee402290b2a5966f3d57b6e50b8fda393ba3231e88184e01ef8",
+    "file_sha256": "648078da12bb5ee402290b2a5966f3d57b6e50b8fda393ba3231e88184e01ef8"
+  },
+  ".work/warehouses-20261030/finalize_evidence.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/finalize_evidence.py",
+    "encoding": "identity",
+    "raw_sha256": "9bda179ebdd38ddce136a538be70f10ff7aa83a73a7119e0317d7fd28694f233",
+    "file_sha256": "9bda179ebdd38ddce136a538be70f10ff7aa83a73a7119e0317d7fd28694f233"
+  },
+  ".work/warehouses-20261030/verify_index.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/verify_index.py",
+    "encoding": "identity",
+    "raw_sha256": "175371702a68a5b75a49316b4a3b0ec0e8653cd25eded876b6e1629e8e6ad6b9",
+    "file_sha256": "175371702a68a5b75a49316b4a3b0ec0e8653cd25eded876b6e1629e8e6ad6b9"
+  },
+  ".work/warehouses-20261030/stage_verified.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/stage_verified.py",
+    "encoding": "identity",
+    "raw_sha256": "cdd4c85afc19f03931c576b13256651eb7541ee2924b2ea353c3bd018b754296",
+    "file_sha256": "cdd4c85afc19f03931c576b13256651eb7541ee2924b2ea353c3bd018b754296"
+  },
+  ".work/warehouses-20261030/source-allowlist.json": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/source-allowlist.json",
+    "encoding": "identity",
+    "raw_sha256": "9c000822ff798bbac3cd610916f54447e281ea4f01eb4b7bf05a1535175ffd0a",
+    "file_sha256": "9c000822ff798bbac3cd610916f54447e281ea4f01eb4b7bf05a1535175ffd0a"
+  },
+  ".work/warehouses-20261030/curate-plan.json": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/curate-plan.json",
+    "encoding": "identity",
+    "raw_sha256": "2fd19d955446f1e2c35ea79f59a7ae50e0d88ac9f1f61a97960e7baa5dc74fc8",
+    "file_sha256": "2fd19d955446f1e2c35ea79f59a7ae50e0d88ac9f1f61a97960e7baa5dc74fc8"
+  },
+  ".work/warehouses-20261030/test_evidence_tools.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/test_evidence_tools.py",
+    "encoding": "identity",
+    "raw_sha256": "127634c5e1b17897cf601bb44626b98423d42e79a59ef18908a9e5db8b40681d",
+    "file_sha256": "127634c5e1b17897cf601bb44626b98423d42e79a59ef18908a9e5db8b40681d"
+  },
+  ".work/warehouses-20261030/update_documents.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/update_documents.py",
+    "encoding": "identity",
+    "raw_sha256": "e579701f9bb31b61dffdd1434d21f656341c4c4d70bd1b9ade55e3edcf374316",
+    "file_sha256": "e579701f9bb31b61dffdd1434d21f656341c4c4d70bd1b9ade55e3edcf374316"
+  },
+  ".work/warehouses-20261030/browser/run_static.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/browser/run_static.py",
+    "encoding": "identity",
+    "raw_sha256": "7f0ecf512d27910f0de193228675a7f146ba3cd61123b553e48f329348c2ac19",
+    "file_sha256": "7f0ecf512d27910f0de193228675a7f146ba3cd61123b553e48f329348c2ac19"
+  },
+  ".work/warehouses-20261030/prepare_final_selectors.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/prepare_final_selectors.py",
+    "encoding": "identity",
+    "raw_sha256": "9fce3ea6efe23cc7fa1f07b686164f4350b0ece4accc3450b46aa79277a873d5",
+    "file_sha256": "9fce3ea6efe23cc7fa1f07b686164f4350b0ece4accc3450b46aa79277a873d5"
+  },
+  ".work/warehouses-20261030/add_scroll_engine_input.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/add_scroll_engine_input.py",
+    "encoding": "identity",
+    "raw_sha256": "a70f5bd87e6654aea95c7d8b59e1ee951973a106a3c37368597f20682c85da6d",
+    "file_sha256": "a70f5bd87e6654aea95c7d8b59e1ee951973a106a3c37368597f20682c85da6d"
+  },
+  ".work/warehouses-20261030/record_visual_review.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/record_visual_review.py",
+    "encoding": "identity",
+    "raw_sha256": "bb035f5f7b088f6a7acbc9da0d6efd533cae39433500297537ecb73cd8a4b493",
+    "file_sha256": "bb035f5f7b088f6a7acbc9da0d6efd533cae39433500297537ecb73cd8a4b493"
+  },
+  ".work/warehouses-20261030/recover_old_preview.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/recover_old_preview.py",
+    "encoding": "identity",
+    "raw_sha256": "fd008c5980104ba5dc21232b26b2d505b96dbc3b9634fe6fccbf7f00ef17b811",
+    "file_sha256": "fd008c5980104ba5dc21232b26b2d505b96dbc3b9634fe6fccbf7f00ef17b811"
+  },
+  ".work/warehouses-20261030/record_preflight_history.py": {
+    "path": "outputs/warehouses-20261030/sources/.work/warehouses-20261030/record_preflight_history.py",
+    "encoding": "identity",
+    "raw_sha256": "e5368f0006e52d1d1a857df2bc3f286ed62df9d5e6046356844b7e4dd738efc0",
+    "file_sha256": "e5368f0006e52d1d1a857df2bc3f286ed62df9d5e6046356844b7e4dd738efc0"
+  },
+  "tools/client/prepare_warehouses_qa.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/client/prepare_warehouses_qa.py",
+    "encoding": "identity",
+    "raw_sha256": "2f657a4d95e4d743040dd9f3bafafa283e7e8539107f1ca3b708c27d5b8f3906",
+    "file_sha256": "2f657a4d95e4d743040dd9f3bafafa283e7e8539107f1ca3b708c27d5b8f3906"
+  },
+  "tools/client/test_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/sources/tools/client/test_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "3817cd1381b14b11ccb7b4daf6d517a171da464f2af3fa648c0d6a86c413cde5",
+    "file_sha256": "3817cd1381b14b11ccb7b4daf6d517a171da464f2af3fa648c0d6a86c413cde5"
+  },
+  "tools/client/test_warehouses_qa.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/client/test_warehouses_qa.py",
+    "encoding": "identity",
+    "raw_sha256": "9b0c44936fc891eb81efee8a0b725572289ef511e925cc171c4ff8e76d1268e7",
+    "file_sha256": "9b0c44936fc891eb81efee8a0b725572289ef511e925cc171c4ff8e76d1268e7"
+  },
+  "tools/client/verify_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/sources/tools/client/verify_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3",
+    "file_sha256": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3"
+  },
+  "tools/config/test_equipment_foundation.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_equipment_foundation.py",
+    "encoding": "identity",
+    "raw_sha256": "eafa81a0ae3c864a003b116e533fa31dd74b6fbae0174753f70494e056861bc1",
+    "file_sha256": "eafa81a0ae3c864a003b116e533fa31dd74b6fbae0174753f70494e056861bc1"
+  },
+  "tools/config/test_equipment_recycling.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_equipment_recycling.py",
+    "encoding": "identity",
+    "raw_sha256": "6355c7fa6459589c944cfea54aa374a4ad1d3fdef100f05d1cde3f6ff76daa6e",
+    "file_sha256": "6355c7fa6459589c944cfea54aa374a4ad1d3fdef100f05d1cde3f6ff76daa6e"
+  },
+  "tools/config/test_level_growth.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_level_growth.py",
+    "encoding": "identity",
+    "raw_sha256": "480b011d07ea2d0f7a24ca98a5606e8298ffecd9541ccc6a8c865455c84eca2d",
+    "file_sha256": "480b011d07ea2d0f7a24ca98a5606e8298ffecd9541ccc6a8c865455c84eca2d"
+  },
+  "tools/config/test_pet_runtime.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_pet_runtime.py",
+    "encoding": "identity",
+    "raw_sha256": "fe8c60163c5b997355e3d66cf224cc7cdb8e47b26e832a27318908331044ad52",
+    "file_sha256": "fe8c60163c5b997355e3d66cf224cc7cdb8e47b26e832a27318908331044ad52"
+  },
+  "tools/config/test_safe_zone_binding.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_safe_zone_binding.py",
+    "encoding": "identity",
+    "raw_sha256": "69ff91051b62cbfc5dbcd2cd7b8f401f0af9481c7a98d96ec326d8337d720a2c",
+    "file_sha256": "69ff91051b62cbfc5dbcd2cd7b8f401f0af9481c7a98d96ec326d8337d720a2c"
+  },
+  "tools/config/test_summon_candidates.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_summon_candidates.py",
+    "encoding": "identity",
+    "raw_sha256": "c3fa19af5522fc4d8a2de505f44e255950b27da50d58141f6a0c30c9c5e17737",
+    "file_sha256": "c3fa19af5522fc4d8a2de505f44e255950b27da50d58141f6a0c30c9c5e17737"
+  },
+  "tools/config/test_teleport.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_teleport.py",
+    "encoding": "identity",
+    "raw_sha256": "6a68d0e9c6fbedc1c2baea0d6cb8217c2fcda4845cd33ac13201e1f08049f464",
+    "file_sha256": "6a68d0e9c6fbedc1c2baea0d6cb8217c2fcda4845cd33ac13201e1f08049f464"
+  },
+  "tools/config/test_warehouses.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/config/test_warehouses.py",
+    "encoding": "identity",
+    "raw_sha256": "f93266be4c2a9ce725c00737b9d8d7e4bf1c5f24382701810dba11295f455d12",
+    "file_sha256": "f93266be4c2a9ce725c00737b9d8d7e4bf1c5f24382701810dba11295f455d12"
+  },
+  "tools/resources/prepare_first_loop.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/resources/prepare_first_loop.py",
+    "encoding": "identity",
+    "raw_sha256": "1c9cf66b01134022574ac317fba100b3d47047bd48f2a3beb152aff1df792b5f",
+    "file_sha256": "1c9cf66b01134022574ac317fba100b3d47047bd48f2a3beb152aff1df792b5f"
+  },
+  "tools/resources/prepare_summon_candidates.py": {
+    "path": "outputs/warehouses-20261030/sources/tools/resources/prepare_summon_candidates.py",
+    "encoding": "identity",
+    "raw_sha256": "f42ba77ac91f2ca10eaef3387ce2ed6bdba91cc9e159b38d1ff21da6a6d25b05",
+    "file_sha256": "f42ba77ac91f2ca10eaef3387ce2ed6bdba91cc9e159b38d1ff21da6a6d25b05"
+  },
+  ".work/warehouses-20261030/go/full-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "659a9eef6050b199568de5c275ea6e16b6387edec98a198f2900b8d1b9023efb",
+    "file_sha256": "d166807ee58e00a265972f170dbba370b6e46a2bf2fc0f4dba9a3d33406f8878"
+  },
+  ".work/warehouses-20261030/go/full-1/wrapper.json": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/wrapper.json",
+    "encoding": "identity",
+    "raw_sha256": "45b09adc6d5d5aa3377e27285847df0a3c7d50d244a6ea3974b10df3b9ae0db7",
+    "file_sha256": "45b09adc6d5d5aa3377e27285847df0a3c7d50d244a6ea3974b10df3b9ae0db7"
+  },
+  ".work/warehouses-20261030/go/full-1/started.json": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/started.json",
+    "encoding": "identity",
+    "raw_sha256": "559a04e9238bfc211a4254d37e3bd89c692f6dff5d124179ff0b2160c4622f28",
+    "file_sha256": "559a04e9238bfc211a4254d37e3bd89c692f6dff5d124179ff0b2160c4622f28"
+  },
+  ".work/warehouses-20261030/go/full-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "c85c7c1fbb7ae00c66905b0ba6306a4a7b8bdf55c5e763db13dde5bb5f724290",
+    "file_sha256": "865fde0fb85c1a63e4bd3f6e8cb4bf83a9a34acb27ea5bc30cd6c5ddff72dea9"
+  },
+  ".work/warehouses-20261030/go/full-1/full-mongo-race.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/full-mongo-race.stdout.txt.gz",
+    "encoding": "gzip",
+    "raw_sha256": "917e015673b4db11d9f8c6e3585059847ba59f0a7fadac36925e024338a2e223",
+    "file_sha256": "b5381561fdf9f6f096b8098b7d5835b2e68b40a994926f3d3faa0ae68a928255"
+  },
+  ".work/warehouses-20261030/go/full-1/full-mongo-race.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/go/full-1/full-mongo-race.stderr.txt.gz",
+    "encoding": "gzip",
+    "raw_sha256": "62ce714549c28fe283ed31210aedcc74d43191fb8d59ebd3ee422d789c406059",
+    "file_sha256": "fadad94ae0a788a3ccd0748ebe21967818127508fdc86fbc351aa5a9b53cb45d"
+  },
+  ".work/warehouses-20261030/server/additional-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "7279eedc6637f6215e99930a3f509a476764582c77e6641af464347243454bf8",
+    "file_sha256": "7279eedc6637f6215e99930a3f509a476764582c77e6641af464347243454bf8"
+  },
+  ".work/warehouses-20261030/server/additional-1/before.json": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/before.json",
+    "encoding": "identity",
+    "raw_sha256": "6a6ea786f3ed79401f5b5913d091576ab0dcd4ce04556eb0c9a06443ee1798a6",
+    "file_sha256": "6a6ea786f3ed79401f5b5913d091576ab0dcd4ce04556eb0c9a06443ee1798a6"
+  },
+  ".work/warehouses-20261030/server/additional-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "67ab77571d03df4b2124fa370854dcb6fded65b62d7ac756f587f4cb23dc383b",
+    "file_sha256": "ded104edc45f0ddfee9d90c88dbd4e94cf50f908841ada54c4147b0a4783f25a"
+  },
+  ".work/warehouses-20261030/server/additional-1/stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/additional-1/command.json": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/command.json",
+    "encoding": "identity",
+    "raw_sha256": "92958d3f78bea76668ef14b89c250d93f30d7040a7cf424ab48cf90d282deb7e",
+    "file_sha256": "92958d3f78bea76668ef14b89c250d93f30d7040a7cf424ab48cf90d282deb7e"
+  },
+  ".work/warehouses-20261030/server/additional-1/mongo-status.stdout.json": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/mongo-status.stdout.json",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/server/additional-1/mongo-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/server/additional-1/mongo-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/narrow-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/client/narrow-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "daccaae9a2f5e9e31d530104c39bfa291ac65121a863defd34c2871dd38e9755",
+    "file_sha256": "daccaae9a2f5e9e31d530104c39bfa291ac65121a863defd34c2871dd38e9755"
+  },
+  ".work/warehouses-20261030/qa-tool-tests/report.json": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests/report.json",
+    "encoding": "identity",
+    "raw_sha256": "0b0cd0c8714fffb2989c895a267d02b3fceb8af07f3755c8a3e5d4ba950d3223",
+    "file_sha256": "0b0cd0c8714fffb2989c895a267d02b3fceb8af07f3755c8a3e5d4ba950d3223"
+  },
+  ".work/warehouses-20261030/qa-tool-tests/stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests/stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests/stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "cd8dc1453b379fc8148a6ce178b3219410eceb88db0450858b9a7a4aa3cd3f3e",
+    "file_sha256": "cd8dc1453b379fc8148a6ce178b3219410eceb88db0450858b9a7a4aa3cd3f3e"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-2/report.json": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "980bf765ff983374d0d856f19452b49a8ac45cb3a8f41f4f3732c73e5217c735",
+    "file_sha256": "980bf765ff983374d0d856f19452b49a8ac45cb3a8f41f4f3732c73e5217c735"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-2/1.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-2/1.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-2/1.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-2/1.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "081262bd3ce2c85fe984ca72c8d3e21370a5a6c6f49602c8cdd770ad37bb403f",
+    "file_sha256": "081262bd3ce2c85fe984ca72c8d3e21370a5a6c6f49602c8cdd770ad37bb403f"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-2/2.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-2/2.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c",
+    "file_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-2/2.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-2/2.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final/report.json": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-final/report.json",
+    "encoding": "identity",
+    "raw_sha256": "80552102a745c5c8ab32a3c07d40d4882347ca4c1084a3669d615afacccf3491",
+    "file_sha256": "80552102a745c5c8ab32a3c07d40d4882347ca4c1084a3669d615afacccf3491"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final/unit.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-final/unit.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final/unit.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-final/unit.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "6e5075e4ebea16857007f30a01b217825d5b71a274432cb1ed9d1d5aae91eb00",
+    "file_sha256": "6e5075e4ebea16857007f30a01b217825d5b71a274432cb1ed9d1d5aae91eb00"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final/prepare.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-final/prepare.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c",
+    "file_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final/prepare.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-final/prepare.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "89fe97ffa831810e1f2b0c439bbb96fba5f1fd0b44e5ab820df391f0f2d01d23",
+    "file_sha256": "89fe97ffa831810e1f2b0c439bbb96fba5f1fd0b44e5ab820df391f0f2d01d23"
+  },
+  ".work/warehouses-20261030/client/full-1/started.json": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/started.json",
+    "encoding": "identity",
+    "raw_sha256": "3fe58fc50a84028de13c2c3398a50cd321d2d68dcc3dc4bf686a373ddb42a339",
+    "file_sha256": "3fe58fc50a84028de13c2c3398a50cd321d2d68dcc3dc4bf686a373ddb42a339"
+  },
+  ".work/warehouses-20261030/client/full-1/models.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/models.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "file_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+  },
+  ".work/warehouses-20261030/client/full-1/models.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/models.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/full-ui-app.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/full-ui-app.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "85461b19f211109bc090f4f00a3727999ccb5156712ee4ae49091fd3d7d9db63",
+    "file_sha256": "85461b19f211109bc090f4f00a3727999ccb5156712ee4ae49091fd3d7d9db63"
+  },
+  ".work/warehouses-20261030/client/full-1/full-ui-app.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/full-ui-app.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/scene.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/scene.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "637cef6b823c108b5ba3aa870f72acbc4168c18ff650acac98ce77574ce2f661",
+    "file_sha256": "637cef6b823c108b5ba3aa870f72acbc4168c18ff650acac98ce77574ce2f661"
+  },
+  ".work/warehouses-20261030/client/full-1/scene.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/scene.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/strict.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/strict.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "file_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+  },
+  ".work/warehouses-20261030/client/full-1/strict.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/strict.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/protocol-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/protocol-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "34f3547ff9d378cfe2c88b02a1530c164c99c0c537d017fd102514a72ce0942c",
+    "file_sha256": "34f3547ff9d378cfe2c88b02a1530c164c99c0c537d017fd102514a72ce0942c"
+  },
+  ".work/warehouses-20261030/client/full-1/protocol-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/protocol-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-1/protocol-lint.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/protocol-lint.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6",
+    "file_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6"
+  },
+  ".work/warehouses-20261030/client/full-1/protocol-lint.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-1/protocol-lint.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/creator/full-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "0a14cde0bfda7074a1abd1bc05a38bada92bf9b5b565b5a4a0674ef5d54aa404",
+    "file_sha256": "0a14cde0bfda7074a1abd1bc05a38bada92bf9b5b565b5a4a0674ef5d54aa404"
+  },
+  ".work/warehouses-20261030/creator/full-1/wrapper.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/wrapper.json",
+    "encoding": "identity",
+    "raw_sha256": "682bd1c7611c7583e16b60e1df012bb551e18c9c4ebad623cd7321d38f1c1e46",
+    "file_sha256": "682bd1c7611c7583e16b60e1df012bb551e18c9c4ebad623cd7321d38f1c1e46"
+  },
+  ".work/warehouses-20261030/creator/full-1/started.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/started.json",
+    "encoding": "identity",
+    "raw_sha256": "e470c3933d54ad08bb836fb7746409a04aa2d348a93516a2a72e426ba8efa0c4",
+    "file_sha256": "e470c3933d54ad08bb836fb7746409a04aa2d348a93516a2a72e426ba8efa0c4"
+  },
+  ".work/warehouses-20261030/creator/full-1/creator.log": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/creator.log",
+    "encoding": "identity",
+    "raw_sha256": "286f0569d6667833c9ac70b50953bd552bb738658f77797f7eedae34706f63e6",
+    "file_sha256": "286f0569d6667833c9ac70b50953bd552bb738658f77797f7eedae34706f63e6"
+  },
+  ".work/warehouses-20261030/creator/full-1/candidate-files.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/candidate-files.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "581f92fff99c006bbe656c12c8a869149b6d9066c5c126b8707ac63d564149fb",
+    "file_sha256": "cb36e038db6d3eda54c37eacda038c2bcebf56da336f3754bb486c88b289ce2e"
+  },
+  ".work/warehouses-20261030/creator/full-1/creator-build-candidate.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/creator-build-candidate.json",
+    "encoding": "identity",
+    "raw_sha256": "921dc5c788af8cedfc619364f3e4552c1c9528cc44872e977d152ede270362bf",
+    "file_sha256": "921dc5c788af8cedfc619364f3e4552c1c9528cc44872e977d152ede270362bf"
+  },
+  ".work/warehouses-20261030/creator/full-1/served-build-before.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/served-build-before.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-1/served-build-after.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/served-build-after.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-1/creator.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/creator.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "a18a702bb479b22ddd110d288b279291f7e528a068e9abf4eab4ce689317e0ec",
+    "file_sha256": "a18a702bb479b22ddd110d288b279291f7e528a068e9abf4eab4ce689317e0ec"
+  },
+  ".work/warehouses-20261030/creator/full-1/creator.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/creator/full-1/creator.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/report.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "0ca95d74572609ad23c6b057cc36b1c7eb723364cf3297a72dc1f2906edd36f4",
+    "file_sha256": "caf6ad4c360fedd47b2ee6a20df7c7398d8996b9a9c4080dcbe257a5416be5c3"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/runtime.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "b0349376c9270b447d444267edde6541c5d51f33262bda1cf58be2ff38e9c618",
+    "file_sha256": "b0349376c9270b447d444267edde6541c5d51f33262bda1cf58be2ff38e9c618"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/static-runtime.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/static-runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "8adacc18a9da1b984aaeccefa73a47637da73d01ca83f06fe830f1ced1dfb965",
+    "file_sha256": "8adacc18a9da1b984aaeccefa73a47637da73d01ca83f06fe830f1ced1dfb965"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/build.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/build.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/node-path.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/node-path.log",
+    "encoding": "identity",
+    "raw_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d",
+    "file_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser.log",
+    "encoding": "identity",
+    "raw_sha256": "d4f39c0c78354e230bc666bb14f17984f4970b07a2c2d4ad0e25e025eef1927b",
+    "file_sha256": "d4f39c0c78354e230bc666bb14f17984f4970b07a2c2d4ad0e25e025eef1927b"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/server.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/server.log",
+    "encoding": "identity",
+    "raw_sha256": "3da3c447eb95c8997382a69dedb03dd10fa46aa7f5b44c338dcd79045a34e224",
+    "file_sha256": "3da3c447eb95c8997382a69dedb03dd10fa46aa7f5b44c338dcd79045a34e224"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/static.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/static.log",
+    "encoding": "identity",
+    "raw_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2",
+    "file_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/qualifications/9d135ef728bcbd53388b576f888c9104.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/qualifications/9d135ef728bcbd53388b576f888c9104.json",
+    "encoding": "identity",
+    "raw_sha256": "80c879bb36a6e7e8b5a1257b5fca13f6eea8d9dc1ba6da626637a725130ed4d0",
+    "file_sha256": "80c879bb36a6e7e8b5a1257b5fca13f6eea8d9dc1ba6da626637a725130ed4d0"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/report.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "56d3bf4473b528499b3beed0c93c1c6ac0910b9a99ff780eab77d789dbae2939",
+    "file_sha256": "893fd99282f968b3808e402ee0ed8870052ec53fb7a2392017e9c68e60a32492"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/loaded-public.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/loaded-public.json",
+    "encoding": "identity",
+    "raw_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67",
+    "file_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/qualify.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/qualify.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "6d651a1e0e0d4ed78f4ce4511a226961eb33bcb6348d3239f259ecef1f48f3dd",
+    "file_sha256": "6d651a1e0e0d4ed78f4ce4511a226961eb33bcb6348d3239f259ecef1f48f3dd"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/qualify.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/qualify.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/failure.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/failure.png",
+    "encoding": "identity",
+    "raw_sha256": "a056184560360c0e365e153b24ce198a499f607e9076bf331bb976a5f862bf57",
+    "file_sha256": "a056184560360c0e365e153b24ce198a499f607e9076bf331bb976a5f862bf57"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/01-personal-empty.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/01-personal-empty.png",
+    "encoding": "identity",
+    "raw_sha256": "99e94a9d3d9e81e2a2737a6136a93c23a053541ec6b3e9f8248c953a5e6d50e7",
+    "file_sha256": "99e94a9d3d9e81e2a2737a6136a93c23a053541ec6b3e9f8248c953a5e6d50e7"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/01-locked-item-details.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/01-locked-item-details.png",
+    "encoding": "identity",
+    "raw_sha256": "9103ee272ee1ba7a69b4acec0939587a24e760dc8e8d91f223960cfe435f91cd",
+    "file_sha256": "9103ee272ee1ba7a69b4acec0939587a24e760dc8e8d91f223960cfe435f91cd"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/01-locked-item-details-bottom.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/01-locked-item-details-bottom.png",
+    "encoding": "identity",
+    "raw_sha256": "9103ee272ee1ba7a69b4acec0939587a24e760dc8e8d91f223960cfe435f91cd",
+    "file_sha256": "9103ee272ee1ba7a69b4acec0939587a24e760dc8e8d91f223960cfe435f91cd"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/02-personal-store-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/02-personal-store-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "6441199530fb23b82a7e8009e2f2faedd7a578d2b542fb3bd737b08beb1fb01b",
+    "file_sha256": "6441199530fb23b82a7e8009e2f2faedd7a578d2b542fb3bd737b08beb1fb01b"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/02-personal-stored.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/02-personal-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "7a264779538044acd1bb06c163a2983391c0bbf85da6c7b663ee88f9c2fea498",
+    "file_sha256": "7a264779538044acd1bb06c163a2983391c0bbf85da6c7b663ee88f9c2fea498"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/03-personal-cancel-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/03-personal-cancel-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "72b51fa0dee341c2444e3e87af74276b3718490a10160e69c3eabaddefdba0ad",
+    "file_sha256": "72b51fa0dee341c2444e3e87af74276b3718490a10160e69c3eabaddefdba0ad"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/04-personal-last-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/04-personal-last-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "72b51fa0dee341c2444e3e87af74276b3718490a10160e69c3eabaddefdba0ad",
+    "file_sha256": "72b51fa0dee341c2444e3e87af74276b3718490a10160e69c3eabaddefdba0ad"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/04-last-slot-stored.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/04-last-slot-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "a30f70a000401da0fd01f671e28e47cbc5ea6832378cc682eb9fec4d7571ec7b",
+    "file_sha256": "a30f70a000401da0fd01f671e28e47cbc5ea6832378cc682eb9fec4d7571ec7b"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/05-personal-last-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/05-personal-last-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "39c2deff4ff9b8631b02eab429a65759b08f8b81eb03bcf504dd3b867094d256",
+    "file_sha256": "39c2deff4ff9b8631b02eab429a65759b08f8b81eb03bcf504dd3b867094d256"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/06-healthy-personal.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/06-healthy-personal.png",
+    "encoding": "identity",
+    "raw_sha256": "6bac106a7666232ac8a8f3d9f89e46e18977a39f0001e483e4c0e984ff2a43d1",
+    "file_sha256": "6bac106a7666232ac8a8f3d9f89e46e18977a39f0001e483e4c0e984ff2a43d1"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/07-personal-return-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/07-personal-return-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "b287e363ed0c81e391a18865e32343ca86dc974b897b1b37de1048b6f4385a85",
+    "file_sha256": "b287e363ed0c81e391a18865e32343ca86dc974b897b1b37de1048b6f4385a85"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/07-personal-returned.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/07-personal-returned.png",
+    "encoding": "identity",
+    "raw_sha256": "a3398f115c97a9d79c937249558868a5e61db703f4fb5d969783f44d6983bd7d",
+    "file_sha256": "a3398f115c97a9d79c937249558868a5e61db703f4fb5d969783f44d6983bd7d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/08-shared-whole-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-8ffd0c5c93b44d8d946d0ddd46241a10/browser/screenshots/08-shared-whole-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "4deefe1f02634931062d84d919d80a2ac992c5fd01bdf3e7e724d7416967019f",
+    "file_sha256": "4deefe1f02634931062d84d919d80a2ac992c5fd01bdf3e7e724d7416967019f"
+  },
+  ".work/warehouses-20261030/client/full-2/report.json": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "490ccb6f65e3a86b0db7fa65fa6eed9a596b5e0efe5e0693f910e4e5a780c641",
+    "file_sha256": "490ccb6f65e3a86b0db7fa65fa6eed9a596b5e0efe5e0693f910e4e5a780c641"
+  },
+  ".work/warehouses-20261030/client/full-2/started.json": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/started.json",
+    "encoding": "identity",
+    "raw_sha256": "91a5c1e3f5c0978638c347b32042c2c840821de75fd391f150b6d4074212d24e",
+    "file_sha256": "91a5c1e3f5c0978638c347b32042c2c840821de75fd391f150b6d4074212d24e"
+  },
+  ".work/warehouses-20261030/client/full-2/models.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/models.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169",
+    "file_sha256": "a74f380a5781926ce844b37abf1cbd748b3505f95cf94eb22fad87bccf14f169"
+  },
+  ".work/warehouses-20261030/client/full-2/models.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/models.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-2/full-ui-app.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/full-ui-app.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "46c7d4052cf9079334b326e0b52e5f42c4a9c9c1d13ea3ba84f4c32abc1a54e8",
+    "file_sha256": "46c7d4052cf9079334b326e0b52e5f42c4a9c9c1d13ea3ba84f4c32abc1a54e8"
+  },
+  ".work/warehouses-20261030/client/full-2/full-ui-app.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/full-ui-app.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-2/scene.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/scene.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "1d83bf49c7690201a5a11bdafac48dcf95df4808ba47a431e7ae67576deb2c9c",
+    "file_sha256": "1d83bf49c7690201a5a11bdafac48dcf95df4808ba47a431e7ae67576deb2c9c"
+  },
+  ".work/warehouses-20261030/client/full-2/scene.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/scene.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-2/strict.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/strict.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890",
+    "file_sha256": "23f979343e475a834cb2c8e9011871ab19e8e2c6fbdc547fdad568693b519890"
+  },
+  ".work/warehouses-20261030/client/full-2/strict.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/strict.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-2/protocol-check.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/protocol-check.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "677c6e926b0239bb60160aeed7305fd4062538cf3b93ecbffeb143c325a2bea2",
+    "file_sha256": "677c6e926b0239bb60160aeed7305fd4062538cf3b93ecbffeb143c325a2bea2"
+  },
+  ".work/warehouses-20261030/client/full-2/protocol-check.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/protocol-check.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/full-2/protocol-lint.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/protocol-lint.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6",
+    "file_sha256": "acf7a97b2ffc93f6847bad9bfd7a076efebdae787d8e8edec0beddba753d6dc6"
+  },
+  ".work/warehouses-20261030/client/full-2/protocol-lint.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/client/full-2/protocol-lint.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/creator/full-2/report.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "f70858b4ee32cf03b09d7c331a17516c2ec71d53cb60578bd8454ff1e26f334d",
+    "file_sha256": "f70858b4ee32cf03b09d7c331a17516c2ec71d53cb60578bd8454ff1e26f334d"
+  },
+  ".work/warehouses-20261030/creator/full-2/wrapper.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/wrapper.json",
+    "encoding": "identity",
+    "raw_sha256": "8e8dd4e39041081cb2031dd2f09b25e804c70e61a8bf70bbe739b48bcf16edb0",
+    "file_sha256": "8e8dd4e39041081cb2031dd2f09b25e804c70e61a8bf70bbe739b48bcf16edb0"
+  },
+  ".work/warehouses-20261030/creator/full-2/started.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/started.json",
+    "encoding": "identity",
+    "raw_sha256": "2cf72e710ceb77fc73cba918127caa6e378ddb8fc323f3ee0246095ae11fe809",
+    "file_sha256": "2cf72e710ceb77fc73cba918127caa6e378ddb8fc323f3ee0246095ae11fe809"
+  },
+  ".work/warehouses-20261030/creator/full-2/creator.log": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/creator.log",
+    "encoding": "identity",
+    "raw_sha256": "d5075820859f1cd6971c0bfdd7ee2bfa87b6b9a2d77c0ab80e06b25081f33582",
+    "file_sha256": "d5075820859f1cd6971c0bfdd7ee2bfa87b6b9a2d77c0ab80e06b25081f33582"
+  },
+  ".work/warehouses-20261030/creator/full-2/candidate-files.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/candidate-files.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "6656f9e3157432cd91f03b003fad8601b11710d3ef0995c51c4fa7af2d89af9b",
+    "file_sha256": "87176dd1c3ad35a96e1a44b74fbc7f21ceca28c64cffaf0f24c3bc1b2b17522f"
+  },
+  ".work/warehouses-20261030/creator/full-2/creator-build-candidate.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/creator-build-candidate.json",
+    "encoding": "identity",
+    "raw_sha256": "290daa6808b4baf7fbb18814be6e6d3afc04feb7aff98690e453f3e7344404f1",
+    "file_sha256": "290daa6808b4baf7fbb18814be6e6d3afc04feb7aff98690e453f3e7344404f1"
+  },
+  ".work/warehouses-20261030/creator/full-2/served-build-before.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/served-build-before.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-2/served-build-after.json": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/served-build-after.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "981387d4f8475ade27fa4c70dcbdab7aefd97f0bd6863746fb8d0ed5925a832f",
+    "file_sha256": "167992ad9b14c526ed1f058999b2ed75eee81567a86395f7cdd0dee2cca5b1d7"
+  },
+  ".work/warehouses-20261030/creator/full-2/creator.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/creator.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "7352da02f58f87191b7168f224c9822ec6392410b124eddf801ebe44d2917c50",
+    "file_sha256": "7352da02f58f87191b7168f224c9822ec6392410b124eddf801ebe44d2917c50"
+  },
+  ".work/warehouses-20261030/creator/full-2/creator.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/creator/full-2/creator.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/report.json": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/report.json",
+    "encoding": "identity",
+    "raw_sha256": "de0dc3adbdf9e42b97fdbeb2c12d093f737878fef6b7366b8625c0982953b45d",
+    "file_sha256": "de0dc3adbdf9e42b97fdbeb2c12d093f737878fef6b7366b8625c0982953b45d"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/stdout.log": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "ec36e62160d245aaff40bc2161cf3df6b0001641d1206bf9790b1159f3423db4",
+    "file_sha256": "ec36e62160d245aaff40bc2161cf3df6b0001641d1206bf9790b1159f3423db4"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/stderr.log": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/report.json": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "d60d651375f0b1c013d736de2f70aebc3c85924580f91014d762b763d433e06a",
+    "file_sha256": "d60d651375f0b1c013d736de2f70aebc3c85924580f91014d762b763d433e06a"
+  },
+  ".work/warehouses-20261030/browser/static-2/1.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/1.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/1.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/1.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/2.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/2.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/2.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/2.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/3.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/3.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4",
+    "file_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4"
+  },
+  ".work/warehouses-20261030/browser/static-2/3.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/3.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/4.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/4.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "38b452864e2b0028ab5c239b7dfea62894616c697e5629794a87059d1cf4d5c8",
+    "file_sha256": "38b452864e2b0028ab5c239b7dfea62894616c697e5629794a87059d1cf4d5c8"
+  },
+  ".work/warehouses-20261030/browser/static-2/4.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/4.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-2/5.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/5.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "61b198c9d6de192aa31522478d6a8677178d701c716cf336fcbdfaa24f6f468a",
+    "file_sha256": "61b198c9d6de192aa31522478d6a8677178d701c716cf336fcbdfaa24f6f468a"
+  },
+  ".work/warehouses-20261030/browser/static-2/5.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/browser/static-2/5.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/report.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "47795f9f0e53fb33a42d7027c4201d93742b221a986732ceb73980eb62fb74b4",
+    "file_sha256": "4df4e38198e336d320f033d117e6ca676135ba6b8f41faec3e6bfd86ba71bf25"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/runtime.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "b2d730bd811e92da382ad7c9f56bedfffa6fed70d971499635e4880b93b9d1ef",
+    "file_sha256": "b2d730bd811e92da382ad7c9f56bedfffa6fed70d971499635e4880b93b9d1ef"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/static-runtime.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/static-runtime.json",
+    "encoding": "identity",
+    "raw_sha256": "163b469688721086768b57b2cb8013dcfec01815992dec034e88333dc604fbf8",
+    "file_sha256": "163b469688721086768b57b2cb8013dcfec01815992dec034e88333dc604fbf8"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/build.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/build.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/node-path.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/node-path.log",
+    "encoding": "identity",
+    "raw_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d",
+    "file_sha256": "ee05b2fa6319026932117b7822b3fc8cfe1916559a79dbfbd660d8d7dde73c4d"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser.log",
+    "encoding": "identity",
+    "raw_sha256": "0823bb5c403c266b8e8709181ee75762c437aeb162cb6ad1b681ecf0a1baa587",
+    "file_sha256": "0823bb5c403c266b8e8709181ee75762c437aeb162cb6ad1b681ecf0a1baa587"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/server.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/server.log",
+    "encoding": "identity",
+    "raw_sha256": "0497ed889bacbe3a963b4c438c5e980438f099dae14135e27b23c945e8a1e77b",
+    "file_sha256": "0497ed889bacbe3a963b4c438c5e980438f099dae14135e27b23c945e8a1e77b"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/static.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/static.log",
+    "encoding": "identity",
+    "raw_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2",
+    "file_sha256": "feca63d24bc73f0ddb601c3f3f3b7cee7a7b92ac9bed1ef8b51362dd47b787d2"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/qualifications/2651319086f0a8f49d5885af1eca0dd7.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/qualifications/2651319086f0a8f49d5885af1eca0dd7.json",
+    "encoding": "identity",
+    "raw_sha256": "6d3b20a10601da5454f30eeb91b49fe2f89a83cecc896dc3926c45b36c2d03ac",
+    "file_sha256": "6d3b20a10601da5454f30eeb91b49fe2f89a83cecc896dc3926c45b36c2d03ac"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/report.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/report.json.gz",
+    "encoding": "gzip",
+    "raw_sha256": "97f73f56ee558b7c196cb8a0163aa1b5df5531d3afd4289730355289616d6cc0",
+    "file_sha256": "02da218d2f3ee9d0d4eb46db178b2651c4cee5029f2b2f00036c6706ebd882d1"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/visual-review.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/visual-review.json",
+    "encoding": "identity",
+    "raw_sha256": "f80a0cc6ae923a94c0791ae1b5e29c4e97c64f303663ab2769169d2d2c510629",
+    "file_sha256": "f80a0cc6ae923a94c0791ae1b5e29c4e97c64f303663ab2769169d2d2c510629"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/handoff.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/handoff.json",
+    "encoding": "identity",
+    "raw_sha256": "c51843b6f6e3fbf8cb8e607c8e7d5cb1b5a90c652f580481094e1ad3ca87fe71",
+    "file_sha256": "c51843b6f6e3fbf8cb8e607c8e7d5cb1b5a90c652f580481094e1ad3ca87fe71"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/loaded-public.json": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/loaded-public.json",
+    "encoding": "identity",
+    "raw_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67",
+    "file_sha256": "715a1d41d47669ca6edea1a6d4adce96db3e10271cf2caf54de8516aa2b1ad67"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/qualify.stdout.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/qualify.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "d81600a790e408b543d03f409e4a2b8134cf06258729a3c55016668c0d0a6c21",
+    "file_sha256": "d81600a790e408b543d03f409e4a2b8134cf06258729a3c55016668c0d0a6c21"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/qualify.stderr.log": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/qualify.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/failure.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/failure.png",
+    "encoding": "identity",
+    "raw_sha256": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10",
+    "file_sha256": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/00-town-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/00-town-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "c5443e397147bc5b460621bf919af6908eb65e5a746b09251570790640ae8585",
+    "file_sha256": "c5443e397147bc5b460621bf919af6908eb65e5a746b09251570790640ae8585"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/00-town-entry.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/00-town-entry.png",
+    "encoding": "identity",
+    "raw_sha256": "b5a6ddb92403f5d95cc7c19d90ca65a24ec2ccd83230fb1323f506c34c9a475e",
+    "file_sha256": "b5a6ddb92403f5d95cc7c19d90ca65a24ec2ccd83230fb1323f506c34c9a475e"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/01-personal-empty.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/01-personal-empty.png",
+    "encoding": "identity",
+    "raw_sha256": "31e1e8f4c90bcbe783547d2d1aeea5bdcf95e62050f6e573833545e2856002a8",
+    "file_sha256": "31e1e8f4c90bcbe783547d2d1aeea5bdcf95e62050f6e573833545e2856002a8"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/01-locked-item-details.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/01-locked-item-details.png",
+    "encoding": "identity",
+    "raw_sha256": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a",
+    "file_sha256": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/01-locked-item-details-bottom.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/01-locked-item-details-bottom.png",
+    "encoding": "identity",
+    "raw_sha256": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a",
+    "file_sha256": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/02-personal-store-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/02-personal-store-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "e6dc9770f92bac2c60d6ae44751daf3b0ea54eacbc4fdb3ea27b33a2d444d0d2",
+    "file_sha256": "e6dc9770f92bac2c60d6ae44751daf3b0ea54eacbc4fdb3ea27b33a2d444d0d2"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/02-personal-stored.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/02-personal-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "47ff9cb128b369d6e90dfa4492afd1a419eaf8827fed8ce803cf94fbb8dcebdc",
+    "file_sha256": "47ff9cb128b369d6e90dfa4492afd1a419eaf8827fed8ce803cf94fbb8dcebdc"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/03-personal-cancel-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/03-personal-cancel-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043",
+    "file_sha256": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/04-personal-last-confirm.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/04-personal-last-confirm.png",
+    "encoding": "identity",
+    "raw_sha256": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043",
+    "file_sha256": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043"
+  },
+  ".work/warehouses-20261030/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/04-last-slot-stored.png": {
+    "path": "outputs/warehouses-20261030/history/isolated-gui/run-a885081a3a0f4af794f180c7db9334f3/browser/screenshots/04-last-slot-stored.png",
+    "encoding": "identity",
+    "raw_sha256": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10",
+    "file_sha256": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10"
+  },
+  ".work/warehouses-20261030/evidence-tool-history/before-package-skip-fix/verify_index.py": {
+    "path": "outputs/warehouses-20261030/history/evidence-tool-history/before-package-skip-fix/verify_index.py",
+    "encoding": "identity",
+    "raw_sha256": "308ff410a38c64c0495c9d08c55e67de9b4762111523e932039bf3524237f130",
+    "file_sha256": "308ff410a38c64c0495c9d08c55e67de9b4762111523e932039bf3524237f130"
+  },
+  ".work/warehouses-20261030/evidence-tool-history/before-stdlib-xlsx/finalize_evidence.py": {
+    "path": "outputs/warehouses-20261030/history/evidence-tool-history/before-stdlib-xlsx/finalize_evidence.py",
+    "encoding": "identity",
+    "raw_sha256": "e8c46fcfe398d3ae68c1d5662584aa88947628cbc3c31feccccfcc3f0d8f246c",
+    "file_sha256": "e8c46fcfe398d3ae68c1d5662584aa88947628cbc3c31feccccfcc3f0d8f246c"
+  },
+  ".work/warehouses-20261030/server/history/before-skill-economy-ready/go-frozen.json": {
+    "path": "outputs/warehouses-20261030/history/server/history/before-skill-economy-ready/go-frozen.json",
+    "encoding": "identity",
+    "raw_sha256": "df4d24799755f120f72692e493e28cae3389a824ad64c7ef982b61730317d554",
+    "file_sha256": "df4d24799755f120f72692e493e28cae3389a824ad64c7ef982b61730317d554"
+  },
+  ".work/warehouses-20261030/server/history/before-skill-economy-ready/handoff.json": {
+    "path": "outputs/warehouses-20261030/history/server/history/before-skill-economy-ready/handoff.json",
+    "encoding": "identity",
+    "raw_sha256": "73ebc27e7565abacbfa185b5aebc78b626f0e9a8873af4bf2d9588c36400d82e",
+    "file_sha256": "73ebc27e7565abacbfa185b5aebc78b626f0e9a8873af4bf2d9588c36400d82e"
+  },
+  ".work/warehouses-20261030/server/history/before-skill-economy-ready/skill_assets_test.go": {
+    "path": "outputs/warehouses-20261030/history/server/history/before-skill-economy-ready/skill_assets_test.go",
+    "encoding": "identity",
+    "raw_sha256": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+    "file_sha256": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/tools/client/verify_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/tools/client/verify_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "df97447d821bab8c0d449262321b66316f31636d07c1d411f7bd6e698d162810",
+    "file_sha256": "df97447d821bab8c0d449262321b66316f31636d07c1d411f7bd6e698d162810"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/tools/client/test_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/tools/client/test_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "9e23402857ba52d3ec22d56f5b95fe9b549aae7b625cc3e1f662d68145118249",
+    "file_sha256": "9e23402857ba52d3ec22d56f5b95fe9b549aae7b625cc3e1f662d68145118249"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/client/assets/scripts/app/WarehouseModel.ts": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/client/assets/scripts/app/WarehouseModel.ts",
+    "encoding": "identity",
+    "raw_sha256": "a560212f3643687210616a0a9b8b1b52e187bf154841ccbccb8d4af03dc5bb52",
+    "file_sha256": "a560212f3643687210616a0a9b8b1b52e187bf154841ccbccb8d4af03dc5bb52"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/client/assets/scripts/app/GameWarehouse.ts": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/client/assets/scripts/app/GameWarehouse.ts",
+    "encoding": "identity",
+    "raw_sha256": "93205bc0df6bc28a677ef251abbdc0a49c6a37c14381c848fad3b8bffaf5bfd3",
+    "file_sha256": "93205bc0df6bc28a677ef251abbdc0a49c6a37c14381c848fad3b8bffaf5bfd3"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/static-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/static-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "662342fc2de19d935f9c9d5b650b42115355083b14b749dc59af6b122af5ce21",
+    "file_sha256": "662342fc2de19d935f9c9d5b650b42115355083b14b749dc59af6b122af5ce21"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/report-contract.json": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/.work/warehouses-20261030/browser/report-contract.json",
+    "encoding": "identity",
+    "raw_sha256": "f9390d54e01655b0d77aa4266a61bcbeeabdda5a622e6625ce458d7723cd0a70",
+    "file_sha256": "f9390d54e01655b0d77aa4266a61bcbeeabdda5a622e6625ce458d7723cd0a70"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/.work/warehouses-20261030/client/production-freeze.json": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/.work/warehouses-20261030/client/production-freeze.json",
+    "encoding": "identity",
+    "raw_sha256": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715",
+    "file_sha256": "eede635e01951ae265674c1af0cd4bb6d1a279860da42dcc24523dfd48c9e715"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/preserved.json": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/preserved.json",
+    "encoding": "identity",
+    "raw_sha256": "1b6009ab84d2a3d756e75f08a0fa78f0b633e3543e0a7511c557321e6e078cdf",
+    "file_sha256": "1b6009ab84d2a3d756e75f08a0fa78f0b633e3543e0a7511c557321e6e078cdf"
+  },
+  ".work/warehouses-20261030/browser/history/first-isolated-df974/normal-run-01.py": {
+    "path": "outputs/warehouses-20261030/history/browser/history/first-isolated-df974/normal-run-01.py",
+    "encoding": "identity",
+    "raw_sha256": "c084e41ba728ef9b2acaf12aa7d4eae3f187390e6f282a36a20b2f1c8ecf489d",
+    "file_sha256": "c084e41ba728ef9b2acaf12aa7d4eae3f187390e6f282a36a20b2f1c8ecf489d"
+  },
+  ".work/warehouses-20261030/browser/report-contract-2.json": {
+    "path": "outputs/warehouses-20261030/history/browser/report-contract-2.json",
+    "encoding": "identity",
+    "raw_sha256": "34e0a6f447fb1badf3850c34415ea535683fdb24bd2610e0a9afbabc927cb3f1",
+    "file_sha256": "34e0a6f447fb1badf3850c34415ea535683fdb24bd2610e0a9afbabc927cb3f1"
+  },
+  ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/source-sha256.json": {
+    "path": "outputs/warehouses-20261030/history/browser/history/second-isolated-0ce913/qa-before/source-sha256.json",
+    "encoding": "identity",
+    "raw_sha256": "a86faaf84a8210317abdb5ed0501fd34095a62d08f90bf18e6e9ef193c501433",
+    "file_sha256": "a86faaf84a8210317abdb5ed0501fd34095a62d08f90bf18e6e9ef193c501433"
+  },
+  ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/verify_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/history/browser/history/second-isolated-0ce913/qa-before/verify_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "0ce913182d4d872fe20838329522f39ec16d5417a897a24006cbe6d7f0effa85",
+    "file_sha256": "0ce913182d4d872fe20838329522f39ec16d5417a897a24006cbe6d7f0effa85"
+  },
+  ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before/test_warehouses_browser.cjs": {
+    "path": "outputs/warehouses-20261030/history/browser/history/second-isolated-0ce913/qa-before/test_warehouses_browser.cjs",
+    "encoding": "identity",
+    "raw_sha256": "d0b56003f23b4ccaa4563996b83c31dc1ad50474549e0b66634d1e8ad7807bf2",
+    "file_sha256": "d0b56003f23b4ccaa4563996b83c31dc1ad50474549e0b66634d1e8ad7807bf2"
+  },
+  ".work/warehouses-20261030/browser/history/second-isolated-0ce913/selectors-before/cutover.py": {
+    "path": "outputs/warehouses-20261030/history/browser/history/second-isolated-0ce913/selectors-before/cutover.py",
+    "encoding": "identity",
+    "raw_sha256": "ea67d08a2fd388d24eb9b2f6e83dd5c84574aab770a04c8b8c072fed7d0cd72f",
+    "file_sha256": "ea67d08a2fd388d24eb9b2f6e83dd5c84574aab770a04c8b8c072fed7d0cd72f"
+  },
+  ".work/warehouses-20261030/browser/history/second-isolated-0ce913/selectors-before/browser/normal/run-01/run.py": {
+    "path": "outputs/warehouses-20261030/history/browser/history/second-isolated-0ce913/selectors-before/browser/normal/run-01/run.py",
+    "encoding": "identity",
+    "raw_sha256": "00f2da47fa7375e9798c7919b84051804a23937796f6d3565208624b51ac5510",
+    "file_sha256": "00f2da47fa7375e9798c7919b84051804a23937796f6d3565208624b51ac5510"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/before/.work/warehouses-20261030/stage_checks.py": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-scroll-3/before/.work/warehouses-20261030/stage_checks.py",
+    "encoding": "identity",
+    "raw_sha256": "1b320b9b5cc43e441db1fd960eb90db43ffe81965f9bca6c2891a03dbf05911f",
+    "file_sha256": "1b320b9b5cc43e441db1fd960eb90db43ffe81965f9bca6c2891a03dbf05911f"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/before/tools/client/prepare_warehouses_qa.py": {
+    "path": "outputs/warehouses-20261030/history/qa-tool-tests-scroll-3/before/tools/client/prepare_warehouses_qa.py",
+    "encoding": "identity",
+    "raw_sha256": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053",
+    "file_sha256": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/client/assets/scripts/app/GameWarehouse.ts": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/client/assets/scripts/app/GameWarehouse.ts",
+    "encoding": "identity",
+    "raw_sha256": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e",
+    "file_sha256": "caff366866b7c426a1d2f379006381aef46ea1a566ad8202800fa185545ba01e"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/client/assets/scripts/ui/List.ts": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/client/assets/scripts/ui/List.ts",
+    "encoding": "identity",
+    "raw_sha256": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c",
+    "file_sha256": "0e6a6603dbc1d953d97ff8b43f6a55b3fcab8926b89d9cb532e104b11ffcc25c"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/client/tests/app/list_scroll_restore.test.cjs": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/client/tests/app/list_scroll_restore.test.cjs",
+    "encoding": "identity",
+    "raw_sha256": "8b899d71bbc49e235066e8827107e8718f57f7c6fd7c62de92b8834dcb830115",
+    "file_sha256": "8b899d71bbc49e235066e8827107e8718f57f7c6fd7c62de92b8834dcb830115"
+  },
+  ".work/warehouses-20261030/client/list-restore-before/client/tests/app/helpers/list_restore_harness.cjs": {
+    "path": "outputs/warehouses-20261030/history/client/list-restore-before/client/tests/app/helpers/list_restore_harness.cjs",
+    "encoding": "identity",
+    "raw_sha256": "73cf29ebb0879196eaf2198d57bf4ce995e34a96839d56d5b929f481332838e5",
+    "file_sha256": "73cf29ebb0879196eaf2198d57bf4ce995e34a96839d56d5b929f481332838e5"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/report.json": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "38ec4a72bc0ac2df36c1b3bb7a3f29c4c4fdaba7547c1f8d00c5cb876af03a04",
+    "file_sha256": "38ec4a72bc0ac2df36c1b3bb7a3f29c4c4fdaba7547c1f8d00c5cb876af03a04"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/relocation.json": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/relocation.json",
+    "encoding": "identity",
+    "raw_sha256": "b41e5ff20606e49e526b14218575a97fb649e2b5b8e3e4918e57c780353d26e8",
+    "file_sha256": "b41e5ff20606e49e526b14218575a97fb649e2b5b8e3e4918e57c780353d26e8"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/mongo-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/mongo-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/mongo-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/server-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d",
+    "file_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/server-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/server-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/client-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835",
+    "file_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835"
+  },
+  ".work/warehouses-20261030/runtime-history/preflight-unavailable-1/client-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/history/runtime-history/preflight-unavailable-1/client-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/report.json": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/report.json",
+    "encoding": "identity",
+    "raw_sha256": "1eddf4603710572581e299d2fe502f3dde24019d2dd5a65c762683b79cc4b3c0",
+    "file_sha256": "1eddf4603710572581e299d2fe502f3dde24019d2dd5a65c762683b79cc4b3c0"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/server-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/server-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d",
+    "file_sha256": "5d1757dddb1e74e58812b5bbb72ef3ab1fc124ea478aa06aef70d97941b0067d"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/server-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/server-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/mongo-before.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/mongo-before.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/mongo-before.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/mongo-before.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/server-start-rule22.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/server-start-rule22.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f",
+    "file_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/server-start-rule22.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/server-start-rule22.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/mongo-after.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/mongo-after.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/recovery-before-publication/mongo-after.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/recovery-before-publication/mongo-after.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/pure-1/report.json": {
+    "path": "outputs/warehouses-20261030/support/server/pure-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "dc7d94deab047514b1c0697cba56e55e1211acd940e25d40d939b36b7689dd50",
+    "file_sha256": "dc7d94deab047514b1c0697cba56e55e1211acd940e25d40d939b36b7689dd50"
+  },
+  ".work/warehouses-20261030/server/pure-1/before.json": {
+    "path": "outputs/warehouses-20261030/support/server/pure-1/before.json",
+    "encoding": "identity",
+    "raw_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7",
+    "file_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7"
+  },
+  ".work/warehouses-20261030/server/pure-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/support/server/pure-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "94b037f2674d90c09f21e0a31a71986170ec57bf4ead4c1c647ee1fec716b807",
+    "file_sha256": "7fd4c82fd2fc8f16242acabe274b9f68a68b46ee33e340b8f5b7a7a563ec38ce"
+  },
+  ".work/warehouses-20261030/server/pure-1/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/pure-1/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/pure-1/command.json": {
+    "path": "outputs/warehouses-20261030/support/server/pure-1/command.json",
+    "encoding": "identity",
+    "raw_sha256": "ed52216b110221282c1d49268a6ef3e94a92042013653a18173038959480d5dd",
+    "file_sha256": "ed52216b110221282c1d49268a6ef3e94a92042013653a18173038959480d5dd"
+  },
+  ".work/warehouses-20261030/server/store-1/report.json": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "9d162d29769edc173e51345d0a39598c5a68e19008915e01010d617bb566efbf",
+    "file_sha256": "9d162d29769edc173e51345d0a39598c5a68e19008915e01010d617bb566efbf"
+  },
+  ".work/warehouses-20261030/server/store-1/before.json": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/before.json",
+    "encoding": "identity",
+    "raw_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7",
+    "file_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7"
+  },
+  ".work/warehouses-20261030/server/store-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "026de0d961d8efe6ceb42932ad8964abdb948b2450548f803fbc05b94183adca",
+    "file_sha256": "1213f4a6ca6b96564e3930c08c6a13e7ae15cbf8e504f73ec1d7f91738a67cad"
+  },
+  ".work/warehouses-20261030/server/store-1/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/store-1/command.json": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/command.json",
+    "encoding": "identity",
+    "raw_sha256": "76bc38c089b583ca7fbb53f32a4aa00a40b9ba0f6e8e74d02f73f173cca6ddbd",
+    "file_sha256": "76bc38c089b583ca7fbb53f32a4aa00a40b9ba0f6e8e74d02f73f173cca6ddbd"
+  },
+  ".work/warehouses-20261030/server/store-1/mongo-status.stdout.json": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/mongo-status.stdout.json",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/server/store-1/mongo-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/store-1/mongo-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/ws-1/report.json": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "e44a504f8942b9f3127ea23c44e5fd1c859107f544dc4c251c2593d337be4ecc",
+    "file_sha256": "e44a504f8942b9f3127ea23c44e5fd1c859107f544dc4c251c2593d337be4ecc"
+  },
+  ".work/warehouses-20261030/server/ws-1/before.json": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/before.json",
+    "encoding": "identity",
+    "raw_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7",
+    "file_sha256": "9d0b7f3613e683717e57dcfbcca086d31cc39e2361c83313f99cce8e635dc6d7"
+  },
+  ".work/warehouses-20261030/server/ws-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "a48e949f10e4585ab0bc47ab296672dc30336357ee5b1fb967b6ec50307e18ed",
+    "file_sha256": "8e66aeca4cd21495cc204453ccc20c10ce4d2bdf4182a60403e7d5d57494ca05"
+  },
+  ".work/warehouses-20261030/server/ws-1/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/ws-1/command.json": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/command.json",
+    "encoding": "identity",
+    "raw_sha256": "21b6a63bc42c99aae4131c2f82118c74bd311dafc87ea9211291388dd02d49a0",
+    "file_sha256": "21b6a63bc42c99aae4131c2f82118c74bd311dafc87ea9211291388dd02d49a0"
+  },
+  ".work/warehouses-20261030/server/ws-1/mongo-status.stdout.json": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/mongo-status.stdout.json",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/server/ws-1/mongo-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/ws-1/mongo-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/additional-2/report.json": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "1576473f87ca5f5bd35e5b4f95c35ff1952168b0781a39b818813d0eabdbd56a",
+    "file_sha256": "1576473f87ca5f5bd35e5b4f95c35ff1952168b0781a39b818813d0eabdbd56a"
+  },
+  ".work/warehouses-20261030/server/additional-2/before.json": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/before.json",
+    "encoding": "identity",
+    "raw_sha256": "09f38f12425642434e52455daaaddba0c2c003b068387eeb1f6fe1928d919fee",
+    "file_sha256": "09f38f12425642434e52455daaaddba0c2c003b068387eeb1f6fe1928d919fee"
+  },
+  ".work/warehouses-20261030/server/additional-2/events.jsonl": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "3e2dca450ec76b5470bd1a203c85d092ac28f2a4a4390bb683d390c279699805",
+    "file_sha256": "b165e4b011daeb6180ef3fa2ba90e6035220f5e40b269c8f30292de96d833e5a"
+  },
+  ".work/warehouses-20261030/server/additional-2/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/additional-2/command.json": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/command.json",
+    "encoding": "identity",
+    "raw_sha256": "92958d3f78bea76668ef14b89c250d93f30d7040a7cf424ab48cf90d282deb7e",
+    "file_sha256": "92958d3f78bea76668ef14b89c250d93f30d7040a7cf424ab48cf90d282deb7e"
+  },
+  ".work/warehouses-20261030/server/additional-2/mongo-status.stdout.json": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/mongo-status.stdout.json",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/server/additional-2/mongo-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/additional-2/mongo-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/report.json": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "8abe100d8fc679af70a5cd76cda9b6c5dcc488eefa459e5b50b96a47c1f4d8eb",
+    "file_sha256": "8abe100d8fc679af70a5cd76cda9b6c5dcc488eefa459e5b50b96a47c1f4d8eb"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/before.json": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/before.json",
+    "encoding": "identity",
+    "raw_sha256": "9d98598797651e02fdbbd84e85b85217fbd9d6cba1b0ad02ff33f82c009a0c7b",
+    "file_sha256": "9d98598797651e02fdbbd84e85b85217fbd9d6cba1b0ad02ff33f82c009a0c7b"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/events.jsonl": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/events.jsonl.gz",
+    "encoding": "gzip",
+    "raw_sha256": "cc0dfdc1ed6b81e4439bc328238f64ad8ef88b9fe78d7bbb5ff087364e545d4f",
+    "file_sha256": "641cb11a2f91831dea1f15cc65db05c59b5d36bcf0aada2ae48f46411f5d5074"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/command.json": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/command.json",
+    "encoding": "identity",
+    "raw_sha256": "b614dba6b97c0f31db038616c0bf4d8ad646984bb466a0ec3f8b2d9b20a9a1b7",
+    "file_sha256": "b614dba6b97c0f31db038616c0bf4d8ad646984bb466a0ec3f8b2d9b20a9a1b7"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/mongo-status.stdout.json": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/mongo-status.stdout.json",
+    "encoding": "identity",
+    "raw_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+    "file_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044"
+  },
+  ".work/warehouses-20261030/server/skills-ready-1/mongo-status.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/server/skills-ready-1/mongo-status.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/narrow-2/report.json": {
+    "path": "outputs/warehouses-20261030/support/client/narrow-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "b87d47858952a21c24d753095921900918b8799ff5a81909f9433fb391afd3ed",
+    "file_sha256": "b87d47858952a21c24d753095921900918b8799ff5a81909f9433fb391afd3ed"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final-2/report.json": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-final-2/report.json",
+    "encoding": "identity",
+    "raw_sha256": "23955b4e7643722c1e77a4e4fb088015d266708346c374b1c080642e8e037e23",
+    "file_sha256": "23955b4e7643722c1e77a4e4fb088015d266708346c374b1c080642e8e037e23"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final-2/unit.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-final-2/unit.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final-2/unit.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-final-2/unit.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "aaad147a5896c1aa76d2f51f940855a20b0fb533c3ce032a41800f2f63582ff3",
+    "file_sha256": "aaad147a5896c1aa76d2f51f940855a20b0fb533c3ce032a41800f2f63582ff3"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final-2/prepare.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-final-2/prepare.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c",
+    "file_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-final-2/prepare.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-final-2/prepare.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/report.json": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/report.json",
+    "encoding": "identity",
+    "raw_sha256": "662342fc2de19d935f9c9d5b650b42115355083b14b749dc59af6b122af5ce21",
+    "file_sha256": "662342fc2de19d935f9c9d5b650b42115355083b14b749dc59af6b122af5ce21"
+  },
+  ".work/warehouses-20261030/browser/static-1/1.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/1.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/1.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/1.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/2.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/2.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/2.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/2.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/3.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/3.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4",
+    "file_sha256": "21b31f6bc04067bc02026ff76b060f8d421c236b7d8b5215e1d8ebf4d4cb96b4"
+  },
+  ".work/warehouses-20261030/browser/static-1/3.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/3.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/4.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/4.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "b4ee0966f3b1a857c7595e98a0211954b605714a20bf85d49ef13dc9684824a9",
+    "file_sha256": "b4ee0966f3b1a857c7595e98a0211954b605714a20bf85d49ef13dc9684824a9"
+  },
+  ".work/warehouses-20261030/browser/static-1/4.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/4.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/browser/static-1/5.stdout.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/5.stdout.log",
+    "encoding": "identity",
+    "raw_sha256": "ad2b40f72c21aeb2ec74f0ddfde4e10a626633d8656ed7f4581d130ad159876a",
+    "file_sha256": "ad2b40f72c21aeb2ec74f0ddfde4e10a626633d8656ed7f4581d130ad159876a"
+  },
+  ".work/warehouses-20261030/browser/static-1/5.stderr.log": {
+    "path": "outputs/warehouses-20261030/support/browser/static-1/5.stderr.log",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/report.json": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-scroll-3/report.json",
+    "encoding": "identity",
+    "raw_sha256": "01801c3260d12bcdb82e410363a2874eaf86cf2ab52ec15de7991db0d241adc5",
+    "file_sha256": "01801c3260d12bcdb82e410363a2874eaf86cf2ab52ec15de7991db0d241adc5"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/unit.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-scroll-3/unit.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/unit.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-scroll-3/unit.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "c9651c138336bf02701438240b4d7b93ca282194090f2be7c2bf7478191bbc00",
+    "file_sha256": "c9651c138336bf02701438240b4d7b93ca282194090f2be7c2bf7478191bbc00"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/prepare.stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-scroll-3/prepare.stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c",
+    "file_sha256": "8d149c37d0f927cd25e83e4153d1953d94bbafd4804b4c0bf3de94bd1f02757c"
+  },
+  ".work/warehouses-20261030/qa-tool-tests-scroll-3/prepare.stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/qa-tool-tests-scroll-3/prepare.stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/client/narrow-3/report.json": {
+    "path": "outputs/warehouses-20261030/support/client/narrow-3/report.json",
+    "encoding": "identity",
+    "raw_sha256": "838e1ccec5dbe655c7d9a3556fceed7dfa0e07fc1d7ba3b13ecbeb7285e7c55f",
+    "file_sha256": "838e1ccec5dbe655c7d9a3556fceed7dfa0e07fc1d7ba3b13ecbeb7285e7c55f"
+  },
+  ".work/warehouses-20261030/evidence-tools-draft-tests-3/report.json": {
+    "path": "outputs/warehouses-20261030/support/evidence-tools-draft-tests-3/report.json",
+    "encoding": "identity",
+    "raw_sha256": "646b14ff682a9e36aa81b226dae3ace06311cc01224b95fb6c01086f249757ac",
+    "file_sha256": "646b14ff682a9e36aa81b226dae3ace06311cc01224b95fb6c01086f249757ac"
+  },
+  ".work/warehouses-20261030/evidence-tools-draft-tests-3/stdout.txt": {
+    "path": "outputs/warehouses-20261030/support/evidence-tools-draft-tests-3/stdout.txt",
+    "encoding": "identity",
+    "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".work/warehouses-20261030/evidence-tools-draft-tests-3/stderr.txt": {
+    "path": "outputs/warehouses-20261030/support/evidence-tools-draft-tests-3/stderr.txt",
+    "encoding": "identity",
+    "raw_sha256": "a744706494a74962e19cb0c6960d0b27e617ac1051a790421d5148400e57d927",
+    "file_sha256": "a744706494a74962e19cb0c6960d0b27e617ac1051a790421d5148400e57d927"
+  },
+  ".work/warehouses-20261030/server/go-frozen.json": {
+    "path": "outputs/warehouses-20261030/support/server/go-frozen.json",
+    "encoding": "identity",
+    "raw_sha256": "9f88cc4e852d228ad2a5b9537df69ea02780dd02a070c492e47e93a0b649bd89",
+    "file_sha256": "9f88cc4e852d228ad2a5b9537df69ea02780dd02a070c492e47e93a0b649bd89"
+  },
+  ".work/warehouses-20261030/server/handoff.json": {
+    "path": "outputs/warehouses-20261030/support/server/handoff.json",
+    "encoding": "identity",
+    "raw_sha256": "25ff88f09fb8ae5399d7dd5bacd759a277bd92e205775dc9c3f94e26e3b8001f",
+    "file_sha256": "25ff88f09fb8ae5399d7dd5bacd759a277bd92e205775dc9c3f94e26e3b8001f"
+  },
+  ".work/warehouses-20261030/server/skill-economy-regression-review.json": {
+    "path": "outputs/warehouses-20261030/support/server/skill-economy-regression-review.json",
+    "encoding": "identity",
+    "raw_sha256": "62e8a659cad28e7090cffad9f835f1508b6ff1328a8482c00a10106bf10bb887",
+    "file_sha256": "62e8a659cad28e7090cffad9f835f1508b6ff1328a8482c00a10106bf10bb887"
+  },
+  ".work/warehouses-20261030/server/qa-tool-peer-review.json": {
+    "path": "outputs/warehouses-20261030/support/server/qa-tool-peer-review.json",
+    "encoding": "identity",
+    "raw_sha256": "5a8a3146707224d20b4ce3bb5e6b10a4e1076915734709f3624491a7ea38dc6d",
+    "file_sha256": "5a8a3146707224d20b4ce3bb5e6b10a4e1076915734709f3624491a7ea38dc6d"
+  },
+  ".work/warehouses-20261030/browser/report-contract.json": {
+    "path": "outputs/warehouses-20261030/support/browser/report-contract.json",
+    "encoding": "identity",
+    "raw_sha256": "f9390d54e01655b0d77aa4266a61bcbeeabdda5a622e6625ce458d7723cd0a70",
+    "file_sha256": "f9390d54e01655b0d77aa4266a61bcbeeabdda5a622e6625ce458d7723cd0a70"
+  },
+  ".work/warehouses-20261030/cutover-selector-review.json": {
+    "path": "outputs/warehouses-20261030/support/cutover-selector-review.json",
+    "encoding": "identity",
+    "raw_sha256": "378e50d7a3f3cd4aa856cabb54a1b2ddddfa452f756e27c0e9b8f71bf5876786",
+    "file_sha256": "378e50d7a3f3cd4aa856cabb54a1b2ddddfa452f756e27c0e9b8f71bf5876786"
+  },
+  ".work/warehouses-20261030/client/production-freeze-text-fix.json": {
+    "path": "outputs/warehouses-20261030/support/client/production-freeze-text-fix.json",
+    "encoding": "identity",
+    "raw_sha256": "55dd095c3adea5357d9aeed30f54e13cc79a774e084f60496509545639bc70c9",
+    "file_sha256": "55dd095c3adea5357d9aeed30f54e13cc79a774e084f60496509545639bc70c9"
+  },
+  ".work/warehouses-20261030/cutover-selector-review-3.json": {
+    "path": "outputs/warehouses-20261030/support/cutover-selector-review-3.json",
+    "encoding": "identity",
+    "raw_sha256": "81d2c6b8387cfb6ded7291d8f098385f49d884bc87aca0ee3775b0b9818c54cf",
+    "file_sha256": "81d2c6b8387cfb6ded7291d8f098385f49d884bc87aca0ee3775b0b9818c54cf"
+  },
+  ".work/warehouses-20261030/client/production-freeze-list-fix.json": {
+    "path": "outputs/warehouses-20261030/support/client/production-freeze-list-fix.json",
+    "encoding": "identity",
+    "raw_sha256": "c6af6c0e3fbeab7e04e8d3f2659c546350a033e72c2b428e188166eb696d8564",
+    "file_sha256": "c6af6c0e3fbeab7e04e8d3f2659c546350a033e72c2b428e188166eb696d8564"
+  },
+  ".work/warehouses-20261030/browser/receipt-conservation-review.json": {
+    "path": "outputs/warehouses-20261030/support/browser/receipt-conservation-review.json",
+    "encoding": "identity",
+    "raw_sha256": "8f9c95ed5d24b1e14dc3548b72deac6b360b5dbbb67206c4bad8aef22f9988d5",
+    "file_sha256": "8f9c95ed5d24b1e14dc3548b72deac6b360b5dbbb67206c4bad8aef22f9988d5"
+  }
+}

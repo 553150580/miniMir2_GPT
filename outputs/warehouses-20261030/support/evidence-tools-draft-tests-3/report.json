@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "source_before": {
+    ".work\\warehouses-20261030\\finalize_evidence.py": "e8c46fcfe398d3ae68c1d5662584aa88947628cbc3c31feccccfcc3f0d8f246c",
+    ".work\\warehouses-20261030\\verify_index.py": "308ff410a38c64c0495c9d08c55e67de9b4762111523e932039bf3524237f130",
+    ".work\\warehouses-20261030\\stage_verified.py": "cdd4c85afc19f03931c576b13256651eb7541ee2924b2ea353c3bd018b754296",
+    ".work\\warehouses-20261030\\test_evidence_tools.py": "127634c5e1b17897cf601bb44626b98423d42e79a59ef18908a9e5db8b40681d",
+    ".work\\warehouses-20261030\\source-allowlist.json": "cfa711d11efc4103dadf58d062f0de931dfe385b230ebd026e09267a74283b8f",
+    ".work\\warehouses-20261030\\curate-plan.json": "ebc8e9709a0730e7b97b10b7f91ae102bcb6cff13610f04989cc81e35f67bbfa"
+  },
+  "source_after": {
+    ".work\\warehouses-20261030\\finalize_evidence.py": "e8c46fcfe398d3ae68c1d5662584aa88947628cbc3c31feccccfcc3f0d8f246c",
+    ".work\\warehouses-20261030\\verify_index.py": "308ff410a38c64c0495c9d08c55e67de9b4762111523e932039bf3524237f130",
+    ".work\\warehouses-20261030\\stage_verified.py": "cdd4c85afc19f03931c576b13256651eb7541ee2924b2ea353c3bd018b754296",
+    ".work\\warehouses-20261030\\test_evidence_tools.py": "127634c5e1b17897cf601bb44626b98423d42e79a59ef18908a9e5db8b40681d",
+    ".work\\warehouses-20261030\\source-allowlist.json": "cfa711d11efc4103dadf58d062f0de931dfe385b230ebd026e09267a74283b8f",
+    ".work\\warehouses-20261030\\curate-plan.json": "ebc8e9709a0730e7b97b10b7f91ae102bcb6cff13610f04989cc81e35f67bbfa"
+  },
+  "scope": "7项私有reader/gzip/EOL/argv/当前bag+page守恒/freshrev纯边界；真实已失败a885成功片段仅作validator正例，不追认整GUI通过；不执行整体门禁/产品检查、不扫产物树、不写正式报告、不stage"
+}

@@ -1,0 +1,19 @@
+test_busy_static_port_does_not_start_or_stop_any_process (test_warehouses_qa.WarehousesQATests.test_busy_static_port_does_not_start_or_stop_any_process) ... ok
+test_candidate_requires_exact_current_source_and_complete_built_output (test_warehouses_qa.WarehousesQATests.test_candidate_requires_exact_current_source_and_complete_built_output) ... ok
+test_exited_supervisor_does_not_prove_qa_ports_are_closed (test_warehouses_qa.WarehousesQATests.test_exited_supervisor_does_not_prove_qa_ports_are_closed) ... ok
+test_fixture_never_changes_values_or_opens_summon_material (test_warehouses_qa.WarehousesQATests.test_fixture_never_changes_values_or_opens_summon_material) ... ok
+test_foreign_marker_extra_operation_and_concurrent_enter_fail_closed (test_warehouses_qa.WarehousesQATests.test_foreign_marker_extra_operation_and_concurrent_enter_fail_closed) ... ok
+test_forged_or_reused_pid_is_never_stopped (test_warehouses_qa.WarehousesQATests.test_forged_or_reused_pid_is_never_stopped) ... ok
+test_go_gate_requires_full_current_real_mongo_race_evidence (test_warehouses_qa.WarehousesQATests.test_go_gate_requires_full_current_real_mongo_race_evidence) ... ok
+test_normal_create_bson_int64_and_original_binding_are_accepted (test_warehouses_qa.WarehousesQATests.test_normal_create_bson_int64_and_original_binding_are_accepted) ... ok
+test_only_exact_new_random_database_and_marker_are_eligible (test_warehouses_qa.WarehousesQATests.test_only_exact_new_random_database_and_marker_are_eligible) ... ok
+test_output_path_cannot_target_main_config_or_other_stage (test_warehouses_qa.WarehousesQATests.test_output_path_cannot_target_main_config_or_other_stage) ... ok
+test_qualification_preserves_all_original_fields_and_is_idempotent_before_enter (test_warehouses_qa.WarehousesQATests.test_qualification_preserves_all_original_fields_and_is_idempotent_before_enter) ... ok
+test_qualification_rechecks_original_go_and_creator_before_write (test_warehouses_qa.WarehousesQATests.test_qualification_rechecks_original_go_and_creator_before_write) ... ok
+test_qualification_rejects_forged_process_before_database_access (test_warehouses_qa.WarehousesQATests.test_qualification_rejects_forged_process_before_database_access) ... ok
+test_role_used_owned_changed_initial_items_or_source_are_rejected (test_warehouses_qa.WarehousesQATests.test_role_used_owned_changed_initial_items_or_source_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 2.108s
+
+OK

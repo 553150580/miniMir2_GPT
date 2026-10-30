@@ -1,0 +1,98 @@
+{
+  "status": "tool_prepared_not_runtime_verified",
+  "source_sha256": {
+    "tools/client/prepare_warehouses_qa.py": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053",
+    "tools/client/test_warehouses_qa.py": "9b0c44936fc891eb81efee8a0b725572289ef511e925cc171c4ff8e76d1268e7"
+  },
+  "pure_tests": {
+    "passed": 14,
+    "report": ".work/warehouses-20261030/qa-tool-tests-final-2/report.json",
+    "report_sha256": "23955b4e7643722c1e77a4e4fb088015d266708346c374b1c080642e8e037e23",
+    "go_database_service_creator_browser_started": false
+  },
+  "cli": {
+    "run": ".\\tools\\dev.ps1 python3 tools/client/prepare_warehouses_qa.py --run --creator-report .work/warehouses-20261030/creator/full-1/report.json --go-report .work/warehouses-20261030/go/full-1/report.json --report-dir .work/warehouses-20261030/isolated-gui",
+    "qualify": ".\\tools\\dev.ps1 python3 tools/client/prepare_warehouses_qa.py --qualify <runtime.json>",
+    "stdin": {
+      "role_id": "normal_CreateRole_10005_32_lowercase_hex"
+    },
+    "browser": "node tools/client/verify_warehouses_browser.cjs --runtime <runtime.json> --report-dir <run/browser>",
+    "qualify_timeout_ms": 300000
+  },
+  "isolation": {
+    "database_prefix": "minimir_dev_game_test_whgui_",
+    "database_name_bytes": 60,
+    "marker_purpose": "isolated_warehouses_gui",
+    "ports": {
+      "account": 18110,
+      "game": 18111,
+      "gm": 18112,
+      "static": 18082
+    },
+    "main_stop": false,
+    "port18081_used": false,
+    "drop_database": false,
+    "creator_or_project_copy": false,
+    "fixture_modified": false,
+    "main_pid_and_three_instances_preserved": true
+  },
+  "qualification": {
+    "only_before_first_enter": true,
+    "normal_create_operation_required": true,
+    "full_original_role_CAS": "$expr $eq $$ROOT $literal original_document",
+    "existing_privilege_hours": 2,
+    "existing_gold": 1000,
+    "existing_yuanbao": "fixture.warehouses.personal_expansion_yuanbao_units + 1000",
+    "added_items": [
+      {
+        "id": 218,
+        "quantity": 1,
+        "bound": false
+      },
+      {
+        "id": 900001,
+        "quantity": 5,
+        "bound": false
+      }
+    ],
+    "source_kind": "development_fixture",
+    "preserved": "all original binding/level/items/bound wallets/revision/economic/source fields",
+    "not_proven": [
+      "natural_supply",
+      "real_payment",
+      "capacity",
+      "warehouse_results"
+    ]
+  },
+  "gates": [
+    "current full Mongo/race zero skip Go report input map",
+    "real Creator 3.8.8 exit36 + current wrapper input map",
+    "exact 9 engine and 3 font SHA maps",
+    "full actual candidate output manifest equality",
+    "main and owned Mongo original process identity",
+    "qualification rechecks original source/artifact before DB write",
+    "only exact random marker database",
+    "whole-role CAS and original create receipt",
+    "finally stops only owned two QA processes, checks all QA ports closed; retains database/logs",
+    "exact complete unfiltered ./... go test command + explicit failed_tests/skipped_tests empty; integration-only cannot impersonate full run"
+  ],
+  "history": [
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests/report.json",
+      "scope": "first pure test FAIL only expected database name length58 was wrong; actual prefix+uuid60 <=63; not product failure"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-2/report.json",
+      "scope": "12 pure tests passed before extra source/cleanup guard tests; superseded by14"
+    },
+    {
+      "path": ".work\\warehouses-20261030\\qa-runner-handoff.json",
+      "sha256": "e53d551730250b29656fcfb71972c20eb6cc339bbd52798f4e9478ff2751ba73",
+      "scope": "previous tool handoff before exact full-Go command guard; original retained"
+    },
+    {
+      "path": ".work/warehouses-20261030/qa-tool-tests-final/report.json",
+      "scope": "14 pure tests before final full-Go command guard; source hash intentionally differs"
+    }
+  ]
+}

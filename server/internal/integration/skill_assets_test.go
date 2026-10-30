@@ -361,8 +361,14 @@ func TestSkillAssetEconomyMongoWS(t *testing.T) {
 	if r := otherClient.skillConfirm(foreign); r.ErrorCode != 0 {
 		t.Fatal("外来角色尝试破坏了真实归属角色的报价")
 	}
-	c.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: c.entry.SceneEpoch, SkillId: skill.ID, TargetHandle: 10})
-	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CCastAccepted })
+	// 完成永久资产操作及关闭Auto不等于原移动/动作锁已经到期。
+	// 沿真实基线观察合法StateBlocked后再请求；不修改业务时钟或补造可施法状态。
+	hero := proto.Clone(c.player()).(*pb.EntityState)
+	t.Logf("满级实际施法前：scene=%d stateSequence=%d auto=%v HP=%d MP=%d movementRevision=%d movementKind=%d action=%d attackSequence=%d castSequence=%d", c.entry.SceneEpoch, c.scene.StateSequence, c.hosting.AutoBattleEnabled, hero.Hp, hero.Mp, hero.MovementRevision, hero.MovementKind, hero.Action, hero.AttackSequence, hero.CastSequence)
+	accepted := levelGrowthCastWhenReady(c, skill.ID, 10)
+	if accepted.SceneEpoch != c.entry.SceneEpoch || accepted.SkillId != skill.ID || accepted.SkillLevel != skill.MaxLevel || accepted.CasterHandle != hero.EntityHandle || accepted.CasterLife != hero.Life || accepted.TargetHandle != 10 {
+		t.Fatal("实际满级施法没有保留原附着/身体/目标身份", accepted)
+	}
 	c.close()
 	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
 	c.auto(false, 1)

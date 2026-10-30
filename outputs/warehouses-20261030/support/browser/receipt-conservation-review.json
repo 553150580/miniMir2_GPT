@@ -1,0 +1,78 @@
+{
+  "recorded_at_utc": "2026-10-30T00:25:47.258666+00:00",
+  "status": "qa_sources_frozen_pure_passed_business_gui_still_pending",
+  "writes_authorized_only": [
+    "tools/client/verify_warehouses_browser.cjs",
+    "tools/client/test_warehouses_browser.cjs"
+  ],
+  "source_sha256": {
+    "tools/client/verify_warehouses_browser.cjs": "b34c99429aaa7834552f6ab7b19604480b72080a77c9acf453fd27b995c116b3",
+    "tools/client/test_warehouses_browser.cjs": "3817cd1381b14b11ccb7b4daf6d517a171da464f2af3fa648c0d6a86c413cde5"
+  },
+  "original_raw_backup": ".work/warehouses-20261030/browser/history/second-isolated-0ce913/qa-before",
+  "backup_sha256": {
+    "tools/client/verify_warehouses_browser.cjs": "0ce913182d4d872fe20838329522f39ec16d5417a897a24006cbe6d7f0effa85",
+    "tools/client/test_warehouses_browser.cjs": "d0b56003f23b4ccaa4563996b83c31dc1ad50474549e0b66634d1e8ad7807bf2"
+  },
+  "implemented": [
+    "40022/40005/40023的request/binding/op/command/role/scope/action同一性",
+    "fresh role revision=q.before+1，warehouse revision=q.before+1",
+    "receipt changes.before/after与实际前后当前页逐slot相等，null必须真实空槽",
+    "完整/部分转移原身份、数量、版本与当前背包+当前已加载页UID唯一；非所选原件逐项保持",
+    "货币/扩页changes为空，物品与绑定钱包及其它币种保持",
+    "方向计算前保留raw rows/view/offset；state读取失败独立failureObservationError且不覆盖原错误"
+  ],
+  "scope_limit": "仅当前背包+已加载页，不宣称未加载仓页全扫描；未启动浏览器/服务/数据库；未改产品/Go/配置/已有报告",
+  "pure_evidence": {
+    "original_report": ".work/warehouses-20261030/browser/receipt-conservation-2/report.json",
+    "original_report_sha256": "befb14f56ca2779a7894696a5f64853834fe3bc298ad1f4e3dfe8c56e39498ec",
+    "command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-File",
+      "D:\\A_Claude\\miniMir2_GPT\\tools\\dev.ps1",
+      "node",
+      "--test",
+      "tools/client/test_warehouses_browser.cjs"
+    ],
+    "node_exit_code": 0,
+    "original_wrapper_exit_code": 1,
+    "original_wrapper_passed": false,
+    "counts_recounted_from_original_stdout": {
+      "tests": 15,
+      "pass": 15,
+      "fail": 0,
+      "skipped": 0
+    },
+    "inputs_before_after_current_equal": true,
+    "stdout": ".work/warehouses-20261030/browser/receipt-conservation-2/stdout.log",
+    "stdout_sha256": "22f29013f6b7a150e395c9e0b9fcff8e35bf48f832ba781ca9871ae51ae307ba",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "wrapper_erratum": "临时汇总正则消费换行，漏取fail行而误false；原node subprocess exit0且原stdout明确15 pass/0 fail/0 skipped。本报告只逐行复核原字节，不重跑，不改原report。"
+  },
+  "history_scope": {
+    "second_browser_report_sha256": "97f73f56ee558b7c196cb8a0163aa1b5df5531d3afd4289730355289616d6cc0",
+    "second_parent_report_sha256": "47795f9f0e53fb33a42d7027c4201d93742b221a986732ceb73980eb62fb74b4",
+    "passed": false,
+    "completed_commits": 2,
+    "failure": "第29仓位再次选取无可见geometry；实际截图右侧List空白，不归因为仅QA方向。两次存入不代表全GUI通过。",
+    "cleanup": {
+      "qa_stopped": true,
+      "static_stopped": true,
+      "main_stopped": false,
+      "main_preserved": true,
+      "mongo_preserved": true,
+      "database_retained": true,
+      "qa_database_dropped": false
+    }
+  },
+  "helper_single_delta_review": {
+    "old_sha256": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053",
+    "current_sha256": "2f657a4d95e4d743040dd9f3bafafa283e7e8539107f1ca3b708c27d5b8f3906",
+    "only_delta": "ENGINE_FILES append 'ui/scroll-view.ts' as tenth external engine source",
+    "inverse_change_restores_exact_old_bytes": true,
+    "other_ownership_qualify_cleanup_full_go_guards_unchanged": true,
+    "environment_executed_by_this_review": false
+  },
+  "finalizer_handoff": "已向assets发逐slot/UID/fresh roleRev同合同最小建议；未编辑finalize_evidence.py。rules负责统一static3/contract3。"
+}

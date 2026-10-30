@@ -1,0 +1,24 @@
+{
+  "passed": false,
+  "exit_code": 1,
+  "command": [
+    "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tools/client",
+    "-p",
+    "test_warehouses_qa.py",
+    "-v"
+  ],
+  "before": {
+    "tools\\client\\prepare_warehouses_qa.py": "a1d6220b3b3e7659c7d8fda8a7ebbdd7c8daaddf247452a23da17e84453105ea",
+    "tools\\client\\test_warehouses_qa.py": "6ecf527abbb105e8c801175bc537b3eacb6a09bac7fb8272d8f9ce6dc9b691f0"
+  },
+  "after": {
+    "tools\\client\\prepare_warehouses_qa.py": "a1d6220b3b3e7659c7d8fda8a7ebbdd7c8daaddf247452a23da17e84453105ea",
+    "tools\\client\\test_warehouses_qa.py": "6ecf527abbb105e8c801175bc537b3eacb6a09bac7fb8272d8f9ce6dc9b691f0"
+  },
+  "scope": "纯安全边界；未启动Go/Mongo/服务/Creator/浏览器"
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 22,
+  "rule_version": 23,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -1207,6 +1207,13 @@
   "equipment_recycling": {
     "mode": "development_gold_only",
     "outputs": []
+  },
+  "warehouses": {
+    "personal_initial_slots": 30,
+    "personal_expansion_slots": 30,
+    "personal_expansion_yuanbao_units": 30000,
+    "shared_slots": 50,
+    "query_page_limit": 30
   },
   "skill_upgrades": [
     {

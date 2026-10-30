@@ -1,0 +1,78 @@
+{
+  "visual_passed": false,
+  "reviewed_at_utc": "2026-10-30T00:23:36.145864+00:00",
+  "report_sha256": "97f73f56ee558b7c196cb8a0163aa1b5df5531d3afd4289730355289616d6cc0",
+  "screenshots": [
+    "00-town-confirm.png",
+    "00-town-entry.png",
+    "01-personal-empty.png",
+    "01-locked-item-details.png",
+    "01-locked-item-details-bottom.png",
+    "02-personal-store-confirm.png",
+    "02-personal-stored.png",
+    "03-personal-cancel-confirm.png",
+    "04-personal-last-confirm.png",
+    "04-last-slot-stored.png",
+    "failure.png"
+  ],
+  "screenshot_sha256": {
+    "00-town-confirm.png": "c5443e397147bc5b460621bf919af6908eb65e5a746b09251570790640ae8585",
+    "00-town-entry.png": "b5a6ddb92403f5d95cc7c19d90ca65a24ec2ccd83230fb1323f506c34c9a475e",
+    "01-personal-empty.png": "31e1e8f4c90bcbe783547d2d1aeea5bdcf95e62050f6e573833545e2856002a8",
+    "01-locked-item-details.png": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a",
+    "01-locked-item-details-bottom.png": "7ba0b795adcf2daa5800deffd4d0cee34c58ca0ad09ba04ecf233ee54332628a",
+    "02-personal-store-confirm.png": "e6dc9770f92bac2c60d6ae44751daf3b0ea54eacbc4fdb3ea27b33a2d444d0d2",
+    "02-personal-stored.png": "47ff9cb128b369d6e90dfa4492afd1a419eaf8827fed8ce803cf94fbb8dcebdc",
+    "03-personal-cancel-confirm.png": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043",
+    "04-personal-last-confirm.png": "660494ce7bca1fd3574c573a0ac46ad51d5116e0487834da659e7a098ac80043",
+    "04-last-slot-stored.png": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10",
+    "failure.png": "bb6b8608febbfae5d4de6b5cb515898698fc009169cacaa6a52ae79e8130cc10"
+  },
+  "actual_view_image_count": 11,
+  "scope": "实际逐张view_image查看720×1280 Chrome GPU图；不是手机真机，也不将前半仓储提交当完整双仓通过。",
+  "findings": [
+    {
+      "screenshots": [
+        "00-town-entry.png"
+      ],
+      "result": "正常城镇画面，HP16/MP13；不再发生个人怪物耗时死亡"
+    },
+    {
+      "screenshots": [
+        "01-personal-empty.png",
+        "02-personal-stored.png"
+      ],
+      "result": "保存双列表/数量/按钮/分页可见且无遮挡，首位原木剑存入可见"
+    },
+    {
+      "screenshots": [
+        "01-locked-item-details.png",
+        "01-locked-item-details-bottom.png"
+      ],
+      "result": "来源/绑定/品质/锁定可读，无纯技术版本行；该7行均已可见，滚动后内容保持"
+    },
+    {
+      "screenshots": [
+        "02-personal-store-confirm.png",
+        "03-personal-cancel-confirm.png",
+        "04-personal-last-confirm.png"
+      ],
+      "result": "新物品确认短句完整显示，明确存入原物/数量/仓位与不合并保护"
+    },
+    {
+      "screenshots": [
+        "04-last-slot-stored.png",
+        "failure.png"
+      ],
+      "result": "末位提交后右侧列表整片空白；真实产品可见池恢复缺陷，不能记视觉通过"
+    },
+    {
+      "screenshots": [
+        "00-town-confirm.png"
+      ],
+      "result": "原Map往返确认仍一整长行左右截断，为既有界面limitation；Root要求本轮不扩改，不冒称全部界面无问题"
+    }
+  ],
+  "product_fix_evidence": ".work/warehouses-20261030/client/narrow-3/report.json",
+  "product_fix_still_requires_new_creator_and_gui": true
+}

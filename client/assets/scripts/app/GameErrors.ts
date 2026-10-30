@@ -1,12 +1,17 @@
 import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNotLearned, CodeSkillResource, CodeSkillStateBlocked, CodeSkillTarget,
     CodeSkillPreviewStale, CodeSkillMaterials, CodeSkillUpgradeBlocked, CodeSkillBookSource, CodeSkillPurchaseBlocked,
-    CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked } from '../generated/protocol_ids';
+    CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked,
+    CodeWarehouseFull, CodeWarehouseChanged, CodeWarehouseBlocked, CodeWarehousePrivilegeRequired } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。
 export function protocolErrorMessage(messageId: number, errorCode: number): string {
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
+    if (errorCode === CodeWarehouseFull) return '背包或仓库没有空位，原物品保持原处';
+    if (errorCode === CodeWarehouseChanged) return '原仓库、物品或版本已变化，请重新查询';
+    if (errorCode === CodeWarehouseBlocked) return '当前物品状态或仓库条件不允许此操作';
+    if (errorCode === CodeWarehousePrivilegeRequired) return '本角色特权已失效，不能查看或存取共享仓库';
     if (errorCode === CodeEquipmentBagFull) return '背包空间不足，装备保持原位';
     if (errorCode === CodeEquipmentChanged) return '原装备或所在部位已变化，请重新选择';
     if (errorCode === CodeEquipmentBlocked) return '当前职业、等级或装备状态不允许穿脱';

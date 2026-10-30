@@ -90,6 +90,18 @@ export class List extends Component {
         this.refreshVisible(false);
     }
 
+    // ScrollView的即时位移不保证派发滚动事件，恢复后必须同步重建当前可见池。
+    restoreScrollOffset(offset: number): void {
+        if (!Number.isFinite(offset) || !isValid(this, true) || !isValid(this.node, true)
+            || !isValid(this.scrollView, true) || !isValid(this.scrollView.node, true)
+            || !isValid(this.viewport, true) || !isValid(this.scrollView.content, true)) return;
+        const maximum = this.scrollView.getMaxScrollOffset().y;
+        if (!Number.isFinite(maximum)) return;
+        this.scrollView.stopAutoScroll();
+        this.scrollView.scrollToOffset(new Vec2(0, Math.min(Math.max(0, offset), Math.max(0, maximum))), 0);
+        this.refreshVisible(false);
+    }
+
     private onScroll(): void { this.refreshVisible(false); }
     private onViewportResize(): void { this.resizeContent(true); this.refreshVisible(false); }
 

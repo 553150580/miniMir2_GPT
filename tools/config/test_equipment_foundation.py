@@ -21,7 +21,7 @@ class EquipmentFoundationTests(unittest.TestCase):
     def equipment(tables,id=218):return next(row for row in tables['game_equipment'] if row['item_id']==id)
 
     def test_current_source_selection_and_four_explicit_zeros(self):
-        self.assertEqual(self.fixture['rule_version'],22)
+        self.assertEqual(self.fixture['rule_version'],23)
         self.assertEqual(self.profile(self.tables)['base_item_ids'],[35,36,193,218])
         self.assertNotIn(220,[item['id'] for item in self.fixture['items']])
         for item in self.fixture['items']:
@@ -82,6 +82,7 @@ class EquipmentFoundationTests(unittest.TestCase):
             for value in [None,'boots','Weapon','',False,0]:
                 tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=version
                 if version<22:profile.pop('base_item_ids')
+                profile.pop('warehouses')
                 self.equipment(tables)['equipment_type']=value
                 with self.subTest(version=version,value=value),self.assertRaises(ValueError):module.fixture_from_rows(tables)
 
@@ -112,7 +113,7 @@ class EquipmentFoundationTests(unittest.TestCase):
             with self.subTest(value=value):self.assertTrue(config.check_json_contracts(self.schema,tables))
 
     def test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade(self):
-        tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21
+        tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21;profile.pop('warehouses')
         with self.assertRaisesRegex(ValueError,'rule22'):module.fixture_from_rows(tables)
         profile.pop('base_item_ids');fixture=module.fixture_from_rows(tables)
         self.assertTrue(all('equipment_stage' not in item for item in fixture['items']))

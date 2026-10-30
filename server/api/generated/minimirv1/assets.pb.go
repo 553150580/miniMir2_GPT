@@ -2265,6 +2265,524 @@ func (x *HostingReport) GetPooledExperience() int64 {
 	return 0
 }
 
+// scope：1角色个人仓，2账号与永久入口共享仓。客户端不提供仓库归属键。
+// 所有仓位从0开始，limit必须明确且不超过当前配置的分页窗口。
+type WarehouseQuery struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Scope         uint32                 `protobuf:"varint,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	StartSlot     uint64                 `protobuf:"varint,2,opt,name=start_slot,json=startSlot,proto3" json:"start_slot,omitempty"`
+	Limit         uint32                 `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WarehouseQuery) Reset() {
+	*x = WarehouseQuery{}
+	mi := &file_assets_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehouseQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehouseQuery) ProtoMessage() {}
+
+func (x *WarehouseQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehouseQuery.ProtoReflect.Descriptor instead.
+func (*WarehouseQuery) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *WarehouseQuery) GetScope() uint32 {
+	if x != nil {
+		return x.Scope
+	}
+	return 0
+}
+
+func (x *WarehouseQuery) GetStartSlot() uint64 {
+	if x != nil {
+		return x.StartSlot
+	}
+	return 0
+}
+
+func (x *WarehouseQuery) GetLimit() uint32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type WarehouseItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slot          uint64                 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
+	Item          *ItemView              `protobuf:"bytes,2,opt,name=item,proto3" json:"item,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WarehouseItem) Reset() {
+	*x = WarehouseItem{}
+	mi := &file_assets_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehouseItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehouseItem) ProtoMessage() {}
+
+func (x *WarehouseItem) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehouseItem.ProtoReflect.Descriptor instead.
+func (*WarehouseItem) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *WarehouseItem) GetSlot() uint64 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *WarehouseItem) GetItem() *ItemView {
+	if x != nil {
+		return x.Item
+	}
+	return nil
+}
+
+type WarehousePage struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Role          *RoleKey               `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	Scope         uint32                 `protobuf:"varint,2,opt,name=scope,proto3" json:"scope,omitempty"`
+	Revision      uint64                 `protobuf:"varint,3,opt,name=revision,proto3" json:"revision,omitempty"`
+	Capacity      uint64                 `protobuf:"varint,4,opt,name=capacity,proto3" json:"capacity,omitempty"`
+	StartSlot     uint64                 `protobuf:"varint,5,opt,name=start_slot,json=startSlot,proto3" json:"start_slot,omitempty"`
+	Limit         uint32                 `protobuf:"varint,6,opt,name=limit,proto3" json:"limit,omitempty"`
+	Items         []*WarehouseItem       `protobuf:"bytes,7,rep,name=items,proto3" json:"items,omitempty"`
+	Gold          int64                  `protobuf:"varint,8,opt,name=gold,proto3" json:"gold,omitempty"`
+	YuanbaoUnits  int64                  `protobuf:"varint,9,opt,name=yuanbao_units,json=yuanbaoUnits,proto3" json:"yuanbao_units,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WarehousePage) Reset() {
+	*x = WarehousePage{}
+	mi := &file_assets_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehousePage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehousePage) ProtoMessage() {}
+
+func (x *WarehousePage) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehousePage.ProtoReflect.Descriptor instead.
+func (*WarehousePage) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *WarehousePage) GetRole() *RoleKey {
+	if x != nil {
+		return x.Role
+	}
+	return nil
+}
+
+func (x *WarehousePage) GetScope() uint32 {
+	if x != nil {
+		return x.Scope
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetRevision() uint64 {
+	if x != nil {
+		return x.Revision
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetCapacity() uint64 {
+	if x != nil {
+		return x.Capacity
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetStartSlot() uint64 {
+	if x != nil {
+		return x.StartSlot
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetLimit() uint32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetItems() []*WarehouseItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *WarehousePage) GetGold() int64 {
+	if x != nil {
+		return x.Gold
+	}
+	return 0
+}
+
+func (x *WarehousePage) GetYuanbaoUnits() int64 {
+	if x != nil {
+		return x.YuanbaoUnits
+	}
+	return 0
+}
+
+// action：1存物、2取物、3存币、4取币、5个人扩页；currency：1金币、2元宝整数单位。
+// 存取物指定原完整实例及数量；不自动合并其它堆叠。其它动作必须清空无关字段。
+type WarehouseAction struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Scope             uint32                 `protobuf:"varint,1,opt,name=scope,proto3" json:"scope,omitempty"`
+	Action            uint32                 `protobuf:"varint,2,opt,name=action,proto3" json:"action,omitempty"`
+	WarehouseRevision uint64                 `protobuf:"varint,3,opt,name=warehouse_revision,json=warehouseRevision,proto3" json:"warehouse_revision,omitempty"`
+	WarehouseSlot     uint64                 `protobuf:"varint,4,opt,name=warehouse_slot,json=warehouseSlot,proto3" json:"warehouse_slot,omitempty"`
+	ItemInstanceId    []byte                 `protobuf:"bytes,5,opt,name=item_instance_id,json=itemInstanceId,proto3" json:"item_instance_id,omitempty"`
+	ItemVersion       uint64                 `protobuf:"varint,6,opt,name=item_version,json=itemVersion,proto3" json:"item_version,omitempty"`
+	Quantity          int64                  `protobuf:"varint,7,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Currency          uint32                 `protobuf:"varint,8,opt,name=currency,proto3" json:"currency,omitempty"`
+	Amount            int64                  `protobuf:"varint,9,opt,name=amount,proto3" json:"amount,omitempty"`
+	Operation         *OperationContext      `protobuf:"bytes,10,opt,name=operation,proto3" json:"operation,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *WarehouseAction) Reset() {
+	*x = WarehouseAction{}
+	mi := &file_assets_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehouseAction) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehouseAction) ProtoMessage() {}
+
+func (x *WarehouseAction) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehouseAction.ProtoReflect.Descriptor instead.
+func (*WarehouseAction) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *WarehouseAction) GetScope() uint32 {
+	if x != nil {
+		return x.Scope
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetAction() uint32 {
+	if x != nil {
+		return x.Action
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetWarehouseRevision() uint64 {
+	if x != nil {
+		return x.WarehouseRevision
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetWarehouseSlot() uint64 {
+	if x != nil {
+		return x.WarehouseSlot
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetItemInstanceId() []byte {
+	if x != nil {
+		return x.ItemInstanceId
+	}
+	return nil
+}
+
+func (x *WarehouseAction) GetItemVersion() uint64 {
+	if x != nil {
+		return x.ItemVersion
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetCurrency() uint32 {
+	if x != nil {
+		return x.Currency
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetAmount() int64 {
+	if x != nil {
+		return x.Amount
+	}
+	return 0
+}
+
+func (x *WarehouseAction) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
+type WarehouseItemChange struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Slot          uint64                 `protobuf:"varint,1,opt,name=slot,proto3" json:"slot,omitempty"`
+	Before        *ItemView              `protobuf:"bytes,2,opt,name=before,proto3" json:"before,omitempty"`
+	After         *ItemView              `protobuf:"bytes,3,opt,name=after,proto3" json:"after,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *WarehouseItemChange) Reset() {
+	*x = WarehouseItemChange{}
+	mi := &file_assets_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehouseItemChange) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehouseItemChange) ProtoMessage() {}
+
+func (x *WarehouseItemChange) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehouseItemChange.ProtoReflect.Descriptor instead.
+func (*WarehouseItemChange) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *WarehouseItemChange) GetSlot() uint64 {
+	if x != nil {
+		return x.Slot
+	}
+	return 0
+}
+
+func (x *WarehouseItemChange) GetBefore() *ItemView {
+	if x != nil {
+		return x.Before
+	}
+	return nil
+}
+
+func (x *WarehouseItemChange) GetAfter() *ItemView {
+	if x != nil {
+		return x.After
+	}
+	return nil
+}
+
+// 仅已提交回执的事实，不从钱包差值猜结果；健康重入不补播历史。
+// warehouse_revision/余额为原提交截面，客户端不得用旧回执覆盖较新的页面。
+type WarehouseActionResult struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Role              *RoleKey               `protobuf:"bytes,1,opt,name=role,proto3" json:"role,omitempty"`
+	RoleRevision      uint64                 `protobuf:"varint,2,opt,name=role_revision,json=roleRevision,proto3" json:"role_revision,omitempty"`
+	OpId              []byte                 `protobuf:"bytes,3,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	Scope             uint32                 `protobuf:"varint,4,opt,name=scope,proto3" json:"scope,omitempty"`
+	Action            uint32                 `protobuf:"varint,5,opt,name=action,proto3" json:"action,omitempty"`
+	WarehouseRevision uint64                 `protobuf:"varint,6,opt,name=warehouse_revision,json=warehouseRevision,proto3" json:"warehouse_revision,omitempty"`
+	Capacity          uint64                 `protobuf:"varint,7,opt,name=capacity,proto3" json:"capacity,omitempty"`
+	Changes           []*WarehouseItemChange `protobuf:"bytes,8,rep,name=changes,proto3" json:"changes,omitempty"`
+	Gold              int64                  `protobuf:"varint,9,opt,name=gold,proto3" json:"gold,omitempty"`
+	YuanbaoUnits      int64                  `protobuf:"varint,10,opt,name=yuanbao_units,json=yuanbaoUnits,proto3" json:"yuanbao_units,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *WarehouseActionResult) Reset() {
+	*x = WarehouseActionResult{}
+	mi := &file_assets_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WarehouseActionResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WarehouseActionResult) ProtoMessage() {}
+
+func (x *WarehouseActionResult) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WarehouseActionResult.ProtoReflect.Descriptor instead.
+func (*WarehouseActionResult) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *WarehouseActionResult) GetRole() *RoleKey {
+	if x != nil {
+		return x.Role
+	}
+	return nil
+}
+
+func (x *WarehouseActionResult) GetRoleRevision() uint64 {
+	if x != nil {
+		return x.RoleRevision
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetOpId() []byte {
+	if x != nil {
+		return x.OpId
+	}
+	return nil
+}
+
+func (x *WarehouseActionResult) GetScope() uint32 {
+	if x != nil {
+		return x.Scope
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetAction() uint32 {
+	if x != nil {
+		return x.Action
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetWarehouseRevision() uint64 {
+	if x != nil {
+		return x.WarehouseRevision
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetCapacity() uint64 {
+	if x != nil {
+		return x.Capacity
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetChanges() []*WarehouseItemChange {
+	if x != nil {
+		return x.Changes
+	}
+	return nil
+}
+
+func (x *WarehouseActionResult) GetGold() int64 {
+	if x != nil {
+		return x.Gold
+	}
+	return 0
+}
+
+func (x *WarehouseActionResult) GetYuanbaoUnits() int64 {
+	if x != nil {
+		return x.YuanbaoUnits
+	}
+	return 0
+}
+
 var File_assets_proto protoreflect.FileDescriptor
 
 const file_assets_proto_rawDesc = "" +
@@ -2488,7 +3006,54 @@ const file_assets_proto_rawDesc = "" +
 	"\x10total_drop_count\x18\x0e \x01(\x04R\x0etotalDropCount\x12%\n" +
 	"\x0eraw_experience\x18\x0f \x01(\x03R\rrawExperience\x12/\n" +
 	"\x13rejected_experience\x18\x10 \x01(\x03R\x12rejectedExperience\x12+\n" +
-	"\x11pooled_experience\x18\x11 \x01(\x03R\x10pooledExperienceB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\x11pooled_experience\x18\x11 \x01(\x03R\x10pooledExperience\"[\n" +
+	"\x0eWarehouseQuery\x12\x14\n" +
+	"\x05scope\x18\x01 \x01(\rR\x05scope\x12\x1d\n" +
+	"\n" +
+	"start_slot\x18\x02 \x01(\x04R\tstartSlot\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\rR\x05limit\"M\n" +
+	"\rWarehouseItem\x12\x12\n" +
+	"\x04slot\x18\x01 \x01(\x04R\x04slot\x12(\n" +
+	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"\xa5\x02\n" +
+	"\rWarehousePage\x12'\n" +
+	"\x04role\x18\x01 \x01(\v2\x13.minimir.v1.RoleKeyR\x04role\x12\x14\n" +
+	"\x05scope\x18\x02 \x01(\rR\x05scope\x12\x1a\n" +
+	"\brevision\x18\x03 \x01(\x04R\brevision\x12\x1a\n" +
+	"\bcapacity\x18\x04 \x01(\x04R\bcapacity\x12\x1d\n" +
+	"\n" +
+	"start_slot\x18\x05 \x01(\x04R\tstartSlot\x12\x14\n" +
+	"\x05limit\x18\x06 \x01(\rR\x05limit\x12/\n" +
+	"\x05items\x18\a \x03(\v2\x19.minimir.v1.WarehouseItemR\x05items\x12\x12\n" +
+	"\x04gold\x18\b \x01(\x03R\x04gold\x12#\n" +
+	"\ryuanbao_units\x18\t \x01(\x03R\fyuanbaoUnits\"\xee\x02\n" +
+	"\x0fWarehouseAction\x12\x14\n" +
+	"\x05scope\x18\x01 \x01(\rR\x05scope\x12\x16\n" +
+	"\x06action\x18\x02 \x01(\rR\x06action\x12-\n" +
+	"\x12warehouse_revision\x18\x03 \x01(\x04R\x11warehouseRevision\x12%\n" +
+	"\x0ewarehouse_slot\x18\x04 \x01(\x04R\rwarehouseSlot\x12(\n" +
+	"\x10item_instance_id\x18\x05 \x01(\fR\x0eitemInstanceId\x12!\n" +
+	"\fitem_version\x18\x06 \x01(\x04R\vitemVersion\x12\x1a\n" +
+	"\bquantity\x18\a \x01(\x03R\bquantity\x12\x1a\n" +
+	"\bcurrency\x18\b \x01(\rR\bcurrency\x12\x16\n" +
+	"\x06amount\x18\t \x01(\x03R\x06amount\x12:\n" +
+	"\toperation\x18\n" +
+	" \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x83\x01\n" +
+	"\x13WarehouseItemChange\x12\x12\n" +
+	"\x04slot\x18\x01 \x01(\x04R\x04slot\x12,\n" +
+	"\x06before\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x06before\x12*\n" +
+	"\x05after\x18\x03 \x01(\v2\x14.minimir.v1.ItemViewR\x05after\"\xe7\x02\n" +
+	"\x15WarehouseActionResult\x12'\n" +
+	"\x04role\x18\x01 \x01(\v2\x13.minimir.v1.RoleKeyR\x04role\x12#\n" +
+	"\rrole_revision\x18\x02 \x01(\x04R\froleRevision\x12\x13\n" +
+	"\x05op_id\x18\x03 \x01(\fR\x04opId\x12\x14\n" +
+	"\x05scope\x18\x04 \x01(\rR\x05scope\x12\x16\n" +
+	"\x06action\x18\x05 \x01(\rR\x06action\x12-\n" +
+	"\x12warehouse_revision\x18\x06 \x01(\x04R\x11warehouseRevision\x12\x1a\n" +
+	"\bcapacity\x18\a \x01(\x04R\bcapacity\x129\n" +
+	"\achanges\x18\b \x03(\v2\x1f.minimir.v1.WarehouseItemChangeR\achanges\x12\x12\n" +
+	"\x04gold\x18\t \x01(\x03R\x04gold\x12#\n" +
+	"\ryuanbao_units\x18\n" +
+	" \x01(\x03R\fyuanbaoUnitsB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_assets_proto_rawDescOnce sync.Once
@@ -2502,7 +3067,7 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_assets_proto_goTypes = []any{
 	(*WalletState)(nil),              // 0: minimir.v1.WalletState
 	(*ItemView)(nil),                 // 1: minimir.v1.ItemView
@@ -2530,9 +3095,15 @@ var file_assets_proto_goTypes = []any{
 	(*ClaimHostingTimeRequest)(nil),  // 23: minimir.v1.ClaimHostingTimeRequest
 	(*BuyHostingTimeRequest)(nil),    // 24: minimir.v1.BuyHostingTimeRequest
 	(*HostingReport)(nil),            // 25: minimir.v1.HostingReport
-	(*RoleKey)(nil),                  // 26: minimir.v1.RoleKey
-	(*OperationContext)(nil),         // 27: minimir.v1.OperationContext
-	(*GridPoint)(nil),                // 28: minimir.v1.GridPoint
+	(*WarehouseQuery)(nil),           // 26: minimir.v1.WarehouseQuery
+	(*WarehouseItem)(nil),            // 27: minimir.v1.WarehouseItem
+	(*WarehousePage)(nil),            // 28: minimir.v1.WarehousePage
+	(*WarehouseAction)(nil),          // 29: minimir.v1.WarehouseAction
+	(*WarehouseItemChange)(nil),      // 30: minimir.v1.WarehouseItemChange
+	(*WarehouseActionResult)(nil),    // 31: minimir.v1.WarehouseActionResult
+	(*RoleKey)(nil),                  // 32: minimir.v1.RoleKey
+	(*OperationContext)(nil),         // 33: minimir.v1.OperationContext
+	(*GridPoint)(nil),                // 34: minimir.v1.GridPoint
 }
 var file_assets_proto_depIdxs = []int32{
 	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
@@ -2541,35 +3112,43 @@ var file_assets_proto_depIdxs = []int32{
 	3,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
 	7,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
 	5,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
-	26, // 6: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
+	32, // 6: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
 	5,  // 7: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
 	7,  // 8: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
-	27, // 9: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 10: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
-	26, // 11: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
-	27, // 12: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 13: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 14: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 15: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 16: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
-	28, // 17: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
-	27, // 18: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 9: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 10: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
+	32, // 11: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
+	33, // 12: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 13: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 14: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 15: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 16: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
+	34, // 17: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
+	33, // 18: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
 	17, // 19: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
 	1,  // 20: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
 	0,  // 21: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
 	19, // 22: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
 	1,  // 23: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
 	20, // 24: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
-	27, // 25: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 26: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	27, // 27: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 25: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 26: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	33, // 27: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
 	0,  // 28: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
 	1,  // 29: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
-	30, // [30:30] is the sub-list for method output_type
-	30, // [30:30] is the sub-list for method input_type
-	30, // [30:30] is the sub-list for extension type_name
-	30, // [30:30] is the sub-list for extension extendee
-	0,  // [0:30] is the sub-list for field type_name
+	1,  // 30: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
+	32, // 31: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
+	27, // 32: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
+	33, // 33: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
+	1,  // 34: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
+	1,  // 35: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
+	32, // 36: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
+	30, // 37: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
+	38, // [38:38] is the sub-list for method output_type
+	38, // [38:38] is the sub-list for method input_type
+	38, // [38:38] is the sub-list for extension type_name
+	38, // [38:38] is the sub-list for extension extendee
+	0,  // [0:38] is the sub-list for field type_name
 }
 
 func init() { file_assets_proto_init() }
@@ -2584,7 +3163,7 @@ func file_assets_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   26,
+			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

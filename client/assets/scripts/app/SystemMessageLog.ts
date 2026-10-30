@@ -29,6 +29,7 @@ export interface MessageSnapshot {
     teleportNotice?: TeleportObservation | null;
     recycleNotice?: RecycleNotice | null;
     experienceNotice?: ExperienceNotice | null;
+    warehouseNotice?: { role: string; op: string; scope: number; action: number; scene: string; baseline: string } | null;
     role?: { name?: string; level?: number } | null;
     inventory?: {
         level?: number;
@@ -102,6 +103,7 @@ export class SystemMessageLog {
     private lastBindingNotice = '';
     private lastRecycleRevision = 0n;
     private lastExperienceRevision = 0n;
+    private lastWarehouseOp = '';
     private change = 0;
     readonly capacity: number;
 
@@ -131,6 +133,7 @@ export class SystemMessageLog {
             this.seenBindingReceipts.clear(); this.lastBindingNotice = ''; this.seenTeleportResults.clear();
             this.lastRecycleRevision = 0n;
             this.lastExperienceRevision = 0n;
+            this.lastWarehouseOp = '';
         }
         const binding = snapshot.entry ? `${snapshot.entry.sceneEpoch ?? ''}:${snapshot.entry.baselineId ?? ''}` : '';
         if (binding && binding !== this.binding) {
@@ -153,6 +156,13 @@ export class SystemMessageLog {
         this.observeInventory(snapshot);
         this.observeBinding(snapshot);
         this.observeTeleport(snapshot);
+        const warehouse = snapshot.warehouseNotice;
+        if (warehouse && warehouse.role === snapshot.roleIdentity && /^[0-9a-f]{32}$/.test(warehouse.op) && warehouse.op !== this.lastWarehouseOp
+            && warehouse.scene === snapshot.entry?.sceneEpoch?.toString() && warehouse.baseline === snapshot.entry?.baselineId?.toString()
+            && [1, 2].includes(warehouse.scope) && warehouse.action >= 1 && warehouse.action <= 5) {
+            this.lastWarehouseOp = warehouse.op;
+            this.append('仓库操作', `${warehouse.scope === 1 ? '个人仓库' : '共享仓库'}：${['', '存入物品', '取出物品', '存入货币', '取出货币', '扩页'][warehouse.action]}已提交\n当前物品与容量请查看最新查询页`);
+        }
         const experience = snapshot.experienceNotice;
         if (experience && experience.role === snapshot.roleIdentity && BigInt(experience.revision) > this.lastExperienceRevision) {
             this.lastExperienceRevision = BigInt(experience.revision);

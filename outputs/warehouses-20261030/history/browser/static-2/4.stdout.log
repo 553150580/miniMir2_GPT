@@ -1,0 +1,16 @@
+✔ 实际rule23目录、五项配置、16个PB观察类型及保存仓库节点预检，不启动Chrome (7.929ms)
+✔ 真实GameConnection编码与PB往返保留warehouse/slot/version/quantity全部Long，原回执变化可读 (3.3248ms)
+✔ Query拒绝观察实际原40020/3504，不能误认正常Page40021或资产40005 (0.4512ms)
+✔ HTTP-only正常10005/10006创角匹配原职业0和2，认证正文/非本端口先过滤，不记录凭据 (1.0261ms)
+✔ 页面与原件观察保留显式零、原来源/锁，部分数量与完整版本分开核验 (1.8762ms)
+✔ overscan首行虽在复用池但在Mask上方时必须向前回滚，不能拿pool最小index当可见首行 (0.2969ms)
+✔ 所有waitForFunction同步布尔，不把async Promise当就绪；选取等待实际原UID/仓位 (20.1465ms)
+✔ 触屏选择采样在找点之后紧邻touch，业务不私调且完整loaded JsonAsset原字节只按Node语义对比 (0.5834ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 335.717

@@ -1,0 +1,295 @@
+{
+  "started_at_utc": "2026-10-30T04:51:07.680601+00:00",
+  "commands": [
+    {
+      "name": "mongo-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 2.611,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/mongo-before.stdout.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr": ".work/warehouses-20261030/runtime-control/mongo-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 0.293,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/server-before.stdout.txt",
+      "stdout_sha256": "e9c0f39bb5265dafd9a23d2f03c70b6f35de07a67dc0fdee78cca30c8e69618f",
+      "stderr": ".work/warehouses-20261030/runtime-control/server-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-before",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 0.267,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-before.stdout.txt",
+      "stdout_sha256": "91082eed739a29369a230858fbac1ac8f1ac52595d482d78b62307661caef835",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-before.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-stop",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "stop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.911,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/server-stop.stdout.txt",
+      "stdout_sha256": "750796e2dc8aa0f9a1cb9bb1ea8bcef9701ca278ea850efd731b4b7336525cc5",
+      "stderr": ".work/warehouses-20261030/runtime-control/server-stop.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-stop",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "stop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.597,
+      "parse_json": false,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-stop.stdout.txt",
+      "stdout_sha256": "d79e97095eb159a95c102f008f6cb7c5cf5b1005919f70599a6f2dc01b3aac64",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-stop.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-stopped-status",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 1.232,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-stopped-status.stdout.txt",
+      "stdout_sha256": "523f44ef92f6635426c510248a979305fad0cada3ce15387d50e72c8c851a506",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-stopped-status.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "server-start",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/server/dev.py",
+        "start"
+      ],
+      "exit_code": 0,
+      "seconds": 1.389,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/server-start.stdout.txt",
+      "stdout_sha256": "f736840152d32990bbe391110c58f12c00aca28ea50736ba1304a317bab0e72b",
+      "stderr": ".work/warehouses-20261030/runtime-control/server-start.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-start",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "start"
+      ],
+      "exit_code": 0,
+      "seconds": 1.844,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-start.stdout.txt",
+      "stdout_sha256": "a7b2cceea29c0f3d791ce928e9b43a590129753ed80a904ca4fb7badbeffc983",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-start.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "client-after",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/client/dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 0.219,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/client-after.stdout.txt",
+      "stdout_sha256": "f024dbf168a884dddb0287a5ac540604e28037da4c00c2e49a73ecef95111851",
+      "stderr": ".work/warehouses-20261030/runtime-control/client-after.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "mongo-after",
+      "command": [
+        "C:\\Users\\55315\\AppData\\Local\\minimir-toolchain\\windows-amd64\\python\\tools-venv\\Scripts\\python.exe",
+        "D:\\A_Claude\\miniMir2_GPT\\tools\\dev",
+        "python3",
+        "tools/environment/mongodb_dev.py",
+        "status"
+      ],
+      "exit_code": 0,
+      "seconds": 2.42,
+      "parse_json": true,
+      "stdout": ".work/warehouses-20261030/runtime-control/mongo-after.stdout.txt",
+      "stdout_sha256": "95b298a0018e34e3fca63c0edc0e90c6c52132d3c8e506f73f53f5261af1a044",
+      "stderr": ".work/warehouses-20261030/runtime-control/mongo-after.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "phase": "completed",
+  "passed": true,
+  "scope": "候选真实产物切换及本任务受控起停；Mongo仅status，不接来源服或其它服务",
+  "other_ports_touched": [],
+  "rollback_attempted": false,
+  "rollback_restored": false,
+  "saved_layout_changes": {
+    "unchanged_saved_layouts": 9,
+    "intentionally_extended_layouts": [
+      "client/assets/scenes/Game.scene"
+    ],
+    "original_scene_objects": 1191,
+    "appended_scene_objects": 182,
+    "old_object_fields_preserved_except_declared_child_append": true
+  },
+  "before": {
+    "18080": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 53128,
+      "run_id": "1b4cec4070eb4e5b8a1def0d8a43c855",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    },
+    "18100": {
+      "development_only": true,
+      "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+      "instance": "be2af7a3e33c1b8bae5ead600304839b",
+      "mode": "account",
+      "rule_version": 22,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18101": {
+      "development_only": true,
+      "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+      "instance": "2e06b88e6b4569daca8f56801d20f406",
+      "mode": "game",
+      "rule_version": 22,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18102": {
+      "development_only": true,
+      "fixture_hash": "f0f51d16d9f39dfde800eb848535e2f8af273eb652c1c93f165b06a3cc840e93",
+      "instance": "35844287a05430320526180edaa9ea3a",
+      "mode": "gm",
+      "rule_version": 22,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  },
+  "candidate_manifest_sha256": "312b618a60475e532f4f317b49f862fc775129de8431a14e231e92d2040d6893",
+  "mongo_before": {
+    "backend": "windows_native",
+    "pid": 5640,
+    "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+    "project_key": "1e81949e1d3b",
+    "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+    "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "version": "8.0.34"
+  },
+  "staged_artifact_files": 26053,
+  "after": {
+    "18080": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 38580,
+      "run_id": "be04fce8667f459a9bb91155835db89e",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    },
+    "18100": {
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "e564527f61ccb55def2bf5b612c7319b",
+      "mode": "account",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18101": {
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "03678a7ec241d28c98f4d5a6b93a10b4",
+      "mode": "game",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    "18102": {
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "22eb3ec74fcf05df81d5a1058952fdb8",
+      "mode": "gm",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  },
+  "served_candidate_exact_match": true,
+  "mongo_after": {
+    "backend": "windows_native",
+    "pid": 5640,
+    "installation_id": "e65363c2f1d1455190a9e8e0d8979b9c",
+    "project_key": "1e81949e1d3b",
+    "data_path": "C:\\Users\\55315\\AppData\\Local\\minimir-mongodb\\windows\\8.0.34\\1e81949e1d3b\\data",
+    "uri": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true",
+    "port": 27119,
+    "replica_set": "minimirWinDev",
+    "version": "8.0.34"
+  },
+  "mongo_service_restarted": false,
+  "finished_at_utc": "2026-10-30T04:56:19.855145+00:00"
+}

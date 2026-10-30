@@ -1,0 +1,29 @@
+{
+  "status": "test_only_regression_fix_narrow_pass_full2_pending",
+  "original_full": ".work/warehouses-20261030/go/full-1/report.json",
+  "original_full_sha256": "659a9eef6050b199568de5c275ea6e16b6387edec98a198f2900b8d1b9023efb",
+  "original_events_sha256": "c85c7c1fbb7ae00c66905b0ba6306a4a7b8bdf55c5e763db13dde5bb5f724290",
+  "cause": "原用例未等待可受理；统一3202的具体guard不可见，旧日志未证明自动走格或某一具体guard",
+  "changes": {
+    "server/internal/integration/skill_assets_test.go": {
+      "old": "dca841f81307043e8b3a5d7c2ff6fc4109efa141b4be548c87a308177e090821",
+      "current": "8b480d282cfc52a6918c32b3e986ddf3fec016b67c2bf74fc5ad7ead498c5fb0"
+    }
+  },
+  "production_changed": false,
+  "helper_changed": false,
+  "test_change": "仅末尾caller调用已有levelGrowthCastWhenReady，按原Auto=false/3202拒绝/新权威baseline及MP/cast不变观测重试；新增原scene/skill/maxrank/casterLife/target核验，原经济/满级/重连断言保留",
+  "business_deadlines_changed": false,
+  "fixed_sleep_added": false,
+  "narrow_report": "skills-ready-1/report.json",
+  "narrow_report_sha256": "8abe100d8fc679af70a5cd76cda9b6c5dcc488eefa459e5b50b96a47c1f4d8eb",
+  "narrow_exit": 0,
+  "narrow_elapsed_seconds": 16.914580299984664,
+  "inputs_stable": true,
+  "input_count": 206,
+  "blocked_observed_in_this_sample": 0,
+  "sample_note": "本次施法前movementRevision0、action0、auto=false，直接受理；没有冒称本窄样本复现3202等待分支",
+  "old_marker_preserved": "history/before-skill-economy-ready/go-frozen.json",
+  "new_marker_sha256": "9f88cc4e852d228ad2a5b9537df69ea02780dd02a070c492e47e93a0b649bd89",
+  "go_count": 187
+}

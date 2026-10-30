@@ -33,6 +33,7 @@ const codecs: Record<number, MessageType> = {
     40016: pb.SetAutoRecycleRequest, 40017: pb.SetItemLockRequest,
     40018: pb.EquipmentRecycleResult,
     40019: pb.ExperienceGrantResult,
+    40020: pb.WarehouseQuery, 40021: pb.WarehousePage, 40022: pb.WarehouseAction, 40023: pb.WarehouseActionResult,
 };
 
 function variable(value: Long): number[] {
@@ -174,7 +175,7 @@ export class GameConnection {
         if (cancelNavigation && !assemble) return Promise.reject(new Error('导航取消必须等待匹配的完整基线'));
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 40011 ? 40012 : 40005];
+            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 40011 ? 40012 : id === 40020 ? 40021 : 40005];
             this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {
                 this.socket!.send(encodePacket(id, seq, this.binding, value));

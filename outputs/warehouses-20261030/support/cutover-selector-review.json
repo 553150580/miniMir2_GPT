@@ -1,0 +1,12 @@
+{
+  "read_only": true,
+  "reviewed_source_sha256": "31ac3e5da97300a139fbb1e0e8148d7023532708de639d7e1f04a77be789d330",
+  "current_source_sha256": "ea67d08a2fd388d24eb9b2f6e83dd5c84574aab770a04c8b8c072fed7d0cd72f",
+  "only_changes": [
+    "go/full-1→go/full-2",
+    "client/full-1→client/full-2",
+    "creator/full-1→creator/full-2"
+  ],
+  "all_other_source_bytes_equal": true,
+  "script_executed": false
+}

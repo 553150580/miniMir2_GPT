@@ -1,0 +1,53 @@
+{
+  "status": "read_only_peer_no_current_blocking_finding",
+  "observed_at_utc": "2026-10-29T23:21:10.984934+00:00",
+  "source_sha256": {
+    "tools/client/prepare_warehouses_qa.py": "045784638e2bbbd193a4bab840c3ffcd3cd200bdb301113a09322cb6e8e9c053",
+    "tools/client/test_warehouses_qa.py": "9b0c44936fc891eb81efee8a0b725572289ef511e925cc171c4ff8e76d1268e7",
+    "tools/process_control.py": "8e706c00b27577765c7ef6ee765a1475f7b9d3420f3b594fe7c68bd968ce1a9a",
+    "tools/environment/mongodb_windows.py": "51e4a6094d12486c0e625808968cf099cf73ce090f1ebd240ac6eff3b6a52f3b",
+    "tools/client/serve.mjs": "93e5a825ae078f833a62943cc0d84e1baa2503e621ac6de9e1e374c0388aedbd",
+    ".work/warehouses-20261030/qa-tool-tests-final-2/report.json": "23955b4e7643722c1e77a4e4fb088015d266708346c374b1c080642e8e037e23"
+  },
+  "reviewer_executed_tools_or_tests": false,
+  "reviewer_modified_source": false,
+  "reviewed_scope": [
+    "exact work path/reparse boundary; fresh UUID60-byte namespace and exact application marker; no main/existing namespace claim",
+    "stdin only role_id; normal create receipt/initial bound items/level/wallet/unused session constraints; whole-role CAS and fixed transaction-retry qualification",
+    "full Go exact controlled ./... command with no filtering plus current complete input maps/zero failed or skipped; real Creator report/current source and exact9engine3font/full actual output tree",
+    "qualification rechecks original report SHA/current Go and actual candidate before Mongo mutation",
+    "only owned new QA supervisor/static processes; no main stop and no drop; parent exit alone insufficient, all QA listener ports must close",
+    "failed operation/cleanup/source drift cannot claim passed; original main/static and Mongo identities preserved"
+  ],
+  "closed_findings": [
+    {
+      "id": "QA01",
+      "finding": "Creator external engine/font current omitted",
+      "fix": "exact9engine and3font before-after-current dictionary equality at verify_artifact"
+    },
+    {
+      "id": "QA02",
+      "finding": "qualify did not recheck original Go/artifact immediately before qualification",
+      "fix": "runtime stores original Go report SHA/input map; validate_runtime calls verify_frozen_runtime_sources and whole artifact proof"
+    },
+    {
+      "id": "QA03",
+      "finding": "parent exited could imply qa_stopped despite live listeners",
+      "fix": "finally stop_owned AND ports_closed required, otherwise final passed false; does not claim orphan processes were forcibly cleaned"
+    },
+    {
+      "id": "QA04",
+      "finding": "full-input-frozen integration-only/filtered report could pass full Go gate",
+      "fix": "exact unfiltered ./... controlled command paired with report timeout/parallelism; explicit failed_tests/skipped_tests empty required"
+    }
+  ],
+  "producer_tests_read": {
+    "report": ".work/warehouses-20261030/qa-tool-tests-final-2/report.json",
+    "scope": "14 pure tests and no-argument prepare; producer reports terminal0 and before=after=current. I read existing raw/report and did not rerun."
+  },
+  "limitations": [
+    "Static peer does not validate actual Windows stop/start or real browser route. Root must consume real isolated GUI terminal separately.",
+    "Main not stopped; retained random QA database is intentional, not cleanup failure or natural supply/payment proof.",
+    "Qualification seeds exactly existing Until/funds plus2 explicit development_fixture items; no warehouse results or main entitlements seeded."
+  ]
+}

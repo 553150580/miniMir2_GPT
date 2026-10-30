@@ -1,0 +1,279 @@
+{
+  "_id": "2651319086f0a8f49d5885af1eca0dd7",
+  "run_id": "a885081a3a0f4af794f180c7db9334f3",
+  "purpose": "isolated_warehouses_gui",
+  "fixture_sha256": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+  "before": {
+    "_id": "2651319086f0a8f49d5885af1eca0dd7",
+    "account_id": "59d9bbe996fee7c7b44d276575b24838",
+    "origin_server_id": 1,
+    "slot": 1,
+    "job": 2,
+    "gender": 0,
+    "name": "仓储3dff88",
+    "name_key": "仓储3dff88",
+    "level": 1,
+    "experience": 0,
+    "progression_format_version": 1,
+    "progression_curve_version": "myf_exp_candidate_1_50_v1",
+    "revision": 1,
+    "economic_command_seq": 0,
+    "source_seq": 0,
+    "owner_instance": "",
+    "run_epoch": 0,
+    "session_epoch": 0,
+    "wallet": {
+      "gold": 0,
+      "bound_gold": 0,
+      "yuanbao_units": 0,
+      "bound_yuanbao_units": 0
+    },
+    "items": [
+      {
+        "instance_id": "4e4b7449554b7db5dcdb508b794158da",
+        "item_id": 218,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "0d7ad33f77d157609c608331c7e3b2bb",
+        "item_id": 218,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "3274c9ea0361557d06e46f6136a110b3",
+        "item_id": 193,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "22070891dd709c14343a2a9505349750",
+        "item_id": 35,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "66176f291598c4d9f6eb90c5190528d8",
+        "item_id": 36,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "796312f96090f387d44f3192ee4af57f",
+        "item_id": 21,
+        "quantity": 1,
+        "bound": true,
+        "version": 1,
+        "source_kind": "initial_grant",
+        "source_id": "edf0b797ac394f719f4ffcbccf76e756"
+      }
+    ],
+    "equipped": [],
+    "capacity": 32,
+    "pickup_stopped": false,
+    "auto_recycle": {
+      "enabled": false,
+      "quality_ids": null,
+      "max_required_level": 0,
+      "protected_item_ids": null,
+      "protect_bound": false,
+      "protect_unbound": false,
+      "revision": 0
+    },
+    "last_discard_item_id": 0,
+    "last_discard_bound": false,
+    "hosting_seconds": 0,
+    "claim_day": "",
+    "claimed_seconds": 0,
+    "no_equipment_kills": 0,
+    "privilege_until": {
+      "$date": {
+        "$numberLong": "-62135596800000"
+      }
+    },
+    "hosting_card_until": {
+      "$date": {
+        "$numberLong": "-62135596800000"
+      }
+    },
+    "hosting_report": {
+      "session_id": "",
+      "used_seconds": 0,
+      "kills": 0,
+      "experience": 0,
+      "raw_experience": 0,
+      "rejected_experience": 0,
+      "pooled_experience": 0,
+      "earned": {
+        "gold": 0,
+        "bound_gold": 0,
+        "yuanbao_units": 0,
+        "bound_yuanbao_units": 0
+      },
+      "drops": null,
+      "stop_reason": 0,
+      "sequence": 0,
+      "recycle_count": 0,
+      "recycle_gold": 0,
+      "recycle_bound_gold": 0,
+      "discard_count": 0,
+      "last_discard_reason": "",
+      "total_drop_count": 0
+    },
+    "learned_skills": null
+  },
+  "after": {
+    "_id": "2651319086f0a8f49d5885af1eca0dd7",
+    "account_id": "59d9bbe996fee7c7b44d276575b24838",
+    "origin_server_id": 1,
+    "slot": 1,
+    "job": 2,
+    "gender": 0,
+    "name": "仓储3dff88",
+    "name_key": "仓储3dff88",
+    "level": 1,
+    "experience": 0,
+    "progression_format_version": 1,
+    "progression_curve_version": "myf_exp_candidate_1_50_v1",
+    "revision": 1,
+    "economic_command_seq": 0,
+    "source_seq": 0,
+    "owner_instance": "",
+    "run_epoch": 0,
+    "session_epoch": 0,
+    "wallet": {
+      "gold": 1000,
+      "bound_gold": 0,
+      "yuanbao_units": 31000,
+      "bound_yuanbao_units": 0
+    },
+    "items": [
+      {
+        "instance_id": "4e4b7449554b7db5dcdb508b794158da",
+        "item_id": 218,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "0d7ad33f77d157609c608331c7e3b2bb",
+        "item_id": 218,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "3274c9ea0361557d06e46f6136a110b3",
+        "item_id": 193,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "22070891dd709c14343a2a9505349750",
+        "item_id": 35,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "66176f291598c4d9f6eb90c5190528d8",
+        "item_id": 36,
+        "quantity": 1,
+        "bound": true,
+        "version": 1
+      },
+      {
+        "instance_id": "796312f96090f387d44f3192ee4af57f",
+        "item_id": 21,
+        "quantity": 1,
+        "bound": true,
+        "version": 1,
+        "source_kind": "initial_grant",
+        "source_id": "edf0b797ac394f719f4ffcbccf76e756"
+      },
+      {
+        "instance_id": "a0fcb06331e24be0b871352405644a82",
+        "item_id": 218,
+        "quantity": 1,
+        "bound": false,
+        "version": 1,
+        "source_kind": "development_fixture",
+        "source_id": "warehouse-gui:a885081a3a0f4af794f180c7db9334f3:2651319086f0a8f49d5885af1eca0dd7:218"
+      },
+      {
+        "instance_id": "4c814e7cf3f5491cafcfb70dbf10b66b",
+        "item_id": 900001,
+        "quantity": 5,
+        "bound": false,
+        "version": 1,
+        "source_kind": "development_fixture",
+        "source_id": "warehouse-gui:a885081a3a0f4af794f180c7db9334f3:2651319086f0a8f49d5885af1eca0dd7:900001"
+      }
+    ],
+    "equipped": [],
+    "capacity": 32,
+    "pickup_stopped": false,
+    "auto_recycle": {
+      "enabled": false,
+      "quality_ids": null,
+      "max_required_level": 0,
+      "protected_item_ids": null,
+      "protect_bound": false,
+      "protect_unbound": false,
+      "revision": 0
+    },
+    "last_discard_item_id": 0,
+    "last_discard_bound": false,
+    "hosting_seconds": 0,
+    "claim_day": "",
+    "claimed_seconds": 0,
+    "no_equipment_kills": 0,
+    "privilege_until": {
+      "$date": "2026-10-30T02:09:04.490Z"
+    },
+    "hosting_card_until": {
+      "$date": {
+        "$numberLong": "-62135596800000"
+      }
+    },
+    "hosting_report": {
+      "session_id": "",
+      "used_seconds": 0,
+      "kills": 0,
+      "experience": 0,
+      "raw_experience": 0,
+      "rejected_experience": 0,
+      "pooled_experience": 0,
+      "earned": {
+        "gold": 0,
+        "bound_gold": 0,
+        "yuanbao_units": 0,
+        "bound_yuanbao_units": 0
+      },
+      "drops": null,
+      "stop_reason": 0,
+      "sequence": 0,
+      "recycle_count": 0,
+      "recycle_gold": 0,
+      "recycle_bound_gold": 0,
+      "discard_count": 0,
+      "last_discard_reason": "",
+      "total_drop_count": 0
+    },
+    "learned_skills": null
+  },
+  "reason": "仅隔离GUI已有卡权益/已有资金/测试原物；非自然供给、非充值、非仓储操作结果",
+  "only_before_first_enter": true,
+  "warehouse_results_seeded": false,
+  "level_changed": false,
+  "binding_changed": false,
+  "source_seq_changed": false,
+  "permanent_operation_seeded": false
+}

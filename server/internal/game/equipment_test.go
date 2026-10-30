@@ -16,7 +16,7 @@ import (
 func equipmentWorker(t *testing.T, job uint32) (*worker, *room, *capturedConnection) {
 	t.Helper()
 	w, r, c := skillWorker(t, job)
-	if w.e.Store.Cfg.Fixture.RuleVersion != 22 {
+	if w.e.Store.Cfg.Fixture.RuleVersion != 23 {
 		t.Fatal("装备管线测试必须从真实rule22目录派生")
 	}
 	// 仅隔离非零MC/SC参数；主目录木剑/布衣仍是来源零，未新增装备。
