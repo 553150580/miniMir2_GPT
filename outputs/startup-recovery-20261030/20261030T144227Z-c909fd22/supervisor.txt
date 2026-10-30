@@ -1,0 +1,7 @@
+{"time":"2026-10-30T22:42:40.4895967+08:00","level":"INFO","msg":"装配启动","mode":"supervisor","run_id":"manual"}
+{"time":"2026-10-30T22:42:40.7098102+08:00","level":"INFO","msg":"装配启动","mode":"account","run_id":"manual"}
+{"time":"2026-10-30T22:42:40.7677302+08:00","level":"INFO","msg":"装配启动","mode":"game","run_id":"manual"}
+{"time":"2026-10-30T22:42:40.829076+08:00","level":"INFO","msg":"装配启动","mode":"gm","run_id":"manual"}
+{"time":"2026-10-30T22:42:41.2933453+08:00","level":"INFO","msg":"开发节点就绪","mode":"account","address":"127.0.0.1:52294","database":"minimir_dev_game_test_rec_c909fd22ceae4b91bf612a1372a455aa","instance":"997fce98a73fc9408d69badb377509d5","runtime_ready":false}
+{"time":"2026-10-30T22:42:41.2973382+08:00","level":"INFO","msg":"开发节点就绪","mode":"gm","address":"127.0.0.1:52296","database":"minimir_dev_game_test_rec_c909fd22ceae4b91bf612a1372a455aa","instance":"e5e003a5cb687e1efc1268ac84db68b0","runtime_ready":false}
+{"time":"2026-10-30T22:42:42.1903049+08:00","level":"INFO","msg":"开发节点就绪","mode":"game","address":"127.0.0.1:52295","database":"minimir_dev_game_test_rec_c909fd22ceae4b91bf612a1372a455aa","instance":"311bc2482d1a5194120dcb0438067a8a","runtime_ready":false}

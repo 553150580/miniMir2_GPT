@@ -1,0 +1,19 @@
+{
+  "environment": "development",
+  "account_address": "127.0.0.1:57857",
+  "game_address": "127.0.0.1:57858",
+  "gm_address": "127.0.0.1:57859",
+  "mongo_uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
+  "mongo_uri_by_platform": {
+    "windows": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true"
+  },
+  "database": "minimir_dev_game_test_rec_6a7933e79f894cafadcb1824f44b68fa",
+  "fixture_file": "config/development/first-loop.json",
+  "node_id": "recovery-6a7933e79f89",
+  "origin_id": 1,
+  "run_id": 1,
+  "allowed_origins": [
+    "127.0.0.1:*",
+    "localhost:*"
+  ]
+}

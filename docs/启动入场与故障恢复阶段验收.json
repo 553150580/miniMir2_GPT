@@ -1,0 +1,224 @@
+{
+  "status": "limited_passed",
+  "recorded_at_utc": "2026-10-30T15:08:15.394774+00:00",
+  "verified_code_commit": "9d55096f978a15458dbd40e88b5aa10abf69fbde",
+  "workspace_commit_during_execution": "3c7b0c05f321e2d8c5b54878821981277d75a4e5",
+  "runtime_rule_version": 23,
+  "source_inputs": 285,
+  "scope": "独立Windows实际进程、PB/HTTP/WS与新Mongo测试库的启动/入场/恢复子矩阵",
+  "checks": [
+    {
+      "supervisor_custom_config": true,
+      "health": {
+        "account": {
+          "development_only": true,
+          "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+          "instance": "7e40693e77b69ec3ba7c11201f4de367",
+          "mode": "account",
+          "rule_version": 23,
+          "runtime_ready": false,
+          "status": "ok"
+        },
+        "game": {
+          "development_only": true,
+          "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+          "instance": "e9b8c745d3e2bd337b3e2f5f5f6a6d15",
+          "mode": "game",
+          "rule_version": 23,
+          "runtime_ready": false,
+          "status": "ok"
+        },
+        "gm": {
+          "development_only": true,
+          "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+          "instance": "a5e37cc6e60a2150c057cafef36e49da",
+          "mode": "gm",
+          "rule_version": 23,
+          "runtime_ready": false,
+          "status": "ok"
+        }
+      },
+      "children": [
+        {
+          "pid": 8040,
+          "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\startup-recovery-20261030\\20261030T144443Z-52c75df3\\nbserver.exe",
+          "start_ticks": 134378450961806999
+        },
+        {
+          "pid": 26312,
+          "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\startup-recovery-20261030\\20261030T144443Z-52c75df3\\nbserver.exe",
+          "start_ticks": 134378450961855176
+        },
+        {
+          "pid": 19040,
+          "executable": "D:\\A_Claude\\miniMir2_GPT\\.work\\startup-recovery-20261030\\20261030T144443Z-52c75df3\\nbserver.exe",
+          "start_ticks": 134378450961896261
+        }
+      ]
+    },
+    {
+      "supervisor_graceful_group_stop": true
+    },
+    {
+      "action": "initialize",
+      "passed": true,
+      "result": {
+        "registered_normally": true,
+        "created_normally": true,
+        "complete_baseline_before_ack": true,
+        "wrong_ack_blocked_without_assets": true,
+        "duplicate_ack_single_activation": true,
+        "free_six_hours_committed": true,
+        "body": {
+          "life": "0",
+          "hp": "16",
+          "mp": "13",
+          "position": {
+            "x": 8,
+            "y": 7
+          },
+          "attack_sequence": 0,
+          "cast_sequence": 0
+        }
+      }
+    },
+    {
+      "action": "account_down",
+      "passed": true,
+      "result": {
+        "existing_ws_heartbeat": true,
+        "new_ticket_unavailable": true,
+        "preissued_ticket_entered_with_account_down": true,
+        "consumed_ticket_replay": {
+          "rejected": true,
+          "observation": "closed_before_success",
+          "success_entry_or_ready_seen": false
+        },
+        "asset_committed_with_account_down": true,
+        "permanent_sha256": "1cda74690d2bfa52f529c3f9df6bd71bcf88d2302404548d7a1b7a32d847d761"
+      }
+    },
+    {
+      "action": "account_up",
+      "passed": true,
+      "result": {
+        "new_ticket_after_restart": true,
+        "healthy_body_preserved": true,
+        "permanent_preserved": true,
+        "skill_cooldown_verified": false
+      }
+    },
+    {
+      "game_force_stop_own_pid": true,
+      "old_run_epoch": 2,
+      "lease_expired_naturally": true,
+      "wait_seconds": 13.516
+    },
+    {
+      "new_run_epoch": 3,
+      "action": "game_restarted",
+      "passed": true,
+      "result": {
+        "old_ws_closed": true,
+        "old_epoch_ticket": {
+          "rejected": true,
+          "observation": "closed_before_success",
+          "success_entry_or_ready_seen": false
+        },
+        "cold_initial_body": true,
+        "permanent_preserved": true,
+        "original_op_replayed_without_reward": true,
+        "permanent_sha256": "1cda74690d2bfa52f529c3f9df6bd71bcf88d2302404548d7a1b7a32d847d761"
+      }
+    },
+    {
+      "original_typed_claim_receipt_unchanged": true,
+      "claim_receipt_count": 1
+    },
+    {
+      "action": "finish",
+      "passed": true,
+      "result": {
+        "closed": true
+      }
+    }
+  ],
+  "main_preserved": true,
+  "mongo_preserved": true,
+  "new_database_dropped": true,
+  "temporary_config_removed": true,
+  "own_processes_stopped": true,
+  "cleanup_errors": [],
+  "race_binary": true,
+  "qualification_seeded": false,
+  "lease_modified_by_probe": false,
+  "invalid_ticket_scope": "closed_before_success仅证明未成功Entry/Ready，不声称观察到特定错误码",
+  "injured_hp_reset_verified": false,
+  "skill_cooldown_verified": false,
+  "pending_commit_fault_verified": false,
+  "managed_fault_billing_verified": false,
+  "full_fault_matrix_verified": false,
+  "physical_mobile_verified": false,
+  "capacity_verified": false,
+  "full_p0_completed": false,
+  "production_ready": false,
+  "history": "前三attempt为探针接口/拒票关闭/出生采样断言问题，第四为旧冻结输入下有限通过，第五冻结285份最终输入后完整子范围通过；原报告全部保留",
+  "evidence_sha256": {
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/account-1.txt": "84416ed1fbbf5a137cf6dec8f94475243c113328497bdc44d23c8472dc0d4757",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/build.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/game-1.txt": "9b7a40083d46e8101d48f2390de3e0b57828d0a232238d87a567eb5ad5567e4c",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/gm.txt": "66186ba256955200469e8b20a76b81d70743ac729114af867d9ce2c548b58590",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/isolated-config.json": "e169fb26606cb07d14c776939e8f23b27909e22c33885fea9c457616d4549e82",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/probe.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/report.json": "f127e103d1393adbe27f43cebb960fdbb9f9600848ab838a93d5baec7b4aaf2c",
+    "outputs/startup-recovery-20261030/20261030T143532Z-71153891/supervisor.txt": "f3da01c6b178700cbe73e17ff0f20e5fdbb64ff3be2696380c13e85acf46e786",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/account-1.txt": "8a55a125e04fd9b267ad6d1f64655cd8b7553879db696148b54af72bb008f102",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/account-2.txt": "43c5174166454642d15f16df67e98a66fc937bc9fd4cf4aa2fb2aa8f9a5a3b97",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/build.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/game-1.txt": "00377a5292d82cd71704d739b80eead3dee8ab67ac3be70e69f51d3ffec89cbc",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/game-2.txt": "895a8a3b42755a35a0512da907eb0c4dc91278dcc0f127d286c2c0aa719c0dce",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/gm.txt": "fc52f612dec3809db321f9f92bc35aec6209e20f9a6274d4cb0e98ee9e13b414",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/isolated-config.json": "c3cccda85b21dcb00c471ab7067c344f884526db040461886e28e9f2ac80bc59",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/probe.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/report.json": "ba991dabc292ff408baf0dcb34cf76899da3f2a08c38c3087ceb92d40836165b",
+    "outputs/startup-recovery-20261030/20261030T143710Z-6a7933e7/supervisor.txt": "f137284af937bb48598b532ee8b2fbe5ec23fc092a28a91542eca5bb4c6d7302",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/account-1.txt": "f8f07f39e65a6909370948f6877ec85cae829a56f4282ecd44aacaa1d93e3ad4",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/account-2.txt": "2dcb5773cf4f9919223cf6a163ed6a327466ac3856a72f6c486afc15aad94541",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/build.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/game-1.txt": "63375253d835f013990a12d4221dc7d06281adce497c0aa59250db7e485cd79c",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/game-2.txt": "cdbbd8ebbb33edd3d0518ec19a52d6276668386948ffef038dea5639cf02bcaa",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/gm.txt": "22319a7e5d3771b2d9559acfa972400dd2f6135d3809393c8a010142f0c47433",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/isolated-config.json": "426ac2f5a312adc2829d6871e6833ee011686dd5ac5c323195f9f966b73eb8e7",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/probe.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/report.json": "9fc1104f6beb40a435161b9248103ed0f6d3472839c03edf420f1b65c0815884",
+    "outputs/startup-recovery-20261030/20261030T143909Z-8fc9f238/supervisor.txt": "9bd4adee1d58cb79ba583725607d730429846ac9db191db3cb0efb18bc6bb4f0",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/account-1.txt": "7a249c98482826023154c39e8c3b8183895d7cc397ade512454bca3ce6971d4e",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/account-2.txt": "7cce5604b2ebbe97c0b4b4143a17d2d1739db744e31ea0fff2b61e10e0e99744",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/build.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/game-1.txt": "9a189d5ca2ad6761d308d09aafc1e74e1df3435b46efb03c30a5e5aeb6065086",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/game-2.txt": "bd2219176416672b818561b7a1a9d619d0130f904cba9beb25196319ff0a0718",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/gm.txt": "3438d5e01e20810a211c1aa9e1d5691b873d40b8bb380cf4eba60fae6a142068",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/isolated-config.json": "3e74cd91186dcfe70e927c5d10e7bce8efebe37c9c361294fbe1e8fe938ba47d",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/probe.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/report.json": "5e395aff86c64aa09ab0b355590b5cfe60e9fcfe4328da423e922e8ff0a06d41",
+    "outputs/startup-recovery-20261030/20261030T144227Z-c909fd22/supervisor.txt": "1fa181bc0ccb9d97a890f9b030f56c931bcf6bf889c848eebc704e651f8918f8",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/account-1.txt": "fe57e40c3cf716a8df8215ff8f30c4efa2648534e3f6dfe9f4af45feb60fe56a",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/account-2.txt": "c9b708756d31493d22dcaa49fae90ce499b28e6438152103cc3ca0e70bf4221f",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/build.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/game-1.txt": "1ebefe77037b87d15d846eac01661d53e7701264985392408c9e9b033d5151ea",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/game-2.txt": "660422ba652f026e202ffe205e7831a892afe44ddcd5cfb2218c9469c4dacff7",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/gm.txt": "db74124aa0ac14a530ad0b20e3e81abfeee2b51ac8dd00a206e860130a98bfbc",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/isolated-config.json": "93900e58007c0076c1e14ddff59377d3844242c53dcdce343e3b440f968cb11d",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/probe.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/report.json": "0d8ad104d4957f9c327df81047e129f4844e8710776134201040458e8822c8ea",
+    "outputs/startup-recovery-20261030/20261030T144443Z-52c75df3/supervisor.txt": "45880c1aa29f032c24ab9599ee95ba85039744c0d372862782366fd40be7bb34",
+    "outputs/startup-recovery-20261030/sources/recovery_probe.cjs": "7446957c866053e949883fab7bd7d3c7ac85d4b4afd5f3591f1a636da9fd9a27",
+    "outputs/startup-recovery-20261030/sources/verify_startup_recovery.py": "b46ee5e21a643983fc5b52f17671b3da5002f5dcd6e8c700893cf160f68edc1c",
+    "outputs/startup-recovery-20261030/evidence-manifest.json": "0d6a718392dd1bb93fcd0961ade37c655b223430a36af877db4fd0fe4590571b"
+  }
+}
