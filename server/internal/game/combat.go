@@ -381,7 +381,6 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	if mapTemplate.SceneKindValue() == devconfig.SceneKindTown {
 		// 来源城镇不运行离线战斗或扣托管；既有状态/恢复已在上方按真实时钟推进。
-		r.HostMS = 0
 		if offline {
 			return
 		}
@@ -392,6 +391,7 @@ func (w *worker) step(r *room, now time.Time) {
 	if offline {
 		r.HostMS += delta.Milliseconds()
 		if r.HostMS >= 1000 {
+			// 余量跨健康会话累计，整秒归实际跨过门槛的当前托管会话，沿原流水防重。
 			w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostSeconds: 1, HostingSession: r.HostSession})
 			r.HostMS -= 1000
 			return

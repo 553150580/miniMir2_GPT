@@ -1,0 +1,1 @@
+{"structure_valid": true, "runtime_ready": false, "error_count": 0, "release_blocker_count": 744, "report": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\config\\release-report.json"}

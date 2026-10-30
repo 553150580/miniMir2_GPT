@@ -1,0 +1,7 @@
+{
+  "status": "interrupted",
+  "qualified": false,
+  "builder_finished_in_log": true,
+  "actual_exit_code_recorded": false,
+  "post_build_sha_guard_finished": false
+}

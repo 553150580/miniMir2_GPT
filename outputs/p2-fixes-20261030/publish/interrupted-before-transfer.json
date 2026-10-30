@@ -1,0 +1,7 @@
+{
+  "status": "failed_before_transfer",
+  "qualified": false,
+  "cause": "停止命令中文成功输出被切换脚本误按JSON解析；尚未搬包",
+  "old_preview_bytes_changed": false,
+  "old_static_restored_before_retry": true
+}

@@ -1,0 +1,2021 @@
+{
+  "passed": true,
+  "startedAt": "2026-10-30T14:52:52.444Z",
+  "url": "http://127.0.0.1:18081/",
+  "creatorReportPath": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\creator\\full-2\\report.json",
+  "creatorReportSha256": "d9835165f19d26bc84943393c32e759027efd028dd6c445d00b386393dca2524",
+  "fixtureSha256": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+  "toolSha256": "9c6884cb9b0bd31bc4773d0b6765332a0f738d6e023e84ee051726556f49f3e6",
+  "sourceBefore": {
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Game.scene": "54ea883928706356f4877ddb0addc0ffddfd295370730efaf90612cb43fe74f4",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+    "client/assets/scripts/app/AppRoot.ts": "29b5cbd7546dee277f1ee0b5c3f7653bfc47bd62327838fb9e3a52fb609c1eab",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scripts/app/BaselineAssembler.ts": "6ffa576043f7e6187a24e07e9f1913f220189e666f00e4dc703d46c26a00e63b",
+    "client/assets/scripts/app/BeamGeometry.ts": "94105e4ee4c89b0dbf53e43d75790a77e375be30a73af4670105db79ec16bc34",
+    "client/assets/scripts/app/CastingSupplyModel.ts": "4519739a00a4e128a1b9602810f07d0e1fe9b05dcf4636f60357bf07210456e2",
+    "client/assets/scripts/app/CastPlayback.ts": "f1594ee8e28fe0a880db5e63cee1c0a63b72e70cab6f3a569356bace529a3d4d",
+    "client/assets/scripts/app/CombatEffects.ts": "33a649fd95d0eaeaeff17f1154d6da8c62730e5f3740a56ed5ef1a40e5c5e65e",
+    "client/assets/scripts/app/CombatStatusModel.ts": "19b0f0d98124c0573bfd1aa1fef4446f0df7c6c46e8b654bfdc9ec20f4332529",
+    "client/assets/scripts/app/EntityAnimation.ts": "092754db23b30a3fad54f763c0d6b717d92909ff2b5dd8044a81a20c114dfa44",
+    "client/assets/scripts/app/EntityDisplacement.ts": "982d3029d92ac0979c63a47225b9abd654dc1dfe2eeb80a69306803a084fd951",
+    "client/assets/scripts/app/EntityHeadAnchor.ts": "6f812e75693ccf200a39b66271c7e51d9ac4df6bb54de6847f72b94be869bfed",
+    "client/assets/scripts/app/EntityMotion.ts": "0d16a8747bcbae49143a8dff8684a0bced983d97f7b1d1a03720017bd4f2db59",
+    "client/assets/scripts/app/EquipmentModel.ts": "f535386bd33e3cd232ccd82813eea5f9d0a92bfccc4443af86d5be37bb9076bf",
+    "client/assets/scripts/app/GameAutoRecycle.ts": "c501cb85a708c2ddc66f2122279a980dbf18b94cb5dac16c156f224e35bccbd1",
+    "client/assets/scripts/app/GameCombatStatus.ts": "bade6aaf462da44435e9a9d28a1f83e8b0ed70d218fa54d1d503750a7fe339e4",
+    "client/assets/scripts/app/GameConnection.ts": "7c83cc7d5fbc5a31a7e49b5e5102b58f1dcbd3ebf59dbf22f485a8b578043d3d",
+    "client/assets/scripts/app/GameErrors.ts": "1725c2adef71bcae331a0f6a4ab949c3cfcdc80fd15a773b883bbde1800b069f",
+    "client/assets/scripts/app/GameHUD.ts": "0710967fe87fc6e0787f5b0965daa5581cbd9d94a241298d58db2d7cd0627de7",
+    "client/assets/scripts/app/GameMessages.ts": "510998db4a78d846009e93fb5025e3df726a792260d59f0059742c0781a55dcf",
+    "client/assets/scripts/app/GameSession.ts": "e941be8d48afbf2009d0b84606247634d2a11a64a0fadfebbb54b704e3a2b40a",
+    "client/assets/scripts/app/GameSkillAssets.ts": "3fbaa0c15ccaed1e1ad30d52daf79f0b8401e7a4a95c96c739be0eb5386f17ac",
+    "client/assets/scripts/app/GameSkills.ts": "d1bda573179ee16d9109d6c4e666ce1c5fa8fca42f2a98f4ffba7971fb9018e3",
+    "client/assets/scripts/app/GameWarehouse.ts": "af011715e0d371148b807c348489ebb8c9827e3b27c82bcd8ab9d98ac4a14e17",
+    "client/assets/scripts/app/GameWorldView.ts": "1a8e98753686cf6e132c7fb62f689205fc2ade6197afa05917c8764317eb5846",
+    "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
+    "client/assets/scripts/app/HudModel.ts": "1331045d75b6b48608e87ff46e6b5bcaca2cb700723dbe95f83972b16fbc972a",
+    "client/assets/scripts/app/InputTrace.ts": "55da40adb82cf3628f32eb3be2e7531d58927b1f4b2b5da547d587ab5a7758f3",
+    "client/assets/scripts/app/LevelGrowthModel.ts": "1e119db25bc520682b76369a48f1ec7ae04f6ae6a57376e317e8a60ef3779137",
+    "client/assets/scripts/app/MapAttachmentCoordinator.ts": "f230ba5c57c543090bd3053615017a63b852b9a74df3905b66541f372f261514",
+    "client/assets/scripts/app/MapSurface.ts": "33474beb2021090df2d41e2f80190f30ec62edfb0b248e1aff6766719bc0270c",
+    "client/assets/scripts/app/MapTravelModel.ts": "df81cbaa9c04a76f87ac77082c138ee0c37216a008ab699c932eec791bb7115e",
+    "client/assets/scripts/app/MapViewportPreparation.ts": "f73deca654f7e1e8d60e30b61442ca152e92f7a5fa47965cb97d1688a3d54d23",
+    "client/assets/scripts/app/NavigationCancelAssembler.ts": "ab5230b940d42b41e2b39637714676b1cc1d3be9c1585ca9d07a30df08fc6e02",
+    "client/assets/scripts/app/OwnedPetModel.ts": "be5817c3059af591d06d1cd83b106d19316ace056aefc51d53a94d9d3f2c2cc3",
+    "client/assets/scripts/app/PendingOperations.ts": "6894725c6b687226e2eff5049faa5ea3160400e6eedf21a2a5afd4e144784197",
+    "client/assets/scripts/app/PendingRoleCreation.ts": "59a4dbe44a52f2276da0c1e6fe9108aa444e9ac1ba7e7fd427b012f53280c79e",
+    "client/assets/scripts/app/PetBornModel.ts": "f74d8ffd7a60fcc696e7890f3254fc5e0f216fd0276345a9b84474ca9dae9dab",
+    "client/assets/scripts/app/PetTrainingModel.ts": "ca765dae58ca3107f73931abbfd450835fc87f730428781b3f1b0cb9ca990ffd",
+    "client/assets/scripts/app/PotionModel.ts": "e5653b4d17a9698bef14449e81f2e8de8cb8e1fdc7ef72c12c6cc80643241670",
+    "client/assets/scripts/app/RoleBindingModel.ts": "379f37c59b9984d93808607be956316116a936e6909d33f0d61e308c62443b2f",
+    "client/assets/scripts/app/SkillAssetsModel.ts": "2fbfdf101c7fb72f2af891356657c1247e5f2c7c76fe42c335af54428464d787",
+    "client/assets/scripts/app/SkillModel.ts": "4113096987c10d30ec2c4c1112b66553453e25deab84a0c726d466308d751ba5",
+    "client/assets/scripts/app/SourceChunkCache.ts": "3f789f64957b46b2b40e486d84174c58a07d0324125412a70334c5fcfe3e07c3",
+    "client/assets/scripts/app/SourceMapAssets.ts": "09508893faf6627712aa4b5c70d9506ccb55b62c99f9583cb103af9f95cb2b87",
+    "client/assets/scripts/app/SourceMapModel.ts": "9b3a7b1833ecb5133437b328086a25cc82cc13e2cbaac4ea24e04269dcf75133",
+    "client/assets/scripts/app/SourceMapView.ts": "3b946c540d29bd6a962ba044cf350153e0fdf8f17e01fe0019d2c1574857503d",
+    "client/assets/scripts/app/SourceProjection.ts": "d4a79f81caa3e841c08a145f6271a7ed408638f938c1c9b6963818b0c4d69808",
+    "client/assets/scripts/app/StatusEffects.ts": "cb04912531b341362a71a05e213612516e626ea39b71df889258da2c8653293b",
+    "client/assets/scripts/app/StatusPlayback.ts": "28adbbba05f3a5777203b532170c9ea79121b39e48648c1743ce844c0d6ab940",
+    "client/assets/scripts/app/SystemMessageLog.ts": "82822e68cd1134eb5031746e69d198707b88f141fd39598c01e5906f34e979c6",
+    "client/assets/scripts/app/TeleportModel.ts": "35ba57833d8af2ea192910941012324f5fb499f2eb778077ed38d6c87c63ac8b",
+    "client/assets/scripts/app/ViewportAdapter.ts": "3daac6afd51dcf24562886a07f399d5d32b9ba0b7333a39572d91168c533befd",
+    "client/assets/scripts/app/ViewportGeometry.ts": "b9ab0a62a6eb3487a0fd6305a8f9c861a1e8e5e14ad8fd30ccd09d9a55103f30",
+    "client/assets/scripts/app/WarehouseModel.ts": "a0439fafec400fc76c602bf5b279ab89144464aa5ea8948372943d9ad109b20d",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/assets/scripts/core/scene/CreatorSceneBackend.ts": "47822fd5d393dafe8549f1ba30528ef36d6d5a6a9e624ff90c295c8183e1427a",
+    "client/assets/scripts/core/scene/SceneLoader.ts": "32eea780f68feafb29527ad2f327a882353786e3c4f153b20cc1662e6676a047",
+    "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
+    "client/assets/scripts/generated/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "client/assets/scripts/generated/protobuf/client_pb.d.ts": "c3e65f6e549ad961042d04ffba9e91d1e689ae40a52cb8c8647e8ad468998f3c",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "b63f159f6a572fd7783df1090c950914c3927fc7734ce9c8a5d78098b4e77672",
+    "client/assets/scripts/generated/protocol_ids.ts": "70b3a61436e1931de81ae015c453d60fb78b5a8791db79ca7a2dde6d3897d1c3",
+    "client/assets/scripts/input/MapTouchNavigator.ts": "0a5811a1b15aa0c5b82b97bcfad8e8b2d9c8b758ba8cf9e1fc16aea27b025942",
+    "client/assets/scripts/input/NavigationIntent.ts": "6611cfb77ed208d34b865337b9bd1bf866458097f8c0a36c384fa1607b7e0446",
+    "client/assets/scripts/input/TouchJoystick.ts": "df1c030a11e9f1843a89dbda60b3ae2d1ce5242e5b07378fc9016d98586d5a19",
+    "client/assets/scripts/ui/List.ts": "9531779dce03d8c306c9ccf94fb8e93b8095b4599df6e550f16d7e9d2bddab27",
+    "client/assets/scripts/ui/PanelStackState.ts": "dc2fb32609b487d8dc6c59e9792d59c919fff8160c900844fada7f8bc64e4410",
+    "client/assets/scripts/ui/PopupView.ts": "bb6067151c5e73838f0662142551eb36edc0c6dd790e0fff7af3de46d0f368c7",
+    "client/assets/scripts/ui/Tab.ts": "6653d9dab5c13f2ee5cb1a010e95bc86a5ba356a894cfaa33e6fad7a824a0a45",
+    "client/assets/scripts/ui/UIMgr.ts": "36b250a5a48c4720319febbf840c29e23f603d697faacac1a17668cecfb327ac",
+    "client/assets/scripts/ui/ViewStack.ts": "30d9073f1d69c7e5100e65a85b5644801fbdf2a87708a00a6f9deee3e15f3d76",
+    "client/assets/scripts/ui/VirtualListWindow.ts": "a4f8e45fe875d0698432175ecaf16b748120527eca5c1bab9a1d30b22a8910c4"
+  },
+  "touchInput": true,
+  "privateBusinessInvoked": false,
+  "credentialsWritten": false,
+  "databaseSeeded": false,
+  "isolatedUiPrestateInjected": true,
+  "businessMessageSourcesVerified": false,
+  "physicalMobileVerified": false,
+  "checks": [
+    "10005真实提交后丢响应，修改表单后触屏重试仍为原op/原槽/职业/姓名，目录仅一个原角色且journal清除",
+    "明确隔离40条UI前态，触屏搜索30项立即显示Mask内首行；淘汰旧样本后触屏保持原消息锚点，详情返回保留下层列表和滚动",
+    "真实保存切角入口重新列出同一个角色，不重发已终态10005"
+  ],
+  "errors": [],
+  "warnings": [],
+  "expectedTransportErrors": [
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "createRequests": [
+    {
+      "op": "6d7c71073a7a8b37f8f15a25aaaf8748",
+      "origin": "1",
+      "slot": 1,
+      "job": 2,
+      "name": "核对34ba1e"
+    },
+    {
+      "op": "6d7c71073a7a8b37f8f15a25aaaf8748",
+      "origin": "1",
+      "slot": 1,
+      "job": 2,
+      "name": "核对34ba1e"
+    }
+  ],
+  "createResponses": [
+    {
+      "role": "ae530f994282a67ad021fe7ef4b70959",
+      "origin": "1",
+      "slot": 1,
+      "job": 2,
+      "name": "核对34ba1e"
+    },
+    {
+      "role": "ae530f994282a67ad021fe7ef4b70959",
+      "origin": "1",
+      "slot": 1,
+      "job": 2,
+      "name": "核对34ba1e"
+    }
+  ],
+  "messageObservations": [
+    {
+      "name": "before-search",
+      "offset": 2700,
+      "max": 2700,
+      "rowHeight": 80,
+      "itemCount": 40,
+      "rows": [
+        {
+          "index": 31,
+          "id": 34,
+          "text": "隔离UI样本\n其它项 31",
+          "active": true,
+          "bottom": 955,
+          "top": 1035
+        },
+        {
+          "index": 32,
+          "id": 35,
+          "text": "隔离UI样本\n其它项 32",
+          "active": true,
+          "bottom": 875,
+          "top": 955
+        },
+        {
+          "index": 33,
+          "id": 36,
+          "text": "隔离UI样本\n其它项 33",
+          "active": true,
+          "bottom": 795,
+          "top": 875
+        },
+        {
+          "index": 34,
+          "id": 37,
+          "text": "隔离UI样本\n其它项 34",
+          "active": true,
+          "bottom": 715,
+          "top": 795
+        },
+        {
+          "index": 35,
+          "id": 38,
+          "text": "隔离UI样本\n其它项 35",
+          "active": true,
+          "bottom": 635,
+          "top": 715
+        },
+        {
+          "index": 36,
+          "id": 39,
+          "text": "隔离UI样本\n其它项 36",
+          "active": true,
+          "bottom": 555,
+          "top": 635
+        },
+        {
+          "index": 37,
+          "id": 40,
+          "text": "隔离UI样本\n其它项 37",
+          "active": true,
+          "bottom": 475,
+          "top": 555
+        },
+        {
+          "index": 38,
+          "id": 41,
+          "text": "隔离UI样本\n其它项 38",
+          "active": true,
+          "bottom": 395,
+          "top": 475
+        },
+        {
+          "index": 39,
+          "id": 42,
+          "text": "隔离UI样本\n其它项 39",
+          "active": true,
+          "bottom": 315,
+          "top": 395
+        }
+      ],
+      "visible": [
+        {
+          "index": 31,
+          "id": 34,
+          "text": "隔离UI样本\n其它项 31",
+          "active": true,
+          "bottom": 955,
+          "top": 1035
+        },
+        {
+          "index": 32,
+          "id": 35,
+          "text": "隔离UI样本\n其它项 32",
+          "active": true,
+          "bottom": 875,
+          "top": 955
+        },
+        {
+          "index": 33,
+          "id": 36,
+          "text": "隔离UI样本\n其它项 33",
+          "active": true,
+          "bottom": 795,
+          "top": 875
+        },
+        {
+          "index": 34,
+          "id": 37,
+          "text": "隔离UI样本\n其它项 34",
+          "active": true,
+          "bottom": 715,
+          "top": 795
+        },
+        {
+          "index": 35,
+          "id": 38,
+          "text": "隔离UI样本\n其它项 35",
+          "active": true,
+          "bottom": 635,
+          "top": 715
+        },
+        {
+          "index": 36,
+          "id": 39,
+          "text": "隔离UI样本\n其它项 36",
+          "active": true,
+          "bottom": 555,
+          "top": 635
+        },
+        {
+          "index": 37,
+          "id": 40,
+          "text": "隔离UI样本\n其它项 37",
+          "active": true,
+          "bottom": 475,
+          "top": 555
+        },
+        {
+          "index": 38,
+          "id": 41,
+          "text": "隔离UI样本\n其它项 38",
+          "active": true,
+          "bottom": 395,
+          "top": 475
+        },
+        {
+          "index": 39,
+          "id": 42,
+          "text": "隔离UI样本\n其它项 39",
+          "active": true,
+          "bottom": 315,
+          "top": 395
+        }
+      ],
+      "mask": {
+        "bottom": 315,
+        "top": 3515
+      },
+      "items": [
+        {
+          "id": 3,
+          "title": "隔离UI样本",
+          "message": "筛选项 00"
+        },
+        {
+          "id": 4,
+          "title": "隔离UI样本",
+          "message": "筛选项 01"
+        },
+        {
+          "id": 5,
+          "title": "隔离UI样本",
+          "message": "筛选项 02"
+        },
+        {
+          "id": 6,
+          "title": "隔离UI样本",
+          "message": "筛选项 03"
+        },
+        {
+          "id": 7,
+          "title": "隔离UI样本",
+          "message": "筛选项 04"
+        },
+        {
+          "id": 8,
+          "title": "隔离UI样本",
+          "message": "筛选项 05"
+        },
+        {
+          "id": 9,
+          "title": "隔离UI样本",
+          "message": "筛选项 06"
+        },
+        {
+          "id": 10,
+          "title": "隔离UI样本",
+          "message": "筛选项 07"
+        },
+        {
+          "id": 11,
+          "title": "隔离UI样本",
+          "message": "筛选项 08"
+        },
+        {
+          "id": 12,
+          "title": "隔离UI样本",
+          "message": "筛选项 09"
+        },
+        {
+          "id": 13,
+          "title": "隔离UI样本",
+          "message": "筛选项 10"
+        },
+        {
+          "id": 14,
+          "title": "隔离UI样本",
+          "message": "筛选项 11"
+        },
+        {
+          "id": 15,
+          "title": "隔离UI样本",
+          "message": "筛选项 12"
+        },
+        {
+          "id": 16,
+          "title": "隔离UI样本",
+          "message": "筛选项 13"
+        },
+        {
+          "id": 17,
+          "title": "隔离UI样本",
+          "message": "筛选项 14"
+        },
+        {
+          "id": 18,
+          "title": "隔离UI样本",
+          "message": "筛选项 15"
+        },
+        {
+          "id": 19,
+          "title": "隔离UI样本",
+          "message": "筛选项 16"
+        },
+        {
+          "id": 20,
+          "title": "隔离UI样本",
+          "message": "筛选项 17"
+        },
+        {
+          "id": 21,
+          "title": "隔离UI样本",
+          "message": "筛选项 18"
+        },
+        {
+          "id": 22,
+          "title": "隔离UI样本",
+          "message": "筛选项 19"
+        },
+        {
+          "id": 23,
+          "title": "隔离UI样本",
+          "message": "筛选项 20"
+        },
+        {
+          "id": 24,
+          "title": "隔离UI样本",
+          "message": "筛选项 21"
+        },
+        {
+          "id": 25,
+          "title": "隔离UI样本",
+          "message": "筛选项 22"
+        },
+        {
+          "id": 26,
+          "title": "隔离UI样本",
+          "message": "筛选项 23"
+        },
+        {
+          "id": 27,
+          "title": "隔离UI样本",
+          "message": "筛选项 24"
+        },
+        {
+          "id": 28,
+          "title": "隔离UI样本",
+          "message": "筛选项 25"
+        },
+        {
+          "id": 29,
+          "title": "隔离UI样本",
+          "message": "筛选项 26"
+        },
+        {
+          "id": 30,
+          "title": "隔离UI样本",
+          "message": "筛选项 27"
+        },
+        {
+          "id": 31,
+          "title": "隔离UI样本",
+          "message": "筛选项 28"
+        },
+        {
+          "id": 32,
+          "title": "隔离UI样本",
+          "message": "筛选项 29"
+        },
+        {
+          "id": 33,
+          "title": "隔离UI样本",
+          "message": "其它项 30"
+        },
+        {
+          "id": 34,
+          "title": "隔离UI样本",
+          "message": "其它项 31"
+        },
+        {
+          "id": 35,
+          "title": "隔离UI样本",
+          "message": "其它项 32"
+        },
+        {
+          "id": 36,
+          "title": "隔离UI样本",
+          "message": "其它项 33"
+        },
+        {
+          "id": 37,
+          "title": "隔离UI样本",
+          "message": "其它项 34"
+        },
+        {
+          "id": 38,
+          "title": "隔离UI样本",
+          "message": "其它项 35"
+        },
+        {
+          "id": 39,
+          "title": "隔离UI样本",
+          "message": "其它项 36"
+        },
+        {
+          "id": 40,
+          "title": "隔离UI样本",
+          "message": "其它项 37"
+        },
+        {
+          "id": 41,
+          "title": "隔离UI样本",
+          "message": "其它项 38"
+        },
+        {
+          "id": 42,
+          "title": "隔离UI样本",
+          "message": "其它项 39"
+        }
+      ],
+      "scrolling": false
+    },
+    {
+      "name": "after-search",
+      "offset": 0,
+      "max": 1900,
+      "rowHeight": 80,
+      "itemCount": 30,
+      "rows": [
+        {
+          "index": 0,
+          "id": 3,
+          "text": "隔离UI样本\n筛选项 00",
+          "active": true,
+          "bottom": 735,
+          "top": 815
+        },
+        {
+          "index": 1,
+          "id": 4,
+          "text": "隔离UI样本\n筛选项 01",
+          "active": true,
+          "bottom": 655,
+          "top": 735
+        },
+        {
+          "index": 2,
+          "id": 5,
+          "text": "隔离UI样本\n筛选项 02",
+          "active": true,
+          "bottom": 575,
+          "top": 655
+        },
+        {
+          "index": 3,
+          "id": 6,
+          "text": "隔离UI样本\n筛选项 03",
+          "active": true,
+          "bottom": 495,
+          "top": 575
+        },
+        {
+          "index": 4,
+          "id": 7,
+          "text": "隔离UI样本\n筛选项 04",
+          "active": true,
+          "bottom": 415,
+          "top": 495
+        },
+        {
+          "index": 5,
+          "id": 8,
+          "text": "隔离UI样本\n筛选项 05",
+          "active": true,
+          "bottom": 335,
+          "top": 415
+        },
+        {
+          "index": 6,
+          "id": 9,
+          "text": "隔离UI样本\n筛选项 06",
+          "active": true,
+          "bottom": 255,
+          "top": 335
+        },
+        {
+          "index": 7,
+          "id": 10,
+          "text": "隔离UI样本\n筛选项 07",
+          "active": true,
+          "bottom": 175,
+          "top": 255
+        },
+        {
+          "index": 8,
+          "id": 11,
+          "text": "隔离UI样本\n筛选项 08",
+          "active": true,
+          "bottom": 95,
+          "top": 175
+        }
+      ],
+      "visible": [
+        {
+          "index": 0,
+          "id": 3,
+          "text": "隔离UI样本\n筛选项 00",
+          "active": true,
+          "bottom": 735,
+          "top": 815
+        },
+        {
+          "index": 1,
+          "id": 4,
+          "text": "隔离UI样本\n筛选项 01",
+          "active": true,
+          "bottom": 655,
+          "top": 735
+        },
+        {
+          "index": 2,
+          "id": 5,
+          "text": "隔离UI样本\n筛选项 02",
+          "active": true,
+          "bottom": 575,
+          "top": 655
+        },
+        {
+          "index": 3,
+          "id": 6,
+          "text": "隔离UI样本\n筛选项 03",
+          "active": true,
+          "bottom": 495,
+          "top": 575
+        },
+        {
+          "index": 4,
+          "id": 7,
+          "text": "隔离UI样本\n筛选项 04",
+          "active": true,
+          "bottom": 415,
+          "top": 495
+        },
+        {
+          "index": 5,
+          "id": 8,
+          "text": "隔离UI样本\n筛选项 05",
+          "active": true,
+          "bottom": 335,
+          "top": 415
+        },
+        {
+          "index": 6,
+          "id": 9,
+          "text": "隔离UI样本\n筛选项 06",
+          "active": true,
+          "bottom": 255,
+          "top": 335
+        },
+        {
+          "index": 7,
+          "id": 10,
+          "text": "隔离UI样本\n筛选项 07",
+          "active": true,
+          "bottom": 175,
+          "top": 255
+        },
+        {
+          "index": 8,
+          "id": 11,
+          "text": "隔离UI样本\n筛选项 08",
+          "active": true,
+          "bottom": 95,
+          "top": 175
+        }
+      ],
+      "mask": {
+        "bottom": -1585,
+        "top": 815
+      },
+      "items": [
+        {
+          "id": 3,
+          "title": "隔离UI样本",
+          "message": "筛选项 00"
+        },
+        {
+          "id": 4,
+          "title": "隔离UI样本",
+          "message": "筛选项 01"
+        },
+        {
+          "id": 5,
+          "title": "隔离UI样本",
+          "message": "筛选项 02"
+        },
+        {
+          "id": 6,
+          "title": "隔离UI样本",
+          "message": "筛选项 03"
+        },
+        {
+          "id": 7,
+          "title": "隔离UI样本",
+          "message": "筛选项 04"
+        },
+        {
+          "id": 8,
+          "title": "隔离UI样本",
+          "message": "筛选项 05"
+        },
+        {
+          "id": 9,
+          "title": "隔离UI样本",
+          "message": "筛选项 06"
+        },
+        {
+          "id": 10,
+          "title": "隔离UI样本",
+          "message": "筛选项 07"
+        },
+        {
+          "id": 11,
+          "title": "隔离UI样本",
+          "message": "筛选项 08"
+        },
+        {
+          "id": 12,
+          "title": "隔离UI样本",
+          "message": "筛选项 09"
+        },
+        {
+          "id": 13,
+          "title": "隔离UI样本",
+          "message": "筛选项 10"
+        },
+        {
+          "id": 14,
+          "title": "隔离UI样本",
+          "message": "筛选项 11"
+        },
+        {
+          "id": 15,
+          "title": "隔离UI样本",
+          "message": "筛选项 12"
+        },
+        {
+          "id": 16,
+          "title": "隔离UI样本",
+          "message": "筛选项 13"
+        },
+        {
+          "id": 17,
+          "title": "隔离UI样本",
+          "message": "筛选项 14"
+        },
+        {
+          "id": 18,
+          "title": "隔离UI样本",
+          "message": "筛选项 15"
+        },
+        {
+          "id": 19,
+          "title": "隔离UI样本",
+          "message": "筛选项 16"
+        },
+        {
+          "id": 20,
+          "title": "隔离UI样本",
+          "message": "筛选项 17"
+        },
+        {
+          "id": 21,
+          "title": "隔离UI样本",
+          "message": "筛选项 18"
+        },
+        {
+          "id": 22,
+          "title": "隔离UI样本",
+          "message": "筛选项 19"
+        },
+        {
+          "id": 23,
+          "title": "隔离UI样本",
+          "message": "筛选项 20"
+        },
+        {
+          "id": 24,
+          "title": "隔离UI样本",
+          "message": "筛选项 21"
+        },
+        {
+          "id": 25,
+          "title": "隔离UI样本",
+          "message": "筛选项 22"
+        },
+        {
+          "id": 26,
+          "title": "隔离UI样本",
+          "message": "筛选项 23"
+        },
+        {
+          "id": 27,
+          "title": "隔离UI样本",
+          "message": "筛选项 24"
+        },
+        {
+          "id": 28,
+          "title": "隔离UI样本",
+          "message": "筛选项 25"
+        },
+        {
+          "id": 29,
+          "title": "隔离UI样本",
+          "message": "筛选项 26"
+        },
+        {
+          "id": 30,
+          "title": "隔离UI样本",
+          "message": "筛选项 27"
+        },
+        {
+          "id": 31,
+          "title": "隔离UI样本",
+          "message": "筛选项 28"
+        },
+        {
+          "id": 32,
+          "title": "隔离UI样本",
+          "message": "筛选项 29"
+        }
+      ],
+      "scrolling": false
+    },
+    {
+      "name": "anchor-preserved",
+      "before": {
+        "offset": 900,
+        "max": 1900,
+        "rowHeight": 80,
+        "itemCount": 30,
+        "rows": [
+          {
+            "index": 9,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 10,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 11,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 12,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 13,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 14,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 15,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 16,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 17,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          },
+          {
+            "index": 18,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 19,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          }
+        ],
+        "visible": [
+          {
+            "index": 9,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 10,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 11,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 12,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 13,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 14,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 15,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 16,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 17,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          },
+          {
+            "index": 18,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 19,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          }
+        ],
+        "mask": {
+          "bottom": -685,
+          "top": 1715
+        },
+        "items": [
+          {
+            "id": 3,
+            "title": "隔离UI样本",
+            "message": "筛选项 00"
+          },
+          {
+            "id": 4,
+            "title": "隔离UI样本",
+            "message": "筛选项 01"
+          },
+          {
+            "id": 5,
+            "title": "隔离UI样本",
+            "message": "筛选项 02"
+          },
+          {
+            "id": 6,
+            "title": "隔离UI样本",
+            "message": "筛选项 03"
+          },
+          {
+            "id": 7,
+            "title": "隔离UI样本",
+            "message": "筛选项 04"
+          },
+          {
+            "id": 8,
+            "title": "隔离UI样本",
+            "message": "筛选项 05"
+          },
+          {
+            "id": 9,
+            "title": "隔离UI样本",
+            "message": "筛选项 06"
+          },
+          {
+            "id": 10,
+            "title": "隔离UI样本",
+            "message": "筛选项 07"
+          },
+          {
+            "id": 11,
+            "title": "隔离UI样本",
+            "message": "筛选项 08"
+          },
+          {
+            "id": 12,
+            "title": "隔离UI样本",
+            "message": "筛选项 09"
+          },
+          {
+            "id": 13,
+            "title": "隔离UI样本",
+            "message": "筛选项 10"
+          },
+          {
+            "id": 14,
+            "title": "隔离UI样本",
+            "message": "筛选项 11"
+          },
+          {
+            "id": 15,
+            "title": "隔离UI样本",
+            "message": "筛选项 12"
+          },
+          {
+            "id": 16,
+            "title": "隔离UI样本",
+            "message": "筛选项 13"
+          },
+          {
+            "id": 17,
+            "title": "隔离UI样本",
+            "message": "筛选项 14"
+          },
+          {
+            "id": 18,
+            "title": "隔离UI样本",
+            "message": "筛选项 15"
+          },
+          {
+            "id": 19,
+            "title": "隔离UI样本",
+            "message": "筛选项 16"
+          },
+          {
+            "id": 20,
+            "title": "隔离UI样本",
+            "message": "筛选项 17"
+          },
+          {
+            "id": 21,
+            "title": "隔离UI样本",
+            "message": "筛选项 18"
+          },
+          {
+            "id": 22,
+            "title": "隔离UI样本",
+            "message": "筛选项 19"
+          },
+          {
+            "id": 23,
+            "title": "隔离UI样本",
+            "message": "筛选项 20"
+          },
+          {
+            "id": 24,
+            "title": "隔离UI样本",
+            "message": "筛选项 21"
+          },
+          {
+            "id": 25,
+            "title": "隔离UI样本",
+            "message": "筛选项 22"
+          },
+          {
+            "id": 26,
+            "title": "隔离UI样本",
+            "message": "筛选项 23"
+          },
+          {
+            "id": 27,
+            "title": "隔离UI样本",
+            "message": "筛选项 24"
+          },
+          {
+            "id": 28,
+            "title": "隔离UI样本",
+            "message": "筛选项 25"
+          },
+          {
+            "id": 29,
+            "title": "隔离UI样本",
+            "message": "筛选项 26"
+          },
+          {
+            "id": 30,
+            "title": "隔离UI样本",
+            "message": "筛选项 27"
+          },
+          {
+            "id": 31,
+            "title": "隔离UI样本",
+            "message": "筛选项 28"
+          },
+          {
+            "id": 32,
+            "title": "隔离UI样本",
+            "message": "筛选项 29"
+          }
+        ],
+        "scrolling": false
+      },
+      "drop": 9,
+      "anchorId": 14,
+      "expectedOffset": 180,
+      "after": {
+        "offset": 180,
+        "max": 1180,
+        "rowHeight": 80,
+        "itemCount": 21,
+        "rows": [
+          {
+            "index": 9,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 10,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          },
+          {
+            "index": 0,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 1,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 2,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 3,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 4,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 5,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 6,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 7,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 8,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          }
+        ],
+        "visible": [
+          {
+            "index": 9,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 10,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          },
+          {
+            "index": 0,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 1,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 2,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 3,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 4,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 5,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 6,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 7,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 8,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          }
+        ],
+        "mask": {
+          "bottom": -685,
+          "top": 995
+        },
+        "items": [
+          {
+            "id": 12,
+            "title": "隔离UI样本",
+            "message": "筛选项 09"
+          },
+          {
+            "id": 13,
+            "title": "隔离UI样本",
+            "message": "筛选项 10"
+          },
+          {
+            "id": 14,
+            "title": "隔离UI样本",
+            "message": "筛选项 11"
+          },
+          {
+            "id": 15,
+            "title": "隔离UI样本",
+            "message": "筛选项 12"
+          },
+          {
+            "id": 16,
+            "title": "隔离UI样本",
+            "message": "筛选项 13"
+          },
+          {
+            "id": 17,
+            "title": "隔离UI样本",
+            "message": "筛选项 14"
+          },
+          {
+            "id": 18,
+            "title": "隔离UI样本",
+            "message": "筛选项 15"
+          },
+          {
+            "id": 19,
+            "title": "隔离UI样本",
+            "message": "筛选项 16"
+          },
+          {
+            "id": 20,
+            "title": "隔离UI样本",
+            "message": "筛选项 17"
+          },
+          {
+            "id": 21,
+            "title": "隔离UI样本",
+            "message": "筛选项 18"
+          },
+          {
+            "id": 22,
+            "title": "隔离UI样本",
+            "message": "筛选项 19"
+          },
+          {
+            "id": 23,
+            "title": "隔离UI样本",
+            "message": "筛选项 20"
+          },
+          {
+            "id": 24,
+            "title": "隔离UI样本",
+            "message": "筛选项 21"
+          },
+          {
+            "id": 25,
+            "title": "隔离UI样本",
+            "message": "筛选项 22"
+          },
+          {
+            "id": 26,
+            "title": "隔离UI样本",
+            "message": "筛选项 23"
+          },
+          {
+            "id": 27,
+            "title": "隔离UI样本",
+            "message": "筛选项 24"
+          },
+          {
+            "id": 28,
+            "title": "隔离UI样本",
+            "message": "筛选项 25"
+          },
+          {
+            "id": 29,
+            "title": "隔离UI样本",
+            "message": "筛选项 26"
+          },
+          {
+            "id": 30,
+            "title": "隔离UI样本",
+            "message": "筛选项 27"
+          },
+          {
+            "id": 31,
+            "title": "隔离UI样本",
+            "message": "筛选项 28"
+          },
+          {
+            "id": 32,
+            "title": "隔离UI样本",
+            "message": "筛选项 29"
+          }
+        ],
+        "scrolling": false
+      },
+      "afterBack": {
+        "offset": 180,
+        "max": 1180,
+        "rowHeight": 80,
+        "itemCount": 21,
+        "rows": [
+          {
+            "index": 9,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 10,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          },
+          {
+            "index": 0,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 1,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 2,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 3,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 4,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 5,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 6,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 7,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 8,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          }
+        ],
+        "visible": [
+          {
+            "index": 9,
+            "id": 21,
+            "text": "隔离UI样本\n筛选项 18",
+            "active": true,
+            "bottom": 195,
+            "top": 275
+          },
+          {
+            "index": 10,
+            "id": 22,
+            "text": "隔离UI样本\n筛选项 19",
+            "active": true,
+            "bottom": 115,
+            "top": 195
+          },
+          {
+            "index": 0,
+            "id": 12,
+            "text": "隔离UI样本\n筛选项 09",
+            "active": true,
+            "bottom": 915,
+            "top": 995
+          },
+          {
+            "index": 1,
+            "id": 13,
+            "text": "隔离UI样本\n筛选项 10",
+            "active": true,
+            "bottom": 835,
+            "top": 915
+          },
+          {
+            "index": 2,
+            "id": 14,
+            "text": "隔离UI样本\n筛选项 11",
+            "active": true,
+            "bottom": 755,
+            "top": 835
+          },
+          {
+            "index": 3,
+            "id": 15,
+            "text": "隔离UI样本\n筛选项 12",
+            "active": true,
+            "bottom": 675,
+            "top": 755
+          },
+          {
+            "index": 4,
+            "id": 16,
+            "text": "隔离UI样本\n筛选项 13",
+            "active": true,
+            "bottom": 595,
+            "top": 675
+          },
+          {
+            "index": 5,
+            "id": 17,
+            "text": "隔离UI样本\n筛选项 14",
+            "active": true,
+            "bottom": 515,
+            "top": 595
+          },
+          {
+            "index": 6,
+            "id": 18,
+            "text": "隔离UI样本\n筛选项 15",
+            "active": true,
+            "bottom": 435,
+            "top": 515
+          },
+          {
+            "index": 7,
+            "id": 19,
+            "text": "隔离UI样本\n筛选项 16",
+            "active": true,
+            "bottom": 355,
+            "top": 435
+          },
+          {
+            "index": 8,
+            "id": 20,
+            "text": "隔离UI样本\n筛选项 17",
+            "active": true,
+            "bottom": 275,
+            "top": 355
+          }
+        ],
+        "mask": {
+          "bottom": -685,
+          "top": 995
+        },
+        "items": [
+          {
+            "id": 12,
+            "title": "隔离UI样本",
+            "message": "筛选项 09"
+          },
+          {
+            "id": 13,
+            "title": "隔离UI样本",
+            "message": "筛选项 10"
+          },
+          {
+            "id": 14,
+            "title": "隔离UI样本",
+            "message": "筛选项 11"
+          },
+          {
+            "id": 15,
+            "title": "隔离UI样本",
+            "message": "筛选项 12"
+          },
+          {
+            "id": 16,
+            "title": "隔离UI样本",
+            "message": "筛选项 13"
+          },
+          {
+            "id": 17,
+            "title": "隔离UI样本",
+            "message": "筛选项 14"
+          },
+          {
+            "id": 18,
+            "title": "隔离UI样本",
+            "message": "筛选项 15"
+          },
+          {
+            "id": 19,
+            "title": "隔离UI样本",
+            "message": "筛选项 16"
+          },
+          {
+            "id": 20,
+            "title": "隔离UI样本",
+            "message": "筛选项 17"
+          },
+          {
+            "id": 21,
+            "title": "隔离UI样本",
+            "message": "筛选项 18"
+          },
+          {
+            "id": 22,
+            "title": "隔离UI样本",
+            "message": "筛选项 19"
+          },
+          {
+            "id": 23,
+            "title": "隔离UI样本",
+            "message": "筛选项 20"
+          },
+          {
+            "id": 24,
+            "title": "隔离UI样本",
+            "message": "筛选项 21"
+          },
+          {
+            "id": 25,
+            "title": "隔离UI样本",
+            "message": "筛选项 22"
+          },
+          {
+            "id": 26,
+            "title": "隔离UI样本",
+            "message": "筛选项 23"
+          },
+          {
+            "id": 27,
+            "title": "隔离UI样本",
+            "message": "筛选项 24"
+          },
+          {
+            "id": 28,
+            "title": "隔离UI样本",
+            "message": "筛选项 25"
+          },
+          {
+            "id": 29,
+            "title": "隔离UI样本",
+            "message": "筛选项 26"
+          },
+          {
+            "id": 30,
+            "title": "隔离UI样本",
+            "message": "筛选项 27"
+          },
+          {
+            "id": 31,
+            "title": "隔离UI样本",
+            "message": "筛选项 28"
+          },
+          {
+            "id": 32,
+            "title": "隔离UI样本",
+            "message": "筛选项 29"
+          }
+        ],
+        "scrolling": false
+      }
+    }
+  ],
+  "screenshots": [
+    "01-committed-response-lost.png",
+    "02-original-operation-confirmed.png",
+    "03-search-first-rows-visible.png",
+    "04-anchor-and-details.png",
+    "05-message-list-preserved.png",
+    "06-role-directory-reentry.png"
+  ],
+  "healthBefore": [
+    {
+      "port": 18081,
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 19884,
+      "run_id": "f70cb8b2514042c1ab27a2a82e4db036",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\creator\\full-2\\candidate\\web-mobile",
+      "account_port": 18110,
+      "game_port": 18111
+    },
+    {
+      "port": 18110,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "93c4e8092e2f19d8f04a7ca9f6103de1",
+      "mode": "account",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18111,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "8713374577ed4e58e4a1a319bc32ac85",
+      "mode": "game",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18112,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "054a43c9ad3630a364dbe3055531fa34",
+      "mode": "gm",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  ],
+  "abortedAfterCommit": {
+    "role": "ae530f994282a67ad021fe7ef4b70959",
+    "origin": "1",
+    "slot": 1,
+    "job": 2,
+    "name": "核对34ba1e",
+    "scope": "真实10005已成功返回给代理；仅向浏览器丢弃该响应"
+  },
+  "afterLostResponse": {
+    "roles": 0,
+    "pending": {
+      "op": "6d7c71073a7a8b37f8f15a25aaaf8748",
+      "origin": "1",
+      "slot": 1,
+      "job": 2,
+      "name": "核对34ba1e"
+    }
+  },
+  "afterRetry": {
+    "pending": null,
+    "roles": [
+      {
+        "role": "ae530f994282a67ad021fe7ef4b70959",
+        "slot": 1,
+        "job": 2,
+        "name": "核对34ba1e"
+      }
+    ]
+  },
+  "messagePrestate": {
+    "count": 40,
+    "ids": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42
+    ],
+    "scope": "仅隔离消息列表前态；非服务端业务或自然消息来源"
+  },
+  "afterReentry": {
+    "count": 1,
+    "pending": null
+  },
+  "healthAfter": [
+    {
+      "port": 18081,
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 19884,
+      "run_id": "f70cb8b2514042c1ab27a2a82e4db036",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\creator\\full-2\\candidate\\web-mobile",
+      "account_port": 18110,
+      "game_port": 18111
+    },
+    {
+      "port": 18110,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "93c4e8092e2f19d8f04a7ca9f6103de1",
+      "mode": "account",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18111,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "8713374577ed4e58e4a1a319bc32ac85",
+      "mode": "game",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    },
+    {
+      "port": 18112,
+      "development_only": true,
+      "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+      "instance": "054a43c9ad3630a364dbe3055531fa34",
+      "mode": "gm",
+      "rule_version": 23,
+      "runtime_ready": false,
+      "status": "ok"
+    }
+  ],
+  "sourceAfter": {
+    "client/assets/scenes/Boot.scene": "1397b1d0349d9ad6dfa94d6ee544ecfb00d9c53c705d13edd4ed7180ce8181f1",
+    "client/assets/scenes/Game.scene": "54ea883928706356f4877ddb0addc0ffddfd295370730efaf90612cb43fe74f4",
+    "client/assets/scenes/Login.scene": "f128811f364b0db69f0d6f0f590ff8afa551943090902ade8764f4f04110b4f1",
+    "client/assets/scenes/RoleSelect.scene": "db73fda22e03384121bcf5c102e1c4a43b8edcf46313bf6603f99717152f812b",
+    "client/assets/resources/prefabs/Beam.prefab": "bc498821192fdcfd648c9174cbc809ace6e733f1762de04bc39784300b67b1a0",
+    "client/assets/resources/prefabs/Effect.prefab": "c38f2169921ceda6611e684c5b89228a6ab45404374f9feffcf7997ce357101b",
+    "client/assets/resources/prefabs/Entity.prefab": "8f2b7d2d11e172b08941e1ff8b71bf5099c87d32b0691fd94e55c5e404c489e6",
+    "client/assets/resources/prefabs/ListItem.prefab": "6e977eb7ee070e723cba06110966fe10bcc40a7a52a7e3c6b819d0602fd1e7ce",
+    "client/assets/resources/prefabs/MapProp.prefab": "f030f6ff3a397988c35b50bc5248a3a58d62fedda7e05f1502402aa7f6042ca7",
+    "client/assets/resources/prefabs/StatusBadge.prefab": "a6ed04c1fb746415c6134edee49189132cd90b15eeb625ae8cb4660e2e0af73a",
+    "client/assets/scripts/app/AppRoot.ts": "29b5cbd7546dee277f1ee0b5c3f7653bfc47bd62327838fb9e3a52fb609c1eab",
+    "client/assets/scripts/app/AutoRecycleModel.ts": "d34aaa601f0388304198e47ac3eac0c2ced8571ab30afbf1861612aca5f97f53",
+    "client/assets/scripts/app/BaselineAssembler.ts": "6ffa576043f7e6187a24e07e9f1913f220189e666f00e4dc703d46c26a00e63b",
+    "client/assets/scripts/app/BeamGeometry.ts": "94105e4ee4c89b0dbf53e43d75790a77e375be30a73af4670105db79ec16bc34",
+    "client/assets/scripts/app/CastingSupplyModel.ts": "4519739a00a4e128a1b9602810f07d0e1fe9b05dcf4636f60357bf07210456e2",
+    "client/assets/scripts/app/CastPlayback.ts": "f1594ee8e28fe0a880db5e63cee1c0a63b72e70cab6f3a569356bace529a3d4d",
+    "client/assets/scripts/app/CombatEffects.ts": "33a649fd95d0eaeaeff17f1154d6da8c62730e5f3740a56ed5ef1a40e5c5e65e",
+    "client/assets/scripts/app/CombatStatusModel.ts": "19b0f0d98124c0573bfd1aa1fef4446f0df7c6c46e8b654bfdc9ec20f4332529",
+    "client/assets/scripts/app/EntityAnimation.ts": "092754db23b30a3fad54f763c0d6b717d92909ff2b5dd8044a81a20c114dfa44",
+    "client/assets/scripts/app/EntityDisplacement.ts": "982d3029d92ac0979c63a47225b9abd654dc1dfe2eeb80a69306803a084fd951",
+    "client/assets/scripts/app/EntityHeadAnchor.ts": "6f812e75693ccf200a39b66271c7e51d9ac4df6bb54de6847f72b94be869bfed",
+    "client/assets/scripts/app/EntityMotion.ts": "0d16a8747bcbae49143a8dff8684a0bced983d97f7b1d1a03720017bd4f2db59",
+    "client/assets/scripts/app/EquipmentModel.ts": "f535386bd33e3cd232ccd82813eea5f9d0a92bfccc4443af86d5be37bb9076bf",
+    "client/assets/scripts/app/GameAutoRecycle.ts": "c501cb85a708c2ddc66f2122279a980dbf18b94cb5dac16c156f224e35bccbd1",
+    "client/assets/scripts/app/GameCombatStatus.ts": "bade6aaf462da44435e9a9d28a1f83e8b0ed70d218fa54d1d503750a7fe339e4",
+    "client/assets/scripts/app/GameConnection.ts": "7c83cc7d5fbc5a31a7e49b5e5102b58f1dcbd3ebf59dbf22f485a8b578043d3d",
+    "client/assets/scripts/app/GameErrors.ts": "1725c2adef71bcae331a0f6a4ab949c3cfcdc80fd15a773b883bbde1800b069f",
+    "client/assets/scripts/app/GameHUD.ts": "0710967fe87fc6e0787f5b0965daa5581cbd9d94a241298d58db2d7cd0627de7",
+    "client/assets/scripts/app/GameMessages.ts": "510998db4a78d846009e93fb5025e3df726a792260d59f0059742c0781a55dcf",
+    "client/assets/scripts/app/GameSession.ts": "e941be8d48afbf2009d0b84606247634d2a11a64a0fadfebbb54b704e3a2b40a",
+    "client/assets/scripts/app/GameSkillAssets.ts": "3fbaa0c15ccaed1e1ad30d52daf79f0b8401e7a4a95c96c739be0eb5386f17ac",
+    "client/assets/scripts/app/GameSkills.ts": "d1bda573179ee16d9109d6c4e666ce1c5fa8fca42f2a98f4ffba7971fb9018e3",
+    "client/assets/scripts/app/GameWarehouse.ts": "af011715e0d371148b807c348489ebb8c9827e3b27c82bcd8ab9d98ac4a14e17",
+    "client/assets/scripts/app/GameWorldView.ts": "1a8e98753686cf6e132c7fb62f689205fc2ade6197afa05917c8764317eb5846",
+    "client/assets/scripts/app/GridProjection.ts": "43ad515a7b943f28e0c66a8ff3bfa408c514aecf5b809b7b5b5e14511fef7e8b",
+    "client/assets/scripts/app/HudModel.ts": "1331045d75b6b48608e87ff46e6b5bcaca2cb700723dbe95f83972b16fbc972a",
+    "client/assets/scripts/app/InputTrace.ts": "55da40adb82cf3628f32eb3be2e7531d58927b1f4b2b5da547d587ab5a7758f3",
+    "client/assets/scripts/app/LevelGrowthModel.ts": "1e119db25bc520682b76369a48f1ec7ae04f6ae6a57376e317e8a60ef3779137",
+    "client/assets/scripts/app/MapAttachmentCoordinator.ts": "f230ba5c57c543090bd3053615017a63b852b9a74df3905b66541f372f261514",
+    "client/assets/scripts/app/MapSurface.ts": "33474beb2021090df2d41e2f80190f30ec62edfb0b248e1aff6766719bc0270c",
+    "client/assets/scripts/app/MapTravelModel.ts": "df81cbaa9c04a76f87ac77082c138ee0c37216a008ab699c932eec791bb7115e",
+    "client/assets/scripts/app/MapViewportPreparation.ts": "f73deca654f7e1e8d60e30b61442ca152e92f7a5fa47965cb97d1688a3d54d23",
+    "client/assets/scripts/app/NavigationCancelAssembler.ts": "ab5230b940d42b41e2b39637714676b1cc1d3be9c1585ca9d07a30df08fc6e02",
+    "client/assets/scripts/app/OwnedPetModel.ts": "be5817c3059af591d06d1cd83b106d19316ace056aefc51d53a94d9d3f2c2cc3",
+    "client/assets/scripts/app/PendingOperations.ts": "6894725c6b687226e2eff5049faa5ea3160400e6eedf21a2a5afd4e144784197",
+    "client/assets/scripts/app/PendingRoleCreation.ts": "59a4dbe44a52f2276da0c1e6fe9108aa444e9ac1ba7e7fd427b012f53280c79e",
+    "client/assets/scripts/app/PetBornModel.ts": "f74d8ffd7a60fcc696e7890f3254fc5e0f216fd0276345a9b84474ca9dae9dab",
+    "client/assets/scripts/app/PetTrainingModel.ts": "ca765dae58ca3107f73931abbfd450835fc87f730428781b3f1b0cb9ca990ffd",
+    "client/assets/scripts/app/PotionModel.ts": "e5653b4d17a9698bef14449e81f2e8de8cb8e1fdc7ef72c12c6cc80643241670",
+    "client/assets/scripts/app/RoleBindingModel.ts": "379f37c59b9984d93808607be956316116a936e6909d33f0d61e308c62443b2f",
+    "client/assets/scripts/app/SkillAssetsModel.ts": "2fbfdf101c7fb72f2af891356657c1247e5f2c7c76fe42c335af54428464d787",
+    "client/assets/scripts/app/SkillModel.ts": "4113096987c10d30ec2c4c1112b66553453e25deab84a0c726d466308d751ba5",
+    "client/assets/scripts/app/SourceChunkCache.ts": "3f789f64957b46b2b40e486d84174c58a07d0324125412a70334c5fcfe3e07c3",
+    "client/assets/scripts/app/SourceMapAssets.ts": "09508893faf6627712aa4b5c70d9506ccb55b62c99f9583cb103af9f95cb2b87",
+    "client/assets/scripts/app/SourceMapModel.ts": "9b3a7b1833ecb5133437b328086a25cc82cc13e2cbaac4ea24e04269dcf75133",
+    "client/assets/scripts/app/SourceMapView.ts": "3b946c540d29bd6a962ba044cf350153e0fdf8f17e01fe0019d2c1574857503d",
+    "client/assets/scripts/app/SourceProjection.ts": "d4a79f81caa3e841c08a145f6271a7ed408638f938c1c9b6963818b0c4d69808",
+    "client/assets/scripts/app/StatusEffects.ts": "cb04912531b341362a71a05e213612516e626ea39b71df889258da2c8653293b",
+    "client/assets/scripts/app/StatusPlayback.ts": "28adbbba05f3a5777203b532170c9ea79121b39e48648c1743ce844c0d6ab940",
+    "client/assets/scripts/app/SystemMessageLog.ts": "82822e68cd1134eb5031746e69d198707b88f141fd39598c01e5906f34e979c6",
+    "client/assets/scripts/app/TeleportModel.ts": "35ba57833d8af2ea192910941012324f5fb499f2eb778077ed38d6c87c63ac8b",
+    "client/assets/scripts/app/ViewportAdapter.ts": "3daac6afd51dcf24562886a07f399d5d32b9ba0b7333a39572d91168c533befd",
+    "client/assets/scripts/app/ViewportGeometry.ts": "b9ab0a62a6eb3487a0fd6305a8f9c861a1e8e5e14ad8fd30ccd09d9a55103f30",
+    "client/assets/scripts/app/WarehouseModel.ts": "a0439fafec400fc76c602bf5b279ab89144464aa5ea8948372943d9ad109b20d",
+    "client/assets/scripts/app/WorldAssets.ts": "60864a3345b91bf31280662938660bec2658465bf41747ec87ace87229e6ccf6",
+    "client/assets/scripts/app/WorldAudio.ts": "a298c549e41984cfde87dacce8baa3ea30dd7981a314a1e2979561aee38bca2e",
+    "client/assets/scripts/core/scene/CreatorSceneBackend.ts": "47822fd5d393dafe8549f1ba30528ef36d6d5a6a9e624ff90c295c8183e1427a",
+    "client/assets/scripts/core/scene/SceneLoader.ts": "32eea780f68feafb29527ad2f327a882353786e3c4f153b20cc1662e6676a047",
+    "client/assets/scripts/core/scene/SceneManager.ts": "0b6f33c650ac7a46ee18f22e9807d635f2e06d3936be05a76b7226100d311fc6",
+    "client/assets/scripts/generated/config_types.ts": "91102fe089ece02f1fff65a060ac49160e75ec7f7713e4f75cc9e7c41912577d",
+    "client/assets/scripts/generated/protobuf/client_pb.d.ts": "c3e65f6e549ad961042d04ffba9e91d1e689ae40a52cb8c8647e8ad468998f3c",
+    "client/assets/scripts/generated/protobuf/client_pb.js": "b63f159f6a572fd7783df1090c950914c3927fc7734ce9c8a5d78098b4e77672",
+    "client/assets/scripts/generated/protocol_ids.ts": "70b3a61436e1931de81ae015c453d60fb78b5a8791db79ca7a2dde6d3897d1c3",
+    "client/assets/scripts/input/MapTouchNavigator.ts": "0a5811a1b15aa0c5b82b97bcfad8e8b2d9c8b758ba8cf9e1fc16aea27b025942",
+    "client/assets/scripts/input/NavigationIntent.ts": "6611cfb77ed208d34b865337b9bd1bf866458097f8c0a36c384fa1607b7e0446",
+    "client/assets/scripts/input/TouchJoystick.ts": "df1c030a11e9f1843a89dbda60b3ae2d1ce5242e5b07378fc9016d98586d5a19",
+    "client/assets/scripts/ui/List.ts": "9531779dce03d8c306c9ccf94fb8e93b8095b4599df6e550f16d7e9d2bddab27",
+    "client/assets/scripts/ui/PanelStackState.ts": "dc2fb32609b487d8dc6c59e9792d59c919fff8160c900844fada7f8bc64e4410",
+    "client/assets/scripts/ui/PopupView.ts": "bb6067151c5e73838f0662142551eb36edc0c6dd790e0fff7af3de46d0f368c7",
+    "client/assets/scripts/ui/Tab.ts": "6653d9dab5c13f2ee5cb1a010e95bc86a5ba356a894cfaa33e6fad7a824a0a45",
+    "client/assets/scripts/ui/UIMgr.ts": "36b250a5a48c4720319febbf840c29e23f603d697faacac1a17668cecfb327ac",
+    "client/assets/scripts/ui/ViewStack.ts": "30d9073f1d69c7e5100e65a85b5644801fbdf2a87708a00a6f9deee3e15f3d76",
+    "client/assets/scripts/ui/VirtualListWindow.ts": "a4f8e45fe875d0698432175ecaf16b748120527eca5c1bab9a1d30b22a8910c4"
+  },
+  "finishedAt": "2026-10-30T14:53:09.987Z"
+}

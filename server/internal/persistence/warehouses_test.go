@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"google.golang.org/protobuf/proto"
 	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
@@ -84,14 +85,14 @@ func TestWarehouseExplicitActionsRejectUnrelatedFields(t *testing.T) {
 	if !validWarehouseAction(base) {
 		t.Fatal("合法存入")
 	}
-	v := *base
+	v := proto.Clone(base).(*pb.WarehouseAction)
 	v.Amount = 1
-	if validWarehouseAction(&v) {
+	if validWarehouseAction(v) {
 		t.Fatal("存物带币")
 	}
-	v = *base
+	v = proto.Clone(base).(*pb.WarehouseAction)
 	v.Quantity = 0
-	if validWarehouseAction(&v) {
+	if validWarehouseAction(v) {
 		t.Fatal("默认数量")
 	}
 	if validWarehouseAction(&pb.WarehouseAction{Scope: 1, Action: 3, Currency: 1, Amount: 1}) {

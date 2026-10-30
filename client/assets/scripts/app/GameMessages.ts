@@ -1,4 +1,4 @@
-import { _decorator, Component, EditBox, isValid, Label, Node, ScrollView, Vec2 } from 'cc';
+import { _decorator, Component, EditBox, isValid, Label, Node, ScrollView } from 'cc';
 import { List } from '../ui/List';
 import { UIMgr } from '../ui/UIMgr';
 import { MessageSnapshot, SystemMessage, SystemMessageLog } from './SystemMessageLog';
@@ -113,11 +113,11 @@ export class GameMessages extends Component {
                 const label = node.getChildByName('Text')?.getComponent(Label);
                 if (label) label.string = `${item.title}\n${item.preview ?? item.message}`;
             }, true);
-            if (this.queryChanged) this.scroll.scrollToTop(0);
+            if (this.queryChanged) this.list.restoreScrollOffset(0);
             else if (!this.renderedOnce || nearBottom) this.list.scrollToIndex(filtered.length - 1);
             else if (oldAnchor !== undefined) {
                 const index = filtered.findIndex(item => item.id === oldAnchor);
-                if (index >= 0) this.scroll.scrollToOffset(new Vec2(0, index * rowHeight + previousOffset % rowHeight), 0);
+                if (index >= 0) this.list.restoreScrollOffset(index * rowHeight + previousOffset % rowHeight);
             }
             this.rendered = Array.from(filtered); this.renderedOnce = true;
             this.queryChanged = false; this.pending = false;

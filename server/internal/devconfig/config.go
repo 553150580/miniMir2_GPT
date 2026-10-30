@@ -169,6 +169,7 @@ type Config struct {
 	OriginID           uint64            `json:"origin_id"`
 	RunID              uint64            `json:"run_id"`
 	AllowedOrigins     []string          `json:"allowed_origins"`
+	SourcePath         string            `json:"-"`
 	Root               string            `json:"-"`
 	Fixture            Fixture           `json:"-"`
 }
@@ -194,6 +195,7 @@ func Load(path string) (Config, error) {
 	if e = json.Unmarshal(b, &c); e != nil {
 		return c, e
 	}
+	c.SourcePath = absolute
 	c.Root = filepath.Clean(filepath.Join(filepath.Dir(absolute), "../.."))
 	if c.Environment != "development" {
 		return c, errors.New("当前首循环仅可显式development启动；生产尚未提供TLS/发行配置，拒绝启动")

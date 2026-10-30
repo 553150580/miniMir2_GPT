@@ -1,0 +1,25 @@
+[
+  {
+    "check": "protocol-check",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "passed": true
+  },
+  {
+    "check": "preview-check",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "passed": true
+  },
+  {
+    "check": "release-check",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "passed": true
+  },
+  {
+    "check": "current_release_integrity",
+    "version": "dev-warehouses-v0.23-b7f58f9af6ee",
+    "passed": true
+  }
+]

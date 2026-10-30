@@ -134,7 +134,7 @@ type room struct {
 	RetryAt               time.Time
 	Waiting               []command
 	LastTick              time.Time
-	HostMS                int64
+	HostMS                int64 // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
 	HostSession           string
 	DeathID               string
 	AwaitUntil            time.Time
@@ -400,7 +400,6 @@ func (w *worker) command(c command) {
 				r.HostSession = ""
 			}
 			transitionEventHosting(r, at, r.HostSession)
-			r.HostMS = 0
 		}
 		return
 	}
@@ -626,7 +625,6 @@ func (w *worker) join(r *room, c command) {
 			r.Ready = false
 			r.PetBornReady = nil
 			r.Baseline = w.e.baseline.Add(1)
-			r.HostMS = 0
 			r.HostSession = ""
 			r.LastTick = time.Now()
 			r.AwaitUntil = time.Now().Add(10 * time.Second)
@@ -688,6 +686,8 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.PersonalWorld = r.currentWorld()
 	r.Role = role
+	// 故障后的新执行现场不恢复旧临时计量；健康重入不经过此初始化。
+	r.HostMS = 0
 	r.Potions.LastAppliedSeq = role.EconomicSeq
 	r.Navigation = navigationState{}
 	r.Destination = nil
@@ -748,7 +748,6 @@ func (w *worker) revivePlayer(r *room) {
 	r.DeathID = ""
 	// 同图复活仅释放摇杆，原地面导航目标保留并从新脚点继续规划。
 	r.Manual = false
-	r.HostMS = 0
 }
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
 	if r.Isolated {

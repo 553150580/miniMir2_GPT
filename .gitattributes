@@ -33,3 +33,5 @@ outputs/equipment-growth-20261030/** -text
 client/assets/scripts/app/EquipmentModel.ts.meta -text
 outputs/warehouses-20261030/** -text
 outputs/map-confirm-wrap-20261030/** -text
+outputs/p2-fixes-20261030/** -text
+outputs/startup-recovery-20261030/** -text

@@ -12,6 +12,7 @@ import { MapTouchNavigator } from '../input/MapTouchNavigator';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
 import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
 import { PendingOperations } from './PendingOperations';
+import { PendingRoleCreation, RoleCreationRequest } from './PendingRoleCreation';
 import { GameWorldView } from './GameWorldView';
 import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
@@ -39,6 +40,7 @@ import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, e
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
+import { CodeInvalidArgument, CodeOperationConflict } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -92,6 +94,7 @@ export class AppRoot extends Component {
     private travelDestination = 1;
     private travelUiSequence = 0;
     private enterAttempt = 0;
+    private roleCreationTask?: Promise<void>;
     private leaving = false;
     private releaseInput = (): void => { if (this.joystick) this.joystick.release(); else this.nav.releaseJoystick(); };
 
@@ -144,9 +147,12 @@ export class AppRoot extends Component {
         const login = async (register: boolean): Promise<void> => {
             if (!/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Account').string.trim()) || !/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Password').string)) throw new Error('账号和密码需6～20位字母、数字或下划线');
             this.status('正在认证');
+            const token = session.connection.token;
             const result = await session.connection.rpc(register ? 10009 : 10001, { account: this.edit('Account').string.trim(), password: this.edit('Password').string });
+            if (this.disposed || session.connection.token !== token) return;
             const account = Array.from(result.accountId as Uint8Array, value => value.toString(16).padStart(2, '0')).join('');
             session.pending = new PendingOperations(sys.localStorage, `minimir.pending.v1.${account}.1`);
+            session.roleCreation = new PendingRoleCreation(sys.localStorage, `minimir.create-role.v1.${account}.1`);
             session.connection.token = result.accountToken; session.lastError = '';
             this.edit('Password').string = '';
             await this.changeScene('RoleSelect');
@@ -159,12 +165,7 @@ export class AppRoot extends Component {
         for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => { this.selectedRole = i; this.refreshRoles(); });
         for (let i = 0; i < 3; i++) this.button(`JobTabs/Job${i}`, () => { this.selectedJob = i; this.status(`创建职业：${names[i]}`); });
         this.button('Logout', async () => { session.connection.token = ''; await this.changeScene('Login'); });
-        this.button('Create', async () => {
-            const free = [1,2,3,4,5].find(slot => !session.roles.some(role => role.slot === slot));
-            if (free === undefined) throw new Error('五个角色槽已满');
-            await session.connection.rpc(10005, { originServerId: Long.UONE, slot: free, job: this.selectedJob, name: this.edit('Name').string.trim(), opId: newOperationId() });
-            await this.fetchRoles(); this.selectedRole = session.roles.findIndex(role => role.slot === free); this.refreshRoles();
-        });
+        this.button('Create', () => this.createRole());
         this.button('Enter', async () => {
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
             const attempt = ++this.enterAttempt, token = session.connection.token;
@@ -189,13 +190,67 @@ export class AppRoot extends Component {
                 throw error;
             }
         });
-        await this.fetchRoles();
+        if (!await this.fetchRoles()) return;
+        if (session.roleCreation?.get()) await this.createRole();
     }
 
-    private async fetchRoles(): Promise<void> {
-        session.roles = (await session.connection.rpc(10003, { originServerId: Long.UONE })).roles;
+    private async fetchRoles(): Promise<boolean> {
+        const token = session.connection.token, ledger = session.roleCreation;
+        let result: any;
+        try { result = await session.connection.rpc(10003, { originServerId: Long.UONE }); }
+        catch (error) {
+            if (this.disposed || session.connection.token !== token || session.roleCreation !== ledger) return false;
+            throw error;
+        }
+        if (this.disposed || session.connection.token !== token || session.roleCreation !== ledger) return false;
+        session.roles = result.roles;
         if (this.selectedRole < 0 && session.roles.length) this.selectedRole = 0;
         this.refreshRoles();
+        return true;
+    }
+
+    private createRole(): Promise<void> {
+        if (this.roleCreationTask) return this.roleCreationTask;
+        const task = this.submitRoleCreation(); this.roleCreationTask = task;
+        const clear = (): void => { if (this.roleCreationTask === task) this.roleCreationTask = undefined; };
+        void task.then(clear, clear); return task;
+    }
+
+    private async submitRoleCreation(): Promise<void> {
+        const ledger = session.roleCreation, token = session.connection.token;
+        if (!ledger || !token || this.disposed) throw new Error('请先认证后创建角色');
+        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger;
+        let request = ledger.get();
+        const replaying = request !== null;
+        if (!request) {
+            const free = [1,2,3,4,5].find(slot => !session.roles.some(role => role.slot === slot));
+            if (free === undefined) throw new Error('五个角色槽已满');
+            request = { originServerId: Long.UONE, slot: free, job: this.selectedJob, name: this.edit('Name').string.trim(), opId: newOperationId() };
+            ledger.set(request);
+        }
+        this.status(`正在核对原建角：${request.name}`);
+        let result: any;
+        try { result = await session.connection.rpc(10005, request); }
+        catch (error) {
+            if (!current()) return;
+            if (!replaying && error instanceof ProtocolResponseError && error.messageId === 10006
+                && (error.code === CodeInvalidArgument || error.code === CodeOperationConflict)) {
+                // 首次明确业务拒绝才结束；重查拒绝不能证明历史未知尝试未提交。
+                ledger.clear(request.opId);
+                try { await this.fetchRoles(); } catch { /* 保留原拒绝提示，下次选角重查目录。 */ }
+            }
+            throw error;
+        }
+        if (!current()) return;
+        const matches = (role: any, original: RoleCreationRequest): boolean => role?.key?.originServerId?.toString() === original.originServerId.toString()
+            && role.key.roleId instanceof Uint8Array && role.key.roleId.length === 16 && role.slot === original.slot && role.job === original.job
+            && role.name === original.name.normalize('NFKC');
+        if (!matches(result, request)) throw new Error('原建角回执身份不匹配，保留原请求等待核对');
+        if (!await this.fetchRoles() || !current()) return;
+        const selected = session.roles.findIndex(role => matches(role, request!) && role.key.roleId.every((byte: number, index: number) => byte === result.key.roleId[index]));
+        if (selected < 0) throw new Error('原建角尚未出现在当前目录，请沿原操作核对');
+        ledger.clear(request.opId); this.selectedRole = selected; this.refreshRoles();
+        this.status('原建角已确认');
     }
 
     private refreshRoles(): void {

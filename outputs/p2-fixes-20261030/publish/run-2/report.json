@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "recorded_at_utc": "2026-10-30T15:03:15.065309+00:00",
+  "creator_report": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\creator\\full-2\\report.json",
+  "original_build_root": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\creator\\full-2\\candidate\\web-mobile",
+  "current_build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+  "original_preview_backup": "D:\\A_Claude\\miniMir2_GPT\\.work\\p2-fixes-20261030\\publish\\run-2\\previous-web-mobile",
+  "artifact_count": 26053,
+  "full_sha256_equal_after_same_volume_rename": true,
+  "old_preview_preserved": true,
+  "local_development_only": true,
+  "production_ready": false,
+  "static": {
+    "running": true,
+    "health": {
+      "webMobileBuild": true,
+      "developmentOnly": true,
+      "pid": 29520,
+      "run_id": "3c39f522b8d0406ca16a0d3d4c9bacae",
+      "build_root": "D:\\A_Claude\\miniMir2_GPT\\client\\build\\web-mobile",
+      "port": 18080,
+      "account_port": 18100,
+      "game_port": 18101
+    }
+  },
+  "backend": {
+    "running": true,
+    "pid": 25860,
+    "run_id": "f18cbad6-0371-4e03-8974-1ac918a40e92",
+    "health": {
+      "account": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "de1beed973b83e97f94f800851346e88",
+        "mode": "account",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "game": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "901838186512c31376b41c01fe829fea",
+        "mode": "game",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      },
+      "gm": {
+        "development_only": true,
+        "fixture_hash": "01fb22eff55ccefc1d78255adf4a31276515201057f2cc51422b2602cdfcc0b4",
+        "instance": "a6dc61671cb92c0f21a65277aa9229c8",
+        "mode": "gm",
+        "rule_version": 23,
+        "runtime_ready": false,
+        "status": "ok"
+      }
+    },
+    "development_only": true,
+    "production_ready": false
+  }
+}

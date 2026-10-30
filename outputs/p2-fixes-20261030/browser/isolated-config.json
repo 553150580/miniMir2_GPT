@@ -1,0 +1,19 @@
+{
+  "environment": "development",
+  "account_address": "127.0.0.1:18110",
+  "game_address": "127.0.0.1:18111",
+  "gm_address": "127.0.0.1:18112",
+  "mongo_uri": "mongodb://127.0.0.1:27118/?replicaSet=minimirDev&directConnection=true",
+  "mongo_uri_by_platform": {
+    "windows": "mongodb://127.0.0.1:27119/?replicaSet=minimirWinDev&directConnection=true"
+  },
+  "database": "minimir_dev_game_test_p2ui_f70cb8b2514042c1ab27a2a82e4db036",
+  "fixture_file": "config/development/first-loop.json",
+  "node_id": "p2ui-f70cb8b25140",
+  "origin_id": 1,
+  "run_id": 271634010362177,
+  "allowed_origins": [
+    "127.0.0.1:*",
+    "localhost:*"
+  ]
+}

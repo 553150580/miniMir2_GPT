@@ -1,0 +1,12 @@
+test_intact_existing_release_can_switch_without_rewriting_artifacts (test_release_integrity.ReleaseIntegrityTests.test_intact_existing_release_can_switch_without_rewriting_artifacts) ... ok
+test_manifest_drift_keeps_previous_pointer (test_release_integrity.ReleaseIntegrityTests.test_manifest_drift_keeps_previous_pointer) ... ok
+test_missing_or_modified_artifact_keeps_previous_pointer_in_both_modes (test_release_integrity.ReleaseIntegrityTests.test_missing_or_modified_artifact_keeps_previous_pointer_in_both_modes) ... ok
+test_check_accepts_generated_constants_without_writing (test_generate_protocol.ProtocolConstantTests.test_check_accepts_generated_constants_without_writing) ... ok
+test_go_pb_record_does_not_replace_constant_validation (test_generate_protocol.ProtocolConstantTests.test_go_pb_record_does_not_replace_constant_validation) ... ok
+test_manifest_message_and_error_code_changes_require_regeneration (test_generate_protocol.ProtocolConstantTests.test_manifest_message_and_error_code_changes_require_regeneration) ... ok
+test_missing_or_modified_constant_file_on_each_side_is_rejected (test_generate_protocol.ProtocolConstantTests.test_missing_or_modified_constant_file_on_each_side_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.743s
+
+OK

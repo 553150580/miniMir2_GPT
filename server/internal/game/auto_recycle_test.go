@@ -83,7 +83,7 @@ func TestAutoRecycleCommitSendsCompleteInventoryBeforeExactReceipt(t *testing.T)
 			var v pb.InventoryResult
 			_ = proto.Unmarshal(f.Payload, &v)
 			if v.Revision != 11 || v.AutoRecycle.Revision != 1 {
-				t.Fatal(v)
+				t.Fatal(&v)
 			}
 			inventoryIndex = i
 		}
@@ -91,7 +91,7 @@ func TestAutoRecycleCommitSendsCompleteInventoryBeforeExactReceipt(t *testing.T)
 			var v pb.EquipmentRecycleResult
 			_ = proto.Unmarshal(f.Payload, &v)
 			if v.RoleRevision != 11 || v.SourceSeq != 0 || domain.Hex(v.OpId) != b.id || v.RecycledCount != 1 || v.BoundGold != 50 || v.Trigger != 2 {
-				t.Fatal(v)
+				t.Fatal(&v)
 			}
 			eventIndex = i
 		}
@@ -116,7 +116,7 @@ func TestRecycleDiscardOnlyNotificationAndNoAttachmentHistoryReplay(t *testing.T
 	var v pb.EquipmentRecycleResult
 	_ = proto.Unmarshal(c.frames[0].Payload, &v)
 	if v.RecycledCount != 0 || v.DiscardedCount != 1 || v.SourceSeq != 5 || v.DiscardReason != "bag_full" || len(v.OpId) != 0 {
-		t.Fatal(v)
+		t.Fatal(&v)
 	}
 	r.Ready = false
 	w.equipmentRecycleResult(r, op)

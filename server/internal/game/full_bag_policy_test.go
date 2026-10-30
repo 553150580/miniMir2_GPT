@@ -49,7 +49,7 @@ func TestFullBagNormalAutoIntentRemainsAvailable(t *testing.T) {
 		}
 		var state pb.HostingState
 		if err := proto.Unmarshal(c.frames[0].Payload, &state); err != nil || state.AutoBattleEnabled != enabled || state.RemainHostingSec != 3 {
-			t.Fatal("Auto响应不是当前真实hosting状态", state, err)
+			t.Fatal("Auto响应不是当前真实hosting状态", &state, err)
 		}
 	}
 }

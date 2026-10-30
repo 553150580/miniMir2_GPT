@@ -442,6 +442,11 @@ def main(argv=None):
                     raise ValueError("相同内容版本已存在但来源/清单不同，请使用新版本号")
             else:
                 os.replace(temp, dest)
+            # 清单相同不能证明现存文件完整；切换指针前逐项核验实际字节。
+            for name, expected_sha256 in manifest["files"].items():
+                artifact = dest / name
+                if artifact.is_symlink() or not artifact.is_file() or sha256(artifact) != expected_sha256:
+                    raise ValueError(f"配置发布产物缺失或摘要不符：{name}，未切换当前版本")
             pointer = dest.parent / f"{args.mode}_current.json"
             pointer_tmp = pointer.with_suffix(".tmp")
             pointer_tmp.write_text(json.dumps({"path": release_name, "version": release_name, "content_sha256": digest, "runtime_ready": report["runtime_ready"]}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")

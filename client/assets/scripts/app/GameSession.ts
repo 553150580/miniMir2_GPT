@@ -3,6 +3,7 @@ import { GameConnection, Packet, newOperationId } from './GameConnection';
 import { SceneManager } from '../core/scene/SceneManager';
 import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
+import type { PendingRoleCreation } from './PendingRoleCreation';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
@@ -63,6 +64,7 @@ export const session = {
     ready: false,
     command: Long.UONE,
     pending: null as PendingOperations | null,
+    roleCreation: null as PendingRoleCreation | null,
     preparedWorld: null as WorldAssets | null,
     lastError: '',
     update: new Set<() => void>(),

@@ -9,10 +9,24 @@ import re
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def main():
+def render_constants(manifest):
+    """生成和检查共用同一份常量渲染，避免协议清单与双端编号漂移。"""
+    go=['// 由protocol_manifest.json生成，草案未发布。','package protocol','']
+    ts=['// 由protocol_manifest.json生成，草案未发布。','']
+    for family,typ in [('messages','uint16'),('error_codes','uint32')]:
+        go.append('const (')
+        for row in manifest[family]:
+            go.append(f"\t{row['name']} {typ} = {row['value']}")
+            ts.append(f"export const {row['name']}: {row['value']} = {row['value']};")
+        go.extend([')',''])
+    return {'server/internal/protocol/protocol_ids.go':'\n'.join(go).encode('utf-8'),
+            'client/assets/scripts/generated/protocol_ids.ts':('\n'.join(ts)+'\n').encode('utf-8')}
+
+
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     p = ROOT / 'shared/proto/protocol_manifest.json'
     manifest = json.loads(p.read_text(encoding='utf-8'))
     declared = set()
@@ -50,7 +64,12 @@ def main():
             ids.add(row['value']); names.add(row['name'])
     reserved={r['value'] for r in manifest.get('reserved_messages',[])}
     if reserved & {r['value'] for r in manifest['messages']}:raise ValueError('消息编号占用了保留区段中的具体编号')
+    constants=render_constants(manifest)
     if args.check:
+        for relative,expected in constants.items():
+            output=ROOT/relative
+            if not output.is_file() or output.read_bytes()!=expected:
+                raise ValueError('生成协议常量与清单不一致，请先生成协议：'+relative)
         compiled='not_recorded'
         generation=ROOT/'conf/toolchain/go-pb-generation.json'
         if generation.exists():
@@ -63,18 +82,9 @@ def main():
             compiled='verified_generated_sources_current'
         print(json.dumps({'valid':True,'messages':len(manifest['messages']),'error_codes':len(manifest['error_codes']),'proto_source_lint':'passed','protoc_compile':compiled,'game_business':'not_verified_by_generator'},ensure_ascii=False))
         return
-    server_out=ROOT/'server/internal/protocol';server_out.mkdir(parents=True,exist_ok=True)
-    client_out=ROOT/'client/assets/scripts/generated';client_out.mkdir(parents=True,exist_ok=True)
-    go=['// 由protocol_manifest.json生成，草案未发布。','package protocol','']
-    ts=['// 由protocol_manifest.json生成，草案未发布。','']
-    for family,typ in [('messages','uint16'),('error_codes','uint32')]:
-        go.append('const (')
-        for row in manifest[family]:
-            go.append(f"\t{row['name']} {typ} = {row['value']}")
-            ts.append(f"export const {row['name']}: {row['value']} = {row['value']};")
-        go.extend([')',''])
-    (server_out/'protocol_ids.go').write_text('\n'.join(go),encoding='utf-8',newline='\n')
-    (client_out/'protocol_ids.ts').write_text('\n'.join(ts)+'\n',encoding='utf-8',newline='\n')
+    for relative,data in constants.items():
+        output=ROOT/relative;output.parent.mkdir(parents=True,exist_ok=True);output.write_bytes(data)
+    server_out=ROOT/'server/internal/protocol';client_out=ROOT/'client/assets/scripts/generated'
     print(json.dumps({'server':str(server_out),'client':str(client_out),'implementation_status':'generated_constants_only'},ensure_ascii=False))
 
 

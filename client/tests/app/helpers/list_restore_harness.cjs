@@ -25,7 +25,7 @@ const enginePath=path.join(require(path.join(root,'tools/client/creator_paths.cj
 const engineSource=fs.readFileSync(enginePath,'utf8'),ast=ts.createSourceFile(enginePath,engineSource,ts.ScriptTarget.Latest,true);
 const klass=ast.statements.find(n=>ts.isClassDeclaration(n)&&n.name.text==='ScrollView');
 const method=name=>klass.members.find(n=>n.name?.getText(ast)===name).getText(ast);
-const names=['scrollToOffset','scrollTo','_doScroll','getScrollOffset','getMaxScrollOffset','_getContentTopBoundary','_getContentBottomBoundary'];
+const names=['scrollToTop','scrollToOffset','scrollTo','_doScroll','getScrollOffset','getMaxScrollOffset','_getContentTopBoundary','_getContentBottomBoundary'];
 const compiled=ts.transpileModule('class EngineScroll{'+names.map(method).join('\n')+'};exports.EngineScroll=EngineScroll;',{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}}).outputText;
 const module_={exports:{}},options={};
 new Function('exports','Vec2','v2','assignMoveDeltaOption','_moveDeltaOptions',compiled)(module_.exports,Vec2,()=>new Vec2(),(x,y)=>Object.assign(options,{x,y}),options);
@@ -54,4 +54,4 @@ function warehouse(current,query){
  const {GameWarehouse}=load('client/assets/scripts/app/GameWarehouse.ts',id=>id==='cc'?cc:id==='long'?Long:id==='../ui/List'?{List}:id==='../generated/protocol_ids'?require(path.join(root,'.work/ui-tests/generated/protocol_ids.js')):id==='./SkillAssetsModel'?require(path.join(root,'.work/ui-tests/app/SkillAssetsModel.js')):{});
  const component=new GameWarehouse(safe,current,query);return{component,bag,store,panel};
 }
-module.exports={actualList,warehouse,method,enginePath,Vec2,Button,Long,List};
+module.exports={actualList,warehouse,method,enginePath,Vec2,Button,Long,List,cc};

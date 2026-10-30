@@ -170,6 +170,9 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	return httpServer.Shutdown(shutdown)
 }
 func supervise(ctx context.Context, cfg devconfig.Config) error {
+	if !filepath.IsAbs(cfg.SourcePath) {
+		return errors.New("监督进程缺少实际加载的配置文件绝对路径")
+	}
 	binary, e := os.Executable()
 	if e != nil {
 		return e
@@ -177,13 +180,12 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 	if _, e := NodeKey(); e != nil {
 		return e
 	}
-	path := filepath.Join(cfg.Root, "conf/dev/server.json")
 	childExit := make(chan error, 3)
 	modes := []string{"account", "game", "gm"}
 	var children []*exec.Cmd
 	var wg sync.WaitGroup
 	for _, mode := range modes {
-		cmd := exec.Command(binary, "-config", path, "-mode", mode)
+		cmd := supervisorChild(binary, cfg, mode)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		prepareChild(cmd)
@@ -208,6 +210,11 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 	}
 	wg.Wait()
 	return failure
+}
+
+func supervisorChild(binary string, cfg devconfig.Config, mode string) *exec.Cmd {
+	// 保留调用者选定并已校验的原文件；不能把候选装配切回默认数据库或端口。
+	return exec.Command(binary, "-config", cfg.SourcePath, "-mode", mode)
 }
 func MainContext() (context.Context, context.CancelFunc) {
 	return signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
