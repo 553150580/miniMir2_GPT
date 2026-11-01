@@ -1,0 +1,2 @@
+{"time":"2026-11-01T23:55:42.5941959+08:00","level":"INFO","msg":"装配启动","mode":"game","run_id":"manual"}
+{"time":"2026-11-01T23:55:43.1646691+08:00","level":"INFO","msg":"开发节点就绪","mode":"game","address":"127.0.0.1:51203","database":"minimir_dev_game_test_rt_07423dca6afc42a384e5950e3b6dcb74","instance":"191f8b7173092d050832c566b6e118a9","runtime_ready":false}

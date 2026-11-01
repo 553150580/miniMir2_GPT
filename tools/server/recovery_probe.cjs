@@ -81,4 +81,6 @@ const actions={
  },
  async finish(){for(const session of state.sessions)session.close();await sleep(100);return{closed:true};}
 };
+// 其它隔离验收复用原传输与观察器，不启动本文件的命令循环。
+module.exports={Session,ids,pb,encode,decode,until,sleep,unsigned,id,signature};
 if(require.main===module){const lines=readline.createInterface({input:process.stdin,crlfDelay:Infinity});let queue=Promise.resolve();lines.on('line',line=>{queue=queue.then(async()=>{let command;try{command=JSON.parse(line);assert(actions[command.action],'未知探针动作');const result=await actions[command.action](command);process.stdout.write(JSON.stringify({action:command.action,passed:true,result})+'\n');}catch(error){process.stdout.write(JSON.stringify({action:command?.action,passed:false,error:error.message})+'\n');}});});lines.on('close',()=>{queue.finally(()=>{for(const session of state.sessions)session.close();setTimeout(()=>process.exit(0),100).unref();});});}
