@@ -10,8 +10,10 @@ import (
 	"time"
 )
 
+const NodeLeaseDuration = 15 * time.Second
+
 func leaseDate() bson.M {
-	return bson.M{"$dateAdd": bson.M{"startDate": "$$NOW", "unit": "second", "amount": 15}}
+	return bson.M{"$dateAdd": bson.M{"startDate": "$$NOW", "unit": "second", "amount": int64(NodeLeaseDuration / time.Second)}}
 }
 func (s *Store) Singleton(ctx context.Context, kind string) error {
 	key := "singleton:" + kind

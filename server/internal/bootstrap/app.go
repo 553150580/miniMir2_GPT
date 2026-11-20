@@ -14,6 +14,7 @@ import (
 	"minimir/internal/game"
 	"minimir/internal/persistence"
 	"minimir/internal/transport"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -71,13 +72,18 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	if mode != "account" && mode != "game" && mode != "gm" {
 		return errors.New("mode必须为account/game/gm/supervisor")
 	}
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	parent := ctx
+	ctx, cancel := context.WithCancelCause(parent)
+	defer cancel(nil)
 	store, e := persistence.Open(ctx, cfg)
 	if e != nil {
 		return e
 	}
-	defer store.Close(context.Background())
+	defer func() {
+		closeCtx, stop := context.WithTimeout(context.Background(), nodeLeaseTimeout)
+		defer stop()
+		store.Close(closeCtx)
+	}()
 	key, e := NodeKey()
 	if e != nil {
 		return e
@@ -121,7 +127,12 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 			return e
 		}
 	}
-	defer store.Release(context.Background(), mode)
+	defer releaseNodeLease(func(releaseCtx context.Context) error { return store.Release(releaseCtx, mode) })
+	renew := func(attempt context.Context) error { return store.Renew(attempt, mode) }
+	confirmed, e := confirmInitialNodeLease(ctx, renew)
+	if e != nil {
+		return fmt.Errorf("初始节点续租未获确认：%w", e)
+	}
 	server := &transport.Server{Store: store, Mode: mode, NodeKey: key}
 	var engine *game.Engine
 	if mode == "game" {
@@ -135,39 +146,34 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	} else if mode == "gm" {
 		address = cfg.GMAddress
 	}
-	httpServer := &http.Server{Addr: address, Handler: server.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second, MaxHeaderBytes: 16 * 1024}
+	httpServer := &http.Server{Addr: address, Handler: server.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second,
+		MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return ctx }}
 	done := make(chan error, 1)
 	go func() { done <- httpServer.ListenAndServe() }()
+	leaseEvents := make(chan nodeLeaseEvent, 4)
+	go logNodeLeaseEvents(ctx, mode, leaseEvents)
 	go func() {
-		ticker := time.NewTicker(3 * time.Second)
-		defer ticker.Stop()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case <-ticker.C:
-				renew, stop := context.WithTimeout(ctx, 2*time.Second)
-				err := store.Renew(renew, mode)
-				stop()
-				if err != nil {
-					slog.Error("节点租约失败，隔离本进程", "mode", mode, "error", err)
-					cancel()
-					return
-				}
-			}
+		if err := watchNodeLease(ctx, confirmed, renew, leaseEvents); err != nil && ctx.Err() == nil {
+			cancel(err)
+			slog.Error("节点租约失败，隔离本进程", "mode", mode, "error", err)
 		}
 	}()
 	slog.Info("开发节点就绪", "mode", mode, "address", address, "database", cfg.Database, "instance", store.Instance, "runtime_ready", false)
 	select {
 	case err := <-done:
 		if !errors.Is(err, http.ErrServerClosed) {
+			cancel(err)
 			return err
 		}
 	case <-ctx.Done():
 	}
 	shutdown, stop := context.WithTimeout(context.Background(), 8*time.Second)
 	defer stop()
-	return httpServer.Shutdown(shutdown)
+	e = httpServer.Shutdown(shutdown)
+	if parent.Err() == nil {
+		return errors.Join(e, context.Cause(ctx))
+	}
+	return e
 }
 func supervise(ctx context.Context, cfg devconfig.Config) error {
 	if !filepath.IsAbs(cfg.SourcePath) {
