@@ -46,4 +46,4 @@ function makeWorld(ownerHandle,options={}){
 }
 function state(handle=1,kind=1,x=8,y=8,changes={}){return{entityHandle:handle,entityKind:kind,definitionId:kind===3?1:0,position:{x,y},direction:2,moveIntervalMs:kind===1?400:2000,attackSequence:0,castSequence:0,action:0,life:Long.UZERO,movementRevision:Long.UZERO,movementKind:0,hp:Long.fromInt(100),hpMax:Long.fromInt(100),mp:Long.fromInt(100),mpMax:Long.fromInt(100),statuses:[],...changes};}
 function event(changes={}){return{sceneEpoch:Long.UONE,entityHandle:1,entityLife:Long.UZERO,movementRevision:Long.UONE,kind:2,origin:{x:8,y:8},path:[{x:9,y:8}],facingDirection:6,movementDirection:2,stepDurationMs:300,sourceSkillId:8,castId:Long.UZERO,attackSequence:0,castSequence:0,...changes};}
-module.exports={makeWorld,state,event,Long,Sprite,UITransform,Vec3,cc};
+module.exports={makeWorld,state,event,Long,Sprite,UITransform,Vec3,cc,clientAudio:load('ClientAudio')};

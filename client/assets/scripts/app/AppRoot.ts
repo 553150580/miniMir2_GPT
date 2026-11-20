@@ -40,7 +40,7 @@ import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, e
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
-import { bindClientAudio, playClientCue } from './ClientAudio';
+import { bindClientAudio, originalButtonSound, playClientCue } from './ClientAudio';
 import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
@@ -105,7 +105,7 @@ export class AppRoot extends Component {
         const releaseAudio = bindClientAudio(this.node, this.sceneKind);
         if (releaseAudio) {
             this.cleanups.push(releaseAudio);
-            this.tapSound = () => playClientCue('tap');
+            this.tapSound = () => playClientCue(originalButtonSound, 0.68);
         }
         session.scenes ??= new SceneManager(new SceneLoader(new CreatorSceneBackend(director)), ['Boot', 'Login', 'RoleSelect', 'Game'], this.sceneKind);
         const unsubscribe = session.scenes.subscribe(state => {
@@ -438,6 +438,7 @@ export class AppRoot extends Component {
             this.warehouse?.detach();
             void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
         }
+        if (session.teleport.state) this.world?.presentTeleportDeparture(session.teleport.state);
         this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput || session.teleport.blocksInput);
         this.refreshGame();
     }

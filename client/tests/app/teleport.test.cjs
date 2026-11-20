@@ -53,6 +53,7 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 test('真实AppRoot跨图先阻旧输入/释放手动预备owner，Entry后按实际落点准备；资源未好不ACK',async()=>{
  const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');await t.a.attachCurrentEntry();const old=t.a.world,oldBaseline=s.baseline;const id='cd'.repeat(16);s.travel.begin(context(t.h),id,1);const prepared=t.asset('2',true);let primeReleased=0;t.a.preparedTravel={id,assets:prepared,viewport:{release(){primeReleased++;}}};
  const result=sessionPacket(t.h);s.connection.deliver(30014,result);t.a.handleSessionUpdate();assert.equal(t.a.canSendInput(),false);assert.equal(s.baseline,oldBaseline);assert.equal(t.a.world,old);assert.equal(prepared.disposed,1);assert.equal(primeReleased,1);
+ assert.equal(old.teleportDeparture.transitionId,result.transitionId);
  s.connection.sent.length=0;const next={...entry('2','2',2),position:result.position,serverTransitionId:result.transitionId};s.connection.deliver(20002,next);baseline(t.h,next);const gate=deferred();t.setGate(gate);const task=t.a.attachCurrentEntry();await flush();assert.equal(old.disposed,1);assert.equal(s.connection.sent.length,0);assert.deepEqual(t.a.world.position,result.position);s.connection.deliver(6,next);assert.equal(s.ready,false);
  gate.resolve();await task;assert.deepEqual(s.connection.sent.map(p=>p.id),[4]);assert.equal(s.teleport.phase,'awaiting_ready');assert.equal(t.a.canSendInput(),false);s.connection.deliver(6,next);t.a.handleSessionUpdate();assert.equal(t.a.canSendInput(),true);t.a.attachment.dispose();
 });

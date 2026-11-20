@@ -30,6 +30,9 @@ client/.creator/*
 !client/.creator/default-meta.json
 # Creator编辑器问卷服务缓存会自动刷新form标识，不是运行时开屏配置。
 client/settings/v2/packages/information.json
+# 从本机原客户端按原版音频来源清单导入，音频原件和对应导入元数据保存在本机。
+client/assets/resources/audio/*.wav
+client/assets/resources/audio/*.wav.meta
 server/minimir
 outputs/server-dev/nbserver
 conf/dev/*.local.json

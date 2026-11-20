@@ -17,6 +17,8 @@ import type { TeleportObservation } from './TeleportModel';
 import type { PetBornPlayback } from './PetBornModel';
 import { WorldAudio } from './WorldAudio';
 import { playClientCue } from './ClientAudio';
+import { originalActorSound, originalWeaponImpactSound } from './OriginalActorAudio';
+import { originalSkillAudio, originalSkillStrikeAudio, originalTeleportAudio } from './OriginalSkillAudio';
 import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
 
@@ -48,6 +50,9 @@ export class GameWorldView {
     private lastAttackId = 0n;
     private lastCastSoundId = 0n;
     private lastImpactSoundId = 0n;
+    private lastTeleportSound = '';
+    private readonly heardSkillImpacts = new Set<string>();
+    private skillFlights: Array<{ clip: string; at: number; caster: number; life: string }> = [];
     private audio?: WorldAudio;
     private additiveMaterial?: Material;
     private presentationScope = '';
@@ -60,7 +65,7 @@ export class GameWorldView {
         blend: Object.freeze(value.body.map(sprite => { const target = sprite.getRenderMaterial?.(0)?.passes[0]?.blendState.targets[0];
             return Object.freeze({ source: target?.blendSrc ?? null, destination: target?.blendDst ?? null }); })) }))); }
     bindPresentation(identity: AttachmentIdentity, current: () => boolean, retire: () => void = () => {}): void {
-        if (this.presentationScope !== attachmentKey(identity)) this.weaponEquipped = true;
+        if (this.presentationScope !== attachmentKey(identity)) { this.weaponEquipped = true; this.weaponSoundItem = undefined; }
         this.presentationScope = attachmentKey(identity); this.presentationCurrent = current; this.retirePresentation = retire;
     }
     observeEquipment(identity: AttachmentIdentity, playerHandle: number, inventory: { equipped: readonly { slot: number; item: { itemId: number } }[] } | null): boolean {
@@ -68,7 +73,7 @@ export class GameWorldView {
             || playerHandle !== this.playerHandle || !inventory || !Array.isArray(inventory.equipped)) return false;
         const weapon = inventory.equipped.find(entry => entry.slot === 0);
         if (weapon && !this.gameplay.items.some((row: any) => row.item_id === weapon.item.itemId && row.kind === 'equipment' && row.equip_slot === 0)) return false;
-        this.weaponEquipped = !!weapon; return true;
+        this.weaponEquipped = !!weapon; this.weaponSoundItem = weapon?.item.itemId ?? null; return true;
     }
     private visuals = new Map<number, Visual>();
     private projection?: GridProjection;
@@ -82,6 +87,7 @@ export class GameWorldView {
     private playerPosition: { x: number; y: number } | null = null;
     // 未取得当前附着库存时沿用既有候选层；只有明确空槽才能隐藏自己的武器。
     private weaponEquipped = true;
+    private weaponSoundItem?: number | null;
     // 仅显式开发验收网址输出入场及后续两个窗口，不创建诊断UI或读取输入框。
     private audit = typeof location !== 'undefined' && new URLSearchParams(location.search).get('renderQA') === '1'
         ? { stage: 'initial', start: 0, last: 0, updates: 0, maxGap: 0, changedFrames: 0, intermediate: [0, 0, 0, 0] } : null;
@@ -173,7 +179,13 @@ export class GameWorldView {
         if (id <= this.lastCastSoundId || !visual || visual.state.hp.isZero() || visual.state.life.toString() !== event.casterLife.toString()) return;
         this.lastCastSoundId = id;
         if (!cue) {
-            if (event.casterHandle === this.playerHandle) playClientCue('spell');
+            const sound = originalSkillAudio(event.skillId);
+            playClientCue(sound?.cast);
+            if (sound?.fly && this.skillFlights.length < 32) {
+                const delay = Math.min(event.delayMs, definition.impact_base_ms);
+                if (delay > 0) this.skillFlights.push({ clip: sound.fly, at: game.totalTime + delay, caster: event.casterHandle, life: event.casterLife.toString() });
+                else playClientCue(sound.fly);
+            }
             return;
         }
         this.audio?.play(0, cue, () => !this.disposed && this.presentationCurrent() && this.visuals.get(event.casterHandle) === visual
@@ -196,15 +208,24 @@ export class GameWorldView {
     acceptImpact(event: ImpactEvent): void {
         if (this.disposed) return;
         this.effects?.impact(event, game.totalTime);
-        if (!this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString()
-            || (event.casterHandle !== this.playerHandle && event.targetHandle !== this.playerHandle)
-            || (event.outcome !== 1 && event.outcome !== 4) || BigInt(event.amount.toString()) <= 0n) return;
-        const target = this.visuals.get(event.targetHandle);
-        if (!target || target.state.life.toString() !== event.targetLife.toString()) return;
+        if (!this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString() || (event.outcome !== 1 && event.outcome !== 4)) return;
+        const target = this.visuals.get(event.targetHandle), caster = this.visuals.get(event.casterHandle);
+        if (event.targetHandle && (!target || target.state.life.toString() !== event.targetLife.toString())) return;
         const id = BigInt(event.eventId.toString());
         if (id <= this.lastImpactSoundId) return;
         this.lastImpactSoundId = id;
-        playClientCue(event.healing ? 'mend' : 'impact');
+        const impact = originalSkillAudio(event.skillId)?.impact;
+        if (impact) {
+            const cast = event.castId.toString(), key = `${event.casterHandle}:${cast}:${event.skillId}`;
+            if (cast !== '0') {
+                if (this.heardSkillImpacts.has(key)) return;
+                this.heardSkillImpacts.add(key);
+                if (this.heardSkillImpacts.size > 64) this.heardSkillImpacts.delete(this.heardSkillImpacts.values().next().value!);
+            }
+            playClientCue(impact);
+        } else if (!event.healing && BigInt(event.amount.toString()) > 0n && target && caster && event.casterHandle === this.playerHandle && event.attackSequence > 0) {
+            playClientCue(originalWeaponImpactSound(caster.state, target.state, this.weaponSoundItem));
+        }
     }
     acceptDisplacement(event: DisplacementEvent): void {
         if (this.disposed || !this.map) return;
@@ -217,6 +238,7 @@ export class GameWorldView {
         visual.motion.displace(event, now, event.entityHandle === this.playerHandle, accepted.recover);
         visual.state = { ...visual.state, position: visual.movement.position, direction: event.facingDirection,
             movementRevision: event.movementRevision, movementKind: event.kind };
+        if (this.presentationCurrent() && event.entityHandle === this.playerHandle && event.kind === 4 && event.sourceSkillId === 21) playClientCue(originalTeleportAudio.arrival);
         this.effects?.displacement(event, now, event.entityHandle === this.playerHandle);
         this.update(0, this.job);
     }
@@ -227,6 +249,14 @@ export class GameWorldView {
             || player.state.movementRevision?.toString() !== result.movementRevision || !result.position
             || player.state.position.x !== result.position.x || player.state.position.y !== result.position.y) return;
         this.effects?.arrival(result.transitionId, this.playerHandle, result.playerLife, result.position, game.totalTime);
+        playClientCue(originalTeleportAudio.arrival);
+    }
+    presentTeleportDeparture(result: TeleportObservation): void {
+        const player = this.visuals.get(this.playerHandle), key = `${result.playerLife}:${result.castId}`;
+        if (this.disposed || !this.presentationCurrent() || result.outcome !== 1 || result.fromSceneEpoch !== this.sceneEpoch.toString()
+            || player?.state.life.toString() !== result.playerLife || key === this.lastTeleportSound) return;
+        this.lastTeleportSound = key;
+        playClientCue(originalTeleportAudio.departure);
     }
     acceptAttack(event: AttackEvent): void {
         if (this.disposed || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;
@@ -235,7 +265,10 @@ export class GameWorldView {
         if (event.casterLife != null && visual?.state.life?.toString() !== event.casterLife.toString()) return;
         visual?.animation?.acceptAttack(event.attackSequence, event.direction);
         this.effects?.attack(event, game.totalTime);
-        if (visual && event.casterHandle === this.playerHandle && this.presentationCurrent()) playClientCue('swing');
+        if (visual && event.casterHandle === this.playerHandle && this.presentationCurrent()) {
+            playClientCue(originalActorSound(visual.state, 'attack', this.job, this.weaponSoundItem));
+            playClientCue(originalSkillStrikeAudio(event.skillId ?? 0, this.job === 1 ? 1 : 0));
+        }
     }
 
     grid(x: number, y: number): Vec3 { const point = (this.projection ??= new GridProjection(this.map)).project(x, y); return new Vec3(point.x, point.y); }
@@ -307,6 +340,7 @@ export class GameWorldView {
                 if (replaced) this.removeVisual(replaced);
             }
             const previous = visual.state;
+            if (!replaced && this.presentationCurrent() && previous.life?.toString() === state.life?.toString()) this.observeActorSound(previous, state);
             if (previous.movementRevision?.toString() !== state.movementRevision?.toString()) visual.animation?.cancelAppearance();
             if (previous.life?.toString() !== state.life?.toString()) {
                 visual.motion.reset(); visual.animation = visual.profile ? new EntityAnimation(visual.profile.layers[0].actions) : null;
@@ -337,6 +371,15 @@ export class GameWorldView {
         this.update(0, this.job);
     }
 
+    private observeActorSound(previous: any, state: any): void {
+        if (state.entityKind !== 1 && state.attackSequence > previous.attackSequence) {
+            playClientCue(originalActorSound(state, 'attack'), 0.75);
+            playClientCue(originalActorSound(state, 'swing'), 0.75);
+        }
+        if (!previous.hp.isZero() && state.hp.isZero()) playClientCue(originalActorSound(state, 'death'));
+        else if (state.hp.lessThan(previous.hp) && state.hpMax.equals(previous.hpMax)) playClientCue(originalActorSound(state, 'struck'), 0.85);
+    }
+
     // 镜头跟随显示位置，避免权威格跳变抵消实体插值；窗口变化仍能独立重夹。
     refitCamera(): void {
         if (this.disposed || !this.map || !this.playerPosition || !isValid(this.viewport, true) || !isValid(this.world, true)) return;
@@ -362,6 +405,12 @@ export class GameWorldView {
         if (this.disposed || !this.assets) return;
         const now = game.totalTime;
         this.audio?.update();
+        if (this.skillFlights.length) {
+            if (this.presentationCurrent()) for (const flight of this.skillFlights) {
+                if (now >= flight.at && now < flight.at + 250 && this.visuals.get(flight.caster)?.state.life.toString() === flight.life) playClientCue(flight.clip);
+            }
+            this.skillFlights = this.presentationCurrent() ? this.skillFlights.filter(flight => flight.at > now) : [];
+        }
         const audit = _dt > 0 ? this.audit : null;
         if (audit) {
             if (!audit.updates) audit.start = now;
