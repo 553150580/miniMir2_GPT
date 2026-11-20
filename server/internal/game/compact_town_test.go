@@ -16,6 +16,7 @@ func TestCompactTownTravelRequiresAllowedTargetsAndKeepsOriginalPersonalWorld(t 
 	w, r, c, now := mapTravelWorker(t)
 	f := &w.e.Store.Cfg.Fixture
 	personal, position, monster, pet := r.currentWorld(), r.Player.Pos, r.Monsters[0], r.Pet
+	r.AutoTarget = reference(r, monster)
 	r.Loot = []*entity{{Handle: 3000, Kind: 4, Pos: position}}
 	r.LootUntil = now.Add(time.Minute)
 	loot, cutoff := r.Loot[0], r.LootUntil
@@ -73,7 +74,7 @@ func TestCompactTownTravelRequiresAllowedTargetsAndKeepsOriginalPersonalWorld(t 
 			w.prepareMapTravelAt(r, frame, now)
 		}
 		commit(id, town.PlayerSpawn)
-		if r.SavedPersonal != personal || r.Auto || len(r.Loot) != 0 || r.MonsterCount != 0 || len(r.Monsters) != 0 {
+		if r.SavedPersonal != personal || r.Auto || r.AutoTarget != (actorRef{}) || len(r.Loot) != 0 || r.MonsterCount != 0 || len(r.Monsters) != 0 {
 			t.Fatal("城镇之间旅行替换了休眠个人现场，或开启城镇挂机")
 		}
 		reject(prepare(travelToTown, id), p.CodeLineForbidden)
@@ -85,7 +86,7 @@ func TestCompactTownTravelRequiresAllowedTargetsAndKeepsOriginalPersonalWorld(t 
 	w.prepareMapTravelAt(r, prepare(travelToPersonal, 1), now)
 	commit(1, position)
 	if r.currentWorld() != personal || r.SavedPersonal != nil || r.Monsters[0] != monster ||
-		r.Loot[0] != loot || !r.LootUntil.Equal(cutoff) || !r.Auto {
+		r.Loot[0] != loot || !r.LootUntil.Equal(cutoff) || !r.Auto || r.AutoTarget != (actorRef{}) {
 		t.Fatal("返回时没有恢复原角色脚点、怪物、掉落截止和挂机偏好")
 	}
 }

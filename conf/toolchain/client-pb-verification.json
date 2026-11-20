@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 83,
+  "message_count": 84,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -54,6 +54,7 @@
     "CombatImpact",
     "AutoSkillSettings",
     "AutoBattleIntent",
+    "AutoTargetIntent",
     "HostingState",
     "DeathNotice",
     "ReviveChoice",
@@ -90,8 +91,8 @@
     "WarehouseItemChange",
     "WarehouseActionResult"
   ],
-  "int64_field_count": 196,
-  "int64_boundary_cases": 647,
+  "int64_field_count": 198,
+  "int64_boundary_cases": 653,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -790,6 +791,18 @@
       "cases": 3
     },
     {
+      "message": "AutoTargetIntent",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "AutoTargetIntent",
+      "field": "target_life",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "HostingState",
       "field": "state_revision",
       "type": "uint64",
@@ -1402,7 +1415,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "019119a1a3c3b9c77b3cdf2b8aadc2ebbe225b589b0600f274585a7335b3d8e6"
+      "sha256": "92959daabb94eec961048759920273290f9475a802a8b411ce30127a2100404d"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -1412,13 +1425,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "153b3947df9f666de6d8f6952f829cdfb8d358fb90e8795292bf89c7157d029b",
-      "bytes": 1420549
+      "sha256": "0329820960b7bd5384af938f0ad22b1f8e5d3071bfe0c0c395a6b0673aacd7b4",
+      "bytes": 1435065
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "3a2d0dc0a0d8048368343a0e51a9ba333221af7d9b8f43919fb0bee78e2644e5",
-      "bytes": 446892
+      "sha256": "cc0245cfa464fb29d41525f5e197568829dd9ba6ff972595a1518ec7b11f824e",
+      "bytes": 451939
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

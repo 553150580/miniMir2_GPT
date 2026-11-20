@@ -89,6 +89,11 @@ func (w *worker) autoBattleIntent(r *room, frame wire.Frame) {
 		r.AutoSkills = settings
 	}
 	r.Auto = q.Enabled
+	if !r.Auto {
+		r.AutoTarget = actorRef{}
+	} else {
+		r.liveAutoTarget()
+	}
 	w.hosting(r, frame.Request)
 	w.snapshot(r)
 }

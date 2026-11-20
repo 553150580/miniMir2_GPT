@@ -324,6 +324,13 @@ message AutoBattleIntent {
   // 仅更新施法偏好时怪物数量为 0；城镇也允许修改偏好。
   AutoSkillSettings auto_skill_settings = 4;
 }
+// 点选活怪只能填入尚无有效目标的自动战斗锁。
+message AutoTargetIntent {
+  uint64 scene_epoch = 1;
+  uint32 input_sequence = 2;
+  uint32 target_handle = 3;
+  uint64 target_life = 4;
+}
 message HostingState {
   uint32 remain_hosting_sec = 1;
   bool auto_battle_enabled = 2;

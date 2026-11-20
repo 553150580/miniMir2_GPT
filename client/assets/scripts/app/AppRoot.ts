@@ -1121,6 +1121,12 @@ export class AppRoot extends Component {
         if (this.consumeGround(entity.position)) return;
         this.selectedTarget = { handle: entity.entityHandle, life: entity.life.toString() };
         this.refreshGame();
+        if (session.hosting?.autoBattleEnabled && session.entry?.sceneKind === 1 && entity.entityKind === 3 && !entity.hp.isZero()) {
+            try {
+                session.connection.send(30016, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
+                    targetHandle: entity.entityHandle, targetLife: entity.life });
+            } catch (error) { this.error(error); }
+        }
     }
 
     private selectTownNpc(npc: TownNpc): void {

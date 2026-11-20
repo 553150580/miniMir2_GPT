@@ -226,6 +226,7 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 	}
 	if mapChanged {
 		w.cancelTownNavigation(r)
+		r.AutoTarget = actorRef{}
 	}
 	old.PlayerPosition = r.Player.Pos
 	old.HasPet = r.worldPet(old) != nil

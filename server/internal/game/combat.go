@@ -255,6 +255,9 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 		removeDeathStatuses(target)
 		target.Action = 4
 		if target.Kind == 3 {
+			if r.AutoTarget == referenceIn(world, target) {
+				r.AutoTarget = actorRef{}
+			}
 			target.RespawnAt = now.Add(10 * time.Second)
 			if len(context) > 0 && w.sourceTimeline() {
 				until := r.Role.PrivilegeUntil
@@ -270,6 +273,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 				w.isolateRoom(r)
 			}
 		} else if target.Kind == 1 {
+			r.AutoTarget = actorRef{}
 			w.killOwnedPet(r, now)
 			r.DeathID = domain.ID()
 			w.deathNotice(r)

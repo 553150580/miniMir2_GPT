@@ -362,10 +362,11 @@ export class GameWorldView {
             visual.state = decision === 'stale' ? { ...state, position: visual.movement.position, direction: previous.direction } : state;
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId, state.entityHandle === this.playerHandle ? this.playerName : '', this.job, this.gameplay);
-            name.active = !!displayName;
+            const showHead = state.entityKind !== 3 || !state.hp.isZero();
+            name.active = showHead && !!displayName;
             name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体` : displayName;
             const hp = visual.node.getChildByName('HP')!;
-            hp.active = state.entityKind !== 4;
+            hp.active = showHead && state.entityKind !== 4;
             hp.getComponent(ProgressBar)!.progress = state.hpMax.isZero() ? 0
                 : Math.max(0, Math.min(1, Number(BigInt(state.hp.toString()) * 10000n / BigInt(state.hpMax.toString())) / 10000));
         }

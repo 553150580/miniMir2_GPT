@@ -3140,6 +3140,75 @@ func (x *AutoBattleIntent) GetAutoSkillSettings() *AutoSkillSettings {
 	return nil
 }
 
+// 点选活怪只能填入尚无有效目标的自动战斗锁。
+type AutoTargetIntent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	InputSequence uint32                 `protobuf:"varint,2,opt,name=input_sequence,json=inputSequence,proto3" json:"input_sequence,omitempty"`
+	TargetHandle  uint32                 `protobuf:"varint,3,opt,name=target_handle,json=targetHandle,proto3" json:"target_handle,omitempty"`
+	TargetLife    uint64                 `protobuf:"varint,4,opt,name=target_life,json=targetLife,proto3" json:"target_life,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AutoTargetIntent) Reset() {
+	*x = AutoTargetIntent{}
+	mi := &file_world_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AutoTargetIntent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AutoTargetIntent) ProtoMessage() {}
+
+func (x *AutoTargetIntent) ProtoReflect() protoreflect.Message {
+	mi := &file_world_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AutoTargetIntent.ProtoReflect.Descriptor instead.
+func (*AutoTargetIntent) Descriptor() ([]byte, []int) {
+	return file_world_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *AutoTargetIntent) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *AutoTargetIntent) GetInputSequence() uint32 {
+	if x != nil {
+		return x.InputSequence
+	}
+	return 0
+}
+
+func (x *AutoTargetIntent) GetTargetHandle() uint32 {
+	if x != nil {
+		return x.TargetHandle
+	}
+	return 0
+}
+
+func (x *AutoTargetIntent) GetTargetLife() uint64 {
+	if x != nil {
+		return x.TargetLife
+	}
+	return 0
+}
+
 type HostingState struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	RemainHostingSec  uint32                 `protobuf:"varint,1,opt,name=remain_hosting_sec,json=remainHostingSec,proto3" json:"remain_hosting_sec,omitempty"`
@@ -3152,7 +3221,7 @@ type HostingState struct {
 
 func (x *HostingState) Reset() {
 	*x = HostingState{}
-	mi := &file_world_proto_msgTypes[32]
+	mi := &file_world_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3164,7 +3233,7 @@ func (x *HostingState) String() string {
 func (*HostingState) ProtoMessage() {}
 
 func (x *HostingState) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[32]
+	mi := &file_world_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3177,7 +3246,7 @@ func (x *HostingState) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingState.ProtoReflect.Descriptor instead.
 func (*HostingState) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{32}
+	return file_world_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *HostingState) GetRemainHostingSec() uint32 {
@@ -3221,7 +3290,7 @@ type DeathNotice struct {
 
 func (x *DeathNotice) Reset() {
 	*x = DeathNotice{}
-	mi := &file_world_proto_msgTypes[33]
+	mi := &file_world_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3233,7 +3302,7 @@ func (x *DeathNotice) String() string {
 func (*DeathNotice) ProtoMessage() {}
 
 func (x *DeathNotice) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[33]
+	mi := &file_world_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3246,7 +3315,7 @@ func (x *DeathNotice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeathNotice.ProtoReflect.Descriptor instead.
 func (*DeathNotice) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{33}
+	return file_world_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *DeathNotice) GetDeathId() []byte {
@@ -3295,7 +3364,7 @@ type ReviveChoice struct {
 
 func (x *ReviveChoice) Reset() {
 	*x = ReviveChoice{}
-	mi := &file_world_proto_msgTypes[34]
+	mi := &file_world_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3307,7 +3376,7 @@ func (x *ReviveChoice) String() string {
 func (*ReviveChoice) ProtoMessage() {}
 
 func (x *ReviveChoice) ProtoReflect() protoreflect.Message {
-	mi := &file_world_proto_msgTypes[34]
+	mi := &file_world_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3320,7 +3389,7 @@ func (x *ReviveChoice) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviveChoice.ProtoReflect.Descriptor instead.
 func (*ReviveChoice) Descriptor() ([]byte, []int) {
-	return file_world_proto_rawDescGZIP(), []int{34}
+	return file_world_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ReviveChoice) GetDeathId() []byte {
@@ -3689,7 +3758,14 @@ const file_world_proto_rawDesc = "" +
 	"sceneEpoch\x12\x18\n" +
 	"\aenabled\x18\x02 \x01(\bR\aenabled\x12#\n" +
 	"\rmonster_count\x18\x03 \x01(\rR\fmonsterCount\x12M\n" +
-	"\x13auto_skill_settings\x18\x04 \x01(\v2\x1d.minimir.v1.AutoSkillSettingsR\x11autoSkillSettings\"\xe2\x01\n" +
+	"\x13auto_skill_settings\x18\x04 \x01(\v2\x1d.minimir.v1.AutoSkillSettingsR\x11autoSkillSettings\"\xa0\x01\n" +
+	"\x10AutoTargetIntent\x12\x1f\n" +
+	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
+	"sceneEpoch\x12%\n" +
+	"\x0einput_sequence\x18\x02 \x01(\rR\rinputSequence\x12#\n" +
+	"\rtarget_handle\x18\x03 \x01(\rR\ftargetHandle\x12\x1f\n" +
+	"\vtarget_life\x18\x04 \x01(\x04R\n" +
+	"targetLife\"\xe2\x01\n" +
 	"\fHostingState\x12,\n" +
 	"\x12remain_hosting_sec\x18\x01 \x01(\rR\x10remainHostingSec\x12.\n" +
 	"\x13auto_battle_enabled\x18\x02 \x01(\bR\x11autoBattleEnabled\x12%\n" +
@@ -3719,7 +3795,7 @@ func file_world_proto_rawDescGZIP() []byte {
 	return file_world_proto_rawDescData
 }
 
-var file_world_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_world_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_world_proto_goTypes = []any{
 	(*EnterLineRequest)(nil),   // 0: minimir.v1.EnterLineRequest
 	(*EnterLineResult)(nil),    // 1: minimir.v1.EnterLineResult
@@ -3753,47 +3829,48 @@ var file_world_proto_goTypes = []any{
 	(*CombatImpact)(nil),       // 29: minimir.v1.CombatImpact
 	(*AutoSkillSettings)(nil),  // 30: minimir.v1.AutoSkillSettings
 	(*AutoBattleIntent)(nil),   // 31: minimir.v1.AutoBattleIntent
-	(*HostingState)(nil),       // 32: minimir.v1.HostingState
-	(*DeathNotice)(nil),        // 33: minimir.v1.DeathNotice
-	(*ReviveChoice)(nil),       // 34: minimir.v1.ReviveChoice
-	(*GridPoint)(nil),          // 35: minimir.v1.GridPoint
-	(*RoleKey)(nil),            // 36: minimir.v1.RoleKey
-	(*OperationContext)(nil),   // 37: minimir.v1.OperationContext
+	(*AutoTargetIntent)(nil),   // 32: minimir.v1.AutoTargetIntent
+	(*HostingState)(nil),       // 33: minimir.v1.HostingState
+	(*DeathNotice)(nil),        // 34: minimir.v1.DeathNotice
+	(*ReviveChoice)(nil),       // 35: minimir.v1.ReviveChoice
+	(*GridPoint)(nil),          // 36: minimir.v1.GridPoint
+	(*RoleKey)(nil),            // 37: minimir.v1.RoleKey
+	(*OperationContext)(nil),   // 38: minimir.v1.OperationContext
 }
 var file_world_proto_depIdxs = []int32{
-	35, // 0: minimir.v1.EnterLineResult.position:type_name -> minimir.v1.GridPoint
+	36, // 0: minimir.v1.EnterLineResult.position:type_name -> minimir.v1.GridPoint
 	30, // 1: minimir.v1.EnterWorldAck.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
-	35, // 2: minimir.v1.MapTravelPlan.position:type_name -> minimir.v1.GridPoint
-	35, // 3: minimir.v1.RoleBindingPoint.center:type_name -> minimir.v1.GridPoint
-	36, // 4: minimir.v1.BindingState.role:type_name -> minimir.v1.RoleKey
+	36, // 2: minimir.v1.MapTravelPlan.position:type_name -> minimir.v1.GridPoint
+	36, // 3: minimir.v1.RoleBindingPoint.center:type_name -> minimir.v1.GridPoint
+	37, // 4: minimir.v1.BindingState.role:type_name -> minimir.v1.RoleKey
 	8,  // 5: minimir.v1.BindingState.binding:type_name -> minimir.v1.RoleBindingPoint
-	36, // 6: minimir.v1.TeleportResult.role:type_name -> minimir.v1.RoleKey
-	35, // 7: minimir.v1.TeleportResult.position:type_name -> minimir.v1.GridPoint
+	37, // 6: minimir.v1.TeleportResult.role:type_name -> minimir.v1.RoleKey
+	36, // 7: minimir.v1.TeleportResult.position:type_name -> minimir.v1.GridPoint
 	11, // 8: minimir.v1.OwnedPetState.pet_training:type_name -> minimir.v1.PetTrainingState
-	36, // 9: minimir.v1.PetBorn.role:type_name -> minimir.v1.RoleKey
-	35, // 10: minimir.v1.EntityState.position:type_name -> minimir.v1.GridPoint
+	37, // 9: minimir.v1.PetBorn.role:type_name -> minimir.v1.RoleKey
+	36, // 10: minimir.v1.EntityState.position:type_name -> minimir.v1.GridPoint
 	17, // 11: minimir.v1.EntityState.statuses:type_name -> minimir.v1.EntityStatusState
 	18, // 12: minimir.v1.EntityState.combat_attributes:type_name -> minimir.v1.CombatAttributes
 	11, // 13: minimir.v1.EntityState.pet_training:type_name -> minimir.v1.PetTrainingState
-	35, // 14: minimir.v1.EntityDisplacement.origin:type_name -> minimir.v1.GridPoint
-	35, // 15: minimir.v1.EntityDisplacement.path:type_name -> minimir.v1.GridPoint
-	35, // 16: minimir.v1.NavigationState.destination:type_name -> minimir.v1.GridPoint
+	36, // 14: minimir.v1.EntityDisplacement.origin:type_name -> minimir.v1.GridPoint
+	36, // 15: minimir.v1.EntityDisplacement.path:type_name -> minimir.v1.GridPoint
+	36, // 16: minimir.v1.NavigationState.destination:type_name -> minimir.v1.GridPoint
 	14, // 17: minimir.v1.SceneBaselineChunk.entities:type_name -> minimir.v1.EntityState
 	25, // 18: minimir.v1.SceneBaselineChunk.skill_mode_state:type_name -> minimir.v1.SkillModeState
 	16, // 19: minimir.v1.SceneBaselineChunk.navigation_state:type_name -> minimir.v1.NavigationState
 	12, // 20: minimir.v1.SceneBaselineChunk.owned_pet:type_name -> minimir.v1.OwnedPetState
-	35, // 21: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
-	35, // 22: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 21: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
+	36, // 22: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
 	24, // 23: minimir.v1.SkillModeState.states:type_name -> minimir.v1.SkillModeEntry
-	35, // 24: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
-	35, // 25: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
-	35, // 26: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	35, // 27: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
-	35, // 28: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	35, // 29: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 24: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
+	36, // 25: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
+	36, // 26: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 27: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
+	36, // 28: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 29: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
 	30, // 30: minimir.v1.AutoBattleIntent.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
 	30, // 31: minimir.v1.HostingState.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
-	37, // 32: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
+	38, // 32: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
 	33, // [33:33] is the sub-list for method output_type
 	33, // [33:33] is the sub-list for method input_type
 	33, // [33:33] is the sub-list for extension type_name
@@ -3813,7 +3890,7 @@ func file_world_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_world_proto_rawDesc), len(file_world_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   35,
+			NumMessages:   36,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

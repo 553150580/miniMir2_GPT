@@ -6044,6 +6044,120 @@ export namespace minimir {
         }
 
         /**
+         * Properties of an AutoTargetIntent.
+         * @deprecated Use minimir.v1.AutoTargetIntent.$Properties instead.
+         */
+        interface IAutoTargetIntent extends minimir.v1.AutoTargetIntent.$Properties {
+        }
+
+        /** Represents an AutoTargetIntent. */
+        class AutoTargetIntent {
+
+            /**
+             * Constructs a new AutoTargetIntent.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.AutoTargetIntent.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** AutoTargetIntent scene_epoch. */
+            scene_epoch: Long;
+
+            /** AutoTargetIntent input_sequence. */
+            input_sequence: number;
+
+            /** AutoTargetIntent target_handle. */
+            target_handle: number;
+
+            /** AutoTargetIntent target_life. */
+            target_life: Long;
+
+            /**
+             * Creates a new AutoTargetIntent instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns AutoTargetIntent instance
+             */
+            static create(properties: minimir.v1.AutoTargetIntent.$Shape): minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape;
+            static create(properties?: minimir.v1.AutoTargetIntent.$Properties): minimir.v1.AutoTargetIntent;
+
+            /**
+             * Encodes the specified AutoTargetIntent message. Does not implicitly {@link minimir.v1.AutoTargetIntent.verify|verify} messages.
+             * @param message AutoTargetIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.AutoTargetIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified AutoTargetIntent message, length delimited. Does not implicitly {@link minimir.v1.AutoTargetIntent.verify|verify} messages.
+             * @param message AutoTargetIntent message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.AutoTargetIntent.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an AutoTargetIntent message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape} AutoTargetIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape;
+
+            /**
+             * Decodes an AutoTargetIntent message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape} AutoTargetIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape;
+
+            /**
+             * Verifies an AutoTargetIntent message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for AutoTargetIntent
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace AutoTargetIntent {
+
+            /** Properties of an AutoTargetIntent. */
+            interface $Properties {
+
+                /** AutoTargetIntent scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** AutoTargetIntent input_sequence */
+                input_sequence?: (number|null);
+
+                /** AutoTargetIntent target_handle */
+                target_handle?: (number|null);
+
+                /** AutoTargetIntent target_life */
+                target_life?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an AutoTargetIntent. */
+            type $Shape = minimir.v1.AutoTargetIntent.$Properties;
+        }
+
+        /**
          * Properties of a HostingState.
          * @deprecated Use minimir.v1.HostingState.$Properties instead.
          */

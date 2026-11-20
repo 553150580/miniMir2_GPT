@@ -60,6 +60,24 @@ test('普通点怪只选择，详情由独立入口打开，死亡或替换的�
     instance.openTargetDetails();assert.equal(details.length,1);
     instance.castSkill(row(1));assert.equal(sent.at(-1).value.targetHandle,8);
 });
+test('野外自动时点活怪提交当前场景、输入序号及原生命代次，瞄准与手动点选不提交自动锁', () => {
+    const { instance, session, sent } = app();
+    const monster = { ...session.baseline.entities[1], hp: Long.ONE, life: Long.MAX_UNSIGNED_VALUE };
+    instance.selectWorldEntity(monster);
+    assert.equal(sent.length, 0);
+    session.hosting = { autoBattleEnabled: true };
+    for (const entity of [{ ...monster, entityKind: 2 }, { ...monster, hp: Long.ZERO }]) instance.selectWorldEntity(entity);
+    session.entry.sceneKind = 2;
+    instance.selectWorldEntity(monster);
+    session.entry.sceneKind = 1;
+    instance.consumeGround = () => true;
+    instance.selectWorldEntity(monster);
+    assert.equal(sent.length, 0);
+    instance.consumeGround = () => false;
+    instance.selectWorldEntity(monster);
+    assert.deepEqual(sent, [{ id: 30016, value: { sceneEpoch: session.entry.sceneEpoch, inputSequence: 1,
+        targetHandle: monster.entityHandle, targetLife: monster.life } }]);
+});
 test('普通触摸NPC保留详情，技能瞄准中轻触NPC按原格确认且不改地面导航',()=>{
     const {instance,sent,row}=app(),popups=[];
     const npc={name:'书店掌柜',role:'书店',position:{x:4,y:4}};

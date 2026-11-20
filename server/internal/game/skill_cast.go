@@ -424,6 +424,7 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 		return false
 	}
 	pet := r.worldPet(r.currentWorld())
+	focus := r.liveAutoTarget()
 	skills := append([]devconfig.Skill(nil), w.e.Store.Cfg.Fixture.Skills...)
 	sort.SliceStable(skills, func(i, j int) bool {
 		if skills[i].AutoPriority == skills[j].AutoPriority {
@@ -440,8 +441,6 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) || r.Player.MP < s.MPBaseCost+int64(rank)*s.MPLevelCost {
 			continue
 		}
-		var target *entity
-		var grid *pb.GridPoint
 		direction := r.Player.Direction
 		if handler.Status {
 			missing := func(e *entity) bool { return e != nil && e.HP > 0 && e.Statuses[s.BuffID] == nil }
@@ -476,36 +475,13 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 			}
 			continue
 		}
-		if handler.SelfArea {
-			if len(w.areaTargets(r, s, r.Player.Pos)) < s.AutoMinTargets {
-				continue
-			}
-			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
-				return true
-			}
-			continue
-		}
-		if handler.Direction {
-			count := 0
-			for d := range directions {
-				n := len(w.lineTargets(r, pendingCast{Skill: s, TargetPoint: r.Player.Pos, Direction: uint32(d)}))
-				if n > count {
-					count, direction = n, uint32(d)
-				}
-			}
-			if count < s.AutoMinTargets {
-				continue
-			}
-			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
-				return true
-			}
-			continue
-		}
 		if handler.Healing {
-			target = w.automaticHealingTarget(r, pet, s.RangeCells)
+			target := w.automaticHealingTarget(r, pet, s.RangeCells)
 			if target == nil {
 				continue
 			}
+			var grid *pb.GridPoint
+			handle := target.Handle
 			if handler.Area {
 				count := 0
 				for _, e := range w.areaTargets(r, s, target.Pos) {
@@ -517,23 +493,14 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 					continue
 				}
 				grid = pointPB(target.Pos)
-				target = nil
+				handle = 0
 			}
-		} else {
-			target = w.automaticEnemyTarget(r, s, handler.Area)
-			if target == nil {
-				continue
+			if w.castDirected(r, s.ID, handle, 0, direction, now, grid) == 0 {
+				return true
 			}
-			if handler.Area {
-				grid = pointPB(target.Pos)
-				target = nil
-			}
+			continue
 		}
-		handle := uint32(0)
-		if target != nil {
-			handle = target.Handle
-		}
-		if w.castDirected(r, s.ID, handle, 0, direction, now, grid) == 0 {
+		if w.autoOffensiveCast(r, s, handler, focus, now) {
 			return true
 		}
 	}

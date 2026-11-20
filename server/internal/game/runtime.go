@@ -130,6 +130,7 @@ type room struct {
 	Manual                bool
 	ManualDirection       uint32
 	AutoSkills            *autoSkillSettings
+	AutoTarget            actorRef
 	Pending               bool
 	PendingRetry          *job
 	PendingBinding        *safeZoneBindingFact
@@ -462,6 +463,8 @@ func (w *worker) command(c command) {
 		return
 	}
 	switch c.frame.ID {
+	case p.MsgC2SAutoTargetIntent:
+		w.autoTargetIntent(r, c.frame)
 	case p.MsgC2SSkillModeIntent:
 		var q pb.SkillModeIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene {
@@ -686,6 +689,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Destination = nil
 	r.Manual = false
 	r.AutoSkills = nil
+	r.AutoTarget = actorRef{}
 	r.MaterialEconomicSeq, r.MaterialSourceSeq = role.EconomicSeq, role.SourceSeq
 	r.Auto = true
 	r.MonsterCount = 1
@@ -723,6 +727,7 @@ func (w *worker) revivePlayer(r *room) {
 		return
 	}
 	r.Player.Life++
+	r.AutoTarget = actorRef{}
 	r.Player.MovementRevision, r.Player.MovementKind = 0, movementInitial
 	for id, status := range r.Player.Statuses {
 		if status.RemoveOnDeath {

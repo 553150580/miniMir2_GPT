@@ -15901,6 +15901,291 @@ $root.minimir = (function() {
             return AutoBattleIntent;
         })();
 
+        v1.AutoTargetIntent = (function() {
+
+            /**
+             * Properties of an AutoTargetIntent.
+             * @typedef {Object} minimir.v1.AutoTargetIntent.$Properties
+             * @property {Long|null} [scene_epoch] AutoTargetIntent scene_epoch
+             * @property {number|null} [input_sequence] AutoTargetIntent input_sequence
+             * @property {number|null} [target_handle] AutoTargetIntent target_handle
+             * @property {Long|null} [target_life] AutoTargetIntent target_life
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AutoTargetIntent.
+             * @memberof minimir.v1
+             * @interface IAutoTargetIntent
+             * @augments minimir.v1.AutoTargetIntent.$Properties
+             * @deprecated Use minimir.v1.AutoTargetIntent.$Properties instead.
+             */
+
+            /**
+             * Shape of an AutoTargetIntent.
+             * @typedef {minimir.v1.AutoTargetIntent.$Properties} minimir.v1.AutoTargetIntent.$Shape
+             */
+
+            /**
+             * Constructs a new AutoTargetIntent.
+             * @memberof minimir.v1
+             * @classdesc Represents an AutoTargetIntent.
+             * @constructor
+             * @param {minimir.v1.AutoTargetIntent.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var AutoTargetIntent = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AutoTargetIntent scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.AutoTargetIntent
+             * @instance
+             */
+            AutoTargetIntent.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * AutoTargetIntent input_sequence.
+             * @member {number} input_sequence
+             * @memberof minimir.v1.AutoTargetIntent
+             * @instance
+             */
+            AutoTargetIntent.prototype.input_sequence = 0;
+
+            /**
+             * AutoTargetIntent target_handle.
+             * @member {number} target_handle
+             * @memberof minimir.v1.AutoTargetIntent
+             * @instance
+             */
+            AutoTargetIntent.prototype.target_handle = 0;
+
+            /**
+             * AutoTargetIntent target_life.
+             * @member {Long} target_life
+             * @memberof minimir.v1.AutoTargetIntent
+             * @instance
+             */
+            AutoTargetIntent.prototype.target_life = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new AutoTargetIntent instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {minimir.v1.AutoTargetIntent.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.AutoTargetIntent} AutoTargetIntent instance
+             * @type {{
+             *   (properties: minimir.v1.AutoTargetIntent.$Shape): minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape;
+             *   (properties?: minimir.v1.AutoTargetIntent.$Properties): minimir.v1.AutoTargetIntent;
+             * }}
+             */
+            AutoTargetIntent.create = function(properties) {
+                return new AutoTargetIntent(properties);
+            };
+
+            /**
+             * Encodes the specified AutoTargetIntent message. Does not implicitly {@link minimir.v1.AutoTargetIntent.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {minimir.v1.AutoTargetIntent.$Properties} message AutoTargetIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoTargetIntent.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence") && message.input_sequence !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.input_sequence);
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle") && message.target_handle !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.target_handle);
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life") && (typeof message.target_life === "object" ? message.target_life.low || message.target_life.high : message.target_life !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.target_life);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AutoTargetIntent message, length delimited. Does not implicitly {@link minimir.v1.AutoTargetIntent.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {minimir.v1.AutoTargetIntent.$Properties} message AutoTargetIntent message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoTargetIntent.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AutoTargetIntent message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape} AutoTargetIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoTargetIntent.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.AutoTargetIntent();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.input_sequence = value;
+                            else
+                                delete message.input_sequence;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.target_handle = value;
+                            else
+                                delete message.target_handle;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_life = value;
+                            else
+                                delete message.target_life;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AutoTargetIntent message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoTargetIntent & minimir.v1.AutoTargetIntent.$Shape} AutoTargetIntent
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoTargetIntent.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an AutoTargetIntent message.
+             * @function verify
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AutoTargetIntent.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.input_sequence != null && $Object.hasOwnProperty.call(message, "input_sequence"))
+                    if (!$util.isInteger(message.input_sequence))
+                        return "input_sequence: integer expected";
+                if (message.target_handle != null && $Object.hasOwnProperty.call(message, "target_handle"))
+                    if (!$util.isInteger(message.target_handle))
+                        return "target_handle: integer expected";
+                if (message.target_life != null && $Object.hasOwnProperty.call(message, "target_life"))
+                    if (!$util.isInteger(message.target_life) && !(message.target_life && $util.isInteger(message.target_life.low) && $util.isInteger(message.target_life.high)))
+                        return "target_life: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for AutoTargetIntent
+             * @function getTypeUrl
+             * @memberof minimir.v1.AutoTargetIntent
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AutoTargetIntent.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.AutoTargetIntent";
+            };
+
+            return AutoTargetIntent;
+        })();
+
         v1.HostingState = (function() {
 
             /**

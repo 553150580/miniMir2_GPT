@@ -170,24 +170,36 @@ func (w *worker) secondaryTargets(r *room, s devconfig.Skill, direction uint32) 
 }
 
 // Crystal客户端的本子集覆盖顺序：烈火、半月、刺杀、攻杀，模式开关互不覆盖。
-func (w *worker) selectedAttack(r *room, direction uint32, now time.Time) (devconfig.Skill, uint32) {
+func (w *worker) selectedAttack(r *room, direction uint32, now time.Time, focus *entity) (devconfig.Skill, uint32, bool) {
 	front := w.enemyAt(r, stepPoint(r.Player.Pos, direction, 1))
+	if focus != nil && focus != front {
+		// 定点锁位于第二格时，只能选择确实会穿刺该怪的模式。
+		if s, rank, learned := w.learnedBehavior(r, "thrusting"); learned && r.Melee.Thrusting &&
+			focus == w.enemyAt(r, stepPoint(r.Player.Pos, direction, s.SecondaryDistanceCells)) {
+			return s, rank, true
+		}
+		return devconfig.Skill{}, 0, false
+	}
 	if s, rank, learned := w.learnedBehavior(r, "flaming_sword"); learned && r.Melee.Flaming && now.Before(r.Melee.FlamingUntil) && front != nil {
-		return s, rank
+		return s, rank, true
 	}
 	if s, rank, learned := w.learnedBehavior(r, "half_moon"); learned && r.Melee.HalfMoon && r.Player.MP >= s.MPBaseCost+int64(rank)*s.MPLevelCost && (front != nil || len(w.secondaryTargets(r, s, direction)) > 0) {
-		return s, rank
+		return s, rank, true
 	}
 	if s, rank, learned := w.learnedBehavior(r, "thrusting"); learned && r.Melee.Thrusting && len(w.secondaryTargets(r, s, direction)) > 0 {
-		return s, rank
+		return s, rank, true
 	}
 	if s, rank, learned := w.learnedBehavior(r, "slaying"); learned && r.Melee.Slaying && front != nil {
-		return s, rank
+		return s, rank, true
 	}
-	return devconfig.Skill{}, 0
+	return devconfig.Skill{}, 0, true
 }
 
 func (w *worker) attackFacing(r *room, direction, expected, input uint32, now time.Time) uint32 {
+	return w.attackFacingTarget(r, direction, expected, input, now, nil)
+}
+
+func (w *worker) attackFacingTarget(r *room, direction, expected, input uint32, now time.Time, focus *entity) uint32 {
 	from := &r.Player
 	if direction >= uint32(len(directions)) {
 		return p.CodeInvalidArgument
@@ -196,8 +208,8 @@ func (w *worker) attackFacing(r *room, direction, expected, input uint32, now ti
 	if r.Pending || r.Isolated || r.ScheduleID == math.MaxUint64 || from.HP <= 0 || now.Before(from.NextAttack) || now.Before(from.ActionReadyAt) || !w.killBudgetAvailable(r) || w.mapCellBudget(r) == 0 {
 		return p.CodeSkillStateBlocked
 	}
-	s, rank := w.selectedAttack(r, direction, now)
-	if expected != 0 && expected != s.ID {
+	s, rank, reachable := w.selectedAttack(r, direction, now, focus)
+	if !reachable || expected != 0 && expected != s.ID {
 		return p.CodeSkillStateBlocked
 	}
 	front := w.enemyAt(r, stepPoint(from.Pos, direction, 1))

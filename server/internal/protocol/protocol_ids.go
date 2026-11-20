@@ -36,6 +36,7 @@ const (
 	MsgS2CEntityDisplacement uint16 = 30013
 	MsgS2CTeleportResult uint16 = 30014
 	MsgS2CPetBorn uint16 = 30015
+	MsgC2SAutoTargetIntent uint16 = 30016
 	MsgC2SEquip uint16 = 40001
 	MsgC2SRecycle uint16 = 40002
 	MsgS2CInventory uint16 = 40003

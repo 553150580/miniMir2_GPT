@@ -41,6 +41,15 @@ test('安全区观察保留uint64且同一基线的全部块必须一致',()=>{
 });
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
 
+test('自动选怪在现有战斗输入帧保留完整场景和怪物生命代次', () => {
+    const sceneEpoch = Long.fromString('9007199254740993', true), targetLife = Long.MAX_UNSIGNED_VALUE;
+    const result = decodePacket(encodePacket(30016, 13, Long.UONE, { sceneEpoch, inputSequence: 21, targetHandle: 10, targetLife }));
+    assert.equal(result.seq, 13);
+    assert.deepEqual([result.value.inputSequence, result.value.targetHandle], [21, 10]);
+    assert.equal(result.value.sceneEpoch.toString(), sceneEpoch.toString());
+    assert.equal(result.value.targetLife.toString(), targetLife.toString());
+});
+
 test('自动施法偏好在线和入场保留显式关闭，并能识别旧包无设置', () => {
     const sceneEpoch = Long.MAX_UNSIGNED_VALUE, baselineId = Long.UONE;
     const autoSkillSettings = { enabled: false, disabledSkillIds: [1, 11] };
