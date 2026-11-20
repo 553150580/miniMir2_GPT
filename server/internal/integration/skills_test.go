@@ -176,6 +176,7 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				request := c.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: c.entry.SceneEpoch, SkillId: skill.ID, TargetHandle: 10})
 				c.expectError(request, p.CodeSkillStateBlocked)
 			} else {
+				applyAutoSkillPreferences(c, &pb.AutoSkillSettings{})
 				target := uint32(10)
 				if job == 2 {
 					target = 2
@@ -225,24 +226,104 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				manaAfter := c.player().Mp
 				oldBinding := c.binding
 				c.close()
-				c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+				disabled := &pb.AutoSkillSettings{Enabled: true, DisabledSkillIds: []uint32{skill.ID}}
+				c = joinWithAutoSkills(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), disabled)
 				c.auto(false, 1)
 				if c.entry.SceneEpoch != scene || c.binding == oldBinding || c.player().CastSequence != castSequence || c.player().Mp != manaAfter || len(c.inventory.LearnedSkills) != 1 {
 					t.Fatal("健康重连重置场景/魔力/施法观察或丢失持久技能")
+				}
+				if !proto.Equal(c.hosting.GetAutoSkillSettings(), disabled) {
+					t.Fatal("健康重连ACK未在就绪前同步自动施法偏好", c.hosting)
 				}
 				// 新连接可从1重新输入；旧的高水位不会永久阻止合法操作。
 				c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: scene, ReleaseJoystick: true, InputSequence: 1})
 				barrier := c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: scene, Direction: 8})
 				c.expectError(barrier, p.CodeInvalidArgument)
+				station := proto.Clone(c.player().Position).(*pb.GridPoint)
+				movement, life := c.player().MovementRevision, c.player().Life
+				atStation := func() {
+					t.Helper()
+					if !proto.Equal(c.player().Position, station) || c.player().MovementRevision != movement {
+						t.Fatalf("自动挂机改变所选脚点或移动修订：want=%v got=%v", station, c.player())
+					}
+				}
+				c.auto(true, 1)
+				// 用持续的权威基线越过手动施法冷却，隔离单技能禁用与冷却造成的静默。
+				observeUntil := acceptedAt.Add(time.Duration(skill.GlobalSpellMS+300) * time.Millisecond)
+				c.until(func(f wire.Frame) bool {
+					if f.ID == p.MsgS2CCastAccepted || c.player().CastSequence > castSequence {
+						t.Fatal("单技能自动禁用后仍受理该技能")
+					}
+					if f.ID == p.MsgS2CSceneBaseline {
+						atStation()
+					}
+					return f.ID == p.MsgS2CSceneBaseline && time.Now().After(observeUntil)
+				})
+				applyAutoSkillPreferences(c, &pb.AutoSkillSettings{Enabled: true})
+				automatic := &pb.CastAccepted{}
+				travelUntilWithin(c, 8*time.Second, func(f wire.Frame) bool {
+					if f.ID != p.MsgS2CCastAccepted {
+						return false
+					}
+					must(t, proto.Unmarshal(f.Payload, automatic))
+					return true
+				})
+				if automatic.SkillId != skill.ID || automatic.InputSequence != 0 {
+					t.Fatal("重新启用后未产生真实服务端自动施法", automatic)
+				}
+				travelUntilWithin(c, 3*time.Second, func(f wire.Frame) bool {
+					if f.ID != p.MsgS2CSceneBaseline {
+						return false
+					}
+					atStation()
+					return c.player().CastSequence > castSequence
+				})
+				if job == 1 {
+					claimed := c.asset(p.MsgC2SClaimHostingTime, &pb.ClaimHostingTimeRequest{Operation: c.operation()})
+					if claimed.ErrorCode != 0 {
+						t.Fatal("定点托管验收未能领取正常免费时长", claimed)
+					}
+					c.inventoryAt(claimed.NewRevision)
+					beforeOffline, err := inspection.Role(ctx, roleID)
+					must(t, err)
+					c.close()
+					nowBilled := beforeOffline.HostingSeconds
+					for deadline := time.Now().Add(6 * time.Second); nowBilled == beforeOffline.HostingSeconds && time.Now().Before(deadline); {
+						time.Sleep(100 * time.Millisecond)
+						current, err := inspection.Role(ctx, roleID)
+						must(t, err)
+						nowBilled = current.HostingSeconds
+					}
+					if nowBilled >= beforeOffline.HostingSeconds {
+						t.Fatal("健康断线后没有实际托管扣时")
+					}
+					c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+					if c.entry.SceneEpoch != scene || c.player().Life != life || c.player().Hp <= 0 {
+						t.Fatal("健康重连未恢复原定点现场")
+					}
+					atStation()
+				}
 			}
 			var document bson.M
 			must(t, inspection.DB.Collection("roles").FindOne(ctx, bson.M{"_id": roleID}).Decode(&document))
-			for _, key := range []string{"hp", "mp", "casts", "next_spell", "skill_cooldowns", "heal_amount", "next_heal", "input_sequence"} {
+			for _, key := range []string{"hp", "mp", "casts", "next_spell", "skill_cooldowns", "heal_amount", "next_heal", "input_sequence", "auto_skill_settings"} {
 				if _, exists := document[key]; exists {
 					t.Fatalf("技能临时状态%s被持久化", key)
 				}
 			}
 			t.Logf("通过：job%d初始书/仅本角学习/错职业/原回执/重复禁升级/零级持久化/真实PB施法与重连", job)
 		})
+	}
+}
+
+func applyAutoSkillPreferences(c *client, settings *pb.AutoSkillSettings) {
+	c.t.Helper()
+	globalAuto := c.hosting.GetAutoBattleEnabled()
+	request := c.send(p.MsgC2SAutoBattle, &pb.AutoBattleIntent{SceneEpoch: c.entry.SceneEpoch, AutoSkillSettings: settings})
+	travelUntilWithin(c, 2*time.Second, func(f wire.Frame) bool {
+		return f.ID == p.MsgS2CHostingState && f.Request == request
+	})
+	if !proto.Equal(c.hosting.GetAutoSkillSettings(), settings) || c.hosting.GetAutoBattleEnabled() != globalAuto {
+		c.t.Fatal("独立偏好未正确回显或改了全局自动战斗", c.hosting)
 	}
 }

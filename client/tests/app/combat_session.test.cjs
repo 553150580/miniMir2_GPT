@@ -64,23 +64,24 @@ test('CastStep只转发当前Ready连接的真实未来步，重入基线不补�
     session.connection.deliver(30012,{sceneEpoch:entry.sceneEpoch,stepIndex:3});assert.equal(received,1);
     session.connection.status('断线');session.connection.deliver(30012,{sceneEpoch:entry.sceneEpoch,stepIndex:4});assert.equal(received,1);session.castSteps.delete(listener);
 });
-test('同连接复活用新life与更高修订恢复模式操作，迟到旧life状态和旧基线不能覆盖',()=>{
+test('同连接复活用新life与更高修订恢复模式操作，迟到旧life状态和旧基线不能覆盖',async()=>{
     const models=require('../../../.work/ui-tests/app/SkillModel.js');
     const decorator=(...args)=>args.length>1?undefined:(...params)=>params.length===1?params[0]:undefined;
     const appFile=path.resolve(__dirname,'../../assets/scripts/app/AppRoot.ts');
     const appCode=ts.transpileModule(fs.readFileSync(appFile,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,experimentalDecorators:true,esModuleInterop:true}});
     const appModule={exports:{}};
     new Function('require','module','exports',appCode.outputText)(id=>id==='cc'?{_decorator:new Proxy({},{get:()=>decorator}),Component:class{}}
-        :id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> '复活回归角色'}:id==='./SkillModel'?models:{},appModule,appModule.exports);
+        :id==='long'?Long:id==='./GameSession'?moduleLike.exports:id==='./SkillModel'?models:id==='./SkillPreferences'?require('../../../.work/ui-tests/app/SkillPreferences.js'):{},appModule,appModule.exports);
     // 使用真实入口的快照与施放逻辑；不创建场景节点或真实连接。
     const app=Object.create(appModule.exports.AppRoot.prototype),sent=[],connection=session.connection;
-    app.inputSequence=0;connection.send=(id,value)=>sent.push({id,value});
+    app.inputSequence=0;app.refreshGame=()=>{};let resolve;
+    connection.request=(id,value)=>{sent.push({id,value});return new Promise(done=>{resolve=done;});};
     const definition={id:12,name:'刺杀剑术',job_id:0,book_item_id:3,learn_level:1,initial_level:0,max_level:3,kind:'thrusting',active:true,
         activation_kind:'toggle',target_kind:'attack_mode',range:2,base_cost:0,level_cost:0};
     app.world={gameplay:{skills:[definition]}};
     const epoch=Long.fromString('9007199254740993',true),revision=Long.fromString('9007199254740995',true);
     const entry={sceneEpoch:epoch,resourceVersion:Long.fromInt(6,true),baselineId:Long.UONE,nextEconomicCommandSeq:Long.UONE,playerHandle:1};
-    session.connection.deliver(20002,entry);session.role={job:0};
+    session.connection.deliver(20002,entry);
     session.inventory={level:40,items:[],learnedSkills:[{skillId:12,level:0}]};
     const oldMode={sceneEpoch:epoch,revision,playerLife:Long.UZERO,serverTimeUnixMs:Long.fromString('1900000000000',true),
         states:[{skillId:12,enabled:true,ready:false,remainingMs:0,cooldownRemainingMs:0}]};
@@ -92,7 +93,7 @@ test('同连接复活用新life与更高修订恢复模式操作，迟到旧life
     assert.equal(session.connection,connection);assert.equal(session.ready,true);
     assert.equal(app.skillSnapshot().modes,revivedMode);
     assert.equal(models.skillModeStatus(app.skillSnapshot(),definition),'已开启');
-    const row=models.skillRows(app.skillSnapshot())[0];app.castSkill(row,false);
+    const row=models.skillRows(app.skillSnapshot())[0],operation=app.castSkill(row,false);
     assert.equal(sent.length,1);assert.equal(sent[0].id,30009);assert.equal(sent[0].value.enabled,false);
     assert.equal(sent[0].value.sceneEpoch.toString(),epoch.toString());
     // 旧出生代次的已发送状态修订不可能高于复活递增后的版本。
@@ -100,5 +101,39 @@ test('同连接复活用新life与更高修订恢复模式操作，迟到旧life
     session.connection.deliver(5,{stateSequence:Long.UONE,entities:[player(Long.UZERO,0)],skillModeState:oldMode});
     assert.equal(app.skillSnapshot().modes,revivedMode);assert.equal(session.baseline.entities[0].life.toString(),'1');
     assert.equal(models.skillModeStatus(app.skillSnapshot(),definition),'已开启');
-    delete connection.send;
+    const confirmed={...revivedMode,revision:revivedMode.revision.add(1),states:[{...revivedMode.states[0],enabled:false}]};
+    session.connection.deliver(30010,confirmed);resolve(confirmed);await operation;
+    assert.equal(models.skillModeStatus(app.skillSnapshot(),definition),'已关闭');
+    delete connection.request;
+});
+
+test('实际连接等待同序号的30010确认，独立模式推送不会完成30009请求',async()=>{
+    const {load}=require('./helpers/session_harness.cjs');
+    const {GameConnection,encodePacket,decodePacket}=load('client/assets/scripts/app/GameConnection.ts',id=>id==='long'?Long
+        :id==='../generated/protobuf/client_pb.js'?require('../../assets/scripts/generated/protobuf/client_pb.js')
+        :id==='./InputTrace'?{traceInput(){},inputTraceMessage(){}}:{});
+    const originalSocket=global.WebSocket,originalLocation=global.location;
+    let socket;
+    class Socket {
+        static OPEN=1;
+        constructor(){socket=this;this.readyState=0;this.sent=[];}
+        send(bytes){this.sent.push(decodePacket(bytes));}
+        close(){this.readyState=3;}
+    }
+    global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+    const connection=new GameConnection(),deliver=(id,seq,value)=>socket.onmessage({data:encodePacket(id,seq,Long.UONE,value).buffer});
+    try {
+        const joining=connection.connect('test');socket.readyState=Socket.OPEN;socket.onopen();await Promise.resolve();
+        const epoch=Long.fromString('9007199254740993',true);
+        deliver(20002,socket.sent.at(-1).seq,{sceneEpoch:epoch});await joining;
+        let complete=false;
+        const accepted=connection.request(30009,{sceneEpoch:epoch,inputSequence:2,skillId:12,enabled:true}).then(value=>{complete=true;return value;});
+        void accepted.catch(()=>{});
+        const request=socket.sent.at(-1);
+        assert.equal(request.id,30009);assert.equal(request.value.sceneEpoch.toString(),epoch.toString());
+        const state={sceneEpoch:epoch,revision:Long.UONE,playerLife:Long.UZERO,serverTimeUnixMs:epoch,states:[{skillId:12,enabled:true}]};
+        deliver(30010,0,state);await Promise.resolve();assert.equal(complete,false);assert.equal(connection.pending.size,1);
+        deliver(30010,request.seq,state);
+        assert.equal((await accepted).states[0].enabled,true);assert.equal(connection.pending.size,0);
+    } finally { connection.close();global.WebSocket=originalSocket;global.location=originalLocation; }
 });

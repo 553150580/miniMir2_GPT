@@ -8,7 +8,7 @@ const {CastPlayback,MeleePlayback,effectPoses}=require('../../../.work/ui-tests/
 const state=changes=>({sceneEpoch:'9007199254740993',revision:'9007199254740993',playerLife:'0',serverTimeUnixMs:'1900000000000',
     states:[{skillId:12,enabled:true,ready:false,remainingMs:0,cooldownRemainingMs:0},{skillId:26,enabled:false,ready:false,remainingMs:0,cooldownRemainingMs:10000}],...changes});
 const definition=changes=>({id:12,name:'刺杀剑术',job_id:0,kind:'thrusting',active:true,activation_kind:'toggle',target_kind:'attack_mode',range:2,
-    base_cost:0,level_cost:0,cast_ms:600,impact_base_ms:500,accuracy_per_level:0,...changes});
+    base_cost:0,level_cost:0,initial_level:0,learn_level:22,cast_ms:600,impact_base_ms:500,accuracy_per_level:0,...changes});
 test('模式全量状态接收保持Long修订精度，初始life0合法，拒绝旧场景/旧修订/重复条目',()=>{
     const first=state();assert(model.acceptsSkillModeState(null,first,first.sceneEpoch));
     assert(!model.acceptsSkillModeState(first,state(),first.sceneEpoch));
@@ -37,12 +37,23 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
         texts.length=0;for(const row of rows){const label={string:''};render({getChildByName:name=>name==='Text'?{getComponent:()=>label}:{active:false}},row);texts.push(label.string);}
     }};
     const panel={getChildByName:()=>({getComponent:()=>list}),getChildByPath(name){if(!nodes.has(name))nodes.set(name,{active:true,getComponent(type){if(type===Toggle)return toggle;const values=type===Label?labels:buttons;if(!values.has(name))values.set(name,{});return values.get(name);}});return nodes.get(name);}};
-    const controller=new module.exports.GameSkills({getChildByPath:()=>panel},{show(){}}),modes=state();
+    const opened=[];
+    const controller=new module.exports.GameSkills({getChildByPath:()=>panel},{show:(...args)=>opened.push(args)}),modes=state();
     const input={ready:true,job:0,sceneEpoch:modes.sceneEpoch,modes,modesReceivedAt:Date.now(),definitions:[definition({id:7,name:'攻杀剑术',kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),definition(),definition({id:26,name:'烈火剑法',kind:'flaming_sword',activation_kind:'charge',target_kind:'attack_charge'})],inventory:{level:40,items:[],learnedSkills:[{skillId:7,level:0},{skillId:12,level:0},{skillId:26,level:0}]}};
     controller.refresh(input);assert(texts.every(value=>value.split('\n').length<=3));assert.match(labels.get('Message').string,/攻击上限 \+5/);
-    controller.selectedId=12;controller.refresh(input);assert.equal(labels.get('Use/Label').string,'关闭');assert.equal(buttons.get('Use').interactable,true);
+    assert.equal(labels.get('SkillAuto/Label').string,'被动生效');
+    controller.onSelected(1,model.skillRows(input)[1]);assert.equal(opened.length,0);
+    assert.equal(labels.get('SkillAuto/Label').string,'随普攻');
+    controller.refresh({...input,inventory:{...input.inventory,learnedSkills:[]}});
+    assert.equal(labels.get('SkillAuto/Label').string,'学习后可设置');
+    controller.refresh(input);
+    controller.openDetails();assert.equal(opened.length,1);assert.match(opened[0][1].message,/第2格有怪/);
+    controller.refresh(input,12);assert.equal(labels.get('BindQuick/Label').string,'默认手动快捷');
+    controller.refresh(input,12,12);assert.equal(labels.get('BindQuick/Label').string,'当前手动快捷');
+    assert.equal(labels.get('Use/Label').string,'关闭');assert.equal(buttons.get('Use').interactable,true);
     assert.equal(nodes.get('Use').active,false);assert.equal(nodes.get('ModeToggle').active,true);assert.equal(toggle.isChecked,true);assert.equal(toggle.interactable,true);assert.equal(labels.get('ModeToggle/Label').string,'已开启');
     toggle.isChecked=false;controller.refresh(input);assert.equal(toggle.isChecked,true);
+    controller.refresh({...input,modePending:{skillId:12,enabled:false}});assert.equal(toggle.interactable,false);assert.equal(labels.get('ModeToggle/Label').string,'正在关闭');
     controller.refresh({...input,modes:null});assert.equal(buttons.get('Use').interactable,false);assert.equal(toggle.interactable,false);
     controller.selectedId=26;controller.refresh(input);assert.equal(labels.get('Use/Label').string,'充能');
     assert.equal(nodes.get('Use').active,true);assert.equal(nodes.get('ModeToggle').active,false);
@@ -50,6 +61,15 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     const line={definition:definition({id:10,kind:'lightning',activation_kind:'cast',target_kind:'enemy_direction',line_cells:6,range:0}),learned:true,level:0,cost:38};
     assert.match(controller.description(line,input),/前方6格/);assert.doesNotMatch(controller.description(line,input),/射程 0格/);
     assert.match(controller.description({...line,definition:definition({target_kind:'enemy_self',activation_kind:'cast',area_radius:2})},input),/自身周围2格/);
+});
+
+test('已有赠书的未学技能仍只可学习，不成为手动快捷',()=>{
+    const def=definition({id:12,book_item_id:3,learn_level:22,initial_level:0});
+    const snapshot={ready:true,job:0,definitions:[def],inventory:{level:22,items:[{itemId:def.book_item_id,quantity:'1'}],learnedSkills:[]}};
+    assert.equal(model.skillRows(snapshot)[0].canLearn,true);
+    assert.equal(model.primarySkill(snapshot),null);
+    snapshot.inventory.learnedSkills=[{skillId:def.id,level:0}];
+    assert.equal(model.primarySkill(snapshot).definition.id,def.id);
 });
 test('攻杀初学只显示源常驻准确0与攻击上限5，不伪造主动或高阶收益',()=>{
     const row={definition:definition({id:7,kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),learned:true,level:0};

@@ -41,6 +41,21 @@ test('安全区观察保留uint64且同一基线的全部块必须一致',()=>{
 });
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
 
+test('自动施法偏好在线和入场保留显式关闭，并能识别旧包无设置', () => {
+    const sceneEpoch = Long.MAX_UNSIGNED_VALUE, baselineId = Long.UONE;
+    const autoSkillSettings = { enabled: false, disabledSkillIds: [1, 11] };
+    const examples = [[4, { sceneEpoch, baselineId }], [30004, { sceneEpoch }], [30005, { stateRevision: sceneEpoch }]];
+    for (const [id, base] of examples) {
+        const roundTrip = value => decodePacket(encodePacket(id, 7, Long.UONE, value));
+        const current = roundTrip({ ...base, autoSkillSettings });
+        assert.equal(current.seq, 7);
+        assert.deepEqual(current.value.autoSkillSettings, autoSkillSettings);
+        assert.equal(roundTrip(base).value.autoSkillSettings, null);
+        assert.deepEqual(roundTrip({ ...base, autoSkillSettings: { enabled: true, disabledSkillIds: [] } }).value.autoSkillSettings,
+            { enabled: true, disabledSkillIds: [] });
+    }
+});
+
 test('旅行四消息与导航失败终态保留完整64位身份，Plan过期时间保持int64',()=>{
     const id='0123456789abcdef0123456789abcdef',large=Long.fromString('9007199254740993',true);
     const prepare=decodePacket(encodePacket(20007,7,large,{sceneEpoch:Long.MAX_UNSIGNED_VALUE,travelId:id,destination:1})).value;

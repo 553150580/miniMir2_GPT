@@ -33,7 +33,18 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 	r.PendingRetry = nil
 	r.PendingOperationID = ""
 	r.PendingFingerprint = ""
+	modeLearned := false
 	if err == nil && role.Revision >= r.Role.Revision {
+		if result.ErrorCode == 0 && q.Kind == "learn_skill" {
+			_, known := r.Role.Skill(q.SkillID)
+			_, learned := role.Skill(q.SkillID)
+			skill, exists := w.e.Store.Cfg.Fixture.Skill(q.SkillID)
+			activation := skill.Activation()
+			modeLearned = exists && !known && learned && (activation == "toggle" || activation == "charge" || activation == "passive_proc")
+			if modeLearned {
+				r.Melee.Revision++
+			}
+		}
 		r.Role = role
 		transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
 		// 仓储只迁移背包及仓库，不改变已穿属性或任何临时身体状态。
@@ -66,7 +77,7 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 		}
 	}
 	w.snapshot(r)
-	if revived {
+	if revived || modeLearned {
 		w.modes(r, time.Now())
 	}
 	w.after(r)

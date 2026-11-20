@@ -115,6 +115,12 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 		}
 	}
 	if next == nil {
+		if e == &r.Player && r.Destination != nil && *r.Destination == target && r.Navigation.Status == navigationActive {
+			// 玩家点地的路径没有可继续的格子，保留目标观察并释放移动接管。
+			r.Destination = nil
+			r.Navigation.Status = navigationBlocked
+			w.snapshot(r)
+		}
 		return
 	}
 	direction := e.Direction
@@ -425,13 +431,14 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	skipPetAI := w.tickResidentPetFollow(r, now)
 	a := w.fighter(r, &r.Player)
-	if r.Manual {
+	// 掉线期间暂停玩家的手动换点，健康重连后仍可继续原地面目标。
+	if !offline && r.Manual {
 		d := directions[r.ManualDirection]
 		target := devconfig.Point{X: r.Player.Pos.X + d.X, Y: r.Player.Pos.Y + d.Y}
 		if w.neighbor(r, r.Player.Pos, target, &r.Player) && !now.Before(r.Player.NextMove) && !now.Before(r.Player.ActionReadyAt) {
 			w.commitWalk(r, &r.Player, target, r.ManualDirection, now, a.MoveMS)
 		}
-	} else if r.Destination != nil {
+	} else if !offline && r.Destination != nil {
 		if r.Player.Pos == *r.Destination {
 			if r.Navigation.InputSequence != 0 && r.Navigation.Status == navigationActive {
 				r.Navigation.Status = navigationArrived
@@ -441,18 +448,8 @@ func (w *worker) step(r *room, now time.Time) {
 		} else {
 			w.move(r, &r.Player, *r.Destination, now, a.MoveMS)
 		}
-	} else if r.Auto {
-		if target, handled := w.autoSkill(r, now); handled {
-			if target != nil {
-				w.move(r, &r.Player, target.Pos, now, a.MoveMS)
-			}
-		} else if target := w.nearest(r, &r.Player); target != nil {
-			if distance(r.Player.Pos, target.Pos) <= 1 {
-				w.attack(r, &r.Player, target, now)
-			} else {
-				w.move(r, &r.Player, target.Pos, now, a.MoveMS)
-			}
-		}
+	} else if r.Auto && !w.autoSkill(r, now) {
+		w.autoAttack(r, now)
 	}
 	if r.Pending || r.Isolated {
 		return

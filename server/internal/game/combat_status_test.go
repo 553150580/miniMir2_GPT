@@ -492,7 +492,7 @@ func TestStatusMissingSupplyAutoFallsThroughAndSlotNeverAddsGearStats(t *testing
 		w.e.Store.Cfg.Fixture.CastingSupply.Enabled = enabled
 		r.Player.HP--
 		r.Pet.HP = r.Pet.MaxHP
-		_, handled := w.autoSkill(r, time.Now())
+		handled := w.autoSkill(r, time.Now())
 		if !handled || len(r.Casts) != 1 || r.Casts[0].Skill.Behavior != "healing" || r.Pending {
 			t.Fatal("缺护符/未开放材料饿死后续治愈")
 		}

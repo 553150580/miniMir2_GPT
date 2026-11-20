@@ -674,7 +674,7 @@ func TestAutoEnabledFalseAndZeroPriorityAreIndependentFromFlaming(t *testing.T) 
 	for index := range w.e.Store.Cfg.Fixture.Skills {
 		w.e.Store.Cfg.Fixture.Skills[index].AutoEnabled = false
 	}
-	if _, handled := w.autoSkill(r, time.Now()); handled || len(r.Casts) != 0 {
+	if w.autoSkill(r, time.Now()) || len(r.Casts) != 0 {
 		t.Fatal("显式auto关闭仍选择主动技")
 	}
 	for index := range w.e.Store.Cfg.Fixture.Skills {
@@ -684,7 +684,7 @@ func TestAutoEnabledFalseAndZeroPriorityAreIndependentFromFlaming(t *testing.T) 
 			s.AutoPriority = 0
 		}
 	}
-	if _, handled := w.autoSkill(r, time.Now()); !handled || len(r.Casts) != 1 || r.Casts[0].Skill.ID != 1 {
+	if !w.autoSkill(r, time.Now()) || len(r.Casts) != 1 || r.Casts[0].Skill.ID != 1 {
 		t.Fatal("priority0被错误当显式关闭而非排序值")
 	}
 	w, r, _ = stageBWorker(t, 0, 26)

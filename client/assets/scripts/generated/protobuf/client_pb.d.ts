@@ -1994,6 +1994,9 @@ export namespace minimir {
             /** EnterWorldAck baseline_id. */
             baseline_id: Long;
 
+            /** EnterWorldAck auto_skill_settings. */
+            auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
+
             /**
              * Creates a new EnterWorldAck instance using the specified properties.
              * @param [properties] Properties to set
@@ -2062,6 +2065,9 @@ export namespace minimir {
 
                 /** EnterWorldAck baseline_id */
                 baseline_id?: (Long|null);
+
+                /** EnterWorldAck auto_skill_settings */
+                auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -5822,6 +5828,108 @@ export namespace minimir {
         }
 
         /**
+         * Properties of an AutoSkillSettings.
+         * @deprecated Use minimir.v1.AutoSkillSettings.$Properties instead.
+         */
+        interface IAutoSkillSettings extends minimir.v1.AutoSkillSettings.$Properties {
+        }
+
+        /** Represents an AutoSkillSettings. */
+        class AutoSkillSettings {
+
+            /**
+             * Constructs a new AutoSkillSettings.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.AutoSkillSettings.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** AutoSkillSettings enabled. */
+            enabled: boolean;
+
+            /** AutoSkillSettings disabled_skill_ids. */
+            disabled_skill_ids: number[];
+
+            /**
+             * Creates a new AutoSkillSettings instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns AutoSkillSettings instance
+             */
+            static create(properties: minimir.v1.AutoSkillSettings.$Shape): minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape;
+            static create(properties?: minimir.v1.AutoSkillSettings.$Properties): minimir.v1.AutoSkillSettings;
+
+            /**
+             * Encodes the specified AutoSkillSettings message. Does not implicitly {@link minimir.v1.AutoSkillSettings.verify|verify} messages.
+             * @param message AutoSkillSettings message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.AutoSkillSettings.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified AutoSkillSettings message, length delimited. Does not implicitly {@link minimir.v1.AutoSkillSettings.verify|verify} messages.
+             * @param message AutoSkillSettings message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.AutoSkillSettings.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes an AutoSkillSettings message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape} AutoSkillSettings
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape;
+
+            /**
+             * Decodes an AutoSkillSettings message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape} AutoSkillSettings
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape;
+
+            /**
+             * Verifies an AutoSkillSettings message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for AutoSkillSettings
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace AutoSkillSettings {
+
+            /** Properties of an AutoSkillSettings. */
+            interface $Properties {
+
+                /** AutoSkillSettings enabled */
+                enabled?: (boolean|null);
+
+                /** AutoSkillSettings disabled_skill_ids */
+                disabled_skill_ids?: (number[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of an AutoSkillSettings. */
+            type $Shape = minimir.v1.AutoSkillSettings.$Properties;
+        }
+
+        /**
          * Properties of an AutoBattleIntent.
          * @deprecated Use minimir.v1.AutoBattleIntent.$Properties instead.
          */
@@ -5848,6 +5956,9 @@ export namespace minimir {
 
             /** AutoBattleIntent monster_count. */
             monster_count: number;
+
+            /** AutoBattleIntent auto_skill_settings. */
+            auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
 
             /**
              * Creates a new AutoBattleIntent instance using the specified properties.
@@ -5921,6 +6032,9 @@ export namespace minimir {
                 /** AutoBattleIntent monster_count */
                 monster_count?: (number|null);
 
+                /** AutoBattleIntent auto_skill_settings */
+                auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
@@ -5956,6 +6070,9 @@ export namespace minimir {
 
             /** HostingState state_revision. */
             state_revision: Long;
+
+            /** HostingState auto_skill_settings. */
+            auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
 
             /**
              * Creates a new HostingState instance using the specified properties.
@@ -6028,6 +6145,9 @@ export namespace minimir {
 
                 /** HostingState state_revision */
                 state_revision?: (Long|null);
+
+                /** HostingState auto_skill_settings */
+                auto_skill_settings?: (minimir.v1.AutoSkillSettings.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

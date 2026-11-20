@@ -5,13 +5,13 @@
     "account.proto": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964",
     "assets.proto": "ca65e8ada5b58b741499f2ff56f42c5272d17ea773349c6be8ab4b0b5da2d5df",
     "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
-    "world.proto": "9b6d28233b3ceb17d9c3ad577dfd5e571cbc4d76ad9f3538dec971d34bcb7d31"
+    "world.proto": "019119a1a3c3b9c77b3cdf2b8aadc2ebbe225b589b0600f274585a7335b3d8e6"
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "2d33b53706812f84369fc44c93b8b86d81fbfa2e2545bd14a5d1b0b63a123632",
     "server/api/generated/minimirv1/assets.pb.go": "baf1e7d7ed9f026fa75b471bad82ac030f53d86b5efc4f91455506d19b6f065b",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
-    "server/api/generated/minimirv1/world.pb.go": "8fecb5c114023c8ebe2fc518e0a5915b8bbaa25ace88d96e3619cfb68bc39e8d"
+    "server/api/generated/minimirv1/world.pb.go": "d41573eeac4cb29bf6db8471113a32531dc366f59d488ba96f9d738e40859fd2"
   },
   "business_implemented": false
 }

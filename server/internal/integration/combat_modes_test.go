@@ -123,13 +123,22 @@ func TestCombatModesEightSkillsLearningModesCastingAndReconnectMongoWS(t *testin
 	defer func() { warrior.close() }()
 	warrior.auto(false, 5)
 	for _, id := range []uint32{7, 12, 25, 26} {
+		previousRevision := warrior.scene.GetSkillModeState().GetRevision()
 		warrior.buyAndLearnSkill(cfg.Fixture, id)
+		warrior.modesUntil(func(s *pb.SkillModeState) bool {
+			return s.Revision > previousRevision && modeEntry(s, id) != nil
+		})
 	}
 	watermark := warrior.watermark
 	opCount, err := inspection.DB.Collection("operations").CountDocuments(ctx, bson.M{"role_id": domain.Hex(warriorRole.Key.RoleId)})
 	must(t, err)
-	warrior.send(p.MsgC2SSkillModeIntent, &pb.SkillModeIntent{SceneEpoch: warrior.entry.SceneEpoch, SkillId: 12, Enabled: true})
-	warrior.modesUntil(func(s *pb.SkillModeState) bool { return modeEntry(s, 12).Enabled })
+	modeRequest := warrior.send(p.MsgC2SSkillModeIntent, &pb.SkillModeIntent{SceneEpoch: warrior.entry.SceneEpoch, SkillId: 12, Enabled: true})
+	reply := warrior.until(func(frame wire.Frame) bool { return frame.ID == p.MsgS2CSkillModeState && frame.Request == modeRequest })
+	state := &pb.SkillModeState{}
+	must(t, proto.Unmarshal(reply.Payload, state))
+	if !modeEntry(state, 12).Enabled {
+		t.Fatal("刺杀开启请求没有收到同一请求号的权威状态")
+	}
 	time.Sleep(1100 * time.Millisecond)
 	warrior.attackAccepted(0, 12)
 	if hit := warrior.combatImpact(12, 11); hit.Amount <= 0 || hit.Outcome != 1 {
@@ -157,7 +166,7 @@ func TestCombatModesEightSkillsLearningModesCastingAndReconnectMongoWS(t *testin
 	}
 	charge := &pb.SkillModeIntent{SceneEpoch: warrior.entry.SceneEpoch, SkillId: 26, Enabled: true}
 	warrior.send(p.MsgC2SSkillModeIntent, charge)
-	state := warrior.modesUntil(func(s *pb.SkillModeState) bool { return modeEntry(s, 26).Ready })
+	state = warrior.modesUntil(func(s *pb.SkillModeState) bool { return modeEntry(s, 26).Ready })
 	if modeEntry(state, 26).RemainingMs == 0 {
 		t.Fatal("烈火没有权威剩余窗口")
 	}

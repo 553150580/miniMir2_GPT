@@ -4829,6 +4829,7 @@ $root.minimir = (function() {
              * @typedef {Object} minimir.v1.EnterWorldAck.$Properties
              * @property {Long|null} [scene_epoch] EnterWorldAck scene_epoch
              * @property {Long|null} [baseline_id] EnterWorldAck baseline_id
+             * @property {minimir.v1.AutoSkillSettings.$Properties|null} [auto_skill_settings] EnterWorldAck auto_skill_settings
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -4877,6 +4878,14 @@ $root.minimir = (function() {
             EnterWorldAck.prototype.baseline_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * EnterWorldAck auto_skill_settings.
+             * @member {minimir.v1.AutoSkillSettings.$Properties|null|undefined} auto_skill_settings
+             * @memberof minimir.v1.EnterWorldAck
+             * @instance
+             */
+            EnterWorldAck.prototype.auto_skill_settings = null;
+
+            /**
              * Creates a new EnterWorldAck instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EnterWorldAck
@@ -4912,6 +4921,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
                 if (message.baseline_id != null && $Object.hasOwnProperty.call(message, "baseline_id") && (typeof message.baseline_id === "object" ? message.baseline_id.low || message.baseline_id.high : message.baseline_id !== 0))
                     writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.baseline_id);
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings"))
+                    $root.minimir.v1.AutoSkillSettings.encode(message.auto_skill_settings, writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4987,6 +4998,12 @@ $root.minimir = (function() {
                                 delete message.baseline_id;
                             continue;
                         }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            message.auto_skill_settings = $root.minimir.v1.AutoSkillSettings.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_skill_settings);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5041,6 +5058,11 @@ $root.minimir = (function() {
                 if (message.baseline_id != null && $Object.hasOwnProperty.call(message, "baseline_id"))
                     if (!$util.isInteger(message.baseline_id) && !(message.baseline_id && $util.isInteger(message.baseline_id.low) && $util.isInteger(message.baseline_id.high)))
                         return "baseline_id: integer|Long expected";
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings")) {
+                    var error = $root.minimir.v1.AutoSkillSettings.verify(message.auto_skill_settings, _depth + 1);
+                    if (error)
+                        return "auto_skill_settings." + error;
+                }
                 return null;
             };
 
@@ -15346,6 +15368,255 @@ $root.minimir = (function() {
             return CombatImpact;
         })();
 
+        v1.AutoSkillSettings = (function() {
+
+            /**
+             * Properties of an AutoSkillSettings.
+             * @typedef {Object} minimir.v1.AutoSkillSettings.$Properties
+             * @property {boolean|null} [enabled] AutoSkillSettings enabled
+             * @property {Array.<number>|null} [disabled_skill_ids] AutoSkillSettings disabled_skill_ids
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of an AutoSkillSettings.
+             * @memberof minimir.v1
+             * @interface IAutoSkillSettings
+             * @augments minimir.v1.AutoSkillSettings.$Properties
+             * @deprecated Use minimir.v1.AutoSkillSettings.$Properties instead.
+             */
+
+            /**
+             * Shape of an AutoSkillSettings.
+             * @typedef {minimir.v1.AutoSkillSettings.$Properties} minimir.v1.AutoSkillSettings.$Shape
+             */
+
+            /**
+             * Constructs a new AutoSkillSettings.
+             * @memberof minimir.v1
+             * @classdesc Represents an AutoSkillSettings.
+             * @constructor
+             * @param {minimir.v1.AutoSkillSettings.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var AutoSkillSettings = function (properties) {
+                this.disabled_skill_ids = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * AutoSkillSettings enabled.
+             * @member {boolean} enabled
+             * @memberof minimir.v1.AutoSkillSettings
+             * @instance
+             */
+            AutoSkillSettings.prototype.enabled = false;
+
+            /**
+             * AutoSkillSettings disabled_skill_ids.
+             * @member {Array.<number>} disabled_skill_ids
+             * @memberof minimir.v1.AutoSkillSettings
+             * @instance
+             */
+            AutoSkillSettings.prototype.disabled_skill_ids = $util.emptyArray;
+
+            /**
+             * Creates a new AutoSkillSettings instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {minimir.v1.AutoSkillSettings.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.AutoSkillSettings} AutoSkillSettings instance
+             * @type {{
+             *   (properties: minimir.v1.AutoSkillSettings.$Shape): minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape;
+             *   (properties?: minimir.v1.AutoSkillSettings.$Properties): minimir.v1.AutoSkillSettings;
+             * }}
+             */
+            AutoSkillSettings.create = function(properties) {
+                return new AutoSkillSettings(properties);
+            };
+
+            /**
+             * Encodes the specified AutoSkillSettings message. Does not implicitly {@link minimir.v1.AutoSkillSettings.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {minimir.v1.AutoSkillSettings.$Properties} message AutoSkillSettings message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoSkillSettings.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled") && message.enabled !== false)
+                    writer.uint32(/* id 1, wireType 0 =*/8).bool(message.enabled);
+                if (message.disabled_skill_ids != null && message.disabled_skill_ids.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).uint32s(message.disabled_skill_ids);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified AutoSkillSettings message, length delimited. Does not implicitly {@link minimir.v1.AutoSkillSettings.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {minimir.v1.AutoSkillSettings.$Properties} message AutoSkillSettings message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            AutoSkillSettings.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes an AutoSkillSettings message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape} AutoSkillSettings
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoSkillSettings.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.AutoSkillSettings();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.enabled = value;
+                            else
+                                delete message.enabled;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType === 2) {
+                                if (!(message.disabled_skill_ids && message.disabled_skill_ids.length))
+                                    message.disabled_skill_ids = [];
+                                reader.uint32s(message.disabled_skill_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.disabled_skill_ids && message.disabled_skill_ids.length))
+                                message.disabled_skill_ids = [];
+                            message.disabled_skill_ids.push(reader.uint32());
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes an AutoSkillSettings message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.AutoSkillSettings & minimir.v1.AutoSkillSettings.$Shape} AutoSkillSettings
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            AutoSkillSettings.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies an AutoSkillSettings message.
+             * @function verify
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            AutoSkillSettings.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.enabled != null && $Object.hasOwnProperty.call(message, "enabled"))
+                    if (typeof message.enabled !== "boolean")
+                        return "enabled: boolean expected";
+                if (message.disabled_skill_ids != null && $Object.hasOwnProperty.call(message, "disabled_skill_ids")) {
+                    if (!$Array.isArray(message.disabled_skill_ids))
+                        return "disabled_skill_ids: array expected";
+                    for (var i = 0; i < message.disabled_skill_ids.length; ++i)
+                        if (!$util.isInteger(message.disabled_skill_ids[i]))
+                            return "disabled_skill_ids: integer[] expected";
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for AutoSkillSettings
+             * @function getTypeUrl
+             * @memberof minimir.v1.AutoSkillSettings
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            AutoSkillSettings.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.AutoSkillSettings";
+            };
+
+            return AutoSkillSettings;
+        })();
+
         v1.AutoBattleIntent = (function() {
 
             /**
@@ -15354,6 +15625,7 @@ $root.minimir = (function() {
              * @property {Long|null} [scene_epoch] AutoBattleIntent scene_epoch
              * @property {boolean|null} [enabled] AutoBattleIntent enabled
              * @property {number|null} [monster_count] AutoBattleIntent monster_count
+             * @property {minimir.v1.AutoSkillSettings.$Properties|null} [auto_skill_settings] AutoBattleIntent auto_skill_settings
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -15410,6 +15682,14 @@ $root.minimir = (function() {
             AutoBattleIntent.prototype.monster_count = 0;
 
             /**
+             * AutoBattleIntent auto_skill_settings.
+             * @member {minimir.v1.AutoSkillSettings.$Properties|null|undefined} auto_skill_settings
+             * @memberof minimir.v1.AutoBattleIntent
+             * @instance
+             */
+            AutoBattleIntent.prototype.auto_skill_settings = null;
+
+            /**
              * Creates a new AutoBattleIntent instance using the specified properties.
              * @function create
              * @memberof minimir.v1.AutoBattleIntent
@@ -15447,6 +15727,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 2, wireType 0 =*/16).bool(message.enabled);
                 if (message.monster_count != null && $Object.hasOwnProperty.call(message, "monster_count") && message.monster_count !== 0)
                     writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.monster_count);
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings"))
+                    $root.minimir.v1.AutoSkillSettings.encode(message.auto_skill_settings, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -15531,6 +15813,12 @@ $root.minimir = (function() {
                                 delete message.monster_count;
                             continue;
                         }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.auto_skill_settings = $root.minimir.v1.AutoSkillSettings.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_skill_settings);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -15588,6 +15876,11 @@ $root.minimir = (function() {
                 if (message.monster_count != null && $Object.hasOwnProperty.call(message, "monster_count"))
                     if (!$util.isInteger(message.monster_count))
                         return "monster_count: integer expected";
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings")) {
+                    var error = $root.minimir.v1.AutoSkillSettings.verify(message.auto_skill_settings, _depth + 1);
+                    if (error)
+                        return "auto_skill_settings." + error;
+                }
                 return null;
             };
 
@@ -15616,6 +15909,7 @@ $root.minimir = (function() {
              * @property {number|null} [remain_hosting_sec] HostingState remain_hosting_sec
              * @property {boolean|null} [auto_battle_enabled] HostingState auto_battle_enabled
              * @property {Long|null} [state_revision] HostingState state_revision
+             * @property {minimir.v1.AutoSkillSettings.$Properties|null} [auto_skill_settings] HostingState auto_skill_settings
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -15672,6 +15966,14 @@ $root.minimir = (function() {
             HostingState.prototype.state_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * HostingState auto_skill_settings.
+             * @member {minimir.v1.AutoSkillSettings.$Properties|null|undefined} auto_skill_settings
+             * @memberof minimir.v1.HostingState
+             * @instance
+             */
+            HostingState.prototype.auto_skill_settings = null;
+
+            /**
              * Creates a new HostingState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.HostingState
@@ -15709,6 +16011,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 2, wireType 0 =*/16).bool(message.auto_battle_enabled);
                 if (message.state_revision != null && $Object.hasOwnProperty.call(message, "state_revision") && (typeof message.state_revision === "object" ? message.state_revision.low || message.state_revision.high : message.state_revision !== 0))
                     writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.state_revision);
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings"))
+                    $root.minimir.v1.AutoSkillSettings.encode(message.auto_skill_settings, writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -15793,6 +16097,12 @@ $root.minimir = (function() {
                                 delete message.state_revision;
                             continue;
                         }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            message.auto_skill_settings = $root.minimir.v1.AutoSkillSettings.decode(reader, reader.size(), $undefined, _depth + 1, message.auto_skill_settings);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -15850,6 +16160,11 @@ $root.minimir = (function() {
                 if (message.state_revision != null && $Object.hasOwnProperty.call(message, "state_revision"))
                     if (!$util.isInteger(message.state_revision) && !(message.state_revision && $util.isInteger(message.state_revision.low) && $util.isInteger(message.state_revision.high)))
                         return "state_revision: integer|Long expected";
+                if (message.auto_skill_settings != null && $Object.hasOwnProperty.call(message, "auto_skill_settings")) {
+                    var error = $root.minimir.v1.AutoSkillSettings.verify(message.auto_skill_settings, _depth + 1);
+                    if (error)
+                        return "auto_skill_settings." + error;
+                }
                 return null;
             };
 

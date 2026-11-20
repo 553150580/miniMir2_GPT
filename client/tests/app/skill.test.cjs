@@ -52,7 +52,8 @@ test('火球优先合法所选怪物，否则取最近活怪；资源、死亡�
     assert.equal(selectSkillTarget(learned(), entities, 3,1).entityHandle, 3);
     assert.equal(selectSkillTarget(learned(), entities, 2,1).entityHandle, 4);
     assert.equal(selectSkillTarget(learned(), entities, null,1).entityHandle, 4);
-    assert.throws(() => selectSkillTarget(learned(), entities, 5,1), /已倒下/);
+    assert.equal(selectSkillTarget(learned(), entities, 5,1).entityHandle, 4);
+    assert.throws(() => selectSkillTarget(learned(), entities.filter(e=>[1,5].includes(e.entityHandle)), 5,1), /没有可施放/);
     assert.throws(() => selectSkillTarget({ ...learned(), learned: false }, entities, null,1), /尚未学会/);
     assert.throws(() => selectSkillTarget(learned({ active: false }), entities, null,1), /被动/);
     assert.throws(() => selectSkillTarget(learned({ range: 1 }), entities, 3,1), /超出/);
@@ -71,7 +72,7 @@ test('治愈支持自己及当前宠物，敌方选择退回自己，已死亡�
     assert.equal(selectSkillTarget(skill, entities, 2,1).entityHandle, 2);
     assert.equal(selectSkillTarget(skill, entities, null,1).entityHandle, 1);
     assert.equal(selectSkillTarget(skill, entities, 3,1).entityHandle, 1);
-    entities[1].hp = '0'; assert.throws(() => selectSkillTarget(skill, entities, 2,1), /目标已倒下/);
+    entities[1].hp = '0'; assert.throws(() => selectSkillTarget(skill, entities, 2,1), /友方已倒下/);
 });
 test('八方向身体与十六方向飞行按地图上方为0、顺时针排列，原地保留方向', () => {
     const origin = { x: 5, y: 5 }, deltas = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]];

@@ -129,6 +129,7 @@ type room struct {
 	PendingPetBirth       *petBirthReservation
 	Manual                bool
 	ManualDirection       uint32
+	AutoSkills            *autoSkillSettings
 	Pending               bool
 	PendingRetry          *job
 	PendingBinding        *safeZoneBindingFact
@@ -423,6 +424,11 @@ func (w *worker) command(c command) {
 		if !w.finishMapTravelAck(r, time.Now()) {
 			return
 		}
+		if q.AutoSkillSettings != nil {
+			if settings, valid := w.validateAutoSkillSettings(r, q.AutoSkillSettings); valid {
+				r.AutoSkills = settings
+			}
+		}
 		r.Ready = true
 		w.expireModes(r, time.Now())
 		w.snapshot(r)
@@ -467,7 +473,7 @@ func (w *worker) command(c command) {
 			w.modes(r, time.Now())
 			return
 		}
-		if code := w.setSkillMode(r, q.SkillId, q.Enabled, time.Now()); code != 0 {
+		if code := w.setSkillMode(r, q.SkillId, q.Enabled, time.Now(), c.frame.Request); code != 0 {
 			w.failure(r, c.frame, code)
 			w.modes(r, time.Now())
 		}
@@ -540,22 +546,7 @@ func (w *worker) command(c command) {
 			}
 		}
 	case p.MsgC2SAutoBattle:
-		var q pb.AutoBattleIntent
-		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.MonsterCount > 8 {
-			w.failure(r, c.frame, p.CodeInvalidArgument)
-			return
-		}
-		if m, ok := w.currentMap(r); !ok || m.SceneKindValue() == devconfig.SceneKindTown {
-			w.failure(r, c.frame, p.CodeLineForbidden)
-			w.hosting(r, c.frame.Request)
-			return
-		}
-		if q.MonsterCount > 0 {
-			r.MonsterCount = int(q.MonsterCount)
-		}
-		r.Auto = q.Enabled
-		w.hosting(r, c.frame.Request)
-		w.snapshot(r)
+		w.autoBattleIntent(r, c.frame)
 	case p.MsgC2SCastIntent:
 		var q pb.CastIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
@@ -694,6 +685,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Navigation = navigationState{}
 	r.Destination = nil
 	r.Manual = false
+	r.AutoSkills = nil
 	r.MaterialEconomicSeq, r.MaterialSourceSeq = role.EconomicSeq, role.SourceSeq
 	r.Auto = true
 	r.MonsterCount = 1
@@ -789,7 +781,8 @@ func (w *worker) hosting(r *room, request uint32) {
 	if r.Conn == nil || !r.Ready {
 		return
 	}
-	w.send(r, p.MsgS2CHostingState, request, &pb.HostingState{RemainHostingSec: uint32(r.Role.HostingSeconds), AutoBattleEnabled: r.Auto, StateRevision: uint64(r.Role.Revision)})
+	w.send(r, p.MsgS2CHostingState, request, &pb.HostingState{RemainHostingSec: uint32(r.Role.HostingSeconds), AutoBattleEnabled: r.Auto,
+		StateRevision: uint64(r.Role.Revision), AutoSkillSettings: r.AutoSkills.proto()})
 }
 func (w *worker) snapshot(r *room) {
 	if !r.Ready || r.Isolated || r.DeferMovementSnapshot {

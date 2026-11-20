@@ -6,6 +6,7 @@ const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const root=path.resolve(__dirname,'../../..');
 const Long=require('node:module').createRequire(path.join(root,'client/assets/scripts/app/AppRoot.ts'))('long');
 const models=require('../../../.work/ui-tests/app/SkillModel.js');
+const preferences=require('../../../.work/ui-tests/app/SkillPreferences.js');
 const {NavigationIntent}=require('../../../.work/ui-tests/input/NavigationIntent.js');
 const decorator=(...args)=>args.length>1?undefined:(...params)=>params.length===1?params[0]:undefined;
 const decorators=new Proxy({},{get(){return decorator;}});
@@ -28,21 +29,66 @@ function app(){
     const definition=(id,kind,target_kind)=>({id,name:`技能${id}`,job_id:1,book_item_id:7,learn_level:1,initial_level:0,kind,target_kind,active:true,range:9,
         base_cost:3,level_cost:2,cast_ms:600,impact_base_ms:500,projectile_ms_per_cell:0,accuracy_per_level:0});
     const definitions=[definition(1,'fireball','enemy_entity'),definition(11,'thunderbolt','enemy_entity'),definition(23,'firebang','enemy_grid')];
-    const sent=[],shown=[];
+    const sent=[],shown=[],memory=new Map(),storage={getItem:key=>memory.get(key)??null,setItem:(key,value)=>memory.set(key,value)};
     const identity={connection:1,binding:'1',role:'roleA',scene:'1',baseline:'1',map:'1',travelId:''};
     const session={ready:true,travel:{active:false,blocksInput:false},role:{job:1},entry:{sceneEpoch:'1',baselineId:'1',roomId:'1',sceneKind:1,resourceVersion:'5',playerHandle:1},inventory:{revision:'1',level:7,items:[],learnedSkills:definitions.map(row=>({skillId:row.id,level:0}))},quickSkills:new Map(),
-        baseline:{entities:[{entityHandle:1,entityKind:1,hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,hp:'100',position:{x:4,y:4},direction:0}]},connection:{generation:1,binding:Long.UONE,connected:true,send:(id,value)=>sent.push({id,value})}};
-    const {AppRoot}=load(path.join(root,'client/assets/scripts/app/AppRoot.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{}}
-        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',currentEntryIdentity:()=>identity,isCurrentEntry:value=>value===identity&&session.entry.sceneEpoch.toString()===identity.scene,operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
+        baseline:{entities:[{entityHandle:1,entityKind:1,life:'0',hp:'100',mp:'100',position:{x:2,y:2},direction:4},{entityHandle:3,entityKind:3,life:'0',hp:'100',position:{x:4,y:4},direction:0}]},connection:{generation:1,binding:Long.UONE,connected:true,send:(id,value)=>sent.push({id,value})}};
+    const {AppRoot}=load(path.join(root,'client/assets/scripts/app/AppRoot.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{},sys:{localStorage:storage}}
+        :id==='../input/NavigationIntent'?{NavigationIntent}:id==='long'?Long:id==='./GameSession'?{session,roleIdentity:()=> 'roleA',currentEntryIdentity:()=>identity,isCurrentEntry:value=>value===identity&&session.entry.sceneEpoch.toString()===identity.scene,operation:()=>({opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE})}:id==='./SkillModel'?models:id==='./SkillPreferences'?preferences:id==='./CastingSupplyModel'?require('../../../.work/ui-tests/app/CastingSupplyModel.js'):{});
     const instance=new AppRoot(),saved={active:false,getComponent:()=>({string:''})};
     instance.attached=identity;instance.world={sceneEpoch:'1',isMapReady:true,gameplay:{skills:definitions,items:[]},map:{width:16,height:16},showAim:value=>shown.push(value)};instance.ui={top:null};instance.find=()=>saved;instance.error=error=>{throw error;};
     const row=id=>models.skillRows(instance.skillSnapshot()).find(row=>row.definition.id===id);
-    return {instance,session,sent,shown,row,definitions,definition};
+    instance.refreshGame=()=>{};
+    return {instance,session,sent,shown,row,definitions,definition,storage};
 }
 test('真实AppRoot可以施放列表第二主动技能，不再强制第一个技能，快捷选择按角色隔离',()=>{
     const {instance,session,sent,row}=app();instance.castSkill(row(11));assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,11);assert.equal(sent[0].value.targetHandle,3);
     session.quickSkills.set('roleA',11);assert.equal(instance.quickSkill().definition.id,11);
+    session.inventory.learnedSkills=[];assert.equal(instance.quickSkill(),null);
     session.role.job=2;assert.equal(instance.quickSkill(),null);
+});
+test('普通点怪只选择，详情由独立入口打开，死亡或替换的旧目标回退到最近活怪',()=>{
+    const {instance,session,sent,row}=app(),details=[];
+    instance.combatStatus={showEntity:(...args)=>details.push(args)};
+    const original=session.baseline.entities[1];
+    session.baseline.entities.push({...original,entityHandle:8,position:{x:3,y:2}});
+    instance.selectWorldEntity(original);assert.deepEqual(details,[]);
+    instance.openTargetDetails();assert.deepEqual(details,[[3,'0']]);
+    instance.castSkill(row(1));assert.equal(sent.at(-1).value.targetHandle,3);
+    original.hp='0';instance.castSkill(row(1));assert.equal(sent.at(-1).value.targetHandle,8);
+    session.baseline.entities[1]={...original,life:'1',hp:'20'};
+    instance.openTargetDetails();assert.equal(details.length,1);
+    instance.castSkill(row(1));assert.equal(sent.at(-1).value.targetHandle,8);
+});
+test('普通触摸NPC保留详情，技能瞄准中轻触NPC按原格确认且不改地面导航',()=>{
+    const {instance,sent,row}=app(),popups=[];
+    const npc={name:'书店掌柜',role:'书店',position:{x:4,y:4}};
+    instance.popup={show:(...args)=>popups.push(args)};
+    instance.selectTownNpc(npc);assert.deepEqual(popups,[['Details',{title:npc.name,message:npc.role}]]);
+    instance.nav.setGroundTarget({x:9,y:8});instance.castSkill(row(23));
+    instance.selectTownNpc(npc);assert.equal(popups.length,1);assert.deepEqual(sent.at(-1).value.targetGrid,npc.position);
+    assert.deepEqual(instance.nav.state.target,{x:9,y:8});
+});
+test('手动快捷与自动设置分别按角色保存，城镇只发设置并等待匹配的服务端确认',async()=>{
+    const {instance,session,storage,sent}=app();
+    preferences.saveSkillPreference(storage,'roleA','quick',11);
+    preferences.saveSkillPreference(storage,'roleB','quick',23);
+    assert.equal(instance.quickSkill().definition.id,11);
+    assert.equal(preferences.savedQuickSkill(storage,'roleB'),23);
+    const initial={enabled:true,disabledSkillIds:[11]};
+    session.hosting={autoSkillSettings:initial};session.entry.sceneKind=2;
+    session.connection.request=async(id,value)=>{sent.push({id,value});return {autoSkillSettings:initial};};
+    await assert.rejects(instance.changeAutoSkillSettings(),/未确认/);
+    assert.equal(preferences.savedAutoSkillSettings(storage,'roleA'),undefined);
+    session.connection.request=async(id,value)=>{sent.push({id,value});session.hosting.autoSkillSettings=value.autoSkillSettings;return session.hosting;};
+    await instance.changeAutoSkillSettings();
+    assert.deepEqual(sent.at(-1),{id:30004,value:{sceneEpoch:'1',autoSkillSettings:{enabled:false,disabledSkillIds:[11]}}});
+    assert.deepEqual(preferences.savedAutoSkillSettings(storage,'roleA'),{enabled:false,disabledSkillIds:[11]});
+    await instance.changeAutoSkillSettings(11);
+    assert.deepEqual(preferences.savedAutoSkillSettings(storage,'roleA'),{enabled:false,disabledSkillIds:[]});
+    assert.equal(preferences.savedAutoSkillSettings(storage,'roleB'),undefined);
+    assert.equal(instance.quickSkill().definition.id,11);
+    session.hosting={};await assert.rejects(instance.changeAutoSkillSettings(),/尚未同步/);
 });
 test('真实AppRoot地面瞄准、取消与提交均不改原导航；提交只含原技能及明确地面格',()=>{
     const {instance,sent,row}=app();instance.nav.setGroundTarget({x:9,y:8});
@@ -80,16 +126,25 @@ test('真实AppRoot方向瞄准不选替代怪、不限制点击到近端、拒�
     instance.castSkill(row(24));assert.equal(sent.length,2);assert.equal(sent[1].value.skillId,24);assert.equal(sent[1].value.targetHandle,0);assert.deepEqual(sent[1].value.targetGrid,{x:2,y:2});
     assert.deepEqual(instance.nav.state.target,{x:9,y:8});
 });
-test('真实AppRoot模式与烈火走专用请求，关闭不扣本地魔法，未确认不翻状态、错误出生代次不提交',()=>{
+test('真实AppRoot模式与烈火走专用请求，关闭不扣本地魔法，未确认不翻状态、错误出生代次不提交',async()=>{
     const {instance,session,sent,row,definitions,definition}=app();
     definitions.push({...definition(12,'thrusting','attack_mode'),activation_kind:'toggle'}, {...definition(26,'flaming_sword','attack_charge'),activation_kind:'charge'});
     session.inventory.learnedSkills.push({skillId:12,level:0},{skillId:26,level:0});
     const player=session.baseline.entities[0];player.life='0';player.mp='0';
     session.skillModes={sceneEpoch:'1',revision:'1',playerLife:'0',serverTimeUnixMs:'1900000000000',states:[{skillId:12,enabled:true,ready:false,remainingMs:0,cooldownRemainingMs:0},{skillId:26,enabled:false,ready:false,remainingMs:0,cooldownRemainingMs:0}]};
-    instance.nav.setGroundTarget({x:9,y:8});instance.castSkill(row(12));assert.equal(sent[0].id,30009);assert.equal(sent[0].value.enabled,false);
+    let resolve;
+    session.connection.request=(id,value)=>{sent.push({id,value});return new Promise(done=>{resolve=done;});};
+    instance.nav.setGroundTarget({x:9,y:8});const close=instance.castSkill(row(12));assert.equal(sent[0].id,30009);assert.equal(sent[0].value.enabled,false);
     assert.equal(session.skillModes.states[0].enabled,true);assert.equal(player.mp,'0');assert.deepEqual(instance.nav.state.target,{x:9,y:8});
-    player.mp='100';instance.castSkill(row(26));assert.equal(sent[1].id,30009);assert.equal(sent[1].value.skillId,26);assert.equal(sent[1].value.enabled,true);
+    assert.deepEqual(instance.skillSnapshot().modePending,{skillId:12,enabled:false});
+    assert.throws(()=>instance.castSkill(row(12)),/尚未同步/);
+    session.skillModes={...session.skillModes,revision:'2',states:[{...session.skillModes.states[0],enabled:false},session.skillModes.states[1]]};resolve(session.skillModes);await close;
+    assert.equal(instance.skillSnapshot().modePending,undefined);assert.equal(session.skillModes.states[0].enabled,false);
+    player.mp='100';const charge=instance.castSkill(row(26));assert.equal(sent[1].id,30009);assert.equal(sent[1].value.skillId,26);assert.equal(sent[1].value.enabled,true);
     assert.equal(session.skillModes.states[1].ready,false);
+    resolve(session.skillModes);await assert.rejects(charge,/技能状态未确认/);assert.equal(instance.skillSnapshot().modePending,undefined);
+    session.connection.request=async()=>{throw new Error('操作回执超时');};
+    await assert.rejects(instance.castSkill(row(26)),/回执超时/);assert.equal(instance.skillSnapshot().modePending,undefined);
     session.skillModes.states[1].ready=true;assert.throws(()=>instance.castSkill(row(26)),/已就绪/);assert.equal(sent.length,2);
     player.life='1';assert.throws(()=>instance.castSkill(row(12)),/尚未同步/);assert.equal(sent.length,2);
 });
@@ -110,7 +165,7 @@ test('真实AppRoot自身魔法盾不误选宠物；友方材料瞄准固定原�
     const {instance,session,sent,row,definitions,definition}=app(),errors=[];
     definitions.push({...definition(31,'magic_shield','friendly_self')},{...definition(14,'soul_shield','friendly_grid'),area_radius:3,material_item_id:187,material_quantity:1});
     session.inventory.learnedSkills.push({skillId:31,level:0},{skillId:14,level:0});session.baseline.entities[0].life=Long.UZERO;session.entry.sceneEpoch=Long.UONE;
-    session.baseline.entities.push({entityHandle:2,entityKind:2,hp:'100',position:{x:3,y:2}});instance.selectedTarget=2;instance.nav.setGroundTarget({x:9,y:8});
+    session.baseline.entities.push({entityHandle:2,entityKind:2,life:'0',hp:'100',position:{x:3,y:2}});instance.selectedTarget={handle:2,life:'0'};instance.nav.setGroundTarget({x:9,y:8});
     instance.castSkill(row(31));assert.equal(sent.length,1);assert.equal(sent[0].id,30003);assert.equal(sent[0].value.targetHandle,0);assert.deepEqual(sent[0].value.targetGrid,{x:2,y:2});
     const item={instanceId:new Uint8Array(16).fill(7),itemId:187,version:Long.fromString('9007199254740993',true),quantity:Long.fromInt(5),bound:true};
     session.inventory.items=[];session.inventory.equipped=[{slot:100,item}];instance.world.gameplay.casting_supply={enabled:true,slot:100,item_ids:[187]};
@@ -146,7 +201,7 @@ test('实际AppRoot抗拒不锁定宠物，野蛮只选方向，两者均不清�
     const {instance,session,row,definitions,definition,sent}=app();
     definitions.push({...definition(8,'repulsion','enemy_self'),range:0,area_radius:1}, {...definition(27,'shoulder_dash','enemy_direction'),range:0,line_cells:0});
     session.inventory.learnedSkills.push({skillId:8,level:0},{skillId:27,level:0});
-    instance.nav.setGroundTarget({x:9,y:8});instance.selectedTarget=3;
+    instance.nav.setGroundTarget({x:9,y:8});instance.selectedTarget={handle:3,life:'0'};
     instance.castSkill(row(8));assert.equal(sent.length,1);assert.equal(sent[0].value.skillId,8);assert.equal(sent[0].value.targetHandle,0);
     instance.castSkill(row(27));assert.equal(sent.length,1);assert(instance.aim);
     instance.consumeGround({x:5,y:2});assert.equal(sent.length,2);assert.equal(sent[1].value.skillId,27);assert.equal(sent[1].value.direction,2);assert.equal(sent[1].value.targetHandle,0);

@@ -186,8 +186,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	if distance(r.Player.Pos, point) > s.RangeCells {
 		return nil, p.CodeSkillTarget
 	}
-	requireFlight := s.RequireLineOfSight || (s.TargetKind == "" && s.Behavior == "fireball")
-	if requireFlight && !w.lineOfSight(r, r.Player.Pos, point) {
+	if skillRequiresFlight(s) && !w.lineOfSight(r, r.Player.Pos, point) {
 		return nil, p.CodeSkillTarget
 	}
 	cost, validCost := teleportManaCost(&r.Player, s, level)
@@ -420,7 +419,10 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, target.Handle, target.Life, target.Pos, amount, outcome, handler.Healing, c.ID, 0)
 	}
 }
-func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
+func (w *worker) autoSkill(r *room, now time.Time) bool {
+	if r.AutoSkills != nil && !r.AutoSkills.enabled {
+		return false
+	}
 	pet := r.worldPet(r.currentWorld())
 	skills := append([]devconfig.Skill(nil), w.e.Store.Cfg.Fixture.Skills...)
 	sort.SliceStable(skills, func(i, j int) bool {
@@ -429,12 +431,11 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 		}
 		return skills[i].AutoPriority > skills[j].AutoPriority
 	})
-	var approach *entity
 	for _, s := range skills {
-		handler, ok := skillHandlers[s.Behavior]
-		if !ok || !s.AutoEnabled || handler.Passive || s.Activation() != "cast" || s.JobID != r.Role.Job {
+		if !r.AutoSkills.permits(s.ID) || !automaticSkillForJob(s, r.Role.Job) {
 			continue
 		}
+		handler := skillHandlers[s.Behavior]
 		rank, learned := r.Role.Skill(s.ID)
 		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) || r.Player.MP < s.MPBaseCost+int64(rank)*s.MPLevelCost {
 			continue
@@ -468,10 +469,10 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 			}
 			if s.MaterialQuantity > 0 {
 				if w.autoMaterialCast(r, s, center, now) {
-					return nil, true
+					return true
 				}
 			} else if w.castDirected(r, s.ID, 0, 0, direction, now, pointPB(center)) == 0 {
-				return nil, true
+				return true
 			}
 			continue
 		}
@@ -480,7 +481,7 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				continue
 			}
 			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
-				return nil, true
+				return true
 			}
 			continue
 		}
@@ -493,25 +494,16 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				}
 			}
 			if count < s.AutoMinTargets {
-				if approach == nil {
-					nearest := w.nearest(r, &r.Player)
-					if nearest != nil && distance(r.Player.Pos, nearest.Pos) > 1 {
-						approach = nearest
-					}
-				}
 				continue
 			}
 			if w.castDirected(r, s.ID, 0, 0, direction, now) == 0 {
-				return nil, true
+				return true
 			}
 			continue
 		}
 		if handler.Healing {
-			target = &r.Player
-			if target.HP >= target.MaxHP && pet != nil && pet.HP > 0 && pet.HP < pet.MaxHP {
-				target = pet
-			}
-			if target.HP >= target.MaxHP || target.HealAmount > 0 {
+			target = w.automaticHealingTarget(r, pet, s.RangeCells)
+			if target == nil {
 				continue
 			}
 			if handler.Area {
@@ -528,23 +520,12 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 				target = nil
 			}
 		} else {
-			target = w.nearest(r, &r.Player)
+			target = w.automaticEnemyTarget(r, s, handler.Area)
 			if target == nil {
 				continue
 			}
 			if handler.Area {
-				if len(w.areaTargets(r, s, target.Pos)) < s.AutoMinTargets {
-					continue
-				}
 				grid = pointPB(target.Pos)
-			}
-			if distance(r.Player.Pos, target.Pos) > s.RangeCells || s.RequireLineOfSight && !w.lineOfSight(r, r.Player.Pos, target.Pos) {
-				if approach == nil {
-					approach = target
-				}
-				continue
-			}
-			if handler.Area {
 				target = nil
 			}
 		}
@@ -553,8 +534,8 @@ func (w *worker) autoSkill(r *room, now time.Time) (*entity, bool) {
 			handle = target.Handle
 		}
 		if w.castDirected(r, s.ID, handle, 0, direction, now, grid) == 0 {
-			return nil, true
+			return true
 		}
 	}
-	return approach, approach != nil
+	return false
 }

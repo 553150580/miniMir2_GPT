@@ -56,6 +56,7 @@ test('实际中文验收名与12汉字名字有足够单行宽度，24字号不�
 });
 function previousLayout(count){
     const projection=structuredClone(scene);
+    require('./helpers/skill_layout.cjs')(projection);
     require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projection);
     require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
     const saved=projection.slice(0,count);
@@ -247,12 +248,35 @@ test('技能普通弹窗保存复用列表与学习施放按钮，游戏特效�
     assert.equal(scene[scroll._content.__id__]._parent.__id__,scene.indexOf(view));assert.equal(template._active,false);
     component(template,'cc.Button');assert(list.rowHeight>=96);
     for(const button of ['Learn','Use'])component(node(`UIMgr/Panels/Skills/${button}`),'cc.Button');
-    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'开发候选 · 各技能独立升级');
+    assert.equal(component(node('UIMgr/Panels/Skills/Hint'),'cc.Label')._string,'自动施法随战斗开启 · 手动快捷可单独设置');
     assert.equal(node('MapViewport/World/Effects')._parent.__id__,scene.indexOf(node('MapViewport/World')));
     const effect=JSON.parse(fs.readFileSync(path.join(root,'client/assets/resources/prefabs/Effect.prefab'),'utf8'));
     const sprite=effect.find(value=>value.__type__==='cc.Sprite');assert(sprite);assert.equal(sprite._type,SPRITE_SIMPLE);
     assert.equal(sprite._isTrimmedMode,false);assert.equal(sprite._srcBlendFactor,2);assert.equal(sprite._dstBlendFactor,1);
     assert(!effect.some(value=>value.__type__==='cc.Graphics'));
+});
+
+test('手动技能、自动偏好、目标详情使用独立保存按钮且不挡技能列表', () => {
+    const box = n => {
+        const { width, height } = transform(n)._contentSize;
+        return { left: n._lpos.x - width / 2, right: n._lpos.x + width / 2,
+            bottom: n._lpos.y - height / 2, top: n._lpos.y + height / 2 };
+    };
+    const skillPath = 'UIMgr/Panels/Skills/';
+    const list = box(node(skillPath + 'List')), message = box(node(skillPath + 'Message'));
+    const controls = ['AutoCast', 'SkillAuto', 'Details'].map(name => {
+        const control = node(skillPath + name);
+        assert.deepEqual(component(control, 'cc.Button').clickEvents, []);
+        assert.equal(component(node(skillPath + name + '/Label'), 'cc.Label')._fontSize, 24);
+        const area = box(control);
+        assert(area.bottom > list.top && area.top < message.bottom);
+        return area;
+    });
+    assert(controls[0].right < controls[1].left && controls[1].right < controls[2].left);
+    const target = node('MapViewport/Actions/TargetDetails'), auto = node('MapViewport/Actions/Auto');
+    assert.equal(target._active, false);
+    assert(box(target).bottom > box(auto).top);
+    component(target, 'cc.Button');
 });
 
 test('技能资产普通列表保存原实例数量按钮，独立报价覆盖层保存可滚动完整明细',()=>{

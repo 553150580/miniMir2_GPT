@@ -309,19 +309,19 @@ func TestCombatBudgetsAndInvalidGroundRejectBeforeCosts(t *testing.T) {
 func TestAutomaticSkillPriorityUsesTargetsAndFallsBackWithoutTouchingNavigation(t *testing.T) {
 	w, r, _ := stageAWorker(t, 1)
 	now := time.Unix(1800000000, 0)
-	if _, handled := w.autoSkill(r, now); !handled || r.Casts[0].Skill.ID != 11 {
+	if !w.autoSkill(r, now) || r.Casts[0].Skill.ID != 11 {
 		t.Fatal("单怪应按候选优先雷电而非先火球遮蔽新技能")
 	}
 	clearAction(r)
 	s, _ := w.e.Store.Cfg.Fixture.Skill(1)
 	r.Player.MP = s.MPBaseCost
-	if _, handled := w.autoSkill(r, now); !handled || r.Casts[0].Skill.ID != 1 {
+	if !w.autoSkill(r, now) || r.Casts[0].Skill.ID != 1 {
 		t.Fatal("缺蓝没有尝试可付出的低阶技能")
 	}
 	clearAction(r)
 	r.Player.MP = 0
-	if target, handled := w.autoSkill(r, now); handled || target != nil {
-		t.Fatal("无满足技能没有回到普通攻击/追击")
+	if w.autoSkill(r, now) {
+		t.Fatal("无满足技能时没有回到原地普攻或等待")
 	}
 }
 

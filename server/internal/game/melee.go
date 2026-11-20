@@ -73,8 +73,12 @@ func (w *worker) modeState(r *room, now time.Time) *pb.SkillModeState {
 	return out
 }
 
-func (w *worker) modes(r *room, now time.Time) {
-	w.send(r, p.MsgS2CSkillModeState, 0, w.modeState(r, now))
+func (w *worker) modes(r *room, now time.Time, request ...uint32) {
+	var id uint32
+	if len(request) != 0 {
+		id = request[0]
+	}
+	w.send(r, p.MsgS2CSkillModeState, id, w.modeState(r, now))
 }
 
 func (w *worker) expireModes(r *room, now time.Time) {
@@ -85,30 +89,31 @@ func (w *worker) expireModes(r *room, now time.Time) {
 	}
 }
 
-func (w *worker) setSkillMode(r *room, id uint32, enabled bool, now time.Time) uint32 {
+func (w *worker) setSkillMode(r *room, id uint32, enabled bool, now time.Time, request ...uint32) uint32 {
 	s, exists := w.e.Store.Cfg.Fixture.Skill(id)
 	rank, learned := r.Role.Skill(id)
 	if !exists || !learned || s.JobID != r.Role.Job || rank < s.LearnedLevel || rank > s.MaxLevel {
 		return p.CodeSkillNotLearned
 	}
-	if r.Pending || r.Isolated || r.Player.HP <= 0 || w.mapCellBudget(r) == 0 {
+	if r.Isolated || r.Player.HP <= 0 || w.mapCellBudget(r) == 0 || r.Melee.Revision == math.MaxUint64 {
 		return p.CodeSkillStateBlocked
 	}
 	switch s.Behavior {
 	case "thrusting":
 		if r.Melee.Thrusting == enabled {
-			w.modes(r, now)
+			w.modes(r, now, request...)
 			return 0
 		}
 		r.Melee.Thrusting = enabled
 	case "half_moon":
 		if r.Melee.HalfMoon == enabled {
-			w.modes(r, now)
+			w.modes(r, now, request...)
 			return 0
 		}
 		r.Melee.HalfMoon = enabled
 	case "flaming_sword":
-		if !enabled {
+		// 刺杀和半月只改临时开关；烈火还要扣MP并生成可用窗口，继续等待永久事务。
+		if !enabled || r.Pending {
 			return p.CodeSkillStateBlocked
 		}
 		if now.Before(r.Melee.FlamingUntil) {
@@ -126,7 +131,7 @@ func (w *worker) setSkillMode(r *room, id uint32, enabled bool, now time.Time) u
 		return p.CodeSkillStateBlocked
 	}
 	r.Melee.Revision++
-	w.modes(r, now)
+	w.modes(r, now, request...)
 	w.snapshot(r)
 	return 0
 }

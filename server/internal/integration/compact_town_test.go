@@ -56,7 +56,8 @@ func TestCompactTownDirectoryMongoWS(t *testing.T) {
 	rpc(t, endpoint, login.AccountToken, p.MsgC2SCreateRole, &pb.CreateRoleRequest{
 		OriginServerId: 1, Slot: 1, Job: 0, Name: "村镇" + domain.ID()[:6], OpId: domain.Bytes(domain.ID()),
 	}, role, 0)
-	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	prefs := &pb.AutoSkillSettings{}
+	c := joinWithAutoSkills(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), prefs)
 	defer func() { c.close() }()
 	c.auto(false, 1)
 	claim := c.asset(p.MsgC2SClaimHostingTime, &pb.ClaimHostingTimeRequest{Operation: c.operation()})
@@ -89,6 +90,9 @@ func TestCompactTownDirectoryMongoWS(t *testing.T) {
 			t.Fatalf("地图%d的权威入场点、类型或战斗实体错误：%v", id, c.entry)
 		}
 		travelAcknowledge(c, true)
+		if !proto.Equal(c.hosting.GetAutoSkillSettings(), prefs) {
+			t.Fatal("旅行ACK未带偏好时覆盖了当前room的设置")
+		}
 		rejectTravel(1, id)
 		rejectTravel(2, 99)
 		npc := m.NPCs[0].Position
@@ -120,6 +124,9 @@ func TestCompactTownDirectoryMongoWS(t *testing.T) {
 	lastTown := c.entry.RoomId
 	c.close()
 	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	if !proto.Equal(c.hosting.GetAutoSkillSettings(), prefs) {
+		t.Fatal("旧客户端健康重连覆盖了当前room的设置")
+	}
 	if c.entry.RoomId != lastTown || c.entry.SceneEpoch != scene || c.player().Life != standing.Life ||
 		!proto.Equal(c.player().Position, standing.Position) {
 		t.Fatal("健康重连重建了最后选择的城镇", c.entry)

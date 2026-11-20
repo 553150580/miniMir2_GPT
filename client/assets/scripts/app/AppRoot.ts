@@ -21,6 +21,7 @@ import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPr
 import { protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
 import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
+import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
@@ -33,6 +34,7 @@ import type { AttachmentIdentity, TravelContext } from './MapTravelModel';
 import { MapViewportPreparation } from './MapViewportPreparation';
 import { TownDirectory } from './TownDirectory';
 import { townDirectoryRegions, TownDirectoryMapRow } from './TownMapModel';
+import type { TownNpc } from './TownMapModel';
 import { roleBindingText } from './RoleBindingModel';
 import { petAppearDuration } from './PetBornModel';
 import { GameAutoRecycle } from './GameAutoRecycle';
@@ -70,7 +72,8 @@ export class AppRoot extends Component {
     private selectedJob = 0;
     private selectedItem: any = null;
     private selectedEquipped: EquippedSelection | null = null;
-    private selectedTarget: number | null = null;
+    private selectedTarget: { handle: number; life: string } | null = null;
+    private pendingSkillMode?: { skillId: number; enabled: boolean };
     private aim: { skillId: number; role: string; scene: string; rule: string; supply?: SupplySelection } | null = null;
     private inputSequence = 0;
     private auto = true;
@@ -360,15 +363,22 @@ export class AppRoot extends Component {
         this.button('BottomHUD/Skills/RedPotion', () => this.usePotion(35));
         this.button('BottomHUD/Skills/BluePotion', () => this.usePotion(36));
         this.button('MapViewport/Actions/Attack', () => this.basicAttack());
+        this.optionalButton('MapViewport/Actions/TargetDetails', () => this.openTargetDetails());
         this.button('BottomHUD/Skills/BasicAttack', () => {
             if (session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle)?.hp.isZero()) return this.basicAttack();
             const skill = this.quickSkill();
             if (!skill) return this.basicAttack();
-            if (!skill.learned) { this.ui!.open('Skills'); this.refreshGame(); return; }
             return this.castSkill(skill);
         });
         this.button('BottomHUD/Skills/SkillsPanel', () => { this.ui!.open('Skills'); this.refreshGame(); });
         this.button('UIMgr/Panels/Skills/Learn', () => this.learnSkill());
+        this.optionalButton('UIMgr/Panels/Skills/Details', () => this.skills?.openDetails());
+        this.optionalButton('UIMgr/Panels/Skills/AutoCast', () => this.changeAutoSkillSettings());
+        this.optionalButton('UIMgr/Panels/Skills/SkillAuto', () => {
+            const skill = this.skills?.selected;
+            if (!skill?.learned || !skill.definition.auto_enabled) throw new Error('此技能当前仅可手动使用');
+            return this.changeAutoSkillSettings(skill.definition.id);
+        });
         this.button('UIMgr/Panels/Skills/Use', () => {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             return this.castSkill(skill);
@@ -377,12 +387,14 @@ export class AppRoot extends Component {
             const skill = this.skills?.selected; if (!skill) throw new Error('先选择技能');
             const enabled = this.find('UIMgr/Panels/Skills/ModeToggle').getComponent(Toggle)!.isChecked;
             try { return this.castSkill(skill, enabled); }
-            finally { this.refreshGame(); }
+            catch (error) { this.refreshGame(); throw error; }
         }, Toggle.EventType.TOGGLE);
         this.button('UIMgr/Panels/Skills/BindQuick', () => {
             const selected = this.skills?.selected;
             if (!selected?.learned || !selected.definition.active) throw new Error('请选择已学会的主动技能');
-            session.quickSkills.set(roleIdentity(), selected.definition.id); this.refreshGame();
+            const role = roleIdentity(), id = selected.definition.id;
+            saveSkillPreference(sys?.localStorage, role, 'quick', id);
+            session.quickSkills.set(role, id); this.refreshGame();
         });
         this.button('MapViewport/Aiming/Cancel', () => this.cancelAim());
         this.button('MapViewport/BuffBar/Overview', () => this.combatStatus!.openOverview());
@@ -484,21 +496,15 @@ export class AppRoot extends Component {
             mount: assets => {
                 session.progressionCurve = typeof assets.gameplay.progression?.curve_version === 'string' ? assets.gameplay.progression.curve_version : null;
                 this.combatStatus?.dispose(); this.combatStatus = undefined;
-                this.selectedTarget = null; this.aim = null; this.lastBaseline = ''; this.lastInventory = null; this.reconciliationStarted = false;
+                this.selectedTarget = null; this.aim = null; this.pendingSkillMode = undefined; this.lastBaseline = ''; this.lastInventory = null; this.reconciliationStarted = false;
                 const viewport = this.find('MapViewport'), world = viewport.getChildByName('World')!;
                 const view = new GameWorldView(viewport, world, world.getChildByName('Entities')!, role.name, role.job, entry.sceneEpoch, entry.playerHandle);
                 this.world = view; this.attached = identity;
                 view.bindPresentation(identity, () => !this.disposed && !!session.role && this.world === view && isCurrentEntry(identity),
                     () => { if (session.role && isCurrentEntry(identity)) session.petBorn.discardPending(); });
                 this.hud!.setMapFrame(assets.background, assets);
-                view.prepare(assets, entity => {
-                    if (!this.isWorldCurrent() || this.world !== view || !this.canSendInput()) return;
-                    if (this.consumeGround(entity.position)) return;
-                    this.selectedTarget = entity.entityHandle;
-                    this.combatStatus?.showEntity(entity.entityHandle, entity.life.toString());
-                }, npc => {
-                    if (this.world === view && this.isWorldCurrent() && this.canSendInput()) this.popup!.show('Details', { title: npc.name, message: npc.role });
-                });
+                view.prepare(assets, entity => { if (this.world === view && this.canSendInput()) this.selectWorldEntity(entity); },
+                    npc => { if (this.world === view && this.canSendInput()) this.selectTownNpc(npc); });
                 const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, mapId: entry.roomId });
                 this.combatStatus = combatStatus;
                 const releaseStatus = assets.onBeforeInvalidation(reason => {
@@ -524,7 +530,8 @@ export class AppRoot extends Component {
                     || session.baseline?.sceneEpoch.toString() !== identity.scene.toString() || session.baseline?.baselineId.toString() !== identity.baseline.toString()) throw new StaleMapAttachmentError('旧地图准备不得确认新场景');
                 if (identity.travelId && !session.travel.acknowledge(identity)) throw new StaleMapAttachmentError('旅行附着确认代次已经变化');
                 if (identity.serverTransitionId && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
-                session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId });
+                const autoSkillSettings = savedAutoSkillSettings(sys?.localStorage, identity.role);
+                session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, ...(autoSkillSettings && { autoSkillSettings }) });
             },
         });
         this.attachmentTask = task;
@@ -743,28 +750,31 @@ export class AppRoot extends Component {
             const born = session.petBorn.take(identity, baseline, petAppearDuration(this.world.manifest), session.presentationNow());
             if (born) this.world.presentPetBorn(born);
         }
-        const quick = this.quickSkill();
+        const skills = this.skillSnapshot(), boundQuick = this.boundQuickSkillId(skills.roleIdentity), quick = this.quickSkill();
         const presentation = { playerHandle: session.entry?.playerHandle ?? 0, role: session.role, wallet: session.wallet, inventory: session.inventory, baseline,
             bindingState: session.bindingState, bindingNotice: session.bindingNotice, teleportNotice: session.teleport.state, recycleNotice: session.recycleNotice, experienceNotice: session.experienceNotice, warehouseNotice: session.warehouseNotice,
             hosting: session.hosting, report: session.report, ready: session.ready, lastError: session.lastError,
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
-            quickSkillLabel: quick ? skillQuickStateLabel(this.skillSnapshot(), quick) : undefined };
+            quickSkillLabel: quick ? skillQuickStateLabel(skills, quick) : undefined };
         this.hud?.refresh(presentation);
         this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !this.attaching;
         this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !this.attaching;
         const travel = this.find('BottomHUD/Footer/Map').getComponent(Button)!;
         travel.interactable = (session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled);
         this.text('BottomHUD/Footer/Map/Label', this.usesMapDirectory() ? '地图' : session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
-        this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
+        this.skills?.refresh(skills, quick?.definition.id ?? 0, boundQuick);
         this.combatStatus?.refresh(baseline, session.ready);
         const player = baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
         if (session.ready && player && this.attached && this.world.isMapReady) {
             const arrival = session.teleport.takeArrival(this.attached, player.life, player.movementRevision);
             if (arrival) this.world.presentTeleportArrival(arrival);
         }
-        const materialDisabled = !!quick && (needsCastingSupply(this.skillSnapshot(), quick) && this.world.gameplay.casting_supply?.enabled === false
-            || quick.definition.kind === 'summon_pet' && this.skillSnapshot().mapNoPets === true);
-        this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready && (!materialDisabled || player?.hp.isZero()));
+        const materialDisabled = !!quick && (needsCastingSupply(skills, quick) && skills.castingSupplyEnabled === false
+            || quick.definition.kind === 'summon_pet' && skills.mapNoPets === true);
+        this.find('BottomHUD/Skills/BasicAttack').getComponent(Button)!.interactable = !!(session.ready
+            && ((!materialDisabled && (!this.pendingSkillMode || this.pendingSkillMode.skillId !== quick?.definition.id)) || player?.hp.isZero()));
+        const targetDetails = this.node?.getChildByPath?.('Safe/MapViewport/Actions/TargetDetails')?.getComponent(Button);
+        if (targetDetails) targetDetails.node.active = targetDetails.interactable = !!(session.ready && this.selectedWorldEntity());
         this.refreshInventoryContext();
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
@@ -984,6 +994,7 @@ export class AppRoot extends Component {
             inventory: session.inventory, definitions: this.world?.gameplay.skills ?? [], playerStatuses: player?.statuses,
             ownedPet: session.baseline?.ownedPet, mapNoPets: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_pets,
             mapNoTeleport: this.world?.gameplay.map_catalog?.find((map: any) => map.id === session.entry?.roomId.toString())?.no_teleport, modes, modesReceivedAt: session.skillModesReceivedAt,
+            modePending: this.pendingSkillMode, autoSkillSettings: observeAutoSkillSettings(session.hosting?.autoSkillSettings),
             castingSupply: supply ? { name: supplyName ?? '施法护符', quantity: supply.quantity.toString() } : null,
             castingSupplyEnabled: this.world?.gameplay.casting_supply?.enabled, statusDefinitions: this.world?.gameplay.statuses };
     }
@@ -1047,12 +1058,10 @@ export class AppRoot extends Component {
         const activation = skillActivation(current.definition);
         if (activation === 'toggle' || activation === 'charge') {
             const mode = skillMode(this.skillSnapshot(), current.definition.id);
-            if (!mode) throw new Error('战斗状态尚未同步，请稍后再试');
+            if (!mode || this.pendingSkillMode) throw new Error('战斗状态尚未同步，请稍后再试');
             validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle, activation === 'charge');
             if (activation === 'charge' && mode.ready) throw new Error('烈火已就绪，普通攻击命中前方目标时释放');
-            session.connection.send(30009, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
-                skillId: current.definition.id, enabled: activation === 'toggle' ? modeEnabled ?? !mode.enabled : true });
-            return;
+            return this.submitSkillMode(current.definition.id, activation === 'toggle' ? modeEnabled ?? !mode.enabled : true, activation === 'charge');
         }
         if (isGroundSkill(current.definition) || isDirectionalSkill(current.definition)) {
             const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
@@ -1069,11 +1078,60 @@ export class AppRoot extends Component {
             const player = validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle);
             return this.submitCast(current, 0, player.position, player.direction);
         }
-        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedTarget, session.entry.playerHandle);
+        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedWorldEntity()?.entityHandle ?? null, session.entry.playerHandle);
         return this.submitCast(current, target.entityHandle, target.position, 0);
     }
 
-    private quickSkill(): SkillRow | null { return primarySkill(this.skillSnapshot(), session.role ? session.quickSkills.get(roleIdentity()) ?? 0 : 0); }
+    private async submitSkillMode(skillId: number, enabled: boolean, charge: boolean): Promise<void> {
+        const identity = currentEntryIdentity(), snapshot = this.skillSnapshot(), life = snapshot.modes?.playerLife.toString();
+        if (!identity || !isCurrentEntry(identity) || life === undefined) throw new Error('战斗状态尚未同步，请稍后再试');
+        const pending = { skillId, enabled }; this.pendingSkillMode = pending;
+        try {
+            this.refreshGame();
+            const modes = await session.connection.request(30009, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence, skillId, enabled });
+            if (this.disposed || !isCurrentEntry(identity) || this.skillSnapshot().modes?.playerLife.toString() !== life) return;
+            const confirmed = skillMode({ ...snapshot, modes }, skillId);
+            if (modes?.playerLife?.toString() !== life || !confirmed || (charge ? !confirmed.ready : confirmed.enabled !== enabled))
+                throw new Error('技能状态未确认，请查看当前状态后重试');
+        } finally {
+            if (this.pendingSkillMode === pending) { this.pendingSkillMode = undefined; this.refreshGame(); }
+        }
+    }
+
+    private quickSkill(): SkillRow | null {
+        const snapshot = this.skillSnapshot(), role = snapshot.roleIdentity;
+        return primarySkill(snapshot, this.boundQuickSkillId(role));
+    }
+
+    private boundQuickSkillId(role: string): number {
+        if (!role) return 0;
+        const cached = session.quickSkills.get(role);
+        if (cached !== undefined) return cached;
+        const saved = savedQuickSkill(sys?.localStorage, role);
+        session.quickSkills.set(role, saved);
+        return saved;
+    }
+
+    private selectedWorldEntity(): any {
+        const target = this.selectedTarget;
+        return target ? session.baseline?.entities.find((entity: any) => entity.entityHandle === target.handle && entity.life?.toString() === target.life) : undefined;
+    }
+
+    private selectWorldEntity(entity: any): void {
+        if (this.consumeGround(entity.position)) return;
+        this.selectedTarget = { handle: entity.entityHandle, life: entity.life.toString() };
+        this.refreshGame();
+    }
+
+    private selectTownNpc(npc: TownNpc): void {
+        if (!this.consumeGround(npc.position)) this.popup!.show('Details', { title: npc.name, message: npc.role });
+    }
+
+    private openTargetDetails(): void {
+        const selected = this.selectedWorldEntity();
+        if (selected) this.combatStatus?.showEntity(selected.entityHandle, selected.life.toString());
+    }
+
     private cancelAim(): void { this.aim = null; this.find('MapViewport/Aiming').active = false; this.world?.showAim(null); }
     private consumeGround(grid: { x: number; y: number }): boolean {
         if (this.leaving) return true;
@@ -1107,7 +1165,8 @@ export class AppRoot extends Component {
             return;
         }
         const targets = session.baseline?.entities.filter((entity: any) => entity.entityKind === 3 && !entity.hp.isZero()) ?? [];
-        const target = targets.find((entity: any) => entity.entityHandle === this.selectedTarget) ?? targets[0];
+        const selected = this.selectedWorldEntity();
+        const target = targets.includes(selected) ? selected : targets[0];
         if (player) session.connection.send(30011, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++this.inputSequence,
             skillId: 0, direction: target ? gridDirection(player.position, target.position, player.direction) : player.direction });
     }
@@ -1145,6 +1204,21 @@ export class AppRoot extends Component {
             // Toggle会先翻转自身；拒绝或断线时也立即恢复服务端确认的状态。
             this.refreshGame();
         }
+    }
+
+    private async changeAutoSkillSettings(skillId?: number): Promise<void> {
+        this.ensureNotLeaving();
+        const identity = currentEntryIdentity(), current = observeAutoSkillSettings(session.hosting?.autoSkillSettings);
+        if (!session.ready || !identity || !isCurrentEntry(identity) || !current) throw new Error('自动施法设置尚未同步');
+        const ids = new Set(current.disabledSkillIds);
+        if (skillId !== undefined && !ids.delete(skillId)) ids.add(skillId);
+        const settings = { enabled: skillId === undefined ? !current.enabled : current.enabled, disabledSkillIds: Array.from(ids).sort((a, b) => a - b) };
+        const response = await session.connection.request(30004, { sceneEpoch: session.entry.sceneEpoch, autoSkillSettings: settings });
+        if (this.disposed || !isCurrentEntry(identity)) return;
+        const confirmed = observeAutoSkillSettings(response?.autoSkillSettings);
+        if (!confirmed || confirmed.enabled !== settings.enabled || confirmed.disabledSkillIds.join() !== settings.disabledSkillIds.join()) throw new Error('自动施法设置未确认，请重新查看');
+        try { saveSkillPreference(sys?.localStorage, identity.role, 'auto', confirmed); }
+        catch { throw new Error('当前自动施法设置已生效，浏览器未能记住该偏好'); }
     }
 
     private async economic(id: number, value: any): Promise<void> {
@@ -1223,6 +1297,9 @@ export class AppRoot extends Component {
     private text(path: string, value: string): void { const label = this.find(path).getComponent(Label); if (label) label.string = value; }
     private status(message: string): void { if (this.disposed) return; const label = this.node.getChildByPath('Safe/Status')?.getComponent(Label); if (label) label.string = message; }
     private error(error: unknown): void { if (this.disposed || (error instanceof Error && (error as StaleMapAttachmentError).staleMapAttachment === true)) return; const message = error instanceof Error ? error.message : String(error); session.lastError = message; this.status(message); }
+    private optionalButton(path: string, action: () => unknown): void {
+        if (this.node?.getChildByPath?.(`Safe/${path}`)) this.button(path, action);
+    }
     private button(path: string, action: () => unknown, eventType: string = Button.EventType.CLICK): void {
         const node = this.find(path); const handler = (): void => {
             traceInput({ event: 'button', path, event_type: eventType, blocked: this.uiActionBusy || this.leaving });

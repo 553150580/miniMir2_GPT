@@ -78,7 +78,7 @@ test('真实引擎Toggle的自动回收设置回填不触发TOGGLE；普通用�
 test('真实技能模式Toggle绑定只发送一次最终勾选，发送与拒绝前保持权威值，状态回推不反向发送',()=>{
     for(const restart of [false,true]){
         const {root,toggle}=setup(),submitted=[],selected={definition:{id:12}},register=root.button.bind(root);let authoritative=true;
-        root.skills={selected};root.castSkill=(skill,enabled)=>submitted.push({skill,enabled});
+        root.skills={selected};root.castSkill=(skill,enabled)=>{submitted.push({skill,enabled});root.refreshGame();};
         root.refreshGame=()=>toggle.setIsCheckedWithoutNotify(authoritative);
         root.button=(path,action,eventType)=>{if(path==='UIMgr/Panels/Skills/ModeToggle')register(path,action,eventType);};
         root.bindGameButtons();if(restart){toggle.onDisable();toggle.onEnable();}

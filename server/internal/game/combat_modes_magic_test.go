@@ -88,11 +88,11 @@ func TestNewMageAutoCannotStallAdjacentOrdinaryFallback(t *testing.T) {
 	w, r, _ := stageBWorker(t, 1, 10, 24, 33)
 	now := time.Now()
 	r.Player.MP = 0
-	if _, handled := w.autoSkill(r, now); handled {
-		t.Fatal("缺蓝却返回空追击，阻塞普通攻击")
+	if w.autoSkill(r, now) {
+		t.Fatal("缺蓝时自动技能阻塞普通攻击")
 	}
 	r.Player.MP = r.Player.MaxMP
-	if _, handled := w.autoSkill(r, now); handled {
+	if w.autoSkill(r, now) {
 		t.Fatal("只有一个邻格敌不满足群技目标数，却阻塞普通攻击")
 	}
 	point := devconfig.Point{X: 5, Y: 5}
@@ -103,7 +103,7 @@ func TestNewMageAutoCannotStallAdjacentOrdinaryFallback(t *testing.T) {
 	// 冰咆哮两敌相邻，优先级更高；预算/不足蓝时尝试疾光，方向来自权威目标格。
 	ice, _ := w.e.Store.Cfg.Fixture.Skill(33)
 	r.SkillCooldowns = map[uint32]time.Time{ice.ID: now.Add(time.Second)}
-	if _, handled := w.autoSkill(r, now); !handled || len(r.Casts) != 1 || r.Casts[0].Skill.ID != 10 || r.Casts[0].Direction != 0 || r.Destination != &point {
+	if !w.autoSkill(r, now) || len(r.Casts) != 1 || r.Casts[0].Skill.ID != 10 || r.Casts[0].Direction != 0 || r.Destination != &point {
 		t.Fatal("朝向群技没有按目标数/CD选择下一项，或清除了导航")
 	}
 }

@@ -21,7 +21,7 @@ function appHarness(options={}){
     }
     const asset=(map,source=false,sceneKind=source?2:1)=>({listeners:new Set(),onBeforeInvalidation(listener){this.listeners.add(listener);return ()=>this.listeners.delete(listener);},mapId:map,sceneKind,map:{width:source?700:17,height:source?700:17},gameplay:{rule_version:13,skills:[],items:[],town_travel:{enabled:true}},background:null,statusBadgePrefab:{},sourceMap:source?{model:{manifest:{pixel_width:33600,pixel_height:22400},project:(x,y)=>({x:x*48,y:y*32}),queryChunks:()=>[{id:'owner'}]},acquireChunk(){log.push('prime.acquire');return {ready:Promise.resolve({}),release(){log.push('prime.release');}};}}:undefined,disposed:0,dispose(){this.disposed++;for(const listener of Array.from(this.listeners))listener('dispose');this.listeners.clear();log.push('asset.dispose:'+map);}});
     const WorldAssets={prepare:async(_job,_progress,map)=>{loads.push(map?.toString());const pending=pendingLoads.shift();return pending?pending.promise:asset(map.toString(),map.toString()==='2');}};
-    const cc={_decorator:new Proxy({},{get:()=>decorator}),Component:class{},UITransform,Button,Toggle,Label,Game:{EVENT_HIDE:'hide'},game:{totalTime:0,off(){}}};
+    const cc={_decorator:new Proxy({},{get:()=>decorator}),Component:class{},UITransform,Button,Toggle,Label,Game:{EVENT_HIDE:'hide'},game:{totalTime:0,off(){}},sys:{localStorage:options.storage}};
     const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='./GameWorldView'?{GameWorldView:View}:id==='./WorldAssets'?{WorldAssets}:id==='./MapAttachmentCoordinator'?{MapAttachmentCoordinator,...require('../../../.work/ui-tests/app/MapAttachmentCoordinator.js')}:id==='./PetBornModel'?require('../../../.work/ui-tests/app/PetBornModel.js'):id==='./MapTravelModel'?travelModel:id==='./TownMapModel'?townMap:id==='./MapViewportPreparation'?{MapViewportPreparation}:id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='../input/NavigationIntent'?{NavigationIntent}:id==='../input/MapTouchNavigator'?{MapTouchNavigator}:id==='../ui/List'?{List}:id==='./GameConnection'?{newOperationId:()=>new Uint8Array(16).fill(++operationSerial),ProtocolResponseError}:id==='./GameCombatStatus'?{GameCombatStatus:class{dispose(){this.disposed=(this.disposed??0)+1;}update(){} }}:{});
     const a=new AppRoot();a.node={getChildByName:()=>({})};a.find=path=>path==='MapViewport'?viewport:getNode(path);a.joystick=joystick;a.attachment=new MapAttachmentCoordinator();a.hud={setMapFrame(){log.push('hud');},refresh(){}};a.ui={};a.popup={};a.showMapLoading=()=>{};const realRefresh=a.refreshGame.bind(a);a.refreshGame=()=>{};const realError=a.error.bind(a);a.error=error=>log.push('error:'+error.message);a.status=()=>{};
     return {h,a,log,views,loads,pendingLoads,asset,getNode,realRefresh,realError,setGate(value){gate=value;},baseline(e){h.session.baseline={sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.UONE,entities:[{entityHandle:7,entityKind:1,hp:Long.fromInt(100),life:Long.UZERO,position:e.roomId.toString()==='2'?{x:633,y:613}:{x:8,y:8}}]};}};
@@ -69,6 +69,20 @@ test('真实AppRoot初次Town重入使用Entry.roomId替换默认primary，首�
     const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1','2',2)),warm=t.asset('1');t.baseline(e);s.preparedWorld=warm;const gate=deferred();t.setGate(gate);
     const task=t.a.attachCurrentEntry();await flush();assert.deepEqual(t.loads,['2']);assert.equal(warm.disposed,1);assert.equal(t.views.length,1);assert.equal(t.views[0].map.width,700);assert.equal(s.connection.sent.length,0);assert.equal(t.a.canSendInput(),false);
     gate.resolve();await task;assert.deepEqual(s.connection.sent.map(p=>p.id),[4]);assert.equal(s.connection.sent[0].value.sceneEpoch.toString(),'1');assert.deepEqual(t.views[0].position,{x:633,y:613});assert.equal(t.a.canSendInput(),true);t.a.attachment.dispose();
+});
+test('地图资源准备后的真实ACK只携当前角色已保存的自动施法偏好',async()=>{
+    const {saveSkillPreference}=require('../../../.work/ui-tests/app/SkillPreferences.js');
+    const values=new Map(),storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)};
+    const t=appHarness({storage}),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');
+    const first=t.h.roleIdentity(),saved={enabled:false,disabledSkillIds:[1,11]};
+    saveSkillPreference(storage,first,'auto',saved);
+    await t.a.attachCurrentEntry();
+    assert.deepEqual(s.connection.sent.at(-1),{id:4,value:{sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,autoSkillSettings:saved}});
+    s.role={...s.role,key:{...s.role.key,roleId:new Uint8Array(16).fill(3)}};
+    const next=ready(t.h,entry('2'));t.baseline(next);s.preparedWorld=t.asset('1');
+    await t.a.attachCurrentEntry();
+    assert.deepEqual(s.connection.sent.at(-1),{id:4,value:{sceneEpoch:next.sceneEpoch,baselineId:next.baselineId}});
+    t.a.attachment.dispose();
 });
 test('真实AppRoot先apply完整基线才消费出生，重复refresh/visual重建不重播，旧owner解绑不清新scope',async()=>{
  const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');await t.a.attachCurrentEntry();

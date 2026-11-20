@@ -18,7 +18,12 @@ message EnterLineResult {
   // 非空时须与先到的服务端瞬移结果配对；普通入场、健康重入及手动旅行为空。
   string server_transition_id = 10;
 }
-message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
+message EnterWorldAck {
+  uint64 scene_epoch = 1;
+  uint64 baseline_id = 2;
+  // 可选的本机角色偏好，在入场放行自动战斗前提交。
+  AutoSkillSettings auto_skill_settings = 3;
+}
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
 message MapTravelPrepare {
   uint64 scene_epoch = 1;
@@ -308,8 +313,23 @@ message CombatImpact {
   uint64 cast_id = 11;
   uint32 attack_sequence = 12;
 }
-message AutoBattleIntent { uint64 scene_epoch = 1; bool enabled = 2; uint32 monster_count = 3; }
-message HostingState { uint32 remain_hosting_sec = 1; bool auto_battle_enabled = 2; uint64 state_revision = 3; }
+message AutoSkillSettings {
+  bool enabled = 1;
+  repeated uint32 disabled_skill_ids = 2;
+}
+message AutoBattleIntent {
+  uint64 scene_epoch = 1;
+  bool enabled = 2;
+  uint32 monster_count = 3;
+  // 仅更新施法偏好时怪物数量为 0；城镇也允许修改偏好。
+  AutoSkillSettings auto_skill_settings = 4;
+}
+message HostingState {
+  uint32 remain_hosting_sec = 1;
+  bool auto_battle_enabled = 2;
+  uint64 state_revision = 3;
+  AutoSkillSettings auto_skill_settings = 4;
+}
 message DeathNotice {
   bytes death_id = 1;
   uint32 cause_code = 2;

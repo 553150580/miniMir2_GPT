@@ -467,6 +467,11 @@ type client struct {
 
 func join(t *testing.T, address, ticket string, observers ...func(*client, wire.Frame)) *client {
 	t.Helper()
+	return joinWithAutoSkills(t, address, ticket, nil, observers...)
+}
+
+func joinWithAutoSkills(t *testing.T, address, ticket string, settings *pb.AutoSkillSettings, observers ...func(*client, wire.Frame)) *client {
+	t.Helper()
 	ctx, stop := context.WithTimeout(context.Background(), 80*time.Second)
 	ws, _, err := websocket.Dial(ctx, "ws://"+address+"/ws", nil)
 	must(t, err)
@@ -503,7 +508,7 @@ func join(t *testing.T, address, ticket string, observers ...func(*client, wire.
 	if f.Request != rejected || f.ID != p.MsgC2SMoveIntent || f.Error != p.CodeLineRecovering {
 		t.Fatalf("ACK前动作没有被门槛阻挡:%v", f)
 	}
-	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: c.entry.SceneEpoch, BaselineId: c.entry.BaselineId})
+	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: c.entry.SceneEpoch, BaselineId: c.entry.BaselineId, AutoSkillSettings: settings})
 	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSyncReady })
 	// 用同一actor队列内的无效方向作为屏障，验证重复ACK没有重发激活或战报。
 	c.send(p.MsgC2SEnterWorldAck, &pb.EnterWorldAck{SceneEpoch: c.entry.SceneEpoch, BaselineId: c.entry.BaselineId})

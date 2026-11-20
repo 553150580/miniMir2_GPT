@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 82,
+  "message_count": 83,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -52,6 +52,7 @@
     "CastAccepted",
     "AttackAccepted",
     "CombatImpact",
+    "AutoSkillSettings",
     "AutoBattleIntent",
     "HostingState",
     "DeathNotice",
@@ -1401,7 +1402,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "9b6d28233b3ceb17d9c3ad577dfd5e571cbc4d76ad9f3538dec971d34bcb7d31"
+      "sha256": "019119a1a3c3b9c77b3cdf2b8aadc2ebbe225b589b0600f274585a7335b3d8e6"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -1411,13 +1412,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "d3010a974c0fbb618712d1b812089e9a7f38aa41262c3303e1d8020ab4ec6d17",
-      "bytes": 1404006
+      "sha256": "153b3947df9f666de6d8f6952f829cdfb8d358fb90e8795292bf89c7157d029b",
+      "bytes": 1420549
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "7c108002ca02e0b30c6e4744dbbf32f26c899b33af2c91a22cbd537291a938b7",
-      "bytes": 441303
+      "sha256": "3a2d0dc0a0d8048368343a0e51a9ba333221af7d9b8f43919fb0bee78e2644e5",
+      "bytes": 446892
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

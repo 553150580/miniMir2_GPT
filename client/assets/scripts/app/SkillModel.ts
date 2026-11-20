@@ -1,5 +1,6 @@
 import { PotionInteger, PotionItem } from './PotionModel';
 import { OwnedPetState, ownedPetCanRecall } from './OwnedPetModel';
+import type { AutoSkillSettings } from './SkillPreferences';
 
 export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
@@ -10,6 +11,7 @@ export interface SkillDefinition {
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
     buff_id?: number; material_item_id?: number; material_quantity?: number;
+    auto_enabled?: boolean;
     area_radius?: number; require_line_of_sight?: boolean; accuracy_by_level?: readonly number[]; max_attack_bonus_by_level?: readonly number[];
     secondary_direction_offsets?: readonly number[]; secondary_distance_cells?: number; line_cells?: number; line_step_ms?: number; charge_window_ms?: number;
     base_cost: number; level_cost: number; cast_ms: number; impact_base_ms: number; projectile_ms_per_cell: number; accuracy_per_level: number;
@@ -27,6 +29,8 @@ export interface SkillSnapshot {
     mapNoTeleport?: boolean;
     mapNoPets?: boolean;
     ownedPet?: OwnedPetState | null;
+    autoSkillSettings?: AutoSkillSettings;
+    modePending?: { skillId: number; enabled: boolean };
     statusDefinitions?: readonly { id: number; duration_rule?: { kind?: string; duration_ms?: number; stat_multiplier: number; seconds_by_level: readonly number[] };
         attribute_effects: { value_by_level: readonly number[]; target_level_divisor?: number; target_level_add?: number } }[];
 }
@@ -101,7 +105,7 @@ export function skillRows(snapshot: SkillSnapshot): SkillRow[] {
 export function primarySkill(snapshot: SkillSnapshot, preferredId = 0): SkillRow | null {
     const rows = skillRows(snapshot);
     return rows.find(row => row.definition.id === preferredId && row.definition.active && row.learned)
-        ?? rows.find(row => row.definition.active && row.learned) ?? rows.find(row => row.definition.active) ?? null;
+        ?? rows.find(row => row.definition.active && row.learned) ?? null;
 }
 export function skillTargetKind(definition: SkillDefinition): NonNullable<SkillDefinition['target_kind']> {
     if (definition.target_kind) return definition.target_kind;
@@ -165,6 +169,11 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         if (definition.kind==='repulsion') lines.push('尝试推开周围等级较低的敌人', `本阶推开距离 ${low}–${high}格`, '不会对怪物造成伤害');
         else lines.push('轻触地图选择冲撞方向', `本阶冲撞距离 ${low}–${high}格`, '只推动首格的低等级敌人，结束时造成一次伤害', '冲撞受阻仍消耗魔法与冷却');
     }
+    const activation = skillActivation(definition);
+    if (definition.kind === 'thrusting') lines.push('开启后使用普攻，朝向前方第2格有怪才触发刺杀');
+    if (definition.kind === 'half_moon') lines.push('开启后使用普攻，命中时按半月范围攻击并消耗魔法');
+    if (activation === 'charge') lines.push('充能成功后使用普攻，前方第1格有怪时消耗充能');
+    if (definition.auto_enabled) lines.push('自动战斗开启时，按技能条件和自动施法设置使用');
     const status = snapshot.statusDefinitions?.find(value => value.id === definition.buff_id), reduction = status?.attribute_effects.value_by_level[row.level];
     if (definition.kind === 'magic_shield') lines.push('仅对自己施放', reduction === undefined ? '获得伤害减免，实际数值见当前状态' : `当前等级伤害减免 ${reduction}%`, '持续时间受魔法属性与技能等级影响',
         '受到实际伤害会缩短持续时间', '已有魔法盾时重施仍消耗魔法，但不刷新', '角色倒下后魔法盾解除');
@@ -172,7 +181,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         definition.kind === 'soul_shield' ? '提高受益者的魔法防御上限' : '提高受益者的物理防御上限', '加成取决于受益者等级，实际值见状态',
         '持续时间受施法者道术与技能等级影响', '同类状态重施刷新持续时间', '友方倒下时仍可受益，持续时间继续推进', '无主宠物尸体不属于友方');
     else if (!definition.active) lines.push(skillPassiveText(row));
-    else if (!definition.displacement && definition.kind !== 'teleport' && definition.kind !== 'summon_pet') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
+    else if (activation === 'cast' && !definition.displacement && definition.kind !== 'teleport' && definition.kind !== 'summon_pet') lines.push(definition.target_kind === 'enemy_self' ? `自身周围${definition.area_radius ?? 0}格` : isDirectionalSkill(definition) ? `前方${definition.line_cells ?? 0}格` : `射程 ${definition.range}格`);
     if (definition.kind === 'summon_pet') {
         lines.push(isSummonRecall(snapshot, row) ? '当前可召回原宠，不消耗护符' : '新召唤由服务器选择出生位置', '召回仍消耗魔法并受动作与冷却限制');
         if (snapshot.mapNoPets) lines.push('当前地图禁止召唤');
@@ -230,8 +239,8 @@ export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[
     const legal = (target: SkillEntity): boolean => !target.isPetCorpse && integer(target.hp) > 0n
         && (friendly ? target.entityHandle === playerHandle || target.entityKind === 2 : target.entityKind === 3);
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
-    if (selected && (selected.isPetCorpse || integer(selected.hp) === 0n) && (friendly
-        ? selected.entityHandle === playerHandle || selected.entityKind === 2 : selected.entityKind === 3)) throw new Error('所选目标已倒下，请重新选择');
+    if (friendly && selected && (selected.isPetCorpse || integer(selected.hp) === 0n)
+        && (selected.entityHandle === playerHandle || selected.entityKind === 2)) throw new Error('所选友方已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;
     if (!target && friendly) target = player;
     if (!target) target = entities.filter(legal).slice().sort((a, b) => distance(a) - distance(b) || a.entityHandle - b.entityHandle)[0];
