@@ -62,6 +62,7 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				cfg.Fixture.Monsters[0].AttackMin = cfg.Fixture.Pet.DefenceMax + cfg.Fixture.Healing.PetBasePerTick*2
 				cfg.Fixture.Monsters[0].AttackMax = cfg.Fixture.Monsters[0].AttackMin
 				cfg.Fixture.Monsters[0].Accuracy = cfg.Fixture.Pet.Agility
+				cfg.Fixture.Monsters[0].Agility = 0
 			}
 			ctx, cancel := context.WithCancel(context.Background())
 			inspection, err := persistence.Open(ctx, cfg)
@@ -111,7 +112,28 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 			// 唯一随机测试库把待测角色准备至开发学习门槛；不接触现有开发库。
 			_, err = inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{"$set": bson.M{"level": skill.LearnLevel}})
 			must(t, err)
-			c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+			var monsterHit, petHit bool
+			observeImmediate := func(c *client, frame wire.Frame) {
+				if job != 2 || frame.ID != p.MsgS2CCombatImpact {
+					return
+				}
+				var hit pb.CombatImpact
+				must(t, proto.Unmarshal(frame.Payload, &hit))
+				monsterAttacks := hit.CasterHandle == 10 && hit.TargetHandle == 2
+				petAttacks := hit.CasterHandle == 2 && hit.TargetHandle == 10
+				if !monsterAttacks && !petAttacks {
+					return
+				}
+				target := c.entity(hit.TargetHandle)
+				if hit.SceneEpoch != c.entry.SceneEpoch || hit.EventId == 0 || hit.AttackSequence == 0 || hit.TargetGrid == nil ||
+					hit.CastId != 0 || hit.SkillId != 0 || hit.Amount <= 0 || hit.Healing || hit.Outcome != 1 ||
+					target == nil || hit.TargetLife != target.Life {
+					t.Fatal("怪物或宠物即时扣血事件身份错误", &hit)
+				}
+				monsterHit = monsterHit || monsterAttacks
+				petHit = petHit || petAttacks
+			}
+			c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observeImmediate)
 			defer func() { c.close() }()
 			c.auto(false, 1)
 			// 关闭自动不取消已受理移动；按协议实际间隔等待首入动作结束，保留服务端门禁。
@@ -227,7 +249,7 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 				oldBinding := c.binding
 				c.close()
 				disabled := &pb.AutoSkillSettings{Enabled: true, DisabledSkillIds: []uint32{skill.ID}}
-				c = joinWithAutoSkills(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), disabled)
+				c = joinWithAutoSkills(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), disabled, observeImmediate)
 				c.auto(false, 1)
 				if c.entry.SceneEpoch != scene || c.binding == oldBinding || c.player().CastSequence != castSequence || c.player().Mp != manaAfter || len(c.inventory.LearnedSkills) != 1 {
 					t.Fatal("健康重连重置场景/魔力/施法观察或丢失持久技能")
@@ -278,6 +300,9 @@ func TestSkillLearningAndCastingMongoWS(t *testing.T) {
 					atStation()
 					return c.player().CastSequence > castSequence
 				})
+				if job == 2 && (!monsterHit || !petHit) {
+					travelUntilWithin(c, 6*time.Second, func(f wire.Frame) bool { return monsterHit && petHit })
+				}
 				if job == 1 {
 					claimed := c.asset(p.MsgC2SClaimHostingTime, &pb.ClaimHostingTimeRequest{Operation: c.operation()})
 					if claimed.ErrorCode != 0 {

@@ -22,7 +22,7 @@ function fakeResources(options={}){
    let asset=pool.get(key),error=null;
    try{if(!asset){const json=key==='development/gameplay'?gameplay:fs.existsSync(path.join(resourceRoot,key+'.json'))?JSON.parse(fs.readFileSync(path.join(resourceRoot,key+'.json'),'utf8')):undefined;
     options.changeResource?.(key,json);
-    asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};pool.set(key,asset);}
+    asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status',DamageNumber:'damage-number'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};pool.set(key,asset);}
    }catch(failure){error=failure;}
    if(source)sourceActive.now--;callback(error,asset);
   };

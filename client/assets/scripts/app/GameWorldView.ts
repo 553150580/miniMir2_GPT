@@ -3,6 +3,7 @@ import { AnimationSample, EntityAnimation, movementDisplayDurationMs } from './E
 import { EntityMotion } from './EntityMotion';
 import { WorldAssets } from './WorldAssets';
 import { CombatEffects } from './CombatEffects';
+import { DamageNumbers } from './DamageNumbers';
 import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
 import { prepareMapSurface } from './MapSurface';
@@ -48,6 +49,7 @@ export class GameWorldView {
     private assets?: WorldAssets;
     private releaseAssetsInvalidation?: () => void;
     private effects?: CombatEffects;
+    private damageNumbers?: DamageNumbers;
     private statusEffects?: StatusEffects;
     private lastAttackId = 0n;
     private lastCastSoundId = 0n;
@@ -105,6 +107,7 @@ export class GameWorldView {
         this.assets = assets; this.selected = onSelected;
         this.releaseAssetsInvalidation = assets.onBeforeInvalidation(reason => {
             this.retirePresentation(); this.audio?.cancelAll();
+            this.damageNumbers?.dispose(); this.damageNumbers = undefined;
             for (const visual of Array.from(this.visuals.values())) visual.animation?.cancelAppearance();
             if (reason !== 'dispose' || this.disposed) return;
             this.releaseVisuals(); this.disposed = true;
@@ -150,6 +153,9 @@ export class GameWorldView {
         for (const npc of this.map.npcs ?? []) this.townNpcs.push(new TownNpcView(assets, this.entities, this.projection, npc, onNpc));
         const effects = this.world.getChildByName('Effects');
         if (!effects) throw new Error('场景尚未保存游戏特效容器');
+        if (assets.damageNumberPrefab) this.damageNumbers = new DamageNumbers(assets.damageNumberPrefab, effects, this.sceneEpoch,
+            handle => this.visuals.get(handle)?.state.life?.toString() ?? null,
+            handle => this.visuals.get(handle)?.node.getChildByName('Name')?.getComponent(UITransform)?.convertToWorldSpaceAR(Vec3.ZERO) ?? null);
         this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null,
             handle => this.visuals.get(handle)?.state.life?.toString() ?? null, handle => {
                 const visual = this.visuals.get(handle), pose = visual?.pose;
@@ -212,7 +218,9 @@ export class GameWorldView {
     acceptImpact(event: ImpactEvent): void {
         if (this.disposed) return;
         this.effects?.impact(event, game.totalTime);
-        if (!this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString() || (event.outcome !== 1 && event.outcome !== 4)) return;
+        if (!this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString()) return;
+        this.damageNumbers?.accept(event, game.totalTime);
+        if (event.outcome !== 1 && event.outcome !== 4) return;
         const target = this.visuals.get(event.targetHandle), caster = this.visuals.get(event.casterHandle);
         if (event.targetHandle && (!target || target.state.life.toString() !== event.targetLife.toString())) return;
         const id = BigInt(event.eventId.toString());
@@ -477,6 +485,7 @@ export class GameWorldView {
             depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
         }
         this.effects?.update(now);
+        this.damageNumbers?.update(now);
         this.statusEffects?.update(now);
         this.refitCamera();
         if (audit && now - audit.start >= 5000) {
@@ -560,6 +569,7 @@ export class GameWorldView {
         this.playerPosition = null;
         // 附体/战斗特效先解除帧，再销毁其所属实体；Creator的destroy实际在帧尾完成。
         this.effects?.dispose(); this.effects = undefined; this.statusEffects?.dispose(); this.statusEffects = undefined;
+        this.damageNumbers?.dispose(); this.damageNumbers = undefined;
         for (const visual of Array.from(this.visuals.values())) this.removeVisual(visual);
         this.visuals.clear();
         this.additiveMaterial?.destroy(); this.additiveMaterial = undefined;

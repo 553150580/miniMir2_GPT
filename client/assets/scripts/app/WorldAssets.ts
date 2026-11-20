@@ -54,6 +54,7 @@ export class WorldAssets {
     gameplay: any;
     prefab!: Prefab;
     effectPrefab!: Prefab;
+    damageNumberPrefab!: Prefab;
     propPrefab!: Prefab;
     beamPrefab!: Prefab;
     statusBadgePrefab!: Prefab;
@@ -130,6 +131,7 @@ export class WorldAssets {
             }
             result.prefab = result.own(await load<Prefab>('prefabs/Entity', Prefab));
             result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
+            result.damageNumberPrefab = result.own(await load<Prefab>('prefabs/DamageNumber', Prefab));
             result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
             result.statusBadgePrefab = result.own(await load<Prefab>('prefabs/StatusBadge', Prefab));
             const profileIds = new Set<string>();

@@ -235,7 +235,13 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 			break
 		}
 	}
-	w.applyDamage(r, from, target, damage, now)
+	world, scene := r.currentWorld(), r.Scene
+	targetLife, hitPoint, before := target.Life, target.Pos, target.HP
+	w.applyDamageInWorld(r, world, from, target, damage, now)
+	if actual := before - target.HP; actual > 0 && w.e.Store.Cfg.Fixture.RuleVersion >= 24 && (from.Kind == 2 || from.Kind == 3) {
+		// 宠物和怪物仍在本帧结算；致死时即使原实体已归档，事件仍引用受击生命和落点。
+		w.impactInWorld(r, world, scene, 0, from.Handle, target.Handle, targetLife, hitPoint, actual, 1, false, 0, from.AttackSequence)
+	}
 }
 func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now time.Time, context ...hitContext) {
 	w.applyDamageInWorld(r, r.currentWorld(), from, target, damage, now, context...)

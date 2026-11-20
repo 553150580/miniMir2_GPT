@@ -6,6 +6,7 @@ class Vec3{constructor(x=0,y=0,z=0){Object.assign(this,{x,y,z});}}
 class UITransform{constructor(){this.width=64;this.height=96;this.anchorPoint={x:.5,y:.5};}setContentSize(width,height){Object.assign(this,{width,height});}setAnchorPoint(x,y){this.anchorPoint={x,y};}convertToNodeSpaceAR(point){return point;}}
 class Material{copy(_base,options){this.passes=[{blendState:options.states.blendState}];}destroy(){this.destroyed=true;}}
 class Sprite{static Type={SIMPLE:0};static SizeMode={CUSTOM:0};getSharedMaterial(){return {}}getRenderMaterial(){return this.customMaterial}}class Label{}class ProgressBar{}
+class UIOpacity{constructor(){this.opacity=255;}}
 class AudioSource{constructor(){this.clip=null;this.volume=1;this.calls=[];this.playing=false;}play(){this.calls.push({kind:'play',clip:this.clip,volume:this.volume});this.playing=true;}stop(){this.calls.push({kind:'stop'});this.playing=false;}destroy(){this.destroyed=true;}}
 class Node{
  static EventType={SIZE_CHANGED:'size',TOUCH_END:'touch',NODE_DESTROYED:'node-destroyed'};
@@ -19,9 +20,10 @@ class Node{
 }
 const sprite=name=>{const node=new Node(name);node.add(Sprite,new Sprite());return node;};
 const touchListeners=new Set();
-const cc={Node,UITransform,Sprite,Label,ProgressBar,Vec3,AudioSource,Material,Input:{EventType:{TOUCH_END:'touch-end'}},
+const cc={Node,UITransform,Sprite,Label,ProgressBar,UIOpacity,Vec3,AudioSource,Material,Input:{EventType:{TOUCH_END:'touch-end'}},
  input:{on(_e,callback,owner){touchListeners.add({callback,owner});},off(_e,callback,owner){for(const value of touchListeners)if(value.callback===callback&&value.owner===owner)touchListeners.delete(value);},touch(){for(const value of Array.from(touchListeners))value.callback.call(value.owner);}},
  gfx:{BlendFactor:{SRC_ALPHA:2,ONE:1,ONE_MINUS_SRC_ALPHA:4}},isValid:node=>!node?.destroyed,game:{totalTime:0},instantiate(prefab){
+ if(prefab==='damage-number'){const node=new Node('DamageNumber');node.addComponent(Label);node.addComponent(UIOpacity);return node;}
  if(prefab instanceof Node)return sprite(prefab.name);if(prefab!=='entity')return sprite(prefab);
  const node=new Node('Entity'),body=sprite('Body'),name=new Node('Name'),hp=new Node('HP');body.parent=node;new Node('AttachedEffects').parent=node;
  name.add(Label,{string:''});name.setPosition(0,78);name.scale=new Vec3(.7,.7,1);name.parent=node;hp.add(ProgressBar,{});hp.setPosition(0,58);hp.parent=node;return node;
@@ -38,6 +40,7 @@ function makeWorld(ownerHandle,options={}){
  assets.manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.json'),'utf8'));assets.map=JSON.parse(fs.readFileSync(path.join(root,'maps/first-map.json'),'utf8'));assets.gameplay=JSON.parse(fs.readFileSync(path.join(root,'gameplay.json'),'utf8'));
  for(const [key,frame]of Object.entries(assets.manifest.frames))if(!frame.declared_empty)assets.frames.set(key,{key});
  Object.assign(assets,{prefab:'entity',effectPrefab:'effect',propPrefab:'prop',beamPrefab:'beam'});
+ if(options.damageNumbers)assets.damageNumberPrefab='damage-number';
  for(const [key,clip]of Object.entries(options.audio??{}))assets.audioClips.set(key,assets.own(clip));
  assets.profile=state=>assets.manifest.profiles[state.entityKind===1?'player_male':state.entityKind===2?'pet_skeleton':'monster_scarecrow'];
  const inputRoot=new Node('Safe'),viewport=new Node('Viewport'),world=new Node('World'),entities=new Node('Entities');viewport.parent=inputRoot;viewport.getComponent(UITransform).setContentSize(720,808);world.getComponent(UITransform).setContentSize(1088,592);entities.parent=world;new Node('Effects').parent=world;

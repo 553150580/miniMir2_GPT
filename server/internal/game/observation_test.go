@@ -87,7 +87,8 @@ func TestLethalStatePushesBeforeBroadcastWindow(t *testing.T) {
 	if r.Player.HP != 0 || r.Player.Action != 4 || r.DeathID == "" {
 		t.Fatal("攻击没有形成真实死亡状态")
 	}
-	if len(c.frames) != 2 || c.frames[0].ID != p.MsgS2CDeathNotice || c.frames[1].ID != p.MsgS2CSceneBaseline {
+	if len(c.frames) != 3 || c.frames[0].ID != p.MsgS2CDeathNotice || c.frames[1].ID != p.MsgS2CSceneBaseline ||
+		c.frames[2].ID != p.MsgS2CCombatImpact {
 		t.Fatalf("广播窗口前致死没有立即推终态:%v", c.frames)
 	}
 	scene := &pb.SceneBaselineChunk{}
@@ -96,6 +97,11 @@ func TestLethalStatePushesBeforeBroadcastWindow(t *testing.T) {
 	}
 	if scene.Entities[0].Hp != 0 || scene.Entities[0].Action != 4 {
 		t.Fatal("立即基线不含HP0/死亡动作")
+	}
+	var impact pb.CombatImpact
+	if err := proto.Unmarshal(c.frames[2].Payload, &impact); err != nil || impact.TargetHandle != r.Player.Handle ||
+		impact.TargetLife != r.Player.Life || impact.Amount != 1 || impact.Outcome != 1 {
+		t.Fatal("立即死亡基线之后缺少同生命的真实扣血事件", &impact, err)
 	}
 	if w.sourcePetLifecycle() {
 		if r.Pet != nil || scene.OwnedPet != nil {
@@ -112,7 +118,7 @@ func TestLethalStatePushesBeforeBroadcastWindow(t *testing.T) {
 		}
 	}
 	w.step(r, now.Add(100*time.Millisecond))
-	if len(c.frames) != 2 {
+	if len(c.frames) != 3 {
 		t.Fatal("死亡早退后的tick重复发送了致死即时基线")
 	}
 }

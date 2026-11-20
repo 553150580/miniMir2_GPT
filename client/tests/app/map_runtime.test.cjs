@@ -104,16 +104,17 @@ test('真实常驻盾只用保存AttachedEffects与原图，完整基线恢复�
     effects.dispose();
 });
 
-test('真实预载会为无该职业技能的角色加载常驻状态六帧与保存徽标，退场统一释放原引用',async()=>{
+test('真实预载会为无该职业技能的角色加载常驻状态六帧、保存徽标与伤害数字，退场统一释放原引用',async()=>{
     class Asset{constructor(json){this.json=json;this.refs=0;}addRef(){this.refs++;}decRef(){this.refs--;}}
     class JsonAsset extends Asset{}class Prefab extends Asset{}class SpriteFrame extends Asset{}
     const map={...geometry,surface_width:1088,surface_height:544,world_height:592,background_offset_y:24,props:[]};
     const keys=[3890,3891,3892,3900,3901,3902].map(id=>`Magic:${id}`),manifest={map:{...map},profiles:{player:{layers:[]}},effects:{},statuses:{31:{idle:{frames:keys.slice(0,3)},struck:{frames:keys.slice(3)}}}},frames={};
     const values={'development/manifest':new JsonAsset(manifest),'development/maps/first-map':new JsonAsset(map),'development/gameplay':new JsonAsset({jobs:[{job_id:0,profile:'player'}],monster_profiles:[],pet_profiles:[],skills:[]})};
     for(const key of keys){const id=key.split(':')[1],png=`frames/Magic/frame_${id.padStart(6,'0')}.png`;frames[key]={png,declared_empty:false};values['development/'+png.replace('.png','')+'/spriteFrame']=new SpriteFrame();}manifest.frames=frames;
-    for(const name of ['Entity','Effect','MapProp','Beam','StatusBadge'])values['prefabs/'+name]=new Prefab();values['development/maps/first-map/spriteFrame']=new SpriteFrame();
+    for(const name of ['Entity','Effect','MapProp','Beam','StatusBadge','DamageNumber'])values['prefabs/'+name]=new Prefab();values['development/maps/first-map/spriteFrame']=new SpriteFrame();
     const requested=[],ccAssets={Asset,JsonAsset,Prefab,SpriteFrame,resources:{load(key,type,callback){requested.push(key);queueMicrotask(()=>callback(values[key]?null:new Error(key),values[key]));}}};
     const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),id=>id==='cc'?ccAssets:id==='./GridProjection'?{GridProjection}:{});
     const assets=await WorldAssets.prepare(0,()=>{});assert.equal(assets.frames.size,6);assert(requested.includes('prefabs/StatusBadge'));assert(keys.every(key=>assets.frames.has(key)));
+    assert.equal(assets.damageNumberPrefab,values['prefabs/DamageNumber']);
     assert(Object.values(values).every(asset=>asset.refs===1));assets.dispose();assert(Object.values(values).every(asset=>asset.refs===0));assert.equal(assets.frames.size,0);assets.dispose();assert(Object.values(values).every(asset=>asset.refs===0));
 });
