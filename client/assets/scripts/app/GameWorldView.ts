@@ -16,6 +16,7 @@ import type { SourceRect } from './SourceMapModel';
 import type { TeleportObservation } from './TeleportModel';
 import type { PetBornPlayback } from './PetBornModel';
 import { WorldAudio } from './WorldAudio';
+import { playClientCue } from './ClientAudio';
 import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
 
@@ -46,6 +47,7 @@ export class GameWorldView {
     private statusEffects?: StatusEffects;
     private lastAttackId = 0n;
     private lastCastSoundId = 0n;
+    private lastImpactSoundId = 0n;
     private audio?: WorldAudio;
     private additiveMaterial?: Material;
     private presentationScope = '';
@@ -166,10 +168,14 @@ export class GameWorldView {
         this.effects?.accept(event, game.totalTime);
         const cue = this.manifest?.effects?.[String(event.skillId)]?.cast_sound;
         const definition = this.gameplay?.skills?.find((row: any) => row.id === event.skillId);
-        if (!cue || !definition?.active || !this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString() || event.casterLife == null) return;
+        if (!definition?.active || !this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString() || event.casterLife == null) return;
         const id = BigInt(event.castId.toString()), visual = this.visuals.get(event.casterHandle);
         if (id <= this.lastCastSoundId || !visual || visual.state.hp.isZero() || visual.state.life.toString() !== event.casterLife.toString()) return;
         this.lastCastSoundId = id;
+        if (!cue) {
+            if (event.casterHandle === this.playerHandle) playClientCue('spell');
+            return;
+        }
         this.audio?.play(0, cue, () => !this.disposed && this.presentationCurrent() && this.visuals.get(event.casterHandle) === visual
             && visual.state.life.toString() === event.casterLife!.toString() && !visual.state.hp.isZero(), game.totalTime + this.manifest.effects[String(event.skillId)].cast.duration_ms,
             0, `${this.presentationScope}:cast:${event.castId}:${event.casterHandle}:${event.casterLife}`);
@@ -187,7 +193,19 @@ export class GameWorldView {
         this.update(0, this.job); return true;
     }
     acceptCastStep(event: CastStepEvent): void { if (!this.disposed) this.effects?.step(event, game.totalTime); }
-    acceptImpact(event: ImpactEvent): void { if (!this.disposed) this.effects?.impact(event, game.totalTime); }
+    acceptImpact(event: ImpactEvent): void {
+        if (this.disposed) return;
+        this.effects?.impact(event, game.totalTime);
+        if (!this.presentationCurrent() || event.sceneEpoch.toString() !== this.sceneEpoch.toString()
+            || (event.casterHandle !== this.playerHandle && event.targetHandle !== this.playerHandle)
+            || (event.outcome !== 1 && event.outcome !== 4) || BigInt(event.amount.toString()) <= 0n) return;
+        const target = this.visuals.get(event.targetHandle);
+        if (!target || target.state.life.toString() !== event.targetLife.toString()) return;
+        const id = BigInt(event.eventId.toString());
+        if (id <= this.lastImpactSoundId) return;
+        this.lastImpactSoundId = id;
+        playClientCue(event.healing ? 'mend' : 'impact');
+    }
     acceptDisplacement(event: DisplacementEvent): void {
         if (this.disposed || !this.map) return;
         const inside = (point: { x: number; y: number }): boolean => !!point && point.x >= 0 && point.y >= 0 && point.x < this.map.width && point.y < this.map.height;
@@ -217,6 +235,7 @@ export class GameWorldView {
         if (event.casterLife != null && visual?.state.life?.toString() !== event.casterLife.toString()) return;
         visual?.animation?.acceptAttack(event.attackSequence, event.direction);
         this.effects?.attack(event, game.totalTime);
+        if (visual && event.casterHandle === this.playerHandle && this.presentationCurrent()) playClientCue('swing');
     }
 
     grid(x: number, y: number): Vec3 { const point = (this.projection ??= new GridProjection(this.map)).project(x, y); return new Vec3(point.x, point.y); }

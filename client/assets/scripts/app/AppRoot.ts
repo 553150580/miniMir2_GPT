@@ -40,7 +40,8 @@ import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, e
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
-import { CodeInvalidArgument, CodeOperationConflict } from '../generated/protocol_ids';
+import { bindClientAudio, playClientCue } from './ClientAudio';
+import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied } from '../generated/protocol_ids';
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
@@ -96,10 +97,16 @@ export class AppRoot extends Component {
     private enterAttempt = 0;
     private roleCreationTask?: Promise<void>;
     private leaving = false;
+    private tapSound?: () => void;
     private releaseInput = (): void => { if (this.joystick) this.joystick.release(); else this.nav.releaseJoystick(); };
 
     async start(): Promise<void> {
         profiler.hideStats();
+        const releaseAudio = bindClientAudio(this.node, this.sceneKind);
+        if (releaseAudio) {
+            this.cleanups.push(releaseAudio);
+            this.tapSound = () => playClientCue('tap');
+        }
         session.scenes ??= new SceneManager(new SceneLoader(new CreatorSceneBackend(director)), ['Boot', 'Login', 'RoleSelect', 'Game'], this.sceneKind);
         const unsubscribe = session.scenes.subscribe(state => {
             const overlay = this.node.getChildByPath('Loading'); if (!overlay) return;
@@ -233,9 +240,9 @@ export class AppRoot extends Component {
         try { result = await session.connection.rpc(10005, request); }
         catch (error) {
             if (!current()) return;
-            if (!replaying && error instanceof ProtocolResponseError && error.messageId === 10006
-                && (error.code === CodeInvalidArgument || error.code === CodeOperationConflict)) {
-                // 首次明确业务拒绝才结束；重查拒绝不能证明历史未知尝试未提交。
+            if (error instanceof ProtocolResponseError && error.messageId === 10006
+                && (error.code === CodeRoleSlotOrNameOccupied || (!replaying && (error.code === CodeInvalidArgument || error.code === CodeOperationConflict)))) {
+                // 槽位或名称冲突只有服务端已封存原操作的确定拒绝才可结束未知重查。
                 ledger.clear(request.opId);
                 try { await this.fetchRoles(); } catch { /* 保留原拒绝提示，下次选角重查目录。 */ }
             }
@@ -423,10 +430,12 @@ export class AppRoot extends Component {
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
         if (!identity || !isCurrentEntry(identity)) {
+            this.warehouse?.detach();
             this.attachment?.invalidate(); this.attachmentTarget = ''; this.attachmentTask = undefined; this.attaching = false;
             this.setInputBarrier(true); this.releasePreparedTravel(); this.status(session.lastError || '连接已变化，请重新进入'); return;
         }
         if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
+            this.warehouse?.detach();
             void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
         }
         this.setInputBarrier(this.attaching || !session.ready || session.travel.blocksInput || session.teleport.blocksInput);
@@ -1191,6 +1200,7 @@ export class AppRoot extends Component {
             }
             try {
                 session.lastError = '';
+                this.tapSound?.();
                 const result = action();
                 if (result instanceof Promise) { this.uiActionBusy = true; result.catch(error => this.error(error)).finally(() => { this.uiActionBusy = false; }); }
             } catch (error) { this.error(error); }

@@ -40,6 +40,18 @@ test('实际保存存入按钮：GameWarehouse→确认→原journal持久化→
   f.deliver(40023,0,{...f.s.warehouseResult,warehouseRevision:Long.fromInt(999,true)});assert.equal(f.ui.component.page.revision.toString(),'1');
  }finally{f.close();}
 });
+test('同一游戏界面换地图附着，等待新资源时不显示旧共享仓或背包',async()=>{
+ const f=await fixture();try{
+  f.setWarehouse({...f.warehouse,items:[{slot:Long.UZERO,item:{...f.original,bound:false}}]});await f.ui.component.open(2);
+  f.app.attached=f.h.currentEntryIdentity();f.app.attachCurrentEntry=async()=>{};
+  assert.equal(f.ui.store.items[0].item.itemId,218);assert.equal(f.ui.bag.items.length,1);
+  const next=entry(f.s.entry.sceneEpoch.add(1).toString(),'2',2);next.resourceVersion=f.s.entry.resourceVersion;
+  f.deliver(20002,0,next);f.app.handleSessionUpdate();
+  assert.equal(f.ui.component.activeScope,1);assert.equal(f.ui.component.page,null);
+  assert.deepEqual(f.ui.store.items,[]);assert.deepEqual(f.ui.bag.items,[]);
+  assert.equal(f.ui.button('WithdrawItem').interactable,false);
+ }finally{f.close();}
+});
 test('确认取消/改版本/换仓修订/新附着/存储失败均在发40022前拒绝；无关EXP可推进当前operation修订',async()=>{
  for(const mode of ['cancel','version','page','scope','storage','xp']){const f=await fixture();try{f.app.popup.confirm=async()=>{if(mode==='cancel')return false;if(mode==='version')f.s.inventory.items[0].version=f.s.inventory.items[0].version.add(1);if(mode==='page')f.ui.component.page.revision=Long.UONE;if(mode==='scope')f.s.connection.close();if(mode==='storage')f.storage.fail=true;if(mode==='xp')f.s.inventory={...f.s.inventory,revision:Long.fromInt(3,true),experience:Long.fromInt(999)};return true;};succeed(f,p=>assert.equal(p.value.operation.expectedRevision.toString(),'3'));
    if(mode==='cancel'||mode==='xp')await f.click('DepositItem');else await assert.rejects(f.click('DepositItem'));assert.equal(f.packets().filter(x=>x.id===40022).length,mode==='xp'?1:0,mode);

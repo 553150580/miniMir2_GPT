@@ -261,6 +261,7 @@ func TestStatusPendingFreezeBeforeEqualImpactAndFullBaseline(t *testing.T) {
 		t.Fatal("解除未决后未按实际时钟移除")
 	}
 	// 本作统一顺序：离散到期与命中相等时，先移除盾，再以当前属性结算伤害。
+	now = now.Add(2 * time.Second)
 	w.applyBuff(r, pendingCast{Skill: skill, BuffDurationMS: 1000}, &r.Player, now)
 	r.Player.Statuses[31].NextProcess = now.Add(time.Second)
 	r.Player.HP = 100
@@ -269,7 +270,7 @@ func TestStatusPendingFreezeBeforeEqualImpactAndFullBaseline(t *testing.T) {
 	if r.Player.HP != 90 || r.Player.Statuses[31] != nil {
 		t.Fatal("同tick命中使用了已在本帧离散移除的盾")
 	}
-	w.applyBuff(r, pendingCast{Skill: skill, BuffDurationMS: 1000}, &r.Player, now)
+	w.applyBuff(r, pendingCast{Skill: skill, BuffDurationMS: 1000}, &r.Player, now.Add(time.Second))
 	w.baseline(r)
 	scene := &pb.SceneBaselineChunk{}
 	if err := proto.Unmarshal(c.frames[len(c.frames)-1].Payload, scene); err != nil {

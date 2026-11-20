@@ -21,6 +21,7 @@ import (
 var loginBudget = make(chan struct{}, 4)
 
 var localPattern = regexp.MustCompile(`^[A-Za-z0-9_]{6,20}$`)
+var errRoleSlotOrNameOccupied = errors.New("角色槽位或名字已占用")
 
 type Token struct {
 	ID          string    `bson:"_id"`
@@ -151,16 +152,40 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 		return nil, err
 	}
 	r.Binding = binding
+	creation := Operation{ID: opID, Digest: fingerprint, RoleID: r.ID, Kind: "create_role", Created: time.Now()}
+	result, code, err := s.persistRoleCreation(ctx, a, r, creation)
+	if errors.Is(err, errRoleSlotOrNameOccupied) {
+		// 插入冲突已使原事务回滚。重新持有账号围栏，先重查原回执，再把确定拒绝封存为同一个操作的终态。
+		creation.RoleID = ""
+		creation.Code = p.CodeRoleSlotOrNameOccupied
+		result, code, err = s.persistRoleCreation(ctx, a, r, creation)
+	}
+	if err != nil {
+		return nil, err
+	}
+	if code != 0 {
+		return nil, Fail(code, "原建角已终止，槽位或名字已占用")
+	}
+	return result.Summary(), nil
+}
+
+func (s *Store) persistRoleCreation(ctx context.Context, a Auth, role domain.Role, creation Operation) (domain.Role, uint32, error) {
 	var result domain.Role
-	e := s.tx(ctx, func(tc context.Context) error {
+	var code uint32
+	err := s.tx(ctx, func(tc context.Context) error {
 		if e := s.accountGuard(tc, a); e != nil {
 			return e
 		}
+		operations := s.DB.Collection("operations")
 		var previous Operation
-		err := s.DB.Collection("operations").FindOne(tc, bson.M{"_id": opID}).Decode(&previous)
+		err := operations.FindOne(tc, bson.M{"_id": creation.ID}).Decode(&previous)
 		if err == nil {
-			if previous.Digest != fingerprint {
+			if previous.Digest != creation.Digest {
 				return Fail(p.CodeOperationConflict, "同操作ID参数变化")
+			}
+			code = previous.Code
+			if code != 0 {
+				return nil
 			}
 			result, err = s.Role(tc, previous.RoleID)
 			return err
@@ -168,20 +193,20 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 		if !errors.Is(err, mongo.ErrNoDocuments) {
 			return err
 		}
-		if _, err = s.DB.Collection("roles").InsertOne(tc, r); err != nil {
-			if mongo.IsDuplicateKeyError(err) {
-				return Fail(p.CodeOperationConflict, "槽位或名字已占用")
+		code = creation.Code
+		if code == 0 {
+			if _, err = s.DB.Collection("roles").InsertOne(tc, role); err != nil {
+				if mongo.IsDuplicateKeyError(err) {
+					return errRoleSlotOrNameOccupied
+				}
+				return err
 			}
-			return err
+			result = role
 		}
-		_, err = s.DB.Collection("operations").InsertOne(tc, Operation{ID: opID, Digest: fingerprint, RoleID: r.ID, Kind: "create_role", Created: time.Now()})
-		result = r
+		_, err = operations.InsertOne(tc, creation)
 		return err
 	})
-	if e != nil {
-		return nil, e
-	}
-	return result.Summary(), nil
+	return result, code, err
 }
 func (s *Store) IssueTicket(ctx context.Context, a Auth, key *pb.RoleKey) (*pb.EntryTicketResult, error) {
 	if key == nil || len(key.RoleId) != 16 || key.OriginServerId != s.Cfg.OriginID {

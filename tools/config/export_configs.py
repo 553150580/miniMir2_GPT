@@ -256,11 +256,16 @@ def collect(schema, workbook_override=None):
             if ref not in all_data:
                 errors.append(f"schema/{t['table_id']}.{f['name']} 引用不存在的表 {ref}")
                 continue
-            keys = {r["id"] for r in all_data[ref]}
+            target_states = {r["id"]: r.get("record_status") for r in all_data[ref]}
             for r in all_data.get(t["table_id"], []):
                 v = r.get(f["name"])
-                if v is not None and v not in keys and not (v == 0 and f.get("allow_zero")):
-                    errors.append(f"{t['table_id']}/{r['id']}.{f['name']} 引用缺失 {ref}/{v}")
+                if v is None or (v == 0 and f.get("allow_zero")):
+                    continue
+                location = f"{t['table_id']}/{r['id']}.{f['name']}"
+                if v not in target_states:
+                    errors.append(f"{location} 引用缺失 {ref}/{v}")
+                elif r.get("record_status") != "historical" and target_states[v] == "historical":
+                    errors.append(f"{location} 引用了不会导出的历史记录 {ref}/{v}")
     # 缺口登记是发布前置条件，解除缺口必须有证据；不能仅删掉缺口行。
     registered = {x["id"]: x for x in schema.get("blockers", [])}
     found = {}

@@ -2,6 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict');
 const {load,Long}=require('./helpers/session_harness.cjs');
 const {PendingRoleCreation}=load('client/assets/scripts/app/PendingRoleCreation.ts',id=>id==='long'?Long:{});
 const compiled=name=>require('../../../.work/ui-tests/'+name+'.js');
+const {CodeRoleSlotOrNameOccupied}=compiled('generated/protocol_ids');
 class Storage{constructor(){this.data=new Map();this.failWrite=false;this.failRead=false;}getItem(k){if(this.failRead)throw Error('读失败');return this.data.get(k)??null;}setItem(k,v){if(this.failWrite)throw Error('写失败');this.data.set(k,v);}removeItem(k){if(this.failWrite)throw Error('写失败');this.data.delete(k);}}
 class ProtocolResponseError extends Error{constructor(messageId,code){super('明确协议拒绝'+code);this.messageId=messageId;this.code=code;}}
 const decorators=new Proxy({},{get(){return(...args)=>args.length>1?undefined:(...v)=>v.length===1?v[0]:undefined;}});
@@ -67,6 +68,20 @@ test('明确首次业务拒绝结束原请求；繁忙、未知后的拒绝、�
  f.actions.push({error:new ProtocolResponseError(10006,4301)});await assert.rejects(f.click());assert.equal(fingerprint(f.session.roleCreation.get()),original);
  f.actions.push({reply:{slot:4}});await assert.rejects(f.click(),/身份不匹配/);assert.equal(fingerprint(f.session.roleCreation.get()),original);
  await f.click();assert.equal(f.server.length,1);assert.equal(f.session.roleCreation.get(),null);
+});
+
+test('重入后收到原建角确定占用回执，解除旧记录并允许按新输入建角',async()=>{
+ const f=fixture(),old=f.app();await old.roleScene();
+ f.actions.push({error:Error('原建角响应丢失')});await assert.rejects(f.click(),/响应丢失/);
+ const original=fingerprint(f.session.roleCreation.get());
+ f.actions.push({error:new ProtocolResponseError(10008,CodeRoleSlotOrNameOccupied)});
+ await assert.rejects(f.click());assert.equal(fingerprint(f.session.roleCreation.get()),original);
+ old.disposed=true;
+ const next=f.app();next.edit=()=>({string:'新的角色名'});
+ f.actions.push({error:new ProtocolResponseError(10006,CodeRoleSlotOrNameOccupied)});
+ await assert.rejects(next.roleScene(),error=>error.code===CodeRoleSlotOrNameOccupied);
+ assert.equal(fingerprint(f.requests[2]),original);assert.equal(f.session.roleCreation.get(),null);assert.equal(f.allocated,1);
+ await f.click();assert.equal(f.allocated,2);assert.equal(f.server[0].name,'新的角色名');assert.equal(f.session.roleCreation.get(),null);
 });
 
 test('建角journal按账号隔离、严格校验且先落盘；写失败/损坏不得发送或覆盖原记录',async()=>{

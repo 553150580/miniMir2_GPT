@@ -112,6 +112,10 @@ def run(args):
         config.update(database=database, node_id='p2ui-' + attempt[:12], run_id=int(attempt[:12], 16) + 1)
         config.update({mode + '_address': '127.0.0.1:' + str(port) for mode, port in PORTS.items()})
         config_path = ROOT / 'conf/dev' / ('p2ui-' + attempt + '.local.json')
+        expected_fixture = base.fixture_identity(config, config_path)
+        if expected_fixture['fixture_hash'] != report['source_before']['config/development/first-loop.json']:
+            raise RuntimeError('隔离节点必须使用原fixture')
+        report['expected_fixture'] = expected_fixture
         with config_path.open('x', encoding='utf-8', newline='\n') as output:
             output.write(json.dumps(config, ensure_ascii=False, indent=2) + '\n')
         config_sha = sha(config_path)
@@ -129,12 +133,9 @@ def run(args):
         PHASE = 'start_isolated_nodes'
         for mode in PORTS:
             base.launch([str(binary), '-config', str(config_path), '-mode', mode], binary, directory / (mode + '.log'), handles)
-        report['health'] = base.health_ready(config, handles)
+        report['health'] = base.health_ready(config, handles, expected_fixture)
         for mode, port in PORTS.items():
             base.listener_identity(port, binary, [str(binary), '-config', str(config_path), '-mode', mode])
-            health = report['health'][mode]
-            if health.get('fixture_hash') != sha(ROOT / 'config/development/first-loop.json'):
-                raise RuntimeError('隔离节点不是原fixture')
         lease = db.node_leases.find_one({'_id': config['node_id']})
         if not lease or lease.get('owner_instance') != report['health']['game']['instance']:
             raise RuntimeError('隔离game未使用本轮新库')

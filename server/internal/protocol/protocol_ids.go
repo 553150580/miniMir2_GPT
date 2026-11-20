@@ -85,6 +85,7 @@ const (
 	CodeWarehouseInactive uint32 = 4202
 	CodeOperationConflict uint32 = 4301
 	CodeOperationPending uint32 = 4302
+	CodeRoleSlotOrNameOccupied uint32 = 4303
 	CodeSkillNotLearned uint32 = 3201
 	CodeSkillStateBlocked uint32 = 3202
 	CodeSkillCooldown uint32 = 3203

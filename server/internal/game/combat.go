@@ -267,11 +267,20 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 			w.killOwnedPet(r, now)
 			r.DeathID = domain.ID()
 			w.deathNotice(r)
-			if r.Conn == nil {
-				if w.sourceTimeline() {
-					r.KillFacts = append(r.KillFacts, killFact{At: now, HostSession: r.HostSession, StopReason: 2})
+			sourceTimeline := w.sourceTimeline()
+			at, hostSession := now, ""
+			if sourceTimeline && len(context) > 0 {
+				// 已到期的致死攻击归原事件区段，迟处理不借当前连接重判。
+				at, hostSession = context[0].At, context[0].HostSession
+			} else if r.Conn == nil {
+				hostSession = r.HostSession
+			}
+			if hostSession != "" {
+				if sourceTimeline {
+					r.FactOrder++
+					r.KillFacts = append(r.KillFacts, killFact{World: world.Ref, Order: r.FactOrder, At: at, HostSession: hostSession, StopReason: 2})
 				} else {
-					w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostingSession: r.HostSession, StopReason: 2})
+					w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostingSession: hostSession, StopReason: 2, EventAt: at})
 				}
 			}
 		}
@@ -289,6 +298,10 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Scene == 0 {
 		return
 	}
+	// 连接控制可能越过排队的旧帧，旧帧不得倒拨托管计时或推进现场。
+	if now.Before(r.LastTick) {
+		return
+	}
 	mapTemplate, ok := w.currentMap(r)
 	if !ok {
 		w.isolateRoom(r)
@@ -304,9 +317,6 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	delta := now.Sub(r.LastTick)
 	r.LastTick = now
-	if delta < 0 {
-		delta = 0
-	}
 	if delta > 200*time.Millisecond {
 		delta = 200 * time.Millisecond
 	}

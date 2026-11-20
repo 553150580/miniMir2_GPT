@@ -93,6 +93,28 @@ func TestHostingFractionExcludesPendingDatabaseWait(t *testing.T) {
 	}
 }
 
+func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
+	w, r, c := fullBagPolicyWorker(t)
+	r.HostMS, r.MonsterCount = 900, 0
+	w.command(command{role: r.Role.ID, conn: c, disconnect: true})
+	detached := r.LastTick
+	if r.Conn != nil || detached.IsZero() {
+		t.Fatal("断线没有设置托管时钟起点")
+	}
+	w.step(r, detached.Add(-60*time.Millisecond))
+	if !r.LastTick.Equal(detached) || r.HostMS != 900 {
+		t.Fatal("排队的在线帧倒拨了托管时钟")
+	}
+	w.step(r, detached.Add(40*time.Millisecond))
+	if r.HostMS != 940 || len(w.e.jobs) != 0 || r.Pending {
+		t.Fatal("断线前的在线时长进入扣时事务")
+	}
+	w.step(r, detached.Add(100*time.Millisecond))
+	if r.HostMS != 0 || len(w.e.jobs) != 1 || !r.Pending {
+		t.Fatal("真实托管余量满一秒后没有结算一次")
+	}
+}
+
 func TestHostingColdWorldDoesNotRestoreOldFraction(t *testing.T) {
 	w, r, _ := fullBagPolicyWorker(t)
 	r.HostMS = 800

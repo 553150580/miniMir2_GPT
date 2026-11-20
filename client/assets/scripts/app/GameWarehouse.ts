@@ -49,21 +49,27 @@ export class GameWarehouse {
     }
     refresh(input: WarehouseInput): void {
         if (this.disposed || this.retired) return;
-        if (this.input?.attachment !== input.attachment) {
+        const attachmentChanged = this.input?.attachment !== input.attachment;
+        if (attachmentChanged) {
             this.pager.bind(input.attachment); this.selectedBag = ''; this.selectedSlot = ''; this.offsets.clear();
-            this.scope = 1; this.busy = false; this.failed = false; this.notice = ''; this.bagKey = ''; this.storeKey = '';
+            this.scope = 1; this.busy = false; this.failed = false; this.notice = '';
             this.reading = null;
             this.edit('Quantity').string = '1'; this.edit('Amount').string = '';
         }
         this.input = input;
         if (this.selectedBag && !input.inventory.some(item => warehouseId(item.instanceId) === this.selectedBag)) this.selectedBag = '';
         const key = input.inventory.map(item => `${warehouseId(item.instanceId)}:${item.version}:${item.quantity}`).join('|');
-        if (key !== this.bagKey) { this.bagKey = key; this.bag.setItems(input.inventory, this.renderBag, true); }
+        if (attachmentChanged || key !== this.bagKey) {
+            this.bagKey = key; this.bag.setItems(input.inventory, this.renderBag, !attachmentChanged);
+        }
         const page = this.page, storeKey = page ? `${page.scope}:${page.revision}:${page.startSlot}:${page.capacity}` : '';
-        if (storeKey !== this.storeKey) {
-            this.storeKey = storeKey; this.store.setItems(page ? warehouseSlots(page) : [], this.renderSlot, true);
+        if (attachmentChanged || storeKey !== this.storeKey) {
+            this.storeKey = storeKey; this.store.setItems(page ? warehouseSlots(page) : [], this.renderSlot, !attachmentChanged);
         }
         this.refreshControls();
+    }
+    detach(): void {
+        if (this.input?.attachment) this.refresh({ ...this.input, attachment: '', ready: false, inventory: [], wallet: null });
     }
     async open(scope: WarehouseScope): Promise<void> {
         if (this.disposed) return;

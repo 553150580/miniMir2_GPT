@@ -20,6 +20,18 @@ test('新角色/新附着拒旧读取，销毁只退役自身；旧finally不清
  current={...current,attachment:'new-role-scope',role:'1:'+Buffer.from(bytes(8)).toString('hex')};v.component.refresh(current);d.resolve(page({scope:1,startSlot:L(0),limit:config.query_page_limit}));await p;assert.equal(v.component.page,null);assert.equal(v.button('DepositItem').interactable,false);
  const x=deferred();v.component.query=()=>x.promise;const pending=v.component.open(1);v.panel.emit(WidgetNode.EventType.NODE_DESTROYED);v.panel.isValid=false;v.bag.node.isValid=false;v.store.node.isValid=false;x.resolve(page({scope:1,startSlot:L(0),limit:config.query_page_limit}));await pending;assert.doesNotThrow(()=>v.component.dispose());
 });
+test('新附着空快照立即清除旧仓库与背包条目和滚动',async()=>{
+ let current=input();const sharedItem={...item,bound:false};
+ const v=view(()=>current,async q=>page(q,{items:[{slot:L(0),item:sharedItem}]}));
+ v.component.refresh(current);await v.component.open(2);
+ assert.deepEqual(v.store.items[0].item,sharedItem);assert.equal(v.bag.items.length,1);
+ v.store.offset=37;v.bag.offset=18;
+ current={...current,attachment:'new-scene',ready:false,inventory:[],wallet:null};v.component.refresh(current);
+ assert.equal(v.component.activeScope,1);assert.equal(v.component.page,null);
+ assert.deepEqual(v.store.items,[]);assert.deepEqual(v.bag.items,[]);
+ assert.equal(v.store.offset,0);assert.equal(v.bag.offset,0);assert.equal(v.button('WithdrawItem').interactable,false);
+ v.component.dispose();
+});
 test('保存List选择当次更新数量/上下文，不重绑或改变任一offset；未决只禁写不禁查询',async()=>{
  let current=input();const v=view(()=>current,async q=>page(q));v.component.refresh(current);await v.component.open(1);v.bag.offset=17;v.store.offset=93;const before=[v.bag.binds,v.store.binds];
  v.bag.node.emit(List.EVENT_ITEM_CLICK,0,current.inventory[0]);v.store.node.emit(List.EVENT_ITEM_CLICK,2,v.store.items[2]);assert.deepEqual([v.bag.binds,v.store.binds],before);assert.equal(v.bag.offset,17);assert.equal(v.store.offset,93);assert.equal(v.component.prepare(1).request.warehouseSlot.toString(),'2');

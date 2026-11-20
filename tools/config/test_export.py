@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -53,6 +54,31 @@ class ConfigurationTests(unittest.TestCase):
         for target in ("server", "client"):
             _, states = exporter.make_projection(self.schema, self.data, target)
             self.assertTrue(all(v != "historical" for rows in states.values() for v in rows.values()))
+
+    def test_active_references_cannot_point_to_historical_records(self):
+        fields = [
+            {"name": "id", "type": "int", "target": "both", "required": True},
+            {"name": "record_status", "type": "string", "target": "none", "required": True},
+        ]
+        reference = {"name": "quality_id", "type": "int", "target": "both", "ref_table": "qualities"}
+        schema = {"workbooks": [{"group": "gameplay", "path": "test.xlsx"}], "tables": [
+            {"table_id": "qualities", "sheet_name": "品质", "workbook_group": "gameplay", "fields": fields},
+            {"table_id": "affixes", "sheet_name": "词条", "workbook_group": "gameplay", "fields": fields + [reference]},
+        ]}
+        for source_status, target_status in [("confirmed", "historical"), ("historical", "historical"),
+                                             ("confirmed", "candidate")]:
+            with self.subTest(source=source_status, target=target_status):
+                sheets = {
+                    "品质": {2: {1: "id", 2: "record_status"}, 4: {1: 2, 2: target_status}},
+                    "词条": {2: {1: "id", 2: "record_status", 3: "quality_id"}, 4: {1: 1, 2: source_status, 3: 2}},
+                    "发布缺口": {},
+                }
+                with patch.object(exporter, "read_xlsx", return_value=sheets):
+                    _, errors, _, _ = exporter.collect(schema)
+                expected = []
+                if source_status == "confirmed" and target_status == "historical":
+                    expected = ["affixes/1.quality_id 引用了不会导出的历史记录 qualities/2"]
+                self.assertEqual(errors, expected)
 
     def test_probability_conservation_and_quote_formula(self):
         bad = copy.deepcopy(self.data)

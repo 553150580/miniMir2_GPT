@@ -38,6 +38,22 @@ def save(path, value):
     Path(path).write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
 
 
+def fixture_identity(config, config_path):
+    # 与服务端一致，相对配置路径从配置文件目录的上两级解析。
+    path = Path(os.path.abspath(config_path.parent.parent.parent / config['fixture_file']))
+    content = path.read_bytes()
+    rule_version = json.loads(content)['rule_version']
+    if type(rule_version) is not int or not 0 < rule_version < 2**64:
+        raise ValueError('隔离规则版本必须为正的64位无符号整数')
+    return {'path': str(path), 'fixture_hash': hashlib.sha256(content).hexdigest(), 'rule_version': rule_version}
+
+
+def sources_unchanged(report):
+    fixture = report.get('expected_fixture')
+    return report['source_before'] == report['source_after'] and (
+        fixture is None or sha(fixture['path']) == fixture['fixture_hash'])
+
+
 def checked_command(arguments, timeout=60):
     result = subprocess.run(arguments, cwd=ROOT, capture_output=True, timeout=timeout)
     if result.returncode:
@@ -166,6 +182,25 @@ def stop_owned(handle, force=False):
         child.wait(timeout=2)
 
 
+def cleanup_owned(handles):
+    errors = []
+    for handle in reversed(handles):
+        try:
+            child = handle.get('child')
+            try:
+                if child is not None and child.stdin is not None and child.poll() is None:
+                    child.stdin.close()
+                    child.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                # 探针超过优雅退出时限后，仍按本轮进程身份回收。
+                pass
+            finally:
+                stop_owned(handle)
+        except Exception as error:
+            errors.append(str(error))
+    return errors
+
+
 def free_ports():
     listeners = []
     try:
@@ -195,7 +230,7 @@ def listener_identity(port, binary, argv):
     return handle
 
 
-def health_ready(config, handles, timeout=30):
+def health_ready(config, handles, expected_fixture, timeout=30):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if any(handle.get('child') is not None and handle['child'].poll() is not None for handle in handles):
@@ -203,6 +238,12 @@ def health_ready(config, handles, timeout=30):
         try:
             result = {mode: http_json(config[mode + '_address']) for mode in ['account', 'game', 'gm']}
             if all(row.get('status') == 'ok' and row.get('mode') == mode for mode, row in result.items()):
+                for mode, row in result.items():
+                    if row.get('fixture_hash') != expected_fixture['fixture_hash']:
+                        raise RuntimeError(f'隔离节点{mode}的配置摘要与本轮冻结输入不符')
+                    version = row.get('rule_version')
+                    if type(version) is not int or version != expected_fixture['rule_version']:
+                        raise RuntimeError(f'隔离节点{mode}的规则版本与本轮冻结输入不符')
                 return result
         except (OSError, ValueError):
             pass
@@ -270,6 +311,8 @@ def run(args):
         config.update(database=database, node_id='recovery-' + attempt[:12])
         config.update({mode + '_address': '127.0.0.1:' + str(port) for mode, port in zip(['account', 'game', 'gm'], ports)})
         config_path = ROOT / 'conf/dev' / ('recovery-' + attempt + '.local.json')
+        expected_fixture = fixture_identity(config, config_path)
+        report['expected_fixture'] = expected_fixture
         with config_path.open('x', encoding='utf-8', newline='\n') as output:
             output.write(json.dumps(config, ensure_ascii=False, indent=2) + '\n')
         config_sha = sha(config_path)
@@ -288,7 +331,7 @@ def run(args):
         report['race_build'] = not args.no_race
         argv = lambda mode: [str(binary), '-config', str(config_path), '-mode', mode]
         supervisor = launch(argv('supervisor'), binary, directory / 'supervisor.log', handles)
-        health = health_ready(config, [supervisor])
+        health = health_ready(config, [supervisor], expected_fixture)
         supervisor_children = []
         for mode, port in zip(['account', 'game', 'gm'], ports):
             child = listener_identity(port, binary, argv(mode))
@@ -307,17 +350,19 @@ def run(args):
         account = launch(argv('account'), binary, directory / 'account-1.log', handles)
         game = launch(argv('game'), binary, directory / 'game-1.log', handles)
         gm = launch(argv('gm'), binary, directory / 'gm.log', handles)
-        initial_health = health_ready(config, [account, game, gm])
+        initial_health = health_ready(config, [account, game, gm], expected_fixture)
+        report['direct_health'] = initial_health
         probe_handle = launch([prepared['node'], str(ROOT / 'tools/server/recovery_probe.cjs')],
                               prepared['node'], directory / 'probe.stderr.log', handles, interactive=True)
         probe = Probe(probe_handle)
         report['checks'].append(probe.action('initialize', account='http://' + config['account_address'],
                                             game='ws://' + config['game_address'] + '/ws',
-                                            rule_version=initial_health['game']['rule_version']))
+                                            rule_version=expected_fixture['rule_version']))
         stop_owned(account)
         report['checks'].append(probe.action('account_down'))
         account = launch(argv('account'), binary, directory / 'account-2.log', handles)
-        restarted_health = health_ready(config, [account, game, gm])
+        restarted_health = health_ready(config, [account, game, gm], expected_fixture)
+        report['account_restart_health'] = restarted_health
         if restarted_health['game']['instance'] != initial_health['game']['instance']:
             raise RuntimeError('account单独重启改变了game实例')
         report['checks'].append(probe.action('account_up'))
@@ -341,7 +386,7 @@ def run(args):
             report['checks'].append({'game_force_stop_own_pid': True, 'old_run_epoch': original_run['run_epoch'],
                                      'lease_expired_naturally': True, 'wait_seconds': round(time.monotonic() - killed_at, 3)})
             game = launch(argv('game'), binary, directory / 'game-2.log', handles)
-            health_ready(config, [account, game, gm])
+            report['game_restart_health'] = health_ready(config, [account, game, gm], expected_fixture)
             next_run = db.run_control.find_one({'_id': config['run_id']})
             if next_run['run_epoch'] <= original_run['run_epoch'] or next_run['owner_instance'] == original_run['owner_instance']:
                 raise RuntimeError('game重启没有换代')
@@ -357,15 +402,7 @@ def run(args):
     except Exception as error:
         report['error'] = str(error)
     finally:
-        cleanup_errors = []
-        for handle in reversed(handles):
-            try:
-                if handle.get('child') is not None and handle['child'].stdin is not None and handle['child'].poll() is None:
-                    handle['child'].stdin.close()
-                    handle['child'].wait(timeout=5)
-                stop_owned(handle)
-            except Exception as error:
-                cleanup_errors.append(str(error))
+        cleanup_errors = cleanup_owned(handles)
         report['own_processes_stopped'] = not cleanup_errors
         report['process_exits'] = [{'pid': handle['meta']['pid'] if handle.get('meta') else None,
                                    'exit_code': handle['child'].poll(), 'forced_game': handle.get('forced', False)}
@@ -395,7 +432,7 @@ def run(args):
             report['main_preserved'] = report['after']['main'] == prepared['main']
             report['mongo_preserved'] = report['after']['mongo'] == prepared['mongo']
             report['source_after'] = input_snapshot()
-            report['source_stable'] = report['source_after'] == report['source_before']
+            report['source_stable'] = sources_unchanged(report)
         except Exception as error:
             cleanup_errors.append(str(error))
         report['cleanup_errors'] = cleanup_errors

@@ -306,11 +306,11 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 	filter := bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
 	var run Run
 	if e := s.DB.Collection("run_control").FindOne(ctx, filter).Decode(&run); e != nil {
-		return Fail(p.CodeRouteChanged, "运行所有权已失效")
+		return authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	var node bson.M
 	if e := s.DB.Collection("node_leases").FindOne(ctx, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Decode(&node); e != nil {
-		return Fail(p.CodeRouteChanged, "节点许可已失效")
+		return authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
 	}
 	raw := domain.Bytes(a.AccountID)
 	h := sha256.Sum256(raw)
@@ -324,6 +324,15 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 	}
 	return s.accountGuard(ctx, a)
 }
+
+// 无匹配记录才证明权限失效；保留其他错误，供驱动与事务层判断是否重试。
+func authorityReadError(err error, code uint32, message string) error {
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return Fail(code, message)
+	}
+	return err
+}
+
 func (s *Store) checkRole(r domain.Role, a Auth) error {
 	if r.AccountID != a.AccountID || r.Owner != s.Instance || r.RunEpoch != s.Epoch || r.SessionEpoch != a.SessionEpoch {
 		return Fail(p.CodeStaleSession, "角色绑定已失效")

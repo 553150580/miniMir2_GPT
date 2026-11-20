@@ -118,7 +118,7 @@ def assert_same_ledger(before, after, entered=False):
             raise RuntimeError('冷新票角色run_epoch没有换代')
 
 
-def crash_and_restart(db, game, config, argv, binary, directory, handles, label, role_id):
+def crash_and_restart(db, game, config, argv, binary, directory, handles, label, role_id, expected_fixture):
     original = db.run_control.find_one({'_id': config['run_id']})
     isolation.stop_owned(game, force=True)
     stopped = time.monotonic()
@@ -151,7 +151,7 @@ def crash_and_restart(db, game, config, argv, binary, directory, handles, label,
         raise RuntimeError('旧run租约未自然到期，拒绝接管')
     stopped_window = time.monotonic() - stable_since
     game = isolation.launch(argv('game'), binary, directory / f'game-{label}.log', handles)
-    isolation.health_ready(config, [game])
+    health = isolation.health_ready(config, [game], expected_fixture)
     replacement = db.run_control.find_one({'_id': config['run_id']})
     if replacement['run_epoch'] <= original['run_epoch'] or replacement['owner_instance'] == original['owner_instance']:
         raise RuntimeError('新game没有完成所有者换代')
@@ -161,6 +161,7 @@ def crash_and_restart(db, game, config, argv, binary, directory, handles, label,
         assert_same_ledger(snapshot, ledger(db, role_id))
     return game, snapshot, {'game_force_stop_own_pid': True, 'lease_expired_naturally': True,
                            'old_run_epoch': original['run_epoch'], 'new_run_epoch': replacement['run_epoch'],
+                           'restart_health': health,
                            'stopped_stable_window_seconds': round(stopped_window, 3),
                            'stopped_ledger_samples': samples, 'unattached_restart_samples': 8,
                            'stopped_sample_records': sample_records,
@@ -170,20 +171,7 @@ def crash_and_restart(db, game, config, argv, binary, directory, handles, label,
 
 
 def cleanup(handles, client, database, marker, config_path, config_sha, directory, prepared, report):
-    errors = []
-    for handle in reversed(handles):
-        try:
-            child = handle.get('child')
-            if child is not None and child.stdin is not None and child.poll() is None:
-                child.stdin.close()
-                try:
-                    child.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    # 探针可能仍在等待自然受伤；随后仍走原身份围栏回收自有Node。
-                    pass
-            isolation.stop_owned(handle)
-        except Exception as error:
-            errors.append(str(error))
+    errors = isolation.cleanup_owned(handles)
     report['own_processes_stopped'] = not errors
     report['process_exits'] = [{'pid': h['meta']['pid'] if h.get('meta') else None,
                               'exit_code': h['child'].poll(), 'forced_game': h.get('forced', False)}
@@ -213,7 +201,7 @@ def cleanup(handles, client, database, marker, config_path, config_sha, director
         report['main_preserved'] = report['after']['main'] == prepared['main']
         report['mongo_preserved'] = report['after']['mongo'] == prepared['mongo']
         report['source_after'] = inputs()
-        report['source_stable'] = report['source_before'] == report['source_after']
+        report['source_stable'] = isolation.sources_unchanged(report)
     except Exception as error:
         errors.append(str(error))
     report['cleanup_errors'] = errors
@@ -254,6 +242,8 @@ def run():
         config.update({mode + '_address': f'127.0.0.1:{port}' for mode, port in
                        zip(['account', 'game', 'gm'], isolation.free_ports())})
         config_path = ROOT / 'conf/dev' / ('runtime-' + attempt + '.local.json')
+        expected_fixture = isolation.fixture_identity(config, config_path)
+        report['expected_fixture'] = expected_fixture
         with config_path.open('x', encoding='utf-8', newline='\n') as output:
             output.write(json.dumps(config, ensure_ascii=False, indent=2) + '\n')
         config_sha = isolation.sha(config_path)
@@ -270,14 +260,14 @@ def run():
         account = isolation.launch(argv('account'), binary, directory / 'account.log', handles)
         game = isolation.launch(argv('game'), binary, directory / 'game-1.log', handles)
         gm = isolation.launch(argv('gm'), binary, directory / 'gm.log', handles)
-        health = isolation.health_ready(config, [account, game, gm])
-        report['runtime_rule_version'] = health['game']['rule_version']
+        report['initial_health'] = isolation.health_ready(config, [account, game, gm], expected_fixture)
+        report['runtime_rule_version'] = expected_fixture['rule_version']
         probe_handle = isolation.launch([prepared['node'], str(PROBE)], prepared['node'],
                                         directory / 'probe.stderr.log', handles, interactive=True)
         probe = RuntimeProbe(probe_handle)
         created = probe.action('initialize', account='http://' + config['account_address'],
                                game='ws://' + config['game_address'] + '/ws',
-                               rule_version=health['game']['rule_version'])
+                               rule_version=expected_fixture['rule_version'])
         report['checks'].append(created)
         role_id = created['result']['role_id']
         # 仅首次附着前的等级门槛是隔离资格；受伤、学习、耗蓝、扣时全部走真实业务。
@@ -294,7 +284,8 @@ def run():
         report['checks'].append(probe.action('prepare_join'))
         report['checks'].append(probe.action('healthy_reconnect'))
         report['checks'].append(probe.action('prepare_crash'))
-        game, snapshot, check = crash_and_restart(db, game, config, argv, binary, directory, handles, '2', role_id)
+        game, snapshot, check = crash_and_restart(db, game, config, argv, binary, directory, handles, '2', role_id,
+                                                  expected_fixture)
         report['checks'].append({'online_crash': check})
         report['checks'].append(probe.action('cold_rejoin'))
         assert_same_ledger(snapshot, ledger(db, role_id), entered=True)
@@ -317,7 +308,8 @@ def run():
         if hosted['summary']['report_used_seconds'] < 2:
             raise RuntimeError('离线战报未记录原真实扣时')
         report['checks'].append({'healthy_offline_billing': True, 'before': online['summary'], 'after': hosted['summary']})
-        game, snapshot, check = crash_and_restart(db, game, config, argv, binary, directory, handles, '3', role_id)
+        game, snapshot, check = crash_and_restart(db, game, config, argv, binary, directory, handles, '3', role_id,
+                                                  expected_fixture)
         report['checks'].append({'offline_crash': check})
         report['checks'].append(probe.action('offline_rejoin'))
         assert_same_ledger(snapshot, ledger(db, role_id), entered=True)

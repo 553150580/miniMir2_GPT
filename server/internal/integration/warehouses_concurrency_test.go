@@ -109,7 +109,7 @@ func TestWarehouseConcurrentFifthRoleAndSixthRejectedMongoHTTP(t *testing.T) {
 				t.Fatal("第五槽双成功")
 			}
 			winner = n
-		} else if a.frame.Error != p.CodeOperationConflict {
+		} else if a.frame.Error != p.CodeRoleSlotOrNameOccupied {
 			t.Fatal("第五槽非预期终态", a.frame.Error)
 		}
 	}
@@ -134,7 +134,41 @@ func TestWarehouseConcurrentFifthRoleAndSixthRejectedMongoHTTP(t *testing.T) {
 	if len(answers[winner].role.Key.RoleId) != 16 {
 		t.Fatal("赢家无真实角色")
 	}
-	t.Logf("原1..4后同时发两个不同op抢5及第三请求6：赢家%d，其余4301/1001；原op均重放稳定；目录恰5。", winner)
+	t.Logf("原1..4后同时发两个不同op抢5及第三请求6：赢家%d，其余为确定占用和参数错误；原op均重放稳定；目录恰5。", winner)
+
+	t.Run("已拒绝原建角在名字释放后仍不会执行", func(t *testing.T) {
+		other := &pb.LoginResult{}
+		rpc(t, url, "", p.MsgC2SLocalRegister, &pb.LocalLoginRequest{Account: "wh5_" + domain.ID()[:10], Password: "test_123456"}, other, 0)
+		occupied := answers[winner].role
+		q := &pb.CreateRoleRequest{OriginServerId: cfg.OriginID, Slot: 1, Job: 1, Name: occupied.Name, OpId: domain.Bytes(domain.ID())}
+		// 首次确定拒绝的包可丢失，持久原回执不能依赖客户端收到它。
+		rpc(t, url, other.AccountToken, p.MsgC2SCreateRole, q, &pb.RoleSummary{}, p.CodeRoleSlotOrNameOccupied)
+		id := "create:" + domain.Hex(other.AccountId) + ":" + domain.Hex(q.OpId)
+		var terminal persistence.Operation
+		must(t, inspection.DB.Collection("operations").FindOne(ctx, bson.M{"_id": id}).Decode(&terminal))
+		if terminal.Code != p.CodeRoleSlotOrNameOccupied || terminal.RoleID != "" || terminal.Kind != "create_role" {
+			t.Fatalf("未保存确定拒绝的原回执: %+v", terminal)
+		}
+
+		// 仅在随机测试库释放占用，确认此前迟到的原请求也不会创建角色。
+		newName := "更名" + domain.ID()[:5]
+		updated, err := inspection.DB.Collection("roles").UpdateByID(ctx, domain.Hex(occupied.Key.RoleId), bson.M{"$set": bson.M{"name": newName, "name_key": newName}})
+		must(t, err)
+		if updated.ModifiedCount != 1 {
+			t.Fatal("测试未释放原名称")
+		}
+		rpc(t, url, other.AccountToken, p.MsgC2SCreateRole, q, &pb.RoleSummary{}, p.CodeRoleSlotOrNameOccupied)
+		changed := proto.Clone(q).(*pb.CreateRoleRequest)
+		changed.Job = 2
+		rpc(t, url, other.AccountToken, p.MsgC2SCreateRole, changed, &pb.RoleSummary{}, p.CodeOperationConflict)
+		fresh := proto.Clone(q).(*pb.CreateRoleRequest)
+		fresh.OpId = domain.Bytes(domain.ID())
+		created := &pb.RoleSummary{}
+		rpc(t, url, other.AccountToken, p.MsgC2SCreateRole, fresh, created, 0)
+		if created.Name != q.Name || created.Slot != q.Slot || len(created.Key.GetRoleId()) != 16 {
+			t.Fatalf("新操作未按预期建角: %+v", created)
+		}
+	})
 }
 
 func TestWarehousePermanentOriginsShareRunButNotAssetsMongo(t *testing.T) {

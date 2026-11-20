@@ -359,6 +359,55 @@ func TestLateImpactUsesDueForBothPrivilegeBoundariesAndHostingSegment(t *testing
 	}
 }
 
+func TestLateFatalAttackUsesHostingSegmentAtImpactDeadline(t *testing.T) {
+	for _, check := range []struct {
+		name, dueSession, laterSession string
+	}{
+		{name: "online_then_offline", laterSession: "later-offline"},
+		{name: "offline_then_reconnect", dueSession: "original-host"},
+	} {
+		t.Run(check.name, func(t *testing.T) {
+			w, r, c := stageAWorker(t, 1)
+			now := time.Unix(1800000000, 0)
+			due := now.Add(300 * time.Millisecond)
+			r.Player.HP = 1
+			if check.dueSession != "" {
+				r.Conn, r.HostSession = nil, check.dueSession
+			}
+			r.Attacks = []pendingAttack{{Scene: r.Scene, Caster: reference(r, r.Monsters[0]), Target: reference(r, &r.Player), Due: due, Amount: 10000, Defence: defenceAC, HostSession: r.HostSession}}
+			r.Pending = true
+			w.advanceEvents(r, due)
+			if r.Player.HP != 1 || len(r.KillFacts) != 0 {
+				t.Fatal("数据库待决期间处理了致死事件")
+			}
+			r.Conn, r.HostSession = c, check.laterSession
+			if check.laterSession != "" {
+				r.Conn = nil
+			}
+			transitionEventHosting(r, due.Add(time.Millisecond), r.HostSession)
+			r.Pending = false
+			w.advanceEvents(r, due.Add(time.Second))
+			if r.Player.HP != 0 || r.DeathID == "" {
+				t.Fatal("待决结束后原攻击没有致死")
+			}
+			if check.dueSession == "" {
+				if len(r.KillFacts) != 0 {
+					t.Fatal("在线致死事件误写成后续托管死亡")
+				}
+				return
+			}
+			if len(r.KillFacts) != 1 {
+				t.Fatalf("重连后应保留一条原托管死亡事实，得到 %d 条", len(r.KillFacts))
+			}
+			fact := r.KillFacts[0]
+			q := w.killSettlement(r, fact)
+			if fact.World != r.currentWorld().Ref || q.HostingSession != check.dueSession || q.StopReason != 2 || !q.EventAt.Equal(due) || q.Kills != 0 || q.HostSeconds != 0 {
+				t.Fatalf("原世界、托管区段或到期时间发生变化: %+v", q)
+			}
+		})
+	}
+}
+
 func TestHardSettlementFailureIsolatesWithoutDiscardingPaidFacts(t *testing.T) {
 	w, r, c := stageAWorker(t, 1)
 	r.KillFacts = []killFact{{ID: "original", Prepared: true}}

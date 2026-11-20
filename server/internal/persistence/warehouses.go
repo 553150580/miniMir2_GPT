@@ -151,13 +151,13 @@ func (s *Store) warehouse(ctx context.Context, r domain.Role, scope uint32) (War
 // 只读核验不递增run_guards/accountGuard，不冻结角色，也不建立空仓库。
 func (s *Store) warehouseReadFence(ctx context.Context, a Auth) error {
 	if err := s.DB.Collection("run_control").FindOne(ctx, bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Err(); err != nil {
-		return Fail(p.CodeRouteChanged, "运行所有权已失效")
+		return authorityReadError(err, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	if err := s.DB.Collection("node_leases").FindOne(ctx, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Err(); err != nil {
-		return Fail(p.CodeRouteChanged, "节点许可已失效")
+		return authorityReadError(err, p.CodeRouteChanged, "节点许可已失效")
 	}
 	if err := s.DB.Collection("accounts").FindOne(ctx, bson.M{"_id": a.AccountID, "active": true, "auth_version": a.AuthVersion}).Err(); err != nil {
-		return Fail(p.CodeUnauthenticated, "账号授权失效")
+		return authorityReadError(err, p.CodeUnauthenticated, "账号授权失效")
 	}
 	return nil
 }

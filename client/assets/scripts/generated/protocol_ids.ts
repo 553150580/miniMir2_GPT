@@ -80,6 +80,7 @@ export const CodeWarehouseWithdrawOnly: 4201 = 4201;
 export const CodeWarehouseInactive: 4202 = 4202;
 export const CodeOperationConflict: 4301 = 4301;
 export const CodeOperationPending: 4302 = 4302;
+export const CodeRoleSlotOrNameOccupied: 4303 = 4303;
 export const CodeSkillNotLearned: 3201 = 3201;
 export const CodeSkillStateBlocked: 3202 = 3202;
 export const CodeSkillCooldown: 3203 = 3203;

@@ -916,6 +916,14 @@
       "active_in_scope": true
     },
     {
+      "value": 4303,
+      "name": "CodeRoleSlotOrNameOccupied",
+      "display_zh": "原建角已终止，槽位或名称被占用",
+      "status": "draft",
+      "source_ref": "最终策划案.md:7.1；原建角操作确定拒绝回执",
+      "active_in_scope": true
+    },
+    {
       "value": 3201,
       "name": "CodeSkillNotLearned",
       "display_zh": "尚未学习该职业技能",
