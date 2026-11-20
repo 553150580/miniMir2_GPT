@@ -16,6 +16,7 @@ sys.path.insert(0,str(ROOT/'tools/config'))
 import export_configs as config
 sys.path.insert(0,str(ROOT/'tools/resources'))
 import prepare_pet_runtime as pet_runtime
+import prepare_compact_towns as compact_towns
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -619,13 +620,19 @@ def town_runtime_rules(profile,maps):
         raise ValueError('旅行只准入已核完整城镇，开放前必须启用有界导航')
     if travel['quiesce_ttl_ms']>travel['plan_ttl_ms'] or any(travel[name]>86400000 for name in ['plan_ttl_ms','ack_ttl_ms']):raise ValueError('城镇等待时限不符合有界合同')
     if travel['max_plans_per_scene']>256:raise ValueError('旅行ID历史须有界，满时不遗忘取消记录')
-    cells=town['width']*town['height'];n=navigation
+    destination_maps=[row for row in maps if row.get('compact_town')] if profile['rule_version']>=24 else [town]
+    if not destination_maps:
+        raise ValueError('城镇导航须存在已配置目的地')
+    cells=max(row['width']*row['height'] for row in destination_maps);n=navigation
     if n['work_per_worker_tick']<n['work_per_task'] or n['workspaces_per_worker']>256 or n['queue_per_worker']>256 or n['max_dynamic_cells']<2 or any(n[name]>cells for name in ['max_expanded','max_frontier','max_route_cells','max_replans','max_dynamic_cells','work_per_worker_tick']):
         raise ValueError('导航预算超过配置地图或现有worker准入范围')
     word=struct.calcsize('P');workspace=cells*(12+word)+n['max_frontier']*word
     reserved=n['workspaces_per_worker']*workspace+(n['workspaces_per_worker']+n['queue_per_worker'])*n['max_route_cells']*2*word
     if reserved>n['max_memory_bytes_per_worker']:raise ValueError('导航大缓冲预留超过显式每worker内存预算')
-    return deepcopy(travel),deepcopy(navigation)
+    projected_travel=deepcopy(travel)
+    if profile['rule_version']>=24:
+        projected_travel['destination_map_ids']=[row['id'] for row in destination_maps]
+    return projected_travel,deepcopy(navigation)
 
 def skill_book_definition(source,skill,profile,*,complete):
     """技能书共用唯一来源投影；独立候选显式补齐类型固定的非装备中性字段。"""
@@ -900,6 +907,11 @@ def fixture_from_rows(tables):
                                 'economy_reference':'docs/技能获取与升级实施边界.md；书本=目标阶+1用户确定，页与来源渠道候选'}}}
     if profile['rule_version']>=12:
         catalog,catalog_evidence=source_map_catalog(tables,profile)
+        compact_maps,compact_evidence=compact_towns.compile_compact_towns(profile,catalog,result['map'])
+        catalog.extend(compact_maps)
+        if profile['rule_version']>=24:
+            result['map_regions']=compact_towns.compile_map_regions(profile,[result['map'],*compact_maps])
+            result['_source_evidence']['compact_towns']=compact_evidence
         result['maps']=catalog;result['binding']=deepcopy(profile['binding'])
         result['source_map_streaming']=deepcopy(profile['source_map_streaming'])
         result['_source_evidence']['source_map_catalog']=catalog_evidence
@@ -1009,10 +1021,13 @@ def public_gameplay(fixture):
                    'width':row['width'],'height':row['height'],'scene_kind':row.get('scene_kind',1),
                    'safe_zones':[{'id':str(zone['id']),'center':deepcopy(zone['center']),'radius':zone['radius']} for zone in row.get('safe_zones',[])],
                    **({'no_teleport':row['no_teleport']} if fixture['rule_version']>=15 else {}),
-                   **({'no_pets':row['no_pets']} if fixture['rule_version']>=17 else {})}
+                   **({'no_pets':row['no_pets']} if fixture['rule_version']>=17 else {}),
+                   **compact_towns.public_fields(row)}
                  for row in [fixture['map']]+fixture['maps']],
                 'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {}),
-            **({'town_travel':{'enabled':fixture['town_travel']['enabled'],'town_map_id':str(fixture['town_travel']['town_map_id'])}} if fixture['rule_version']>=13 else {})}
+            **({'map_regions':[{**row,'map_ids':list(map(str,row['map_ids']))} for row in fixture['map_regions']]} if fixture['rule_version']>=24 else {}),
+            **({'town_travel':{'enabled':fixture['town_travel']['enabled'],'town_map_id':str(fixture['town_travel']['town_map_id']),
+                              **({'destination_map_ids':list(map(str,fixture['town_travel']['destination_map_ids']))} if fixture['rule_version']>=24 else {})}} if fixture['rule_version']>=13 else {})}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--extract',action='store_true',help='历史首次初始化；已建立开发表后禁止重跑，不能覆盖唯一Excel');p.add_argument('--check',action='store_true');args=p.parse_args()
@@ -1036,6 +1051,8 @@ def main():
             fixture['_source_evidence']['pet_runtime_inputs']={
                 'compiler_sha256':config.sha256(Path(pet_runtime.__file__)),
                 'workbooks':[{'group':w['group'],'path':w['path'],'sha256':config.sha256(ROOT/w['path'])} for w in schema['workbooks']]}
+        if fixture['rule_version']>=24:
+            fixture['_source_evidence']['compact_town_compiler_sha256']=config.sha256(Path(compact_towns.__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)

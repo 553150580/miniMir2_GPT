@@ -33,6 +33,18 @@ func travelID(n int) string { return fmt.Sprintf("%032x", n) }
 
 func travelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time) {
 	t.Helper()
+	w, r, c, now := mapTravelWorker(t)
+	useLegacySourceTown(&w.e.Store.Cfg.Fixture)
+	w.e.Store.Cfg.Fixture.TownTravel = &devconfig.TownTravelConfig{Enabled: true, TownMapID: 2,
+		PlanTTLMS: 30000, QuiesceTTLMS: 5000, AckTTLMS: 12000, MaxPlansPerScene: 256}
+	if town, exists := w.e.Store.Cfg.Fixture.MapByID(2); !exists || town.SceneKindValue() != devconfig.SceneKindTown || !town.Walkable(town.PlayerSpawn) {
+		t.Fatal("本组需要已冻结的完整来源城镇目录")
+	}
+	return w, r, c, now
+}
+
+func mapTravelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time) {
+	t.Helper()
 	r, _ := observedRoom()
 	w := observedWorker(t, r)
 	now := time.Unix(1800000000, 0)
@@ -46,12 +58,16 @@ func travelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time) {
 	r.CellEntrySequence = 100
 	r.LastTick = now
 	w.e.baseline.Store(r.Baseline)
-	w.e.Store.Cfg.Fixture.TownTravel = &devconfig.TownTravelConfig{Enabled: true, TownMapID: 2,
-		PlanTTLMS: 30000, QuiesceTTLMS: 5000, AckTTLMS: 12000, MaxPlansPerScene: 256}
-	if town, exists := w.e.Store.Cfg.Fixture.MapByID(2); !exists || town.SceneKindValue() != devconfig.SceneKindTown || !town.Walkable(town.PlayerSpawn) {
-		t.Fatal("本组需要已冻结的完整来源城镇目录")
-	}
 	return w, r, c, now
+}
+
+// 冻结rule23执行门禁和来源大地图寻路预算，使用目录仍保留的原始地图与安全区。
+func useLegacySourceTown(f *devconfig.Fixture) {
+	f.RuleVersion = 23
+	f.TownTravel.DestinationMapIDs = nil
+	navigation := f.TownNavigation
+	navigation.WorkPerTask, navigation.WorkPerWorkerTick = 1024, 8192
+	navigation.MaxExpanded, navigation.MaxFrontier, navigation.MaxRouteCells = 490000, 65536, 4096
 }
 
 func prepareTravelAt(w *worker, r *room, n int, destination uint32, now time.Time) wire.Frame {

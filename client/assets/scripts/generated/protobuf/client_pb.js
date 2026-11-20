@@ -5069,6 +5069,7 @@ $root.minimir = (function() {
              * @property {Long|null} [scene_epoch] MapTravelPrepare scene_epoch
              * @property {string|null} [travel_id] MapTravelPrepare travel_id
              * @property {number|null} [destination] MapTravelPrepare destination
+             * @property {Long|null} [target_map_id] MapTravelPrepare target_map_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -5125,6 +5126,14 @@ $root.minimir = (function() {
             MapTravelPrepare.prototype.destination = 0;
 
             /**
+             * MapTravelPrepare target_map_id.
+             * @member {Long} target_map_id
+             * @memberof minimir.v1.MapTravelPrepare
+             * @instance
+             */
+            MapTravelPrepare.prototype.target_map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new MapTravelPrepare instance using the specified properties.
              * @function create
              * @memberof minimir.v1.MapTravelPrepare
@@ -5162,6 +5171,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 2, wireType 2 =*/18).string(message.travel_id);
                 if (message.destination != null && $Object.hasOwnProperty.call(message, "destination") && message.destination !== 0)
                     writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.destination);
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id") && (typeof message.target_map_id === "object" ? message.target_map_id.low || message.target_map_id.high : message.target_map_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.target_map_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -5246,6 +5257,15 @@ $root.minimir = (function() {
                                 delete message.destination;
                             continue;
                         }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target_map_id = value;
+                            else
+                                delete message.target_map_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -5303,6 +5323,9 @@ $root.minimir = (function() {
                 if (message.destination != null && $Object.hasOwnProperty.call(message, "destination"))
                     if (!$util.isInteger(message.destination))
                         return "destination: integer expected";
+                if (message.target_map_id != null && $Object.hasOwnProperty.call(message, "target_map_id"))
+                    if (!$util.isInteger(message.target_map_id) && !(message.target_map_id && $util.isInteger(message.target_map_id.low) && $util.isInteger(message.target_map_id.high)))
+                        return "target_map_id: integer|Long expected";
                 return null;
             };
 

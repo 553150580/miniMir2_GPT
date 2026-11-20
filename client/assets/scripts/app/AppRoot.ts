@@ -31,6 +31,8 @@ import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachme
 import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity, TravelContext } from './MapTravelModel';
 import { MapViewportPreparation } from './MapViewportPreparation';
+import { TownDirectory } from './TownDirectory';
+import { townDirectoryRegions, TownDirectoryMapRow } from './TownMapModel';
 import { roleBindingText } from './RoleBindingModel';
 import { petAppearDuration } from './PetBornModel';
 import { GameAutoRecycle } from './GameAutoRecycle';
@@ -60,6 +62,7 @@ export class AppRoot extends Component {
     private skillAssets?: GameSkillAssets;
     private autoRecycle?: GameAutoRecycle;
     private warehouse?: GameWarehouse;
+    private townDirectory?: TownDirectory;
     private combatStatus?: GameCombatStatus;
     private ui?: UIMgr;
     private popup?: PopupView;
@@ -93,6 +96,7 @@ export class AppRoot extends Component {
     private preparedTravel?: { id: string; assets: WorldAssets; viewport: MapViewportPreparation };
     private travelSource?: TravelContext;
     private travelDestination = 1;
+    private travelDestinationMap?: Long;
     private travelUiSequence = 0;
     private enterAttempt = 0;
     private roleCreationTask?: Promise<void>;
@@ -288,6 +292,8 @@ export class AppRoot extends Component {
         this.autoRecycle = new GameAutoRecycle(this.find('UIMgr/Panels/Settings'));
         this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
         const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
+        const directory = new TownDirectory(this.find('UIMgr/Panels/TownDirectory'), row => this.selectTownDestination(row));
+        this.townDirectory = directory; this.cleanups.push(() => directory.dispose());
         const cast = (event: CastEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCast(event); };
         session.casts.add(cast); this.cleanups.push(() => session.casts.delete(cast));
         const castStep = (event: CastStepEvent): void => { if (this.eventMatchesWorld(event.sceneEpoch)) this.world?.acceptCastStep(event); };
@@ -345,7 +351,8 @@ export class AppRoot extends Component {
             this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => { this.ui!.open(panel); this.refreshGame(); });
         }
         for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
-        this.button('BottomHUD/Footer/Map', () => this.travelMap());
+        this.button('BottomHUD/Footer/Map', () => this.openMapDirectory());
+        if (session.entry?.resourceVersion.greaterThanOrEqual(Long.fromInt(24, true))) this.text('BottomHUD/Footer/Map/Label', '地图');
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
         this.button('TopHUD/WalletButton', () => this.popup!.show('Details', { title: '四钱包', message: session.wallet ? `金币 ${session.wallet.gold}\n绑定金币 ${session.wallet.boundGold}\n元宝 ${yuanbao(session.wallet.yuanbaoUnits)}\n绑定元宝 ${yuanbao(session.wallet.boundYuanbaoUnits)}` : '等待余额同步' }));
         this.button('MapViewport/Actions/Auto', () => { this.auto = this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.isChecked; return this.autoState(); }, Toggle.EventType.TOGGLE);
@@ -430,11 +437,13 @@ export class AppRoot extends Component {
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
         if (!identity || !isCurrentEntry(identity)) {
+            this.closeMapDirectory();
             this.warehouse?.detach();
             this.attachment?.invalidate(); this.attachmentTarget = ''; this.attachmentTask = undefined; this.attaching = false;
             this.setInputBarrier(true); this.releasePreparedTravel(); this.status(session.lastError || '连接已变化，请重新进入'); return;
         }
         if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
+            this.closeMapDirectory();
             this.warehouse?.detach();
             void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
         }
@@ -468,7 +477,7 @@ export class AppRoot extends Component {
                         }
                     }
                     if (this.disposed || session.entry !== entry || !isCurrentEntry(identity)) throw new StaleMapAttachmentError('旧地图资源准备已经失效');
-                    if (assets.mapId !== identity.map.toString() || String(assets.gameplay.rule_version) !== entry.resourceVersion.toString()) throw new Error('地图资源或规则版本与真实入场身份不一致');
+                    if (assets.mapId !== identity.map.toString() || assets.sceneKind !== entry.sceneKind || String(assets.gameplay.rule_version) !== entry.resourceVersion.toString()) throw new Error('地图资源或规则版本与真实入场身份不一致');
                     await this.waitBaseline(identity); return assets;
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
             },
@@ -487,6 +496,8 @@ export class AppRoot extends Component {
                     if (this.consumeGround(entity.position)) return;
                     this.selectedTarget = entity.entityHandle;
                     this.combatStatus?.showEntity(entity.entityHandle, entity.life.toString());
+                }, npc => {
+                    if (this.world === view && this.isWorldCurrent() && this.canSendInput()) this.popup!.show('Details', { title: npc.name, message: npc.role });
                 });
                 const combatStatus = new GameCombatStatus(this.node.getChildByName('Safe')!, this.ui!, this.popup!, assets.statusBadgePrefab, entry.playerHandle, assets.gameplay.statuses, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, mapId: entry.roomId });
                 this.combatStatus = combatStatus;
@@ -592,20 +603,39 @@ export class AppRoot extends Component {
         if (!player || player.hp.isZero()) throw new Error('角色存活时才能往返城镇');
         if (this.economicBusy || this.unresolved || session.pending?.get(roleIdentity())) throw new Error('上一笔资产操作须先沿原身份核对');
     }
-    private async travelMap(): Promise<void> {
+    private usesMapDirectory(): boolean { return (this.world?.gameplay.rule_version ?? 0) >= 24; }
+    private openMapDirectory(): void | Promise<void> {
+        if (!this.usesMapDirectory() || session.travel.phase === 'uncertain') return this.travelMap();
+        this.validateTravel();
+        const rows = townDirectoryRegions(this.world!.gameplay, session.entry.roomId.toString());
+        this.ui!.open('TownDirectory'); this.townDirectory!.show(rows);
+    }
+    private closeMapDirectory(): void {
+        if (this.townDirectory && this.ui?.top === this.townDirectory.panel) this.ui.back();
+    }
+    private selectTownDestination(row: TownDirectoryMapRow): void {
+        if (this.uiActionBusy || !this.townDirectory || this.ui?.top !== this.townDirectory.panel) return;
+        this.tapSound?.(); this.uiActionBusy = true;
+        void this.travelMap(row).catch(error => this.error(error)).finally(() => { this.uiActionBusy = false; });
+    }
+    private async travelMap(selection?: TownDirectoryMapRow): Promise<void> {
         if (session.travel.phase === 'uncertain' && this.travelSource) { await this.reconcileTravel(this.travelSource); return; }
         this.validateTravel();
         if (this.world!.gameplay.town_travel?.enabled !== true) throw new Error('城镇往返尚未开放');
         if (session.travel.active) throw new Error('上一旅行计划尚未确定，请等待原计划状态或重新连接');
         const source = this.travelContext(), entry = session.entry, id = Array.from(newOperationId(), byte => byte.toString(16).padStart(2, '0')).join('');
-        const destination = entry.sceneKind === 2 ? 2 : 1;
-        const scope = { id, generation: session.travel.begin(source, id, destination), ui: ++this.travelUiSequence };
+        if (selection && !townDirectoryRegions(this.world!.gameplay, entry.roomId.toString()).some(region => region.maps.some(row => row.mapId === selection.mapId
+            && row.destination === selection.destination && !row.current))) throw new Error('原地图选项已变化');
+        const destination = selection?.destination ?? (entry.sceneKind === 2 ? 2 : 1);
+        const targetMapId = selection ? Long.fromString(selection.mapId, true) : undefined;
+        const scope = { id, generation: session.travel.begin(source, id, destination, targetMapId), ui: ++this.travelUiSequence };
         const current = (): boolean => !this.disposed && this.travelUiSequence === scope.ui && session.travel.id === scope.id && session.travel.generation === scope.generation;
         let prepared: typeof this.preparedTravel;
-        this.travelSource = source; this.travelDestination = destination;
+        this.travelSource = source; this.travelDestination = destination; this.travelDestinationMap = targetMapId;
+        if (selection) this.closeMapDirectory();
         this.releaseInput(); this.showMapLoading(true, '申请目标地图计划');
         try {
-            const plan = await session.connection.request(20007, { sceneEpoch: entry.sceneEpoch, travelId: id, destination });
+            const plan = await session.connection.request(20007, { sceneEpoch: entry.sceneEpoch, travelId: id, destination, ...(targetMapId ? { targetMapId } : {}) });
             if (!current()) throw new StaleMapAttachmentError('旧旅行计划回调已经失效');
             if (plan.phase !== undefined) throw new Error('服务端已终止或处理本次旅行计划');
             session.travel.acceptPlan(plan, this.travelContext(), Date.now()); this.validateTravel();
@@ -617,12 +647,12 @@ export class AppRoot extends Component {
             try { valid = current() && session.travel.active && session.travel.matches(this.travelContext()); } catch { /* 原身份已丢失，仍须归还刚完成的资源。 */ }
             if (!valid) { assets.dispose(); throw new StaleMapAttachmentError('旧旅行资源准备已经失效'); }
             prepared = { id, assets, viewport: prime }; this.preparedTravel = prepared;
-            if ((assets.sourceMap ? 2 : 1) !== plan.targetSceneKind) throw new Error('旅行目标地图类型与资源不匹配');
+            if (assets.sceneKind !== plan.targetSceneKind) throw new Error('旅行目标地图类型与资源不匹配');
             const view = this.find('MapViewport').getComponent(UITransform)!, scale = this.world!.world.scale;
             await prime.prepare(plan.position, view.width / scale.x, view.height / scale.y);
             if (!current()) throw new StaleMapAttachmentError('旧旅行视口准备已经失效');
             this.validateTravel(); session.travel.prepared(this.travelContext(), Date.now()); this.showMapLoading(false);
-            const accepted = await this.popup!.confirm('Confirm', destination === 1 ? '目标城镇资源已准备。确认前往城镇？原个人战斗现场将由服务端保留。' : '目标个人地图资源已准备。确认返回原战斗现场？', '地图往返');
+            const accepted = selection || await this.popup!.confirm('Confirm', destination === 1 ? '目标城镇资源已准备。确认前往城镇？原个人战斗现场将由服务端保留。' : '目标个人地图资源已准备。确认返回原战斗现场？', '地图往返');
             if (!current()) throw new StaleMapAttachmentError('旧旅行确认已经失效');
             if (!accepted) { await this.cancelTravel(id, source); return; }
             this.validateTravel(); this.releaseInput(); session.travel.commit(this.travelContext(), Date.now()); this.setInputBarrier(true);
@@ -662,7 +692,8 @@ export class AppRoot extends Component {
             if (!session.travel.blocksInput) {
                 // Prepare响应丢失时只用原id重查；服务端可返回原Plan或phase3/4终态。
                 if (!session.travel.plan) {
-                    try { await session.connection.request(20007, { sceneEpoch: source.scene, travelId: id, destination: this.travelDestination }); }
+                    const targetMapId = this.travelDestinationMap;
+                    try { await session.connection.request(20007, { sceneEpoch: source.scene, travelId: id, destination: this.travelDestination, ...(targetMapId ? { targetMapId } : {}) }); }
                     catch (error) { if (current() && error instanceof ProtocolResponseError) { session.travel.reset(); scope.id = session.travel.id; scope.generation = session.travel.generation; } throw error; }
                 }
                 if (!current()) throw new StaleMapAttachmentError('旧旅行核对回调已经失效');
@@ -723,7 +754,7 @@ export class AppRoot extends Component {
         this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !this.attaching;
         const travel = this.find('BottomHUD/Footer/Map').getComponent(Button)!;
         travel.interactable = (session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled);
-        this.text('BottomHUD/Footer/Map/Label', session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
+        this.text('BottomHUD/Footer/Map/Label', this.usesMapDirectory() ? '地图' : session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
         this.skills?.refresh(this.skillSnapshot(), quick?.definition.id ?? 0);
         this.combatStatus?.refresh(baseline, session.ready);
         const player = baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);

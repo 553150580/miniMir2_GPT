@@ -1,10 +1,12 @@
 import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 import { GridProjection } from './GridProjection';
 import { SourceMapAssets } from './SourceMapAssets';
+import { compactTownMap, townNpcFrames } from './TownMapModel';
 
 interface WorldMapEntry {
     readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
     readonly width?: number; readonly height?: number; readonly safe_zones?: readonly unknown[];
+    readonly compact_town?: boolean;
 }
 export type WorldAssetsInvalidation = 'dispose' | 'source';
 function mapIdString(value: unknown): string {
@@ -58,6 +60,7 @@ export class WorldAssets {
     background: SpriteFrame | null = null;
     sourceMap?: SourceMapAssets;
     mapId = '1';
+    sceneKind = 1;
     get mapBackground(): SpriteFrame | null { return this.background; }
     readonly frames = new Map<string, SpriteFrame>();
     readonly audioClips = new Map<string, AudioClip>();
@@ -95,8 +98,8 @@ export class WorldAssets {
         try {
             result.manifest = result.own(await load<JsonAsset>('development/manifest', JsonAsset)).json;
             result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
-            const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id;
-            if (selected.scene_kind === 2) {
+            const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
+            if (selected.scene_kind === 2 && !selected.compact_town) {
                 const streaming = result.gameplay.source_map_streaming;
                 if (!streaming || ![streaming.load_concurrency, streaming.cache_capacity].every(value => Number.isSafeInteger(value) && value > 0)) throw new Error('来源地图缺少显式流式并发/缓存预算');
                 result.sourceMap = await SourceMapAssets.prepare(selected.resource_key, { concurrency: streaming.load_concurrency, capacity: streaming.cache_capacity });
@@ -108,7 +111,8 @@ export class WorldAssets {
                 result.map = Object.freeze({ ...source, name: selected.name, scene_kind: selected.scene_kind, safe_zones: selected.safe_zones });
                 result.propPrefab = result.sourceMap.propPrefab; result.background = result.sourceMap.minimap;
             } else {
-                result.map = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
+                const floor = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
+                result.map = selected.compact_town ? compactTownMap(floor, selected) : floor;
                 if (selected.width !== undefined || result.map.id !== undefined) {
                     const id = typeof result.map.id === 'number' && Number.isSafeInteger(result.map.id) && result.map.id >= 0 ? String(result.map.id) : mapIdString(result.map.id);
                     if (id !== selected.id) throw new Error('个人地图资源与目录身份不一致');
@@ -145,6 +149,7 @@ export class WorldAssets {
                 if (!frame || frame.declared_empty) throw new Error(`地图物件缺少原始帧：${prop.frame}`);
                 keys.add(prop.frame);
             }
+            for (const npc of result.map.npcs ?? []) for (const key of townNpcFrames(result.manifest, npc)) keys.add(key);
             for (const id of profileIds) {
                 const profile = result.manifest.profiles[id];
                 if (!profile) throw new Error(`缺少外观资源：${id}`);

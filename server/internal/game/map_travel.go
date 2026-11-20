@@ -50,6 +50,7 @@ func currentTravelHistory(r *room) *mapTravelHistory {
 type mapTravelPlan struct {
 	ID             string
 	Destination    uint32
+	RequestedMapID uint64
 	Conn           Connection
 	Auth           persistence.Auth
 	FromScene      uint64
@@ -99,7 +100,7 @@ func (w *worker) travelBound(r *room, plan *mapTravelPlan) bool {
 
 func (w *worker) travelConfigMatches(plan *mapTravelPlan) bool {
 	f := &w.e.Store.Cfg.Fixture
-	return f.TownTravel != nil && f.TownTravel.Enabled && *f.TownTravel == plan.Rules &&
+	return f.TownTravel != nil && f.TownTravel.Enabled && f.TownTravel.Matches(plan.Rules) &&
 		f.Hash == plan.ConfigHash && f.RuleVersion == plan.RuleVersion
 }
 
@@ -156,7 +157,7 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 	// 新准备请求也推进旧plan的期限检查，不能靠持续发新ID让过期槽一直占用。
 	w.progressMapTravel(r, now)
 	if old := r.Travel; old != nil && old.ID == q.TravelId && old.FromScene == q.SceneEpoch && old.Conn == r.Conn && old.Auth == r.Auth {
-		if old.Destination != q.Destination || !w.travelBound(r, old) {
+		if old.Destination != q.Destination || old.RequestedMapID != q.TargetMapId || !w.travelBound(r, old) {
 			w.travelFailure(r, frame, p.CodeOperationConflict)
 			return
 		}
@@ -194,18 +195,26 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 	var target *devconfig.MapTemplate
 	var position devconfig.Point
 	if q.Destination == travelToTown {
-		if current.SceneKindValue() != devconfig.SceneKindPersonal || r.MapID != f.Map.ID || r.SavedPersonal != nil {
+		mapID := q.TargetMapId
+		if f.RuleVersion < 24 && mapID == 0 {
+			mapID = f.TownTravel.TownMapID
+		}
+		fromPersonal := current.SceneKindValue() == devconfig.SceneKindPersonal && r.MapID == f.Map.ID && r.SavedPersonal == nil
+		fromTown := f.RuleVersion >= 24 && current.SceneKindValue() == devconfig.SceneKindTown && f.TownDestination(r.MapID) &&
+			r.SavedPersonal != nil && r.SavedPersonal == r.PersonalWorld && r.SavedPersonal.MapID == f.Map.ID
+		if (!fromPersonal && !fromTown) || !f.TownDestination(mapID) || mapID == r.MapID {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
 		}
-		target, ok = f.MapByID(f.TownTravel.TownMapID)
+		target, ok = f.MapByID(mapID)
 		if !ok || target.SceneKindValue() != devconfig.SceneKindTown {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
 		}
 		position = target.PlayerSpawn
 	} else {
-		if current.SceneKindValue() != devconfig.SceneKindTown || r.MapID != f.TownTravel.TownMapID || r.SavedPersonal == nil {
+		if current.SceneKindValue() != devconfig.SceneKindTown || !f.TownDestination(r.MapID) || r.SavedPersonal == nil ||
+			q.TargetMapId != 0 && q.TargetMapId != r.SavedPersonal.MapID {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
 		}
@@ -221,9 +230,9 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 		return
 	}
 	history.IDs[q.TravelId] = struct{}{}
-	r.Travel = &mapTravelPlan{ID: q.TravelId, Destination: q.Destination, Conn: r.Conn, Auth: r.Auth,
+	r.Travel = &mapTravelPlan{ID: q.TravelId, Destination: q.Destination, RequestedMapID: q.TargetMapId, Conn: r.Conn, Auth: r.Auth,
 		FromScene: r.Scene, FromMapID: r.MapID, PlayerLife: r.Player.Life, TargetMapID: target.ID, TargetKind: target.SceneKindValue(),
-		Position: position, Personal: r.SavedPersonal, Rules: *f.TownTravel, ConfigHash: f.Hash, RuleVersion: f.RuleVersion,
+		Position: position, Personal: r.SavedPersonal, Rules: f.TownTravel.Snapshot(), ConfigHash: f.Hash, RuleVersion: f.RuleVersion,
 		Expires: now.Add(time.Duration(f.TownTravel.PlanTTLMS) * time.Millisecond)}
 	w.sendTravelPlan(r, r.Travel, frame.Request)
 }
@@ -382,7 +391,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 			}
 		}
 	}
-	residentWorld := r.TownWorld
+	residentWorld := r.townWorld(plan.TargetMapID)
 	if plan.Destination == travelToPersonal {
 		residentWorld = r.SavedPersonal
 	}
@@ -422,15 +431,14 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 	}
 	var destinationWorld *worldState
 	if plan.Destination == travelToTown {
-		r.PersonalWorld, r.SavedPersonal = r.currentWorld(), r.currentWorld()
-		if r.TownWorld == nil {
-			r.TownWorld = r.newWorld(plan.TargetMapID)
-		}
-		destinationWorld = r.TownWorld
+		destinationWorld = w.ensureTownWorld(r, plan.TargetMapID)
 		if destinationWorld == nil || destinationWorld.MapID != plan.TargetMapID {
 			plan.Phase = travelCancelled
 			w.sendTravelState(r, plan, plan.Request)
 			return false
+		}
+		if r.MapID == f.Map.ID && r.PersonalWorld == nil {
+			r.PersonalWorld = r.currentWorld()
 		}
 		destinationWorld.Auto, destinationWorld.Destination, destinationWorld.Navigation = false, nil, navigationState{}
 	} else {

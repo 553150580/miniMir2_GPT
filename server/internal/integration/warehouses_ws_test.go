@@ -169,7 +169,7 @@ func TestWarehousesTwoRolesAtomicTransferAndReconnectMongoWS(t *testing.T) {
 			return false
 		})
 		c.auto(false, 0)
-		travelToBaseline(c, 1, 2)
+		travelToBaseline(c, 1, 3)
 		travelAcknowledge(c, true)
 	}
 	// 同账号5角色同时附着；同一角色换票的会话围栏不得挤掉其它4角色。
@@ -185,7 +185,7 @@ func TestWarehousesTwoRolesAtomicTransferAndReconnectMongoWS(t *testing.T) {
 		c := join(t, cfg.GameAddress, issue(t, url, login.AccountToken, key.Key))
 		otherClients = append(otherClients, c)
 		c.auto(false, 1)
-		travelToBaseline(c, 1, 2)
+		travelToBaseline(c, 1, 3)
 		travelAcknowledge(c, true)
 	}
 	// 后台仍有两个独立操作者；共享竞争不能把另一角色踢下线。

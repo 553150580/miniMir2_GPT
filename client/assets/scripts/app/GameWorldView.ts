@@ -21,6 +21,8 @@ import { originalActorSound, originalWeaponImpactSound } from './OriginalActorAu
 import { originalSkillAudio, originalSkillStrikeAudio, originalTeleportAudio } from './OriginalSkillAudio';
 import { attachmentKey } from './MapTravelModel';
 import type { AttachmentIdentity } from './MapTravelModel';
+import type { TownNpc } from './TownMapModel';
+import { TownNpcView } from './TownNpcView';
 
 interface Visual {
     node: Node;
@@ -82,6 +84,7 @@ export class GameWorldView {
     private mapPreparation?: Promise<void>;
     private mapFailure: unknown;
     private readonly props: Array<{ node: Node; foot: Vec3; id: string }> = [];
+    private readonly townNpcs: TownNpcView[] = [];
     private disposed = false;
     private selected: (entity: any) => void = () => {};
     private playerPosition: { x: number; y: number } | null = null;
@@ -97,7 +100,7 @@ export class GameWorldView {
         if (isValid(this.viewport, true)) this.viewport.on(Node.EventType.SIZE_CHANGED, this.refitCamera, this);
     }
 
-    prepare(assets: WorldAssets, onSelected: (entity: any) => void): void {
+    prepare(assets: WorldAssets, onSelected: (entity: any) => void, onNpc: (npc: TownNpc) => void = () => {}): void {
         if (this.disposed) { assets.dispose(); return; }
         this.assets = assets; this.selected = onSelected;
         this.releaseAssetsInvalidation = assets.onBeforeInvalidation(reason => {
@@ -144,6 +147,7 @@ export class GameWorldView {
             const id = prop.group_id ? `${prop.group_id}:${String(prop.part_index).padStart(4, '0')}:${prop.id}` : prop.id;
             this.props.push({ node, foot, id });
         }
+        for (const npc of this.map.npcs ?? []) this.townNpcs.push(new TownNpcView(assets, this.entities, this.projection, npc, onNpc));
         const effects = this.world.getChildByName('Effects');
         if (!effects) throw new Error('场景尚未保存游戏特效容器');
         this.effects = new CombatEffects(assets, effects, this.sceneEpoch, (x, y) => this.grid(x, y), handle => this.visuals.get(handle)?.node.position ?? null,
@@ -467,6 +471,7 @@ export class GameWorldView {
         if (this.sourceView) this.sourceView.setEntities(sourceOrder);
         else {
             const depth: Array<ProjectedDepth & { node: Node }> = this.props.map(prop => ({ node: prop.node, x: prop.foot.x, y: prop.foot.y, layer: 0, id: prop.id }));
+            for (const { node } of this.townNpcs) depth.push({ node, x: node.position.x, y: node.position.y, layer: 1, id: node.name });
             for (const visual of Array.from(this.visuals.values())) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
             depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
         }
@@ -559,6 +564,7 @@ export class GameWorldView {
         this.additiveMaterial?.destroy(); this.additiveMaterial = undefined;
         for (const prop of this.props) if (isValid(prop.node, true)) { const sprite = prop.node.getComponent(Sprite); if (sprite) sprite.spriteFrame = null; prop.node.destroy(); }
         this.props.length = 0;
+        for (const npc of this.townNpcs.splice(0)) npc.dispose();
         if (isValid(this.world, true) && surfaceOwners.get(this.world) === this) {
             const surface = this.world.getChildByName('Surface')?.getComponent(Sprite);
             if (surface) { surface.spriteFrame = null; surface.enabled = false; }

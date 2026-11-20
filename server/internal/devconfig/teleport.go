@@ -56,7 +56,7 @@ func (f *Fixture) ValidateTeleport() error {
 		if m.NoTeleport == nil {
 			return errors.New("所有运行地图须显式提供独立NoTeleport规则")
 		}
-		if m.SceneKindValue() == SceneKindTown {
+		if m.SceneKindValue() == SceneKindTown && !m.CompactTown {
 			if m.Source == nil || len(m.SourceStaticBits) != collisionByteCount(m.CellBudget()) || len(m.SourceStaticBits) == 0 || len(m.CollisionBits) != len(m.SourceStaticBits) {
 				return errors.New("来源城镇须明确原图静态位图，不能由闭门位图替代")
 			}
@@ -70,7 +70,7 @@ func (f *Fixture) ValidateTeleport() error {
 				return errors.New("原图静态位图尾部补位必须为0")
 			}
 		} else if len(m.SourceStaticBits) != 0 {
-			return errors.New("本作个人图只使用唯一作者碰撞，不携带另一份静态位图")
+			return errors.New("作者布局只使用唯一阻挡格，不携带另一份静态位图")
 		}
 	}
 	for _, s := range f.Skills {

@@ -38,6 +38,7 @@ export class MapTravelModel {
     private sequence = 0;
     private identifier = '';
     private destination = 0;
+    private destinationMap?: string;
     private preparedPlan?: TravelPlan;
     private committedScene?: string;
     private attached?: string;
@@ -47,8 +48,9 @@ export class MapTravelModel {
     get plan(): TravelPlan | undefined { return this.preparedPlan; }
     get active(): boolean { return !['idle', 'complete', 'cancelled', 'expired'].includes(this.phase); }
     get blocksInput(): boolean { return this.commitDispatched && this.active; }
-    begin(value: TravelContext, id: string, destination: number): number {
+    begin(value: TravelContext, id: string, destination: number, destinationMap?: TravelInteger): number {
         if (this.active || !/^[a-f0-9]{32}$/.test(id) || ![1, 2].includes(destination)) throw new Error('旅行请求正在处理中或身份无效');
+        this.destinationMap = destinationMap === undefined ? undefined : travelInteger(destinationMap, true);
         this.source = context(value); this.identifier = id; this.destination = destination; this.preparedPlan = undefined; this.committedScene = undefined; this.attached = undefined;
         this.commitDispatched = false;
         this.phase = 'planning'; return ++this.sequence;
@@ -61,11 +63,13 @@ export class MapTravelModel {
         return !!this.source && value.connection === this.source.connection && value.role === this.source.role && travelInteger(value.binding) === this.source.binding;
     }
     acceptPlan(plan: TravelPlan, current: TravelContext, nowMs: number): void {
+        const targetMapId = travelInteger(plan.targetMapId, true);
         if (this.phase !== 'planning' || !this.matches(current) || plan.travelId !== this.identifier || travelInteger(plan.fromSceneEpoch) !== this.source!.scene
+            || (this.destinationMap !== undefined && targetMapId !== this.destinationMap)
             || plan.targetSceneKind !== (this.destination === 1 ? 2 : 1) || !plan.position || ![plan.position.x, plan.position.y].every(n => Number.isSafeInteger(n) && n >= 0)) throw new Error('旅行计划与原请求身份不匹配');
         const expires = travelInteger(plan.expiresAtUnixMs, true);
         if (BigInt(expires) > 9223372036854775807n || !Number.isSafeInteger(nowMs) || nowMs < 0 || BigInt(expires) <= BigInt(nowMs)) throw new Error('旅行计划已经过期');
-        this.preparedPlan = Object.freeze({ ...plan, fromSceneEpoch: travelInteger(plan.fromSceneEpoch), targetMapId: travelInteger(plan.targetMapId, true), expiresAtUnixMs: expires, position: Object.freeze({ ...plan.position }) });
+        this.preparedPlan = Object.freeze({ ...plan, fromSceneEpoch: travelInteger(plan.fromSceneEpoch), targetMapId, expiresAtUnixMs: expires, position: Object.freeze({ ...plan.position }) });
         this.phase = 'preparing';
     }
     prepared(current: TravelContext, nowMs: number): void { this.checkPlan(current, nowMs); if (this.phase !== 'preparing') throw new Error('旅行资源准备代次已变化'); this.phase = 'confirming'; }
@@ -74,6 +78,7 @@ export class MapTravelModel {
     uncertain(): void { if (this.active && !this.committedScene) this.phase = 'uncertain'; }
     acceptState(value: TravelState, current: Pick<TravelContext, 'connection' | 'binding' | 'role'>): boolean {
         if (!this.source || !this.sameConnection(current) || value.travelId !== this.identifier || travelInteger(value.fromSceneEpoch) !== this.source.scene || ![1, 2, 3, 4].includes(value.phase)) return false;
+        if (this.destinationMap !== undefined && travelInteger(value.targetMapId) !== this.destinationMap) return false;
         if (this.preparedPlan && travelInteger(value.targetMapId) !== this.preparedPlan.targetMapId) return false;
         if (this.committedScene) return value.phase === 2 && travelInteger(value.sceneEpoch) === this.committedScene;
         if (['cancelled', 'expired', 'complete'].includes(this.phase)) return false;
@@ -99,7 +104,7 @@ export class MapTravelModel {
         this.phase = 'awaiting_ready'; return true;
     }
     ready(value: AttachmentIdentity): boolean { if (this.phase !== 'awaiting_ready' || this.attached !== attachmentKey(value)) return false; this.phase = 'complete'; return true; }
-    reset(): void { this.sequence++; this.phase = 'idle'; this.source = undefined; this.identifier = ''; this.preparedPlan = undefined; this.committedScene = undefined; this.attached = undefined; this.commitDispatched = false; }
+    reset(): void { this.sequence++; this.phase = 'idle'; this.source = undefined; this.identifier = ''; this.destinationMap = undefined; this.preparedPlan = undefined; this.committedScene = undefined; this.attached = undefined; this.commitDispatched = false; }
     private checkPlan(current: TravelContext, nowMs: number): void {
         if (!this.preparedPlan || !this.matches(current) || !Number.isSafeInteger(nowMs) || nowMs < 0 || BigInt(this.preparedPlan.expiresAtUnixMs.toString()) <= BigInt(nowMs)) throw new Error('旅行原连接、角色状态或计划期限已变化');
     }

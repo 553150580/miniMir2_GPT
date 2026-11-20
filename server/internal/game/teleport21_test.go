@@ -18,6 +18,14 @@ import (
 // 只构造已通过Enter的可信内存缓存，不预置Mongo receipt或冒称真实WS证明。
 func teleport21Worker(t *testing.T) (*worker, *room, *capturedConnection, devconfig.Skill, time.Time) {
 	t.Helper()
+	w, r, c, s, now := boundTeleport21Worker(t)
+	useLegacySourceTown(&w.e.Store.Cfg.Fixture)
+	r.TownWorld = r.newWorld(2)
+	return w, r, c, s, now
+}
+
+func boundTeleport21Worker(t *testing.T) (*worker, *room, *capturedConnection, devconfig.Skill, time.Time) {
+	t.Helper()
 	w, r, c := stageBWorker(t, 1, 21, 1, 9)
 	if w.e.Store.Cfg.Fixture.RuleVersion < 15 {
 		t.Fatal("本组需真实唯一Excel rule15及后续的21合同")
@@ -29,7 +37,6 @@ func teleport21Worker(t *testing.T) (*worker, *room, *capturedConnection, devcon
 	r.Pet = nil
 	r.MapID = w.e.Store.Cfg.Fixture.Map.ID
 	r.PersonalWorld = r.currentWorld()
-	r.TownWorld = r.newWorld(2)
 	id := domain.ID()
 	r.Role.ID, r.Auth.RoleID, r.Role.Origin = id, id, 1
 	r.Role.Revision, r.Role.SourceSeq, r.Role.BindingSourceSeq = 15, 7, 7

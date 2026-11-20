@@ -2099,6 +2099,9 @@ export namespace minimir {
             /** MapTravelPrepare destination. */
             destination: number;
 
+            /** MapTravelPrepare target_map_id. */
+            target_map_id: Long;
+
             /**
              * Creates a new MapTravelPrepare instance using the specified properties.
              * @param [properties] Properties to set
@@ -2170,6 +2173,9 @@ export namespace minimir {
 
                 /** MapTravelPrepare destination */
                 destination?: (number|null);
+
+                /** MapTravelPrepare target_map_id */
+                target_map_id?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 const {Long,load,harness,entry,ready,context,ProtocolResponseError}=require('./helpers/session_harness.cjs');
 const {MapAttachmentCoordinator}=require('../../../.work/ui-tests/app/MapAttachmentCoordinator.js');
 const travelModel=require('../../../.work/ui-tests/app/MapTravelModel.js');
+const townMap=load('client/assets/scripts/app/TownMapModel.ts',()=>travelModel);
 const {NavigationIntent}=require('../../../.work/ui-tests/input/NavigationIntent.js');
 const {MapViewportPreparation}=load('client/assets/scripts/app/MapViewportPreparation.ts',()=>{});
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
@@ -18,13 +19,52 @@ function appHarness(options={}){
     class View{constructor(_v,world,_e,_name,_job,scene){this.world=world;this.sceneEpoch=scene;this.isMapReady=false;this.disposed=0;views.push(this);log.push('mount:'+scene);}bindPresentation(identity,current,retire){this.presentationIdentity=identity;this.presentationCurrent=current;this.retirePresentation=retire;}observeEquipment(identity,playerHandle,inventory){this.equipmentObservation={identity,playerHandle,inventory};}prepare(assets){this.assets=assets;this.manifest=assets.manifest;this.gameplay=assets.gameplay;this.map=assets.map;}apply(b){this.baseline=b;}update(){}async prepareViewport(position){this.position=position;log.push('viewport:'+this.sceneEpoch);await gate?.promise;this.isMapReady=true;}dispose(){if(this.disposed++)return;log.push('view.dispose:'+this.sceneEpoch);this.assets?.dispose();}
         presentTeleportDeparture(value){this.teleportDeparture=value;}
     }
-    const asset=(map,source=false)=>({listeners:new Set(),onBeforeInvalidation(listener){this.listeners.add(listener);return ()=>this.listeners.delete(listener);},mapId:map,map:{width:source?700:17,height:source?700:17},gameplay:{rule_version:13,skills:[],items:[],town_travel:{enabled:true}},background:null,statusBadgePrefab:{},sourceMap:source?{model:{manifest:{pixel_width:33600,pixel_height:22400},project:(x,y)=>({x:x*48,y:y*32}),queryChunks:()=>[{id:'owner'}]},acquireChunk(){log.push('prime.acquire');return {ready:Promise.resolve({}),release(){log.push('prime.release');}};}}:undefined,disposed:0,dispose(){this.disposed++;for(const listener of Array.from(this.listeners))listener('dispose');this.listeners.clear();log.push('asset.dispose:'+map);}});
+    const asset=(map,source=false,sceneKind=source?2:1)=>({listeners:new Set(),onBeforeInvalidation(listener){this.listeners.add(listener);return ()=>this.listeners.delete(listener);},mapId:map,sceneKind,map:{width:source?700:17,height:source?700:17},gameplay:{rule_version:13,skills:[],items:[],town_travel:{enabled:true}},background:null,statusBadgePrefab:{},sourceMap:source?{model:{manifest:{pixel_width:33600,pixel_height:22400},project:(x,y)=>({x:x*48,y:y*32}),queryChunks:()=>[{id:'owner'}]},acquireChunk(){log.push('prime.acquire');return {ready:Promise.resolve({}),release(){log.push('prime.release');}};}}:undefined,disposed:0,dispose(){this.disposed++;for(const listener of Array.from(this.listeners))listener('dispose');this.listeners.clear();log.push('asset.dispose:'+map);}});
     const WorldAssets={prepare:async(_job,_progress,map)=>{loads.push(map?.toString());const pending=pendingLoads.shift();return pending?pending.promise:asset(map.toString(),map.toString()==='2');}};
     const cc={_decorator:new Proxy({},{get:()=>decorator}),Component:class{},UITransform,Button,Toggle,Label,Game:{EVENT_HIDE:'hide'},game:{totalTime:0,off(){}}};
-    const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='./GameWorldView'?{GameWorldView:View}:id==='./WorldAssets'?{WorldAssets}:id==='./MapAttachmentCoordinator'?{MapAttachmentCoordinator,...require('../../../.work/ui-tests/app/MapAttachmentCoordinator.js')}:id==='./PetBornModel'?require('../../../.work/ui-tests/app/PetBornModel.js'):id==='./MapTravelModel'?travelModel:id==='./MapViewportPreparation'?{MapViewportPreparation}:id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='../input/NavigationIntent'?{NavigationIntent}:id==='../input/MapTouchNavigator'?{MapTouchNavigator}:id==='../ui/List'?{List}:id==='./GameConnection'?{newOperationId:()=>new Uint8Array(16).fill(++operationSerial),ProtocolResponseError}:id==='./GameCombatStatus'?{GameCombatStatus:class{dispose(){this.disposed=(this.disposed??0)+1;}update(){} }}:{});
+    const {AppRoot}=load('client/assets/scripts/app/AppRoot.ts',id=>id==='cc'?cc:id==='long'?Long:id==='./GameSession'?h:id==='./GameWorldView'?{GameWorldView:View}:id==='./WorldAssets'?{WorldAssets}:id==='./MapAttachmentCoordinator'?{MapAttachmentCoordinator,...require('../../../.work/ui-tests/app/MapAttachmentCoordinator.js')}:id==='./PetBornModel'?require('../../../.work/ui-tests/app/PetBornModel.js'):id==='./MapTravelModel'?travelModel:id==='./TownMapModel'?townMap:id==='./MapViewportPreparation'?{MapViewportPreparation}:id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='../input/NavigationIntent'?{NavigationIntent}:id==='../input/MapTouchNavigator'?{MapTouchNavigator}:id==='../ui/List'?{List}:id==='./GameConnection'?{newOperationId:()=>new Uint8Array(16).fill(++operationSerial),ProtocolResponseError}:id==='./GameCombatStatus'?{GameCombatStatus:class{dispose(){this.disposed=(this.disposed??0)+1;}update(){} }}:{});
     const a=new AppRoot();a.node={getChildByName:()=>({})};a.find=path=>path==='MapViewport'?viewport:getNode(path);a.joystick=joystick;a.attachment=new MapAttachmentCoordinator();a.hud={setMapFrame(){log.push('hud');},refresh(){}};a.ui={};a.popup={};a.showMapLoading=()=>{};const realRefresh=a.refreshGame.bind(a);a.refreshGame=()=>{};const realError=a.error.bind(a);a.error=error=>log.push('error:'+error.message);a.status=()=>{};
-    return {h,a,log,views,loads,pendingLoads,asset,getNode,realRefresh,realError,setGate(value){gate=value;},baseline(e){h.session.baseline={sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.UONE,entities:[{entityHandle:7,entityKind:1,hp:Long.fromInt(100),life:Long.UZERO,position:{x:e.sceneKind===2?633:8,y:e.sceneKind===2?613:8}}]};}};
+    return {h,a,log,views,loads,pendingLoads,asset,getNode,realRefresh,realError,setGate(value){gate=value;},baseline(e){h.session.baseline={sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.UONE,entities:[{entityHandle:7,entityKind:1,hp:Long.fromInt(100),life:Long.UZERO,position:e.roomId.toString()==='2'?{x:633,y:613}:{x:8,y:8}}]};}};
 }
+
+test('规则24地图目录选中城镇或野外即带原Long目标进入真实旅行，不再弹旧确认', async () => {
+    const t=appHarness(),s=t.h.session,rule=Long.fromInt(24,true);
+    const gameplay={rule_version:24, skills:[],items:[],town_travel:{enabled:true,destination_map_ids:['3','4']},
+        map_catalog:[{id:'1',name:'林间战场',scene_kind:1},{id:'3',name:'山谷村',scene_kind:2,compact_town:true},{id:'4',name:'边界村',scene_kind:2,compact_town:true}],
+        map_regions:[{id:'0',name:'比奇省',map_ids:['1','3','4']}]};
+    const initial={...entry('1'),resourceVersion:rule};ready(t.h,initial);t.baseline(initial);
+    s.preparedWorld=Object.assign(t.asset('1'),{gameplay});await t.a.attachCurrentEntry();
+    const panel={};let shown;
+    t.a.townDirectory={panel,show(regions){shown=regions;}};
+    t.a.ui={top:null,open(name){assert.equal(name,'TownDirectory');this.top=panel;},back(){this.top=null;}};
+    t.a.popup={confirm(){assert.fail('选地图已确认，不弹旧往返窗');}};
+    const requests=[];
+    let prepared;
+    s.connection.request=async(code,value)=>{
+        requests.push({code,value});
+        if(code===20007){
+            assert(Long.isLong(value.targetMapId));prepared=value;
+            return {travelId:value.travelId,fromSceneEpoch:value.sceneEpoch,targetMapId:value.targetMapId,targetSceneKind:value.destination===1?2:1,
+                position:{x:8,y:8},expiresAtUnixMs:String(Date.now()+60000)};
+        }
+        assert.equal(code,20009);assert.equal(value.travelId,prepared.travelId);assert.equal(value.cancel,false);
+        const scene=value.sceneEpoch.add(1),committed={travelId:value.travelId,fromSceneEpoch:value.sceneEpoch,sceneEpoch:scene,phase:2,targetMapId:prepared.targetMapId};
+        s.connection.deliver(20010,committed);
+        const next={...entry(scene.toString(),prepared.targetMapId.toString(),prepared.destination===1?2:1),resourceVersion:rule};
+        s.connection.deliver(20002,next);t.baseline(next);await t.a.attachCurrentEntry();s.connection.deliver(6,next);
+        return committed;
+    };
+    for(const [map,kind] of [['4',2],['1',1]]){
+        t.a.openMapDirectory();assert.equal(t.a.ui.top,panel);
+        const rows=shown[0].maps,chosen=rows.find(row=>row.mapId===map);
+        assert.equal(rows.find(row=>row.current).mapId,s.entry.roomId.toString());assert.equal(chosen.current,false);
+        t.pendingLoads.push({promise:Promise.resolve(Object.assign(t.asset(map,false,kind),{gameplay}))});
+        await t.a.travelMap(chosen);
+        assert.equal(s.entry.roomId.toString(),map);assert.equal(t.a.world.map.width,17);assert.equal(t.a.ui.top,null);
+    }
+    assert.deepEqual(requests.filter(request=>request.code===20007).map(({value})=>[value.destination,value.targetMapId.toString()]),[[1,'4'],[2,'1']]);
+    t.a.attachment.dispose();
+});
 test('真实AppRoot初次Town重入使用Entry.roomId替换默认primary，首视口完成前绝不ACK',async()=>{
     const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1','2',2)),warm=t.asset('1');t.baseline(e);s.preparedWorld=warm;const gate=deferred();t.setGate(gate);
     const task=t.a.attachCurrentEntry();await flush();assert.deepEqual(t.loads,['2']);assert.equal(warm.disposed,1);assert.equal(t.views.length,1);assert.equal(t.views[0].map.width,700);assert.equal(s.connection.sent.length,0);assert.equal(t.a.canSendInput(),false);

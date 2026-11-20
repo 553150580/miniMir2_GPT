@@ -13,6 +13,7 @@ import (
 )
 
 func installContextTown(w *worker, blocked ...devconfig.Point) {
+	useLegacySourceTown(&w.e.Store.Cfg.Fixture)
 	m := devconfig.MapTemplate{ID: 2, SceneKind: devconfig.SceneKindTown, Width: 700, Height: 700, PlayerSpawn: devconfig.Point{X: 633, Y: 613}, CollisionBits: make([]byte, 61250)}
 	for _, point := range blocked {
 		cell := point.Y*700 + point.X

@@ -15,22 +15,25 @@ const (
 
 // 地图模板只有静态地形与来源信息，不保存实例、角色位置或战斗现场。
 type MapTemplate struct {
-	ID               uint64             `json:"id"`
-	DisplayName      string             `json:"display_name,omitempty"`
-	ResourceKey      string             `json:"resource_key,omitempty"`
-	Width            int                `json:"width"`
-	Height           int                `json:"height"`
-	SceneKind        uint32             `json:"scene_kind,omitempty"`
-	Blocked          []Point            `json:"blocked,omitempty"`
-	CollisionBits    []byte             `json:"collision_bits,omitempty"`
-	SourceStaticBits []byte             `json:"source_static_bits,omitempty"`
-	NoTeleport       *bool              `json:"no_teleport,omitempty"`
-	NoPets           *bool              `json:"no_pets,omitempty"`
-	PlayerSpawn      Point              `json:"player_spawn"`
-	PetSpawn         Point              `json:"pet_spawn"`
-	MonsterSpawns    []Point            `json:"monster_spawns,omitempty"`
-	SafeZones        []SafeZone         `json:"safe_zones,omitempty"`
-	Source           *SourceMapIdentity `json:"source,omitempty"`
+	ID                uint64             `json:"id"`
+	DisplayName       string             `json:"display_name,omitempty"`
+	ResourceKey       string             `json:"resource_key,omitempty"`
+	Width             int                `json:"width"`
+	Height            int                `json:"height"`
+	SceneKind         uint32             `json:"scene_kind,omitempty"`
+	CompactTown       bool               `json:"compact_town,omitempty"`
+	Blocked           []Point            `json:"blocked,omitempty"`
+	CollisionBits     []byte             `json:"collision_bits,omitempty"`
+	SourceStaticBits  []byte             `json:"source_static_bits,omitempty"`
+	NoTeleport        *bool              `json:"no_teleport,omitempty"`
+	NoPets            *bool              `json:"no_pets,omitempty"`
+	PlayerSpawn       Point              `json:"player_spawn"`
+	PetSpawn          Point              `json:"pet_spawn"`
+	MonsterSpawns     []Point            `json:"monster_spawns,omitempty"`
+	SafeZones         []SafeZone         `json:"safe_zones,omitempty"`
+	LegacySafeZoneIDs []uint64           `json:"legacy_safe_zone_ids,omitempty"`
+	NPCs              []TownNPC          `json:"npcs,omitempty"`
+	Source            *SourceMapIdentity `json:"source,omitempty"`
 }
 
 // 完整来源尺寸与运行目录尺寸相等；裁剪窗口不能借同一来源声明冒充完整地图。
@@ -79,7 +82,7 @@ func (m *MapTemplate) Walkable(p Point) bool {
 	if !m.Contains(p) {
 		return false
 	}
-	if m.SceneKindValue() == SceneKindTown {
+	if m.SceneKindValue() == SceneKindTown && !m.CompactTown {
 		cells := m.CellBudget()
 		if len(m.Blocked) != 0 || len(m.CollisionBits) != collisionByteCount(cells) {
 			return false
@@ -87,7 +90,7 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		cell := p.Y*m.Width + p.X
 		return m.CollisionBits[cell/8]&(1<<uint(cell%8)) == 0
 	}
-	if m.SceneKindValue() != SceneKindPersonal || len(m.CollisionBits) != 0 {
+	if m.SceneKindValue() != SceneKindPersonal && !(m.SceneKindValue() == SceneKindTown && m.CompactTown) || len(m.CollisionBits) != 0 {
 		return false
 	}
 	for _, blocked := range m.Blocked {
@@ -103,7 +106,7 @@ func (m *MapTemplate) TeleportWalkable(p Point) bool {
 	if !m.Contains(p) {
 		return false
 	}
-	if m.SceneKindValue() == SceneKindPersonal {
+	if m.SceneKindValue() == SceneKindPersonal || m.SceneKindValue() == SceneKindTown && m.CompactTown {
 		return m.Walkable(p)
 	}
 	if m.SceneKindValue() != SceneKindTown || m.Source == nil || len(m.SourceStaticBits) != collisionByteCount(m.CellBudget()) {
@@ -111,6 +114,22 @@ func (m *MapTemplate) TeleportWalkable(p Point) bool {
 	}
 	cell := p.Y*m.Width + p.X
 	return m.SourceStaticBits[cell/8]&(1<<uint(cell%8)) == 0
+}
+
+// 紧凑城镇只维护作者阻挡格，导航从同一份阻挡生成位图。
+func (m *MapTemplate) TownCollisionBits() []byte {
+	if !m.CompactTown {
+		return m.CollisionBits
+	}
+	bits := make([]byte, collisionByteCount(m.CellBudget()))
+	for _, p := range m.Blocked {
+		if !m.Contains(p) {
+			return nil
+		}
+		cell := p.Y*m.Width + p.X
+		bits[cell/8] |= 1 << uint(cell%8)
+	}
+	return bits
 }
 
 // 来源按配置顺序取首个包含当前格子的安全区，方形范围包含边界。
@@ -155,7 +174,7 @@ func (f *Fixture) GridCellBudget() int {
 
 func (f *Fixture) ValidateMap() error {
 	budget := f.GridCellBudget()
-	if budget == 0 || f.Map.ID == 0 || f.Map.ID > math.MaxInt64 || len(f.Map.CollisionBits) != 0 || len(f.Map.MonsterSpawns) < 8 {
+	if budget == 0 || f.Map.ID == 0 || f.Map.ID > math.MaxInt64 || f.Map.CompactTown || len(f.Map.LegacySafeZoneIDs) != 0 || len(f.Map.NPCs) != 0 || len(f.Map.CollisionBits) != 0 || len(f.Map.MonsterSpawns) < 8 {
 		return errors.New("开发地图须为已批准的16×16或17×17，并提供至少8个怪物槽位")
 	}
 	inBounds := func(p Point) bool {
@@ -218,6 +237,9 @@ func (f *Fixture) validateMapDirectory() error {
 			return errors.New("额外地图须显式为城镇，地图ID须唯一且可持久化")
 		}
 		seen[m.ID] = true
+		if f.RuleVersion < 24 && m.CompactTown || !m.CompactTown && (len(m.LegacySafeZoneIDs) != 0 || len(m.NPCs) != 0) {
+			return errors.New("紧凑城镇及历史安全区映射仅供rule24及后续紧凑地图")
+		}
 		if err := m.validateTown(); err != nil {
 			return fmt.Errorf("城镇地图%d：%w", m.ID, err)
 		}
@@ -226,6 +248,9 @@ func (f *Fixture) validateMapDirectory() error {
 }
 
 func (m *MapTemplate) validateTown() error {
+	if m.CompactTown {
+		return m.validateCompactTown()
+	}
 	cells := m.CellBudget()
 	if cells == 0 || len(m.Blocked) != 0 || len(m.MonsterSpawns) != 0 {
 		return errors.New("城镇须提供有效完整尺寸与独立碰撞位图，不沿用个人阻挡表或怪物槽")
@@ -244,6 +269,26 @@ func (m *MapTemplate) validateTown() error {
 	}
 	if _, err := hex.DecodeString(m.Source.SHA256); err != nil {
 		return errors.New("城镇来源SHA256须为64位十六进制")
+	}
+	return m.validateSafeZones()
+}
+
+func (m *MapTemplate) validateCompactTown() error {
+	if m.Width != 17 || m.Height != 17 || m.Source != nil || len(m.CollisionBits) != 0 || len(m.SourceStaticBits) != 0 || len(m.MonsterSpawns) != 0 || len(m.SafeZones) != 1 || strings.TrimSpace(m.DisplayName) == "" || strings.TrimSpace(m.ResourceKey) == "" {
+		return errors.New("紧凑城镇须为独立17×17布局、具有唯一安全区，不沿用原图位图或个人怪物槽")
+	}
+	seen := make(map[Point]bool, len(m.Blocked))
+	for _, p := range m.Blocked {
+		if !m.Contains(p) || seen[p] {
+			return fmt.Errorf("紧凑城镇阻挡格越界或重复：(%d,%d)", p.X, p.Y)
+		}
+		seen[p] = true
+	}
+	if !m.Walkable(m.PlayerSpawn) {
+		return errors.New("紧凑城镇入口须为可走格")
+	}
+	if err := m.validateTownNPCs(seen); err != nil {
+		return err
 	}
 	return m.validateSafeZones()
 }

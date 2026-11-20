@@ -89,8 +89,8 @@
     "WarehouseItemChange",
     "WarehouseActionResult"
   ],
-  "int64_field_count": 195,
-  "int64_boundary_cases": 644,
+  "int64_field_count": 196,
+  "int64_boundary_cases": 647,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -245,6 +245,12 @@
     {
       "message": "MapTravelPrepare",
       "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "MapTravelPrepare",
+      "field": "target_map_id",
       "type": "uint64",
       "cases": 3
     },
@@ -1395,7 +1401,7 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "d022411b14ae3364160a8e29a89a16e489b19c8ea23ad01c5682ce9969e18275"
+      "sha256": "9b6d28233b3ceb17d9c3ad577dfd5e571cbc4d76ad9f3538dec971d34bcb7d31"
     },
     {
       "path": "shared/proto/assets.proto",
@@ -1405,13 +1411,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "b63f159f6a572fd7783df1090c950914c3927fc7734ce9c8a5d78098b4e77672",
-      "bytes": 1402459
+      "sha256": "d3010a974c0fbb618712d1b812089e9a7f38aa41262c3303e1d8020ab4ec6d17",
+      "bytes": 1404006
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "c3e65f6e549ad961042d04ffba9e91d1e689ae40a52cb8c8647e8ad468998f3c",
-      "bytes": 441118
+      "sha256": "7c108002ca02e0b30c6e4744dbbf32f26c899b33af2c91a22cbd537291a938b7",
+      "bytes": 441303
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

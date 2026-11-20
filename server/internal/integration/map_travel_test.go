@@ -24,8 +24,7 @@ func TestMapTravelMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("设置MINIMIR_MONGO_E2E=1连接已核验所有权的本任务专属副本集")
 	}
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
-	must(t, err)
+	cfg := historicalSourceTownConfig(t)
 	if cfg.Fixture.TownTravel == nil || !cfg.Fixture.TownTravel.Enabled || cfg.Fixture.TownNavigation == nil || !cfg.Fixture.TownNavigation.Enabled {
 		t.Fatal("真实城镇业务测试要求唯一Excel已显式启用城镇旅行/有界导航")
 	}
@@ -273,7 +272,12 @@ func travelToBaseline(c *client, destination uint32, mapID uint64) {
 	c.t.Helper()
 	from := proto.Clone(c.entry).(*pb.EnterLineResult)
 	id := domain.ID()
-	request := c.send(p.MsgC2SMapTravelPrepare, &pb.MapTravelPrepare{SceneEpoch: from.SceneEpoch, TravelId: id, Destination: destination})
+	// 历史测试继续验证旧客户端不带目标字段；当前目录直接提交选中的地图身份。
+	targetMapID := mapID
+	if mapID == 2 || from.RoomId == 2 {
+		targetMapID = 0
+	}
+	request := c.send(p.MsgC2SMapTravelPrepare, &pb.MapTravelPrepare{SceneEpoch: from.SceneEpoch, TravelId: id, Destination: destination, TargetMapId: targetMapID})
 	f := travelUntilWithin(c, 3*time.Second, func(f wire.Frame) bool { return f.ID == p.MsgS2CMapTravelPlan && f.Request == request })
 	plan := &pb.MapTravelPlan{}
 	must(c.t, proto.Unmarshal(f.Payload, plan))

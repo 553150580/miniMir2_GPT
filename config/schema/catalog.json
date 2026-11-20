@@ -14477,6 +14477,179 @@
               }
             }
           },
+          "compact_towns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "int",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "name": {
+                  "type": "string"
+                },
+                "player_spawn": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "int",
+                      "minimum": 0,
+                      "maximum": 16
+                    },
+                    "y": {
+                      "type": "int",
+                      "minimum": 0,
+                      "maximum": 16
+                    }
+                  }
+                },
+                "safe_zone": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "int",
+                      "minimum": 1,
+                      "maximum": 4294967295
+                    },
+                    "center": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "int",
+                          "minimum": 0,
+                          "maximum": 16
+                        },
+                        "y": {
+                          "type": "int",
+                          "minimum": 0,
+                          "maximum": 16
+                        }
+                      }
+                    },
+                    "radius": {
+                      "type": "int",
+                      "minimum": 1,
+                      "maximum": 8
+                    }
+                  }
+                },
+                "legacy_safe_zone_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 4294967295
+                  }
+                },
+                "no_pets": {
+                  "type": "boolean"
+                },
+                "no_teleport": {
+                  "type": "boolean"
+                },
+                "npcs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "int",
+                        "minimum": 1,
+                        "maximum": 4294967295
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string"
+                      },
+                      "position": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "int",
+                            "minimum": 0,
+                            "maximum": 16
+                          },
+                          "y": {
+                            "type": "int",
+                            "minimum": 0,
+                            "maximum": 16
+                          }
+                        }
+                      },
+                      "profile": {
+                        "type": "string"
+                      },
+                      "source": {
+                        "type": "object",
+                        "properties": {
+                          "table": {
+                            "type": "string"
+                          },
+                          "sha256": {
+                            "type": "string"
+                          },
+                          "line": {
+                            "type": "int",
+                            "minimum": 1,
+                            "maximum": 4294967295
+                          },
+                          "map_code": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "int",
+                                "minimum": 0,
+                                "maximum": 65535
+                              },
+                              "y": {
+                                "type": "int",
+                                "minimum": 0,
+                                "maximum": 65535
+                              }
+                            }
+                          },
+                          "appearance": {
+                            "type": "int",
+                            "minimum": 0,
+                            "maximum": 65535
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "map_regions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "map_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 4294967295
+                  }
+                }
+              }
+            }
+          },
           "town_navigation": {
             "type": "object",
             "properties": {

@@ -81,6 +81,43 @@ func (f *Fixture) ValidBinding(point BindingPoint) bool {
 	return ok && m.Walkable(Point{X: int(point.X), Y: int(point.Y)})
 }
 
+// 保留存档与原回执的坐标；这里只解析已经核验的安全区到本次瞬移目标。
+func (f *Fixture) TownTeleportBinding(point BindingPoint, zoneID uint64) (BindingPoint, bool) {
+	m, ok := f.MapByID(point.MapID)
+	if !ok || m.SceneKindValue() != SceneKindTown || !m.CompactTown && m.Source == nil || zoneID == 0 || !m.TeleportWalkable(Point{X: int(point.X), Y: int(point.Y)}) {
+		return BindingPoint{}, false
+	}
+	knownZone := false
+	for _, zone := range m.SafeZones {
+		if zone.ID == zoneID && zone.Center == (Point{X: int(point.X), Y: int(point.Y)}) {
+			knownZone = true
+			break
+		}
+	}
+	if !knownZone {
+		return BindingPoint{}, false
+	}
+	if f.RuleVersion < 24 || f.TownDestination(m.ID) {
+		return point, true
+	}
+	if f.TownTravel == nil || m.ID != f.TownTravel.TownMapID || m.CompactTown {
+		return BindingPoint{}, false
+	}
+	for _, id := range f.TownTravel.DestinationMapIDs {
+		town, ok := f.MapByID(id)
+		if !ok || !town.CompactTown || len(town.SafeZones) != 1 {
+			continue
+		}
+		for _, legacyID := range town.LegacySafeZoneIDs {
+			center := town.SafeZones[0].Center
+			if legacyID == zoneID && town.TeleportWalkable(center) {
+				return BindingPoint{MapID: town.ID, X: int32(center.X), Y: int32(center.Y)}, true
+			}
+		}
+	}
+	return BindingPoint{}, false
+}
+
 func (f *Fixture) ValidateBinding() error {
 	if f.Binding == nil {
 		if f.RuleVersion >= 12 {
@@ -104,7 +141,7 @@ func (f *Fixture) ValidateBinding() error {
 		found := false
 		for i := range f.Maps {
 			m := &f.Maps[i]
-			if m.SceneKindValue() != SceneKindTown || m.Source == nil || len(m.SafeZones) == 0 {
+			if m.SceneKindValue() != SceneKindTown || m.Source == nil && !m.CompactTown || len(m.SafeZones) == 0 || f.RuleVersion >= 24 && !f.TownDestination(m.ID) {
 				continue
 			}
 			found = true

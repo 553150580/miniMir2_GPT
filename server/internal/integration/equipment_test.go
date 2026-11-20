@@ -27,8 +27,8 @@ func TestEquipmentTransactionsVersionsReceiptsMongo(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 23 {
-		t.Fatal("必须使用当前rule22装备合同")
+	if cfg.Fixture.RuleVersion < 23 {
+		t.Fatal("必须使用已启用的装备合同")
 	}
 	cfg.Database = "minimir_dev_game_test_eq_" + domain.ID()
 	ctx := context.Background()
@@ -154,8 +154,8 @@ func TestEquipmentWearSwapUnequipAndReconnectMongoWS(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 23 {
-		t.Fatal("必须使用当前rule22装备合同")
+	if cfg.Fixture.RuleVersion < 23 {
+		t.Fatal("必须使用已启用的装备合同")
 	}
 	var offer devconfig.SkillShop
 	for _, row := range cfg.Fixture.SkillShop {
@@ -342,8 +342,8 @@ func TestEquipmentNonZeroMagicSpiritRoundtripMongoWS(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 23 {
-		t.Fatal("必须从当前rule22派生非零管线资格")
+	if cfg.Fixture.RuleVersion < 23 {
+		t.Fatal("必须从已启用的装备合同派生非零管线资格")
 	}
 	for n := range cfg.Fixture.Items {
 		if cfg.Fixture.Items[n].ID == 218 {
@@ -530,8 +530,8 @@ func TestEquipmentLegacyWearCanBeRemovedAndReplacedMongo(t *testing.T) {
 	}
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 23 {
-		t.Fatal("必须使用当前rule22")
+	if cfg.Fixture.RuleVersion < 23 {
+		t.Fatal("必须使用已启用的装备合同")
 	}
 	for n := range cfg.Fixture.Items {
 		i := &cfg.Fixture.Items[n]

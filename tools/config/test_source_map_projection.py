@@ -91,11 +91,14 @@ class SourceMapProjectionTests(unittest.TestCase):
 
     def test_public_map_catalog_preserves_id_text_and_hides_raw_source_data(self):
         public=module.public_gameplay(module.fixture_from_rows(self.tables))
-        self.assertEqual([row['id'] for row in public['map_catalog']],['1','2'])
+        self.assertEqual([row['id'] for row in public['map_catalog']],['1','2','3','4','5'])
         self.assertEqual(public['map_catalog'][1]['resource_key'],'source-maps/map-2/manifest')
         self.assertEqual(public['source_map_streaming'],{'load_concurrency':4,'cache_capacity':49})
         for row in public['map_catalog']:
-            self.assertEqual(set(row),{'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport','no_pets'})
+            expected={'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport','no_pets'}
+            if row.get('compact_town'):
+                expected.update({'compact_town','player_spawn','blocked','npcs'})
+            self.assertEqual(set(row),expected)
             for key in ['source_ref','source','collision_bits','source_sha256','manifest_sha256','initial_binding_pool_verified']:
                 self.assertNotIn(key,row)
 

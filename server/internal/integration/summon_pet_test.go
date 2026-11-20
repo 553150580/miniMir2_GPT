@@ -29,7 +29,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	must(t, err)
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")
 	must(t, err)
-	if cfg.Fixture.RuleVersion != 23 || cfg.Fixture.CastingSupply.Enabled {
+	if cfg.Fixture.RuleVersion < 23 || cfg.Fixture.CastingSupply.Enabled {
 		t.Fatal("必须从主rule21关闭材料的真实配置创建隔离样本；独立召唤候选仍required17")
 	}
 	if _, enabled := cfg.Fixture.Skill(17); enabled {
@@ -50,7 +50,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 		}
 	}
 	for i := range f.Maps {
-		if f.Maps[i].ID == 2 {
+		if f.Maps[i].ID == 3 {
 			blocked := true
 			f.Maps[i].NoPets = &blocked
 		}
@@ -253,7 +253,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 		!proto.Equal(petRuntimeWSEntity(c.scene, born.EntityHandle).Position, standing.Position) {
 		t.Fatal("无装符同图Recall扣耗、重生或擅自搬动原宠")
 	}
-	travelToBaseline(c, 1, 2)
+	travelToBaseline(c, 1, 3)
 	travelAcknowledge(c, true)
 	if c.scene.OwnedPet == nil || c.scene.OwnedPet.MapId != 1 || !c.scene.OwnedPet.FollowSuppressed || travelCount(c.scene, 2) != 0 {
 		t.Fatal("NoPets旅行搬入宠物或漏掉异图Owned观察", c.scene.OwnedPet)

@@ -20,7 +20,13 @@ message EnterLineResult {
 }
 message EnterWorldAck { uint64 scene_epoch = 1; uint64 baseline_id = 2; }
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
-message MapTravelPrepare { uint64 scene_epoch = 1; string travel_id = 2; uint32 destination = 3; }
+message MapTravelPrepare {
+  uint64 scene_epoch = 1;
+  string travel_id = 2;
+  uint32 destination = 3;
+  // 地图列表选择目录ID。返回个人图时只能选原个人现场；旧客户端省略此字段。
+  uint64 target_map_id = 4;
+}
 message MapTravelPlan {
   string travel_id = 1;
   uint64 from_scene_epoch = 2;

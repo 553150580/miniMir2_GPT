@@ -53,6 +53,20 @@ test('WorldAssets来源分支使用完整700目录与独立SourceMapAssets，不
  assert(resources.requested.includes('source-maps/map-2/manifest'));assert(!resources.requested.some(key=>key.includes('development/maps/first-map')));assert(!resources.requested.some(key=>key.includes('/chunks/')));
  assert.equal(resources.requested.filter(key=>key==='prefabs/MapProp').length,1);assert.equal(assets.sourceMap.stats.chunks.entries,0);assert(assets.frames.size>0);assets.dispose();assertReleased(resources);
 });
+test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有名称无血条的NPC',async()=>{
+ const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{},Long.fromInt(3,true));
+ assert.equal(assets.sceneKind,2);assert.equal(assets.mapId,'3');assert.equal(assets.sourceMap,undefined);
+ assert.deepEqual([assets.map.width,assets.map.height,assets.map.projection],[17,17,'isometric_diamond']);
+ assert.ok(assets.map.npcs.length>0);assert(!assets.map.props.length);assert(!resources.requested.some(key=>key.startsWith('source-maps/')));
+ const {view,entities}=scene(assets);view.apply({entities:[state()]});
+ for(const npc of assets.map.npcs){
+  const node=entities.getChildByName(`npc_${npc.id}`);
+  assert.equal(node.getChildByName('Name').getComponent(cc.Label).string,npc.name);
+  assert.equal(node.getChildByName('HP').active,false);assert.deepEqual(node.position,view.grid(npc.position.x,npc.position.y));
+  assert(node.getChildByName('Body').getComponent(Sprite).spriteFrame);
+ }
+ view.dispose();assertReleased(resources);
+});
 test('目录选择与来源资源身份完整保留最大uint64，拒绝数字资源ID冒充另一张图',async()=>{
  const id='18446744073709551615',resources=fakeResources({changeGameplay:g=>g.map_catalog[1].id=id,changeResource:(key,json)=>{if(key==='source-maps/map-2/manifest')json.id=id;}});
  const assets=await WorldAssets.prepare(0,()=>{},Long.MAX_UNSIGNED_VALUE);assert.equal(assets.mapId,id);assert.equal(assets.map.id,id);assets.dispose();assertReleased(resources);

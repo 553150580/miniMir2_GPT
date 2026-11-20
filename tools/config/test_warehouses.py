@@ -26,7 +26,7 @@ class WarehouseConfigurationTests(unittest.TestCase):
         return module.warehouse_rules(tables, self.profile(tables))
 
     def test_current_confirmed_contract_and_explicit_technical_window(self):
-        self.assertEqual(self.profile(self.tables)['rule_version'], 23)
+        self.assertGreaterEqual(self.profile(self.tables)['rule_version'], 23)
         self.assertEqual(self.compile(), {'personal_initial_slots': 30, 'personal_expansion_slots': 30,
                          'personal_expansion_yuanbao_units': 30000, 'shared_slots': 50, 'query_page_limit': 30})
         fixture = module.fixture_from_rows(self.tables)

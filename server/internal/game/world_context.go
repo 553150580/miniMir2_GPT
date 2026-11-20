@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// 执行身份不属于客户端scene。每个owner固定保留个人/城镇两个世界，不因换图重建。
+// 执行身份不属于客户端scene。每个owner保留个人世界与已到访的配置城镇，不因健康换图重建。
 type worldRef struct{ Epoch, ID uint64 }
 
 type worldState struct {
@@ -83,6 +83,11 @@ func (r *room) worlds() []*worldState {
 			all = append(all, world)
 		}
 	}
+	for _, world := range r.TownWorlds {
+		if world != nil && world != active && world != r.PersonalWorld && world != r.TownWorld {
+			all = append(all, world)
+		}
+	}
 	return all
 }
 
@@ -96,12 +101,51 @@ func (r *room) world(ref worldRef) *worldState {
 }
 
 func (r *room) newWorld(mapID uint64) *worldState {
+	return r.allocateWorld(mapID, 2)
+}
+
+func (r *room) allocateWorld(mapID, limit uint64) *worldState {
 	r.currentWorld()
-	if r.WorldSequence >= 2 {
+	if r.WorldSequence >= limit {
 		return nil
 	}
 	r.WorldSequence++
 	return &worldState{Ref: worldRef{Epoch: r.ExecutionEpoch, ID: r.WorldSequence}, MapID: mapID}
+}
+
+func (r *room) townWorld(mapID uint64) *worldState {
+	if r.TownWorld != nil && r.TownWorld.MapID == mapID {
+		return r.TownWorld
+	}
+	for _, world := range r.TownWorlds {
+		if world.MapID == mapID {
+			return world
+		}
+	}
+	return nil
+}
+
+func (w *worker) ensureTownWorld(r *room, mapID uint64) *worldState {
+	f := &w.e.Store.Cfg.Fixture
+	m, ok := f.MapByID(mapID)
+	if !ok || m.SceneKindValue() != devconfig.SceneKindTown || f.RuleVersion >= 24 && !f.TownDestination(mapID) {
+		return nil
+	}
+	if world := r.townWorld(mapID); world != nil {
+		return world
+	}
+	if f.RuleVersion < 24 {
+		if r.TownWorld == nil {
+			r.TownWorld = r.newWorld(mapID)
+		}
+		return r.townWorld(mapID)
+	}
+	world := r.allocateWorld(mapID, 1+uint64(len(f.TownTravel.DestinationMapIDs)))
+	if world != nil {
+		// 按首次到访顺序登记。后续遍历不受Go map迭代顺序影响。
+		r.TownWorlds = append(r.TownWorlds, world)
+	}
+	return world
 }
 
 func (w *worker) worldMap(world *worldState) (*devconfig.MapTemplate, bool) {
@@ -189,7 +233,7 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 		old.PetPosition, old.PetLife = pet.Pos, pet.Life
 	}
 	r.worldState = target
-	if old == r.PersonalWorld && target == r.TownWorld {
+	if mapChanged && old == r.PersonalWorld && m.SceneKindValue() == devconfig.SceneKindTown {
 		r.SavedPersonal = old
 	}
 	if target == r.PersonalWorld {

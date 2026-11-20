@@ -24,8 +24,7 @@ func TestTeleport21LearningBindingAndHealthyColdEntryMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("显式开启真实Mongo/WS后验证21学习、真实绑定、施放和冷热入场")
 	}
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
-	must(t, err)
+	cfg := historicalSourceTownConfig(t)
 	skill, exists := cfg.Fixture.Skill(21)
 	if cfg.Fixture.RuleVersion < 15 || !exists || skill.BookItemID != 13 || skill.Teleport == nil || !cfg.Fixture.SafeZoneBindingEnabled() {
 		t.Fatal("真实唯一Excel尚未显式选择21/正常安全区绑定合同")
@@ -221,6 +220,56 @@ func TestTeleport21LearningBindingAndHealthyColdEntryMongoWS(t *testing.T) {
 	if !learned {
 		t.Fatal("正常购书学习的21冷启动丢失")
 	}
+	// 停止本用例的旧实例，保留随机库中通过正常行走取得的原回执，按当前规则重入。
+	current, err := devconfig.Load("../../../conf/dev/server.json")
+	must(t, err)
+	current.Database, current.AccountAddress, current.GameAddress, current.GMAddress = cfg.Database, cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress
+	mapped, ok := current.Fixture.TownTeleportBinding(devconfig.BindingPoint{
+		MapID: latestRole.Binding.MapID, X: latestRole.Binding.X, Y: latestRole.Binding.Y,
+	}, latestRole.BindingSafeZoneID)
+	if !ok || mapped.MapID == 2 || current.Fixture.RuleVersion < 24 {
+		t.Fatal("原回执没有可用的当前紧凑城镇迁移目标", latestRole.Binding, latestRole.BindingSafeZoneID)
+	}
+	c.close()
+	stop()
+	cfg = current
+	stop = launch()
+	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	if c.entry.RoomId != cfg.Fixture.Map.ID || c.roleBinding == nil || !c.roleBinding.Trusted ||
+		c.roleBinding.Binding.GetMapId() != 2 || c.roleBinding.SourceSeq != uint64(latestRole.BindingSourceSeq) {
+		t.Fatal("升级后冷入场没有保持原回执或提前改写成新地图", c.entry, c.roleBinding)
+	}
+	c.auto(false, 1)
+	travelUntilWithin(c, 2*time.Second, func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline })
+	upgradeCast, upgradeMP := teleportWSCastAcceptedAndPaid(c, 10)
+	upgradeResult := teleportWSResult(c, upgradeCast.CastId)
+	mappedTown, _ := cfg.Fixture.MapByID(mapped.MapID)
+	if upgradeResult.Outcome != 1 || upgradeResult.TargetMapId != mapped.MapID || upgradeResult.TransitionId == "" ||
+		upgradeResult.Position == nil || !mappedTown.Walkable(devconfig.Point{X: int(upgradeResult.Position.X), Y: int(upgradeResult.Position.Y)}) {
+		t.Fatal("真实历史回执未通过21进入对应紧凑城镇的权威落格", upgradeResult)
+	}
+	teleportWSEnterAndAck(c, upgradeResult)
+	if c.player().Mp != upgradeMP || c.player().Life != upgradeResult.PlayerLife {
+		t.Fatal("规则升级后的21没有继续保留原生命与技能费用", c.player())
+	}
+	if c.roleBinding.Binding.GetMapId() != mapped.MapID {
+		travelUntilWithin(c, 3*time.Second, func(f wire.Frame) bool {
+			return f.ID == p.MsgS2CBindingState && c.roleBinding.Binding.GetMapId() == mapped.MapID
+		})
+	}
+	zone := mappedTown.SafeZones[0]
+	if !c.roleBinding.Trusted || c.roleBinding.SafeZoneId != zone.ID ||
+		c.roleBinding.SourceSeq != uint64(latestRole.BindingSourceSeq+1) ||
+		c.roleBinding.Binding.GetCenter().X != int32(zone.Center.X) || c.roleBinding.Binding.GetCenter().Y != int32(zone.Center.Y) {
+		t.Fatal("仅实际落格应生成一个当前安全区的新可信源回执", c.roleBinding)
+	}
+	c.close()
+	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	if c.entry.RoomId != mapped.MapID || !c.roleBinding.Trusted || c.roleBinding.Binding.GetMapId() != mapped.MapID ||
+		c.roleBinding.SourceSeq != uint64(latestRole.BindingSourceSeq+1) {
+		t.Fatal("新回执未通过实际Mongo冷验和当前城镇健康重连", c.entry, c.roleBinding)
+	}
+	t.Logf("原rule23地图2可信凭证在同一随机库通过rule24冷验，正常21进入紧凑地图%d并仅提交一次新安全区%d", mapped.MapID, zone.ID)
 	t.Logf("通过: 随机库%s，正常注册Mage/买原书13/学习21、真实升级Preview的MP10→13/时长30000→30000/惩罚30→30且未升级、nil proof拒付、真实Town Walk证明、MP10与Delay200、30014/Entry/ACK、同图30013/Flux费用13、健康保持与冷proof；旧World付费事件及SourceSeq争用另由game/Store专项，不冒称本WS实际发生", cfg.Database)
 }
 

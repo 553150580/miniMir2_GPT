@@ -7,12 +7,31 @@ const component=(n,type)=>{const c=n._components.map(r=>scene[r.__id__]).find(c=
 const base='UIMgr/Panels/Warehouse/',bounds=n=>({l:n._lpos.x-size(n).width/2,r:n._lpos.x+size(n).width/2,b:n._lpos.y-size(n).height/2,t:n._lpos.y+size(n).height/2});
 const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.b<b.t&&a.t>b.b;
 test('仓库只追加保存子树与Functions入口；原1191对象只父children各追加一次，原地图/HUD/ItemLock全部字节语义保持',()=>{
- assert.equal(scene.length,1373);const projected=structuredClone(scene.slice(0,1191));
+ const beforeDirectory=structuredClone(scene.slice(0,1373));
+ beforeDirectory[253]._children=beforeDirectory[253]._children.filter(x=>x.__id__<1373);
+ assert.equal(crypto.createHash('sha256').update(JSON.stringify(beforeDirectory)).digest('hex'),'4914af7ce27923adca7039cdb36663ab4ffef85e7fd2915c009b9927a772f462');
+ const projected=beforeDirectory.slice(0,1191);
  require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projected);
- for(const parent of [253,395]){assert.equal(scene[parent]._children.filter(x=>x.__id__>=1191).length,1);projected[parent]._children=projected[parent]._children.filter(x=>x.__id__<1191);}
+ for(const parent of [253,395]){assert.equal(beforeDirectory[parent]._children.filter(x=>x.__id__>=1191).length,1);projected[parent]._children=projected[parent]._children.filter(x=>x.__id__<1191);}
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(projected)).digest('hex'),'373823584fe100fa7d5e53150f5660cb242e87ba7055d7a75e54ca34e6669675');
  assert.equal(index('UIMgr/Panels/Warehouse'),1191);assert(index('UIMgr/Panels/Functions/Pages/Page0/Warehouse')>=1191);assert.equal(component(node('UIMgr/Panels/Inventory/List/View'),'cc.UITransform')._contentSize.height,414);
  const ids=scene.filter(x=>x.__type__==='cc.Node').map(x=>x._id);assert.equal(new Set(ids).size,ids.length);
+});
+test('地图目录仅追加保存面板，左右可滚动区域及按钮命中框互不重叠',()=>{
+ assert.equal(index('UIMgr/Panels/TownDirectory'),1373);
+ const prefix='UIMgr/Panels/TownDirectory/';
+ assert.equal(component(node(prefix+'Title'),'cc.Label')._string,'地图');
+ const columns=['RegionList','MapList'];
+ for(const name of columns){
+  const base=prefix+name,list=node(base),scroll=component(list,'cc.ScrollView'),view=node(base+'/View');
+  assert.equal(component(view,'cc.Mask')._type,0);assert.equal(component(view,'cc.Widget')._bottom,0);
+  assert.equal(scroll._content.__id__,index(base+'/View/Content'));
+  const template=node(base+'/View/Content/ItemTemplate');assert.equal(template._active,false);
+  assert(component(template,'cc.Button'));assert.equal(component(node(base+'/View/Content/ItemTemplate/Text'),'cc.Label')._fontSize,24);
+  assert.equal(size(view).width,size(list).width);assert.equal(size(template).width,size(list).width);
+ }
+ assert(!overlap(bounds(node(prefix+columns[0])),bounds(node(prefix+columns[1]))));
+ assert(size(node(prefix+columns[1])).width>=2*size(node(prefix+columns[0])).width);
 });
 test('两列仓库列表使用保存ScrollView/Mask/动态模板，真View避开数量和固定按钮，不生成运行时布局',()=>{
  const views=[];

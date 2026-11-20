@@ -237,10 +237,12 @@ func (x *EnterWorldAck) GetBaselineId() uint64 {
 
 // 同owner旅行只接受已配置城镇或原个人现场，不接受客户端地图坐标。
 type MapTravelPrepare struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
-	TravelId      string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
-	Destination   uint32                 `protobuf:"varint,3,opt,name=destination,proto3" json:"destination,omitempty"`
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch  uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	TravelId    string                 `protobuf:"bytes,2,opt,name=travel_id,json=travelId,proto3" json:"travel_id,omitempty"`
+	Destination uint32                 `protobuf:"varint,3,opt,name=destination,proto3" json:"destination,omitempty"`
+	// 地图列表选择目录ID。返回个人图时只能选原个人现场；旧客户端省略此字段。
+	TargetMapId   uint64 `protobuf:"varint,4,opt,name=target_map_id,json=targetMapId,proto3" json:"target_map_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -292,6 +294,13 @@ func (x *MapTravelPrepare) GetTravelId() string {
 func (x *MapTravelPrepare) GetDestination() uint32 {
 	if x != nil {
 		return x.Destination
+	}
+	return 0
+}
+
+func (x *MapTravelPrepare) GetTargetMapId() uint64 {
+	if x != nil {
+		return x.TargetMapId
 	}
 	return 0
 }
@@ -3284,12 +3293,13 @@ const file_world_proto_rawDesc = "" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
 	"\vbaseline_id\x18\x02 \x01(\x04R\n" +
-	"baselineId\"r\n" +
+	"baselineId\"\x96\x01\n" +
 	"\x10MapTravelPrepare\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1b\n" +
 	"\ttravel_id\x18\x02 \x01(\tR\btravelId\x12 \n" +
-	"\vdestination\x18\x03 \x01(\rR\vdestination\"\x86\x02\n" +
+	"\vdestination\x18\x03 \x01(\rR\vdestination\x12\"\n" +
+	"\rtarget_map_id\x18\x04 \x01(\x04R\vtargetMapId\"\x86\x02\n" +
 	"\rMapTravelPlan\x12\x1b\n" +
 	"\ttravel_id\x18\x01 \x01(\tR\btravelId\x12(\n" +
 	"\x10from_scene_epoch\x18\x02 \x01(\x04R\x0efromSceneEpoch\x12\"\n" +

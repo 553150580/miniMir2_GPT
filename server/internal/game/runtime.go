@@ -99,6 +99,7 @@ type room struct {
 	*worldState
 	PersonalWorld         *worldState
 	TownWorld             *worldState
+	TownWorlds            []*worldState
 	ExecutionEpoch        uint64
 	WorldSequence         uint64
 	InflightEvents        int
@@ -677,6 +678,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
 	r.worldState = &worldState{}
 	r.PersonalWorld, r.TownWorld = nil, nil
+	r.TownWorlds = nil
 	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
 	r.Pet, r.PetWorld, r.PetLifeSequence = nil, worldRef{}, 0
 	r.PetHandleSequence, r.PendingPetBirth = petHandle, nil

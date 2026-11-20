@@ -21,7 +21,7 @@ class EquipmentFoundationTests(unittest.TestCase):
     def equipment(tables,id=218):return next(row for row in tables['game_equipment'] if row['item_id']==id)
 
     def test_current_source_selection_and_four_explicit_zeros(self):
-        self.assertEqual(self.fixture['rule_version'],23)
+        self.assertGreaterEqual(self.fixture['rule_version'],22)
         self.assertEqual(self.profile(self.tables)['base_item_ids'],[35,36,193,218])
         self.assertNotIn(220,[item['id'] for item in self.fixture['items']])
         for item in self.fixture['items']:

@@ -73,8 +73,19 @@ func (s *Store) validateBindingOrigin(role domain.Role, q SafeZoneBindingRequest
 		return Fail(p.CodeLineForbidden, "传送绑定仅接受本阶段已学21的成功来源后置")
 	}
 	// role由同一事务的Role读取完成证明核验；请求字段本身不构成资格。
-	if role.Binding == nil || role.BindingSourceSeq <= 0 || role.BindingSafeZoneID == 0 || q.OriginBindingSourceSeq <= 0 || q.MapID != role.Binding.MapID {
+	if role.Binding == nil || role.BindingSourceSeq <= 0 || role.BindingSafeZoneID == 0 || q.OriginBindingSourceSeq <= 0 {
 		return Fail(p.CodeLineForbidden, "传送绑定缺少原可信绑定地图资格")
+	}
+	mapID := role.Binding.MapID
+	if f.RuleVersion >= 24 {
+		point, ok := f.TownTeleportBinding(devconfig.BindingPoint{MapID: mapID, X: role.Binding.X, Y: role.Binding.Y}, role.BindingSafeZoneID)
+		if !ok {
+			return Fail(p.CodeLineForbidden, "传送绑定缺少可用城镇目标")
+		}
+		mapID = point.MapID
+	}
+	if q.MapID != mapID {
+		return Fail(p.CodeLineForbidden, "传送绑定不在原证明对应城镇")
 	}
 	if q.OriginBindingSourceSeq != role.BindingSourceSeq {
 		return Fail(p.CodeOperationConflict, "传送原绑定证明已变化，不能更换原事件资格")
@@ -114,6 +125,14 @@ func checkBindingSourceDocument(raw bson.Raw) error {
 }
 
 func bindingZoneSetHash(m *devconfig.MapTemplate) (string, error) {
+	if m != nil && m.CompactTown && m.SceneKindValue() == devconfig.SceneKindTown && len(m.SafeZones) == 1 {
+		return hashBindingIdentity(struct {
+			MapID         uint64
+			Geometry      string
+			Zones         []devconfig.SafeZone
+			LegacyZoneIDs []uint64
+		}{m.ID, bindingMapSHA256(m), m.SafeZones, m.LegacySafeZoneIDs})
+	}
 	if m == nil || m.SceneKindValue() != devconfig.SceneKindTown || m.Source == nil || m.Source.Code == "" || !lowerHex(m.Source.SHA256, 32) || m.Source.Width != m.Width || m.Source.Height != m.Height || len(m.SafeZones) == 0 {
 		return "", Fail(p.CodeLineForbidden, "绑定必须使用完整来源城镇及来源安全区目录")
 	}
@@ -123,11 +142,23 @@ func bindingZoneSetHash(m *devconfig.MapTemplate) (string, error) {
 		Source devconfig.SourceMapIdentity
 		Zones  []devconfig.SafeZone
 	}{m.ID, *m.Source, m.SafeZones}
+	return hashBindingIdentity(identity)
+}
+
+func hashBindingIdentity(identity any) (string, error) {
 	raw, err := json.Marshal(identity)
 	if err != nil {
 		return "", err
 	}
 	return Hash(raw), nil
+}
+
+func bindingMapSHA256(m *devconfig.MapTemplate) string {
+	if m.CompactTown {
+		// 紧凑地图没有完整来源文件。原凭证的地图身份字段保存本地布局摘要。
+		return Hash(m.TownCollisionBits())
+	}
+	return m.Source.SHA256
 }
 
 func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceipt, string, error) {
@@ -142,7 +173,7 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 		return nil, "", Fail(p.CodeOperationConflict, "绑定规则身份已变化")
 	}
 	m, ok := f.MapByID(q.MapID)
-	if !ok {
+	if !ok || f.RuleVersion >= 24 && !f.TownDestination(q.MapID) {
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作不在来源城镇目录")
 	}
 	walkable := m.Walkable(q.Position)
@@ -161,7 +192,7 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作没有首匹配的合法来源安全区")
 	}
 	receipt := &BindingReceipt{Point: domain.RoleBinding{MapID: m.ID, X: int32(zone.Center.X), Y: int32(zone.Center.Y)}, ZoneID: zone.ID,
-		SourceMapSHA256: m.Source.SHA256, ZoneSetSHA256: zoneHash, Action: q.Action, EventID: q.EventID, RuleVersion: q.ExpectedRuleVersion, ConfigHash: q.ExpectedConfigHash}
+		SourceMapSHA256: bindingMapSHA256(m), ZoneSetSHA256: zoneHash, Action: q.Action, EventID: q.EventID, RuleVersion: q.ExpectedRuleVersion, ConfigHash: q.ExpectedConfigHash}
 	raw, err := json.Marshal(q)
 	if err != nil {
 		return nil, "", err
@@ -209,14 +240,14 @@ func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
 		return Fail(p.CodeLineForbidden, "绑定来源回执身份或已提交中心不一致")
 	}
 	m, ok := s.Cfg.Fixture.MapByID(b.Point.MapID)
-	if !ok || !m.Walkable(devconfig.Point{X: int(b.Point.X), Y: int(b.Point.Y)}) {
+	if !ok || m.CompactTown != (b.RuleVersion >= 24) || !m.Walkable(devconfig.Point{X: int(b.Point.X), Y: int(b.Point.Y)}) {
 		return Fail(p.CodeLineForbidden, "绑定来源中心不在当前来源地图可走格")
 	}
 	zoneHash, err := bindingZoneSetHash(m)
 	if err != nil {
 		return err
 	}
-	if b.SourceMapSHA256 != m.Source.SHA256 || b.ZoneSetSHA256 != zoneHash {
+	if b.SourceMapSHA256 != bindingMapSHA256(m) || b.ZoneSetSHA256 != zoneHash {
 		return Fail(p.CodeLineForbidden, "绑定来源地图或安全区目录身份已变化")
 	}
 	// 提交时在动作格取首匹配；冷验按已记录的源行身份核中心，不在另一格重新选区。

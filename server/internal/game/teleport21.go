@@ -47,21 +47,17 @@ func teleportManaCost(player *entity, skill devconfig.Skill, rank uint32) (int64
 }
 
 func (w *worker) trustedTeleportBinding(r *room) bool {
+	_, ok := w.teleportTownBinding(r)
+	return ok
+}
+
+func (w *worker) teleportTownBinding(r *room) (devconfig.BindingPoint, bool) {
 	f := &w.e.Store.Cfg.Fixture
 	b := r.Role.Binding
 	if !f.SafeZoneBindingEnabled() || b == nil || r.Role.BindingSourceSeq <= 0 || r.Role.BindingSafeZoneID == 0 {
-		return false
+		return devconfig.BindingPoint{}, false
 	}
-	m, ok := f.MapByID(b.MapID)
-	if !ok || m.SceneKindValue() != devconfig.SceneKindTown || m.Source == nil {
-		return false
-	}
-	for _, zone := range m.SafeZones {
-		if zone.ID == r.Role.BindingSafeZoneID && zone.Center == (devconfig.Point{X: int(b.X), Y: int(b.Y)}) && m.TeleportWalkable(zone.Center) {
-			return true
-		}
-	}
-	return false
+	return f.TownTeleportBinding(devconfig.BindingPoint{MapID: b.MapID, X: b.X, Y: b.Y}, r.Role.BindingSafeZoneID)
 }
 
 func (w *worker) teleportResult(r *room, cast pendingCast, from, scene uint64, target uint64, point *devconfig.Point, outcome uint32, transition string) {
@@ -91,14 +87,14 @@ func (w *worker) resolveTeleport21(r *room, origin *worldState, cast pendingCast
 	if *source.NoTeleport {
 		return fail(teleportSourceForbidden)
 	}
-	if !w.trustedTeleportBinding(r) || cast.Skill.ID != 21 || cast.Skill.JobID != r.Role.Job || cast.Skill.Teleport == nil {
+	binding, trusted := w.teleportTownBinding(r)
+	if !trusted || cast.Skill.ID != 21 || cast.Skill.JobID != r.Role.Job || cast.Skill.Teleport == nil {
 		return fail(teleportBindingInvalid)
 	}
 	rank, learned := r.Role.Skill(21)
 	if !learned || rank < cast.Skill.LearnedLevel || rank > cast.Skill.MaxLevel {
 		return fail(teleportBindingInvalid)
 	}
-	binding := *r.Role.Binding
 	originProof := r.Role.BindingSourceSeq
 	targetMap, known := f.MapByID(binding.MapID)
 	if !known {
@@ -123,13 +119,9 @@ func (w *worker) resolveTeleport21(r *room, origin *worldState, cast pendingCast
 	if !found {
 		return fail(teleportNoLanding)
 	}
-	target := r.TownWorld
-	if r.currentWorld().MapID == targetMap.ID {
-		target = r.currentWorld()
-	}
-	if target == nil {
-		target = r.newWorld(targetMap.ID)
-		r.TownWorld = target
+	target := r.currentWorld()
+	if target.MapID != targetMap.ID {
+		target = w.ensureTownWorld(r, targetMap.ID)
 	}
 	if target == nil || target.MapID != targetMap.ID {
 		return fail(teleportUnavailable)
@@ -167,7 +159,7 @@ func (w *worker) resolveTeleport21(r *room, origin *worldState, cast pendingCast
 	var landing *safeZoneBindingFact
 	if zone, inside := targetMap.SafeZoneAt(point); inside {
 		center := domain.RoleBinding{MapID: targetMap.ID, X: int32(zone.Center.X), Y: int32(zone.Center.Y)}
-		if center != binding {
+		if center != *r.Role.Binding {
 			if r.BindingCandidate != nil || r.PendingBinding != nil || r.FactOrder == math.MaxUint64 || r.Role.SourceSeq == math.MaxInt64 || r.Role.Revision == math.MaxInt64 || len(r.KillFacts)+1 > f.CombatTiming.KillQueueCapacity {
 				return fail(teleportUnavailable)
 			}

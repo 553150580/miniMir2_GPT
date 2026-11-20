@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 23,
+  "rule_version": 24,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -3817,14 +3817,384 @@
       ],
       "no_teleport": false,
       "no_pets": false
+    },
+    {
+      "id": "3",
+      "name": "银杏山谷",
+      "resource_key": "development/maps/first-map",
+      "width": 17,
+      "height": 17,
+      "scene_kind": 2,
+      "safe_zones": [
+        {
+          "id": "301",
+          "center": {
+            "x": 8,
+            "y": 8
+          },
+          "radius": 8
+        }
+      ],
+      "no_teleport": false,
+      "no_pets": false,
+      "compact_town": true,
+      "player_spawn": {
+        "x": 8,
+        "y": 13
+      },
+      "blocked": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 8,
+          "y": 4
+        },
+        {
+          "x": 12,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 9
+        },
+        {
+          "x": 12,
+          "y": 9
+        },
+        {
+          "x": 6,
+          "y": 9
+        }
+      ],
+      "npcs": [
+        {
+          "id": "3001",
+          "name": "陈家铺老板",
+          "role": "杂货铺",
+          "position": {
+            "x": 4,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "3002",
+          "name": "玛法领路人",
+          "role": "引路人",
+          "position": {
+            "x": 8,
+            "y": 4
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "3003",
+          "name": "精武馆老板",
+          "role": "武器铺",
+          "position": {
+            "x": 12,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "3004",
+          "name": "高家店老板",
+          "role": "服装铺",
+          "position": {
+            "x": 4,
+            "y": 9
+          },
+          "profile": "player_female"
+        },
+        {
+          "id": "3005",
+          "name": "许家店",
+          "role": "药店",
+          "position": {
+            "x": 12,
+            "y": 9
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "3006",
+          "name": "廖家店老板",
+          "role": "仓库",
+          "position": {
+            "x": 6,
+            "y": 9
+          },
+          "profile": "player_male"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "边界村",
+      "resource_key": "development/maps/first-map",
+      "width": 17,
+      "height": 17,
+      "scene_kind": 2,
+      "safe_zones": [
+        {
+          "id": "401",
+          "center": {
+            "x": 8,
+            "y": 8
+          },
+          "radius": 8
+        }
+      ],
+      "no_teleport": false,
+      "no_pets": false,
+      "compact_town": true,
+      "player_spawn": {
+        "x": 8,
+        "y": 13
+      },
+      "blocked": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 8,
+          "y": 4
+        },
+        {
+          "x": 12,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 9
+        },
+        {
+          "x": 12,
+          "y": 9
+        },
+        {
+          "x": 6,
+          "y": 9
+        }
+      ],
+      "npcs": [
+        {
+          "id": "4001",
+          "name": "边界村小店老板",
+          "role": "杂货铺",
+          "position": {
+            "x": 4,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "4002",
+          "name": "边界守将",
+          "role": "守卫",
+          "position": {
+            "x": 8,
+            "y": 4
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "4003",
+          "name": "铁匠铺老板",
+          "role": "铁匠铺",
+          "position": {
+            "x": 12,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "4004",
+          "name": "白家服装老板",
+          "role": "服装铺",
+          "position": {
+            "x": 4,
+            "y": 9
+          },
+          "profile": "player_female"
+        },
+        {
+          "id": "4005",
+          "name": "书店老板",
+          "role": "书店",
+          "position": {
+            "x": 12,
+            "y": 9
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "4006",
+          "name": "仓库保管员",
+          "role": "仓库",
+          "position": {
+            "x": 6,
+            "y": 9
+          },
+          "profile": "player_male"
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "name": "比奇城",
+      "resource_key": "development/maps/first-map",
+      "width": 17,
+      "height": 17,
+      "scene_kind": 2,
+      "safe_zones": [
+        {
+          "id": "501",
+          "center": {
+            "x": 8,
+            "y": 8
+          },
+          "radius": 8
+        }
+      ],
+      "no_teleport": false,
+      "no_pets": false,
+      "compact_town": true,
+      "player_spawn": {
+        "x": 8,
+        "y": 13
+      },
+      "blocked": [
+        {
+          "x": 4,
+          "y": 5
+        },
+        {
+          "x": 8,
+          "y": 4
+        },
+        {
+          "x": 12,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 9
+        },
+        {
+          "x": 12,
+          "y": 9
+        },
+        {
+          "x": 6,
+          "y": 9
+        },
+        {
+          "x": 10,
+          "y": 9
+        }
+      ],
+      "npcs": [
+        {
+          "id": "5001",
+          "name": "杂货铺老板",
+          "role": "杂货铺",
+          "position": {
+            "x": 4,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5002",
+          "name": "比奇国王",
+          "role": "国王",
+          "position": {
+            "x": 8,
+            "y": 4
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5003",
+          "name": "铁匠铺老板",
+          "role": "铁匠铺",
+          "position": {
+            "x": 12,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5004",
+          "name": "安家布衣",
+          "role": "服装铺",
+          "position": {
+            "x": 4,
+            "y": 9
+          },
+          "profile": "player_female"
+        },
+        {
+          "id": "5005",
+          "name": "夏家店老板",
+          "role": "药店",
+          "position": {
+            "x": 12,
+            "y": 9
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5006",
+          "name": "仓库保管员",
+          "role": "仓库",
+          "position": {
+            "x": 6,
+            "y": 9
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5007",
+          "name": "书店老板",
+          "role": "书店",
+          "position": {
+            "x": 10,
+            "y": 9
+          },
+          "profile": "player_male"
+        }
+      ]
     }
   ],
   "source_map_streaming": {
     "load_concurrency": 4,
     "cache_capacity": 49
   },
+  "map_regions": [
+    {
+      "id": "0",
+      "name": "比奇省",
+      "map_ids": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ]
+    }
+  ],
   "town_travel": {
     "enabled": true,
-    "town_map_id": "2"
+    "town_map_id": "2",
+    "destination_map_ids": [
+      "3",
+      "4",
+      "5"
+    ]
   }
 }

@@ -59,11 +59,12 @@ func (e *Engine) initializeTownNavigation() error {
 	f := &e.Store.Cfg.Fixture
 	maps := append([]devconfig.MapTemplate{f.Map}, f.Maps...)
 	for _, m := range maps {
-		if m.SceneKindValue() != devconfig.SceneKindTown {
+		if m.SceneKindValue() != devconfig.SceneKindTown || f.RuleVersion >= 24 && !f.TownDestination(m.ID) {
 			continue
 		}
-		version := fmt.Sprintf("%x", sha256.Sum256(m.CollisionBits))
-		grid, err := townnav.NewGrid(m.ID, version, m.Width, m.Height, m.CollisionBits)
+		bits := m.TownCollisionBits()
+		version := fmt.Sprintf("%x", sha256.Sum256(bits))
+		grid, err := townnav.NewGrid(m.ID, version, m.Width, m.Height, bits)
 		if err != nil {
 			return fmt.Errorf("城镇地图%d导航准备失败: %w", m.ID, err)
 		}
