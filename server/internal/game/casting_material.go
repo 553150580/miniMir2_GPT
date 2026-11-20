@@ -171,7 +171,7 @@ func hardAuthorityFailure(code uint32) bool {
 	return code == p.CodeRouteChanged || code == p.CodeUnauthenticated || code == p.CodeStaleSession
 }
 
-func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, grid devconfig.Point, now time.Time) bool {
+func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, grid devconfig.Point, now time.Time, need *automaticManaNeed) bool {
 	if !w.e.Store.Cfg.Fixture.CastingSupply.Enabled {
 		return false
 	}
@@ -186,8 +186,8 @@ func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, grid devconfig
 	if persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture) != 0 {
 		return false
 	}
-	plan, code := w.prepareCast(r, skill.ID, 0, r.Player.Direction, now, true, pointPB(grid))
-	if code != 0 {
+	plan, code := w.prepareCastRecordingMana(r, skill.ID, 0, r.Player.Direction, now, true, pointPB(grid))
+	if !need.ready(r, plan, code) {
 		return false
 	}
 	q.Context = &pb.OperationContext{OpId: domain.Bytes(domain.ID()), ExpectedRevision: uint64(r.Role.Revision), ExpectedRuleVersion: w.e.Store.Cfg.Fixture.RuleVersion}

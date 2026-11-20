@@ -4,7 +4,8 @@ const path = require('node:path');
 
 const output = path.resolve(__dirname, '../../../.work/ui-tests');
 const { PanelStackState } = require(path.join(output, 'ui/PanelStackState.js'));
-const { visibleRange } = require(path.join(output, 'ui/VirtualListWindow.js'));
+const { visibleRange, ListLayoutMode, listLayout, layoutVisibleRange, listItemPoint, listOffsetForIndex,
+    listMaximumOffset, preserveListOffset, listNodeBudget } = require(path.join(output, 'ui/VirtualListWindow.js'));
 const { NavigationIntent, direction8 } = require(path.join(output, 'input/NavigationIntent.js'));
 
 test('普通面板和覆盖弹窗分别返回，已有面板与滚动数据保持同一引用', () => {
@@ -68,6 +69,33 @@ test('部分可见条目、空视口和异常输入具有有界结果', () => {
         assert.ok(range.start >= 0 && range.end <= count && range.end >= range.start);
         assert.ok(range.end - range.start <= Math.ceil(height / 64) + 5);
     }
+});
+
+test('网格按真实可见行裁剪最后一个不满行，遮罩完全落在间隔时无需额外节点', () => {
+    const dense = listLayout(ListLayoutMode.Grid, 11, 310, 102, 100, 52, 5, 8);
+    assert.equal(dense.columns, 3);
+    assert.equal(dense.contentHeight, 232);
+    assert.deepEqual(layoutVisibleRange(dense, 0, 0), { start: 0, end: 6 });
+    assert.deepEqual(layoutVisibleRange(dense, Infinity, 0), { start: 0, end: 6 });
+    assert.deepEqual(layoutVisibleRange(dense, 5000, 0), { start: 6, end: 11 });
+    assert.deepEqual(listItemPoint(dense, 10), { x: 105, y: 180 });
+    assert.equal(listOffsetForIndex(dense, 10), 180);
+    const sparse = listLayout(ListLayoutMode.Horizontal, 5, 10, 100, 40, 60, 20, 0);
+    assert.deepEqual(layoutVisibleRange(sparse, 40, 0), { start: 1, end: 1 });
+    assert.deepEqual(layoutVisibleRange(sparse, 40, 1), { start: 0, end: 2 });
+    assert.equal(listMaximumOffset(sparse), 270);
+});
+
+test('网格缩列保留原首行索引与行内偏移，空或无尺寸布局不申请可见条目', () => {
+    const before = listLayout(ListLayoutMode.Grid, 1_000_000, 290, 280, 64, 52, 10, 8);
+    const after = listLayout(ListLayoutMode.Grid, 1_000_000, 215, 280, 64, 52, 10, 8);
+    const empty = listLayout(ListLayoutMode.Grid, 0, 215, 280, 64, 52, 10, 8);
+    const noSize = listLayout(ListLayoutMode.Horizontal, 1_000_000, 215, 0, 64, 52, 10, 8);
+    assert.equal(preserveListOffset(before, after, 677), 857);
+    assert.equal(listNodeBudget(after, 2), 33);
+    assert.equal(listNodeBudget(empty, 2), 0);
+    assert.deepEqual(layoutVisibleRange(empty, 850, 2), { start: 0, end: 0 });
+    assert.deepEqual(layoutVisibleRange(noSize, 850, 2), { start: 0, end: 0 });
 });
 
 test('摇杆稳定映射八方向，死区和非法输入不会产生方向', () => {

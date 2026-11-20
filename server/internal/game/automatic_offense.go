@@ -92,7 +92,7 @@ func (w *worker) autoDirectAim(r *room, skill devconfig.Skill, focus *entity) *e
 }
 
 // 选心和朝向只控制本次施法。已释放的直线与范围依旧依其能力结算附带目标。
-func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skillHandler, focus *entity, now time.Time) bool {
+func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skillHandler, focus *entity, now time.Time, need *automaticManaNeed) bool {
 	var target *entity
 	var grid *pb.GridPoint
 	var handle uint32
@@ -117,7 +117,7 @@ func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skill
 		return false
 	}
 	ref := reference(r, target)
-	if w.castDirected(r, skill.ID, handle, 0, direction, now, grid) != 0 {
+	if !w.castAutomatically(r, skill.ID, handle, direction, now, need, grid) {
 		return false
 	}
 	r.lockAutoTarget(ref)

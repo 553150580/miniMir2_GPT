@@ -7,8 +7,11 @@ const component=(n,type)=>{const c=n._components.map(r=>scene[r.__id__]).find(c=
 const base='UIMgr/Panels/Warehouse/',bounds=n=>({l:n._lpos.x-size(n).width/2,r:n._lpos.x+size(n).width/2,b:n._lpos.y-size(n).height/2,t:n._lpos.y+size(n).height/2});
 const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.b<b.t&&a.t>b.b;
 test('仓库只追加保存子树与Functions入口；原1191对象只父children各追加一次，原地图/HUD/ItemLock全部字节语义保持',()=>{
- const beforeDirectory=require('./helpers/skill_layout.cjs')(structuredClone(scene)).slice(0,1373);
+ const beforeDirectory=require('./helpers/inventory_grid_layout.cjs')(require('./helpers/skill_layout.cjs')(structuredClone(scene))).slice(0,1373);
  beforeDirectory[253]._children=beforeDirectory[253]._children.filter(x=>x.__id__<1373);
+ const reconnect=beforeDirectory[2]._children.filter(ref=>ref.__id__>=1373);
+ assert.deepEqual(reconnect.map(ref=>scene[ref.__id__]._name),['ReconnectDialog']);
+ beforeDirectory[2]._children=beforeDirectory[2]._children.filter(ref=>ref.__id__<1373);
  assert.equal(crypto.createHash('sha256').update(JSON.stringify(beforeDirectory)).digest('hex'),'4914af7ce27923adca7039cdb36663ab4ffef85e7fd2915c009b9927a772f462');
  const projected=beforeDirectory.slice(0,1191);
  require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projected);

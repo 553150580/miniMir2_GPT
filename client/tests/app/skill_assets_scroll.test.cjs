@@ -23,7 +23,7 @@ const scrollClass=scrollSource.statements.find(node=>ts.isClassDeclaration(node)
 const methods=['getScrollOffset','_getContentTopBoundary','_getContentBottomBoundary'].map(name=>scrollClass.members.find(node=>node.name?.getText(scrollSource)===name).getText(scrollSource));
 const scrollCompiled=ts.transpileModule(`class ReadOffsets{${methods.join('\n')}};exports.ReadOffsets=ReadOffsets;`,{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}});
 const scrollModule={exports:{}};new Function('exports','Vec2',scrollCompiled.outputText)(scrollModule.exports,Vec2);
-const {List}=load(path.join(root,'client/assets/scripts/ui/List.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{},Button,UITransform,Vec2,
+const {List}=load(path.join(root,'client/assets/scripts/ui/List.ts'),id=>id==='cc'?{_decorator:decorators,Component:class{},Button,Enum:value=>value,UITransform,Vec2,
     isValid:value=>value!=null,Node:{EventType:{SIZE_CHANGED:'size'}},ScrollView:{EventType:{SCROLLING:'scrolling',SCROLL_ENDED:'ended'}}}
     :id==='./VirtualListWindow'?require('../../../.work/ui-tests/ui/VirtualListWindow.js'):{});
 

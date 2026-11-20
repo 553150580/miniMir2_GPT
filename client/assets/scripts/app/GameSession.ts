@@ -31,6 +31,7 @@ let localOperation: { id: string; connection: number; binding: string; role: str
 export const session = {
     connection: new GameConnection(),
     scenes: null as SceneManager | null,
+    account: null as { id: string; name: string } | null,
     role: null as any,
     roles: [] as any[],
     entry: null as any,

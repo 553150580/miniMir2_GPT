@@ -121,6 +121,14 @@ func (w *worker) castDirected(r *room, id, targetHandle, input, direction uint32
 	return w.acceptPreparedCast(r, plan, input, now)
 }
 func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed bool, ground ...*pb.GridPoint) (*preparedCast, uint32) {
+	return w.prepareCastWithMana(r, id, targetHandle, direction, now, materialAllowed, false, ground...)
+}
+
+func (w *worker) prepareCastRecordingMana(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed bool, ground *pb.GridPoint) (*preparedCast, uint32) {
+	return w.prepareCastWithMana(r, id, targetHandle, direction, now, materialAllowed, true, ground)
+}
+
+func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32, now time.Time, materialAllowed, recordMana bool, ground ...*pb.GridPoint) (*preparedCast, uint32) {
 	if w.mapCellBudget(r) == 0 {
 		return nil, p.CodeSkillStateBlocked
 	}
@@ -193,7 +201,7 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	if !validCost {
 		return nil, p.CodeSkillStateBlocked
 	}
-	if r.Player.MP < cost {
+	if !recordMana && r.Player.MP < cost {
 		return nil, p.CodeSkillResource
 	}
 	if r.eventCount()+1 > w.eventCapacity() {
@@ -206,15 +214,29 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	if r.Isolated || w.e.Store.Cfg.Fixture.RuleVersion >= 22 && !w.e.Store.Cfg.Fixture.EquipmentMagicArithmeticSafe(stats) {
 		return nil, p.CodeSkillStateBlocked
 	}
+	var definition devconfig.BuffDefinition
+	if handler.Status {
+		var exists bool
+		definition, exists = w.e.Store.Cfg.Fixture.Buff(s.BuffID)
+		if !exists {
+			return nil, p.CodeSkillNotLearned
+		}
+	}
+	if handler.Displacement && s.Displacement == nil {
+		return nil, p.CodeSkillStateBlocked
+	}
+	delay := s.DelayBaseMS + int64(distance(r.Player.Pos, point))*s.ProjectileMSPerCell
+	if delay > math.MaxUint32 {
+		return nil, p.CodeSkillStateBlocked
+	}
+	if r.Player.MP < cost {
+		return &preparedCast{Cost: cost}, p.CodeSkillResource
+	}
 	amount := int64(0)
 	duration := int64(0)
 	if handler.Teleport || handler.Summon {
 		// 传送没有伤害或治疗随机量，成功后的状态在实际移交完成时才添加。
 	} else if handler.Status {
-		definition, ok := w.e.Store.Cfg.Fixture.Buff(s.BuffID)
-		if !ok {
-			return nil, p.CodeSkillNotLearned
-		}
 		switch definition.DurationKind {
 		case "mc_source_power":
 			stat := w.interval(stats.MagicMin, stats.MagicMax)
@@ -228,9 +250,6 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 		}
 		duration *= int64(time.Second / time.Millisecond)
 	} else if handler.Displacement {
-		if s.Displacement == nil {
-			return nil, p.CodeSkillStateBlocked
-		}
 		// 野蛮只以0进入源技能公式，不抽职业DC/MC；抗拒怪物分支没有伤害计算。
 		if s.Behavior == "shoulder_dash" {
 			amount = w.magicAmount(s, level, 0)
@@ -251,10 +270,6 @@ func (w *worker) prepareCast(r *room, id, targetHandle, direction uint32, now ti
 	}
 	if handler.UndeadBonus && target != nil && target.Monster != nil && target.Monster.Undead {
 		amount = amount * s.UndeadMultiplierPPM / 1000000
-	}
-	delay := s.DelayBaseMS + int64(distance(r.Player.Pos, point))*s.ProjectileMSPerCell
-	if delay > math.MaxUint32 || r.CastID == math.MaxUint64 {
-		return nil, p.CodeSkillStateBlocked
 	}
 	plan := &preparedCast{Scene: r.Scene, Skill: s, Level: level, Caster: reference(r, &r.Player), Origin: r.Player.Pos, Point: point, Cost: cost, Amount: amount, DelayMS: delay, BuffDurationMS: duration, Direction: r.Player.Direction}
 	plan.Summon = summon
@@ -425,6 +440,7 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 	}
 	pet := r.worldPet(r.currentWorld())
 	focus := r.liveAutoTarget()
+	var manaNeeded automaticManaNeed
 	skills := append([]devconfig.Skill(nil), w.e.Store.Cfg.Fixture.Skills...)
 	sort.SliceStable(skills, func(i, j int) bool {
 		if skills[i].AutoPriority == skills[j].AutoPriority {
@@ -438,7 +454,7 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 		}
 		handler := skillHandlers[s.Behavior]
 		rank, learned := r.Role.Skill(s.ID)
-		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) || r.Player.MP < s.MPBaseCost+int64(rank)*s.MPLevelCost {
+		if !learned || rank < s.LearnedLevel || rank > s.MaxLevel || now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[s.ID]) {
 			continue
 		}
 		direction := r.Player.Direction
@@ -467,10 +483,10 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 				}
 			}
 			if s.MaterialQuantity > 0 {
-				if w.autoMaterialCast(r, s, center, now) {
+				if w.autoMaterialCast(r, s, center, now, &manaNeeded) {
 					return true
 				}
-			} else if w.castDirected(r, s.ID, 0, 0, direction, now, pointPB(center)) == 0 {
+			} else if w.castAutomatically(r, s.ID, 0, direction, now, &manaNeeded, pointPB(center)) {
 				return true
 			}
 			continue
@@ -495,14 +511,14 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 				grid = pointPB(target.Pos)
 				handle = 0
 			}
-			if w.castDirected(r, s.ID, handle, 0, direction, now, grid) == 0 {
+			if w.castAutomatically(r, s.ID, handle, direction, now, &manaNeeded, grid) {
 				return true
 			}
 			continue
 		}
-		if w.autoOffensiveCast(r, s, handler, focus, now) {
+		if w.autoOffensiveCast(r, s, handler, focus, now, &manaNeeded) {
 			return true
 		}
 	}
-	return false
+	return r.Auto && w.tryManaPotion(r, manaNeeded, now)
 }

@@ -40,6 +40,8 @@ type AssetRequest struct {
 	Warehouse        *pb.WarehouseAction
 }
 
+const AssetAutoUsePotion = "auto_use_item"
+
 func add(a, b int64) (int64, error) {
 	if b < 0 || a > math.MaxInt64-b {
 		return a, Fail(p.CodeInvalidArgument, "整数余额溢出")
@@ -62,10 +64,19 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	result.OpId = q.Context.OpId
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
 	if q.SourceSeq > 0 {
-		if q.Kind != "cast_material" || q.Context.CommandSeq != 0 {
-			return out, result, receipt, Fail(p.CodeInvalidArgument, "自动施法必须使用独立来源流水")
+		var source string
+		switch q.Kind {
+		case "cast_material":
+			source = "source_cast:"
+		case AssetAutoUsePotion:
+			source = "source_potion:"
 		}
-		opID = "source_cast:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
+		if source == "" || q.Context.CommandSeq != 0 {
+			return out, result, receipt, Fail(p.CodeInvalidArgument, "自动资产操作必须使用独立来源流水")
+		}
+		opID = source + a.RoleID + ":" + domain.Hex(q.Context.OpId)
+	} else if q.Kind == AssetAutoUsePotion {
+		return out, result, receipt, Fail(p.CodeInvalidArgument, "自动用药缺少来源流水")
 	}
 	e := s.tx(ctx, func(tc context.Context) error {
 		receipt = Operation{}
@@ -167,12 +178,16 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				businessCode = p.CodeInvalidArgument
 			}
 			// 开发样例只记录操作防重；临时位置和HP由权威场景在提交后处理，不保存数据库。
-		case "use_item":
+		case "use_item", AssetAutoUsePotion:
 			var effect devconfig.PotionEffect
 			r, effect, businessCode = consumePotion(r, q, s.Cfg.Fixture)
-			if businessCode == 0 {
-				potion = &PotionReceipt{Scene: strconv.FormatUint(q.SceneEpoch, 10), ItemID: effect.ItemID, HP: effect.HP, MP: effect.MP}
+			if businessCode != 0 {
+				if q.Kind == AssetAutoUsePotion {
+					return Fail(businessCode, "未满足自动用药资格")
+				}
+				break
 			}
+			potion = &PotionReceipt{Scene: strconv.FormatUint(q.SceneEpoch, 10), ItemID: effect.ItemID, HP: effect.HP, MP: effect.MP}
 		case "learn_skill":
 			r, businessCode = learnSkill(r, q, s.Cfg.Fixture)
 		case "set_casting_supply":
@@ -236,6 +251,13 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
+		if q.Kind == AssetAutoUsePotion {
+			audit["potion"] = potion
+			audit["item_instance_id"] = q.ItemID
+			audit["source_seq"] = q.SourceSeq
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
+		}
 		if recycling != nil {
 			audit["recycling"] = recycling
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
@@ -276,6 +298,9 @@ func consumePotion(r domain.Role, q AssetRequest, fixture devconfig.Fixture) (do
 		}
 	}
 	if index < 0 || r.Items[index].ItemID != q.ItemDefinitionID || r.Items[index].Quantity < 1 || r.Items[index].Version < 1 || r.Items[index].Version == math.MaxInt64 {
+		return r, effect, p.CodeInvalidArgument
+	}
+	if q.Kind == AssetAutoUsePotion && (!AutoManaPotionEligible(r.Items[index], r.Job, fixture) || uint64(r.Items[index].Version) != q.ItemVersion) {
 		return r, effect, p.CodeInvalidArgument
 	}
 	r.Items = append([]domain.Item(nil), r.Items...)

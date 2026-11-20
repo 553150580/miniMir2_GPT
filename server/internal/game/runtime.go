@@ -561,7 +561,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.SkillId != 0 {
-			if code := w.castDirected(r, q.SkillId, q.TargetHandle, q.InputSequence, q.Direction, time.Now(), q.TargetGrid); code != 0 {
+			if code := w.castWithManaRecovery(r, &q, time.Now()); code != 0 {
 				w.failure(r, c.frame, code)
 			}
 			return
@@ -685,6 +685,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	// 故障后的新执行现场不恢复旧临时计量；健康重入不经过此初始化。
 	r.HostMS = 0
 	r.Potions.LastAppliedSeq = role.EconomicSeq
+	r.Potions.LastSourceSeq = role.SourceSeq
 	r.Navigation = navigationState{}
 	r.Destination = nil
 	r.Manual = false
@@ -971,27 +972,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		w.send(r, p.MsgS2COperationResult, f.Request, op)
 		return
 	}
-	if r.AssetGeneration == math.MaxUint64 {
-		w.isolateRoom(r)
-		return
-	}
-	r.AssetGeneration++
-	binding := assetBinding{room: r, auth: r.Auth, generation: r.AssetGeneration, id: domain.Hex(q.Context.OpId), fingerprint: q.Fingerprint}
-	r.Pending = true
-	r.PendingOperationID = domain.Hex(q.Context.OpId)
-	r.PendingFingerprint = q.Fingerprint
-	auth := r.Auth
-	var j job
-	j = job{target: w, run: func() func(*worker) {
-		role, result, receipt, err := w.e.Store.AssetWithReceipt(w.e.ctx, auth, q)
-		return func(w *worker) {
-			w.finishAsset(binding, q, f, reviveID, role, result, receipt, err, &j)
-		}
-	}}
-	if !w.submit(j) {
-		r.PendingRetry = &j
-		r.RetryAt = time.Now().Add(100 * time.Millisecond)
-	}
+	w.submitAsset(r, q, f, reviveID)
 }
 
 func economic(id uint16) bool {

@@ -25,24 +25,27 @@ const enginePath=path.join(require(path.join(root,'tools/client/creator_paths.cj
 const engineSource=fs.readFileSync(enginePath,'utf8'),ast=ts.createSourceFile(enginePath,engineSource,ts.ScriptTarget.Latest,true);
 const klass=ast.statements.find(n=>ts.isClassDeclaration(n)&&n.name.text==='ScrollView');
 const method=name=>klass.members.find(n=>n.name?.getText(ast)===name).getText(ast);
-const names=['scrollToTop','scrollToOffset','scrollTo','_doScroll','getScrollOffset','getMaxScrollOffset','_getContentTopBoundary','_getContentBottomBoundary'];
+const names=['scrollToTop','scrollToOffset','scrollTo','_doScroll','getScrollOffset','getMaxScrollOffset','_getContentTopBoundary','_getContentBottomBoundary','_getContentLeftBoundary'];
 const compiled=ts.transpileModule('class EngineScroll{'+names.map(method).join('\n')+'};exports.EngineScroll=EngineScroll;',{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}}).outputText;
 const module_={exports:{}},options={};
 new Function('exports','Vec2','v2','assignMoveDeltaOption','_moveDeltaOptions',compiled)(module_.exports,Vec2,()=>new Vec2(),(x,y)=>Object.assign(options,{x,y}),options);
 const EngineScroll=module_.exports.EngineScroll;EngineScroll.EventType={SCROLLING:'scrolling',SCROLL_ENDED:'ended'};
-const cc={_decorator:decorators,Component:class{},Button,EditBox,Mask,Label,UITransform,Vec2,Node:SavedNode,ScrollView:EngineScroll,
+const cc={_decorator:decorators,Component:class{},Button,EditBox,Enum:value=>value,Mask,Label,UITransform,Vec2,Node:SavedNode,ScrollView:EngineScroll,
  isValid:value=>Boolean(value&&value.isValid!==false),warn:()=>{},instantiate:()=>{const n=new SavedNode('Row'),text=new SavedNode('Text');n.components.set(Button,{});n.components.set(UITransform,new UITransform());text.components.set(Label,{string:''});n.controls.set('Text',text);return n;}};
 const {List}=load('client/assets/scripts/ui/List.ts',id=>id==='cc'?cc:id==='./VirtualListWindow'?require(path.join(root,'.work/ui-tests/ui/VirtualListWindow.js')):{});
-function actualList(name='List'){
+function actualList(name='List',options={}){
  const node=new SavedNode(name),viewport=new SavedNode('View'),content=new SavedNode('Content'),template=new SavedNode('ItemTemplate');
  const view=new UITransform(290,280),size=new UITransform(290,280);viewport.components.set(UITransform,view);viewport.components.set(Mask,{});content.components.set(UITransform,size);content.setParent(viewport);node.controls.set('ItemTemplate',template);
- const scroll=new EngineScroll();Object.assign(scroll,{node,content,_content:content,view,_topBoundary:140,_leftBoundary:0,writes:[],stops:0,emitted:0,
-  _getContentPosition:()=>content.position,_getContentLeftBoundary:()=>0,stopAutoScroll(){this.stops++;},
-  _calculateMovePercentDelta(q){return{y:(1-q.y)*this.getMaxScrollOffset().y-this.getScrollOffset().y};},
+ if(options.templateWidth)template.components.set(UITransform,new UITransform(options.templateWidth,90));
+ const scroll=new EngineScroll();Object.assign(scroll,{node,content,_content:content,view,_topBoundary:140,_leftBoundary:-145,writes:[],stops:0,emitted:0,
+  _getContentPosition:()=>content.position,stopAutoScroll(){this.stops++;},
+  _calculateMovePercentDelta(q){const max=this.getMaxScrollOffset(),offset=this.getScrollOffset();return{x:-q.x*max.x-offset.x,y:(1-q.y)*max.y-offset.y};},
   // 引擎0时长经_doScroll直接_moveContent；此处只替换物理坐标写入，不主动发scroll事件。
-  _moveContent(delta){content.position.y+=delta.y;this.writes.push(this.getScrollOffset().y);}});content.position.y=140;
- const list=new List();Object.assign(list,{node,scrollView:scroll,viewport,templateNode:template,rowHeight:90,overscan:2});node.components.set(List,list);list.onLoad();list.onEnable();
- return{list,node,scroll,content,view,visible(){return Array.from(list.rows).filter(([,row])=>{const top=content.position.y+row.position.y,bottom=top-90;return row.active&&top>-132&&bottom<132;}).map(([index])=>index);},userScroll(offset){scroll.scrollToOffset(new Vec2(0,offset),0);scroll.emitted++;node.emit(EngineScroll.EventType.SCROLLING);}};
+  _moveContent(delta){content.position.x+=delta.x;content.position.y+=delta.y;this.writes.push(this.getScrollOffset().y);}});content.position.y=140;
+ const list=new List();Object.assign(list,{node,scrollView:scroll,viewport,templateNode:template,rowHeight:90,overscan:2},options.layout);node.components.set(List,list);list.onLoad();list.onEnable();
+ return{list,node,scroll,content,viewport,view,visible(){return Array.from(list.rows).filter(([,row])=>{const top=content.position.y+row.position.y,bottom=top-90;return row.active&&top>-132&&bottom<132;}).map(([index])=>index);},
+  userScroll(offset){scroll.scrollToOffset(scroll.horizontal?new Vec2(offset,0):new Vec2(0,offset),0);scroll.emitted++;node.emit(EngineScroll.EventType.SCROLLING);},
+  resize(width,height){view.setContentSize(width,height);scroll._topBoundary=height/2;scroll._leftBoundary=-width/2;viewport.emit(SavedNode.EventType.SIZE_CHANGED);}};
 }
 function warehouse(current,query){
  const safe=new SavedNode('Safe'),panel=new SavedNode('Warehouse');safe.controls.set('UIMgr/Panels/Warehouse',panel);

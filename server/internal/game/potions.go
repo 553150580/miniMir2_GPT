@@ -18,6 +18,7 @@ type potionState struct {
 	NextTick       time.Time
 	NextUse        time.Time
 	LastAppliedSeq int64
+	LastSourceSeq  int64
 }
 
 func potionGate(r *room, scene uint64, now time.Time) uint32 {
@@ -82,13 +83,31 @@ func queueAdd(queue, amount, cap int64) int64 {
 
 func (w *worker) applyPotionReceipt(r *room, receipt persistence.Operation, now time.Time) bool {
 	effect := receipt.Potion
-	if receipt.Kind != "use_item" || receipt.Code != 0 || effect == nil || effect.Scene != strconv.FormatUint(r.Scene, 10) || receipt.CommandSeq <= r.Potions.LastAppliedSeq {
+	if receipt.Code != 0 || effect == nil || effect.Scene != strconv.FormatUint(r.Scene, 10) {
+		return false
+	}
+	watermark, sequence := &r.Potions.LastAppliedSeq, receipt.CommandSeq
+	switch receipt.Kind {
+	case "use_item":
+	case persistence.AssetAutoUsePotion:
+		if effect.HP != 0 || effect.MP <= 0 {
+			return false
+		}
+		watermark, sequence = &r.Potions.LastSourceSeq, receipt.SourceSeq
+	default:
+		return false
+	}
+	if sequence <= *watermark {
 		return false
 	}
 	rules := w.e.Store.Cfg.Fixture.Potions
-	r.Potions.LastAppliedSeq = receipt.CommandSeq
-	r.Potions.HP = queueAdd(r.Potions.HP, effect.HP, rules.QueueCap)
-	r.Potions.MP = queueAdd(r.Potions.MP, effect.MP, rules.QueueCap)
+	*watermark = sequence
+	if effect.HP > 0 {
+		r.Potions.HP = queueAdd(r.Potions.HP, effect.HP, rules.QueueCap)
+	}
+	if effect.MP > 0 {
+		r.Potions.MP = queueAdd(r.Potions.MP, effect.MP, rules.QueueCap)
+	}
 	r.Potions.NextUse = now.Add(time.Duration(rules.UseDelayMS) * time.Millisecond)
 	return true
 }

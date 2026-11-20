@@ -94,20 +94,23 @@ export class GameConnection {
     private sequence = 0;
     private lifecycle = 0;
     private socket?: WebSocket;
+    private disconnectMessage = '';
+    private heartbeat?: ReturnType<typeof setTimeout>;
     private listeners = new Set<(packet: Packet) => void>();
     private statusListeners = new Set<(status: string) => void>();
     private pending = new Map<number, { responses: readonly number[]; assemble?: (chunk: any) => any | null; ok: (value: any) => void; fail: (error: Error) => void; timer: ReturnType<typeof setTimeout> }>();
     get generation(): number { return this.lifecycle; }
     get connected(): boolean { return this.socket?.readyState === WebSocket.OPEN; }
+    get disconnectReason(): string { return this.disconnectMessage; }
 
     subscribe(listener: (packet: Packet) => void): () => void { this.listeners.add(listener); return () => this.listeners.delete(listener); }
     onStatus(listener: (status: string) => void): () => void { this.statusListeners.add(listener); return () => this.statusListeners.delete(listener); }
 
-    async rpc(id: number, value: any): Promise<any> {
+    async rpc(id: number, value: any, signal?: AbortSignal): Promise<any> {
         const seq = ++this.sequence;
         const response = await fetch(`${location.origin}/account/rpc`, {
             method: 'POST', headers: { 'Content-Type': 'application/octet-stream', ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}) },
-            body: encodePacket(id, seq, Long.UZERO, value),
+            body: encodePacket(id, seq, Long.UZERO, value), signal,
         });
         if (!response.ok) throw new Error(`认证服务返回HTTP ${response.status}`);
         const packet = decodePacket(new Uint8Array(await response.arrayBuffer()));
@@ -116,7 +119,8 @@ export class GameConnection {
         return packet.value;
     }
 
-    async connect(ticket: string): Promise<void> {
+    async connect(ticket: string, signal?: AbortSignal): Promise<void> {
+        if (signal?.aborted) throw new Error('游戏连接已取消');
         this.close(); this.binding = Long.UZERO;
         const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
         const socket = new WebSocket(`${protocol}//${location.host}/game/ws`); this.socket = socket;
@@ -148,15 +152,36 @@ export class GameConnection {
                 for (const listener of Array.from(this.listeners)) listener(packet);
             } catch (error) { this.report(error instanceof Error ? error.message : String(error)); }
         };
-        socket.onclose = () => { if (this.socket === socket) { this.rejectPending(); this.report('连接已断开，重新连接需重新认证取票'); } };
-        await new Promise<void>((ok, fail) => {
-            const timer = setTimeout(() => { socket.close(); fail(new Error('游戏连接超时')); }, 10000);
-            socket.onopen = () => { clearTimeout(timer); ok(); };
-            socket.onerror = () => { clearTimeout(timer); fail(new Error('游戏连接失败')); };
-        });
-        if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏连接准备已经失效');
-        await this.request(20001, { accountTicket: ticket });
-        if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏入场回执已经失效');
+        let cancelOpen: (() => void) | undefined;
+        const abort = (): void => {
+            cancelOpen?.();
+            if (this.socket === socket) this.close();
+        };
+        signal?.addEventListener('abort', abort, { once: true });
+        try {
+            await new Promise<void>((ok, fail) => {
+                const failOpen = (message: string): void => {
+                    clearTimeout(timer);
+                    fail(new Error(message));
+                };
+                const timer = setTimeout(() => {
+                    failOpen('游戏连接超时');
+                    if (this.socket === socket) this.report('游戏连接超时');
+                }, 10000);
+                cancelOpen = () => failOpen('游戏连接已取消');
+                socket.onopen = () => { clearTimeout(timer); ok(); };
+                socket.onerror = () => failOpen('游戏连接失败');
+                socket.onclose = () => {
+                    const current = this.socket === socket;
+                    failOpen(current ? '游戏连接已断开' : '旧游戏连接准备已经失效');
+                    if (current) this.report('游戏连接已断开');
+                };
+            });
+            if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏连接准备已经失效');
+            await this.request(20001, { accountTicket: ticket });
+            if (this.socket !== socket || this.lifecycle !== generation) throw new Error('旧游戏入场回执已经失效');
+            this.pollHeartbeat(generation);
+        } finally { signal?.removeEventListener('abort', abort); }
     }
 
     send(id: number, value: any): number {
@@ -176,7 +201,7 @@ export class GameConnection {
         if (cancelNavigation && !assemble) return Promise.reject(new Error('导航取消必须等待匹配的完整基线'));
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
-            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : 40005];
+            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 1 ? 2 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : 40005];
             this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {
                 this.socket!.send(encodePacket(id, seq, this.binding, value));
@@ -185,9 +210,36 @@ export class GameConnection {
         });
     }
 
-    close(): void { this.lifecycle++; const old = this.socket; this.socket = undefined; old?.close(); this.rejectPending(); }
+    close(): void { this.disconnectMessage = ''; this.closeSocket(); }
+    private pollHeartbeat(generation: number): void {
+        this.heartbeat = setTimeout(() => {
+            if (this.lifecycle !== generation) return;
+            if (typeof document !== 'undefined' && document.hidden) { this.pollHeartbeat(generation); return; }
+            // 服务器在传输层回复心跳，房间处理或资产回执延迟不代表连接已断开。
+            void this.request(1, { clientMonotonicMs: Long.fromNumber(performance.now(), true) }).then(
+                () => { if (this.lifecycle === generation) this.pollHeartbeat(generation); },
+                () => {
+                    if (this.lifecycle !== generation) return;
+                    if (typeof document !== 'undefined' && document.hidden) this.pollHeartbeat(generation);
+                    else this.report('游戏连接超时');
+                },
+            );
+        }, 10000);
+    }
+    private closeSocket(): void {
+        clearTimeout(this.heartbeat);
+        this.lifecycle++;
+        const old = this.socket;
+        this.socket = undefined;
+        old?.close();
+        this.rejectPending();
+    }
     private rejectPending(): void { for (const item of Array.from(this.pending.values())) { clearTimeout(item.timer); item.fail(new Error('连接已关闭')); } this.pending.clear(); }
-    private report(message: string): void { this.lifecycle++; for (const listener of Array.from(this.statusListeners)) listener(message); }
+    private report(message: string): void {
+        this.closeSocket();
+        this.disconnectMessage = message;
+        for (const listener of Array.from(this.statusListeners)) listener(message);
+    }
 }
 
 export function newOperationId(): Uint8Array { const bytes = new Uint8Array(16); crypto.getRandomValues(bytes); return bytes; }

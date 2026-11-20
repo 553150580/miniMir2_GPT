@@ -11,6 +11,7 @@ import { TouchJoystick } from '../input/TouchJoystick';
 import { MapTouchNavigator } from '../input/MapTouchNavigator';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
 import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
+import { accountIdentity, GameReconnect } from './GameReconnect';
 import { PendingOperations } from './PendingOperations';
 import { PendingRoleCreation, RoleCreationRequest } from './PendingRoleCreation';
 import { GameWorldView } from './GameWorldView';
@@ -39,6 +40,7 @@ import { roleBindingText } from './RoleBindingModel';
 import { petAppearDuration } from './PetBornModel';
 import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
+import { inventoryCapacityText } from './InventoryDisplay';
 import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
 import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
 import { combatAttributeLines } from './CombatStatusModel';
@@ -162,9 +164,11 @@ export class AppRoot extends Component {
             if (!/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Account').string.trim()) || !/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Password').string)) throw new Error('账号和密码需6～20位字母、数字或下划线');
             this.status('正在认证');
             const token = session.connection.token;
-            const result = await session.connection.rpc(register ? 10009 : 10001, { account: this.edit('Account').string.trim(), password: this.edit('Password').string });
+            const name = this.edit('Account').string.trim();
+            const result = await session.connection.rpc(register ? 10009 : 10001, { account: name, password: this.edit('Password').string });
             if (this.disposed || session.connection.token !== token) return;
-            const account = Array.from(result.accountId as Uint8Array, value => value.toString(16).padStart(2, '0')).join('');
+            const account = accountIdentity(result.accountId);
+            session.account = { id: account, name };
             session.pending = new PendingOperations(sys.localStorage, `minimir.pending.v1.${account}.1`);
             session.roleCreation = new PendingRoleCreation(sys.localStorage, `minimir.create-role.v1.${account}.1`);
             session.connection.token = result.accountToken; session.lastError = '';
@@ -178,7 +182,7 @@ export class AppRoot extends Component {
         if (!session.connection.token) { await this.changeScene('Login'); return; }
         for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => { this.selectedRole = i; this.refreshRoles(); });
         for (let i = 0; i < 3; i++) this.button(`JobTabs/Job${i}`, () => { this.selectedJob = i; this.status(`创建职业：${names[i]}`); });
-        this.button('Logout', async () => { session.connection.token = ''; await this.changeScene('Login'); });
+        this.button('Logout', async () => { session.connection.token = ''; session.account = null; await this.changeScene('Login'); });
         this.button('Create', () => this.createRole());
         this.button('Enter', async () => {
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
@@ -316,7 +320,14 @@ export class AppRoot extends Component {
         this.cleanups.push(() => { if (this.ui && isValid(this.ui.node, true)) this.ui.node.off(UIMgr.EVENT_CHANGED, this.releaseInput, this); if (this.popup && isValid(this.popup.node, true)) this.popup.node.off(PopupView.EVENT_CHANGED, this.releaseInput, this); });
         this.bindGameButtons();
         const refresh = (): void => this.handleSessionUpdate(); session.update.add(refresh); this.cleanups.push(() => session.update.delete(refresh));
-        await this.attachCurrentEntry();
+        const reconnect = new GameReconnect(this.node.getChildByName('ReconnectDialog')!,
+            () => !this.attaching && this.isWorldCurrent() && this.world!.isMapReady, () => {
+                this.showMapLoading(false);
+                this.handleSessionUpdate();
+                while (this.popup?.back()) {}
+            }, () => this.attachCurrentEntry(), () => this.tapSound?.());
+        this.cleanups.push(() => reconnect.dispose());
+        if (!session.connection.disconnectReason) await this.attachCurrentEntry();
     }
 
     private bindGameButtons(): void {
@@ -787,9 +798,15 @@ export class AppRoot extends Component {
             const items = panel === 'Inventory' ? session.inventory?.items ?? [] : (session.inventory?.equipped ?? []).map((entry: any) => entry.item);
             list.setItems(items, (node, item: any) => {
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
-                const worn = panel === 'Role' ? session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId)) : null;
+                const label = node.getChildByName('Text')!.getComponent(Label)!;
+                const name = definition?.name ?? item.itemId, ownership = item.bound ? '绑定' : '非绑定';
+                if (panel === 'Inventory') {
+                    label.string = `${name}\n×${item.quantity} · ${ownership}`;
+                    return;
+                }
+                const worn = session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId));
                 const part = worn ? `${definition?.kind === 'casting_supply' ? '护符' : equipmentSlotName(worn.slot)} · ` : '';
-                node.getChildByName('Text')!.getComponent(Label)!.string = `${part}${definition?.name ?? item.itemId} ×${item.quantity} ${item.bound ? '绑定' : '非绑定'}`;
+                label.string = `${part}${name} ×${item.quantity} ${ownership}`;
             }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
@@ -836,6 +853,7 @@ export class AppRoot extends Component {
     // 选择只刷新已保存的上下文控件，不重绑列表或推进场景和经济流程。
     private refreshInventoryContext(): void {
         if (this.disposed || !this.world) return;
+        this.text('UIMgr/Panels/Inventory/Capacity', inventoryCapacityText(session.inventory));
         if (this.lastInventory !== session.inventory && this.selectedItem) this.selectedItem = session.inventory?.items.find((item: any) => item.instanceId.toString() === this.selectedItem.instanceId.toString()) ?? null;
         if (this.selectedEquipped) {
             const selected = this.selectedEquipped;
@@ -1053,20 +1071,23 @@ export class AppRoot extends Component {
     private castSkill(skill: SkillRow, modeEnabled?: boolean): void | Promise<void> {
         this.ensureNotLeaving();
         if (!session.ready) throw new Error('场景尚未就绪');
-        const current = skillRows(this.skillSnapshot()).find(row => row.definition.id === skill.definition.id);
+        const snapshot = this.skillSnapshot();
+        const current = skillRows(snapshot).find(row => row.definition.id === skill.definition.id);
         if (!current) throw new Error('技能状态已变化，请重新选择');
         const activation = skillActivation(current.definition);
         if (activation === 'toggle' || activation === 'charge') {
-            const mode = skillMode(this.skillSnapshot(), current.definition.id);
+            const mode = skillMode(snapshot, current.definition.id);
             if (!mode || this.pendingSkillMode) throw new Error('战斗状态尚未同步，请稍后再试');
             validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle, activation === 'charge');
             if (activation === 'charge' && mode.ready) throw new Error('烈火已就绪，普通攻击命中前方目标时释放');
             return this.submitSkillMode(current.definition.id, activation === 'toggle' ? modeEnabled ?? !mode.enabled : true, activation === 'charge');
         }
+        // 普通技能由服务端核验魔法与自动补给，材料施法仍在本地预检魔法。
+        const checkCost = needsCastingSupply(snapshot, current);
         if (isGroundSkill(current.definition) || isDirectionalSkill(current.definition)) {
             const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
-            if (isGroundSkill(current.definition)) validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map, session.entry.playerHandle);
-            else validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle);
+            if (isGroundSkill(current.definition)) validateGroundTarget(current, session.baseline?.entities ?? [], player?.position ?? { x: 0, y: 0 }, this.world!.map, session.entry.playerHandle, checkCost);
+            else validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle, checkCost);
             const supply = current.definition.material_quantity ? selectedCastingSupply(this.supplySnapshot(), current.definition) : undefined;
             this.aim = { skillId: current.definition.id, role: roleIdentity(), scene: session.entry.sceneEpoch.toString(), rule: session.entry.resourceVersion.toString(), supply };
             this.text('MapViewport/Aiming/Text', `${current.definition.name}：轻触${isDirectionalSkill(current.definition) ? '周围选择方向' : '地面施放'}`);
@@ -1075,10 +1096,10 @@ export class AppRoot extends Component {
             return;
         }
         if (current.definition.target_kind === 'enemy_self' || current.definition.target_kind === 'friendly_self' || current.definition.kind === 'teleport') {
-            const player = validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle);
+            const player = validateCaster(current, session.baseline?.entities ?? [], session.entry.playerHandle, checkCost);
             return this.submitCast(current, 0, player.position, player.direction);
         }
-        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedWorldEntity()?.entityHandle ?? null, session.entry.playerHandle);
+        const target = selectSkillTarget(current, session.baseline?.entities ?? [], this.selectedWorldEntity()?.entityHandle ?? null, session.entry.playerHandle, checkCost);
         return this.submitCast(current, target.entityHandle, target.position, 0);
     }
 
@@ -1145,10 +1166,12 @@ export class AppRoot extends Component {
         try {
             if (!session.ready || this.aim.role !== roleIdentity() || this.aim.scene !== session.entry?.sceneEpoch.toString()
                 || this.aim.rule !== session.entry?.resourceVersion.toString()) throw new Error('瞄准状态已变化，请重新选择技能');
-            const row = skillRows(this.skillSnapshot()).find(value => value.definition.id === this.aim!.skillId);
+            const snapshot = this.skillSnapshot();
+            const row = skillRows(snapshot).find(value => value.definition.id === this.aim!.skillId);
             if (!row) throw new Error('技能状态已变化，请重新选择');
-            const target = isDirectionalSkill(row.definition) ? validateDirectionTarget(row, session.baseline?.entities ?? [], grid, this.world!.map, session.entry.playerHandle)
-                : validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map, session.entry.playerHandle);
+            const checkCost = needsCastingSupply(snapshot, row);
+            const target = isDirectionalSkill(row.definition) ? validateDirectionTarget(row, session.baseline?.entities ?? [], grid, this.world!.map, session.entry.playerHandle, checkCost)
+                : validateGroundTarget(row, session.baseline?.entities ?? [], grid, this.world!.map, session.entry.playerHandle, checkCost);
             const player = session.baseline.entities.find((entity: any) => entity.entityHandle === session.entry?.playerHandle);
             const result = this.submitCast(row, 0, { x: target.x, y: target.y }, gridDirection(player.position, target, player.direction), this.aim.supply);
             if (result instanceof Promise) void result.catch(error => this.error(error));
@@ -1288,7 +1311,7 @@ export class AppRoot extends Component {
                 session.lastError = '';
             } else session.lastError = '连接未就绪，仅完成本地退出；远端导航取消未确认';
             this.nav.exitGame(); session.connection.close(); session.ready = false;
-            if (!hosting) await this.changeScene('RoleSelect'); else { session.connection.token = ''; await this.changeScene('Login'); }
+            if (!hosting) await this.changeScene('RoleSelect'); else { session.connection.token = ''; session.account = null; await this.changeScene('Login'); }
         } finally {
             // 切换成功后Creator会销毁旧组件并清空字段；只有留在原场景时才恢复输入。
             if (!this.disposed) { this.leaving = false; this.nav.setInputBlocked(this.inputBarrier); }
