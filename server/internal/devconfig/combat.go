@@ -1,3 +1,5 @@
+// 本文件装配来源攻击、防御取值与技能伤害公式，并校验各职业战斗参数。
+
 package devconfig
 
 import (
@@ -5,6 +7,8 @@ import (
 	"math"
 )
 
+// supportedSkill 判断“supported”技能是否满足要求。
+// behavior 记录行为，使用文本表示。
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
@@ -14,6 +18,8 @@ func supportedSkill(behavior string) bool {
 	return false
 }
 
+// Activation 返回“activation”供调用方使用。
+// s 是调用该方法的技能实例。
 func (s Skill) Activation() string {
 	if s.ActivationKind != "" {
 		return s.ActivationKind
@@ -32,6 +38,8 @@ func (s Skill) Activation() string {
 	return "cast"
 }
 
+// MaximumAttackBonus 返回最大值攻击加成供调用方使用。
+// s 是调用该方法的技能实例，level 记录等级，使用数值表示。
 func (s Skill) MaximumAttackBonus(level uint32) int64 {
 	if int(level) < len(s.MaxAttackBonusByLevel) {
 		return s.MaxAttackBonusByLevel[level]
@@ -39,33 +47,54 @@ func (s Skill) MaximumAttackBonus(level uint32) int64 {
 	return 0
 }
 
+// CombatTiming 保存战斗时序所需的状态。
 type CombatTiming struct {
-	PlayerAttackBaseMS         int64 `json:"player_attack_base_ms"`
-	PlayerAttackSpeedStepMS    int64 `json:"player_attack_speed_step_ms"`
-	PlayerAttackLevelStepMS    int64 `json:"player_attack_level_step_ms"`
-	PlayerAttackLevelCapMS     int64 `json:"player_attack_level_cap_ms"`
-	PlayerAttackMinMS          int64 `json:"player_attack_min_ms"`
-	PlayerAttackActionMS       int64 `json:"player_attack_action_ms"`
-	PlayerAttackImpactMS       int64 `json:"player_attack_impact_ms"`
-	PlayerPushActionMS         int64 `json:"player_push_action_ms"`
+	// PlayerAttackBaseMS 记录玩家攻击基础值毫秒，使用数值表示。
+	PlayerAttackBaseMS int64 `json:"player_attack_base_ms"`
+	// PlayerAttackSpeedStepMS 记录玩家攻击速度步骤毫秒，使用数值表示。
+	PlayerAttackSpeedStepMS int64 `json:"player_attack_speed_step_ms"`
+	// PlayerAttackLevelStepMS 记录玩家攻击等级步骤毫秒，使用数值表示。
+	PlayerAttackLevelStepMS int64 `json:"player_attack_level_step_ms"`
+	// PlayerAttackLevelCapMS 记录玩家攻击等级上限毫秒，使用数值表示。
+	PlayerAttackLevelCapMS int64 `json:"player_attack_level_cap_ms"`
+	// PlayerAttackMinMS 记录玩家攻击最小毫秒，使用数值表示。
+	PlayerAttackMinMS int64 `json:"player_attack_min_ms"`
+	// PlayerAttackActionMS 记录玩家攻击动作毫秒，使用数值表示。
+	PlayerAttackActionMS int64 `json:"player_attack_action_ms"`
+	// PlayerAttackImpactMS 记录玩家攻击命中影响毫秒，使用数值表示。
+	PlayerAttackImpactMS int64 `json:"player_attack_impact_ms"`
+	// PlayerPushActionMS 记录玩家推入动作毫秒，使用数值表示。
+	PlayerPushActionMS int64 `json:"player_push_action_ms"`
+	// MonsterPushActionMSPerStep 记录怪物推入动作毫秒“per”步骤，使用数值表示。
 	MonsterPushActionMSPerStep int64 `json:"monster_push_action_ms_per_step"`
-	MonsterPushMoveMSPerStep   int64 `json:"monster_push_move_ms_per_step"`
-	PushedStepDisplayMS        int64 `json:"pushed_step_display_ms"`
-	EventCapacity              int   `json:"event_capacity"`
-	KillQueueCapacity          int   `json:"kill_queue_capacity"`
+	// MonsterPushMoveMSPerStep 记录怪物推入移动毫秒“per”步骤，使用数值表示。
+	MonsterPushMoveMSPerStep int64 `json:"monster_push_move_ms_per_step"`
+	// PushedStepDisplayMS 记录被推动位移步骤显示毫秒，使用数值表示。
+	PushedStepDisplayMS int64 `json:"pushed_step_display_ms"`
+	// EventCapacity 记录事件容量，使用数值表示。
+	EventCapacity int `json:"event_capacity"`
+	// KillQueueCapacity 记录击杀队列容量，使用数值表示。
+	KillQueueCapacity int `json:"kill_queue_capacity"`
 }
 
+// AccuracyBonus 返回“accuracy”加成供调用方使用。
+// s 是调用该方法的技能实例，level 记录等级，使用数值表示。
 func (s Skill) AccuracyBonus(level uint32) int64 {
 	if int(level) < len(s.AccuracyByLevel) {
 		return s.AccuracyByLevel[level]
 	}
 	return int64(level) * s.AccuracyPerLevel
 }
+
+// PlayerAttackInterval 返回玩家攻击周期供调用方使用。
+// t 是调用该方法的战斗时序实例，level 记录等级，使用数值表示，speed 记录速度，使用数值表示。
 func (t CombatTiming) PlayerAttackInterval(level uint32, speed int64) int64 {
+	// reduction 保存根据整数“64”与玩家攻击等级步骤毫秒计算的“reduction”。
 	reduction := int64(level) * t.PlayerAttackLevelStepMS
 	if reduction > t.PlayerAttackLevelCapMS {
 		reduction = t.PlayerAttackLevelCapMS
 	}
+	// value 保存根据玩家攻击基础值毫秒与速度与玩家攻击速度步骤毫秒的计算结果的计算结果与“reduction”计算的值。
 	value := t.PlayerAttackBaseMS - speed*t.PlayerAttackSpeedStepMS - reduction
 	if value < t.PlayerAttackMinMS {
 		value = t.PlayerAttackMinMS
@@ -75,8 +104,13 @@ func (t CombatTiming) PlayerAttackInterval(level uint32, speed int64) int64 {
 	}
 	return value
 }
+
+// ValidateCombat 校验战斗。
+// f 是调用该方法的开发测试配置实例。
 func (f *Fixture) ValidateCombat() error {
+	// t 保存战斗时序，用于当前步骤中的t。
 	t := f.CombatTiming
+	// v 接收遍历数值列表时当前的元素。
 	for _, v := range []int64{t.PlayerAttackBaseMS, t.PlayerAttackSpeedStepMS, t.PlayerAttackLevelStepMS, t.PlayerAttackLevelCapMS, t.PlayerAttackMinMS, t.PlayerAttackActionMS, t.PlayerAttackImpactMS} {
 		if v <= 0 || v > math.MaxInt32 {
 			return errors.New("战斗时序参数必须完整且可计时")
@@ -85,8 +119,10 @@ func (f *Fixture) ValidateCombat() error {
 	if t.PlayerAttackMinMS > t.PlayerAttackBaseMS || t.EventCapacity < 1 || t.EventCapacity > 4096 || t.KillQueueCapacity < len(f.Map.MonsterSpawns)+1 || t.KillQueueCapacity > 4096 {
 		return errors.New("战斗事件或逐杀预算无效")
 	}
+	// s 接收遍历技能集合时当前的元素。
 	for _, s := range f.Skills {
 		if s.Behavior == "summon_pet" {
+			// err 接收校验召唤技能过程中可能产生的错误，供后续失败分支处理。
 			if err := validateSummonSkill(s); err != nil {
 				return err
 			}
@@ -95,6 +131,7 @@ func (f *Fixture) ValidateCombat() error {
 		if len(s.AccuracyByLevel) != int(s.MaxLevel)+1 {
 			return errors.New("逐阶准确数组不完整")
 		}
+		// v 接收遍历“accuracy”“by”等级时当前的元素。
 		for _, v := range s.AccuracyByLevel {
 			if v < 0 || v > math.MaxInt32 {
 				return errors.New("逐阶准确越界")
@@ -108,6 +145,7 @@ func (f *Fixture) ValidateCombat() error {
 		default:
 			return errors.New("技能目标类型无效")
 		}
+		// wanted 保存期望状态所使用的文本。
 		wanted := "enemy_entity"
 		switch s.Behavior {
 		case "fencing", "spirit_sword", "slaying":
@@ -141,9 +179,11 @@ func (f *Fixture) ValidateCombat() error {
 		} else if s.AutoMinTargets < 1 {
 			return errors.New("主动自动目标数必须明确")
 		}
+		// err 接收校验攻击技能过程中可能产生的错误，供后续失败分支处理。
 		if err := f.validateAttackSkill(s); err != nil {
 			return err
 		}
+		// err 接收校验位移技能过程中可能产生的错误，供后续失败分支处理。
 		if err := f.validateDisplacementSkill(s); err != nil {
 			return err
 		}
@@ -151,8 +191,11 @@ func (f *Fixture) ValidateCombat() error {
 	return nil
 }
 
+// validateAttackSkill 校验攻击技能。
+// f 是调用该方法的开发测试配置实例，s 记录技能。
 func (f *Fixture) validateAttackSkill(s Skill) error {
 	if f.RuleVersion >= 6 {
+		// field 接收遍历文本列表时当前的元素。
 		for _, field := range []string{"activation_kind", "max_attack_bonus_by_level", "ready_proc_denominator", "ready_proc_numerators", "secondary_direction_offsets", "secondary_distance_cells", "secondary_impact_ms", "charge_window_ms", "line_cells", "line_step_ms", "line_stop_on_blocked", "non_undead_divisor"} {
 			if !s.present[field] {
 				return errors.New("v6技能专有参数必须显式输出，不能缺失或为null：" + field)
@@ -162,6 +205,7 @@ func (f *Fixture) validateAttackSkill(s Skill) error {
 			return errors.New("v6技能激活/数组/中性折减须明确")
 		}
 	}
+	// expected 保存预期结果所使用的文本。
 	expected := "cast"
 	switch s.Behavior {
 	case "fencing", "spirit_sword":
@@ -180,6 +224,7 @@ func (f *Fixture) validateAttackSkill(s Skill) error {
 		if s.ReadyProcDenominator == 0 || len(s.ReadyProcNumerators) != int(s.MaxLevel)+1 || len(s.MaxAttackBonusByLevel) != int(s.MaxLevel)+1 {
 			return errors.New("攻杀准备概率和永久攻击成长不完整")
 		}
+		// i 定位就绪“proc”“numerators”中正在处理的成员，n 接收遍历就绪“proc”“numerators”时当前的元素。
 		for i, n := range s.ReadyProcNumerators {
 			if n > s.ReadyProcDenominator || s.MaxAttackBonusByLevel[i] < 0 || s.MaxAttackBonusByLevel[i] > math.MaxInt32 {
 				return errors.New("攻杀准备概率或攻击成长越界")
@@ -190,7 +235,9 @@ func (f *Fixture) validateAttackSkill(s Skill) error {
 		if len(s.SecondaryDirectionOffsets) == 0 || len(s.SecondaryDirectionOffsets) > 8 || s.SecondaryDistanceCells < 1 || s.SecondaryDistanceCells >= f.Map.Width {
 			return errors.New("攻击模式旁格配置无效")
 		}
+		// seen 建立带初始值的按数值索引的布尔状态映射，供本段继续处理。
 		seen := map[int32]bool{}
+		// offset 接收遍历次优先朝向偏移集合时当前的元素。
 		for _, offset := range s.SecondaryDirectionOffsets {
 			if offset < -7 || offset > 7 || seen[(offset+8)%8] || offset == 0 && s.SecondaryDistanceCells == 1 {
 				return errors.New("攻击模式格子重复或覆盖普通前格")

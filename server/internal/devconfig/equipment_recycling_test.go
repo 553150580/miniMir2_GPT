@@ -1,3 +1,5 @@
+// 本文件验证自动回收和售卖合同区分显式零值、未知来源和非法支付配置。
+
 package devconfig
 
 import (
@@ -5,7 +7,10 @@ import (
 	"testing"
 )
 
+// TestEquipmentRecyclingRequiresExplicitGoldOnlyContract 核验拒绝缺失或伪造配方，用诊断「新回收合同混入旧规则版本」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestEquipmentRecyclingRequiresExplicitGoldOnlyContract(t *testing.T) {
+	// raw 接收遍历文本列表时当前的元素。
 	for _, raw := range []string{
 		`{}`, `{ "equipment_recycling": null }`,
 		`{ "equipment_recycling": {"mode":"development_gold_only"} }`,
@@ -13,20 +18,26 @@ func TestEquipmentRecyclingRequiresExplicitGoldOnlyContract(t *testing.T) {
 		`{ "equipment_recycling": {"mode":"formal","outputs":[]} }`,
 		`{ "equipment_recycling": {"mode":"development_gold_only","outputs":[{"item_id":1}]} }`,
 	} {
+		// f 记录开发测试配置。
 		var f Fixture
+		// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 		if err := json.Unmarshal([]byte(raw), &f); err != nil {
 			t.Fatal(err)
 		}
 		f.RuleVersion = 19
+		// err 接收校验装备自动回收过程中可能产生的错误，供后续失败分支处理。
 		if err := f.ValidateEquipmentRecycling(); err == nil {
 			t.Fatalf("缺失或伪造配方被接受: %s", raw)
 		}
 	}
+	// f 记录开发测试配置。
 	var f Fixture
+	// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 	if err := json.Unmarshal([]byte(`{"equipment_recycling":{"mode":"development_gold_only","outputs":[]},"items":[{"id":218,"is_equipment":true,"required_level":1,"recycle_gold":50,"drop_quality":0}]}`), &f); err != nil {
 		t.Fatal(err)
 	}
 	f.RuleVersion = 19
+	// err 接收校验装备自动回收过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateEquipmentRecycling(); err != nil {
 		t.Fatal(err)
 	}
@@ -34,17 +45,22 @@ func TestEquipmentRecyclingRequiresExplicitGoldOnlyContract(t *testing.T) {
 		t.Fatal("来源需求等级未保留")
 	}
 	f.Items[0].RequiredLevel = nil
+	// err 接收校验装备自动回收过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateEquipmentRecycling(); err == nil {
 		t.Fatal("缺需求等级被当成0级")
 	}
 	f.Items = nil
 	f.RuleVersion = 18
+	// err 接收校验装备自动回收过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateEquipmentRecycling(); err == nil {
 		t.Fatal("新回收合同混入旧规则版本")
 	}
 }
 
+// TestEquipmentRecycleZeroValuesAreNotMissingSource 核对「明确的零金币普通装备被当成未知」与「缺失来源被默认为0」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestEquipmentRecycleZeroValuesAreNotMissingSource(t *testing.T) {
+	// raw 接收遍历文本列表时当前的元素。
 	for _, raw := range []string{
 		`{"is_equipment":true,"required_level":1,"drop_quality":0}`,
 		`{"is_equipment":true,"required_level":1,"drop_quality":0,"recycle_gold":null}`,
@@ -53,7 +69,9 @@ func TestEquipmentRecycleZeroValuesAreNotMissingSource(t *testing.T) {
 		`{"is_equipment":true,"required_level":1,"recycle_gold":0,"drop_quality":5}`,
 		`{"is_equipment":true,"required_level":0,"recycle_gold":0,"drop_quality":0}`,
 	} {
+		// item 记录道具。
 		var item Item
+		// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 		if err := json.Unmarshal([]byte(raw), &item); err != nil {
 			t.Fatal(err)
 		}
@@ -61,7 +79,9 @@ func TestEquipmentRecycleZeroValuesAreNotMissingSource(t *testing.T) {
 			t.Fatalf("缺失来源被默认为0: %s", raw)
 		}
 	}
+	// item 记录道具。
 	var item Item
+	// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 	if err := json.Unmarshal([]byte(`{"is_equipment":true,"required_level":1,"recycle_gold":0,"drop_quality":0}`), &item); err != nil {
 		t.Fatal(err)
 	}

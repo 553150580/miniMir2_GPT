@@ -1,3 +1,5 @@
+// 使用真实数据库与场景回执验证保护装备、回收来源、永久幂等和在线离线收益处理。
+
 package integration
 
 import (
@@ -22,24 +24,32 @@ import (
 	"minimir/internal/wire"
 )
 
+// TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo 核对永久回收回执、原实例保护和重试时使用的来源身份。
+// t 提供断言失败报告、子用例和清理注册。
 func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("显式真实Mongo回收事务验收")
 	}
+	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 19 {
 		t.Fatal("自动回收必须使用当前rule19或以上完整配置")
 	}
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
+	// ctx 保存由“background”取得的上下文。
 	ctx := context.Background()
+	// authority 保存由打开取得的权限围栏。
 	authority, err := persistence.Open(ctx, cfg)
 	must(t, err)
+	// owner 保存由打开取得的所有者。
 	owner, err := persistence.Open(ctx, cfg)
 	must(t, err)
+	// next 保存由打开取得的下一状态。
 	next, err := persistence.Open(ctx, cfg)
 	must(t, err)
 	t.Cleanup(func() {
+		// cleanup 传递从调用方派生的上下文，供取消或控制截止时间，cancel 取消对应上下文或停止计时，释放其关联资源。
 		cleanup, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 		must(t, authority.DB.Drop(cleanup))
@@ -48,27 +58,37 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 		authority.Close(cleanup)
 	})
 	must(t, authority.Singleton(ctx, "account"))
+	// grant 保存由批准游戏取得的授予。
 	grant, err := authority.ApproveGame(ctx, cfg.NodeID, owner.Instance, cfg.RunID)
 	must(t, err)
 	owner.Epoch = grant.Epoch
+	// login 接收登录供后续步骤使用。
 	login, err := authority.Login(ctx, "recycle_"+domain.ID()[:8], "test_123456", true)
 	must(t, err)
+	// account 保存由“authenticate”取得的账号。
 	account, err := authority.Authenticate(ctx, login.AccountToken)
 	must(t, err)
+	// summary 保存由创建角色取得的“summary”。
 	summary, err := authority.CreateRole(ctx, account, &pb.CreateRoleRequest{OriginServerId: 1, Slot: 1, Job: 0, Name: "回收事务" + domain.ID()[:6], OpId: domain.Bytes(domain.ID())})
 	must(t, err)
+	// enter 封装入场对应的后续处理，store 记录持久层存储。
 	enter := func(store *persistence.Store) (domain.Role, persistence.Auth) {
+		// ticket 保存由签发入场票据取得的入场票据，err 接收签发入场票据过程中可能产生的错误，供后续失败分支处理。
 		ticket, err := authority.IssueTicket(ctx, account, summary.Key)
 		must(t, err)
+		// r 接收入场供后续步骤使用，a 保存由入场取得的a。
 		r, a, err := store.Enter(ctx, ticket.Ticket)
 		must(t, err)
 		return r, a
 	}
+	// r 接收入场供后续步骤使用，auth 保存由入场取得的授权。
 	r, auth := enter(owner)
 	if r.AutoRecycle.Enabled || r.AutoRecycle.Revision != 0 {
 		t.Fatal("新角色策略未默认关闭")
 	}
+	// wood 记录“wood”，使用道具列表表示。
 	var wood []domain.Item
+	// item 接收遍历道具集合时当前的元素。
 	for _, item := range r.Items {
 		if item.ItemID == 218 {
 			wood = append(wood, item)
@@ -77,18 +97,22 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	if len(wood) != 2 {
 		t.Fatal("当前开发初始物品前态已变更，不能伪造实例")
 	}
+	// asset 封装资产对应的后续处理，q 记录资产请求。
 	asset := func(q persistence.AssetRequest) (*pb.OperationResult, persistence.Operation) {
 		must(t, authority.Renew(ctx, "account"))
 		must(t, owner.Renew(ctx, "game"))
 		q.Context = &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: uint64(r.EconomicSeq + 1), ExpectedRevision: uint64(r.Revision), ExpectedRuleVersion: cfg.Fixture.RuleVersion}
+		// raw 保存由序列化取得的原始值，err 接收序列化过程中可能产生的错误，供后续失败分支处理。
 		raw, err := json.Marshal(q)
 		must(t, err)
 		q.Fingerprint = persistence.Hash(raw)
+		// out 保存由资产带有回执取得的输出，result 保存由资产带有回执取得的结果，receipt 保存由资产带有回执取得的回执。
 		out, result, receipt, err := owner.AssetWithReceipt(ctx, auth, q)
 		must(t, err)
 		r = out
 		return result, receipt
 	}
+	// result 保存由资产取得的结果。
 	result, _ := asset(persistence.AssetRequest{Kind: "claim_hosting"})
 	if result.ErrorCode != 0 {
 		t.Fatal(result)
@@ -97,11 +121,13 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	if result.ErrorCode != 0 {
 		t.Fatal(result)
 	}
+	// before 保存当前处理所用的操作前的状态。
 	before := r
 	result, _ = asset(persistence.AssetRequest{Kind: "recycle", ItemIDs: []string{wood[0].ID, wood[1].ID}})
 	if result.ErrorCode == 0 || !reflect.DeepEqual(r.Items, before.Items) || r.Wallet != before.Wallet || r.SourceSeq != before.SourceSeq {
 		t.Fatal("手动批回收绕过锁或部分扣物")
 	}
+	// policy 保存当前处理所用的策略。
 	policy := &pb.AutoRecyclePolicy{Enabled: true, QualityIds: []uint32{0, 1, 2, 3, 4}, ProtectedItemIds: []uint32{193}}
 	result, _ = asset(persistence.AssetRequest{Kind: "set_auto_recycle", AutoRecycle: policy})
 	if result.ErrorCode != 0 || r.AutoRecycle.Revision != 1 || !reflect.DeepEqual(r.Items, before.Items) || r.SourceSeq != 0 {
@@ -109,34 +135,45 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	}
 	policy.Revision = 1
 	before = r
+	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Kind: "set_auto_recycle", AutoRecycle: policy, ApplyExisting: true, Context: &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: uint64(r.EconomicSeq + 1), ExpectedRevision: uint64(r.Revision), ExpectedRuleVersion: cfg.Fixture.RuleVersion}}
+	// raw 保存由序列化取得的原始值。
 	raw, err := json.Marshal(q)
 	must(t, err)
 	q.Fingerprint = persistence.Hash(raw)
+	// receipt 保存由资产带有回执取得的回执。
 	r, result, receipt, err := owner.AssetWithReceipt(ctx, auth, q)
 	must(t, err)
 	if result.ErrorCode != 0 || len(r.Items) != len(before.Items)-1 || r.AutoRecycle.Revision != 2 || r.SourceSeq != before.SourceSeq || r.EconomicSeq != before.EconomicSeq+1 || r.Revision != before.Revision+1 || receipt.Recycling == nil || len(receipt.Recycling.Recycled) != 1 || receipt.Recycling.Recycled[0].ID != wood[1].ID || receipt.Recycling.BoundGold != 50 || receipt.AutoRecyclePolicy == nil || !reflect.DeepEqual(*receipt.AutoRecyclePolicy, r.AutoRecycle) {
 		t.Fatal("显式应用并非同一经济事务", r, receipt)
 	}
+	// policyAudit 记录策略审计记录，使用临时结构表示。
 	var policyAudit struct {
+		// Policy 记录策略，使用自动回收策略表示。
 		Policy domain.AutoRecyclePolicy `bson:"auto_recycle_policy"`
 	}
 	must(t, owner.DB.Collection("audit_outbox").FindOne(ctx, bson.M{"_id": receipt.ID}).Decode(&policyAudit))
 	if !reflect.DeepEqual(policyAudit.Policy, r.AutoRecycle) {
 		t.Fatal("设置审计未保存实际新策略全文")
 	}
+	// replayed 保存由资产带有回执取得的“replayed”，replay 保存由资产带有回执取得的重放。
+	// replayReceipt 保存由资产带有回执取得的重放回执。
 	replayed, replay, replayReceipt, err := owner.AssetWithReceipt(ctx, auth, q)
 	must(t, err)
 	if replay.ErrorCode != 0 || replayed.Revision != r.Revision || replayed.Wallet != r.Wallet || !reflect.DeepEqual(receipt.Recycling, replayReceipt.Recycling) {
 		t.Fatal("旧设置原op重试重复扣物或丢原回执")
 	}
+	// changed 保存当前处理所用的已变化。
 	changed := q
 	changed.Fingerprint = "changed-original-payload"
+	// err 接收资产带有回执过程中可能产生的错误，供后续失败分支处理。
 	if _, _, _, err := owner.AssetWithReceipt(ctx, auth, changed); persistence.Code(err) != p.CodeOperationConflict {
 		t.Fatal("同op内容变化未拒绝", err)
 	}
 	before = r
+	// item 组装道具所需的数据。
 	item := domain.Item{ID: domain.ID(), ItemID: 218, Quantity: 1, Version: 1, SourceKind: "monster_drop", SourceID: fmt.Sprint(r.SourceSeq + 1)}
+	// settlement 组装结算所需的数据。
 	settlement := persistence.Settlement{SourceSeq: r.SourceSeq + 1, Kills: 1, Experience: 15, Gold: 30, Bound: true, Item: &item, HostSeconds: 1, HostingSession: domain.ID(), EventAt: time.Now().UTC(), TargetHandle: 10, TargetLife: 9, CasterHandle: 1}
 	r, receipt, err = owner.SettleWithReceipt(ctx, auth, settlement)
 	must(t, err)
@@ -151,23 +188,29 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	if replayed.Revision != r.Revision || replayed.Wallet != r.Wallet || !reflect.DeepEqual(replayReceipt.Recycling, receipt.Recycling) || replayed.Report.Sequence != r.Report.Sequence {
 		t.Fatal("原来源重放重复回收/报告")
 	}
+	// changedSettlement 保存当前处理所用的已变化结算。
 	changedSettlement := settlement
 	changedSettlement.Gold++
+	// err 接收结算带有回执过程中可能产生的错误，供后续失败分支处理。
 	if _, _, err := owner.SettleWithReceipt(ctx, auth, changedSettlement); persistence.Code(err) != p.CodeOperationConflict {
 		t.Fatal("同source变化未拒绝", err)
 	}
+	// opRaw 保存由原始值取得的操作原始值。
 	opRaw, err := owner.DB.Collection("operations").FindOne(ctx, bson.M{"_id": receipt.ID}).Raw()
 	must(t, err)
 	_, err = owner.DB.Collection("operations").DeleteOne(ctx, bson.M{"_id": receipt.ID})
 	must(t, err)
+	// err 接收结算带有回执过程中可能产生的错误，供后续失败分支处理。
 	if _, _, err := owner.SettleWithReceipt(ctx, auth, settlement); persistence.Code(err) != p.CodeOperationConflict {
 		t.Fatal("新回执丢失被伪装为legacy水位", err)
 	}
 	_, err = owner.DB.Collection("operations").InsertOne(ctx, opRaw)
 	must(t, err)
+	// invalid 接收遍历数值列表时当前的元素。
 	for _, invalid := range []int64{-1, r.SourceSeq + 1} {
 		_, err = owner.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": r.ID}, bson.M{"$set": bson.M{"settlement_receipt_start_seq": invalid}})
 		must(t, err)
+		// err 接收结算带有回执过程中可能产生的错误，供后续失败分支处理。
 		if _, _, err := owner.SettleWithReceipt(ctx, auth, settlement); persistence.Code(err) != p.CodeOperationConflict {
 			t.Fatal("回执界限无效仍接受", invalid, err)
 		}
@@ -175,20 +218,27 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	_, err = owner.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": r.ID}, bson.M{"$set": bson.M{"settlement_receipt_start_seq": r.SettlementReceiptStartSeq}})
 	must(t, err)
 	// 单独角色的可达极限水位；只验证守卫，不伪造负数后继续业务。
+	// limitSummary 保存由创建角色取得的限额“summary”。
 	limitSummary, err := authority.CreateRole(ctx, account, &pb.CreateRoleRequest{OriginServerId: 1, Slot: 2, Job: 0, Name: "水位极限" + domain.ID()[:6], OpId: domain.Bytes(domain.ID())})
 	must(t, err)
+	// limitTicket 保存由签发入场票据取得的限额入场票据。
 	limitTicket, err := authority.IssueTicket(ctx, account, limitSummary.Key)
 	must(t, err)
+	// limitRole 保存由入场取得的限额角色，limitAuth 保存由入场取得的限额授权。
 	limitRole, limitAuth, err := owner.Enter(ctx, limitTicket.Ticket)
 	must(t, err)
 	_, err = owner.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": limitRole.ID}, bson.M{"$set": bson.M{"revision": int64(math.MaxInt64), "economic_command_seq": int64(math.MaxInt64)}})
 	must(t, err)
+	// kind 接收遍历文本列表时当前的元素。
 	for _, kind := range []string{"set_auto_recycle", "set_item_lock"} {
+		// request 初始化用作请求的资产请求。
 		request := persistence.AssetRequest{Kind: kind, Fingerprint: kind + "-limit", AutoRecycle: &pb.AutoRecyclePolicy{}, ItemID: limitRole.Items[0].ID, ItemVersion: 1, Locked: true, Context: &pb.OperationContext{OpId: domain.Bytes(domain.ID()), CommandSeq: uint64(math.MaxInt64) + 1, ExpectedRevision: uint64(math.MaxInt64), ExpectedRuleVersion: cfg.Fixture.RuleVersion}}
+		// err 接收资产带有回执过程中可能产生的错误，供后续失败分支处理。
 		if _, _, _, err := owner.AssetWithReceipt(ctx, limitAuth, request); persistence.Code(err) != p.CodeOperationConflict {
 			t.Fatal("资产水位溢出未先拒绝", kind, err)
 		}
 	}
+	// limited 保存由角色取得的已上限。
 	limited, err := owner.Role(ctx, limitRole.ID)
 	must(t, err)
 	if limited.Revision != math.MaxInt64 || limited.EconomicSeq != math.MaxInt64 || limited.Items[0].Version != 1 || limited.Items[0].Locked || limited.AutoRecycle.Revision != 0 {
@@ -198,10 +248,12 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	grant, err = authority.ApproveGame(ctx, cfg.NodeID, next.Instance, cfg.RunID)
 	must(t, err)
 	next.Epoch = grant.Epoch
+	// cold 保存由入场取得的“cold”，nextAuth 保存由入场取得的下一状态授权。
 	cold, nextAuth := enter(next)
 	if !reflect.DeepEqual(cold.AutoRecycle, r.AutoRecycle) || !cold.Items[0].Locked || cold.Items[0].ID != wood[0].ID || cold.Wallet != r.Wallet {
 		t.Fatal("冷owner未保留策略/锁/实际收益")
 	}
+	// err 接收结算带有回执过程中可能产生的错误，供后续失败分支处理。
 	if _, _, err := owner.SettleWithReceipt(ctx, auth, persistence.Settlement{SourceSeq: r.SourceSeq + 1}); persistence.Code(err) != p.CodeRouteChanged {
 		t.Fatal("旧owner仍可写回收", err)
 	}
@@ -210,6 +262,7 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	if replayed.Revision != cold.Revision || replayed.Wallet != cold.Wallet || !reflect.DeepEqual(replayReceipt.Recycling, receipt.Recycling) {
 		t.Fatal("冷owner重放未使用原资产结果")
 	}
+	// count 保存由数量文档取得的数量。
 	count, err := owner.DB.Collection("audit_outbox").CountDocuments(ctx, bson.M{"_id": receipt.ID})
 	must(t, err)
 	if count != 1 {
@@ -218,10 +271,13 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 	t.Logf("真实事务通过：策略revision=%d，EconomicSeq=%d，SourceSeq=%d；原bound保留、原回执重查、typed receipt防缺失、冷owner旧围栏", cold.AutoRecycle.Revision, cold.EconomicSeq, cold.SourceSeq)
 }
 
+// TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS 检查客户端更新回收策略和锁定状态后，在线及离线收益的处理结果。
+// t 提供断言失败报告、子用例和清理注册。
 func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("显式真实Mongo/WS自动回收闭环")
 	}
+	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 19 {
@@ -230,6 +286,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	// 仅本次随机库的容量/战斗前态：正常Create产生30木剑+布衣+职业书填满32格，怪物1HP/0攻/0敏。
 	// 正常注册/创角/拾取/所有设置仍经实际协议，不向角色背包注入实例或操作结果。
 	cfg.Fixture.InitialInventory = make([]uint32, 31)
+	// i 标记遍历初始值背包资产时访问的下标。
 	for i := range cfg.Fixture.InitialInventory {
 		cfg.Fixture.InitialInventory[i] = 218
 	}
@@ -239,18 +296,24 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	cfg.Fixture.Monsters[0].AttackMin = 0
 	cfg.Fixture.Monsters[0].AttackMax = 0
 	cfg.Fixture.Monsters[0].Agility = 0
+	// raw 保存由序列化取得的原始值。
 	raw, err := json.Marshal(cfg.Fixture)
 	must(t, err)
 	cfg.Fixture.Hash = persistence.Hash(raw)
 	must(t, cfg.Fixture.Validate())
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
+	// ctx 传递从调用方派生的上下文，供取消或控制截止时间，cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithCancel(context.Background())
+	// group 记录分组，使用协程汇合计数器表示。
 	var group sync.WaitGroup
+	// inspection 保存由打开取得的检查。
 	inspection, err := persistence.Open(ctx, cfg)
 	must(t, err)
+	// mode 接收遍历文本列表时当前的元素。
 	for _, mode := range []string{"account", "game", "gm"} {
 		group.Go(func() {
+			// err 接收运行批次过程中可能产生的错误，供后续失败分支处理。
 			if err := bootstrap.Run(ctx, cfg, mode); err != nil && ctx.Err() == nil {
 				t.Errorf("自动回收%s节点:%v", mode, err)
 			}
@@ -259,28 +322,42 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	t.Cleanup(func() {
 		cancel()
 		group.Wait()
+		// cleanup 传递从调用方派生的上下文，供取消或控制截止时间，stop 取消对应上下文或停止计时，释放其关联资源。
 		cleanup, stop := context.WithTimeout(context.Background(), 10*time.Second)
 		defer stop()
 		must(t, inspection.DB.Drop(cleanup))
 		inspection.Close(cleanup)
 	})
+	// a 接收遍历文本列表时当前的元素。
 	for _, a := range []string{cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress} {
 		healthy(t, a)
 	}
+	// endpoint 保存根据当前数据与账号地址的计算结果与当前数据计算的端点。
 	endpoint := "http://" + cfg.AccountAddress + "/rpc"
+	// login 保存当前处理所用的登录。
 	login := &pb.LoginResult{}
 	rpc(t, endpoint, "", p.MsgC2SLocalRegister, &pb.LocalLoginRequest{Account: "recycle_ws_" + domain.ID()[:8], Password: "test_123456"}, login, 0)
+	// role 保存当前处理所用的角色。
 	role := &pb.RoleSummary{}
 	rpc(t, endpoint, login.AccountToken, p.MsgC2SCreateRole, &pb.CreateRoleRequest{OriginServerId: 1, Slot: 1, Job: 0, Name: "自动回收" + domain.ID()[:6], OpId: domain.Bytes(domain.ID())}, role, 0)
+	// roleID 标识当前业务使用的角色。
 	roleID := domain.Hex(role.Key.RoleId)
+	// events 记录事件集合，使用装备回收结果列表表示。
 	var events []*pb.EquipmentRecycleResult
+	// phase 保存阶段所使用的文本。
 	phase := "enter"
+	// attacks 规定攻击集合的初始取值，positiveImpacts 规定“positive”“impacts”的初始取值。
 	attacks, positiveImpacts := 0, 0
+	// pendingAttacks 初始化用作待确认攻击集合的按数值索引的布尔状态映射。
 	pendingAttacks := map[uint32]bool{}
+	// observedDeaths 建立带初始值的按文本索引的布尔状态映射，供本段继续处理。
 	observedDeaths := map[string]bool{}
+	// lastExperienceSource 保存由无符号整数“64”取得的上一次状态经验来源。
 	lastExperienceSource := uint64(0)
+	// observe 封装观测对应的后续处理，c 记录客户端，f 记录协议帧。
 	observe := func(c *client, f wire.Frame) {
 		if f.Error == 0 && f.ID == p.MsgS2CSceneBaseline && c.scene != nil {
+			// body 接收遍历实体时当前的元素。
 			for _, body := range c.scene.Entities {
 				if body.EntityKind == 3 && body.Hp == 0 {
 					observedDeaths[fmt.Sprintf("%d:%d", body.EntityHandle, body.Life)] = true
@@ -288,6 +365,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 			}
 		}
 		if f.Error == 0 && f.ID == p.MsgS2CExperienceGrantResult {
+			// grant 记录授予，使用经验赋予道具或权限结果表示。
 			var grant pb.ExperienceGrantResult
 			must(t, proto.Unmarshal(f.Payload, &grant))
 			if grant.RawExperience > 0 && grant.SourceSeq > lastExperienceSource {
@@ -296,6 +374,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		}
 		if f.Error == 0 && f.ID == p.MsgS2CAttackAccepted {
 			attacks++
+			// attack 记录攻击，使用攻击已受理表示。
 			var attack pb.AttackAccepted
 			must(t, proto.Unmarshal(f.Payload, &attack))
 			if attack.CasterHandle == c.entry.GetPlayerHandle() && attack.TargetHandle != 0 {
@@ -306,6 +385,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 			}
 		}
 		if f.Error == 0 && f.ID == p.MsgS2CCombatImpact {
+			// hit 记录命中，使用战斗命中影响表示。
 			var hit pb.CombatImpact
 			must(t, proto.Unmarshal(f.Payload, &hit))
 			if hit.CasterHandle == c.entry.GetPlayerHandle() && hit.AttackSequence != 0 {
@@ -316,6 +396,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 			}
 		}
 		if f.Error == 0 && f.ID == p.MsgS2CEquipmentRecycleResult {
+			// x 记录装备回收结果。
 			var x pb.EquipmentRecycleResult
 			must(t, proto.Unmarshal(f.Payload, &x))
 			if c.inventory == nil || c.inventory.Revision < x.RoleRevision || !reflect.DeepEqual(x.Role.RoleId, role.Key.RoleId) {
@@ -324,8 +405,10 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 			events = append(events, &x)
 		}
 	}
+	// c 接收加入供后续步骤使用。
 	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observe)
 	defer func() { c.close() }()
+	// stopAutoAndDrain 封装停止自动“and”收束对应的后续处理。
 	stopAutoAndDrain := func() {
 		c.auto(false, 8)
 		for len(pendingAttacks) > 0 {
@@ -333,7 +416,9 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		}
 		// Impact早于事件批末的死亡基线；先用同请求基线越过此前全部帧，
 		// 不把该请求本身当永久Pending屏障。
+		// request 保存由发送取得的请求。
 		request := c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, CancelNavigation: true})
+		// f 记录协议帧。
 		c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && f.Request == request })
 		// 此段新角色无施法/绑定来源，在线SourceSeq仅为实际kill；以刚刚
 		// 完整观察到的原怪死亡数等EXP确认，不在命中后猜永久Pending已完成。
@@ -346,6 +431,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	}
 	defer func() {
 		if t.Failed() {
+			// stored 保存由角色取得的已持久保存，e 接收角色供后续步骤使用。
 			stored, e := inspection.Role(context.Background(), roleID)
 			t.Logf("失败观察 phase=%s attacks=%d positive_impacts=%d recycle_events=%d player=%v hosting=%v inventory_revision=%d bag=%d policy=%v；永久role_read_error=%v rev=%d source=%d econ=%d no_equipment_kills=%d pickup_stopped=%t bag=%d report=%+v", phase, attacks, positiveImpacts, len(events), c.player(), c.hosting, c.inventory.GetRevision(), len(c.inventory.GetItems()), c.inventory.GetAutoRecycle(), e, stored.Revision, stored.SourceSeq, stored.EconomicSeq, stored.NoEquipmentKills, stored.PickupStopped, len(stored.Items), stored.Report)
 		}
@@ -356,7 +442,9 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	}
 	// 来源level1战士空手DC=0，正常装备原木剑才具备杀怪前态；不改最低伤害。
 	phase = "equip_original_wood"
+	// wornID 标识当前业务使用的“worn”。
 	wornID := append([]byte(nil), c.inventory.Items[0].InstanceId...)
+	// res 保存由资产取得的结果。
 	res := c.asset(p.MsgC2SEquip, &pb.EquipRequest{ItemInstanceId: wornID, Slot: 0, ItemVersion: c.inventory.Items[0].Version, Operation: c.operation()})
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
@@ -371,8 +459,10 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		t.Fatal(res)
 	}
 	c.inventoryAt(res.NewRevision)
+	// untilResult 封装有效截止时间结果对应的后续处理，predicate 记录“predicate”，使用供当前流程调用的函数表示。
 	untilResult := func(predicate func(*pb.EquipmentRecycleResult) bool) *pb.EquipmentRecycleResult {
 		for {
+			// x 接收遍历事件集合时当前的元素。
 			for _, x := range events {
 				if predicate(x) {
 					return x
@@ -383,17 +473,21 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	}
 	c.auto(true, 8)
 	phase = "default_policy_wait_actual_full_discard"
+	// discard 保存由有效截止时间结果取得的丢弃，x 记录装备回收结果。
 	discard := untilResult(func(x *pb.EquipmentRecycleResult) bool { return x.Trigger == 1 && x.DiscardedCount == 1 })
+	// full 保存由角色取得的满额。
 	full, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	if !full.PickupStopped || full.SourceSeq < int64(discard.SourceSeq) || discard.DiscardReason != "bag_full" || discard.RecycledCount != 0 || c.hosting == nil || !c.hosting.AutoBattleEnabled {
 		t.Fatal("默认关闭未真实弃物，或满包关闭了Auto", full, discard)
 	}
 	phase = "full_bag_continues_actual_kill_experience"
+	// continued 保存由有效截止时间取得的“continued”，f 记录协议帧。
 	continued := c.until(func(f wire.Frame) bool {
 		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
 			return false
 		}
+		// grant 记录授予，使用经验赋予道具或权限结果表示。
 		var grant pb.ExperienceGrantResult
 		must(t, proto.Unmarshal(f.Payload, &grant))
 		return grant.SourceSeq > discard.SourceSeq && grant.AcceptedExperience > 0
@@ -406,12 +500,15 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		t.Fatal("首弃物后未继续原kill/EXP，或正常关闭Auto失效", full)
 	}
 	// 仍未腾格，使用正常意图重新开启，必须成功且再产生真实kill确认。
+	// beforeRestart 保存持久收益来源序号，用于当前步骤中的操作前的状态“restart”。
 	beforeRestart := full.SourceSeq
 	c.auto(true, 8)
+	// f 记录协议帧。
 	c.until(func(f wire.Frame) bool {
 		if f.ID != p.MsgS2CExperienceGrantResult || f.Error != 0 {
 			return false
 		}
+		// grant 记录授予，使用经验赋予道具或权限结果表示。
 		var grant pb.ExperienceGrantResult
 		must(t, proto.Unmarshal(f.Payload, &grant))
 		return grant.SourceSeq > uint64(beforeRestart) && grant.AcceptedExperience > 0
@@ -419,7 +516,9 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	stopAutoAndDrain()
 	full, err = inspection.Role(ctx, roleID)
 	must(t, err)
+	// wood 记录“wood”，使用道具观察视图列表表示。
 	var wood []*pb.ItemView
+	// item 接收遍历道具集合时当前的元素。
 	for _, item := range c.inventory.Items {
 		if item.ItemId == 218 {
 			wood = append(wood, item)
@@ -428,20 +527,24 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	if len(wood) < 29 || len(wood) > 30 {
 		t.Fatal("正常穿戴/首件实际拾取后，容量夹具木剑数错误", len(wood))
 	}
+	// expectedSweep 保存由无符号整数“64”取得的预期结果“sweep”。
 	expectedSweep := uint64(len(wood) - 1)
 	phase = "lock_original_and_save_future_policy"
+	// lock 保存当前处理所用的锁定。
 	lock := &pb.SetItemLockRequest{ItemInstanceId: wood[0].InstanceId, ItemVersion: wood[0].Version, Locked: true, Operation: c.operation()}
 	res = c.asset(p.MsgC2SSetItemLock, lock)
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
 	}
 	c.inventoryAt(res.NewRevision)
+	// policy 保存当前处理所用的策略。
 	policy := &pb.AutoRecyclePolicy{Enabled: true, QualityIds: []uint32{0}, ProtectedItemIds: []uint32{193}}
 	res = c.asset(p.MsgC2SSetAutoRecycle, &pb.SetAutoRecycleRequest{Policy: policy, Operation: c.operation()})
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
 	}
 	c.inventoryAt(res.NewRevision)
+	// unchanged 保存由角色取得的“unchanged”。
 	unchanged, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	if !unchanged.PickupStopped || unchanged.SourceSeq != full.SourceSeq || len(unchanged.Items) != len(full.Items) || unchanged.AutoRecycle.Revision != 1 {
@@ -449,13 +552,16 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	}
 	policy = proto.Clone(c.inventory.AutoRecycle).(*pb.AutoRecyclePolicy)
 	phase = "explicit_apply_existing"
+	// apply 保存当前处理所用的应用。
 	apply := &pb.SetAutoRecycleRequest{Policy: policy, ApplyExisting: true, Operation: c.operation()}
 	res = c.asset(p.MsgC2SSetAutoRecycle, apply)
 	if res.ErrorCode != 0 {
 		t.Fatal(res)
 	}
 	c.inventoryAt(res.NewRevision)
+	// applied 保存由有效截止时间结果取得的“applied”，x 记录装备回收结果。
 	applied := untilResult(func(x *pb.EquipmentRecycleResult) bool { return x.Trigger == 2 && x.RoleRevision == res.NewRevision })
+	// released 保存由角色取得的“released”。
 	released, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	if released.PickupStopped || c.hosting.AutoBattleEnabled || len(released.Items) != len(full.Items)-int(expectedSweep) || applied.RecycledCount != expectedSweep || applied.BoundGold != int64(expectedSweep)*50 || applied.Gold != 0 || released.SourceSeq != full.SourceSeq || released.AutoRecycle.Revision != 2 {
@@ -464,33 +570,40 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 	if len(released.Equipped) != 1 || released.Equipped[0].Item.ID != domain.Hex(wornID) {
 		t.Fatal("自动回收消耗了穿戴原件")
 	}
+	// item 接收遍历道具集合时当前的元素。
 	for _, item := range c.inventory.Items {
 		if reflect.DeepEqual(item.InstanceId, wood[0].InstanceId) && (!item.Locked || item.RecycleBlockFlags&1 == 0) {
 			t.Fatal("锁定状态未投影")
 		}
 	}
+	// beforeSource 保存持久收益来源序号，用于当前步骤中的操作前的状态来源。
 	beforeSource := released.SourceSeq
 	// 此时Auto仍关闭；正常健康票重入续同一现场，并给下一段完整观察预算。
 	c.close()
 	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observe)
 	c.auto(true, 8)
 	phase = "online_wait_normal_equipment_or_20_kill_guarantee"
+	// online 保存由有效截止时间结果取得的在线，x 记录装备回收结果。
 	online := untilResult(func(x *pb.EquipmentRecycleResult) bool {
 		return x.Trigger == 1 && x.RecycledCount == 1 && x.SourceSeq > uint64(beforeSource)
 	})
+	// onlineRole 保存由角色取得的在线角色。
 	onlineRole, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	if online.Gold+online.BoundGold != 50 || onlineRole.Report.Sequence != 0 || onlineRole.PickupStopped {
 		t.Fatal("在线直接回收未使用原规则或污染离线报告", online, onlineRole)
 	}
+	// beforeLife 保存生命代次，用于当前步骤中的操作前的状态生命代次。
 	beforeLife := c.player().Life
 	c.close()
 	phase = "offline_wait_normal_equipment_or_20_kill_guarantee"
 	// 保持原65/20/10/5与20杀保底、原动作和10秒复活；这是测试整体观察上限，不改业务deadline。
 	deadline := time.NewTimer(90 * time.Second)
 	defer deadline.Stop()
+	// poll 保存由创建“ticker”取得的“poll”。
 	poll := time.NewTicker(30 * time.Millisecond)
 	defer poll.Stop()
+	// offline 记录离线，使用角色表示。
 	var offline domain.Role
 waiting:
 	for {
@@ -509,19 +622,30 @@ waiting:
 		t.Fatal("离线未逐事件共用回收或报告把样本当总量", offline.Report)
 	}
 	// 按该原HostingSession和已提交SourceSeq截面重算真实审计，不能把kill数猜成物品数。
+	// cursor 保存由查找取得的游标。
 	cursor, err := inspection.DB.Collection("audit_outbox").Find(ctx, bson.M{"role_id": roleID, "kind": "settlement", "hosting_session": offline.Report.SessionID, "source_seq": bson.M{"$lte": offline.SourceSeq}})
 	must(t, err)
+	// rows 记录“rows”，使用临时结构列表表示。
 	var rows []struct {
-		Kills       int64                         `bson:"kills"`
-		Experience  int64                         `bson:"experience"`
-		Gold        int64                         `bson:"gold"`
-		Bound       bool                          `bson:"bound"`
-		Item        *domain.Item                  `bson:"item"`
-		HostSeconds int64                         `bson:"host_seconds"`
-		Details     persistence.SettlementReceipt `bson:"settlement"`
+		// Kills 记录击杀集合，使用数值表示。
+		Kills int64 `bson:"kills"`
+		// Experience 记录经验，使用数值表示。
+		Experience int64 `bson:"experience"`
+		// Gold 记录金币，使用数值表示。
+		Gold int64 `bson:"gold"`
+		// Bound 标记是否处于绑定状态。
+		Bound bool `bson:"bound"`
+		// Item 记录道具。
+		Item *domain.Item `bson:"item"`
+		// HostSeconds 记录网络主机或托管秒集合，使用数值表示。
+		HostSeconds int64 `bson:"host_seconds"`
+		// Details 记录“details”，使用结算回执表示。
+		Details persistence.SettlementReceipt `bson:"settlement"`
 	}
 	must(t, cursor.All(ctx, &rows))
+	// expected 初始化用作预期结果的报告或战报。
 	expected := domain.Report{}
+	// row 接收遍历“rows”时当前的元素。
 	for _, row := range rows {
 		expected.Kills += row.Kills
 		expected.Experience += row.Experience
@@ -530,6 +654,7 @@ waiting:
 		if row.Item != nil {
 			expected.TotalDropCount++
 		}
+		// rec 保存自动回收，用于当前步骤中的“rec”。
 		rec := row.Details.Recycling
 		expected.RecycleCount += int64(len(rec.Recycled))
 		expected.RecycleGold += rec.Gold
@@ -546,10 +671,12 @@ waiting:
 			expected.Drops = append(expected.Drops, *row.Item)
 		}
 	}
+	// got 保存报告或战报，用于当前步骤中的实际结果。
 	got := offline.Report
 	if got.Kills != expected.Kills || got.Experience != expected.Experience || got.UsedSeconds != expected.UsedSeconds || got.Sequence != expected.Sequence || got.TotalDropCount != expected.TotalDropCount || got.RecycleCount != expected.RecycleCount || got.RecycleGold != expected.RecycleGold || got.RecycleBoundGold != expected.RecycleBoundGold || got.DiscardCount != expected.DiscardCount || got.Earned != expected.Earned || len(got.Drops) != len(expected.Drops) {
 		t.Fatal("战报不等于原来源已提交审计截面", got, expected)
 	}
+	// previousEvents 记录事件集合中的条目数。
 	previousEvents := len(events)
 	phase = "healthy_reentry_no_historical_replay"
 	c = join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), observe)
@@ -557,11 +684,13 @@ waiting:
 	if c.player().Life != beforeLife || c.inventory.AutoRecycle.Revision != 2 || c.report.RecycleCount < uint64(offline.Report.RecycleCount) {
 		t.Fatal("健康重入丢策略/生命/报告或补播历史回收")
 	}
+	// event 接收遍历事件集合中的范围时当前的元素。
 	for _, event := range events[previousEvents:] {
 		if event.SourceSeq <= uint64(offline.SourceSeq) {
 			t.Fatal("健康重入补播旧回收", event)
 		}
 	}
+	// healthyRole 保存由角色取得的健康角色。
 	healthyRole, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	res = c.asset(p.MsgC2SSetItemLock, lock)
@@ -569,6 +698,7 @@ waiting:
 		t.Fatal("原锁op健康票重放失败", res)
 	}
 	c.inventoryAt(res.NewRevision)
+	// final 保存由角色取得的最终状态。
 	final, err := inspection.Role(ctx, roleID)
 	must(t, err)
 	if final.AutoRecycle.Revision != 2 || final.Items[0].Version != 2 || !final.Items[0].Locked || final.Wallet != healthyRole.Wallet {

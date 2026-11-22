@@ -1,3 +1,5 @@
+// 提供历史城镇兼容测试的配置辅助，按旧版地图、旅行协议和寻路预算冻结测试条件。
+
 package integration
 
 import (
@@ -7,11 +9,15 @@ import (
 )
 
 // 历史WS回归沿用目录保留的原图与原区坐标，并固定旧旅行协议及大图寻路预算。
+// t 提供断言失败报告、子用例和清理注册。
 func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	t.Helper()
+	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
+	// f 保存当前处理所用的开发测试配置。
 	f := &cfg.Fixture
+	// legacy 保存由地图“by”标识取得的兼容旧数据，exists 保存由地图“by”标识取得的存在。
 	legacy, exists := f.MapByID(f.TownTravel.TownMapID)
 	if !exists || legacy.CompactTown || legacy.Source == nil {
 		t.Fatal("当前目录缺少供兼容回归使用的完整历史地图")
@@ -25,6 +31,7 @@ func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	f.EquipmentDurability = nil
 	f.Hash = persistence.Hash([]byte(f.Hash + ":historical-town-rule23-test"))
 	f.TownTravel.DestinationMapIDs = nil
+	// n 保存当前处理所用的城镇导航。
 	n := f.TownNavigation
 	n.WorkPerTask, n.WorkPerWorkerTick = 1024, 8192
 	n.MaxExpanded, n.MaxFrontier, n.MaxRouteCells = 490000, 65536, 4096

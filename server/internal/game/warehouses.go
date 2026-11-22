@@ -1,3 +1,4 @@
+// 本文件经数据库执行仓库分页查询，仅向原场景与原附着返还有效结果。
 package game
 
 import (
@@ -11,11 +12,14 @@ import (
 	"time"
 )
 
+// warehouseQuery 处理仓库查询。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，f 记录协议帧。
 func (w *worker) warehouseQuery(r *room, f wire.Frame) {
 	if r.PreviewInFlight {
 		w.failure(r, f, p.CodeOperationPending)
 		return
 	}
+	// q 保存当前处理所用的仓库查询。
 	q := &pb.WarehouseQuery{}
 	if proto.Unmarshal(f.Payload, q) != nil || len(q.ProtoReflect().GetUnknown()) != 0 {
 		w.failure(r, f, p.CodeInvalidArgument)
@@ -27,9 +31,13 @@ func (w *worker) warehouseQuery(r *room, f wire.Frame) {
 	}
 	r.PreviewGeneration++
 	r.PreviewInFlight = true
+	// b 建立带初始值的技能预览会话绑定，供本段继续处理。
 	b := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
+	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{target: w, run: func() func(*worker) {
+		// page 保存由查询仓库取得的页面或分页，err 接收查询仓库过程中可能产生的错误，供后续失败分支处理。
 		page, err := w.e.Store.QueryWarehouse(w.e.ctx, b.auth, q)
+		// w 记录房间执行器。
 		return func(w *worker) { w.finishWarehouseQuery(b, f, page, err) }
 	}}
 	if !w.submit(j) {
@@ -37,7 +45,11 @@ func (w *worker) warehouseQuery(r *room, f wire.Frame) {
 		w.failure(r, f, p.CodeServerBusy)
 	}
 }
+
+// finishWarehouseQuery 完成仓库查询。
+// w 是调用该方法的房间执行器实例，b 记录b，使用技能预览会话绑定表示，f 记录协议帧，page 记录页面或分页，使用仓库页面或分页表示，err 保存当前操作的失败原因，供调用方检查或返回。
 func (w *worker) finishWarehouseQuery(b skillPreviewBinding, f wire.Frame, page *pb.WarehousePage, err error) {
+	// r 保存当前处理所用的房间。
 	r := b.room
 	if r.PreviewGeneration != b.generation || !r.PreviewInFlight {
 		return

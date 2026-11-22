@@ -1,3 +1,5 @@
+// 验证普通与特殊修理计划、费用计算、耐久状态和实例版本条件。
+
 package persistence
 
 import (
@@ -10,6 +12,7 @@ import (
 	p "minimir/internal/protocol"
 )
 
+// repairFixture 返回修理开发测试配置供调用方使用。
 func repairFixture() *devconfig.Fixture {
 	return &devconfig.Fixture{
 		EquipmentDurability: &devconfig.EquipmentDurabilityRules{
@@ -21,45 +24,64 @@ func repairFixture() *devconfig.Fixture {
 	}
 }
 
+// TestEquipmentRepairUsesExactDeficitAndPreservesBinding 核对「修理未只改原实例的上限、耐久、版本及原报价钱包」与「普通修理报价、修后上限或穿戴槽错误」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestEquipmentRepairUsesExactDeficitAndPreservesBinding(t *testing.T) {
+	// f 接收修理开发测试配置供后续步骤使用。
 	f := repairFixture()
+	// item 组装道具所需的数据。
 	item := domain.Item{ID: domain.ID(), ItemID: 218, Quantity: 1, Version: 3, Bound: true, Locked: true, SourceKind: "npc_shop", SourceID: "source", OriginalDurabilityU: 4000, MaxDurabilityU: 3900, DurabilityU: 1800}
+	// role 组装角色所需的数据。
 	role := domain.Role{Equipped: []domain.Equipped{{Slot: 0, Item: item}}, Wallet: domain.Wallet{BoundGold: 2, Gold: 10, BoundYuanbao: 3, Yuanbao: 10}}
+	// ordinary 保存由构建修理计划取得的“ordinary”，code 保存由构建修理计划取得的结果码。
 	ordinary, code := BuildRepairPlan(role, f, f.EquipmentDurability.Ordinary, item.ID, 3)
 	if code != 0 || !ordinary.Equipped || ordinary.Slot != 0 || ordinary.After.DurabilityU != 3830 || ordinary.After.MaxDurabilityU != 3830 ||
 		ordinary.After.OriginalDurabilityU != 4000 || ordinary.Spend != (domain.Wallet{BoundGold: 2, Gold: 1}) {
 		t.Fatalf("普通修理报价、修后上限或穿戴槽错误: %+v，状态%d", ordinary, code)
 	}
+	// after 保存由应用修理计划取得的操作后的状态。
 	after, code := ApplyRepairPlan(role, ordinary)
+	// expected 保存当前处理所用的预期结果。
 	expected := item
 	expected.DurabilityU, expected.MaxDurabilityU, expected.Version = 3830, 3830, 4
 	if code != 0 || after.Equipped[0].Item != expected || role.Equipped[0].Item != item || after.Wallet != (domain.Wallet{Gold: 9, BoundYuanbao: 3, Yuanbao: 10}) {
 		t.Fatal("修理未只改原实例的上限、耐久、版本及原报价钱包")
 	}
+	// again 保存由应用修理计划取得的“again”，code 保存由应用修理计划取得的结果码。
 	if again, code := ApplyRepairPlan(after, ordinary); code != p.CodeEquipmentChanged || !reflect.DeepEqual(after, again) {
 		t.Fatal("旧计划重复扣款或覆盖了新耐久")
 	}
 	role.Equipped, role.Items = nil, []domain.Item{item}
+	// special 保存由构建修理计划取得的特殊。
 	special, code := BuildRepairPlan(role, f, *f.EquipmentDurability.Special, item.ID, 3)
 	if code != 0 || special.Equipped || special.After.DurabilityU != 3900 || special.After.MaxDurabilityU != 3900 ||
 		special.Spend != (domain.Wallet{BoundYuanbao: 3, Yuanbao: 8}) {
 		t.Fatalf("特殊修理报价、背包身份或上限错误: %+v，状态%d", special, code)
 	}
 	role.Wallet.Yuanbao = 0
+	// denied 保存由应用修理计划取得的“denied”，code 保存由应用修理计划取得的结果码。
 	if denied, code := ApplyRepairPlan(role, special); code != p.CodeEquipmentBlocked || !reflect.DeepEqual(denied, role) {
 		t.Fatal("余额不足仍然扣款或修改了原实例")
 	}
+	// fee 保存由修理消耗取得的“fee”。
 	if fee := repairCost(math.MaxInt64-1, math.MaxInt64, math.MaxInt64); fee != math.MaxInt64-1 {
 		t.Fatalf("大整数比例费用溢出: %d", fee)
 	}
 }
 
+// TestDurabilityHydrationDoesNotRepairBrokenEquipment 核对「旧无耐久实例初始化、已损坏0值保留或背包/穿戴投影错误」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestDurabilityHydrationDoesNotRepairBrokenEquipment(t *testing.T) {
+	// f 接收修理开发测试配置供后续步骤使用。
 	f := repairFixture()
+	// old 初始化用作原状态的道具。
 	old := domain.Item{ID: domain.ID(), ItemID: 218, Quantity: 1, Version: 1}
+	// broken 保存由“initialize”道具耐久取得的“broken”。
 	broken := InitializeItemDurability(old, f)
 	broken.ID, broken.DurabilityU, broken.MaxDurabilityU = domain.ID(), 0, 3970
+	// r 组装角色所需的数据。
 	r := domain.Role{Items: []domain.Item{old}, Equipped: []domain.Equipped{{Slot: 0, Item: broken}}}
+	// loaded 保存由“hydrate”角色耐久取得的已加载。
 	loaded := hydrateRoleDurability(r, f)
 	if loaded.Items[0].DurabilityU != 4000 || loaded.Items[0].OriginalDurabilityU != 4000 || loaded.Items[0].Version != old.Version ||
 		loaded.Equipped[0].Item != broken || r.Items[0] != old || loaded.Inventory().Equipped[0].Item.OriginalDurabilityU != 4000 || loaded.Inventory().Equipped[0].Item.DurabilityU != 0 {
@@ -67,21 +89,34 @@ func TestDurabilityHydrationDoesNotRepairBrokenEquipment(t *testing.T) {
 	}
 }
 
+// TestEquipmentWearReceiptPinsExactInstanceAndDeath 核对「合批未精确应用，或损坏时销毁/修改了原实例身份」与「版本变化或死亡身份不匹配仍应用了旧成本」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestEquipmentWearReceiptPinsExactInstanceAndDeath(t *testing.T) {
+	// f 接收修理开发测试配置供后续步骤使用。
 	f := repairFixture()
+	// item 保存由“initialize”道具耐久取得的道具。
 	item := InitializeItemDurability(domain.Item{ID: domain.ID(), ItemID: 218, Quantity: 1, Version: 1, Bound: true}, f)
 	item.DurabilityU = 3
+	// role 组装角色所需的数据。
 	role := domain.Role{Equipped: []domain.Equipped{{Slot: 0, Item: item}}}
+	// death 保存由标识取得的死亡。
 	death := domain.ID()
+	// costs 建立带初始值的装备磨损列表，供本段继续处理。
 	costs := []EquipmentWear{{Slot: 0, InstanceID: item.ID, Version: 1, AttackU: 1, DeathU: 2}}
+	// after 保存由应用装备磨损取得的操作后的状态，proof 保存由应用装备磨损取得的“proof”。
+	// err 接收应用装备磨损过程中可能产生的错误，供后续失败分支处理。
 	after, proof, err := applyEquipmentWear(role, costs, death, f)
 	if err != nil || len(proof) != 1 || proof[0].Before != item || proof[0].After.ID != item.ID || !proof[0].After.Bound || after.Equipped[0].Item.DurabilityU != 0 || after.Equipped[0].Item.Version != 2 || role.Equipped[0].Item != item {
 		t.Fatal("合批未精确应用，或损坏时销毁/修改了原实例身份", proof, err)
 	}
+	// invalid 接收遍历临时结构列表时当前的元素。
 	for _, invalid := range []struct {
-		role  domain.Role
+		// role 记录角色。
+		role domain.Role
+		// death 记录死亡，使用文本表示。
 		death string
 	}{{after, death}, {role, ""}, {role, "错误"}} {
+		// got 保存由应用装备磨损取得的实际结果，proof 保存由应用装备磨损取得的“proof”，err 接收应用装备磨损过程中可能产生的错误，供后续失败分支处理。
 		got, proof, err := applyEquipmentWear(invalid.role, costs, invalid.death, f)
 		if err == nil || len(proof) != 0 || !reflect.DeepEqual(got, invalid.role) {
 			t.Fatal("版本变化或死亡身份不匹配仍应用了旧成本")

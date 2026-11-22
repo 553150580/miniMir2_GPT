@@ -1,3 +1,4 @@
+// 本文件覆盖换图计划、停更、原场景事件、提交、撤销、重放历史及确认超时的完整状态机。
 package game
 
 import (
@@ -14,40 +15,68 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// travelConnection 保存地图切换连接所需的状态。
 type travelConnection struct {
+	// capturedConnection 提供嵌入的已捕获连接能力。
 	capturedConnection
-	alive   bool
+	// alive 标记是否处于存活状态状态。
+	alive bool
+	// binding 携带连接上的会话代次，用于防止旧连接命令被接受。
 	binding uint64
-	closed  []string
+	// closed 记录“closed”，使用文本列表表示。
+	closed []string
 }
 
-func (c *travelConnection) Alive() bool         { return c.alive }
-func (c *travelConnection) Binding() uint64     { return c.binding }
+// Alive 判断存活状态是否满足要求。
+// c 是调用该方法的地图切换连接实例。
+func (c *travelConnection) Alive() bool { return c.alive }
+
+// Binding 返回会话绑定供调用方使用。
+// c 是调用该方法的地图切换连接实例。
+func (c *travelConnection) Binding() uint64 { return c.binding }
+
+// SetBinding 设置会话绑定。
+// c 是调用该方法的地图切换连接实例，v 记录数值。
 func (c *travelConnection) SetBinding(v uint64) { c.binding = v }
+
+// Close 关闭当前请求或状态，并把结果交给调用方。
+// c 是调用该方法的地图切换连接实例，reason 记录原因，使用文本表示。
 func (c *travelConnection) Close(reason string) {
 	c.alive = false
 	c.closed = append(c.closed, reason)
 }
 
+// travelID 返回地图切换标识供调用方使用。
+// n 记录数值。
 func travelID(n int) string { return fmt.Sprintf("%032x", n) }
 
+// travelWorker 处理地图切换房间执行器。
+// t 提供断言失败报告、子用例和清理注册。
 func travelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time) {
 	t.Helper()
+	// w 接收地图地图切换房间执行器供后续步骤使用，r 接收地图地图切换房间执行器供后续步骤使用，c 接收地图地图切换房间执行器供后续步骤使用，now 保存由地图地图切换房间执行器取得的当前时间。
 	w, r, c, now := mapTravelWorker(t)
 	useLegacySourceTown(&w.e.Store.Cfg.Fixture)
 	w.e.Store.Cfg.Fixture.TownTravel = &devconfig.TownTravelConfig{Enabled: true, TownMapID: 2,
 		PlanTTLMS: 30000, QuiesceTTLMS: 5000, AckTTLMS: 12000, MaxPlansPerScene: 256}
+	// town 保存由地图“by”标识取得的城镇，exists 保存由地图“by”标识取得的存在。
 	if town, exists := w.e.Store.Cfg.Fixture.MapByID(2); !exists || town.SceneKindValue() != devconfig.SceneKindTown || !town.Walkable(town.PlayerSpawn) {
 		t.Fatal("本组需要已冻结的完整来源城镇目录")
 	}
 	return w, r, c, now
 }
 
+// mapTravelWorker 处理地图地图切换房间执行器。
+// t 提供断言失败报告、子用例和清理注册。
 func mapTravelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time) {
 	t.Helper()
+	// r 接收观察到的房间供后续步骤使用。
 	r, _ := observedRoom()
+	// w 接收观察到的房间执行器供后续步骤使用。
 	w := observedWorker(t, r)
+	// now 保存由Unix 时间取得的当前时间。
 	now := time.Unix(1800000000, 0)
+	// c 保存当前处理所用的地图切换连接。
 	c := &travelConnection{alive: true, binding: 3}
 	r.Conn, r.Role.ID, r.Auth.RoleID, r.Auth.AccountID = c, "role", "role", "account"
 	r.MapID = w.e.Store.Cfg.Fixture.Map.ID
@@ -62,31 +91,44 @@ func mapTravelWorker(t *testing.T) (*worker, *room, *travelConnection, time.Time
 }
 
 // 冻结rule23执行门禁和来源大地图寻路预算，使用目录仍保留的原始地图与安全区。
+// f 记录开发测试配置。
 func useLegacySourceTown(f *devconfig.Fixture) {
 	f.RuleVersion = 23
 	f.TownTravel.DestinationMapIDs = nil
+	// navigation 保存城镇导航，用于当前步骤中的导航。
 	navigation := f.TownNavigation
 	navigation.WorkPerTask, navigation.WorkPerWorkerTick = 1024, 8192
 	navigation.MaxExpanded, navigation.MaxFrontier, navigation.MaxRouteCells = 490000, 65536, 4096
 }
 
+// prepareTravelAt 返回准备地图切换发生时间供调用方使用。
+// w 记录房间执行器，r 指向当前执行器拥有并更新的目标房间，n 记录数值，destination 记录目的地，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 func prepareTravelAt(w *worker, r *room, n int, destination uint32, now time.Time) wire.Frame {
+	// frame 保存由消息取得的协议帧。
 	frame := wire.Message(p.MsgC2SMapTravelPrepare, uint32(n), uint64(r.Auth.SessionEpoch),
 		&pb.MapTravelPrepare{SceneEpoch: r.Scene, TravelId: travelID(n), Destination: destination})
 	w.prepareMapTravelAt(r, frame, now)
 	return frame
 }
 
+// confirmTravelAt 处理确认地图切换发生时间。
+// w 记录房间执行器，r 指向当前执行器拥有并更新的目标房间，n 记录数值，scene 记录场景，使用数值表示，cancel 标记是否处于取消函数状态。
+// now 提供当前时点，作为状态有效期和计时判断的基准。
 func confirmTravelAt(w *worker, r *room, n int, scene uint64, cancel bool, now time.Time) {
 	w.commitMapTravelAt(r, wire.Message(p.MsgC2SMapTravelCommit, uint32(100+n), uint64(r.Auth.SessionEpoch),
 		&pb.MapTravelCommit{SceneEpoch: scene, TravelId: travelID(n), Cancel: cancel}), now)
 }
 
+// lastTravelState 返回上一次状态地图切换状态供调用方使用。
+// t 提供断言失败报告、子用例和清理注册，c 记录地图切换连接。
 func lastTravelState(t *testing.T, c *travelConnection) *pb.MapTravelState {
 	t.Helper()
+	// i 保存根据“len”与当前数据计算的当前位置的下标。
 	for i := len(c.frames) - 1; i >= 0; i-- {
 		if c.frames[i].ID == p.MsgS2CMapTravelState {
+			// state 保存当前处理所用的状态。
 			state := &pb.MapTravelState{}
+			// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 			if err := proto.Unmarshal(c.frames[i].Payload, state); err != nil {
 				t.Fatal(err)
 			}
@@ -97,7 +139,10 @@ func lastTravelState(t *testing.T, c *travelConnection) *pb.MapTravelState {
 	return nil
 }
 
+// TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld 核验来源图应进行一次健康移交或仍保留个人怪物，以及提交状态应原/新scene身份。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	r.Player.NextMove, r.Player.NextAttack, r.Player.ActionReadyAt = now.Add(time.Second), now.Add(2*time.Second), now.Add(3*time.Second)
 	r.Player.HealAmount, r.Player.NextHeal = 17, now.Add(4*time.Second)
@@ -105,13 +150,19 @@ func TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld(t *testing.T) 
 	r.Potions = potionState{HP: 11, MP: 19, LastAppliedSeq: 42, NextTick: now.Add(time.Second), NextUse: now.Add(2 * time.Second)}
 	r.NextSpell, r.SkillCooldowns = now.Add(5*time.Second), map[uint32]time.Time{1: now.Add(6 * time.Second)}
 	r.Melee = meleeState{HalfMoon: true, Flaming: true, FlamingUntil: now.Add(9 * time.Second), Revision: 4}
+	// point 组装点位所需的数据。
 	point := devconfig.Point{X: 8, Y: 6}
 	r.Destination = &point
 	r.Navigation = navigationState{Revision: 27, InputSequence: 13, Destination: &point, Status: navigationActive}
 	r.Loot, r.LootUntil = []*entity{{Handle: 3000, Kind: 4, Pos: r.Player.Pos}}, now.Add(7*time.Second)
 	r.Monsters[0].HP, r.Monsters[0].Life = 73, 4
+	// player 保存当前处理所用的玩家，pet 保存当前处理所用的宠物，petValue 保存当前处理所用的宠物值，potions 保存当前处理所用的药水集合。
+	// melee 保存当前处理所用的近战。
 	player, pet, petValue, potions, melee := r.Player, r.Pet, *r.Pet, r.Potions, r.Melee
+	// monsters 保存当前处理所用的怪物集合，loot 保存当前处理所用的战利品，lootUntil 保存当前处理所用的战利品有效截止时间，navigation 保存当前处理所用的导航。
+	// nextSpell 保存当前处理所用的下一状态法术。
 	monsters, loot, lootUntil, navigation, nextSpell := r.Monsters, r.Loot, r.LootUntil, r.Navigation, r.NextSpell
+	// auth 保存当前处理所用的授权，role 保存当前处理所用的角色。
 	auth, role := r.Auth, r.Role
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	if r.MapID != 1 || r.SavedPersonal != nil || !r.Ready || r.Player.Pos != player.Pos {
@@ -124,11 +175,13 @@ func TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld(t *testing.T) 
 	if r.Pet != pet || r.Player.Life != player.Life || r.Pet.Life != petValue.Life || r.Auth != auth || !reflect.DeepEqual(r.Role, role) || r.Potions != potions || r.Melee != melee || !r.NextSpell.Equal(nextSpell) {
 		t.Fatal("旅行重建实体、改授权/永久数据，或重置药品/技能/模式时钟")
 	}
+	// after 保存玩家，用于当前步骤中的操作后的状态。
 	after := r.Player
 	after.Pos, after.CellEntry, after.MovementRevision, after.MovementKind = player.Pos, player.CellEntry, player.MovementRevision, player.MovementKind
 	if !reflect.DeepEqual(after, player) {
 		t.Fatal("除落格与运动观察水位外改变了玩家现场")
 	}
+	// state 保存由上一次状态地图切换状态取得的状态。
 	if state := lastTravelState(t, c); state.Phase != travelCommitted || state.FromSceneEpoch != 20 || state.SceneEpoch != 21 {
 		t.Fatal("提交状态没有原/新scene身份")
 	}
@@ -146,9 +199,14 @@ func TestMapTravelRoundTripKeepsTravellerAndOriginalPersonalWorld(t *testing.T) 
 	}
 }
 
+// TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork 核验确定收束后应移交，用诊断「收束通过清队列伪造完成」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork(t *testing.T) {
+	// field 接收遍历文本列表时当前的元素。
 	for _, field := range []string{"pending", "retry", "kills", "waiting", "casts", "attacks"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(field, func(t *testing.T) {
+			// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 			w, r, _, now := travelWorker(t)
 			prepareTravelAt(w, r, 1, travelToTown, now)
 			switch field {
@@ -180,11 +238,15 @@ func TestMapTravelQuiescingWaitsWithoutClearingAnyOriginalWork(t *testing.T) {
 	}
 }
 
+// TestMapTravelReleasedAttackResolvesOnlyInOriginalScene 核验已释放攻击应在旧场景按原时间结算，用诊断「旧事实跨图或旧怪物伤害丢失」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelReleasedAttackResolvesOnlyInOriginalScene(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, _, now := travelWorker(t)
 	r.Monsters[0].HP, r.Monsters[0].MaxHP = 1000, 1000
 	r.Monsters[0].Monster = &devconfig.Monster{Fighter: devconfig.Fighter{Agility: 0}}
 	w.roll = func(int64) int64 { return 0 }
+	// due 保存由新增取得的已到期。
 	due := now.Add(100 * time.Millisecond)
 	r.Attacks = []pendingAttack{{Caster: reference(r, &r.Player), Target: reference(r, r.Monsters[0]), Due: due, Defence: defenceAC, Amount: 5}}
 	prepareTravelAt(w, r, 1, travelToTown, now)
@@ -201,8 +263,12 @@ func TestMapTravelReleasedAttackResolvesOnlyInOriginalScene(t *testing.T) {
 	}
 }
 
+// TestMapTravelReleasedLethalAttackCancelsRatherThanResurrectingInTown 核验原已释放攻击应形成真实死亡，用诊断「借旅行逃掉旧攻击、复活或带死亡跨图」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelReleasedLethalAttackCancelsRatherThanResurrectingInTown(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
+	// due 保存由新增取得的已到期。
 	due := now.Add(100 * time.Millisecond)
 	r.Attacks = []pendingAttack{{Caster: reference(r, r.Monsters[0]), Target: reference(r, &r.Player), Due: due, Defence: defenceAC, Amount: 10000}}
 	prepareTravelAt(w, r, 1, travelToTown, now)
@@ -217,9 +283,14 @@ func TestMapTravelReleasedLethalAttackCancelsRatherThanResurrectingInTown(t *tes
 	}
 }
 
+// TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer 核对「失效身份仍移交或清除原永久Pending」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer(t *testing.T) {
+	// change 接收遍历文本列表时当前的元素。
 	for _, change := range []string{"death", "life", "auth", "connection", "scene", "configuration"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(change, func(t *testing.T) {
+			// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 			w, r, _, now := travelWorker(t)
 			prepareTravelAt(w, r, 1, travelToTown, now)
 			r.Pending = true
@@ -246,9 +317,13 @@ func TestMapTravelDeathAndOriginalIdentityChangesCancelWithoutTransfer(t *testin
 	}
 }
 
+// TestMapTravelPlanAndQuiesceDeadlinesDoNotResetOrReleaseUnknownJob 核验准备到期应在原场景结束，用诊断「超时释放unknown原job或伪造切图」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelPlanAndQuiesceDeadlinesDoNotResetOrReleaseUnknownJob(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToTown, now)
+	// deadline 保存过期集合，用于当前步骤中的截止时间。
 	deadline := r.Travel.Expires
 	prepareTravelAt(w, r, 1, travelToTown, now.Add(time.Second))
 	if !r.Travel.Expires.Equal(deadline) {
@@ -260,8 +335,10 @@ func TestMapTravelPlanAndQuiesceDeadlinesDoNotResetOrReleaseUnknownJob(t *testin
 	}
 	prepareTravelAt(w, r, 2, travelToTown, deadline)
 	r.Pending, r.PendingRetry = true, &job{target: w}
+	// original 保存待按原身份重试的操作，用于当前步骤中的原始。
 	original := r.PendingRetry
 	confirmTravelAt(w, r, 2, 20, false, deadline)
+	// until 保存“quiesce”有效截止时间，用于当前步骤中的有效截止时间。
 	until := r.Travel.QuiesceUntil
 	w.progressMapTravel(r, until)
 	if r.Travel.Phase != travelExpired || r.PendingRetry != original || !r.Pending || r.MapID != 1 || r.SavedPersonal != nil {
@@ -269,7 +346,10 @@ func TestMapTravelPlanAndQuiesceDeadlinesDoNotResetOrReleaseUnknownJob(t *testin
 	}
 }
 
+// TestMapTravelQuiesceHasIndependentDeadlineAndLateCancelKeepsExpiredState 核对「已到期plan被迟到取消改写成另一终态」与「已确认plan仍使用旧的资源准备期限」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelQuiesceHasIndependentDeadlineAndLateCancelKeepsExpiredState(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	r.Pending = true
@@ -291,10 +371,15 @@ func TestMapTravelQuiesceHasIndependentDeadlineAndLateCancelKeepsExpiredState(t 
 	}
 }
 
+// TestMapTravelDuplicateCommitAndLateOldIDCannotMoveTwice 核对「重复提交或提交后取消发生第二次移交/回滚」与「旧旅行确认被重新绑定到当前plan」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelDuplicateCommitAndLateOldIDCannotMoveTwice(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, false, now)
+	// scene 保存当前处理所用的场景，baseline 保存当前处理所用的场景基线，saved 保存“saved”个人，用于当前步骤中的“saved”。
+	// count 记录协议帧集合中的条目数。
 	scene, baseline, saved, count := r.Scene, r.Baseline, r.SavedPersonal, len(c.frames)
 	confirmTravelAt(w, r, 1, 20, false, now.Add(time.Millisecond))
 	confirmTravelAt(w, r, 1, 20, true, now.Add(2*time.Millisecond))
@@ -306,6 +391,7 @@ func TestMapTravelDuplicateCommitAndLateOldIDCannotMoveTwice(t *testing.T) {
 	}
 	r.Ready = true
 	prepareTravelAt(w, r, 2, travelToPersonal, now.Add(time.Second))
+	// current 保存地图切换，用于当前步骤中的当前状态。
 	current := r.Travel
 	confirmTravelAt(w, r, 1, 20, false, now.Add(time.Second))
 	if r.Travel != current || r.Travel.Phase != travelPrepared || r.MapID != 2 || c.frames[len(c.frames)-1].Error != p.CodeOperationConflict {
@@ -313,8 +399,12 @@ func TestMapTravelDuplicateCommitAndLateOldIDCannotMoveTwice(t *testing.T) {
 	}
 }
 
+// TestMapTravelCancelledIDsNeverReviveAfterSeveralNewPlans 核对「最近ID未重放终态，或重放增加/遗忘历史」与「较旧取消ID被迟到prepare复活」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelCancelledIDsNeverReviveAfterSeveralNewPlans(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
+	// id 区分当前步骤指向的目标对象。
 	for id := 1; id <= 4; id++ {
 		prepareTravelAt(w, r, id, travelToTown, now)
 		confirmTravelAt(w, r, id, 20, true, now)
@@ -322,7 +412,9 @@ func TestMapTravelCancelledIDsNeverReviveAfterSeveralNewPlans(t *testing.T) {
 			t.Fatal("未形成原取消终态")
 		}
 	}
+	// current 保存地图切换，用于当前步骤中的当前状态。
 	current := r.Travel
+	// id 接收遍历数值列表时当前的元素。
 	for _, id := range []int{1, 2, 3, 1, 3, 2} {
 		prepareTravelAt(w, r, id, travelToTown, now)
 		if c.frames[len(c.frames)-1].Error != p.CodeOperationConflict || r.Travel != current {
@@ -340,13 +432,18 @@ func TestMapTravelCancelledIDsNeverReviveAfterSeveralNewPlans(t *testing.T) {
 	}
 }
 
+// TestMapTravelHistoryCapacityRejectsNewIDsWithoutEvictingOldOnes 核对「历史满后仍接受新计划或按时间丢弃墓碑」与「单纯detach提前清除了原会话历史」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelHistoryCapacityRejectsNewIDsWithoutEvictingOldOnes(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	w.e.Store.Cfg.Fixture.TownTravel.MaxPlansPerScene = 3
+	// id 区分当前步骤指向的目标对象。
 	for id := 1; id <= 3; id++ {
 		prepareTravelAt(w, r, id, travelToTown, now)
 		confirmTravelAt(w, r, id, 20, true, now)
 	}
+	// current 保存地图切换，用于当前步骤中的当前状态，history 保存地图切换“history”，用于当前步骤中的“history”。
 	current, history := r.Travel, r.TravelHistory
 	prepareTravelAt(w, r, 4, travelToTown, now.Add(time.Hour))
 	if c.frames[len(c.frames)-1].Error != p.CodeServerBusy || r.Travel != current || r.TravelHistory != history || len(history.IDs) != 3 {
@@ -362,13 +459,18 @@ func TestMapTravelHistoryCapacityRejectsNewIDsWithoutEvictingOldOnes(t *testing.
 	}
 }
 
+// TestMapTravelExpiredIDsStayRejectedAndNoHistoryBudgetIsInvented 核对「缺少显式历史容量仍补默认并开放旅行」与「旧到期ID复活」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelExpiredIDsStayRejectedAndNoHistoryBudgetIsInvented(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
+	// id 区分当前步骤指向的目标对象。
 	for id := 1; id <= 3; id++ {
 		prepareTravelAt(w, r, id, travelToTown, now)
 		now = r.Travel.Expires
 		w.progressMapTravel(r, now)
 	}
+	// current 保存地图切换，用于当前步骤中的当前状态。
 	current := r.Travel
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, false, now)
@@ -383,10 +485,14 @@ func TestMapTravelExpiredIDsStayRejectedAndNoHistoryBudgetIsInvented(t *testing.
 	}
 }
 
+// TestMapTravelHistoryNamespaceChangesOnlyWithRealAttachmentOrScene 核验实际换scene应释放旧命名空间，以及仅生命变化不应忘记同场景取消记录。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelHistoryNamespaceChangesOnlyWithRealAttachmentOrScene(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, true, now)
+	// original 保存地图切换“history”，用于当前步骤中的原始。
 	original := r.TravelHistory
 	r.Player.Life++
 	prepareTravelAt(w, r, 2, travelToTown, now)
@@ -400,6 +506,7 @@ func TestMapTravelHistoryNamespaceChangesOnlyWithRealAttachmentOrScene(t *testin
 	if r.TravelHistory == original || r.Travel.Phase != travelPrepared || len(r.TravelHistory.IDs) != 1 || r.Travel.Auth.SessionEpoch != 4 {
 		t.Fatal("真实新会话未建立独立旅行命名空间")
 	}
+	// oldBinding 保存由消息取得的原状态会话绑定。
 	oldBinding := wire.Message(p.MsgC2SMapTravelCommit, 90, 3, &pb.MapTravelCommit{SceneEpoch: 20, TravelId: travelID(1)})
 	w.commitMapTravelAt(r, oldBinding, now)
 	if r.Travel.Phase != travelPrepared || r.MapID != 1 || c.frames[len(c.frames)-1].Error != p.CodeStaleSession {
@@ -424,8 +531,12 @@ func TestMapTravelHistoryNamespaceChangesOnlyWithRealAttachmentOrScene(t *testin
 	}
 }
 
+// TestMapTravelCancelOnlyCancelsPlanAndKeepsNavigationAndWorld 核对「取消改变了健康个人现场」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelCancelOnlyCancelsPlanAndKeepsNavigationAndWorld(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
+	// point 组装点位所需的数据。
 	point := devconfig.Point{X: 8, Y: 6}
 	r.Destination = &point
 	prepareTravelAt(w, r, 1, travelToTown, now)
@@ -435,10 +546,14 @@ func TestMapTravelCancelOnlyCancelsPlanAndKeepsNavigationAndWorld(t *testing.T) 
 	}
 }
 
+// TestMapTravelACKExpiryKeepsCommittedWorldAndHealthyReconnect 核验健康重连不能同步既有Town及原个人现场，用诊断「ACK失败回滚/重建world或激活未准备地图」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelACKExpiryKeepsCommittedWorldAndHealthyReconnect(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, false, now)
+	// scene 保存当前处理所用的场景，personal 保存“saved”个人，用于当前步骤中的个人。
 	scene, personal := r.Scene, r.SavedPersonal
 	w.progressMapTravel(r, r.Travel.AckUntil)
 	if len(c.closed) != 1 || w.finishMapTravelAck(r, r.Travel.AckUntil) || r.MapID != 2 || r.Scene != scene || r.SavedPersonal != personal || r.Ready {
@@ -453,9 +568,13 @@ func TestMapTravelACKExpiryKeepsCommittedWorldAndHealthyReconnect(t *testing.T) 
 	}
 }
 
+// TestMapTravelDeadPetIsMovedWithoutResurrectionAndNoConfiguredTownPetSpawn 核对「借Town重召宠物或用非法固定出生格」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelDeadPetIsMovedWithoutResurrectionAndNoConfiguredTownPetSpawn(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, _, now := travelWorker(t)
 	r.Pet.HP, r.Pet.Action, r.Pet.Life = 0, 4, 77
+	// pet 保存当前处理所用的宠物。
 	pet := r.Pet
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, false, now)
@@ -464,25 +583,37 @@ func TestMapTravelDeadPetIsMovedWithoutResurrectionAndNoConfiguredTownPetSpawn(t
 	}
 }
 
+// TestMapTravelPetPointDoesNotCrossBlockedDiagonalCorners 核验返回个人现场应保留原合法宠物位置，用诊断「Town宠物被放到只能切角到达的邻格」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelPetPointDoesNotCrossBlockedDiagonalCorners(t *testing.T) {
+	// m 保存当前处理所用的地图模板。
 	m := &devconfig.MapTemplate{Width: 3, Height: 3, Blocked: []devconfig.Point{{X: 1, Y: 0}, {X: 2, Y: 1}, {X: 1, Y: 2}, {X: 0, Y: 1}}}
+	// center 建立带初始值的点位，供本段继续处理。
 	center := devconfig.Point{X: 1, Y: 1}
+	// ok 表明查询、校验或类型转换是否成功。
 	if _, ok := travelPetPoint(m, center, nil, nil, 0); ok {
 		t.Fatal("Town宠物被放到只能切角到达的邻格")
 	}
+	// original 建立带初始值的点位，供本段继续处理。
 	original := devconfig.Point{X: 0, Y: 0}
+	// point 保存由地图切换宠物点位取得的点位，ok 表明查询、校验或类型转换是否成功。
 	if point, ok := travelPetPoint(m, center, &original, nil, 0); !ok || point != original {
 		t.Fatal("返回个人现场没有保留原合法宠物位置")
 	}
 }
 
+// TestMapTravelPersonalDeadlinesKeepOriginalCutoffAndExpireOnceOnReturn 核验返回应依原截止处理到期事实，用诊断「Town期间刷新个人怪物或重设掉落期限」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelPersonalDeadlinesKeepOriginalCutoffAndExpireOnceOnReturn(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, _, now := travelWorker(t)
 	r.Auto, r.Pet = false, nil
+	// monster 保存从怪物集合取出的怪物。
 	monster := r.Monsters[0]
 	monster.HP, monster.Life, monster.RespawnAt = 0, 4, now.Add(2*time.Second)
 	monster.NextMove, monster.NextAttack = now.Add(time.Hour), now.Add(time.Hour)
 	r.Loot, r.LootUntil = []*entity{{Handle: 3000, Kind: 4}}, now.Add(time.Second)
+	// originalRespawn 保存复活发生时间，用于当前步骤中的原始复活，originalLoot 保存战利品有效截止时间，用于当前步骤中的原始战利品。
 	originalRespawn, originalLoot := monster.RespawnAt, r.LootUntil
 	prepareTravelAt(w, r, 1, travelToTown, now)
 	confirmTravelAt(w, r, 1, 20, false, now)
@@ -509,13 +640,19 @@ func TestMapTravelPersonalDeadlinesKeepOriginalCutoffAndExpireOnceOnReturn(t *te
 	}
 }
 
+// TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer 核对「计数器溢出造成半次移交或回绕」与「没有个人保留现场却接受返回」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer(t *testing.T) {
+	// counter 接收遍历文本列表时当前的元素。
 	for _, counter := range []string{"scene", "baseline", "movement", "cell"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(counter, func(t *testing.T) {
+			// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 			w, r, _, now := travelWorker(t)
 			if counter == "scene" {
 				r.Scene = math.MaxUint64
 			}
+			// scene 保存当前处理所用的场景。
 			scene := r.Scene
 			prepareTravelAt(w, r, 1, travelToTown, now)
 			if counter != "scene" {
@@ -534,11 +671,13 @@ func TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer(t *testing
 			}
 		})
 	}
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用，now 保存由地图切换房间执行器取得的当前时间。
 	w, r, c, now := travelWorker(t)
 	prepareTravelAt(w, r, 1, travelToPersonal, now)
 	if r.Travel != nil || c.frames[len(c.frames)-1].Error != p.CodeLineForbidden {
 		t.Fatal("没有个人保留现场却接受返回")
 	}
+	// destination 接收遍历数值列表时当前的元素。
 	for _, destination := range []uint32{0, 3, math.MaxUint32} {
 		prepareTravelAt(w, r, 2, destination, now)
 		if r.Travel != nil || c.frames[len(c.frames)-1].Error != p.CodeInvalidArgument {
@@ -547,7 +686,10 @@ func TestMapTravelOverflowAndBadDestinationFailWithoutPartialTransfer(t *testing
 	}
 }
 
+// TestMapTravelRuntimeCommandsReuseEnterACKAndOldSceneCannotActivate 核对「合法ACK未复用SyncReady握手」与「正常命令入口未切图或提前Ready」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestMapTravelRuntimeCommandsReuseEnterACKAndOldSceneCannotActivate(t *testing.T) {
+	// w 接收地图切换房间执行器供后续步骤使用，r 接收地图切换房间执行器供后续步骤使用，c 接收地图切换房间执行器供后续步骤使用。
 	w, r, c, _ := travelWorker(t)
 	w.command(command{role: "role", conn: c, frame: wire.Message(p.MsgC2SMapTravelPrepare, 1, 3,
 		&pb.MapTravelPrepare{SceneEpoch: 20, TravelId: travelID(1), Destination: travelToTown})})
@@ -556,9 +698,12 @@ func TestMapTravelRuntimeCommandsReuseEnterACKAndOldSceneCannotActivate(t *testi
 	if r.MapID != 2 || r.Ready || r.Travel.Phase != travelCommitted {
 		t.Fatal("正常命令入口未切图或提前Ready")
 	}
+	// committed 保存当前处理所用的已提交，entry 保存当前处理所用的入场，baseline 保存当前处理所用的场景基线。
 	committed, entry, baseline := -1, -1, -1
+	// index 定位协议帧集合中正在处理的成员，frame 接收遍历协议帧集合时当前的元素。
 	for index, frame := range c.frames {
 		if frame.ID == p.MsgS2CMapTravelState {
+			// state 保存当前处理所用的状态。
 			state := &pb.MapTravelState{}
 			if proto.Unmarshal(frame.Payload, state) == nil && state.Phase == travelCommitted {
 				committed = index

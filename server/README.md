@@ -1,5 +1,7 @@
 # 开发服务端
 
+先读[服务端解读文档](../docs/服务端解读文档.md)，其中从启动、入场和战斗一路跟到 MongoDB，并列出了各模块和常见问题的代码入口。
+
 `cmd/nbserver` 是同一 Go 程序，支持 `account`、`game`、`gm`、`supervisor`。当前装配仅接受 development、127.0.0.1 监听与本任务专用 MongoDB 副本集；未提供生产 TLS/发行配置时拒绝生产启动。数值来自 `config/development/first-loop.json` 的有来源候选，`runtime_ready=false`，不宣称已经还原目标 1.80 或通过完整平衡验收。
 
 ## 当前战士模式与方向技能阶段

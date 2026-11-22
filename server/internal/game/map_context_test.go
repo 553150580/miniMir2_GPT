@@ -1,3 +1,4 @@
+// 本文件回归地图模板选择、可走区域、导航预算、技能地形和未知地图时的处理。
 package game
 
 import (
@@ -12,10 +13,15 @@ import (
 	"minimir/internal/wire"
 )
 
+// installContextTown 处理“install”上下文城镇。
+// w 记录房间执行器，blocked 记录阻挡，使用可变数量的点位表示。
 func installContextTown(w *worker, blocked ...devconfig.Point) {
 	useLegacySourceTown(&w.e.Store.Cfg.Fixture)
+	// m 组装地图模板所需的数据。
 	m := devconfig.MapTemplate{ID: 2, SceneKind: devconfig.SceneKindTown, Width: 700, Height: 700, PlayerSpawn: devconfig.Point{X: 633, Y: 613}, CollisionBits: make([]byte, 61250)}
+	// point 接收遍历阻挡时当前的元素。
 	for _, point := range blocked {
+		// cell 保存根据纵坐标与当前数据的计算结果与横坐标计算的地图格。
 		cell := point.Y*700 + point.X
 		m.CollisionBits[cell/8] |= 1 << uint(cell%8)
 	}
@@ -23,11 +29,16 @@ func installContextTown(w *worker, blocked ...devconfig.Point) {
 	w.e.Store.Cfg.Fixture.Maps = []devconfig.MapTemplate{m}
 }
 
+// TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget 核对「来源原坐标未能普通行走，或被裁成17×17」与「当前图边界或寻路格子预算仍读全局个人地图」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
+	// w 接收阶段b房间执行器供后续步骤使用，personal 保存由阶段b房间执行器取得的个人。
 	w, personal, _ := stageBWorker(t, 1, 1)
 	installContextTown(w, devconfig.Point{X: 9, Y: 8})
 	w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{{X: 8, Y: 7}}
+	// town 保存当前处理所用的城镇。
 	town := &room{Player: entity{Kind: 1, HP: 10, Pos: devconfig.Point{X: 8, Y: 8}}, worldState: &worldState{MapID: 2}}
+	// personalID 接收遍历数值列表时当前的元素。
 	for _, personalID := range []uint64{0, 1} {
 		personal.MapID = personalID
 		if w.walkable(personal, devconfig.Point{X: 8, Y: 7}) || !w.walkable(town, devconfig.Point{X: 8, Y: 7}) || !w.walkable(personal, devconfig.Point{X: 9, Y: 8}) || w.walkable(town, devconfig.Point{X: 9, Y: 8}) {
@@ -46,10 +57,13 @@ func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
 	town.Player.Pos = devconfig.Point{X: 633, Y: 613}
 	town.Player.Handle, town.Scene, town.Ready, town.Conn = 1, 3, true, &capturedConnection{}
 	w.e.workers = []*worker{w}
+	// err 接收“initialize”城镇导航过程中可能产生的错误，供后续失败分支处理。
 	if err := w.e.initializeTownNavigation(); err != nil {
 		t.Fatal(err)
 	}
+	// i 标记循环或列表中的当前位置。
 	for i := 0; i < 3 && town.Player.Pos != (devconfig.Point{X: 633, Y: 614}); i++ {
+		// now 保存由新增取得的当前时间。
 		now := time.Now().Add(time.Duration(i) * time.Second)
 		w.beginTownNavigationTick(now)
 		w.move(town, &town.Player, devconfig.Point{X: 633, Y: 614}, now, 600)
@@ -60,21 +74,30 @@ func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
 	}
 }
 
+// TestRoomMapContextSkillFlightAreaAndLineUseCurrentTerrain 核对「地图范围/直线技能仍读个人阻挡」与「地图的火球阻挡受理/资源错误」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextSkillFlightAreaAndLineUseCurrentTerrain(t *testing.T) {
+	// mapID 接收遍历数值列表时当前的元素。
 	for _, mapID := range []uint64{1, 2} {
+		// w 接收阶段b房间执行器供后续步骤使用，r 接收阶段b房间执行器供后续步骤使用。
 		w, r, _ := stageBWorker(t, 1, 1, 9, 23)
 		installContextTown(w)
 		w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{{X: 9, Y: 8}}
 		r.MapID, r.Player.Pos, r.Monsters[0].Pos = mapID, devconfig.Point{X: 8, Y: 8}, devconfig.Point{X: 9, Y: 8}
 		r.Pet = nil
 		// 手造对象只验证同坐标规则隔离，不是城镇刷怪入口或运行态实例。
+		// beforeMP 保存魔法值，用于当前步骤中的操作前的状态魔法值。
 		beforeMP := r.Player.MP
+		// code 保存由施法取得的结果码。
 		code := w.cast(r, 1, r.Monsters[0].Handle, 1, time.Now())
 		if mapID == 1 && (code != p.CodeSkillTarget || r.Player.MP != beforeMP) || mapID == 2 && (code != 0 || r.Player.MP >= beforeMP) {
 			t.Fatalf("地图%d的火球阻挡受理/资源错误：%d", mapID, code)
 		}
+		// area 保存由区域目标集合取得的区域。
 		area := w.areaTargets(r, devconfig.Skill{TargetKind: "enemy_ground", AreaRadius: 1}, r.Monsters[0].Pos)
+		// line 保存由线路目标集合取得的线路。
 		line := w.lineTargets(r, pendingCast{Skill: devconfig.Skill{Behavior: "hell_fire", LineCells: 4}, TargetPoint: r.Player.Pos, Direction: 2, LineRemaining: 4})
+		// want 规定期望值的初始取值。
 		want := 0
 		if mapID == 2 {
 			want = 1
@@ -85,11 +108,15 @@ func TestRoomMapContextSkillFlightAreaAndLineUseCurrentTerrain(t *testing.T) {
 	}
 }
 
+// TestRoomMapContextGroundIntentAndEntryPreserveSourceCoordinates 核对「基线伪造城镇宠物/怪物或裁剪来源坐标」与「城镇外坐标受理或覆盖原合法导航」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextGroundIntentAndEntryPreserveSourceCoordinates(t *testing.T) {
+	// w 接收阶段b房间执行器供后续步骤使用，r 接收阶段b房间执行器供后续步骤使用，c 接收阶段b房间执行器供后续步骤使用。
 	w, r, c := stageBWorker(t, 1, 23)
 	installContextTown(w)
 	r.MapID, r.Player.Pos = 2, devconfig.Point{X: 650, Y: 631}
 	r.Pet, r.Monsters, r.MonsterCount = nil, nil, 0
+	// move 封装移动对应的后续处理，sequence 记录序号，使用数值表示，x 记录数值。
 	move := func(sequence uint32, x int32) {
 		w.command(command{role: "role", conn: c, frame: wire.Message(p.MsgC2SMoveIntent, sequence, 3, &pb.MoveIntent{SceneEpoch: r.Scene, InputSequence: sequence, Destination: &pb.GridPoint{X: x, Y: 631}})})
 	}
@@ -101,31 +128,42 @@ func TestRoomMapContextGroundIntentAndEntryPreserveSourceCoordinates(t *testing.
 	if c.frames[len(c.frames)-1].Error != p.CodeInvalidArgument || r.Destination.X != 699 {
 		t.Fatal("城镇外坐标受理或覆盖原合法导航")
 	}
+	// mp 保存当前处理所用的魔法值。
 	mp := r.Player.MP
+	// code 保存由施法取得的结果码。
 	if code := w.cast(r, 23, 0, 3, time.Now(), &pb.GridPoint{X: 700, Y: 631}); code != p.CodeSkillTarget || r.Player.MP != mp {
 		t.Fatal("来源图外技能坐标被受理或扣蓝")
 	}
+	// code 保存由施法取得的结果码。
 	if code := w.cast(r, 23, 0, 4, time.Now(), &pb.GridPoint{X: 650, Y: 632}); code != 0 || r.Casts[0].TargetPoint != (devconfig.Point{X: 650, Y: 632}) {
 		t.Fatal("来源图内技能坐标被当作个人图越界")
 	}
+	// entry 保存由入场线路结果取得的入场。
 	entry := w.enterLineResult(r)
 	if entry == nil || entry.RoomId != 2 || entry.SceneKind != 2 || entry.Position.X != 650 || entry.Position.Y != 631 {
 		t.Fatal("入场目录身份、类型或原坐标不准确")
 	}
 	w.baseline(r)
+	// baseline 保存当前处理所用的场景基线。
 	baseline := &pb.SceneBaselineChunk{}
 	if proto.Unmarshal(c.frames[len(c.frames)-1].Payload, baseline) != nil || len(baseline.Entities) != 1 || baseline.Entities[0].Position.X != 650 || baseline.Entities[0].Position.Y != 631 {
 		t.Fatal("基线伪造城镇宠物/怪物或裁剪来源坐标")
 	}
 }
 
+// TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain 核对「推移仍受个人17×17预算或边界约束」与「地图推移越过其阻挡或串用另一图」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain(t *testing.T) {
+	// now 记录本次处理开始时的时间。
 	now := time.Now()
+	// mapID 接收遍历数值列表时当前的元素。
 	for _, mapID := range []uint64{1, 2} {
+		// w 接收被推动位移房间执行器供后续步骤使用，r 接收被推动位移房间执行器供后续步骤使用。
 		w, r, _ := pushedWorker(t)
 		installContextTown(w, devconfig.Point{X: 10, Y: 8})
 		w.e.Store.Cfg.Fixture.Map.Blocked = nil
 		r.MapID, r.Monsters[0].Pos = mapID, devconfig.Point{X: 9, Y: 8}
+		// out 保存由来源被推动位移取得的输出。
 		out := w.sourcePushed(r, reference(r, r.Monsters[0]), 2, 1, now, displacementSource{})
 		if mapID == 1 && out.Steps != 1 || mapID == 2 && (out.Steps != 0 || out.Stop != pushTerrain) {
 			t.Fatalf("地图%d推移越过其阻挡或串用另一图：%+v", mapID, out)
@@ -134,6 +172,7 @@ func TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain(t *testing.T
 		installContextTown(w, devconfig.Point{X: 9, Y: 8})
 		w.e.Store.Cfg.Fixture.Map.Blocked = nil
 		r.MapID = mapID
+		// code 保存由施法“directed”取得的结果码。
 		if code := w.castDirected(r, 27, 0, 1, 2, now); code != 0 {
 			t.Fatal(code)
 		}
@@ -141,26 +180,35 @@ func TestRoomMapContextPushedAndShoulderDashDoNotUseOtherMapTerrain(t *testing.T
 			t.Fatalf("地图%d冲撞未使用当前图阻挡", mapID)
 		}
 	}
+	// w 接收被推动位移房间执行器供后续步骤使用，r 接收被推动位移房间执行器供后续步骤使用。
 	w, r, _ := pushedWorker(t)
 	installContextTown(w)
 	r.MapID, r.Player.Pos, r.Pet = 2, devconfig.Point{X: 633, Y: 613}, nil
 	r.Monsters[0].Pos = devconfig.Point{X: 634, Y: 613}
+	// out 保存由来源被推动位移取得的输出。
 	if out := w.sourcePushed(r, reference(r, r.Monsters[0]), 2, 1, now, displacementSource{}); out.Steps != 1 || r.Monsters[0].Pos != (devconfig.Point{X: 635, Y: 613}) {
 		t.Fatal("推移仍受个人17×17预算或边界约束")
 	}
 }
 
+// TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback 核对「未知地图普通移动改变现场或观察水位」与「未知地图复活未拒绝或修改了生命现场」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback(t *testing.T) {
+	// w 接收被推动位移任务或职业编号房间执行器供后续步骤使用，r 接收被推动位移任务或职业编号房间执行器供后续步骤使用。
 	w, r, _ := pushedJobWorker(t, 1)
 	installContextTown(w)
 	r.MapID = math.MaxUint64
+	// origin 保存位置，用于当前步骤中的大区或起点，mp 保存当前处理所用的魔法值，life 保存当前处理所用的生命代次。
 	origin, mp, life := r.Player.Pos, r.Player.MP, r.Player.Life
+	// ok 表明查询、校验或类型转换是否成功。
 	if _, ok := w.currentMap(r); ok || w.mapCellBudget(r) != 0 || w.walkable(r, origin) || w.inBounds(r, origin) || w.lineOfSight(r, origin, origin) {
 		t.Fatal("显式未知地图退回了个人地图")
 	}
+	// code 保存由施法取得的结果码。
 	if code := w.cast(r, 1, r.Monsters[0].Handle, 1, time.Now()); code != p.CodeSkillStateBlocked || r.Player.MP != mp || len(r.Casts) != 0 {
 		t.Fatal("未知地图技能受理或扣费")
 	}
+	// out 保存由来源被推动位移取得的输出。
 	if out := w.sourcePushed(r, reference(r, &r.Player), 2, 1, time.Now(), displacementSource{}); out.Stop != pushInvalid || out.Steps != 0 {
 		t.Fatal("未知地图推移回退个人地图")
 	}
@@ -171,14 +219,19 @@ func TestRoomMapContextUnknownIDFailsWithoutPrimaryFallback(t *testing.T) {
 	if !r.Isolated || r.Player.Life != life || r.Player.Pos != origin {
 		t.Fatal("未知地图复活未拒绝或修改了生命现场")
 	}
+	// entry 保存由入场线路结果取得的入场。
 	if entry := w.enterLineResult(r); entry != nil {
 		t.Fatal("未知地图发布了伪造的个人图入场")
 	}
 }
 
+// TestRoomMapContextColdInitializationAndRespawnUseCorrectTemplate 核验冷初始化应明确创建原个人地图，用诊断「当前图复活错误读回个人图出生点」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestRoomMapContextColdInitializationAndRespawnUseCorrectTemplate(t *testing.T) {
+	// w 接收阶段b房间执行器供后续步骤使用，r 接收阶段b房间执行器供后续步骤使用。
 	w, r, _ := stageBWorker(t, 1, 1)
 	installContextTown(w)
+	// fresh 保存当前处理所用的首次装载。
 	fresh := &room{worldState: &worldState{MapID: 2}}
 	w.initialize(fresh, r.Role)
 	if fresh.MapID != 1 || fresh.Player.Pos != w.e.Store.Cfg.Fixture.Map.PlayerSpawn || len(fresh.Monsters) != 8 {

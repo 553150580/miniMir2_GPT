@@ -1,3 +1,4 @@
+// 本文件回归宠物出生只播一次、完整基线送达次序、归属与场景更换后的丢弃。
 package game
 
 import (
@@ -12,18 +13,32 @@ import (
 	"time"
 )
 
+// petBornConnection 保存宠物出生连接所需的状态。
 type petBornConnection struct {
-	frames        []wire.Frame
-	alive         bool
-	binding       uint64
-	failID        uint16
-	failChunk     int
+	// frames 记录协议帧集合，使用协议帧列表表示。
+	frames []wire.Frame
+	// alive 标记是否处于存活状态状态。
+	alive bool
+	// binding 携带连接上的会话代次，用于防止旧连接命令被接受。
+	binding uint64
+	// failID 标识当前业务使用的失败。
+	failID uint16
+	// failChunk 记录失败分片，使用数值表示。
+	failChunk int
+	// chunkAttempts 记录分片“attempts”，使用数值表示。
 	chunkAttempts int
-	closed        int
-	onDeliver     func(wire.Frame)
+	// closed 记录“closed”，使用数值表示。
+	closed int
+	// onDeliver 记录启用状态“deliver”，使用供当前流程调用的函数表示。
+	onDeliver func(wire.Frame)
 }
 
+// Alive 判断存活状态是否满足要求。
+// c 是调用该方法的宠物出生连接实例。
 func (c *petBornConnection) Alive() bool { return c.alive }
+
+// Deliver 判断“deliver”是否满足要求。
+// c 是调用该方法的宠物出生连接实例，f 记录协议帧。
 func (c *petBornConnection) Deliver(f wire.Frame) bool {
 	if !c.alive {
 		return false
@@ -40,16 +55,36 @@ func (c *petBornConnection) Deliver(f wire.Frame) bool {
 	}
 	return true
 }
-func (c *petBornConnection) Close(string)        { c.closed++; c.alive = false }
-func (c *petBornConnection) SetRole(string)      {}
-func (c *petBornConnection) RoleID() string      { return "role" }
-func (c *petBornConnection) SetBinding(b uint64) { c.binding = b }
-func (c *petBornConnection) Binding() uint64     { return c.binding }
 
+// Close 关闭当前请求或状态，并把结果交给调用方。
+// c 是调用该方法的宠物出生连接实例。
+func (c *petBornConnection) Close(string) { c.closed++; c.alive = false }
+
+// SetRole 设置角色。
+// c 是调用该方法的宠物出生连接实例。
+func (c *petBornConnection) SetRole(string) {}
+
+// RoleID 返回角色标识供调用方使用。
+// c 是调用该方法的宠物出生连接实例。
+func (c *petBornConnection) RoleID() string { return "role" }
+
+// SetBinding 设置会话绑定。
+// c 是调用该方法的宠物出生连接实例，b 记录b，使用数值表示。
+func (c *petBornConnection) SetBinding(b uint64) { c.binding = b }
+
+// Binding 返回会话绑定供调用方使用。
+// c 是调用该方法的宠物出生连接实例。
+func (c *petBornConnection) Binding() uint64 { return c.binding }
+
+// petBornWorker 处理宠物出生房间执行器。
+// t 提供断言失败报告、子用例和清理注册。
 func petBornWorker(t *testing.T) (*worker, *room, *petBornConnection, *worldState, *worldState, time.Time) {
 	t.Helper()
+	// w 接收召唤房间执行器供后续步骤使用，r 接收召唤房间执行器供后续步骤使用，personal 保存由召唤房间执行器取得的个人。
+	// town 保存由召唤房间执行器取得的城镇。
 	w, r, _, personal, town, _ := summonWorker(t, false)
 	w.e.Store.Cfg.Fixture.RuleVersion = 18 // 当前新观察合同的隔离前态，不降低主配置校验。
+	// c 保存当前处理所用的宠物出生连接。
 	c := &petBornConnection{alive: true, binding: uint64(r.Auth.SessionEpoch)}
 	r.Conn = c
 	w.sendSyncReady(r, 71, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: 1})
@@ -60,12 +95,18 @@ func petBornWorker(t *testing.T) (*worker, *room, *petBornConnection, *worldStat
 	return w, r, c, personal, town, time.Now().Add(-2 * time.Second)
 }
 
+// petBornEvents 返回宠物出生事件集合供调用方使用。
+// t 提供断言失败报告、子用例和清理注册，c 记录宠物出生连接。
 func petBornEvents(t *testing.T, c *petBornConnection) []*pb.PetBorn {
 	t.Helper()
+	// events 初始化用作事件集合的宠物出生列表。
 	events := []*pb.PetBorn{}
+	// f 接收遍历协议帧集合时当前的元素。
 	for _, f := range c.frames {
 		if f.ID == p.MsgS2CPetBorn {
+			// q 保存当前处理所用的宠物出生。
 			q := &pb.PetBorn{}
+			// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 			if err := proto.Unmarshal(f.Payload, q); err != nil {
 				t.Fatal(err)
 			}
@@ -75,7 +116,11 @@ func petBornEvents(t *testing.T, c *petBornConnection) []*pb.PetBorn {
 	return events
 }
 
+// TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact 核验真实新生应且仅有一条事实，用诊断「出生身份、实际now、0运动水位或角色围栏错误」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact(t *testing.T) {
+	// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+	// start 保存由宠物出生房间执行器取得的起点或开始时间。
 	w, r, c, _, _, start := petBornWorker(t)
 	r.Scene = uint64(1)<<63 | 11
 	r.Baseline = uint64(1)<<63 | 13
@@ -84,14 +129,18 @@ func TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact(t *testing.
 	r.PetLifeSequence = uint64(1)<<63 | 21
 	w.sendSyncReady(r, 72, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline})
 	r.Player.Direction = 2
+	// plan 保存由已支付召唤计划取得的计划。
 	plan := paidSummonPlan(t, w, r, start)
 	c.frames = nil
+	// bornAt 记录本次处理开始时的时间。
 	bornAt := time.Now()
 	w.advanceEvents(r, bornAt)
+	// events 保存由宠物出生事件集合取得的事件集合。
 	events := petBornEvents(t, c)
 	if len(events) != 1 || r.Pet == nil {
 		t.Fatal("真实新生没有且仅有一条事实", len(events))
 	}
+	// e 保存从事件集合取出的事件集合中的指定项。
 	e := events[0]
 	if e.SceneEpoch != r.Scene || e.BaselineId != r.Baseline || e.EntityHandle != r.Pet.Handle || e.EntityLife != r.Pet.Life || e.DefinitionId != r.Pet.Def || e.MapId != 1 ||
 		e.SourceCastId != r.CastID || e.SourceSkillId != 17 || e.BornAtUnixMs != uint64(bornAt.UnixMilli()) || e.MovementRevision != 0 || e.Direction != 5 ||
@@ -101,17 +150,24 @@ func TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact(t *testing.
 	if e.BornAtUnixMs == uint64(start.Add(time.Duration(plan.DelayMS)*time.Millisecond).UnixMilli()) {
 		t.Fatal("将旧due伪装为实际出生时间")
 	}
+	// chunks 建立带初始值的按数值索引的布尔状态映射，供本段继续处理。
 	chunks := map[uint32]bool{}
+	// count 保存由无符号整数“32”取得的数量。
 	count := uint32(0)
+	// foundBody 保存当前处理所用的已找到标记消息正文。
 	foundBody := false
+	// foundFact 保存当前处理所用的已找到标记已发生的事实。
 	foundFact := false
+	// frame 接收遍历协议帧集合时当前的元素。
 	for _, frame := range c.frames {
 		if frame.ID == p.MsgS2CSceneBaseline {
+			// b 保存当前处理所用的b。
 			b := &pb.SceneBaselineChunk{}
 			_ = proto.Unmarshal(frame.Payload, b)
 			if b.StateSequence == e.StateSequence {
 				chunks[b.ChunkIndex] = true
 				count = b.ChunkCount
+				// body 接收遍历实体时当前的元素。
 				for _, body := range b.Entities {
 					if body.EntityHandle == e.EntityHandle && body.Life == e.EntityLife && body.Direction == e.Direction && body.MovementRevision == e.MovementRevision {
 						foundBody = true
@@ -136,9 +192,15 @@ func TestPetBornActualSpawnIdentityAndCompleteBaselinePrecedeOneFact(t *testing.
 	}
 }
 
+// TestPetBornNeverSynthesizedForRecallLegacyOrRule17 核对「Recall/legacy/旧rule从状态推导出生」与「legacy隔离安装失败」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornNeverSynthesizedForRecallLegacyOrRule17(t *testing.T) {
+	// mode 接收遍历文本列表时当前的元素。
 	for _, mode := range []string{"recall", "legacy", "rule17"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(mode, func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, _, start := petBornWorker(t)
 			switch mode {
 			case "rule17":
@@ -146,6 +208,7 @@ func TestPetBornNeverSynthesizedForRecallLegacyOrRule17(t *testing.T) {
 				paidSummonPlan(t, w, r, start)
 				w.advanceEvents(r, time.Now())
 			case "legacy":
+				// pet 保存当前处理所用的宠物。
 				pet := &entity{Handle: 0, Kind: 2, Def: w.e.Store.Cfg.Fixture.Pet.DefinitionID, HP: 15, MaxHP: 15, Pos: r.Player.Pos}
 				if !w.attachLegacyPetState(pet) || !w.installPet(r, r.currentWorld(), pet) {
 					t.Fatal("legacy隔离安装失败")
@@ -158,6 +221,7 @@ func TestPetBornNeverSynthesizedForRecallLegacyOrRule17(t *testing.T) {
 				r.Player.ActionReadyAt = time.Time{}
 				r.NextSpell = time.Time{}
 				r.SkillCooldowns = nil
+				// code 保存由施法取得的结果码。
 				if code := w.cast(r, 17, 0, 2, time.Now()); code != 0 {
 					t.Fatal(code)
 				}
@@ -170,9 +234,15 @@ func TestPetBornNeverSynthesizedForRecallLegacyOrRule17(t *testing.T) {
 	}
 }
 
+// TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket 核验未观察/未Sync出生应保留业务身体或错误发事实，用诊断「AutoRecall或健康新票补播历史出生」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket(t *testing.T) {
+	// mode 接收遍历文本列表时当前的元素。
 	for _, mode := range []string{"other_world", "not_ready", "new_connection_without_sync", "sync_send_failed"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(mode, func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// town 保存由宠物出生房间执行器取得的城镇，start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, town, start := petBornWorker(t)
 			paidSummonPlan(t, w, r, start)
 			switch mode {
@@ -194,6 +264,7 @@ func TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket(t
 			if mode == "other_world" {
 				w.tickResidentPetFollow(r, time.Now())
 			}
+			// next 保存当前处理所用的下一状态。
 			next := &petBornConnection{alive: true, binding: uint64(r.Auth.SessionEpoch)}
 			r.Conn = next
 			r.Ready = true
@@ -206,10 +277,17 @@ func TestPetBornUnobservedWorldAndBeforeReadyNeverReplayAfterRecallOrNewTicket(t
 	}
 }
 
+// TestPetBornFailedDueAndOldLifeHaveNoObservation 核对「失败due/旧Life产生身体或事实」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornFailedDueAndOldLifeHaveNoObservation(t *testing.T) {
+	// mode 接收遍历文本列表时当前的元素。
 	for _, mode := range []string{"dead", "new_life", "invalid_static"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(mode, func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, _, start := petBornWorker(t)
+			// plan 保存由已支付召唤计划取得的计划。
 			plan := paidSummonPlan(t, w, r, start)
 			switch mode {
 			case "dead":
@@ -227,9 +305,15 @@ func TestPetBornFailedDueAndOldLifeHaveNoObservation(t *testing.T) {
 	}
 }
 
+// TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact 核对「显示失败/旧附件变更发事实或回滚业务身体」与「发送失败未有界关闭原连接」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact(t *testing.T) {
+	// mode 接收遍历文本列表时当前的元素。
 	for _, mode := range []string{"baseline_failure", "fact_failure", "connection", "auth", "scene", "body_dead", "body_moved", "new_sequence"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(mode, func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, _, start := petBornWorker(t)
 			paidSummonPlan(t, w, r, start)
 			c.frames = nil
@@ -239,7 +323,9 @@ func TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact(t *testing.
 			if mode == "fact_failure" {
 				c.failID = p.MsgS2CPetBorn
 			}
+			// replaced 保存当前处理所用的“replaced”。
 			replaced := &petBornConnection{alive: true, binding: uint64(r.Auth.SessionEpoch)}
+			// frame 记录协议帧。
 			c.onDeliver = func(frame wire.Frame) {
 				if frame.ID != p.MsgS2CSceneBaseline {
 					return
@@ -281,10 +367,17 @@ func TestPetBornBaselineDeliveryFailureAndAttachmentMutationDropFact(t *testing.
 	}
 }
 
+// TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment 核对「不匹配/未成功SyncReady建立新生资格」与「无原SyncReady证明仍发出生」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment(t *testing.T) {
+	// change 接收遍历文本列表时当前的元素。
 	for _, change := range []string{"not_ready", "bad_payload", "connection", "auth", "binding", "failed"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(change, func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, _, start := petBornWorker(t)
+			// value 保存当前处理所用的值。
 			value := &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline}
 			if change == "not_ready" {
 				r.Ready = false
@@ -295,6 +388,7 @@ func TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment(t *testing.T) {
 			if change == "failed" {
 				c.failID = p.MsgS2CSyncReady
 			}
+			// f 记录协议帧。
 			c.onDeliver = func(f wire.Frame) {
 				if f.ID != p.MsgS2CSyncReady {
 					return
@@ -323,7 +417,11 @@ func TestPetBornSyncReadyStampRequiresSuccessfulExactAttachment(t *testing.T) {
 	}
 }
 
+// TestPetBornUnreadyFilterAndStateSequenceExhaustionFailClosed 核对「baseline序号耗尽回绕或回滚已生效宠物」与「通用send未过滤ACK前出生」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornUnreadyFilterAndStateSequenceExhaustionFailClosed(t *testing.T) {
+	// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+	// start 保存由宠物出生房间执行器取得的起点或开始时间。
 	w, r, c, _, _, start := petBornWorker(t)
 	c.frames = nil
 	r.Ready = false
@@ -341,8 +439,14 @@ func TestPetBornUnreadyFilterAndStateSequenceExhaustionFailClosed(t *testing.T) 
 	}
 }
 
+// TestPetBornSyncReadyWorldIdentityDoesNotFollowUnannouncedWorldChange 核验SyncReady前态应锁定原World，用诊断「新附件重新同步后补播旧出生」定位对应断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornSyncReadyWorldIdentityDoesNotFollowUnannouncedWorldChange(t *testing.T) {
+	// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+	// personal 保存由宠物出生房间执行器取得的个人，town 保存由宠物出生房间执行器取得的城镇。
+	// start 保存由宠物出生房间执行器取得的起点或开始时间。
 	w, r, c, personal, town, start := petBornWorker(t)
+	// plan 保存由已支付召唤计划取得的计划。
 	plan := paidSummonPlan(t, w, r, start)
 	w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{plan.Summon.Front}
 	// 模型停在内部World已经变化、但原scene/baseline尚未重新附着的边界。
@@ -355,6 +459,7 @@ func TestPetBornSyncReadyWorldIdentityDoesNotFollowUnannouncedWorldChange(t *tes
 	if r.Pet == nil || r.petResidentWorld() != town || len(petBornEvents(t, c)) != 0 {
 		t.Fatal("新World沿用旧SyncReady资格发布出生，或丢失真实fallback身体")
 	}
+	// next 保存当前处理所用的下一状态。
 	next := &petBornConnection{alive: true, binding: uint64(r.Auth.SessionEpoch + 1)}
 	r.Conn = next
 	r.Auth.SessionEpoch++
@@ -366,13 +471,22 @@ func TestPetBornSyncReadyWorldIdentityDoesNotFollowUnannouncedWorldChange(t *tes
 	}
 }
 
+// TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry 核对「半组发送失败仍发事实/重试或回滚」与「压力前态未真实产生多块」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry(t *testing.T) {
+	// fail 接收遍历布尔状态列表时当前的元素。
 	for _, fail := range []bool{false, true} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(map[bool]string{false: "complete", true: "second_chunk_failure"}[fail], func(t *testing.T) {
+			// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+			// start 保存由宠物出生房间执行器取得的起点或开始时间。
 			w, r, c, _, _, start := petBornWorker(t)
 			paidSummonPlan(t, w, r, start)
+			// i 保存由无符号整数“32”取得的当前位置的下标。
 			for i := uint32(1001); i < 1129; i++ {
+				// body 保存当前处理所用的消息正文。
 				body := &entity{Handle: i, Kind: 2, Def: w.e.Store.Cfg.Fixture.Pet.DefinitionID, HP: 0, MaxHP: 15, Life: uint64(i), IsPetCorpse: true, Statuses: map[uint32]*combatStatus{}}
+				// id 区分当前步骤指向的目标对象。
 				for id := uint32(1); id < 65; id++ {
 					body.Statuses[id] = &combatStatus{ID: id, TargetLife: body.Life, RemainingMS: math.MaxInt32, SourceSkillID: math.MaxUint32, SkillLevel: math.MaxUint32}
 				}
@@ -386,6 +500,7 @@ func TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry(t *t
 				c.failChunk = 2
 			}
 			w.advanceEvents(r, time.Now())
+			// events 保存由宠物出生事件集合取得的事件集合。
 			events := petBornEvents(t, c)
 			if fail {
 				if len(events) != 0 || c.chunkAttempts != 2 || r.Pet == nil {
@@ -396,7 +511,9 @@ func TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry(t *t
 			if len(events) != 1 {
 				t.Fatal("多块完整后缺事实", len(events))
 			}
+			// count 规定数量的初始取值。
 			count := 0
+			// frame 接收遍历协议帧集合时当前的元素。
 			for _, frame := range c.frames {
 				if frame.ID == p.MsgS2CPetBorn {
 					break
@@ -412,17 +529,26 @@ func TestPetBornMultiChunkGroupAllDeliveredBeforeFactAndFailureDoesNotRetry(t *t
 	}
 }
 
+// TestPetBornElapsedOverflowNegativeAndDuplicateCannotReplay 核对「elapsed负数/溢出未拒绝」与「同局部事实可重复发送」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestPetBornElapsedOverflowNegativeAndDuplicateCannotReplay(t *testing.T) {
+	// duration 接收遍历时长列表时当前的元素。
 	for _, duration := range []time.Duration{-time.Millisecond, (time.Duration(math.MaxUint32) + 1) * time.Millisecond} {
+		// anchor 记录本次处理开始时的时间。
 		anchor := time.Now()
+		// ok 表明查询、校验或类型转换是否成功。
 		if _, ok := petBornElapsed(anchor.Add(-duration), anchor); ok {
 			t.Fatal("elapsed负数/溢出未拒绝")
 		}
 	}
+	// w 接收宠物出生房间执行器供后续步骤使用，r 接收宠物出生房间执行器供后续步骤使用，c 接收宠物出生房间执行器供后续步骤使用。
+	// start 保存由宠物出生房间执行器取得的起点或开始时间。
 	w, r, c, _, _, start := petBornWorker(t)
+	// plan 保存由已支付召唤计划取得的计划。
 	plan := paidSummonPlan(t, w, r, start)
 	w.advanceEvents(r, time.Now())
 	c.frames = nil
+	// fact 保存由创建宠物出生已发生的事实取得的已发生的事实。
 	fact := newPetBirthFact(r, r.currentWorld(), r.Pet, pendingCast{ID: r.CastID, Skill: plan.Skill, Summon: plan.Summon}, time.Now())
 	w.publishPetBorn(r, fact)
 	w.publishPetBorn(r, fact)

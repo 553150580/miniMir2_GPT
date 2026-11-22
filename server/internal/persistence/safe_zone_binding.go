@@ -1,3 +1,5 @@
+// 安全区复活绑定的持久提交和信任恢复。冻结地图及区域摘要，验证原施法材料和来源序号，并保存原操作回执。
+
 package persistence
 
 import (
@@ -17,57 +19,88 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
+// safeZoneBindingKind 保存安全区域会话绑定类型所使用的文本。
 const safeZoneBindingKind = "safe_zone_binding"
 
 // 只由权威walk/21成功后置的owner构造；Position仅供本次来源校验，不写入永久文档。
 // Pending重试必须保留整个请求，不能换来源序号、事件ID、revision或配置身份。
+// SafeZoneBindingRequest 携带房间已经确认的安全区绑定事实及所属场景、实体和来源事件。
 type SafeZoneBindingRequest struct {
-	SourceSeq           int64
-	ExpectedRevision    int64
+	// SourceSeq 记录持久收益来源序号，使用数值表示。
+	SourceSeq int64
+	// ExpectedRevision 记录预期结果修订号，使用数值表示。
+	ExpectedRevision int64
+	// ExpectedRuleVersion 记录预期结果规则版本，使用数值表示。
 	ExpectedRuleVersion uint64
-	ExpectedConfigHash  string
-	MapID               uint64
-	Position            devconfig.Point
-	Action              string
-	EventID             string
+	// ExpectedConfigHash 记录预期结果配置摘要，使用文本表示。
+	ExpectedConfigHash string
+	// MapID 标识当前业务使用的地图。
+	MapID uint64
+	// Position 记录位置，使用点位表示。
+	Position devconfig.Point
+	// Action 记录动作，使用文本表示。
+	Action string
+	// EventID 标识当前业务使用的事件。
+	EventID string
 	// 仅teleport携带；旧walk请求省略此字段，保留原JSON摘要与原请求重试身份。
 	OriginBindingSourceSeq int64 `json:",omitempty"`
 }
 
 // 回执只保存已发生的永久绑定事实及来源身份，不保存角色当前位置或临时世界。
+// BindingReceipt 保留可信绑定位置、地图区域摘要和原施法来源，支持冷重入核验。
 type BindingReceipt struct {
-	Point           domain.RoleBinding `bson:"point"`
-	ZoneID          uint64             `bson:"zone_id"`
-	SourceMapSHA256 string             `bson:"source_map_sha256"`
-	ZoneSetSHA256   string             `bson:"zone_set_sha256"`
-	Action          string             `bson:"action"`
-	EventID         string             `bson:"event_id"`
-	RuleVersion     uint64             `bson:"rule_version"`
-	ConfigHash      string             `bson:"config_hash"`
+	// Point 记录点位，使用角色会话绑定表示。
+	Point domain.RoleBinding `bson:"point"`
+	// ZoneID 标识当前业务使用的区域。
+	ZoneID uint64 `bson:"zone_id"`
+	// SourceMapSHA256 记录来源地图“sha”“256”，使用文本表示。
+	SourceMapSHA256 string `bson:"source_map_sha256"`
+	// ZoneSetSHA256 记录区域设置“sha”“256”，使用文本表示。
+	ZoneSetSHA256 string `bson:"zone_set_sha256"`
+	// Action 记录动作，使用文本表示。
+	Action string `bson:"action"`
+	// EventID 标识当前业务使用的事件。
+	EventID string `bson:"event_id"`
+	// RuleVersion 记录规则版本，使用数值表示。
+	RuleVersion uint64 `bson:"rule_version"`
+	// ConfigHash 记录配置摘要，使用文本表示。
+	ConfigHash string `bson:"config_hash"`
 }
 
+// lowerHex 验证摘要或标识是否恰好是指定字节数的小写十六进制。
+// value 记录值，使用文本表示，bytes 记录字节，使用数值表示。
 func lowerHex(value string, bytes int) bool {
 	if len(value) != bytes*2 || strings.ToLower(value) != value {
 		return false
 	}
+	// decoded 保存由解码文本取得的“decoded”，err 接收解码文本过程中可能产生的错误，供后续失败分支处理。
 	decoded, err := hex.DecodeString(value)
 	return err == nil && len(decoded) == bytes
 }
 
+// bindingOperationID 使用角色编号和来源序号构建不会随重试变化的绑定操作键。
+// roleID 标识当前业务使用的角色，sourceSeq 记录持久收益来源序号，使用数值表示。
 func bindingOperationID(roleID string, sourceSeq int64) string {
 	return fmt.Sprintf("binding:%s:%d", roleID, sourceSeq)
 }
 
+// bindingActionSupported 判断配置版本允许哪种事件建立可信安全区绑定。
+// action 记录动作，使用文本表示，rule 记录规则，使用数值表示。
 func bindingActionSupported(action string, rule uint64) bool {
 	return action == "walk" && rule >= 14 || action == "teleport" && rule >= 15
 }
 
+// validateBindingOrigin 核对绑定事件的角色来源、技能来源与当前规则所允许的事件形状。
+// s 是调用该方法的持久层存储实例，role 记录角色，q 记录安全区域会话绑定请求。
 func (s *Store) validateBindingOrigin(role domain.Role, q SafeZoneBindingRequest) error {
 	if q.Action != "teleport" {
 		return nil
 	}
+	// f 保存当前处理所用的开发测试配置。
 	f := &s.Cfg.Fixture
+	// skill 接收技能供后续步骤使用，selected 保存由技能取得的已选择。
 	skill, selected := f.Skill(21)
+	// rank 保存由技能取得的排序位次，learned 保存由技能取得的已学习。
 	rank, learned := role.Skill(21)
 	if f.RuleVersion < 15 || !selected || skill.Behavior != "teleport" || !learned || skill.JobID != role.Job || rank < skill.LearnedLevel || rank > skill.MaxLevel {
 		return Fail(p.CodeLineForbidden, "传送绑定仅接受本阶段已学21的成功来源后置")
@@ -76,8 +109,10 @@ func (s *Store) validateBindingOrigin(role domain.Role, q SafeZoneBindingRequest
 	if role.Binding == nil || role.BindingSourceSeq <= 0 || role.BindingSafeZoneID == 0 || q.OriginBindingSourceSeq <= 0 {
 		return Fail(p.CodeLineForbidden, "传送绑定缺少原可信绑定地图资格")
 	}
+	// mapID 标识当前业务使用的地图。
 	mapID := role.Binding.MapID
 	if f.RuleVersion >= 24 {
+		// point 保存由城镇瞬移会话绑定取得的点位，ok 表明查询、校验或类型转换是否成功。
 		point, ok := f.TownTeleportBinding(devconfig.BindingPoint{MapID: mapID, X: role.Binding.X, Y: role.Binding.Y}, role.BindingSafeZoneID)
 		if !ok {
 			return Fail(p.CodeLineForbidden, "传送绑定缺少可用城镇目标")
@@ -93,12 +128,17 @@ func (s *Store) validateBindingOrigin(role domain.Role, q SafeZoneBindingRequest
 	return nil
 }
 
+// checkBindingSourceDocument 在 BSON 解码前核查绑定来源字段是否齐全、唯一且数值合法。
+// raw 记录原始值。
 func checkBindingSourceDocument(raw bson.Raw) error {
+	// fields 保存由“elements”取得的字段集合，err 接收“elements”过程中可能产生的错误，供后续失败分支处理。
 	fields, err := raw.Elements()
 	if err != nil {
 		return Fail(p.CodeLineForbidden, "绑定来源存档结构无效")
 	}
+	// seen 建立带初始值的按文本索引的布尔状态映射，供本段继续处理。
 	seen := map[string]bool{}
+	// field 接收遍历字段集合时当前的元素。
 	for _, field := range fields {
 		if field.Key() == "binding" || field.Key() == "binding_source_seq" {
 			if seen[field.Key()] {
@@ -107,6 +147,7 @@ func checkBindingSourceDocument(raw bson.Raw) error {
 			seen[field.Key()] = true
 		}
 	}
+	// value 保存由查找取得的值。
 	value := raw.Lookup("binding_source_seq")
 	if value.Type == 0 {
 		return nil // 旧角色不补造来源证明，完整旧绑定仍可保留。
@@ -117,6 +158,7 @@ func checkBindingSourceDocument(raw bson.Raw) error {
 	if raw.Lookup("binding").Type != bson.TypeEmbeddedDocument {
 		return Fail(p.CodeLineForbidden, "绑定来源序号缺少对应的完整绑定")
 	}
+	// cursor 保存由查找取得的游标。
 	cursor := raw.Lookup("source_seq")
 	if cursor.Type != bson.TypeInt32 && cursor.Type != bson.TypeInt64 || cursor.AsInt64() < value.AsInt64() {
 		return Fail(p.CodeLineForbidden, "绑定来源序号超过角色完整来源水位")
@@ -124,12 +166,18 @@ func checkBindingSourceDocument(raw bson.Raw) error {
 	return nil
 }
 
+// bindingZoneSetHash 生成该地图绑定区域目录的稳定摘要，供原绑定与新配置核对。
+// m 记录地图模板。
 func bindingZoneSetHash(m *devconfig.MapTemplate) (string, error) {
 	if m != nil && m.CompactTown && m.SceneKindValue() == devconfig.SceneKindTown && len(m.SafeZones) == 1 {
 		return hashBindingIdentity(struct {
-			MapID         uint64
-			Geometry      string
-			Zones         []devconfig.SafeZone
+			// MapID 标识当前业务使用的地图。
+			MapID uint64
+			// Geometry 记录“geometry”，使用文本表示。
+			Geometry string
+			// Zones 记录区域集合，使用安全区域列表表示。
+			Zones []devconfig.SafeZone
+			// LegacyZoneIDs 记录兼容旧数据区域i“ds”，使用数值列表表示。
 			LegacyZoneIDs []uint64
 		}{m.ID, bindingMapSHA256(m), m.SafeZones, m.LegacySafeZoneIDs})
 	}
@@ -137,15 +185,22 @@ func bindingZoneSetHash(m *devconfig.MapTemplate) (string, error) {
 		return "", Fail(p.CodeLineForbidden, "绑定必须使用完整来源城镇及来源安全区目录")
 	}
 	// 有序列表保留重叠及重复中心；此摘要是现有唯一配置的派生身份，不是另一份数值源。
+	// identity 初始化用作身份的临时结构。
 	identity := struct {
-		MapID  uint64
+		// MapID 标识当前业务使用的地图。
+		MapID uint64
+		// Source 记录来源，使用来源地图身份表示。
 		Source devconfig.SourceMapIdentity
-		Zones  []devconfig.SafeZone
+		// Zones 记录区域集合，使用安全区域列表表示。
+		Zones []devconfig.SafeZone
 	}{m.ID, *m.Source, m.SafeZones}
 	return hashBindingIdentity(identity)
 }
 
+// hashBindingIdentity 对绑定身份快照序列化并生成内容摘要。
+// identity 记录身份，使用任意类型的数据表示。
 func hashBindingIdentity(identity any) (string, error) {
+	// raw 保存由序列化取得的原始值，err 接收序列化过程中可能产生的错误，供后续失败分支处理。
 	raw, err := json.Marshal(identity)
 	if err != nil {
 		return "", err
@@ -153,6 +208,8 @@ func hashBindingIdentity(identity any) (string, error) {
 	return Hash(raw), nil
 }
 
+// bindingMapSHA256 选择核验当前地图资源身份时使用的摘要。
+// m 记录地图模板。
 func bindingMapSHA256(m *devconfig.MapTemplate) string {
 	if m.CompactTown {
 		// 紧凑地图没有完整来源文件。原凭证的地图身份字段保存本地布局摘要。
@@ -161,7 +218,10 @@ func bindingMapSHA256(m *devconfig.MapTemplate) string {
 	return m.Source.SHA256
 }
 
+// prepareSafeZoneBinding 根据地图及事件原坐标确定候选安全区、生成回执和稳定请求摘要。
+// s 是调用该方法的持久层存储实例，q 记录安全区域会话绑定请求。
 func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceipt, string, error) {
+	// f 保存当前处理所用的开发测试配置。
 	f := &s.Cfg.Fixture
 	if !f.SafeZoneBindingEnabled() {
 		return nil, "", Fail(p.CodeLineForbidden, "来源安全区绑定入口未启用")
@@ -172,10 +232,12 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 	if q.ExpectedRuleVersion != f.RuleVersion || q.ExpectedConfigHash != f.Hash {
 		return nil, "", Fail(p.CodeOperationConflict, "绑定规则身份已变化")
 	}
+	// m 接收地图“by”标识供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	m, ok := f.MapByID(q.MapID)
 	if !ok || f.RuleVersion >= 24 && !f.TownDestination(q.MapID) {
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作不在来源城镇目录")
 	}
+	// walkable 接收可走格供后续步骤使用。
 	walkable := m.Walkable(q.Position)
 	if q.Action == "teleport" {
 		walkable = m.TeleportWalkable(q.Position)
@@ -183,16 +245,20 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 	if !walkable {
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作不在来源城镇可走格")
 	}
+	// zoneHash 保存由会话绑定区域设置摘要取得的区域摘要，err 接收会话绑定区域设置摘要过程中可能产生的错误，供后续失败分支处理。
 	zoneHash, err := bindingZoneSetHash(m)
 	if err != nil {
 		return nil, "", err
 	}
+	// zone 保存由安全区域发生时间取得的区域，inside 保存由安全区域发生时间取得的“inside”。
 	zone, inside := m.SafeZoneAt(q.Position)
 	if !inside || zone.ID == 0 || zone.ID > math.MaxInt64 || !m.Walkable(zone.Center) || zone.Center.X > math.MaxInt32 || zone.Center.Y > math.MaxInt32 {
 		return nil, "", Fail(p.CodeLineForbidden, "绑定动作没有首匹配的合法来源安全区")
 	}
+	// receipt 保存当前处理所用的回执。
 	receipt := &BindingReceipt{Point: domain.RoleBinding{MapID: m.ID, X: int32(zone.Center.X), Y: int32(zone.Center.Y)}, ZoneID: zone.ID,
 		SourceMapSHA256: bindingMapSHA256(m), ZoneSetSHA256: zoneHash, Action: q.Action, EventID: q.EventID, RuleVersion: q.ExpectedRuleVersion, ConfigHash: q.ExpectedConfigHash}
+	// raw 保存由序列化取得的原始值。
 	raw, err := json.Marshal(q)
 	if err != nil {
 		return nil, "", err
@@ -202,10 +268,14 @@ func (s *Store) prepareSafeZoneBinding(q SafeZoneBindingRequest) (*BindingReceip
 
 // BindingTrusted只用于事务/入场读取。worker依据已核验的BindingSourceSeq缓存判断，不能在tick中查库。
 // 无证明的历史绑定保持原值但无资格；声明了证明却丢失/损坏/错配时拒绝，不静默降级或重写。
+// BindingTrusted 从持久回执与配置恢复角色绑定的可信资格。
+// s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，role 记录角色。
 func (s *Store) BindingTrusted(ctx context.Context, role domain.Role) (bool, error) {
 	return s.restoreBindingTrust(ctx, &role)
 }
 
+// restoreBindingTrust 清理读入角色的临时信任标记，重新查证持久化的匹配回执。
+// s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，role 记录角色。
 func (s *Store) restoreBindingTrust(ctx context.Context, role *domain.Role) (bool, error) {
 	role.BindingSafeZoneID = 0
 	if role.BindingSourceSeq == 0 {
@@ -214,6 +284,7 @@ func (s *Store) restoreBindingTrust(ctx context.Context, role *domain.Role) (boo
 	if role.BindingSourceSeq < 0 || role.Binding == nil || role.SourceSeq < role.BindingSourceSeq {
 		return false, Fail(p.CodeLineForbidden, "绑定来源水位与角色不一致")
 	}
+	// op 保存由读取会话绑定操作取得的操作，err 接收读取会话绑定操作过程中可能产生的错误，供后续失败分支处理。
 	op, err := s.readBindingOperation(ctx, bindingOperationID(role.ID, role.BindingSourceSeq))
 	if errors.Is(err, mongo.ErrNoDocuments) {
 		return false, Fail(p.CodeLineForbidden, "绑定来源永久回执缺失")
@@ -228,7 +299,10 @@ func (s *Store) restoreBindingTrust(ctx context.Context, role *domain.Role) (boo
 	return true, nil
 }
 
+// validateBindingOperation 用角色绑定各项水位、坐标和地图区域身份核对原永久回执。
+// s 是调用该方法的持久层存储实例，role 记录角色，op 记录操作。
 func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
+	// b 保存会话绑定，用于当前步骤中的b。
 	b := op.Binding
 	if b == nil || role.Binding == nil || op.ID != bindingOperationID(role.ID, role.BindingSourceSeq) || op.Kind != safeZoneBindingKind || op.RoleID != role.ID {
 		return Fail(p.CodeLineForbidden, "绑定来源回执身份不一致")
@@ -239,19 +313,23 @@ func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
 	if op.Code != 0 || op.Potion != nil || op.Casting != nil || !lowerHex(op.Digest, 32) || !bindingActionSupported(b.Action, b.RuleVersion) || !lowerHex(b.EventID, 16) || b.RuleVersion > s.Cfg.Fixture.RuleVersion || b.RuleVersion > math.MaxInt64 || !lowerHex(b.ConfigHash, 32) || b.Point != *role.Binding {
 		return Fail(p.CodeLineForbidden, "绑定来源回执身份或已提交中心不一致")
 	}
+	// m 接收地图“by”标识供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	m, ok := s.Cfg.Fixture.MapByID(b.Point.MapID)
 	if !ok || m.CompactTown != (b.RuleVersion >= 24) || !m.Walkable(devconfig.Point{X: int(b.Point.X), Y: int(b.Point.Y)}) {
 		return Fail(p.CodeLineForbidden, "绑定来源中心不在当前来源地图可走格")
 	}
+	// zoneHash 保存由会话绑定区域设置摘要取得的区域摘要，err 接收会话绑定区域设置摘要过程中可能产生的错误，供后续失败分支处理。
 	zoneHash, err := bindingZoneSetHash(m)
 	if err != nil {
 		return err
 	}
+	// mapHash 保存由会话绑定地图“sha”“256”取得的地图摘要。
 	mapHash := bindingMapSHA256(m)
 	if (b.SourceMapSHA256 != mapHash || b.ZoneSetSHA256 != zoneHash) && !matchesHistoricalTownBinding(b, s.Cfg.Fixture.RuleVersion, mapHash, zoneHash) {
 		return Fail(p.CodeLineForbidden, "绑定来源地图或安全区目录身份已变化")
 	}
 	// 提交时在动作格取首匹配；冷验按已记录的源行身份核中心，不在另一格重新选区。
+	// zone 接收遍历安全区域集合时当前的元素。
 	for _, zone := range m.SafeZones {
 		if zone.ID == b.ZoneID && zone.Center.X == int(b.Point.X) && zone.Center.Y == int(b.Point.Y) {
 			return nil
@@ -260,8 +338,12 @@ func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
 	return Fail(p.CodeLineForbidden, "绑定来源安全区与中心不一致")
 }
 
+// readBindingOperation 按绑定幂等键读取持久操作，先验证 BSON 字段形状再解码。
+// s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，id 区分当前步骤指向的目标对象。
 func (s *Store) readBindingOperation(ctx context.Context, id string) (Operation, error) {
+	// op 记录操作。
 	var op Operation
+	// raw 接收原始值供后续步骤使用，err 接收原始值过程中可能产生的错误，供后续失败分支处理。
 	raw, err := s.DB.Collection("operations").FindOne(ctx, bson.M{"_id": id}).Raw()
 	if err != nil {
 		return op, err
@@ -274,13 +356,19 @@ func (s *Store) readBindingOperation(ctx context.Context, id string) (Operation,
 }
 
 // 原始BSON严格核验，避免缺字段/重复键/浮点数在Decode后伪装成完整证明。
+// checkBindingOperationDocument 严检必需字段、数据类型和临时状态，防止损坏文档误获信任。
+// raw 记录原始值。
 func checkBindingOperationDocument(raw bson.Raw) error {
+	// fail 封装失败对应的后续处理。
 	fail := func() error { return Fail(p.CodeLineForbidden, "绑定来源回执BSON结构不完整或类型无效") }
+	// fields 保存由“elements”取得的字段集合，err 接收“elements”过程中可能产生的错误，供后续失败分支处理。
 	fields, err := raw.Elements()
 	if err != nil || len(fields) != 10 {
 		return fail()
 	}
+	// seen 建立带初始值的按文本索引的布尔状态映射，供本段继续处理。
 	seen := map[string]bool{}
+	// field 接收遍历字段集合时当前的元素。
 	for _, field := range fields {
 		if seen[field.Key()] {
 			return fail()
@@ -292,12 +380,15 @@ func checkBindingOperationDocument(raw bson.Raw) error {
 			return fail() // 新typed kind无旧扩展合同；不能夹带其它经济回执或临时字段。
 		}
 	}
+	// name 接收遍历文本列表时当前的元素。
 	for _, name := range []string{"_id", "digest", "role_id", "kind"} {
 		if raw.Lookup(name).Type != bson.TypeString {
 			return fail()
 		}
 	}
+	// name 接收遍历文本列表时当前的元素。
 	for _, name := range []string{"command_seq", "source_seq", "revision", "code"} {
+		// value 保存由查找取得的值。
 		value := raw.Lookup(name)
 		if value.Type != bson.TypeInt32 && value.Type != bson.TypeInt64 || value.AsInt64() < 0 || (name == "source_seq" || name == "revision") && value.AsInt64() == 0 || name == "code" && value.AsInt64() != 0 {
 			return fail()
@@ -306,16 +397,20 @@ func checkBindingOperationDocument(raw bson.Raw) error {
 	if raw.Lookup("created_at").Type != bson.TypeDateTime {
 		return fail()
 	}
+	// doc 保存由文档成功标记取得的“doc”，ok 表明查询、校验或类型转换是否成功。
 	doc, ok := raw.Lookup("binding_use").DocumentOK()
 	if !ok {
 		return fail()
 	}
+	// items 保存由“elements”取得的道具集合。
 	items, err := doc.Elements()
 	if err != nil || len(items) != 8 {
 		return fail()
 	}
 	seen = map[string]bool{}
+	// item 接收遍历道具集合时当前的元素。
 	for _, item := range items {
+		// key 接收键供后续步骤使用，value 接收值供后续步骤使用。
 		key, value := item.Key(), item.Value()
 		if seen[key] {
 			return fail()
@@ -326,6 +421,7 @@ func checkBindingOperationDocument(raw bson.Raw) error {
 			if value.Type != bson.TypeEmbeddedDocument {
 				return fail()
 			}
+			// wrapped 保存由序列化取得的“wrapped”，err 接收序列化过程中可能产生的错误，供后续失败分支处理。
 			wrapped, err := bson.Marshal(bson.D{{Key: "binding", Value: value.Document()}})
 			if err != nil || checkBindingDocument(wrapped) != nil {
 				return fail()
@@ -346,23 +442,33 @@ func checkBindingOperationDocument(raw bson.Raw) error {
 }
 
 // BindSafeZoneWithReceipt不消耗客户端经济序号。原ID/摘要先查回执，绝不把旧SourceSeq直接当成功。
+// BindSafeZoneWithReceipt 在角色和账号围栏内原子记录绑定、原来源和审计，可重放相同事实。
+// s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，auth 记录授权，q 记录安全区域会话绑定请求。
 func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZoneBindingRequest) (domain.Role, Operation, error) {
+	// out 记录输出，使用角色表示。
 	var out domain.Role
+	// receipt 记录回执，使用操作表示。
 	var receipt Operation
 	if q.SourceSeq <= 0 {
 		return out, receipt, Fail(p.CodeInvalidArgument, "绑定来源序号无效")
 	}
+	// opID 标识当前业务使用的操作。
 	opID := bindingOperationID(auth.RoleID, q.SourceSeq)
+	// raw 保存由序列化取得的原始值，err 接收序列化过程中可能产生的错误，供后续失败分支处理。
 	raw, err := json.Marshal(q)
 	if err != nil {
 		return out, receipt, err
 	}
+	// digest 接收摘要供后续步骤使用。
 	digest := Hash(raw)
+	// tc 记录MongoDB 事务上下文，使用请求或事务上下文表示。
 	err = s.guardedTx(ctx, auth, func(tc context.Context) error {
 		receipt = Operation{}
+		// err 接收权限围栏过程中可能产生的错误，供后续失败分支处理。
 		if err := s.fence(tc, auth); err != nil {
 			return err
 		}
+		// role 接收角色供后续步骤使用，err 接收角色过程中可能产生的错误，供后续失败分支处理。
 		role, err := s.Role(tc, auth.RoleID)
 		if err != nil {
 			return err
@@ -370,12 +476,15 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if err = s.checkRole(role, auth); err != nil {
 			return err
 		}
+		// old 保存由读取会话绑定操作取得的原状态。
 		old, err := s.readBindingOperation(tc, opID)
 		if err == nil {
 			if old.Kind != safeZoneBindingKind || old.RoleID != role.ID || old.SourceSeq != q.SourceSeq || old.Digest != digest || old.Code != 0 || old.Binding == nil {
 				return Fail(p.CodeOperationConflict, "同绑定来源ID的请求内容或回执改变")
 			}
+			// historical 保存当前处理所用的“historical”。
 			historical := role
+			// point 保存当前处理所用的点位。
 			point := old.Binding.Point
 			historical.Binding, historical.BindingSourceSeq = &point, old.SourceSeq
 			if err = s.validateBindingOperation(historical, old); err != nil {
@@ -391,6 +500,7 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if role.SourceSeq == math.MaxInt64 || role.Revision == math.MaxInt64 || role.SourceSeq+1 != q.SourceSeq || role.Revision != q.ExpectedRevision {
 			return Fail(p.CodeOperationConflict, "绑定来源序列或角色revision变化，保留原事件对账")
 		}
+		// binding 保存由准备安全区域会话绑定取得的会话绑定，fingerprint 保存由准备安全区域会话绑定取得的“fingerprint”。
 		binding, fingerprint, err := s.prepareSafeZoneBinding(q)
 		if err != nil {
 			return err
@@ -401,7 +511,9 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if err = s.validateBindingOrigin(role, q); err != nil {
 			return err
 		}
+		// before 保存修订号，用于当前步骤中的操作前的状态。
 		before := role.Revision
+		// point 保存当前处理所用的点位。
 		point := binding.Point
 		role.Binding, role.BindingSourceSeq = &point, q.SourceSeq
 		role.BindingSafeZoneID = binding.ZoneID
@@ -409,10 +521,12 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		if err = s.replace(tc, role, before); err != nil {
 			return err
 		}
+		// op 组装操作所需的数据。
 		op := Operation{ID: opID, Digest: digest, RoleID: role.ID, CommandSeq: role.EconomicSeq, SourceSeq: q.SourceSeq, Revision: role.Revision, Kind: safeZoneBindingKind, Created: time.Now(), Binding: binding}
 		if _, err = s.DB.Collection("operations").InsertOne(tc, op); err != nil {
 			return err
 		}
+		// audit 初始化用作审计记录的MongoDB BSON 文档。
 		audit := bson.M{"_id": opID, "kind": safeZoneBindingKind, "role_id": role.ID, "account_id": auth.AccountID, "source_seq": q.SourceSeq, "revision": role.Revision, "binding_use": binding, "at": op.Created}
 		if q.Action == "teleport" {
 			audit["origin_binding_source_seq"] = q.OriginBindingSourceSeq

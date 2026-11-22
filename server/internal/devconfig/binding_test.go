@@ -1,3 +1,5 @@
+// 本文件拒绝缺失或不可行的绑定格，核对零坐标与旧绑定映射的兼容边界。
+
 package devconfig
 
 import (
@@ -5,9 +7,14 @@ import (
 	"testing"
 )
 
+// TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain 核对「缺失、关闭、未知地图或无效地格被补成了有效绑定」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain(t *testing.T) {
+	// scenario 接收遍历临时结构列表时当前的元素。
 	for _, scenario := range []struct {
+		// name 记录名称，使用文本表示。
 		name string
+		// json 记录JSON，使用文本表示。
 		json string
 	}{
 		{"missing_enabled", `{"start_points":[]}`},
@@ -28,9 +35,12 @@ func TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain(t *testing.T
 		{"blocked", `{"enabled":true,"start_points":[{"map_id":1,"x":1,"y":1}]}`},
 		{"overflow", `{"enabled":true,"start_points":[{"map_id":1,"x":2147483648,"y":0}]}`},
 	} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(scenario.name, func(t *testing.T) {
+			// f 组装开发测试配置所需的数据。
 			f := Fixture{RuleVersion: 12}
 			f.Map.ID, f.Map.Width, f.Map.Height, f.Map.Blocked = 1, 17, 17, []Point{{X: 1, Y: 1}}
+			// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 			err := json.Unmarshal([]byte(scenario.json), &f.Binding)
 			if err == nil {
 				err = f.ValidateBinding()
@@ -42,9 +52,13 @@ func TestBindingRulesRequireExplicitCoordinatesAndConfiguredTerrain(t *testing.T
 	}
 }
 
+// TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin 核对「新规则缺失绑定合同未被拒绝」与「旧规则被悄悄启用绑定配置」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin(t *testing.T) {
+	// f 组装开发测试配置所需的数据。
 	f := Fixture{RuleVersion: 11}
 	f.Map.ID, f.Map.Width, f.Map.Height = 1, 17, 17
+	// err 接收校验会话绑定过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateBinding(); err != nil {
 		t.Fatal(err)
 	}
@@ -52,10 +66,13 @@ func TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin(t *testin
 	if f.ValidateBinding() == nil {
 		t.Fatal("新规则缺失绑定合同未被拒绝")
 	}
+	// raw 接收遍历文本列表时当前的元素。
 	for _, raw := range []string{`{"enabled":false,"start_points":[]}`, `{"enabled":true,"start_points":[{"map_id":1,"x":0,"y":0}]}`} {
+		// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 		if err := json.Unmarshal([]byte(raw), &f.Binding); err != nil {
 			t.Fatal(err)
 		}
+		// err 接收校验会话绑定过程中可能产生的错误，供后续失败分支处理。
 		if err := f.ValidateBinding(); err != nil {
 			t.Fatal(err)
 		}
@@ -66,12 +83,20 @@ func TestBindingZeroCoordinatesAreExplicitAndLegacyDoesNotInventOrigin(t *testin
 	}
 }
 
+// TestSafeZoneBindingGateDoesNotEnableRandomInitialization 核对「安全区更新门禁改变随机初始化或缺省启用」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestSafeZoneBindingGateDoesNotEnableRandomInitialization(t *testing.T) {
+	// scenario 接收遍历临时结构列表时当前的元素。
 	for _, scenario := range []struct {
-		name   string
-		rule   uint64
-		json   string
-		valid  bool
+		// name 记录名称，使用文本表示。
+		name string
+		// rule 记录规则，使用数值表示。
+		rule uint64
+		// json 记录JSON，使用文本表示。
+		json string
+		// valid 标记是否处于有效状态。
+		valid bool
+		// active 标记是否处于“active”状态。
 		active bool
 	}{
 		{"missing_gate", 14, `{"enabled":false,"start_points":[]}`, false, false},
@@ -83,9 +108,12 @@ func TestSafeZoneBindingGateDoesNotEnableRandomInitialization(t *testing.T) {
 		{"both_closed", 14, `{"enabled":false,"start_points":[],"safe_zone_enabled":false}`, true, false},
 		{"visit_only", 14, `{"enabled":false,"start_points":[],"safe_zone_enabled":true}`, true, true},
 	} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(scenario.name, func(t *testing.T) {
+			// f 组装开发测试配置所需的数据。
 			f := Fixture{RuleVersion: scenario.rule}
 			f.Maps = []MapTemplate{{ID: 2, Width: 4, Height: 4, SceneKind: SceneKindTown, CollisionBits: make([]byte, 2), Source: &SourceMapIdentity{}, SafeZones: []SafeZone{{ID: 106, Center: Point{X: 2, Y: 2}, Radius: 1}}}}
+			// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 			err := json.Unmarshal([]byte(scenario.json), &f.Binding)
 			if err == nil {
 				err = f.ValidateBinding()
@@ -100,10 +128,16 @@ func TestSafeZoneBindingGateDoesNotEnableRandomInitialization(t *testing.T) {
 	}
 }
 
+// TestSafeZoneBindingRequiresSourceTownAndWalkableCenter 核对「缺少来源安全区或不可走中心仍启用绑定」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestSafeZoneBindingRequiresSourceTownAndWalkableCenter(t *testing.T) {
+	// invalid 接收遍历文本列表时当前的元素。
 	for _, invalid := range []string{"no_town", "no_source", "no_zones", "blocked_center", "personal_zone"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(invalid, func(t *testing.T) {
+			// f 组装开发测试配置所需的数据。
 			f := Fixture{RuleVersion: 14}
+			// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 			if err := json.Unmarshal([]byte(`{"enabled":false,"start_points":[],"safe_zone_enabled":true}`), &f.Binding); err != nil {
 				t.Fatal(err)
 			}

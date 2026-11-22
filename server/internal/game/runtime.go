@@ -1,3 +1,4 @@
+// 本文件装配游戏引擎与房间分片，路由连接和指令，管理入场、场景基线和操作分发。
 package game
 
 import (
@@ -19,164 +20,183 @@ import (
 	"time"
 )
 
+// Connection 定义房间可使用的 WebSocket 附着、收发和会话状态接口。
 type Connection interface {
-	Alive() bool
-	Deliver(wire.Frame) bool
-	Close(string)
-	SetRole(string)
-	RoleID() string
-	SetBinding(uint64)
-	Binding() uint64
-}
-type command struct {
-	role        string
-	conn        Connection
-	frame       wire.Frame
-	ticket      string
-	done        func(*worker)
-	tick        time.Time
-	at          time.Time
-	disconnect  bool
-	fromWaiting bool
-}
-type job struct {
-	run        func() func(*worker)
-	target     *worker
-	settlement bool
-}
-type Engine struct {
-	Store            *persistence.Store
-	workers          []*worker
-	jobs             chan job
-	settlementJobs   chan job
-	admissionTickets chan job
-	admissionEntries chan job
-	ctx              context.Context
-	cancel           context.CancelFunc
-	wg               sync.WaitGroup
-	baseline         atomic.Uint64
-	stopped          atomic.Bool
-	TownGrids        map[uint64]*townnav.Grid
+	Alive() bool             // 报告连接是否仍能处理当前请求或接收推送。
+	Deliver(wire.Frame) bool // 尝试将完整应用帧移交给连接的发送队列。
+	Close(string)            // 按服务端原因关闭连接，并触发对应的断连清理。
+	SetRole(string)          // 在查到有效票据角色后写入连接路由键。
+	RoleID() string          // 返回连接当前路由的角色编号。
+	SetBinding(uint64)       // 在入场事务确认后写入新会话代次。
+	Binding() uint64         // 读取会话代次，用来拦截旧连接或旧帧。
 }
 
+// command 表示应该交给单个房间分片串行处理的输入或控制事件。
+type command struct {
+	role        string        // 房间分片内的角色索引键。
+	conn        Connection    // 命令来源连接，后台时钟及内部回调可不带连接。
+	frame       wire.Frame    // 原始请求帧，保留消息号、请求号和绑定代次。
+	ticket      string        // 入场命令携带的短票。
+	done        func(*worker) // 在房间分片 goroutine 上执行的内部工作。
+	tick        time.Time     // 发出房间逻辑帧时采样的服务器时刻。
+	at          time.Time     // 记录断开发生时刻，标定在线和托管事件的归属边界。
+	disconnect  bool          // 把这条控制命令解释为对应连接的断开。
+	fromWaiting bool          // 该命令从房间等待队列重放时为真。
+}
+
+// job 表示数据库协程同房间分片之间的异步提交与回收约定。
+type job struct {
+	run        func() func(*worker) // 在数据库执行协程中运行；返回的函数只在目标分片应用结果。
+	target     *worker              // 拥有该房间并接收结果的分片。
+	settlement bool                 // 将收益等持久结算任务路由到独立等待队列。
+}
+
+// Engine 持有游戏分片和数据库队列，负责路由协议及管理运行周期。
+type Engine struct {
+	Store            *persistence.Store       // 服务端持久层，提供票据、围栏和经济事务。
+	workers          []*worker                // 所有房间分片，按角色散列映射保持操作顺序。
+	jobs             chan job                 // 普通业务数据库任务的有界队列。
+	settlementJobs   chan job                 // 收益与同类持久结算任务的独立等待队列。
+	admissionTickets chan job                 // 入场第一阶段的短票角色查询队列。
+	admissionEntries chan job                 // 入场第二阶段的持久会话接管队列。
+	ctx              context.Context          // 引擎生命周期，取消后停止推进和投递任务。
+	cancel           context.CancelFunc       // 通知分片、时钟和数据库执行协程退出。
+	wg               sync.WaitGroup           // 等待引擎持有的后台协程完成。
+	baseline         atomic.Uint64            // 跨分片分配客户端场景基线编号。
+	stopped          atomic.Bool              // 表示已冻结新增游戏操作，停服时仍可处理已受理回执。
+	TownGrids        map[uint64]*townnav.Grid // 按城镇地图编号保存可共用的导航静态网格。
+}
+
+// workerCount 固定角色散列的分片数量。
 const workerCount = 8
+
+// maxRoomsPerWorker 约束正式开发装配中每个分片保留的房间数量。
 const maxRoomsPerWorker = 256
 
+// worker 独占所属角色房间的状态修改权，避免网络及数据库协程并发改写房间。
 type worker struct {
-	e                  *Engine
-	commands           chan command
-	control            chan command
-	done               chan func(*worker)
-	rooms              map[string]*room
-	roll               func(int64) int64
-	townNavigation     *townNavigationWorker
-	personalNavigation personalNavigationWorkspace
-}
-type entity struct {
-	Handle           uint32
-	Kind             uint32
-	Def              uint32
-	Pos              devconfig.Point
-	Direction        uint32
-	HP               int64
-	MP               int64
-	MaxMP            int64
-	MaxHP            int64
-	Action           uint32
-	AttackSequence   uint32
-	AttackSkillID    uint32
-	AttackSkillLevel uint32
-	ActionUntil      time.Time
-	NextMove         time.Time
-	NextAttack       time.Time
-	ActionReadyAt    time.Time
-	RespawnAt        time.Time
-	Monster          *devconfig.Monster
-	CastSequence     uint32
-	CastSkillID      uint32
-	Life             uint64
-	HealAmount       int64
-	NextHeal         time.Time
-	Statuses         map[uint32]*combatStatus
-	MovementRevision uint64
-	MovementKind     uint32
-	CellEntry        uint64
-	PetRuntime       *petRuntimeState
-	IsPetCorpse      bool
-}
-type room struct {
-	*worldState
-	PersonalWorld         *worldState
-	TownWorld             *worldState
-	TownWorlds            []*worldState
-	ExecutionEpoch        uint64
-	WorldSequence         uint64
-	InflightEvents        int
-	EventBatch            []dueEvent
-	AdvancingEvents       bool
-	FactOrder             uint64
-	BindingCandidate      *safeZoneBindingFact
-	SettlementGeneration  uint64
-	AssetGeneration       uint64
-	Role                  domain.Role
-	Auth                  persistence.Auth
-	Conn                  Connection
-	Ready                 bool
-	PetBornReady          *petBornAttachment
-	Travel                *mapTravelPlan
-	TravelHistory         *mapTravelHistory
-	SavedPersonal         *personalWorld
-	TownNavigation        [2]*townNavigationRequest
-	Scene                 uint64
-	Baseline              uint64
-	Sequence              uint64
-	Player                entity
-	Pet                   *entity
-	PetWorld              worldRef
-	PetLifeSequence       uint64
-	PetHandleSequence     uint32
-	PendingPetBirth       *petBirthReservation
-	Manual                bool
-	ManualDirection       uint32
-	AutoSkills            *autoSkillSettings
-	AutoTarget            actorRef
-	Pending               bool
-	PendingRetry          *job
-	PendingBinding        *safeZoneBindingFact
-	RetryAt               time.Time
-	Waiting               []command
-	LastTick              time.Time
-	idleSince             time.Time
-	HostMS                int64 // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
-	hostSecondsOpen       int64 // 当前会话已经运行、尚未绑定结算流水的整秒。
-	HostSession           string
-	DeathID               string
-	AwaitUntil            time.Time
-	LastBroadcast         time.Time
-	Potions               potionState
-	Wear                  equipmentWearState
-	PendingOperationID    string
-	PendingFingerprint    string
-	InputSequence         uint32
-	NextSpell             time.Time
-	SkillCooldowns        map[uint32]time.Time
-	CastID                uint64
-	EventID               uint64
-	ScheduleID            uint64
-	KillFacts             []killFact
-	PreviewInFlight       bool
-	PreviewGeneration     uint64
-	Isolated              bool
-	MaterialEconomicSeq   int64
-	MaterialSourceSeq     int64
-	MaterialGeneration    uint64
-	Melee                 meleeState
-	CellEntrySequence     uint64
-	DeferMovementSnapshot bool
+	e                  *Engine                     // 当前分片所属的引擎。
+	commands           chan command                // 接收游戏指令、入场请求和逻辑帧。
+	control            chan command                // 优先独立接收断连等控制命令。
+	done               chan func(*worker)          // 接收数据库结果，在分片内串行应用。
+	rooms              map[string]*room            // 该分片持有的角色房间，只有其事件循环改写。
+	roll               func(int64) int64           // 供测试注入可复现掷点的函数。
+	townNavigation     *townNavigationWorker       // 该分片的城镇寻路队列、预算与工作区。
+	personalNavigation personalNavigationWorkspace // 可在分片内跨个人房间复用的寻路数组。
 }
 
+// entity 保存当前进程中的战斗身体、动作时钟和空间身份。
+type entity struct {
+	Handle           uint32                   // 在场景实体集内引用该身体的句柄。
+	Kind             uint32                   // 区分角色、宠物、怪物与场景对象的类别。
+	Def              uint32                   // 对应配置中的实体定义编号。
+	Pos              devconfig.Point          // 地图逻辑网格位置。
+	Direction        uint32                   // 当前朝向的八方向编号。
+	HP               int64                    // 当前生命值，归零表示死亡。
+	MP               int64                    // 当前魔法值，供施法和恢复逻辑使用。
+	MaxMP            int64                    // 魔法上限，恢复时用来裁剪。
+	MaxHP            int64                    // 生命上限，恢复或复活时用来裁剪。
+	Action           uint32                   // 向客户端观察的当前动作类型。
+	AttackSequence   uint32                   // 观察端用来区别相邻攻击动作的单调序号。
+	AttackSkillID    uint32                   // 这次攻击动作使用的技能定义编号。
+	AttackSkillLevel uint32                   // 这次攻击动作的技能等级。
+	ActionUntil      time.Time                // 当前动作表现到期的时刻。
+	NextMove         time.Time                // 下一次允许行走的独立时刻。
+	NextAttack       time.Time                // 下一次允许发起攻击的独立时刻。
+	ActionReadyAt    time.Time                // 当前行动锁结束的时刻。
+	RespawnAt        time.Time                // 死亡怪物允许尝试复活的时刻。
+	Monster          *devconfig.Monster       // 怪物或宠物采用的配置数值。
+	CastSequence     uint32                   // 观察端用来区别施法动作的单调序号。
+	CastSkillID      uint32                   // 这次施法动作使用的技能编号。
+	Life             uint64                   // 当前出生代次，阻止旧事件误命中新生身体。
+	HealAmount       int64                    // 尚未按治疗时钟消化的技能恢复量。
+	NextHeal         time.Time                // 下一次技能治疗量生效的时刻。
+	Statuses         map[uint32]*combatStatus // 按效果编号保存尚生效的战斗状态。
+	MovementRevision uint64                   // 位置变化的单调修订号，区分强制位移和正常行走。
+	MovementKind     uint32                   // 上次位置变化的类型。
+	CellEntry        uint64                   // 此次进入逻辑格的唯一序号。
+	PetRuntime       *petRuntimeState         // 宠物出生后才有的运行配置与成长状态。
+	IsPetCorpse      bool                     // 表示实体仅作为已归档的宠物尸体显示。
+}
+
+// room 汇总角色资产的已确认视图与活动场景，分片循环统一推进所有临时状态。
+type room struct {
+	*worldState                                     // 当前活动世界；匿名嵌入让常用战斗代码直接访问场景状态。
+	PersonalWorld         *worldState               // 此角色独有的挂机世界，切到城镇时仍可保留原现场。
+	TownWorld             *worldState               // 当前持有的城镇世界引用。
+	TownWorlds            []*worldState             // 已创建的其他城镇现场，用于按地图查找和保留事件归属。
+	ExecutionEpoch        uint64                    // 此房间在当前进程中的唯一执行代次。
+	WorldSequence         uint64                    // 从同一执行代次分配世界编号的水位。
+	InflightEvents        int                       // 已移入到期处理批次的事件数量。
+	EventBatch            []dueEvent                // 本轮从各世界取出的待执行事件列表。
+	AdvancingEvents       bool                      // 标记正在推进统一事件批次，避免中途重入。
+	FactOrder             uint64                    // 来源事实的房间顺序水位，协调绑定和击杀。
+	BindingCandidate      *safeZoneBindingFact      // 尚待占用来源流水的安全区绑定事实。
+	SettlementGeneration  uint64                    // 收益结算回调的房间内代次。
+	AssetGeneration       uint64                    // 经济指令回调的房间内代次。
+	Role                  domain.Role               // 最近通过持久层确认的角色资产和业务水位。
+	Auth                  persistence.Auth          // 当前角色拥有者、账号和会话代次的授权信息。
+	Conn                  Connection                // 当前附着连接；为空时按离线现场处理。
+	Ready                 bool                      // 当前连接是否已确认正确场景基线。
+	PetBornReady          *petBornAttachment        // 宠物新生事实所需的已确认观察连接身份。
+	Travel                *mapTravelPlan            // 当前或最近一次的换图计划及终态。
+	TravelHistory         *mapTravelHistory         // 在当前会话和场景内拒绝旧换图编号的已接受历史。
+	SavedPersonal         *personalWorld            // 切往城镇时停驻的个人现场标记。
+	TownNavigation        [2]*townNavigationRequest // 玩家和宠物各自的城镇寻路引用。
+	Scene                 uint64                    // 客户端观察的场景代次，与内部世界执行身份分开。
+	Baseline              uint64                    // 当前连接等待确认的场景基线编号。
+	Sequence              uint64                    // 场景推送状态的单调编号。
+	Player                entity                    // 该房间中唯一的角色身体。
+	Pet                   *entity                   // 角色目前拥有的宠物身体。
+	PetWorld              worldRef                  // 宠物实际驻留世界的执行身份。
+	PetLifeSequence       uint64                    // 分配宠物出生代次的单调水位。
+	PetHandleSequence     uint32                    // 分配宠物实体句柄的水位。
+	PendingPetBirth       *petBirthReservation      // 已接受但尚未完成的宠物出生预约。
+	Manual                bool                      // 摇杆手动移动是否仍在持续。
+	ManualDirection       uint32                    // 当前手动移动方向。
+	AutoSkills            *autoSkillSettings        // 角色对自动释放技能的独立偏好。
+	AutoTarget            actorRef                  // 当前自动战斗锁定的怪物生命引用。
+	Pending               bool                      // 房间存在需要冻结推进的在途持久操作。
+	PendingRetry          *job                      // 结果未知或排队失败后需原样重投的数据库任务。
+	PendingBinding        *safeZoneBindingFact      // 已作为当前在途操作提交的安全区绑定事实。
+	RetryAt               time.Time                 // 下一次允许重投在途任务的时刻。
+	Waiting               []command                 // 在途操作结束后准备重放的有限命令队列。
+	LastTick              time.Time                 // 上次处理的服务器逻辑帧时刻，用于计算定步计量。
+	idleSince             time.Time                 // 首次满足释放条件的时刻，健康回收窗口从这里计起。
+	HostMS                int64                     // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
+	hostSecondsOpen       int64                     // 当前会话已经运行、尚未绑定结算流水的整秒。
+	HostSession           string                    // 当前连续离线托管的会话编号。
+	DeathID               string                    // 当前死亡待选分支的唯一编号。
+	AwaitUntil            time.Time                 // 当前附着等待首次场景 ACK 的截止时刻。
+	LastBroadcast         time.Time                 // 最近一次场景快照发送时刻。
+	Potions               potionState               // 药水恢复池、冷却和回执水位。
+	Wear                  equipmentWearState        // 待确认及新积累的装备耐久磨损。
+	PendingOperationID    string                    // 当前在途操作的原始编号。
+	PendingFingerprint    string                    // 当前操作原业务内容的指纹，检测错配回执和重试。
+	InputSequence         uint32                    // 当前附着已接收的移动与施法共用输入水位。
+	NextSpell             time.Time                 // 玩家下一次允许施法的时刻。
+	SkillCooldowns        map[uint32]time.Time      // 按技能编号保存的各自冷却时刻。
+	CastID                uint64                    // 分配施法事件编号的水位。
+	EventID               uint64                    // 分配战斗观察事件编号的水位。
+	ScheduleID            uint64                    // 分配统一战斗事件排序号的水位。
+	KillFacts             []killFact                // 尚未以来源事务确认的击杀事实，保持原身份和随机结果。
+	PreviewInFlight       bool                      // 本房间是否已有只读预览任务在途。
+	PreviewGeneration     uint64                    // 只读预览回调的代次，用于使旧结果失效。
+	Isolated              bool                      // 出现无法安全继续的授权或身份问题时冻结房间。
+	MaterialEconomicSeq   int64                     // 已应用材料技能回执的经济指令水位。
+	MaterialSourceSeq     int64                     // 已应用材料技能回执的来源水位。
+	MaterialGeneration    uint64                    // 材料技能回调的房间内代次。
+	Melee                 meleeState                // 普攻模式、蓄力和修订状态。
+	CellEntrySequence     uint64                    // 分配角色及实体格进入身份的单调水位。
+	DeferMovementSnapshot bool                      // 暂缓中途位移快照，留待同一组合动作完整提交后再观察。
+}
+
+// New 启动稳定散列的房间分片、独立数据库执行协程和周期逻辑帧。
+// ctx 向下传递当前请求的截止时间和取消信号，s 记录持久层存储。
 func New(ctx context.Context, s *persistence.Store) *Engine {
+	// cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithCancel(ctx)
+	// e 保存当前处理所用的游戏引擎。
 	e := &Engine{
 		Store: s, ctx: ctx, cancel: cancel,
 		jobs:             make(chan job, 256),
@@ -184,26 +204,34 @@ func New(ctx context.Context, s *persistence.Store) *Engine {
 		admissionTickets: make(chan job, 128),
 		admissionEntries: make(chan job, 128),
 	}
+	// i 标记循环或列表中的当前位置。
 	for i := 0; i < workerCount; i++ {
+		// w 保存当前处理所用的房间执行器。
 		w := &worker{e: e, commands: make(chan command, 256), control: make(chan command, 64), done: make(chan func(*worker), 256), rooms: map[string]*room{}}
 		e.workers = append(e.workers, w)
 	}
+	// err 接收城镇导航静态网格装配失败的原因。
 	if err := e.initializeTownNavigation(); err != nil {
 		cancel()
 		panic("城镇导航准入初始化失败：" + err.Error())
 	}
+	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
 		e.wg.Go(w.loop)
 	}
 	e.startDatabaseWorkers()
 	e.wg.Go(func() {
+		// 逻辑帧以同一采样时钟发给所有分片；满队列时跳过投递，避免时钟阻塞其它分片。
+		// ticker 按 100 毫秒节拍采样同一时刻并分发逻辑帧。
 		ticker := time.NewTicker(100 * time.Millisecond)
 		defer ticker.Stop()
 		for {
 			select {
 			case <-ctx.Done():
 				return
+			// now 接收c通道送来的当前时间。
 			case now := <-ticker.C:
+				// w 接收遍历房间执行器集合时当前的元素。
 				for _, w := range e.workers {
 					select {
 					case w.commands <- command{tick: now}:
@@ -215,20 +243,30 @@ func New(ctx context.Context, s *persistence.Store) *Engine {
 	})
 	return e
 }
+
+// worker 由角色编号计算稳定的所有分片，同一角色的操作始终进入原分片。
+// e 是调用该方法的游戏引擎实例，id 区分当前步骤指向的目标对象。
 func (e *Engine) worker(id string) *worker {
+	// raw 保存由字节取得的原始值。
 	raw := domain.Bytes(id)
+	// h 是角色编号的 SHA-256 摘要；前八字节用于选择固定分片。
 	h := sha256.Sum256(raw)
 	return e.workers[binary.BigEndian.Uint64(h[:8])%workerCount]
 }
+
+// Enter 受理客户端短票，异步查出角色后将入场流程交给角色所属分片。
+// e 是调用该方法的游戏引擎实例，token 记录令牌，使用文本表示，c 记录连接，request 关联客户端请求与服务端的对应响应。
 func (e *Engine) Enter(token string, c Connection, request uint32) {
 	if e.stopped.Load() {
 		c.Close("maintenance")
 		return
 	}
+	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{run: func() func(*worker) {
 		if !c.Alive() {
 			return nil
 		}
+		// t 保存由入场票据角色取得的t，err 接收入场票据角色过程中可能产生的错误，供后续失败分支处理。
 		t, err := e.Store.TicketRole(e.ctx, token)
 		if !c.Alive() {
 			return nil
@@ -246,8 +284,13 @@ func (e *Engine) Enter(token string, c Connection, request uint32) {
 	}
 }
 
+// rejectEntry 先尽力同步原请求错误，再关闭入场失败的连接。
+// c 记录连接，request 关联客户端请求与服务端的对应响应，code 记录结果码，使用数值表示，reason 记录原因，使用文本表示。
 func rejectEntry(c Connection, request, code uint32, reason string) {
+	// f 组装协议帧所需的数据。
 	f := wire.Frame{ID: p.MsgS2CEnterLine, Request: request, Error: code}
+	// terminal 按目标类型读取当前接口值，得到终止，ok 表明运行时值能否按要求的类型读取。
+	// DeliverAndClose 将原请求错误放入终止发送槽，并在发送后关闭连接。
 	if terminal, ok := c.(interface{ DeliverAndClose(wire.Frame, string) }); ok {
 		terminal.DeliverAndClose(f, reason)
 		return
@@ -256,6 +299,8 @@ func rejectEntry(c Connection, request, code uint32, reason string) {
 	c.Close(reason)
 }
 
+// post 无阻塞投递连接命令；队列拥堵时关闭相应连接，保护分片吞吐。
+// e 是调用该方法的游戏引擎实例，w 记录房间执行器，c 记录命令。
 func (e *Engine) post(w *worker, c command) bool {
 	select {
 	case w.commands <- c:
@@ -268,6 +313,8 @@ func (e *Engine) post(w *worker, c command) bool {
 	}
 }
 
+// postEntry 按入场协议报告分片队列已满，使客户端得到明确拒绝原因。
+// e 是调用该方法的游戏引擎实例，w 记录房间执行器，c 记录命令。
 func (e *Engine) postEntry(w *worker, c command) {
 	select {
 	case w.commands <- c:
@@ -276,11 +323,14 @@ func (e *Engine) postEntry(w *worker, c command) {
 	}
 }
 
+// Handle 把已知角色的应用帧交给分片，未入场或停服时立即拒绝。
+// e 是调用该方法的游戏引擎实例，c 记录连接，f 记录协议帧。
 func (e *Engine) Handle(c Connection, f wire.Frame) {
 	if e.stopped.Load() {
 		c.Close("maintenance")
 		return
 	}
+	// id 区分当前步骤指向的目标对象。
 	id := c.RoleID()
 	if id == "" {
 		c.Deliver(wire.Frame{ID: f.ID, Request: f.Request, Error: p.CodeUnauthenticated})
@@ -288,7 +338,11 @@ func (e *Engine) Handle(c Connection, f wire.Frame) {
 	}
 	e.post(e.worker(id), command{role: id, conn: c, frame: f})
 }
+
+// Disconnect 将连接退出排入独立控制队列，并保存断开时刻。
+// e 是调用该方法的游戏引擎实例，c 记录连接。
 func (e *Engine) Disconnect(c Connection) {
+	// id 区分当前步骤指向的目标对象。
 	if id := c.RoleID(); id != "" {
 		select {
 		case e.worker(id).control <- command{role: id, conn: c, disconnect: true, at: time.Now()}:
@@ -296,10 +350,16 @@ func (e *Engine) Disconnect(c Connection) {
 		}
 	}
 }
+
+// Stop 冻结新操作，关停连接和后台协程，并兜底关闭尚残留的长连接。
+// e 是调用该方法的游戏引擎实例。
 func (e *Engine) Stop() {
 	e.stopped.Store(true)
+	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
+		// w 记录房间执行器。
 		e.post(w, command{done: func(w *worker) {
+			// r 接收遍历房间集合时当前的元素。
 			for _, r := range w.rooms {
 				w.cancelTownNavigation(r)
 				w.cancelMapTravelOnDetach(r)
@@ -312,12 +372,15 @@ func (e *Engine) Stop() {
 			}
 		}})
 	}
+	// deadline 是连接清理命令与待处理回调的短暂退出缓冲。
 	deadline := time.NewTimer(500 * time.Millisecond)
 	<-deadline.C
 	e.cancel()
 	e.wg.Wait()
 	// 父context先取消时worker已退出，仍必须关闭已劫持的WS；此时遍历由Stop独占。
+	// w 接收遍历房间执行器集合时当前的元素。
 	for _, w := range e.workers {
+		// r 接收遍历房间集合时当前的元素。
 		for _, r := range w.rooms {
 			if r.Conn != nil {
 				r.Conn.Close("maintenance")
@@ -327,15 +390,21 @@ func (e *Engine) Stop() {
 		}
 	}
 }
+
+// loop 串行处理数据库结果、连接控制、客户端命令和房间逻辑帧。
+// w 是调用该方法的房间执行器实例。
 func (w *worker) loop() {
 	for {
 		select {
 		case <-w.e.ctx.Done():
 			return
+		// done 接收完成信号通道送来的完成信号。
 		case done := <-w.done:
 			done(w)
+		// c 接收控制通道送来的控制通道。
 		case c := <-w.control:
 			w.command(c)
+		// c 接收命令集合通道送来的命令集合通道。
 		case c := <-w.commands:
 			if c.done != nil {
 				c.done(w)
@@ -343,6 +412,7 @@ func (w *worker) loop() {
 			}
 			if !c.tick.IsZero() {
 				w.beginTownNavigationTick(c.tick)
+				// roleID 定位房间集合中正在处理的成员，r 接收遍历房间集合时当前的元素。
 				for roleID, r := range w.rooms {
 					w.step(r, c.tick)
 					w.expireIdleRoom(roleID, r, c.tick)
@@ -354,6 +424,9 @@ func (w *worker) loop() {
 		}
 	}
 }
+
+// command 核对附着身份及待确认状态，并按消息类型触发房间内的相应处理。
+// w 是调用该方法的房间执行器实例，c 记录命令。
 func (w *worker) command(c command) {
 	if w.e.stopped.Load() {
 		if c.conn != nil && !c.disconnect {
@@ -361,6 +434,7 @@ func (w *worker) command(c command) {
 		}
 		return
 	}
+	// r 保存从房间集合取出的房间集合中的指定项。
 	r := w.rooms[c.role]
 	if c.ticket != "" {
 		if r != nil && r.Isolated {
@@ -414,10 +488,12 @@ func (w *worker) command(c command) {
 			r.Manual = false
 			r.LastTick = time.Now()
 			r.HostSession = domain.ID()
+			// at 保存当前处理所用的发生时间。
 			at := c.at
 			if at.IsZero() {
 				at = time.Now()
 			}
+			// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown {
 				r.HostSession = ""
 			}
@@ -437,6 +513,7 @@ func (w *worker) command(c command) {
 		if r.Ready {
 			return
 		}
+		// q 记录入场场景世界确认。
 		var q pb.EnterWorldAck
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.BaselineId != r.Baseline {
 			return
@@ -445,6 +522,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.AutoSkillSettings != nil {
+			// settings 为通过职业和技能限制的自动施法偏好，valid 说明校验是否通过。
 			if settings, valid := w.validateAutoSkillSettings(r, q.AutoSkillSettings); valid {
 				r.AutoSkills = settings
 			}
@@ -488,6 +566,7 @@ func (w *worker) command(c command) {
 	case p.MsgC2SAutoTargetIntent:
 		w.autoTargetIntent(r, c.frame)
 	case p.MsgC2SSkillModeIntent:
+		// q 记录技能模式意图。
 		var q pb.SkillModeIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -498,11 +577,13 @@ func (w *worker) command(c command) {
 			w.modes(r, time.Now())
 			return
 		}
+		// code 是调整当前已学技能模式的协议结果；非零时同步拒绝和原模式。
 		if code := w.setSkillMode(r, q.SkillId, q.Enabled, time.Now(), c.frame.Request); code != 0 {
 			w.failure(r, c.frame, code)
 			w.modes(r, time.Now())
 		}
 	case p.MsgC2SAttackIntent:
+		// q 记录攻击意图。
 		var q pb.AttackIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -512,6 +593,7 @@ func (w *worker) command(c command) {
 			w.failure(r, c.frame, p.CodeStaleInput)
 			return
 		}
+		// code 是当前朝向普攻的受理结果；非零时返回原请求错误。
 		if code := w.attackFacing(r, q.Direction, q.SkillId, q.InputSequence, time.Now()); code != 0 {
 			w.failure(r, c.frame, code)
 		}
@@ -524,6 +606,7 @@ func (w *worker) command(c command) {
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
 	case p.MsgC2SMoveIntent:
+		// q 记录移动意图。
 		var q pb.MoveIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 || q.CancelNavigation && (q.Destination != nil || q.ReleaseJoystick || q.Direction != 0) {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -550,6 +633,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.Destination != nil {
+			// point 组装点位所需的数据。
 			point := devconfig.Point{X: int(q.Destination.X), Y: int(q.Destination.Y)}
 			if !w.walkable(r, point) {
 				w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -575,6 +659,7 @@ func (w *worker) command(c command) {
 	case p.MsgC2SAutoBattle:
 		w.autoBattleIntent(r, c.frame)
 	case p.MsgC2SCastIntent:
+		// q 记录施法意图。
 		var q pb.CastIntent
 		if proto.Unmarshal(c.frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.Direction > 7 {
 			w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -585,11 +670,13 @@ func (w *worker) command(c command) {
 			return
 		}
 		if q.SkillId != 0 {
+			// code 是带自动补蓝判定的施法受理结果。
 			if code := w.castWithManaRecovery(r, &q, time.Now()); code != 0 {
 				w.failure(r, c.frame, code)
 			}
 			return
 		}
+		// m 接收遍历怪物集合中的范围时当前的元素。
 		for _, m := range r.Monsters[:r.MonsterCount] {
 			if m.Handle == q.TargetHandle && m.HP > 0 {
 				w.attack(r, &r.Player, m, time.Now(), q.InputSequence)
@@ -602,18 +689,28 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeInvalidArgument)
 	}
 }
+
+// join 在数据库确认会话接管后附着连接。健康角色沿用原现场，仅冷入场初始化。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，c 记录命令。
 func (w *worker) join(r *room, c command) {
+	// 新的入场尝试使此前只读预览失效，并保留永久操作的单房间串行边界。
 	r.PreviewGeneration++
 	r.PreviewInFlight = false
 	r.Pending = true
+	// fresh 表示房间尚无场景，成功接管后需要初始化临时现场。
 	fresh := r.Scene == 0
+	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{target: w, run: func() func(*worker) {
+		// role 记录角色。
 		var role domain.Role
+		// auth 记录授权。
 		var auth persistence.Auth
+		// err 保存当前操作的失败原因，供调用方检查或返回。
 		err := context.Canceled
 		if c.conn.Alive() {
 			role, auth, err = w.e.Store.Enter(w.e.ctx, c.ticket)
 		}
+		// w 记录房间执行器。
 		return func(w *worker) {
 			r.Pending = false
 			if err != nil {
@@ -622,6 +719,7 @@ func (w *worker) join(r *room, c command) {
 				}
 				if fresh {
 					delete(w.rooms, c.role)
+					// next 接收遍历等待时当前的元素。
 					for _, next := range r.Waiting {
 						w.command(next)
 					}
@@ -654,6 +752,7 @@ func (w *worker) join(r *room, c command) {
 			r.HostSession = ""
 			r.LastTick = time.Now()
 			r.AwaitUntil = time.Now().Add(10 * time.Second)
+			// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown && w.e.Store.Cfg.Fixture.TownTravel != nil {
 				r.AwaitUntil = time.Now().Add(time.Duration(w.e.Store.Cfg.Fixture.TownTravel.AckTTLMS) * time.Millisecond)
 			}
@@ -665,16 +764,19 @@ func (w *worker) join(r *room, c command) {
 				w.after(r)
 				return
 			}
+			// 新会话明确切到在线事件区段；已到期的旧事件仍保留原托管归属。
 			transitionEventHosting(r, time.Now(), "")
 			c.conn.SetBinding(uint64(auth.SessionEpoch))
 			if r.Player.Handle == 0 {
 				w.isolateRoom(r)
 				return
 			}
+			// entry 是本次附着对应的场景、基线、资源版本和角色位置。
 			entry := w.enterLineResult(r)
 			if entry == nil {
 				return
 			}
+			// 先发送场景身份和完整基线，收到匹配 ACK 后才同步资产和开放操作。
 			w.send(r, p.MsgS2CEnterLine, c.frame.Request, entry)
 			w.bindingState(r, 1)
 			w.baseline(r)
@@ -689,7 +791,11 @@ func (w *worker) join(r *room, c command) {
 		}
 	}
 }
+
+// enterLineResult 用当前模板和角色现场构造客户端入场结果。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
+	// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	m, ok := w.currentMap(r)
 	if !ok {
 		w.isolateRoom(r)
@@ -697,6 +803,9 @@ func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
 	}
 	return &pb.EnterLineResult{SceneEpoch: r.Scene, BaselineId: r.Baseline, RoomId: m.ID, LineId: 1, ResourceVersion: w.e.Store.Cfg.Fixture.RuleVersion, Position: pointPB(r.Player.Pos), SceneKind: m.SceneKindValue(), NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1), PlayerHandle: r.Player.Handle}
 }
+
+// initialize 用数据库角色创建冷启动房间，初始化个人场景、身体和临时状态。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，role 记录角色。
 func (w *worker) initialize(r *room, role domain.Role) {
 	w.cancelTownNavigation(r)
 	r.PetBornReady = nil
@@ -707,8 +816,10 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
 	r.Pet, r.PetWorld, r.PetLifeSequence = nil, worldRef{}, 0
 	r.PetHandleSequence, r.PendingPetBirth = petHandle, nil
+	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
 	r.MapID = f.Map.ID
+	// player 接收玩家供后续步骤使用。
 	player, _ := f.Player(role.Job)
 	r.Scene = binary.BigEndian.Uint64(domain.Bytes(domain.ID())[:8])
 	r.PersonalWorld = r.currentWorld()
@@ -741,14 +852,21 @@ func (w *worker) initialize(r *room, role domain.Role) {
 		}
 	}
 	w.applyPetMapEntryPolicy(r, &f.Map)
+	// i 标记循环或列表中的当前位置。
 	for i := 0; i < 8; i++ {
+		// def 保存从怪物集合取出的“def”。
 		def := f.Monsters[i%len(f.Monsters)]
+		// hp 保存当前处理所用的生命值。
 		hp := def.HP
 		r.Monsters = append(r.Monsters, &entity{Handle: uint32(10 + i), Kind: 3, Def: def.ID, Pos: f.Map.MonsterSpawns[i], HP: hp, MaxHP: def.HP, Monster: &def})
 	}
 }
+
+// after 在当前操作结束后依次重放尚可处理的房间等待命令。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) after(r *room) {
 	for len(r.Waiting) > 0 && !r.Pending && !r.Isolated {
+		// c 保存从等待取出的等待中的指定项。
 		c := r.Waiting[0]
 		r.Waiting = r.Waiting[1:]
 		c.fromWaiting = true
@@ -756,7 +874,10 @@ func (w *worker) after(r *room) {
 	}
 }
 
+// revivePlayer 为同一角色创建新生命代次，按当前地图规则恢复到复活位置。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) revivePlayer(r *room) {
+	// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	m, ok := w.currentMap(r)
 	if !ok || !m.Walkable(m.PlayerSpawn) {
 		w.isolateRoom(r)
@@ -765,6 +886,7 @@ func (w *worker) revivePlayer(r *room) {
 	r.Player.Life++
 	r.AutoTarget = actorRef{}
 	r.Player.MovementRevision, r.Player.MovementKind = 0, movementInitial
+	// id 标识当前战斗效果，status 是该编号下已有的效果实例。
 	for id, status := range r.Player.Statuses {
 		if status.RemoveOnDeath {
 			delete(r.Player.Statuses, id)
@@ -784,6 +906,10 @@ func (w *worker) revivePlayer(r *room) {
 	// 同图复活仅释放摇杆，原地面导航目标保留并从新脚点继续规划。
 	r.Manual = false
 }
+
+// send 向当前附着投递协议帧，按场景确认状态过滤尚不可见的战斗表现。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，id 区分当前步骤指向的目标对象，request 关联客户端请求与服务端的对应响应。
+// msg 记录“msg”，使用消息表示。
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
 	if r.Isolated {
 		return
@@ -798,6 +924,9 @@ func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
 		r.Conn.Deliver(wire.Message(id, request, uint64(r.Auth.SessionEpoch), msg))
 	}
 }
+
+// failure 按经济命令和普通指令的协议格式返回当前请求失败。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，f 记录协议帧，code 记录结果码，使用数值表示。
 func (w *worker) failure(r *room, f wire.Frame, code uint32) {
 	if economic(f.ID) {
 		w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: code, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -805,10 +934,14 @@ func (w *worker) failure(r *room, f wire.Frame, code uint32) {
 	}
 	r.Conn.Deliver(wire.Frame{ID: f.ID, Request: f.Request, Binding: uint64(r.Auth.SessionEpoch), Error: code})
 }
+
+// assets 在场景确认后同步最新持久背包、钱包和托管状态。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) assets(r *room) {
 	if r.Conn == nil || !r.Ready {
 		return
 	}
+	// state 保存由成长状态取得的状态，err 接收成长状态过程中可能产生的错误，供后续失败分支处理。
 	state, err := persistence.ProgressionState(r.Role, w.e.Store.Cfg.Fixture)
 	if err != nil {
 		w.isolateRoom(r)
@@ -818,6 +951,9 @@ func (w *worker) assets(r *room) {
 	w.send(r, p.MsgS2CWallet, 0, r.Role.Wallet.Proto(r.Role.Revision))
 	w.hosting(r, 0)
 }
+
+// hosting 同步余额、自动战斗开关、资产修订号和自动技能偏好。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，request 关联客户端请求与服务端的对应响应。
 func (w *worker) hosting(r *room, request uint32) {
 	if r.Conn == nil || !r.Ready {
 		return
@@ -825,6 +961,9 @@ func (w *worker) hosting(r *room, request uint32) {
 	w.send(r, p.MsgS2CHostingState, request, &pb.HostingState{RemainHostingSec: uint32(r.Role.HostingSeconds), AutoBattleEnabled: r.Auto,
 		StateRevision: uint64(r.Role.Revision), AutoSkillSettings: r.AutoSkills.proto()})
 }
+
+// snapshot 在场景可观察且当前没有组合位移延迟时发送基线。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) snapshot(r *room) {
 	if !r.Ready || r.Isolated || r.DeferMovementSnapshot {
 		return
@@ -833,50 +972,66 @@ func (w *worker) snapshot(r *room) {
 }
 
 // 入场基线在ACK之前发送；周期同步仍经snapshot的Ready门槛。明确取消沿同一请求号确认后才关闭连接。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，request 记录请求，使用可变数量的数值表示。
 func (w *worker) baseline(r *room, request ...uint32) {
 	if r.Conn == nil {
 		return
 	}
+	// requestID 标识当前业务使用的请求。
 	requestID := uint32(0)
 	if len(request) > 0 {
 		requestID = request[0]
 	}
+	// chunks 保存按协议帧上限切分后的完整基线，err 表示基线没有构造成功。
 	chunks, err := w.buildBaseline(r, requestID)
 	if err != nil {
 		w.isolateRoom(r)
 		return
 	}
+	// chunk 接收遍历“chunks”时当前的元素。
 	for _, chunk := range chunks {
 		w.send(r, p.MsgS2CSceneBaseline, requestID, chunk)
 	}
 }
 
 // 先构造完整组；新生事实与普通同步使用同一实体投影及真实wire分块。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，requestID 标识当前业务使用的请求。
 func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineChunk, error) {
 	if r.Sequence == math.MaxUint64 {
 		return nil, errors.New("场景基线次序耗尽")
 	}
 	r.Sequence++
+	// out 保存当前处理所用的输出。
 	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto(), OwnedPet: w.ownedPetPB(r)}
+	// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	if m, ok := w.currentMap(r); ok {
+		// zone 保存由安全区域发生时间取得的区域，inside 保存由安全区域发生时间取得的“inside”。
 		if zone, inside := m.SafeZoneAt(r.Player.Pos); inside {
 			out.SafeZoneId = zone.ID
 		}
 	}
+	// entities 建立带初始值的实体列表，供本段继续处理。
 	entities := []*entity{&r.Player}
+	// pet 保存由场景世界宠物取得的宠物。
 	if pet := r.worldPet(r.currentWorld()); pet != nil {
 		entities = append(entities, pet)
 	}
+	// corpse 接收遍历宠物尸体集合时当前的元素。
 	for _, corpse := range r.currentWorld().PetCorpses {
 		entities = append(entities, corpse.Body)
 	}
 	entities = append(entities, r.Monsters[:r.MonsterCount]...)
 	entities = append(entities, r.Loot...)
+	// e 接收遍历实体时当前的元素。
 	for _, e := range entities {
+		// moveMS 保存由无符号整数“32”取得的移动毫秒。
 		moveMS := uint32(0)
+		// attackMS 保存由无符号整数“32”取得的攻击毫秒。
 		attackMS := uint32(0)
+		// attributes 记录“attributes”，使用战斗“attributes”表示。
 		var attributes *pb.CombatAttributes
 		if e.Kind >= 1 && e.Kind <= 3 {
+			// stats 保存由战斗单位取得的统计或属性。
 			stats := w.fighter(r, e)
 			moveMS = uint32(stats.MoveMS)
 			attackMS = uint32(stats.AttackMS)
@@ -886,12 +1041,21 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 	}
 	return splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
 }
+
+// pointPB 把服务端逻辑格位置转换为协议格式。
+// p 记录点位。
 func pointPB(p devconfig.Point) *pb.GridPoint { return &pb.GridPoint{X: int32(p.X), Y: int32(p.Y)} }
+
+// asset 解析持久资产指令及操作身份，应用门禁并进入原子事务队列。
+// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，f 记录协议帧。
 func (w *worker) asset(r *room, f wire.Frame) {
+	// reviveID 标识当前业务使用的复活。
 	reviveID := ""
+	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
 	case p.MsgC2SVendorCommit:
+		// x 记录商人提交请求。
 		var x pb.VendorCommitRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.QuoteId) != 16 {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -899,10 +1063,12 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind, q.Context, q.Vendor = persistence.AssetVendor, x.Operation, &x
 		// 原回执优先核对；只有尚未提交的命令需要再次见到同一名商人。
+		// shop 保存由商人商店取得的商店。
 		if shop := w.vendorShop(r, x.SceneEpoch, x.NpcId); shop != nil {
 			q.VendorShop = shop.Key
 		}
 	case p.MsgC2SWarehouseAction:
+		// x 记录仓库动作。
 		var x pb.WarehouseAction
 		if proto.Unmarshal(f.Payload, &x) != nil {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -910,6 +1076,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind, q.Context, q.Warehouse = "warehouse", x.Operation, &x
 	case p.MsgC2SSetAutoRecycle:
+		// x 记录设置自动回收请求。
 		var x pb.SetAutoRecycleRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || x.Policy == nil {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -917,6 +1084,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind, q.Context, q.AutoRecycle, q.ApplyExisting = "set_auto_recycle", x.Operation, x.Policy, x.ApplyExisting
 	case p.MsgC2SSetItemLock:
+		// x 记录设置道具锁定请求。
 		var x pb.SetItemLockRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -924,6 +1092,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind, q.Context, q.ItemID, q.ItemVersion, q.Locked = "set_item_lock", x.Operation, domain.Hex(x.ItemInstanceId), x.ItemVersion, x.Locked
 	case p.MsgC2SSetCastingSupply:
+		// x 记录设置施法耗材请求。
 		var x pb.SetCastingSupplyRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -931,6 +1100,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind, q.Context, q.ItemID, q.ItemVersion, q.Unequip = "set_casting_supply", x.Operation, domain.Hex(x.ItemInstanceId), x.ItemVersion, x.Unequip
 	case p.MsgC2SSkillAssetCommit:
+		// x 记录技能资产提交请求。
 		var x pb.SkillAssetCommitRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.PreviewId) != 16 {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -940,6 +1110,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.Context = x.Operation
 		q.PreviewID = domain.Hex(x.PreviewId)
 	case p.MsgC2SEquip:
+		// x 记录穿戴装备请求。
 		var x pb.EquipRequest
 		if proto.Unmarshal(f.Payload, &x) != nil {
 			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -951,6 +1122,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.Slot = x.Slot
 		q.Unequip, q.ItemVersion = x.Unequip, x.ItemVersion
 	case p.MsgC2SRecycle:
+		// x 记录回收请求。
 		var x pb.RecycleRequest
 		if proto.Unmarshal(f.Payload, &x) != nil {
 			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -958,10 +1130,12 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		}
 		q.Kind = "recycle"
 		q.Context = x.Operation
+		// id 接收遍历道具进程或道具实例标识集合时当前的元素。
 		for _, id := range x.ItemInstanceIds {
 			q.ItemIDs = append(q.ItemIDs, domain.Hex(id))
 		}
 	case p.MsgC2SClaimHostingTime:
+		// x 记录领取离线托管时间请求。
 		var x pb.ClaimHostingTimeRequest
 		if proto.Unmarshal(f.Payload, &x) != nil {
 			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -974,6 +1148,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
 		return
 	case p.MsgC2SReviveChoice:
+		// x 记录复活选择。
 		var x pb.ReviveChoice
 		if proto.Unmarshal(f.Payload, &x) != nil {
 			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -985,6 +1160,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.ReviveDeathID = reviveID
 		q.ValidRevive = w.e.Store.Cfg.Fixture.AllowFreeDevRevive && x.Action == 1 && r.Player.HP == 0 && reviveID == r.DeathID
 	case p.MsgC2SUseItem:
+		// x 记录使用道具请求。
 		var x pb.UseItemRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
 			w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
@@ -997,6 +1173,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.SceneEpoch = x.SceneEpoch
 		q.PotionGateCode = potionGate(r, x.SceneEpoch, time.Now())
 	case p.MsgC2SLearnSkill:
+		// x 记录学习技能请求。
 		var x pb.LearnSkillRequest
 		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ItemInstanceId) != 16 {
 			w.failure(r, f, p.CodeInvalidArgument)
@@ -1012,6 +1189,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		return
 	}
 	if r.Pending {
+		// op 保存当前处理所用的操作。
 		op := &pb.OperationResult{ErrorCode: p.CodeOperationPending, Pending: true, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)}
 		if q.Context != nil {
 			op.OpId = q.Context.OpId
@@ -1022,6 +1200,8 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	w.submitAsset(r, q, f, reviveID)
 }
 
+// economic 判断该消息是否需要经济操作格式及原编号。
+// id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
 	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit:
@@ -1029,75 +1209,93 @@ func economic(id uint16) bool {
 	}
 	return false
 }
+
+// operationContext 从各类持久操作的协议正文提取经济身份。
+// f 记录协议帧。
 func operationContext(f wire.Frame) *pb.OperationContext {
+	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
 	case p.MsgC2SVendorCommit:
+		// q 保存当前处理所用的商人提交请求。
 		q := &pb.VendorCommitRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SWarehouseAction:
+		// q 保存当前处理所用的仓库动作。
 		q := &pb.WarehouseAction{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SSetAutoRecycle:
+		// q 保存当前处理所用的设置自动回收请求。
 		q := &pb.SetAutoRecycleRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SSetItemLock:
+		// q 保存当前处理所用的设置道具锁定请求。
 		q := &pb.SetItemLockRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SCastWithMaterial:
+		// q 保存当前处理所用的施法带有材料请求。
 		q := &pb.CastWithMaterialRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SSetCastingSupply:
+		// q 保存当前处理所用的设置施法耗材请求。
 		q := &pb.SetCastingSupplyRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SSkillAssetCommit:
+		// q 保存当前处理所用的技能资产提交请求。
 		q := &pb.SkillAssetCommitRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SEquip:
+		// q 保存当前处理所用的穿戴装备请求。
 		q := &pb.EquipRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SRecycle:
+		// q 保存当前处理所用的回收请求。
 		q := &pb.RecycleRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SClaimHostingTime:
+		// q 保存当前处理所用的领取离线托管时间请求。
 		q := &pb.ClaimHostingTimeRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SBuyHostingTime:
+		// q 保存当前处理所用的“buy”离线托管时间请求。
 		q := &pb.BuyHostingTimeRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SReviveChoice:
+		// q 保存当前处理所用的复活选择。
 		q := &pb.ReviveChoice{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SUseItem:
+		// q 保存当前处理所用的使用道具请求。
 		q := &pb.UseItemRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
 		}
 	case p.MsgC2SLearnSkill:
+		// q 保存当前处理所用的学习技能请求。
 		q := &pb.LearnSkillRequest{}
 		if proto.Unmarshal(f.Payload, q) == nil {
 			op = q.Operation
@@ -1105,7 +1303,11 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	}
 	return op
 }
+
+// operationID 返回错误回执需要携带的原始操作编号。
+// f 记录协议帧。
 func operationID(f wire.Frame) []byte {
+	// op 保存由操作上下文取得的操作。
 	op := operationContext(f)
 	if op != nil {
 		return op.OpId

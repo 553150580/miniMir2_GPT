@@ -1,3 +1,5 @@
+// 本文件验证瞬移静态地形、显式策略、位图完整性和旧版关闭分支。
+
 package devconfig
 
 import (
@@ -5,14 +7,21 @@ import (
 	"testing"
 )
 
+// teleportMapFixture 返回瞬移地图开发测试配置供调用方使用。
 func teleportMapFixture() Fixture {
+	// allowed 保存当前处理所用的允许。
 	allowed := false
 	return Fixture{RuleVersion: 15, Map: MapTemplate{ID: 1, Width: 17, Height: 17, NoTeleport: &allowed}, Maps: []MapTemplate{{ID: 2, Width: 3, Height: 2, SceneKind: SceneKindTown, NoTeleport: &allowed, Source: &SourceMapIdentity{Code: "0", Width: 3, Height: 2}, CollisionBits: []byte{10}, SourceStaticBits: []byte{2}}}}
 }
 
+// TestTeleportUsesSourceStaticWalkWithoutClosedDoorOrDynamicOccupancyInference 核对「闭门专用阻挡混入源静态Teleport判定」与「缺少源静态位图时偷用闭门位图」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestTeleportUsesSourceStaticWalkWithoutClosedDoorOrDynamicOccupancyInference(t *testing.T) {
+	// f 接收瞬移地图开发测试配置供后续步骤使用。
 	f := teleportMapFixture()
+	// m 保存当前处理所用的地图集合中的指定项。
 	m := &f.Maps[0]
+	// err 接收校验瞬移过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateTeleport(); err != nil {
 		t.Fatal(err)
 	}
@@ -22,6 +31,7 @@ func TestTeleportUsesSourceStaticWalkWithoutClosedDoorOrDynamicOccupancyInferenc
 	if m.TeleportWalkable(Point{X: 1, Y: 0}) {
 		t.Fatal("源静态墙变为可传送")
 	}
+	// p 接收遍历点位列表时当前的元素。
 	for _, p := range []Point{{X: -1}, {X: 3}, {Y: 2}} {
 		if m.TeleportWalkable(p) {
 			t.Fatal("越界点被当作有效样本", p)
@@ -33,9 +43,14 @@ func TestTeleportUsesSourceStaticWalkWithoutClosedDoorOrDynamicOccupancyInferenc
 	}
 }
 
+// TestTeleportMapRulesRejectMissingPolicyTamperedBitsAndLegacyInjection 核对「不完整或错版本瞬移地图合同未拒绝」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestTeleportMapRulesRejectMissingPolicyTamperedBitsAndLegacyInjection(t *testing.T) {
+	// name 接收遍历文本列表时当前的元素。
 	for _, name := range []string{"missing_personal_policy", "missing_town_policy", "missing_static", "static_not_subset", "tail_bits", "personal_parallel_bits", "old_rule"} {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run(name, func(t *testing.T) {
+			// f 接收瞬移地图开发测试配置供后续步骤使用。
 			f := teleportMapFixture()
 			switch name {
 			case "missing_personal_policy":
@@ -61,39 +76,57 @@ func TestTeleportMapRulesRejectMissingPolicyTamperedBitsAndLegacyInjection(t *te
 	}
 }
 
+// TestTeleportRulesJSONRequiresAllSourceChoicesWithoutCoordinateEscapeHatch 核对「错误类型、null或坐标逃逸未拒绝」与「缺字段被补成默认规则」所标示的断言。
+// t 提供断言失败报告、子用例和清理注册。
 func TestTeleportRulesJSONRequiresAllSourceChoicesWithoutCoordinateEscapeHatch(t *testing.T) {
+	// good 建立带初始值的按文本索引的任意类型的数据映射，供本段继续处理。
 	good := map[string]any{"max_attempts": 200, "axis_rule": "map_dimension_divided_by_rank_plus_one", "landing_rule": "source_static_walk", "allow_occupied": true, "allow_accepted_dead": true, "check_source_map_at_due": true}
+	// key 接收遍历“good”时当前的元素。
 	for key := range good {
+		// t 提供断言失败报告、子用例和清理注册。
 		t.Run("missing_"+key, func(t *testing.T) {
+			// copy 建立带初始值的按文本索引的任意类型的数据映射，供本段继续处理。
 			copy := map[string]any{}
+			// k 定位“good”中正在处理的成员，v 接收遍历“good”时当前的元素。
 			for k, v := range good {
 				if k != key {
 					copy[k] = v
 				}
 			}
+			// raw 保存由序列化取得的原始值。
 			raw, _ := json.Marshal(copy)
+			// rules 记录规则集合，使用技能瞬移规则集合表示。
 			var rules SkillTeleportRules
 			if json.Unmarshal(raw, &rules) == nil {
 				t.Fatal("缺字段被补成默认规则")
 			}
 		})
 	}
+	// change 接收遍历按文本索引的任意类型的数据映射列表时当前的元素。
 	for _, change := range []map[string]any{{"max_attempts": 1.5}, {"max_attempts": true}, {"allow_accepted_dead": nil}, {"destination": map[string]int{"x": 8, "y": 8}}} {
+		// copy 建立带初始值的按文本索引的任意类型的数据映射，供本段继续处理。
 		copy := map[string]any{}
+		// k 定位“good”中正在处理的成员，v 接收遍历“good”时当前的元素。
 		for k, v := range good {
 			copy[k] = v
 		}
+		// k 定位变更中正在处理的成员，v 接收遍历变更时当前的元素。
 		for k, v := range change {
 			copy[k] = v
 		}
+		// raw 保存由序列化取得的原始值。
 		raw, _ := json.Marshal(copy)
+		// rules 记录规则集合，使用技能瞬移规则集合表示。
 		var rules SkillTeleportRules
 		if json.Unmarshal(raw, &rules) == nil {
 			t.Fatal("错误类型、null或坐标逃逸未拒绝", change)
 		}
 	}
+	// raw 保存由序列化取得的原始值。
 	raw, _ := json.Marshal(good)
+	// rules 记录规则集合，使用技能瞬移规则集合表示。
 	var rules SkillTeleportRules
+	// err 接收反序列化过程中可能产生的错误，供后续失败分支处理。
 	if err := json.Unmarshal(raw, &rules); err != nil {
 		t.Fatal(err)
 	}

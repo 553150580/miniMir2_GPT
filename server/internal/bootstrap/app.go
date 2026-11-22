@@ -1,3 +1,5 @@
+// 本文件装配账号、游戏和 GM 节点，加载内部密钥、登记租约并管理受控退出与监管子进程。
+
 package bootstrap
 
 import (
@@ -25,33 +27,44 @@ import (
 	"time"
 )
 
+// NodeKey 读取或首次生成同机节点登记密钥，校验存量文件的类型和完整长度。
 func NodeKey() (string, error) {
+	// home 提供当前系统用户的主目录，用于定位私有数据，e 接收“user”归属方向或目录供后续步骤使用。
 	home, e := os.UserHomeDir()
 	if e != nil {
 		return "", e
 	}
+	// dir 保存本机开发节点私有文件的目录。
 	dir := filepath.Join(home, ".local/share/minimir-toolchain/game-dev")
 	if e = os.MkdirAll(dir, 0700); e != nil {
 		return "", e
 	}
+	// path 定位同一装配下各进程共用的密钥文件。
 	path := filepath.Join(dir, "node.key")
+	// info 用于检查存量密钥是否为符号链接，e 接收“lstat”供后续步骤使用。
 	if info, e := os.Lstat(path); e == nil {
 		if info.Mode()&os.ModeSymlink != 0 {
 			return "", errors.New("拒绝节点密钥符号链接")
 		}
+		// b 暂存待读取或编码的密钥字节，e 接收读取文件供后续步骤使用。
 		b, e := os.ReadFile(path)
 		if e == nil && len(b) != 64 {
 			return "", errors.New("节点密钥尚未完整写入")
 		}
 		return string(b), e
 	}
+	// b 暂存待读取或编码的密钥字节。
 	b := make([]byte, 32)
 	if _, e = rand.Read(b); e != nil {
 		return "", e
 	}
+	// text 保存可写入文件及内部请求头的十六进制密钥。
 	text := hex.EncodeToString(b)
+	// 独占创建保证并行启动的进程共用先写入的密钥。
+	// f 持有首次独占创建成功的密钥文件句柄。
 	f, e := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if os.IsExist(e) {
+		// b 暂存待读取或编码的密钥字节，e 接收读取文件供后续步骤使用。
 		b, e := os.ReadFile(path)
 		if e == nil && len(b) != 64 {
 			return "", errors.New("节点密钥尚未完整写入")
@@ -65,6 +78,9 @@ func NodeKey() (string, error) {
 	f.Close()
 	return text, e
 }
+
+// Run 完成节点登记和首个租约确认，启动 HTTP 服务并协调退场清算。
+// ctx 向下传递当前请求的截止时间和取消信号，cfg 记录服务配置，mode 记录模式，使用文本表示。
 func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	if mode == "supervisor" {
 		return supervise(ctx, cfg)
@@ -72,32 +88,45 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	if mode != "account" && mode != "game" && mode != "gm" {
 		return errors.New("mode必须为account/game/gm/supervisor")
 	}
+	// parent 保留外部生命周期，区分主动停服和节点内部失权退出。
 	parent := ctx
+	// cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithCancelCause(parent)
 	defer cancel(nil)
+	// store 保存由打开取得的持久层存储，e 接收打开供后续步骤使用。
 	store, e := persistence.Open(ctx, cfg)
 	if e != nil {
 		return e
 	}
 	defer func() {
+		// closeCtx 传递从调用方派生的上下文，供取消或控制截止时间，stop 取消对应上下文或停止计时，释放其关联资源。
 		closeCtx, stop := context.WithTimeout(context.Background(), nodeLeaseTimeout)
 		defer stop()
 		store.Close(closeCtx)
 	}()
+	// key 保存由节点键取得的键。
 	key, e := NodeKey()
 	if e != nil {
 		return e
 	}
 	if mode == "game" {
+		// 运行代次必须由账号节点批准，健康接口开放前先确认批准的实例就是当前进程。
+		// body 保存由序列化取得的消息正文。
 		body, _ := json.Marshal(map[string]any{"node_id": cfg.NodeID, "instance_id": store.Instance, "run_id": cfg.RunID})
+		// client 保存当前处理所用的客户端。
 		client := &http.Client{Timeout: 5 * time.Second}
+		// last 记住最近一次向账号节点登记失败的原因。
 		var last error
+		// attempt 规定“attempt”的初始取值。
 		for attempt := 0; attempt < 30; attempt++ {
+			// request 保存由创建请求带有上下文取得的请求。
 			request, _ := http.NewRequestWithContext(ctx, "POST", "http://"+cfg.AccountAddress+"/internal/register-game", bytes.NewReader(body))
 			request.Header.Set("X-Dev-Node-Key", key)
+			// response 保存由“do”取得的响应，err 接收“do”过程中可能产生的错误，供后续失败分支处理。
 			response, err := client.Do(request)
 			if err == nil {
 				if response.StatusCode == 200 {
+					// grant 保存账号节点批准的运行所有权和代次。
 					var grant persistence.Run
 					err = json.NewDecoder(response.Body).Decode(&grant)
 					response.Body.Close()
@@ -127,15 +156,22 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 			return e
 		}
 	}
+	// releaseCtx 记录释放上下文，使用请求或事务上下文表示。
 	defer releaseNodeLease(func(releaseCtx context.Context) error { return store.Release(releaseCtx, mode) })
+	// renew 封装续租对应的后续处理，attempt 记录“attempt”，使用请求或事务上下文表示。
 	renew := func(attempt context.Context) error { return store.Renew(attempt, mode) }
+	// confirmed 保存由确认初始值节点租约取得的已确认。
 	confirmed, e := confirmInitialNodeLease(ctx, renew)
 	if e != nil {
 		return fmt.Errorf("初始节点续租未获确认：%w", e)
 	}
+	// server 保存当前处理所用的服务端。
 	server := &transport.Server{Store: store, Mode: mode, NodeKey: key}
+	// engine 记录游戏引擎。
 	var engine *game.Engine
+	// leaseContext 维护租约监视和游戏引擎的生命周期，允许主动停服先结清。
 	leaseContext := ctx
+	// cancelEngine 保存由取消函数原因“func”取得的取消函数游戏引擎。
 	cancelEngine := context.CancelCauseFunc(func(error) {})
 	if mode == "game" {
 		// 主动停止先结清原流水；租约失败直接取消房间执行与结清等待。
@@ -145,19 +181,25 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 		server.Engine = engine
 		defer engine.Stop()
 	}
+	// address 保存账号地址，用于当前步骤中的地址。
 	address := cfg.AccountAddress
 	if mode == "game" {
 		address = cfg.GameAddress
 	} else if mode == "gm" {
 		address = cfg.GMAddress
 	}
+	// httpServer 保存当前处理所用的HTTP服务端。
 	httpServer := &http.Server{Addr: address, Handler: server.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 10 * time.Second,
 		MaxHeaderBytes: 16 * 1024, BaseContext: func(net.Listener) context.Context { return ctx }}
+	// done 通知装配层 HTTP 监听已经停止或发生错误。
 	done := make(chan error, 1)
 	go func() { done <- httpServer.ListenAndServe() }()
+	// leaseEvents 创建用于维护租约事件集合的容器或通道。
 	leaseEvents := make(chan nodeLeaseEvent, 4)
 	go logNodeLeaseEvents(leaseContext, mode, leaseEvents)
+	// 游戏房间和 HTTP 接入都依赖续租结果，监视器失权时同时取消二者。
 	go func() {
+		// err 接收监视节点租约过程中可能产生的错误，供后续失败分支处理。
 		if err := watchNodeLease(leaseContext, confirmed, renew, leaseEvents); err != nil && leaseContext.Err() == nil {
 			cancelEngine(err)
 			cancel(err)
@@ -166,6 +208,7 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	}()
 	slog.Info("开发节点就绪", "mode", mode, "address", address, "database", cfg.Database, "instance", store.Instance, "runtime_ready", false)
 	select {
+	// err 保存当前操作的失败原因，供调用方检查或返回。
 	case err := <-done:
 		if !errors.Is(err, http.ErrServerClosed) {
 			cancelEngine(err)
@@ -174,9 +217,12 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 		}
 	case <-ctx.Done():
 	}
+	// shutdown 传递从调用方派生的上下文，供取消或控制截止时间，stop 取消对应上下文或停止计时，释放其关联资源。
 	shutdown, stop := context.WithTimeout(context.Background(), 8*time.Second)
 	defer stop()
+	// drainErr 记录收束错误。
 	var drainErr error
+	// 只有上级主动停服才启动结清。失权退出由原数据库围栏拦截过时代次的事务。
 	if engine != nil && parent.Err() != nil {
 		drainErr = engine.DrainSettlements(shutdown)
 	}
@@ -186,22 +232,33 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	}
 	return errors.Join(e, drainErr)
 }
+
+// supervise 从同一可执行文件拉起三个节点，接到退出信号后通知并等待所有子进程。
+// ctx 向下传递当前请求的截止时间和取消信号，cfg 记录服务配置。
 func supervise(ctx context.Context, cfg devconfig.Config) error {
 	if !filepath.IsAbs(cfg.SourcePath) {
 		return errors.New("监督进程缺少实际加载的配置文件绝对路径")
 	}
+	// binary 保存由“executable”取得的“binary”，e 接收“executable”供后续步骤使用。
 	binary, e := os.Executable()
 	if e != nil {
 		return e
 	}
+	// e 接收节点键供后续步骤使用。
 	if _, e := NodeKey(); e != nil {
 		return e
 	}
+	// childExit 创建用于维护子进程退出的容器或通道。
 	childExit := make(chan error, 3)
+	// modes 初始化用作模式集合的文本列表。
 	modes := []string{"account", "game", "gm"}
+	// children 记录“children”，使用“cmd”列表表示。
 	var children []*exec.Cmd
+	// wg 记录“wg”，使用协程汇合计数器表示。
 	var wg sync.WaitGroup
+	// mode 接收遍历模式集合时当前的元素。
 	for _, mode := range modes {
+		// cmd 保存由进程监管器子进程取得的“cmd”。
 		cmd := supervisorChild(binary, cfg, mode)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
@@ -211,15 +268,18 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 		}
 		children = append(children, cmd)
 		wg.Go(func() {
+			// err 接收等待过程中可能产生的错误，供后续失败分支处理。
 			err := cmd.Wait()
 			childExit <- fmt.Errorf("%s节点退出: %v", mode, err)
 		})
 	}
+	// failure 记录失败，使用错误表示。
 	var failure error
 	select {
 	case <-ctx.Done():
 	case failure = <-childExit:
 	}
+	// child 接收遍历“children”时当前的元素。
 	for _, child := range children {
 		if child.Process != nil {
 			stopChild(child)
@@ -229,10 +289,14 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 	return failure
 }
 
+// supervisorChild 返回进程监管器子进程供调用方使用。
+// binary 记录“binary”，使用文本表示，cfg 记录服务配置，mode 记录模式，使用文本表示。
 func supervisorChild(binary string, cfg devconfig.Config, mode string) *exec.Cmd {
 	// 保留调用者选定并已校验的原文件；不能把候选装配切回默认数据库或端口。
 	return exec.Command(binary, "-config", cfg.SourcePath, "-mode", mode)
 }
+
+// MainContext 将操作系统的中断和终止信号转换为装配取消信号。
 func MainContext() (context.Context, context.CancelFunc) {
 	return signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 }
