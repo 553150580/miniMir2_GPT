@@ -11,6 +11,10 @@ import (
 const (
 	SceneKindPersonal uint32 = 1
 	SceneKindTown     uint32 = 2
+
+	maxPersonalGridSide = 17
+	// MaxPersonalGridCells 是兼容历史模板所需的个人地图最大格数。
+	MaxPersonalGridCells = maxPersonalGridSide * maxPersonalGridSide
 )
 
 // 地图模板只有静态地形与来源信息，不保存实例、角色位置或战斗现场。
@@ -170,7 +174,7 @@ func (f *Fixture) GridCellBudget() int {
 		return 0
 	}
 	switch f.Map.Width {
-	case 16, 17:
+	case 16, maxPersonalGridSide:
 		return f.Map.CellBudget()
 	case 13:
 		if f.RuleVersion >= 26 {

@@ -81,40 +81,12 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 		return
 	}
 	start := e.Pos
-	budget := w.mapCellBudget(r)
-	if budget == 0 || !w.inBounds(r, start) || !w.inBounds(r, target) {
+	m, ok := w.currentMap(r)
+	if !ok || m.CellBudget() > devconfig.MaxPersonalGridCells || !m.Contains(start) || !m.Contains(target) {
 		return
 	}
-	queue := []devconfig.Point{start}
-	seen := map[devconfig.Point]bool{start: true}
-	first := map[devconfig.Point]devconfig.Point{}
-	var next *devconfig.Point
-	// 每个合法格至多发现一次；访问预算随已校验地图格数增长，避免17格绕路被旧256截断。
-	for head := 0; head < len(queue) && head < budget; head++ {
-		cur := queue[head]
-		for _, d := range directions {
-			q := devconfig.Point{X: cur.X + d.X, Y: cur.Y + d.Y}
-			if seen[q] || !w.neighbor(r, cur, q, e) {
-				continue
-			}
-			seen[q] = true
-			if cur == start {
-				first[q] = q
-			} else {
-				first[q] = first[cur]
-			}
-			if q == target || distance(q, target) < distance(start, target) && distance(q, target) == 1 {
-				candidate := first[q]
-				next = &candidate
-				break
-			}
-			queue = append(queue, q)
-		}
-		if next != nil {
-			break
-		}
-	}
-	if next == nil {
+	next, found := w.personalNavigation.findFirstStep(m, r, e, target)
+	if !found {
 		if e == &r.Player && r.Destination != nil && *r.Destination == target && r.Navigation.Status == navigationActive {
 			// 玩家点地的路径没有可继续的格子，保留目标观察并释放移动接管。
 			r.Destination = nil
@@ -130,7 +102,7 @@ func (w *worker) move(r *room, e *entity, target devconfig.Point, now time.Time,
 			break
 		}
 	}
-	w.commitWalk(r, e, *next, direction, now, interval)
+	w.commitWalk(r, e, next, direction, now, interval)
 }
 func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	f := &w.e.Store.Cfg.Fixture

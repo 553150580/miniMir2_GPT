@@ -55,13 +55,14 @@ type Engine struct {
 	TownGrids map[uint64]*townnav.Grid
 }
 type worker struct {
-	e              *Engine
-	commands       chan command
-	control        chan command
-	done           chan func(*worker)
-	rooms          map[string]*room
-	roll           func(int64) int64
-	townNavigation *townNavigationWorker
+	e                  *Engine
+	commands           chan command
+	control            chan command
+	done               chan func(*worker)
+	rooms              map[string]*room
+	roll               func(int64) int64
+	townNavigation     *townNavigationWorker
+	personalNavigation personalNavigationWorkspace
 }
 type entity struct {
 	Handle           uint32
