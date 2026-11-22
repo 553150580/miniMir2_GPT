@@ -24,6 +24,7 @@ type AssetRequest struct {
 	Slot             uint32
 	Benefit          uint32
 	ValidRevive      bool
+	ReviveDeathID    string
 	ItemDefinitionID uint32
 	SceneEpoch       uint64
 	PotionGateCode   uint32
@@ -182,10 +183,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			}
 			r.ClaimedSeconds += delta
 		case "revive":
-			if !q.ValidRevive {
+			if !q.ValidRevive || r.RetiredDeathID != "" && r.RetiredDeathID != q.ReviveDeathID {
 				businessCode = p.CodeInvalidArgument
+				break
 			}
-			// 开发样例只记录操作防重；临时位置和HP由权威场景在提交后处理，不保存数据库。
+			// 只有成功确认的原复活选择能清除死亡标记。临时位置和生命仍由场景处理。
+			r.RetiredDeathID = ""
 		case "use_item", AssetAutoUsePotion:
 			var effect devconfig.PotionEffect
 			r, effect, businessCode = consumePotion(r, q, s.Cfg.Fixture)

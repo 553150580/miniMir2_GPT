@@ -115,6 +115,8 @@ export class AppRoot extends Component {
     private travelDestinationMap?: Long;
     private travelUiSequence = 0;
     private enterAttempt = 0;
+    private roleDirectoryReady = false;
+    private roleDirectoryTask?: Promise<boolean>;
     private roleCreationTask?: Promise<void>;
     private leaving = false;
     private tapSound?: () => void;
@@ -196,11 +198,16 @@ export class AppRoot extends Component {
 
     private async roleScene(): Promise<void> {
         if (!session.connection.token) { await this.changeScene('Login'); return; }
-        for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => { this.selectedRole = i; this.refreshRoles(); });
+        for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => {
+            this.selectedRole = i;
+            if (!this.roleDirectoryReady) return this.fetchRoles();
+            this.refreshRoles();
+        });
         for (let i = 0; i < 3; i++) this.button(`JobTabs/Job${i}`, () => { this.selectedJob = i; this.status(`创建职业：${names[i]}`); });
         this.button('Logout', async () => { signInResume = null; session.connection.token = ''; session.account = null; await this.changeScene('Login'); });
         this.button('Create', () => this.createRole());
         this.button('Enter', async () => {
+            if (!this.roleDirectoryReady && !await this.fetchRoles()) return;
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
             const attempt = ++this.enterAttempt, token = session.connection.token, account = session.account;
             const current = (): boolean => !this.disposed && this.enterAttempt === attempt && session.connection.token === token && session.account === account;
@@ -235,7 +242,16 @@ export class AppRoot extends Component {
         if (session.roleCreation?.get()) await this.createRole();
     }
 
-    private async fetchRoles(): Promise<boolean> {
+    private fetchRoles(): Promise<boolean> {
+        if (this.roleDirectoryTask) return this.roleDirectoryTask;
+        const task = this.loadRoles();
+        this.roleDirectoryTask = task;
+        const clear = (): void => { if (this.roleDirectoryTask === task) this.roleDirectoryTask = undefined; };
+        void task.then(clear, clear);
+        return task;
+    }
+
+    private async loadRoles(): Promise<boolean> {
         const token = session.connection.token, ledger = session.roleCreation, account = session.account;
         const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
         let result: any;
@@ -247,6 +263,8 @@ export class AppRoot extends Component {
         }
         if (!current()) return false;
         session.roles = result.roles;
+        if (!this.roleDirectoryReady) this.status('');
+        this.roleDirectoryReady = true;
         if (signInResume && signInResume.accountId === account?.id) {
             const role = signInResume.role;
             signInResume = null;
@@ -268,6 +286,7 @@ export class AppRoot extends Component {
         const ledger = session.roleCreation, token = session.connection.token, account = session.account;
         if (!ledger || !token || this.disposed) throw new Error('请先认证后创建角色');
         const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
+        if (!this.roleDirectoryReady && (!await this.fetchRoles() || !current())) return;
         let request = ledger.get();
         const replaying = request !== null;
         if (!request) {

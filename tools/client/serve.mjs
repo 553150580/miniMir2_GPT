@@ -4,6 +4,7 @@ import net from 'node:net';
 import { createReadStream, existsSync, statSync, realpathSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { proxyAccountRpc } from './account_proxy.mjs';
 
 const projectRoot = path.resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const option = (name, fallback) => {const index=process.argv.indexOf(name);if(index<0)return fallback;const value=process.argv[index+1];if(!value||value.startsWith('--'))throw Error('缺少参数：'+name);return value;};
@@ -19,14 +20,9 @@ const runIndex=process.argv.indexOf('--instance-id');
 const runId=runIndex>=0?process.argv[runIndex+1]:'';
 const sockets=new Set();
 const mime = { '.html':'text/html; charset=utf-8', '.js':'text/javascript', '.json':'application/json', '.css':'text/css', '.png':'image/png', '.wasm':'application/wasm', '.ttf':'font/ttf', '.woff':'font/woff', '.svg':'image/svg+xml', '.wav':'audio/wav' };
-const proxy = (request, response) => {
-    const upstream = http.request({ hostname:'127.0.0.1', port:accountPort, path:'/rpc', method:request.method, headers:{ ...request.headers, host:'127.0.0.1:'+accountPort } }, result => { response.writeHead(result.statusCode, result.headers); result.pipe(response); });
-    upstream.on('error', () => { if (!response.headersSent) response.writeHead(503); response.end('认证服务未启动'); });
-    request.pipe(upstream);
-};
 const server = http.createServer((request,response) => {
     if (request.url === '/favicon.ico') { response.writeHead(204); response.end(); return; }
-    if (request.url === '/account/rpc') { proxy(request,response); return; }
+    if (request.url === '/account/rpc') { proxyAccountRpc(request,response,accountPort); return; }
     if (request.url === '/healthz') { response.writeHead(existsSync(path.join(root,'index.html')) ? 200 : 503, {'Content-Type':'application/json'}); response.end(JSON.stringify({webMobileBuild:existsSync(path.join(root,'index.html')),developmentOnly:true,pid:process.pid,run_id:runId,build_root:root,port,account_port:accountPort,game_port:gamePort})); return; }
     let target;
     try { target = path.resolve(root, '.' + decodeURIComponent(new URL(request.url,'http://localhost').pathname)); } catch { response.writeHead(400);response.end();return; }

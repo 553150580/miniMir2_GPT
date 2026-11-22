@@ -79,6 +79,15 @@ test('明确首次业务拒绝结束原请求；繁忙、未知后的拒绝、�
 
 const displayRole=(slot)=>({key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(slot)},slot,job:0,name:`角色${slot}`,level:1});
 
+test('角色目录首次超时后复用当前角色槽重试，不需要退出重新登录',async()=>{
+ const f=fixture(),app=f.app(),original=f.session.connection.rpc;f.server.push(displayRole(1),displayRole(2));
+ f.session.connection.rpc=async(id,q)=>{if(id===10003){f.session.connection.rpc=original;throw Error('账号服务响应超时');}return original(id,q);};
+ await assert.rejects(app.roleScene(),/账号服务响应超时/);assert.equal(f.session.roles.length,0);
+ await f.click('Role1');
+ assert.equal(app.selectedRole,1);assert.equal(f.session.roles[1].slot,2);
+ assert.equal(f.session.connection.token,'account-a-token');assert.deepEqual(f.scenes,[]);
+});
+
 test('点击进入遇到10008认证拒绝，重新登录同账号恢复原角色身份，不自动继续入场',async()=>{
  const f=fixture(),app=f.app();f.server.push(displayRole(1),displayRole(2));await app.roleScene();f.click('Role1');
  const pendingKey=`minimir.pending.v1.${f.session.account.id}.1`;f.storage.setItem(pendingKey,'原经济记录');

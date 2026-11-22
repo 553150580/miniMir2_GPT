@@ -5,6 +5,7 @@ import { inputTraceMessage, traceInput } from './InputTrace';
 import { NavigationCancelAssembler } from './NavigationCancelAssembler';
 
 const pb = clientPb.minimir.v1;
+const accountRpcTimeoutMs = 10000;
 type MessageType = { encode(value: any): { finish(): Uint8Array }; decode(value: Uint8Array): any };
 export interface Packet { id: number; seq: number; binding: Long; error: number; value: any; }
 // 明确的协议拒绝与网络中断/未知提交分开，调用方不能把超时当作服务端撤销。
@@ -108,16 +109,37 @@ export class GameConnection {
     onStatus(listener: (status: string) => void): () => void { this.statusListeners.add(listener); return () => this.statusListeners.delete(listener); }
 
     async rpc(id: number, value: any, signal?: AbortSignal): Promise<any> {
+        if (signal?.aborted) throw new Error('账号请求已取消');
         const seq = ++this.sequence;
-        const response = await fetch(`${location.origin}/account/rpc`, {
-            method: 'POST', headers: { 'Content-Type': 'application/octet-stream', ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}) },
-            body: encodePacket(id, seq, Long.UZERO, value), signal,
-        });
-        if (!response.ok) throw new Error(`认证服务返回HTTP ${response.status}`);
-        const packet = decodePacket(new Uint8Array(await response.arrayBuffer()));
-        if (packet.seq !== seq) throw new Error('认证响应序号不匹配');
-        if (packet.error) throw new ProtocolResponseError(packet.id, packet.error);
-        return packet.value;
+        const controller = new AbortController();
+        const cancel = (): void => controller.abort();
+        signal?.addEventListener('abort', cancel, { once: true });
+        let timedOut = false;
+        // 截止时间同时约束响应头和响应体，上层取消也立即传给同一个请求。
+        const deadline = setTimeout(() => {
+            if (controller.signal.aborted) return;
+            timedOut = true;
+            cancel();
+        }, accountRpcTimeoutMs);
+        try {
+            const response = await fetch(`${location.origin}/account/rpc`, {
+                method: 'POST', headers: { 'Content-Type': 'application/octet-stream', ...(this.token ? { Authorization: `Bearer ${this.token}` } : {}) },
+                body: encodePacket(id, seq, Long.UZERO, value), signal: controller.signal,
+            });
+            if (response.status === 504) throw new Error('账号服务响应超时');
+            if (!response.ok) throw new Error(`认证服务返回HTTP ${response.status}`);
+            const packet = decodePacket(new Uint8Array(await response.arrayBuffer()));
+            if (packet.seq !== seq) throw new Error('认证响应序号不匹配');
+            if (packet.error) throw new ProtocolResponseError(packet.id, packet.error);
+            return packet.value;
+        } catch (error) {
+            if (timedOut) throw new Error('账号服务响应超时');
+            if (signal?.aborted) throw new Error('账号请求已取消');
+            throw error;
+        } finally {
+            clearTimeout(deadline);
+            signal?.removeEventListener('abort', cancel);
+        }
     }
 
     async connect(ticket: string, signal?: AbortSignal): Promise<void> {

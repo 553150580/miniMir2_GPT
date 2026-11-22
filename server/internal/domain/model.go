@@ -109,6 +109,7 @@ type Role struct {
 	LegacyExperienceOverflow     int64             `bson:"legacy_experience_overflow,omitempty" json:"legacy_experience_overflow"`
 	ProgressionMigrationRequired bool              `bson:"progression_migration_required,omitempty" json:"progression_migration_required"`
 	Revision                     int64             `bson:"revision" json:"revision"`
+	RetiredDeathID               string            `bson:"retired_death_id,omitempty" json:"-"`
 	EconomicSeq                  int64             `bson:"economic_command_seq" json:"economic_command_seq"`
 	SourceSeq                    int64             `bson:"source_seq" json:"source_seq"`
 	SettlementReceiptStartSeq    int64             `bson:"settlement_receipt_start_seq,omitempty" json:"-"`

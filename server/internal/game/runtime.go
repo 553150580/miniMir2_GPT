@@ -146,6 +146,7 @@ type room struct {
 	RetryAt               time.Time
 	Waiting               []command
 	LastTick              time.Time
+	idleSince             time.Time
 	HostMS                int64 // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
 	HostSession           string
 	DeathID               string
@@ -337,8 +338,9 @@ func (w *worker) loop() {
 			}
 			if !c.tick.IsZero() {
 				w.beginTownNavigationTick(c.tick)
-				for _, r := range w.rooms {
+				for roleID, r := range w.rooms {
 					w.step(r, c.tick)
+					w.expireIdleRoom(roleID, r, c.tick)
 				}
 				w.endTownNavigationTick()
 				continue
@@ -367,8 +369,10 @@ func (w *worker) command(c command) {
 		}
 		if r == nil {
 			if len(w.rooms) >= maxRoomsPerWorker {
-				c.conn.Close("development room budget")
-				return
+				if !w.releaseIdleSlot(time.Now()) {
+					rejectEntry(c.conn, c.frame.Request, p.CodeServerBusy, "development room budget")
+					return
+				}
 			}
 			r = &room{Role: domain.Role{ID: c.role}, worldState: &worldState{}}
 			w.rooms[c.role] = r
@@ -630,6 +634,7 @@ func (w *worker) join(r *room, c command) {
 			w.cancelTownNavigation(r)
 			r.Role = role
 			r.Auth = auth
+			r.idleSince = time.Time{}
 			if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
 				w.refreshPlayerStats(r)
 			}
@@ -717,7 +722,10 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
 	w.refreshPlayerStats(r)
 	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP
-	if role.Job == f.Pet.JobID && (!w.petRuntimeEnabled() || f.PetRuntime.BootstrapMode == "legacy_untrained_pet") {
+	if role.RetiredDeathID != "" {
+		r.DeathID = role.RetiredDeathID
+		r.Player.HP, r.Player.Action = 0, 4
+	} else if role.Job == f.Pet.JobID && (!w.petRuntimeEnabled() || f.PetRuntime.BootstrapMode == "legacy_untrained_pet") {
 		r.Pet = &entity{Handle: 2, Kind: 2, Def: f.Pet.DefinitionID, Pos: f.Map.PetSpawn, HP: f.Pet.HP, MaxHP: f.Pet.HP, MP: f.Pet.MP, MaxMP: f.Pet.MP}
 		r.PetWorld = r.currentWorld().Ref
 		if w.petRuntimeEnabled() && !w.attachLegacyPetState(r.Pet) {
@@ -967,6 +975,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		reviveID = domain.Hex(x.DeathId)
 		q.Kind = "revive"
 		q.Context = x.Operation
+		q.ReviveDeathID = reviveID
 		q.ValidRevive = w.e.Store.Cfg.Fixture.AllowFreeDevRevive && x.Action == 1 && r.Player.HP == 0 && reviveID == r.DeathID
 	case p.MsgC2SUseItem:
 		var x pb.UseItemRequest

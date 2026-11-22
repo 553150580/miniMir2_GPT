@@ -2,31 +2,44 @@ package transport
 
 import (
 	"context"
+	"net/http"
+	"sync/atomic"
+	"time"
+
 	"github.com/coder/websocket"
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
-	"net/http"
-	"sync/atomic"
-	"time"
+)
+
+const initialAdmissionTimeout = 10 * time.Second
+
+const (
+	admissionWaiting uint32 = iota
+	admissionBound
+	admissionExpired
 )
 
 type connection struct {
-	socket   *websocket.Conn
-	ctx      context.Context
-	cancel   context.CancelFunc
-	queue    chan []byte
-	terminal chan []byte
-	queued   atomic.Int64
-	role     atomic.Value
-	binding  atomic.Uint64
-	closed   atomic.Bool
-	ending   atomic.Bool
-	entry    atomic.Bool
+	socket         *websocket.Conn
+	ctx            context.Context
+	cancel         context.CancelFunc
+	queue          chan []byte
+	terminal       chan []byte
+	queued         atomic.Int64
+	role           atomic.Value
+	binding        atomic.Uint64
+	closed         atomic.Bool
+	ending         atomic.Bool
+	entry          atomic.Bool
+	admission      atomic.Uint32
+	admissionTimer *time.Timer
 }
 
-func (c *connection) Alive() bool { return !c.closed.Load() && !c.ending.Load() && c.ctx.Err() == nil }
+func (c *connection) Alive() bool {
+	return c.admission.Load() != admissionExpired && !c.closed.Load() && !c.ending.Load() && c.ctx.Err() == nil
+}
 func (c *connection) Deliver(f wire.Frame) bool {
 	if !c.Alive() {
 		return false
@@ -67,9 +80,19 @@ func (c *connection) RoleID() string {
 	}
 	return v.(string)
 }
-func (c *connection) SetBinding(v uint64) { c.binding.Store(v) }
-func (c *connection) Binding() uint64     { return c.binding.Load() }
+func (c *connection) SetBinding(v uint64) {
+	if v != 0 && c.admission.CompareAndSwap(admissionWaiting, admissionBound) {
+		c.admissionTimer.Stop()
+	}
+	c.binding.Store(v)
+}
+func (c *connection) Binding() uint64 { return c.binding.Load() }
+
 func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
+	s.serveWebSocket(w, r, initialAdmissionTimeout)
+}
+
+func (s *Server) serveWebSocket(w http.ResponseWriter, r *http.Request, admissionTimeout time.Duration) {
 	if s.active.Add(1) > 128 {
 		s.active.Add(-1)
 		http.Error(w, "development connection budget", 503)
@@ -83,6 +106,13 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 	socket.SetReadLimit(wire.MaxFrame)
 	ctx, cancel := context.WithCancel(r.Context())
 	c := &connection{socket: socket, ctx: ctx, cancel: cancel, queue: make(chan []byte, 128), terminal: make(chan []byte, 1)}
+	// 起算于升级成功，只有有效角色绑定能结束此计时。心跳和提交票据本身均不延长截止。
+	c.admissionTimer = time.AfterFunc(admissionTimeout, func() {
+		if c.admission.CompareAndSwap(admissionWaiting, admissionExpired) {
+			c.Close("initial admission timeout")
+		}
+	})
+	defer c.admissionTimer.Stop()
 	defer c.Close("disconnected")
 	defer s.Engine.Disconnect(c)
 	writerDone := make(chan struct{})
