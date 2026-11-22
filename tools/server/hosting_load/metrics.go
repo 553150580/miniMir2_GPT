@@ -16,21 +16,22 @@ import (
 )
 
 type hostingLoadMongoMetrics struct {
-	mu     sync.Mutex
-	phases []*hostingLoadMongoPhase
+	mu        sync.Mutex
+	completed []hostingLoadMongoPhaseReport
+	current   hostingLoadMongoPhase
+	interval  hostingLoadMongoPhase
 }
 
 type hostingLoadMongoPhase struct {
 	name         string
 	startedAt    time.Time
-	endedAt      time.Time
 	commit       hostingLoadMongoSamples
 	otherWrites  hostingLoadMongoSamples
 	transactions hostingLoadMongoSamples
 }
 
 type hostingLoadMongoSamples struct {
-	confirmed []time.Duration
+	confirmed durationHistogram
 	failures  hostingLoadMongoFailures
 }
 
@@ -77,14 +78,14 @@ func (m *hostingLoadMongoMetrics) SetPhase(name string) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	now := time.Now()
-	if len(m.phases) != 0 {
-		current := m.phases[len(m.phases)-1]
-		if current.name == name {
+	if !m.current.startedAt.IsZero() {
+		if m.current.name == name {
 			return
 		}
-		current.endedAt = now
+		m.completed = append(m.completed, m.current.report(now))
 	}
-	m.phases = append(m.phases, &hostingLoadMongoPhase{name: name, startedAt: now})
+	m.current = hostingLoadMongoPhase{name: name, startedAt: now}
+	m.interval = hostingLoadMongoPhase{name: name, startedAt: now}
 }
 
 func (m *hostingLoadMongoMetrics) Monitor() *event.CommandMonitor {
@@ -204,24 +205,26 @@ func classifyHostingLoadMongoError(err error) hostingLoadMongoFailures {
 func (m *hostingLoadMongoMetrics) recordCommand(command string, elapsed time.Duration, failure hostingLoadMongoFailures) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	current := m.phases[len(m.phases)-1]
-	samples := &current.otherWrites
 	if command == "commitTransaction" {
-		samples = &current.commit
+		m.current.commit.record(elapsed, failure)
+		m.interval.commit.record(elapsed, failure)
+		return
 	}
-	samples.record(elapsed, failure)
+	m.current.otherWrites.record(elapsed, failure)
+	m.interval.otherWrites.record(elapsed, failure)
 }
 
 func (m *hostingLoadMongoMetrics) RecordTransaction(elapsed time.Duration, err error) {
 	failure := classifyHostingLoadMongoError(err)
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.phases[len(m.phases)-1].transactions.record(elapsed, failure)
+	m.current.transactions.record(elapsed, failure)
+	m.interval.transactions.record(elapsed, failure)
 }
 
 func (s *hostingLoadMongoSamples) record(elapsed time.Duration, failure hostingLoadMongoFailures) {
 	if failure.Total == 0 {
-		s.confirmed = append(s.confirmed, elapsed)
+		s.confirmed.observe(elapsed)
 		return
 	}
 	s.failures.Total += failure.Total
@@ -235,31 +238,30 @@ func (s *hostingLoadMongoSamples) record(elapsed time.Duration, failure hostingL
 
 func (m *hostingLoadMongoMetrics) Snapshot() []hostingLoadMongoPhaseReport {
 	m.mu.Lock()
-	snapshot := make([]hostingLoadMongoPhase, len(m.phases))
-	for i, phase := range m.phases {
-		snapshot[i] = *phase
-		snapshot[i].commit.confirmed = slices.Clone(phase.commit.confirmed)
-		snapshot[i].otherWrites.confirmed = slices.Clone(phase.otherWrites.confirmed)
-		snapshot[i].transactions.confirmed = slices.Clone(phase.transactions.confirmed)
-	}
-	m.mu.Unlock()
+	defer m.mu.Unlock()
+	report := make([]hostingLoadMongoPhaseReport, len(m.completed), len(m.completed)+1)
+	copy(report, m.completed)
+	return append(report, m.current.report(time.Now()))
+}
+
+func (m *hostingLoadMongoMetrics) TakeInterval() hostingLoadMongoPhaseReport {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	now := time.Now()
-	report := make([]hostingLoadMongoPhaseReport, len(snapshot))
-	for i, phase := range snapshot {
-		ended := phase.endedAt
-		if ended.IsZero() {
-			ended = now
-		}
-		report[i] = hostingLoadMongoPhaseReport{
-			Phase: phase.name, StartedAt: phase.startedAt, EndedAt: ended,
-			Commit: phase.commit.report(), OtherWrites: phase.otherWrites.report(), Transactions: phase.transactions.report(),
-		}
-	}
+	report := m.interval.report(now)
+	m.interval = hostingLoadMongoPhase{name: m.current.name, startedAt: now}
 	return report
 }
 
-func (s hostingLoadMongoSamples) report() hostingLoadMongoSampleReport {
-	return hostingLoadMongoSampleReport{Confirmed: hostingLoadDurations(s.confirmed), Failures: s.failures}
+func (p *hostingLoadMongoPhase) report(endedAt time.Time) hostingLoadMongoPhaseReport {
+	return hostingLoadMongoPhaseReport{
+		Phase: p.name, StartedAt: p.startedAt, EndedAt: endedAt,
+		Commit: p.commit.report(), OtherWrites: p.otherWrites.report(), Transactions: p.transactions.report(),
+	}
+}
+
+func (s *hostingLoadMongoSamples) report() hostingLoadMongoSampleReport {
+	return hostingLoadMongoSampleReport{Confirmed: s.confirmed.report(), Failures: s.failures}
 }
 
 func hostingLoadDurations(samples []time.Duration) hostingLoadDurationReport {

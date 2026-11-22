@@ -12,7 +12,7 @@ import sys
 import time
 import uuid
 
-from verify_startup_recovery import ROOT, fixture_identity, http_json, load, save, sha, stop_owned
+from verify_startup_recovery import ROOT, fixture_identity, http_json, load, main_identity, save, sha, stop_owned
 
 sys.path.insert(0, str(ROOT / 'tools' / 'environment'))
 import mongodb_hosting_load as mongo
@@ -93,6 +93,14 @@ def show_event(row):
     elif event == 'default_admission':
         progress(f"默认接入 {row.get('first_128', {}).get('online')} 个，"
                  f"第 129 个结果 {row.get('connection_129')}")
+    elif event == 'soak_sample':
+        server = row.get('server', {})
+        elapsed = row.get('elapsed_seconds', 0)
+        census = row.get('census', {})
+        rooms = server.get('rooms', {})
+        progress(f"混合负载 {elapsed:.0f} 秒，在线 {rooms.get('online', census.get('online'))}，"
+                 f"托管 {rooms.get('managed')}，总房间 {rooms.get('total')}，"
+                 f"累计回收 {server.get('room_evictions')}")
     elif event in {'admission', 'hold_start', 'hold_sample', 'hold_end'}:
         census = row.get('census', row.get('current', {}))
         stage_name = {'admission': '入场', 'hold_start': '开始观察', 'hold_sample': '观察中', 'hold_end': '观察结束'}[event]
@@ -161,6 +169,8 @@ def run(args, hold_seconds):
     used_ports = set()
     progress(f'本轮独立压测证据位于 {work}')
     try:
+        if args.profile == 'soak':
+            report['main_before'] = main_identity()
         endpoint = mongo.start(db_record, mongo_dir, run_id)
         report['mongo'] = endpoint
         if not endpoint['endpoint_verified']:
@@ -180,7 +190,9 @@ def run(args, hold_seconds):
         path = work / 'seed.jsonl'
         seed = launch(command('seed', selected[0], addresses), path, handles)
         seed_rows = wait_logged(seed, path, 180, '预置角色')
-        if not seed_rows or seed_rows[-1].get('roles') != args.seed:
+        seeded = seed_rows[-1] if seed_rows else {}
+        expected = seeded.get('target_active', seeded.get('roles'))
+        if expected != args.seed or seeded.get('roles', 0) < args.seed:
             raise RuntimeError('预置角色结果与目标不一致')
         report['seed'] = seed_rows[-1]
 
@@ -236,6 +248,12 @@ def run(args, hold_seconds):
             report['mongo_cleanup'] = mongo.stop(db_record, mongo_dir, run_id)
         except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
             report['cleanup_errors'].append(str(error))
+        if 'main_before' in report:
+            try:
+                report['main_after'] = main_identity()
+                report['main_preserved'] = report['main_after'] == report['main_before']
+            except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as error:
+                report['main_check_error'] = str(error)
         report['ended_at'] = dt.datetime.now(dt.timezone.utc).isoformat()
         save(work / 'runner.json', report)
         progress(f'证据已保存至 {work / "runner.json"}')
@@ -249,7 +267,7 @@ def main():
     parser.add_argument('--hold', default='180s')
     parser.add_argument('--seed', type=int, default=5000)
     parser.add_argument('--parallel', type=int, default=16)
-    parser.add_argument('--profile', choices=['both', 'default', 'raised', 'prejoin'], default='both')
+    parser.add_argument('--profile', choices=['both', 'default', 'raised', 'prejoin', 'soak'], default='both')
     args = parser.parse_args()
     duration = re.fullmatch(r'([1-9]\d*)([sm])', args.hold)
     hold_seconds = int(duration[1]) * (60 if duration[2] == 'm' else 1) if duration else 0

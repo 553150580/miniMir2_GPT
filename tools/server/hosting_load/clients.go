@@ -94,7 +94,11 @@ func runClients(ctx context.Context, cfg devconfig.Config, statsAddr string, a a
 	if a.profile == "default" {
 		expected = 129
 	}
-	roles, err := loadIdentities(ctx, store, expected)
+	seeded := expected
+	if a.profile == "soak" {
+		seeded = planSoak(a).seeded
+	}
+	roles, err := loadIdentities(ctx, store, seeded)
 	if err != nil {
 		return err
 	}
@@ -106,14 +110,9 @@ func runClients(ctx context.Context, cfg devconfig.Config, statsAddr string, a a
 			}
 		}
 	}()
-	join := func(i int) (*loadBot, error) {
-		q, stop := context.WithTimeout(ctx, 10*time.Second)
-		ticket, err := store.IssueTicket(q, persistence.Auth{AccountID: roles[i].AccountID, AuthVersion: 1}, &pb.RoleKey{RoleId: domain.Bytes(roles[i].ID), OriginServerId: cfg.OriginID})
-		stop()
-		if err != nil {
-			return nil, loadTicketError{err}
-		}
-		return joinLoadBot(ctx, cfg.GameAddress, ticket.Ticket, a.profile != "prejoin")
+	join := issueLoadBot(ctx, cfg, store, roles, a.profile != "prejoin")
+	if a.profile == "soak" {
+		return runSoak(ctx, store, statsAddr, a, roles, bots, join)
 	}
 	if a.profile == "default" {
 		entry := admit(ctx, bots, 128, a.parallel, join)
@@ -211,6 +210,19 @@ func runClients(ctx context.Context, cfg devconfig.Config, statsAddr string, a a
 		}
 	}
 	return nil
+}
+
+func issueLoadBot(ctx context.Context, cfg devconfig.Config, store *persistence.Store, roles []loadIdentity, activate bool) func(int) (*loadBot, error) {
+	return func(i int) (*loadBot, error) {
+		q, stop := context.WithTimeout(ctx, 10*time.Second)
+		ticket, err := store.IssueTicket(q, persistence.Auth{AccountID: roles[i].AccountID, AuthVersion: 1},
+			&pb.RoleKey{RoleId: domain.Bytes(roles[i].ID), OriginServerId: cfg.OriginID})
+		stop()
+		if err != nil {
+			return nil, loadTicketError{err}
+		}
+		return joinLoadBot(ctx, cfg.GameAddress, ticket.Ticket, activate)
+	}
 }
 
 func enableStaggered(ctx context.Context, bots []*loadBot) admissionResult {

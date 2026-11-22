@@ -19,8 +19,13 @@ type loadIdentity struct {
 	AccountID string `bson:"account_id"`
 }
 
-func seedRoles(ctx context.Context, cfg devconfig.Config, runID string, count int) error {
-	if count < 1 || count > 5000 {
+func seedRoles(ctx context.Context, cfg devconfig.Config, runID string, a arguments) error {
+	count, hosted := a.seed, 0
+	if a.profile == "soak" {
+		plan := planSoak(a)
+		count, hosted = plan.seeded, plan.offline
+	}
+	if a.seed < 1 || a.seed > 5000 || count < a.seed || count > 20000 {
 		return fmt.Errorf("无效的压测预置角色数 %d", count)
 	}
 	store, err := persistence.Open(ctx, cfg)
@@ -59,14 +64,20 @@ func seedRoles(ctx context.Context, cfg devconfig.Config, runID string, count in
 			if createErr != nil {
 				return fmt.Errorf("创建测试角色 %d: %w", i, createErr)
 			}
-			_, updateErr := store.DB.Collection("roles").UpdateOne(work, bson.M{"_id": domain.Hex(role.Key.RoleId)}, bson.M{"$set": bson.M{"level": 45}})
+			seed := bson.M{"level": 45}
+			if i < hosted {
+				// 只为隔离托管组赋予合法的免费时长量，后续扣秒和奖励由游戏服实际提交。
+				seed["hosting_seconds"] = soakHostingBalance
+			}
+			_, updateErr := store.DB.Collection("roles").UpdateOne(work, bson.M{"_id": domain.Hex(role.Key.RoleId)}, bson.M{"$set": seed})
 			return updateErr
 		})
 	}
 	if err = group.Wait(); err != nil {
 		return err
 	}
-	return emit(map[string]any{"event": "seed", "roles": count, "job": "warrior", "level": 45, "seconds": time.Since(start).Seconds()})
+	return emit(map[string]any{"event": "seed", "roles": count, "target_active": a.seed, "hosting_roles_seeded": hosted,
+		"hosting_seconds_each": soakHostingBalance, "job": "warrior", "level": 45, "seconds": time.Since(start).Seconds()})
 }
 
 func loadIdentities(ctx context.Context, store *persistence.Store, limit int) ([]loadIdentity, error) {

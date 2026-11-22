@@ -33,6 +33,8 @@ type loadBot struct {
 	attack, cast, settlement, death, errors, heartbeatOK atomic.Uint64
 	baselines, positionSamples, changedPosition          atomic.Uint64
 	heartbeatRequest                                     atomic.Uint32
+	playerLife                                           atomic.Uint64
+	hostingRemaining                                     atomic.Uint32
 	autoActivation                                       chan error
 
 	statusMu    sync.Mutex
@@ -46,6 +48,9 @@ type loadBotSnapshot struct {
 	Baselines, PositionSamples, ChangedPosition                      uint64
 	ZoneWidth, ZoneHeight                                            int32
 	Scene, MapID                                                     uint64
+	Life, Binding                                                    uint64
+	X, Y                                                             int32
+	HostingRemaining                                                 uint32
 	CloseReason                                                      string
 	ErrorCodes                                                       map[uint32]uint64
 }
@@ -110,6 +115,7 @@ func (b *loadBot) enter(ctx context.Context, ticket string, activate bool) error
 		for _, entity := range baseline.Entities {
 			if entity.EntityHandle == b.handle && entity.EntityKind == 1 && entity.Hp > 0 && entity.Position != nil {
 				player = entity.Position.X == b.x && entity.Position.Y == b.y
+				b.playerLife.Store(entity.Life)
 			}
 		}
 	}
@@ -141,6 +147,7 @@ func (b *loadBot) enter(ctx context.Context, ticket string, activate bool) error
 		return fmt.Errorf("服务端未确认预期的入场自动战斗状态")
 	}
 	b.auto.Store(hosting.AutoBattleEnabled)
+	b.hostingRemaining.Store(hosting.RemainHostingSec)
 	return nil
 }
 
@@ -254,6 +261,7 @@ func (b *loadBot) drain() {
 			decodeErr = proto.Unmarshal(f.Payload, &hosting)
 			if decodeErr == nil {
 				b.auto.Store(hosting.AutoBattleEnabled)
+				b.hostingRemaining.Store(hosting.RemainHostingSec)
 			}
 			if f.Request == loadAutoActivateRequest {
 				activationErr := decodeErr
@@ -287,6 +295,7 @@ func (b *loadBot) drain() {
 						b.changedPosition.Add(1)
 					}
 					b.dead.Store(entity.Hp <= 0)
+					b.playerLife.Store(entity.Life)
 					break
 				}
 			}
@@ -357,6 +366,7 @@ func (b *loadBot) snapshot() loadBotSnapshot {
 		Errors: b.errors.Load(), HeartbeatOK: b.heartbeatOK.Load(), CloseReason: b.closeReason,
 		Baselines: b.baselines.Load(), PositionSamples: b.positionSamples.Load(), ChangedPosition: b.changedPosition.Load(),
 		Scene: b.scene, MapID: b.mapID, ZoneWidth: 13, ZoneHeight: 13,
+		Life: b.playerLife.Load(), Binding: b.binding, X: b.x, Y: b.y, HostingRemaining: b.hostingRemaining.Load(),
 	}
 	if b.closeReason != "" {
 		s.CloseCount = 1

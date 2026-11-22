@@ -6,6 +6,8 @@ import hashlib
 import json
 from pathlib import Path
 
+from hosting_load_soak_report import hold_trends, operation_totals, reconnect_totals, trend, window_counts
+
 
 MIB = 1024 * 1024
 
@@ -109,6 +111,7 @@ def queue_stats(before, after):
                                                 after.get('db_queue_full_by_lane')),
         'db_queue_depth_peak_at_tick': after['max_db_queue_depth'],
         'db_queue_depth_peak_by_lane_at_tick': after.get('max_db_queue_depth_by_lane'),
+        'db_queue_depth_by_lane_end': after.get('db_queue_depth_by_lane'),
         'db_queue_capacity_by_lane': after.get('db_queue_capacity_by_lane'),
         'worker_tick_execution': after['tick_work'], 'worker_tick_lag': after['tick_lag'],
         'kill_to_receipt': after.get('kill_to_receipt'),
@@ -132,15 +135,16 @@ def phase_stats(start, finish, censuses, samples, pids, logical_processors):
 
     begin_census, census = start['census'], finish['census']
     scenes = [point['distinct_scenes'] for point in [begin_census, *censuses, census]]
-    rooms_match = (
-        sum(before['last_tick_rooms']) == begin_census['distinct_scenes']
-        and sum(after['last_tick_rooms']) == census['distinct_scenes']
-    )
+    before_online = before.get('rooms', {}).get('online', sum(before['last_tick_rooms']))
+    after_online = after.get('rooms', {}).get('online', sum(after['last_tick_rooms']))
+    rooms_match = (before_online == begin_census['distinct_scenes']
+                   and after_online == census['distinct_scenes'])
     changed_positions = census['changed_position'] - begin_census['changed_position']
     return {
         'target': target,
         'start': before['at'], 'end': after['at'],
         'seconds': seconds, 'client_elapsed_seconds': finish['elapsed_seconds'],
+        'client_window_minus_server_seconds': finish['elapsed_seconds'] - seconds,
         'minimum_online': finish['minimum_online'], 'minimum_auto_alive': finish['minimum_auto_alive'],
         'distinct_scenes_start': begin_census['distinct_scenes'], 'distinct_scenes_end': census['distinct_scenes'],
         'minimum_distinct_scenes': min(scenes), 'census_readings': len(scenes),
@@ -156,12 +160,87 @@ def phase_stats(start, finish, censuses, samples, pids, logical_processors):
         'client_error_codes': counter_changes(begin_census.get('error_codes', {}), census.get('error_codes', {})),
         'heartbeats': census['heartbeats'] - begin_census['heartbeats'],
         'server_close_reasons': counter_changes(before.get('server_close_reasons'), after.get('server_close_reasons')),
+        'server_terminal_reasons': counter_changes(before.get('server_terminal_reasons'),
+                                                   after.get('server_terminal_reasons')),
         'processes': {name: process_stats(window, pid, name, logical_processors) for name, pid in pids.items()},
         'gc': gc_stats(before, after, seconds),
         'mongodb': mongo,
+        'latency_quantiles': after.get('latency_quantiles', 'exact'),
         'mongo_window_start_offset_ms': (mongo_began - began).total_seconds() * 1000,
         'mongo_window_end_offset_ms': (mongo_ended - ended).total_seconds() * 1000,
         'queues_and_ticks': queue_stats(before, after),
+    }
+
+
+def soak_stats(start, finish, client_samples, samples, pids, logical_processors, observations, operations):
+    # 在线与托管人数来自不同观测面。短时重连和已脱离但尚在保留期的房间分别统计。
+    points = [start, *observations, finish]
+    diagnostics = [point['server'] for point in points]
+    began, ended = stamp(diagnostics[0]['at']), stamp(diagnostics[-1]['at'])
+    final_seconds = finish['elapsed_seconds']
+    readings = [start, *client_samples, *observations, finish]
+    windows = []
+    for left, right in zip(points, points[1:]):
+        old, new = left['server'], right['server']
+        window_began, window_ended = stamp(old['at']), stamp(new['at'])
+        seconds = (window_ended - window_began).total_seconds()
+        from_elapsed, to_elapsed = left.get('elapsed_seconds', 0), right['elapsed_seconds']
+        if seconds <= 0 or to_elapsed <= from_elapsed:
+            raise ValueError('长测观测窗口时间未推进')
+        censuses = [row['census'] for row in readings
+                    if from_elapsed <= row.get('elapsed_seconds', 0) <= to_elapsed]
+        window = [(timestamp, row) for timestamp, row in samples if window_began <= timestamp <= window_ended]
+        windows.append({
+            'from_elapsed_seconds': from_elapsed, 'to_elapsed_seconds': to_elapsed,
+            'server_start': old['at'], 'server_end': new['at'],
+            'server_seconds': seconds,
+            'client_window_minus_server_seconds': to_elapsed - from_elapsed - seconds,
+            'ends_at_hold_end': right.get('event') == 'hold_end',
+            'client_counts': window_counts(left['census'], right['census'], to_elapsed - from_elapsed),
+            'minimum_online': min(row['online'] for row in censuses),
+            'minimum_online_auto_alive': min(row['auto_alive'] for row in censuses),
+            'minimum_online_scenes': min(row['distinct_scenes'] for row in censuses),
+            'processes': {name: process_stats(window, pid, name, logical_processors) for name, pid in pids.items()},
+            'gc': gc_stats(old, new, seconds),
+            'rooms': new.get('rooms'),
+            'rooms_by_worker': new.get('rooms_by_worker', new['last_tick_rooms']),
+            'active_total': right.get('active_total'),
+            'active_online': right.get('active_online'),
+            'active_managed': right.get('active_managed'),
+            'hosting': right.get('hosting'),
+            'queues_and_ticks': queue_stats(old, new),
+            'room_evictions': new.get('room_evictions', 0) - old.get('room_evictions', 0),
+            'room_creations': new.get('room_creations', 0) - old.get('room_creations', 0),
+            'server_close_reasons': counter_changes(old.get('server_close_reasons'), new.get('server_close_reasons')),
+            'server_terminal_reasons': counter_changes(old.get('server_terminal_reasons'),
+                                                       new.get('server_terminal_reasons')),
+            'latency_interval': new.get('interval'),
+        })
+
+    room_keys = set().union(*(row.get('rooms', {}) for row in diagnostics))
+    room_trends = {
+        key: trend([(row.get('elapsed_seconds', 0), row['server']['rooms'][key]) for row in points
+                    if key in row['server'].get('rooms', {})], final_seconds)
+        for key in sorted(room_keys)
+    }
+    old, new = diagnostics[0], diagnostics[-1]
+    return {
+        'minimum_active': finish.get('minimum_active'),
+        'cycles': finish.get('cycles'),
+        'hosting_start': start.get('hosting'),
+        'hosting_end': finish.get('hosting'),
+        'windows': windows,
+        'process_memory_trends': hold_trends(began, ended, samples, pids, diagnostics),
+        'room_trends': room_trends,
+        'room_evictions': new.get('room_evictions', 0) - old.get('room_evictions', 0),
+        'room_creations': new.get('room_creations', 0) - old.get('room_creations', 0),
+        'operations': {
+            'events': operations,
+            **{key: operation_totals(operations, key)
+               for key in ('replacement_admission', 'reconnect_admission', 'hosted_probe_admission')},
+            **{key: reconnect_totals(operations, key)
+               for key in ('reconnect_observation', 'hosted_probe_observation')},
+        },
     }
 
 
@@ -189,6 +268,8 @@ def admission_stats(row, activation, hold_start, previous):
         result['until_hold_start'] = {
             'counter_interval_starts_at': start_label,
             'server_close_reasons': counter_changes(close_reasons, server.get('server_close_reasons')),
+            'server_terminal_reasons': counter_changes(prior_server.get('server_terminal_reasons', {}),
+                                                       server.get('server_terminal_reasons')),
             **queue_stats(prior_server, server),
             'mongodb': mongo_phase(server, f'ramp-{target}'),
         }
@@ -214,7 +295,8 @@ def summarize(directory, profile=None):
     samples_path = directory / 'process-samples.jsonl'
     runner = json.loads(runner_path.read_text(encoding='utf-8'))
     if profile is None:
-        profile = 'prejoin' if (directory / 'clients-prejoin.jsonl').is_file() else 'raised'
+        profile = next((name for name in ('soak', 'prejoin')
+                        if (directory / f'clients-{name}.jsonl').is_file()), 'raised')
     profile_run = runner['profiles'].get(profile, {})
     sources = {runner_path.name: sha256(runner_path)}
     samples = []
@@ -250,6 +332,7 @@ def summarize(directory, profile=None):
         if not pids and samples:
             pids = {name: row['pid'] for name, row in samples[0][1]['processes'].items()}
         admissions, activations, previous_finish = {}, {}, None
+        observations, operations = {}, {}
         for row in read_rows(client_path):
             event, target = row['event'], row.get('target')
             if event == 'admission':
@@ -262,15 +345,41 @@ def summarize(directory, profile=None):
                     admission_stats(admissions.pop(target), activations.pop(target, None), row, previous_finish)
                 )
             elif event == 'hold_sample':
-                starts[target][1].append(row['census'])
+                starts[target][1].append(row)
+            elif event == 'soak_sample':
+                observations.setdefault(target, []).append(row)
+            elif event == 'soak_operations':
+                operations.setdefault(target, []).append(row)
+            elif event == 'soak_cohorts':
+                result['soak_cohorts'] = row
             elif event == 'hold_end':
                 start, censuses = starts.pop(target)
-                result['hold_stages'].append(phase_stats(start, row, censuses, samples, pids or {},
-                                                         runner['logical_processors']))
+                points = observations.pop(target, [])
+                stage = phase_stats(start, row, [p['census'] for p in [*censuses, *points]],
+                                    samples, pids or {}, runner['logical_processors'])
+                if profile == 'soak':
+                    stage['soak'] = soak_stats(start, row, censuses, samples, pids or {},
+                                               runner['logical_processors'], points, operations.pop(target, []))
+                result['hold_stages'].append(stage)
                 previous_finish = row
+            elif event == 'soak_drain':
+                drain = {'target': target, **row}
+                if previous_finish is not None and previous_finish['target'] == target:
+                    before, after = previous_finish['server'], row['server']
+                    drain['seconds_after_hold'] = (stamp(after['at']) - stamp(before['at'])).total_seconds()
+                    drain['room_changes_since_hold'] = counter_changes(before.get('rooms'), after.get('rooms'))
+                    drain['room_evictions_since_hold'] = after.get('room_evictions', 0) - before.get('room_evictions', 0)
+                result.setdefault('post_hold_soak_drain', []).append(drain)
         for target, row in admissions.items():
             result['admission'].append(admission_stats(row, activations.get(target), None, previous_finish))
     result['incomplete_hold_targets'] = sorted(starts)
+    if profile == 'soak' and starts:
+        result['incomplete_soak'] = {
+            target: {'observations': len(observations.get(target, [])),
+                     'last_observation': observations.get(target, [None])[-1],
+                     'operations': operations.get(target, [])}
+            for target in starts
+        }
 
     for observed_profile in ('default', profile):
         for mode in ('game', 'account'):
@@ -289,7 +398,7 @@ def summarize(directory, profile=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('directory', type=Path, help='包含 runner.json 和压测原始日志的目录')
-    parser.add_argument('--profile', choices=('raised', 'prejoin'), help='默认按本轮机器人日志自动识别')
+    parser.add_argument('--profile', choices=('raised', 'prejoin', 'soak'), help='默认按本轮机器人日志自动识别')
     parser.add_argument('--output', type=Path, help='UTF-8 JSON 输出路径，默认写入标准输出')
     args = parser.parse_args()
     report = summarize(args.directory.resolve(strict=True), args.profile)

@@ -86,7 +86,7 @@ func run(a arguments) error {
 		if a.mode == "game" {
 			switch a.profile {
 			case "default":
-			case "raised", "prejoin":
+			case "raised", "prejoin", "soak":
 				transport.HostingLoadConnectionLimit = 5500
 				game.HostingLoadRoomLimit = 768
 			default:
@@ -100,7 +100,7 @@ func run(a arguments) error {
 		}
 		return bootstrap.Run(ctx, cfg, a.mode)
 	case "seed":
-		return seedRoles(ctx, cfg, a.runID, a.seed)
+		return seedRoles(ctx, cfg, a.runID, a)
 	case "clients":
 		return runClients(ctx, cfg, statsAddress, a)
 	default:
