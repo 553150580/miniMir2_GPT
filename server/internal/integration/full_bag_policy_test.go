@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -121,6 +122,44 @@ func TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo(t *testing.T) {
 	}
 	if _, _, err := owner.SettleWithReceipt(ctx, auth, persistence.Settlement{SourceSeq: after.SourceSeq + 1, HostSeconds: 1, HostingSession: "full-session"}); persistence.Code(err) != p.CodeOperationConflict {
 		t.Fatal("余额0仍允许超扣托管", err)
+	}
+	next := persistence.Settlement{SourceSeq: after.SourceSeq + 1, Kills: 1, Experience: monster.Exp, Gold: monster.GoldMin, EventAt: time.Now()}
+	nextID := fmt.Sprintf("settle:%s:%d", after.ID, next.SourceSeq)
+	// 在第三项写入处造成真实唯一键冲突，验证前两项和资产推进一并回滚。
+	_, err = owner.DB.Collection("audit_outbox").InsertOne(ctx, bson.M{"_id": nextID, "test_marker": "original"})
+	must(t, err)
+	if _, _, err := owner.SettleWithReceipt(ctx, auth, next); !mongo.IsDuplicateKeyError(err) {
+		t.Fatal("重复审计键应保留Mongo唯一键错误", err)
+	}
+	rolledBack, err := owner.Role(ctx, after.ID)
+	must(t, err)
+	if rolledBack.SourceSeq != after.SourceSeq || rolledBack.Revision != after.Revision || rolledBack.Wallet != after.Wallet || rolledBack.Experience != after.Experience {
+		t.Fatal("审计写失败后角色资产或版本没有完整回滚", rolledBack)
+	}
+	if count, err := owner.DB.Collection("operations").CountDocuments(ctx, bson.M{"_id": nextID}); err != nil || count != 0 {
+		t.Fatal("审计写失败后留下永久收益回执", count, err)
+	}
+	wantOriginal := bson.M{"_id": nextID, "test_marker": "original"}
+	if result, err := owner.DB.Collection("audit_outbox").DeleteOne(ctx, wantOriginal); err != nil || result.DeletedCount != 1 {
+		t.Fatal("未保留原审计项", result, err)
+	}
+	recovered, recoveredReceipt, err := owner.SettleWithReceipt(ctx, auth, next)
+	must(t, err)
+	if recovered.SourceSeq != next.SourceSeq || recovered.Revision != after.Revision+1 || recovered.Wallet.Gold != after.Wallet.Gold+next.Gold || recoveredReceipt.ID != nextID {
+		t.Fatal("相同来源在明确回滚后未恰好提交一次", recovered, recoveredReceipt)
+	}
+	// 让角色读取到零值版本，但实际文档不匹配版本过滤器。
+	_, err = owner.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": after.ID}, bson.M{"$unset": bson.M{"revision": ""}})
+	must(t, err)
+	unmatched := persistence.Settlement{SourceSeq: recovered.SourceSeq + 1, Gold: monster.GoldMin}
+	unmatchedID := fmt.Sprintf("settle:%s:%d", after.ID, unmatched.SourceSeq)
+	if _, _, err := owner.SettleWithReceipt(ctx, auth, unmatched); persistence.Code(err) != p.CodeOperationConflict || err.Error() != "角色版本变化" {
+		t.Fatal("角色版本未匹配时应以版本冲突回滚批次", err)
+	}
+	for _, collection := range []string{"operations", "audit_outbox"} {
+		if count, err := owner.DB.Collection(collection).CountDocuments(ctx, bson.M{"_id": unmatchedID}); err != nil || count != 0 {
+			t.Fatal("角色版本未匹配时留下回执或审计项", collection, count, err)
+		}
 	}
 	t.Log("真实Mongo范围：隔离满包资格，原Store逐事件连续EXP/金币/弃物/扣时、余额0与原receipt防重；实际AI/WS由另一用例验证，不伪称正常掉率采样")
 }

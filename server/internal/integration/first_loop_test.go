@@ -229,10 +229,11 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	for _, item := range persisted.Items {
 		itemsBeforeCombat[item.ID] = true
 	}
-	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, Destination: &pb.GridPoint{X: 6, Y: 8}})
+	destination := &pb.GridPoint{X: 6, Y: 8}
+	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, Destination: destination})
 	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: c.entry.SceneEpoch, ReleaseJoystick: true})
 	c.until(func(f wire.Frame) bool {
-		return f.ID == p.MsgS2CSceneBaseline && c.player() != nil && c.player().Position.X == 6
+		return f.ID == p.MsgS2CSceneBaseline && c.player() != nil && proto.Equal(c.player().Position, destination)
 	})
 	before := proto.Clone(c.player()).(*pb.EntityState)
 	time.Sleep(1100 * time.Millisecond)

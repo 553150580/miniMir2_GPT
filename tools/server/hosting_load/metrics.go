@@ -127,6 +127,23 @@ func classifyHostingLoadMongoReply(reply bson.Raw) hostingLoadMongoFailures {
 	if writeErrors, ok := reply.Lookup("writeErrors").ArrayOK(); ok && len(writeErrors) > 5 {
 		result.Total = 1
 	}
+	// bulkWrite 的逐项错误会随成功命令的结果游标返回。
+	if count, ok := reply.Lookup("nErrors").AsInt64OK(); ok && count > 0 {
+		result.Total = 1
+		if batch, ok := reply.Lookup("cursor", "firstBatch").ArrayOK(); ok {
+			values, _ := batch.Values()
+			for _, value := range values {
+				doc, _ := value.DocumentOK()
+				code, _ := doc.Lookup("code").AsInt64OK()
+				switch code {
+				case 50, 64, 262:
+					result.Timeout = 1
+				case 112:
+					result.Transient = 1
+				}
+			}
+		}
+	}
 	if labels, ok := reply.Lookup("errorLabels").ArrayOK(); ok {
 		values, _ := labels.Values()
 		for _, value := range values {

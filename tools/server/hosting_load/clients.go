@@ -111,7 +111,7 @@ func runClients(ctx context.Context, cfg devconfig.Config, statsAddr string, a a
 		ticket, err := store.IssueTicket(q, persistence.Auth{AccountID: roles[i].AccountID, AuthVersion: 1}, &pb.RoleKey{RoleId: domain.Bytes(roles[i].ID), OriginServerId: cfg.OriginID})
 		stop()
 		if err != nil {
-			return nil, err
+			return nil, loadTicketError{err}
 		}
 		return joinLoadBot(ctx, cfg.GameAddress, ticket.Ticket, a.profile != "prejoin")
 	}
@@ -251,32 +251,54 @@ func sleepContext(ctx context.Context, d time.Duration) error {
 }
 
 type admissionResult struct {
-	Failures  int      `json:"failures"`
-	Recovered int      `json:"recovered"`
-	Samples   []string `json:"samples,omitempty"`
+	Roles             int                       `json:"roles_attempted"`
+	FirstSuccess      int                       `json:"first_success"`
+	Success           int                       `json:"success"`
+	Failures          int                       `json:"failures"`
+	Recovered         int                       `json:"recovered"`
+	TicketFailures    int                       `json:"ticket_failures"`
+	TicketTimeouts    int                       `json:"ticket_timeouts"`
+	TicketWriteErrors int                       `json:"ticket_write_concern_errors"`
+	Confirmation      hostingLoadDurationReport `json:"confirmation_latency"`
+	Samples           []string                  `json:"samples,omitempty"`
 }
+
+type loadTicketError struct{ err error }
+
+func (e loadTicketError) Error() string { return e.err.Error() }
+func (e loadTicketError) Unwrap() error { return e.err }
 
 func admit(ctx context.Context, bots []*loadBot, goal, parallel int, join func(int) (*loadBot, error)) admissionResult {
 	var workers sync.WaitGroup
 	positions := make(chan int)
 	var lock sync.Mutex
 	result := admissionResult{}
+	timings := make([]time.Duration, 0, goal)
 	for range parallel {
 		workers.Go(func() {
 			for i := range positions {
+				started := time.Now()
 				for attempt := 0; attempt < 3; attempt++ {
 					bot, err := join(i)
 					if err == nil {
 						bots[i] = bot
+						lock.Lock()
+						timings = append(timings, time.Since(started))
 						if attempt > 0 {
-							lock.Lock()
 							result.Recovered++
-							lock.Unlock()
 						}
+						lock.Unlock()
 						break
 					}
 					lock.Lock()
 					result.Failures++
+					var ticket loadTicketError
+					if errors.As(err, &ticket) {
+						result.TicketFailures++
+						failure := classifyHostingLoadMongoError(ticket.err)
+						result.TicketTimeouts += failure.Timeout
+						result.TicketWriteErrors += failure.WriteConcern
+					}
 					if len(result.Samples) < 12 {
 						result.Samples = append(result.Samples, err.Error())
 					}
@@ -288,6 +310,7 @@ func admit(ctx context.Context, bots []*loadBot, goal, parallel int, join func(i
 			}
 		})
 	}
+	attempted := 0
 schedule:
 	for i := 0; i < goal; i++ {
 		if bots[i] != nil {
@@ -297,9 +320,14 @@ schedule:
 		case <-ctx.Done():
 			break schedule
 		case positions <- i:
+			attempted++
 		}
 	}
 	close(positions)
 	workers.Wait()
+	result.Roles = attempted
+	result.Success = len(timings)
+	result.FirstSuccess = result.Success - result.Recovered
+	result.Confirmation = hostingLoadDurations(timings)
 	return result
 }

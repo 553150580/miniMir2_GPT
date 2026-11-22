@@ -42,7 +42,7 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 	}
 	digest := Hash(raw)
 	id := fmt.Sprintf("settle:%s:%d", a.RoleID, q.SourceSeq)
-	err = s.tx(ctx, func(tc context.Context) error {
+	err = s.guardedTx(ctx, a, func(tc context.Context) error {
 		receipt = Operation{}
 		if err := s.fence(tc, a); err != nil {
 			return err
@@ -85,24 +85,81 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 		if err != nil {
 			return err
 		}
-		if err = s.replace(tc, next, before); err != nil {
-			return err
-		}
-		receipt = Operation{ID: id, Digest: digest, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: next.Revision, Kind: "settlement", Created: time.Now(), Settlement: &details, Recycling: &details.Recycling}
-		if _, err = s.DB.Collection("operations").InsertOne(tc, receipt); err != nil {
-			return err
-		}
+		proposed := Operation{ID: id, Digest: digest, RoleID: r.ID, CommandSeq: r.EconomicSeq, SourceSeq: q.SourceSeq, Revision: next.Revision, Kind: "settlement", Created: time.Now(), Settlement: &details, Recycling: &details.Recycling}
 		eventAt := q.EventAt
 		if eventAt.IsZero() {
 			eventAt = time.Now()
 		}
-		if _, err = s.DB.Collection("audit_outbox").InsertOne(tc, bson.M{"_id": id, "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "hosting_session": q.HostingSession, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": details.RuleVersion, "config_hash": details.ConfigHash, "settlement": details, "at": time.Now()}); err != nil {
+		audit := bson.M{"_id": id, "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "hosting_session": q.HostingSession, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": details.RuleVersion, "config_hash": details.ConfigHash, "settlement": details, "at": time.Now()}
+		if err = s.writeSettlement(tc, next, before, proposed, audit); err != nil {
 			return err
 		}
-		out = next
+		out, receipt = next, proposed
 		return nil
 	})
 	return out, receipt, err
+}
+
+// 三份文档沿用同一事务。角色版本未匹配时，回滚事务也会撤销本批回执和审计。
+func (s *Store) writeSettlement(ctx context.Context, next domain.Role, oldRevision int64, receipt Operation, audit bson.M) error {
+	database := s.DB.Name()
+	writes := []mongo.ClientBulkWrite{
+		{Database: database, Collection: "roles", Model: mongo.NewClientReplaceOneModel().SetFilter(roleReplaceFilter(next, oldRevision)).SetReplacement(next)},
+		{Database: database, Collection: "operations", Model: mongo.NewClientInsertOneModel().SetDocument(receipt)},
+		{Database: database, Collection: "audit_outbox", Model: mongo.NewClientInsertOneModel().SetDocument(audit)},
+	}
+	result, err := s.Client.BulkWrite(ctx, writes)
+	if err != nil {
+		return settlementBulkWriteError(err)
+	}
+	if result.MatchedCount != 1 {
+		return Fail(p.CodeOperationConflict, "角色版本变化")
+	}
+	if result.InsertedCount != 2 || !result.Acknowledged {
+		return Fail(p.CodeServerBusy, "收益回执或审计写入未确认")
+	}
+	return nil
+}
+
+// 客户端跨集合批量错误容器不实现驱动事务所查的错误标签接口。
+func settlementBulkWriteError(err error) error {
+	var bulk mongo.ClientBulkWriteException
+	if !errors.As(err, &bulk) {
+		return err
+	}
+	if top := bulk.WriteError; top != nil {
+		return mongo.CommandError{Code: int32(top.Code), Message: top.Message, Labels: settlementWriteLabels(top.Code, top.Raw), Wrapped: err, Raw: top.Raw}
+	}
+	converted := mongo.WriteException{}
+	for _, failure := range bulk.WriteErrors {
+		converted.WriteErrors = append(converted.WriteErrors, failure)
+		converted.Labels = append(converted.Labels, settlementWriteLabels(failure.Code, failure.Raw)...)
+	}
+	for i := range bulk.WriteConcernErrors {
+		failure := &bulk.WriteConcernErrors[i]
+		if converted.WriteConcernError == nil {
+			converted.WriteConcernError = failure
+		}
+		converted.Labels = append(converted.Labels, settlementWriteLabels(failure.Code, failure.Raw)...)
+	}
+	return converted
+}
+
+func settlementWriteLabels(code int, raw bson.Raw) []string {
+	var labels []string
+	if array, ok := raw.Lookup("errorLabels").ArrayOK(); ok {
+		values, _ := array.Values()
+		for _, value := range values {
+			if label, ok := value.StringValueOK(); ok {
+				labels = append(labels, label)
+			}
+		}
+	}
+	// 批内事务写冲突可能只在结果游标以代码112返回，请驱动重试整个事务。
+	if code == 112 {
+		labels = append(labels, "TransientTransactionError")
+	}
+	return labels
 }
 
 func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.Role, SettlementReceipt, error) {

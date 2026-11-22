@@ -40,20 +40,28 @@ type command struct {
 	fromWaiting bool
 }
 type job struct {
-	run    func() func(*worker)
-	target *worker
+	run        func() func(*worker)
+	target     *worker
+	settlement bool
 }
 type Engine struct {
-	Store     *persistence.Store
-	workers   []*worker
-	jobs      chan job
-	ctx       context.Context
-	cancel    context.CancelFunc
-	wg        sync.WaitGroup
-	baseline  atomic.Uint64
-	stopped   atomic.Bool
-	TownGrids map[uint64]*townnav.Grid
+	Store            *persistence.Store
+	workers          []*worker
+	jobs             chan job
+	settlementJobs   chan job
+	admissionTickets chan job
+	admissionEntries chan job
+	ctx              context.Context
+	cancel           context.CancelFunc
+	wg               sync.WaitGroup
+	baseline         atomic.Uint64
+	stopped          atomic.Bool
+	TownGrids        map[uint64]*townnav.Grid
 }
+
+const workerCount = 8
+const maxRoomsPerWorker = 256
+
 type worker struct {
 	e                  *Engine
 	commands           chan command
@@ -167,8 +175,14 @@ type room struct {
 
 func New(ctx context.Context, s *persistence.Store) *Engine {
 	ctx, cancel := context.WithCancel(ctx)
-	e := &Engine{Store: s, ctx: ctx, cancel: cancel, jobs: make(chan job, 256)}
-	for i := 0; i < 8; i++ {
+	e := &Engine{
+		Store: s, ctx: ctx, cancel: cancel,
+		jobs:             make(chan job, 256),
+		settlementJobs:   make(chan job, workerCount*maxRoomsPerWorker),
+		admissionTickets: make(chan job, 128),
+		admissionEntries: make(chan job, 128),
+	}
+	for i := 0; i < workerCount; i++ {
 		w := &worker{e: e, commands: make(chan command, 256), control: make(chan command, 64), done: make(chan func(*worker), 256), rooms: map[string]*room{}}
 		e.workers = append(e.workers, w)
 	}
@@ -179,23 +193,7 @@ func New(ctx context.Context, s *persistence.Store) *Engine {
 	for _, w := range e.workers {
 		e.wg.Go(w.loop)
 	}
-	for i := 0; i < 8; i++ {
-		e.wg.Go(func() {
-			for {
-				select {
-				case <-ctx.Done():
-					return
-				case j := <-e.jobs:
-					callback := j.run()
-					select {
-					case j.target.done <- callback:
-					case <-ctx.Done():
-						return
-					}
-				}
-			}
-		})
-	}
+	e.startDatabaseWorkers()
 	e.wg.Go(func() {
 		ticker := time.NewTicker(100 * time.Millisecond)
 		defer ticker.Stop()
@@ -218,32 +216,31 @@ func New(ctx context.Context, s *persistence.Store) *Engine {
 func (e *Engine) worker(id string) *worker {
 	raw := domain.Bytes(id)
 	h := sha256.Sum256(raw)
-	return e.workers[binary.BigEndian.Uint64(h[:8])%8]
+	return e.workers[binary.BigEndian.Uint64(h[:8])%workerCount]
 }
 func (e *Engine) Enter(token string, c Connection, request uint32) {
 	if e.stopped.Load() {
 		c.Close("maintenance")
 		return
 	}
-	w := e.workers[0]
-	j := job{target: w, run: func() func(*worker) {
-		t, err := e.Store.TicketRole(e.ctx, token)
-		return func(_ *worker) {
-			if !c.Alive() {
-				return
-			}
-			if err != nil {
-				rejectEntry(c, request, persistence.Code(err), "invalid ticket")
-				return
-			}
-			c.SetRole(t.RoleID)
-			e.post(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: token, frame: wire.Frame{Request: request}})
+	j := job{run: func() func(*worker) {
+		if !c.Alive() {
+			return nil
 		}
+		t, err := e.Store.TicketRole(e.ctx, token)
+		if !c.Alive() {
+			return nil
+		}
+		if err != nil {
+			rejectEntry(c, request, persistence.Code(err), "invalid ticket")
+			return nil
+		}
+		c.SetRole(t.RoleID)
+		e.postEntry(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: token, frame: wire.Frame{Request: request}})
+		return nil
 	}}
-	select {
-	case e.jobs <- j:
-	default:
-		c.Close("server busy")
+	if !offerDatabaseJob(e.admissionTickets, j) {
+		rejectEntry(c, request, p.CodeServerBusy, "admission ticket queue full")
 	}
 }
 
@@ -268,6 +265,15 @@ func (e *Engine) post(w *worker, c command) bool {
 		return false
 	}
 }
+
+func (e *Engine) postEntry(w *worker, c command) {
+	select {
+	case w.commands <- c:
+	default:
+		rejectEntry(c.conn, c.frame.Request, p.CodeServerBusy, "admission command queue full")
+	}
+}
+
 func (e *Engine) Handle(c Connection, f wire.Frame) {
 	id := c.RoleID()
 	if id == "" {
@@ -341,14 +347,6 @@ func (w *worker) loop() {
 		}
 	}
 }
-func (w *worker) submit(j job) bool {
-	select {
-	case w.e.jobs <- j:
-		return true
-	default:
-		return false
-	}
-}
 func (w *worker) command(c command) {
 	r := w.rooms[c.role]
 	if c.ticket != "" {
@@ -368,7 +366,7 @@ func (w *worker) command(c command) {
 			return
 		}
 		if r == nil {
-			if len(w.rooms) >= 256 {
+			if len(w.rooms) >= maxRoomsPerWorker {
 				c.conn.Close("development room budget")
 				return
 			}
@@ -600,11 +598,18 @@ func (w *worker) join(r *room, c command) {
 	r.Pending = true
 	fresh := r.Scene == 0
 	j := job{target: w, run: func() func(*worker) {
-		role, auth, err := w.e.Store.Enter(w.e.ctx, c.ticket)
+		var role domain.Role
+		var auth persistence.Auth
+		err := context.Canceled
+		if c.conn.Alive() {
+			role, auth, err = w.e.Store.Enter(w.e.ctx, c.ticket)
+		}
 		return func(w *worker) {
 			r.Pending = false
 			if err != nil {
-				rejectEntry(c.conn, c.frame.Request, persistence.Code(err), "entry rejected")
+				if c.conn.Alive() {
+					rejectEntry(c.conn, c.frame.Request, persistence.Code(err), "entry rejected")
+				}
 				if fresh {
 					delete(w.rooms, c.role)
 					for _, next := range r.Waiting {
@@ -665,9 +670,9 @@ func (w *worker) join(r *room, c command) {
 			w.after(r)
 		}
 	}}
-	if !w.submit(j) {
+	if !w.e.submitEntry(j) {
 		r.Pending = false
-		c.conn.Close("server busy")
+		rejectEntry(c.conn, c.frame.Request, p.CodeServerBusy, "admission transaction queue full")
 		if fresh {
 			delete(w.rooms, c.role)
 		}

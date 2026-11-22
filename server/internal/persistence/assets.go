@@ -80,7 +80,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	} else if q.Kind == AssetAutoUsePotion {
 		return out, result, receipt, Fail(p.CodeInvalidArgument, "自动用药缺少来源流水")
 	}
-	e := s.tx(ctx, func(tc context.Context) error {
+	e := s.guardedTx(ctx, a, func(tc context.Context) error {
 		receipt = Operation{}
 		if e := s.fence(tc, a); e != nil {
 			return e

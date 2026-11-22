@@ -51,7 +51,7 @@ func (s *Store) PreviewVendor(ctx context.Context, a Auth, shop string, q *pb.Ve
 	}
 	var quote vendorQuote
 	f := &s.Cfg.Fixture
-	err = s.tx(ctx, func(tc context.Context) error {
+	err = s.guardedTx(ctx, a, func(tc context.Context) error {
 		if err := s.fence(tc, a); err != nil {
 			return err
 		}

@@ -262,7 +262,7 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 	}
 	a := Auth{AccountID: t.AccountID, AuthVersion: t.AuthVersion, RoleID: t.RoleID}
 	var r domain.Role
-	e = s.tx(ctx, func(tc context.Context) error {
+	e = s.guardedTx(ctx, a, func(tc context.Context) error {
 		if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID {
 			return Fail(p.CodeRouteChanged, "票据目标运行代次过期")
 		}

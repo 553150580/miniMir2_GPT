@@ -308,7 +308,7 @@ func (s *Store) PreviewSkillAsset(ctx context.Context, a Auth, q *pb.SkillAssetP
 		return nil, Fail(p.CodeInvalidArgument, "缺少技能预览")
 	}
 	var quote skillQuote
-	err := s.tx(ctx, func(tc context.Context) error {
+	err := s.guardedTx(ctx, a, func(tc context.Context) error {
 		if err := s.fence(tc, a); err != nil {
 			return err
 		}

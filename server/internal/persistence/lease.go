@@ -67,7 +67,7 @@ func (s *Store) ApproveGame(ctx context.Context, node, instance string, runID ui
 		if nodeResult.MatchedCount != 1 {
 			return Fail(p.CodeServerBusy, "节点尚由其它有效实例持有")
 		}
-		for group := 0; group < 32; group++ {
+		for group := 0; group < runGuardGroups; group++ {
 			_, e = s.DB.Collection("run_guards").UpdateOne(tc, bson.M{"_id": fmt.Sprintf("%d:%d", runID, group)}, bson.M{"$set": bson.M{"owner_instance": instance, "run_epoch": old.Epoch + 1, "control_version": old.ControlVersion + 1}, "$inc": bson.M{"seq": 1}}, options.UpdateOne().SetUpsert(true))
 			if e != nil {
 				return e
@@ -116,7 +116,7 @@ func (s *Store) Release(ctx context.Context, kind string) error {
 		if res.MatchedCount == 0 {
 			return nil
 		}
-		for g := 0; g < 32; g++ {
+		for g := 0; g < runGuardGroups; g++ {
 			if _, e = s.DB.Collection("run_guards").UpdateOne(tc, bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, g), "owner_instance": s.Instance, "run_epoch": s.Epoch}, bson.M{"$inc": bson.M{"control_version": 1, "seq": 1}}); e != nil {
 				return e
 			}

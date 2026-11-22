@@ -321,6 +321,9 @@ func (w *worker) step(r *room, now time.Time) {
 			j := *r.PendingRetry
 			if w.submit(j) {
 				r.PendingRetry = nil
+			} else {
+				// 给执行器留出回收队列槽位的时间，重试沿用原任务和流水。
+				r.RetryAt = now.Add(250 * time.Millisecond)
 			}
 		}
 		return
@@ -562,7 +565,7 @@ func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfi
 	r.PendingOperationID, r.PendingFingerprint = binding.id, binding.fingerprint
 	auth := r.Auth
 	var j job
-	j = job{target: w, run: func() func(*worker) {
+	j = job{target: w, settlement: true, run: func() func(*worker) {
 		role, receipt, err := w.e.Store.SettleWithReceipt(context.Background(), auth, q)
 		return func(w *worker) {
 			w.finishSettlementReceipt(binding, q, role, receipt, err, &j, finished)

@@ -35,25 +35,47 @@ func (c *connection) Close(reason string) {
     ("if s.active.Add(1) > 128 {", "if s.active.Add(1) > HostingLoadConnectionLimit {"),
 ])
 change("internal/game/runtime.go", [
-    ("func New(ctx context.Context,", """var HostingLoadRoomLimit = 256
-var HostingLoadObserveTick func(shard, rooms, queue int, elapsed, lag time.Duration)
-var HostingLoadQueueFull func()
+    ("const maxRoomsPerWorker = 256", "var HostingLoadRoomLimit = 256"),
+    ("workerCount*maxRoomsPerWorker", "workerCount*HostingLoadRoomLimit"),
+    ("func New(ctx context.Context,", """type HostingLoadQueueDepth struct {
+	Business int `json:"business"`
+	Settlement int `json:"settlement"`
+	Ticket int `json:"ticket"`
+	Entry int `json:"entry"`
+}
+
+var HostingLoadObserveTick func(shard, rooms int, queued, capacity HostingLoadQueueDepth, elapsed, lag time.Duration)
+var HostingLoadQueueFull func(lane string)
 
 func New(ctx context.Context,"""),
     ("type worker struct {", "type worker struct {\n\thostingLoadShard int"),
     ("w := &worker{e: e, commands:", "w := &worker{hostingLoadShard: i, e: e, commands:"),
-    ("if len(w.rooms) >= 256 {", "if len(w.rooms) >= HostingLoadRoomLimit {"),
+    ("if len(w.rooms) >= maxRoomsPerWorker {", "if len(w.rooms) >= HostingLoadRoomLimit {"),
+    ("if !offerDatabaseJob(e.admissionTickets, j) {", 'if !auditDatabaseOffer(e.admissionTickets, j, "ticket") {'),
     ("if !c.tick.IsZero() {\n\t\t\t\tw.begin", "if !c.tick.IsZero() {\n\t\t\t\tstarted := time.Now()\n\t\t\t\tw.begin"),
     ("w.endTownNavigationTick()\n\t\t\t\tcontinue", """w.endTownNavigationTick()
 				if HostingLoadObserveTick != nil {
-					HostingLoadObserveTick(w.hostingLoadShard, len(w.rooms), len(w.e.jobs), time.Since(started), started.Sub(c.tick))
+					e := w.e
+					queued := HostingLoadQueueDepth{len(e.jobs), len(e.settlementJobs), len(e.admissionTickets), len(e.admissionEntries)}
+					capacity := HostingLoadQueueDepth{cap(e.jobs), cap(e.settlementJobs), cap(e.admissionTickets), cap(e.admissionEntries)}
+					HostingLoadObserveTick(w.hostingLoadShard, len(w.rooms), queued, capacity, time.Since(started), started.Sub(c.tick))
 				}
 				continue"""),
-    ("case w.e.jobs <- j:\n\t\treturn true\n\tdefault:\n\t\treturn false", """case w.e.jobs <- j:
-		return true
-	default:
-		if HostingLoadQueueFull != nil { HostingLoadQueueFull() }
-		return false"""),
+])
+change("internal/game/database_jobs.go", [
+    ("func (e *Engine) submitEntry(j job) bool {", """func auditDatabaseOffer(queue chan<- job, j job, lane string) bool {
+	ok := offerDatabaseJob(queue, j)
+	if !ok && HostingLoadQueueFull != nil {
+		HostingLoadQueueFull(lane)
+	}
+	return ok
+}
+
+func (e *Engine) submitEntry(j job) bool {"""),
+    ("return offerDatabaseJob(queue, j)\n}\n\nfunc (w *worker) submit", 'return auditDatabaseOffer(queue, j, "entry")\n}\n\nfunc (w *worker) submit'),
+    ("queue = w.e.settlementJobs\n\t}\n\treturn offerDatabaseJob(queue, j)", """return auditDatabaseOffer(w.e.settlementJobs, j, "settlement")
+	}
+	return auditDatabaseOffer(queue, j, "business")"""),
 ])
 change("internal/game/combat.go", [
     ("func (w *worker) settleInWorldReceipt(", """var HostingLoadObserveReward func(time.Duration)
@@ -71,7 +93,7 @@ change("internal/persistence/store.go", [
 var HostingLoadObserveTx func(time.Duration,error)
 
 func Open(ctx context.Context, cfg devconfig.Config)"""),
-    (".SetMaxPoolSize(16).SetServerSelectionTimeout", ".SetMaxPoolSize(16).SetMonitor(HostingLoadCommandMonitor).SetServerSelectionTimeout"),
+    (".SetServerSelectionTimeout", ".SetMonitor(HostingLoadCommandMonitor).SetServerSelectionTimeout"),
     (".SetMaxPoolSize(3))", ".SetMaxPoolSize(3).SetMonitor(HostingLoadCommandMonitor))"),
     ("func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {", """func (s *Store) tx(ctx context.Context, fn func(context.Context) error) (result error) {
 	var observeError error
@@ -91,7 +113,7 @@ def main():
         raise RuntimeError("请通过 ./tools/dev.ps1 在 Windows 锁定工具环境下构建")
     WORK.mkdir(parents=True, exist_ok=True)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--name", choices=("hosting-load", "hosting-load-prejoin"), default="hosting-load")
+    parser.add_argument("--name", choices=("hosting-load", "hosting-load-prejoin", "hosting-load-queue"), default="hosting-load")
     args = parser.parse_args()
     target = WORK / (args.name + ".exe")
     server_dev = SERVER / ".dev"

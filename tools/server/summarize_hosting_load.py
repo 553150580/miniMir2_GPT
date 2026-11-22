@@ -102,6 +102,19 @@ def mongo_phase(server, name):
     return next((row for row in server['mongo'] if row['phase'] == name), None)
 
 
+def queue_stats(before, after):
+    return {
+        'db_queue_full': after['db_queue_full'] - before.get('db_queue_full', 0),
+        'db_queue_full_by_lane': counter_changes(before.get('db_queue_full_by_lane', {}),
+                                                after.get('db_queue_full_by_lane')),
+        'db_queue_depth_peak_at_tick': after['max_db_queue_depth'],
+        'db_queue_depth_peak_by_lane_at_tick': after.get('max_db_queue_depth_by_lane'),
+        'db_queue_capacity_by_lane': after.get('db_queue_capacity_by_lane'),
+        'worker_tick_execution': after['tick_work'], 'worker_tick_lag': after['tick_lag'],
+        'kill_to_receipt': after.get('kill_to_receipt'),
+    }
+
+
 def phase_stats(start, finish, censuses, samples, pids, logical_processors):
     target = finish['target']
     before, after = start['server'], finish['server']
@@ -148,12 +161,7 @@ def phase_stats(start, finish, censuses, samples, pids, logical_processors):
         'mongodb': mongo,
         'mongo_window_start_offset_ms': (mongo_began - began).total_seconds() * 1000,
         'mongo_window_end_offset_ms': (mongo_ended - ended).total_seconds() * 1000,
-        'queues_and_ticks': {
-            'db_queue_full': after['db_queue_full'] - before['db_queue_full'],
-            'db_queue_depth_peak_at_tick': after['max_db_queue_depth'],
-            'worker_tick_execution': after['tick_work'], 'worker_tick_lag': after['tick_lag'],
-            'kill_to_receipt': after.get('kill_to_receipt'),
-        },
+        'queues_and_ticks': queue_stats(before, after),
     }
 
 
@@ -166,6 +174,10 @@ def admission_stats(row, activation, hold_start, previous):
         'missing_entered_at_admission': max(0, target - current['entered']),
         'auto_activation': activation,
     }
+    attempts = row['attempt_errors']
+    if roles := attempts.get('roles_attempted'):
+        result['first_attempt_success_rate'] = attempts['first_success'] / roles
+        result['final_success_rate'] = attempts['success'] / roles
     if hold_start is not None:
         server = hold_start['server']
         prior_server = previous['server'] if previous is not None else {}
@@ -177,11 +189,7 @@ def admission_stats(row, activation, hold_start, previous):
         result['until_hold_start'] = {
             'counter_interval_starts_at': start_label,
             'server_close_reasons': counter_changes(close_reasons, server.get('server_close_reasons')),
-            'db_queue_full': server['db_queue_full'] - prior_server.get('db_queue_full', 0),
-            'db_queue_depth_peak_at_tick': server['max_db_queue_depth'],
-            'worker_tick_execution': server['tick_work'],
-            'worker_tick_lag': server['tick_lag'],
-            'kill_to_receipt': server.get('kill_to_receipt'),
+            **queue_stats(prior_server, server),
             'mongodb': mongo_phase(server, f'ramp-{target}'),
         }
     return result

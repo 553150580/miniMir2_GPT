@@ -358,7 +358,7 @@ func (s *Store) BindSafeZoneWithReceipt(ctx context.Context, auth Auth, q SafeZo
 		return out, receipt, err
 	}
 	digest := Hash(raw)
-	err = s.tx(ctx, func(tc context.Context) error {
+	err = s.guardedTx(ctx, auth, func(tc context.Context) error {
 		receipt = Operation{}
 		if err := s.fence(tc, auth); err != nil {
 			return err

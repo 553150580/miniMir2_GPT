@@ -3,7 +3,6 @@ package persistence
 import (
 	"context"
 	"crypto/sha256"
-	"encoding/binary"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -39,13 +38,18 @@ func Code(err error) uint32 {
 }
 
 type Store struct {
-	Client   *mongo.Client
-	Control  *mongo.Client
-	DB       *mongo.Database
-	Cfg      devconfig.Config
-	Instance string
-	Epoch    int64
+	Client        *mongo.Client
+	Control       *mongo.Client
+	DB            *mongo.Database
+	Cfg           devconfig.Config
+	Instance      string
+	Epoch         int64
+	runGuardSlots *runGuardSlots
 }
+
+// 业务连接池为任务执行器保留并发空间。续租走独立控制连接池。
+const businessPoolSize = 32
+
 type Auth struct {
 	AccountID    string
 	AuthVersion  int64
@@ -96,7 +100,7 @@ func Open(ctx context.Context, cfg devconfig.Config) (*Store, error) {
 	if cfg.Database != "minimir_dev_game" && !strings.HasPrefix(cfg.Database, "minimir_dev_game_test_") {
 		return nil, errors.New("拒绝连接非本任务游戏库")
 	}
-	c, e := mongo.Connect(options.Client().ApplyURI(cfg.MongoURI).SetMaxPoolSize(16).SetServerSelectionTimeout(5 * time.Second))
+	c, e := mongo.Connect(options.Client().ApplyURI(cfg.MongoURI).SetMaxPoolSize(businessPoolSize).SetServerSelectionTimeout(5 * time.Second))
 	if e != nil {
 		return nil, e
 	}
@@ -107,7 +111,7 @@ func Open(ctx context.Context, cfg devconfig.Config) (*Store, error) {
 	if e != nil {
 		return nil, e
 	}
-	s := &Store{Client: c, Control: ctl, DB: c.Database(cfg.Database), Cfg: cfg, Instance: domain.ID()}
+	s := &Store{Client: c, Control: ctl, DB: c.Database(cfg.Database), Cfg: cfg, Instance: domain.ID(), runGuardSlots: newRunGuardSlots()}
 	if e = s.Migrate(ctx); e != nil {
 		c.Disconnect(ctx)
 		ctl.Disconnect(ctx)
@@ -257,7 +261,7 @@ func (s *Store) retainOperationReceipts(ctx context.Context) error {
 	return nil
 }
 func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, transactionTimeout)
 	defer cancel()
 	sess, e := s.Client.StartSession()
 	if e != nil {
@@ -319,9 +323,7 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 	if e := s.DB.Collection("node_leases").FindOne(ctx, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Decode(&node); e != nil {
 		return authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
 	}
-	raw := domain.Bytes(a.AccountID)
-	h := sha256.Sum256(raw)
-	group := binary.BigEndian.Uint64(h[:8]) % 32
+	group := runGuardGroup(a.AccountID)
 	r, e := s.DB.Collection("run_guards").UpdateOne(ctx, bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, group), "owner_instance": s.Instance, "run_epoch": s.Epoch, "control_version": run.ControlVersion}, bson.M{"$inc": bson.M{"seq": 1}})
 	if e != nil {
 		return e
@@ -347,7 +349,7 @@ func (s *Store) checkRole(r domain.Role, a Auth) error {
 	return nil
 }
 func (s *Store) replace(ctx context.Context, r domain.Role, oldRevision int64) error {
-	res, e := s.DB.Collection("roles").ReplaceOne(ctx, bson.M{"_id": r.ID, "revision": oldRevision, "owner_instance": r.Owner, "run_epoch": r.RunEpoch, "session_epoch": r.SessionEpoch}, r)
+	res, e := s.DB.Collection("roles").ReplaceOne(ctx, roleReplaceFilter(r, oldRevision), r)
 	if e != nil {
 		return e
 	}
@@ -355,4 +357,8 @@ func (s *Store) replace(ctx context.Context, r domain.Role, oldRevision int64) e
 		return Fail(p.CodeOperationConflict, "角色版本变化")
 	}
 	return nil
+}
+
+func roleReplaceFilter(r domain.Role, oldRevision int64) bson.M {
+	return bson.M{"_id": r.ID, "revision": oldRevision, "owner_instance": r.Owner, "run_epoch": r.RunEpoch, "session_epoch": r.SessionEpoch}
 }
