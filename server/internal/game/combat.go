@@ -137,7 +137,7 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	if e.Kind == 1 {
 		a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
 		for _, item := range r.Role.Equipped {
-			if item.Slot == devconfig.CastingSupplySlot {
+			if item.Slot == devconfig.CastingSupplySlot || f.EquipmentDurability != nil && item.Item.OriginalDurabilityU > 0 && item.Item.DurabilityU <= r.Wear.loss(item.Item, item.Slot) {
 				continue
 			}
 			def, _ := f.Item(item.Item.ItemID)
@@ -226,6 +226,9 @@ func (w *worker) attack(r *room, from, target *entity, now time.Time, input ...u
 		}
 	}
 	from.AttackSequence++
+	if from == &r.Player {
+		w.weaponWear(r, now)
+	}
 	from.NextAttack = now.Add(time.Duration(a.AttackMS) * time.Millisecond)
 	from.Action = 2
 	from.ActionUntil = now.Add(200 * time.Millisecond)
@@ -255,6 +258,9 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 	if target.HP < 0 {
 		target.HP = 0
 	}
+	if target == &r.Player {
+		w.receivedWear(r, false, now)
+	}
 	target.Action = 3
 	target.ActionUntil = now.Add(200 * time.Millisecond)
 	if target.HP == 0 {
@@ -282,6 +288,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 			r.AutoTarget = actorRef{}
 			w.killOwnedPet(r, now)
 			r.DeathID = domain.ID()
+			w.receivedWear(r, true, now)
 			w.deathNotice(r)
 			sourceTimeline := w.sourceTimeline()
 			at, hostSession := now, ""
@@ -380,6 +387,9 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	w.flushKillFacts(r)
 	if r.Pending || r.Isolated {
+		return
+	}
+	if w.flushWear(r, now, false) {
 		return
 	}
 	if r.currentWorld() != activeBeforeEvents || r.Scene != sceneBeforeEvents {
@@ -562,10 +572,17 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 
 func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, actor actorRef, finished func(persistence.Operation)) {
 	r.SettlementGeneration++
+	r.Wear.attach(&q)
 	raw, err := json.Marshal(q)
 	if err != nil {
 		w.isolateRoom(r)
 		return
+	}
+	if len(q.EquipmentWear) > 0 {
+		r.Wear.inflight = nil
+	}
+	if q.WearDeathID != "" {
+		r.Wear.deathID = ""
 	}
 	binding := settlementBinding{room: r, auth: r.Auth, world: world.Ref, point: point, generation: r.SettlementGeneration, id: fmt.Sprintf("settle:%d", q.SourceSeq), fingerprint: persistence.Hash(raw)}
 	binding.progressionActor, binding.sourceBefore = actor, r.Role.SourceSeq
@@ -620,6 +637,9 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 		world.LootUntil = time.Now().Add(500 * time.Millisecond)
 	}
 	w.assets(r)
+	if q.WearDeathID != "" && q.WearDeathID == r.DeathID && r.Player.HP <= 0 {
+		w.deathNotice(r)
+	}
 	if q.HostingSession != "" && r.Conn != nil && r.Ready {
 		w.send(r, p.MsgS2CHostingReport, 0, r.Role.HostingReport())
 	}
@@ -629,7 +649,7 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 }
 
 func (w *worker) deathNotice(r *room) {
-	if r.Conn == nil {
+	if r.Conn == nil || r.Wear.deathID != "" && r.Wear.deathID == r.DeathID {
 		return
 	}
 	allowed := uint32(0)

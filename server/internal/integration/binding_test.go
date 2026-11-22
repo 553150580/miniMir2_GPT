@@ -160,6 +160,7 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	f.Progression = devconfig.ProgressionRules{ExpPerLevel: slices.Clone(f.Progression.ExpPerLevel[:20])} // 保留历史20阈值，不混入rule20上限/池合同。
 	f.EquipmentRecycling = nil                                                                            // rule19开发回收合同不能带回历史rule12初始化样本。
 	f.PetRuntime = nil                                                                                    // 历史初始化合同不混入rule16生命周期能力。
+	f.NPCShops, f.EquipmentDurability = nil, nil
 	if f.Binding != nil {
 		binding := *f.Binding
 		binding.SafeZoneEnabled = nil
@@ -168,6 +169,7 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	f.TownTravel, f.TownNavigation = nil, nil
 	f.Map.NoTeleport, f.Map.SourceStaticBits = nil, nil
 	f.Map.NoPets = nil
+	f.Maps = slices.DeleteFunc(slices.Clone(f.Maps), func(m devconfig.MapTemplate) bool { return m.CompactTown })
 	for i := range f.Maps {
 		f.Maps[i].NoTeleport, f.Maps[i].SourceStaticBits = nil, nil
 		f.Maps[i].NoPets = nil

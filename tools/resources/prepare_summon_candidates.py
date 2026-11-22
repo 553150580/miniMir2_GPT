@@ -19,8 +19,8 @@ DEST=ROOT/'config/development/summon-candidates.json'
 
 def compile_catalog(tables,evidence):
     profile=deepcopy(pets.one(tables,'dev_first_loop_profile',1)['parameters'])
-    if type(profile['rule_version']) is not int or not 17 <= profile['rule_version'] <= 24:
-        raise ValueError('关闭召唤候选须使用完整rule17至24主合同；候选最低合同仍为17')
+    if type(profile['rule_version']) is not int or not 17 <= profile['rule_version'] <= 25:
+        raise ValueError('关闭召唤候选须使用完整rule17至25主合同；候选最低合同仍为17')
     references=[(row['id'],row['summon_skill_id']) for row in tables['game_pet_templates'] if row['record_status']!='historical' and row['summon_skill_id'] is not None]
     ids=[skill for _,skill in references]
     if not ids or len(set(ids))!=len(ids) or any(type(id) is not int or id<=0 for id in ids):

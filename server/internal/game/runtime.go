@@ -143,6 +143,7 @@ type room struct {
 	AwaitUntil            time.Time
 	LastBroadcast         time.Time
 	Potions               potionState
+	Wear                  equipmentWearState
 	PendingOperationID    string
 	PendingFingerprint    string
 	InputSequence         uint32
@@ -458,6 +459,9 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
+	if w.flushWearBeforeAsset(r, c.frame, time.Now()) {
+		return
+	}
 	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill || c.frame.ID == p.MsgC2SSkillAssetCommit || c.frame.ID == p.MsgC2SCastWithMaterial || c.frame.ID == p.MsgC2SSetCastingSupply) && r.Pending {
 		w.queuePotion(r, c)
 		return
@@ -497,6 +501,8 @@ func (w *worker) command(c command) {
 		w.materialCast(r, c.frame)
 	case p.MsgC2SSkillAssetPreview:
 		w.skillAssetPreview(r, c.frame)
+	case p.MsgC2SVendorQuote:
+		w.vendorPreview(r, c.frame)
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
 	case p.MsgC2SMoveIntent:
@@ -572,7 +578,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -856,6 +862,17 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	reviveID := ""
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SVendorCommit:
+		var x pb.VendorCommitRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.QuoteId) != 16 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.Vendor = persistence.AssetVendor, x.Operation, &x
+		// 原回执优先核对；只有尚未提交的命令需要再次见到同一名商人。
+		if shop := w.vendorShop(r, x.SceneEpoch, x.NpcId); shop != nil {
+			q.VendorShop = shop.Key
+		}
 	case p.MsgC2SWarehouseAction:
 		var x pb.WarehouseAction
 		if proto.Unmarshal(f.Payload, &x) != nil {
@@ -977,7 +994,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit:
 		return true
 	}
 	return false
@@ -985,6 +1002,11 @@ func economic(id uint16) bool {
 func operationContext(f wire.Frame) *pb.OperationContext {
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SVendorCommit:
+		q := &pb.VendorCommitRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SWarehouseAction:
 		q := &pb.WarehouseAction{}
 		if proto.Unmarshal(f.Payload, q) == nil {

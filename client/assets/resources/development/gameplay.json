@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 24,
+  "rule_version": 25,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -1214,6 +1214,527 @@
     "personal_expansion_yuanbao_units": 30000,
     "shared_slots": 50,
     "query_page_limit": 30
+  },
+  "npc_shops": [
+    {
+      "key": "weapon",
+      "roles": [
+        "武器铺",
+        "铁匠铺"
+      ],
+      "offers": [
+        {
+          "id": 218,
+          "item_id": 218,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 218,
+          "price_gold": 25
+        }
+      ],
+      "can_repair": true
+    },
+    {
+      "key": "clothing",
+      "roles": [
+        "服装铺"
+      ],
+      "offers": [
+        {
+          "id": 193,
+          "item_id": 193,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 400,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 193,
+          "price_gold": 200
+        }
+      ],
+      "can_repair": true
+    },
+    {
+      "key": "jewelry",
+      "roles": [
+        "首饰店"
+      ],
+      "offers": [
+        {
+          "id": 259,
+          "item_id": 259,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 500,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 259,
+          "price_gold": 250
+        }
+      ],
+      "can_repair": true
+    },
+    {
+      "key": "butcher",
+      "roles": [
+        "肉店"
+      ],
+      "offers": [
+        {
+          "id": 92,
+          "item_id": 92,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 200,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 92,
+          "price_gold": 100
+        }
+      ],
+      "can_repair": false
+    },
+    {
+      "key": "potions",
+      "roles": [
+        "药店"
+      ],
+      "offers": [
+        {
+          "id": 35,
+          "item_id": 35,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 10,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 36,
+          "item_id": 36,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 10,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 35,
+          "price_gold": 5
+        },
+        {
+          "item_id": 36,
+          "price_gold": 5
+        }
+      ],
+      "can_repair": false
+    },
+    {
+      "key": "grocery",
+      "roles": [
+        "杂货铺"
+      ],
+      "offers": [
+        {
+          "id": 594,
+          "item_id": 594,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 10,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 594,
+          "price_gold": 5
+        }
+      ],
+      "can_repair": false
+    },
+    {
+      "key": "books",
+      "roles": [
+        "书店"
+      ],
+      "offers": [
+        {
+          "id": 6,
+          "item_id": 7,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 7,
+          "item_id": 21,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 8,
+          "item_id": 1,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 3,
+          "item_id": 900001,
+          "quantity": 1,
+          "currency": "ingot",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 4,
+          "item_id": 900001,
+          "quantity": 1,
+          "currency": "bound_ingot",
+          "price_units": 100,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 9,
+          "item_id": 22,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 600,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 10,
+          "item_id": 12,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 2000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 11,
+          "item_id": 11,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1600,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 12,
+          "item_id": 14,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 13,
+          "item_id": 32,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 15000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 14,
+          "item_id": 2,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 2000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 15,
+          "item_id": 3,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 5000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 16,
+          "item_id": 4,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 8000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 17,
+          "item_id": 6,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 20000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 18,
+          "item_id": 16,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 5000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 19,
+          "item_id": 20,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 20000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 20,
+          "item_id": 17,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 12000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 21,
+          "item_id": 10,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1200,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 22,
+          "item_id": 28,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 23,
+          "item_id": 29,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 4500,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 24,
+          "item_id": 18,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 15000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 25,
+          "item_id": 8,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 800,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 26,
+          "item_id": 5,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 12000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 27,
+          "item_id": 13,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 2000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        }
+      ],
+      "sell_prices": [
+        {
+          "item_id": 7,
+          "price_gold": 250
+        },
+        {
+          "item_id": 21,
+          "price_gold": 250
+        },
+        {
+          "item_id": 1,
+          "price_gold": 250
+        },
+        {
+          "item_id": 22,
+          "price_gold": 300
+        },
+        {
+          "item_id": 12,
+          "price_gold": 1000
+        },
+        {
+          "item_id": 11,
+          "price_gold": 800
+        },
+        {
+          "item_id": 14,
+          "price_gold": 1500
+        },
+        {
+          "item_id": 32,
+          "price_gold": 7500
+        },
+        {
+          "item_id": 2,
+          "price_gold": 1000
+        },
+        {
+          "item_id": 3,
+          "price_gold": 2500
+        },
+        {
+          "item_id": 4,
+          "price_gold": 4000
+        },
+        {
+          "item_id": 6,
+          "price_gold": 10000
+        },
+        {
+          "item_id": 16,
+          "price_gold": 2500
+        },
+        {
+          "item_id": 20,
+          "price_gold": 10000
+        },
+        {
+          "item_id": 17,
+          "price_gold": 6000
+        },
+        {
+          "item_id": 10,
+          "price_gold": 600
+        },
+        {
+          "item_id": 28,
+          "price_gold": 1750
+        },
+        {
+          "item_id": 29,
+          "price_gold": 2250
+        },
+        {
+          "item_id": 18,
+          "price_gold": 7500
+        },
+        {
+          "item_id": 8,
+          "price_gold": 400
+        },
+        {
+          "item_id": 5,
+          "price_gold": 6000
+        },
+        {
+          "item_id": 13,
+          "price_gold": 1000
+        }
+      ],
+      "can_repair": false
+    }
+  ],
+  "equipment_durability": {
+    "weapon_loss_u": 1,
+    "armor_hit_loss_u": 1,
+    "death_loss_u": 1000,
+    "repair_range_cells": 1,
+    "ordinary": {
+      "kind": 1,
+      "upper_loss_divisor": 30,
+      "min_max_durability_u": 1
+    },
+    "special": {
+      "kind": 2,
+      "full_repair_cost_u": 10
+    }
   },
   "skill_upgrades": [
     {
@@ -3187,7 +3708,9 @@
         "magic_attack_max": 0,
         "spirit_attack_min": 0,
         "spirit_attack_max": 0
-      }
+      },
+      "original_durability_u": 4000,
+      "repair_base_price": 50
     },
     {
       "item_id": 193,
@@ -3216,7 +3739,9 @@
         "magic_attack_max": 0,
         "spirit_attack_min": 0,
         "spirit_attack_max": 0
-      }
+      },
+      "original_durability_u": 10000,
+      "repair_base_price": 400
     },
     {
       "item_id": 35,
@@ -3257,6 +3782,59 @@
         "hp": 0,
         "mp": 30
       }
+    },
+    {
+      "item_id": 92,
+      "name": "肉",
+      "kind": "meat",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 259,
+      "name": "金项链",
+      "kind": "equipment",
+      "equip_slot": 3,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 2,
+      "recycle_gold": 0,
+      "quality": 0,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 0,
+        "physical_attack_max": 0,
+        "physical_defence_min": 0,
+        "physical_defence_max": 0,
+        "magic_defence_min": 0,
+        "magic_defence_max": 1,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      },
+      "original_durability_u": 8000,
+      "repair_base_price": 500
+    },
+    {
+      "item_id": 594,
+      "name": "蜡烛",
+      "kind": "misc",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
     },
     {
       "item_id": 7,
@@ -4096,6 +4674,14 @@
         {
           "x": 10,
           "y": 9
+        },
+        {
+          "x": 6,
+          "y": 5
+        },
+        {
+          "x": 10,
+          "y": 5
         }
       ],
       "npcs": [
@@ -4166,6 +4752,26 @@
           "position": {
             "x": 10,
             "y": 9
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5008",
+          "name": "项链店老板",
+          "role": "首饰店",
+          "position": {
+            "x": 6,
+            "y": 5
+          },
+          "profile": "player_male"
+        },
+        {
+          "id": "5009",
+          "name": "屠夫",
+          "role": "肉店",
+          "position": {
+            "x": 10,
+            "y": 5
           },
           "profile": "player_male"
         }

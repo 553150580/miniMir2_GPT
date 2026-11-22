@@ -327,6 +327,9 @@ func (w *worker) progressMapTravel(r *room, now time.Time) bool {
 	if r.Pending || r.PendingRetry != nil || r.PendingPetBirth != nil || len(r.KillFacts) != 0 || len(r.Waiting) != 0 || r.eventCount() != 0 {
 		return true
 	}
+	if w.flushWear(r, now, true) {
+		return true
+	}
 	return w.finishMapTravel(r, plan, now)
 }
 

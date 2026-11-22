@@ -140,7 +140,7 @@ func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest)
 		r.Gender = 1
 	}
 	for _, id := range s.Cfg.Fixture.InitialInventory {
-		r.Items = append(r.Items, domain.Item{ID: domain.ID(), ItemID: id, Quantity: 1, Bound: true, Version: 1})
+		r.Items = append(r.Items, InitializeItemDurability(domain.Item{ID: domain.ID(), ItemID: id, Quantity: 1, Bound: true, Version: 1}, &s.Cfg.Fixture))
 	}
 	for _, book := range s.Cfg.Fixture.InitialSkillBooks {
 		if book.JobID == q.Job {

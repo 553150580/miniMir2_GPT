@@ -207,7 +207,8 @@ func (s *Store) QueryWarehouse(ctx context.Context, a Auth, q *pb.WarehouseQuery
 			if !exists || x.ID != x.Item.ID || !warehouseItemValid(x.Item, s.Cfg.Fixture) || q.Scope == WarehouseShared && x.Item.Bound {
 				return Fail(p.CodeWarehouseBlocked, "仓储物品状态无效")
 			}
-			page.Items = append(page.Items, &pb.WarehouseItem{Slot: uint64(x.Slot), Item: x.Item.Proto()})
+			item := InitializeItemDurability(x.Item, &s.Cfg.Fixture)
+			page.Items = append(page.Items, &pb.WarehouseItem{Slot: uint64(x.Slot), Item: item.Proto()})
 		}
 		if err = cursor.Err(); err != nil {
 			return err
@@ -316,7 +317,7 @@ func (s *Store) applyWarehouse(tc context.Context, r domain.Role, q *pb.Warehous
 			if errors.Is(err, mongo.ErrNoDocuments) || stored.ID != stored.Item.ID || stored.ID != domain.Hex(q.ItemInstanceId) || bag >= 0 {
 				return r, nil, p.CodeWarehouseChanged, nil
 			}
-			original = stored.Item
+			original = InitializeItemDurability(stored.Item, &f)
 			for _, eq := range r.Equipped {
 				if eq.Item.ID == original.ID {
 					return r, nil, p.CodeWarehouseChanged, nil

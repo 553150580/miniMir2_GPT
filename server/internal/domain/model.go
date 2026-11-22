@@ -38,21 +38,34 @@ func (w Wallet) Proto(rev int64) *pb.WalletState {
 }
 
 type Item struct {
-	ID              string `bson:"instance_id" json:"instance_id"`
-	ItemID          uint32 `bson:"item_id" json:"item_id"`
-	Quantity        int64  `bson:"quantity" json:"quantity"`
-	Bound           bool   `bson:"bound" json:"bound"`
-	Version         int64  `bson:"version" json:"version"`
-	SourceKind      string `bson:"source_kind,omitempty" json:"source_kind"`
-	SourceID        string `bson:"source_id,omitempty" json:"source_id"`
-	Quality         uint32 `bson:"quality,omitempty" json:"quality"`
-	Locked          bool   `bson:"locked,omitempty" json:"locked"`
-	PendingResultID string `bson:"pending_result_id,omitempty" json:"-"`
-	ReservationID   string `bson:"reservation_id,omitempty" json:"-"`
+	ID                  string `bson:"instance_id" json:"instance_id"`
+	ItemID              uint32 `bson:"item_id" json:"item_id"`
+	Quantity            int64  `bson:"quantity" json:"quantity"`
+	Bound               bool   `bson:"bound" json:"bound"`
+	Version             int64  `bson:"version" json:"version"`
+	DurabilityU         int64  `bson:"durability_u,omitempty" json:"durability_u,omitempty"`
+	MaxDurabilityU      int64  `bson:"max_durability_u,omitempty" json:"max_durability_u,omitempty"`
+	OriginalDurabilityU int64  `bson:"original_durability_u,omitempty" json:"original_durability_u,omitempty"`
+	SourceKind          string `bson:"source_kind,omitempty" json:"source_kind"`
+	SourceID            string `bson:"source_id,omitempty" json:"source_id"`
+	Quality             uint32 `bson:"quality,omitempty" json:"quality"`
+	Locked              bool   `bson:"locked,omitempty" json:"locked"`
+	PendingResultID     string `bson:"pending_result_id,omitempty" json:"-"`
+	ReservationID       string `bson:"reservation_id,omitempty" json:"-"`
 }
 
 func (i Item) Proto() *pb.ItemView {
-	return &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags()}
+	wire := &pb.ItemView{InstanceId: Bytes(i.ID), ItemId: i.ItemID, Quantity: i.Quantity, Bound: i.Bound, Version: uint64(i.Version), SourceKind: i.SourceKind, SourceId: i.SourceID, Quality: i.Quality, Locked: i.Locked, RecycleBlockFlags: i.RecycleBlockFlags()}
+	if i.HasValidDurability() {
+		wire.DurabilityU = uint64(i.DurabilityU)
+		wire.MaxDurabilityU = uint64(i.MaxDurabilityU)
+		wire.OriginalDurabilityU = uint64(i.OriginalDurabilityU)
+	}
+	return wire
+}
+
+func (i Item) HasValidDurability() bool {
+	return i.OriginalDurabilityU > 0 && i.MaxDurabilityU > 0 && i.MaxDurabilityU <= i.OriginalDurabilityU && i.DurabilityU >= 0 && i.DurabilityU <= i.MaxDurabilityU
 }
 
 type Equipped struct {

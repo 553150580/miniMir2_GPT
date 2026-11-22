@@ -68,6 +68,8 @@ type Item struct {
 	TaoMinBonus            int64    `json:"tao_min_bonus"`
 	TaoMaxBonus            int64    `json:"tao_max_bonus"`
 	EquipmentStage         uint32   `json:"equipment_stage"`
+	OriginalDurabilityU    int64    `json:"original_durability_u,omitempty"`
+	RepairBasePrice        int64    `json:"repair_base_price,omitempty"`
 	AttackSpeedBonus       int64    `json:"attack_speed_bonus"`
 	DefenceBonus           int64    `json:"defence_bonus"`
 	RecycleGold            int64    `json:"recycle_gold"`
@@ -123,6 +125,7 @@ type Fixture struct {
 	Pet                Fighter                  `json:"pet"`
 	PetRuntime         *PetRuntimeRules         `json:"pet_runtime,omitempty"`
 	EquipmentRecycling *EquipmentRecyclingRules `json:"equipment_recycling,omitempty"`
+	EquipmentDurability *EquipmentDurabilityRules `json:"equipment_durability,omitempty"`
 	Monsters           []Monster                `json:"monsters"`
 	Items              []Item                   `json:"items"`
 	Potions            PotionRules              `json:"potions"`
@@ -134,6 +137,7 @@ type Fixture struct {
 	InitialSkillBooks  []InitialSkillBook       `json:"initial_skill_books"`
 	SkillUpgrades      []SkillUpgrade           `json:"skill_upgrades"`
 	SkillShop          []SkillShop              `json:"skill_shop"`
+	NPCShops           []NPCShop                `json:"npc_shops,omitempty"`
 	SkillBookRecycle   []SkillBookRecycle       `json:"skill_book_recycle"`
 	SkillEconomy       SkillEconomy             `json:"skill_economy"`
 	CombatTiming       CombatTiming             `json:"combat_timing"`
@@ -246,6 +250,9 @@ func (f *Fixture) Validate() error {
 	if err := f.ValidateTownConfiguration(); err != nil {
 		return err
 	}
+	if err := f.validateNPCShops(); err != nil {
+		return err
+	}
 	if err := f.ValidateTeleport(); err != nil {
 		return err
 	}
@@ -262,6 +269,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.ValidateEquipmentStats(); err != nil {
+		return err
+	}
+	if err := f.ValidateEquipmentDurability(); err != nil {
 		return err
 	}
 	if err := f.ValidateWarehouses(); err != nil {

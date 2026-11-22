@@ -16,11 +16,13 @@ import (
 
 // 永久来源结果只保存资产事实，不保存临时战斗世界。
 type SettlementReceipt struct {
-	RuleVersion uint64                    `bson:"rule_version"`
-	ConfigHash  string                    `bson:"config_hash"`
-	GrantedItem bool                      `bson:"granted_item"`
-	Recycling   EquipmentRecyclingReceipt `bson:"recycling"`
-	Experience  *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"`
+	RuleVersion   uint64                    `bson:"rule_version"`
+	ConfigHash    string                    `bson:"config_hash"`
+	GrantedItem   bool                      `bson:"granted_item"`
+	Recycling     EquipmentRecyclingReceipt `bson:"recycling"`
+	Experience    *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"`
+	EquipmentWear []EquipmentWearReceipt    `bson:"equipment_wear,omitempty"`
+	WearDeathID   string                    `bson:"wear_death_id,omitempty"`
 }
 
 func (s *Store) Settle(ctx context.Context, a Auth, q Settlement) (domain.Role, error) {
@@ -113,13 +115,16 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 			return r, details, Fail(p.CodeOperationConflict, "角色回收策略无效")
 		}
 	}
-	out := r
+	out, wear, err := applyEquipmentWear(r, q.EquipmentWear, q.WearDeathID, &f)
+	if err != nil {
+		return r, details, err
+	}
+	details.EquipmentWear, details.WearDeathID = wear, q.WearDeathID
 	out.SourceSeq = q.SourceSeq
 	if f.RuleVersion >= 19 && out.SettlementReceiptStartSeq == 0 {
 		out.SettlementReceiptStartSeq = q.SourceSeq
 	}
 	out.HostingSeconds -= q.HostSeconds
-	var err error
 	actualExperience := q.Experience
 	if f.RuleVersion >= 20 {
 		contract, e := GrowthContract(f)
@@ -155,6 +160,8 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 		}
 	}
 	if q.Item != nil {
+		item := InitializeItemDurability(*q.Item, &f)
+		q.Item = &item
 		recycled := false
 		if f.RuleVersion >= 19 && autoRecycleMatches(out, *q.Item, f) {
 			gold, reason := recyclePrice(out, *q.Item, f)

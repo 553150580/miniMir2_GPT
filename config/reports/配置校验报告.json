@@ -4,9 +4,9 @@
   "structure_valid": true,
   "runtime_ready": false,
   "table_count": 98,
-  "record_count": 995,
+  "record_count": 999,
   "status_counts": {
-    "candidate": 496,
+    "candidate": 500,
     "confirmed": 393,
     "historical": 36,
     "unverified": 70
@@ -409,8 +409,15 @@
     "game_items/13 尚为 candidate",
     "game_items 第32行缺少必填 icon_resource_key",
     "game_items/25 尚为 candidate",
+    "game_items 第33行缺少必填 icon_resource_key",
+    "game_items/92 尚为 candidate",
+    "game_items 第34行缺少必填 icon_resource_key",
+    "game_items/259 尚为 candidate",
+    "game_items 第35行缺少必填 icon_resource_key",
+    "game_items/594 尚为 candidate",
     "game_equipment/218 尚为 candidate",
     "game_equipment/193 尚为 candidate",
+    "game_equipment/259 尚为 candidate",
     "game_appearance：有效记录 0 条，至少需要 1 条",
     "game_monsters 第4行缺少必填 aggro_range_cells",
     "game_monsters 第4行缺少必填 chase_range_cells",
@@ -760,6 +767,6 @@
   ],
   "workbook_hashes": {
     "architecture": "752d854d30a569c10fc09df4d72e13277a8dccec2c431ee8ed63546140733888",
-    "gameplay": "4722870ae8bfee9d579ea05ff5fb727b997650453f8b8e032dbaecdafbebce27"
+    "gameplay": "5d897d8aa2d83b7bc345ac1ad0bc48d21654b1731c050dca8a5f664c618f31d2"
   }
 }

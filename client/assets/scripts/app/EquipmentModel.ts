@@ -1,9 +1,13 @@
 import Long from 'long';
 import { equipmentLevelLines, equipmentLevelReason, GrowthEquipmentDefinition } from './LevelGrowthModel';
 import type { PotionItem } from './PotionModel';
-import { sourceName } from './SkillAssetsModel';
+import { assetInteger, sourceName } from './SkillAssetsModel';
 
-export interface EquipmentItem extends PotionItem { quality?: number; sourceKind?: string; locked?: boolean; recycleBlockFlags?: number; }
+export interface EquipmentItem extends PotionItem {
+    quality?: number; sourceKind?: string; locked?: boolean; recycleBlockFlags?: number;
+    durabilityU?: Parameters<typeof assetInteger>[0]; maxDurabilityU?: Parameters<typeof assetInteger>[0];
+    originalDurabilityU?: Parameters<typeof assetInteger>[0];
+}
 export interface EquipmentDefinition extends GrowthEquipmentDefinition { item_id: number; equip_slot?: number; equipment_stage?: number; base_attributes?: unknown; }
 export interface EquippedSelection { readonly slot: number; readonly item: EquipmentItem; }
 export interface EquipmentSnapshot {
@@ -70,6 +74,14 @@ const BASE_RANGES = [
     ['physical_attack', '物理攻击'], ['magic_attack', '魔法攻击'], ['spirit_attack', '道术攻击'],
     ['physical_defence', '物理防御'], ['magic_defence', '魔法防御'],
 ] as const;
+export function equipmentDurabilityText(item: EquipmentItem): string {
+    const current = assetInteger(item.durabilityU ?? 0), max = assetInteger(item.maxDurabilityU ?? 0);
+    const original = assetInteger(item.originalDurabilityU ?? 0);
+    if (original <= 0n || max <= 0n || current < 0n || current > max || max > original) return '';
+    const display = (value: bigint): bigint => (value + 999n) / 1000n;
+    return `持久 ${display(current)}/${display(max)}${current === 0n ? ' · 已损坏，属性失效' : ''}`;
+}
+
 export function equipmentBaseAttributeLines(definition: EquipmentDefinition | undefined): string[] {
     if (definition?.kind !== 'equipment') return [];
     const value = definition.base_attributes;
@@ -87,7 +99,7 @@ export function equipmentDetailLines(definition: EquipmentDefinition | undefined
     const stageKnown = Number.isSafeInteger(stage) && stage! >= 0 && Number.isSafeInteger(definition.required_level) && definition.required_level! >= 1
         && stage === Math.floor((definition.required_level! - 1) / 10);
     return [worn ? '已穿戴装备' : '背包装备', equipmentSlotName(definition.equip_slot ?? -1), `数量 ${item.quantity}`, item.bound ? '绑定物品' : '非绑定物品',
-        `品质 ${item.quality ?? '未知'}`, `来源 ${sourceName(item.sourceKind)}`,
+        `品质 ${item.quality ?? '未知'}`, `来源 ${sourceName(item.sourceKind)}`, ...[equipmentDurabilityText(item)].filter(Boolean),
         stageKnown ? `装备阶段 T${stage! + 1}` : '装备阶段尚未同步', ...equipmentLevelLines(definition, level, job), ...equipmentBaseAttributeLines(definition),
         ...(item.locked ? ['装备已锁定，回收受保护'] : []), ...((item.recycleBlockFlags ?? 0) & 6 ? ['装备正在处理或有未确认结果'] : [])];
 }

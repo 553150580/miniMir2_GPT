@@ -25,7 +25,7 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
         f=self.fixture
         self.assertGreaterEqual(f['rule_version'],19)
         self.assertEqual(f['equipment_recycling'],{'mode':'development_gold_only','outputs':[]})
-        self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400)])
+        self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400),(259,2,0,0)])
         self.assertEqual(len(f['skills']),22)
         self.assertNotIn(17,[r['id'] for r in f['skills']])
         self.assertIs(f['casting_supply']['enabled'],False)
@@ -33,7 +33,7 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
         evidence=f['_source_evidence']['equipment_recycling']
         self.assertIs(evidence['formal_recipe_published'],False)
         self.assertIs(evidence['formal_recycle_values_consumed'],False)
-        self.assertIs(evidence['durability_model_implemented'],False)
+        self.assertIs(evidence['durability_model_implemented'],True)
 
     def test_required_level_and_gold_follow_their_existing_unique_cells(self):
         tables=self.changed();before=copy.deepcopy(tables)
@@ -115,9 +115,10 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
             if item['kind']=='equipment':
                 source=next(row for row in f['items'] if row['id']==item['item_id'])
                 self.assertEqual((item['required_level'],item['recycle_gold'],item['quality']),(source['required_level'],source['recycle_gold'],source['drop_quality']))
+                self.assertEqual(item['original_durability_u'],source['original_durability_u'])
             else:
                 self.assertNotIn('required_level',item);self.assertNotIn('recycle_gold',item)
-            self.assertNotIn('original_durability_u',item)
+                self.assertNotIn('original_durability_u',item)
         public['equipment_recycling']['outputs'].append({'not_runtime':True})
         self.assertEqual(f,before)
 

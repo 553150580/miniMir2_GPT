@@ -22,13 +22,13 @@ class EquipmentFoundationTests(unittest.TestCase):
 
     def test_current_source_selection_and_four_explicit_zeros(self):
         self.assertGreaterEqual(self.fixture['rule_version'],22)
-        self.assertEqual(self.profile(self.tables)['base_item_ids'],[35,36,193,218])
+        self.assertEqual(self.profile(self.tables)['base_item_ids'],[35,36,193,218,92,259,594])
         self.assertNotIn(220,[item['id'] for item in self.fixture['items']])
         for item in self.fixture['items']:
             for field in ['magic_min_bonus','magic_max_bonus','tao_min_bonus','tao_max_bonus']:
                 if item['is_equipment']:self.assertIn(field,item)
                 self.assertEqual(item.get(field,0),0)
-        self.assertEqual([(i['id'],i['equipment_stage'],i['recycle_gold']) for i in self.fixture['items'] if i['is_equipment']],[(218,0,50),(193,0,400)])
+        self.assertEqual([(i['id'],i['equipment_stage'],i['recycle_gold']) for i in self.fixture['items'] if i['is_equipment']],[(218,0,50),(193,0,400),(259,0,0)])
         self.assertFalse(self.fixture['casting_supply']['enabled'])
         self.assertNotIn(17,[skill['id'] for skill in self.fixture['skills']])
 
@@ -49,7 +49,9 @@ class EquipmentFoundationTests(unittest.TestCase):
                 self.assertNotIn('base_attributes',item);self.assertNotIn('equipment_stage',item)
 
     def test_selection_comes_from_profile_not_fixed_four_or_all_equipment(self):
-        tables=deepcopy(self.tables);self.profile(tables)['base_item_ids']=[35,36,193]
+        tables=deepcopy(self.tables);profile=self.profile(tables);profile['base_item_ids'].remove(218)
+        profile['npc_shop_prices']['items']=[row for row in profile['npc_shop_prices']['items'] if row['item_id']!=218]
+        next(row for row in profile['npc_shops'] if row['key']=='weapon')['item_ids']=[]
         self.assertNotIn(218,[row['id'] for row in module.fixture_from_rows(tables)['items']])
         self.assertIn(218,[row['id'] for row in tables['game_equipment']])
 
@@ -114,6 +116,7 @@ class EquipmentFoundationTests(unittest.TestCase):
 
     def test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade(self):
         tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21;profile.pop('warehouses')
+        for key in module.npc_shops.PROFILE_KEYS:del profile[key]
         with self.assertRaisesRegex(ValueError,'rule22'):module.fixture_from_rows(tables)
         profile.pop('base_item_ids');fixture=module.fixture_from_rows(tables)
         self.assertTrue(all('equipment_stage' not in item for item in fixture['items']))

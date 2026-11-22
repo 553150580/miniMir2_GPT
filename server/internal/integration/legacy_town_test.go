@@ -18,6 +18,8 @@ func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	}
 	f.Maps = []devconfig.MapTemplate{*legacy}
 	f.RuleVersion = 23
+	f.NPCShops = nil
+	f.EquipmentDurability = nil
 	f.Hash = persistence.Hash([]byte(f.Hash + ":historical-town-rule23-test"))
 	f.TownTravel.DestinationMapIDs = nil
 	n := f.TownNavigation

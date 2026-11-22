@@ -26,7 +26,7 @@ class CompactTownTests(unittest.TestCase):
         self.assertEqual(public['map_regions'], [{'id': '0', 'name': '比奇省', 'map_ids': ['1', '3', '4', '5']}])
         self.assertEqual(public['town_travel']['destination_map_ids'], [town['id'] for town in towns])
         self.assertEqual([(town['name'], len(town['npcs'])) for town in towns],
-                         [('银杏山谷', 6), ('边界村', 6), ('比奇城', 7)])
+                         [('银杏山谷', 6), ('边界村', 6), ('比奇城', 9)])
         for town in towns:
             self.assertEqual((town['width'], town['height'], town['scene_kind']), (17, 17, 2))
             self.assertEqual(town['blocked'], [npc['position'] for npc in town['npcs']])
@@ -37,6 +37,9 @@ class CompactTownTests(unittest.TestCase):
         profile = tables['dev_first_loop_profile'][0]['parameters']
         profile['rule_version'] = 23
         del profile['compact_towns'], profile['map_regions']
+        for key in module.npc_shops.PROFILE_KEYS:
+            del profile[key]
+        profile['base_item_ids'] = [35, 36, 193, 218]
         prior = module.fixture_from_rows(tables)
         self.assertEqual(prior['maps'], self.fixture['maps'][:1])
         self.assertEqual(module.public_gameplay(prior)['town_travel'], {'enabled': True, 'town_map_id': '2'})

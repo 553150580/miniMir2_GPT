@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 84,
+  "message_count": 87,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -89,10 +89,13 @@
     "WarehousePage",
     "WarehouseAction",
     "WarehouseItemChange",
-    "WarehouseActionResult"
+    "WarehouseActionResult",
+    "VendorQuoteRequest",
+    "VendorQuoteResult",
+    "VendorCommitRequest"
   ],
-  "int64_field_count": 198,
-  "int64_boundary_cases": 653,
+  "int64_field_count": 222,
+  "int64_boundary_cases": 732,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -863,6 +866,24 @@
       "cases": 3
     },
     {
+      "message": "ItemView",
+      "field": "durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "max_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ItemView",
+      "field": "original_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "InventoryResult",
       "field": "revision",
       "type": "uint64",
@@ -1281,9 +1302,135 @@
       "field": "yuanbao_units",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "VendorQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteRequest",
+      "field": "npc_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteRequest",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteRequest",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "expires_at_unix_ms",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "npc_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "item_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "ingot",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "bound_ingot",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "max_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "original_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "repaired_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "repaired_max_durability_u",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "item_quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "VendorCommitRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "VendorCommitRequest",
+      "field": "npc_id",
+      "type": "uint64",
+      "cases": 3
     }
   ],
-  "bytes_field_count": 23,
+  "bytes_field_count": 27,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1399,6 +1546,26 @@
       "message": "WarehouseActionResult",
       "field": "op_id",
       "repeated": false
+    },
+    {
+      "message": "VendorQuoteRequest",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
+      "message": "VendorQuoteResult",
+      "field": "instance_id",
+      "repeated": false
+    },
+    {
+      "message": "VendorCommitRequest",
+      "field": "quote_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -1419,19 +1586,19 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "ca65e8ada5b58b741499f2ff56f42c5272d17ea773349c6be8ab4b0b5da2d5df"
+      "sha256": "caa3d594c988fce3e384130b9a14d6c75a96d35a1c4db6ea3a50e860b3f1834b"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "0329820960b7bd5384af938f0ad22b1f8e5d3071bfe0c0c395a6b0673aacd7b4",
-      "bytes": 1435065
+      "sha256": "75099a1fb851383e8521f20e1921d2e2f9d0728aa56e7f7d4184b4f1e0ec8e9b",
+      "bytes": 1512600
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "cc0245cfa464fb29d41525f5e197568829dd9ba6ff972595a1518ec7b11f824e",
-      "bytes": 451939
+      "sha256": "2bffba7d223c8d7730f7adccb8889bcc5f9a89e5455909a8d38582ca1bdbb3ad",
+      "bytes": 471482
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

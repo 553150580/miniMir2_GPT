@@ -249,6 +249,7 @@ func (w *worker) attackFacingTarget(r *room, direction, expected, input uint32, 
 		secondaryAmount = w.magicAmount(s, rank, base)
 	}
 	from.AttackSequence++
+	w.weaponWear(r, now)
 	from.AttackSkillID, from.AttackSkillLevel = s.ID, rank
 	from.NextAttack = now.Add(time.Duration(stats.AttackMS) * time.Millisecond)
 	from.ActionReadyAt = now.Add(time.Duration(w.e.Store.Cfg.Fixture.CombatTiming.PlayerAttackActionMS) * time.Millisecond)

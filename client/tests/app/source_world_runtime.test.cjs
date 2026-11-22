@@ -31,9 +31,9 @@ function fakeResources(options={}){
  cc.resources={load};return{pool,requested,pending,gameplay,sourceActive,flush(){for(const finish of pending.splice(0))finish();}};
 }
 function scene(assets){
- const viewport=new cc.Node('Viewport'),world=new cc.Node('World'),entities=new cc.Node('Entities');viewport.getComponent(UITransform).setContentSize(720,808);world.parent=viewport;entities.parent=world;
- for(const [name,type]of [['Surface',Sprite],['Soil',Graphics],['GridLines',Graphics],['TargetMarker',Sprite]]){const node=new cc.Node(name);node.add(type,new type());node.parent=world;}
- const diamond=new cc.Node('Diamond');diamond.add(Graphics,new Graphics());diamond.parent=world.getChildByName('TargetMarker');new cc.Node('Effects').parent=world;
+ const viewport=new cc.Node('Viewport'),world=new cc.Node('World'),entities=new cc.Node('Entities');viewport.getComponent(UITransform).setContentSize(720,808);world.parent=viewport;
+ for(const [name,type]of [['Soil',Graphics],['Surface',Sprite],['GridLines',Graphics],['TargetMarker',Sprite]]){const node=new cc.Node(name);node.add(type,new type());node.parent=world;}
+ const diamond=new cc.Node('Diamond');diamond.add(Graphics,new Graphics());diamond.parent=world.getChildByName('TargetMarker');entities.parent=world;new cc.Node('Effects').parent=world;
  const view=new GameWorldView(viewport,world,entities,'来源测试',0,Long.UONE,1);view.prepare(assets,()=>{});return{view,viewport,world,entities};
 }
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
@@ -96,4 +96,26 @@ test('真实跨层来源视口先等待原生块，矩形点击/镜头/方向/�
 test('来源流式预算缺失或目录与资产尺寸不符均拒绝，已取得资源成对释放',async()=>{
  const missing=fakeResources({changeGameplay:g=>delete g.source_map_streaming});await assert.rejects(WorldAssets.prepare(0,()=>{},'2'),/显式流式/);assert(!missing.requested.some(key=>key.startsWith('source-maps/')));assertReleased(missing);
  const wrong=fakeResources({changeGameplay:g=>g.map_catalog[1].width=17});await assert.rejects(WorldAssets.prepare(0,()=>{},'2'),/完整尺寸/);assertReleased(wrong);
+});
+
+test('来源矩形投影的尸体绘于地板和来源障碍之间，复生时重新加入来源对象排序', async () => {
+ const resources = fakeResources(), assets = await WorldAssets.prepare(0, () => {}, '2');
+ const { view, world, entities } = scene(assets);
+ const player = state(1, 1, 650, 631), monster = state(2, 3, 651, 630);
+ try {
+  view.apply({ entities: [player, monster] });
+  await view.prepareViewport();
+  const node = view.visuals.get(2).node, floor = world.getChildByName('Surface');
+  assert.ok(view.sourceView.stats.objectNodes > 0);
+  assert.equal(node.parent, entities);
+  view.apply({ entities: [player, { ...monster, hp: Long.UZERO }] });
+  assert.equal(node.parent, world);
+  assert.deepEqual(node.position, view.grid(651, 630));
+  assert.ok(floor.getSiblingIndex() < node.getSiblingIndex() && node.getSiblingIndex() < entities.getSiblingIndex());
+  assert.deepEqual(view.sourceView.entityOrder.map(row => row.id), ['entity_1']);
+  assert.ok(entities.children.some(child => child.name.startsWith('SourceMap:')));
+  view.apply({ entities: [player, { ...monster, life: Long.UONE }] });
+  assert.equal(node.parent, entities);
+  assert.deepEqual(view.sourceView.entityOrder.map(row => row.id), ['entity_1', 'entity_2']);
+ } finally { view.dispose(); assertReleased(resources); }
 });

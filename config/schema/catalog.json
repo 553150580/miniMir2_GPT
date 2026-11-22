@@ -4736,7 +4736,8 @@
           "target": "both",
           "enum_values": [
             "weapon",
-            "armour"
+            "armour",
+            "necklace"
           ]
         },
         {
@@ -13918,6 +13919,80 @@
       "source_ref": "../SuprcodeCrystal/Server/MirObjects/HumanObject.cs:2974-2981；../SuprcodeCrystal/Server/MirObjects/MapObject.cs:243-259"
     },
     {
+      "table_id": "game_equipment",
+      "id": 259,
+      "field": "class_restriction",
+      "rule_key": null,
+      "shape": {
+        "type": "array",
+        "items": {
+          "type": "int",
+          "minimum": 0
+        }
+      },
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
+    },
+    {
+      "table_id": "game_equipment",
+      "id": 259,
+      "field": "base_attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "attack_speed": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "magic_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_min": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "spirit_attack_max": {
+            "type": "int",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:220；rule22基础装备属性：原表Mc/Mc2/Sc/Sc2逐列均为0，显式投影魔法攻击/道术攻击上下限；不证明完整词条/外观/持久系统"
+    },
+    {
       "table_id": "dev_first_loop_profile",
       "id": 1,
       "field": "parameters",
@@ -14064,6 +14139,10 @@
           "recycle_test_gold_by_item": {
             "type": "object",
             "properties": {
+              "259": {
+                "type": "int",
+                "minimum": 0
+              },
               "218": {
                 "type": "int",
                 "minimum": 0
@@ -14645,6 +14724,144 @@
                     "type": "int",
                     "minimum": 1,
                     "maximum": 4294967295
+                  }
+                }
+              }
+            }
+          },
+          "npc_shops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "item_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 4294967295
+                  }
+                },
+                "legacy_skill_offers": {
+                  "type": "boolean"
+                },
+                "sell_skill_books": {
+                  "type": "boolean"
+                },
+                "can_repair": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "npc_shop_prices": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "int",
+                      "minimum": 1,
+                      "maximum": 4294967295
+                    },
+                    "price_gold": {
+                      "type": "int",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "source_ref": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "sell_ratio_numerator": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "sell_ratio_denominator": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "max_purchase_quantity": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "source_ref": {
+                "type": "string"
+              }
+            }
+          },
+          "equipment_durability": {
+            "type": "object",
+            "properties": {
+              "weapon_loss_u": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "armor_hit_loss_u": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "death_loss_u": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 4294967295
+              },
+              "repair_range_cells": {
+                "type": "int",
+                "minimum": 1,
+                "maximum": 8
+              },
+              "ordinary": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 1
+                  },
+                  "upper_loss_divisor": {
+                    "type": "int",
+                    "minimum": 2,
+                    "maximum": 4294967295
+                  },
+                  "min_max_durability_u": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 2147483647
+                  }
+                }
+              },
+              "special": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "int",
+                    "minimum": 2,
+                    "maximum": 2
+                  },
+                  "full_repair_cost_u": {
+                    "type": "int",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
                   }
                 }
               }

@@ -65,6 +65,9 @@ const (
 	MsgS2CWarehousePage uint16 = 40021
 	MsgC2SWarehouseAction uint16 = 40022
 	MsgS2CWarehouseActionResult uint16 = 40023
+	MsgC2SVendorQuote uint16 = 40024
+	MsgS2CVendorQuote uint16 = 40025
+	MsgC2SVendorCommit uint16 = 40026
 )
 
 const (
@@ -107,4 +110,8 @@ const (
 	CodeWarehouseChanged uint32 = 3502
 	CodeWarehouseBlocked uint32 = 3503
 	CodeWarehousePrivilegeRequired uint32 = 3504
+	CodeVendorUnavailable uint32 = 3601
+	CodeVendorQuoteStale uint32 = 3602
+	CodeVendorFunds uint32 = 3603
+	CodeVendorItemBlocked uint32 = 3604
 )

@@ -23,6 +23,10 @@ message ItemView {
   bool locked = 9;
   // 强保护位：1锁定，2未确认培养结果，4资产占用，8穿戴中；客户端不可覆盖。
   uint32 recycle_block_flags = 10;
+  // 1/1000显示单位；原始上限为非零时才有耐久，当前值0表示损坏。
+  uint64 durability_u = 11;
+  uint64 max_durability_u = 12;
+  uint64 original_durability_u = 13;
 }
 message EquippedItem { uint32 slot = 1; ItemView item = 2; }
 // 已学技能属于永久成长；短冷却、施法与治疗队列不保存在此处。
@@ -256,4 +260,47 @@ message WarehouseActionResult {
   repeated WarehouseItemChange changes = 8;
   int64 gold = 9;
   int64 yuanbao_units = 10;
+}
+
+// 1购买、2出售、3普通修理、4特殊修理。每次操作只使用选中报价或物品实例。
+message VendorQuoteRequest {
+  uint64 scene_epoch = 1;
+  uint64 npc_id = 2;
+  uint32 action = 3;
+  uint32 offer_id = 4;
+  bytes instance_id = 5;
+  uint64 item_version = 6;
+  int64 quantity = 7;
+}
+
+message VendorQuoteResult {
+  bytes quote_id = 1;
+  uint64 expires_at_unix_ms = 2;
+  uint64 scene_epoch = 3;
+  uint64 npc_id = 4;
+  uint32 action = 5;
+  uint32 offer_id = 6;
+  uint32 item_id = 7;
+  bytes instance_id = 8;
+  uint64 item_version = 9;
+  int64 quantity = 10;
+  int64 gold = 11;
+  int64 bound_gold = 12;
+  int64 ingot = 13;
+  int64 bound_ingot = 14;
+  uint64 durability_u = 15;
+  uint64 max_durability_u = 16;
+  uint64 original_durability_u = 17;
+  uint64 repaired_durability_u = 18;
+  uint64 repaired_max_durability_u = 19;
+  // 买商品可按包报价；quantity为操作份数，item_quantity是实际交付件数。
+  int64 item_quantity = 20;
+  bool bound = 21;
+}
+
+message VendorCommitRequest {
+  OperationContext operation = 1;
+  bytes quote_id = 2;
+  uint64 scene_epoch = 3;
+  uint64 npc_id = 4;
 }

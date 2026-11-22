@@ -80,7 +80,8 @@ test('确认文字按保存Label真实尺寸与本机字体度量覆盖32格主�
  const label=node._components.map(deref).find(value=>value.__type__==='cc.Label'),size=node._components.map(deref).find(value=>value.__type__==='cc.UITransform')._contentSize;
  assert.equal(label._enableWrapText,true);assert.equal(label._isSystemFontUsed,true);assert.equal(label._fontSize,24);assert.equal(label._lineHeight,30);
  const gameplay=JSON.parse(fs.readFileSync('client/assets/resources/development/gameplay.json','utf8')),definitions=gameplay.items.filter(row=>row.kind==='equipment');
- assert.equal(definitions.length,2);assert(definitions.every(row=>row.quality===0&&row.required_level===1));
+ const starterDefinitions=definitions.filter(row=>[193,218].includes(row.item_id));
+ assert.equal(starterDefinitions.length,2);assert(starterDefinitions.every(row=>row.quality===0&&row.required_level===1));
  const samples=[model.createAutoRecyclePreview(snapshot(),policy(),true)];
  for(const binding of [false,true])samples.push(model.createAutoRecyclePreview(snapshot({items:Array.from({length:32},(_,i)=>item(i+1,{itemId:193,bound:binding})),definitions}),policy(),true));
  for(const protectedItemIds of [[],[218],[193],[218,193]])for(const protectBound of [false,true])for(const protectUnbound of [false,true]){

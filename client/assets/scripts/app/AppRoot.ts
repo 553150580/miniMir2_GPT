@@ -26,7 +26,10 @@ import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, save
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { traceInput } from './InputTrace';
 import { GameSkillAssets } from './GameSkillAssets';
-import { canRecycleBook, pageMergeGroup, preparePageMerge, PreparedSkillAsset, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validatePageMergeQuote, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
+import { GameNpcShop } from './GameNpcShop';
+import { npcShopForRole, npcShopSnapshot } from './NpcShopCatalog';
+import type { VendorQuote, VendorSelection } from './NpcShopModel';
+import { assetInteger, canRecycleBook, pageMergeGroup, preparePageMerge, PreparedSkillAsset, SkillAssetQuote, SkillAssetsSnapshot, sourceName, validatePageMergeQuote, validateQuotedMaterials, validateSkillAssetContext } from './SkillAssetsModel';
 import { GameCombatStatus } from './GameCombatStatus';
 import { captureSupply, CastingSupplySnapshot, selectedCastingSupply, SupplySelection, validateSupply } from './CastingSupplyModel';
 import { MapAttachmentCoordinator, StaleMapAttachmentError } from './MapAttachmentCoordinator';
@@ -42,7 +45,7 @@ import { GameAutoRecycle } from './GameAutoRecycle';
 import { AutoRecycleSnapshot, autoRecycleConfirmation, autoRecycleReportLines, createAutoRecyclePreview, manualRecycleBlockReason, recycleItemKey, validateAutoRecyclePreview } from './AutoRecycleModel';
 import { inventoryCapacityText } from './InventoryDisplay';
 import { equipmentLevelLines, progressionDetailLines, progressionSummary } from './LevelGrowthModel';
-import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
+import { createEquipmentPreview, equipmentActionReason, equipmentConfirmation, equipmentDetailLines, equipmentDurabilityText, equipmentSlotName, EquipmentSnapshot, EquippedSelection, validateEquipmentPreview } from './EquipmentModel';
 import { combatAttributeLines } from './CombatStatusModel';
 import { GameWarehouse, WarehouseInput } from './GameWarehouse';
 import { validateWarehousePreview, warehouseConfig, WarehouseRequest } from './WarehouseModel';
@@ -64,6 +67,8 @@ export class AppRoot extends Component {
     private messages?: GameMessages;
     private skills?: GameSkills;
     private skillAssets?: GameSkillAssets;
+    private npcShop?: GameNpcShop;
+    private npcShopContext?: { npc: TownNpc; scope: string };
     private autoRecycle?: GameAutoRecycle;
     private warehouse?: GameWarehouse;
     private townDirectory?: TownDirectory;
@@ -296,6 +301,11 @@ export class AppRoot extends Component {
         this.cleanups.push(() => this.skills?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
+        this.npcShop = new GameNpcShop(safe, this.popup, {
+            quote: selection => this.quoteNpc(selection), commit: (selection, quote) => this.commitNpc(selection, quote),
+            report: error => this.error(error),
+        });
+        this.cleanups.push(() => this.npcShop?.dispose());
         this.autoRecycle = new GameAutoRecycle(this.find('UIMgr/Panels/Settings'));
         this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
         const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
@@ -461,12 +471,14 @@ export class AppRoot extends Component {
         const identity = currentEntryIdentity();
         if (!identity || !isCurrentEntry(identity)) {
             this.closeMapDirectory();
+            this.closeNpcShop();
             this.warehouse?.detach();
             this.attachment?.invalidate(); this.attachmentTarget = ''; this.attachmentTask = undefined; this.attaching = false;
             this.setInputBarrier(true); this.releasePreparedTravel(); this.status(session.lastError || '连接已变化，请重新进入'); return;
         }
         if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
             this.closeMapDirectory();
+            this.closeNpcShop();
             this.warehouse?.detach();
             void this.attachCurrentEntry().catch(error => { if (!(error instanceof StaleMapAttachmentError)) this.error(error); }); return;
         }
@@ -789,6 +801,7 @@ export class AppRoot extends Component {
         this.refreshInventoryContext();
         this.find('MapViewport/Aiming').active = !!this.aim;
         this.skillAssets?.refresh(this.skillAssetsSnapshot());
+        if (this.npcShopContext && this.ui?.top?.name === 'NpcShop') this.npcShop?.refresh(this.npcShopState());
         this.autoRecycle?.refresh(this.recycleSnapshot(), this.economicBusy, this.unresolved || !!session.pending?.get(roleIdentity()));
         this.warehouse?.refresh(this.warehouseInput());
         this.messages?.refresh({ ...presentation, roleIdentity: roleIdentity(), entry: session.entry });
@@ -800,13 +813,14 @@ export class AppRoot extends Component {
                 const definition = this.world!.gameplay.items.find((row: any) => row.item_id === item.itemId);
                 const label = node.getChildByName('Text')!.getComponent(Label)!;
                 const name = definition?.name ?? item.itemId, ownership = item.bound ? '绑定' : '非绑定';
+                const durability = definition?.kind === 'equipment' ? equipmentDurabilityText(item) : '';
                 if (panel === 'Inventory') {
-                    label.string = `${name}\n×${item.quantity} · ${ownership}`;
+                    label.string = `${name}\n×${item.quantity} · ${ownership}${durability ? `\n${durability.includes('已损坏') ? '已损坏' : durability}` : ''}`;
                     return;
                 }
                 const worn = session.inventory?.equipped.find((entry: any) => recycleItemKey(entry.item.instanceId) === recycleItemKey(item.instanceId));
                 const part = worn ? `${definition?.kind === 'casting_supply' ? '护符' : equipmentSlotName(worn.slot)} · ` : '';
-                label.string = `${part}${name} ×${item.quantity} ${ownership}`;
+                label.string = `${part}${name} ×${item.quantity} ${ownership}${durability ? ` · ${durability}` : ''}`;
             }, true);
             if (!(list as any).__boundSelection) { (list as any).__boundSelection = true; list.node.on('list-item-click', (_index: number, selected: any) => {
                 if (this.disposed) return;
@@ -1151,7 +1165,75 @@ export class AppRoot extends Component {
     }
 
     private selectTownNpc(npc: TownNpc): void {
-        if (!this.consumeGround(npc.position)) this.popup!.show('Details', { title: npc.name, message: npc.role });
+        if (this.consumeGround(npc.position)) return;
+        const identity = currentEntryIdentity();
+        const shop = this.npcShop && this.world && npcShopForRole(this.world.gameplay, npc.role);
+        if (!shop || !identity || !isCurrentEntry(identity) || !this.npcShop) {
+            this.popup!.show('Details', { title: npc.name, message: npc.role });
+            return;
+        }
+        this.npcShopContext = { npc, scope: `${attachmentKey(identity)}/${npc.id}` };
+        this.npcShop.open(npc.name, shop.key);
+        this.ui!.open('NpcShop');
+        this.npcShop.refresh(this.npcShopState());
+    }
+
+    private closeNpcShop(): void {
+        if (!this.npcShopContext) return;
+        this.npcShopContext = undefined;
+        this.npcShop?.refresh(null);
+        if (this.ui?.top?.name === 'NpcShop') this.ui.back();
+    }
+
+    private npcShopState() {
+        const context = this.npcShopContext, identity = currentEntryIdentity(), gameplay = this.world?.gameplay;
+        if (!context || !identity || !isCurrentEntry(identity) || !gameplay
+            || context.scope !== `${attachmentKey(identity)}/${context.npc.id}`) return null;
+        const shop = npcShopForRole(gameplay, context.npc.role);
+        if (!shop) return null;
+        const player = session.baseline?.entities.find((entity: any) => entity.entityHandle === session.entry.playerHandle);
+        const { x, y } = context.npc.position, range = gameplay.equipment_durability?.repair_range_cells;
+        const nearby = player && !player.hp.isZero() && Number.isSafeInteger(range)
+            && Math.max(Math.abs(player.position.x - x), Math.abs(player.position.y - y)) <= range;
+        const matchedRevision = !!session.inventory && !!session.wallet && session.inventory.revision.equals(session.wallet.revision);
+        const ready = !!nearby && matchedRevision && this.canSendInput() && !this.economicBusy && !this.unresolved
+            && !session.pending?.get(roleIdentity());
+        return { ...npcShopSnapshot(shop, context.scope, session.inventory, ready, gameplay.items, !!gameplay.equipment_durability?.special),
+            reason: nearby ? '正在同步角色资产，请稍候' : '请走到这位商人身旁，再进行交易或修理' };
+    }
+
+    private npcScope(selection: VendorSelection) {
+        const current = this.npcShopState();
+        if (this.ui?.top?.name !== 'NpcShop' || !current?.ready || current.scope !== selection.scope || current.shopKey !== selection.shopKey) {
+            throw new Error('请靠近原商人，并等待角色资产同步');
+        }
+        const sceneEpoch = session.entry.sceneEpoch as Long, npcId = Long.fromString(this.npcShopContext!.npc.id, true);
+        const row = (selection.action === 1 ? current.buy : selection.action === 2 ? current.sell : current.repair)
+            .find(item => item.key === selection.key && !item.disabledReason);
+        if (!row || row.itemId !== selection.itemId || row.offerId !== selection.offerId
+            || row.itemVersion?.toString() !== selection.itemVersion?.toString()) throw new Error('原商品或装备已变化，请重新选择');
+        return { sceneEpoch, npcId, row };
+    }
+
+    private async quoteNpc(selection: VendorSelection): Promise<VendorQuote> {
+        const { sceneEpoch, npcId, row } = this.npcScope(selection);
+        const packs = selection.quantity / assetInteger(row.quantityStep ?? 1);
+        const quote = await session.connection.request(40024, { sceneEpoch, npcId, action: selection.action, offerId: row.offerId,
+            instanceId: selection.instanceId, itemVersion: selection.itemVersion === undefined ? undefined : Long.fromString(selection.itemVersion.toString(), true),
+            quantity: Long.fromString(packs.toString()) });
+        this.npcScope(selection);
+        if (!npcId.equals(quote.npcId) || !sceneEpoch.equals(quote.sceneEpoch)
+            || (selection.itemVersion !== undefined && quote.itemVersion.toString() !== selection.itemVersion.toString())) {
+            throw new Error('商店报价与原场景或物品不一致，请重新报价');
+        }
+        const price = [quote.gold, quote.boundGold, quote.ingot, quote.boundIngot].reduce((sum, amount) => sum + assetInteger(amount), 0n);
+        return { ...quote, price, quantity: quote.itemQuantity, instanceId: quote.instanceId?.length ? quote.instanceId : undefined };
+    }
+
+    private async commitNpc(selection: VendorSelection, quote: VendorQuote): Promise<void> {
+        const { sceneEpoch, npcId } = this.npcScope(selection);
+        if (quote.npcId.toString() !== npcId.toString()) throw new Error('原商人已经变化，请重新报价');
+        await this.economic(40026, { quoteId: new Uint8Array(quote.quoteId), sceneEpoch, npcId });
     }
 
     private openTargetDetails(): void {

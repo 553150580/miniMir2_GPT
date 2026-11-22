@@ -2811,6 +2811,18 @@
             }
           ],
           "description": "每日限购"
+        },
+        "price_gold": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "每件金币价格，单位：金币"
         }
       },
       "required": [
@@ -2821,7 +2833,8 @@
         "price_u",
         "quantity",
         "purchased_bound",
-        "daily_limit"
+        "daily_limit",
+        "price_gold"
       ],
       "additionalProperties": false
     },
@@ -4034,7 +4047,12 @@
         "equipment_type": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "weapon",
+                "armour",
+                "necklace"
+              ]
             },
             {
               "type": "null"
@@ -4054,7 +4072,9 @@
         "required_level": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -5101,6 +5121,51 @@
             }
           ],
           "description": "八方向动作与特效键"
+        },
+        "book_item_id": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "学习书物品ID"
+        },
+        "native_start_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "原生初学阶"
+        },
+        "native_max_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "原生开放最高阶"
+        },
+        "damage_parameters": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "技能数值参数"
         }
       },
       "required": [
@@ -5117,7 +5182,11 @@
         "resource_costs",
         "damage_or_heal_path",
         "effect_ids",
-        "action_resource_key"
+        "action_resource_key",
+        "book_item_id",
+        "native_start_level",
+        "native_max_level",
+        "damage_parameters"
       ],
       "additionalProperties": false
     },
@@ -5198,6 +5267,30 @@
             }
           ],
           "description": "保持攻击方式射程目标形状"
+        },
+        "required_role_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "所需角色等级"
+        },
+        "page_item_id": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "书页物品ID"
         }
       },
       "required": [
@@ -5207,7 +5300,9 @@
         "book_cost",
         "page_cost",
         "allowed_numeric_changes",
-        "preserve_behavior_shape"
+        "preserve_behavior_shape",
+        "required_role_level",
+        "page_item_id"
       ],
       "additionalProperties": false
     },
@@ -5396,6 +5491,26 @@
             }
           ],
           "description": "原版或扩展预算组"
+        },
+        "duration_rule": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "按施法属性计算时长"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "状态名称"
         }
       },
       "required": [
@@ -5407,7 +5522,9 @@
         "stack_policy",
         "remove_events",
         "immunity_rules",
-        "budget_group"
+        "budget_group",
+        "duration_rule",
+        "display_name"
       ],
       "additionalProperties": false
     },
@@ -5440,7 +5557,11 @@
         "effect_type": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "defensive_buff",
+                "teleport_success_buff"
+              ]
             },
             {
               "type": "null"
@@ -5460,7 +5581,11 @@
         "trigger_phase": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "cast_impact",
+                "teleport_success"
+              ]
             },
             {
               "type": "null"
@@ -5696,7 +5821,8 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 0
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -5707,7 +5833,9 @@
         "level": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -5718,7 +5846,9 @@
         "next_level_exp": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
             },
             {
               "type": "null"
@@ -10965,6 +11095,18 @@
             }
           ],
           "description": "每日限购"
+        },
+        "price_gold": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "每件金币价格，单位：金币"
         }
       },
       "required": [
@@ -10975,7 +11117,8 @@
         "price_u",
         "quantity",
         "purchased_bound",
-        "daily_limit"
+        "daily_limit",
+        "price_gold"
       ],
       "additionalProperties": false
     },
@@ -12188,7 +12331,12 @@
         "equipment_type": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "weapon",
+                "armour",
+                "necklace"
+              ]
             },
             {
               "type": "null"
@@ -12208,7 +12356,9 @@
         "required_level": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -12653,6 +12803,24 @@
             }
           ],
           "description": "地图版本"
+        },
+        "visual_geometry": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "地图投影与土层"
+        },
+        "decorations": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "场边小型装饰"
         }
       },
       "required": [
@@ -12666,7 +12834,9 @@
         "collision_id",
         "spawn_cell",
         "tile_resource_key",
-        "map_version"
+        "map_version",
+        "visual_geometry",
+        "decorations"
       ],
       "additionalProperties": false
     },
@@ -13184,6 +13354,51 @@
             }
           ],
           "description": "八方向动作与特效键"
+        },
+        "book_item_id": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "学习书物品ID"
+        },
+        "native_start_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "原生初学阶"
+        },
+        "native_max_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "原生开放最高阶"
+        },
+        "damage_parameters": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "技能数值参数"
         }
       },
       "required": [
@@ -13200,7 +13415,11 @@
         "resource_costs",
         "damage_or_heal_path",
         "effect_ids",
-        "action_resource_key"
+        "action_resource_key",
+        "book_item_id",
+        "native_start_level",
+        "native_max_level",
+        "damage_parameters"
       ],
       "additionalProperties": false
     },
@@ -13281,6 +13500,30 @@
             }
           ],
           "description": "保持攻击方式射程目标形状"
+        },
+        "required_role_level": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "所需角色等级"
+        },
+        "page_item_id": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "书页物品ID"
         }
       },
       "required": [
@@ -13290,7 +13533,9 @@
         "book_cost",
         "page_cost",
         "allowed_numeric_changes",
-        "preserve_behavior_shape"
+        "preserve_behavior_shape",
+        "required_role_level",
+        "page_item_id"
       ],
       "additionalProperties": false
     },
@@ -13479,6 +13724,37 @@
             }
           ],
           "description": "原版或扩展预算组"
+        },
+        "duration_rule": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "description": "按施法属性计算时长"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "状态名称"
+        },
+        "short_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "徽标短名"
         }
       },
       "required": [
@@ -13490,7 +13766,10 @@
         "stack_policy",
         "remove_events",
         "immunity_rules",
-        "budget_group"
+        "budget_group",
+        "duration_rule",
+        "display_name",
+        "short_name"
       ],
       "additionalProperties": false
     },
@@ -13523,7 +13802,11 @@
         "effect_type": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "defensive_buff",
+                "teleport_success_buff"
+              ]
             },
             {
               "type": "null"
@@ -13543,7 +13826,11 @@
         "trigger_phase": {
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "cast_impact",
+                "teleport_success"
+              ]
             },
             {
               "type": "null"
@@ -13779,7 +14066,8 @@
           "anyOf": [
             {
               "type": "integer",
-              "minimum": 0
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -13790,7 +14078,9 @@
         "level": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4294967295
             },
             {
               "type": "null"
@@ -13801,7 +14091,9 @@
         "next_level_exp": {
           "anyOf": [
             {
-              "type": "integer"
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
             },
             {
               "type": "null"

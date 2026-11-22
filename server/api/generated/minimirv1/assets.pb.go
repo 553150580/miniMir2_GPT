@@ -111,8 +111,12 @@ type ItemView struct {
 	Locked     bool   `protobuf:"varint,9,opt,name=locked,proto3" json:"locked,omitempty"`
 	// 强保护位：1锁定，2未确认培养结果，4资产占用，8穿戴中；客户端不可覆盖。
 	RecycleBlockFlags uint32 `protobuf:"varint,10,opt,name=recycle_block_flags,json=recycleBlockFlags,proto3" json:"recycle_block_flags,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// 1/1000显示单位；原始上限为非零时才有耐久，当前值0表示损坏。
+	DurabilityU         uint64 `protobuf:"varint,11,opt,name=durability_u,json=durabilityU,proto3" json:"durability_u,omitempty"`
+	MaxDurabilityU      uint64 `protobuf:"varint,12,opt,name=max_durability_u,json=maxDurabilityU,proto3" json:"max_durability_u,omitempty"`
+	OriginalDurabilityU uint64 `protobuf:"varint,13,opt,name=original_durability_u,json=originalDurabilityU,proto3" json:"original_durability_u,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *ItemView) Reset() {
@@ -211,6 +215,27 @@ func (x *ItemView) GetLocked() bool {
 func (x *ItemView) GetRecycleBlockFlags() uint32 {
 	if x != nil {
 		return x.RecycleBlockFlags
+	}
+	return 0
+}
+
+func (x *ItemView) GetDurabilityU() uint64 {
+	if x != nil {
+		return x.DurabilityU
+	}
+	return 0
+}
+
+func (x *ItemView) GetMaxDurabilityU() uint64 {
+	if x != nil {
+		return x.MaxDurabilityU
+	}
+	return 0
+}
+
+func (x *ItemView) GetOriginalDurabilityU() uint64 {
+	if x != nil {
+		return x.OriginalDurabilityU
 	}
 	return 0
 }
@@ -2783,6 +2808,372 @@ func (x *WarehouseActionResult) GetYuanbaoUnits() int64 {
 	return 0
 }
 
+// 1购买、2出售、3普通修理、4特殊修理。每次操作只使用选中报价或物品实例。
+type VendorQuoteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch    uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	NpcId         uint64                 `protobuf:"varint,2,opt,name=npc_id,json=npcId,proto3" json:"npc_id,omitempty"`
+	Action        uint32                 `protobuf:"varint,3,opt,name=action,proto3" json:"action,omitempty"`
+	OfferId       uint32                 `protobuf:"varint,4,opt,name=offer_id,json=offerId,proto3" json:"offer_id,omitempty"`
+	InstanceId    []byte                 `protobuf:"bytes,5,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	ItemVersion   uint64                 `protobuf:"varint,6,opt,name=item_version,json=itemVersion,proto3" json:"item_version,omitempty"`
+	Quantity      int64                  `protobuf:"varint,7,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VendorQuoteRequest) Reset() {
+	*x = VendorQuoteRequest{}
+	mi := &file_assets_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VendorQuoteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VendorQuoteRequest) ProtoMessage() {}
+
+func (x *VendorQuoteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VendorQuoteRequest.ProtoReflect.Descriptor instead.
+func (*VendorQuoteRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{32}
+}
+
+func (x *VendorQuoteRequest) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *VendorQuoteRequest) GetNpcId() uint64 {
+	if x != nil {
+		return x.NpcId
+	}
+	return 0
+}
+
+func (x *VendorQuoteRequest) GetAction() uint32 {
+	if x != nil {
+		return x.Action
+	}
+	return 0
+}
+
+func (x *VendorQuoteRequest) GetOfferId() uint32 {
+	if x != nil {
+		return x.OfferId
+	}
+	return 0
+}
+
+func (x *VendorQuoteRequest) GetInstanceId() []byte {
+	if x != nil {
+		return x.InstanceId
+	}
+	return nil
+}
+
+func (x *VendorQuoteRequest) GetItemVersion() uint64 {
+	if x != nil {
+		return x.ItemVersion
+	}
+	return 0
+}
+
+func (x *VendorQuoteRequest) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+type VendorQuoteResult struct {
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	QuoteId                []byte                 `protobuf:"bytes,1,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
+	ExpiresAtUnixMs        uint64                 `protobuf:"varint,2,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	SceneEpoch             uint64                 `protobuf:"varint,3,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	NpcId                  uint64                 `protobuf:"varint,4,opt,name=npc_id,json=npcId,proto3" json:"npc_id,omitempty"`
+	Action                 uint32                 `protobuf:"varint,5,opt,name=action,proto3" json:"action,omitempty"`
+	OfferId                uint32                 `protobuf:"varint,6,opt,name=offer_id,json=offerId,proto3" json:"offer_id,omitempty"`
+	ItemId                 uint32                 `protobuf:"varint,7,opt,name=item_id,json=itemId,proto3" json:"item_id,omitempty"`
+	InstanceId             []byte                 `protobuf:"bytes,8,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
+	ItemVersion            uint64                 `protobuf:"varint,9,opt,name=item_version,json=itemVersion,proto3" json:"item_version,omitempty"`
+	Quantity               int64                  `protobuf:"varint,10,opt,name=quantity,proto3" json:"quantity,omitempty"`
+	Gold                   int64                  `protobuf:"varint,11,opt,name=gold,proto3" json:"gold,omitempty"`
+	BoundGold              int64                  `protobuf:"varint,12,opt,name=bound_gold,json=boundGold,proto3" json:"bound_gold,omitempty"`
+	Ingot                  int64                  `protobuf:"varint,13,opt,name=ingot,proto3" json:"ingot,omitempty"`
+	BoundIngot             int64                  `protobuf:"varint,14,opt,name=bound_ingot,json=boundIngot,proto3" json:"bound_ingot,omitempty"`
+	DurabilityU            uint64                 `protobuf:"varint,15,opt,name=durability_u,json=durabilityU,proto3" json:"durability_u,omitempty"`
+	MaxDurabilityU         uint64                 `protobuf:"varint,16,opt,name=max_durability_u,json=maxDurabilityU,proto3" json:"max_durability_u,omitempty"`
+	OriginalDurabilityU    uint64                 `protobuf:"varint,17,opt,name=original_durability_u,json=originalDurabilityU,proto3" json:"original_durability_u,omitempty"`
+	RepairedDurabilityU    uint64                 `protobuf:"varint,18,opt,name=repaired_durability_u,json=repairedDurabilityU,proto3" json:"repaired_durability_u,omitempty"`
+	RepairedMaxDurabilityU uint64                 `protobuf:"varint,19,opt,name=repaired_max_durability_u,json=repairedMaxDurabilityU,proto3" json:"repaired_max_durability_u,omitempty"`
+	// 买商品可按包报价；quantity为操作份数，item_quantity是实际交付件数。
+	ItemQuantity  int64 `protobuf:"varint,20,opt,name=item_quantity,json=itemQuantity,proto3" json:"item_quantity,omitempty"`
+	Bound         bool  `protobuf:"varint,21,opt,name=bound,proto3" json:"bound,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VendorQuoteResult) Reset() {
+	*x = VendorQuoteResult{}
+	mi := &file_assets_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VendorQuoteResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VendorQuoteResult) ProtoMessage() {}
+
+func (x *VendorQuoteResult) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VendorQuoteResult.ProtoReflect.Descriptor instead.
+func (*VendorQuoteResult) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *VendorQuoteResult) GetQuoteId() []byte {
+	if x != nil {
+		return x.QuoteId
+	}
+	return nil
+}
+
+func (x *VendorQuoteResult) GetExpiresAtUnixMs() uint64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetNpcId() uint64 {
+	if x != nil {
+		return x.NpcId
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetAction() uint32 {
+	if x != nil {
+		return x.Action
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetOfferId() uint32 {
+	if x != nil {
+		return x.OfferId
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetItemId() uint32 {
+	if x != nil {
+		return x.ItemId
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetInstanceId() []byte {
+	if x != nil {
+		return x.InstanceId
+	}
+	return nil
+}
+
+func (x *VendorQuoteResult) GetItemVersion() uint64 {
+	if x != nil {
+		return x.ItemVersion
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetQuantity() int64 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetGold() int64 {
+	if x != nil {
+		return x.Gold
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetBoundGold() int64 {
+	if x != nil {
+		return x.BoundGold
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetIngot() int64 {
+	if x != nil {
+		return x.Ingot
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetBoundIngot() int64 {
+	if x != nil {
+		return x.BoundIngot
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetDurabilityU() uint64 {
+	if x != nil {
+		return x.DurabilityU
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetMaxDurabilityU() uint64 {
+	if x != nil {
+		return x.MaxDurabilityU
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetOriginalDurabilityU() uint64 {
+	if x != nil {
+		return x.OriginalDurabilityU
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetRepairedDurabilityU() uint64 {
+	if x != nil {
+		return x.RepairedDurabilityU
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetRepairedMaxDurabilityU() uint64 {
+	if x != nil {
+		return x.RepairedMaxDurabilityU
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetItemQuantity() int64 {
+	if x != nil {
+		return x.ItemQuantity
+	}
+	return 0
+}
+
+func (x *VendorQuoteResult) GetBound() bool {
+	if x != nil {
+		return x.Bound
+	}
+	return false
+}
+
+type VendorCommitRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Operation     *OperationContext      `protobuf:"bytes,1,opt,name=operation,proto3" json:"operation,omitempty"`
+	QuoteId       []byte                 `protobuf:"bytes,2,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
+	SceneEpoch    uint64                 `protobuf:"varint,3,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	NpcId         uint64                 `protobuf:"varint,4,opt,name=npc_id,json=npcId,proto3" json:"npc_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VendorCommitRequest) Reset() {
+	*x = VendorCommitRequest{}
+	mi := &file_assets_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VendorCommitRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VendorCommitRequest) ProtoMessage() {}
+
+func (x *VendorCommitRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VendorCommitRequest.ProtoReflect.Descriptor instead.
+func (*VendorCommitRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *VendorCommitRequest) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
+func (x *VendorCommitRequest) GetQuoteId() []byte {
+	if x != nil {
+		return x.QuoteId
+	}
+	return nil
+}
+
+func (x *VendorCommitRequest) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *VendorCommitRequest) GetNpcId() uint64 {
+	if x != nil {
+		return x.NpcId
+	}
+	return 0
+}
+
 var File_assets_proto protoreflect.FileDescriptor
 
 const file_assets_proto_rawDesc = "" +
@@ -2795,7 +3186,7 @@ const file_assets_proto_rawDesc = "" +
 	"bound_gold\x18\x02 \x01(\x03R\tboundGold\x12#\n" +
 	"\ryuanbao_units\x18\x03 \x01(\x03R\fyuanbaoUnits\x12.\n" +
 	"\x13bound_yuanbao_units\x18\x04 \x01(\x03R\x11boundYuanbaoUnits\x12\x1a\n" +
-	"\brevision\x18\x05 \x01(\x04R\brevision\"\xb0\x02\n" +
+	"\brevision\x18\x05 \x01(\x04R\brevision\"\xb1\x03\n" +
 	"\bItemView\x12\x1f\n" +
 	"\vinstance_id\x18\x01 \x01(\fR\n" +
 	"instanceId\x12\x17\n" +
@@ -2809,7 +3200,10 @@ const file_assets_proto_rawDesc = "" +
 	"\aquality\x18\b \x01(\rR\aquality\x12\x16\n" +
 	"\x06locked\x18\t \x01(\bR\x06locked\x12.\n" +
 	"\x13recycle_block_flags\x18\n" +
-	" \x01(\rR\x11recycleBlockFlags\"L\n" +
+	" \x01(\rR\x11recycleBlockFlags\x12!\n" +
+	"\fdurability_u\x18\v \x01(\x04R\vdurabilityU\x12(\n" +
+	"\x10max_durability_u\x18\f \x01(\x04R\x0emaxDurabilityU\x122\n" +
+	"\x15original_durability_u\x18\r \x01(\x04R\x13originalDurabilityU\"L\n" +
 	"\fEquippedItem\x12\x12\n" +
 	"\x04slot\x18\x01 \x01(\rR\x04slot\x12(\n" +
 	"\x04item\x18\x02 \x01(\v2\x14.minimir.v1.ItemViewR\x04item\"?\n" +
@@ -3053,7 +3447,50 @@ const file_assets_proto_rawDesc = "" +
 	"\achanges\x18\b \x03(\v2\x1f.minimir.v1.WarehouseItemChangeR\achanges\x12\x12\n" +
 	"\x04gold\x18\t \x01(\x03R\x04gold\x12#\n" +
 	"\ryuanbao_units\x18\n" +
-	" \x01(\x03R\fyuanbaoUnitsB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	" \x01(\x03R\fyuanbaoUnits\"\xdf\x01\n" +
+	"\x12VendorQuoteRequest\x12\x1f\n" +
+	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
+	"sceneEpoch\x12\x15\n" +
+	"\x06npc_id\x18\x02 \x01(\x04R\x05npcId\x12\x16\n" +
+	"\x06action\x18\x03 \x01(\rR\x06action\x12\x19\n" +
+	"\boffer_id\x18\x04 \x01(\rR\aofferId\x12\x1f\n" +
+	"\vinstance_id\x18\x05 \x01(\fR\n" +
+	"instanceId\x12!\n" +
+	"\fitem_version\x18\x06 \x01(\x04R\vitemVersion\x12\x1a\n" +
+	"\bquantity\x18\a \x01(\x03R\bquantity\"\xd4\x05\n" +
+	"\x11VendorQuoteResult\x12\x19\n" +
+	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12+\n" +
+	"\x12expires_at_unix_ms\x18\x02 \x01(\x04R\x0fexpiresAtUnixMs\x12\x1f\n" +
+	"\vscene_epoch\x18\x03 \x01(\x04R\n" +
+	"sceneEpoch\x12\x15\n" +
+	"\x06npc_id\x18\x04 \x01(\x04R\x05npcId\x12\x16\n" +
+	"\x06action\x18\x05 \x01(\rR\x06action\x12\x19\n" +
+	"\boffer_id\x18\x06 \x01(\rR\aofferId\x12\x17\n" +
+	"\aitem_id\x18\a \x01(\rR\x06itemId\x12\x1f\n" +
+	"\vinstance_id\x18\b \x01(\fR\n" +
+	"instanceId\x12!\n" +
+	"\fitem_version\x18\t \x01(\x04R\vitemVersion\x12\x1a\n" +
+	"\bquantity\x18\n" +
+	" \x01(\x03R\bquantity\x12\x12\n" +
+	"\x04gold\x18\v \x01(\x03R\x04gold\x12\x1d\n" +
+	"\n" +
+	"bound_gold\x18\f \x01(\x03R\tboundGold\x12\x14\n" +
+	"\x05ingot\x18\r \x01(\x03R\x05ingot\x12\x1f\n" +
+	"\vbound_ingot\x18\x0e \x01(\x03R\n" +
+	"boundIngot\x12!\n" +
+	"\fdurability_u\x18\x0f \x01(\x04R\vdurabilityU\x12(\n" +
+	"\x10max_durability_u\x18\x10 \x01(\x04R\x0emaxDurabilityU\x122\n" +
+	"\x15original_durability_u\x18\x11 \x01(\x04R\x13originalDurabilityU\x122\n" +
+	"\x15repaired_durability_u\x18\x12 \x01(\x04R\x13repairedDurabilityU\x129\n" +
+	"\x19repaired_max_durability_u\x18\x13 \x01(\x04R\x16repairedMaxDurabilityU\x12#\n" +
+	"\ritem_quantity\x18\x14 \x01(\x03R\fitemQuantity\x12\x14\n" +
+	"\x05bound\x18\x15 \x01(\bR\x05bound\"\xa4\x01\n" +
+	"\x13VendorCommitRequest\x12:\n" +
+	"\toperation\x18\x01 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12\x19\n" +
+	"\bquote_id\x18\x02 \x01(\fR\aquoteId\x12\x1f\n" +
+	"\vscene_epoch\x18\x03 \x01(\x04R\n" +
+	"sceneEpoch\x12\x15\n" +
+	"\x06npc_id\x18\x04 \x01(\x04R\x05npcIdB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_assets_proto_rawDescOnce sync.Once
@@ -3067,7 +3504,7 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
 var file_assets_proto_goTypes = []any{
 	(*WalletState)(nil),              // 0: minimir.v1.WalletState
 	(*ItemView)(nil),                 // 1: minimir.v1.ItemView
@@ -3101,9 +3538,12 @@ var file_assets_proto_goTypes = []any{
 	(*WarehouseAction)(nil),          // 29: minimir.v1.WarehouseAction
 	(*WarehouseItemChange)(nil),      // 30: minimir.v1.WarehouseItemChange
 	(*WarehouseActionResult)(nil),    // 31: minimir.v1.WarehouseActionResult
-	(*RoleKey)(nil),                  // 32: minimir.v1.RoleKey
-	(*OperationContext)(nil),         // 33: minimir.v1.OperationContext
-	(*GridPoint)(nil),                // 34: minimir.v1.GridPoint
+	(*VendorQuoteRequest)(nil),       // 32: minimir.v1.VendorQuoteRequest
+	(*VendorQuoteResult)(nil),        // 33: minimir.v1.VendorQuoteResult
+	(*VendorCommitRequest)(nil),      // 34: minimir.v1.VendorCommitRequest
+	(*RoleKey)(nil),                  // 35: minimir.v1.RoleKey
+	(*OperationContext)(nil),         // 36: minimir.v1.OperationContext
+	(*GridPoint)(nil),                // 37: minimir.v1.GridPoint
 }
 var file_assets_proto_depIdxs = []int32{
 	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
@@ -3112,43 +3552,44 @@ var file_assets_proto_depIdxs = []int32{
 	3,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
 	7,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
 	5,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
-	32, // 6: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
+	35, // 6: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
 	5,  // 7: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
 	7,  // 8: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
-	33, // 9: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 10: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
-	32, // 11: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
-	33, // 12: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 13: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 14: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 15: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 16: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
-	34, // 17: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
-	33, // 18: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 9: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 10: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
+	35, // 11: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
+	36, // 12: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 13: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 14: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 15: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 16: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 17: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 18: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
 	17, // 19: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
 	1,  // 20: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
 	0,  // 21: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
 	19, // 22: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
 	1,  // 23: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
 	20, // 24: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
-	33, // 25: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 26: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	33, // 27: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 25: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 26: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	36, // 27: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
 	0,  // 28: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
 	1,  // 29: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
 	1,  // 30: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
-	32, // 31: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
+	35, // 31: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
 	27, // 32: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
-	33, // 33: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
+	36, // 33: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
 	1,  // 34: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
 	1,  // 35: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
-	32, // 36: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
+	35, // 36: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
 	30, // 37: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
-	38, // [38:38] is the sub-list for method output_type
-	38, // [38:38] is the sub-list for method input_type
-	38, // [38:38] is the sub-list for extension type_name
-	38, // [38:38] is the sub-list for extension extendee
-	0,  // [0:38] is the sub-list for field type_name
+	36, // 38: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // [39:39] is the sub-list for method output_type
+	39, // [39:39] is the sub-list for method input_type
+	39, // [39:39] is the sub-list for extension type_name
+	39, // [39:39] is the sub-list for extension extendee
+	0,  // [0:39] is the sub-list for field type_name
 }
 
 func init() { file_assets_proto_init() }
@@ -3163,7 +3604,7 @@ func file_assets_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   32,
+			NumMessages:   35,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

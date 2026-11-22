@@ -17,6 +17,7 @@ import export_configs as config
 sys.path.insert(0,str(ROOT/'tools/resources'))
 import prepare_pet_runtime as pet_runtime
 import prepare_compact_towns as compact_towns
+import prepare_npc_shops as npc_shops
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -774,20 +775,19 @@ def selected_base_items(tables,profile):
         ids=profile.get('base_item_ids')
         if not isinstance(ids,list) or not ids or any(type(id) is not int or not 0<id<=2**53-1 for id in ids) or len(set(ids))!=len(ids):
             raise ValueError('rule22 base_item_ids必须显式非空、唯一且为正整数，不补原四项默认')
-    selected=[]
+    categories={'equipment','potion'}
+    if profile['rule_version']>=25:
+        categories.update(('meat','misc'))
     for id in ids:
         matches=[row for row in tables['game_items'] if row['id']==id]
-        if len(matches)!=1 or matches[0]['item_type'] not in ('equipment','potion'):
-            raise ValueError('基础物品必须唯一存在且为装备或药品，书/页/材料由各自唯一选择维护')
-        selected.append(matches[0])
+        if len(matches)!=1 or matches[0]['item_type'] not in categories:
+            raise ValueError('基础物品必须唯一存在且属于对应规则的基础类别，书/页/材料由各自唯一选择维护')
     # 按唯一物品表原行序保持历史实例选择顺序；profile只裁决选入集合。
     return [row for row in tables['game_items'] if row['id'] in ids]
 
 
 def equipment_foundation(eq,profile):
     """装备基础属性必须有来源的完整显式值；阶段取唯一row.stage并核需求等级公式。"""
-    if eq['equipment_type'] not in ('weapon','armour'):
-        raise ValueError('未知equipment_type不能按armour处理')
     if profile['rule_version']<22:
         if any(eq['base_attributes'].get(key,0)!=0 for key in ('magic_attack_min','magic_attack_max','spirit_attack_min','spirit_attack_max')):
             raise ValueError('装备MC/SC非零属性须使用rule22合同')
@@ -828,28 +828,41 @@ def fixture_from_rows(tables):
         'magic_resist':0,'magic_resist_weight':resist_weight,
         'attack_speed':0,'attack_ms':r['attack_interval_ms'],'move_ms':r['move_interval_ms'],'undead':r['attributes']['undead'],'can_push':r['attributes']['can_push']}
     items=[]
-    for r in selected_base_items(tables,profile):
+    base_items=selected_base_items(tables,profile)
+    vendor_prices=npc_shops.compile_prices(profile,{row['id'] for row in base_items})
+    equipment_slots={'weapon':0,'armour':1}
+    if profile['rule_version']>=25:
+        equipment_slots['necklace']=3
+    for r in base_items:
         matches=[x for x in tables['game_equipment'] if x['item_id']==r['id']]
         if len(matches)>1 or r['item_type']=='equipment' and len(matches)!=1:
             raise ValueError('已选装备必须有唯一game_equipment定义，不能猜回收资格')
         eq=matches[0] if matches else None;attrs=eq['base_attributes'] if eq else {}
         if eq and r['item_type']!='equipment':raise ValueError('非装备物品不能复用装备定义')
+        if eq and eq['equipment_type'] not in equipment_slots:raise ValueError('未知装备类别不能猜测装备槽')
         foundation=equipment_foundation(eq,profile) if eq else {}
+        repair_fields=npc_shops.equipment_fields(eq,vendor_prices,profile) if eq else {}
+        trade_goods=r['item_type'] in ('meat','misc')
+        if trade_goods and (type(r['max_stack']) is not int or not 1<=r['max_stack']<=2**32-1):
+            raise ValueError('肉和杂货须显式配置堆叠上限')
         if eq and profile['rule_version']>=19 and 'required_level' not in eq:
             raise ValueError('已选装备缺少唯一装备表required_level')
         if eq and profile['rule_version']>=19:
             quality=eq.get('quality')
             if type(quality) is not int or not 0<=quality<=4 or type(r.get('quality')) is not int or r['quality']!=quality:
                 raise ValueError('已选game_items与game_equipment品质必须显式且一致')
-        items.append({'id':r['id'],'name':r['display_name'],'equipment_slot':0 if eq and eq['equipment_type']=='weapon' else 1 if eq else 0,
+        items.append({'id':r['id'],'name':r['display_name'],'equipment_slot':equipment_slots[eq['equipment_type']] if eq else 0,
                       'is_equipment':eq is not None,'attack_bonus':0,'attack_min_bonus':attrs.get('physical_attack_min',0),
                       'attack_max_bonus':attrs.get('physical_attack_max',0),'defence_bonus':attrs.get('physical_defence_min',0),
                       'defence_min_bonus':attrs.get('physical_defence_min',0),'defence_max_bonus':attrs.get('physical_defence_max',0),
                       'magic_defence_min_bonus':attrs.get('magic_defence_min',0),'magic_defence_max_bonus':attrs.get('magic_defence_max',0),
                       'attack_speed_bonus':attrs['attack_speed'] if eq else 0,
-                      'recycle_gold':profile['recycle_test_gold_by_item'][str(r['id'])],'stackable':eq is None,
+                      'recycle_gold':0 if trade_goods else profile['recycle_test_gold_by_item'][str(r['id'])],
+                      'stackable':r['max_stack']>1 if trade_goods else eq is None,
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2],
-                      **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {}),**foundation})
+                      **({'kind':r['item_type'],'max_stack':r['max_stack']} if trade_goods else {}),
+                      **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {}),
+                      **foundation,**repair_fields})
     for skill in skills:
         if any(item['id']==skill['book_item_id'] for item in items):raise ValueError('技能书ID与已有物品冲突')
         source=one('game_items',skill['book_item_id'])
@@ -912,6 +925,14 @@ def fixture_from_rows(tables):
         if profile['rule_version']>=24:
             result['map_regions']=compact_towns.compile_map_regions(profile,[result['map'],*compact_maps])
             result['_source_evidence']['compact_towns']=compact_evidence
+        if profile['rule_version']>=25:
+            result['npc_shops']=npc_shops.compile_shops(profile,items,compact_maps,economy['skill_shop'],vendor_prices)
+            result['equipment_durability']=npc_shops.durability_rules(profile,items)
+            result['_source_evidence']['npc_shops']={
+                'status':'candidate','parameters_source':'唯一玩法Excel/开发首循环夹具/parameters.npc_shops,npc_shop_prices,equipment_durability',
+                'price_source':deepcopy(profile['npc_shop_prices']),
+                'original_durability_source':'唯一玩法Excel/game_equipment.original_durability_u；沿用各记录锁定的MYF DuraMax',
+                'repair_reference':'资料参考/crystal/Shared/Data/ItemData.cs:543–562、Server/MirObjects/PlayerObject.cs:8133–8157；普修按原价/缺失耐久，特修单价、磨损和距离为开发候选'}
         result['maps']=catalog;result['binding']=deepcopy(profile['binding'])
         result['source_map_streaming']=deepcopy(profile['source_map_streaming'])
         result['_source_evidence']['source_map_catalog']=catalog_evidence
@@ -938,7 +959,7 @@ def fixture_from_rows(tables):
             'required_level_source':'唯一玩法Excel/game_equipment.required_level',
             'quality_source':'唯一玩法Excel/game_equipment.quality；须与game_items.quality一致',
             'formal_recipe_published':False,'formal_recycle_values_consumed':False,
-            'durability_model_implemented':False}
+            'durability_model_implemented':profile['rule_version']>=25}
     if profile['rule_version']>=22:
         result['_source_evidence']['equipment_foundation']={
             'selection_source':'唯一玩法Excel/dev_first_loop_profile.parameters.base_item_ids',
@@ -971,12 +992,14 @@ def public_gameplay(fixture):
     items=[]
     for row in fixture['items']:
         effect=effects.get(row['id']) if not row['is_equipment'] else None
-        item={'item_id':row['id'],'name':row['name'],'kind':'casting_supply' if row.get('kind')=='casting_supply' else 'equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion',
+        item={'item_id':row['id'],'name':row['name'],'kind':row.get('kind') or ('equipment' if row['is_equipment'] else 'book' if row.get('book_skill_id') else 'skill_page' if row.get('is_skill_page') else 'potion'),
               **({'equip_slot':row['equipment_slot']} if row['is_equipment'] or row.get('kind')=='casting_supply' else {}),
               'allowed_jobs':deepcopy(row['allowed_jobs']),'use_enabled':effect is not None,
               **({'required_level':row['required_level'],'recycle_gold':row['recycle_gold'],'quality':row['drop_quality']} if row['is_equipment'] and fixture['rule_version']>=19 else {})}
         if row['is_equipment'] and fixture['rule_version']>=22:
             item.update(equipment_stage=row['equipment_stage'],base_attributes={key:row[bonus] for key,bonus in EQUIPMENT_ATTRIBUTE_BONUSES.items()})
+        if row['is_equipment'] and fixture['rule_version']>=25:
+            item.update(original_durability_u=row['original_durability_u'],repair_base_price=row['repair_base_price'])
         if effect is not None:item['potion']={**shared,'hp':effect['hp'],'mp':effect['mp']}
         if row.get('book_skill_id'):item['skill_id']=row['book_skill_id']
         items.append(item)
@@ -1007,6 +1030,7 @@ def public_gameplay(fixture):
             'skills':skills,'statuses':statuses,'casting_supply':deepcopy(fixture['casting_supply']),
             **({'equipment_recycling':deepcopy(fixture['equipment_recycling'])} if fixture['rule_version']>=19 else {}),
             **({'warehouses':deepcopy(fixture['warehouses'])} if fixture['rule_version']>=23 else {}),
+            **({key:deepcopy(fixture[key]) for key in ('npc_shops','equipment_durability')} if fixture['rule_version']>=25 else {}),
             'skill_upgrades':deepcopy(fixture['skill_upgrades']),'skill_book_recycle':deepcopy(fixture['skill_book_recycle']),
             'shop_offers':[{'offer_id':r['id'],'item_id':r['item_id'],'name':next(i['name'] for i in fixture['items'] if i['id']==r['item_id']),
                             'quantity':r['quantity'],'currency_kind':r['currency'],'price_units':r['price_units'],'required_role_level':r['required_role_level'],
@@ -1053,6 +1077,8 @@ def main():
                 'workbooks':[{'group':w['group'],'path':w['path'],'sha256':config.sha256(ROOT/w['path'])} for w in schema['workbooks']]}
         if fixture['rule_version']>=24:
             fixture['_source_evidence']['compact_town_compiler_sha256']=config.sha256(Path(compact_towns.__file__))
+        if fixture['rule_version']>=25:
+            fixture['_source_evidence']['npc_shop_compiler_sha256']=config.sha256(Path(npc_shops.__file__))
     if args.check:
         if read(DEST)!=fixture:raise ValueError('development fixture outdated; export it from Excel')
     else:save(DEST,fixture)

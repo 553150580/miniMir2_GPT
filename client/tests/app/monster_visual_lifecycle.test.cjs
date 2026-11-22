@@ -13,6 +13,7 @@ test('活怪在死亡基线隐藏名字和血条，尸体动画继续播放，�
     try {
         world.apply([monster]);
         const visual = world.view.visuals.get(2), standing = head(visual);
+        assert.equal(visual.node.parent, world.entities);
         assert.equal(standing.name, true);
         assert.ok(standing.text);
         assert.equal(standing.hp, true);
@@ -21,6 +22,8 @@ test('活怪在死亡基线隐藏名字和血条，尸体动画继续播放，�
         world.apply([{ ...monster, hp: Long.UZERO }], 100);
         assert.equal(world.view.visuals.get(2), visual);
         assert.equal(visual.node.active, true);
+        assert.equal(visual.node.parent, world.view.world);
+        assert.ok(visual.node.getSiblingIndex() < world.entities.getSiblingIndex());
         assert.deepEqual(head(visual), { ...standing, name: false, hp: false, progress: 0 });
         assert.equal(visual.pose.action, 'die');
         const death = visual.profile.layers[0].actions.die;
@@ -33,8 +36,33 @@ test('活怪在死亡基线隐藏名字和血条，尸体动画继续播放，�
         world.apply([{ ...monster, life: newLife, hp: monster.hpMax }], corpseTime + 1);
         assert.equal(world.view.visuals.get(2), visual);
         assert.equal(visual.state.life, newLife);
+        assert.equal(visual.node.parent, world.entities);
         assert.equal(visual.pose.action, 'standing');
         assert.deepEqual(head(visual), { ...standing, progress: 1 });
+    } finally { world.view.dispose(); }
+});
+
+test('菱形地图尸体共同位于地板和活体遮挡层之间，不随脚底深度排序，消失时解除原节点资源', () => {
+    const world = makeWorld(1);
+    const floor = new cc.Node('Surface'); floor.parent = world.view.world; floor.setSiblingIndex(0);
+    const effects = world.view.world.getChildByName('Effects');
+    const dead = { hp: Long.UZERO };
+    const actors = [state(1, 1, 12, 12, dead), state(2, 2, 3, 3, dead), state(3, 3, 9, 9, dead)];
+    const monster = state(4, 3, 2, 2), item = state(5, 4, 4, 6, dead);
+    try {
+        world.apply([...actors, monster, item]);
+        const corpses = actors.map(row => world.view.visuals.get(row.entityHandle).node);
+        assert.deepEqual(world.view.world.children, [floor, ...corpses, world.entities, effects]);
+        assert.ok(world.view.props.length > 0);
+        assert.ok(world.view.props.every(prop => prop.node.parent === world.entities));
+        assert.equal(world.view.visuals.get(4).node.parent, world.entities);
+        assert.equal(world.view.visuals.get(5).node.parent, world.entities);
+        assert.ok(corpses.every(node => node.getChildByName('Body').getComponent(cc.Sprite).spriteFrame));
+        world.update(300);
+        assert.deepEqual(world.view.world.children, [floor, ...corpses, world.entities, effects]);
+        world.apply([monster, item], 500);
+        assert.deepEqual(world.view.world.children, [floor, world.entities, effects]);
+        assert.ok(corpses.every(node => node.destroyed && node.parent === null && node.getChildByName('Body').getComponent(cc.Sprite).spriteFrame === null));
     } finally { world.view.dispose(); }
 });
 

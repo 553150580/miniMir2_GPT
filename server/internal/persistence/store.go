@@ -80,6 +80,7 @@ type Operation struct {
 	Skill             *skillPlan                 `bson:"skill_plan,omitempty"`
 	Equipment         *EquipmentReceipt          `bson:"equipment,omitempty"`
 	Warehouse         *WarehouseReceipt          `bson:"warehouse,omitempty"`
+	Vendor            *VendorReceipt             `bson:"npc_trade,omitempty"`
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -138,6 +139,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		"account_tokens":  {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"entry_tickets":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"skill_quotes":    {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"vendor_quotes":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"warehouse_items": {{Keys: bson.D{{Key: "warehouse_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}},
 	}
 	for name, models := range indexes {
@@ -289,6 +291,7 @@ func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
 	}
 	if err == nil {
 		_, err = s.restoreBindingTrust(ctx, &r)
+		r = hydrateRoleDurability(r, &s.Cfg.Fixture)
 	}
 	return r, err
 }

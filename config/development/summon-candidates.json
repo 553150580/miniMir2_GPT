@@ -140,13 +140,13 @@
       {
         "group": "gameplay",
         "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-        "sha256": "4722870ae8bfee9d579ea05ff5fb727b997650453f8b8e032dbaecdafbebce27"
+        "sha256": "5d897d8aa2d83b7bc345ac1ad0bc48d21654b1731c050dca8a5f664c618f31d2"
       }
     ],
-    "schema_sha256": "eafd508bdfecb70f5ff3376421c83650ce8f14b78d6f25ad7eb431efb2b19ccb",
-    "compiler_sha256": "53f0b259d4e46b773d6a2aed373100d695b758db57419e3274f8b84326954495",
+    "schema_sha256": "6d1faea65f32eb815156dbc0909ff62266f6974b01275bcddceaf90bc5a270ca",
+    "compiler_sha256": "535c318cfe1653790e1f3001b0fe9dd479b90ca7bba9cc8a6a2cceeca16bd23c",
     "pet_compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
-    "generator_sha256": "099520332cba01b6f4dc712a162026cc3171b6f7b47ffc5acdc207543bdfd9fb",
+    "generator_sha256": "e854528a76113d2f03dcaadfcf1127c375e4c98b2dcd4157ed1b978c10941faf",
     "source_contract_sha256": "99a583f12645c77eb609c3c0bfa7b59c37bd51aa6c0955d3bee44a52e7a665a3",
     "target_180_verified": false
   }

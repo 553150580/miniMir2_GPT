@@ -10,6 +10,9 @@ import (
 func (w *worker) finishSettlementReceipt(b settlementBinding, q persistence.Settlement, role domain.Role, receipt persistence.Operation, err error, retry *job, finished func(persistence.Operation)) {
 	r := b.room
 	owned := w.rooms[b.auth.RoleID] == r && r.Auth == b.auth && !r.Isolated && r.Pending && r.SettlementGeneration == b.generation && r.PendingOperationID == b.id && r.PendingFingerprint == b.fingerprint
+	if owned && err == nil && !confirmedWear(q, receipt) {
+		err = persistence.Fail(p.CodeOperationConflict, "磨损确认回执与原事实不一致")
+	}
 	w.finishSettlement(b, q, role, err, retry, func() {
 		if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
 			w.applyExperienceRecovery(r, b, q, receipt)

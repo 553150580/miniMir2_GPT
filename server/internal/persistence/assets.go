@@ -38,6 +38,8 @@ type AssetRequest struct {
 	ApplyExisting    bool
 	Locked           bool
 	Warehouse        *pb.WarehouseAction
+	Vendor           *pb.VendorCommitRequest
+	VendorShop       string
 }
 
 const AssetAutoUsePotion = "auto_use_item"
@@ -123,7 +125,13 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var recycling *EquipmentRecyclingReceipt
 		var equipment *EquipmentReceipt
 		var warehouse *WarehouseReceipt
+		var vendor *VendorReceipt
 		switch q.Kind {
+		case AssetVendor:
+			r, businessCode, vendor, e = s.commitVendor(tc, a, r, q)
+			if e != nil {
+				return e
+			}
 		case "warehouse":
 			if q.Warehouse == nil || !proto.Equal(q.Warehouse.Operation, q.Context) {
 				businessCode = p.CodeInvalidArgument
@@ -208,6 +216,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			skillDetails = nil
 			equipment = nil
 			warehouse = nil
+			vendor = nil
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -225,6 +234,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Skill = cloneSkillPlan(skillDetails)
 		op.Equipment = cloneEquipmentReceipt(equipment)
 		op.Warehouse = cloneWarehouseReceipt(warehouse)
+		op.Vendor = vendor
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -244,6 +254,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		if warehouse != nil {
 			audit["warehouse"] = cloneWarehouseReceipt(warehouse)
+		}
+		if vendor != nil {
+			audit["npc_trade"] = vendor
+			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
+			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
 		if casting != nil {
 			audit["casting_use"] = casting
@@ -328,4 +343,6 @@ type Settlement struct {
 	TargetHandle     uint32
 	TargetLife       uint64
 	CasterHandle     uint32
+	EquipmentWear    []EquipmentWear `json:"equipment_wear,omitempty"`
+	WearDeathID      string          `json:"wear_death_id,omitempty"`
 }

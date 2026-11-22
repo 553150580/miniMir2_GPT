@@ -132,6 +132,9 @@ func requirePetFields(raw json.RawMessage, kind reflect.Type) error {
 			if !exists && kind == reflect.TypeOf(Item{}) && slices.Contains(equipmentStatFields[:], name) {
 				continue // 旧17非装备原书可缺新装备字段；rule22实际装备仍由presence验证，存在null仍拒。
 			}
+			if !exists && kind == reflect.TypeOf(Item{}) && (field.Name == "OriginalDurabilityU" || field.Name == "RepairBasePrice") {
+				continue // 历史召唤书可以省略后来新增的装备维修字段。
+			}
 			// rule16历史定义尚无召回名；rule17由Fixture版本校验要求该字段非空。
 			if !exists && kind == reflect.TypeOf(PetRuntimeDefinition{}) && field.Name == "RecallName" {
 				continue

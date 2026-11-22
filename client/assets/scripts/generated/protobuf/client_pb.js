@@ -17362,6 +17362,9 @@ $root.minimir = (function() {
              * @property {number|null} [quality] ItemView quality
              * @property {boolean|null} [locked] ItemView locked
              * @property {number|null} [recycle_block_flags] ItemView recycle_block_flags
+             * @property {Long|null} [durability_u] ItemView durability_u
+             * @property {Long|null} [max_durability_u] ItemView max_durability_u
+             * @property {Long|null} [original_durability_u] ItemView original_durability_u
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -17474,6 +17477,30 @@ $root.minimir = (function() {
             ItemView.prototype.recycle_block_flags = 0;
 
             /**
+             * ItemView durability_u.
+             * @member {Long} durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView max_durability_u.
+             * @member {Long} max_durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.max_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ItemView original_durability_u.
+             * @member {Long} original_durability_u
+             * @memberof minimir.v1.ItemView
+             * @instance
+             */
+            ItemView.prototype.original_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
              * Creates a new ItemView instance using the specified properties.
              * @function create
              * @memberof minimir.v1.ItemView
@@ -17525,6 +17552,12 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).bool(message.locked);
                 if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags") && message.recycle_block_flags !== 0)
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.recycle_block_flags);
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u") && (typeof message.durability_u === "object" ? message.durability_u.low || message.durability_u.high : message.durability_u !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).uint64(message.durability_u);
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u") && (typeof message.max_durability_u === "object" ? message.max_durability_u.low || message.max_durability_u.high : message.max_durability_u !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint64(message.max_durability_u);
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u") && (typeof message.original_durability_u === "object" ? message.original_durability_u.low || message.original_durability_u.high : message.original_durability_u !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.original_durability_u);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -17672,6 +17705,33 @@ $root.minimir = (function() {
                                 delete message.recycle_block_flags;
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.durability_u = value;
+                            else
+                                delete message.durability_u;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_durability_u = value;
+                            else
+                                delete message.max_durability_u;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.original_durability_u = value;
+                            else
+                                delete message.original_durability_u;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -17750,6 +17810,15 @@ $root.minimir = (function() {
                 if (message.recycle_block_flags != null && $Object.hasOwnProperty.call(message, "recycle_block_flags"))
                     if (!$util.isInteger(message.recycle_block_flags))
                         return "recycle_block_flags: integer expected";
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u"))
+                    if (!$util.isInteger(message.durability_u) && !(message.durability_u && $util.isInteger(message.durability_u.low) && $util.isInteger(message.durability_u.high)))
+                        return "durability_u: integer|Long expected";
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u"))
+                    if (!$util.isInteger(message.max_durability_u) && !(message.max_durability_u && $util.isInteger(message.max_durability_u.low) && $util.isInteger(message.max_durability_u.high)))
+                        return "max_durability_u: integer|Long expected";
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u"))
+                    if (!$util.isInteger(message.original_durability_u) && !(message.original_durability_u && $util.isInteger(message.original_durability_u.low) && $util.isInteger(message.original_durability_u.high)))
+                        return "original_durability_u: integer|Long expected";
                 return null;
             };
 
@@ -27834,6 +27903,1320 @@ $root.minimir = (function() {
             };
 
             return WarehouseActionResult;
+        })();
+
+        v1.VendorQuoteRequest = (function() {
+
+            /**
+             * Properties of a VendorQuoteRequest.
+             * @typedef {Object} minimir.v1.VendorQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] VendorQuoteRequest scene_epoch
+             * @property {Long|null} [npc_id] VendorQuoteRequest npc_id
+             * @property {number|null} [action] VendorQuoteRequest action
+             * @property {number|null} [offer_id] VendorQuoteRequest offer_id
+             * @property {Uint8Array|null} [instance_id] VendorQuoteRequest instance_id
+             * @property {Long|null} [item_version] VendorQuoteRequest item_version
+             * @property {Long|null} [quantity] VendorQuoteRequest quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a VendorQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IVendorQuoteRequest
+             * @augments minimir.v1.VendorQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.VendorQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a VendorQuoteRequest.
+             * @typedef {minimir.v1.VendorQuoteRequest.$Properties} minimir.v1.VendorQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new VendorQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a VendorQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.VendorQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var VendorQuoteRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * VendorQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteRequest npc_id.
+             * @member {Long} npc_id
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.npc_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteRequest action.
+             * @member {number} action
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.action = 0;
+
+            /**
+             * VendorQuoteRequest offer_id.
+             * @member {number} offer_id
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.offer_id = 0;
+
+            /**
+             * VendorQuoteRequest instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * VendorQuoteRequest item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteRequest quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @instance
+             */
+            VendorQuoteRequest.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new VendorQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {minimir.v1.VendorQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.VendorQuoteRequest} VendorQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.VendorQuoteRequest.$Shape): minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.VendorQuoteRequest.$Properties): minimir.v1.VendorQuoteRequest;
+             * }}
+             */
+            VendorQuoteRequest.create = function(properties) {
+                return new VendorQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified VendorQuoteRequest message. Does not implicitly {@link minimir.v1.VendorQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {minimir.v1.VendorQuoteRequest.$Properties} message VendorQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id") && (typeof message.npc_id === "object" ? message.npc_id.low || message.npc_id.high : message.npc_id !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.npc_id);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.action);
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id") && message.offer_id !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.offer_id);
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.item_version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified VendorQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.VendorQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {minimir.v1.VendorQuoteRequest.$Properties} message VendorQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a VendorQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape} VendorQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.VendorQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.npc_id = value;
+                            else
+                                delete message.npc_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.offer_id = value;
+                            else
+                                delete message.offer_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a VendorQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape} VendorQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a VendorQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            VendorQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id"))
+                    if (!$util.isInteger(message.npc_id) && !(message.npc_id && $util.isInteger(message.npc_id.low) && $util.isInteger(message.npc_id.high)))
+                        return "npc_id: integer|Long expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id"))
+                    if (!$util.isInteger(message.offer_id))
+                        return "offer_id: integer expected";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for VendorQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.VendorQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            VendorQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.VendorQuoteRequest";
+            };
+
+            return VendorQuoteRequest;
+        })();
+
+        v1.VendorQuoteResult = (function() {
+
+            /**
+             * Properties of a VendorQuoteResult.
+             * @typedef {Object} minimir.v1.VendorQuoteResult.$Properties
+             * @property {Uint8Array|null} [quote_id] VendorQuoteResult quote_id
+             * @property {Long|null} [expires_at_unix_ms] VendorQuoteResult expires_at_unix_ms
+             * @property {Long|null} [scene_epoch] VendorQuoteResult scene_epoch
+             * @property {Long|null} [npc_id] VendorQuoteResult npc_id
+             * @property {number|null} [action] VendorQuoteResult action
+             * @property {number|null} [offer_id] VendorQuoteResult offer_id
+             * @property {number|null} [item_id] VendorQuoteResult item_id
+             * @property {Uint8Array|null} [instance_id] VendorQuoteResult instance_id
+             * @property {Long|null} [item_version] VendorQuoteResult item_version
+             * @property {Long|null} [quantity] VendorQuoteResult quantity
+             * @property {Long|null} [gold] VendorQuoteResult gold
+             * @property {Long|null} [bound_gold] VendorQuoteResult bound_gold
+             * @property {Long|null} [ingot] VendorQuoteResult ingot
+             * @property {Long|null} [bound_ingot] VendorQuoteResult bound_ingot
+             * @property {Long|null} [durability_u] VendorQuoteResult durability_u
+             * @property {Long|null} [max_durability_u] VendorQuoteResult max_durability_u
+             * @property {Long|null} [original_durability_u] VendorQuoteResult original_durability_u
+             * @property {Long|null} [repaired_durability_u] VendorQuoteResult repaired_durability_u
+             * @property {Long|null} [repaired_max_durability_u] VendorQuoteResult repaired_max_durability_u
+             * @property {Long|null} [item_quantity] VendorQuoteResult item_quantity
+             * @property {boolean|null} [bound] VendorQuoteResult bound
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a VendorQuoteResult.
+             * @memberof minimir.v1
+             * @interface IVendorQuoteResult
+             * @augments minimir.v1.VendorQuoteResult.$Properties
+             * @deprecated Use minimir.v1.VendorQuoteResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a VendorQuoteResult.
+             * @typedef {minimir.v1.VendorQuoteResult.$Properties} minimir.v1.VendorQuoteResult.$Shape
+             */
+
+            /**
+             * Constructs a new VendorQuoteResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a VendorQuoteResult.
+             * @constructor
+             * @param {minimir.v1.VendorQuoteResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var VendorQuoteResult = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * VendorQuoteResult quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * VendorQuoteResult expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult npc_id.
+             * @member {Long} npc_id
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.npc_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult action.
+             * @member {number} action
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.action = 0;
+
+            /**
+             * VendorQuoteResult offer_id.
+             * @member {number} offer_id
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.offer_id = 0;
+
+            /**
+             * VendorQuoteResult item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.item_id = 0;
+
+            /**
+             * VendorQuoteResult instance_id.
+             * @member {Uint8Array} instance_id
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.instance_id = $util.newBuffer([]);
+
+            /**
+             * VendorQuoteResult item_version.
+             * @member {Long} item_version
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.item_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult gold.
+             * @member {Long} gold
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult ingot.
+             * @member {Long} ingot
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.ingot = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult bound_ingot.
+             * @member {Long} bound_ingot
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.bound_ingot = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult durability_u.
+             * @member {Long} durability_u
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult max_durability_u.
+             * @member {Long} max_durability_u
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.max_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult original_durability_u.
+             * @member {Long} original_durability_u
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.original_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult repaired_durability_u.
+             * @member {Long} repaired_durability_u
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.repaired_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult repaired_max_durability_u.
+             * @member {Long} repaired_max_durability_u
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.repaired_max_durability_u = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorQuoteResult item_quantity.
+             * @member {Long} item_quantity
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.item_quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * VendorQuoteResult bound.
+             * @member {boolean} bound
+             * @memberof minimir.v1.VendorQuoteResult
+             * @instance
+             */
+            VendorQuoteResult.prototype.bound = false;
+
+            /**
+             * Creates a new VendorQuoteResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {minimir.v1.VendorQuoteResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.VendorQuoteResult} VendorQuoteResult instance
+             * @type {{
+             *   (properties: minimir.v1.VendorQuoteResult.$Shape): minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape;
+             *   (properties?: minimir.v1.VendorQuoteResult.$Properties): minimir.v1.VendorQuoteResult;
+             * }}
+             */
+            VendorQuoteResult.create = function(properties) {
+                return new VendorQuoteResult(properties);
+            };
+
+            /**
+             * Encodes the specified VendorQuoteResult message. Does not implicitly {@link minimir.v1.VendorQuoteResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {minimir.v1.VendorQuoteResult.$Properties} message VendorQuoteResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorQuoteResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.expires_at_unix_ms);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.scene_epoch);
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id") && (typeof message.npc_id === "object" ? message.npc_id.low || message.npc_id.high : message.npc_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.npc_id);
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action") && message.action !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.action);
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id") && message.offer_id !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.offer_id);
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.item_id);
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id") && message.instance_id.length)
+                    writer.uint32(/* id 8, wireType 2 =*/66).bytes(message.instance_id);
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version") && (typeof message.item_version === "object" ? message.item_version.low || message.item_version.high : message.item_version !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.item_version);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 10, wireType 0 =*/80).int64(message.quantity);
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold") && (typeof message.gold === "object" ? message.gold.low || message.gold.high : message.gold !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.gold);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.bound_gold);
+                if (message.ingot != null && $Object.hasOwnProperty.call(message, "ingot") && (typeof message.ingot === "object" ? message.ingot.low || message.ingot.high : message.ingot !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).int64(message.ingot);
+                if (message.bound_ingot != null && $Object.hasOwnProperty.call(message, "bound_ingot") && (typeof message.bound_ingot === "object" ? message.bound_ingot.low || message.bound_ingot.high : message.bound_ingot !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).int64(message.bound_ingot);
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u") && (typeof message.durability_u === "object" ? message.durability_u.low || message.durability_u.high : message.durability_u !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).uint64(message.durability_u);
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u") && (typeof message.max_durability_u === "object" ? message.max_durability_u.low || message.max_durability_u.high : message.max_durability_u !== 0))
+                    writer.uint32(/* id 16, wireType 0 =*/128).uint64(message.max_durability_u);
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u") && (typeof message.original_durability_u === "object" ? message.original_durability_u.low || message.original_durability_u.high : message.original_durability_u !== 0))
+                    writer.uint32(/* id 17, wireType 0 =*/136).uint64(message.original_durability_u);
+                if (message.repaired_durability_u != null && $Object.hasOwnProperty.call(message, "repaired_durability_u") && (typeof message.repaired_durability_u === "object" ? message.repaired_durability_u.low || message.repaired_durability_u.high : message.repaired_durability_u !== 0))
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint64(message.repaired_durability_u);
+                if (message.repaired_max_durability_u != null && $Object.hasOwnProperty.call(message, "repaired_max_durability_u") && (typeof message.repaired_max_durability_u === "object" ? message.repaired_max_durability_u.low || message.repaired_max_durability_u.high : message.repaired_max_durability_u !== 0))
+                    writer.uint32(/* id 19, wireType 0 =*/152).uint64(message.repaired_max_durability_u);
+                if (message.item_quantity != null && $Object.hasOwnProperty.call(message, "item_quantity") && (typeof message.item_quantity === "object" ? message.item_quantity.low || message.item_quantity.high : message.item_quantity !== 0))
+                    writer.uint32(/* id 20, wireType 0 =*/160).int64(message.item_quantity);
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound") && message.bound !== false)
+                    writer.uint32(/* id 21, wireType 0 =*/168).bool(message.bound);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified VendorQuoteResult message, length delimited. Does not implicitly {@link minimir.v1.VendorQuoteResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {minimir.v1.VendorQuoteResult.$Properties} message VendorQuoteResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorQuoteResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a VendorQuoteResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape} VendorQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorQuoteResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.VendorQuoteResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.npc_id = value;
+                            else
+                                delete message.npc_id;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.action = value;
+                            else
+                                delete message.action;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.offer_id = value;
+                            else
+                                delete message.offer_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.instance_id = value;
+                            else
+                                delete message.instance_id;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_version = value;
+                            else
+                                delete message.item_version;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold = value;
+                            else
+                                delete message.gold;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.ingot = value;
+                            else
+                                delete message.ingot;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_ingot = value;
+                            else
+                                delete message.bound_ingot;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.durability_u = value;
+                            else
+                                delete message.durability_u;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.max_durability_u = value;
+                            else
+                                delete message.max_durability_u;
+                            continue;
+                        }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.original_durability_u = value;
+                            else
+                                delete message.original_durability_u;
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.repaired_durability_u = value;
+                            else
+                                delete message.repaired_durability_u;
+                            continue;
+                        }
+                    case 19: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.repaired_max_durability_u = value;
+                            else
+                                delete message.repaired_max_durability_u;
+                            continue;
+                        }
+                    case 20: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.item_quantity = value;
+                            else
+                                delete message.item_quantity;
+                            continue;
+                        }
+                    case 21: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.bound = value;
+                            else
+                                delete message.bound;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a VendorQuoteResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape} VendorQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorQuoteResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a VendorQuoteResult message.
+             * @function verify
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            VendorQuoteResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id"))
+                    if (!$util.isInteger(message.npc_id) && !(message.npc_id && $util.isInteger(message.npc_id.low) && $util.isInteger(message.npc_id.high)))
+                        return "npc_id: integer|Long expected";
+                if (message.action != null && $Object.hasOwnProperty.call(message, "action"))
+                    if (!$util.isInteger(message.action))
+                        return "action: integer expected";
+                if (message.offer_id != null && $Object.hasOwnProperty.call(message, "offer_id"))
+                    if (!$util.isInteger(message.offer_id))
+                        return "offer_id: integer expected";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.instance_id != null && $Object.hasOwnProperty.call(message, "instance_id"))
+                    if (!(message.instance_id && typeof message.instance_id.length === "number" || $util.isString(message.instance_id)))
+                        return "instance_id: buffer expected";
+                if (message.item_version != null && $Object.hasOwnProperty.call(message, "item_version"))
+                    if (!$util.isInteger(message.item_version) && !(message.item_version && $util.isInteger(message.item_version.low) && $util.isInteger(message.item_version.high)))
+                        return "item_version: integer|Long expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                if (message.gold != null && $Object.hasOwnProperty.call(message, "gold"))
+                    if (!$util.isInteger(message.gold) && !(message.gold && $util.isInteger(message.gold.low) && $util.isInteger(message.gold.high)))
+                        return "gold: integer|Long expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.ingot != null && $Object.hasOwnProperty.call(message, "ingot"))
+                    if (!$util.isInteger(message.ingot) && !(message.ingot && $util.isInteger(message.ingot.low) && $util.isInteger(message.ingot.high)))
+                        return "ingot: integer|Long expected";
+                if (message.bound_ingot != null && $Object.hasOwnProperty.call(message, "bound_ingot"))
+                    if (!$util.isInteger(message.bound_ingot) && !(message.bound_ingot && $util.isInteger(message.bound_ingot.low) && $util.isInteger(message.bound_ingot.high)))
+                        return "bound_ingot: integer|Long expected";
+                if (message.durability_u != null && $Object.hasOwnProperty.call(message, "durability_u"))
+                    if (!$util.isInteger(message.durability_u) && !(message.durability_u && $util.isInteger(message.durability_u.low) && $util.isInteger(message.durability_u.high)))
+                        return "durability_u: integer|Long expected";
+                if (message.max_durability_u != null && $Object.hasOwnProperty.call(message, "max_durability_u"))
+                    if (!$util.isInteger(message.max_durability_u) && !(message.max_durability_u && $util.isInteger(message.max_durability_u.low) && $util.isInteger(message.max_durability_u.high)))
+                        return "max_durability_u: integer|Long expected";
+                if (message.original_durability_u != null && $Object.hasOwnProperty.call(message, "original_durability_u"))
+                    if (!$util.isInteger(message.original_durability_u) && !(message.original_durability_u && $util.isInteger(message.original_durability_u.low) && $util.isInteger(message.original_durability_u.high)))
+                        return "original_durability_u: integer|Long expected";
+                if (message.repaired_durability_u != null && $Object.hasOwnProperty.call(message, "repaired_durability_u"))
+                    if (!$util.isInteger(message.repaired_durability_u) && !(message.repaired_durability_u && $util.isInteger(message.repaired_durability_u.low) && $util.isInteger(message.repaired_durability_u.high)))
+                        return "repaired_durability_u: integer|Long expected";
+                if (message.repaired_max_durability_u != null && $Object.hasOwnProperty.call(message, "repaired_max_durability_u"))
+                    if (!$util.isInteger(message.repaired_max_durability_u) && !(message.repaired_max_durability_u && $util.isInteger(message.repaired_max_durability_u.low) && $util.isInteger(message.repaired_max_durability_u.high)))
+                        return "repaired_max_durability_u: integer|Long expected";
+                if (message.item_quantity != null && $Object.hasOwnProperty.call(message, "item_quantity"))
+                    if (!$util.isInteger(message.item_quantity) && !(message.item_quantity && $util.isInteger(message.item_quantity.low) && $util.isInteger(message.item_quantity.high)))
+                        return "item_quantity: integer|Long expected";
+                if (message.bound != null && $Object.hasOwnProperty.call(message, "bound"))
+                    if (typeof message.bound !== "boolean")
+                        return "bound: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for VendorQuoteResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.VendorQuoteResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            VendorQuoteResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.VendorQuoteResult";
+            };
+
+            return VendorQuoteResult;
+        })();
+
+        v1.VendorCommitRequest = (function() {
+
+            /**
+             * Properties of a VendorCommitRequest.
+             * @typedef {Object} minimir.v1.VendorCommitRequest.$Properties
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] VendorCommitRequest operation
+             * @property {Uint8Array|null} [quote_id] VendorCommitRequest quote_id
+             * @property {Long|null} [scene_epoch] VendorCommitRequest scene_epoch
+             * @property {Long|null} [npc_id] VendorCommitRequest npc_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a VendorCommitRequest.
+             * @memberof minimir.v1
+             * @interface IVendorCommitRequest
+             * @augments minimir.v1.VendorCommitRequest.$Properties
+             * @deprecated Use minimir.v1.VendorCommitRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a VendorCommitRequest.
+             * @typedef {minimir.v1.VendorCommitRequest.$Properties} minimir.v1.VendorCommitRequest.$Shape
+             */
+
+            /**
+             * Constructs a new VendorCommitRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a VendorCommitRequest.
+             * @constructor
+             * @param {minimir.v1.VendorCommitRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var VendorCommitRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * VendorCommitRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.VendorCommitRequest
+             * @instance
+             */
+            VendorCommitRequest.prototype.operation = null;
+
+            /**
+             * VendorCommitRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.VendorCommitRequest
+             * @instance
+             */
+            VendorCommitRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * VendorCommitRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.VendorCommitRequest
+             * @instance
+             */
+            VendorCommitRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * VendorCommitRequest npc_id.
+             * @member {Long} npc_id
+             * @memberof minimir.v1.VendorCommitRequest
+             * @instance
+             */
+            VendorCommitRequest.prototype.npc_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new VendorCommitRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {minimir.v1.VendorCommitRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.VendorCommitRequest} VendorCommitRequest instance
+             * @type {{
+             *   (properties: minimir.v1.VendorCommitRequest.$Shape): minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape;
+             *   (properties?: minimir.v1.VendorCommitRequest.$Properties): minimir.v1.VendorCommitRequest;
+             * }}
+             */
+            VendorCommitRequest.create = function(properties) {
+                return new VendorCommitRequest(properties);
+            };
+
+            /**
+             * Encodes the specified VendorCommitRequest message. Does not implicitly {@link minimir.v1.VendorCommitRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {minimir.v1.VendorCommitRequest.$Properties} message VendorCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorCommitRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.scene_epoch);
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id") && (typeof message.npc_id === "object" ? message.npc_id.low || message.npc_id.high : message.npc_id !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.npc_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified VendorCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.VendorCommitRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {minimir.v1.VendorCommitRequest.$Properties} message VendorCommitRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            VendorCommitRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a VendorCommitRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape} VendorCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorCommitRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.VendorCommitRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.npc_id = value;
+                            else
+                                delete message.npc_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a VendorCommitRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape} VendorCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            VendorCommitRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a VendorCommitRequest message.
+             * @function verify
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            VendorCommitRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.npc_id != null && $Object.hasOwnProperty.call(message, "npc_id"))
+                    if (!$util.isInteger(message.npc_id) && !(message.npc_id && $util.isInteger(message.npc_id.low) && $util.isInteger(message.npc_id.high)))
+                        return "npc_id: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for VendorCommitRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.VendorCommitRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            VendorCommitRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.VendorCommitRequest";
+            };
+
+            return VendorCommitRequest;
         })();
 
         return v1;

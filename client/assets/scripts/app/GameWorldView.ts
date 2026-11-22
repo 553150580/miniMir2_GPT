@@ -368,6 +368,13 @@ export class GameWorldView {
                 dead: state.hp.isZero(), injured: state.hp.lessThan(previous.hp) }, now);
             if ((decision === 'initial' || decision === 'recover') && state.movementKind >= 2) visual.animation?.displace(state.attackSequence, state.castSequence);
             visual.state = decision === 'stale' ? { ...state, position: visual.movement.position, direction: previous.direction } : state;
+            const corpse = (state.entityKind === 1 || state.entityKind === 2 || state.entityKind === 3) && state.hp.isZero();
+            const parent = corpse ? this.world : this.entities;
+            if (visual.node.parent !== parent) {
+                // 尸体与地面共用世界坐标，在保存的直立实体层之前独立绘制。
+                visual.node.parent = parent;
+                if (corpse) visual.node.setSiblingIndex(this.entities.getSiblingIndex());
+            }
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId, state.entityHandle === this.playerHandle ? this.playerName : '', this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
@@ -436,7 +443,7 @@ export class GameWorldView {
             if (audit && motion.moving && visual.state.entityKind <= 3
                 && (Math.abs(motion.x - Math.round(motion.x)) > .001 || Math.abs(motion.y - Math.round(motion.y)) > .001)) audit.intermediate[visual.state.entityKind]++;
             visual.node.setPosition(this.grid(motion.x, motion.y));
-            if (this.sourceView) sourceOrder.push({ id: `entity_${visual.state.entityHandle}`, node: visual.node,
+            if (this.sourceView && visual.node.parent === this.entities) sourceOrder.push({ id: `entity_${visual.state.entityHandle}`, node: visual.node,
                 x: motion.x, y: motion.y, row: visual.state.position.y });
             if (visual.state.entityHandle === this.playerHandle) this.playerPosition = { x: motion.x, y: motion.y };
             const pose = visual.animation?.sample(now, motion);
@@ -481,7 +488,8 @@ export class GameWorldView {
         else {
             const depth: Array<ProjectedDepth & { node: Node }> = this.props.map(prop => ({ node: prop.node, x: prop.foot.x, y: prop.foot.y, layer: 0, id: prop.id }));
             for (const { node } of this.townNpcs) depth.push({ node, x: node.position.x, y: node.position.y, layer: 1, id: node.name });
-            for (const visual of Array.from(this.visuals.values())) depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
+            for (const visual of Array.from(this.visuals.values())) if (visual.node.parent === this.entities)
+                depth.push({ node: visual.node, x: visual.node.position.x, y: visual.node.position.y, layer: 1, id: `entity_${visual.state.entityHandle}` });
             depth.sort(compareProjectedDepth).forEach((entry, index) => { if (entry.node.getSiblingIndex() !== index) entry.node.setSiblingIndex(index); });
         }
         this.effects?.update(now);

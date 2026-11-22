@@ -6668,6 +6668,15 @@ export namespace minimir {
             /** ItemView recycle_block_flags. */
             recycle_block_flags: number;
 
+            /** ItemView durability_u. */
+            durability_u: Long;
+
+            /** ItemView max_durability_u. */
+            max_durability_u: Long;
+
+            /** ItemView original_durability_u. */
+            original_durability_u: Long;
+
             /**
              * Creates a new ItemView instance using the specified properties.
              * @param [properties] Properties to set
@@ -6760,6 +6769,15 @@ export namespace minimir {
 
                 /** ItemView recycle_block_flags */
                 recycle_block_flags?: (number|null);
+
+                /** ItemView durability_u */
+                durability_u?: (Long|null);
+
+                /** ItemView max_durability_u */
+                max_durability_u?: (Long|null);
+
+                /** ItemView original_durability_u */
+                original_durability_u?: (Long|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -10565,6 +10583,468 @@ export namespace minimir {
 
             /** Shape of a WarehouseActionResult. */
             type $Shape = minimir.v1.WarehouseActionResult.$Properties;
+        }
+
+        /**
+         * Properties of a VendorQuoteRequest.
+         * @deprecated Use minimir.v1.VendorQuoteRequest.$Properties instead.
+         */
+        interface IVendorQuoteRequest extends minimir.v1.VendorQuoteRequest.$Properties {
+        }
+
+        /** Represents a VendorQuoteRequest. */
+        class VendorQuoteRequest {
+
+            /**
+             * Constructs a new VendorQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.VendorQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** VendorQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** VendorQuoteRequest npc_id. */
+            npc_id: Long;
+
+            /** VendorQuoteRequest action. */
+            action: number;
+
+            /** VendorQuoteRequest offer_id. */
+            offer_id: number;
+
+            /** VendorQuoteRequest instance_id. */
+            instance_id: Uint8Array;
+
+            /** VendorQuoteRequest item_version. */
+            item_version: Long;
+
+            /** VendorQuoteRequest quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new VendorQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns VendorQuoteRequest instance
+             */
+            static create(properties: minimir.v1.VendorQuoteRequest.$Shape): minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.VendorQuoteRequest.$Properties): minimir.v1.VendorQuoteRequest;
+
+            /**
+             * Encodes the specified VendorQuoteRequest message. Does not implicitly {@link minimir.v1.VendorQuoteRequest.verify|verify} messages.
+             * @param message VendorQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.VendorQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified VendorQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.VendorQuoteRequest.verify|verify} messages.
+             * @param message VendorQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.VendorQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a VendorQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape} VendorQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape;
+
+            /**
+             * Decodes a VendorQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape} VendorQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.VendorQuoteRequest & minimir.v1.VendorQuoteRequest.$Shape;
+
+            /**
+             * Verifies a VendorQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for VendorQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace VendorQuoteRequest {
+
+            /** Properties of a VendorQuoteRequest. */
+            interface $Properties {
+
+                /** VendorQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** VendorQuoteRequest npc_id */
+                npc_id?: (Long|null);
+
+                /** VendorQuoteRequest action */
+                action?: (number|null);
+
+                /** VendorQuoteRequest offer_id */
+                offer_id?: (number|null);
+
+                /** VendorQuoteRequest instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** VendorQuoteRequest item_version */
+                item_version?: (Long|null);
+
+                /** VendorQuoteRequest quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a VendorQuoteRequest. */
+            type $Shape = minimir.v1.VendorQuoteRequest.$Properties;
+        }
+
+        /**
+         * Properties of a VendorQuoteResult.
+         * @deprecated Use minimir.v1.VendorQuoteResult.$Properties instead.
+         */
+        interface IVendorQuoteResult extends minimir.v1.VendorQuoteResult.$Properties {
+        }
+
+        /** Represents a VendorQuoteResult. */
+        class VendorQuoteResult {
+
+            /**
+             * Constructs a new VendorQuoteResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.VendorQuoteResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** VendorQuoteResult quote_id. */
+            quote_id: Uint8Array;
+
+            /** VendorQuoteResult expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** VendorQuoteResult scene_epoch. */
+            scene_epoch: Long;
+
+            /** VendorQuoteResult npc_id. */
+            npc_id: Long;
+
+            /** VendorQuoteResult action. */
+            action: number;
+
+            /** VendorQuoteResult offer_id. */
+            offer_id: number;
+
+            /** VendorQuoteResult item_id. */
+            item_id: number;
+
+            /** VendorQuoteResult instance_id. */
+            instance_id: Uint8Array;
+
+            /** VendorQuoteResult item_version. */
+            item_version: Long;
+
+            /** VendorQuoteResult quantity. */
+            quantity: Long;
+
+            /** VendorQuoteResult gold. */
+            gold: Long;
+
+            /** VendorQuoteResult bound_gold. */
+            bound_gold: Long;
+
+            /** VendorQuoteResult ingot. */
+            ingot: Long;
+
+            /** VendorQuoteResult bound_ingot. */
+            bound_ingot: Long;
+
+            /** VendorQuoteResult durability_u. */
+            durability_u: Long;
+
+            /** VendorQuoteResult max_durability_u. */
+            max_durability_u: Long;
+
+            /** VendorQuoteResult original_durability_u. */
+            original_durability_u: Long;
+
+            /** VendorQuoteResult repaired_durability_u. */
+            repaired_durability_u: Long;
+
+            /** VendorQuoteResult repaired_max_durability_u. */
+            repaired_max_durability_u: Long;
+
+            /** VendorQuoteResult item_quantity. */
+            item_quantity: Long;
+
+            /** VendorQuoteResult bound. */
+            bound: boolean;
+
+            /**
+             * Creates a new VendorQuoteResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns VendorQuoteResult instance
+             */
+            static create(properties: minimir.v1.VendorQuoteResult.$Shape): minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape;
+            static create(properties?: minimir.v1.VendorQuoteResult.$Properties): minimir.v1.VendorQuoteResult;
+
+            /**
+             * Encodes the specified VendorQuoteResult message. Does not implicitly {@link minimir.v1.VendorQuoteResult.verify|verify} messages.
+             * @param message VendorQuoteResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.VendorQuoteResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified VendorQuoteResult message, length delimited. Does not implicitly {@link minimir.v1.VendorQuoteResult.verify|verify} messages.
+             * @param message VendorQuoteResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.VendorQuoteResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a VendorQuoteResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape} VendorQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape;
+
+            /**
+             * Decodes a VendorQuoteResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape} VendorQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.VendorQuoteResult & minimir.v1.VendorQuoteResult.$Shape;
+
+            /**
+             * Verifies a VendorQuoteResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for VendorQuoteResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace VendorQuoteResult {
+
+            /** Properties of a VendorQuoteResult. */
+            interface $Properties {
+
+                /** VendorQuoteResult quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** VendorQuoteResult expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** VendorQuoteResult scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** VendorQuoteResult npc_id */
+                npc_id?: (Long|null);
+
+                /** VendorQuoteResult action */
+                action?: (number|null);
+
+                /** VendorQuoteResult offer_id */
+                offer_id?: (number|null);
+
+                /** VendorQuoteResult item_id */
+                item_id?: (number|null);
+
+                /** VendorQuoteResult instance_id */
+                instance_id?: (Uint8Array|null);
+
+                /** VendorQuoteResult item_version */
+                item_version?: (Long|null);
+
+                /** VendorQuoteResult quantity */
+                quantity?: (Long|null);
+
+                /** VendorQuoteResult gold */
+                gold?: (Long|null);
+
+                /** VendorQuoteResult bound_gold */
+                bound_gold?: (Long|null);
+
+                /** VendorQuoteResult ingot */
+                ingot?: (Long|null);
+
+                /** VendorQuoteResult bound_ingot */
+                bound_ingot?: (Long|null);
+
+                /** VendorQuoteResult durability_u */
+                durability_u?: (Long|null);
+
+                /** VendorQuoteResult max_durability_u */
+                max_durability_u?: (Long|null);
+
+                /** VendorQuoteResult original_durability_u */
+                original_durability_u?: (Long|null);
+
+                /** VendorQuoteResult repaired_durability_u */
+                repaired_durability_u?: (Long|null);
+
+                /** VendorQuoteResult repaired_max_durability_u */
+                repaired_max_durability_u?: (Long|null);
+
+                /** VendorQuoteResult item_quantity */
+                item_quantity?: (Long|null);
+
+                /** VendorQuoteResult bound */
+                bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a VendorQuoteResult. */
+            type $Shape = minimir.v1.VendorQuoteResult.$Properties;
+        }
+
+        /**
+         * Properties of a VendorCommitRequest.
+         * @deprecated Use minimir.v1.VendorCommitRequest.$Properties instead.
+         */
+        interface IVendorCommitRequest extends minimir.v1.VendorCommitRequest.$Properties {
+        }
+
+        /** Represents a VendorCommitRequest. */
+        class VendorCommitRequest {
+
+            /**
+             * Constructs a new VendorCommitRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.VendorCommitRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** VendorCommitRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** VendorCommitRequest quote_id. */
+            quote_id: Uint8Array;
+
+            /** VendorCommitRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** VendorCommitRequest npc_id. */
+            npc_id: Long;
+
+            /**
+             * Creates a new VendorCommitRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns VendorCommitRequest instance
+             */
+            static create(properties: minimir.v1.VendorCommitRequest.$Shape): minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape;
+            static create(properties?: minimir.v1.VendorCommitRequest.$Properties): minimir.v1.VendorCommitRequest;
+
+            /**
+             * Encodes the specified VendorCommitRequest message. Does not implicitly {@link minimir.v1.VendorCommitRequest.verify|verify} messages.
+             * @param message VendorCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.VendorCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified VendorCommitRequest message, length delimited. Does not implicitly {@link minimir.v1.VendorCommitRequest.verify|verify} messages.
+             * @param message VendorCommitRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.VendorCommitRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a VendorCommitRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape} VendorCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape;
+
+            /**
+             * Decodes a VendorCommitRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape} VendorCommitRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.VendorCommitRequest & minimir.v1.VendorCommitRequest.$Shape;
+
+            /**
+             * Verifies a VendorCommitRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for VendorCommitRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace VendorCommitRequest {
+
+            /** Properties of a VendorCommitRequest. */
+            interface $Properties {
+
+                /** VendorCommitRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** VendorCommitRequest quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** VendorCommitRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** VendorCommitRequest npc_id */
+                npc_id?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a VendorCommitRequest. */
+            type $Shape = minimir.v1.VendorCommitRequest.$Properties;
         }
     }
 }

@@ -42,16 +42,22 @@ func (w *worker) skillAssetPreview(r *room, f wire.Frame) {
 	}
 }
 
-func (w *worker) finishSkillAssetPreview(binding skillPreviewBinding, f wire.Frame, result *pb.SkillAssetPreview, err error) {
+func (w *worker) claimPreview(binding skillPreviewBinding) bool {
 	r := binding.room
 	if r.PreviewGeneration != binding.generation || !r.PreviewInFlight {
-		return
+		return false
 	}
 	// 只释放本代槽位；新连接或新请求建立的槽位不受旧回调影响。
 	r.PreviewInFlight = false
-	if w.rooms[binding.auth.RoleID] != r || r.Conn != binding.conn || r.Auth != binding.auth || r.Scene != binding.scene || !r.Ready || binding.conn == nil || !binding.conn.Alive() || binding.conn.Binding() != uint64(binding.auth.SessionEpoch) {
+	return w.rooms[binding.auth.RoleID] == r && r.Conn == binding.conn && r.Auth == binding.auth && r.Scene == binding.scene &&
+		r.Ready && binding.conn != nil && binding.conn.Alive() && binding.conn.Binding() == uint64(binding.auth.SessionEpoch)
+}
+
+func (w *worker) finishSkillAssetPreview(binding skillPreviewBinding, f wire.Frame, result *pb.SkillAssetPreview, err error) {
+	if !w.claimPreview(binding) {
 		return
 	}
+	r := binding.room
 	if err != nil {
 		w.failure(r, f, persistence.Code(err))
 	} else {
