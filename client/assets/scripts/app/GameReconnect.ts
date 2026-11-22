@@ -1,6 +1,5 @@
 import { Button, EditBox, Label, Node, isValid } from 'cc';
-import { CodeUnauthenticated } from '../generated/protocol_ids';
-import { ProtocolResponseError } from './GameConnection';
+import { connectRoleEntry, isEntryTicketError, isRoleAccountAuthenticationError } from './RoleEntry';
 import { currentEntryIdentity, isCurrentEntry, roleIdentity, session } from './GameSession';
 
 export function accountIdentity(id: Uint8Array): string {
@@ -90,13 +89,7 @@ export class GameReconnect {
                 this.needsPassword = false;
             }
             this.status.string = '正在认证并连接原角色…';
-            const ticket = await connection.rpc(10007, { role: this.role.key }, attempt.signal);
-            requireScope();
-            // 取票始终使用当前角色的原区服号和角色ID，不复用旧连接的绑定或短票。
-            const entry = connection.connect(ticket.ticket, attempt.signal);
-            generation = connection.generation;
-            await entry;
-            requireScope();
+            generation = await connectRoleEntry(connection, this.role.key, requireScope, attempt.signal);
             const identity = currentEntryIdentity();
             if (!identity || identity.connection !== generation || !isCurrentEntry(identity)) throw new Error('未收到有效的角色入场回执');
             this.status.string = '正在同步当前地图…';
@@ -108,9 +101,12 @@ export class GameReconnect {
             if (!scopeIsCurrent()) return;
             if (generation !== undefined && connection.generation === generation) connection.close();
             this.offline();
-            if (error instanceof ProtocolResponseError && error.messageId === 10008 && error.code === CodeUnauthenticated) {
+            if (isRoleAccountAuthenticationError(error)) {
                 this.needsPassword = true;
-                this.status.string = '登录凭证已过期，请输入当前账号的密码。';
+                this.status.string = '登录凭证已失效，请输入当前账号的密码。';
+            } else if (isEntryTicketError(error)) {
+                this.needsPassword = true;
+                this.status.string = '重新取票后仍未能进入，请输入当前账号的密码重新认证。';
             } else {
                 const message = attempt.signal.aborted ? '重连超时' : (error instanceof Error ? error.message : '重连失败');
                 this.status.string = `${message}，请重试。`;

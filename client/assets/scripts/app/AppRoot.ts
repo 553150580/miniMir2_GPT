@@ -12,6 +12,7 @@ import { MapTouchNavigator } from '../input/MapTouchNavigator';
 import { newOperationId, ProtocolResponseError } from './GameConnection';
 import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
 import { accountIdentity, GameReconnect } from './GameReconnect';
+import { connectRoleEntry, isRoleAccountAuthenticationError } from './RoleEntry';
 import { PendingOperations } from './PendingOperations';
 import { PendingRoleCreation, RoleCreationRequest } from './PendingRoleCreation';
 import { GameWorldView } from './GameWorldView';
@@ -19,7 +20,7 @@ import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
-import { protocolErrorMessage } from './GameErrors';
+import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
 import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
@@ -54,6 +55,11 @@ import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied 
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
+let signInResume: { accountId: string; name: string; role: string | null } | null = null;
+
+function selectedRoleIdentity(role: any): string {
+    return `${role.key.originServerId.toString()}:${accountIdentity(role.key.roleId)}`;
+}
 
 @ccclass('AppRoot')
 export class AppRoot extends Component {
@@ -165,6 +171,10 @@ export class AppRoot extends Component {
     }
 
     private loginScene(): void {
+        if (signInResume) {
+            this.edit('Account').string = signInResume.name;
+            this.status(ACCOUNT_AUTHENTICATION_MESSAGE);
+        }
         const login = async (register: boolean): Promise<void> => {
             if (!/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Account').string.trim()) || !/^[A-Za-z0-9_]{6,20}$/.test(this.edit('Password').string)) throw new Error('账号和密码需6～20位字母、数字或下划线');
             this.status('正在认证');
@@ -173,6 +183,7 @@ export class AppRoot extends Component {
             const result = await session.connection.rpc(register ? 10009 : 10001, { account: name, password: this.edit('Password').string });
             if (this.disposed || session.connection.token !== token) return;
             const account = accountIdentity(result.accountId);
+            if (signInResume?.accountId !== account) signInResume = null;
             session.account = { id: account, name };
             session.pending = new PendingOperations(sys.localStorage, `minimir.pending.v1.${account}.1`);
             session.roleCreation = new PendingRoleCreation(sys.localStorage, `minimir.create-role.v1.${account}.1`);
@@ -187,29 +198,36 @@ export class AppRoot extends Component {
         if (!session.connection.token) { await this.changeScene('Login'); return; }
         for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => { this.selectedRole = i; this.refreshRoles(); });
         for (let i = 0; i < 3; i++) this.button(`JobTabs/Job${i}`, () => { this.selectedJob = i; this.status(`创建职业：${names[i]}`); });
-        this.button('Logout', async () => { session.connection.token = ''; session.account = null; await this.changeScene('Login'); });
+        this.button('Logout', async () => { signInResume = null; session.connection.token = ''; session.account = null; await this.changeScene('Login'); });
         this.button('Create', () => this.createRole());
         this.button('Enter', async () => {
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
-            const attempt = ++this.enterAttempt, token = session.connection.token;
+            const attempt = ++this.enterAttempt, token = session.connection.token, account = session.account;
+            const current = (): boolean => !this.disposed && this.enterAttempt === attempt && session.connection.token === token && session.account === account;
+            const requireScope = (): void => {
+                if (!current() || session.roles[this.selectedRole] !== role) throw new StaleMapAttachmentError('旧选角入场已经失效');
+            };
             session.preparedWorld?.dispose(); session.preparedWorld = null;
             const assets = await WorldAssets.prepare(role.job, (done, total) => {
                 if (!this.disposed) this.status(`准备动作资源 ${done}/${total}`);
             });
-            if (this.disposed || this.enterAttempt !== attempt || session.connection.token !== token) { assets.dispose(); return; }
+            if (!current() || session.roles[this.selectedRole] !== role) { assets.dispose(); return; }
             session.preparedWorld = assets;
+            let generation: number | undefined;
             try {
                 // 动作资源准备完成才取短票，避免网络加载占用入场基线的确认期限。
                 this.status('正在获取入场票据');
-                const ticket = await session.connection.rpc(10007, { role: role.key });
-                if (this.disposed || this.enterAttempt !== attempt || session.connection.token !== token) throw new StaleMapAttachmentError('旧选角取票已经失效');
                 session.role = role; session.ready = false; session.entry = null; session.baseline = null;
-                await session.connection.connect(ticket.ticket);
-                if (this.disposed || this.enterAttempt !== attempt || session.role !== role || !currentEntryIdentity()) throw new StaleMapAttachmentError('旧选角入场已经失效');
+                generation = await connectRoleEntry(session.connection, role.key, requireScope);
+                requireScope();
+                const entry = currentEntryIdentity();
+                if (!entry || entry.connection !== generation || !isCurrentEntry(entry)) throw new StaleMapAttachmentError('旧选角入场已经失效');
                 await session.scenes!.switchTo('Game');
             } catch (error) {
-                if (!this.disposed && this.enterAttempt === attempt) session.connection.close();
                 if (session.preparedWorld === assets) { assets.dispose(); session.preparedWorld = null; }
+                if (!current() || session.roles[this.selectedRole] !== role) return;
+                if (isRoleAccountAuthenticationError(error)) { await this.reauthenticateRole(); return; }
+                if (generation !== undefined && session.connection.generation === generation) session.connection.close();
                 throw error;
             }
         });
@@ -218,15 +236,22 @@ export class AppRoot extends Component {
     }
 
     private async fetchRoles(): Promise<boolean> {
-        const token = session.connection.token, ledger = session.roleCreation;
+        const token = session.connection.token, ledger = session.roleCreation, account = session.account;
+        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
         let result: any;
         try { result = await session.connection.rpc(10003, { originServerId: Long.UONE }); }
         catch (error) {
-            if (this.disposed || session.connection.token !== token || session.roleCreation !== ledger) return false;
+            if (!current()) return false;
+            if (isRoleAccountAuthenticationError(error)) { await this.reauthenticateRole(); return false; }
             throw error;
         }
-        if (this.disposed || session.connection.token !== token || session.roleCreation !== ledger) return false;
+        if (!current()) return false;
         session.roles = result.roles;
+        if (signInResume && signInResume.accountId === account?.id) {
+            const role = signInResume.role;
+            signInResume = null;
+            if (role) this.selectedRole = session.roles.findIndex(value => selectedRoleIdentity(value) === role);
+        }
         if (this.selectedRole < 0 && session.roles.length) this.selectedRole = 0;
         this.refreshRoles();
         return true;
@@ -240,9 +265,9 @@ export class AppRoot extends Component {
     }
 
     private async submitRoleCreation(): Promise<void> {
-        const ledger = session.roleCreation, token = session.connection.token;
+        const ledger = session.roleCreation, token = session.connection.token, account = session.account;
         if (!ledger || !token || this.disposed) throw new Error('请先认证后创建角色');
-        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger;
+        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
         let request = ledger.get();
         const replaying = request !== null;
         if (!request) {
@@ -256,6 +281,7 @@ export class AppRoot extends Component {
         try { result = await session.connection.rpc(10005, request); }
         catch (error) {
             if (!current()) return;
+            if (isRoleAccountAuthenticationError(error)) { await this.reauthenticateRole(); return; }
             if (error instanceof ProtocolResponseError && error.messageId === 10006
                 && (error.code === CodeRoleSlotOrNameOccupied || (!replaying && (error.code === CodeInvalidArgument || error.code === CodeOperationConflict)))) {
                 // 槽位或名称冲突只有服务端已封存原操作的确定拒绝才可结束未知重查。
@@ -274,6 +300,22 @@ export class AppRoot extends Component {
         if (selected < 0) throw new Error('原建角尚未出现在当前目录，请沿原操作核对');
         ledger.clear(request.opId); this.selectedRole = selected; this.refreshRoles();
         this.status('原建角已确认');
+    }
+
+    private async reauthenticateRole(): Promise<void> {
+        const account = session.account;
+        const selected = session.roles[this.selectedRole];
+        const previous = signInResume && signInResume.accountId === account?.id ? signInResume.role : null;
+        signInResume = account ? { accountId: account.id, name: account.name, role: selected ? selectedRoleIdentity(selected) : previous } : null;
+        session.connection.close(); session.connection.token = '';
+        session.preparedWorld?.dispose(); session.preparedWorld = null;
+        session.account = null; session.role = null; session.roles = [];
+        session.ready = false; session.entry = null; session.baseline = null;
+        // 只释放内存引用，重新登录后按同一个账号键读取原建角、经济账本。
+        session.pending = null; session.roleCreation = null;
+        session.lastError = ACCOUNT_AUTHENTICATION_MESSAGE;
+        this.status(ACCOUNT_AUTHENTICATION_MESSAGE);
+        await this.changeScene('Login');
     }
 
     private refreshRoles(): void {

@@ -277,8 +277,12 @@ func (s *Store) tx(ctx context.Context, fn func(context.Context) error) error {
 	return e
 }
 func (s *Store) Role(ctx context.Context, id string) (domain.Role, error) {
+	return s.readRole(ctx, bson.M{"_id": id})
+}
+
+func (s *Store) readRole(ctx context.Context, filter bson.M) (domain.Role, error) {
 	var r domain.Role
-	raw, err := s.DB.Collection("roles").FindOne(ctx, bson.M{"_id": id}).Raw()
+	raw, err := s.DB.Collection("roles").FindOne(ctx, filter).Raw()
 	if err != nil {
 		return r, err
 	}

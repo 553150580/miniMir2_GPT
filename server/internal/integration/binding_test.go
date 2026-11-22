@@ -2,10 +2,7 @@ package integration
 
 import (
 	"context"
-	"errors"
-	"github.com/coder/websocket"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"io"
 	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
@@ -13,7 +10,6 @@ import (
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
-	"minimir/internal/wire"
 	"os"
 	"slices"
 	"sync"
@@ -86,23 +82,7 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 		must(t, err)
 		ticket := issue(t, endpoint, login.AccountToken, role.Key)
 		if scenario == "invalid_map" {
-			requestCtx, stop := context.WithTimeout(ctx, 3*time.Second)
-			ws, _, err := websocket.Dial(requestCtx, "ws://"+cfg.GameAddress+"/ws", nil)
-			must(t, err)
-			must(t, ws.Write(requestCtx, websocket.MessageBinary, wire.Encode(wire.Message(p.MsgC2SEnterLine, 1, 0, &pb.EnterLineRequest{AccountTicket: ticket}))))
-			_, raw, readErr := ws.Read(requestCtx)
-			ws.CloseNow()
-			stop()
-			// 既有入场拒绝立即关闭连接，队列内错误帧不保证先送达；超时或其它网络失败不算拒绝通过。
-			if readErr == nil {
-				frame, err := wire.Decode(raw)
-				must(t, err)
-				if frame.Error != p.CodeLineForbidden || frame.Request != 1 {
-					t.Fatal("未知绑定地图返回错误的拒绝帧", frame)
-				}
-			} else if !errors.Is(readErr, io.EOF) {
-				t.Fatal("入场拒绝之外的网络失败", readErr)
-			}
+			assertEntryRejectionFrame(t, cfg.GameAddress, ticket, p.CodeLineForbidden)
 			healthy(t, cfg.GameAddress)
 			stored, err = inspection.Role(ctx, id)
 			must(t, err)

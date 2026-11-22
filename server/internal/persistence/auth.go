@@ -57,17 +57,26 @@ func (s *Store) Login(ctx context.Context, name, password string, register bool)
 	var a domain.Account
 	e := s.DB.Collection("accounts").FindOne(ctx, bson.M{"name": name}).Decode(&a)
 	if register {
-		if !errors.Is(e, mongo.ErrNoDocuments) {
+		if e == nil {
 			return nil, Fail(p.CodeOperationConflict, "账号已存在")
+		}
+		if !errors.Is(e, mongo.ErrNoDocuments) {
+			return nil, e
 		}
 		salt := make([]byte, 16)
 		rand.Read(salt)
 		a = domain.Account{ID: domain.ID(), Name: name, Salt: salt, PasswordHash: argon2.IDKey([]byte(password), salt, 3, 64*1024, 1, 32), Active: true, AuthVersion: 1}
 		if _, e = s.DB.Collection("accounts").InsertOne(ctx, a); e != nil {
-			return nil, Fail(p.CodeOperationConflict, "账号已存在或登记失败")
+			if mongo.IsDuplicateKeyError(e) {
+				return nil, Fail(p.CodeOperationConflict, "账号已存在")
+			}
+			return nil, e
 		}
 	} else {
-		if e != nil || !a.Active {
+		if e != nil {
+			return nil, authorityReadError(e, p.CodeUnauthenticated, "账号或口令不符")
+		}
+		if !a.Active {
 			return nil, Fail(p.CodeUnauthenticated, "账号或口令不符")
 		}
 		actual := argon2.IDKey([]byte(password), a.Salt, 3, 64*1024, 1, 32)
@@ -86,11 +95,11 @@ func (s *Store) Authenticate(ctx context.Context, token string) (Auth, error) {
 		return Auth{}, Fail(p.CodeUnauthenticated, "需要账号认证")
 	}
 	if e := s.DB.Collection("account_tokens").FindOne(ctx, bson.M{"_id": Hash([]byte(token)), "expires_at": bson.M{"$gt": time.Now()}}).Decode(&t); e != nil {
-		return Auth{}, Fail(p.CodeUnauthenticated, "账号认证已过期")
+		return Auth{}, authorityReadError(e, p.CodeUnauthenticated, "账号认证已过期")
 	}
 	var a domain.Account
 	if e := s.DB.Collection("accounts").FindOne(ctx, bson.M{"_id": t.AccountID, "active": true, "auth_version": t.AuthVersion}).Decode(&a); e != nil {
-		return Auth{}, Fail(p.CodeUnauthenticated, "账号授权失效")
+		return Auth{}, authorityReadError(e, p.CodeUnauthenticated, "账号授权失效")
 	}
 	return Auth{AccountID: a.ID, AuthVersion: a.AuthVersion}, nil
 }
@@ -210,16 +219,17 @@ func (s *Store) persistRoleCreation(ctx context.Context, a Auth, role domain.Rol
 }
 func (s *Store) IssueTicket(ctx context.Context, a Auth, key *pb.RoleKey) (*pb.EntryTicketResult, error) {
 	if key == nil || len(key.RoleId) != 16 || key.OriginServerId != s.Cfg.OriginID {
-		return nil, Fail(p.CodeInvalidArgument, "角色不存在")
+		return nil, Fail(p.CodeInvalidArgument, "所选角色不可用")
 	}
-	r, e := s.Role(ctx, domain.Hex(key.RoleId))
-	if e != nil || r.AccountID != a.AccountID || r.Origin != key.OriginServerId {
-		return nil, Fail(p.CodeUnauthenticated, "角色归属不符")
+	// 先按账号和原区服过滤，再读取角色证明，避免向其他账号暴露角色状态。
+	r, e := s.readRole(ctx, bson.M{"_id": domain.Hex(key.RoleId), "account_id": a.AccountID, "origin_server_id": key.OriginServerId})
+	if e != nil {
+		return nil, authorityReadError(e, p.CodeInvalidArgument, "所选角色不可用")
 	}
 	var run Run
 	e = s.DB.Collection("run_control").FindOne(ctx, bson.M{"_id": s.Cfg.RunID, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Decode(&run)
 	if e != nil {
-		return nil, Fail(p.CodeLineRecovering, "游戏节点尚未就绪")
+		return nil, authorityReadError(e, p.CodeLineRecovering, "游戏节点尚未就绪")
 	}
 	token := domain.ID() + domain.ID()
 	until := time.Now().Add(45 * time.Second)
@@ -236,7 +246,7 @@ func (s *Store) TicketRole(ctx context.Context, token string) (Ticket, error) {
 	}
 	e := s.DB.Collection("entry_tickets").FindOne(ctx, bson.M{"_id": Hash([]byte(token)), "used": false, "expires_at": bson.M{"$gt": time.Now()}}).Decode(&t)
 	if e != nil {
-		return t, Fail(p.CodeUnauthenticated, "票据过期或已使用")
+		return t, authorityReadError(e, p.CodeUnauthenticated, "票据过期或已使用")
 	}
 	return t, nil
 }

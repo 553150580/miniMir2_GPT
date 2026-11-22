@@ -232,8 +232,7 @@ func (e *Engine) Enter(token string, c Connection, request uint32) {
 				return
 			}
 			if err != nil {
-				c.Deliver(wire.Frame{ID: p.MsgS2CEnterLine, Request: request, Error: persistence.Code(err)})
-				c.Close("invalid ticket")
+				rejectEntry(c, request, persistence.Code(err), "invalid ticket")
 				return
 			}
 			c.SetRole(t.RoleID)
@@ -246,6 +245,17 @@ func (e *Engine) Enter(token string, c Connection, request uint32) {
 		c.Close("server busy")
 	}
 }
+
+func rejectEntry(c Connection, request, code uint32, reason string) {
+	f := wire.Frame{ID: p.MsgS2CEnterLine, Request: request, Error: code}
+	if terminal, ok := c.(interface{ DeliverAndClose(wire.Frame, string) }); ok {
+		terminal.DeliverAndClose(f, reason)
+		return
+	}
+	c.Deliver(f)
+	c.Close(reason)
+}
+
 func (e *Engine) post(w *worker, c command) bool {
 	select {
 	case w.commands <- c:
@@ -342,8 +352,7 @@ func (w *worker) command(c command) {
 	r := w.rooms[c.role]
 	if c.ticket != "" {
 		if r != nil && r.Isolated {
-			c.conn.Deliver(wire.Frame{ID: p.MsgS2CEnterLine, Request: c.frame.Request, Error: p.CodeLineRecovering})
-			c.conn.Close("room authority isolated")
+			rejectEntry(c.conn, c.frame.Request, p.CodeLineRecovering, "room authority isolated")
 			return
 		}
 		if !c.conn.Alive() {
@@ -594,8 +603,7 @@ func (w *worker) join(r *room, c command) {
 		return func(w *worker) {
 			r.Pending = false
 			if err != nil {
-				c.conn.Deliver(wire.Frame{ID: p.MsgS2CEnterLine, Request: c.frame.Request, Error: persistence.Code(err)})
-				c.conn.Close("entry rejected")
+				rejectEntry(c.conn, c.frame.Request, persistence.Code(err), "entry rejected")
 				if fresh {
 					delete(w.rooms, c.role)
 					for _, next := range r.Waiting {

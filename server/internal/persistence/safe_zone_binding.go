@@ -247,7 +247,8 @@ func (s *Store) validateBindingOperation(role domain.Role, op Operation) error {
 	if err != nil {
 		return err
 	}
-	if b.SourceMapSHA256 != bindingMapSHA256(m) || b.ZoneSetSHA256 != zoneHash {
+	mapHash := bindingMapSHA256(m)
+	if (b.SourceMapSHA256 != mapHash || b.ZoneSetSHA256 != zoneHash) && !matchesHistoricalTownBinding(b, s.Cfg.Fixture.RuleVersion, mapHash, zoneHash) {
 		return Fail(p.CodeLineForbidden, "绑定来源地图或安全区目录身份已变化")
 	}
 	// 提交时在动作格取首匹配；冷验按已记录的源行身份核中心，不在另一格重新选区。

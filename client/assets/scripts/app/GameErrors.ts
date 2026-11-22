@@ -3,12 +3,25 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked,
     CodeWarehouseFull, CodeWarehouseChanged, CodeWarehouseBlocked, CodeWarehousePrivilegeRequired,
     CodeVendorUnavailable, CodeVendorQuoteStale, CodeVendorFunds, CodeVendorItemBlocked,
-    CodeRoleSlotOrNameOccupied } from '../generated/protocol_ids';
+    CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
+export const ACCOUNT_AUTHENTICATION_MESSAGE = '登录凭证已失效，请重新登录。';
+
+export function isRoleAccountRejection(messageId: number, errorCode: number): boolean {
+    return errorCode === CodeUnauthenticated && (messageId === 10004 || messageId === 10006 || messageId === 10008);
+}
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。
 export function protocolErrorMessage(messageId: number, errorCode: number): string {
+    if (isRoleAccountRejection(messageId, errorCode)) return ACCOUNT_AUTHENTICATION_MESSAGE;
+    if (errorCode === CodeUnauthenticated) {
+        if (messageId === 10002) return '账号或密码不符，请重新输入。';
+        if (messageId === 20002) return '入场票据已失效，请重试进入，或重新登录。';
+        return '当前连接认证已失效，请重新连接。';
+    }
+    if (errorCode === CodeRouteChanged && messageId === 20002) return '游戏线路已更新，请重试进入，或重新登录。';
+    if (errorCode === CodeServerBusy) return '服务暂时繁忙，请稍后重试。';
     if (errorCode === CodeRoleSlotOrNameOccupied) return '角色槽位或名称已被占用，请查看角色列表或更换名称后重试';
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;
     if (errorCode === CodeWarehouseFull) return '背包或仓库没有空位，原物品保持原处';

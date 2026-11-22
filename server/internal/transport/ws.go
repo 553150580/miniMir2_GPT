@@ -13,20 +13,22 @@ import (
 )
 
 type connection struct {
-	socket  *websocket.Conn
-	ctx     context.Context
-	cancel  context.CancelFunc
-	queue   chan []byte
-	queued  atomic.Int64
-	role    atomic.Value
-	binding atomic.Uint64
-	closed  atomic.Bool
-	entry   atomic.Bool
+	socket   *websocket.Conn
+	ctx      context.Context
+	cancel   context.CancelFunc
+	queue    chan []byte
+	terminal chan []byte
+	queued   atomic.Int64
+	role     atomic.Value
+	binding  atomic.Uint64
+	closed   atomic.Bool
+	ending   atomic.Bool
+	entry    atomic.Bool
 }
 
-func (c *connection) Alive() bool { return !c.closed.Load() && c.ctx.Err() == nil }
+func (c *connection) Alive() bool { return !c.closed.Load() && !c.ending.Load() && c.ctx.Err() == nil }
 func (c *connection) Deliver(f wire.Frame) bool {
-	if c.closed.Load() {
+	if !c.Alive() {
 		return false
 	}
 	b := wire.Encode(f)
@@ -43,6 +45,14 @@ func (c *connection) Deliver(f wire.Frame) bool {
 		return false
 	}
 }
+
+// 入场拒绝交给同一个写协程发送，房间线程不等待网络，也不让普通帧占住终止槽。
+func (c *connection) DeliverAndClose(f wire.Frame, _ string) {
+	if c.Alive() && c.ending.CompareAndSwap(false, true) {
+		c.terminal <- wire.Encode(f)
+	}
+}
+
 func (c *connection) Close(_ string) {
 	if c.closed.CompareAndSwap(false, true) {
 		c.cancel()
@@ -72,25 +82,39 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 	}
 	socket.SetReadLimit(wire.MaxFrame)
 	ctx, cancel := context.WithCancel(r.Context())
-	c := &connection{socket: socket, ctx: ctx, cancel: cancel, queue: make(chan []byte, 128)}
+	c := &connection{socket: socket, ctx: ctx, cancel: cancel, queue: make(chan []byte, 128), terminal: make(chan []byte, 1)}
 	defer c.Close("disconnected")
 	defer s.Engine.Disconnect(c)
 	writerDone := make(chan struct{})
 	go func() {
 		defer close(writerDone)
 		for {
+			var b []byte
+			ending := true
+			// 先检查终止槽，已排队的心跳不会延迟入场拒绝。
 			select {
-			case <-ctx.Done():
-				return
-			case b := <-c.queue:
-				c.queued.Add(-int64(len(b)))
-				writeCtx, stop := context.WithTimeout(ctx, 5*time.Second)
-				err := socket.Write(writeCtx, websocket.MessageBinary, b)
-				stop()
-				if err != nil {
-					c.Close("write failed")
+			case b = <-c.terminal:
+			default:
+				select {
+				case <-ctx.Done():
 					return
+				case b = <-c.terminal:
+				case b = <-c.queue:
+					ending = false
 				}
+			}
+			timeout := 5 * time.Second
+			if ending {
+				timeout = time.Second
+			} else {
+				c.queued.Add(-int64(len(b)))
+			}
+			writeCtx, stop := context.WithTimeout(ctx, timeout)
+			err := socket.Write(writeCtx, websocket.MessageBinary, b)
+			stop()
+			if ending || err != nil {
+				c.Close("writer stopped")
+				return
 			}
 		}
 	}()
@@ -99,6 +123,9 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 		kind, b, err := socket.Read(ctx)
 		if err != nil {
 			return
+		}
+		if c.ending.Load() {
+			continue
 		}
 		if kind != websocket.MessageBinary {
 			c.Close("binary frames required")
