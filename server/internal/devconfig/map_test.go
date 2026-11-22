@@ -24,6 +24,16 @@ func TestMapApprovedDimensionsAndDerivedSearchBudget(t *testing.T) {
 			t.Fatalf("未批准或溢出尺寸被接受：%v", size)
 		}
 	}
+	f := mapFixture(13)
+	f.Map.MonsterSpawns = []Point{{X: 1, Y: 1}, {X: 1, Y: 11}, {X: 11, Y: 1}, {X: 11, Y: 11}, {X: 1, Y: 4}, {X: 3, Y: 3}, {X: 5, Y: 11}, {X: 2, Y: 12}}
+	f.RuleVersion = 25
+	if f.GridCellBudget() != 0 || f.ValidateMap() == nil {
+		t.Fatal("历史规则错误接入13格地图")
+	}
+	f.RuleVersion = 26
+	if f.GridCellBudget() != 169 || f.ValidateMap() != nil {
+		t.Fatal("规则26未接入13格地图及169格搜索预算")
+	}
 }
 
 func TestMapRejectsInvalidCollisionSpawnsAndDisconnectedBirthCells(t *testing.T) {

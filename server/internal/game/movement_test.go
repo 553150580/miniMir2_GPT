@@ -169,9 +169,9 @@ func TestPushedFourDecorationsKeepPrefixButSkipInvalidPostamble(t *testing.T) {
 	for index, test := range tests {
 		t.Run(string(rune('0'+index)), func(t *testing.T) {
 			w, r, c := pushedWorker(t)
-			if w.walkable(r, test.blocked) {
-				t.Fatal("唯一运行场景已不包含本例四个小物阻挡")
-			}
+			// 单独保留历史场景的阻挡回归；当前挂机地图已移除这些小物。
+			w.e.Store.Cfg.Fixture.Map.Width, w.e.Store.Cfg.Fixture.Map.Height = 17, 17
+			w.e.Store.Cfg.Fixture.Map.Blocked = []devconfig.Point{test.blocked}
 			e := r.Monsters[0]
 			e.Pos = test.start
 			now := time.Unix(1800000000, 0)

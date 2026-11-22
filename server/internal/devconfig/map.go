@@ -164,18 +164,26 @@ func (f *Fixture) MapByID(id uint64) (*MapTemplate, bool) {
 	return nil, false
 }
 
-// 个人地图继续只接受已获批准的开发尺寸；不因增加城镇而扩大其规则。
+// 规则26接入13格挂机图，历史16格和17格模板仍可读取。
 func (f *Fixture) GridCellBudget() int {
-	if f.Map.SceneKindValue() != SceneKindPersonal || f.Map.Width != f.Map.Height || f.Map.Width != 16 && f.Map.Width != 17 {
+	if f.Map.SceneKindValue() != SceneKindPersonal || f.Map.Width != f.Map.Height {
 		return 0
 	}
-	return f.Map.CellBudget()
+	switch f.Map.Width {
+	case 16, 17:
+		return f.Map.CellBudget()
+	case 13:
+		if f.RuleVersion >= 26 {
+			return f.Map.CellBudget()
+		}
+	}
+	return 0
 }
 
 func (f *Fixture) ValidateMap() error {
 	budget := f.GridCellBudget()
 	if budget == 0 || f.Map.ID == 0 || f.Map.ID > math.MaxInt64 || f.Map.CompactTown || len(f.Map.LegacySafeZoneIDs) != 0 || len(f.Map.NPCs) != 0 || len(f.Map.CollisionBits) != 0 || len(f.Map.MonsterSpawns) < 8 {
-		return errors.New("开发地图须为已批准的16×16或17×17，并提供至少8个怪物槽位")
+		return errors.New("开发地图须为16×16、17×17或规则26起的13×13，并提供至少8个怪物槽位")
 	}
 	inBounds := func(p Point) bool {
 		return p.X >= 0 && p.Y >= 0 && p.X < f.Map.Width && p.Y < f.Map.Height
@@ -196,7 +204,7 @@ func (f *Fixture) ValidateMap() error {
 		}
 		occupied[p] = true
 	}
-	// 只检查静态地面连通性；不把动态角色/怪物占位当永久障碍，也不限制运行时重生叠格。
+	// 只检查配置出生点的静态连通性；运行时由各自房间处理动态占位。
 	queue := []Point{f.Map.PlayerSpawn}
 	seen := map[Point]bool{f.Map.PlayerSpawn: true}
 	for head := 0; head < len(queue) && head < budget; head++ {

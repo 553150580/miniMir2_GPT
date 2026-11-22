@@ -13,7 +13,7 @@ import (
 )
 
 func TestGridEightDirectionsAndCornerBlocking(t *testing.T) {
-	for _, size := range []int{16, 17} {
+	for _, size := range []int{13, 16, 17} {
 		t.Run(strconv.Itoa(size), func(t *testing.T) { testGridEightDirectionsAndCornerBlocking(t, size) })
 	}
 }

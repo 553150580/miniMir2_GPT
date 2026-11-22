@@ -41,10 +41,24 @@ async function settle(resources,view,promise){for(let i=0;i<100&&!view.isMapRead
 function assertReleased(resources){for(const asset of resources.pool.values())assert.equal(asset.refs,0,asset.key);}
 
 test('WorldAssets无mapId选择目录首个primary；旧profile仍兼容first-map，显式uint64不经Number',async()=>{
- const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{});assert.equal(assets.mapId,'1');assert.equal(assets.sourceMap,undefined);assert.equal(assets.map.width,17);assert(assets.background);assert(!resources.requested.some(key=>key.startsWith('source-maps/')));assets.dispose();assertReleased(resources);
+ const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{});assert.equal(assets.mapId,'1');assert.equal(assets.sourceMap,undefined);assert.equal(assets.map.width,13);assert(assets.background);assert(!resources.requested.some(key=>key.startsWith('source-maps/')));assert(resources.requested.includes('development/maps/personal-map/spriteFrame'));assets.dispose();assertReleased(resources);
  const old=fakeResources({changeGameplay:g=>delete g.map_catalog}),legacy=await WorldAssets.prepare(0,()=>{},Long.UONE);assert.equal(legacy.mapId,'1');assert(old.requested.includes('development/maps/first-map'));legacy.dispose();assertReleased(old);
  const unsupported=fakeResources();await assert.rejects(WorldAssets.prepare(0,()=>{},'9007199254740993'),/没有请求/);assert(!unsupported.requested.includes('development/maps/first-map'));assertReleased(unsupported);
  const number=fakeResources();await assert.rejects(WorldAssets.prepare(0,()=>{},2),/64位对象/);assertReleased(number);
+});
+test('开阔普通图的全部169格可点击，没有实例化物件，保留建筑或空气阻挡的资源均拒绝',async()=>{
+ const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{}),{view,world}=scene(assets);
+ assert.equal(view.props.length,0);assert.equal(view.projection.geometry.soil_thickness_px,24);
+ for(let y=0;y<13;y++)for(let x=0;x<13;x++){
+   const screen=world.getComponent(UITransform).convertToWorldSpaceAR(view.grid(x,y));
+   assert.deepEqual(view.screenToGrid(screen),{x,y});
+ }
+ assert.equal(view.screenToGrid(world.getComponent(UITransform).convertToWorldSpaceAR(view.grid(13,13))),null);
+ view.dispose();assertReleased(resources);
+ for(const key of ['props','blocked']){
+   const altered=fakeResources({changeResource:(name,json)=>{if(name==='development/maps/personal-map')json[key].push({x:1,y:1});}});
+   await assert.rejects(WorldAssets.prepare(0,()=>{}),/地图地板、投影/);assertReleased(altered);
+ }
 });
 test('WorldAssets来源分支使用完整700目录与独立SourceMapAssets，不加载个人图JSON/背景或预载1936块',async()=>{
  const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{},Long.fromString('2',true));
@@ -57,6 +71,7 @@ test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有�
  const resources=fakeResources(),assets=await WorldAssets.prepare(0,()=>{},Long.fromInt(3,true));
  assert.equal(assets.sceneKind,2);assert.equal(assets.mapId,'3');assert.equal(assets.sourceMap,undefined);
  assert.deepEqual([assets.map.width,assets.map.height,assets.map.projection],[17,17,'isometric_diamond']);
+ assert.equal(assets.map.soil_thickness_px,48);assert(resources.requested.includes('development/maps/first-map/spriteFrame'));
  assert.ok(assets.map.npcs.length>0);assert(!assets.map.props.length);assert(!resources.requested.some(key=>key.startsWith('source-maps/')));
  const {view,entities}=scene(assets);view.apply({entities:[state()]});
  for(const npc of assets.map.npcs){
@@ -70,7 +85,7 @@ test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有�
 test('目录选择与来源资源身份完整保留最大uint64，拒绝数字资源ID冒充另一张图',async()=>{
  const id='18446744073709551615',resources=fakeResources({changeGameplay:g=>g.map_catalog[1].id=id,changeResource:(key,json)=>{if(key==='source-maps/map-2/manifest')json.id=id;}});
  const assets=await WorldAssets.prepare(0,()=>{},Long.MAX_UNSIGNED_VALUE);assert.equal(assets.mapId,id);assert.equal(assets.map.id,id);assets.dispose();assertReleased(resources);
- const wrong=fakeResources({changeResource:(key,json)=>{if(key==='development/maps/first-map')json.id=2;}});await assert.rejects(WorldAssets.prepare(0,()=>{}),/目录身份/);assertReleased(wrong);
+ const wrong=fakeResources({changeResource:(key,json)=>{if(key==='development/maps/personal-map')json.id=2;}});await assert.rejects(WorldAssets.prepare(0,()=>{}),/目录身份/);assertReleased(wrong);
 });
 test('真实跨层来源视口先等待原生块，矩形点击/镜头/方向/位移沿对应几何，换代同步撤销ready及解绑',async()=>{
  const resources=fakeResources({delayChunks:true}),assets=await WorldAssets.prepare(0,()=>{},'2'),{view,viewport,world,entities}=scene(assets);cc.game.totalTime=100;

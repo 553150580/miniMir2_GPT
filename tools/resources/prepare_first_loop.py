@@ -18,6 +18,7 @@ sys.path.insert(0,str(ROOT/'tools/resources'))
 import prepare_pet_runtime as pet_runtime
 import prepare_compact_towns as compact_towns
 import prepare_npc_shops as npc_shops
+import personal_map_contract as personal_map
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -424,7 +425,7 @@ def validate_map_inputs(definition,collision,profile,spawns):
     if geometry['tile_width']!=2*geometry['tile_height']:raise ValueError('当前菱形地图采用2:1地格比例')
     point=lambda p:isinstance(p,dict) and set(p)=={'x','y'} and all(type(v) is int and v>=0 for v in p.values())
     if not point(geometry['source_origin']):raise ValueError('地图来源裁剪原点无效')
-    if collision.get('client_navigation')!={'geometry_reference':f'game_maps/{definition["id"]}.visual_geometry','collision_basis':'authored_edge_decorations'}:raise ValueError('客户端地图几何须引用唯一基础表，碰撞须明确为本作场边摆放')
+    personal_map.collision_basis(definition,collision)
     cells=collision['blocked_cells']
     if not isinstance(cells,list) or any(not point(p) or p['x']>=width or p['y']>=height for p in cells):raise ValueError('阻挡格坐标越界或格式错误')
     blocked={(p['x'],p['y']) for p in cells}
@@ -454,7 +455,8 @@ def validate_map_asset(tables):
     """生成地图只作派生一致性证据，不再反向提供宠物出生或地格数值。"""
     profile=tables['dev_first_loop_profile'][0]['parameters'];definition=next(x for x in tables['game_maps'] if x['id']==profile['map_id'])
     collision=next(x for x in tables['game_map_collisions'] if x['id']==definition['collision_id']);geometry=definition['visual_geometry']
-    asset=read(ASSETS/'maps/first-map.json')
+    basis=personal_map.collision_basis(definition,collision)
+    asset=read(ASSETS/(definition['tile_resource_key'].removeprefix('development/')+'.json'))
     if (asset['width'],asset['height'])!=(definition['width_cells'],definition['height_cells']):raise ValueError('生成地图与唯一Excel尺寸不一致')
     if any(asset.get(k)!=v for k,v in geometry.items()):raise ValueError('生成地图投影与唯一Excel不一致')
     if asset.get('source_sha256')!=collision['source_hash']:raise ValueError('地图来源文件摘要与唯一碰撞表不一致')
@@ -465,12 +467,14 @@ def validate_map_asset(tables):
     if not isinstance(cells,list) or len(cells)!=asset['height'] or any(not isinstance(row,list) or len(row)!=asset['width'] for row in cells):raise ValueError('地图必须包含完整格子，不能靠负表缺省扩大')
     actual={(x,y) for y,row in enumerate(cells) for x,cell in enumerate(row) if cell['blocked']}
     if actual!={(p['x'],p['y']) for p in collision['blocked_cells']}:raise ValueError('本作运行格碰撞与唯一Excel不一致')
-    if asset.get('collision_basis')!='authored_edge_decorations' or any(type(c.get(k)) is not bool for row in cells for c in row for k in ['source_blocked','blocked']):raise ValueError('原始来源碰撞与本作运行碰撞必须分别记录')
+    if asset.get('collision_basis')!=basis or any(type(c.get(k)) is not bool for row in cells for c in row for k in ['source_blocked','blocked']):raise ValueError('原始来源碰撞与本作运行碰撞必须分别记录')
     source=[{'x':x,'y':y} for y,row in enumerate(cells) for x,c in enumerate(row) if c['source_blocked']]
     if asset.get('source_blocked')!=source:raise ValueError('原始来源碰撞证据不完整')
     props=asset.get('props')
     expected=[{'id':p['id'],'frame':p['frame'],**collision['blocked_cells'][p['collision_cell_index']]} for p in definition['decorations']]
     if not isinstance(props,list) or [{k:p.get(k) for k in ['id','frame','x','y']} for p in props]!=expected:raise ValueError('运行装饰不得混入未配置的大树或其它物件')
+    if basis==personal_map.OPEN_COLLISION and (asset.get('background_layers')!=['back','middle'] or asset.get('source_fronts_rendered') is not False):
+        raise ValueError('开阔挂机图仅允许背景与中层地砖绘制')
     return asset
 
 def map_policy(tables,definition,profile):

@@ -125,12 +125,12 @@ class SummonCandidateProjectionTests(unittest.TestCase):
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
 
     def test_visual_protocol_version_preserves_minimum_summon_contract(self):
-        for version in range(17,26):
+        for version in range(17,27):
             tables=self.changed();self.profile(tables)['rule_version']=version
             if version<20:self.profile(tables).pop('progression')
             if version<19:self.profile(tables).pop('equipment_recycling')
             self.assertEqual(self.compile(tables)['required_rule_version'],17)
-        tables=self.changed();self.profile(tables)['rule_version']=26
+        tables=self.changed();self.profile(tables)['rule_version']=27
         with self.assertRaises(ValueError):self.compile(tables)
 
     def test_definition_link_and_material_cannot_be_guessed(self):

@@ -71,6 +71,8 @@ func TestSourceDisplacementSkills6400Vectors(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// 来源oracle的坐标与边界按17格生成，保持其固定测试几何。
+	cfg.Fixture.Map.Width, cfg.Fixture.Map.Height = 17, 17
 	now := time.UnixMilli(10000)
 	for index, test := range vectors {
 		input := test.Input

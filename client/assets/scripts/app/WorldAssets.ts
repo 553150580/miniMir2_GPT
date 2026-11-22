@@ -113,18 +113,23 @@ export class WorldAssets {
                 result.propPrefab = result.sourceMap.propPrefab; result.background = result.sourceMap.minimap;
             } else {
                 const floor = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
+                if (!floor) throw new Error('地图缺少地板数据');
                 result.map = selected.compact_town ? compactTownMap(floor, selected) : floor;
                 if (selected.width !== undefined || result.map.id !== undefined) {
                     const id = typeof result.map.id === 'number' && Number.isSafeInteger(result.map.id) && result.map.id >= 0 ? String(result.map.id) : mapIdString(result.map.id);
                     if (id !== selected.id) throw new Error('个人地图资源与目录身份不一致');
                 }
                 const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
+                // 新开阔挂机图独立裁切。同一份历史清单仍核对城镇17格地台和旧个人图。
+                const openField = selected.resource_key === 'development/maps/personal-map';
+                const floorMatches = openField ? selected.scene_kind === 1 && floor.collision_basis === 'open_personal_field'
+                    && floor.background === 'maps/personal-map.png' && Array.isArray(floor.blocked) && !floor.blocked.length
+                    && Array.isArray(floor.props) && !floor.props.length && floor.source_fronts_rendered === false
+                    : ['width', 'height', 'tile_width', 'tile_height', 'projection', 'soil_thickness_px', 'surface_width', 'surface_height',
+                        'world_height', 'background_offset_y'].every(key => mapInfo?.[key] === result.map[key]);
                 if (result.map.surface_width !== projection.surfaceWidth || result.map.surface_height !== projection.surfaceHeight
                     || result.map.world_height !== projection.worldHeight || result.map.background_offset_y !== projection.floorCenterY
-                    || mapInfo?.width !== result.map.width || mapInfo?.height !== result.map.height
-                    || mapInfo?.tile_width !== result.map.tile_width || mapInfo?.tile_height !== result.map.tile_height
-                    || mapInfo?.projection !== result.map.projection
-                    || ['soil_thickness_px', 'surface_width', 'surface_height', 'world_height', 'background_offset_y'].some(key => mapInfo?.[key] !== result.map[key])
+                    || !floorMatches
                     || (selected.width !== undefined && selected.width !== result.map.width) || (selected.height !== undefined && selected.height !== result.map.height)) throw new Error('地图地板、投影与来源清单不一致，请更新同一份资源');
                 result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
                 result.background = result.own(await load<SpriteFrame>(`${selected.resource_key}/spriteFrame`, SpriteFrame));

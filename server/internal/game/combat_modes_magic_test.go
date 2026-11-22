@@ -12,6 +12,8 @@ func TestLightningExactSixCellsEightDirectionsAndFrontWallDoesNotStop(t *testing
 	for direction := uint32(0); direction < 8; direction++ {
 		t.Run(string(rune('0'+direction)), func(t *testing.T) {
 			w, r, _ := stageBWorker(t, 1, 10)
+			// 边界之外的第七格仍要在图内，用独立几何验证射程而非小图边界。
+			w.e.Store.Cfg.Fixture.Map.Width, w.e.Store.Cfg.Fixture.Map.Height = 17, 17
 			now := time.Now()
 			origin := r.Player.Pos
 			definition := r.Monsters[0].Monster

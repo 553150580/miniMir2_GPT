@@ -3,6 +3,7 @@
 from collections import deque
 from copy import deepcopy
 import re
+from personal_map_contract import LEGACY_RESOURCE_KEY
 
 
 SIZE = 17
@@ -118,7 +119,7 @@ def compile_compact_towns(profile, legacy_maps, personal_map):
         zone_ids.add(zone['id'])
         names.add(name)
         consumed_zones.update(mapping)
-        maps.append({'id': town_id, 'display_name': name, 'resource_key': personal_map['resource_key'],
+        maps.append({'id': town_id, 'display_name': name, 'resource_key': LEGACY_RESOURCE_KEY,
                      'scene_kind': 2, 'compact_town': True, 'width': SIZE, 'height': SIZE,
                      'player_spawn': deepcopy(row['player_spawn']),
                      'blocked': [deepcopy(npc['position']) for npc in npcs], 'safe_zones': [deepcopy(zone)],

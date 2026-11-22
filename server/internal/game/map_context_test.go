@@ -33,7 +33,7 @@ func TestRoomMapContextSeparatesTerrainBoundsAndNavigationBudget(t *testing.T) {
 		if w.walkable(personal, devconfig.Point{X: 8, Y: 7}) || !w.walkable(town, devconfig.Point{X: 8, Y: 7}) || !w.walkable(personal, devconfig.Point{X: 9, Y: 8}) || w.walkable(town, devconfig.Point{X: 9, Y: 8}) {
 			t.Fatal("相同格子的两张地图阻挡串用，或旧MapID0兼容失效")
 		}
-		if w.mapCellBudget(personal) != 289 || w.mapCellBudget(town) != 490000 || w.inBounds(personal, devconfig.Point{X: 633, Y: 613}) || !w.inBounds(town, devconfig.Point{X: 699, Y: 699}) {
+		if w.mapCellBudget(personal) != w.e.Store.Cfg.Fixture.Map.CellBudget() || w.mapCellBudget(town) != 490000 || w.inBounds(personal, devconfig.Point{X: 633, Y: 613}) || !w.inBounds(town, devconfig.Point{X: 699, Y: 699}) {
 			t.Fatal("当前图边界或寻路格子预算仍读全局个人地图")
 		}
 		if !w.lineOfSight(personal, devconfig.Point{X: 8, Y: 8}, devconfig.Point{X: 10, Y: 8}) || w.lineOfSight(town, devconfig.Point{X: 8, Y: 8}, devconfig.Point{X: 10, Y: 8}) {

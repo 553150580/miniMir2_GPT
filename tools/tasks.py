@@ -32,7 +32,9 @@ TASKS = {
     'check': [['python3', 'tools/reference/inventory.py', '--check'], ['python3', 'tools/reference/prepare_local.py', '--check'], ['python3', 'tools/reference/verify_pet_sources.py'], ['python3', 'tools/config/export_configs.py', '--check'], ['python3', 'tools/config/generate_protocol.py', '--check']],
     'preview': [['python3', 'tools/config/export_configs.py'], ['python3', 'tools/config/sync_bindings.py']],
     'release-check': [['python3', 'tools/config/export_configs.py', '--check', '--mode', 'release']],
-    'development-resources-check': [['python3', 'tools/resources/build_development_assets.py', '--check'], ['python3', 'tools/resources/prepare_first_loop.py', '--check']],
+    'development-resources-check': [['python3', 'tools/resources/build_development_assets.py', '--check'],
+                                    ['python3', 'tools/resources/build_personal_map.py', '--check'],
+                                    ['python3', 'tools/resources/prepare_first_loop.py', '--check']],
 }
 GROUPS = {'test': ['client-scene-test', 'client-test', 'python-test', 'go-test', 'protocol-check']}
 if os.name == 'nt':

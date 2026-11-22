@@ -27,8 +27,12 @@ func TestAutoTargetStaysOnSelectedLifeAcrossHostingAndManualMoveMongoWS(t *testi
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_lock_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)
-	cfg.Fixture.Map.PlayerSpawn = devconfig.Point{X: 3, Y: 8}
-	cfg.Fixture.Map.MonsterSpawns[0], cfg.Fixture.Map.MonsterSpawns[1] = devconfig.Point{X: 16, Y: 16}, devconfig.Point{X: 4, Y: 8}
+	m := &cfg.Fixture.Map
+	m.PlayerSpawn = devconfig.Point{X: 0, Y: 8}
+	m.Blocked = nil
+	m.MonsterSpawns = []devconfig.Point{
+		{X: m.Width - 1, Y: m.Height - 1}, {X: 1, Y: 8}, {X: 2}, {X: 3}, {X: 4}, {X: 5}, {X: 6}, {X: 7},
+	}
 	cfg.Fixture.Monsters[0].MoveMS, cfg.Fixture.Monsters[0].AttackMS = 120000, 120000
 	cfg.Fixture.Monsters[0].AttackMin, cfg.Fixture.Monsters[0].AttackMax, cfg.Fixture.Monsters[0].HP = 0, 0, 1000
 	must(t, cfg.Fixture.Validate())
@@ -140,7 +144,7 @@ func TestAutoTargetStaysOnSelectedLifeAcrossHostingAndManualMoveMongoWS(t *testi
 		c.player().AttackSequence != start.AttackSequence || c.player().CastSequence != start.CastSequence+1 {
 		t.Fatal("同场景托管失去首靶并攻击了近怪，或健康重连重建现场", c.entry, c.player())
 	}
-	goal := &pb.GridPoint{X: 13, Y: 13}
+	goal := &pb.GridPoint{X: int32(m.Width - 4), Y: int32(m.Height - 4)}
 	c.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: scene, Destination: goal})
 	travelUntilWithin(c, 15*time.Second, func(f wire.Frame) bool {
 		return f.ID == p.MsgS2CSceneBaseline && c.scene.GetNavigationState().GetStatus() == 2 && proto.Equal(c.player().Position, goal)

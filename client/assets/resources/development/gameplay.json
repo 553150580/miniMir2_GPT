@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 25,
+  "rule_version": 26,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -4336,9 +4336,9 @@
     {
       "id": "1",
       "name": "林间战场",
-      "resource_key": "development/maps/first-map",
-      "width": 17,
-      "height": 17,
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
       "scene_kind": 1,
       "safe_zones": [],
       "no_teleport": false,

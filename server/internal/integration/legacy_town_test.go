@@ -18,6 +18,9 @@ func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	}
 	f.Maps = []devconfig.MapTemplate{*legacy}
 	f.RuleVersion = 23
+	if f.Map.Width == 13 {
+		f.Map.Width, f.Map.Height = 17, 17
+	}
 	f.NPCShops = nil
 	f.EquipmentDurability = nil
 	f.Hash = persistence.Hash([]byte(f.Hash + ":historical-town-rule23-test"))

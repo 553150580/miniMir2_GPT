@@ -12,6 +12,7 @@ import sys
 from PIL import Image, ImageDraw, __version__ as PILLOW_VERSION
 import inspect_wil as wil
 import pet_birth_assets
+from personal_map_contract import OPEN_COLLISION, collision_basis
 
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / 'client/assets/resources/development'
@@ -122,7 +123,7 @@ def component(cells,start):
     return seen
 
 def map_config():
-    """读取唯一工作簿，不从历史生成物或来源提取快照补参数。"""
+    """初始17格地台独立再现，新挂机图的参数由其独立工具读取工作簿。"""
     sys.path.insert(0,str(ROOT/'tools/config'))
     import export_configs as config
     tables,errors,_,_=config.collect(config.load_json(ROOT/'config/schema/catalog.json'))
@@ -130,6 +131,15 @@ def map_config():
     profile=next(row for row in tables['dev_first_loop_profile'] if row['id']==1)['parameters']
     definition=next(row for row in tables['game_maps'] if row['id']==profile['map_id'])
     collision=next(row for row in tables['game_map_collisions'] if row['id']==definition['collision_id'])
+    if collision_basis(definition,collision)==OPEN_COLLISION:
+        # 历史地台从封存的原17格产物复建，用于城镇，不会反向填充新挂机图配置。
+        archived=config.load_json(ROOT/'client/assets/resources/development/maps/first-map.json')
+        geometry={key:archived[key] for key in ('projection','tile_width','tile_height','soil_thickness_px','source_origin')}
+        definition={'id':archived['id'],'display_name':archived['name'],'width_cells':archived['width'],
+                    'height_cells':archived['height'],'spawn_cell':archived['player_spawn'],
+                    'decorations':[{key:prop[key] for key in ('id','frame','collision_cell_index')} for prop in archived['props']]}
+        collision={'blocked_cells':archived['blocked'],'source_hash':archived['source_sha256']}
+        return definition,collision,geometry,archived['pet_spawn'],archived['monster_spawns']
     geometry=definition.get('visual_geometry')
     fields={'projection','tile_width','tile_height','soil_thickness_px','source_origin'}
     if not isinstance(geometry,dict) or set(geometry)!=fields:raise ValueError('地图visual_geometry必须由唯一Excel显式维护完整字段')
@@ -141,7 +151,6 @@ def map_config():
     width,height=definition['width_cells'],definition['height_cells']
     if type(width) is not int or type(height) is not int or width<=0 or height<=0:raise ValueError('地图格数必须为正整数')
     if (collision['width_cells'],collision['height_cells'])!=(width,height):raise ValueError('地图与碰撞尺寸不一致')
-    if collision.get('client_navigation')!={'geometry_reference':f'game_maps/{definition["id"]}.visual_geometry','collision_basis':'authored_edge_decorations'}:raise ValueError('本作地图碰撞必须显式登记为唯一Excel小型边缘装饰布局')
     spawns=[row for row in tables['game_monster_spawns'] if row['map_id']==definition['id']]
     spawns.sort(key=lambda row:row['slot_index'])
     return definition,collision,geometry,profile['pet_spawn'],[row['cell'] for row in spawns]

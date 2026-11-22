@@ -265,6 +265,18 @@ class PotionProjectionTests(unittest.TestCase):
         tables['dev_first_loop_profile'][0]['parameters']['pet_spawn']['x']=0
         self.assertEqual(result['map']['pet_spawn'],{'x':1,'y':0})
 
+    def test_open_personal_map_requires_new_resource_and_removes_building_collision(self):
+        tables=candidate_tables();definition=tables['game_maps'][0];collision=tables['game_map_collisions'][0]
+        definition['tile_resource_key']='development/maps/personal-map'
+        collision['client_navigation']['collision_basis']='open_personal_field'
+        self.assertEqual(fixture(tables)['map']['blocked'],[])
+        broken=deepcopy(tables)
+        broken['game_map_collisions'][0]['blocked_cells']=[{'x':0,'y':1}]
+        broken['game_maps'][0]['decorations']=[{'id':'old','frame':'Objects:8898','collision_cell_index':0}]
+        with self.assertRaisesRegex(ValueError,'空装饰、空运行阻挡'):fixture(broken)
+        definition['tile_resource_key']='development/maps/first-map'
+        with self.assertRaisesRegex(ValueError,'资源键与碰撞约定'):fixture(tables)
+
     def test_map_rejects_geometry_drift_invalid_spawns_and_corner_cutting(self):
         baseline=candidate_tables()
         changes=[('size',lambda t:t['game_map_collisions'][0].update(width_cells=3)),

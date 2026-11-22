@@ -285,14 +285,25 @@ func (w *worker) worldDeadlines(r *room, world *worldState, now time.Time) {
 	}
 	for i, monster := range world.Monsters {
 		if monster.HP == 0 && !monster.RespawnAt.IsZero() && !now.Before(monster.RespawnAt) {
-			if i >= len(m.MonsterSpawns) || !m.Walkable(m.MonsterSpawns[i]) || monster.Life == math.MaxUint64 {
+			if i >= len(m.MonsterSpawns) || monster.Life == math.MaxUint64 {
 				w.isolateRoom(r)
 				return
 			}
-			monster.HP, monster.Life, monster.Statuses = monster.MaxHP, monster.Life+1, nil
-			if !w.commitRelocation(r, monster, m.MonsterSpawns[i]) {
+			point := m.MonsterSpawns[i]
+			if w.e.Store.Cfg.Fixture.RuleVersion >= 26 && m.SceneKindValue() == devconfig.SceneKindPersonal {
+				var ok bool
+				point, ok = w.randomMonsterRespawnPoint(r, world, m)
+				if !ok {
+					continue // 保留原截止，下一帧有空格就复活，无需再等十秒。
+				}
+			} else if !m.Walkable(point) {
+				w.isolateRoom(r)
 				return
 			}
+			if !w.commitRelocation(r, monster, point) {
+				return
+			}
+			monster.HP, monster.Life, monster.Statuses = monster.MaxHP, monster.Life+1, nil
 			monster.MovementRevision, monster.MovementKind = 0, movementInitial
 			monster.RespawnAt, monster.Action = time.Time{}, 0
 		}

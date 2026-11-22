@@ -7,7 +7,7 @@ const {GridProjection}=require('../../../.work/ui-tests/app/GridProjection.js');
 const {beamGeometry}=require('../../../.work/ui-tests/app/BeamGeometry.js');
 const base=path.resolve(__dirname,'../../assets/resources/development');
 const map=JSON.parse(fs.readFileSync(path.join(base,'maps/first-map.json'),'utf8')),manifest=JSON.parse(fs.readFileSync(path.join(base,'manifest.json'),'utf8'));
-test('实际17×17地图只显示四周4件原尺寸小物，原19片大景物仅保留来源且不残留空气阻挡',()=>{
+test('历史17×17地图保留原装饰和来源证据，供旧合同与城镇继续校验',()=>{
     assert.equal(map.width,17);assert.equal(map.height,17);assert.equal(map.cells.length,17);assert(map.cells.every(row=>row.length===17));
     assert.equal(map.blocked.length,4);assert.equal(map.source_blocked.length,17);assert.equal(map.connected_walkable_count,285);
     assert.equal(map.collision_basis,'authored_edge_decorations');assert.equal(manifest.map.collision_basis,map.collision_basis);
@@ -41,6 +41,26 @@ test('实际17×17地图只显示四周4件原尺寸小物，原19片大景物�
     for(const sourceProp of map.source_props)assert(map.layers.some(layer=>layer.x===sourceProp.x&&layer.y===sourceProp.y&&layer.layer==='front'&&layer.frame===sourceProp.frame));
     assert(map.background_layers.every(layer=>(typeof layer==='string'?layer:layer.layer)!=='front'));
     for(let x=0;x<17;x++)for(let y=0;y<17;y++)assert.deepEqual(projection.cellAt(projection.project(x,y)),{x,y});
+});
+test('当前普通挂机图13×13、侧壁24、无任何建筑或历史阻挡，城镇仍独立引用17×17地台',()=>{
+    const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
+    const field=JSON.parse(fs.readFileSync(path.join(base,'maps/personal-map.json'),'utf8'));
+    const entry=gameplay.map_catalog.find(row=>row.id==='1');
+    assert.deepEqual([entry.resource_key,entry.width,entry.height],['development/maps/personal-map',13,13]);
+    assert.deepEqual([field.width,field.height,field.tile_width,field.tile_height,field.soil_thickness_px],[13,13,64,32,24]);
+    assert.deepEqual(field.props,[]);assert.deepEqual(field.blocked,[]);assert.equal(field.connected_walkable_count,169);
+    assert.equal(field.collision_basis,'open_personal_field');assert.equal(field.source_fronts_rendered,false);
+    assert.deepEqual(field.background_layers,['back','middle']);assert(field.source_blocked.length>0);
+    assert(field.cells.every(row=>row.length===13&&row.every(cell=>cell.blocked===false)));
+    assert.deepEqual(field.source_origin,{x:130,y:130});assert.equal(field.source_floor_sha256,map.background_sha256);
+    const projection=new GridProjection(field);
+    assert.deepEqual([projection.surfaceWidth,projection.surfaceHeight,projection.worldHeight,projection.floorCenterY],[832,416,440,12]);
+    const png=fs.readFileSync(path.join(base,field.background));assert.equal(png.readUInt32BE(16),832);assert.equal(png.readUInt32BE(20),416);
+    assert.equal(crypto.createHash('sha256').update(png).digest('hex'),field.background_sha256);
+    for(const town of gameplay.map_catalog.filter(row=>row.compact_town)){
+        assert.deepEqual([town.resource_key,town.width,town.height],['development/maps/first-map',17,17]);
+    }
+    assert.equal(map.soil_thickness_px,48);
 });
 test('实际疾光48帧保持原PNG哈希和尺寸，来源8向向量与六格投影端点匹配刚体Mask方案',()=>{
     const resource=manifest.effects['10'],projection=new GridProjection(map),gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
