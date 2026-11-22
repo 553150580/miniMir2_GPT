@@ -48,7 +48,7 @@ type Store struct {
 }
 
 // 业务连接池为任务执行器保留并发空间。续租走独立控制连接池。
-const businessPoolSize = 32
+const businessPoolSize = 48
 
 type Auth struct {
 	AccountID    string
@@ -304,7 +304,7 @@ func (s *Store) readRole(ctx context.Context, filter bson.M) (domain.Role, error
 	return r, err
 }
 func (s *Store) accountGuard(ctx context.Context, a Auth) error {
-	r, e := s.DB.Collection("accounts").UpdateOne(ctx, bson.M{"_id": a.AccountID, "active": true, "auth_version": a.AuthVersion}, bson.M{"$inc": bson.M{"auth_guard_seq": 1}})
+	r, e := s.DB.Collection("accounts").UpdateOne(ctx, accountGuardFilter(a), bson.M{"$inc": bson.M{"auth_guard_seq": 1}})
 	if e != nil {
 		return e
 	}
@@ -313,25 +313,61 @@ func (s *Store) accountGuard(ctx context.Context, a Auth) error {
 	}
 	return nil
 }
+
+func accountGuardFilter(a Auth) bson.M {
+	return bson.M{"_id": a.AccountID, "active": true, "auth_version": a.AuthVersion}
+}
+
 func (s *Store) fence(ctx context.Context, a Auth) error {
+	writes, err := s.fenceWrites(ctx, a)
+	if err != nil {
+		return err
+	}
+	return s.writeFence(ctx, writes)
+}
+
+func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrite, error) {
 	filter := bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
-	var run Run
-	if e := s.DB.Collection("run_control").FindOne(ctx, filter).Decode(&run); e != nil {
-		return authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
+	var run struct {
+		ControlVersion int64     `bson:"control_version"`
+		LeaseUntil     time.Time `bson:"lease_until"`
 	}
-	var node bson.M
-	if e := s.DB.Collection("node_leases").FindOne(ctx, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Decode(&node); e != nil {
-		return authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
+	runFields := options.FindOne().SetProjection(bson.M{"_id": 0, "control_version": 1, "lease_until": 1})
+	if e := s.DB.Collection("run_control").FindOne(ctx, filter, runFields).Decode(&run); e != nil {
+		return nil, authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
 	}
-	group := runGuardGroup(a.AccountID)
-	r, e := s.DB.Collection("run_guards").UpdateOne(ctx, bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, group), "owner_instance": s.Instance, "run_epoch": s.Epoch, "control_version": run.ControlVersion}, bson.M{"$inc": bson.M{"seq": 1}})
-	if e != nil {
-		return e
+	node := bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
+	if e := s.DB.Collection("node_leases").FindOne(ctx, node, options.FindOne().SetProjection(bson.M{"_id": 1})).Err(); e != nil {
+		return nil, authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
 	}
-	if r.MatchedCount != 1 {
+	guard := bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, runGuardGroup(a.AccountID)),
+		"owner_instance": s.Instance, "run_epoch": s.Epoch, "control_version": run.ControlVersion}
+	database := s.DB.Name()
+	writes := make([]mongo.ClientBulkWrite, 2, 5)
+	writes[0] = mongo.ClientBulkWrite{Database: database, Collection: "run_guards", Model: mongo.NewClientUpdateOneModel().
+		SetFilter(guard).SetUpdate(bson.M{"$inc": bson.M{"seq": 1}})}
+	writes[1] = mongo.ClientBulkWrite{Database: database, Collection: "accounts", Model: mongo.NewClientUpdateOneModel().
+		SetFilter(accountGuardFilter(a)).SetUpdate(bson.M{"$inc": bson.M{"auth_guard_seq": 1}})}
+	return writes, nil
+}
+
+func (s *Store) writeFence(ctx context.Context, writes []mongo.ClientBulkWrite) error {
+	// 在同一事务中仍执行两次条件写，用一个命令取得两项各自的匹配结果。
+	result, err := s.Client.BulkWrite(ctx, writes, options.ClientBulkWrite().SetVerboseResults(true))
+	if err != nil {
+		return transactionBulkWriteError(err)
+	}
+	return verifyFenceWrites(result)
+}
+
+func verifyFenceWrites(result *mongo.ClientBulkWriteResult) error {
+	if !result.Acknowledged || result.UpdateResults[0].MatchedCount != 1 {
 		return Fail(p.CodeRouteChanged, "写屏障失效")
 	}
-	return s.accountGuard(ctx, a)
+	if result.UpdateResults[1].MatchedCount != 1 {
+		return Fail(p.CodeUnauthenticated, "账号授权失效")
+	}
+	return nil
 }
 
 // 无匹配记录才证明权限失效；保留其他错误，供驱动与事务层判断是否重试。

@@ -16,6 +16,8 @@ from verify_startup_recovery import ROOT, fixture_identity, http_json, load, mai
 
 sys.path.insert(0, str(ROOT / 'tools' / 'environment'))
 import mongodb_hosting_load as mongo
+from hosting_load_ledger_audit import audit_soak_ledger
+from hosting_load_mongo_samples import MongoLoadSampler
 from process_control import background_options, windows_identity
 from windows_process_samples import ProcessSamples
 
@@ -167,6 +169,8 @@ def run(args, hold_seconds):
     }
     handles = []
     used_ports = set()
+    mongo_samples = None
+    mongo_sampler = None
     progress(f'本轮独立压测证据位于 {work}')
     try:
         if args.profile == 'soak':
@@ -177,6 +181,12 @@ def run(args, hold_seconds):
             raise RuntimeError('本轮 MongoDB 端点未核验')
         used_ports.add(endpoint['port'])
         progress(f"独立 MongoDB {endpoint['version']} 已就绪，进程 {endpoint['pid']}")
+        if args.profile == 'soak':
+            mongo_path = work / 'mongo-samples.jsonl'
+            mongo_samples = mongo_path.open('x', encoding='utf-8', newline='\n', buffering=1)
+            mongo_sampler = MongoLoadSampler(endpoint, mongo_samples)
+            report['mongo_samples'] = str(mongo_path)
+            mongo_sampler.record('before_seed')
 
         def command(mode, profile, addresses):
             account, game, diagnostic = addresses
@@ -214,14 +224,22 @@ def run(args, hold_seconds):
                              [('account', account), ('game', game), ('clients', clients)]}
                 processes['mongo'] = endpoint['pid']
                 counters = ProcessSamples(processes)
+                mongo_sample_due = time.monotonic()
 
                 def sample():
+                    nonlocal mongo_sample_due
                     row = {'profile': profile, 'sampled_at': dt.datetime.now(dt.timezone.utc).isoformat(),
                            'processes': counters.read()}
                     samples.write(json.dumps(row) + '\n')
+                    now = time.monotonic()
+                    if mongo_sampler and now >= mongo_sample_due:
+                        mongo_sampler.record(profile)
+                        mongo_sample_due = now + 30
 
                 try:
                     rows = wait_logged(clients, clients_path, hold_seconds + 600, f'{profile} 配额压测', sample)
+                    if mongo_sampler:
+                        mongo_sampler.record('after_clients')
                 finally:
                     counters.close()
                 if game['child'].poll() is not None or account['child'].poll() is not None:
@@ -235,10 +253,21 @@ def run(args, hold_seconds):
                 stop(account)
                 if game['child'].returncode != 0 or account['child'].returncode != 0:
                     raise RuntimeError('压测服务正常退出时返回错误，请查看该阶段独立日志')
+                if profile == 'soak':
+                    progress('正在核对独立库中的永久收益和托管扣时')
+                    ledger_audit = audit_soak_ledger(endpoint, seeded)
+                    report['ledger_audit'] = ledger_audit
+                    save(work / 'ledger-audit.json', ledger_audit)
+                    if not ledger_audit['passed']:
+                        raise RuntimeError('隔离账本复核未通过，请查看 ledger-audit.json')
     except BaseException as error:
         report['error'] = str(error)
         raise
     finally:
+        if mongo_sampler:
+            mongo_sampler.close()
+        if mongo_samples:
+            mongo_samples.close()
         for handle in reversed(handles):
             try:
                 stop(handle)

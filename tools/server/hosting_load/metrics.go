@@ -46,12 +46,13 @@ type hostingLoadMongoFailures struct {
 }
 
 type hostingLoadDurationReport struct {
-	Count  int     `json:"count"`
-	P50MS  float64 `json:"p50_ms,omitempty"`
-	P95MS  float64 `json:"p95_ms,omitempty"`
-	P99MS  float64 `json:"p99_ms,omitempty"`
-	MaxMS  float64 `json:"max_ms,omitempty"`
-	MeanMS float64 `json:"mean_ms,omitempty"`
+	Count     int     `json:"count"`
+	Over500MS int     `json:"over_500_ms"`
+	P50MS     float64 `json:"p50_ms,omitempty"`
+	P95MS     float64 `json:"p95_ms,omitempty"`
+	P99MS     float64 `json:"p99_ms,omitempty"`
+	MaxMS     float64 `json:"max_ms,omitempty"`
+	MeanMS    float64 `json:"mean_ms,omitempty"`
 }
 
 type hostingLoadMongoSampleReport struct {
@@ -271,14 +272,18 @@ func hostingLoadDurations(samples []time.Duration) hostingLoadDurationReport {
 	}
 	slices.Sort(samples)
 	totalMS := float64(0)
+	over500 := 0
 	for _, sample := range samples {
 		totalMS += float64(sample) / float64(time.Millisecond)
+		if sample > durationThreshold {
+			over500++
+		}
 	}
 	percentile := func(p int) float64 {
 		return float64(samples[(count*p+99)/100-1]) / float64(time.Millisecond)
 	}
 	return hostingLoadDurationReport{
-		Count: count, P50MS: percentile(50), P95MS: percentile(95), P99MS: percentile(99),
+		Count: count, Over500MS: over500, P50MS: percentile(50), P95MS: percentile(95), P99MS: percentile(99),
 		MaxMS: percentile(100), MeanMS: totalMS / float64(count),
 	}
 }

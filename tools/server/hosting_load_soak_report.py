@@ -53,6 +53,45 @@ def hold_trends(began, ended, samples, pids, diagnostics):
     return result
 
 
+def mongo_internal_trends(began, ended, rows, pid):
+    # 只选保压窗口内同一实例的成功读数。缓存和分配器统计可能重叠。
+    samples = [(dt.datetime.fromisoformat(row['sampled_at']), row) for row in rows]
+    window = [(timestamp, row) for timestamp, row in samples if began <= timestamp <= ended]
+    accepted = [(timestamp, row) for timestamp, row in window
+                if row.get('pid') == pid and 'error' not in row]
+    accepted.sort(key=lambda sample: sample[0])
+    duration = (ended - began).total_seconds()
+    metrics = {
+        'resident_mib': ('memory_mib', 'resident', 1),
+        'wired_tiger_cache_mib': ('wired_tiger_cache', 'bytes currently in the cache', MIB),
+        'wired_tiger_cache_max_mib': ('wired_tiger_cache', 'maximum bytes configured', MIB),
+        'wired_tiger_dirty_mib': ('wired_tiger_cache', 'tracked dirty bytes in the cache', MIB),
+        'wired_tiger_pages': ('wired_tiger_cache', 'pages currently held in the cache', 1),
+        'connections': ('connection_counts', 'current', 1),
+        'wired_tiger_open_sessions': ('wired_tiger_session', 'open session count', 1),
+        'logical_sessions': ('logical_sessions', 'activeSessionsCount', 1),
+        'open_transactions': ('transactions', 'currentOpen', 1),
+    }
+    result = {
+        'samples': len(accepted),
+        'failed_samples': len(window) - len(accepted),
+        'metrics': {},
+    }
+    for key in ('current_allocated_bytes', 'heap_size'):
+        result['metrics']['allocator_' + key.replace('_bytes', '') + '_mib'] = trend(
+            [((timestamp - began).total_seconds(), value / MIB) for timestamp, row in accepted
+             if (value := row.get('allocator', {}).get('generic', {}).get(key)) is not None],
+            duration,
+        )
+    for key, (section, field, divisor) in metrics.items():
+        result['metrics'][key] = trend(
+            [((timestamp - began).total_seconds(), value / divisor) for timestamp, row in accepted
+             if (value := row.get(section, {}).get(field)) is not None],
+            duration,
+        )
+    return result
+
+
 def window_counts(before, after, seconds):
     counts = {field: after[field] - before[field]
               for field in ('settlements', 'attacks', 'deaths', 'disconnects', 'errors', 'heartbeats')}

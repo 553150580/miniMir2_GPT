@@ -148,6 +148,7 @@ type room struct {
 	LastTick              time.Time
 	idleSince             time.Time
 	HostMS                int64 // 健康owner累计的未满秒托管余量，跨连接、地图和生命保留。
+	hostSecondsOpen       int64 // 当前会话已经运行、尚未绑定结算流水的整秒。
 	HostSession           string
 	DeathID               string
 	AwaitUntil            time.Time
@@ -276,6 +277,10 @@ func (e *Engine) postEntry(w *worker, c command) {
 }
 
 func (e *Engine) Handle(c Connection, f wire.Frame) {
+	if e.stopped.Load() {
+		c.Close("maintenance")
+		return
+	}
 	id := c.RoleID()
 	if id == "" {
 		c.Deliver(wire.Frame{ID: f.ID, Request: f.Request, Error: p.CodeUnauthenticated})
@@ -350,6 +355,12 @@ func (w *worker) loop() {
 	}
 }
 func (w *worker) command(c command) {
+	if w.e.stopped.Load() {
+		if c.conn != nil && !c.disconnect {
+			c.conn.Close("maintenance")
+		}
+		return
+	}
 	r := w.rooms[c.role]
 	if c.ticket != "" {
 		if r != nil && r.Isolated {
@@ -359,12 +370,7 @@ func (w *worker) command(c command) {
 		if !c.conn.Alive() {
 			return
 		}
-		if r != nil && r.Pending {
-			if len(r.Waiting) < 2 {
-				r.Waiting = append(r.Waiting, c)
-			} else {
-				c.conn.Close("role busy")
-			}
+		if r != nil && w.queueEntryAfterSettlement(r, c) {
 			return
 		}
 		if r == nil {
@@ -709,6 +715,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Role = role
 	// 故障后的新执行现场不恢复旧临时计量；健康重入不经过此初始化。
 	r.HostMS = 0
+	r.hostSecondsOpen = 0
 	r.Potions.LastAppliedSeq = role.EconomicSeq
 	r.Potions.LastSourceSeq = role.SourceSeq
 	r.Navigation = navigationState{}

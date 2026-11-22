@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"math"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -18,6 +19,8 @@ import (
 type SettlementReceipt struct {
 	RuleVersion   uint64                    `bson:"rule_version"`
 	ConfigHash    string                    `bson:"config_hash"`
+	HostSeconds   int64                     `bson:"host_seconds,omitempty"`
+	Kills         int64                     `bson:"kills,omitempty"`
 	GrantedItem   bool                      `bson:"granted_item"`
 	Recycling     EquipmentRecyclingReceipt `bson:"recycling"`
 	Experience    *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"`
@@ -44,7 +47,8 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 	id := fmt.Sprintf("settle:%s:%d", a.RoleID, q.SourceSeq)
 	err = s.guardedTx(ctx, a, func(tc context.Context) error {
 		receipt = Operation{}
-		if err := s.fence(tc, a); err != nil {
+		fence, err := s.fenceWrites(tc, a)
+		if err != nil {
 			return err
 		}
 		r, err := s.Role(tc, a.RoleID)
@@ -57,19 +61,23 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 		if r.SettlementReceiptStartSeq < 0 || r.SettlementReceiptStartSeq > r.SourceSeq {
 			return Fail(p.CodeOperationConflict, "收益回执界限无效")
 		}
-		var old Operation
-		err = s.DB.Collection("operations").FindOne(tc, bson.M{"_id": id}).Decode(&old)
-		if err == nil {
-			if old.Kind != "settlement" || old.RoleID != a.RoleID || old.SourceSeq != q.SourceSeq || old.Digest != digest || old.Settlement == nil {
-				return Fail(p.CodeOperationConflict, "同来源结算内容改变")
-			}
-			out, receipt = r, old
-			return nil
-		}
-		if !errors.Is(err, mongo.ErrNoDocuments) {
-			return err
-		}
 		if r.SourceSeq >= q.SourceSeq {
+			// 新来源由角色水位和事务内的唯一键保护；已到达水位时才读取永久回执。
+			if err := s.writeFence(tc, fence); err != nil {
+				return err
+			}
+			var old Operation
+			err = s.DB.Collection("operations").FindOne(tc, bson.M{"_id": id}).Decode(&old)
+			if err == nil {
+				if old.Kind != "settlement" || old.RoleID != a.RoleID || old.SourceSeq != q.SourceSeq || old.Digest != digest || old.Settlement == nil {
+					return Fail(p.CodeOperationConflict, "同来源结算内容改变")
+				}
+				out, receipt = r, old
+				return nil
+			}
+			if !errors.Is(err, mongo.ErrNoDocuments) {
+				return err
+			}
 			if r.SettlementReceiptStartSeq > 0 && q.SourceSeq >= r.SettlementReceiptStartSeq {
 				return Fail(p.CodeOperationConflict, "新收益来源缺少永久回执")
 			}
@@ -91,7 +99,10 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 			eventAt = time.Now()
 		}
 		audit := bson.M{"_id": id, "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "hosting_session": q.HostingSession, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": details.RuleVersion, "config_hash": details.ConfigHash, "settlement": details, "at": time.Now()}
-		if err = s.writeSettlement(tc, next, before, proposed, audit); err != nil {
+		if err = s.writeSettlement(tc, fence, next, before, proposed, audit); err != nil {
+			if mongo.IsDuplicateKeyError(err) {
+				return Fail(p.CodeOperationConflict, "收益来源回执或审计先于角色水位")
+			}
 			return err
 		}
 		out, receipt = next, proposed
@@ -100,70 +111,35 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 	return out, receipt, err
 }
 
-// 三份文档沿用同一事务。角色版本未匹配时，回滚事务也会撤销本批回执和审计。
-func (s *Store) writeSettlement(ctx context.Context, next domain.Role, oldRevision int64, receipt Operation, audit bson.M) error {
+// 新来源的两道围栏和三份结算文档在同一事务批量写入，逐项检查条件匹配。
+func (s *Store) writeSettlement(ctx context.Context, fence []mongo.ClientBulkWrite, next domain.Role, oldRevision int64, receipt Operation, audit bson.M) error {
 	database := s.DB.Name()
-	writes := []mongo.ClientBulkWrite{
-		{Database: database, Collection: "roles", Model: mongo.NewClientReplaceOneModel().SetFilter(roleReplaceFilter(next, oldRevision)).SetReplacement(next)},
-		{Database: database, Collection: "operations", Model: mongo.NewClientInsertOneModel().SetDocument(receipt)},
-		{Database: database, Collection: "audit_outbox", Model: mongo.NewClientInsertOneModel().SetDocument(audit)},
-	}
-	result, err := s.Client.BulkWrite(ctx, writes)
+	writes := append(fence,
+		mongo.ClientBulkWrite{Database: database, Collection: "roles", Model: mongo.NewClientReplaceOneModel().SetFilter(roleReplaceFilter(next, oldRevision)).SetReplacement(next)},
+		mongo.ClientBulkWrite{Database: database, Collection: "operations", Model: mongo.NewClientInsertOneModel().SetDocument(receipt)},
+		mongo.ClientBulkWrite{Database: database, Collection: "audit_outbox", Model: mongo.NewClientInsertOneModel().SetDocument(audit)},
+	)
+	result, err := s.Client.BulkWrite(ctx, writes, options.ClientBulkWrite().SetVerboseResults(true))
 	if err != nil {
-		return settlementBulkWriteError(err)
+		return transactionBulkWriteError(err)
 	}
-	if result.MatchedCount != 1 {
+	if err = verifyFenceWrites(result); err != nil {
+		return err
+	}
+	if result.UpdateResults[2].MatchedCount != 1 {
 		return Fail(p.CodeOperationConflict, "角色版本变化")
 	}
-	if result.InsertedCount != 2 || !result.Acknowledged {
+	if result.InsertedCount != 2 {
 		return Fail(p.CodeServerBusy, "收益回执或审计写入未确认")
 	}
 	return nil
 }
 
-// 客户端跨集合批量错误容器不实现驱动事务所查的错误标签接口。
-func settlementBulkWriteError(err error) error {
-	var bulk mongo.ClientBulkWriteException
-	if !errors.As(err, &bulk) {
-		return err
-	}
-	if top := bulk.WriteError; top != nil {
-		return mongo.CommandError{Code: int32(top.Code), Message: top.Message, Labels: settlementWriteLabels(top.Code, top.Raw), Wrapped: err, Raw: top.Raw}
-	}
-	converted := mongo.WriteException{}
-	for _, failure := range bulk.WriteErrors {
-		converted.WriteErrors = append(converted.WriteErrors, failure)
-		converted.Labels = append(converted.Labels, settlementWriteLabels(failure.Code, failure.Raw)...)
-	}
-	for i := range bulk.WriteConcernErrors {
-		failure := &bulk.WriteConcernErrors[i]
-		if converted.WriteConcernError == nil {
-			converted.WriteConcernError = failure
-		}
-		converted.Labels = append(converted.Labels, settlementWriteLabels(failure.Code, failure.Raw)...)
-	}
-	return converted
-}
-
-func settlementWriteLabels(code int, raw bson.Raw) []string {
-	var labels []string
-	if array, ok := raw.Lookup("errorLabels").ArrayOK(); ok {
-		values, _ := array.Values()
-		for _, value := range values {
-			if label, ok := value.StringValueOK(); ok {
-				labels = append(labels, label)
-			}
-		}
-	}
-	// 批内事务写冲突可能只在结果游标以代码112返回，请驱动重试整个事务。
-	if code == 112 {
-		labels = append(labels, "TransientTransactionError")
-	}
-	return labels
-}
-
 func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.Role, SettlementReceipt, error) {
-	details := SettlementReceipt{RuleVersion: f.RuleVersion, ConfigHash: f.Hash, Recycling: EquipmentRecyclingReceipt{PolicyRevision: r.AutoRecycle.Revision, Policy: policySnapshot(r.AutoRecycle), Trigger: 1}}
+	details := SettlementReceipt{
+		RuleVersion: f.RuleVersion, ConfigHash: f.Hash, HostSeconds: q.HostSeconds, Kills: q.Kills,
+		Recycling: EquipmentRecyclingReceipt{PolicyRevision: r.AutoRecycle.Revision, Policy: policySnapshot(r.AutoRecycle), Trigger: 1},
+	}
 	if q.HostSeconds < 0 || r.HostingSeconds < q.HostSeconds || q.Kills < 0 || r.Level == 0 || r.Revision == math.MaxInt64 {
 		return r, details, Fail(p.CodeOperationConflict, "托管时长或角色结算状态无效")
 	}

@@ -286,6 +286,12 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 		}
 	}
 }
+func clearFinishedAction(e *entity, now time.Time) {
+	if e != nil && e.HP > 0 && !now.Before(e.ActionUntil) {
+		e.Action = 0
+	}
+}
+
 func (w *worker) step(r *room, now time.Time) {
 	if w.e.stopped.Load() || r.Isolated {
 		return
@@ -317,15 +323,7 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	if r.Pending {
 		w.progressMapTravel(r, now)
-		if r.PendingRetry != nil && !now.Before(r.RetryAt) {
-			j := *r.PendingRetry
-			if w.submit(j) {
-				r.PendingRetry = nil
-			} else {
-				// 给执行器留出回收队列槽位的时间，重试沿用原任务和流水。
-				r.RetryAt = now.Add(250 * time.Millisecond)
-			}
-		}
+		w.retryPendingRoom(r, now)
 		return
 	}
 	if w.expirePetCorpses(r, now) {
@@ -375,6 +373,9 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	offline := r.Conn == nil
 	if r.Player.HP <= 0 {
+		if w.flushHostingSeconds(r, now) {
+			return
+		}
 		w.progressMapTravel(r, now)
 		return
 	}
@@ -393,29 +394,25 @@ func (w *worker) step(r *room, now time.Time) {
 	if mapTemplate.SceneKindValue() == devconfig.SceneKindTown {
 		// 来源城镇不运行离线战斗或扣托管；既有状态/恢复已在上方按真实时钟推进。
 		if offline {
+			w.flushHostingSeconds(r, now)
 			return
 		}
 	}
 	if offline && (r.Role.HostingSeconds <= 0 || !r.Auto) {
+		w.flushHostingSeconds(r, now)
 		return
 	}
-	if offline {
-		r.HostMS += delta.Milliseconds()
-		if r.HostMS >= 1000 {
-			// 余量跨健康会话累计，整秒归实际跨过门槛的当前托管会话，沿原流水防重。
-			w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, HostSeconds: 1, HostingSession: r.HostSession})
-			r.HostMS -= 1000
-			return
-		}
+	if offline && w.meterHosting(r, delta, now) {
+		return
 	}
 	if r.Player.HP <= 0 {
 		return
 	}
-	for _, e := range append(append([]*entity{&r.Player}, r.Monsters...), r.Pet) {
-		if e != nil && e.HP > 0 && !now.Before(e.ActionUntil) {
-			e.Action = 0
-		}
+	clearFinishedAction(&r.Player, now)
+	for _, monster := range r.Monsters {
+		clearFinishedAction(monster, now)
 	}
+	clearFinishedAction(r.Pet, now)
 	w.worldDeadlines(r, r.currentWorld(), now)
 	if r.Isolated {
 		return
@@ -548,11 +545,13 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, actor actorRef, finished func(persistence.Operation)) {
 	r.SettlementGeneration++
 	r.Wear.attach(&q)
+	hostSeconds := attachHostingSeconds(r, &q)
 	raw, err := json.Marshal(q)
 	if err != nil {
 		w.isolateRoom(r)
 		return
 	}
+	r.hostSecondsOpen -= hostSeconds
 	if len(q.EquipmentWear) > 0 {
 		r.Wear.inflight = nil
 	}

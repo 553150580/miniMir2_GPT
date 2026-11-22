@@ -6,7 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from hosting_load_soak_report import hold_trends, operation_totals, reconnect_totals, trend, window_counts
+from hosting_load_soak_report import hold_trends, mongo_internal_trends, operation_totals, reconnect_totals, trend, window_counts
 
 
 MIB = 1024 * 1024
@@ -293,6 +293,7 @@ def fixture_stats(runner):
 def summarize(directory, profile=None):
     runner_path = directory / 'runner.json'
     samples_path = directory / 'process-samples.jsonl'
+    mongo_samples_path = directory / 'mongo-samples.jsonl'
     runner = json.loads(runner_path.read_text(encoding='utf-8'))
     if profile is None:
         profile = next((name for name in ('soak', 'prejoin')
@@ -304,6 +305,10 @@ def summarize(directory, profile=None):
         sources[samples_path.name] = sha256(samples_path)
         samples = [(stamp(row['sampled_at']), row) for row in read_rows(samples_path) if row['profile'] == profile]
         samples.sort(key=lambda sample: sample[0])
+    mongo_samples = []
+    if mongo_samples_path.is_file():
+        sources[mongo_samples_path.name] = sha256(mongo_samples_path)
+        mongo_samples = read_rows(mongo_samples_path)
     result = {
         'run_id': runner['run_id'], 'binary_sha256': runner['binary_sha256'],
         'started_at': runner['started_at'], 'ended_at': runner['ended_at'],
@@ -317,6 +322,10 @@ def summarize(directory, profile=None):
         'mongo_isolation': runner.get('mongo'), 'mongo_cleanup': runner.get('mongo_cleanup'),
         'node_lease_logs': {},
     }
+    ledger_path = directory / 'ledger-audit.json'
+    if ledger_path.is_file():
+        sources[ledger_path.name] = sha256(ledger_path)
+        result['ledger_audit'] = json.loads(ledger_path.read_text(encoding='utf-8'))
     default_path = directory / 'clients-default.jsonl'
     if default_path.is_file():
         sources[default_path.name] = sha256(default_path)
@@ -360,6 +369,9 @@ def summarize(directory, profile=None):
                 if profile == 'soak':
                     stage['soak'] = soak_stats(start, row, censuses, samples, pids or {},
                                                runner['logical_processors'], points, operations.pop(target, []))
+                    if mongo_samples and pids and pids.get('mongo'):
+                        stage['soak']['mongo_internal_trends'] = mongo_internal_trends(
+                            stamp(stage['start']), stamp(stage['end']), mongo_samples, pids['mongo'])
                 result['hold_stages'].append(stage)
                 previous_finish = row
             elif event == 'soak_drain':

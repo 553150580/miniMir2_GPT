@@ -108,7 +108,7 @@ func TestFullBagOfflineChargesOriginalSlotAndStopsNewAIAtZero(t *testing.T) {
 	now := time.Unix(1800000000, 0)
 	r.LastTick = now.Add(-100 * time.Millisecond)
 	w.step(r, now)
-	q := persistence.Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: r.HostSession}
+	q := persistence.Settlement{SourceSeq: 5, HostSeconds: 1, HostingSession: r.HostSession, EventAt: now}
 	raw, err := json.Marshal(q)
 	if err != nil {
 		t.Fatal(err)

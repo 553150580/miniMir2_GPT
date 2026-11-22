@@ -9,6 +9,7 @@ const (
 	durationBucketBits = 5
 	durationBucketSize = 1 << durationBucketBits
 	durationBuckets    = 1 + 63*durationBucketSize
+	durationThreshold  = 500 * time.Millisecond
 )
 
 // 每个倍增区间分成 32 个子桶，分位取桶的上界，最长运行也只使用固定空间。
@@ -16,6 +17,7 @@ const (
 type durationHistogram struct {
 	buckets [durationBuckets]uint64
 	count   uint64
+	over500 uint64
 	totalNS float64
 	maximum time.Duration
 }
@@ -32,6 +34,10 @@ func (h *durationHistogram) observe(elapsed time.Duration) {
 	}
 	h.buckets[index]++
 	h.count++
+	// 直接比较观测值，避免 500 毫秒所在的子桶把两侧的样本混在一起。
+	if elapsed > durationThreshold {
+		h.over500++
+	}
 	h.totalNS += float64(elapsed)
 	h.maximum = max(h.maximum, elapsed)
 }
@@ -50,7 +56,10 @@ func (h *durationHistogram) report() hostingLoadDurationReport {
 		return hostingLoadDurationReport{}
 	}
 	const ms = float64(time.Millisecond)
-	out := hostingLoadDurationReport{Count: int(h.count), MaxMS: float64(h.maximum) / ms, MeanMS: h.totalNS / ms / float64(h.count)}
+	out := hostingLoadDurationReport{
+		Count: int(h.count), Over500MS: int(h.over500),
+		MaxMS: float64(h.maximum) / ms, MeanMS: h.totalNS / ms / float64(h.count),
+	}
 	ranks := [3]uint64{(h.count*50 + 99) / 100, (h.count*95 + 99) / 100, (h.count*99 + 99) / 100}
 	percentiles := [3]*float64{&out.P50MS, &out.P95MS, &out.P99MS}
 	var accumulated uint64

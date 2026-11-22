@@ -135,8 +135,13 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	}
 	server := &transport.Server{Store: store, Mode: mode, NodeKey: key}
 	var engine *game.Engine
+	leaseContext := ctx
+	cancelEngine := context.CancelCauseFunc(func(error) {})
 	if mode == "game" {
-		engine = game.New(ctx, store)
+		// 主动停止先结清原流水；租约失败直接取消房间执行与结清等待。
+		leaseContext, cancelEngine = context.WithCancelCause(context.WithoutCancel(ctx))
+		defer cancelEngine(nil)
+		engine = game.New(leaseContext, store)
 		server.Engine = engine
 		defer engine.Stop()
 	}
@@ -151,9 +156,10 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	done := make(chan error, 1)
 	go func() { done <- httpServer.ListenAndServe() }()
 	leaseEvents := make(chan nodeLeaseEvent, 4)
-	go logNodeLeaseEvents(ctx, mode, leaseEvents)
+	go logNodeLeaseEvents(leaseContext, mode, leaseEvents)
 	go func() {
-		if err := watchNodeLease(ctx, confirmed, renew, leaseEvents); err != nil && ctx.Err() == nil {
+		if err := watchNodeLease(leaseContext, confirmed, renew, leaseEvents); err != nil && leaseContext.Err() == nil {
+			cancelEngine(err)
 			cancel(err)
 			slog.Error("节点租约失败，隔离本进程", "mode", mode, "error", err)
 		}
@@ -162,6 +168,7 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	select {
 	case err := <-done:
 		if !errors.Is(err, http.ErrServerClosed) {
+			cancelEngine(err)
 			cancel(err)
 			return err
 		}
@@ -169,11 +176,15 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	}
 	shutdown, stop := context.WithTimeout(context.Background(), 8*time.Second)
 	defer stop()
+	var drainErr error
+	if engine != nil && parent.Err() != nil {
+		drainErr = engine.DrainSettlements(shutdown)
+	}
 	e = httpServer.Shutdown(shutdown)
 	if parent.Err() == nil {
 		return errors.Join(e, context.Cause(ctx))
 	}
-	return e
+	return errors.Join(e, drainErr)
 }
 func supervise(ctx context.Context, cfg devconfig.Config) error {
 	if !filepath.IsAbs(cfg.SourcePath) {

@@ -2,6 +2,8 @@ package game
 
 import (
 	"errors"
+	"slices"
+
 	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
@@ -18,10 +20,23 @@ func splitBaseline(out *pb.SceneBaselineChunk, request uint32, binding uint64) (
 	if len(out.Entities) > baselineEntityLimit {
 		return nil, errors.New("场景基线实体超过双端合同")
 	}
+	header := len(wire.Encode(wire.Frame{ID: p.MsgS2CSceneBaseline, Request: request, Binding: binding}))
+	// 普通挂机图的完整基线已经带单帧身份。校验后直接交给发送端编码，
+	// 省去整份实体克隆和仅用于长度核验的临时编码。
+	var smallHandles [16]uint32
+	if len(out.Entities) <= len(smallHandles) && out.ChunkCount == 1 && out.ChunkIndex == 0 && header+proto.Size(out) <= wire.MaxFrame {
+		for i, entity := range out.Entities {
+			if entity == nil || entity.EntityHandle == 0 || slices.Contains(smallHandles[:i], entity.EntityHandle) {
+				return nil, errors.New("场景基线实体身份重复或无效")
+			}
+			smallHandles[i] = entity.EntityHandle
+		}
+		return []*pb.SceneBaselineChunk{out}, nil
+	}
+
 	base := proto.Clone(out).(*pb.SceneBaselineChunk)
 	base.Entities = nil
 	base.ChunkCount, base.ChunkIndex = baselineChunkLimit, baselineChunkLimit-1
-	header := len(wire.Encode(wire.Frame{ID: p.MsgS2CSceneBaseline, Request: request, Binding: binding}))
 	metadata := proto.Size(base)
 	if header+metadata > wire.MaxFrame {
 		return nil, errors.New("场景基线元数据超过单帧")

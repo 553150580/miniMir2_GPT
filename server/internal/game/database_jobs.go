@@ -3,7 +3,7 @@ package game
 import "context"
 
 const (
-	databaseBusinessWorkers  = 24
+	databaseBusinessWorkers  = 48
 	databaseAdmissionWorkers = 6
 )
 

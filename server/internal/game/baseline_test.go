@@ -51,10 +51,38 @@ func TestPetRuntimeBaselineRejectsSingleOversizedEntityBeforeSendingAnyChunk(t *
 	for i := 0; i < wire.MaxFrame; i++ {
 		e.Statuses = append(e.Statuses, &pb.EntityStatusState{StatusId: uint32(i + 1)})
 	}
-	if chunks, err := splitBaseline(&pb.SceneBaselineChunk{Entities: []*pb.EntityState{e}}, 0, 0); err == nil || chunks != nil {
+	if chunks, err := splitBaseline(&pb.SceneBaselineChunk{ChunkCount: 1, Entities: []*pb.EntityState{e}}, 0, 0); err == nil || chunks != nil {
 		t.Fatal("单实体越界仍发出部分基线")
 	}
 	if _, err := splitBaseline(&pb.SceneBaselineChunk{Entities: []*pb.EntityState{{EntityHandle: 3}, {EntityHandle: 3}}}, 0, 0); err == nil {
 		t.Fatal("允许基线跨块重复handle")
+	}
+}
+
+func TestSmallBaselineKeepsMetadataAndValidatesIdentity(t *testing.T) {
+	out := &pb.SceneBaselineChunk{
+		SceneEpoch: 7, BaselineId: 8, ChunkCount: 1, StateSequence: 9,
+		Entities:        []*pb.EntityState{{EntityHandle: 1}, {EntityHandle: 10}},
+		NavigationState: &pb.NavigationState{Destination: &pb.GridPoint{X: 12, Y: 12}},
+	}
+	want := proto.Clone(out)
+	chunks, err := splitBaseline(out, math.MaxUint32, math.MaxUint64)
+	if err != nil || len(chunks) != 1 || !proto.Equal(chunks[0], want) {
+		t.Fatalf("个人地图单帧基线应保留原元数据：%v", err)
+	}
+	encoded := wire.Encode(wire.Message(p.MsgS2CSceneBaseline, math.MaxUint32, math.MaxUint64, chunks[0]))
+	frame, err := wire.Decode(encoded)
+	if err != nil || frame.Request != math.MaxUint32 || frame.Binding != math.MaxUint64 {
+		t.Fatalf("单帧基线必须保留正常的封包身份：%v", err)
+	}
+	got := &pb.SceneBaselineChunk{}
+	if err := proto.Unmarshal(frame.Payload, got); err != nil || !proto.Equal(got, want) {
+		t.Fatalf("单帧基线编码后字段发生变化：%v", err)
+	}
+	for _, invalid := range []*pb.EntityState{nil, {}, {EntityHandle: 1}} {
+		out.Entities[1] = invalid
+		if chunks, err := splitBaseline(out, 0, 0); err == nil || chunks != nil {
+			t.Fatal("单帧基线接收了无效或重叠的实体身份")
+		}
 	}
 }
