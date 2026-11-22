@@ -21,12 +21,12 @@ function sockets(t) {
         deliver(id, seq, binding, value) { this.onmessage?.({ data: encodePacket(id, seq, binding, value).buffer }); }
     }
     global.WebSocket = Socket;
-    global.location = { protocol: 'http:', host: '127.0.0.1:18080' };
+    global.location = { origin: 'http://127.0.0.1:18080' };
     const connection = new GameConnection(), status = [];
     connection.onStatus(message => status.push(message));
     t.after(() => { connection.close(); global.WebSocket = original; global.location = location; });
     async function enter(ticket) {
-        const joining = connection.connect(ticket), socket = instances.at(-1);
+        const joining = connection.connect(ticket, '/game/ws'), socket = instances.at(-1);
         socket.open(); await Promise.resolve();
         const request = socket.sent.at(-1);
         assert.equal(request.value.accountTicket, ticket);
@@ -80,7 +80,7 @@ test('主动关闭清理未完成请求，不把切角或主动退出当作掉�
 
 test('握手尚未open时网络断开也立即结束，并在状态中留下重连原因', async t => {
     const { connection, status, instances } = sockets(t);
-    const joining = connection.connect('断开测试');
+    const joining = connection.connect('断开测试', '/game/ws');
     const rejected = assert.rejects(joining, /断开|关闭/);
     const socket = instances.at(-1);
     socket.close(); await rejected;
@@ -101,7 +101,7 @@ function clock(t) {
 test('重连终止信号会立即关闭未完成的WS握手或入场，并清理原计时器且不误报掉线', async t => {
     const tick = clock(t), { connection, status, instances } = sockets(t);
     const beforeOpen = new AbortController();
-    const opening = connection.connect('等待握手', beforeOpen.signal);
+    const opening = connection.connect('等待握手', '/game/ws', beforeOpen.signal);
     const rejectedOpen = assert.rejects(opening, /取消/);
     const first = instances.at(-1);
     beforeOpen.abort(); await rejectedOpen;
@@ -111,7 +111,7 @@ test('重连终止信号会立即关闭未完成的WS握手或入场，并清理
     assert.deepEqual(status, []);
 
     const beforeEntry = new AbortController();
-    const joining = connection.connect('等待入场', beforeEntry.signal);
+    const joining = connection.connect('等待入场', '/game/ws', beforeEntry.signal);
     const rejectedEntry = assert.rejects(joining, /取消|关闭/);
     const second = instances.at(-1);
     second.open(); await Promise.resolve();
@@ -131,7 +131,7 @@ test('重连终止信号会立即关闭未完成的WS握手或入场，并清理
 test('绑定后心跳使用当前会话和原请求序号，正常回执继续检查，主动关闭停止计时', async t => {
     const tick = clock(t), { connection, status, instances } = sockets(t);
     const signal = new AbortController();
-    const joining = connection.connect('登录票据', signal.signal);
+    const joining = connection.connect('登录票据', '/game/ws', signal.signal);
     const socket = instances.at(-1);
     socket.open(); await Promise.resolve();
     await tick(9000);

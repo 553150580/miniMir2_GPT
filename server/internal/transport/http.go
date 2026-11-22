@@ -153,6 +153,17 @@ func (s *Server) rpc(w http.ResponseWriter, r *http.Request) {
 		if f.ID == p.MsgC2SLocalRegister {
 			id = p.MsgS2CLocalRegister
 		}
+	case p.MsgC2SServerDirectory:
+		var q pb.ServerDirectoryRequest
+		e = decode(&q)
+		var a persistence.Auth
+		if e == nil {
+			a, e = s.auth(r)
+		}
+		if e == nil {
+			out, e = s.Store.ServerDirectory(ctx, a)
+		}
+		id = p.MsgS2CServerDirectory
 	case p.MsgC2SRoleDirectory:
 		// q 承载角色目录请求中的入口服编号。
 		var q pb.RoleDirectoryRequest
@@ -211,22 +222,36 @@ func (s *Server) registerGame(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "unauthorized", 401)
 		return
 	}
-	// q 记录临时结构。
 	var q struct {
-		// Node 记录节点，使用文本表示。
-		Node string `json:"node_id"`
-		// Instance 记录进程或道具实例，使用文本表示。
-		Instance string `json:"instance_id"`
-		// Run 记录运行批次，使用数值表示。
-		Run uint64 `json:"run_id"`
+		GameNodeID string `json:"game_node_id"`  // 稳定的游戏部署身份。
+		BootID     string `json:"boot_id"`       // 本次启动生成的实例身份。
+		RunID      uint64 `json:"run_server_id"` // 当前进程申请运行的逻辑服。
+		Node       string `json:"node_id"`       // 旧版登记字段。
+		Instance   string `json:"instance_id"`   // 旧版登记字段。
+		Run        uint64 `json:"run_id"`        // 旧版登记字段。
 	}
 	// e 接收解码供后续步骤使用。
 	if e := json.NewDecoder(r.Body).Decode(&q); e != nil {
 		http.Error(w, "invalid registration", 400)
 		return
 	}
-	// run 保存由批准游戏取得的运行批次，e 接收批准游戏供后续步骤使用。
-	run, e := s.Store.ApproveGame(r.Context(), q.Node, q.Instance, q.Run)
+	// 兼容旧上报。双字段出现时必须描述同一授权申请。
+	if q.GameNodeID != "" && q.Node != "" && q.GameNodeID != q.Node ||
+		q.BootID != "" && q.Instance != "" && q.BootID != q.Instance ||
+		q.RunID != 0 && q.Run != 0 && q.RunID != q.Run {
+		jsonError(w, persistence.Fail(p.CodeInvalidArgument, "登记身份字段相互冲突"))
+		return
+	}
+	if q.GameNodeID == "" {
+		q.GameNodeID = q.Node
+	}
+	if q.BootID == "" {
+		q.BootID = q.Instance
+	}
+	if q.RunID == 0 {
+		q.RunID = q.Run
+	}
+	run, e := s.Store.ApproveGame(r.Context(), q.GameNodeID, q.BootID, q.RunID)
 	if e != nil {
 		jsonError(w, e)
 		return

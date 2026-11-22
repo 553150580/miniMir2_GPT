@@ -10,12 +10,12 @@ class Toggle{static EventType={TOGGLE:'toggle'};}class EditBox{static EventType=
 async function fixture(){
  const previous={socket:global.WebSocket,location:global.location};const sockets=[];
  class Socket{static OPEN=1;constructor(){this.readyState=0;this.sent=[];sockets.push(this);}send(bytes){this.sent.push(bytes);this.onPacket?.(connection.decodePacket(bytes));}close(){this.readyState=3;this.onclose?.();}}
- global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+ global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };
  const compiled=name=>require('../../../.work/ui-tests/app/'+name+'.js');
  const h=load('client/assets/scripts/app/GameSession.ts',id=>id==='long'?Long:id==='./GameConnection'?connection:id==='./GameErrors'?{protocolErrorMessage:()=>''}
   :['./BaselineAssembler','./TeleportModel','./RoleBindingModel','./MapTravelModel','./SkillModel','./PetBornModel'].includes(id)?compiled(id.slice(2)):{});
  const s=h.session;s.role={job:2,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(9)}};
- const connecting=s.connection.connect('纯组件测试票'),socket=sockets[0];socket.readyState=1;socket.onopen();await Promise.resolve();
+ const connecting=s.connection.connect('纯组件测试票', '/game/ws'),socket=sockets[0];socket.readyState=1;socket.onopen();await Promise.resolve();
  const deliver=(id,seq,value)=>{const bytes=connection.encodePacket(id,seq,Long.UONE,value);socket.onmessage({data:bytes.buffer});};
  const e=entry();e.resourceVersion=Long.fromInt(19,true);deliver(20002,connection.decodePacket(socket.sent[0]).seq,e);await connecting;deliver(6,0,e);
  const item=id=>({instanceId:new Uint8Array(16).fill(id),itemId:id===3?193:218,quantity:Long.ONE,version:Long.UONE,quality:0,bound:true,locked:id===1,recycleBlockFlags:id===1?1:0});

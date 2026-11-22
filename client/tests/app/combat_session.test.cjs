@@ -120,10 +120,10 @@ test('实际连接等待同序号的30010确认，独立模式推送不会完成
         send(bytes){this.sent.push(decodePacket(bytes));}
         close(){this.readyState=3;}
     }
-    global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+    global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };
     const connection=new GameConnection(),deliver=(id,seq,value)=>socket.onmessage({data:encodePacket(id,seq,Long.UONE,value).buffer});
     try {
-        const joining=connection.connect('test');socket.readyState=Socket.OPEN;socket.onopen();await Promise.resolve();
+        const joining=connection.connect('test', '/game/ws');socket.readyState=Socket.OPEN;socket.onopen();await Promise.resolve();
         const epoch=Long.fromString('9007199254740993',true);
         deliver(20002,socket.sent.at(-1).seq,{sceneEpoch:epoch});await joining;
         let complete=false;

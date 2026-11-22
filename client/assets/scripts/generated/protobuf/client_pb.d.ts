@@ -1058,6 +1058,408 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a ServerDirectoryRequest.
+         * @deprecated Use minimir.v1.ServerDirectoryRequest.$Properties instead.
+         */
+        interface IServerDirectoryRequest extends minimir.v1.ServerDirectoryRequest.$Properties {
+        }
+
+        /** Represents a ServerDirectoryRequest. */
+        class ServerDirectoryRequest {
+
+            /**
+             * Constructs a new ServerDirectoryRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ServerDirectoryRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /**
+             * Creates a new ServerDirectoryRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ServerDirectoryRequest instance
+             */
+            static create(properties: minimir.v1.ServerDirectoryRequest.$Shape): minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape;
+            static create(properties?: minimir.v1.ServerDirectoryRequest.$Properties): minimir.v1.ServerDirectoryRequest;
+
+            /**
+             * Encodes the specified ServerDirectoryRequest message. Does not implicitly {@link minimir.v1.ServerDirectoryRequest.verify|verify} messages.
+             * @param message ServerDirectoryRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ServerDirectoryRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ServerDirectoryRequest message, length delimited. Does not implicitly {@link minimir.v1.ServerDirectoryRequest.verify|verify} messages.
+             * @param message ServerDirectoryRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ServerDirectoryRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ServerDirectoryRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape} ServerDirectoryRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape;
+
+            /**
+             * Decodes a ServerDirectoryRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape} ServerDirectoryRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape;
+
+            /**
+             * Verifies a ServerDirectoryRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ServerDirectoryRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ServerDirectoryRequest {
+
+            /** Properties of a ServerDirectoryRequest. */
+            interface $Properties {
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ServerDirectoryRequest. */
+            type $Shape = minimir.v1.ServerDirectoryRequest.$Properties;
+        }
+
+        /**
+         * Properties of a ServerEntry.
+         * @deprecated Use minimir.v1.ServerEntry.$Properties instead.
+         */
+        interface IServerEntry extends minimir.v1.ServerEntry.$Properties {
+        }
+
+        /** Represents a ServerEntry. */
+        class ServerEntry {
+
+            /**
+             * Constructs a new ServerEntry.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ServerEntry.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ServerEntry origin_server_id. */
+            origin_server_id: Long;
+
+            /** ServerEntry name. */
+            name: string;
+
+            /** ServerEntry available. */
+            available: boolean;
+
+            /**
+             * Creates a new ServerEntry instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ServerEntry instance
+             */
+            static create(properties: minimir.v1.ServerEntry.$Shape): minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape;
+            static create(properties?: minimir.v1.ServerEntry.$Properties): minimir.v1.ServerEntry;
+
+            /**
+             * Encodes the specified ServerEntry message. Does not implicitly {@link minimir.v1.ServerEntry.verify|verify} messages.
+             * @param message ServerEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ServerEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ServerEntry message, length delimited. Does not implicitly {@link minimir.v1.ServerEntry.verify|verify} messages.
+             * @param message ServerEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ServerEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ServerEntry message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape} ServerEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape;
+
+            /**
+             * Decodes a ServerEntry message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape} ServerEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape;
+
+            /**
+             * Verifies a ServerEntry message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ServerEntry
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ServerEntry {
+
+            /** Properties of a ServerEntry. */
+            interface $Properties {
+
+                /** ServerEntry origin_server_id */
+                origin_server_id?: (Long|null);
+
+                /** ServerEntry name */
+                name?: (string|null);
+
+                /** ServerEntry available */
+                available?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ServerEntry. */
+            type $Shape = minimir.v1.ServerEntry.$Properties;
+        }
+
+        /**
+         * Properties of a ServerRegion.
+         * @deprecated Use minimir.v1.ServerRegion.$Properties instead.
+         */
+        interface IServerRegion extends minimir.v1.ServerRegion.$Properties {
+        }
+
+        /** Represents a ServerRegion. */
+        class ServerRegion {
+
+            /**
+             * Constructs a new ServerRegion.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ServerRegion.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ServerRegion region_id. */
+            region_id: string;
+
+            /** ServerRegion name. */
+            name: string;
+
+            /** ServerRegion servers. */
+            servers: minimir.v1.ServerEntry.$Properties[];
+
+            /**
+             * Creates a new ServerRegion instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ServerRegion instance
+             */
+            static create(properties: minimir.v1.ServerRegion.$Shape): minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape;
+            static create(properties?: minimir.v1.ServerRegion.$Properties): minimir.v1.ServerRegion;
+
+            /**
+             * Encodes the specified ServerRegion message. Does not implicitly {@link minimir.v1.ServerRegion.verify|verify} messages.
+             * @param message ServerRegion message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ServerRegion.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ServerRegion message, length delimited. Does not implicitly {@link minimir.v1.ServerRegion.verify|verify} messages.
+             * @param message ServerRegion message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ServerRegion.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ServerRegion message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape} ServerRegion
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape;
+
+            /**
+             * Decodes a ServerRegion message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape} ServerRegion
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape;
+
+            /**
+             * Verifies a ServerRegion message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ServerRegion
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ServerRegion {
+
+            /** Properties of a ServerRegion. */
+            interface $Properties {
+
+                /** ServerRegion region_id */
+                region_id?: (string|null);
+
+                /** ServerRegion name */
+                name?: (string|null);
+
+                /** ServerRegion servers */
+                servers?: (minimir.v1.ServerEntry.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ServerRegion. */
+            type $Shape = minimir.v1.ServerRegion.$Properties;
+        }
+
+        /**
+         * Properties of a ServerDirectoryResult.
+         * @deprecated Use minimir.v1.ServerDirectoryResult.$Properties instead.
+         */
+        interface IServerDirectoryResult extends minimir.v1.ServerDirectoryResult.$Properties {
+        }
+
+        /** Represents a ServerDirectoryResult. */
+        class ServerDirectoryResult {
+
+            /**
+             * Constructs a new ServerDirectoryResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ServerDirectoryResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ServerDirectoryResult regions. */
+            regions: minimir.v1.ServerRegion.$Properties[];
+
+            /**
+             * Creates a new ServerDirectoryResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ServerDirectoryResult instance
+             */
+            static create(properties: minimir.v1.ServerDirectoryResult.$Shape): minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape;
+            static create(properties?: minimir.v1.ServerDirectoryResult.$Properties): minimir.v1.ServerDirectoryResult;
+
+            /**
+             * Encodes the specified ServerDirectoryResult message. Does not implicitly {@link minimir.v1.ServerDirectoryResult.verify|verify} messages.
+             * @param message ServerDirectoryResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ServerDirectoryResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ServerDirectoryResult message, length delimited. Does not implicitly {@link minimir.v1.ServerDirectoryResult.verify|verify} messages.
+             * @param message ServerDirectoryResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ServerDirectoryResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ServerDirectoryResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape} ServerDirectoryResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape;
+
+            /**
+             * Decodes a ServerDirectoryResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape} ServerDirectoryResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape;
+
+            /**
+             * Verifies a ServerDirectoryResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ServerDirectoryResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ServerDirectoryResult {
+
+            /** Properties of a ServerDirectoryResult. */
+            interface $Properties {
+
+                /** ServerDirectoryResult regions */
+                regions?: (minimir.v1.ServerRegion.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ServerDirectoryResult. */
+            type $Shape = minimir.v1.ServerDirectoryResult.$Properties;
+        }
+
+        /**
          * Properties of a RoleDirectoryRequest.
          * @deprecated Use minimir.v1.RoleDirectoryRequest.$Properties instead.
          */
@@ -1637,6 +2039,9 @@ export namespace minimir {
             /** EntryTicketResult expires_at_unix. */
             expires_at_unix: Long;
 
+            /** EntryTicketResult game_node_id. */
+            game_node_id: string;
+
             /**
              * Creates a new EntryTicketResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -1714,6 +2119,9 @@ export namespace minimir {
 
                 /** EntryTicketResult expires_at_unix */
                 expires_at_unix?: (Long|null);
+
+                /** EntryTicketResult game_node_id */
+                game_node_id?: (string|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

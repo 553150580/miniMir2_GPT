@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 仅隔离cfg正常注册/道士创角/触屏观察；不造尸体、不发送导航或战斗私有调用，凭据只在内存。
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'../..'),secrets=[];
@@ -89,7 +90,7 @@ async function verifyQAHealth(){
  try{
   await page.goto('http://127.0.0.1:18080/?petRuntimeQA=1');await scene('Login');
   const account='pgq'+crypto.randomBytes(6).toString('hex'),password=crypto.randomBytes(12).toString('hex'),name='PG'+crypto.randomBytes(4).toString('hex');secrets.push(account,password);
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await idle();await observe();
+  await edit('Account',account);await edit('Password',password);await tap('Register');await chooseQAServer(page, scene);await idle();await observe();
   await until(async()=>{const selected=await page.evaluate(readTaoSelection);report.roleSelectionAttempts.push({time:Date.now(),...selected});if(!selected.ready)return false;if(selected.selectedJob===2){report.roleSelection=selected;return true;}await tap('JobTabs/Job2');return false;},'Loading关闭且职业job2普通触屏选择已生效',10000);
   await edit('Name',name);await tap('Create');await page.waitForFunction(name=>Boolean(cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(label=>label.string.includes(name))),name,{timeout:20000});await idle();
   const created=await page.evaluate(({session,name})=>{const role=session.roles.find(role=>role.name===name);return role?{job:role.job,slot:role.slot}:null;},{session:observed,name});assert(created&&created.job===2,'正常创建后的目录角色必须是道士');assert.equal(report.roleCreationRequests.length,1);assert.equal(report.roleCreationRequests[0].job,2);report.createdRole=created;

@@ -14,6 +14,7 @@ export class GameReconnect {
     private readonly buttonLabel: Label;
     private readonly unsubscribe: () => void;
     private readonly account = session.account;
+    private readonly server = session.originServer;
     private readonly role = session.role;
     private readonly identity = roleIdentity();
     private attempt?: AbortController;
@@ -102,7 +103,7 @@ export class GameReconnect {
         let token = connection.token;
         let generation: number | undefined;
         const scopeIsCurrent = (): boolean => !this.disposed && this.attempt === attempt && session.account === this.account
-            && session.role === this.role && roleIdentity() === this.identity && connection.token === token;
+            && session.originServer === this.server && session.role === this.role && roleIdentity() === this.identity && connection.token === token;
         const requireScope = (): void => {
             if (!scopeIsCurrent() || attempt.signal.aborted) throw new Error('重连身份已失效');
         };
@@ -110,6 +111,7 @@ export class GameReconnect {
         try {
             requireScope();
             if (!this.account) throw new Error('缺少当前账号，请重新登录');
+            if (!this.server?.originServerId.equals(this.role.key.originServerId)) throw new Error('当前区服与角色归属不匹配');
             if (this.needsPassword) {
                 this.showStatus('正在验证当前账号…');
                 const verified = await connection.rpc(10001, { account: this.account.name, password }, attempt.signal);

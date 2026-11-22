@@ -13,11 +13,11 @@ const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function fixture(skillId){
  const oldSocket=global.WebSocket,oldLocation=global.location,sockets=[];
  class Socket{static OPEN=1;constructor(){this.readyState=0;this.sent=[];sockets.push(this);}send(bytes){this.sent.push(bytes);this.onPacket?.(connection.decodePacket(bytes),bytes);}close(){this.readyState=3;this.onclose?.();}}
- global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+ global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };
  const h=load('client/assets/scripts/app/GameSession.ts',id=>id==='long'?Long:id==='./GameConnection'?connection:id==='./GameErrors'?{protocolErrorMessage:()=>''}
   :['./BaselineAssembler','./TeleportModel','./RoleBindingModel','./MapTravelModel','./SkillModel','./PetBornModel'].includes(id)?model(id.slice(2)):{});
  const s=h.session;s.role={job:2,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(9)}};
- const connecting=s.connection.connect('纯组件测试票'),socket=sockets[0];socket.readyState=1;socket.onopen();await Promise.resolve();
+ const connecting=s.connection.connect('纯组件测试票', '/game/ws'),socket=sockets[0];socket.readyState=1;socket.onopen();await Promise.resolve();
  const deliver=(id,seq,value)=>{const bytes=connection.encodePacket(id,seq,Long.UONE,value);socket.onmessage({data:bytes.buffer});};
  const e=entry('9007199254740993','1');e.resourceVersion=Long.fromInt(18,true);deliver(20002,connection.decodePacket(socket.sent[0]).seq,e);await connecting;deliver(6,0,e);
  const definition={id:skillId,name:'材料技能',job_id:2,book_item_id:25,learn_level:19,initial_level:0,max_level:3,kind:skillId===17?'summon_pet':skillId===14?'soul_shield':'blessed_armour',target_kind:skillId===17?'friendly_self':'friendly_grid',active:true,activation_kind:'cast',range:9,base_cost:12,level_cost:4,cast_ms:600,material_item_id:187,material_quantity:1,area_radius:3};

@@ -13,6 +13,9 @@ import { newOperationId, ProtocolResponseError } from './GameConnection';
 import { currentEntryIdentity, isCurrentEntry, operation, roleIdentity, session } from './GameSession';
 import { accountIdentity, GameReconnect } from './GameReconnect';
 import { connectRoleEntry, isRoleAccountAuthenticationError } from './RoleEntry';
+import { ServerDirectory } from './ServerDirectory';
+import { directoryRegions } from './ServerDirectoryModel';
+import type { OriginServer } from './ServerDirectoryModel';
 import { PendingOperations } from './PendingOperations';
 import { PendingRoleCreation, RoleCreationRequest } from './PendingRoleCreation';
 import { GameWorldView } from './GameWorldView';
@@ -55,7 +58,7 @@ import { CodeInvalidArgument, CodeOperationConflict, CodeRoleSlotOrNameOccupied 
 
 const { ccclass, property } = _decorator;
 const names = ['男战士', '女法师', '男道士'];
-let signInResume: { accountId: string; name: string; role: string | null } | null = null;
+let signInResume: { accountId: string; name: string; origin: string | undefined; role: string | null } | null = null;
 
 function selectedRoleIdentity(role: any): string {
     return `${role.key.originServerId.toString()}:${accountIdentity(role.key.roleId)}`;
@@ -129,7 +132,7 @@ export class AppRoot extends Component {
             this.cleanups.push(releaseAudio);
             this.tapSound = () => playClientCue(originalButtonSound, 0.68);
         }
-        session.scenes ??= new SceneManager(new SceneLoader(new CreatorSceneBackend(director)), ['Boot', 'Login', 'RoleSelect', 'Game'], this.sceneKind);
+        session.scenes ??= new SceneManager(new SceneLoader(new CreatorSceneBackend(director)), ['Boot', 'Login', 'ServerSelect', 'RoleSelect', 'Game'], this.sceneKind);
         const unsubscribe = session.scenes.subscribe(state => {
             const overlay = this.node.getChildByPath('Loading'); if (!overlay) return;
             overlay.active = this.mapLoading || state.phase === 'preloading' || state.phase === 'loading';
@@ -142,6 +145,7 @@ export class AppRoot extends Component {
         try {
             if (this.sceneKind === 'Boot') { this.button('Continue', () => this.changeScene('Login')); await this.changeScene('Login'); }
             else if (this.sceneKind === 'Login') this.loginScene();
+            else if (this.sceneKind === 'ServerSelect') await this.serverScene();
             else if (this.sceneKind === 'RoleSelect') await this.roleScene();
             else if (this.sceneKind === 'Game') await this.gameScene();
         } catch (error) { this.error(error); }
@@ -187,30 +191,97 @@ export class AppRoot extends Component {
             const account = accountIdentity(result.accountId);
             if (signInResume?.accountId !== account) signInResume = null;
             session.account = { id: account, name };
-            session.pending = new PendingOperations(sys.localStorage, `minimir.pending.v1.${account}.1`);
-            session.roleCreation = new PendingRoleCreation(sys.localStorage, `minimir.create-role.v1.${account}.1`);
+            this.clearSelectedServer();
             session.connection.token = result.accountToken; session.lastError = '';
             this.edit('Password').string = '';
-            await this.changeScene('RoleSelect');
+            await this.changeScene('ServerSelect');
         };
         this.button('Login', () => login(false)); this.button('Register', () => login(true));
     }
 
+    private async serverScene(): Promise<void> {
+        const account = session.account, token = session.connection.token;
+        if (!account || !token) { await this.changeScene('Login'); return; }
+        const current = (): boolean => !this.disposed && session.account === account && session.connection.token === token;
+        const abort = new AbortController();
+        let entering = false, refreshTask: Promise<void> | undefined;
+        const directory = new ServerDirectory(this.find('RegionList'), this.find('ServerList'), server => {
+            if (!current() || entering) return;
+            entering = true;
+            this.tapSound?.();
+            void this.selectServer(server).catch(error => this.error(error)).finally(() => { entering = false; });
+        });
+        this.cleanups.push(() => abort.abort(), () => directory.dispose());
+        const refresh = (): Promise<void> | undefined => {
+            if (entering) return;
+            if (refreshTask) return refreshTask;
+            this.status('正在取得区服目录…');
+            const task = session.connection.rpc(10011, {}, abort.signal).then(value => {
+                if (!current()) return;
+                const regions = directoryRegions(value);
+                const preferred = session.originServer?.originServerId.toString() ?? signInResume?.origin;
+                directory.show(regions, preferred);
+                const available = regions.some(region => region.servers.some(server => server.available));
+                this.status(available ? '请选择要进入的区服' : '目前没有可进入的区服，可稍后刷新。');
+            }).catch(async error => {
+                if (!current()) return;
+                if (isRoleAccountAuthenticationError(error)) await this.reauthenticateRole();
+                else this.error(error);
+            });
+            refreshTask = task;
+            void task.finally(() => { if (refreshTask === task) refreshTask = undefined; });
+            return task;
+        };
+        this.button('Reload', refresh);
+        this.button('Back', async () => { if (!entering) await this.logout(); });
+        await refresh();
+    }
+
+    private async selectServer(server: OriginServer): Promise<void> {
+        const account = session.account;
+        if (!account || !server.available) return;
+        const origin = server.originServerId.toString();
+        this.clearSelectedServer();
+        session.originServer = server;
+        // 旧入口 1 仍使用原有键，其他入口各自保存未决建角及经济记录。
+        session.pending = new PendingOperations(sys.localStorage, `minimir.pending.v1.${account.id}.${origin}`);
+        session.roleCreation = new PendingRoleCreation(sys.localStorage, `minimir.create-role.v1.${account.id}.${origin}`);
+        if (signInResume?.origin !== origin) signInResume = null;
+        await this.changeScene('RoleSelect');
+    }
+
+    private clearSelectedServer(): void {
+        session.originServer = null;
+        session.role = null; session.roles = []; session.ready = false; session.entry = null; session.baseline = null;
+        session.pending = null; session.roleCreation = null;
+    }
+
+    private async logout(): Promise<void> {
+        signInResume = null; session.connection.token = ''; session.account = null;
+        this.clearSelectedServer();
+        await this.changeScene('Login');
+    }
+
     private async roleScene(): Promise<void> {
         if (!session.connection.token) { await this.changeScene('Login'); return; }
+        const server = session.originServer;
+        if (!server) { await this.changeScene('ServerSelect'); return; }
+        this.text('Title', `${server.name} · 选择角色`);
         for (let i = 0; i < 5; i++) this.button(`Role${i}`, () => {
             this.selectedRole = i;
             if (!this.roleDirectoryReady) return this.fetchRoles();
             this.refreshRoles();
         });
         for (let i = 0; i < 3; i++) this.button(`JobTabs/Job${i}`, () => { this.selectedJob = i; this.status(`创建职业：${names[i]}`); });
-        this.button('Logout', async () => { signInResume = null; session.connection.token = ''; session.account = null; await this.changeScene('Login'); });
+        this.button('Logout', () => this.logout());
+        this.button('BackServers', () => this.changeScene('ServerSelect'));
         this.button('Create', () => this.createRole());
         this.button('Enter', async () => {
             if (!this.roleDirectoryReady && !await this.fetchRoles()) return;
             const role = session.roles[this.selectedRole]; if (!role) throw new Error('先选择一个角色');
             const attempt = ++this.enterAttempt, token = session.connection.token, account = session.account;
-            const current = (): boolean => !this.disposed && this.enterAttempt === attempt && session.connection.token === token && session.account === account;
+            const current = (): boolean => !this.disposed && this.enterAttempt === attempt && session.connection.token === token
+                && session.account === account && session.originServer === server;
             const requireScope = (): void => {
                 if (!current() || session.roles[this.selectedRole] !== role) throw new StaleMapAttachmentError('旧选角入场已经失效');
             };
@@ -252,20 +323,24 @@ export class AppRoot extends Component {
     }
 
     private async loadRoles(): Promise<boolean> {
-        const token = session.connection.token, ledger = session.roleCreation, account = session.account;
-        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
+        const token = session.connection.token, ledger = session.roleCreation, account = session.account, server = session.originServer;
+        if (!server) return false;
+        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger
+            && session.account === account && session.originServer === server;
         let result: any;
-        try { result = await session.connection.rpc(10003, { originServerId: Long.UONE }); }
+        try { result = await session.connection.rpc(10003, { originServerId: server.originServerId }); }
         catch (error) {
             if (!current()) return false;
             if (isRoleAccountAuthenticationError(error)) { await this.reauthenticateRole(); return false; }
             throw error;
         }
         if (!current()) return false;
+        if (!Array.isArray(result.roles) || result.roles.some((role: any) => !Long.isLong(role?.key?.originServerId)
+            || !server.originServerId.equals(role.key.originServerId))) throw new Error('角色目录与所选区服不匹配');
         session.roles = result.roles;
         if (!this.roleDirectoryReady) this.status('');
         this.roleDirectoryReady = true;
-        if (signInResume && signInResume.accountId === account?.id) {
+        if (signInResume?.accountId === account?.id && signInResume?.origin === server.originServerId.toString()) {
             const role = signInResume.role;
             signInResume = null;
             if (role) this.selectedRole = session.roles.findIndex(value => selectedRoleIdentity(value) === role);
@@ -283,18 +358,20 @@ export class AppRoot extends Component {
     }
 
     private async submitRoleCreation(): Promise<void> {
-        const ledger = session.roleCreation, token = session.connection.token, account = session.account;
-        if (!ledger || !token || this.disposed) throw new Error('请先认证后创建角色');
-        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger && session.account === account;
+        const ledger = session.roleCreation, token = session.connection.token, account = session.account, server = session.originServer;
+        if (!ledger || !token || !server || this.disposed) throw new Error('请先认证并选择区服后创建角色');
+        const current = (): boolean => !this.disposed && session.connection.token === token && session.roleCreation === ledger
+            && session.account === account && session.originServer === server;
         if (!this.roleDirectoryReady && (!await this.fetchRoles() || !current())) return;
         let request = ledger.get();
         const replaying = request !== null;
         if (!request) {
             const free = [1,2,3,4,5].find(slot => !session.roles.some(role => role.slot === slot));
             if (free === undefined) throw new Error('五个角色槽已满');
-            request = { originServerId: Long.UONE, slot: free, job: this.selectedJob, name: this.edit('Name').string.trim(), opId: newOperationId() };
+            request = { originServerId: server.originServerId, slot: free, job: this.selectedJob, name: this.edit('Name').string.trim(), opId: newOperationId() };
             ledger.set(request);
         }
+        if (!request.originServerId.equals(server.originServerId)) throw new Error('原建角记录与所选区服不匹配');
         this.status(`正在核对原建角：${request.name}`);
         let result: any;
         try { result = await session.connection.rpc(10005, request); }
@@ -324,14 +401,14 @@ export class AppRoot extends Component {
     private async reauthenticateRole(): Promise<void> {
         const account = session.account;
         const selected = session.roles[this.selectedRole];
-        const previous = signInResume && signInResume.accountId === account?.id ? signInResume.role : null;
-        signInResume = account ? { accountId: account.id, name: account.name, role: selected ? selectedRoleIdentity(selected) : previous } : null;
+        const previous = signInResume?.accountId === account?.id ? signInResume : null;
+        const origin = session.originServer?.originServerId.toString() ?? previous?.origin;
+        signInResume = account ? { accountId: account.id, name: account.name, origin, role: selected ? selectedRoleIdentity(selected) : previous?.role ?? null } : null;
         session.connection.close(); session.connection.token = '';
         session.preparedWorld?.dispose(); session.preparedWorld = null;
-        session.account = null; session.role = null; session.roles = [];
-        session.ready = false; session.entry = null; session.baseline = null;
-        // 只释放内存引用，重新登录后按同一个账号键读取原建角、经济账本。
-        session.pending = null; session.roleCreation = null;
+        session.account = null;
+        // 只释放内存引用，重新选择原账号的原区服后读取未决记录。
+        this.clearSelectedServer();
         session.lastError = ACCOUNT_AUTHENTICATION_MESSAGE;
         this.status(ACCOUNT_AUTHENTICATION_MESSAGE);
         await this.changeScene('Login');
@@ -1465,7 +1542,7 @@ export class AppRoot extends Component {
                 session.lastError = '';
             } else session.lastError = '连接未就绪，仅完成本地退出；远端导航取消未确认';
             this.nav.exitGame(); session.connection.close(); session.ready = false;
-            if (hosting) { session.connection.token = ''; session.account = null; }
+            if (hosting) { session.connection.token = ''; session.account = null; this.clearSelectedServer(); }
             await session.scenes!.switchTo(session.connection.token ? 'RoleSelect' : 'Login');
         } finally {
             // 切换成功后Creator会销毁旧组件并清空字段；只有留在原场景时才恢复输入。

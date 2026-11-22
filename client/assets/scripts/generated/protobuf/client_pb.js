@@ -2538,6 +2538,950 @@ $root.minimir = (function() {
             return LoginResult;
         })();
 
+        v1.ServerDirectoryRequest = (function() {
+
+            /**
+             * Properties of a ServerDirectoryRequest.
+             * @typedef {Object} minimir.v1.ServerDirectoryRequest.$Properties
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ServerDirectoryRequest.
+             * @memberof minimir.v1
+             * @interface IServerDirectoryRequest
+             * @augments minimir.v1.ServerDirectoryRequest.$Properties
+             * @deprecated Use minimir.v1.ServerDirectoryRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a ServerDirectoryRequest.
+             * @typedef {minimir.v1.ServerDirectoryRequest.$Properties} minimir.v1.ServerDirectoryRequest.$Shape
+             */
+
+            /**
+             * Constructs a new ServerDirectoryRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a ServerDirectoryRequest.
+             * @constructor
+             * @param {minimir.v1.ServerDirectoryRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ServerDirectoryRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Creates a new ServerDirectoryRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {minimir.v1.ServerDirectoryRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ServerDirectoryRequest} ServerDirectoryRequest instance
+             * @type {{
+             *   (properties: minimir.v1.ServerDirectoryRequest.$Shape): minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape;
+             *   (properties?: minimir.v1.ServerDirectoryRequest.$Properties): minimir.v1.ServerDirectoryRequest;
+             * }}
+             */
+            ServerDirectoryRequest.create = function(properties) {
+                return new ServerDirectoryRequest(properties);
+            };
+
+            /**
+             * Encodes the specified ServerDirectoryRequest message. Does not implicitly {@link minimir.v1.ServerDirectoryRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {minimir.v1.ServerDirectoryRequest.$Properties} message ServerDirectoryRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerDirectoryRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ServerDirectoryRequest message, length delimited. Does not implicitly {@link minimir.v1.ServerDirectoryRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {minimir.v1.ServerDirectoryRequest.$Properties} message ServerDirectoryRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerDirectoryRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ServerDirectoryRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape} ServerDirectoryRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerDirectoryRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ServerDirectoryRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    reader.skipType(tag & 7, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ServerDirectoryRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerDirectoryRequest & minimir.v1.ServerDirectoryRequest.$Shape} ServerDirectoryRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerDirectoryRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ServerDirectoryRequest message.
+             * @function verify
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ServerDirectoryRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ServerDirectoryRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.ServerDirectoryRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ServerDirectoryRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ServerDirectoryRequest";
+            };
+
+            return ServerDirectoryRequest;
+        })();
+
+        v1.ServerEntry = (function() {
+
+            /**
+             * Properties of a ServerEntry.
+             * @typedef {Object} minimir.v1.ServerEntry.$Properties
+             * @property {Long|null} [origin_server_id] ServerEntry origin_server_id
+             * @property {string|null} [name] ServerEntry name
+             * @property {boolean|null} [available] ServerEntry available
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ServerEntry.
+             * @memberof minimir.v1
+             * @interface IServerEntry
+             * @augments minimir.v1.ServerEntry.$Properties
+             * @deprecated Use minimir.v1.ServerEntry.$Properties instead.
+             */
+
+            /**
+             * Shape of a ServerEntry.
+             * @typedef {minimir.v1.ServerEntry.$Properties} minimir.v1.ServerEntry.$Shape
+             */
+
+            /**
+             * Constructs a new ServerEntry.
+             * @memberof minimir.v1
+             * @classdesc Represents a ServerEntry.
+             * @constructor
+             * @param {minimir.v1.ServerEntry.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ServerEntry = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ServerEntry origin_server_id.
+             * @member {Long} origin_server_id
+             * @memberof minimir.v1.ServerEntry
+             * @instance
+             */
+            ServerEntry.prototype.origin_server_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * ServerEntry name.
+             * @member {string} name
+             * @memberof minimir.v1.ServerEntry
+             * @instance
+             */
+            ServerEntry.prototype.name = "";
+
+            /**
+             * ServerEntry available.
+             * @member {boolean} available
+             * @memberof minimir.v1.ServerEntry
+             * @instance
+             */
+            ServerEntry.prototype.available = false;
+
+            /**
+             * Creates a new ServerEntry instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {minimir.v1.ServerEntry.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ServerEntry} ServerEntry instance
+             * @type {{
+             *   (properties: minimir.v1.ServerEntry.$Shape): minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape;
+             *   (properties?: minimir.v1.ServerEntry.$Properties): minimir.v1.ServerEntry;
+             * }}
+             */
+            ServerEntry.create = function(properties) {
+                return new ServerEntry(properties);
+            };
+
+            /**
+             * Encodes the specified ServerEntry message. Does not implicitly {@link minimir.v1.ServerEntry.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {minimir.v1.ServerEntry.$Properties} message ServerEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerEntry.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.origin_server_id != null && $Object.hasOwnProperty.call(message, "origin_server_id") && (typeof message.origin_server_id === "object" ? message.origin_server_id.low || message.origin_server_id.high : message.origin_server_id !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.origin_server_id);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.available != null && $Object.hasOwnProperty.call(message, "available") && message.available !== false)
+                    writer.uint32(/* id 3, wireType 0 =*/24).bool(message.available);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ServerEntry message, length delimited. Does not implicitly {@link minimir.v1.ServerEntry.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {minimir.v1.ServerEntry.$Properties} message ServerEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerEntry.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ServerEntry message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape} ServerEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerEntry.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ServerEntry();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.origin_server_id = value;
+                            else
+                                delete message.origin_server_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.available = value;
+                            else
+                                delete message.available;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ServerEntry message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerEntry & minimir.v1.ServerEntry.$Shape} ServerEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerEntry.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ServerEntry message.
+             * @function verify
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ServerEntry.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.origin_server_id != null && $Object.hasOwnProperty.call(message, "origin_server_id"))
+                    if (!$util.isInteger(message.origin_server_id) && !(message.origin_server_id && $util.isInteger(message.origin_server_id.low) && $util.isInteger(message.origin_server_id.high)))
+                        return "origin_server_id: integer|Long expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.available != null && $Object.hasOwnProperty.call(message, "available"))
+                    if (typeof message.available !== "boolean")
+                        return "available: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for ServerEntry
+             * @function getTypeUrl
+             * @memberof minimir.v1.ServerEntry
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ServerEntry.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ServerEntry";
+            };
+
+            return ServerEntry;
+        })();
+
+        v1.ServerRegion = (function() {
+
+            /**
+             * Properties of a ServerRegion.
+             * @typedef {Object} minimir.v1.ServerRegion.$Properties
+             * @property {string|null} [region_id] ServerRegion region_id
+             * @property {string|null} [name] ServerRegion name
+             * @property {Array.<minimir.v1.ServerEntry.$Properties>|null} [servers] ServerRegion servers
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ServerRegion.
+             * @memberof minimir.v1
+             * @interface IServerRegion
+             * @augments minimir.v1.ServerRegion.$Properties
+             * @deprecated Use minimir.v1.ServerRegion.$Properties instead.
+             */
+
+            /**
+             * Shape of a ServerRegion.
+             * @typedef {minimir.v1.ServerRegion.$Properties} minimir.v1.ServerRegion.$Shape
+             */
+
+            /**
+             * Constructs a new ServerRegion.
+             * @memberof minimir.v1
+             * @classdesc Represents a ServerRegion.
+             * @constructor
+             * @param {minimir.v1.ServerRegion.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ServerRegion = function (properties) {
+                this.servers = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ServerRegion region_id.
+             * @member {string} region_id
+             * @memberof minimir.v1.ServerRegion
+             * @instance
+             */
+            ServerRegion.prototype.region_id = "";
+
+            /**
+             * ServerRegion name.
+             * @member {string} name
+             * @memberof minimir.v1.ServerRegion
+             * @instance
+             */
+            ServerRegion.prototype.name = "";
+
+            /**
+             * ServerRegion servers.
+             * @member {Array.<minimir.v1.ServerEntry.$Properties>} servers
+             * @memberof minimir.v1.ServerRegion
+             * @instance
+             */
+            ServerRegion.prototype.servers = $util.emptyArray;
+
+            /**
+             * Creates a new ServerRegion instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {minimir.v1.ServerRegion.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ServerRegion} ServerRegion instance
+             * @type {{
+             *   (properties: minimir.v1.ServerRegion.$Shape): minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape;
+             *   (properties?: minimir.v1.ServerRegion.$Properties): minimir.v1.ServerRegion;
+             * }}
+             */
+            ServerRegion.create = function(properties) {
+                return new ServerRegion(properties);
+            };
+
+            /**
+             * Encodes the specified ServerRegion message. Does not implicitly {@link minimir.v1.ServerRegion.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {minimir.v1.ServerRegion.$Properties} message ServerRegion message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerRegion.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.region_id != null && $Object.hasOwnProperty.call(message, "region_id") && message.region_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.region_id);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
+                if (message.servers != null && message.servers.length)
+                    for (var i = 0; i < message.servers.length; ++i)
+                        $root.minimir.v1.ServerEntry.encode(message.servers[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ServerRegion message, length delimited. Does not implicitly {@link minimir.v1.ServerRegion.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {minimir.v1.ServerRegion.$Properties} message ServerRegion message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerRegion.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ServerRegion message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape} ServerRegion
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerRegion.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ServerRegion();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.region_id = value;
+                            else
+                                delete message.region_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.servers && message.servers.length))
+                                message.servers = [];
+                            message.servers.push($root.minimir.v1.ServerEntry.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ServerRegion message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerRegion & minimir.v1.ServerRegion.$Shape} ServerRegion
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerRegion.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ServerRegion message.
+             * @function verify
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ServerRegion.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.region_id != null && $Object.hasOwnProperty.call(message, "region_id"))
+                    if (!$util.isString(message.region_id))
+                        return "region_id: string expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.servers != null && $Object.hasOwnProperty.call(message, "servers")) {
+                    if (!$Array.isArray(message.servers))
+                        return "servers: array expected";
+                    for (var i = 0; i < message.servers.length; ++i) {
+                        var error = $root.minimir.v1.ServerEntry.verify(message.servers[i], _depth + 1);
+                        if (error)
+                            return "servers." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ServerRegion
+             * @function getTypeUrl
+             * @memberof minimir.v1.ServerRegion
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ServerRegion.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ServerRegion";
+            };
+
+            return ServerRegion;
+        })();
+
+        v1.ServerDirectoryResult = (function() {
+
+            /**
+             * Properties of a ServerDirectoryResult.
+             * @typedef {Object} minimir.v1.ServerDirectoryResult.$Properties
+             * @property {Array.<minimir.v1.ServerRegion.$Properties>|null} [regions] ServerDirectoryResult regions
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ServerDirectoryResult.
+             * @memberof minimir.v1
+             * @interface IServerDirectoryResult
+             * @augments minimir.v1.ServerDirectoryResult.$Properties
+             * @deprecated Use minimir.v1.ServerDirectoryResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a ServerDirectoryResult.
+             * @typedef {minimir.v1.ServerDirectoryResult.$Properties} minimir.v1.ServerDirectoryResult.$Shape
+             */
+
+            /**
+             * Constructs a new ServerDirectoryResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a ServerDirectoryResult.
+             * @constructor
+             * @param {minimir.v1.ServerDirectoryResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ServerDirectoryResult = function (properties) {
+                this.regions = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ServerDirectoryResult regions.
+             * @member {Array.<minimir.v1.ServerRegion.$Properties>} regions
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @instance
+             */
+            ServerDirectoryResult.prototype.regions = $util.emptyArray;
+
+            /**
+             * Creates a new ServerDirectoryResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {minimir.v1.ServerDirectoryResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ServerDirectoryResult} ServerDirectoryResult instance
+             * @type {{
+             *   (properties: minimir.v1.ServerDirectoryResult.$Shape): minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape;
+             *   (properties?: minimir.v1.ServerDirectoryResult.$Properties): minimir.v1.ServerDirectoryResult;
+             * }}
+             */
+            ServerDirectoryResult.create = function(properties) {
+                return new ServerDirectoryResult(properties);
+            };
+
+            /**
+             * Encodes the specified ServerDirectoryResult message. Does not implicitly {@link minimir.v1.ServerDirectoryResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {minimir.v1.ServerDirectoryResult.$Properties} message ServerDirectoryResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerDirectoryResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.regions != null && message.regions.length)
+                    for (var i = 0; i < message.regions.length; ++i)
+                        $root.minimir.v1.ServerRegion.encode(message.regions[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ServerDirectoryResult message, length delimited. Does not implicitly {@link minimir.v1.ServerDirectoryResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {minimir.v1.ServerDirectoryResult.$Properties} message ServerDirectoryResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ServerDirectoryResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ServerDirectoryResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape} ServerDirectoryResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerDirectoryResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ServerDirectoryResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.regions && message.regions.length))
+                                message.regions = [];
+                            message.regions.push($root.minimir.v1.ServerRegion.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ServerDirectoryResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ServerDirectoryResult & minimir.v1.ServerDirectoryResult.$Shape} ServerDirectoryResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ServerDirectoryResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ServerDirectoryResult message.
+             * @function verify
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ServerDirectoryResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.regions != null && $Object.hasOwnProperty.call(message, "regions")) {
+                    if (!$Array.isArray(message.regions))
+                        return "regions: array expected";
+                    for (var i = 0; i < message.regions.length; ++i) {
+                        var error = $root.minimir.v1.ServerRegion.verify(message.regions[i], _depth + 1);
+                        if (error)
+                            return "regions." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ServerDirectoryResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.ServerDirectoryResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ServerDirectoryResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ServerDirectoryResult";
+            };
+
+            return ServerDirectoryResult;
+        })();
+
         v1.RoleDirectoryRequest = (function() {
 
             /**
@@ -3886,6 +4830,7 @@ $root.minimir = (function() {
              * @property {Long|null} [run_server_id] EntryTicketResult run_server_id
              * @property {Long|null} [route_version] EntryTicketResult route_version
              * @property {Long|null} [expires_at_unix] EntryTicketResult expires_at_unix
+             * @property {string|null} [game_node_id] EntryTicketResult game_node_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -3958,6 +4903,14 @@ $root.minimir = (function() {
             EntryTicketResult.prototype.expires_at_unix = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
             /**
+             * EntryTicketResult game_node_id.
+             * @member {string} game_node_id
+             * @memberof minimir.v1.EntryTicketResult
+             * @instance
+             */
+            EntryTicketResult.prototype.game_node_id = "";
+
+            /**
              * Creates a new EntryTicketResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntryTicketResult
@@ -3999,6 +4952,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.route_version);
                 if (message.expires_at_unix != null && $Object.hasOwnProperty.call(message, "expires_at_unix") && (typeof message.expires_at_unix === "object" ? message.expires_at_unix.low || message.expires_at_unix.high : message.expires_at_unix !== 0))
                     writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.expires_at_unix);
+                if (message.game_node_id != null && $Object.hasOwnProperty.call(message, "game_node_id") && message.game_node_id !== "")
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.game_node_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -4101,6 +5056,15 @@ $root.minimir = (function() {
                                 delete message.expires_at_unix;
                             continue;
                         }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.game_node_id = value;
+                            else
+                                delete message.game_node_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -4164,6 +5128,9 @@ $root.minimir = (function() {
                 if (message.expires_at_unix != null && $Object.hasOwnProperty.call(message, "expires_at_unix"))
                     if (!$util.isInteger(message.expires_at_unix) && !(message.expires_at_unix && $util.isInteger(message.expires_at_unix.low) && $util.isInteger(message.expires_at_unix.high)))
                         return "expires_at_unix: integer|Long expected";
+                if (message.game_node_id != null && $Object.hasOwnProperty.call(message, "game_node_id"))
+                    if (!$util.isString(message.game_node_id))
+                        return "game_node_id: string expected";
                 return null;
             };
 

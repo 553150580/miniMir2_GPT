@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 87,
+  "message_count": 91,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -16,6 +16,10 @@
     "ConfigVersion",
     "LocalLoginRequest",
     "LoginResult",
+    "ServerDirectoryRequest",
+    "ServerEntry",
+    "ServerRegion",
+    "ServerDirectoryResult",
     "RoleDirectoryRequest",
     "RoleSummary",
     "RoleDirectoryResult",
@@ -94,8 +98,8 @@
     "VendorQuoteResult",
     "VendorCommitRequest"
   ],
-  "int64_field_count": 222,
-  "int64_boundary_cases": 732,
+  "int64_field_count": 223,
+  "int64_boundary_cases": 735,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -160,6 +164,12 @@
     {
       "message": "LoginResult",
       "field": "expires_at_unix",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "ServerEntry",
+      "field": "origin_server_id",
       "type": "uint64",
       "cases": 3
     },
@@ -1578,7 +1588,7 @@
     },
     {
       "path": "shared/proto/account.proto",
-      "sha256": "ddc17c4559698e289db745c6865a5cc8f3f1b708d3397dc2a9caa1cb85731964"
+      "sha256": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66"
     },
     {
       "path": "shared/proto/world.proto",
@@ -1592,13 +1602,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "75099a1fb851383e8521f20e1921d2e2f9d0728aa56e7f7d4184b4f1e0ec8e9b",
-      "bytes": 1512600
+      "sha256": "610670727641e052bafaded43c55a2d05e30be5c31464717880cc1f83ec5d401",
+      "bytes": 1559483
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "2bffba7d223c8d7730f7adccb8889bcc5f9a89e5455909a8d38582ca1bdbb3ad",
-      "bytes": 471482
+      "sha256": "979f4f86e4aa317ca715af0e864c5b119c38b9994ccdb17affb64abcf9b40625",
+      "bytes": 490226
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

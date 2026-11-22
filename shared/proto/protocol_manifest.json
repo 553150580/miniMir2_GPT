@@ -218,6 +218,30 @@
       "source_ref": "2026-10-26首个可玩闭环：基线就绪确认与本地开发账号注册"
     },
     {
+      "value": 10011,
+      "name": "MsgC2SServerDirectory",
+      "proto_message": "ServerDirectoryRequest",
+      "direction": "c2s",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:959-978，账号节点的分区分服入口"
+    },
+    {
+      "value": 10012,
+      "name": "MsgS2CServerDirectory",
+      "proto_message": "ServerDirectoryResult",
+      "direction": "s2c",
+      "binding_required": false,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案.md:959-978，账号节点的分区分服响应"
+    },
+    {
       "value": 20001,
       "name": "MsgC2SEnterLine",
       "proto_message": "EnterLineRequest",

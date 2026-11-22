@@ -308,9 +308,11 @@ type Config struct {
 	MongoURIByPlatform map[string]string `json:"mongo_uri_by_platform,omitempty"` // 针对不同操作系统选用的专用副本集地址。
 	Database           string            `json:"database"`                        // 通过所有权检查的开发或隔离测试库名称。
 	FixtureFile        string            `json:"fixture_file"`                    // 存放玩法规则快照的文件路径。
-	NodeID             string            `json:"node_id"`                         // 申请节点运行租约时使用的稳定身份。
+	NodeID             string            `json:"game_node_id"`                    // game 节点的稳定部署身份，兼容旧配置键 node_id。
 	OriginID           uint64            `json:"origin_id"`                       // 试玩的入口服编号。
 	RunID              uint64            `json:"run_id"`                          // 游戏执行域的稳定编号，所有权换代时保持此编号。
+	OriginRoutes       []OriginRouteSeed `json:"origin_routes,omitempty"`         // 首次建库时登记的区服入口和路由。
+	RunServers         []RunServerSeed   `json:"run_servers,omitempty"`           // 首次建库时登记的运行服与部署节点分配。
 	AllowedOrigins     []string          `json:"allowed_origins"`                 // 配置文件保留的来源白名单字段，传输层另执行本机来源限制。
 	SourcePath         string            `json:"-"`                               // 此次实际读取的启动配置绝对路径。
 	Root               string            `json:"-"`                               // 解析相对玩法快照路径的仓库根目录。
@@ -340,7 +342,7 @@ func Load(path string) (Config, error) {
 	if e != nil {
 		return c, e
 	}
-	if e = json.Unmarshal(b, &c); e != nil {
+	if e = c.decodeNodeConfiguration(b); e != nil {
 		return c, e
 	}
 	c.SourcePath = absolute
@@ -367,8 +369,8 @@ func Load(path string) (Config, error) {
 	if c.Database != "minimir_dev_game" && !strings.HasPrefix(c.Database, "minimir_dev_game_test_") {
 		return c, errors.New("必须使用专用开发游戏数据库")
 	}
-	if c.NodeID == "" || c.OriginID == 0 || c.RunID == 0 {
-		return c, errors.New("节点与路由ID缺失")
+	if e = c.validateTopology(); e != nil {
+		return c, e
 	}
 	// fixturePath 保存开发测试配置文件，用于当前步骤中的开发测试配置路径。
 	fixturePath := c.FixtureFile

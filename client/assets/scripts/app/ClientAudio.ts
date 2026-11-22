@@ -3,7 +3,7 @@ import { traceInput } from './InputTrace';
 import { originalActorAudioClips } from './OriginalActorAudio';
 import { originalSkillAudioClips } from './OriginalSkillAudio';
 
-export const originalSceneMusic = { Login: 'Log-in-long2', RoleSelect: 'main_theme', Game: 'Field2' } as const;
+export const originalSceneMusic = { Login: 'Log-in-long2', ServerSelect: 'main_theme', RoleSelect: 'main_theme', Game: 'Field2' } as const;
 export const originalButtonSound = '103';
 const effectClips = new Set([originalButtonSound, ...originalActorAudioClips, ...originalSkillAudioClips]);
 const effectChannels = 8;

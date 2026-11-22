@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 独立rule18工程的正常触屏链；内部对象/协议/渲染事件只读观察，凭据仅在内存。
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
@@ -385,7 +386,7 @@ async function run() {
     try {
         await page.goto(`http://127.0.0.1:${evidence.static_port}/?petVisualQA=1`); await scene('Login');
         const account = 'pvq' + crypto.randomBytes(6).toString('hex'), password = crypto.randomBytes(9).toString('hex'), name = 'PV' + crypto.randomBytes(4).toString('hex'); secrets.push(account, password);
-        await edit('Account', account); await edit('Password', password); await tap('Register'); await scene('RoleSelect'); await idle(); await observe();
+        await edit('Account', account); await edit('Password', password); await tap('Register'); await chooseQAServer(page, scene); await idle(); await observe();
         await until(async () => { const selected = await page.evaluate(() => { const a = cc.director.getScene().getComponentsInChildren('AppRoot')[0], n = cc.find('Canvas/Safe/JobTabs/Job2'); return { selected: a.selectedJob, ready: n?.activeInHierarchy && n.getComponent(cc.Button)?.interactable && !cc.find('Canvas/Loading')?.activeInHierarchy }; }); if (!selected.ready) return false; if (selected.selected === 2) return true; await tap('JobTabs/Job2'); return false; }, '正常Job2选择', 10000);
         await edit('Name', name); await tap('Create'); await until(() => !!created, '正常CreateRole回包'); await idle();
         await page.waitForFunction(name => cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l => l.string.includes(name)), name);

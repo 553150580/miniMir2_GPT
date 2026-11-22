@@ -111,7 +111,7 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	if mode == "game" {
 		// 运行代次必须由账号节点批准，健康接口开放前先确认批准的实例就是当前进程。
 		// body 保存由序列化取得的消息正文。
-		body, _ := json.Marshal(map[string]any{"node_id": cfg.NodeID, "instance_id": store.Instance, "run_id": cfg.RunID})
+		body, _ := json.Marshal(map[string]any{"game_node_id": cfg.NodeID, "boot_id": store.Instance, "run_server_id": cfg.RunID})
 		// client 保存当前处理所用的客户端。
 		client := &http.Client{Timeout: 5 * time.Second}
 		// last 记住最近一次向账号节点登记失败的原因。
@@ -129,10 +129,13 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 					var grant persistence.Run
 					err = json.NewDecoder(response.Body).Decode(&grant)
 					response.Body.Close()
-					if err == nil && grant.Owner == store.Instance {
+					if err == nil && grant.Owner == store.Instance && grant.GameNodeID == cfg.NodeID && grant.ID == cfg.RunID && grant.Epoch > 0 && grant.AssignmentVersion > 0 {
 						store.Epoch = grant.Epoch
 						last = nil
 						break
+					}
+					if err == nil {
+						err = errors.New("account返回的游戏节点或运行服授权身份不匹配")
 					}
 				} else {
 					io.Copy(io.Discard, response.Body)

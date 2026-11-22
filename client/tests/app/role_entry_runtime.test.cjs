@@ -27,11 +27,11 @@ function connection(responses, httpErrors = []) {
             requests.push({ role: value.role, signal, token: this.token });
             const error = httpErrors.shift();
             if (error) throw error;
-            return { ticket: `短票${requests.length}` };
+            return { ticket: `短票${requests.length}`, gameWssUrl: `ws://127.0.0.1:${18100 + requests.length}/ws` };
         },
-        async connect(ticket, signal) {
+        async connect(ticket, endpoint, signal) {
             this.generation++;
-            connections.push({ ticket, signal });
+            connections.push({ ticket, endpoint, signal });
             const response = responses.shift();
             if (response instanceof Error) throw response;
             await response;
@@ -47,6 +47,7 @@ test('入口短票1002或线路2002各只重取一次同角色并更换票面', 
         const generation = await connectRoleEntry(state.socket, roleKey, () => {}, controller.signal);
         assert.equal(generation, state.socket.generation);
         assert.deepEqual(state.connections.map(row => row.ticket), ['短票1', '短票2']);
+        assert.deepEqual(state.connections.map(row => row.endpoint), ['ws://127.0.0.1:18101/ws', 'ws://127.0.0.1:18102/ws']);
         assert(state.requests.every(row => row.role === roleKey && row.signal === controller.signal));
         assert(state.connections.every(row => row.signal === controller.signal));
         assert.equal(state.closures.length, 1);
@@ -90,7 +91,7 @@ test('旧短票拒绝晚于切换身份时既不重试也不关闭新的连接�
 
 function reconnectFixture(state, exitGame = async () => {}) {
     const account = { id: '07'.repeat(16), name: 'account_a' }, role = { key: roleKey };
-    const session = { account, role, connection: state.socket, ready: true, update: new Set(), lastError: '' };
+    const session = { account, role, originServer: { originServerId: roleKey.originServerId }, connection: state.socket, ready: true, update: new Set(), lastError: '' };
     const status = { string: '' }, password = { string: '', node: { active: false } }, label = { string: '' };
     let click, attached = 0;
     const listeners = new Map();

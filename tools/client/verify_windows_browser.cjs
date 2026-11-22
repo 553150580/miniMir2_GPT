@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 const assert=require('node:assert/strict');
 const crypto=require('node:crypto');
 const fs=require('node:fs');
@@ -47,7 +48,7 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
   await page.goto('http://127.0.0.1:18080/?renderQA=1');await scene('Login');
   await page.screenshot({path:path.join(out,'01-login.png')});
   const account='wqa'+crypto.randomBytes(5).toString('hex'),password=crypto.randomBytes(9).toString('hex');
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');
+  await edit('Account',account);await edit('Password',password);await tap('Register');await chooseQAServer(page, scene);
   await edit('Name','Win'+crypto.randomBytes(3).toString('hex'));await tap('Create');
   await page.waitForFunction(()=>cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(x=>x.string.includes('Win')),{timeout:20000});
   await tap('Enter');await scene('Game');await page.waitForFunction(()=>!!cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.reconciliationStarted,null,{timeout:30000});

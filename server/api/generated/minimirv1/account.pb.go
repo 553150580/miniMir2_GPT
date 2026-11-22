@@ -134,6 +134,207 @@ func (x *LoginResult) GetExpiresAtUnix() uint64 {
 	return 0
 }
 
+// 登录后读取账号节点公开的永久入口目录。是否可进入由当前运行授权决定。
+type ServerDirectoryRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ServerDirectoryRequest) Reset() {
+	*x = ServerDirectoryRequest{}
+	mi := &file_account_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerDirectoryRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerDirectoryRequest) ProtoMessage() {}
+
+func (x *ServerDirectoryRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerDirectoryRequest.ProtoReflect.Descriptor instead.
+func (*ServerDirectoryRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{2}
+}
+
+type ServerEntry struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	OriginServerId uint64                 `protobuf:"varint,1,opt,name=origin_server_id,json=originServerId,proto3" json:"origin_server_id,omitempty"`
+	Name           string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Available      bool                   `protobuf:"varint,3,opt,name=available,proto3" json:"available,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ServerEntry) Reset() {
+	*x = ServerEntry{}
+	mi := &file_account_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerEntry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerEntry) ProtoMessage() {}
+
+func (x *ServerEntry) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerEntry.ProtoReflect.Descriptor instead.
+func (*ServerEntry) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ServerEntry) GetOriginServerId() uint64 {
+	if x != nil {
+		return x.OriginServerId
+	}
+	return 0
+}
+
+func (x *ServerEntry) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ServerEntry) GetAvailable() bool {
+	if x != nil {
+		return x.Available
+	}
+	return false
+}
+
+type ServerRegion struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RegionId      string                 `protobuf:"bytes,1,opt,name=region_id,json=regionId,proto3" json:"region_id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Servers       []*ServerEntry         `protobuf:"bytes,3,rep,name=servers,proto3" json:"servers,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ServerRegion) Reset() {
+	*x = ServerRegion{}
+	mi := &file_account_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerRegion) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerRegion) ProtoMessage() {}
+
+func (x *ServerRegion) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerRegion.ProtoReflect.Descriptor instead.
+func (*ServerRegion) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ServerRegion) GetRegionId() string {
+	if x != nil {
+		return x.RegionId
+	}
+	return ""
+}
+
+func (x *ServerRegion) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *ServerRegion) GetServers() []*ServerEntry {
+	if x != nil {
+		return x.Servers
+	}
+	return nil
+}
+
+type ServerDirectoryResult struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Regions       []*ServerRegion        `protobuf:"bytes,1,rep,name=regions,proto3" json:"regions,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ServerDirectoryResult) Reset() {
+	*x = ServerDirectoryResult{}
+	mi := &file_account_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerDirectoryResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerDirectoryResult) ProtoMessage() {}
+
+func (x *ServerDirectoryResult) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerDirectoryResult.ProtoReflect.Descriptor instead.
+func (*ServerDirectoryResult) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ServerDirectoryResult) GetRegions() []*ServerRegion {
+	if x != nil {
+		return x.Regions
+	}
+	return nil
+}
+
 type RoleDirectoryRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	OriginServerId uint64                 `protobuf:"varint,1,opt,name=origin_server_id,json=originServerId,proto3" json:"origin_server_id,omitempty"`
@@ -143,7 +344,7 @@ type RoleDirectoryRequest struct {
 
 func (x *RoleDirectoryRequest) Reset() {
 	*x = RoleDirectoryRequest{}
-	mi := &file_account_proto_msgTypes[2]
+	mi := &file_account_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -155,7 +356,7 @@ func (x *RoleDirectoryRequest) String() string {
 func (*RoleDirectoryRequest) ProtoMessage() {}
 
 func (x *RoleDirectoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[2]
+	mi := &file_account_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +369,7 @@ func (x *RoleDirectoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleDirectoryRequest.ProtoReflect.Descriptor instead.
 func (*RoleDirectoryRequest) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{2}
+	return file_account_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RoleDirectoryRequest) GetOriginServerId() uint64 {
@@ -193,7 +394,7 @@ type RoleSummary struct {
 
 func (x *RoleSummary) Reset() {
 	*x = RoleSummary{}
-	mi := &file_account_proto_msgTypes[3]
+	mi := &file_account_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -205,7 +406,7 @@ func (x *RoleSummary) String() string {
 func (*RoleSummary) ProtoMessage() {}
 
 func (x *RoleSummary) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[3]
+	mi := &file_account_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -218,7 +419,7 @@ func (x *RoleSummary) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleSummary.ProtoReflect.Descriptor instead.
 func (*RoleSummary) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{3}
+	return file_account_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *RoleSummary) GetKey() *RoleKey {
@@ -280,7 +481,7 @@ type RoleDirectoryResult struct {
 
 func (x *RoleDirectoryResult) Reset() {
 	*x = RoleDirectoryResult{}
-	mi := &file_account_proto_msgTypes[4]
+	mi := &file_account_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -292,7 +493,7 @@ func (x *RoleDirectoryResult) String() string {
 func (*RoleDirectoryResult) ProtoMessage() {}
 
 func (x *RoleDirectoryResult) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[4]
+	mi := &file_account_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -305,7 +506,7 @@ func (x *RoleDirectoryResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RoleDirectoryResult.ProtoReflect.Descriptor instead.
 func (*RoleDirectoryResult) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{4}
+	return file_account_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *RoleDirectoryResult) GetRoles() []*RoleSummary {
@@ -335,7 +536,7 @@ type CreateRoleRequest struct {
 
 func (x *CreateRoleRequest) Reset() {
 	*x = CreateRoleRequest{}
-	mi := &file_account_proto_msgTypes[5]
+	mi := &file_account_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -347,7 +548,7 @@ func (x *CreateRoleRequest) String() string {
 func (*CreateRoleRequest) ProtoMessage() {}
 
 func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[5]
+	mi := &file_account_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -360,7 +561,7 @@ func (x *CreateRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRoleRequest.ProtoReflect.Descriptor instead.
 func (*CreateRoleRequest) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{5}
+	return file_account_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreateRoleRequest) GetOriginServerId() uint64 {
@@ -407,7 +608,7 @@ type EntryTicketRequest struct {
 
 func (x *EntryTicketRequest) Reset() {
 	*x = EntryTicketRequest{}
-	mi := &file_account_proto_msgTypes[6]
+	mi := &file_account_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -419,7 +620,7 @@ func (x *EntryTicketRequest) String() string {
 func (*EntryTicketRequest) ProtoMessage() {}
 
 func (x *EntryTicketRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[6]
+	mi := &file_account_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -432,7 +633,7 @@ func (x *EntryTicketRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntryTicketRequest.ProtoReflect.Descriptor instead.
 func (*EntryTicketRequest) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{6}
+	return file_account_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *EntryTicketRequest) GetRole() *RoleKey {
@@ -449,13 +650,14 @@ type EntryTicketResult struct {
 	RunServerId   uint64                 `protobuf:"varint,3,opt,name=run_server_id,json=runServerId,proto3" json:"run_server_id,omitempty"`
 	RouteVersion  uint64                 `protobuf:"varint,4,opt,name=route_version,json=routeVersion,proto3" json:"route_version,omitempty"`
 	ExpiresAtUnix uint64                 `protobuf:"varint,5,opt,name=expires_at_unix,json=expiresAtUnix,proto3" json:"expires_at_unix,omitempty"`
+	GameNodeId    string                 `protobuf:"bytes,6,opt,name=game_node_id,json=gameNodeId,proto3" json:"game_node_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *EntryTicketResult) Reset() {
 	*x = EntryTicketResult{}
-	mi := &file_account_proto_msgTypes[7]
+	mi := &file_account_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +669,7 @@ func (x *EntryTicketResult) String() string {
 func (*EntryTicketResult) ProtoMessage() {}
 
 func (x *EntryTicketResult) ProtoReflect() protoreflect.Message {
-	mi := &file_account_proto_msgTypes[7]
+	mi := &file_account_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -480,7 +682,7 @@ func (x *EntryTicketResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EntryTicketResult.ProtoReflect.Descriptor instead.
 func (*EntryTicketResult) Descriptor() ([]byte, []int) {
-	return file_account_proto_rawDescGZIP(), []int{7}
+	return file_account_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *EntryTicketResult) GetTicket() string {
@@ -518,6 +720,13 @@ func (x *EntryTicketResult) GetExpiresAtUnix() uint64 {
 	return 0
 }
 
+func (x *EntryTicketResult) GetGameNodeId() string {
+	if x != nil {
+		return x.GameNodeId
+	}
+	return ""
+}
+
 var File_account_proto protoreflect.FileDescriptor
 
 const file_account_proto_rawDesc = "" +
@@ -531,7 +740,18 @@ const file_account_proto_rawDesc = "" +
 	"\n" +
 	"account_id\x18\x01 \x01(\fR\taccountId\x12#\n" +
 	"\raccount_token\x18\x02 \x01(\tR\faccountToken\x12&\n" +
-	"\x0fexpires_at_unix\x18\x03 \x01(\x04R\rexpiresAtUnix\"@\n" +
+	"\x0fexpires_at_unix\x18\x03 \x01(\x04R\rexpiresAtUnix\"\x18\n" +
+	"\x16ServerDirectoryRequest\"i\n" +
+	"\vServerEntry\x12(\n" +
+	"\x10origin_server_id\x18\x01 \x01(\x04R\x0eoriginServerId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1c\n" +
+	"\tavailable\x18\x03 \x01(\bR\tavailable\"r\n" +
+	"\fServerRegion\x12\x1b\n" +
+	"\tregion_id\x18\x01 \x01(\tR\bregionId\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x121\n" +
+	"\aservers\x18\x03 \x03(\v2\x17.minimir.v1.ServerEntryR\aservers\"K\n" +
+	"\x15ServerDirectoryResult\x122\n" +
+	"\aregions\x18\x01 \x03(\v2\x18.minimir.v1.ServerRegionR\aregions\"@\n" +
 	"\x14RoleDirectoryRequest\x12(\n" +
 	"\x10origin_server_id\x18\x01 \x01(\x04R\x0eoriginServerId\"\xcb\x01\n" +
 	"\vRoleSummary\x12%\n" +
@@ -552,14 +772,16 @@ const file_account_proto_rawDesc = "" +
 	"\x04name\x18\x04 \x01(\tR\x04name\x12\x13\n" +
 	"\x05op_id\x18\x05 \x01(\fR\x04opId\"=\n" +
 	"\x12EntryTicketRequest\x12'\n" +
-	"\x04role\x18\x01 \x01(\v2\x13.minimir.v1.RoleKeyR\x04role\"\xbe\x01\n" +
+	"\x04role\x18\x01 \x01(\v2\x13.minimir.v1.RoleKeyR\x04role\"\xe0\x01\n" +
 	"\x11EntryTicketResult\x12\x16\n" +
 	"\x06ticket\x18\x01 \x01(\tR\x06ticket\x12 \n" +
 	"\fgame_wss_url\x18\x02 \x01(\tR\n" +
 	"gameWssUrl\x12\"\n" +
 	"\rrun_server_id\x18\x03 \x01(\x04R\vrunServerId\x12#\n" +
 	"\rroute_version\x18\x04 \x01(\x04R\frouteVersion\x12&\n" +
-	"\x0fexpires_at_unix\x18\x05 \x01(\x04R\rexpiresAtUnixB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\x0fexpires_at_unix\x18\x05 \x01(\x04R\rexpiresAtUnix\x12 \n" +
+	"\fgame_node_id\x18\x06 \x01(\tR\n" +
+	"gameNodeIdB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once
@@ -573,27 +795,33 @@ func file_account_proto_rawDescGZIP() []byte {
 	return file_account_proto_rawDescData
 }
 
-var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_account_proto_goTypes = []any{
-	(*LocalLoginRequest)(nil),    // 0: minimir.v1.LocalLoginRequest
-	(*LoginResult)(nil),          // 1: minimir.v1.LoginResult
-	(*RoleDirectoryRequest)(nil), // 2: minimir.v1.RoleDirectoryRequest
-	(*RoleSummary)(nil),          // 3: minimir.v1.RoleSummary
-	(*RoleDirectoryResult)(nil),  // 4: minimir.v1.RoleDirectoryResult
-	(*CreateRoleRequest)(nil),    // 5: minimir.v1.CreateRoleRequest
-	(*EntryTicketRequest)(nil),   // 6: minimir.v1.EntryTicketRequest
-	(*EntryTicketResult)(nil),    // 7: minimir.v1.EntryTicketResult
-	(*RoleKey)(nil),              // 8: minimir.v1.RoleKey
+	(*LocalLoginRequest)(nil),      // 0: minimir.v1.LocalLoginRequest
+	(*LoginResult)(nil),            // 1: minimir.v1.LoginResult
+	(*ServerDirectoryRequest)(nil), // 2: minimir.v1.ServerDirectoryRequest
+	(*ServerEntry)(nil),            // 3: minimir.v1.ServerEntry
+	(*ServerRegion)(nil),           // 4: minimir.v1.ServerRegion
+	(*ServerDirectoryResult)(nil),  // 5: minimir.v1.ServerDirectoryResult
+	(*RoleDirectoryRequest)(nil),   // 6: minimir.v1.RoleDirectoryRequest
+	(*RoleSummary)(nil),            // 7: minimir.v1.RoleSummary
+	(*RoleDirectoryResult)(nil),    // 8: minimir.v1.RoleDirectoryResult
+	(*CreateRoleRequest)(nil),      // 9: minimir.v1.CreateRoleRequest
+	(*EntryTicketRequest)(nil),     // 10: minimir.v1.EntryTicketRequest
+	(*EntryTicketResult)(nil),      // 11: minimir.v1.EntryTicketResult
+	(*RoleKey)(nil),                // 12: minimir.v1.RoleKey
 }
 var file_account_proto_depIdxs = []int32{
-	8, // 0: minimir.v1.RoleSummary.key:type_name -> minimir.v1.RoleKey
-	3, // 1: minimir.v1.RoleDirectoryResult.roles:type_name -> minimir.v1.RoleSummary
-	8, // 2: minimir.v1.EntryTicketRequest.role:type_name -> minimir.v1.RoleKey
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	3,  // 0: minimir.v1.ServerRegion.servers:type_name -> minimir.v1.ServerEntry
+	4,  // 1: minimir.v1.ServerDirectoryResult.regions:type_name -> minimir.v1.ServerRegion
+	12, // 2: minimir.v1.RoleSummary.key:type_name -> minimir.v1.RoleKey
+	7,  // 3: minimir.v1.RoleDirectoryResult.roles:type_name -> minimir.v1.RoleSummary
+	12, // 4: minimir.v1.EntryTicketRequest.role:type_name -> minimir.v1.RoleKey
+	5,  // [5:5] is the sub-list for method output_type
+	5,  // [5:5] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_account_proto_init() }
@@ -608,7 +836,7 @@ func file_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_proto_rawDesc), len(file_account_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

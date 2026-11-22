@@ -15,6 +15,10 @@
       "uuid": "bba723dc-eae5-5372-b190-52314a0cbd31"
     },
     {
+      "url": "db://assets/scenes/ServerSelect.scene",
+      "uuid": "411471f8-2b5e-5029-b5ea-7f5001670c6d"
+    },
+    {
       "url": "db://assets/scenes/RoleSelect.scene",
       "uuid": "16605c45-4f9a-59c0-8669-4dea2e7f702d"
     },

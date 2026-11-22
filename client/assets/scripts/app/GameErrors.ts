@@ -9,7 +9,7 @@ const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
 export const ACCOUNT_AUTHENTICATION_MESSAGE = '登录凭证已失效，请重新登录。';
 
 export function isRoleAccountRejection(messageId: number, errorCode: number): boolean {
-    return errorCode === CodeUnauthenticated && (messageId === 10004 || messageId === 10006 || messageId === 10008);
+    return errorCode === CodeUnauthenticated && (messageId === 10004 || messageId === 10006 || messageId === 10008 || messageId === 10012);
 }
 
 // 同一份协议错误供请求 Promise 和会话订阅使用，不能生成两种用户提示。

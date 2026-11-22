@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 新账号、原生UI购书/学习/施放；只为新角色准备等级与余额，凭据仅保留在本进程内存。
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path');
 const {execFileSync}=require('node:child_process');
@@ -45,11 +46,11 @@ function packet(payload){const b=Buffer.from(payload);if(b.length<6)return null;
  try{
   await page.goto('http://127.0.0.1:18080/?renderQA=1');await scene('Login');
   const account='dqa'+crypto.randomBytes(5).toString('hex'),password=crypto.randomBytes(8).toString('hex'),names=['DM'+crypto.randomBytes(4).toString('hex'),'DW'+crypto.randomBytes(4).toString('hex')];
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await idle();
+  await edit('Account',account);await edit('Password',password);await tap('Register');await chooseQAServer(page, scene);await idle();
   for(let i=0;i<2;i++){await tap('JobTabs/Job'+(i===0?1:0));await edit('Name',names[i]);await tap('Create');await page.waitForFunction(name=>cc.find('Canvas/Safe').getComponentsInChildren(cc.Label).some(l=>l.string.includes(name)),names[i]);await idle()}
   checks.push('正常注册账号，分别在保存的选角场景创建法师与战士');
   dev(['python3','tools/server/dev.py','stop']);preconditions=dev(['python3','tools/client/prepare_displacement_qa.py'],JSON.stringify({account_name:account,role_names:names}));dev(['python3','tools/server/dev.py','start']);
-  await page.reload();await scene('Login');await edit('Account',account);await edit('Password',password);await tap('Login');await scene('RoleSelect');await idle();
+  await page.reload();await scene('Login');await edit('Account',account);await edit('Password',password);await tap('Login');await chooseQAServer(page, scene);await idle();
   for(const [index,id,book,offer]of [[0,8,8,25],[1,27,5,26]]){
    await page.waitForFunction(name=>cc.find('Canvas/Safe').getComponentsInChildren(cc.Label).some(l=>l.string.includes(name)),names[index]);
    await tap('Role'+index);await tap('Enter');await scene('Game');await page.waitForFunction(()=>cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.reconciliationStarted,null,{timeout:30000});

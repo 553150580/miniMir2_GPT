@@ -73,12 +73,14 @@ type Auth struct {
 
 // Run 是 MongoDB 中运行服所有权的权威快照。
 type Run struct {
-	ID             uint64    `bson:"_id"`             // 运行服编号，可与角色的永久入口编号独立。
-	Owner          string    `bson:"owner_instance"`  // 当前有权操作该运行服的游戏进程实例。
-	Epoch          int64     `bson:"run_epoch"`       // 所有权代次，阻止旧进程和旧票据写入。
-	ControlVersion int64     `bson:"control_version"` // 和每个分组围栏对齐的控制版本，释放或接管时递增。
-	LeaseUntil     time.Time `bson:"lease_until"`     // 按数据库时钟计算的租约结束时刻。
-	State          string    `bson:"state"`           // active 表示已授权运行，stopped 表示已停止。
+	ID                uint64    `bson:"_id"`                          // 运行服编号，可与角色的永久入口编号独立。
+	GameNodeID        string    `bson:"game_node_id,omitempty"`       // 注册获准承载本运行服的稳定节点编号。
+	AssignmentVersion int64     `bson:"assignment_version,omitempty"` // 注册时核对的持久部署版本。
+	Owner             string    `bson:"owner_instance"`               // 当前有权操作该运行服的游戏进程实例。
+	Epoch             int64     `bson:"run_epoch"`                    // 所有权代次，阻止旧进程和旧票据写入。
+	ControlVersion    int64     `bson:"control_version"`              // 和每个分组围栏对齐的控制版本，释放或接管时递增。
+	LeaseUntil        time.Time `bson:"lease_until"`                  // 按数据库时钟计算的租约结束时刻。
+	State             string    `bson:"state"`                        // active 表示已授权运行，stopped 表示已停止。
 }
 
 // Operation 保存首个确定结果。重试读取这份回执核对请求内容和返回原结果。
@@ -178,6 +180,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 		"roles":           {{Keys: bson.D{{Key: "account_id", Value: 1}, {Key: "origin_server_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}, {Keys: bson.D{{Key: "name_key", Value: 1}}, Options: options.Index().SetUnique(true)}},
 		"account_tokens":  {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"entry_tickets":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
+		"origin_routes":   {{Keys: bson.D{{Key: "run_server_id", Value: 1}}}},
 		"skill_quotes":    {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"vendor_quotes":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"warehouse_items": {{Keys: bson.D{{Key: "warehouse_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}},
@@ -188,12 +191,7 @@ func (s *Store) Migrate(ctx context.Context) error {
 			return e
 		}
 	}
-	_, e = s.DB.Collection("origin_routes").UpdateOne(ctx, bson.M{"_id": s.Cfg.OriginID}, bson.M{"$setOnInsert": bson.M{"run_server_id": s.Cfg.RunID, "node_id": s.Cfg.NodeID, "route_version": int64(1)}}, options.UpdateOne().SetUpsert(true))
-	if e != nil {
-		return e
-	}
-	_, e = s.DB.Collection("run_control").UpdateOne(ctx, bson.M{"_id": s.Cfg.RunID}, bson.M{"$setOnInsert": Run{ID: s.Cfg.RunID, State: "stopped", LeaseUntil: time.Unix(0, 0)}}, options.UpdateOne().SetUpsert(true))
-	return e
+	return s.seedRoutingCatalog(ctx)
 }
 
 // 永久回执不能按时间删除；仅移除本集合created_at单字段TTL，不修改任何业务文档。
@@ -416,7 +414,8 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 // s 提供节点、运行服与数据库，ctx 关联当前事务，a 决定账号围栏和对应哈希组。
 func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrite, error) {
 	// filter 选择仍在有效租约内、实例与运行代次都匹配的运行服状态。
-	filter := bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
+	filter := bson.M{"_id": s.Cfg.RunID, "game_node_id": s.Cfg.NodeID, "owner_instance": s.Instance,
+		"run_epoch": s.Epoch, "state": "active", "$expr": leaseFilter()}
 	// run 接收当前运行服的控制版本和租约时点。
 	var run struct {
 		// ControlVersion 记录控制版本，使用数值表示。
@@ -431,7 +430,8 @@ func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrit
 		return nil, authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	// node 选择仍持有有效租约的当前游戏进程节点记录。
-	node := bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
+	node := bson.M{"_id": s.Cfg.NodeID, "kind": "game", "owner_instance": s.Instance,
+		"run_server_id": s.Cfg.RunID, "run_epoch": s.Epoch, "$expr": leaseFilter()}
 	// e 区分节点租约已失效与查询失败。
 	if e := s.DB.Collection("node_leases").FindOne(ctx, node, options.FindOne().SetProjection(bson.M{"_id": 1})).Err(); e != nil {
 		return nil, authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")

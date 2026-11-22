@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 真实Creator保存UI与正常新角色；不预置数据库，不调用业务方法或改写角色/库存。
 'use strict';
 const assert = require('node:assert/strict'), crypto = require('node:crypto'), fs = require('node:fs'), path = require('node:path');
@@ -99,7 +100,7 @@ async function main() {
         for (const port of [18100, 18101, 18102]) { const response = await fetch(`http://127.0.0.1:${port}/healthz`, { signal: AbortSignal.timeout(3000) }); const health = await response.json(); assert(response.ok && health.status === 'ok' && health.rule_version === 19 && health.development_only); assert.equal(health.fixture_hash, report.fixtureSha256); report.health.push({ port, ...health }); }
         await page.goto('http://127.0.0.1:18080/'); await scene('Login');
         const account = 'arqa' + crypto.randomBytes(5).toString('hex'), password = crypto.randomBytes(9).toString('hex'), name = '回收' + crypto.randomBytes(3).toString('hex');
-        await edit('Account', account); await edit('Password', password); await tap('Register'); await scene('RoleSelect');
+        await edit('Account', account); await edit('Password', password); await tap('Register'); await chooseQAServer(page, scene);
         const jobDeadline = Date.now() + 10000; let selectedJob = false, jobTaps = 0;
         do {
             selectedJob = await page.evaluate(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.selectedJob === 2);

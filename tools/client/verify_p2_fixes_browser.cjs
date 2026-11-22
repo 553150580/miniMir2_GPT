@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 正常触屏建角+真实提交后丢响应；消息列表采用显式隔离UI前态，不能据此认证业务消息来源。
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
@@ -51,7 +52,7 @@ async function main(){
   async function shot(name){await page.screenshot({path:path.join(out,name+'.png')});report.screenshots.push(name+'.png');}
   async function idle(){await page.waitForFunction(()=>{const a=cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];return a&&!a.uiActionBusy&&!a.roleCreationTask;},null,{timeout:30000});await frames();}
   await page.goto(base);await scene('Login');const account='p2qa'+crypto.randomBytes(5).toString('hex'),password=crypto.randomBytes(9).toString('hex');secrets.push(account,password);
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await tap('JobTabs/Job2');
+  await edit('Account',account);await edit('Password',password);await tap('Register');await chooseQAServer(page, scene);await tap('JobTabs/Job2');
   const name='核对'+crypto.randomBytes(3).toString('hex');await edit('Name',name);await tap('Create');await idle();assert(report.abortedAfterCommit);
   observed=await page.evaluateHandle(async()=>(await System.import('chunks:///_virtual/GameSession.ts')).session);
   report.afterLostResponse=await page.evaluate(s=>{const q=s.roleCreation.get();return{roles:s.roles.length,pending:q?{op:Array.from(q.opId,b=>b.toString(16).padStart(2,'0')).join(''),origin:q.originServerId.toString(),slot:q.slot,job:q.job,name:q.name}:null};},observed);

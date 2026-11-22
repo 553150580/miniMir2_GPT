@@ -4,6 +4,7 @@ import { SceneManager } from '../core/scene/SceneManager';
 import { BaselineAssembler } from './BaselineAssembler';
 import { PendingOperations } from './PendingOperations';
 import type { PendingRoleCreation } from './PendingRoleCreation';
+import type { OriginServer } from './ServerDirectoryModel';
 import type { WorldAssets } from './WorldAssets';
 import { protocolErrorMessage } from './GameErrors';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
@@ -32,6 +33,7 @@ export const session = {
     connection: new GameConnection(),
     scenes: null as SceneManager | null,
     account: null as { id: string; name: string } | null,
+    originServer: null as OriginServer | null,
     role: null as any,
     roles: [] as any[],
     entry: null as any,

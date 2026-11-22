@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 通过正常触屏检查保存确认窗的完整排版、取消和地图往返；不播种数据库或调用私有业务。
 'use strict';
 const assert = require('node:assert/strict');
@@ -83,7 +84,7 @@ async function main() {
         }
         await page.goto('http://127.0.0.1:18080/'); await scene('Login');
         const account = 'wrap' + crypto.randomBytes(5).toString('hex'), password = crypto.randomBytes(9).toString('hex'); secrets.push(account, password);
-        await edit('Account', account); await edit('Password', password); await tap('Register'); await scene('RoleSelect'); await tap('JobTabs/Job2');
+        await edit('Account', account); await edit('Password', password); await tap('Register'); await chooseQAServer(page, scene); await tap('JobTabs/Job2');
         await page.waitForFunction(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0].selectedJob === 2);
         const name = '换行' + crypto.randomBytes(3).toString('hex'); await edit('Name', name); await tap('Create');
         await page.waitForFunction(name => cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l => l.string.includes(name)), name);

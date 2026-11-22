@@ -6,6 +6,21 @@ import "common.proto";
 // 本地口令仅经TLS发送，不进入日志；第三方登录在平台接入阶段另定义验证字段。
 message LocalLoginRequest { string account = 1; string password = 2; }
 message LoginResult { bytes account_id = 1; string account_token = 2; uint64 expires_at_unix = 3; }
+
+// 登录后读取账号节点公开的永久入口目录。是否可进入由当前运行授权决定。
+message ServerDirectoryRequest {}
+message ServerEntry {
+  uint64 origin_server_id = 1;
+  string name = 2;
+  bool available = 3;
+}
+message ServerRegion {
+  string region_id = 1;
+  string name = 2;
+  repeated ServerEntry servers = 3;
+}
+message ServerDirectoryResult { repeated ServerRegion regions = 1; }
+
 message RoleDirectoryRequest { uint64 origin_server_id = 1; }
 message RoleSummary {
   RoleKey key = 1;
@@ -25,5 +40,6 @@ message EntryTicketResult {
   uint64 run_server_id = 3;
   uint64 route_version = 4;
   uint64 expires_at_unix = 5;
+  string game_node_id = 6;
 }
 

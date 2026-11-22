@@ -10,6 +10,7 @@ import (
 	"errors"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/text/unicode/norm"
 	"math"
@@ -40,17 +41,19 @@ type Token struct {
 
 // Ticket 是账号服签发给某个运行实例和角色的一次性入场许可。
 type Ticket struct {
-	ID           string    `bson:"_id"`           // 随机票据的哈希。
-	AccountID    string    `bson:"account_id"`    // 入场要求的账号归属。
-	AuthVersion  int64     `bson:"auth_version"`  // 签发时的账号授权代次。
-	RoleID       string    `bson:"role_id"`       // 票据允许接管的角色键。
-	Origin       uint64    `bson:"origin"`        // 角色的永久入口服。
-	Run          uint64    `bson:"run"`           // 票据指定的运行服。
-	Epoch        int64     `bson:"epoch"`         // 运行服授权代次。
-	Owner        string    `bson:"owner"`         // 票据绑定的游戏进程实例。
-	RouteVersion int64     `bson:"route_version"` // 对应本次路由的控制版本。
-	Expires      time.Time `bson:"expires_at"`    // 票据的有效截止时刻。
-	Used         bool      `bson:"used"`          // 是否已经在一次成功事务中被消耗。
+	ID                string    `bson:"_id"`                // 随机票据的哈希。
+	AccountID         string    `bson:"account_id"`         // 入场要求的账号归属。
+	AuthVersion       int64     `bson:"auth_version"`       // 签发时的账号授权代次。
+	RoleID            string    `bson:"role_id"`            // 票据允许接管的角色键。
+	Origin            uint64    `bson:"origin"`             // 角色的永久入口服。
+	Run               uint64    `bson:"run"`                // 票据指定的运行服。
+	GameNodeID        string    `bson:"game_node_id"`       // 准许消费此票的稳定游戏节点。
+	AssignmentVersion int64     `bson:"assignment_version"` // 签票时持久部署的版本。
+	Epoch             int64     `bson:"epoch"`              // 运行服授权代次。
+	Owner             string    `bson:"owner"`              // 票据绑定的游戏进程实例。
+	RouteVersion      int64     `bson:"route_version"`      // 对应本次路由的控制版本。
+	Expires           time.Time `bson:"expires_at"`         // 票据的有效截止时刻。
+	Used              bool      `bson:"used"`               // 是否已经在一次成功事务中被消耗。
 }
 
 // Login 注册或校验本地账号，成功后签发短期账号令牌。
@@ -135,17 +138,20 @@ func (s *Store) Authenticate(ctx context.Context, token string) (Auth, error) {
 // Roles 返回账号在请求入口服下的角色摘要目录。
 // s 提供角色目录，ctx 限定读取时长，a 是已认证账号，origin 是要查询的永久入口服。
 func (s *Store) Roles(ctx context.Context, a Auth, origin uint64) (*pb.RoleDirectoryResult, error) {
-	if origin != s.Cfg.OriginID {
-		return nil, Fail(p.CodeRouteChanged, "入口不存在")
+	route, err := s.originRoute(ctx, origin)
+	if err != nil {
+		return nil, err
 	}
 	// cursor 迭代该账号及入口下的角色，e 保存建游标或解码期间的错误。
-	cursor, e := s.DB.Collection("roles").Find(ctx, bson.M{"account_id": a.AccountID, "origin_server_id": origin})
+	cursor, e := s.DB.Collection("roles").Find(ctx, bson.M{"account_id": a.AccountID, "origin_server_id": origin},
+		options.Find().SetProjection(bson.M{"_id": 1, "origin_server_id": 1, "name": 1, "job": 1, "gender": 1, "level": 1, "slot": 1}).
+			SetSort(bson.D{{Key: "slot", Value: 1}}))
 	if e != nil {
 		return nil, e
 	}
 	defer cursor.Close(ctx)
 	// out 保存当前处理所用的输出。
-	out := &pb.RoleDirectoryResult{RouteVersion: 1}
+	out := &pb.RoleDirectoryResult{RouteVersion: uint64(route.Version)}
 	for cursor.Next(ctx) {
 		// r 记录角色。
 		var r domain.Role
@@ -160,7 +166,7 @@ func (s *Store) Roles(ctx context.Context, a Auth, origin uint64) (*pb.RoleDirec
 // CreateRole 校验入口、槽位、职业和名字，用原操作键幂等写入角色及回执。
 // s 提供角色和回执集合，ctx 限制提交时长，a 确定角色归属，q 携带槽位、职业、姓名和幂等键。
 func (s *Store) CreateRole(ctx context.Context, a Auth, q *pb.CreateRoleRequest) (*pb.RoleSummary, error) {
-	if q.OriginServerId != s.Cfg.OriginID || q.Slot < 1 || q.Slot > 5 || q.Job > 2 || len(q.OpId) != 16 {
+	if q == nil || q.OriginServerId == 0 || q.Slot < 1 || q.Slot > 5 || q.Job > 2 || len(q.OpId) != 16 {
 		return nil, Fail(p.CodeInvalidArgument, "角色槽位或操作ID不合法")
 	}
 	// ok 表明查询、校验或类型转换是否成功。
@@ -261,6 +267,9 @@ func (s *Store) persistRoleCreation(ctx context.Context, a Auth, role domain.Rol
 		if !errors.Is(err, mongo.ErrNoDocuments) {
 			return err
 		}
+		if _, err = s.originRoute(tc, role.Origin); err != nil {
+			return err
+		}
 		// 槽位或名字拒绝也可形成永久终态，重放原请求会返回相同拒绝。
 		code = creation.Code
 		if code == 0 {
@@ -281,7 +290,7 @@ func (s *Store) persistRoleCreation(ctx context.Context, a Auth, role domain.Rol
 // IssueTicket 为账号拥有的角色签发与当前运行服进程及代次绑定的入场许可。
 // s 提供票据与运行租约存储，ctx 约束读写时长，a 确定账号权限，key 标明所选角色和永久入口。
 func (s *Store) IssueTicket(ctx context.Context, a Auth, key *pb.RoleKey) (*pb.EntryTicketResult, error) {
-	if key == nil || len(key.RoleId) != 16 || key.OriginServerId != s.Cfg.OriginID {
+	if key == nil || len(key.RoleId) != 16 || key.OriginServerId == 0 {
 		return nil, Fail(p.CodeInvalidArgument, "所选角色不可用")
 	}
 	// 先按账号和原区服过滤，再读取角色证明，避免向其他账号暴露角色状态。
@@ -290,21 +299,29 @@ func (s *Store) IssueTicket(ctx context.Context, a Auth, key *pb.RoleKey) (*pb.E
 	if e != nil {
 		return nil, authorityReadError(e, p.CodeInvalidArgument, "所选角色不可用")
 	}
-	// run 保存有效运行服的当前持有实例及其代次。
-	var run Run
-	e = s.DB.Collection("run_control").FindOne(ctx, bson.M{"_id": s.Cfg.RunID, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Decode(&run)
+	// destination 将永久入口解析为当前获准的节点、运行服和部署版本。
+	destination, e := s.liveRoute(ctx, r.Origin)
 	if e != nil {
-		return nil, authorityReadError(e, p.CodeLineRecovering, "游戏节点尚未就绪")
+		return nil, e
 	}
 	// token 是交给客户端、供 WebSocket 入场使用的一次性票据原文。
 	token := domain.ID() + domain.ID()
 	// until 是本张票据 45 秒的有效期终点。
 	until := time.Now().Add(45 * time.Second)
-	_, e = s.DB.Collection("entry_tickets").InsertOne(ctx, Ticket{ID: Hash([]byte(token)), AccountID: a.AccountID, AuthVersion: a.AuthVersion, RoleID: r.ID, Origin: r.Origin, Run: s.Cfg.RunID, Owner: run.Owner, Epoch: run.Epoch, RouteVersion: 1, Expires: until})
+	ticket := Ticket{
+		ID: Hash([]byte(token)), AccountID: a.AccountID, AuthVersion: a.AuthVersion, RoleID: r.ID, Origin: r.Origin,
+		Run: destination.origin.RunID, GameNodeID: destination.assignment.GameNodeID,
+		AssignmentVersion: destination.assignment.AssignmentVersion, Owner: destination.run.Owner, Epoch: destination.run.Epoch,
+		RouteVersion: destination.origin.Version, Expires: until,
+	}
+	_, e = s.DB.Collection("entry_tickets").InsertOne(ctx, ticket)
 	if e != nil {
 		return nil, e
 	}
-	return &pb.EntryTicketResult{Ticket: token, GameWssUrl: "ws://" + s.Cfg.GameAddress + "/ws", RunServerId: s.Cfg.RunID, RouteVersion: 1, ExpiresAtUnix: uint64(until.Unix())}, nil
+	return &pb.EntryTicketResult{
+		Ticket: token, GameWssUrl: destination.assignment.GameWSURL, RunServerId: ticket.Run, GameNodeId: ticket.GameNodeID,
+		RouteVersion: uint64(ticket.RouteVersion), ExpiresAtUnix: uint64(until.Unix()),
+	}, nil
 }
 
 // TicketRole 预读未消费且未过期的票据，供游戏服把入场分派到角色 worker。
@@ -341,7 +358,7 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 // allowTakeover 为假时只查证已提交会话，已断开的请求不再发起新的接管。
 // 拒绝时若已在持久围栏内读到角色，返回该视图供房间核对旧会话是否仍有效。
 func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allowTakeover bool) (domain.Role, Auth, error) {
-	if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID {
+	if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID || t.GameNodeID != s.Cfg.NodeID {
 		return domain.Role{}, Auth{}, Fail(p.CodeRouteChanged, "票据目标运行代次过期")
 	}
 	if len(t.ID) != 64 || len(domain.Bytes(attempt)) != 16 {
@@ -384,10 +401,20 @@ func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allow
 		}
 		// 消费结果与新的绑定代次同时提交；仅原内部尝试可查证已消费的票据。
 		now := time.Now()
-		used, err := s.DB.Collection("entry_tickets").UpdateOne(tc, bson.M{
+		filter := bson.M{
 			"_id": t.ID, "account_id": t.AccountID, "auth_version": t.AuthVersion, "role_id": t.RoleID,
 			"origin": t.Origin, "run": t.Run, "epoch": t.Epoch, "owner": t.Owner, "used": false, "expires_at": bson.M{"$gt": now},
-		}, bson.M{"$set": bson.M{"used": true, "used_at": now, "entry_attempt": key, "session_epoch": r.SessionEpoch + 1}})
+			"game_node_id": t.GameNodeID, "route_version": t.RouteVersion, "assignment_version": t.AssignmentVersion,
+		}
+		var original Ticket
+		if err = s.DB.Collection("entry_tickets").FindOne(tc, filter).Decode(&original); err != nil {
+			return authorityReadError(err, p.CodeUnauthenticated, "票据不可重用")
+		}
+		if err = s.confirmTicketRoute(tc, original); err != nil {
+			return err
+		}
+		used, err := s.DB.Collection("entry_tickets").UpdateOne(tc, filter,
+			bson.M{"$set": bson.M{"used": true, "used_at": now, "entry_attempt": key, "session_epoch": r.SessionEpoch + 1}})
 		if err != nil {
 			return err
 		}

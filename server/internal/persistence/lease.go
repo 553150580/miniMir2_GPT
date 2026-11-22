@@ -4,10 +4,14 @@ package persistence
 
 import (
 	"context"
+	"encoding/hex"
+	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
+	"math"
+	"minimir/internal/devconfig"
 	p "minimir/internal/protocol"
 	"time"
 )
@@ -46,8 +50,11 @@ func (s *Store) Singleton(ctx context.Context, kind string) error {
 func (s *Store) ApproveGame(ctx context.Context, node, instance string, runID uint64) (Run, error) {
 	// next 保存已获准的运行服状态，供 game 继续持有对应代次。
 	var next Run
-	if node != s.Cfg.NodeID || runID != s.Cfg.RunID || len(instance) != 32 {
+	if !devconfig.ValidGameNodeID(node) || runID == 0 || runID > math.MaxInt64 || len(instance) != 32 {
 		return next, Fail(p.CodeUnauthenticated, "部署身份不在许可范围")
+	}
+	if decoded, e := hex.DecodeString(instance); e != nil || hex.EncodeToString(decoded) != instance {
+		return next, Fail(p.CodeUnauthenticated, "游戏启动实例标识无效")
 	}
 	// e 保存整个授权事务的错误，tc 把节点租约、运行服和全部分组围栏绑定到同一次提交。
 	e := s.tx(ctx, func(tc context.Context) error {
@@ -60,18 +67,55 @@ func (s *Store) ApproveGame(ctx context.Context, node, instance string, runID ui
 		if approval.MatchedCount != 1 {
 			return Fail(p.CodeRouteChanged, "account授权租约失效")
 		}
+		// 对权威运行服分配实际写入，避免并发维护或部署调整与旧分配授权同时提交。
+		var assignment runAssignment
+		e = s.DB.Collection("run_servers").FindOneAndUpdate(tc,
+			bson.M{"_id": runID, "game_node_id": node, "state": "open", "assignment_version": bson.M{"$gt": 0}},
+			bson.M{"$inc": bson.M{"grant_seq": 1}}).Decode(&assignment)
+		if errors.Is(e, mongo.ErrNoDocuments) {
+			return Fail(p.CodeUnauthenticated, "游戏节点与运行服未获当前部署授权")
+		}
+		if e != nil {
+			return e
+		}
+		if !openAssignment(assignment) {
+			return Fail(p.CodeRouteChanged, "运行服公告地址无效")
+		}
 		// old 保存当前运行服持有者、代次及控制版本。
 		var old Run
 		// e 保存原运行服控制记录的读取错误。
 		if e := s.DB.Collection("run_control").FindOne(tc, bson.M{"_id": runID}).Decode(&old); e != nil {
 			return e
 		}
-		if old.Owner == instance && old.State == "active" {
+		if old.Owner == instance {
+			// 注册响应丢失时仅重发仍然有效的原授权。过期或失权的启动实例不能凭同一身份续回。
+			if old.State != "active" || !matchingRun(assignment, old) {
+				return Fail(p.CodeRouteChanged, "原启动实例的运行服部署授权失效")
+			}
+			validUntil := leaseFilter()
+			e = s.DB.Collection("node_leases").FindOne(tc, bson.M{"_id": node, "kind": "game", "owner_instance": instance, "run_server_id": runID, "$expr": validUntil}).Err()
+			if e != nil {
+				return authorityReadError(e, p.CodeRouteChanged, "原启动实例的节点租约失效")
+			}
+			e = s.DB.Collection("run_control").FindOne(tc, bson.M{"_id": runID, "owner_instance": instance, "run_epoch": old.Epoch, "$expr": validUntil}).Err()
+			if e != nil {
+				return authorityReadError(e, p.CodeRouteChanged, "原启动实例的运行服租约失效")
+			}
 			next = old
 			return nil
 		}
+		if old.Epoch < 0 || old.Epoch == math.MaxInt64 || old.ControlVersion < 0 || old.ControlVersion == math.MaxInt64 {
+			return Fail(p.CodeRouteChanged, "运行服所有权代次或控制版本无效")
+		}
 		// res 的匹配数确认原运行服已停止或租约过期，允许接管。
-		res, e := s.DB.Collection("run_control").UpdateOne(tc, bson.M{"_id": runID, "run_epoch": old.Epoch, "$or": bson.A{bson.M{"state": "stopped"}, bson.M{"$expr": bson.M{"$lte": bson.A{"$lease_until", "$$NOW"}}}}}, mongo.Pipeline{bson.D{{Key: "$set", Value: bson.M{"owner_instance": instance, "run_epoch": old.Epoch + 1, "control_version": old.ControlVersion + 1, "state": "active", "lease_until": leaseDate()}}}})
+		runFilter := bson.M{"_id": runID, "run_epoch": old.Epoch, "$or": bson.A{
+			bson.M{"state": "stopped"}, bson.M{"$expr": bson.M{"$lte": bson.A{"$lease_until", "$$NOW"}}},
+		}}
+		runUpdate := bson.M{
+			"owner_instance": instance, "game_node_id": node, "assignment_version": assignment.AssignmentVersion,
+			"run_epoch": old.Epoch + 1, "control_version": old.ControlVersion + 1, "state": "active", "lease_until": leaseDate(),
+		}
+		res, e := s.DB.Collection("run_control").UpdateOne(tc, runFilter, mongo.Pipeline{bson.D{{Key: "$set", Value: runUpdate}}})
 		if e != nil {
 			return e
 		}
@@ -82,7 +126,15 @@ func (s *Store) ApproveGame(ctx context.Context, node, instance string, runID ui
 			return e
 		}
 		// nodeResult 的匹配数确认部署节点已归本 game 实例持有。
-		nodeResult, e := s.DB.Collection("node_leases").UpdateOne(tc, bson.M{"_id": node, "$or": bson.A{bson.M{"owner_instance": instance}, bson.M{"$expr": bson.M{"$lte": bson.A{"$lease_until", "$$NOW"}}}, bson.M{"lease_until": bson.M{"$exists": false}}}}, mongo.Pipeline{bson.D{{Key: "$set", Value: bson.M{"owner_instance": instance, "lease_until": leaseDate(), "kind": "game", "run_epoch": old.Epoch + 1}}}}, options.UpdateOne())
+		// 当前每个启动实例只负责一个 run，同一 node 不能靠给不同 run 反复注册绕开互斥。
+		nodeFilter := bson.M{"_id": node, "$or": bson.A{
+			bson.M{"owner_instance": instance, "run_server_id": runID},
+			bson.M{"$expr": bson.M{"$lte": bson.A{"$lease_until", "$$NOW"}}}, bson.M{"lease_until": bson.M{"$exists": false}},
+		}}
+		nodeUpdate := bson.M{
+			"owner_instance": instance, "lease_until": leaseDate(), "kind": "game", "run_server_id": runID, "run_epoch": old.Epoch + 1,
+		}
+		nodeResult, e := s.DB.Collection("node_leases").UpdateOne(tc, nodeFilter, mongo.Pipeline{bson.D{{Key: "$set", Value: nodeUpdate}}})
 		if e != nil {
 			return e
 		}
@@ -97,7 +149,7 @@ func (s *Store) ApproveGame(ctx context.Context, node, instance string, runID ui
 				return e
 			}
 		}
-		next = Run{ID: runID, Owner: instance, Epoch: old.Epoch + 1, ControlVersion: old.ControlVersion + 1, State: "active"}
+		next = Run{ID: runID, Owner: instance, GameNodeID: node, AssignmentVersion: assignment.AssignmentVersion, Epoch: old.Epoch + 1, ControlVersion: old.ControlVersion + 1, State: "active"}
 		return nil
 	})
 	return next, e
@@ -115,6 +167,10 @@ func (s *Store) Renew(ctx context.Context, kind string) error {
 	}
 	// filter 只允许同一实例延长尚未过期的租约。
 	filter := bson.M{"_id": key, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}
+	if kind == "game" {
+		filter["run_server_id"] = s.Cfg.RunID
+		filter["run_epoch"] = s.Epoch
+	}
 	// r 的匹配数识别本节点是否仍持有租约，e 保存写入错误。
 	r, e := db.Collection("node_leases").UpdateOne(ctx, filter, mongo.Pipeline{bson.D{{Key: "$set", Value: bson.M{"lease_until": leaseDate()}}}})
 	if e != nil {
@@ -124,7 +180,7 @@ func (s *Store) Renew(ctx context.Context, kind string) error {
 		return Fail(p.CodeRouteChanged, "节点租约失效")
 	}
 	if kind == "game" {
-		r, e = db.Collection("run_control").UpdateOne(ctx, bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}, mongo.Pipeline{bson.D{{Key: "$set", Value: bson.M{"lease_until": leaseDate()}}}})
+		r, e = db.Collection("run_control").UpdateOne(ctx, bson.M{"_id": s.Cfg.RunID, "game_node_id": s.Cfg.NodeID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}, mongo.Pipeline{bson.D{{Key: "$set", Value: bson.M{"lease_until": leaseDate()}}}})
 		if e != nil {
 			return e
 		}
@@ -146,7 +202,7 @@ func (s *Store) Release(ctx context.Context, kind string) error {
 	// tc 保证游戏服停运、组围栏换版与节点租约归还在同一事务。
 	return s.tx(ctx, func(tc context.Context) error {
 		// res 的匹配数确认仍有权关闭该运行服，e 保存控制记录更新错误。
-		res, e := s.DB.Collection("run_control").UpdateOne(tc, bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch}, bson.M{"$set": bson.M{"state": "stopped", "lease_until": time.Unix(0, 0)}, "$inc": bson.M{"control_version": 1}})
+		res, e := s.DB.Collection("run_control").UpdateOne(tc, bson.M{"_id": s.Cfg.RunID, "game_node_id": s.Cfg.NodeID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active"}, bson.M{"$set": bson.M{"state": "stopped", "lease_until": time.Unix(0, 0)}, "$inc": bson.M{"control_version": 1}})
 		if e != nil {
 			return e
 		}
@@ -159,7 +215,7 @@ func (s *Store) Release(ctx context.Context, kind string) error {
 				return e
 			}
 		}
-		_, e = s.DB.Collection("node_leases").UpdateOne(tc, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance}, bson.M{"$set": bson.M{"lease_until": time.Unix(0, 0)}})
+		_, e = s.DB.Collection("node_leases").UpdateOne(tc, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "run_server_id": s.Cfg.RunID, "run_epoch": s.Epoch}, bson.M{"$set": bson.M{"lease_until": time.Unix(0, 0)}})
 		return e
 	})
 }

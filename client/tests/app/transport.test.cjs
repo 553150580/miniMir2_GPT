@@ -27,7 +27,8 @@ function loadSource(file){
     return module.exports;
 }
 function load(name){return loadSource(path.join(source,name+'.ts'));}
-const {encodePacket,decodePacket,GameConnection,ProtocolResponseError}=load('GameConnection');
+const {encodePacket,decodePacket,GameConnection,ProtocolResponseError,gameSocketAddress}=load('GameConnection');
+const {directoryRegions}=load('ServerDirectoryModel');
 const {viewportGeometry}=load('ViewportGeometry');
 const {BaselineAssembler}=load('BaselineAssembler');
 
@@ -40,6 +41,33 @@ test('安全区观察保留uint64且同一基线的全部块必须一致',()=>{
     a.reset();assert.throws(()=>a.accept({...common,chunkIndex:0,entities:[],safeZoneId:106},Long.UONE,Long.UONE),/Long/);
 });
 const Long=createRequire(path.join(source,'GameConnection.ts'))('long');
+
+test('区服目录经协议帧保留完整入口号，拒绝跨分区重复入口和不安全精度', () => {
+    const high = Long.fromString('9007199254740993', true);
+    const request = decodePacket(encodePacket(10011, 18, Long.UZERO, {}));
+    assert.equal(request.id, 10011);
+    const reply = decodePacket(encodePacket(10012, request.seq, Long.UZERO, { regions: [
+        { regionId: 'west', name: '西区', servers: [{ originServerId: high, name: '西一服', available: true }] },
+        { regionId: 'east', name: '东区', servers: [{ originServerId: Long.UONE, name: '东一服', available: false }] },
+    ] }));
+    const regions = directoryRegions(reply.value);
+    assert.equal(regions[0].servers[0].originServerId.toString(), '9007199254740993');
+    assert.equal(regions[1].servers[0].available, false);
+    assert.throws(() => directoryRegions({ regions: [regions[0], {...regions[1], servers: regions[0].servers}] }), /条目无效/);
+    assert.throws(() => directoryRegions({ regions: [{regionId: 'east', name: '东区', servers: [
+        { originServerId: 9007199254740993, name: '东一服', available: true },
+    ]}] }), /条目无效/);
+});
+
+test('入场凭据允许同源代理与目标节点地址，拒绝缺失、越协议和安全降级', () => {
+    assert.equal(gameSocketAddress('/game/ws', 'http://127.0.0.1:18080'), 'ws://127.0.0.1:18080/game/ws');
+    assert.equal(gameSocketAddress('ws://127.0.0.1:18103/ws', 'http://127.0.0.1:18080'), 'ws://127.0.0.1:18103/ws');
+    assert.equal(gameSocketAddress('/game/ws', 'https://account.example'), 'wss://account.example/game/ws');
+    assert.equal(gameSocketAddress('wss://game.example/ws', 'https://account.example'), 'wss://game.example/ws');
+    for (const value of [undefined, '', '//game.example/ws', 'https://game.example/', 'wss://u:p@game.example/ws', 'wss://game.example/ws#fragment', 'ws://game.example/ws', '/\\game.example/ws']) {
+        assert.throws(() => gameSocketAddress(value, 'https://account.example'), /游戏连接地址/);
+    }
+});
 
 test('自动选怪在现有战斗输入帧保留完整场景和怪物生命代次', () => {
     const sceneEpoch = Long.fromString('9007199254740993', true), targetLife = Long.MAX_UNSIGNED_VALUE;
@@ -235,11 +263,11 @@ test('同序号的快照不能抢经济回执，旧绑定被隔离，自动状�
         send(bytes){this.sent.push(bytes);}
         close(){this.readyState=3;this.onclose?.();}
     }
-    global.WebSocket=FakeSocket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+    global.WebSocket=FakeSocket;global.location={ origin: 'http://127.0.0.1:18080' };
     const connection=new GameConnection();
     const deliver=(id,seq,binding,value)=>{const bytes=encodePacket(id,seq,binding,value);socket.onmessage({data:bytes.buffer});};
     try{
-        const connecting=connection.connect('单次测试票');socket.readyState=1;socket.onopen();await Promise.resolve();
+        const connecting=connection.connect('单次测试票', '/game/ws');socket.readyState=1;socket.onopen();await Promise.resolve();
         const enter=decodePacket(socket.sent.at(-1));deliver(20002,enter.seq,Long.fromInt(5,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});await connecting;
         const operation={opId:new Uint8Array(16).fill(9),commandSeq:Long.UONE,expectedRevision:Long.UONE,expectedRuleVersion:Long.UONE};
         let completed=false;const pending=connection.request(40001,{itemInstanceId:new Uint8Array(16).fill(8),slot:0,operation}).then(value=>{completed=true;return value;});
@@ -281,9 +309,9 @@ test('防御状态/属性及材料施法/装卸精确保留64位，完整空状�
 test('旧socket迟到open不能在新连接发送旧票；同步发送失败立即清理Pending与计时器',async()=>{
     const original=global.WebSocket,oldLocation=global.location,sockets=[];
     class Socket{static OPEN=1;constructor(){this.readyState=0;this.sent=[];sockets.push(this);}send(bytes){if(this.failSend)throw Error('同步发送失败');this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}
-    global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const connection=new GameConnection();
+    global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };const connection=new GameConnection();
     try{
-        const old=connection.connect('旧票'),oldCheck=assert.rejects(old,/旧游戏连接/),latest=connection.connect('新票');
+        const old=connection.connect('旧票', '/game/ws'),oldCheck=assert.rejects(old,/旧游戏连接/),latest=connection.connect('新票', '/game/ws');
         sockets[0].onopen();await oldCheck;assert.equal(sockets[1].sent.length,0);sockets[1].readyState=1;sockets[1].onopen();await Promise.resolve();
         const sent=decodePacket(sockets[1].sent[0]);assert.equal(sent.value.accountTicket,'新票');const bytes=encodePacket(20002,sent.seq,Long.fromInt(8,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});sockets[1].onmessage({data:bytes.buffer});await latest;
         sockets[1].failSend=true;await assert.rejects(connection.request(20007,{sceneEpoch:Long.UONE,travelId:'01'.repeat(16),destination:1}),/同步发送失败/);assert.equal(connection.pending.size,0);
@@ -310,9 +338,9 @@ test('训练嵌套PB与尸体标识保留完整uint64，128具真实编码样本
 test('真实GameConnection取消导航等同请求全部分块；周期/旧binding碎片不能抢确认，关闭拒绝未完成请求',async()=>{
  const original=global.WebSocket,oldLocation=global.location;let socket;
  class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}
- global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const c=new GameConnection(),deliver=(id,seq,binding,value)=>{const bytes=encodePacket(id,seq,binding,value);socket.onmessage({data:bytes.buffer});};
+ global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };const c=new GameConnection(),deliver=(id,seq,binding,value)=>{const bytes=encodePacket(id,seq,binding,value);socket.onmessage({data:bytes.buffer});};
  try{
-  const connecting=c.connect('测试票');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,Long.fromInt(5,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});await connecting;
+  const connecting=c.connect('测试票', '/game/ws');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,Long.fromInt(5,true),{sceneEpoch:Long.UONE,baselineId:Long.UONE});await connecting;
   const chunk=(i)=>({sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2,chunkIndex:i,navigationState:{status:4,revision:Long.UONE},entities:[{entityHandle:i+1}]});let resolved=false;const wait=c.requestNavigationCancel(Long.UONE,Long.UONE,10).then(value=>{resolved=true;return value;}),seq=decodePacket(socket.sent.at(-1)).seq;
   deliver(5,0,Long.fromInt(5,true),chunk(0));deliver(5,seq,Long.fromInt(4,true),chunk(0));deliver(5,seq,Long.fromInt(5,true),chunk(1));await Promise.resolve();assert.equal(resolved,false);assert.equal(c.pending.size,1);
   deliver(5,seq,Long.fromInt(5,true),chunk(0));const complete=await wait;assert.equal(complete.assembledNavigationCancel,true);assert.equal(complete.entities.length,2);assert.equal(c.pending.size,0);
@@ -322,8 +350,8 @@ test('真实GameConnection取消导航等同请求全部分块；周期/旧bindi
 
 test('真实GameConnection取消响应混序列或重复块立即拒绝并归还Pending，不降格成第一块成功',async()=>{
  for(const change of [{stateSequence:Long.fromInt(2,true)},{chunkIndex:0}]){
-  const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};const c=new GameConnection(),deliver=(seq,value)=>{const b=encodePacket(5,seq,Long.UONE,value);socket.onmessage({data:b.buffer});};
-  try{const connecting=c.connect('票');socket.readyState=1;socket.onopen();await Promise.resolve();const entry=encodePacket(20002,decodePacket(socket.sent.at(-1)).seq,Long.UONE,{sceneEpoch:Long.UONE,baselineId:Long.UONE});socket.onmessage({data:entry.buffer});await connecting;
+  const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };const c=new GameConnection(),deliver=(seq,value)=>{const b=encodePacket(5,seq,Long.UONE,value);socket.onmessage({data:b.buffer});};
+  try{const connecting=c.connect('票', '/game/ws');socket.readyState=1;socket.onopen();await Promise.resolve();const entry=encodePacket(20002,decodePacket(socket.sent.at(-1)).seq,Long.UONE,{sceneEpoch:Long.UONE,baselineId:Long.UONE});socket.onmessage({data:entry.buffer});await connecting;
    const wait=c.requestNavigationCancel(Long.UONE,Long.UONE,3),rejected=assert.rejects(wait,/分块/),seq=decodePacket(socket.sent.at(-1)).seq,chunk={sceneEpoch:Long.UONE,baselineId:Long.UONE,stateSequence:Long.UONE,chunkCount:2,navigationState:{status:4},entities:[]};deliver(seq,{...chunk,chunkIndex:0});deliver(seq,{...chunk,chunkIndex:1,...change});await rejected;assert.equal(c.pending.size,0);
   }finally{c.close();global.WebSocket=original;global.location=oldLocation;}
  }
@@ -331,10 +359,10 @@ test('真实GameConnection取消响应混序列或重复块立即拒绝并归还
 
 
 test('实际PB→GameConnection→Session完整基线只在当前scope呈现训练，缺块/旧scene不替换宠物或提前Ready',async()=>{
- const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={protocol:'http:',host:'127.0.0.1:18080'};
+ const original=global.WebSocket,oldLocation=global.location;let socket;class Socket{static OPEN=1;constructor(){socket=this;this.readyState=0;this.sent=[];}send(bytes){this.sent.push(bytes);}close(){this.readyState=3;this.onclose?.();}}global.WebSocket=Socket;global.location={ origin: 'http://127.0.0.1:18080' };
  const {session}=load('GameSession');session.role={job:2,key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(9)}};const c=session.connection,deliver=(id,seq,value)=>{const bytes=encodePacket(id,seq,Long.fromInt(9,true),value);socket.onmessage({data:bytes.buffer});};
  try{
-  const connecting=c.connect('观察测试票');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,{sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),roomId:Long.UONE,sceneKind:1,resourceVersion:Long.fromInt(16,true),playerHandle:7,nextEconomicCommandSeq:Long.UONE});await connecting;
+  const connecting=c.connect('观察测试票', '/game/ws');socket.readyState=1;socket.onopen();await Promise.resolve();deliver(20002,decodePacket(socket.sent.at(-1)).seq,{sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),roomId:Long.UONE,sceneKind:1,resourceVersion:Long.fromInt(16,true),playerHandle:7,nextEconomicCommandSeq:Long.UONE});await connecting;
   const common={sceneEpoch:Long.UONE,baselineId:Long.fromInt(2,true),stateSequence:Long.UONE,chunkCount:2},pet={entityHandle:200,entityKind:2,life:Long.UONE,hp:Long.fromInt(10),petTraining:{trainingLevel:1,maxTrainingLevel:7,experience:Long.MAX_UNSIGNED_VALUE,nextLevelExperience:Long.fromInt(40000,true)}};
   deliver(5,0,{...common,chunkIndex:0,entities:[{entityHandle:7,entityKind:1,life:Long.UZERO,hp:Long.fromInt(100)}]});assert.equal(session.baseline,null);assert.equal(session.ready,false);
   deliver(5,0,{...common,sceneEpoch:Long.fromInt(3,true),chunkIndex:1,entities:[pet]});assert.equal(session.baseline,null);

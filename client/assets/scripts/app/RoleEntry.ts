@@ -21,7 +21,7 @@ export async function connectRoleEntry(connection: GameConnection, role: RoleKey
         requireScope();
         const ticket = await connection.rpc(10007, { role }, signal);
         requireScope();
-        const entering = connection.connect(ticket.ticket, signal);
+        const entering = connection.connect(ticket.ticket, ticket.gameWssUrl, signal);
         const generation = connection.generation;
         try {
             await entering;

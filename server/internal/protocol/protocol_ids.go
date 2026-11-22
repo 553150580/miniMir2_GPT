@@ -18,6 +18,8 @@ const (
 	MsgS2CEntryTicket uint16 = 10008
 	MsgC2SLocalRegister uint16 = 10009
 	MsgS2CLocalRegister uint16 = 10010
+	MsgC2SServerDirectory uint16 = 10011
+	MsgS2CServerDirectory uint16 = 10012
 	MsgC2SEnterLine uint16 = 20001
 	MsgS2CEnterLine uint16 = 20002
 	MsgC2SMoveIntent uint16 = 20006

@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 真实保存UI、正常新角色和原打怪奖励；不预置等级、经验、物品或临时战斗状态。
 'use strict';
 const assert = require('node:assert/strict'), crypto = require('node:crypto'), fs = require('node:fs'), path = require('node:path');
@@ -276,7 +277,7 @@ async function main() {
         for (const port of [18100, 18101, 18102]) { const response = await fetch(`http://127.0.0.1:${port}/healthz`, { signal: AbortSignal.timeout(5000) }), q = await response.json(); assert(response.ok && q.status === 'ok' && q.development_only && q.rule_version === 20); assert.equal(q.fixture_hash, report.fixtureSha256); report.health.push({ port, ...q }); }
         await page.goto('http://127.0.0.1:18080/'); await scene('Login');
         const account = 'lgqa' + crypto.randomBytes(5).toString('hex'), password = crypto.randomBytes(9).toString('hex'); secrets.push(account, password);
-        await edit('Account', account); await edit('Password', password); await tap('Register'); await scene('RoleSelect');
+        await edit('Account', account); await edit('Password', password); await tap('Register'); await chooseQAServer(page, scene);
         const name = '成长' + crypto.randomBytes(3).toString('hex'), deadline = Date.now() + 10000;
         while (!await page.evaluate(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.selectedJob === 2)) { assert(Date.now() < deadline, '道士按钮未选中'); await tap('JobTabs/Job2'); await sleep(100); }
         await edit('Name', name); await tap('Create'); await page.waitForFunction(name => cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l => l.string.includes(name)), name, { timeout: 20000 });

@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 真实保存UI、正常道士、触屏到访安全区与永久绑定观察；不预置数据库或改写权威位置，本脚本不验收21。
 const assert=require('node:assert/strict'),crypto=require('node:crypto'),fs=require('node:fs'),path=require('node:path');
 const {chromium}=require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT,'browser-tools/node_modules/playwright-core'));
@@ -73,7 +74,7 @@ function packet(value){const b=Buffer.from(value);if(b.length<6)return null;let 
  }
  try{
   await page.goto('http://127.0.0.1:18080/?townTravelQA=1');await scene('Login');const account='tqa'+crypto.randomBytes(5).toString('hex'),password=crypto.randomBytes(9).toString('hex');
-  await edit('Account',account);await edit('Password',password);await tap('Register');await scene('RoleSelect');await tap('JobTabs/Job2');
+  await edit('Account',account);await edit('Password',password);await tap('Register');await chooseQAServer(page, scene);await tap('JobTabs/Job2');
   await page.waitForFunction(()=>Boolean(cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.selectedJob===2),null,{timeout:10000});report.roleSelection=await page.evaluate(()=>{const a=cc.director.getScene().getComponentsInChildren('AppRoot')[0];return{job:a.selectedJob,status:cc.find('Canvas/Safe/Status').getComponent(cc.Label).string};});
   const roleName='Town'+crypto.randomBytes(3).toString('hex');await edit('Name',roleName);await tap('Create');await page.waitForFunction(name=>Boolean(cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(l=>l.string.includes(name))),roleName);
   report.createdRole=await page.evaluate(async name=>{const {session}=await System.import('chunks:///_virtual/GameSession.ts'),role=session.roles.find(role=>role.name===name);return role?{job:role.job,slot:role.slot}:null;},roleName);assert.equal(report.createdRole?.job,2,'目录确认正常创建的角色职业必须为道士');

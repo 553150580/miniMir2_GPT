@@ -11,18 +11,19 @@ const deferred=()=>{let resolve,reject;const promise=new Promise((yes,no)=>{reso
 const hex=bytes=>Buffer.from(bytes).toString('hex');
 function fingerprint(q){return JSON.stringify({origin:q.originServerId.toString(),slot:q.slot,job:q.job,name:q.name,op:hex(q.opId)});}
 
-function fixture(storage=new Storage(),key='create.account-a.1'){
+const firstOrigin={originServerId:Long.UONE,name:'测试一服',available:true};
+function fixture(storage=new Storage(),key=`minimir.create-role.v1.${'ab'.repeat(16)}.1`){
  const server=[],receipts=new Map(),requests=[],handlers=new Map(),actions=[],scenes=[];let allocated=0,directoryReads=0,failDirectory=false,disposedAssets=0;
  const account={id:'ab'.repeat(16),name:'account_a'}, ticketCalls=[];
- const session={account,roles:[],connection:{token:'account-a-token',close(){}},roleCreation:new PendingRoleCreation(storage,key),scenes:{async switchTo(name){scenes.push(name);}}};
+ const session={account,originServer:firstOrigin,roles:[],connection:{token:'account-a-token',close(){}},roleCreation:new PendingRoleCreation(storage,key),scenes:{async switchTo(name){scenes.push(name);}}};
  session.connection.rpc=async(id,q)=>{
-  if(id===10003){directoryReads++;if(failDirectory){failDirectory=false;throw Error('目录响应丢失');}return{roles:server.slice()};}
+  if(id===10003){assert(q.originServerId.equals(session.originServer.originServerId));directoryReads++;if(failDirectory){failDirectory=false;throw Error('目录响应丢失');}return{roles:server.filter(role=>role.key.originServerId.equals(q.originServerId))};}
   if(id===10001){return{accountId:new Uint8Array(16).fill(q.account===account.name?0xab:0xcd),accountToken:'new-token'};}
   if(id===10007){ticketCalls.push(q.role);throw new ProtocolResponseError(10008,1002);}
   assert.equal(id,10005);assert.equal(fingerprint(session.roleCreation.get()),fingerprint(q),'真实RPC发送前原请求已落盘');requests.push(q);
   const action=actions.shift();if(action?.before)await action.before.promise;if(action?.error)throw action.error;
   const idKey=hex(q.opId);let role=receipts.get(idKey);
-  if(!role){if(server.some(row=>row.slot===q.slot))throw new ProtocolResponseError(10006,4301);role={key:{originServerId:q.originServerId,roleId:new Uint8Array(16).fill(server.length+1)},slot:q.slot,job:q.job,name:q.name.normalize('NFKC'),level:1};server.push(role);receipts.set(idKey,role);}
+    if(!role){if(server.some(row=>row.slot===q.slot&&row.key.originServerId.equals(q.originServerId)))throw new ProtocolResponseError(10006,4301);role={key:{originServerId:q.originServerId,roleId:new Uint8Array(16).fill(server.length+1)},slot:q.slot,job:q.job,name:q.name.normalize('NFKC'),level:1};server.push(role);receipts.set(idKey,role);}
   if(action?.drop)throw Error('建角提交后响应丢失');if(action?.directory)failDirectory=true;
   return action?.reply??role;
  };
@@ -57,11 +58,12 @@ test('新选角组件读取原持久建角，自动沿原op核对；恢复不要
 });
 
 test('旧建角和目录异步结果不得更新销毁场景、新账号或新ledger，原账号journal保留待核对',async()=>{
- for(const mode of ['destroy','account','ledger']){
+ for(const mode of ['destroy','account','ledger','origin']){
   const f=fixture(),app=f.app();await app.roleScene();const gate=deferred();f.actions.push({before:gate});const pending=f.click(),originalLedger=f.session.roleCreation;
   if(mode==='destroy')app.disposed=true;
   if(mode==='account'){f.session.connection.token='account-b-token';f.session.roleCreation=new PendingRoleCreation(f.storage,'create.account-b.1');}
   if(mode==='ledger')f.session.roleCreation=new PendingRoleCreation(f.storage,f.key);
+  if(mode==='origin')f.session.originServer={...firstOrigin,originServerId:Long.fromInt(2,true)};
   gate.resolve();
   await pending;assert.equal(f.session.roles.length,0,mode);assert.equal(f.directoryReads,1,mode);assert(originalLedger.get(),mode);
  }
@@ -79,6 +81,24 @@ test('明确首次业务拒绝结束原请求；繁忙、未知后的拒绝、�
 
 const displayRole=(slot)=>({key:{originServerId:Long.UONE,roleId:new Uint8Array(16).fill(slot)},slot,job:0,name:`角色${slot}`,level:1});
 
+test('返回区服可切换精确入口，槽位及未确认建角记录按永久入口分开', async()=>{
+ const f=fixture(),old=f.app();await old.roleScene();f.actions.push({drop:true});
+ await assert.rejects(f.click(),/响应丢失/);
+ const suspended=f.session.roleCreation.get();assert(suspended);
+ await f.click('BackServers');assert.equal(f.scenes.at(-1),'ServerSelect');
+ const secondOrigin={originServerId:Long.fromString('9007199254740993',true),name:'测试二服',available:true};
+ const picker=f.app();await picker.selectServer(secondOrigin);assert.equal(f.scenes.at(-1),'RoleSelect');
+ const second=f.app();await second.roleScene();assert.equal(f.session.roles.length,0);
+ second.form.Name.string='二服角色';await f.click();
+ assert.equal(f.requests[1].originServerId.toString(),'9007199254740993');assert.equal(f.requests[1].slot,1);
+ assert.equal(f.session.roles[0].name,'二服角色');
+ assert.equal(fingerprint(new PendingRoleCreation(f.storage,f.key).get()),fingerprint(suspended));
+ await picker.selectServer(firstOrigin);
+ const returned=f.app();await returned.roleScene();
+ assert.equal(f.session.roles.length,1);assert.equal(fingerprint(f.requests[2]),fingerprint(suspended));
+ assert.equal(f.session.roleCreation.get(),null);assert.equal(f.server.length,2);
+});
+
 test('角色目录首次超时后复用当前角色槽重试，不需要退出重新登录',async()=>{
  const f=fixture(),app=f.app(),original=f.session.connection.rpc;f.server.push(displayRole(1),displayRole(2));
  f.session.connection.rpc=async(id,q)=>{if(id===10003){f.session.connection.rpc=original;throw Error('账号服务响应超时');}return original(id,q);};
@@ -95,7 +115,8 @@ test('点击进入遇到10008认证拒绝，重新登录同账号恢复原角色
  assert.equal(f.session.connection.token,'');assert.equal(f.session.ready,false);assert.equal(f.session.role,null);
  assert.equal(f.storage.getItem(pendingKey),'原经济记录');assert.equal(f.ticketCalls.length,1);assert.equal(f.ticketCalls[0],f.server[1].key);
  const login=f.app();login.loginScene();assert.equal(login.form.Account.string,'account_a');assert.equal(login.form.Password.string,'');assert.match(login.message,/重新登录/);
- login.form.Password.string='history_pass';await f.click('Login');assert.equal(login.form.Password.string,'');assert.deepEqual(f.scenes,['Login','RoleSelect']);
+ login.form.Password.string='history_pass';await f.click('Login');assert.equal(login.form.Password.string,'');assert.deepEqual(f.scenes,['Login','ServerSelect']);
+ await login.selectServer(firstOrigin);assert.deepEqual(f.scenes,['Login','ServerSelect','RoleSelect']);
  f.server.reverse();const resumed=f.app();await resumed.roleScene();assert.equal(resumed.selectedRole,0);assert.equal(f.session.roles[resumed.selectedRole].slot,2);assert.equal(f.ticketCalls.length,1);
 });
 
@@ -115,6 +136,7 @@ test('旧凭证的迟到1002不可退出新登录，切换账号也不沿用原�
  assert.equal(f.session.connection.token,'account-a-token');assert.deepEqual(f.scenes,[]);assert.equal(f.disposedAssets,1);
  const fresh=fixture(),old=fresh.app();fresh.server.push(displayRole(1),displayRole(2));await old.roleScene();fresh.click('Role1');await fresh.click('Enter');
  const login=fresh.app();login.loginScene();login.form.Account.string='account_b';login.form.Password.string='new_pass';await fresh.click('Login');
+ await login.selectServer(firstOrigin);
  const roles=fresh.app();await roles.roleScene();assert.equal(roles.selectedRole,0);assert.notEqual(fresh.session.account.id,account.id);
 });
 

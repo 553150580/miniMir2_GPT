@@ -1,3 +1,4 @@
+const { chooseQAServer } = require('./choose_qa_server.cjs');
 // 普通满包持续战斗与保存背包触屏；正常新角色，不预置等级、物品、余额或临时状态。
 'use strict';
 const assert = require('node:assert/strict'), crypto = require('node:crypto'), fs = require('node:fs'), path = require('node:path');
@@ -257,7 +258,7 @@ async function main() {
     }
     try {
         report.health = []; for (const port of [18100, 18101, 18102]) { const response = await fetch(`http://127.0.0.1:${port}/healthz`, { signal: AbortSignal.timeout(5000) }), q = await response.json(); assert(response.ok && q.status === 'ok' && q.development_only && q.rule_version === 21 && q.fixture_hash === report.fixtureSha256); report.health.push({ port, ...q }); }
-        await page.goto('http://127.0.0.1:18080/'); await scene('Login'); const account = 'icqa' + crypto.randomBytes(5).toString('hex'), password = crypto.randomBytes(9).toString('hex'); secrets.push(account, password); await edit('Account', account); await edit('Password', password); await tap('Register'); await scene('RoleSelect');
+        await page.goto('http://127.0.0.1:18080/'); await scene('Login'); const account = 'icqa' + crypto.randomBytes(5).toString('hex'), password = crypto.randomBytes(9).toString('hex'); secrets.push(account, password); await edit('Account', account); await edit('Password', password); await tap('Register'); await chooseQAServer(page, scene);
         const name = '容量' + crypto.randomBytes(3).toString('hex'), end = Date.now() + 10000; while (!await page.evaluate(() => cc.director.getScene().getComponentsInChildren('AppRoot')[0]?.selectedJob === 2)) { assert(Date.now() < end); await tap('JobTabs/Job2'); await sleep(100); } await edit('Name', name); await tap('Create'); await page.waitForFunction(name => cc.find('Canvas/Safe/Role0')?.getComponentsInChildren(cc.Label).some(x => x.string.includes(name)), name); await tap('Role0'); await tap('Enter'); await scene('Game'); await ready(); await auto(false);
         const initial = report.observations.initial = await state(); expectedRoleKey = initial.roleKey; assert.equal(initial.job, 2); assert.equal(initial.level, 1); assert.equal(initial.experience, '0'); assert.equal(initial.hosting.remain, '0'); assert.equal(initial.autoRecycleEnabled, false);
         await tap('BottomHUD/Footer/Inventory'); for (const item of [218, 193]) { await selectItem(item); await tap('UIMgr/Panels/Inventory/Equip'); await page.waitForFunction(({ s, item }) => s.inventory.equipped.some(x => x.item.itemId === item), { s: observed, item }); } await closeAll(); for (let i = 0; (await state()).count !== 8; i++) { assert(i < 4); await tap('MapViewport/Actions/Count'); } await auto(true); await screenshot('01-equipped-normal-auto'); report.checks.push('正常注册1级道士，原木剑布衣保存按钮穿戴；默认回收关闭/初始托管0，普通Auto8开始自然战斗');

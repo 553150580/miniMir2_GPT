@@ -19,6 +19,7 @@ const codecs: Record<number, MessageType> = {
     10004: pb.RoleDirectoryResult, 10005: pb.CreateRoleRequest, 10006: pb.RoleSummary,
     10007: pb.EntryTicketRequest, 10008: pb.EntryTicketResult,
     10009: pb.LocalLoginRequest, 10010: pb.LoginResult,
+    10011: pb.ServerDirectoryRequest, 10012: pb.ServerDirectoryResult,
     20001: pb.EnterLineRequest, 20002: pb.EnterLineResult, 20006: pb.MoveIntent,
     20007: pb.MapTravelPrepare, 20008: pb.MapTravelPlan, 20009: pb.MapTravelCommit, 20010: pb.MapTravelState,
     20011: pb.BindingState,
@@ -90,6 +91,20 @@ export function decodePacket(data: Uint8Array): Packet {
     return { id, seq, binding, error, value };
 }
 
+// 票据指定本次连接地址。同源开发代理可用根路径，公网 HTTPS 页面只使用安全 WebSocket。
+export function gameSocketAddress(endpoint: unknown, accountOrigin: string): string {
+    if (typeof endpoint !== 'string' || !endpoint || /[\s\\#]/u.test(endpoint)) throw new Error('入场票据缺少有效的游戏连接地址');
+    if (!/^\/(?!\/)/u.test(endpoint) && !/^wss?:\/\/[^/]/iu.test(endpoint)) throw new Error('游戏连接地址无效');
+    const origin = new URL(accountOrigin);
+    origin.protocol = origin.protocol === 'https:' ? 'wss:' : 'ws:';
+    let target: URL;
+    try { target = new URL(endpoint, origin); }
+    catch { throw new Error('游戏连接地址无效'); }
+    if (!target.hostname || target.username || target.password || target.hash || (target.protocol !== 'ws:' && target.protocol !== 'wss:')
+        || (origin.protocol === 'wss:' && target.protocol !== 'wss:')) throw new Error('游戏连接地址无效');
+    return target.href;
+}
+
 export class GameConnection {
     token = '';
     binding = Long.UZERO;
@@ -142,11 +157,12 @@ export class GameConnection {
         }
     }
 
-    async connect(ticket: string, signal?: AbortSignal): Promise<void> {
+    async connect(ticket: string, endpoint: string, signal?: AbortSignal): Promise<void> {
         if (signal?.aborted) throw new Error('游戏连接已取消');
+        if (typeof ticket !== 'string' || !ticket) throw new Error('入场票据无效');
+        const address = gameSocketAddress(endpoint, location.origin);
         this.close(); this.binding = Long.UZERO;
-        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const socket = new WebSocket(`${protocol}//${location.host}/game/ws`); this.socket = socket;
+        const socket = new WebSocket(address); this.socket = socket;
         const generation = this.lifecycle;
         socket.binaryType = 'arraybuffer';
         socket.onmessage = event => {
