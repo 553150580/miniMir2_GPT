@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
-	"go.mongodb.org/mongo-driver/v2/mongo"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
@@ -161,12 +160,12 @@ func TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo(t *testing.T) {
 	next := persistence.Settlement{SourceSeq: after.SourceSeq + 1, Kills: 1, Experience: monster.Exp, Gold: monster.GoldMin, EventAt: time.Now()}
 	// nextID 标识当前业务使用的下一状态。
 	nextID := fmt.Sprintf("settle:%s:%d", after.ID, next.SourceSeq)
-	// 在第三项写入处造成真实唯一键冲突，验证前两项和资产推进一并回滚。
+	// 制造孤立审计触发批量结算的唯一键冲突，核对回执与角色资产一起回滚。
 	_, err = owner.DB.Collection("audit_outbox").InsertOne(ctx, bson.M{"_id": nextID, "test_marker": "original"})
 	must(t, err)
 	// err 接收结算带有回执过程中可能产生的错误，供后续失败分支处理。
-	if _, _, err := owner.SettleWithReceipt(ctx, auth, next); !mongo.IsDuplicateKeyError(err) {
-		t.Fatal("重复审计键应保留Mongo唯一键错误", err)
+	if _, _, err := owner.SettleWithReceipt(ctx, auth, next); persistence.Code(err) != p.CodeOperationConflict {
+		t.Fatal("重复审计键应按原来源冲突回滚", err)
 	}
 	// rolledBack 保存由角色取得的已随机值回退。
 	rolledBack, err := owner.Role(ctx, after.ID)

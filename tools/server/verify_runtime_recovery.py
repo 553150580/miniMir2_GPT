@@ -64,7 +64,7 @@ def digest(value):
 
 def role_projection(role):
     # 新票接管只允许以下控制字段换代；全部永久玩法字段仍逐字比较。
-    controls = {'owner_instance', 'run_epoch', 'session_epoch', 'revision'}
+    controls = {'owner_instance', 'run_epoch', 'session_epoch', 'revision', 'last_entry_attempt'}
     return {key: value for key, value in role.items() if key not in controls}
 
 

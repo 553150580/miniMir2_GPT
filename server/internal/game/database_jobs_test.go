@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 )
 
@@ -120,7 +121,7 @@ func TestDatabaseAdmissionOverloadReturnsProtocolError(t *testing.T) {
 	r := &room{}
 	// w 保存当前处理所用的房间执行器。
 	w := &worker{e: e, rooms: map[string]*room{"role": r}}
-	w.join(r, command{role: "role", conn: conn, ticket: "已校验票据"})
+	w.join(r, command{role: "role", conn: conn, ticket: &persistence.Ticket{}})
 	if len(conn.frames) != 2 ||
 		conn.frames[0].ID != p.MsgS2CEnterLine || conn.frames[0].Request != 10 || conn.frames[0].Error != p.CodeServerBusy ||
 		conn.frames[1].ID != p.MsgS2CEnterLine || conn.frames[1].Error != p.CodeServerBusy ||
@@ -140,7 +141,7 @@ func TestDatabaseAdmissionSkipsDisconnectedWaitingEntry(t *testing.T) {
 	w := &worker{e: e, rooms: map[string]*room{"role": r}}
 	// conn 保存当前处理所用的连接。
 	conn := &travelConnection{alive: true}
-	w.join(r, command{role: "role", conn: conn, ticket: "已校验票据"})
+	w.join(r, command{role: "role", conn: conn, ticket: &persistence.Ticket{}})
 	if !r.Pending || len(e.admissionEntries) != 1 {
 		t.Fatal("入场任务没有进入待处理状态")
 	}

@@ -135,7 +135,7 @@ Excel编辑器已修复追加记录与空模板重复物理行的问题；实际
 ./tools/dev python3 tools/config/export_configs.py --check --mode release
 ```
 
-检查报告在 `config/reports/配置校验报告.json`。导出到 `config/releases/<版本>-<内容哈希>/`，完成后原子切换 `preview_current.json` 指针；正式门禁不通过时不会生成半套发布数据。它只生成本地文件，尚未连接gameNode，也不对线上环境发布。
+预览检查报告写入 `config/reports/配置校验报告.json`，正式门禁报告写入 `config/reports/正式发布门禁.json`。两种模式均可用 `--report` 指定输出。预览导出到 `config/releases/<版本>-<内容哈希>/`，完成后原子切换 `preview_current.json` 指针。正式门禁通过后才生成正式发布数据。检查和导出仅操作本地文件。
 
 客户端和服务端JSON分别使用字段的 `client/both` 与 `server/both` 目标。逐记录状态仅放在发布清单的 `record_states` 内，双端载荷均不包含它；来源文案也不投影给客户端。客户端JSON不是伤害、掉落、权益或交易的裁决依据。
 

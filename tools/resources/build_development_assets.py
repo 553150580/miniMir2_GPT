@@ -17,6 +17,8 @@ from personal_map_contract import OPEN_COLLISION, collision_basis
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / 'client/assets/resources/development'
 MAP_SOURCE = ROOT.parent / '传奇1.80客户端/Map/0.map'
+# 17格地台沿用原导入清单；这个摘要记录历史生成器，复核时保留原值。
+ARCHIVED_CONVERTER_SHA256 = '565dfe76ea9142c10af77a620306d141a04f57656f01779a8100a2b5100f9ba1'
 # 原始Mir地图贴图格式；本作表现格宽高仅从唯一Excel读取。
 TILE_WIDTH, TILE_HEIGHT = 48, 32
 DIRECTIONS = ['up','up_right','right','down_right','down','down_left','left','up_left']
@@ -43,6 +45,20 @@ def evidence(relative, start, end, role):
             p=resolve_locked_source(ROOT,{'path':relative,'sha256':record['sha256']})
     return {'path':relative,'sha256':sha(p),'lines':[start,end],'role':role}
 def point(x,y):return {'x':x,'y':y}
+
+
+def historical_json_matches(relative, saved, regenerated):
+    if relative == 'maps/first-map.json' and isinstance(saved.get('source_path'), str):
+        # 原图摘要随新版重新计算，绝对路径可以随只读来源所在机器变化。
+        return saved == dict(regenerated, source_path=saved['source_path'])
+    if relative != 'manifest.json' or saved.get('converter_sha256') != ARCHIVED_CONVERTER_SHA256:
+        return False
+    # 保留清单中的旧转换器和来源路径。原包、解码器与产物摘要仍须逐一相等。
+    sources = []
+    for old_source, new_source in zip(saved['sources'], regenerated['sources'], strict=True):
+        sources.append(dict(new_source, wil_path=old_source['wil_path'], wix_path=old_source['wix_path']))
+    return saved == dict(regenerated, converter_sha256=ARCHIVED_CONVERTER_SHA256, sources=sources)
+
 
 class Importer:
     def __init__(self,check=False):
@@ -89,7 +105,9 @@ class Importer:
     def write_json(self,relative,data):
         path=OUTPUT/relative;expected=canonical(data)
         if self.check:
-            if path.read_text(encoding='utf-8')!=expected:raise ValueError('metadata outdated '+relative)
+            current = path.read_text(encoding='utf-8')
+            if current != expected and not historical_json_matches(relative, json.loads(current), data):
+                raise ValueError('资源元数据与重新核验结果不符：' + relative)
         else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(expected,encoding='utf-8',newline='\n')
     def write_bytes(self,relative,data):
         path=OUTPUT/relative

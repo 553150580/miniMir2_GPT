@@ -175,7 +175,7 @@ func (w *worker) finishMaterialCast(binding materialCommitBinding, q persistence
 		}
 		return
 	}
-	r.Pending = false
+	r.resumeAfterPending(time.Now())
 	r.PendingRetry = nil
 	r.PendingOperationID = ""
 	r.PendingFingerprint = ""

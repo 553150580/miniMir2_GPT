@@ -48194,7 +48194,7 @@
     "_enabled": true,
     "__prefab": null,
     "_id": "b84cc53ed7b14332a4f03d1",
-    "_string": "请点击重新连接。",
+    "_string": "请点击重新连接。\n轻触背景可返回选角。",
     "_fontSize": 24,
     "_actualFontSize": 24,
     "_lineHeight": 30,

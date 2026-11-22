@@ -104,6 +104,25 @@ class ReleaseIntegrityTests(unittest.TestCase):
         self.assertEqual(self.export('preview-candidate'), 2)
         self.assertEqual(pointer.read_bytes(), stable)
 
+    def test_blocked_release_check_writes_only_its_default_report(self):
+        schema_path = self.root / 'config/schema/catalog.json'
+        schema = json.loads(schema_path.read_text(encoding='utf-8'))
+        schema['blockers'] = [{'id': 'B_SAMPLE', 'description': '测试发布缺口'}]
+        schema_path.write_text(json.dumps(schema), encoding='utf-8')
+        reports = self.root / 'config/reports'
+        preview = reports / '配置校验报告.json'
+        release = reports / '正式发布门禁.json'
+
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(exporter.main(['--check']), 0)
+            preview_before = preview.read_bytes()
+            self.assertEqual(exporter.main(['--check', '--mode', 'release']), 2)
+        self.assertEqual(preview.read_bytes(), preview_before)
+        report = json.loads(release.read_text(encoding='utf-8'))
+        self.assertEqual(report['mode'], 'release')
+        self.assertEqual(report['release_blockers'], ['B_SAMPLE：测试发布缺口'])
+        self.assertFalse((self.releases / 'release_current.json').exists())
+
 
 if __name__ == '__main__':
     unittest.main()

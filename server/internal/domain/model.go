@@ -143,6 +143,7 @@ type Role struct {
 	Owner                        string            `bson:"owner_instance" json:"-"`                                                        // 获准写入此角色聚合的游戏节点实例。
 	RunEpoch                     int64             `bson:"run_epoch" json:"-"`                                                             // 游戏运行所有权代次。
 	SessionEpoch                 int64             `bson:"session_epoch" json:"binding_epoch"`                                             // 同一角色换连接递增的绑定代次。
+	LastEntryAttempt             string            `bson:"last_entry_attempt,omitempty" json:"-"`                                          // 当前绑定由哪一次票据接管产生，原票据清理后仍可查证。
 	Wallet                       Wallet            `bson:"wallet" json:"wallet"`                                                           // 四类持久货币余额。
 	Items                        []Item            `bson:"items" json:"items"`                                                             // 当前背包的物品实例列表。
 	Equipped                     []Equipped        `bson:"equipped" json:"equipped"`                                                       // 当前装备栏的部位与物品。

@@ -190,7 +190,7 @@ func (w *worker) finishSafeZoneBinding(fact *safeZoneBindingFact, role domain.Ro
 	if role.Revision >= r.Role.Revision {
 		r.Role = role
 	}
-	r.Pending = false
+	r.resumeAfterPending(time.Now())
 	r.PendingRetry = nil
 	r.PendingBinding = nil
 	r.PendingOperationID = ""

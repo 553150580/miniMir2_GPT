@@ -128,10 +128,15 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	cfg.Fixture.Monsters[0].AttackMax = cfg.Fixture.Monsters[0].AttackMin
 	cfg.Fixture.Monsters[0].Accuracy = cfg.Fixture.Pet.Agility
 	cfg.Fixture.Pet.DefenceMin, cfg.Fixture.Pet.DefenceMax = 0, 0
+	cfg.Fixture.Pet.AttackMin, cfg.Fixture.Pet.AttackMax = 0, 0
 	// base 保存由玩家发生时间等级取得的基础值。
 	base, _ := cfg.Fixture.PlayerAtLevel(1, testRoleLevel)
 	cfg.Fixture.Monsters[0].DefenceMin, cfg.Fixture.Monsters[0].DefenceMax = base.AttackMax, base.AttackMax
-	cfg.Fixture.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 6}, {X: 6, Y: 7}, {X: 6, Y: 8}, {X: 7, Y: 6}, {X: 7, Y: 8}, {X: 8, Y: 6}, {X: 8, Y: 7}, {X: 8, Y: 8}}
+	// 首怪与道士、宠物等距，优先攻击道士；开启七怪后右边的怪离宠物更近。
+	// 第八槽留在宠物初始格，群疗不启用该槽。无宠法师则可绕过首怪走到八怪中心。
+	cfg.Fixture.Map.PlayerSpawn = devconfig.Point{X: 5, Y: 6}
+	cfg.Fixture.Map.PetSpawn = devconfig.Point{X: 6, Y: 6}
+	cfg.Fixture.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 7}, {X: 6, Y: 8}, {X: 7, Y: 6}, {X: 7, Y: 8}, {X: 8, Y: 6}, {X: 8, Y: 7}, {X: 8, Y: 8}, {X: 6, Y: 6}}
 	// injuryMonsterCount 保存由无符号整数“32”取得的“injury”怪物数量。
 	injuryMonsterCount := uint32(len(cfg.Fixture.Map.MonsterSpawns) - 1)
 	// moveWaitMS 保存根据移动毫秒与当前数据计算的移动等待毫秒。
@@ -434,44 +439,41 @@ func TestCombatAreaFiveSkillsAndEightKillMongoWS(t *testing.T) {
 	defer func() { wave.close() }()
 	wave.auto(false, 1)
 	wave.buyAndLearnSkill(cfg.Fixture, 23)
-	time.Sleep(time.Duration(cfg.Fixture.Players[0].MoveMS+100) * time.Millisecond)
-	// 先清除占据站位的首怪，再正常等待其10秒重生；不把寻路穿活怪当测试前提。
-	wave.castAccepted(23, 0, wave.entity(10).Position)
-	// f 记录协议帧。
-	wave.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && wave.entity(10).Hp == 0 })
-	wave.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: wave.entry.SceneEpoch, Destination: &pb.GridPoint{X: 7, Y: 7}})
+	waveCenter := &pb.GridPoint{X: 7, Y: 7}
+	wave.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: wave.entry.SceneEpoch, Destination: waveCenter})
 	// f 记录协议帧。
 	wave.until(func(f wire.Frame) bool {
-		return f.ID == p.MsgS2CSceneBaseline && wave.player().Position.X == 7 && wave.player().Position.Y == 7
+		return f.ID == p.MsgS2CSceneBaseline && proto.Equal(wave.player().Position, waveCenter)
 	})
-	time.Sleep(time.Duration(cfg.Fixture.Players[0].MoveMS+100) * time.Millisecond)
-	// f 记录协议帧。
-	wave.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline && wave.entity(10).Hp > 0 })
-	// 仅随机测试库设置本波19杀合法前态，再经真实购书事务同步owner，避免测试缓存写穿。
-	_, err = inspection.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": waveID}, bson.M{"$set": bson.M{"no_equipment_kills": cfg.Fixture.Drops.EquipmentGuarantee - 1}})
-	must(t, err)
-	// bookOffer 保存由无符号整数“32”取得的技能书尝试提交。
-	bookOffer := uint32(0)
-	// waveSkill 保存由技能取得的“wave”技能。
-	waveSkill, _ := cfg.Fixture.Skill(23)
-	// offer 接收遍历技能商店时当前的元素。
-	for _, offer := range cfg.Fixture.SkillShop {
-		if offer.ItemID == waveSkill.BookItemID && offer.Currency == "gold" {
-			bookOffer = offer.ID
-		}
-	}
-	// prepared 保存由技能预览取得的“prepared”。
-	prepared := wave.skillPreview(&pb.SkillAssetPreviewRequest{Kind: 1, OfferId: bookOffer, Quantity: 1})
-	// result 保存由技能确认取得的结果。
-	if result := wave.skillConfirm(prepared); result.ErrorCode != 0 {
-		t.Fatal("本波owner前态同步失败")
-	}
+	time.Sleep(time.Duration(moveWaitMS) * time.Millisecond)
 	wave.auto(false, 8)
+	wave.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline })
+	waveSkill, ok := cfg.Fixture.Skill(23)
+	if !ok {
+		t.Fatal("缺少爆裂火焰唯一配置")
+	}
+	waveRadius := int32(waveSkill.AreaRadius)
+	occupied := map[[2]int32]bool{{waveCenter.X, waveCenter.Y}: true}
+	for handle := uint32(10); handle < 18; handle++ {
+		monster := wave.entity(handle)
+		if monster == nil || monster.Hp <= 0 || monster.Position == nil {
+			t.Fatalf("八杀前态缺少原活怪：handle=%d state=%v", handle, monster)
+		}
+		x, y := monster.Position.X, monster.Position.Y
+		cell := [2]int32{x, y}
+		if occupied[cell] || x < waveCenter.X-waveRadius || x > waveCenter.X+waveRadius || y < waveCenter.Y-waveRadius || y > waveCenter.Y+waveRadius {
+			t.Fatalf("八杀前态的活怪重叠或超出爆裂范围：handle=%d position=%v center=%v", handle, monster.Position, waveCenter)
+		}
+		occupied[cell] = true
+	}
 	t.Log("准备同帧八杀")
 	// before 保存由角色取得的操作前的状态。
 	before, err := inspection.Role(ctx, waveID)
 	must(t, err)
-	wave.castAccepted(23, 0, &pb.GridPoint{X: 7, Y: 7})
+	if before.NoEquipmentKills != cfg.Fixture.Drops.EquipmentGuarantee-1 || before.SourceSeq != 0 {
+		t.Fatal("八杀前态必须保留建角时设定的隔离保底，并且未产生过击杀收益")
+	}
+	wave.castAccepted(23, 0, waveCenter)
 	// f 记录协议帧。
 	wave.until(func(f wire.Frame) bool {
 		if f.ID != p.MsgS2CSceneBaseline {

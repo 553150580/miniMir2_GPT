@@ -5,8 +5,11 @@ import (
 	"testing"
 	"time"
 
+	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/persistence"
+	p "minimir/internal/protocol"
+	"minimir/internal/wire"
 )
 
 // monsterRespawnRoom 处理怪物复活房间。
@@ -17,6 +20,45 @@ func monsterRespawnRoom(m devconfig.MapTemplate, monsters ...*entity) (*worker, 
 	// w 保存当前处理所用的房间执行器。
 	w := &worker{e: &Engine{Store: &persistence.Store{Cfg: devconfig.Config{Fixture: devconfig.Fixture{RuleVersion: 26, Map: m}}}}}
 	return w, r
+}
+
+func TestAutoBattleRestoresVisibleMonstersToUnoccupiedCells(t *testing.T) {
+	m := devconfig.MapTemplate{ID: 1, Width: 3, Height: 2}
+	deadline := time.Unix(1800000000, 0)
+	active := &entity{Pos: devconfig.Point{X: 1}, HP: 9}
+	onPlayer := &entity{Handle: 11, Life: 4, HP: 3, NextAttack: deadline}
+	onPet := &entity{Pos: devconfig.Point{X: 2}, HP: 5}
+	clear := &entity{Pos: devconfig.Point{X: 2, Y: 1}, HP: 7}
+	dead := &entity{RespawnAt: deadline}
+	w, r := monsterRespawnRoom(m, active, onPlayer, onPet, clear, dead)
+	r.MonsterCount = 1
+	r.Pet = &entity{Pos: onPet.Pos, HP: 4}
+	w.roll = func(int64) int64 { return 0 }
+
+	w.autoBattleIntent(r, wire.Message(p.MsgC2SAutoBattle, 1, 0, &pb.AutoBattleIntent{Enabled: true, MonsterCount: 5}))
+	if r.MonsterCount != 5 || !r.Auto || onPlayer.Pos != (devconfig.Point{Y: 1}) || onPet.Pos != (devconfig.Point{X: 1, Y: 1}) {
+		t.Fatal("恢复原怪物槽位时未避开角色、宠物和活怪")
+	}
+	if onPlayer.HP != 3 || onPlayer.Life != 4 || onPlayer.Handle != 11 || onPlayer.NextAttack != deadline ||
+		onPlayer.MovementRevision != 1 || onPlayer.MovementKind != movementTeleport ||
+		clear.Pos != (devconfig.Point{X: 2, Y: 1}) || clear.MovementRevision != 0 || dead.RespawnAt != deadline {
+		t.Fatal("恢复槽位改变了怪物原战斗状态或无冲突位置")
+	}
+}
+
+func TestAutoBattleLeavesMonsterCountUnchangedWhenGridIsFull(t *testing.T) {
+	m := devconfig.MapTemplate{ID: 1, Width: 2, Height: 2}
+	active := &entity{Pos: devconfig.Point{X: 1}, HP: 9}
+	first, second := &entity{HP: 9}, &entity{HP: 9}
+	w, r := monsterRespawnRoom(m, active, first, second)
+	r.MonsterCount = 1
+	r.Pet = &entity{Pos: devconfig.Point{Y: 1}, HP: 4}
+	r.Conn = &capturedConnection{}
+
+	w.autoBattleIntent(r, wire.Message(p.MsgC2SAutoBattle, 1, 0, &pb.AutoBattleIntent{Enabled: true, MonsterCount: 3}))
+	if r.MonsterCount != 1 || r.Auto || first.MovementRevision != 0 || second.MovementRevision != 0 || first.Pos != r.Player.Pos {
+		t.Fatal("空位不足时已部分修改怪物位置或自动战斗状态")
+	}
 }
 
 // TestRandomMonsterRespawnSamplesEachFreeGridCell 核验原截止内应在指定空格一次复活，或旧生命仍可引用，用诊断「随机上界含阻挡或占格，或漏掉空格」定位对应断言。

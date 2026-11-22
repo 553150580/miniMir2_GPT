@@ -6,6 +6,7 @@ import (
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
+	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
 	"reflect"
@@ -546,7 +547,7 @@ func TestHardSettlementFailureIsolatesWithoutDiscardingPaidFacts(t *testing.T) {
 	if r.Player.Pos != before {
 		t.Fatal("隔离room仍推进")
 	}
-	w.command(command{role: "role", conn: c, ticket: "new-ticket", frame: wire.Frame{Request: 1}})
+	w.command(command{role: "role", conn: c, ticket: &persistence.Ticket{}, frame: wire.Frame{Request: 1}})
 	if c.frames[len(c.frames)-1].Error != p.CodeLineRecovering {
 		t.Fatal("隔离后新票据给旧事实提升授权")
 	}

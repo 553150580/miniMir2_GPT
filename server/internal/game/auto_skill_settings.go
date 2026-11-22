@@ -98,14 +98,16 @@ func (w *worker) autoBattleIntent(r *room, frame wire.Frame) {
 			return
 		}
 	}
-	// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
-	if m, ok := w.currentMap(r); !ok || m.SceneKindValue() == devconfig.SceneKindTown {
+	m, ok := w.currentMap(r)
+	if !ok || m.SceneKindValue() == devconfig.SceneKindTown {
 		w.failure(r, frame, p.CodeLineForbidden)
 		w.hosting(r, frame.Request)
 		return
 	}
-	if q.MonsterCount > 0 {
-		r.MonsterCount = int(q.MonsterCount)
+	if q.MonsterCount > 0 && !w.setVisibleMonsterCount(r, m, int(q.MonsterCount)) {
+		w.failure(r, frame, p.CodeServerBusy)
+		w.hosting(r, frame.Request)
+		return
 	}
 	if settings != nil {
 		r.AutoSkills = settings

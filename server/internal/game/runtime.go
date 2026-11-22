@@ -33,15 +33,15 @@ type Connection interface {
 
 // command 表示应该交给单个房间分片串行处理的输入或控制事件。
 type command struct {
-	role        string        // 房间分片内的角色索引键。
-	conn        Connection    // 命令来源连接，后台时钟及内部回调可不带连接。
-	frame       wire.Frame    // 原始请求帧，保留消息号、请求号和绑定代次。
-	ticket      string        // 入场命令携带的短票。
-	done        func(*worker) // 在房间分片 goroutine 上执行的内部工作。
-	tick        time.Time     // 发出房间逻辑帧时采样的服务器时刻。
-	at          time.Time     // 记录断开发生时刻，标定在线和托管事件的归属边界。
-	disconnect  bool          // 把这条控制命令解释为对应连接的断开。
-	fromWaiting bool          // 该命令从房间等待队列重放时为真。
+	role        string              // 房间分片内的角色索引键。
+	conn        Connection          // 命令来源连接，后台时钟及内部回调可不带连接。
+	frame       wire.Frame          // 原始请求帧，保留消息号、请求号和绑定代次。
+	ticket      *persistence.Ticket // 入场命令携带已校验的短票，待确认时按原身份查证。
+	done        func(*worker)       // 在房间分片 goroutine 上执行的内部工作。
+	tick        time.Time           // 发出房间逻辑帧时采样的服务器时刻。
+	at          time.Time           // 记录断开发生时刻，标定在线和托管事件的归属边界。
+	disconnect  bool                // 把这条控制命令解释为对应连接的断开。
+	fromWaiting bool                // 该命令从房间等待队列重放时为真。
 }
 
 // job 表示数据库协程同房间分片之间的异步提交与回收约定。
@@ -49,6 +49,7 @@ type job struct {
 	run        func() func(*worker) // 在数据库执行协程中运行；返回的函数只在目标分片应用结果。
 	target     *worker              // 拥有该房间并接收结果的分片。
 	settlement bool                 // 将收益等持久结算任务路由到独立等待队列。
+	admission  bool                 // 将会话接管及其重试路由到专用数据库队列。
 }
 
 // Engine 持有游戏分片和数据库队列，负责路由协议及管理运行周期。
@@ -158,6 +159,7 @@ type room struct {
 	AutoTarget            actorRef                  // 当前自动战斗锁定的怪物生命引用。
 	Pending               bool                      // 房间存在需要冻结推进的在途持久操作。
 	PendingRetry          *job                      // 结果未知或排队失败后需原样重投的数据库任务。
+	entryAttempt          string                    // 待确认的原入场尝试，期间冻结旧连接的游戏输入。
 	PendingBinding        *safeZoneBindingFact      // 已作为当前在途操作提交的安全区绑定事实。
 	RetryAt               time.Time                 // 下一次允许重投在途任务的时刻。
 	Waiting               []command                 // 在途操作结束后准备重放的有限命令队列。
@@ -276,7 +278,7 @@ func (e *Engine) Enter(token string, c Connection, request uint32) {
 			return nil
 		}
 		c.SetRole(t.RoleID)
-		e.postEntry(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: token, frame: wire.Frame{Request: request}})
+		e.postEntry(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: &t, frame: wire.Frame{Request: request}})
 		return nil
 	}}
 	if !offerDatabaseJob(e.admissionTickets, j) {
@@ -414,6 +416,10 @@ func (w *worker) loop() {
 				w.beginTownNavigationTick(c.tick)
 				// roleID 定位房间集合中正在处理的成员，r 接收遍历房间集合时当前的元素。
 				for roleID, r := range w.rooms {
+					if r.Scene == 0 && !w.e.stopped.Load() {
+						// 冷入场查证时还没有场景，但也需要继续重投原任务。
+						w.retryPendingRoom(r, c.tick)
+					}
 					w.step(r, c.tick)
 					w.expireIdleRoom(roleID, r, c.tick)
 				}
@@ -436,7 +442,7 @@ func (w *worker) command(c command) {
 	}
 	// r 保存从房间集合取出的房间集合中的指定项。
 	r := w.rooms[c.role]
-	if c.ticket != "" {
+	if c.ticket != nil {
 		if r != nil && r.Isolated {
 			rejectEntry(c.conn, c.frame.Request, p.CodeLineRecovering, "room authority isolated")
 			return
@@ -507,6 +513,10 @@ func (w *worker) command(c command) {
 		} else {
 			c.conn.Deliver(wire.Frame{ID: c.frame.ID, Request: c.frame.Request, Binding: c.conn.Binding(), Error: p.CodeStaleSession})
 		}
+		return
+	}
+	if r.entryAttempt != "" {
+		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
 	if c.frame.ID == p.MsgC2SEnterWorldAck {
@@ -687,108 +697,6 @@ func (w *worker) command(c command) {
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
-	}
-}
-
-// join 在数据库确认会话接管后附着连接。健康角色沿用原现场，仅冷入场初始化。
-// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，c 记录命令。
-func (w *worker) join(r *room, c command) {
-	// 新的入场尝试使此前只读预览失效，并保留永久操作的单房间串行边界。
-	r.PreviewGeneration++
-	r.PreviewInFlight = false
-	r.Pending = true
-	// fresh 表示房间尚无场景，成功接管后需要初始化临时现场。
-	fresh := r.Scene == 0
-	// j 初始化用作当前位置的下标的任务或职业编号。
-	j := job{target: w, run: func() func(*worker) {
-		// role 记录角色。
-		var role domain.Role
-		// auth 记录授权。
-		var auth persistence.Auth
-		// err 保存当前操作的失败原因，供调用方检查或返回。
-		err := context.Canceled
-		if c.conn.Alive() {
-			role, auth, err = w.e.Store.Enter(w.e.ctx, c.ticket)
-		}
-		// w 记录房间执行器。
-		return func(w *worker) {
-			r.Pending = false
-			if err != nil {
-				if c.conn.Alive() {
-					rejectEntry(c.conn, c.frame.Request, persistence.Code(err), "entry rejected")
-				}
-				if fresh {
-					delete(w.rooms, c.role)
-					// next 接收遍历等待时当前的元素。
-					for _, next := range r.Waiting {
-						w.command(next)
-					}
-				} else {
-					w.after(r)
-				}
-				return
-			}
-			if fresh {
-				w.initialize(r, role)
-			}
-			if r.Conn != nil && r.Conn != c.conn {
-				r.Conn.Close("role taken over")
-			}
-			w.cancelMapTravelOnDetach(r)
-			w.cancelTownNavigation(r)
-			r.Role = role
-			r.Auth = auth
-			r.idleSince = time.Time{}
-			if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
-				w.refreshPlayerStats(r)
-			}
-			transitionEventPrivilege(r, time.Now(), role.PrivilegeUntil)
-			r.InputSequence = 0
-			r.Manual = false
-			r.Conn = c.conn
-			r.Ready = false
-			r.PetBornReady = nil
-			r.Baseline = w.e.baseline.Add(1)
-			r.HostSession = ""
-			r.LastTick = time.Now()
-			r.AwaitUntil = time.Now().Add(10 * time.Second)
-			// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
-			if m, ok := w.currentMap(r); ok && m.SceneKindValue() == devconfig.SceneKindTown && w.e.Store.Cfg.Fixture.TownTravel != nil {
-				r.AwaitUntil = time.Now().Add(time.Duration(w.e.Store.Cfg.Fixture.TownTravel.AckTTLMS) * time.Millisecond)
-			}
-			if !c.conn.Alive() {
-				r.Conn = nil
-				r.PetBornReady = nil
-				r.HostSession = domain.ID()
-				transitionEventHosting(r, time.Now(), r.HostSession)
-				w.after(r)
-				return
-			}
-			// 新会话明确切到在线事件区段；已到期的旧事件仍保留原托管归属。
-			transitionEventHosting(r, time.Now(), "")
-			c.conn.SetBinding(uint64(auth.SessionEpoch))
-			if r.Player.Handle == 0 {
-				w.isolateRoom(r)
-				return
-			}
-			// entry 是本次附着对应的场景、基线、资源版本和角色位置。
-			entry := w.enterLineResult(r)
-			if entry == nil {
-				return
-			}
-			// 先发送场景身份和完整基线，收到匹配 ACK 后才同步资产和开放操作。
-			w.send(r, p.MsgS2CEnterLine, c.frame.Request, entry)
-			w.bindingState(r, 1)
-			w.baseline(r)
-			w.after(r)
-		}
-	}}
-	if !w.e.submitEntry(j) {
-		r.Pending = false
-		rejectEntry(c.conn, c.frame.Request, p.CodeServerBusy, "admission transaction queue full")
-		if fresh {
-			delete(w.rooms, c.role)
-		}
 	}
 }
 

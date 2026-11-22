@@ -169,11 +169,15 @@ func TestHostingFractionAcrossHealthyReconnectMongo(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		verified, err := owner.TicketRole(ctx, ticket.Ticket)
+		if err != nil {
+			t.Fatal(err)
+		}
 		// next 保存当前处理所用的下一状态。
 		next := &travelConnection{alive: true}
 		// debit 保存已累计且尚未归入流水的托管整秒，用于当前步骤中的扣减，oldBinding 保存授权，用于当前步骤中的原状态会话绑定。
 		debit, oldBinding := r.hostSecondsOpen, r.Auth
-		w.command(command{role: id, conn: next, ticket: ticket.Ticket, frame: wire.Frame{Request: uint32(segment + 1)}})
+		w.command(command{role: id, conn: next, ticket: &verified, frame: wire.Frame{Request: uint32(segment + 1)}})
 		if debit != 0 {
 			if len(r.Waiting) != 1 || len(w.e.jobs) != 1 || r.Auth != oldBinding || r.Conn != nil || !r.Pending {
 				t.Fatal("未确认的旧会话时长需阻塞接管")

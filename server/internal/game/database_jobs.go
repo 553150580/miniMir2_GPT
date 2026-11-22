@@ -94,6 +94,9 @@ func (e *Engine) submitEntry(j job) bool {
 // submit 选择独立结算队列或普通业务队列，保留已有任务顺序。
 // w 是调用该方法的房间执行器实例，j 记录当前位置的下标，使用任务或职业编号表示。
 func (w *worker) submit(j job) bool {
+	if j.admission {
+		return w.e.submitEntry(j)
+	}
 	// queue 初始指向普通业务队列，收益结算任务可改走单独的结算队列。
 	queue := w.e.jobs
 	if j.settlement && w.e.settlementJobs != nil {

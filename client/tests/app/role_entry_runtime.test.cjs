@@ -88,23 +88,29 @@ test('旧短票拒绝晚于切换身份时既不重试也不关闭新的连接�
     assert.deepEqual(state.closures, []);
 });
 
-function reconnectFixture(state) {
+function reconnectFixture(state, exitGame = async () => {}) {
     const account = { id: '07'.repeat(16), name: 'account_a' }, role = { key: roleKey };
     const session = { account, role, connection: state.socket, ready: true, update: new Set(), lastError: '' };
     const status = { string: '' }, password = { string: '', node: { active: false } }, label = { string: '' };
     let click, attached = 0;
+    const listeners = new Map();
     const button = { interactable: true, node: {
         getChildByName() { return { getComponent() { return label; } }; }, on(_event, listener) { click = listener; }, off() {},
     } };
     const parts = { 'Panel/Message': status, 'Panel/Password': password, 'Panel/Reconnect': button };
-    const root = { active: false, getChildByPath(name) { return { getComponent() { return parts[name]; } }; } };
+    const root = { active: false, getChildByPath(name) { return { getComponent() { return parts[name]; } }; },
+        on(event, listener) { listeners.set(event, listener); }, off(event) { listeners.delete(event); } };
     const { GameReconnect } = load('client/assets/scripts/app/GameReconnect.ts', module => ({
-        cc: { Button: { EventType: { CLICK: 'click' } }, isValid: () => true }, './RoleEntry': roleEntry,
+        cc: { Button: { EventType: { CLICK: 'click' } }, Node: { EventType: { TOUCH_END: 'touch-end' } }, isValid: () => true }, './RoleEntry': roleEntry,
         './GameSession': { session, roleIdentity: () => '角色', isCurrentEntry: value => value.connection === state.socket.generation,
             currentEntryIdentity: () => ({ connection: state.socket.generation }) },
     })[module]);
-    const dialog = new GameReconnect(root, () => true, () => {}, async () => { attached++; }, () => {});
-    return { dialog, root, status, password, get attached() { return attached; }, async retry() {
+    const dialog = new GameReconnect(root, () => true, () => {}, async () => { attached++; }, exitGame, () => {});
+    return { dialog, root, status, password, button, click, get attached() { return attached; }, touch(target = root) {
+        const event = { target, propagationStopped: false };
+        listeners.get('touch-end')?.(event);
+        return event;
+    }, async retry() {
         click();
         for (let i = 0; dialog.attempt && i < 20; i++) await new Promise(resolve => setImmediate(resolve));
         assert.equal(dialog.attempt, undefined);
@@ -145,4 +151,40 @@ test('重连的账号1002提示当前账号口令，1003保持普通重试且不
         assert.equal(state.authRequests.length, 0);
         view.dialog.dispose();
     }
+});
+
+test('重连弹窗只有背景手势退出，取消在途重连并屏蔽迟到的成功回调', async () => {
+    let entered;
+    const state = connection([new Promise(resolve => { entered = resolve; })]);
+    let exits = 0;
+    const view = reconnectFixture(state, async () => { exits++; state.socket.close(); });
+    view.click();
+    await Promise.resolve();
+    const attempt = state.connections[0].signal;
+    assert.equal(view.touch(view.button.node).propagationStopped, false);
+    assert.equal(attempt.aborted, false);
+    assert.equal(view.touch().propagationStopped, true);
+    assert.equal(attempt.aborted, true);
+    assert.equal(view.button.interactable, false);
+    view.touch(); view.click();
+    entered();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(exits, 1);
+    assert.equal(state.requests.length, 1);
+    assert.equal(view.attached, 0);
+    assert.equal(view.dialog.attempt, undefined);
+    view.dialog.dispose();
+    assert.equal(view.touch().propagationStopped, false);
+});
+
+test('背景返回失败时保持遮罩并恢复重连操作', async () => {
+    const state = connection([]), view = reconnectFixture(state, async () => { throw Error('加载选角失败'); });
+    view.touch();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(view.root.active, true);
+    assert.equal(view.button.interactable, true);
+    assert.match(view.status.string, /加载选角失败.*\n.*背景/);
+    await view.retry();
+    assert.equal(view.root.active, false);
+    view.dialog.dispose();
 });

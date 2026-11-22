@@ -396,7 +396,7 @@ export class AppRoot extends Component {
                 this.showMapLoading(false);
                 this.handleSessionUpdate();
                 while (this.popup?.back()) {}
-            }, () => this.attachCurrentEntry(), () => this.tapSound?.());
+            }, () => this.attachCurrentEntry(), () => this.leave(false, true), () => this.tapSound?.());
         this.cleanups.push(() => reconnect.dispose());
         if (!session.connection.disconnectReason) await this.attachCurrentEntry();
     }
@@ -1434,13 +1434,23 @@ export class AppRoot extends Component {
         this.status('操作已由服务端确认');
     }
 
-    private async leave(hosting: boolean): Promise<void> {
+    private requireHostingExit(baseline = session.baseline): void {
+        if (!session.ready || this.attaching || session.travel.blocksInput || session.teleport.blocksInput
+            || !this.isWorldCurrent() || !session.hosting) throw new Error('托管状态尚未同步，请恢复连接后再试');
+        if (session.entry.sceneKind !== 1) throw new Error('请返回普通挂机地图再开始离线托管');
+        const player = baseline?.entities.find((entity: any) => entity.entityHandle === session.entry.playerHandle);
+        if (!player || player.hp.isZero()) throw new Error('请在角色存活且状态已同步时开始离线托管');
+        if (!session.hosting.remainHostingSec) throw new Error('先领取免费托管时长');
+        if (!session.hosting.autoBattleEnabled) throw new Error('请先开启自动战斗，再开始离线托管');
+    }
+
+    private async leave(hosting: boolean, localOnly = false): Promise<void> {
         if (this.leaving) throw new Error('正在等待退出确认');
-        if (hosting && !session.hosting?.remainHostingSec) throw new Error('先领取免费托管时长');
+        if (hosting) this.requireHostingExit();
         // 先释放已有摇杆，再只对本次退出关闭新输入；普通资产等待不使用此屏障。
         this.releaseInput(); this.leaving = true; this.nav.setInputBlocked(true);
         try {
-            if (session.ready && !session.travel?.blocksInput && !this.attaching && this.isWorldCurrent()) {
+            if (!localOnly && session.ready && !session.travel.blocksInput && !this.attaching && this.isWorldCurrent()) {
                 const entry = session.entry, binding = session.connection.binding.toString(), role = roleIdentity(), generation = session.connection.generation;
                 const ack = await session.connection.requestNavigationCancel(entry.sceneEpoch, entry.baselineId, ++this.inputSequence, entry.roomId);
                 if (this.disposed || session.entry !== entry || session.connection.generation !== generation || session.connection.binding.toString() !== binding || roleIdentity() !== role
@@ -1448,13 +1458,15 @@ export class AppRoot extends Component {
                 if (ack?.sceneEpoch?.toString() !== entry.sceneEpoch.toString() || ack.baselineId?.toString() !== entry.baselineId.toString()
                     || ack.assembledNavigationCancel !== true || !ack.navigationState || ![0, 4].includes(ack.navigationState.status)) throw new Error('远端导航取消尚未得到完整确认，请重新退出');
                 const latest = session.baseline;
-                if (latest && BigInt(latest.stateSequence.toString()) > BigInt(ack.stateSequence.toString())
-                    && latest.navigationState && (![0, 4].includes(latest.navigationState.status)
+                const hasNewerBaseline = latest && BigInt(latest.stateSequence.toString()) > BigInt(ack.stateSequence.toString());
+                if (hasNewerBaseline && latest.navigationState && (![0, 4].includes(latest.navigationState.status)
                         || BigInt(latest.navigationState.revision.toString()) > BigInt(ack.navigationState.revision.toString()))) throw new Error('已有更新的导航目标，请重新退出');
+                if (hosting) this.requireHostingExit(hasNewerBaseline ? latest : ack);
                 session.lastError = '';
             } else session.lastError = '连接未就绪，仅完成本地退出；远端导航取消未确认';
             this.nav.exitGame(); session.connection.close(); session.ready = false;
-            if (!hosting) await this.changeScene('RoleSelect'); else { session.connection.token = ''; session.account = null; await this.changeScene('Login'); }
+            if (hosting) { session.connection.token = ''; session.account = null; }
+            await session.scenes!.switchTo(session.connection.token ? 'RoleSelect' : 'Login');
         } finally {
             // 切换成功后Creator会销毁旧组件并清空字段；只有留在原场景时才恢复输入。
             if (!this.disposed) { this.leaving = false; this.nav.setInputBlocked(this.inputBarrier); }

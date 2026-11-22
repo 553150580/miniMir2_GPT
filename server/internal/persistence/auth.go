@@ -12,6 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"golang.org/x/crypto/argon2"
 	"golang.org/x/text/unicode/norm"
+	"math"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
@@ -325,11 +326,28 @@ func (s *Store) TicketRole(ctx context.Context, token string) (Ticket, error) {
 // Enter 在同一事务消费票据并接管角色，返回新角色会话身份和持久状态。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，token 记录令牌，使用文本表示。
 func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, error) {
-	// t 是仍未消费的原票据，e 保存预读失败并在正式事务前返回。
-	t, e := s.TicketRole(ctx, token)
-	if e != nil {
-		return domain.Role{}, Auth{}, e
+	t, err := s.TicketRole(ctx, token)
+	if err != nil {
+		return domain.Role{}, Auth{}, err
 	}
+	role, auth, err := s.EnterTicket(ctx, t, domain.ID(), true)
+	if err != nil {
+		return domain.Role{}, Auth{}, err
+	}
+	return role, auth, nil
+}
+
+// EnterTicket 提交已查验票据的原接管尝试。attempt 由服务端生成，同一次提交待确认时沿用。
+// allowTakeover 为假时只查证已提交会话，已断开的请求不再发起新的接管。
+// 拒绝时若已在持久围栏内读到角色，返回该视图供房间核对旧会话是否仍有效。
+func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allowTakeover bool) (domain.Role, Auth, error) {
+	if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID {
+		return domain.Role{}, Auth{}, Fail(p.CodeRouteChanged, "票据目标运行代次过期")
+	}
+	if len(t.ID) != 64 || len(domain.Bytes(attempt)) != 16 {
+		return domain.Role{}, Auth{}, Fail(p.CodeInvalidArgument, "缺少已校验的入场尝试身份")
+	}
+	key := Hash([]byte(t.ID + ":" + attempt))
 	// 在重试事务之外固定本次候选；已存在的永久绑定始终优先。
 	// initial 是角色缺少持久绑定时才会使用的默认复活位置。
 	initial, e := s.initialBinding()
@@ -342,24 +360,39 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 	var r domain.Role
 	// tc 将票据消费、角色接管和需要的迁移写入绑定到同一事务。
 	e = s.guardedTx(ctx, a, func(tc context.Context) error {
-		if t.Owner != s.Instance || t.Epoch != s.Epoch || t.Run != s.Cfg.RunID {
-			return Fail(p.CodeRouteChanged, "票据目标运行代次过期")
-		}
-		// err 接收权限围栏过程中可能产生的错误，供后续失败分支处理。
+		r = domain.Role{}
+		// 原提交也写入这两道围栏。等待期间不能以一次未见回执的查询释放旧会话。
 		if err := s.fence(tc, a); err != nil {
 			return err
 		}
-		// used 的匹配数证明票据仍未使用且有效，err 保存数据库写入错误。
-		used, err := s.DB.Collection("entry_tickets").UpdateOne(tc, bson.M{"_id": t.ID, "used": false, "expires_at": bson.M{"$gt": time.Now()}}, bson.M{"$set": bson.M{"used": true, "used_at": time.Now()}})
+		var err error
+		r, err = s.Role(tc, t.RoleID)
+		if err != nil {
+			return err
+		}
+		if r.AccountID != t.AccountID || r.Origin != t.Origin {
+			return Fail(p.CodeInvalidArgument, "票据角色归属已变化")
+		}
+		if r.LastEntryAttempt == key {
+			return s.checkRole(r, Auth{AccountID: a.AccountID, RoleID: a.RoleID, SessionEpoch: r.SessionEpoch})
+		}
+		if !allowTakeover {
+			return Fail(p.CodeUnauthenticated, "入场连接已关闭")
+		}
+		if r.SessionEpoch == math.MaxInt64 || r.Revision == math.MaxInt64 {
+			return Fail(p.CodeOperationConflict, "角色会话或版本无法继续递增")
+		}
+		// 消费结果与新的绑定代次同时提交；仅原内部尝试可查证已消费的票据。
+		now := time.Now()
+		used, err := s.DB.Collection("entry_tickets").UpdateOne(tc, bson.M{
+			"_id": t.ID, "account_id": t.AccountID, "auth_version": t.AuthVersion, "role_id": t.RoleID,
+			"origin": t.Origin, "run": t.Run, "epoch": t.Epoch, "owner": t.Owner, "used": false, "expires_at": bson.M{"$gt": now},
+		}, bson.M{"$set": bson.M{"used": true, "used_at": now, "entry_attempt": key, "session_epoch": r.SessionEpoch + 1}})
 		if err != nil {
 			return err
 		}
 		if used.MatchedCount != 1 {
 			return Fail(p.CodeUnauthenticated, "票据不可重用")
-		}
-		r, err = s.Role(tc, t.RoleID)
-		if err != nil {
-			return err
 		}
 		if r.Binding == nil {
 			r.Binding = initial
@@ -387,6 +420,7 @@ func (s *Store) Enter(ctx context.Context, token string) (domain.Role, Auth, err
 		r.RunEpoch = s.Epoch
 		r.SessionEpoch++
 		r.Revision++
+		r.LastEntryAttempt = key
 		// res 的匹配数用于确认原角色版本与账号归属仍一致。
 		res, err := s.DB.Collection("roles").ReplaceOne(tc, bson.M{"_id": r.ID, "revision": old, "account_id": t.AccountID}, r)
 		if err != nil {

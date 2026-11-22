@@ -35,7 +35,7 @@ func (w *worker) retireRoomDeath(r *room) bool {
 				}
 				return
 			}
-			r.Pending = false
+			r.resumeAfterPending(time.Now())
 			r.PendingRetry = nil
 			r.Role.RetiredDeathID = deathID
 			r.idleSince = idleSince

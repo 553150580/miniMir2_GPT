@@ -44,8 +44,7 @@ server-integration-test:
 	./tools/dev python3 tools/server/test.py --mongo --race
 
 development-resources-check:
-	./tools/dev python3 tools/resources/build_development_assets.py --check
-	./tools/dev python3 tools/resources/prepare_first_loop.py --check
+	./tools/dev python3 tools/tasks.py development-resources-check
 
 client-scene-test:
 	./tools/dev node tools/client/compile_scene_tests.mjs

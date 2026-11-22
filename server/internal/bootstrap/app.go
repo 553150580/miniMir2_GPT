@@ -22,7 +22,6 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
-	"sync"
 	"syscall"
 	"time"
 )
@@ -248,14 +247,16 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 	if _, e := NodeKey(); e != nil {
 		return e
 	}
-	// childExit 创建用于维护子进程退出的容器或通道。
-	childExit := make(chan error, 3)
+	childExit := make(chan supervisedChildExit, 3)
 	// modes 初始化用作模式集合的文本列表。
 	modes := []string{"account", "game", "gm"}
 	// children 记录“children”，使用“cmd”列表表示。
 	var children []*exec.Cmd
-	// wg 记录“wg”，使用协程汇合计数器表示。
-	var wg sync.WaitGroup
+	stop := func() {
+		for _, child := range children {
+			stopChild(child)
+		}
+	}
 	// mode 接收遍历模式集合时当前的元素。
 	for _, mode := range modes {
 		// cmd 保存由进程监管器子进程取得的“cmd”。
@@ -264,29 +265,51 @@ func supervise(ctx context.Context, cfg devconfig.Config) error {
 		cmd.Stderr = os.Stderr
 		prepareChild(cmd)
 		if e = cmd.Start(); e != nil {
-			return e
+			stop()
+			return errors.Join(fmt.Errorf("启动%s节点: %w", mode, e), collectChildExits(childExit, len(children)))
 		}
 		children = append(children, cmd)
-		wg.Go(func() {
-			// err 接收等待过程中可能产生的错误，供后续失败分支处理。
-			err := cmd.Wait()
-			childExit <- fmt.Errorf("%s节点退出: %v", mode, err)
-		})
+		go func() { childExit <- supervisedChildExit{mode, cmd.Wait()} }()
 	}
-	// failure 记录失败，使用错误表示。
+	return waitForChildren(ctx, childExit, len(children), stop)
+}
+
+type supervisedChildExit struct {
+	mode string
+	err  error
+}
+
+// 收到停服请求后仍核对所有节点的退出结果，包括游戏节点的结清错误。
+func waitForChildren(ctx context.Context, exits <-chan supervisedChildExit, remaining int, stop func()) error {
 	var failure error
 	select {
 	case <-ctx.Done():
-	case failure = <-childExit:
-	}
-	// child 接收遍历“children”时当前的元素。
-	for _, child := range children {
-		if child.Process != nil {
-			stopChild(child)
+	case exit := <-exits:
+		remaining--
+		failure = exit.failure()
+		if failure == nil && ctx.Err() == nil {
+			failure = fmt.Errorf("%s节点在请求停服前已退出", exit.mode)
 		}
 	}
-	wg.Wait()
+	stop()
+	return errors.Join(failure, collectChildExits(exits, remaining))
+}
+
+func collectChildExits(exits <-chan supervisedChildExit, remaining int) error {
+	var failure error
+	for range remaining {
+		if err := (<-exits).failure(); err != nil {
+			failure = errors.Join(failure, err)
+		}
+	}
 	return failure
+}
+
+func (exit supervisedChildExit) failure() error {
+	if exit.err == nil {
+		return nil
+	}
+	return fmt.Errorf("%s节点退出: %w", exit.mode, exit.err)
 }
 
 // supervisorChild 返回进程监管器子进程供调用方使用。

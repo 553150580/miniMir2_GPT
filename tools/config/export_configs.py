@@ -384,8 +384,11 @@ def main(argv=None):
     parser.add_argument("--mode", choices=("preview", "release"), default="preview")
     parser.add_argument("--version", default="dev-prep-v0.1")
     parser.add_argument("--schema", type=Path, default=ROOT / "config/schema/catalog.json")
-    parser.add_argument("--report", type=Path, default=ROOT / "config/reports/配置校验报告.json")
+    parser.add_argument("--report", type=Path)
     args = parser.parse_args(argv)
+    if args.report is None:
+        report_name = "正式发布门禁.json" if args.mode == "release" else "配置校验报告.json"
+        args.report = ROOT / "config/reports" / report_name
     try:
         schema = load_json(args.schema)
         data, errors, release_issues, paths = collect(schema)

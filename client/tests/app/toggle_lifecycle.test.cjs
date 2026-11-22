@@ -93,14 +93,14 @@ test('真实技能模式Toggle绑定只发送一次最终勾选，发送与拒�
 
 test('真实退出完成后Creator清空旧组件对象字段，finally不再解锁已销毁导航',async()=>{
     const root=new AppRoot(),blocked=[];let exited=0,closed=0;
-    session.ready=false;session.connection={close(){closed++;}};
+    session.ready=false;session.connection={token:'test-token',close(){closed++;}};
     root.releaseInput=()=>{};
     root.nav={setInputBlocked:value=>blocked.push(value),exitGame(){exited++;}};
-    root.changeScene=async name=>{
+    session.scenes={switchTo:async name=>{
         assert.equal(name,'RoleSelect');
         root.disposed=true;root.nav=null;root.node=null;
         session.lastError='新场景状态';
-    };
+    }};
     await root.leave(false);
     assert.deepEqual(blocked,[true]);assert.equal(exited,1);assert.equal(closed,1);
     root.error(new Error('旧场景迟到错误'));root.status('旧场景迟到文字');
@@ -111,7 +111,7 @@ test('退出未切换场景时仍恢复原输入，迟到按钮拒绝不会触�
     const root=new AppRoot(),blocked=[];
     session.ready=false;session.connection={close(){}};root.releaseInput=()=>{};
     root.nav={setInputBlocked:value=>blocked.push(value),exitGame(){}};
-    root.changeScene=async()=>{throw new Error('切换失败');};
+    session.scenes={switchTo:async()=>{throw new Error('切换失败');}};
     await assert.rejects(root.leave(false),/切换失败/);
     assert.deepEqual(blocked,[true,false]);assert.equal(root.leaving,false);
     const button=new NodeEvents();root.find=()=>button;

@@ -231,6 +231,7 @@ func TestManaPotionManualAutomaticAndHostingMongoWS(t *testing.T) {
 		t.Fatal("在线自动没有用完同一可用堆叠，或多消费了其他实例")
 	}
 	waitCast(false)
+	hostingBefore := persisted.HostingSeconds
 	c.close()
 	// deadline 保存由新增取得的截止时间。
 	deadline := time.Now().Add(12 * time.Second)
@@ -239,13 +240,19 @@ func TestManaPotionManualAutomaticAndHostingMongoWS(t *testing.T) {
 		count, err := inspection.DB.Collection("operations").CountDocuments(ctx, bson.M{"role_id": roleID, "kind": persistence.AssetAutoUsePotion})
 		must(t, err)
 		if count == 3 {
-			break
+			// 自动用药与托管检查点分别提交，等待两项真实持久结果。
+			role, err := inspection.Role(ctx, roleID)
+			must(t, err)
+			if role.HostingSeconds < hostingBefore {
+				break
+			}
 		}
 		time.Sleep(80 * time.Millisecond)
 	}
 	persisted = checkReceipts(c, 3, int64(claim.CommandSeq))
-	if quantity(persisted.Items, last.ID) != 0 || quantity(persisted.Items, locked.ID) != 3 || quantity(persisted.Items, red.ID) != 2 || persisted.HostingSeconds >= 21600 {
-		t.Fatal("离线托管没有消费下一件可用蓝药，误扣红药或锁定物品，或没进入真实托管")
+	if quantity(persisted.Items, last.ID) != 0 || quantity(persisted.Items, locked.ID) != 3 || quantity(persisted.Items, red.ID) != 2 || persisted.HostingSeconds >= hostingBefore {
+		t.Fatalf("离线托管用药或扣时未确认：蓝药=%d 锁定蓝药=%d 红药=%d，托管=%d→%d",
+			quantity(persisted.Items, last.ID), quantity(persisted.Items, locked.ID), quantity(persisted.Items, red.ID), hostingBefore, persisted.HostingSeconds)
 	}
 
 	// resumed 保存由加入带有自动技能集合取得的“resumed”。

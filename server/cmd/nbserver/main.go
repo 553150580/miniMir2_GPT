@@ -30,7 +30,11 @@ func main() {
 	// ctx 保存由主流程上下文取得的上下文，stop 取消对应上下文或停止计时，释放其关联资源。
 	ctx, stop := bootstrap.MainContext()
 	defer stop()
-	if err = bootstrap.Run(ctx, cfg, *mode); err != nil {
+	err = bootstrap.Run(ctx, cfg, *mode)
+	if *mode == "supervisor" {
+		slog.Info("装配停止结果", "mode", *mode, "run_id", *runID, "ok", err == nil, "error", err)
+	}
+	if err != nil {
 		slog.Error("服务退出", "mode", *mode, "error", err)
 		os.Exit(1)
 	}

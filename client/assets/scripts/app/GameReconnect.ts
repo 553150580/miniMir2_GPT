@@ -1,4 +1,5 @@
 import { Button, EditBox, Label, Node, isValid } from 'cc';
+import type { EventTouch } from 'cc';
 import { connectRoleEntry, isEntryTicketError, isRoleAccountAuthenticationError } from './RoleEntry';
 import { currentEntryIdentity, isCurrentEntry, roleIdentity, session } from './GameSession';
 
@@ -17,15 +18,17 @@ export class GameReconnect {
     private readonly identity = roleIdentity();
     private attempt?: AbortController;
     private needsPassword = false;
+    private returning = false;
     private disposed = false;
 
     constructor(private readonly root: Node, private readonly worldReady: () => boolean, private readonly offline: () => void,
-        private readonly attach: () => Promise<unknown>, private readonly tap: () => void) {
+        private readonly attach: () => Promise<unknown>, private readonly exitGame: () => Promise<void>, private readonly tap: () => void) {
         this.status = root.getChildByPath('Panel/Message')!.getComponent(Label)!;
         this.password = root.getChildByPath('Panel/Password')!.getComponent(EditBox)!;
         this.button = root.getChildByPath('Panel/Reconnect')!.getComponent(Button)!;
         this.buttonLabel = this.button.node.getChildByName('Label')!.getComponent(Label)!;
         this.button.node.on(Button.EventType.CLICK, this.retry, this);
+        this.root.on(Node.EventType.TOUCH_END, this.returnFromBackdrop, this);
         this.unsubscribe = session.connection.onStatus(this.disconnected);
         if (session.connection.disconnectReason) this.disconnected(session.connection.disconnectReason);
     }
@@ -35,20 +38,47 @@ export class GameReconnect {
         this.unsubscribe();
         this.attempt?.abort();
         if (isValid(this.button.node, true)) this.button.node.off(Button.EventType.CLICK, this.retry, this);
+        if (isValid(this.root, true)) this.root.off(Node.EventType.TOUCH_END, this.returnFromBackdrop, this);
     }
 
     private disconnected = (message: string): void => {
+        if (this.returning) return;
         this.offline();
         this.root.active = true;
-        this.status.string = this.attempt ? '重连期间连接中断，请重试。' : `${message}，请点击重新连接。`;
+        this.showStatus(this.attempt ? '重连期间连接中断，请重试。' : `${message}，请点击重新连接。`);
     };
 
+    private returnFromBackdrop = (event: EventTouch): void => {
+        if (event.target !== this.root || !this.root.active || this.returning || this.disposed) return;
+        event.propagationStopped = true;
+        this.returning = true;
+        this.attempt?.abort();
+        this.attempt = undefined;
+        this.password.string = '';
+        this.password.node.active = false;
+        this.button.interactable = false;
+        this.tap();
+        this.status.string = session.connection.token ? '正在返回选角…' : '正在返回登录…';
+        void this.exitGame().catch(error => {
+            if (this.disposed) return;
+            this.returning = false;
+            this.password.node.active = this.needsPassword;
+            this.button.interactable = true;
+            this.buttonLabel.string = '重新连接';
+            this.showStatus(error instanceof Error ? error.message : '返回失败，请重试。');
+        });
+    };
+
+    private showStatus(message: string): void {
+        this.status.string = `${message}\n轻触背景可返回${session.connection.token ? '选角' : '登录'}。`;
+    }
+
     private retry = (): void => {
-        if (!this.root.active || this.attempt || this.disposed) return;
+        if (!this.root.active || this.attempt || this.returning || this.disposed) return;
         this.tap();
         const password = this.needsPassword ? this.password.string : '';
         if (this.needsPassword && !/^[A-Za-z0-9_]{6,20}$/.test(password)) {
-            this.status.string = '请输入当前账号的密码。';
+            this.showStatus('请输入当前账号的密码。');
             return;
         }
         const attempt = new AbortController();
@@ -81,18 +111,18 @@ export class GameReconnect {
             requireScope();
             if (!this.account) throw new Error('缺少当前账号，请重新登录');
             if (this.needsPassword) {
-                this.status.string = '正在验证当前账号…';
+                this.showStatus('正在验证当前账号…');
                 const verified = await connection.rpc(10001, { account: this.account.name, password }, attempt.signal);
                 requireScope();
                 if (accountIdentity(verified.accountId) !== this.account.id) throw new Error('账号身份已变化');
                 connection.token = token = verified.accountToken;
                 this.needsPassword = false;
             }
-            this.status.string = '正在认证并连接原角色…';
+            this.showStatus('正在认证并连接原角色…');
             generation = await connectRoleEntry(connection, this.role.key, requireScope, attempt.signal);
             const identity = currentEntryIdentity();
             if (!identity || identity.connection !== generation || !isCurrentEntry(identity)) throw new Error('未收到有效的角色入场回执');
-            this.status.string = '正在同步当前地图…';
+            this.showStatus('正在同步当前地图…');
             await this.waitForWorld(attempt.signal, () => isCurrentEntry(identity));
             requireScope();
             session.lastError = '';
@@ -103,13 +133,13 @@ export class GameReconnect {
             this.offline();
             if (isRoleAccountAuthenticationError(error)) {
                 this.needsPassword = true;
-                this.status.string = '登录凭证已失效，请输入当前账号的密码。';
+                this.showStatus('登录凭证已失效，请输入当前账号的密码。');
             } else if (isEntryTicketError(error)) {
                 this.needsPassword = true;
-                this.status.string = '重新取票后仍未能进入，请输入当前账号的密码重新认证。';
+                this.showStatus('重新取票后仍未能进入，请输入当前账号的密码重新认证。');
             } else {
                 const message = attempt.signal.aborted ? '重连超时' : (error instanceof Error ? error.message : '重连失败');
-                this.status.string = `${message}，请重试。`;
+                this.showStatus(`${message}，请重试。`);
             }
         } finally { clearTimeout(deadline); }
     }

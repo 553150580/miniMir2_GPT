@@ -222,9 +222,79 @@ test('真实AppRoot复用保存Role Message展示未知/nil/legacy/trusted，提
 
 test('真实AppRoot退出只接受完整取消观察；等待期间新Entry使旧完成不能关闭新附着',async()=>{
  for(const replacement of [false,true]){
-  const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');await t.a.attachCurrentEntry();let closed=0,changed=0;s.connection.close=()=>{closed++;};t.a.changeScene=async()=>{changed++;};const pending=deferred();s.connection.requestNavigationCancel=(scene,baseline,input)=>{assert.equal(scene.toString(),'1');assert.equal(baseline.toString(),'1');assert(input>0);return pending.promise;};
+  const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1'));t.baseline(e);s.preparedWorld=t.asset('1');await t.a.attachCurrentEntry();let closed=0,changed=0;s.connection.close=()=>{closed++;};s.scenes={switchTo:async()=>{changed++;}};const pending=deferred();s.connection.requestNavigationCancel=(scene,baseline,input)=>{assert.equal(scene.toString(),'1');assert.equal(baseline.toString(),'1');assert(input>0);return pending.promise;};
   const task=t.a.leave(false),check=replacement?assert.rejects(task,/退出期间/):task;await flush();assert.equal(closed,0);assert.equal(changed,0);
   if(replacement){s.connection.deliver(20002,entry('2'));t.baseline(s.entry);}
   pending.resolve({sceneEpoch:e.sceneEpoch,baselineId:e.baselineId,stateSequence:Long.fromInt(2,true),chunkCount:2,chunkIndex:1,assembledNavigationCancel:true,navigationState:{status:4,revision:Long.UONE},entities:[]});await check;assert.equal(closed,replacement?0:1);assert.equal(changed,replacement?0:1);t.a.attachment.dispose();
  }
+});
+
+test('离线托管只接受服务端已确认的普通地图、存活角色、开启自动战斗和可用余额', async () => {
+    const cases = [
+        { host: null, error: /尚未同步/ },
+        { host: { autoBattleEnabled: true, remainHostingSec: 0 }, error: /领取免费托管时长/ },
+        { host: { autoBattleEnabled: false, remainHostingSec: 60 }, error: /开启自动战斗/ },
+        { dead: true, error: /角色存活/ },
+        { town: true, error: /普通挂机地图/ },
+    ];
+    for (const fixture of cases) {
+        const t = appHarness(), s = t.h.session;
+        const e = ready(t.h, fixture.town ? entry('1', '2', 2) : entry('1'));
+        t.baseline(e);
+        s.preparedWorld = t.asset(e.roomId.toString(), !!fixture.town);
+        await t.a.attachCurrentEntry();
+        if (fixture.dead) s.baseline.entities[0].hp = Long.ZERO;
+        s.hosting = Object.hasOwn(fixture, 'host') ? fixture.host : { autoBattleEnabled: true, remainHostingSec: 60 };
+        t.a.auto = true;
+        s.connection.close = () => assert.fail('托管不可用时应保留连接');
+        s.connection.requestNavigationCancel = () => assert.fail('托管不可用时应保留导航');
+        await assert.rejects(t.a.leave(true), fixture.error);
+        assert.equal(s.ready, true);
+        assert.equal(t.a.canSendInput(), true);
+        t.a.attachment.dispose();
+    }
+});
+
+test('离线托管在导航取消回执后复核，死亡不退出，仍可托管时才返回登录', async () => {
+    for (const remaining of [true, false]) {
+        const t = appHarness(), s = t.h.session, e = ready(t.h, entry('1'));
+        t.baseline(e);
+        s.preparedWorld = t.asset('1');
+        await t.a.attachCurrentEntry();
+        s.connection.token = 'test-token';
+        s.account = { id: 'account', name: 'account_name' };
+        s.hosting = { autoBattleEnabled: true, remainHostingSec: 60 };
+        const pending = deferred(), transitions = [];
+        s.connection.requestNavigationCancel = () => pending.promise;
+        s.connection.close = () => transitions.push('关闭连接');
+        s.scenes = { switchTo: async scene => transitions.push(scene) };
+        const result = t.a.leave(true);
+        const checked = remaining ? result : assert.rejects(result, /角色存活/);
+        assert.deepEqual(transitions, []);
+        pending.resolve({ ...s.baseline, stateSequence: Long.fromInt(2, true), assembledNavigationCancel: true,
+            navigationState: { status: 4, revision: Long.UONE },
+            entities: [{ ...s.baseline.entities[0], hp: remaining ? Long.UONE : Long.ZERO }] });
+        await checked;
+        assert.deepEqual(transitions, remaining ? ['关闭连接', 'Login'] : []);
+        assert.equal(s.ready, !remaining);
+        assert.equal(s.connection.token, remaining ? '' : 'test-token');
+        t.a.attachment.dispose();
+    }
+});
+
+test('掉线返回只退出本地，保留原未决账本，并按登录凭证选择登录或选角', async () => {
+    for (const token of ['', 'test-token']) {
+        const t = appHarness(), s = t.h.session;
+        const ledger = { get() { return { id: 40026 }; } };
+        s.connection.token = token;
+        s.pending = ledger;
+        const transitions = [];
+        s.connection.requestNavigationCancel = () => assert.fail('掉线返回不能发送原连接上的请求');
+        s.connection.close = () => transitions.push('关闭连接');
+        s.scenes = { switchTo: async scene => transitions.push(scene) };
+        await t.a.leave(false, true);
+        assert.deepEqual(transitions, ['关闭连接', token ? 'RoleSelect' : 'Login']);
+        assert.equal(s.pending, ledger);
+        t.a.attachment.dispose();
+    }
 });

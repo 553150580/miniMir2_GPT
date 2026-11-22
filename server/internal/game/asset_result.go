@@ -71,7 +71,7 @@ func (w *worker) finishAsset(b assetBinding, q persistence.AssetRequest, f wire.
 		}
 		return
 	}
-	r.Pending = false
+	r.resumeAfterPending(time.Now())
 	r.PendingRetry = nil
 	r.PendingOperationID = ""
 	r.PendingFingerprint = ""

@@ -67,7 +67,9 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 			f.Maps[i].NoPets = &blocked
 		}
 	}
-	f.Map.MonsterSpawns[0] = devconfig.Point{X: 9, Y: 8}
+	// 测试从当前挂机图出生格向东召唤，首怪也放在该相邻格验证方向攻击。
+	front := devconfig.Point{X: f.Map.PlayerSpawn.X + 1, Y: f.Map.PlayerSpawn.Y}
+	f.Map.MonsterSpawns[0] = front
 	// i 标记遍历怪物集合时访问的下标。
 	for i := range f.Monsters {
 		// m 保存当前处理所用的怪物集合中的指定项。
@@ -226,7 +228,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 	// body 保存由宠物运行时WebSocket实体取得的消息正文。
 	body := petRuntimeWSEntity(c.scene, born.EntityHandle)
 	if born.MapId != 1 || born.Life == 0 || born.EntityHandle <= 2 || born.Hp <= 0 || born.PetTraining == nil || born.PetTraining.TrainingLevel != 0 || born.PetTraining.MaxTrainingLevel != 4 ||
-		body == nil || body.Position.X != 9 || body.Position.Y != 8 || body.Direction != 5 || !reflect.DeepEqual(born.RecallSkillIds, []uint32{17}) {
+		body == nil || body.Position.X != int32(front.X) || body.Position.Y != int32(front.Y) || body.Direction != 5 || !reflect.DeepEqual(born.RecallSkillIds, []uint32{17}) {
 		t.Fatal("真正出生未沿请求Front/源初向/独立训练，或缺Owned身份", born, body)
 	}
 	// 在不启用自动战斗的情况下，用普通方向攻击击杀与新宠叠格的真实怪物；Pet非最后一击也训练。

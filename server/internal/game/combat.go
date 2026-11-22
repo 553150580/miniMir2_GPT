@@ -716,7 +716,7 @@ func (w *worker) finishSettlement(binding settlementBinding, q persistence.Settl
 		r.RetryAt = time.Now().Add(500 * time.Millisecond)
 		return
 	}
-	r.Pending = false
+	r.resumeAfterPending(time.Now())
 	r.PendingRetry = nil
 	r.PendingOperationID, r.PendingFingerprint = "", ""
 	if err != nil {

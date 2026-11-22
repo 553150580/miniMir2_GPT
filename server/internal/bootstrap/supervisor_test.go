@@ -5,8 +5,10 @@ package bootstrap
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"minimir/internal/devconfig"
@@ -62,5 +64,22 @@ func TestSupervisorRejectsMissingConfigurationSourceBeforeStarting(t *testing.T)
 	// err 接收“supervise”过程中可能产生的错误，供后续失败分支处理。
 	if err := supervise(context.Background(), devconfig.Config{}); err == nil {
 		t.Fatal("没有实际加载来源仍启动子节点")
+	}
+}
+
+func TestSupervisorReportsGameFailureOnRequestedShutdown(t *testing.T) {
+	drainFailure := errors.New("停服等待结算未完成")
+	for _, gameError := range []error{nil, drainFailure} {
+		ctx, cancel := context.WithCancel(context.Background())
+		cancel()
+		exits := make(chan supervisedChildExit, 3)
+		err := waitForChildren(ctx, exits, 3, func() {
+			exits <- supervisedChildExit{mode: "account"}
+			exits <- supervisedChildExit{mode: "gm"}
+			exits <- supervisedChildExit{mode: "game", err: gameError}
+		})
+		if !errors.Is(err, gameError) || err != nil && !strings.Contains(err.Error(), "game节点退出") || len(exits) != 0 {
+			t.Fatalf("监管进程没有完整确认各节点的退出: %v", err)
+		}
 	}
 }

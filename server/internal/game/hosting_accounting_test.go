@@ -111,6 +111,25 @@ func TestHostingFractionExcludesPendingDatabaseWait(t *testing.T) {
 	}
 }
 
+func TestHostingSettlementResumesBetweenTicks(t *testing.T) {
+	w, r, _ := fullBagPolicyWorker(t)
+	r.Conn, r.Pending, r.HostMS, r.MonsterCount = nil, true, 940, 0
+	now := time.Unix(1800000000, 0)
+	r.LastTick = now.Add(-100 * time.Millisecond)
+	w.step(r, now)
+
+	r.resumeAfterPending(now.Add(60 * time.Millisecond))
+	w.step(r, now.Add(40*time.Millisecond))
+	w.step(r, now.Add(100*time.Millisecond))
+	if r.HostMS != 980 || r.hostSecondsOpen != 0 || r.Pending {
+		t.Fatalf("恢复前的等待进入托管计量: 余量=%d 整秒=%d", r.HostMS, r.hostSecondsOpen)
+	}
+	w.step(r, now.Add(200*time.Millisecond))
+	if r.HostMS != 80 || r.hostSecondsOpen != 1 {
+		t.Fatalf("恢复后的真实时间未连续计量: 余量=%d 整秒=%d", r.HostMS, r.hostSecondsOpen)
+	}
+}
+
 // TestHostingFractionIgnoresQueuedTickBeforeDisconnect 核验断线应设置托管时钟起点，用诊断「健康接管应在旧绑定上结清整秒后再连接」定位对应断言。
 // t 提供断言失败报告、子用例和清理注册。
 func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
@@ -135,7 +154,7 @@ func TestHostingFractionIgnoresQueuedTickBeforeDisconnect(t *testing.T) {
 	if r.HostMS != 0 || r.hostSecondsOpen != 1 || len(w.e.jobs) != 0 || r.Pending {
 		t.Fatal("真实托管余量满一秒时应累计整秒")
 	}
-	w.command(command{role: r.Role.ID, conn: &capturedConnection{}, ticket: "待接管"})
+	w.command(command{role: r.Role.ID, conn: &capturedConnection{}, ticket: &persistence.Ticket{}})
 	if r.Conn != nil || r.hostSecondsOpen != 0 || len(r.Waiting) != 1 || len(w.e.jobs) != 1 || !r.Pending {
 		t.Fatal("健康接管应在旧绑定上结清整秒后再连接")
 	}

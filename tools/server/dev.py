@@ -61,14 +61,40 @@ def start():
     raise RuntimeError(f'装配未在10秒内就绪，请查 {meta["log"]}')
 def stop():
     meta=read()
-    if not meta or not owned(meta): return status()
+    if not meta or meta.get('project_root') != str(ROOT): return status()
+    if not owned(meta):
+        verify_shutdown(meta)
+        return status()
     if os.name=='nt':windows_stop(meta,BINARY)
     else:os.kill(meta['pid'],signal.SIGTERM)
     for _ in range(150):
-        if not owned(meta): return status()
+        if not owned(meta):
+            verify_shutdown(meta)
+            return status()
         time.sleep(.1)
     # 不发SIGKILL：不能在未知提交边界直接停止数据库资产任务。
     raise RuntimeError('受控节点未完成优雅停止；保留原进程与日志以核查，不强杀')
+
+
+def verify_shutdown(meta):
+    """核对本轮监管进程的最终结果，避免仅凭 PID 消失确认结清。"""
+    path = Path(meta['log'])
+    with path.open('rb') as log:
+        size = log.seek(0, os.SEEK_END)
+        log.seek(max(0, size - 16384))
+        lines = log.read().splitlines()
+    for line in reversed(lines):
+        try:
+            row = json.loads(line)
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        if (isinstance(row, dict) and row.get('msg') == '装配停止结果'
+                and row.get('mode') == 'supervisor' and row.get('run_id') == meta['run_id']):
+            if row.get('ok') is True:
+                return
+            raise RuntimeError(f'节点停服失败：{row.get("error")}，详见 {path}')
+    raise RuntimeError(f'监管进程已退出，但缺少本轮停服结果，详见 {path}')
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('action',choices=['start','stop','status']);args=parser.parse_args()
     try: print(json.dumps(globals()[args.action](),ensure_ascii=False,indent=2))

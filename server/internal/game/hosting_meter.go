@@ -11,6 +11,14 @@ import (
 // 架构方案第9.3节约每3秒确认一次。事务在途时暂停模拟，保留原未确认量。
 const hostingCheckpointSeconds = int64(3)
 
+// 房间恢复执行时，以原分片处理回执的时刻重新开始离线计量。
+func (r *room) resumeAfterPending(now time.Time) {
+	if r.Conn == nil && now.After(r.LastTick) {
+		r.LastTick = now
+	}
+	r.Pending = false
+}
+
 // meterHosting 累加已执行的离线托管时间，满足结算条件时暂停本帧新增行为。
 // w 持有房间 r 的计量状态，delta 是本帧允许推进的真实时间，now 作为需要落盘时的来源时刻。
 func (w *worker) meterHosting(r *room, delta time.Duration, now time.Time) bool {
