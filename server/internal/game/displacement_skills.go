@@ -26,6 +26,9 @@ func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) boo
 		w.isolateRoom(r)
 		return false
 	}
+	if e == &r.Player && !w.moveSharedTownPlayer(r, point) {
+		return false
+	}
 	r.CellEntrySequence++
 	e.Pos, e.CellEntry = point, r.CellEntrySequence
 	if e == r.Pet {

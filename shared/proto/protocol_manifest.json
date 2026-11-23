@@ -758,6 +758,42 @@
       "source_ref": "docs/安全区永久绑定实施边界.md；纯已提交观察，不授予客户端设置坐标权限"
     },
     {
+      "value": 20012,
+      "name": "MsgC2SPersonalBossEnter",
+      "proto_message": "PersonalBossEnter",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2"
+    },
+    {
+      "value": 20013,
+      "name": "MsgC2SPersonalBossLeave",
+      "proto_message": "PersonalBossLeave",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2"
+    },
+    {
+      "value": 20014,
+      "name": "MsgS2CPersonalBossState",
+      "proto_message": "PersonalBossState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2"
+    },
+    {
       "value": 40020,
       "name": "MsgC2SWarehouseQuery",
       "proto_message": "WarehouseQuery",
@@ -840,6 +876,42 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "用户2026-11-22 NPC商店要求；最终策划案4.2/4.3/4.25"
+    },
+    {
+      "value": 40027,
+      "name": "MsgC2STaskCodexState",
+      "proto_message": "TaskCodexStateRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.17/4.21"
+    },
+    {
+      "value": 40028,
+      "name": "MsgS2CTaskCodexState",
+      "proto_message": "TaskCodexStateResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.17/4.21"
+    },
+    {
+      "value": 40029,
+      "name": "MsgC2STaskCodexClaim",
+      "proto_message": "TaskCodexClaimRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.17/4.21"
     }
   ],
   "error_codes": [
@@ -1185,6 +1257,22 @@
       "display_zh": "物品或数量不满足当前服务条件",
       "status": "draft",
       "source_ref": "用户2026-11-22 NPC商店要求；最终策划案4.2",
+      "active_in_scope": true
+    },
+    {
+      "value": 3701,
+      "name": "CodeTaskCodexUnavailable",
+      "display_zh": "当前奖励不可领取",
+      "status": "draft",
+      "source_ref": "最终策划案4.17/4.21",
+      "active_in_scope": true
+    },
+    {
+      "value": 3702,
+      "name": "CodeTaskCodexDayChanged",
+      "display_zh": "运营日已切换，请刷新任务",
+      "status": "draft",
+      "source_ref": "最终策划案4.21",
       "active_in_scope": true
     }
   ]

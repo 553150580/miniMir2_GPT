@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 91,
+  "message_count": 99,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -96,10 +96,18 @@
     "WarehouseActionResult",
     "VendorQuoteRequest",
     "VendorQuoteResult",
-    "VendorCommitRequest"
+    "VendorCommitRequest",
+    "TaskCodexStateRequest",
+    "TaskCodexStateResult",
+    "TaskCodexStateRow",
+    "TaskCodexRewardItem",
+    "TaskCodexClaimRequest",
+    "PersonalBossEnter",
+    "PersonalBossLeave",
+    "PersonalBossState"
   ],
-  "int64_field_count": 223,
-  "int64_boundary_cases": 735,
+  "int64_field_count": 235,
+  "int64_boundary_cases": 777,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1438,6 +1446,78 @@
       "field": "npc_id",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "TaskCodexStateResult",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "TaskCodexStateResult",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "TaskCodexStateRow",
+      "field": "progress",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "TaskCodexStateRow",
+      "field": "target",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "TaskCodexStateRow",
+      "field": "map_id",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "TaskCodexStateRow",
+      "field": "bound_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "TaskCodexStateRow",
+      "field": "bound_yuanbao_units",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "TaskCodexRewardItem",
+      "field": "quantity",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "PersonalBossEnter",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PersonalBossLeave",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PersonalBossState",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "PersonalBossState",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
     }
   ],
   "bytes_field_count": 27,
@@ -1592,23 +1672,31 @@
     },
     {
       "path": "shared/proto/world.proto",
-      "sha256": "92959daabb94eec961048759920273290f9475a802a8b411ce30127a2100404d"
+      "sha256": "282ba01b862f3889a5630e8d63b82908ea89239ac83f74bdc27d884af6961c13"
     },
     {
       "path": "shared/proto/assets.proto",
       "sha256": "caa3d594c988fce3e384130b9a14d6c75a96d35a1c4db6ea3a50e860b3f1834b"
+    },
+    {
+      "path": "shared/proto/tasks_codex.proto",
+      "sha256": "2d72442ba3da69dcc5ff44813f7cecdf6a6089895d1cde50a53eb153f1728b4e"
+    },
+    {
+      "path": "shared/proto/personal_boss.proto",
+      "sha256": "14d2023435160bb941f42c873273bf34e296acfa73cb5266c47a59cdf9e86312"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "610670727641e052bafaded43c55a2d05e30be5c31464717880cc1f83ec5d401",
-      "bytes": 1559483
+      "sha256": "b43fc4fb99b5ff098ac8ff12adcbbeec1b20571dae1ca25306915ab2b9e8294c",
+      "bytes": 1683812
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "979f4f86e4aa317ca715af0e864c5b119c38b9994ccdb17affb64abcf9b40625",
-      "bytes": 490226
+      "sha256": "5c10c83f4b8b3d753fd307692e700b5eaaae8582afda642a3388aa32f6448ed7",
+      "bytes": 532616
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

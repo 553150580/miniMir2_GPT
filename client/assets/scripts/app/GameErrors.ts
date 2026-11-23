@@ -3,6 +3,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked,
     CodeWarehouseFull, CodeWarehouseChanged, CodeWarehouseBlocked, CodeWarehousePrivilegeRequired,
     CodeVendorUnavailable, CodeVendorQuoteStale, CodeVendorFunds, CodeVendorItemBlocked,
+    CodeTaskCodexUnavailable, CodeTaskCodexDayChanged,
     CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
 const SCENE_FORBIDDEN_MESSAGE = '当前场景不允许此操作';
@@ -32,6 +33,8 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (errorCode === CodeVendorQuoteStale) return '商店报价已失效，请重新报价';
     if (errorCode === CodeVendorFunds) return '当前钱包余额不足';
     if (errorCode === CodeVendorItemBlocked) return '物品或数量不满足当前商店服务条件';
+    if (errorCode === CodeTaskCodexUnavailable) return '当前奖励不可领取，请查看任务进度';
+    if (errorCode === CodeTaskCodexDayChanged) return '运营日已切换，请刷新任务';
     if (errorCode === CodeEquipmentBagFull) return '背包空间不足，装备保持原位';
     if (errorCode === CodeEquipmentChanged) return '原装备或所在部位已变化，请重新选择';
     if (errorCode === CodeEquipmentBlocked) return '当前职业、等级或装备状态不允许穿脱';

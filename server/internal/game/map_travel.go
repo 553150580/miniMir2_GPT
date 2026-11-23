@@ -534,7 +534,11 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		destinationWorld = r.SavedPersonal
 		// 原复活/掉落截止原样恢复，由正常step按当前时钟处理一次；不回放休眠期攻击或收益。
 	}
-	if !w.activateWorld(r, destinationWorld, plan.Position, &petPosition) {
+	var petLanding *devconfig.Point // 只在需要迁移宠物时保留它的落点。
+	if movePet {
+		petLanding = &petPosition
+	}
+	if !w.activateWorldAt(r, destinationWorld, plan.Position, petLanding, true) {
 		plan.Phase = travelCancelled
 		w.sendTravelState(r, plan, plan.Request)
 		return false
@@ -542,6 +546,7 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 	if plan.Destination == travelToPersonal {
 		r.SavedPersonal = nil
 	}
+	plan.Position = r.Player.Pos // 城镇出生格被占时同步服务端最终分配的落点。
 	r.Scene, r.Baseline = r.Scene+1, baseline
 	r.TravelHistory = nil                // 实际换scene后，旧scene请求已有身份门禁；当前终态plan仍可查询。
 	r.Manual, r.InputSequence = false, 0 // 摇杆属于连接输入，不在新图自动恢复按住状态。

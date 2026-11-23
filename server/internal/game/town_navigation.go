@@ -13,6 +13,8 @@ import (
 
 // 每个房间只保留玩家/宠物的小请求状态。全图工作区与路线缓冲属于worker的有界池。
 type townNavigationRequest struct {
+	// dynamicCells 是当前请求允许检查的动态格数量，紧凑共享城镇受地图几何限制。
+	dynamicCells int
 	// room 记录房间。
 	room *room
 	// actor 记录行动实体。
@@ -57,6 +59,8 @@ type townNavigationWorker struct {
 	holders []*townNavigationRequest
 	// scratch 记录临时工作区，使用点位列表表示。
 	scratch []townnav.Point
+	// sharedScratch 是紧凑城镇的共享占格工作区，在当前分片上复用。
+	sharedScratch []townnav.Point
 	// sequence 记录序号，使用数值表示。
 	sequence uint64
 	// cursor 记录游标，使用数值表示。
@@ -87,6 +91,8 @@ func (e *Engine) initializeTownNavigation() error {
 	e.TownGrids = make(map[uint64]*townnav.Grid)
 	// maxCells 规定最大地图格集合的初始取值。
 	maxCells := 0
+	// maxSharedCells 取实际发布的最大紧凑城镇格数。
+	maxSharedCells := 0
 	// f 保存当前处理所用的开发测试配置。
 	f := &e.Store.Cfg.Fixture
 	// maps 保留加入新条目后的地图集合。
@@ -111,6 +117,9 @@ func (e *Engine) initializeTownNavigation() error {
 		}
 		e.TownGrids[m.ID] = grid
 		maxCells = max(maxCells, grid.Cells())
+		if m.CompactTown {
+			maxSharedCells = max(maxSharedCells, grid.Cells())
+		}
 	}
 	if maxCells == 0 {
 		return fmt.Errorf("启用城镇导航但没有城镇地图")
@@ -123,6 +132,10 @@ func (e *Engine) initializeTownNavigation() error {
 	word := int64(strconv.IntSize / 8)
 	// reserved 保存根据整数“64”与整数“64”与当前数据与“word”的计算结果的计算结果与整数“64”与“word”的计算结果的计算结果的计算结果与整数“64”与整数“64”的计算结果与当前数据的计算结果与“word”的计算结果计算的已保留。
 	reserved := int64(cfg.WorkspacesPerWorker)*(int64(maxCells)*(12+word)+int64(frontier)*word) + int64(cfg.WorkspacesPerWorker+cfg.QueuePerWorker)*int64(routeCells)*2*word
+	// 每个房间最多两个导航请求。等待占位或暂停的请求仍可能保留快照，
+	// 以角色房间上限估算当前快照及规划器复制和扩容，另计分片共用工作区。
+	const dynamicSnapshotsPerWorker = maxRoomsPerWorker*2*3 + 1
+	reserved += int64(maxSharedCells) * dynamicSnapshotsPerWorker * 2 * word
 	if reserved > cfg.MaxMemoryBytesPerWorker {
 		return fmt.Errorf("全部城镇最大图的导航大缓冲预留超过显式每worker预算")
 	}
@@ -133,6 +146,7 @@ func (e *Engine) initializeTownNavigation() error {
 		}
 		// n 保存当前处理所用的城镇导航房间执行器。
 		n := &townNavigationWorker{queue: make([]*townNavigationRequest, 0, cfg.QueuePerWorker), active: make([]*townNavigationRequest, 0, cfg.WorkspacesPerWorker), holders: make([]*townNavigationRequest, 0, cfg.WorkspacesPerWorker+cfg.QueuePerWorker), scratch: make([]townnav.Point, 0, cfg.MaxDynamicCells)}
+		n.sharedScratch = make([]townnav.Point, 0, maxSharedCells)
 		// i 标记循环或列表中的当前位置。
 		for i := 0; i < cfg.WorkspacesPerWorker; i++ {
 			// workspace 保存由创建搜索工作区取得的搜索工作区，err 接收创建搜索工作区过程中可能产生的错误，供后续失败分支处理。
@@ -266,9 +280,13 @@ func (w *worker) cancelTownNavigation(r *room) {
 func (w *worker) updateTownOccupancy(q *townNavigationRequest) bool {
 	// n 保存当前处理所用的城镇导航。
 	n := w.townNavigation
-	n.scratch = n.scratch[:0]
 	// r 保存当前处理所用的房间。
 	r := q.room
+	// scratch 优先保留本地角色占格预算，共享场景另外使用按几何分配的工作区。
+	scratch := n.scratch[:0]
+	if r.townMembership.owner != 0 {
+		scratch = n.sharedScratch[:0]
+	}
 	if r.MonsterCount < 0 || r.MonsterCount > len(r.Monsters) {
 		return false
 	}
@@ -277,10 +295,10 @@ func (w *worker) updateTownOccupancy(q *townNavigationRequest) bool {
 		if e == nil || e == q.actor || e.HP <= 0 {
 			return true
 		}
-		if len(n.scratch) == cap(n.scratch) || !q.grid.Contains(townPoint(e.Pos)) {
+		if len(scratch) == cap(scratch) || !q.grid.Contains(townPoint(e.Pos)) {
 			return false
 		}
-		n.scratch = append(n.scratch, townPoint(e.Pos))
+		scratch = append(scratch, townPoint(e.Pos))
 		return true
 	}
 	if !add(&r.Player) || !add(r.worldPet(r.currentWorld())) {
@@ -292,11 +310,15 @@ func (w *worker) updateTownOccupancy(q *townNavigationRequest) bool {
 			return false
 		}
 	}
-	// changed 保存根据修订号与当前数据的计算结果与“len”与“len”的计算结果计算的已变化。
-	changed := q.dynamic.Revision == 0 || len(n.scratch) != len(q.dynamic.Blocked)
+	scratch, ok := w.appendSharedTownBlocks(r, scratch)
+	if !ok {
+		return false
+	}
+	// changed 表示当前动态占位相对上次搜索发生变化。
+	changed := q.dynamic.Revision == 0 || len(scratch) != len(q.dynamic.Blocked)
 	if !changed {
 		// i 定位临时工作区中正在处理的成员，p 接收遍历临时工作区时当前的元素。
-		for i, p := range n.scratch {
+		for i, p := range scratch {
 			if p != q.dynamic.Blocked[i] {
 				changed = true
 				break
@@ -308,7 +330,11 @@ func (w *worker) updateTownOccupancy(q *townNavigationRequest) bool {
 			return false
 		}
 		q.dynamic.Revision++
-		q.dynamic.Blocked = append(q.dynamic.Blocked[:0], n.scratch...)
+		if cap(q.dynamic.Blocked) < len(scratch) {
+			q.dynamic.Blocked = make([]townnav.Point, len(scratch))
+		}
+		q.dynamic.Blocked = q.dynamic.Blocked[:len(scratch)]
+		copy(q.dynamic.Blocked, scratch)
 	}
 	return true
 }
@@ -420,7 +446,7 @@ func (w *worker) admitTownRequests() {
 		// cfg 保存城镇导航，用于当前步骤中的服务配置。
 		cfg := w.e.Store.Cfg.Fixture.TownNavigation
 		// limits 组装上限集合所需的数据。
-		limits := townnav.Limits{MaxExpanded: cfg.MaxExpanded, MaxFrontier: min(cfg.MaxFrontier, q.grid.Cells()), MaxRouteCells: min(cfg.MaxRouteCells, q.grid.Cells()), MaxReplans: cfg.MaxReplans, MaxDynamicCells: min(cfg.MaxDynamicCells, q.grid.Cells())}
+		limits := townnav.Limits{MaxExpanded: cfg.MaxExpanded, MaxFrontier: min(cfg.MaxFrontier, q.grid.Cells()), MaxRouteCells: min(cfg.MaxRouteCells, q.grid.Cells()), MaxReplans: cfg.MaxReplans, MaxDynamicCells: q.dynamicCells}
 		// err 保存当前操作的失败原因，供调用方检查或返回。
 		var err error
 		// m 接收当前状态地图供后续步骤使用，known 保存由当前状态地图取得的已知状态。
@@ -628,7 +654,11 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 			return true
 		}
 		n.sequence++
-		q = &townNavigationRequest{room: r, actor: e, target: target, grid: grid, key: townnav.Key{Scene: r.Scene, MapID: r.MapID, MapVersion: grid.Version(), RequestRevision: n.sequence, Life: e.Life}, dynamic: townnav.Dynamic{Blocked: make([]townnav.Point, 0, cfg.MaxDynamicCells)}}
+		dynamicCells := min(cfg.MaxDynamicCells, grid.Cells())
+		if r.townMembership.owner != 0 {
+			dynamicCells = grid.Cells()
+		}
+		q = &townNavigationRequest{room: r, actor: e, target: target, grid: grid, key: townnav.Key{Scene: r.Scene, MapID: r.MapID, MapVersion: grid.Version(), RequestRevision: n.sequence, Life: e.Life}, dynamicCells: dynamicCells}
 		if i == 0 && r.Destination != nil && *r.Destination == target {
 			q.inputRevision = r.Navigation.Revision
 		}

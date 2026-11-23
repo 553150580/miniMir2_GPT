@@ -203,6 +203,10 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 
 // Fixture 集中持有当前只读开发规则快照，供各玩法读取同一版本。
 type Fixture struct {
+	// PersonalBoss 只供隔离开发装配显式注入，待唯一配置工作簿审定后再开放发布数据。
+	PersonalBoss *PersonalBossConfig `json:"-"`
+	// TasksCodex 保存已经获得发布数据的任务和图鉴定义。
+	TasksCodex *TaskCodexRules `json:"tasks_codex,omitempty"`
 	// Warehouses 记录仓库集合，使用仓库规则集合表示。
 	Warehouses *WarehouseRules `json:"warehouses,omitempty"`
 	// SchemaVersion 记录“schema”版本，使用数值表示。
@@ -443,6 +447,9 @@ func (f *Fixture) Validate() error {
 	}
 	// err 接收校验仓库集合过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateWarehouses(); err != nil {
+		return err
+	}
+	if err := f.ValidateTasksCodex(); err != nil {
 		return err
 	}
 	// err 接收校验位移“foundation”过程中可能产生的错误，供后续失败分支处理。

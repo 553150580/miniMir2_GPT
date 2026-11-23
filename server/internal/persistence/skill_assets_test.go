@@ -61,6 +61,8 @@ func TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(t *testing.T) {
 		want := 3
 		if skill.Behavior == "slaying" || skill.Behavior == "repulsion" {
 			want = 4
+		} else if skill.Behavior == "turn_undead" {
+			want = 2
 		}
 		if len(preview.Stats) != want {
 			t.Fatalf("技能%d无意义中性数组污染预览:%d/%d", skill.ID, len(preview.Stats), want)
@@ -78,6 +80,20 @@ func TestSkillPreviewShowsMaximumAttackGrowthOnlyForSlaying(t *testing.T) {
 				t.Fatal("攻杀预览未反映真实永久最大DC成长")
 			}
 		}
+	}
+}
+
+// TestSkillPreviewTurnUndeadThresholdAndCost 验证圣言术升级报价只展示魔法消耗与第二段基础阈值。
+func TestSkillPreviewTurnUndeadThresholdAndCost(t *testing.T) {
+	// fixture 提供与来源记录一致的魔法消耗，独立于当前主配置是否开放技能。
+	fixture := devconfig.Fixture{Skills: []devconfig.Skill{{ID: 32, Behavior: "turn_undead", MPBaseCost: 52, MPLevelCost: 13}}}
+	// quote 报告从初学升至一阶的效果变化。
+	quote := skillQuote{Plan: skillPlan{Kind: 2, SkillID: 32, From: 0, To: 1}}
+	// stats 是客户端可见的数值条目，不包含基础魔法威力或普通准确属性。
+	stats := quote.Proto(fixture).Stats
+	if len(stats) != 2 || stats[0].Key != "mp_cost" || stats[0].BeforeMin != 52 || stats[0].AfterMax != 65 ||
+		stats[1].Key != "turn_undead_base_threshold" || stats[1].BeforeMin != 23 || stats[1].AfterMax != 31 {
+		t.Fatalf("圣言升级数值不符: %+v", stats)
 	}
 }
 

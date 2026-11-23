@@ -63,6 +63,17 @@ export class WorldAssets {
     mapId = '1';
     sceneKind = 1;
     get mapBackground(): SpriteFrame | null { return this.background; }
+    // 复用当前地图已预载的怪物站立帧，用于图鉴显示。
+    monsterCodexFrame(id: number): SpriteFrame | null {
+        const found = this.gameplay.monster_profiles?.find((row: { definition_id: number }) => row.definition_id === id);
+        const standing = found && this.manifest.profiles[found.profile]?.layers[0]?.actions?.standing;
+        const keys: string[] = standing?.directions?.[0]?.frames ?? [];
+        for (const key of keys) {
+            const frame = this.frames.get(key);
+            if (frame) return frame;
+        }
+        return null;
+    }
     readonly frames = new Map<string, SpriteFrame>();
     readonly audioClips = new Map<string, AudioClip>();
     private owned = new Set<Asset>();
@@ -143,6 +154,8 @@ export class WorldAssets {
             const player = result.gameplay.jobs.find((row: any) => row.job_id === job);
             if (!player) throw new Error('当前职业缺少外观资源');
             profileIds.add(player.profile);
+            // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
+            if (result.sceneKind === 2) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
             for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();

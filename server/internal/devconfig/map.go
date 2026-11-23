@@ -15,6 +15,8 @@ const (
 	SceneKindPersonal uint32 = 1
 	// SceneKindTown 规定场景类型城镇的初始取值。
 	SceneKindTown uint32 = 2
+	// SceneKindPersonalBoss 表示独享首领挑战场景。
+	SceneKindPersonalBoss uint32 = 3
 
 	// maxPersonalGridSide 规定最大个人网格“side”的初始取值。
 	maxPersonalGridSide = 17
@@ -137,7 +139,7 @@ func (m *MapTemplate) Walkable(p Point) bool {
 		cell := p.Y*m.Width + p.X
 		return m.CollisionBits[cell/8]&(1<<uint(cell%8)) == 0
 	}
-	if m.SceneKindValue() != SceneKindPersonal && !(m.SceneKindValue() == SceneKindTown && m.CompactTown) || len(m.CollisionBits) != 0 {
+	if m.SceneKindValue() != SceneKindPersonal && m.SceneKindValue() != SceneKindPersonalBoss && !(m.SceneKindValue() == SceneKindTown && m.CompactTown) || len(m.CollisionBits) != 0 {
 		return false
 	}
 	// blocked 接收遍历阻挡时当前的元素。

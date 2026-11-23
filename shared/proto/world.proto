@@ -152,6 +152,8 @@ message EntityState {
   PetTrainingState pet_training = 23;
   // World-owned旧宠尸体：无主人，仅用于显示和旧引用解析，不能作为当前宠物或友方候选。
   bool is_pet_corpse = 24;
+  // 只用于共享场景的玩家名字展示，实体归属仍由服务端决定。
+  string display_name = 25;
 }
 // 仅描述已提交的真实路径；不授予客户端移动能力，也不重放进场前的旧事件。
 message EntityDisplacement {

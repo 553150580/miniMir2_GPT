@@ -45,6 +45,7 @@ type killFact struct {
 	Target              actorRef           // 死亡怪物的世界、句柄和生命代次。
 	Caster              actorRef           // 击杀者的世界、句柄和生命代次。
 	Monster             devconfig.Monster  // 击杀时冻结的怪物数值，供经验和掉落结算。
+	MapID               uint64             // 实际发生击杀的地图配置号，后续换图不改归属。
 	At                  time.Time          // 事件实际到期时刻，决定收益归属与绑定。
 	Bound               bool               // 击杀时已经确定的资产绑定属性。
 	HostSession         string             // 应该累加战报的原托管会话。
@@ -140,6 +141,7 @@ func transitionEventHosting(r *room, at time.Time, session string) {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) isolateRoom(r *room) {
 	r.PetBornReady = nil
+	w.leaveSharedTown(r)
 	w.cancelTownNavigation(r)
 	w.cancelMapTravelOnDetach(r)
 	r.Isolated = true
@@ -449,7 +451,7 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 		point = r.Player.Pos
 	}
 	// fact 固化原世界、击杀时刻、归属、掉落随机值和未来的物品实例编号。
-	fact := killFact{ID: domain.ID(), World: world.Ref, Order: r.FactOrder, DropPoint: point, Target: referenceIn(world, m), Caster: referenceIn(world, caster), Monster: *m.Monster, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
+	fact := killFact{ID: domain.ID(), World: world.Ref, Order: r.FactOrder, DropPoint: point, Target: referenceIn(world, m), Caster: referenceIn(world, caster), Monster: *m.Monster, MapID: world.MapID, At: at, Bound: !privilegeUntil.After(at), Roll: w.draw(1000000), InstanceID: domain.ID(), HostSession: session}
 	if world == r.currentWorld() {
 		fact.ProgressionActor = referenceIn(world, &r.Player)
 	}
@@ -546,6 +548,7 @@ func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {
 		// f 保存当前处理所用的开发测试配置。
 		f := w.e.Store.Cfg.Fixture
 		q.Kills = 1
+		q.MonsterID, q.MapID = fact.Monster.ID, fact.MapID
 		q.Experience = fact.Monster.Exp
 		q.Bound = fact.Bound
 		q.NoEquipmentKills = r.Role.NoEquipmentKills + 1

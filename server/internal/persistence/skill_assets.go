@@ -591,6 +591,17 @@ func (q skillQuote) Proto(f devconfig.Fixture) *pb.SkillAssetPreview {
 			}
 			return out
 		}
+		if s.Behavior == "turn_undead" {
+			// beforeCost、afterCost 是升级前后实际魔法消耗，before、after 是未叠加目标等级差的第二段阈值。
+			beforeCost := s.MPBaseCost + int64(p.From)*s.MPLevelCost
+			afterCost := s.MPBaseCost + int64(p.To)*s.MPLevelCost
+			before, after := devconfig.TurnUndeadBaseThreshold(p.From), devconfig.TurnUndeadBaseThreshold(p.To)
+			out.Stats = []*pb.SkillNumericComparison{
+				{Key: "mp_cost", BeforeMin: beforeCost, BeforeMax: beforeCost, AfterMin: afterCost, AfterMax: afterCost},
+				{Key: "turn_undead_base_threshold", BeforeMin: before, BeforeMax: before, AfterMin: after, AfterMax: after},
+			}
+			return out
+		}
 		// beforeMin 保存由能力值“bounds”取得的操作前的状态最小，beforeMax 保存由能力值“bounds”取得的操作前的状态最大。
 		beforeMin, beforeMax := powerBounds(s, p.From)
 		// afterMin 保存由能力值“bounds”取得的操作后的状态最小，afterMax 保存由能力值“bounds”取得的操作后的状态最大。

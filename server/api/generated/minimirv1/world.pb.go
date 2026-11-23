@@ -1233,7 +1233,9 @@ type EntityState struct {
 	MovementKind uint32            `protobuf:"varint,22,opt,name=movement_kind,json=movementKind,proto3" json:"movement_kind,omitempty"`
 	PetTraining  *PetTrainingState `protobuf:"bytes,23,opt,name=pet_training,json=petTraining,proto3" json:"pet_training,omitempty"`
 	// World-owned旧宠尸体：无主人，仅用于显示和旧引用解析，不能作为当前宠物或友方候选。
-	IsPetCorpse   bool `protobuf:"varint,24,opt,name=is_pet_corpse,json=isPetCorpse,proto3" json:"is_pet_corpse,omitempty"`
+	IsPetCorpse bool `protobuf:"varint,24,opt,name=is_pet_corpse,json=isPetCorpse,proto3" json:"is_pet_corpse,omitempty"`
+	// 只用于共享场景的玩家名字展示，实体归属仍由服务端决定。
+	DisplayName   string `protobuf:"bytes,25,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1434,6 +1436,13 @@ func (x *EntityState) GetIsPetCorpse() bool {
 		return x.IsPetCorpse
 	}
 	return false
+}
+
+func (x *EntityState) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
 }
 
 // 仅描述已提交的真实路径；不授予客户端移动能力，也不重放进场前的旧事件。
@@ -3538,7 +3547,7 @@ const file_world_proto_rawDesc = "" +
 	"\tdirection\x18\f \x01(\rR\tdirection\x12'\n" +
 	"\x04role\x18\r \x01(\v2\x13.minimir.v1.RoleKeyR\x04role\x12\x1d\n" +
 	"\n" +
-	"elapsed_ms\x18\x0e \x01(\rR\telapsedMs\"\xa0\a\n" +
+	"elapsed_ms\x18\x0e \x01(\rR\telapsedMs\"\xc3\a\n" +
 	"\vEntityState\x12#\n" +
 	"\rentity_handle\x18\x01 \x01(\rR\fentityHandle\x12\x1f\n" +
 	"\ventity_kind\x18\x02 \x01(\rR\n" +
@@ -3565,7 +3574,8 @@ const file_world_proto_rawDesc = "" +
 	"\x11movement_revision\x18\x15 \x01(\x04R\x10movementRevision\x12#\n" +
 	"\rmovement_kind\x18\x16 \x01(\rR\fmovementKind\x12?\n" +
 	"\fpet_training\x18\x17 \x01(\v2\x1c.minimir.v1.PetTrainingStateR\vpetTraining\x12\"\n" +
-	"\ris_pet_corpse\x18\x18 \x01(\bR\visPetCorpse\"\xa9\x04\n" +
+	"\ris_pet_corpse\x18\x18 \x01(\bR\visPetCorpse\x12!\n" +
+	"\fdisplay_name\x18\x19 \x01(\tR\vdisplayName\"\xa9\x04\n" +
 	"\x12EntityDisplacement\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12#\n" +

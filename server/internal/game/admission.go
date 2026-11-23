@@ -91,6 +91,7 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	if r.Conn != nil && r.Conn != c.conn {
 		r.Conn.Close("role taken over")
 	}
+	w.leaveSharedTown(r)
 	w.cancelMapTravelOnDetach(r)
 	w.cancelTownNavigation(r)
 	r.Role, r.Auth = role, auth
@@ -131,6 +132,12 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 		w.isolateRoom(r)
 		return
 	}
+	if town && !w.attachSharedTown(r, m) {
+		rejectEntry(c.conn, c.frame.Request, p.CodeLineFull, "shared town is full")
+		r.Conn = nil
+		w.after(r)
+		return
+	}
 	entry := w.enterLineResult(r)
 	if entry == nil {
 		return
@@ -138,5 +145,6 @@ func (w *worker) attachEntry(r *room, c command, role domain.Role, auth persiste
 	w.send(r, p.MsgS2CEnterLine, c.frame.Request, entry)
 	w.bindingState(r, 1)
 	w.baseline(r)
+	w.recoverPersonalBoss(r)
 	w.after(r)
 }

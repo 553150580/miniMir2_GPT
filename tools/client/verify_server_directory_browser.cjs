@@ -9,7 +9,7 @@ const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js'
 const manifestPath = path.resolve(process.argv[2] ?? '');
 const work = path.resolve('.work');
 assert(manifestPath.startsWith(work + path.sep), '选服验收清单必须在独立工作目录');
-const { baseUrl, entries } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const { baseUrl, entries, tasksCodex } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(baseUrl);
 assert(base.protocol === 'http:' && base.hostname === '127.0.0.1' && base.port !== '18080', '仅允许独立回环试玩入口');
 assert.equal(entries.length, 4);
@@ -113,6 +113,71 @@ async function main() {
             await widget.waitFor({ state: 'visible', timeout: 5000 });
             await widget.fill(value);
         };
+        const verifyTasks = async () => {
+            const panel = 'UIMgr/Panels/TasksCodex';
+            const bag = 'UIMgr/Panels/Inventory';
+            await tap('BottomHUD/QuickNav/Inventory');
+            report.step = '选择新角色背包里的原木剑';
+            const weapon = await page.waitForFunction(path => {
+                const list = cc.find('Canvas/Safe/' + path + '/List')?.getComponent('List');
+                const match = Array.from(list?.rows ?? []).find(([index, node]) => node.activeInHierarchy && list.items[index]?.itemId === 218);
+                if (!match) return null;
+                const box = match[1]._uiProps.uiTransformComp.getBoundingBoxToWorld();
+                const visible = cc.view.getVisibleSize(), canvas = document.querySelector('canvas').getBoundingClientRect();
+                return { x: canvas.x + (box.x + box.width / 2) / visible.width * canvas.width,
+                    y: canvas.y + (visible.height - box.y - box.height / 2) / visible.height * canvas.height };
+            }, bag, { timeout: 10000 });
+            const point = await weapon.jsonValue();
+            await weapon.dispose();
+            await page.touchscreen.tap(point.x, point.y);
+            await page.waitForFunction(() => cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
+            await page.touchscreen.tap(10, 200);
+            await page.waitForFunction(() => !cc.find('Canvas/Safe/PopupView/Panels/StatusDetails')?.activeInHierarchy);
+            await tap(bag + '/Equip');
+            await tap('PopupView/Panels/Confirm/ConfirmButton');
+            report.step = '等待权威装备回执';
+            await page.waitForFunction(async () => {
+                const { session } = await System.import('chunks:///_virtual/GameSession.ts');
+                return session.inventory?.equipped?.some(entry => entry.slot === 0 && entry.item.itemId === 218);
+            }, null, { timeout: 15000 });
+            await page.touchscreen.tap(10, 200);
+            await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, bag);
+            report.step = '开启自动战斗并观察任务进度';
+            const alreadyAuto = await page.evaluate(() => cc.find('Canvas/Safe/MapViewport/Actions/Auto')?.getComponent(cc.Toggle)?.isChecked);
+            if (!alreadyAuto) await tap('MapViewport/Actions/Auto');
+            await tap('BottomHUD/QuickNav/Quest');
+            report.step = '等待主线目标可领取';
+            await page.waitForFunction(path => {
+                const root = cc.find('Canvas/Safe/' + path);
+                return root?.activeInHierarchy && root.getChildByName('Claim')?.getComponent(cc.Button)?.interactable
+                    && root.getChildByName('Detail')?.getComponent(cc.Label)?.string.includes('初次击杀');
+            }, panel, { timeout: 45000 });
+            await tap(panel + '/Claim');
+            report.step = '等待领取回执刷新主线任务';
+            await page.waitForFunction(path => cc.find('Canvas/Safe/' + path + '/RecordList/View/Content')?.children.some(
+                node => node.getChildByName('Text')?.getComponent(cc.Label)?.string?.includes('初次击杀  已领')),
+            panel, { timeout: 15000 });
+            await tap(panel + '/CategoryList/View/Content', '图鉴');
+            report.step = '核对击杀已计入图鉴';
+            await page.waitForFunction(path => {
+                const root = cc.find('Canvas/Safe/' + path);
+                return /稻草人\s+[1-5]\/5/.test(root?.getChildByName('Detail')?.getComponent(cc.Label)?.string ?? '');
+            }, panel, { timeout: 15000 });
+            report.tasksCodex = { mainClaimed: true, killInCodex: true };
+            const hasPreview = await page.evaluate(path => !!cc.find('Canvas/Safe/' + path + '/CodexPreview'), panel);
+            if (hasPreview) {
+                await page.waitForFunction(path => {
+                    const root = cc.find('Canvas/Safe/' + path);
+                    const list = root?.getChildByPath('RecordList')?.getComponent('List');
+                    const frame = root?.getChildByName('CodexPreview')?.getComponent(cc.Sprite)?.spriteFrame;
+                    return frame && list?.items[0]?.heading && list.items[1]?.name === '稻草人';
+                }, panel, { timeout: 12000 });
+                report.tasksCodex.mapGroupAndMonsterPreview = true;
+            }
+            // 左上角的背景位于保存布局的任务面板外。
+            await page.touchscreen.tap(20, 200);
+            await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
+        };
         await page.goto(base.href);
         await scene('Login');
         await edit('Account', 'scope_' + crypto.randomBytes(5).toString('hex'));
@@ -146,6 +211,7 @@ async function main() {
             const route = await ticketResponses[index];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
+            if (tasksCodex && index === 0) await verifyTasks();
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');
                 await scene('RoleSelect');
@@ -161,9 +227,11 @@ async function main() {
             const scene = window.cc?.director?.getScene()?.name;
             const rows = name => cc.find('Canvas/Safe/' + name + '/View/Content')?.children.map(
                 node => node.getChildByName('Text')?.getComponent(cc.Label)?.string).filter(Boolean);
+            const tasks = cc.find('Canvas/Safe/UIMgr/Panels/TasksCodex');
             return { scene, status: cc.find('Canvas/Safe/Status')?.getComponent(cc.Label)?.string,
                 title: cc.find('Canvas/Safe/Title')?.getComponent(cc.Label)?.string,
                 firstSlot: cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string,
+                tasksVisible: tasks?.activeInHierarchy, taskDetail: tasks?.getChildByName('Detail')?.getComponent(cc.Label)?.string,
                 regions: rows('RegionList'), servers: rows('ServerList') };
         }).catch(() => null);
         throw new Error(`${report.step}: ${error.message}${report.observed ? ' ' + JSON.stringify(report.observed) : ''}`);

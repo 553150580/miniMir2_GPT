@@ -11,8 +11,8 @@ import (
 // behavior 记录行为，使用文本表示。
 func supportedSkill(behavior string) bool {
 	switch behavior {
-	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet":
+	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "fire_wall", "healing", "mass_healing",
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet", "turn_undead":
 		return true
 	}
 	return false
@@ -166,8 +166,11 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "friendly_grid"
 		case "magic_shield", "teleport":
 			wanted = "friendly_self"
-		case "firebang", "ice_storm":
+		case "firebang", "ice_storm", "fire_wall":
 			wanted = "enemy_grid"
+		}
+		if s.Behavior == "fire_wall" && (s.AreaRadius != 1 || s.AutoEnabled || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0) {
+			return errors.New("开发火墙必须手动指定中心，500毫秒后建立正交邻格")
 		}
 		if s.TargetKind != wanted || s.AutoPriority < 0 || s.AutoMinTargets < 0 || s.AutoMinTargets > len(f.Map.MonsterSpawns)+2 {
 			return errors.New("技能行为、目标或自动策略不一致")

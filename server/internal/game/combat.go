@@ -55,7 +55,7 @@ func distance(a, b devconfig.Point) int {
 // free 校验格子地形和动态实体占位，忽略移动者自身。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，q 记录点位，self 记录“self”，使用实体表示。
 func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
-	if !w.walkable(r, q) {
+	if !w.walkable(r, q) || !w.townCellFree(r, self, q) {
 		return false
 	}
 	// all 初始化用作全部的实体列表。
@@ -142,50 +142,10 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
 	if e.Kind == 1 {
-		// a 保存由玩家发生时间等级取得的a。
-		a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
-		// item 接收遍历已穿戴装备时当前的元素。
-		for _, item := range r.Role.Equipped {
-			if item.Slot == devconfig.CastingSupplySlot || f.EquipmentDurability != nil && item.Item.OriginalDurabilityU > 0 && item.Item.DurabilityU <= r.Wear.loss(item.Item, item.Slot) {
-				continue
-			}
-			// def 保存由道具取得的“def”。
-			def, _ := f.Item(item.Item.ItemID)
-			if f.RuleVersion >= 22 {
-				// valid 标记是否处于有效状态。
-				var valid bool
-				a, valid = def.AddEquipmentBonuses(a)
-				if !valid {
-					w.isolateRoom(r)
-					return devconfig.Fighter{}
-				}
-				continue
-			}
-			a.AttackMin += def.AttackBonus + def.AttackMinBonus
-			a.AttackMax += def.AttackBonus + def.AttackMaxBonus
-			a.AttackSpeed += def.AttackSpeedBonus
-			a.Defence += def.DefenceBonus
-			a.DefenceMin += def.DefenceMinBonus
-			a.DefenceMax += def.DefenceMaxBonus
-			a.MagicDefenceMin += def.MagicDefenceMinBonus
-			a.MagicDefenceMax += def.MagicDefenceMaxBonus
+		if battle := r.bossBattle; battle != nil {
+			return statusFighter(e, battle.fighter)
 		}
-		// skill 接收遍历技能集合时当前的元素。
-		for _, skill := range f.Skills {
-			// level 是角色记录的技能等级，learned 表示技能已习得。
-			if level, learned := r.Role.Skill(skill.ID); learned && (skill.Behavior == "fencing" || skill.Behavior == "spirit_sword" || skill.Behavior == "slaying") && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
-				a.Accuracy += skill.AccuracyBonus(level)
-				a.AttackMax += skill.MaximumAttackBonus(level)
-			}
-		}
-		if w.sourceTimeline() {
-			if f.RuleVersion >= 22 && !f.EquipmentArithmeticSafe(a) {
-				w.isolateRoom(r)
-				return devconfig.Fighter{}
-			}
-			a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
-		}
-		return statusFighter(e, a)
+		return statusFighter(e, w.basePlayerFighter(r))
 	}
 	if e.Kind == 2 {
 		if e.PetRuntime != nil {
@@ -194,6 +154,55 @@ func (w *worker) fighter(r *room, e *entity) devconfig.Fighter {
 		return statusFighter(e, f.Pet)
 	}
 	return statusFighter(e, e.Monster.Fighter)
+}
+
+// basePlayerFighter 计算可用于挑战入场快照的已确认装备和被动技能属性。
+func (w *worker) basePlayerFighter(r *room) devconfig.Fighter {
+	f := &w.e.Store.Cfg.Fixture
+	// a 保存由玩家发生时间等级取得的a。
+	a, _ := f.PlayerAtLevel(r.Role.Job, r.Role.Level)
+	// item 接收遍历已穿戴装备时当前的元素。
+	for _, item := range r.Role.Equipped {
+		if item.Slot == devconfig.CastingSupplySlot || f.EquipmentDurability != nil && item.Item.OriginalDurabilityU > 0 && item.Item.DurabilityU <= r.Wear.loss(item.Item, item.Slot) {
+			continue
+		}
+		// def 保存由道具取得的“def”。
+		def, _ := f.Item(item.Item.ItemID)
+		if f.RuleVersion >= 22 {
+			// valid 标记是否处于有效状态。
+			var valid bool
+			a, valid = def.AddEquipmentBonuses(a)
+			if !valid {
+				w.isolateRoom(r)
+				return devconfig.Fighter{}
+			}
+			continue
+		}
+		a.AttackMin += def.AttackBonus + def.AttackMinBonus
+		a.AttackMax += def.AttackBonus + def.AttackMaxBonus
+		a.AttackSpeed += def.AttackSpeedBonus
+		a.Defence += def.DefenceBonus
+		a.DefenceMin += def.DefenceMinBonus
+		a.DefenceMax += def.DefenceMaxBonus
+		a.MagicDefenceMin += def.MagicDefenceMinBonus
+		a.MagicDefenceMax += def.MagicDefenceMaxBonus
+	}
+	// skill 接收遍历技能集合时当前的元素。
+	for _, skill := range f.Skills {
+		// level 是角色记录的技能等级，learned 表示技能已习得。
+		if level, learned := r.Role.Skill(skill.ID); learned && (skill.Behavior == "fencing" || skill.Behavior == "spirit_sword" || skill.Behavior == "slaying") && skill.JobID == r.Role.Job && level >= skill.LearnedLevel && level <= skill.MaxLevel {
+			a.Accuracy += skill.AccuracyBonus(level)
+			a.AttackMax += skill.MaximumAttackBonus(level)
+		}
+	}
+	if w.sourceTimeline() {
+		if f.RuleVersion >= 22 && !f.EquipmentArithmeticSafe(a) {
+			w.isolateRoom(r)
+			return devconfig.Fighter{}
+		}
+		a.AttackMS = f.CombatTiming.PlayerAttackInterval(r.Role.Level, a.AttackSpeed)
+	}
+	return a
 }
 
 // nearest 在当前有效怪物中找到与施法者或攻击者最近的目标。
@@ -292,6 +301,10 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 	if damage <= 0 || target.HP <= 0 {
 		return
 	}
+	if r.bossBattle != nil {
+		w.applyPersonalBossDamage(r, from, target, damage, now, context)
+		return
+	}
 	wearStatuses(target, damage)
 	target.HP -= damage
 	if target.HP < 0 {
@@ -374,6 +387,9 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Scene == 0 {
 		return
 	}
+	if r.townMembership.owner != 0 && (r.Conn == nil || !r.Conn.Alive()) {
+		w.leaveSharedTown(r)
+	}
 	// 连接控制可能越过排队的旧帧，旧帧不得倒拨托管计时或推进现场。
 	if now.Before(r.LastTick) {
 		return
@@ -386,6 +402,7 @@ func (w *worker) step(r *room, now time.Time) {
 	}
 	if r.Conn != nil && !r.Ready {
 		if now.After(r.AwaitUntil) {
+			w.leaveSharedTown(r)
 			r.Conn.Close("baseline acknowledgement timeout")
 		}
 	}
@@ -401,6 +418,7 @@ func (w *worker) step(r *room, now time.Time) {
 	if r.Pending {
 		w.progressMapTravel(r, now)
 		w.retryPendingRoom(r, now)
+		w.snapshotSharedTownWhenDue(r, now)
 		return
 	}
 	if w.expirePetCorpses(r, now) {
@@ -461,6 +479,7 @@ func (w *worker) step(r *room, now time.Time) {
 			return
 		}
 		w.progressMapTravel(r, now)
+		w.snapshotSharedTownWhenDue(r, now)
 		return
 	}
 	if w.tickPotions(r, now) {
@@ -489,6 +508,12 @@ func (w *worker) step(r *room, now time.Time) {
 	if offline && w.meterHosting(r, delta, now) {
 		return
 	}
+	w.stepGridCombat(r, mapTemplate, now, offline)
+	w.flushKillFacts(r)
+}
+
+// stepGridCombat 用同一套地格、移动、攻击及宠物行为推进一个活动场景。
+func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now time.Time, offline bool) {
 	if r.Player.HP <= 0 {
 		return
 	}
@@ -498,7 +523,9 @@ func (w *worker) step(r *room, now time.Time) {
 		clearFinishedAction(monster, now)
 	}
 	clearFinishedAction(r.Pet, now)
-	w.worldDeadlines(r, r.currentWorld(), now)
+	if r.bossBattle == nil {
+		w.worldDeadlines(r, r.currentWorld(), now)
+	}
 	if r.Isolated {
 		return
 	}
@@ -538,7 +565,7 @@ func (w *worker) step(r *room, now time.Time) {
 	// pet 保存由场景世界宠物取得的宠物。
 	pet := r.worldPet(r.currentWorld())
 	if !skipPetAI && pet != nil && pet.HP > 0 && (pet.PetRuntime == nil || !pet.PetRuntime.FollowSuppressed) {
-		if r.Auto && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
+		if (r.Auto || r.bossBattle != nil) && mapTemplate.SceneKindValue() != devconfig.SceneKindTown {
 			// target 保存由最近取得的目标。
 			if target := w.nearest(r, pet); target != nil {
 				if distance(pet.Pos, target.Pos) <= 1 {
@@ -577,7 +604,6 @@ func (w *worker) step(r *room, now time.Time) {
 		r.LastBroadcast = now
 		w.snapshot(r)
 	}
-	w.flushKillFacts(r)
 }
 
 // legacyKill 处理未启用统一时间线规则时的怪物死亡与收益。
@@ -588,7 +614,8 @@ func (w *worker) legacyKill(r *room, m *entity, now time.Time) {
 	// bound 表示击杀时没有有效特权，随后按绑定资产发放。
 	bound := !r.Role.PrivilegeUntil.After(now)
 	// q 组装结算所需的数据。
-	q := persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, Kills: 1, Experience: m.Monster.Exp, Bound: bound, NoEquipmentKills: r.Role.NoEquipmentKills + 1}
+	q := persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, Kills: 1, MonsterID: m.Monster.ID, MapID: r.currentWorld().MapID,
+		Experience: m.Monster.Exp, Bound: bound, NoEquipmentKills: r.Role.NoEquipmentKills + 1, EventAt: now}
 	// roll 接收随机值供后续步骤使用。
 	roll := random(1000000)
 	// equipment 表示已达到保底次数或旧规则掷点落在装备掉落区间。
@@ -661,6 +688,9 @@ func (w *worker) settleInWorld(r *room, world *worldState, point devconfig.Point
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，point 记录点位，q 记录结算。
 // actor 记录行动实体，使用行动实体引用表示，finished 记录“finished”，使用供当前流程调用的函数表示。
 func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfig.Point, q persistence.Settlement, actor actorRef, finished func(persistence.Operation)) {
+	if r.bossBattle != nil {
+		return
+	}
 	r.SettlementGeneration++
 	r.Wear.attach(&q)
 	// hostSeconds 是与原事务兼容且已冻结到该事务中的托管整秒。

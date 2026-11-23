@@ -22,7 +22,10 @@ import (
 // Displacement 标记是否处于位移状态。
 // Teleport 标记是否处于瞬移状态。
 // Summon 标记是否处于召唤状态。
-type skillHandler struct{ Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status, Displacement, Teleport, Summon bool }
+type skillHandler struct {
+	Passive, Healing, Area, UndeadBonus, Direction, SelfArea, Status, Displacement, Teleport, Summon bool
+	TurnUndead                                                                                       bool // 仅对亡灵怪物使用两段判定，成功后安排延迟处决。
+}
 
 // preparedCast 冻结施法目标、费用、效果和原身体身份，供后续安全提交。
 type preparedCast struct {
@@ -34,19 +37,21 @@ type preparedCast struct {
 	Direction                             uint32          // 接受计划时冻结的施法方向。
 	Cost, Amount, DelayMS, BuffDurationMS int64           // 待扣魔法值、效果量、命中延时与状态持续时间。
 	Summon                                *summonPetPlan  // 需要新生或召回宠物时保留的专用计划。
+	ExecuteTarget                         bool            // 圣言术已通过等级和概率判定，可安排原目标的延迟处决。
 }
 
 // skillHandlers 以配置行为名称标识服务端可执行的技能分支。
 var skillHandlers = map[string]skillHandler{
 	"fencing": {Passive: true}, "spirit_sword": {Passive: true},
 	"fireball": {}, "great_fireball": {}, "thunderbolt": {UndeadBonus: true},
-	"firebang": {Area: true}, "healing": {Healing: true}, "mass_healing": {Healing: true, Area: true},
+	"firebang": {Area: true}, "fire_wall": {Area: true}, "healing": {Healing: true}, "mass_healing": {Healing: true, Area: true},
 	"magic_shield": {Status: true}, "soul_shield": {Status: true, Area: true}, "blessed_armour": {Status: true, Area: true},
 	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
 	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
 	"repulsion": {SelfArea: true, Displacement: true}, "shoulder_dash": {Direction: true, Displacement: true},
-	"teleport":   {Teleport: true},
-	"summon_pet": {Summon: true},
+	"teleport":    {Teleport: true},
+	"summon_pet":  {Summon: true},
+	"turn_undead": {TurnUndead: true},
 }
 
 // targetKind 根据技能配置决定默认目标类别。
@@ -211,6 +216,10 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	if !exists || !learned || !registered || s.JobID != r.Role.Job || level < s.LearnedLevel || level > s.MaxLevel {
 		return nil, p.CodeSkillNotLearned
 	}
+	// 未接入角色 owner 的永久消耗前，私有挑战只运行本场的可独立结算动作。
+	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0) {
+		return nil, p.CodeSkillStateBlocked
+	}
 	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
 		return nil, p.CodeSkillStateBlocked
 	}
@@ -260,7 +269,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		}
 	} else {
 		target = w.skillTarget(r, s, targetHandle)
-		if target == nil {
+		if target == nil || handler.TurnUndead && !turnUndeadTarget(target) {
 			return nil, p.CodeSkillTarget
 		}
 		point = target.Pos
@@ -315,8 +324,8 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	amount := int64(0)
 	// duration 保存由整数“64”取得的持续时间。
 	duration := int64(0)
-	if handler.Teleport || handler.Summon {
-		// 传送没有伤害或治疗随机量，成功后的状态在实际移交完成时才添加。
+	if handler.Teleport || handler.Summon || handler.TurnUndead {
+		// 这些行为使用各自的迁移、召唤或处决规则。
 	} else if handler.Status {
 		switch definition.DurationKind {
 		case "mc_source_power":
@@ -353,6 +362,9 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	} else {
 		amount = w.magicAmount(s, level, w.interval(stats.MagicMin, stats.MagicMax))
 	}
+	if s.Behavior == "fire_wall" && fireWallLifetime(amount) == 0 {
+		return nil, p.CodeSkillStateBlocked
+	}
 	if handler.UndeadBonus && target != nil && target.Monster != nil && target.Monster.Undead {
 		amount = amount * s.UndeadMultiplierPPM / 1000000
 	}
@@ -361,6 +373,9 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	plan.Summon = summon
 	if target != nil {
 		plan.Target = reference(r, target)
+		if handler.TurnUndead {
+			plan.ExecuteTarget = w.turnUndeadSucceeds(r.Role.Level, target.Monster.Level, level)
+		}
 	}
 	if handler.Direction || handler.Summon {
 		plan.Direction = direction
@@ -411,13 +426,18 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	if r.Conn == nil {
 		event.HostSession = r.HostSession
 	}
-	if !skillHandlers[s.Behavior].Displacement {
+	// handler 决定当前受理动作立即处理、延迟推进或只发送圣言未命中。
+	handler := skillHandlers[s.Behavior]
+	if !handler.Displacement && (!handler.TurnUndead || plan.ExecuteTarget) {
 		r.Casts = append(r.Casts, event)
 	}
 	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(plan.Origin), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
-	if skillHandlers[s.Behavior].Displacement {
+	if handler.Displacement {
 		w.resolveDisplacementSkill(r, event, now)
 		return 0
+	}
+	if handler.TurnUndead && !plan.ExecuteTarget {
+		w.impact(r, id, r.Player.Handle, handle, life, point, 0, 2, false, r.CastID, 0)
 	}
 	w.snapshot(r)
 	return 0
@@ -447,8 +467,16 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 	if c.Skill.Behavior == "hell_fire" {
 		caster = w.resolveCredit(r, c.Caster)
 	}
+	if c.Skill.Behavior == "fire_wall" {
+		w.resolveFireWall(r, world, caster, c, now)
+		return
+	}
 	if !registered || caster == nil {
 		w.impactInWorld(r, world, c.Scene, c.Skill.ID, c.Caster.Handle, c.Target, c.TargetLife, c.TargetPoint, 0, 3, handler.Healing, c.ID, 0)
+		return
+	}
+	if handler.TurnUndead {
+		w.resolveTurnUndead(r, world, caster, c, now)
 		return
 	}
 	// targets 初始化用作目标集合的实体列表。

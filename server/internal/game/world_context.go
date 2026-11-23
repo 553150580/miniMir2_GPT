@@ -15,22 +15,24 @@ type worldRef struct{ Epoch, ID uint64 }
 
 // worldState 保存每张已访问地图独立存在的临时战斗现场。
 type worldState struct {
-	Ref            worldRef         // 场景执行身份，限定事件和实体引用。
-	MapID          uint64           // 该世界对应的配置地图编号。
-	PlayerPosition devconfig.Point  // 活动角色离开时保存的位置，供该世界的历史事实使用。
-	PetPosition    devconfig.Point  // 宠物在世界停驻时保留的位置提示。
-	HasPet         bool             // 这个世界曾保留有效宠物位置时为真。
-	PetLife        uint64           // 历史位置提示所属birth；真实居民由room.PetWorld判定。
-	Monsters       []*entity        // 当前世界的怪物槽位。
-	MonsterCount   int              // 活跃的前置怪物槽位数量。
-	Auto           bool             // 这个世界的普通自动战斗开关。
-	Destination    *devconfig.Point // 这个世界保留的玩家地面导航目标。
-	Navigation     navigationState  // 向客户端同步的导航修订和进度。
-	Loot           []*entity        // 当前世界暂时显示的收益对象。
-	LootUntil      time.Time        // 临时收益对象的显示截止时刻。
-	Casts          []pendingCast    // 原归属世界为本世界的已受理施法列表。
-	Attacks        []pendingAttack  // 原归属世界为本世界的已受理攻击列表。
-	PetCorpses     []*petCorpse     // 在该世界保留的已死亡宠物身体。
+	BossMap        *devconfig.MapTemplate // 私有挑战采用经过校验的独立地图，不混入普通地图表。
+	Ref            worldRef               // 场景执行身份，限定事件和实体引用。
+	MapID          uint64                 // 该世界对应的配置地图编号。
+	PlayerPosition devconfig.Point        // 活动角色离开时保存的位置，供该世界的历史事实使用。
+	PetPosition    devconfig.Point        // 宠物在世界停驻时保留的位置提示。
+	HasPet         bool                   // 这个世界曾保留有效宠物位置时为真。
+	PetLife        uint64                 // 历史位置提示所属birth；真实居民由room.PetWorld判定。
+	Monsters       []*entity              // 当前世界的怪物槽位。
+	MonsterCount   int                    // 活跃的前置怪物槽位数量。
+	Auto           bool                   // 这个世界的普通自动战斗开关。
+	Destination    *devconfig.Point       // 这个世界保留的玩家地面导航目标。
+	Navigation     navigationState        // 向客户端同步的导航修订和进度。
+	Loot           []*entity              // 当前世界暂时显示的收益对象。
+	LootUntil      time.Time              // 临时收益对象的显示截止时刻。
+	Casts          []pendingCast          // 原归属世界为本世界的已受理施法列表。
+	FireWalls      []*fireWallField       // 已建立且可作用于入格实体的火墙，未使用技能的世界此切片为空。
+	Attacks        []pendingAttack        // 原归属世界为本世界的已受理攻击列表。
+	PetCorpses     []*petCorpse           // 在该世界保留的已死亡宠物身体。
 }
 
 // 由到期业务选择一次目的地；核心在该事件与批后缀之间提交。无统一死亡取消门禁。
@@ -185,6 +187,9 @@ func (w *worker) worldMap(world *worldState) (*devconfig.MapTemplate, bool) {
 	if world == nil {
 		return nil, false
 	}
+	if world.BossMap != nil {
+		return world.BossMap, world.MapID == world.BossMap.ID && world.BossMap.SceneKindValue() == devconfig.SceneKindPersonalBoss
+	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
 	if world.MapID == 0 { // 仅沿用旧手造内存fixture的primary兼容。
@@ -259,6 +264,11 @@ func (r *room) eventCount() int {
 // 仅由受信业务在调度边界调用。目的点/宠物规则由调用方选定，核心不发明空格规则。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，target 记录目标，使用场景世界状态表示，point 记录点位，petPoint 记录宠物点位。
 func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Point, petPoint *devconfig.Point) bool {
+	return w.activateWorldAt(r, target, point, petPoint, false)
+}
+
+// activateWorldAt 原子保留共享城镇目标格，界面进城可以选择相邻的空闲落点。
+func (w *worker) activateWorldAt(r *room, target *worldState, point devconfig.Point, petPoint *devconfig.Point, alternateTownLanding bool) bool {
 	// m 接收场景世界地图供后续步骤使用，known 保存由场景世界地图取得的已知状态。
 	m, known := w.worldMap(target)
 	// old 保存由当前状态场景世界取得的原状态。
@@ -279,9 +289,15 @@ func (w *worker) activateWorld(r *room, target *worldState, point devconfig.Poin
 	if r.CellEntrySequence > math.MaxUint64-moves {
 		return false
 	}
+	// 目标格必须在原世界仍有效时预留，防止两个角色迁移到同一出生格。
+	point, available := w.reserveSharedTown(r, m, point, petPoint, alternateTownLanding, mapChanged)
+	if !available {
+		return false
+	}
 	if mapChanged {
 		w.cancelTownNavigation(r)
 		r.AutoTarget = actorRef{}
+		old.clearFireWalls()
 	}
 	old.PlayerPosition = r.Player.Pos
 	old.HasPet = r.worldPet(old) != nil

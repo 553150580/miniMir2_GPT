@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { skillRows, primarySkill, skillAccuracy, skillQuickLabel, createSkillLearnPreview, validateSkillLearnPreview, skillBookInstance, selectSkillTarget, validateGroundTarget, gridDirection } = require('../../../.work/ui-tests/app/SkillModel.js');
+const { skillRows, primarySkill, skillAccuracy, skillQuickLabel, skillDescriptionLines, createSkillLearnPreview, validateSkillLearnPreview, skillBookInstance, selectSkillTarget, validateGroundTarget, gridDirection } = require('../../../.work/ui-tests/app/SkillModel.js');
 const { CastPlayback, effectPoses } = require('../../../.work/ui-tests/app/CastPlayback.js');
 const id = value => new Uint8Array(16).fill(value);
 const definition = changes => ({ id: 1, name: '火球术', job_id: 1, book_item_id: 7, learn_level: 7, initial_level: 0,
@@ -25,6 +25,18 @@ test('技能列表仅投影本职，已学0级保留初学及按等级计算的M
     input.job = 0; assert.equal(primarySkill(input), null); assert.equal(skillRows(input)[0].definition.active, false);
     input.inventory.learnedSkills=[{skillId:3,level:0}];assert.equal(skillAccuracy(skillRows(input)[0]),0);
     input.inventory.learnedSkills[0].level=1;assert.equal(skillAccuracy(skillRows(input)[0]),3);
+});
+test('圣言术显示亡灵与延迟处决条件，快捷位使用短名', () => {
+    const row = learned({ id: 32, name: '圣言术', kind: 'turn_undead', target_kind: 'enemy_entity', range: 9 });
+    const detail = skillDescriptionLines(row, snapshot()).join('\n');
+    assert.equal(skillQuickLabel(row.definition), '圣言');
+    assert.match(detail, /亡灵怪物/);
+    assert.match(detail, /延迟消灭原目标/);
+    assert.match(detail, /射程 9格/);
+    const entities = [entity(1, 1, 2, 2), entity(2, 3, 3, 2), entity(3, 3, 6, 2), entity(4, 3, 2, 3, '0')];
+    assert.equal(selectSkillTarget(row, entities, 3, 1).entityHandle, 3);
+    assert.throws(() => selectSkillTarget(row, entities, null, 1), /请先点选/);
+    assert.throws(() => selectSkillTarget(row, entities, 4, 1), /请先点选/);
 });
 test('学习需到7级并有对应原书，按库存首个正数量选实例且保留绑定、Long数量和版本', () => {
     const input = snapshot(), preview = createSkillLearnPreview(input, 1);

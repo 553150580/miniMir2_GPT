@@ -3974,6 +3974,9 @@ export namespace minimir {
             /** EntityState is_pet_corpse. */
             is_pet_corpse: boolean;
 
+            /** EntityState display_name. */
+            display_name: string;
+
             /**
              * Creates a new EntityState instance using the specified properties.
              * @param [properties] Properties to set
@@ -4108,6 +4111,9 @@ export namespace minimir {
 
                 /** EntityState is_pet_corpse */
                 is_pet_corpse?: (boolean|null);
+
+                /** EntityState display_name */
+                display_name?: (string|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -11453,6 +11459,954 @@ export namespace minimir {
 
             /** Shape of a VendorCommitRequest. */
             type $Shape = minimir.v1.VendorCommitRequest.$Properties;
+        }
+
+        /**
+         * Properties of a TaskCodexStateRequest.
+         * @deprecated Use minimir.v1.TaskCodexStateRequest.$Properties instead.
+         */
+        interface ITaskCodexStateRequest extends minimir.v1.TaskCodexStateRequest.$Properties {
+        }
+
+        /** Represents a TaskCodexStateRequest. */
+        class TaskCodexStateRequest {
+
+            /**
+             * Constructs a new TaskCodexStateRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TaskCodexStateRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /**
+             * Creates a new TaskCodexStateRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TaskCodexStateRequest instance
+             */
+            static create(properties: minimir.v1.TaskCodexStateRequest.$Shape): minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape;
+            static create(properties?: minimir.v1.TaskCodexStateRequest.$Properties): minimir.v1.TaskCodexStateRequest;
+
+            /**
+             * Encodes the specified TaskCodexStateRequest message. Does not implicitly {@link minimir.v1.TaskCodexStateRequest.verify|verify} messages.
+             * @param message TaskCodexStateRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TaskCodexStateRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TaskCodexStateRequest message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateRequest.verify|verify} messages.
+             * @param message TaskCodexStateRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TaskCodexStateRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TaskCodexStateRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape} TaskCodexStateRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape;
+
+            /**
+             * Decodes a TaskCodexStateRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape} TaskCodexStateRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape;
+
+            /**
+             * Verifies a TaskCodexStateRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TaskCodexStateRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TaskCodexStateRequest {
+
+            /** Properties of a TaskCodexStateRequest. */
+            interface $Properties {
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TaskCodexStateRequest. */
+            type $Shape = minimir.v1.TaskCodexStateRequest.$Properties;
+        }
+
+        /**
+         * Properties of a TaskCodexStateResult.
+         * @deprecated Use minimir.v1.TaskCodexStateResult.$Properties instead.
+         */
+        interface ITaskCodexStateResult extends minimir.v1.TaskCodexStateResult.$Properties {
+        }
+
+        /** Represents a TaskCodexStateResult. */
+        class TaskCodexStateResult {
+
+            /**
+             * Constructs a new TaskCodexStateResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TaskCodexStateResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** TaskCodexStateResult error_code. */
+            error_code: number;
+
+            /** TaskCodexStateResult role_revision. */
+            role_revision: Long;
+
+            /** TaskCodexStateResult rule_version. */
+            rule_version: Long;
+
+            /** TaskCodexStateResult day. */
+            day: string;
+
+            /** TaskCodexStateResult activity. */
+            activity: number;
+
+            /** TaskCodexStateResult daily_claimed. */
+            daily_claimed: number;
+
+            /** TaskCodexStateResult daily_claim_limit. */
+            daily_claim_limit: number;
+
+            /** TaskCodexStateResult rows. */
+            rows: minimir.v1.TaskCodexStateRow.$Properties[];
+
+            /**
+             * Creates a new TaskCodexStateResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TaskCodexStateResult instance
+             */
+            static create(properties: minimir.v1.TaskCodexStateResult.$Shape): minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape;
+            static create(properties?: minimir.v1.TaskCodexStateResult.$Properties): minimir.v1.TaskCodexStateResult;
+
+            /**
+             * Encodes the specified TaskCodexStateResult message. Does not implicitly {@link minimir.v1.TaskCodexStateResult.verify|verify} messages.
+             * @param message TaskCodexStateResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TaskCodexStateResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TaskCodexStateResult message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateResult.verify|verify} messages.
+             * @param message TaskCodexStateResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TaskCodexStateResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TaskCodexStateResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape} TaskCodexStateResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape;
+
+            /**
+             * Decodes a TaskCodexStateResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape} TaskCodexStateResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape;
+
+            /**
+             * Verifies a TaskCodexStateResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TaskCodexStateResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TaskCodexStateResult {
+
+            /** Properties of a TaskCodexStateResult. */
+            interface $Properties {
+
+                /** TaskCodexStateResult error_code */
+                error_code?: (number|null);
+
+                /** TaskCodexStateResult role_revision */
+                role_revision?: (Long|null);
+
+                /** TaskCodexStateResult rule_version */
+                rule_version?: (Long|null);
+
+                /** TaskCodexStateResult day */
+                day?: (string|null);
+
+                /** TaskCodexStateResult activity */
+                activity?: (number|null);
+
+                /** TaskCodexStateResult daily_claimed */
+                daily_claimed?: (number|null);
+
+                /** TaskCodexStateResult daily_claim_limit */
+                daily_claim_limit?: (number|null);
+
+                /** TaskCodexStateResult rows */
+                rows?: (minimir.v1.TaskCodexStateRow.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TaskCodexStateResult. */
+            type $Shape = minimir.v1.TaskCodexStateResult.$Properties;
+        }
+
+        /**
+         * Properties of a TaskCodexStateRow.
+         * @deprecated Use minimir.v1.TaskCodexStateRow.$Properties instead.
+         */
+        interface ITaskCodexStateRow extends minimir.v1.TaskCodexStateRow.$Properties {
+        }
+
+        /** Represents a TaskCodexStateRow. */
+        class TaskCodexStateRow {
+
+            /**
+             * Constructs a new TaskCodexStateRow.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TaskCodexStateRow.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** TaskCodexStateRow kind. */
+            kind: number;
+
+            /** TaskCodexStateRow id. */
+            id: number;
+
+            /** TaskCodexStateRow name. */
+            name: string;
+
+            /** TaskCodexStateRow progress. */
+            progress: Long;
+
+            /** TaskCodexStateRow target. */
+            target: Long;
+
+            /** TaskCodexStateRow available. */
+            available: boolean;
+
+            /** TaskCodexStateRow claimed. */
+            claimed: boolean;
+
+            /** TaskCodexStateRow claimable. */
+            claimable: boolean;
+
+            /** TaskCodexStateRow map_id. */
+            map_id: Long;
+
+            /** TaskCodexStateRow monster_id. */
+            monster_id: number;
+
+            /** TaskCodexStateRow bound_gold. */
+            bound_gold: Long;
+
+            /** TaskCodexStateRow bound_yuanbao_units. */
+            bound_yuanbao_units: Long;
+
+            /** TaskCodexStateRow reward_items. */
+            reward_items: minimir.v1.TaskCodexRewardItem.$Properties[];
+
+            /**
+             * Creates a new TaskCodexStateRow instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TaskCodexStateRow instance
+             */
+            static create(properties: minimir.v1.TaskCodexStateRow.$Shape): minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape;
+            static create(properties?: minimir.v1.TaskCodexStateRow.$Properties): minimir.v1.TaskCodexStateRow;
+
+            /**
+             * Encodes the specified TaskCodexStateRow message. Does not implicitly {@link minimir.v1.TaskCodexStateRow.verify|verify} messages.
+             * @param message TaskCodexStateRow message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TaskCodexStateRow.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TaskCodexStateRow message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateRow.verify|verify} messages.
+             * @param message TaskCodexStateRow message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TaskCodexStateRow.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TaskCodexStateRow message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape} TaskCodexStateRow
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape;
+
+            /**
+             * Decodes a TaskCodexStateRow message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape} TaskCodexStateRow
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape;
+
+            /**
+             * Verifies a TaskCodexStateRow message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TaskCodexStateRow
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TaskCodexStateRow {
+
+            /** Properties of a TaskCodexStateRow. */
+            interface $Properties {
+
+                /** TaskCodexStateRow kind */
+                kind?: (number|null);
+
+                /** TaskCodexStateRow id */
+                id?: (number|null);
+
+                /** TaskCodexStateRow name */
+                name?: (string|null);
+
+                /** TaskCodexStateRow progress */
+                progress?: (Long|null);
+
+                /** TaskCodexStateRow target */
+                target?: (Long|null);
+
+                /** TaskCodexStateRow available */
+                available?: (boolean|null);
+
+                /** TaskCodexStateRow claimed */
+                claimed?: (boolean|null);
+
+                /** TaskCodexStateRow claimable */
+                claimable?: (boolean|null);
+
+                /** TaskCodexStateRow map_id */
+                map_id?: (Long|null);
+
+                /** TaskCodexStateRow monster_id */
+                monster_id?: (number|null);
+
+                /** TaskCodexStateRow bound_gold */
+                bound_gold?: (Long|null);
+
+                /** TaskCodexStateRow bound_yuanbao_units */
+                bound_yuanbao_units?: (Long|null);
+
+                /** TaskCodexStateRow reward_items */
+                reward_items?: (minimir.v1.TaskCodexRewardItem.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TaskCodexStateRow. */
+            type $Shape = minimir.v1.TaskCodexStateRow.$Properties;
+        }
+
+        /**
+         * Properties of a TaskCodexRewardItem.
+         * @deprecated Use minimir.v1.TaskCodexRewardItem.$Properties instead.
+         */
+        interface ITaskCodexRewardItem extends minimir.v1.TaskCodexRewardItem.$Properties {
+        }
+
+        /** Represents a TaskCodexRewardItem. */
+        class TaskCodexRewardItem {
+
+            /**
+             * Constructs a new TaskCodexRewardItem.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TaskCodexRewardItem.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** TaskCodexRewardItem item_id. */
+            item_id: number;
+
+            /** TaskCodexRewardItem quantity. */
+            quantity: Long;
+
+            /**
+             * Creates a new TaskCodexRewardItem instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TaskCodexRewardItem instance
+             */
+            static create(properties: minimir.v1.TaskCodexRewardItem.$Shape): minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape;
+            static create(properties?: minimir.v1.TaskCodexRewardItem.$Properties): minimir.v1.TaskCodexRewardItem;
+
+            /**
+             * Encodes the specified TaskCodexRewardItem message. Does not implicitly {@link minimir.v1.TaskCodexRewardItem.verify|verify} messages.
+             * @param message TaskCodexRewardItem message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TaskCodexRewardItem.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TaskCodexRewardItem message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexRewardItem.verify|verify} messages.
+             * @param message TaskCodexRewardItem message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TaskCodexRewardItem.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TaskCodexRewardItem message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape} TaskCodexRewardItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape;
+
+            /**
+             * Decodes a TaskCodexRewardItem message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape} TaskCodexRewardItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape;
+
+            /**
+             * Verifies a TaskCodexRewardItem message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TaskCodexRewardItem
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TaskCodexRewardItem {
+
+            /** Properties of a TaskCodexRewardItem. */
+            interface $Properties {
+
+                /** TaskCodexRewardItem item_id */
+                item_id?: (number|null);
+
+                /** TaskCodexRewardItem quantity */
+                quantity?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TaskCodexRewardItem. */
+            type $Shape = minimir.v1.TaskCodexRewardItem.$Properties;
+        }
+
+        /**
+         * Properties of a TaskCodexClaimRequest.
+         * @deprecated Use minimir.v1.TaskCodexClaimRequest.$Properties instead.
+         */
+        interface ITaskCodexClaimRequest extends minimir.v1.TaskCodexClaimRequest.$Properties {
+        }
+
+        /** Represents a TaskCodexClaimRequest. */
+        class TaskCodexClaimRequest {
+
+            /**
+             * Constructs a new TaskCodexClaimRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.TaskCodexClaimRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** TaskCodexClaimRequest operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** TaskCodexClaimRequest kind. */
+            kind: number;
+
+            /** TaskCodexClaimRequest id. */
+            id: number;
+
+            /** TaskCodexClaimRequest day. */
+            day: string;
+
+            /**
+             * Creates a new TaskCodexClaimRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns TaskCodexClaimRequest instance
+             */
+            static create(properties: minimir.v1.TaskCodexClaimRequest.$Shape): minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape;
+            static create(properties?: minimir.v1.TaskCodexClaimRequest.$Properties): minimir.v1.TaskCodexClaimRequest;
+
+            /**
+             * Encodes the specified TaskCodexClaimRequest message. Does not implicitly {@link minimir.v1.TaskCodexClaimRequest.verify|verify} messages.
+             * @param message TaskCodexClaimRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.TaskCodexClaimRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified TaskCodexClaimRequest message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexClaimRequest.verify|verify} messages.
+             * @param message TaskCodexClaimRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.TaskCodexClaimRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a TaskCodexClaimRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape} TaskCodexClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape;
+
+            /**
+             * Decodes a TaskCodexClaimRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape} TaskCodexClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape;
+
+            /**
+             * Verifies a TaskCodexClaimRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for TaskCodexClaimRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace TaskCodexClaimRequest {
+
+            /** Properties of a TaskCodexClaimRequest. */
+            interface $Properties {
+
+                /** TaskCodexClaimRequest operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** TaskCodexClaimRequest kind */
+                kind?: (number|null);
+
+                /** TaskCodexClaimRequest id */
+                id?: (number|null);
+
+                /** TaskCodexClaimRequest day */
+                day?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a TaskCodexClaimRequest. */
+            type $Shape = minimir.v1.TaskCodexClaimRequest.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossEnter.
+         * @deprecated Use minimir.v1.PersonalBossEnter.$Properties instead.
+         */
+        interface IPersonalBossEnter extends minimir.v1.PersonalBossEnter.$Properties {
+        }
+
+        /** Represents a PersonalBossEnter. */
+        class PersonalBossEnter {
+
+            /**
+             * Constructs a new PersonalBossEnter.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossEnter.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossEnter scene_epoch. */
+            scene_epoch: Long;
+
+            /** PersonalBossEnter challenge_id. */
+            challenge_id: string;
+
+            /** PersonalBossEnter template_id. */
+            template_id: number;
+
+            /**
+             * Creates a new PersonalBossEnter instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossEnter instance
+             */
+            static create(properties: minimir.v1.PersonalBossEnter.$Shape): minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape;
+            static create(properties?: minimir.v1.PersonalBossEnter.$Properties): minimir.v1.PersonalBossEnter;
+
+            /**
+             * Encodes the specified PersonalBossEnter message. Does not implicitly {@link minimir.v1.PersonalBossEnter.verify|verify} messages.
+             * @param message PersonalBossEnter message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossEnter.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossEnter message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossEnter.verify|verify} messages.
+             * @param message PersonalBossEnter message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossEnter.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossEnter message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape} PersonalBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape;
+
+            /**
+             * Decodes a PersonalBossEnter message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape} PersonalBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape;
+
+            /**
+             * Verifies a PersonalBossEnter message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossEnter
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossEnter {
+
+            /** Properties of a PersonalBossEnter. */
+            interface $Properties {
+
+                /** PersonalBossEnter scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** PersonalBossEnter challenge_id */
+                challenge_id?: (string|null);
+
+                /** PersonalBossEnter template_id */
+                template_id?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossEnter. */
+            type $Shape = minimir.v1.PersonalBossEnter.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossLeave.
+         * @deprecated Use minimir.v1.PersonalBossLeave.$Properties instead.
+         */
+        interface IPersonalBossLeave extends minimir.v1.PersonalBossLeave.$Properties {
+        }
+
+        /** Represents a PersonalBossLeave. */
+        class PersonalBossLeave {
+
+            /**
+             * Constructs a new PersonalBossLeave.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossLeave.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossLeave scene_epoch. */
+            scene_epoch: Long;
+
+            /** PersonalBossLeave challenge_id. */
+            challenge_id: string;
+
+            /**
+             * Creates a new PersonalBossLeave instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossLeave instance
+             */
+            static create(properties: minimir.v1.PersonalBossLeave.$Shape): minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape;
+            static create(properties?: minimir.v1.PersonalBossLeave.$Properties): minimir.v1.PersonalBossLeave;
+
+            /**
+             * Encodes the specified PersonalBossLeave message. Does not implicitly {@link minimir.v1.PersonalBossLeave.verify|verify} messages.
+             * @param message PersonalBossLeave message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossLeave.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossLeave message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossLeave.verify|verify} messages.
+             * @param message PersonalBossLeave message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossLeave.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossLeave message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape} PersonalBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape;
+
+            /**
+             * Decodes a PersonalBossLeave message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape} PersonalBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape;
+
+            /**
+             * Verifies a PersonalBossLeave message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossLeave
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossLeave {
+
+            /** Properties of a PersonalBossLeave. */
+            interface $Properties {
+
+                /** PersonalBossLeave scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** PersonalBossLeave challenge_id */
+                challenge_id?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossLeave. */
+            type $Shape = minimir.v1.PersonalBossLeave.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossState.
+         * @deprecated Use minimir.v1.PersonalBossState.$Properties instead.
+         */
+        interface IPersonalBossState extends minimir.v1.PersonalBossState.$Properties {
+        }
+
+        /** Represents a PersonalBossState. */
+        class PersonalBossState {
+
+            /**
+             * Constructs a new PersonalBossState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossState challenge_id. */
+            challenge_id: string;
+
+            /** PersonalBossState scene_epoch. */
+            scene_epoch: Long;
+
+            /** PersonalBossState template_id. */
+            template_id: number;
+
+            /** PersonalBossState state. */
+            state: number;
+
+            /** PersonalBossState expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** PersonalBossState error_code. */
+            error_code: number;
+
+            /**
+             * Creates a new PersonalBossState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossState instance
+             */
+            static create(properties: minimir.v1.PersonalBossState.$Shape): minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape;
+            static create(properties?: minimir.v1.PersonalBossState.$Properties): minimir.v1.PersonalBossState;
+
+            /**
+             * Encodes the specified PersonalBossState message. Does not implicitly {@link minimir.v1.PersonalBossState.verify|verify} messages.
+             * @param message PersonalBossState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossState message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossState.verify|verify} messages.
+             * @param message PersonalBossState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape} PersonalBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape;
+
+            /**
+             * Decodes a PersonalBossState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape} PersonalBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape;
+
+            /**
+             * Verifies a PersonalBossState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossState {
+
+            /** Properties of a PersonalBossState. */
+            interface $Properties {
+
+                /** PersonalBossState challenge_id */
+                challenge_id?: (string|null);
+
+                /** PersonalBossState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** PersonalBossState template_id */
+                template_id?: (number|null);
+
+                /** PersonalBossState state */
+                state?: (number|null);
+
+                /** PersonalBossState expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** PersonalBossState error_code */
+                error_code?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossState. */
+            type $Shape = minimir.v1.PersonalBossState.$Properties;
         }
     }
 }

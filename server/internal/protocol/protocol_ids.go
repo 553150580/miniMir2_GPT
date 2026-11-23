@@ -63,6 +63,9 @@ const (
 	MsgC2SMapTravelCommit uint16 = 20009
 	MsgS2CMapTravelState uint16 = 20010
 	MsgS2CBindingState uint16 = 20011
+	MsgC2SPersonalBossEnter uint16 = 20012
+	MsgC2SPersonalBossLeave uint16 = 20013
+	MsgS2CPersonalBossState uint16 = 20014
 	MsgC2SWarehouseQuery uint16 = 40020
 	MsgS2CWarehousePage uint16 = 40021
 	MsgC2SWarehouseAction uint16 = 40022
@@ -70,6 +73,9 @@ const (
 	MsgC2SVendorQuote uint16 = 40024
 	MsgS2CVendorQuote uint16 = 40025
 	MsgC2SVendorCommit uint16 = 40026
+	MsgC2STaskCodexState uint16 = 40027
+	MsgS2CTaskCodexState uint16 = 40028
+	MsgC2STaskCodexClaim uint16 = 40029
 )
 
 const (
@@ -116,4 +122,6 @@ const (
 	CodeVendorQuoteStale uint32 = 3602
 	CodeVendorFunds uint32 = 3603
 	CodeVendorItemBlocked uint32 = 3604
+	CodeTaskCodexUnavailable uint32 = 3701
+	CodeTaskCodexDayChanged uint32 = 3702
 )

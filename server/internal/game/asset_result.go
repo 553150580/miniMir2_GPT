@@ -23,6 +23,10 @@ type assetBinding struct {
 // submitAsset 冻结原操作，提交事务，队列满时按原任务退避。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，q 记录资产请求，f 记录协议帧，reviveID 标识当前业务使用的复活。
 func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, reviveID string) {
+	// 首领副本只保留战斗快照，不能沿普通背包路径发起任何永久操作。
+	if r.bossBattle != nil {
+		return
+	}
 	if r.AssetGeneration == math.MaxUint64 {
 		w.isolateRoom(r)
 		return

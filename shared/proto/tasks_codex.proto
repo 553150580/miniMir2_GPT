@@ -1,0 +1,50 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+import "common.proto";
+
+// 查询当前会话角色的任务、成就和怪物图鉴。
+message TaskCodexStateRequest {}
+
+// 任务、成就和图鉴的展示、进度与领取状态均由角色所有者统一返回。
+message TaskCodexStateResult {
+  uint32 error_code = 1;
+  uint64 role_revision = 2;
+  uint64 rule_version = 3;
+  string day = 4;
+  uint32 activity = 5;
+  uint32 daily_claimed = 6;
+  uint32 daily_claim_limit = 7;
+  repeated TaskCodexStateRow rows = 8;
+}
+
+message TaskCodexStateRow {
+  // 1 主线、2 每日、3 成就、4 图鉴、5 每日活跃奖励。
+  uint32 kind = 1;
+  uint32 id = 2;
+  string name = 3;
+  int64 progress = 4;
+  int64 target = 5;
+  bool available = 6;
+  bool claimed = 7;
+  bool claimable = 8;
+  uint64 map_id = 9;
+  uint32 monster_id = 10;
+  int64 bound_gold = 11;
+  int64 bound_yuanbao_units = 12;
+  repeated TaskCodexRewardItem reward_items = 13;
+}
+
+// 只展示配置指定的绑定物品，领取时重新验证背包容量。
+message TaskCodexRewardItem {
+  uint32 item_id = 1;
+  int64 quantity = 2;
+}
+
+// 每日目标和活跃奖励必须带查询时的服务器运营日。
+message TaskCodexClaimRequest {
+  OperationContext operation = 1;
+  uint32 kind = 2;
+  uint32 id = 3;
+  string day = 4;
+}

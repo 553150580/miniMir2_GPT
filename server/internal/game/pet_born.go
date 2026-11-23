@@ -33,6 +33,9 @@ type petBornAttachment struct {
 // capturePetBornAttachment 返回“capture”宠物出生“attachment”供调用方使用。
 // r 指向当前执行器拥有并更新的目标房间。
 func capturePetBornAttachment(r *room) *petBornAttachment {
+	if r.personalBoss != nil && r.personalBoss.battle != nil {
+		return nil
+	}
 	if !r.Ready || r.Isolated || r.Auth.SessionEpoch <= 0 || r.Auth.RoleID != r.Role.ID || r.Conn == nil || !r.Conn.Alive() || r.Conn.Binding() != uint64(r.Auth.SessionEpoch) || r.Scene == 0 || r.Baseline == 0 {
 		return nil
 	}

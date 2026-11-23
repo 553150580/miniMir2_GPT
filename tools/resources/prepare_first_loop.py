@@ -19,6 +19,7 @@ import prepare_pet_runtime as pet_runtime
 import prepare_compact_towns as compact_towns
 import prepare_npc_shops as npc_shops
 import personal_map_contract as personal_map
+import prepare_tasks_codex as tasks_codex
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -28,7 +29,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile']
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile',*tasks_codex.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -987,6 +988,13 @@ def fixture_from_rows(tables):
             if selected is None or selected['base']!={key:value for key,value in result['pet'].items() if key!='undead'} or selected['undead']!=result['pet']['undead']:
                 raise ValueError('旧免费bootstrap必须与同源PetRuntime基础属性逐字段一致')
         result['pet_runtime']=pet_rules
+    progress_targets=tasks_codex.project(tables)
+    if progress_targets is not None:
+        result['tasks_codex']=progress_targets
+        result['_source_evidence']['tasks_codex']={
+            'tables':list(tasks_codex.TABLES),
+            'compiler_sha256':config.sha256(Path(tasks_codex.__file__)),
+            'scope':'开发候选目标及绑定奖励。正式数值、图鉴属性预算和特殊玩法任务未启用。'}
     return result
 
 def public_gameplay(fixture):

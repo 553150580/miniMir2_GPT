@@ -8,6 +8,7 @@ import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayba
 import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
 import { prepareMapSurface } from './MapSurface';
 import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
+import type { SpriteFrame } from 'cc';
 import { StatusEffects } from './StatusEffects';
 import { DisplacementEvent, EntityDisplacement } from './EntityDisplacement';
 import { SourceProjection } from './SourceProjection';
@@ -63,6 +64,7 @@ export class GameWorldView {
     private presentationCurrent: () => boolean = () => false;
     private retirePresentation: () => void = () => {};
     get audioAudit() { return this.audio?.audit ?? null; }
+    monsterCodexFrame(id: number): SpriteFrame | null { return this.assets?.monsterCodexFrame(id) ?? null; }
     get petAppearanceAudit() { return Object.freeze(Array.from(this.visuals.values()).filter(value => value.state.entityKind === 2).map(value => Object.freeze({
         handle: value.state.entityHandle, life: value.state.life.toString(), definitionId: value.state.definitionId, action: value.pose?.action ?? '',
         frame: value.pose?.frame ?? -1, direction: value.pose?.direction ?? -1, frames: Object.freeze(value.keys.slice()),
@@ -308,7 +310,9 @@ export class GameWorldView {
         for (const state of baseline.entities) {
             alive.add(state.entityHandle);
             let visual = this.visuals.get(state.entityHandle);
-            const profile = this.assets.profile(state, this.job);
+            // 城镇远端角色使用服务端同步的职业，其余实体继续使用当前角色的资源范围。
+            const entityJob = state.entityKind === 1 && state.entityHandle !== this.playerHandle ? state.definitionId : this.job;
+            const profile = this.assets.profile(state, entityJob);
             // 句柄是实体槽位；同槽位换定义或外观时，层数、头顶和动作必须取新模板。
             const replaced = visual && (visual.state.entityKind !== state.entityKind || visual.state.definitionId !== state.definitionId || visual.profile !== profile) ? visual : undefined;
             if (!visual || replaced) {
@@ -376,7 +380,8 @@ export class GameWorldView {
                 if (corpse) visual.node.setSiblingIndex(this.entities.getSiblingIndex());
             }
             const name = visual.node.getChildByName('Name')!;
-            const displayName = entityDisplayName(state.entityKind, state.definitionId, state.entityHandle === this.playerHandle ? this.playerName : '', this.job, this.gameplay);
+            const displayName = entityDisplayName(state.entityKind, state.definitionId,
+                state.entityHandle === this.playerHandle ? this.playerName : state.displayName ?? '', this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
             name.active = showHead && !!displayName;
             name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体` : displayName;

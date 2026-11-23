@@ -44,6 +44,8 @@ type AssetRequest struct {
 	Warehouse        *pb.WarehouseAction     // 仓库动作的完整协议参数。
 	Vendor           *pb.VendorCommitRequest // NPC 买卖或修理的报价提交参数。
 	VendorShop       string                  // 房间根据 NPC 与当前地图确定的商店身份。
+
+	TaskCodex *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -79,6 +81,10 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		return out, result, receipt, Fail(p.CodeInvalidArgument, "资产请求缺少16字节op_id")
 	}
 	result.OpId = q.Context.OpId
+	var taskEventAt time.Time // 事务重试在同一次任务处理内采用同一个运营时点。
+	if s.Cfg.Fixture.TasksCodex != nil {
+		taskEventAt = time.Now()
+	}
 	// 经济命令和服务端自动来源使用不同的序号与操作命名空间。
 	// opID 标识当前业务使用的操作。
 	opID := "asset:" + a.RoleID + ":" + domain.Hex(q.Context.OpId)
@@ -159,6 +165,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var warehouse *WarehouseReceipt
 		// vendor 保存实际成交的商人买卖或修理结果。
 		var vendor *VendorReceipt
+		var taskCodex *TaskCodexClaimReceipt // 首次领取确认的任务或图鉴奖励。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetVendor:
@@ -241,6 +248,12 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			potion = &PotionReceipt{Scene: strconv.FormatUint(q.SceneEpoch, 10), ItemID: effect.ItemID, HP: effect.HP, MP: effect.MP}
 		case "learn_skill":
 			r, businessCode = learnSkill(r, q, s.Cfg.Fixture)
+		case AssetTaskCodexClaim:
+			if q.TaskCodex == nil || !proto.Equal(q.TaskCodex.Operation, q.Context) {
+				businessCode = p.CodeInvalidArgument
+				break
+			}
+			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID)
 		case "set_casting_supply":
 			r, businessCode = setCastingSupply(r, q, s.Cfg.Fixture)
 		case "cast_material":
@@ -261,6 +274,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			equipment = nil
 			warehouse = nil
 			vendor = nil
+			taskCodex = nil
+		} else {
+			r = advanceAssetTasks(r, &s.Cfg.Fixture, q.Kind, recycling, taskEventAt)
 		}
 		if businessCode == 0 && len(r.Items) < r.Capacity {
 			r.PickupStopped = false
@@ -281,6 +297,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Equipment = cloneEquipmentReceipt(equipment)
 		op.Warehouse = cloneWarehouseReceipt(warehouse)
 		op.Vendor = vendor
+		op.TaskCodex = taskCodex
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -324,6 +341,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["recycling"] = recycling
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
+		}
+		if taskCodex != nil {
+			audit["tasks_codex_claim"] = taskCodex
 		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
@@ -384,6 +404,8 @@ func consumePotion(r domain.Role, q AssetRequest, fixture devconfig.Fixture) (do
 type Settlement struct {
 	SourceSeq        int64           // 同角色必须连续递增的来源序号。
 	Kills            int64           // 本来源对应的击杀次数。
+	MonsterID        uint32          `json:"monster_id,omitempty"` // 实际击杀的怪物配置号，旧来源或非击杀为零。
+	MapID            uint64          `json:"map_id,omitempty"`     // 原击杀发生的地图配置号，不随之后换图而变。
 	Experience       int64           // 应用等级及经验规则前的原始经验。
 	Gold             int64           // 本来源直接产生的金币，不含装备回收。
 	Bound            bool            // 直接金币应计入绑定钱包还是普通钱包。

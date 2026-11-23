@@ -96,7 +96,8 @@ func (r *room) availablePetHandle() (uint32, bool) {
 		}
 		return false
 	}
-	for high < math.MaxUint32 {
+	// 共享场景使用更高的观察句柄区间，本房间的宠物永不进入该区间。
+	for high < sharedTownHandleFirst-1 {
 		high++
 		if !used(high) {
 			return high, true

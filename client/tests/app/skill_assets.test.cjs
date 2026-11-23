@@ -18,6 +18,15 @@ function quote(input){return {previewId:id(9),kind:2,ruleVersion:'4',configHash:
     materials:[{item:{...input.inventory.items[0]},consumeQuantity:'2'},{item:{...input.inventory.items[2]},consumeQuantity:'5'}],outputs:[],
     stats:[{key:'base_power',beforeMin:'2',beforeMax:'3',afterMin:'3',afterMax:'5'},{key:'accuracy_bonus',beforeMin:'0',beforeMax:'0',afterMin:'3',afterMax:'3'}]};}
 
+test('圣言术升级报价展示第二段阈值和等级差说明', () => {
+    const input = snapshot(), first = quote(input);
+    first.stats = [{ key: 'turn_undead_base_threshold', beforeMin: '23', beforeMax: '23', afterMin: '31', afterMax: '31' }];
+    const lines = skillQuoteLines(first, input.definitions).join('\n');
+    assert.match(lines, /第二段基础阈值.*另加等级差/);
+    assert.match(lines, /当前值 23/);
+    assert.match(lines, /下一阶 31/);
+});
+
 test('购买数量显式增减并受当前SKU上限约束，不切换支付商品或币种',()=>{
     let amount=1n;for(let i=0;i<4;i++)amount=adjustPurchaseQuantity(amount,1,32);assert.equal(amount,5n);
     amount=adjustPurchaseQuantity(amount,-1,32);assert.equal(amount,4n);

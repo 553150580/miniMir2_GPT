@@ -44,6 +44,8 @@ type pendingCast struct {
 	BuffDurationMS int64
 	// Summon 记录召唤，使用召唤宠物计划表示。
 	Summon *summonPetPlan
+	// FireWall 保存已建立的火墙。字段为空时仍是第一次放置。
+	FireWall *fireWallField
 }
 
 // acceptInput 受理输入。

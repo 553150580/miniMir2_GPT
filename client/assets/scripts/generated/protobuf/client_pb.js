@@ -9768,6 +9768,7 @@ $root.minimir = (function() {
              * @property {number|null} [movement_kind] EntityState movement_kind
              * @property {minimir.v1.PetTrainingState.$Properties|null} [pet_training] EntityState pet_training
              * @property {boolean|null} [is_pet_corpse] EntityState is_pet_corpse
+             * @property {string|null} [display_name] EntityState display_name
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -9993,6 +9994,14 @@ $root.minimir = (function() {
             EntityState.prototype.is_pet_corpse = false;
 
             /**
+             * EntityState display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.EntityState
+             * @instance
+             */
+            EntityState.prototype.display_name = "";
+
+            /**
              * Creates a new EntityState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.EntityState
@@ -10073,6 +10082,8 @@ $root.minimir = (function() {
                     $root.minimir.v1.PetTrainingState.encode(message.pet_training, writer.uint32(/* id 23, wireType 2 =*/186).fork(), _depth + 1).ldelim();
                 if (message.is_pet_corpse != null && $Object.hasOwnProperty.call(message, "is_pet_corpse") && message.is_pet_corpse !== false)
                     writer.uint32(/* id 24, wireType 0 =*/192).bool(message.is_pet_corpse);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 25, wireType 2 =*/202).string(message.display_name);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -10336,6 +10347,15 @@ $root.minimir = (function() {
                                 delete message.is_pet_corpse;
                             continue;
                         }
+                    case 25: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -10468,6 +10488,9 @@ $root.minimir = (function() {
                 if (message.is_pet_corpse != null && $Object.hasOwnProperty.call(message, "is_pet_corpse"))
                     if (typeof message.is_pet_corpse !== "boolean")
                         return "is_pet_corpse: boolean expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
                 return null;
             };
 
@@ -30184,6 +30207,2434 @@ $root.minimir = (function() {
             };
 
             return VendorCommitRequest;
+        })();
+
+        v1.TaskCodexStateRequest = (function() {
+
+            /**
+             * Properties of a TaskCodexStateRequest.
+             * @typedef {Object} minimir.v1.TaskCodexStateRequest.$Properties
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TaskCodexStateRequest.
+             * @memberof minimir.v1
+             * @interface ITaskCodexStateRequest
+             * @augments minimir.v1.TaskCodexStateRequest.$Properties
+             * @deprecated Use minimir.v1.TaskCodexStateRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a TaskCodexStateRequest.
+             * @typedef {minimir.v1.TaskCodexStateRequest.$Properties} minimir.v1.TaskCodexStateRequest.$Shape
+             */
+
+            /**
+             * Constructs a new TaskCodexStateRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a TaskCodexStateRequest.
+             * @constructor
+             * @param {minimir.v1.TaskCodexStateRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TaskCodexStateRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Creates a new TaskCodexStateRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {minimir.v1.TaskCodexStateRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TaskCodexStateRequest} TaskCodexStateRequest instance
+             * @type {{
+             *   (properties: minimir.v1.TaskCodexStateRequest.$Shape): minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape;
+             *   (properties?: minimir.v1.TaskCodexStateRequest.$Properties): minimir.v1.TaskCodexStateRequest;
+             * }}
+             */
+            TaskCodexStateRequest.create = function(properties) {
+                return new TaskCodexStateRequest(properties);
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateRequest message. Does not implicitly {@link minimir.v1.TaskCodexStateRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {minimir.v1.TaskCodexStateRequest.$Properties} message TaskCodexStateRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateRequest message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {minimir.v1.TaskCodexStateRequest.$Properties} message TaskCodexStateRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TaskCodexStateRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape} TaskCodexStateRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TaskCodexStateRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    reader.skipType(tag & 7, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TaskCodexStateRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateRequest & minimir.v1.TaskCodexStateRequest.$Shape} TaskCodexStateRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TaskCodexStateRequest message.
+             * @function verify
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TaskCodexStateRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                return null;
+            };
+
+            /**
+             * Gets the type url for TaskCodexStateRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.TaskCodexStateRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TaskCodexStateRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TaskCodexStateRequest";
+            };
+
+            return TaskCodexStateRequest;
+        })();
+
+        v1.TaskCodexStateResult = (function() {
+
+            /**
+             * Properties of a TaskCodexStateResult.
+             * @typedef {Object} minimir.v1.TaskCodexStateResult.$Properties
+             * @property {number|null} [error_code] TaskCodexStateResult error_code
+             * @property {Long|null} [role_revision] TaskCodexStateResult role_revision
+             * @property {Long|null} [rule_version] TaskCodexStateResult rule_version
+             * @property {string|null} [day] TaskCodexStateResult day
+             * @property {number|null} [activity] TaskCodexStateResult activity
+             * @property {number|null} [daily_claimed] TaskCodexStateResult daily_claimed
+             * @property {number|null} [daily_claim_limit] TaskCodexStateResult daily_claim_limit
+             * @property {Array.<minimir.v1.TaskCodexStateRow.$Properties>|null} [rows] TaskCodexStateResult rows
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TaskCodexStateResult.
+             * @memberof minimir.v1
+             * @interface ITaskCodexStateResult
+             * @augments minimir.v1.TaskCodexStateResult.$Properties
+             * @deprecated Use minimir.v1.TaskCodexStateResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a TaskCodexStateResult.
+             * @typedef {minimir.v1.TaskCodexStateResult.$Properties} minimir.v1.TaskCodexStateResult.$Shape
+             */
+
+            /**
+             * Constructs a new TaskCodexStateResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a TaskCodexStateResult.
+             * @constructor
+             * @param {minimir.v1.TaskCodexStateResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TaskCodexStateResult = function (properties) {
+                this.rows = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TaskCodexStateResult error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.error_code = 0;
+
+            /**
+             * TaskCodexStateResult role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TaskCodexStateResult rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TaskCodexStateResult day.
+             * @member {string} day
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.day = "";
+
+            /**
+             * TaskCodexStateResult activity.
+             * @member {number} activity
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.activity = 0;
+
+            /**
+             * TaskCodexStateResult daily_claimed.
+             * @member {number} daily_claimed
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.daily_claimed = 0;
+
+            /**
+             * TaskCodexStateResult daily_claim_limit.
+             * @member {number} daily_claim_limit
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.daily_claim_limit = 0;
+
+            /**
+             * TaskCodexStateResult rows.
+             * @member {Array.<minimir.v1.TaskCodexStateRow.$Properties>} rows
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @instance
+             */
+            TaskCodexStateResult.prototype.rows = $util.emptyArray;
+
+            /**
+             * Creates a new TaskCodexStateResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {minimir.v1.TaskCodexStateResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TaskCodexStateResult} TaskCodexStateResult instance
+             * @type {{
+             *   (properties: minimir.v1.TaskCodexStateResult.$Shape): minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape;
+             *   (properties?: minimir.v1.TaskCodexStateResult.$Properties): minimir.v1.TaskCodexStateResult;
+             * }}
+             */
+            TaskCodexStateResult.create = function(properties) {
+                return new TaskCodexStateResult(properties);
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateResult message. Does not implicitly {@link minimir.v1.TaskCodexStateResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {minimir.v1.TaskCodexStateResult.$Properties} message TaskCodexStateResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.error_code);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.role_revision);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.day);
+                if (message.activity != null && $Object.hasOwnProperty.call(message, "activity") && message.activity !== 0)
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.activity);
+                if (message.daily_claimed != null && $Object.hasOwnProperty.call(message, "daily_claimed") && message.daily_claimed !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.daily_claimed);
+                if (message.daily_claim_limit != null && $Object.hasOwnProperty.call(message, "daily_claim_limit") && message.daily_claim_limit !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.daily_claim_limit);
+                if (message.rows != null && message.rows.length)
+                    for (var i = 0; i < message.rows.length; ++i)
+                        $root.minimir.v1.TaskCodexStateRow.encode(message.rows[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateResult message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {minimir.v1.TaskCodexStateResult.$Properties} message TaskCodexStateResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TaskCodexStateResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape} TaskCodexStateResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TaskCodexStateResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.activity = value;
+                            else
+                                delete message.activity;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_claimed = value;
+                            else
+                                delete message.daily_claimed;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_claim_limit = value;
+                            else
+                                delete message.daily_claim_limit;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.rows && message.rows.length))
+                                message.rows = [];
+                            message.rows.push($root.minimir.v1.TaskCodexStateRow.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TaskCodexStateResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateResult & minimir.v1.TaskCodexStateResult.$Shape} TaskCodexStateResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TaskCodexStateResult message.
+             * @function verify
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TaskCodexStateResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isString(message.day))
+                        return "day: string expected";
+                if (message.activity != null && $Object.hasOwnProperty.call(message, "activity"))
+                    if (!$util.isInteger(message.activity))
+                        return "activity: integer expected";
+                if (message.daily_claimed != null && $Object.hasOwnProperty.call(message, "daily_claimed"))
+                    if (!$util.isInteger(message.daily_claimed))
+                        return "daily_claimed: integer expected";
+                if (message.daily_claim_limit != null && $Object.hasOwnProperty.call(message, "daily_claim_limit"))
+                    if (!$util.isInteger(message.daily_claim_limit))
+                        return "daily_claim_limit: integer expected";
+                if (message.rows != null && $Object.hasOwnProperty.call(message, "rows")) {
+                    if (!$Array.isArray(message.rows))
+                        return "rows: array expected";
+                    for (var i = 0; i < message.rows.length; ++i) {
+                        var error = $root.minimir.v1.TaskCodexStateRow.verify(message.rows[i], _depth + 1);
+                        if (error)
+                            return "rows." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for TaskCodexStateResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.TaskCodexStateResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TaskCodexStateResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TaskCodexStateResult";
+            };
+
+            return TaskCodexStateResult;
+        })();
+
+        v1.TaskCodexStateRow = (function() {
+
+            /**
+             * Properties of a TaskCodexStateRow.
+             * @typedef {Object} minimir.v1.TaskCodexStateRow.$Properties
+             * @property {number|null} [kind] TaskCodexStateRow kind
+             * @property {number|null} [id] TaskCodexStateRow id
+             * @property {string|null} [name] TaskCodexStateRow name
+             * @property {Long|null} [progress] TaskCodexStateRow progress
+             * @property {Long|null} [target] TaskCodexStateRow target
+             * @property {boolean|null} [available] TaskCodexStateRow available
+             * @property {boolean|null} [claimed] TaskCodexStateRow claimed
+             * @property {boolean|null} [claimable] TaskCodexStateRow claimable
+             * @property {Long|null} [map_id] TaskCodexStateRow map_id
+             * @property {number|null} [monster_id] TaskCodexStateRow monster_id
+             * @property {Long|null} [bound_gold] TaskCodexStateRow bound_gold
+             * @property {Long|null} [bound_yuanbao_units] TaskCodexStateRow bound_yuanbao_units
+             * @property {Array.<minimir.v1.TaskCodexRewardItem.$Properties>|null} [reward_items] TaskCodexStateRow reward_items
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TaskCodexStateRow.
+             * @memberof minimir.v1
+             * @interface ITaskCodexStateRow
+             * @augments minimir.v1.TaskCodexStateRow.$Properties
+             * @deprecated Use minimir.v1.TaskCodexStateRow.$Properties instead.
+             */
+
+            /**
+             * Shape of a TaskCodexStateRow.
+             * @typedef {minimir.v1.TaskCodexStateRow.$Properties} minimir.v1.TaskCodexStateRow.$Shape
+             */
+
+            /**
+             * Constructs a new TaskCodexStateRow.
+             * @memberof minimir.v1
+             * @classdesc Represents a TaskCodexStateRow.
+             * @constructor
+             * @param {minimir.v1.TaskCodexStateRow.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TaskCodexStateRow = function (properties) {
+                this.reward_items = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TaskCodexStateRow kind.
+             * @member {number} kind
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.kind = 0;
+
+            /**
+             * TaskCodexStateRow id.
+             * @member {number} id
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.id = 0;
+
+            /**
+             * TaskCodexStateRow name.
+             * @member {string} name
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.name = "";
+
+            /**
+             * TaskCodexStateRow progress.
+             * @member {Long} progress
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.progress = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TaskCodexStateRow target.
+             * @member {Long} target
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.target = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TaskCodexStateRow available.
+             * @member {boolean} available
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.available = false;
+
+            /**
+             * TaskCodexStateRow claimed.
+             * @member {boolean} claimed
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.claimed = false;
+
+            /**
+             * TaskCodexStateRow claimable.
+             * @member {boolean} claimable
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.claimable = false;
+
+            /**
+             * TaskCodexStateRow map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * TaskCodexStateRow monster_id.
+             * @member {number} monster_id
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.monster_id = 0;
+
+            /**
+             * TaskCodexStateRow bound_gold.
+             * @member {Long} bound_gold
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.bound_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TaskCodexStateRow bound_yuanbao_units.
+             * @member {Long} bound_yuanbao_units
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.bound_yuanbao_units = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * TaskCodexStateRow reward_items.
+             * @member {Array.<minimir.v1.TaskCodexRewardItem.$Properties>} reward_items
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @instance
+             */
+            TaskCodexStateRow.prototype.reward_items = $util.emptyArray;
+
+            /**
+             * Creates a new TaskCodexStateRow instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {minimir.v1.TaskCodexStateRow.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TaskCodexStateRow} TaskCodexStateRow instance
+             * @type {{
+             *   (properties: minimir.v1.TaskCodexStateRow.$Shape): minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape;
+             *   (properties?: minimir.v1.TaskCodexStateRow.$Properties): minimir.v1.TaskCodexStateRow;
+             * }}
+             */
+            TaskCodexStateRow.create = function(properties) {
+                return new TaskCodexStateRow(properties);
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateRow message. Does not implicitly {@link minimir.v1.TaskCodexStateRow.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {minimir.v1.TaskCodexStateRow.$Properties} message TaskCodexStateRow message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateRow.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.kind);
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && message.id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.id);
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name") && message.name !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.name);
+                if (message.progress != null && $Object.hasOwnProperty.call(message, "progress") && (typeof message.progress === "object" ? message.progress.low || message.progress.high : message.progress !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.progress);
+                if (message.target != null && $Object.hasOwnProperty.call(message, "target") && (typeof message.target === "object" ? message.target.low || message.target.high : message.target !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.target);
+                if (message.available != null && $Object.hasOwnProperty.call(message, "available") && message.available !== false)
+                    writer.uint32(/* id 6, wireType 0 =*/48).bool(message.available);
+                if (message.claimed != null && $Object.hasOwnProperty.call(message, "claimed") && message.claimed !== false)
+                    writer.uint32(/* id 7, wireType 0 =*/56).bool(message.claimed);
+                if (message.claimable != null && $Object.hasOwnProperty.call(message, "claimable") && message.claimable !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.claimable);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.map_id);
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id") && message.monster_id !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.monster_id);
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold") && (typeof message.bound_gold === "object" ? message.bound_gold.low || message.bound_gold.high : message.bound_gold !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.bound_gold);
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units") && (typeof message.bound_yuanbao_units === "object" ? message.bound_yuanbao_units.low || message.bound_yuanbao_units.high : message.bound_yuanbao_units !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.bound_yuanbao_units);
+                if (message.reward_items != null && message.reward_items.length)
+                    for (var i = 0; i < message.reward_items.length; ++i)
+                        $root.minimir.v1.TaskCodexRewardItem.encode(message.reward_items[i], writer.uint32(/* id 13, wireType 2 =*/106).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TaskCodexStateRow message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexStateRow.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {minimir.v1.TaskCodexStateRow.$Properties} message TaskCodexStateRow message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexStateRow.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TaskCodexStateRow message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape} TaskCodexStateRow
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateRow.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TaskCodexStateRow();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.name = value;
+                            else
+                                delete message.name;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.progress = value;
+                            else
+                                delete message.progress;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.target = value;
+                            else
+                                delete message.target;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.available = value;
+                            else
+                                delete message.available;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.claimed = value;
+                            else
+                                delete message.claimed;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.claimable = value;
+                            else
+                                delete message.claimable;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.monster_id = value;
+                            else
+                                delete message.monster_id;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold = value;
+                            else
+                                delete message.bound_gold;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_yuanbao_units = value;
+                            else
+                                delete message.bound_yuanbao_units;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.reward_items && message.reward_items.length))
+                                message.reward_items = [];
+                            message.reward_items.push($root.minimir.v1.TaskCodexRewardItem.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TaskCodexStateRow message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexStateRow & minimir.v1.TaskCodexStateRow.$Shape} TaskCodexStateRow
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexStateRow.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TaskCodexStateRow message.
+             * @function verify
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TaskCodexStateRow.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id))
+                        return "id: integer expected";
+                if (message.name != null && $Object.hasOwnProperty.call(message, "name"))
+                    if (!$util.isString(message.name))
+                        return "name: string expected";
+                if (message.progress != null && $Object.hasOwnProperty.call(message, "progress"))
+                    if (!$util.isInteger(message.progress) && !(message.progress && $util.isInteger(message.progress.low) && $util.isInteger(message.progress.high)))
+                        return "progress: integer|Long expected";
+                if (message.target != null && $Object.hasOwnProperty.call(message, "target"))
+                    if (!$util.isInteger(message.target) && !(message.target && $util.isInteger(message.target.low) && $util.isInteger(message.target.high)))
+                        return "target: integer|Long expected";
+                if (message.available != null && $Object.hasOwnProperty.call(message, "available"))
+                    if (typeof message.available !== "boolean")
+                        return "available: boolean expected";
+                if (message.claimed != null && $Object.hasOwnProperty.call(message, "claimed"))
+                    if (typeof message.claimed !== "boolean")
+                        return "claimed: boolean expected";
+                if (message.claimable != null && $Object.hasOwnProperty.call(message, "claimable"))
+                    if (typeof message.claimable !== "boolean")
+                        return "claimable: boolean expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id"))
+                    if (!$util.isInteger(message.monster_id))
+                        return "monster_id: integer expected";
+                if (message.bound_gold != null && $Object.hasOwnProperty.call(message, "bound_gold"))
+                    if (!$util.isInteger(message.bound_gold) && !(message.bound_gold && $util.isInteger(message.bound_gold.low) && $util.isInteger(message.bound_gold.high)))
+                        return "bound_gold: integer|Long expected";
+                if (message.bound_yuanbao_units != null && $Object.hasOwnProperty.call(message, "bound_yuanbao_units"))
+                    if (!$util.isInteger(message.bound_yuanbao_units) && !(message.bound_yuanbao_units && $util.isInteger(message.bound_yuanbao_units.low) && $util.isInteger(message.bound_yuanbao_units.high)))
+                        return "bound_yuanbao_units: integer|Long expected";
+                if (message.reward_items != null && $Object.hasOwnProperty.call(message, "reward_items")) {
+                    if (!$Array.isArray(message.reward_items))
+                        return "reward_items: array expected";
+                    for (var i = 0; i < message.reward_items.length; ++i) {
+                        var error = $root.minimir.v1.TaskCodexRewardItem.verify(message.reward_items[i], _depth + 1);
+                        if (error)
+                            return "reward_items." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for TaskCodexStateRow
+             * @function getTypeUrl
+             * @memberof minimir.v1.TaskCodexStateRow
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TaskCodexStateRow.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TaskCodexStateRow";
+            };
+
+            return TaskCodexStateRow;
+        })();
+
+        v1.TaskCodexRewardItem = (function() {
+
+            /**
+             * Properties of a TaskCodexRewardItem.
+             * @typedef {Object} minimir.v1.TaskCodexRewardItem.$Properties
+             * @property {number|null} [item_id] TaskCodexRewardItem item_id
+             * @property {Long|null} [quantity] TaskCodexRewardItem quantity
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TaskCodexRewardItem.
+             * @memberof minimir.v1
+             * @interface ITaskCodexRewardItem
+             * @augments minimir.v1.TaskCodexRewardItem.$Properties
+             * @deprecated Use minimir.v1.TaskCodexRewardItem.$Properties instead.
+             */
+
+            /**
+             * Shape of a TaskCodexRewardItem.
+             * @typedef {minimir.v1.TaskCodexRewardItem.$Properties} minimir.v1.TaskCodexRewardItem.$Shape
+             */
+
+            /**
+             * Constructs a new TaskCodexRewardItem.
+             * @memberof minimir.v1
+             * @classdesc Represents a TaskCodexRewardItem.
+             * @constructor
+             * @param {minimir.v1.TaskCodexRewardItem.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TaskCodexRewardItem = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TaskCodexRewardItem item_id.
+             * @member {number} item_id
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @instance
+             */
+            TaskCodexRewardItem.prototype.item_id = 0;
+
+            /**
+             * TaskCodexRewardItem quantity.
+             * @member {Long} quantity
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @instance
+             */
+            TaskCodexRewardItem.prototype.quantity = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new TaskCodexRewardItem instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {minimir.v1.TaskCodexRewardItem.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TaskCodexRewardItem} TaskCodexRewardItem instance
+             * @type {{
+             *   (properties: minimir.v1.TaskCodexRewardItem.$Shape): minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape;
+             *   (properties?: minimir.v1.TaskCodexRewardItem.$Properties): minimir.v1.TaskCodexRewardItem;
+             * }}
+             */
+            TaskCodexRewardItem.create = function(properties) {
+                return new TaskCodexRewardItem(properties);
+            };
+
+            /**
+             * Encodes the specified TaskCodexRewardItem message. Does not implicitly {@link minimir.v1.TaskCodexRewardItem.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {minimir.v1.TaskCodexRewardItem.$Properties} message TaskCodexRewardItem message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexRewardItem.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id") && message.item_id !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.item_id);
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity") && (typeof message.quantity === "object" ? message.quantity.low || message.quantity.high : message.quantity !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.quantity);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TaskCodexRewardItem message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexRewardItem.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {minimir.v1.TaskCodexRewardItem.$Properties} message TaskCodexRewardItem message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexRewardItem.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TaskCodexRewardItem message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape} TaskCodexRewardItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexRewardItem.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TaskCodexRewardItem();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.item_id = value;
+                            else
+                                delete message.item_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quantity = value;
+                            else
+                                delete message.quantity;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TaskCodexRewardItem message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexRewardItem & minimir.v1.TaskCodexRewardItem.$Shape} TaskCodexRewardItem
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexRewardItem.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TaskCodexRewardItem message.
+             * @function verify
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TaskCodexRewardItem.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.item_id != null && $Object.hasOwnProperty.call(message, "item_id"))
+                    if (!$util.isInteger(message.item_id))
+                        return "item_id: integer expected";
+                if (message.quantity != null && $Object.hasOwnProperty.call(message, "quantity"))
+                    if (!$util.isInteger(message.quantity) && !(message.quantity && $util.isInteger(message.quantity.low) && $util.isInteger(message.quantity.high)))
+                        return "quantity: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for TaskCodexRewardItem
+             * @function getTypeUrl
+             * @memberof minimir.v1.TaskCodexRewardItem
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TaskCodexRewardItem.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TaskCodexRewardItem";
+            };
+
+            return TaskCodexRewardItem;
+        })();
+
+        v1.TaskCodexClaimRequest = (function() {
+
+            /**
+             * Properties of a TaskCodexClaimRequest.
+             * @typedef {Object} minimir.v1.TaskCodexClaimRequest.$Properties
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] TaskCodexClaimRequest operation
+             * @property {number|null} [kind] TaskCodexClaimRequest kind
+             * @property {number|null} [id] TaskCodexClaimRequest id
+             * @property {string|null} [day] TaskCodexClaimRequest day
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a TaskCodexClaimRequest.
+             * @memberof minimir.v1
+             * @interface ITaskCodexClaimRequest
+             * @augments minimir.v1.TaskCodexClaimRequest.$Properties
+             * @deprecated Use minimir.v1.TaskCodexClaimRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a TaskCodexClaimRequest.
+             * @typedef {minimir.v1.TaskCodexClaimRequest.$Properties} minimir.v1.TaskCodexClaimRequest.$Shape
+             */
+
+            /**
+             * Constructs a new TaskCodexClaimRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a TaskCodexClaimRequest.
+             * @constructor
+             * @param {minimir.v1.TaskCodexClaimRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var TaskCodexClaimRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * TaskCodexClaimRequest operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @instance
+             */
+            TaskCodexClaimRequest.prototype.operation = null;
+
+            /**
+             * TaskCodexClaimRequest kind.
+             * @member {number} kind
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @instance
+             */
+            TaskCodexClaimRequest.prototype.kind = 0;
+
+            /**
+             * TaskCodexClaimRequest id.
+             * @member {number} id
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @instance
+             */
+            TaskCodexClaimRequest.prototype.id = 0;
+
+            /**
+             * TaskCodexClaimRequest day.
+             * @member {string} day
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @instance
+             */
+            TaskCodexClaimRequest.prototype.day = "";
+
+            /**
+             * Creates a new TaskCodexClaimRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {minimir.v1.TaskCodexClaimRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.TaskCodexClaimRequest} TaskCodexClaimRequest instance
+             * @type {{
+             *   (properties: minimir.v1.TaskCodexClaimRequest.$Shape): minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape;
+             *   (properties?: minimir.v1.TaskCodexClaimRequest.$Properties): minimir.v1.TaskCodexClaimRequest;
+             * }}
+             */
+            TaskCodexClaimRequest.create = function(properties) {
+                return new TaskCodexClaimRequest(properties);
+            };
+
+            /**
+             * Encodes the specified TaskCodexClaimRequest message. Does not implicitly {@link minimir.v1.TaskCodexClaimRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {minimir.v1.TaskCodexClaimRequest.$Properties} message TaskCodexClaimRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexClaimRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind") && message.kind !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.kind);
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id") && message.id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.id);
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.day);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified TaskCodexClaimRequest message, length delimited. Does not implicitly {@link minimir.v1.TaskCodexClaimRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {minimir.v1.TaskCodexClaimRequest.$Properties} message TaskCodexClaimRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            TaskCodexClaimRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a TaskCodexClaimRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape} TaskCodexClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexClaimRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.TaskCodexClaimRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.kind = value;
+                            else
+                                delete message.kind;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.id = value;
+                            else
+                                delete message.id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a TaskCodexClaimRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.TaskCodexClaimRequest & minimir.v1.TaskCodexClaimRequest.$Shape} TaskCodexClaimRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            TaskCodexClaimRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a TaskCodexClaimRequest message.
+             * @function verify
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            TaskCodexClaimRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                if (message.kind != null && $Object.hasOwnProperty.call(message, "kind"))
+                    if (!$util.isInteger(message.kind))
+                        return "kind: integer expected";
+                if (message.id != null && $Object.hasOwnProperty.call(message, "id"))
+                    if (!$util.isInteger(message.id))
+                        return "id: integer expected";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isString(message.day))
+                        return "day: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for TaskCodexClaimRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.TaskCodexClaimRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            TaskCodexClaimRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.TaskCodexClaimRequest";
+            };
+
+            return TaskCodexClaimRequest;
+        })();
+
+        v1.PersonalBossEnter = (function() {
+
+            /**
+             * Properties of a PersonalBossEnter.
+             * @typedef {Object} minimir.v1.PersonalBossEnter.$Properties
+             * @property {Long|null} [scene_epoch] PersonalBossEnter scene_epoch
+             * @property {string|null} [challenge_id] PersonalBossEnter challenge_id
+             * @property {number|null} [template_id] PersonalBossEnter template_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossEnter.
+             * @memberof minimir.v1
+             * @interface IPersonalBossEnter
+             * @augments minimir.v1.PersonalBossEnter.$Properties
+             * @deprecated Use minimir.v1.PersonalBossEnter.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossEnter.
+             * @typedef {minimir.v1.PersonalBossEnter.$Properties} minimir.v1.PersonalBossEnter.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossEnter.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossEnter.
+             * @constructor
+             * @param {minimir.v1.PersonalBossEnter.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossEnter = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossEnter scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.PersonalBossEnter
+             * @instance
+             */
+            PersonalBossEnter.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossEnter challenge_id.
+             * @member {string} challenge_id
+             * @memberof minimir.v1.PersonalBossEnter
+             * @instance
+             */
+            PersonalBossEnter.prototype.challenge_id = "";
+
+            /**
+             * PersonalBossEnter template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.PersonalBossEnter
+             * @instance
+             */
+            PersonalBossEnter.prototype.template_id = 0;
+
+            /**
+             * Creates a new PersonalBossEnter instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {minimir.v1.PersonalBossEnter.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossEnter} PersonalBossEnter instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossEnter.$Shape): minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape;
+             *   (properties?: minimir.v1.PersonalBossEnter.$Properties): minimir.v1.PersonalBossEnter;
+             * }}
+             */
+            PersonalBossEnter.create = function(properties) {
+                return new PersonalBossEnter(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossEnter message. Does not implicitly {@link minimir.v1.PersonalBossEnter.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {minimir.v1.PersonalBossEnter.$Properties} message PersonalBossEnter message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossEnter.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.challenge_id);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.template_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossEnter message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossEnter.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {minimir.v1.PersonalBossEnter.$Properties} message PersonalBossEnter message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossEnter.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossEnter message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape} PersonalBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossEnter.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossEnter();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossEnter message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossEnter & minimir.v1.PersonalBossEnter.$Shape} PersonalBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossEnter.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossEnter message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossEnter.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!$util.isString(message.challenge_id))
+                        return "challenge_id: string expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossEnter
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossEnter
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossEnter.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossEnter";
+            };
+
+            return PersonalBossEnter;
+        })();
+
+        v1.PersonalBossLeave = (function() {
+
+            /**
+             * Properties of a PersonalBossLeave.
+             * @typedef {Object} minimir.v1.PersonalBossLeave.$Properties
+             * @property {Long|null} [scene_epoch] PersonalBossLeave scene_epoch
+             * @property {string|null} [challenge_id] PersonalBossLeave challenge_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossLeave.
+             * @memberof minimir.v1
+             * @interface IPersonalBossLeave
+             * @augments minimir.v1.PersonalBossLeave.$Properties
+             * @deprecated Use minimir.v1.PersonalBossLeave.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossLeave.
+             * @typedef {minimir.v1.PersonalBossLeave.$Properties} minimir.v1.PersonalBossLeave.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossLeave.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossLeave.
+             * @constructor
+             * @param {minimir.v1.PersonalBossLeave.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossLeave = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossLeave scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.PersonalBossLeave
+             * @instance
+             */
+            PersonalBossLeave.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossLeave challenge_id.
+             * @member {string} challenge_id
+             * @memberof minimir.v1.PersonalBossLeave
+             * @instance
+             */
+            PersonalBossLeave.prototype.challenge_id = "";
+
+            /**
+             * Creates a new PersonalBossLeave instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {minimir.v1.PersonalBossLeave.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossLeave} PersonalBossLeave instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossLeave.$Shape): minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape;
+             *   (properties?: minimir.v1.PersonalBossLeave.$Properties): minimir.v1.PersonalBossLeave;
+             * }}
+             */
+            PersonalBossLeave.create = function(properties) {
+                return new PersonalBossLeave(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossLeave message. Does not implicitly {@link minimir.v1.PersonalBossLeave.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {minimir.v1.PersonalBossLeave.$Properties} message PersonalBossLeave message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossLeave.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.challenge_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossLeave message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossLeave.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {minimir.v1.PersonalBossLeave.$Properties} message PersonalBossLeave message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossLeave.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossLeave message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape} PersonalBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossLeave.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossLeave();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossLeave message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossLeave & minimir.v1.PersonalBossLeave.$Shape} PersonalBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossLeave.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossLeave message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossLeave.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!$util.isString(message.challenge_id))
+                        return "challenge_id: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossLeave
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossLeave
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossLeave.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossLeave";
+            };
+
+            return PersonalBossLeave;
+        })();
+
+        v1.PersonalBossState = (function() {
+
+            /**
+             * Properties of a PersonalBossState.
+             * @typedef {Object} minimir.v1.PersonalBossState.$Properties
+             * @property {string|null} [challenge_id] PersonalBossState challenge_id
+             * @property {Long|null} [scene_epoch] PersonalBossState scene_epoch
+             * @property {number|null} [template_id] PersonalBossState template_id
+             * @property {number|null} [state] PersonalBossState state
+             * @property {Long|null} [expires_at_unix_ms] PersonalBossState expires_at_unix_ms
+             * @property {number|null} [error_code] PersonalBossState error_code
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossState.
+             * @memberof minimir.v1
+             * @interface IPersonalBossState
+             * @augments minimir.v1.PersonalBossState.$Properties
+             * @deprecated Use minimir.v1.PersonalBossState.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossState.
+             * @typedef {minimir.v1.PersonalBossState.$Properties} minimir.v1.PersonalBossState.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossState.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossState.
+             * @constructor
+             * @param {minimir.v1.PersonalBossState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossState = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossState challenge_id.
+             * @member {string} challenge_id
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.challenge_id = "";
+
+            /**
+             * PersonalBossState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossState template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.template_id = 0;
+
+            /**
+             * PersonalBossState state.
+             * @member {number} state
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.state = 0;
+
+            /**
+             * PersonalBossState expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.PersonalBossState
+             * @instance
+             */
+            PersonalBossState.prototype.error_code = 0;
+
+            /**
+             * Creates a new PersonalBossState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {minimir.v1.PersonalBossState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossState} PersonalBossState instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossState.$Shape): minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape;
+             *   (properties?: minimir.v1.PersonalBossState.$Properties): minimir.v1.PersonalBossState;
+             * }}
+             */
+            PersonalBossState.create = function(properties) {
+                return new PersonalBossState(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossState message. Does not implicitly {@link minimir.v1.PersonalBossState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {minimir.v1.PersonalBossState.$Properties} message PersonalBossState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.challenge_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.template_id);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.state);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.expires_at_unix_ms);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.error_code);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossState message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {minimir.v1.PersonalBossState.$Properties} message PersonalBossState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape} PersonalBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossState & minimir.v1.PersonalBossState.$Shape} PersonalBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossState message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!$util.isString(message.challenge_id))
+                        return "challenge_id: string expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossState
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossState";
+            };
+
+            return PersonalBossState;
         })();
 
         return v1;

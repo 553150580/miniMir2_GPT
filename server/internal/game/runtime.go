@@ -68,6 +68,7 @@ type Engine struct {
 	baseline         atomic.Uint64                 // 跨分片分配客户端场景基线编号。
 	stopped          atomic.Bool                   // 表示已冻结新增游戏操作，停服时仍可处理已受理回执。
 	TownGrids        map[uint64]*townnav.Grid      // 按城镇地图编号保存可共用的导航静态网格。
+	sharedTowns      sharedTownDirectory           // 当前引擎每个运行服的共享城镇席位与动态占格。
 }
 
 // workerCount 固定角色散列的分片数量。
@@ -129,6 +130,9 @@ type room struct {
 	PersonalWorld         *worldState               // 此角色独有的挂机世界，切到城镇时仍可保留原现场。
 	TownWorld             *worldState               // 当前持有的城镇世界引用。
 	TownWorlds            []*worldState             // 已创建的其他城镇现场，用于按地图查找和保留事件归属。
+	townMembership        townMembership            // 角色当前的共享城镇席位，由所属分片管理。
+	personalBoss          *personalBossRun          // 永久角色房间正在批准、观察或结算的独享挑战。
+	bossBattle            *personalBossBattle       // 独享挑战子房间只持有临时战斗能力，不能直接写永久数据。
 	ExecutionEpoch        uint64                    // 此房间在当前进程中的唯一执行代次。
 	WorldSequence         uint64                    // 从同一执行代次分配世界编号的水位。
 	InflightEvents        int                       // 已移入到期处理批次的事件数量。
@@ -378,6 +382,7 @@ func (e *Engine) Stop() {
 		e.post(w, command{done: func(w *worker) {
 			// r 接收遍历房间集合时当前的元素。
 			for _, r := range w.rooms {
+				w.leaveSharedTown(r)
 				w.cancelTownNavigation(r)
 				w.cancelMapTravelOnDetach(r)
 				if r.Conn != nil {
@@ -399,6 +404,7 @@ func (e *Engine) Stop() {
 	for _, w := range e.workers {
 		// r 接收遍历房间集合时当前的元素。
 		for _, r := range w.rooms {
+			w.leaveSharedTown(r)
 			if r.Conn != nil {
 				r.Conn.Close("maintenance")
 				r.Conn = nil
@@ -435,6 +441,7 @@ func (w *worker) loop() {
 						// 冷入场查证时还没有场景，但也需要继续重投原任务。
 						w.retryPendingRoom(r, c.tick)
 					}
+					w.stepPersonalBoss(r, c.tick)
 					w.step(r, c.tick)
 					w.expireIdleRoom(roleID, r, c.tick)
 				}
@@ -470,6 +477,18 @@ func (w *worker) command(c command) {
 		if !c.conn.Alive() {
 			return
 		}
+		if r != nil && r.personalBoss != nil {
+			w.interruptPersonalBoss(r, time.Now())
+			// 即使中断尚未拿到永久操作槽，也先等待同一场次收束，不能抢走原会话。
+			if r.personalBoss != nil && !r.Pending {
+				if len(r.Waiting) >= 2 {
+					rejectEntry(c.conn, c.frame.Request, p.CodeLineRecovering, "challenge is closing")
+				} else {
+					r.Waiting = append(r.Waiting, c)
+				}
+				return
+			}
+		}
 		if r != nil && w.queueEntryAfterSettlement(r, c) {
 			return
 		}
@@ -504,6 +523,8 @@ func (w *worker) command(c command) {
 	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			w.interruptPersonalBoss(r, time.Now())
+			w.leaveSharedTown(r)
 			w.cancelMapTravelOnDetach(r)
 			w.cancelTownNavigation(r)
 			r.PreviewGeneration++
@@ -539,6 +560,14 @@ func (w *worker) command(c command) {
 		w.failure(r, c.frame, p.CodeLineRecovering)
 		return
 	}
+	if w.personalBossCommand(r, c) {
+		return
+	}
+	w.roomCommand(r, c)
+}
+
+// roomCommand 接收已经按角色附着和场景白名单分流的指令，普通和首领场景复用格子行动核心。
+func (w *worker) roomCommand(r *room, c command) {
 	if c.frame.ID == p.MsgC2SEnterWorldAck {
 		if r.Ready {
 			return
@@ -635,6 +664,8 @@ func (w *worker) command(c command) {
 		w.vendorPreview(r, c.frame)
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
+	case p.MsgC2STaskCodexState:
+		w.taskCodexQuery(r, c.frame)
 	case p.MsgC2SMoveIntent:
 		// q 记录移动意图。
 		var q pb.MoveIntent
@@ -701,7 +732,7 @@ func (w *worker) command(c command) {
 		}
 		if q.SkillId != 0 {
 			// code 是带自动补蓝判定的施法受理结果。
-			if code := w.castWithManaRecovery(r, &q, time.Now()); code != 0 {
+			if code := w.castRoomIntent(r, &q, time.Now()); code != 0 {
 				w.failure(r, c.frame, code)
 			}
 			return
@@ -713,7 +744,7 @@ func (w *worker) command(c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -735,6 +766,7 @@ func (w *worker) enterLineResult(r *room) *pb.EnterLineResult {
 // initialize 用数据库角色创建冷启动房间，初始化个人场景、身体和临时状态。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，role 记录角色。
 func (w *worker) initialize(r *room, role domain.Role) {
+	w.leaveSharedTown(r)
 	w.cancelTownNavigation(r)
 	r.PetBornReady = nil
 	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
@@ -811,6 +843,11 @@ func (w *worker) revivePlayer(r *room) {
 		w.isolateRoom(r)
 		return
 	}
+	spawn, reserved := w.reserveSharedTownRevival(r, m)
+	if !reserved {
+		w.isolateRoom(r)
+		return
+	}
 	r.Player.Life++
 	r.AutoTarget = actorRef{}
 	r.Player.MovementRevision, r.Player.MovementKind = 0, movementInitial
@@ -826,7 +863,7 @@ func (w *worker) revivePlayer(r *room) {
 	r.Melee.Revision++
 	r.Player.HP = r.Player.MaxHP
 	r.Player.MP = r.Player.MaxMP
-	if !w.relocate(r, &r.Player, m.PlayerSpawn) {
+	if !w.relocate(r, &r.Player, spawn) {
 		return
 	}
 	r.Player.Action = 0
@@ -839,7 +876,7 @@ func (w *worker) revivePlayer(r *room) {
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，id 区分当前步骤指向的目标对象，request 关联客户端请求与服务端的对应响应。
 // msg 记录“msg”，使用消息表示。
 func (w *worker) send(r *room, id uint16, request uint32, msg proto.Message) {
-	if r.Isolated {
+	if r.Isolated || suppressOrdinaryObservation(r, id) {
 		return
 	}
 	if !r.Ready {
@@ -902,7 +939,7 @@ func (w *worker) snapshot(r *room) {
 // 入场基线在ACK之前发送；周期同步仍经snapshot的Ready门槛。明确取消沿同一请求号确认后才关闭连接。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，request 记录请求，使用可变数量的数值表示。
 func (w *worker) baseline(r *room, request ...uint32) {
-	if r.Conn == nil {
+	if r.Conn == nil || suppressOrdinaryObservation(r, p.MsgS2CSceneBaseline) {
 		return
 	}
 	// requestID 标识当前业务使用的请求。
@@ -967,6 +1004,7 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 		}
 		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind, PetTraining: petTrainingPB(e), IsPetCorpse: e.IsPetCorpse})
 	}
+	w.appendSharedTownViews(r, out)
 	return splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
 }
 
@@ -982,6 +1020,14 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2STaskCodexClaim:
+		// 领取只携带目录编号和查询时的运营日，进度及奖励由角色事务重新校验。
+		var x pb.TaskCodexClaimRequest
+		if proto.Unmarshal(f.Payload, &x) != nil || len(x.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.TaskCodex = persistence.AssetTaskCodexClaim, x.Operation, &x
 	case p.MsgC2SVendorCommit:
 		// x 记录商人提交请求。
 		var x pb.VendorCommitRequest
@@ -1132,7 +1178,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim:
 		return true
 	}
 	return false
@@ -1144,6 +1190,12 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2STaskCodexClaim:
+		// 提取同一领取请求的幂等身份，供错误回包和原请求对账使用。
+		q := &pb.TaskCodexClaimRequest{}
+		if proto.Unmarshal(f.Payload, q) == nil {
+			op = q.Operation
+		}
 	case p.MsgC2SVendorCommit:
 		// q 保存当前处理所用的商人提交请求。
 		q := &pb.VendorCommitRequest{}

@@ -164,6 +164,10 @@ type Role struct {
 	Binding                      *RoleBinding      `bson:"binding,omitempty" json:"binding,omitempty"`                                     // 已持久确认的安全点，不随当前位置更新。
 	BindingSourceSeq             int64             `bson:"binding_source_seq,omitempty" json:"-"`                                          // 最后一次确认绑定的服务端来源序号。
 	BindingSafeZoneID            uint64            `bson:"-" json:"-"`                                                                     // 读取时核对出的可信安全区号，由配置推导。
+
+	TasksCodex *TaskCodexProgress `bson:"tasks_codex,omitempty" json:"tasks_codex,omitempty"` // 角色的已确认任务、成就和图鉴进度，旧角色从空进度开始。
+
+	PersonalBoss *PersonalBossProgress `bson:"personal_boss,omitempty" json:"personal_boss,omitempty"` // 个人首领预约、成功次数及冷却。
 }
 
 // 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。

@@ -50,6 +50,9 @@ func (s *equipmentWearState) loss(item domain.Item, slot uint32) int64 {
 // weaponWear 处理“weapon”磨损。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) weaponWear(r *room, now time.Time) {
+	if r.bossBattle != nil {
+		return
+	}
 	// rules 保存装备耐久，用于当前步骤中的规则集合。
 	rules := w.e.Store.Cfg.Fixture.EquipmentDurability
 	if rules == nil {
@@ -72,6 +75,9 @@ func (w *worker) weaponWear(r *room, now time.Time) {
 // receivedWear 处理“received”磨损。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，death 标记是否处于死亡状态，now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) receivedWear(r *room, death bool, now time.Time) {
+	if r.bossBattle != nil {
+		return
+	}
 	// rules 保存装备耐久，用于当前步骤中的规则集合。
 	rules := w.e.Store.Cfg.Fixture.EquipmentDurability
 	if rules == nil {

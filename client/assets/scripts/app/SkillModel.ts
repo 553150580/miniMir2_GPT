@@ -6,7 +6,8 @@ export interface SkillDefinition {
     id: number; name: string; job_id: number; book_item_id: number; learn_level: number; initial_level: number;
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
-        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport' | 'summon_pet'; active: boolean; range: number;
+        | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport' | 'summon_pet'
+        | 'turn_undead'; active: boolean; range: number;
     displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
@@ -154,7 +155,7 @@ export function skillPassiveText(row: SkillRow): string {
 }
 // 快捷槽原字号与单行宽度固定，完整名称仍由技能列表及瞄准提示展示。
 export function skillQuickLabel(definition: SkillDefinition): string {
-    return ({ summon_pet: '召唤', teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲' } as Record<string, string>)[definition.kind] ?? definition.name;
+    return ({ summon_pet: '召唤', teleport: '瞬移', firebang: '爆裂', mass_healing: '群疗', slaying: '攻杀', thrusting: '刺杀', half_moon: '半月', flaming_sword: '烈火', hell_fire: '地狱火', lightning: '疾光', thunder_storm: '雷光', magic_shield: '魔法盾', soul_shield: '幽灵盾', blessed_armour: '战甲', turn_undead: '圣言' } as Record<string, string>)[definition.kind] ?? definition.name;
 }
 export function skillQuickStateLabel(snapshot: SkillSnapshot, row: SkillRow): string {
     if (row.definition.kind === 'summon_pet' && snapshot.mapNoPets) return '禁召';
@@ -192,6 +193,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         if (status?.duration_rule?.kind === 'fixed_ms') lines.push(`成功后获得${Math.ceil((status.duration_rule.duration_ms ?? 0) / 1000)}秒传送耗蓝状态`);
         if (reduction !== undefined) lines.push(`状态期间仅传送技能的魔法消耗增加${reduction}%`, '再次成功刷新持续时间');
     }
+    if (definition.kind === 'turn_undead') lines.push('先点选一只存活的亡灵怪物', '按双方等级和技能等级判定，成功后延迟消灭原目标', '对合法目标施放失败仍消耗魔法与冷却');
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)
         lines.push(`本阶持续时间＝施放时道术值×${status.duration_rule.stat_multiplier}＋${status.duration_rule.seconds_by_level[row.level]}秒`);
@@ -239,6 +241,8 @@ export function selectSkillTarget(row: SkillRow, entities: readonly SkillEntity[
     const legal = (target: SkillEntity): boolean => !target.isPetCorpse && integer(target.hp) > 0n
         && (friendly ? target.entityHandle === playerHandle || target.entityKind === 2 : target.entityKind === 3);
     const selected = entities.find(entity => entity.entityHandle === selectedHandle);
+    // 亡灵属性由服务端判定，圣言术直接提交玩家点选的怪物，避免无目标时自动换到其它怪物。
+    if (row.definition.kind === 'turn_undead' && (!selected || !legal(selected))) throw new Error('请先点选一只存活的亡灵怪物');
     if (friendly && selected && (selected.isPetCorpse || integer(selected.hp) === 0n)
         && (selected.entityHandle === playerHandle || selected.entityKind === 2)) throw new Error('所选友方已倒下，请重新选择');
     let target = selected && legal(selected) ? selected : undefined;

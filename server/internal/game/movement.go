@@ -84,12 +84,17 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	if !allowed {
 		return false
 	}
-	if !w.beginMovement(r, e, movementWalk) {
+	if r.Isolated || e.MovementRevision == math.MaxUint64 {
+		if !r.Isolated {
+			w.isolateRoom(r)
+		}
 		return false
 	}
 	if !w.relocate(r, e, point) {
 		return false
 	}
+	// 共享城镇的占格可能被另一分片先提交，只有真正落格的行走才推进修订。
+	w.beginMovement(r, e, movementWalk)
 	e.Direction = direction
 	e.Action, e.ActionUntil = 1, now.Add(200*time.Millisecond)
 	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)
@@ -102,6 +107,8 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	if binding != nil {
 		w.submitSafeZoneBinding(r, binding, now)
 	}
+	// 原怪物行走在真正入格后立即触发该格的火墙。
+	w.enterFireWall(r, e, now)
 	return true
 }
 
@@ -187,6 +194,10 @@ func (w *worker) sourcePushed(r *room, target actorRef, direction uint32, distan
 				event.Path = append(event.Path, pointPB(point))
 			}
 			w.send(r, p.MsgS2CEntityDisplacement, 0, event)
+		}
+		if out.Postamble {
+			// 原受推完成并广播后才检查最终格，途中经过的火墙不触发。
+			w.enterFireWall(r, e, now)
 		}
 		w.snapshot(r)
 	}()

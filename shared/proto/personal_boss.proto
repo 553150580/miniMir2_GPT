@@ -1,0 +1,27 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+// 从当前活动场景发起一次个人挑战，重复请求沿用同一挑战编号。
+message PersonalBossEnter {
+  uint64 scene_epoch = 1;
+  string challenge_id = 2;
+  uint32 template_id = 3;
+}
+
+// 使用原挑战身份申请中断和返回，不能指定收益或次数。
+message PersonalBossLeave {
+  uint64 scene_epoch = 1;
+  string challenge_id = 2;
+}
+
+// 挑战进度由服务端核定，永久结果仅在角色所有者确认后下发。
+message PersonalBossState {
+  string challenge_id = 1;
+  uint64 scene_epoch = 2;
+  uint32 template_id = 3;
+  // 1 预约，2 等待首基线确认，3 进行中，4 胜利，5 超时，6 中断，7 战败。
+  uint32 state = 4;
+  int64 expires_at_unix_ms = 5;
+  uint32 error_code = 6;
+}

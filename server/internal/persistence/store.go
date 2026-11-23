@@ -107,6 +107,7 @@ type Operation struct {
 	Equipment         *EquipmentReceipt          `bson:"equipment,omitempty"`           // 装备相关操作产生的确定资产回执。
 	Warehouse         *WarehouseReceipt          `bson:"warehouse,omitempty"`           // 仓库资产、页号与版本变化。
 	Vendor            *VendorReceipt             `bson:"npc_trade,omitempty"`           // NPC 买卖或修理的原成交参数和结果。
+	TaskCodex         *TaskCodexClaimReceipt     `bson:"tasks_codex_claim,omitempty"`   // 原任务或图鉴领取确认的定义及绑定奖励。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。
@@ -191,6 +192,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 		"skill_quotes":    {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"vendor_quotes":   {{Keys: bson.D{{Key: "expires_at", Value: 1}}, Options: options.Index().SetExpireAfterSeconds(0)}},
 		"warehouse_items": {{Keys: bson.D{{Key: "warehouse_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}},
+
+		// 按角色定位挑战记录和结束时间，永久回执不设过期索引。
+		personalBossCollection: {{Keys: bson.D{{Key: "role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}}},
 	}
 	// name 定位目标集合，models 是为该集合建立的索引列表。
 	for name, models := range indexes {

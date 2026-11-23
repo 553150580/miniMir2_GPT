@@ -25,6 +25,7 @@ import { GameMessages } from './GameMessages';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
+import { GameTasksCodex } from './GameTasksCodex';
 import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
@@ -75,6 +76,7 @@ export class AppRoot extends Component {
     private hud?: GameHUD;
     private messages?: GameMessages;
     private skills?: GameSkills;
+    private tasksCodex?: GameTasksCodex;
     private skillAssets?: GameSkillAssets;
     private npcShop?: GameNpcShop;
     private npcShopContext?: { npc: TownNpc; scope: string };
@@ -437,6 +439,15 @@ export class AppRoot extends Component {
         this.cleanups.push(() => this.combatStatus?.dispose());
         this.skills = new GameSkills(safe, this.popup, (title, lines) => this.combatStatus!.showDetails(title, lines));
         this.cleanups.push(() => this.skills?.dispose());
+        this.tasksCodex = new GameTasksCodex(this.find('UIMgr/Panels/TasksCodex'), () => {
+            const identity = currentEntryIdentity();
+            return identity && session.ready && !this.disposed ? attachmentKey(identity) : '';
+        }, () => session.connection.request(40027, {}), request => this.economic(40029, request),
+        id => this.world?.gameplay.map_catalog?.find((row: { id: string }) => row.id === id)?.name,
+        id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name,
+        id => this.world?.monsterCodexFrame(id) ?? null,
+        error => this.error(error));
+        this.cleanups.push(() => this.tasksCodex?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
         this.npcShop = new GameNpcShop(safe, this.popup, {
@@ -574,9 +585,14 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus', () => this.skillAssets!.adjustPurchase(1));
         for (const [path, title, message] of [
             ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
-            ['BottomHUD/QuickNav/Quest','任务','任务系统暂未开放。'],
             ['MapViewport/Mission','战斗状态','点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。'],
         ] as const) this.button(path, () => this.popup!.show('Help', { title, message }));
+        this.button('BottomHUD/QuickNav/Quest', () => {
+            this.ui!.open('TasksCodex');
+            return this.tasksCodex!.reload();
+        });
+        this.button('UIMgr/Panels/TasksCodex/Claim', () => this.tasksCodex!.claim());
+        this.button('UIMgr/Panels/TasksCodex/Refresh', () => this.tasksCodex!.reload());
         this.button('BottomHUD/Skills/PetPanel', () => this.combatStatus?.showPet());
         this.button('UIMgr/Panels/Settings/Help', () => this.popup!.show('Help', { title: '操作帮助', message: '左下摇杆控制八方向，轻触空地寻路。打开面板和聊天保留地面目标，主动方向接管才终止原寻路。点击半透明背景返回。'
             + (session.role?.job === 0 ? '\n刺杀、半月需手动开启；烈火需手动充能。自动战斗仅使用已开启的模式和已就绪的烈火。' : '') }));
@@ -899,6 +915,7 @@ export class AppRoot extends Component {
         if (this.disposed || !this.world || !this.isWorldCurrent()) return;
         const baseline = session.baseline;
         const town = session.entry?.sceneKind === 2;
+        if (session.inventory) this.tasksCodex?.observe(session.inventory.revision);
         if (town) this.auto = false;
         else if (session.hosting) this.auto = session.hosting.autoBattleEnabled;
         if (baseline) this.count = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
