@@ -3,14 +3,11 @@
 package bootstrap
 
 import (
-	"bytes"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"log/slog"
 	"minimir/internal/devconfig"
 	"minimir/internal/game"
@@ -108,50 +105,22 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 	if e != nil {
 		return e
 	}
+	// gameStores 独立绑定各运行服与其所有权代次，数据库连接池仍由根 store 管理。
+	var gameStores []*persistence.Store
+	var hostedRunIDs []uint64
 	if mode == "game" {
-		// 运行代次必须由账号节点批准，健康接口开放前先确认批准的实例就是当前进程。
-		// body 保存由序列化取得的消息正文。
-		body, _ := json.Marshal(map[string]any{"game_node_id": cfg.NodeID, "boot_id": store.Instance, "run_server_id": cfg.RunID})
-		// client 保存当前处理所用的客户端。
-		client := &http.Client{Timeout: 5 * time.Second}
-		// last 记住最近一次向账号节点登记失败的原因。
-		var last error
-		// attempt 规定“attempt”的初始取值。
-		for attempt := 0; attempt < 30; attempt++ {
-			// request 保存由创建请求带有上下文取得的请求。
-			request, _ := http.NewRequestWithContext(ctx, "POST", "http://"+cfg.AccountAddress+"/internal/register-game", bytes.NewReader(body))
-			request.Header.Set("X-Dev-Node-Key", key)
-			// response 保存由“do”取得的响应，err 接收“do”过程中可能产生的错误，供后续失败分支处理。
-			response, err := client.Do(request)
-			if err == nil {
-				if response.StatusCode == 200 {
-					// grant 保存账号节点批准的运行所有权和代次。
-					var grant persistence.Run
-					err = json.NewDecoder(response.Body).Decode(&grant)
-					response.Body.Close()
-					if err == nil && grant.Owner == store.Instance && grant.GameNodeID == cfg.NodeID && grant.ID == cfg.RunID && grant.Epoch > 0 && grant.AssignmentVersion > 0 {
-						store.Epoch = grant.Epoch
-						last = nil
-						break
-					}
-					if err == nil {
-						err = errors.New("account返回的游戏节点或运行服授权身份不匹配")
-					}
-				} else {
-					io.Copy(io.Discard, response.Body)
-					response.Body.Close()
-					err = errors.New("account尚未批准运行所有权")
-				}
-			}
-			last = err
-			select {
-			case <-ctx.Done():
-				return ctx.Err()
-			case <-time.After(500 * time.Millisecond):
-			}
+		hostedRunIDs, e = cfg.HostedRunIDs()
+		if e != nil {
+			return e
 		}
-		if store.Epoch == 0 {
-			return fmt.Errorf("游戏注册失败: %w", last)
+		// 对外监听前确认 account 一次批准全部运行服，再安装续租与停服使用的完整授权集。
+		grants, err := registerGameRuns(ctx, cfg, key, store.Instance, hostedRunIDs)
+		if err != nil {
+			return err
+		}
+		gameStores, e = store.GameRunStores(grants)
+		if e != nil {
+			return e
 		}
 	} else {
 		if e = store.Singleton(ctx, mode); e != nil {
@@ -168,7 +137,7 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 		return fmt.Errorf("初始节点续租未获确认：%w", e)
 	}
 	// server 保存当前处理所用的服务端。
-	server := &transport.Server{Store: store, Mode: mode, NodeKey: key}
+	server := &transport.Server{Store: store, Mode: mode, NodeKey: key, HostedRunIDs: hostedRunIDs}
 	// engine 记录游戏引擎。
 	var engine *game.Engine
 	// leaseContext 维护租约监视和游戏引擎的生命周期，允许主动停服先结清。
@@ -179,7 +148,7 @@ func Run(ctx context.Context, cfg devconfig.Config, mode string) error {
 		// 主动停止先结清原流水；租约失败直接取消房间执行与结清等待。
 		leaseContext, cancelEngine = context.WithCancelCause(context.WithoutCancel(ctx))
 		defer cancelEngine(nil)
-		engine = game.New(leaseContext, store)
+		engine = game.NewRunEngine(leaseContext, gameStores)
 		server.Engine = engine
 		defer engine.Stop()
 	}

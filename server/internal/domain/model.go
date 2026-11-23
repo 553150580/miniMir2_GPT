@@ -141,6 +141,7 @@ type Role struct {
 	SourceSeq                    int64             `bson:"source_seq" json:"source_seq"`                                                   // 服务端来源事件最后确认的序号。
 	SettlementReceiptStartSeq    int64             `bson:"settlement_receipt_start_seq,omitempty" json:"-"`                                // 开始要求永久收益回执的最早来源序号。
 	Owner                        string            `bson:"owner_instance" json:"-"`                                                        // 获准写入此角色聚合的游戏节点实例。
+	RunServerID                  uint64            `bson:"run_server_id,omitempty" json:"-"`                                               // 当前角色会话所属运行服，可在新连接接管时变更。
 	RunEpoch                     int64             `bson:"run_epoch" json:"-"`                                                             // 游戏运行所有权代次。
 	SessionEpoch                 int64             `bson:"session_epoch" json:"binding_epoch"`                                             // 同一角色换连接递增的绑定代次。
 	LastEntryAttempt             string            `bson:"last_entry_attempt,omitempty" json:"-"`                                          // 当前绑定由哪一次票据接管产生，原票据清理后仍可查证。

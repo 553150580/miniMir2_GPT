@@ -41,10 +41,12 @@ func (w *worker) skillAssetPreview(r *room, f wire.Frame) {
 	r.PreviewInFlight = true
 	// binding 初始化用作会话绑定的技能预览会话绑定。
 	binding := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
+	// store 是原房间的运行服视图，预览也要核对角色的运行服围栏。
+	store := w.roomStore(r)
 	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{target: w, run: func() func(*worker) {
 		// result 保存由预览技能资产取得的结果，err 接收预览技能资产过程中可能产生的错误，供后续失败分支处理。
-		result, err := w.e.Store.PreviewSkillAsset(w.e.ctx, binding.auth, q)
+		result, err := store.PreviewSkillAsset(w.e.ctx, binding.auth, q)
 		// w 记录房间执行器。
 		return func(w *worker) {
 			w.finishSkillAssetPreview(binding, f, result, err)

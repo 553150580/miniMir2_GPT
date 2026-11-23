@@ -1,4 +1,4 @@
-"""在独立副本集上验收账号区服目录、两个节点入场及路由隔离。"""
+"""在独立副本集上验收区服目录、双节点四服入场及路由隔离。"""
 
 import argparse
 import json
@@ -65,7 +65,7 @@ def verify(web_root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--web-root', type=Path, help='可选，加入两个区服的真实 Chromium 触屏验收')
+    parser.add_argument('--web-root', type=Path, help='可选，加入四个区服的真实 Chromium 触屏验收')
     args = parser.parse_args()
     if os.name != 'nt' or os.environ.get('MINIMIR_TOOLCHAIN_ACTIVE') != '1':
         parser.error('请通过 ./tools/dev.ps1 在项目锁定的 Windows 工具链中运行')

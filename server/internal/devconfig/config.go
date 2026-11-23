@@ -310,7 +310,8 @@ type Config struct {
 	FixtureFile        string            `json:"fixture_file"`                    // 存放玩法规则快照的文件路径。
 	NodeID             string            `json:"game_node_id"`                    // game 节点的稳定部署身份，兼容旧配置键 node_id。
 	OriginID           uint64            `json:"origin_id"`                       // 试玩的入口服编号。
-	RunID              uint64            `json:"run_id"`                          // 游戏执行域的稳定编号，所有权换代时保持此编号。
+	RunID              uint64            `json:"run_id,omitempty"`                // 兼容旧单运行服配置；多运行服配置时保存首服编号。
+	RunServerIDs       []uint64          `json:"run_server_ids,omitempty"`        // 本游戏进程启动后同时承载的逻辑运行服。
 	OriginRoutes       []OriginRouteSeed `json:"origin_routes,omitempty"`         // 首次建库时登记的区服入口和路由。
 	RunServers         []RunServerSeed   `json:"run_servers,omitempty"`           // 首次建库时登记的运行服与部署节点分配。
 	AllowedOrigins     []string          `json:"allowed_origins"`                 // 配置文件保留的来源白名单字段，传输层另执行本机来源限制。

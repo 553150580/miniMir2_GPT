@@ -51,13 +51,15 @@ func Code(err error) uint32 {
 
 // Store 持有本进程的数据库客户端、业务配置和已经获准的运行身份。
 type Store struct {
-	Client        *mongo.Client    // 账号与角色读写、业务事务使用的连接池。
-	Control       *mongo.Client    // 专供节点续租，避免续租被业务请求积压。
-	DB            *mongo.Database  // 业务客户端指向的本项目游戏库。
-	Cfg           devconfig.Config // 当前数据库、节点、原区服、运行服和玩法配置快照。
-	Instance      string           // 启动时分配的进程实例标识。
-	Epoch         int64            // 运行服授权代次，随所有权接管增大。
-	runGuardSlots *runGuardSlots   // 本进程内等待同组围栏的并发槽。
+	Client          *mongo.Client       // 账号与角色读写、业务事务使用的连接池。
+	Control         *mongo.Client       // 专供节点续租，避免续租被业务请求积压。
+	DB              *mongo.Database     // 业务客户端指向的本项目游戏库。
+	Cfg             devconfig.Config    // 当前数据库、节点、原区服、运行服和玩法配置快照。
+	Instance        string              // 启动时分配的进程实例标识。
+	Epoch           int64               // 运行服授权代次，随所有权接管增大。
+	runGuardSlots   *runGuardSlots      // 本进程内等待同组围栏的并发槽。
+	gameMemberships []gameRunMembership // 根存储拥有的完整启动授权，监听前一次性安装。
+	borrowedRunView bool                // 此视图只借用连接池及运行服业务权限。
 }
 
 // 业务连接池为任务执行器保留并发空间。续租走独立控制连接池。
@@ -150,7 +152,12 @@ func Open(ctx context.Context, cfg devconfig.Config) (*Store, error) {
 
 // Close 关闭该持久层实例持有的两类 MongoDB 客户端。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号。
-func (s *Store) Close(ctx context.Context) { s.Client.Disconnect(ctx); s.Control.Disconnect(ctx) }
+func (s *Store) Close(ctx context.Context) {
+	if !s.borrowedRunView {
+		s.Client.Disconnect(ctx)
+		s.Control.Disconnect(ctx)
+	}
+}
 
 // Migrate 核验数据库归属，确保应用元数据、索引、路由和待授权运行服记录存在。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号。
@@ -414,8 +421,9 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 // s 提供节点、运行服与数据库，ctx 关联当前事务，a 决定账号围栏和对应哈希组。
 func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrite, error) {
 	// filter 选择仍在有效租约内、实例与运行代次都匹配的运行服状态。
-	filter := bson.M{"_id": s.Cfg.RunID, "game_node_id": s.Cfg.NodeID, "owner_instance": s.Instance,
-		"run_epoch": s.Epoch, "state": "active", "$expr": leaseFilter()}
+	runMember := gameRunMembership{RunID: s.Cfg.RunID, Epoch: s.Epoch}
+	filter := activeRunOwnership(s.Cfg.NodeID, s.Instance, runMember)
+	filter["$expr"] = leaseFilter()
 	// run 接收当前运行服的控制版本和租约时点。
 	var run struct {
 		// ControlVersion 记录控制版本，使用数值表示。
@@ -430,8 +438,7 @@ func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrit
 		return nil, authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	// node 选择仍持有有效租约的当前游戏进程节点记录。
-	node := bson.M{"_id": s.Cfg.NodeID, "kind": "game", "owner_instance": s.Instance,
-		"run_server_id": s.Cfg.RunID, "run_epoch": s.Epoch, "$expr": leaseFilter()}
+	node := nodeLeaseFilter(s.Cfg.NodeID, s.Instance, runMember)
 	// e 区分节点租约已失效与查询失败。
 	if e := s.DB.Collection("node_leases").FindOne(ctx, node, options.FindOne().SetProjection(bson.M{"_id": 1})).Err(); e != nil {
 		return nil, authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
@@ -487,10 +494,16 @@ func authorityReadError(err error, code uint32, message string) error {
 // checkRole 确认角色属于当前账号、游戏进程、运行服代次及角色会话。
 // s 提供当前运行所有权，r 是已持久保存的角色，a 是该请求携带的账号和会话身份。
 func (s *Store) checkRole(r domain.Role, a Auth) error {
-	if r.AccountID != a.AccountID || r.Owner != s.Instance || r.RunEpoch != s.Epoch || r.SessionEpoch != a.SessionEpoch {
+	wrongRun := r.RunServerID != s.Cfg.RunID && (r.RunServerID != 0 || !s.acceptsLegacyRoleScope())
+	if wrongRun || r.AccountID != a.AccountID || r.Owner != s.Instance || r.RunEpoch != s.Epoch || r.SessionEpoch != a.SessionEpoch {
 		return Fail(p.CodeStaleSession, "角色绑定已失效")
 	}
 	return nil
+}
+
+// acceptsLegacyRoleScope 只允许旧单服存储接口继续核对尚无运行服字段的会话。
+func (s *Store) acceptsLegacyRoleScope() bool {
+	return !s.borrowedRunView && len(s.gameMemberships) == 0 && len(s.Cfg.RunServerIDs) <= 1
 }
 
 // replace 使用原版本和所有权条件替换角色聚合，防止覆盖更新过的角色。
@@ -510,5 +523,9 @@ func (s *Store) replace(ctx context.Context, r domain.Role, oldRevision int64) e
 // roleReplaceFilter 为普通替换与批量结算统一比较角色键、版本和两个代次。
 // r 提供角色键和要保留的所有者代次，oldRevision 是业务计算前读到的角色版本。
 func roleReplaceFilter(r domain.Role, oldRevision int64) bson.M {
-	return bson.M{"_id": r.ID, "revision": oldRevision, "owner_instance": r.Owner, "run_epoch": r.RunEpoch, "session_epoch": r.SessionEpoch}
+	filter := bson.M{"_id": r.ID, "revision": oldRevision, "owner_instance": r.Owner, "run_epoch": r.RunEpoch, "session_epoch": r.SessionEpoch}
+	if r.RunServerID != 0 {
+		filter["run_server_id"] = r.RunServerID
+	}
+	return filter
 }

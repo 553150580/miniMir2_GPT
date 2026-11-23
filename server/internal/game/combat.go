@@ -686,11 +686,13 @@ func (w *worker) settleInWorldReceipt(r *room, world *worldState, point devconfi
 	r.PendingOperationID, r.PendingFingerprint = binding.id, binding.fingerprint
 	// auth 保存当前处理所用的授权。
 	auth := r.Auth
+	// store 提供原房间的运行服围栏，托管、收益和重试均使用同一视图。
+	store := w.roomStore(r)
 	// j 记录当前位置的下标，使用任务或职业编号表示。
 	var j job
 	j = job{target: w, settlement: true, run: func() func(*worker) {
 		// role 是事务返回的永久角色视图，receipt 是原来源回执，err 指出写入或确认有无失败。
-		role, receipt, err := w.e.Store.SettleWithReceipt(context.Background(), auth, q)
+		role, receipt, err := store.SettleWithReceipt(context.Background(), auth, q)
 		// w 记录房间执行器。
 		return func(w *worker) {
 			w.finishSettlementReceipt(binding, q, role, receipt, err, &j, finished)

@@ -109,11 +109,13 @@ func (w *worker) submitMaterialCast(r *room, q persistence.AssetRequest, plan *p
 	r.PendingFingerprint = q.Fingerprint
 	// auth 保存持久任务应使用的原授权，重试时仍沿用它。
 	auth := r.Auth
+	// store 保存原施法房间的运行服视图，延迟回执仍核对同一运行服围栏。
+	store := w.roomStore(r)
 	// pending 是可能退避或重试的原扣料任务。
 	var pending job
 	pending = job{target: w, run: func() func(*worker) {
 		// role、result、receipt 分别是事务后的角色视图、协议结果和持久回执，err 说明提交或确认是否失败。
-		role, result, receipt, err := w.e.Store.AssetWithReceipt(w.e.ctx, auth, q)
+		role, result, receipt, err := store.AssetWithReceipt(w.e.ctx, auth, q)
 		// w 是接收回执且有权改写房间的原分片。
 		return func(w *worker) {
 			w.finishMaterialCast(binding, q, plan, input, frame, role, result, receipt, err, &pending)

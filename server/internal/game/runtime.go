@@ -37,6 +37,7 @@ type command struct {
 	conn        Connection          // 命令来源连接，后台时钟及内部回调可不带连接。
 	frame       wire.Frame          // 原始请求帧，保留消息号、请求号和绑定代次。
 	ticket      *persistence.Ticket // 入场命令携带已校验的短票，待确认时按原身份查证。
+	runStore    *persistence.Store  // 首次查票后选定的运行服持久层，等待和重试时保留。
 	done        func(*worker)       // 在房间分片 goroutine 上执行的内部工作。
 	tick        time.Time           // 发出房间逻辑帧时采样的服务器时刻。
 	at          time.Time           // 记录断开发生时刻，标定在线和托管事件的归属边界。
@@ -54,18 +55,19 @@ type job struct {
 
 // Engine 持有游戏分片和数据库队列，负责路由协议及管理运行周期。
 type Engine struct {
-	Store            *persistence.Store       // 服务端持久层，提供票据、围栏和经济事务。
-	workers          []*worker                // 所有房间分片，按角色散列映射保持操作顺序。
-	jobs             chan job                 // 普通业务数据库任务的有界队列。
-	settlementJobs   chan job                 // 收益与同类持久结算任务的独立等待队列。
-	admissionTickets chan job                 // 入场第一阶段的短票角色查询队列。
-	admissionEntries chan job                 // 入场第二阶段的持久会话接管队列。
-	ctx              context.Context          // 引擎生命周期，取消后停止推进和投递任务。
-	cancel           context.CancelFunc       // 通知分片、时钟和数据库执行协程退出。
-	wg               sync.WaitGroup           // 等待引擎持有的后台协程完成。
-	baseline         atomic.Uint64            // 跨分片分配客户端场景基线编号。
-	stopped          atomic.Bool              // 表示已冻结新增游戏操作，停服时仍可处理已受理回执。
-	TownGrids        map[uint64]*townnav.Grid // 按城镇地图编号保存可共用的导航静态网格。
+	Store            *persistence.Store            // 共享规则配置及安装范围的票据预查入口。
+	runStores        map[uint64]*persistence.Store // 每个获准运行服的独立围栏与代次，启动后只读。
+	workers          []*worker                     // 所有房间分片，按角色散列映射保持操作顺序。
+	jobs             chan job                      // 普通业务数据库任务的有界队列。
+	settlementJobs   chan job                      // 收益与同类持久结算任务的独立等待队列。
+	admissionTickets chan job                      // 入场第一阶段的短票角色查询队列。
+	admissionEntries chan job                      // 入场第二阶段的持久会话接管队列。
+	ctx              context.Context               // 引擎生命周期，取消后停止推进和投递任务。
+	cancel           context.CancelFunc            // 通知分片、时钟和数据库执行协程退出。
+	wg               sync.WaitGroup                // 等待引擎持有的后台协程完成。
+	baseline         atomic.Uint64                 // 跨分片分配客户端场景基线编号。
+	stopped          atomic.Bool                   // 表示已冻结新增游戏操作，停服时仍可处理已受理回执。
+	TownGrids        map[uint64]*townnav.Grid      // 按城镇地图编号保存可共用的导航静态网格。
 }
 
 // workerCount 固定角色散列的分片数量。
@@ -123,6 +125,7 @@ type entity struct {
 // room 汇总角色资产的已确认视图与活动场景，分片循环统一推进所有临时状态。
 type room struct {
 	*worldState                                     // 当前活动世界；匿名嵌入让常用战斗代码直接访问场景状态。
+	runStore              *persistence.Store        // 房间创建时选定的运行服视图，在整个房间生命周期中固定。
 	PersonalWorld         *worldState               // 此角色独有的挂机世界，切到城镇时仍可保留原现场。
 	TownWorld             *worldState               // 当前持有的城镇世界引用。
 	TownWorlds            []*worldState             // 已创建的其他城镇现场，用于按地图查找和保留事件归属。
@@ -193,14 +196,20 @@ type room struct {
 	DeferMovementSnapshot bool                      // 暂缓中途位移快照，留待同一组合动作完整提交后再观察。
 }
 
-// New 启动稳定散列的房间分片、独立数据库执行协程和周期逻辑帧。
-// ctx 向下传递当前请求的截止时间和取消信号，s 记录持久层存储。
+// New 为单运行服启动持有共享分片、数据库队列与逻辑时钟的引擎。
+// ctx 控制引擎生命周期，s 提供该运行服的持久化视图。
 func New(ctx context.Context, s *persistence.Store) *Engine {
+	return NewRunEngine(ctx, []*persistence.Store{s})
+}
+
+// newEngine 启动一套供同一游戏进程内所有运行服共享的执行资源。
+// ctx 控制生命周期，s 用于共享规则与票据预查，runs 保留所有获准使用的运行服视图。
+func newEngine(ctx context.Context, s *persistence.Store, runs map[uint64]*persistence.Store) *Engine {
 	// cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithCancel(ctx)
 	// e 保存当前处理所用的游戏引擎。
 	e := &Engine{
-		Store: s, ctx: ctx, cancel: cancel,
+		Store: s, runStores: runs, ctx: ctx, cancel: cancel,
 		jobs:             make(chan job, 256),
 		settlementJobs:   make(chan job, workerCount*maxRoomsPerWorker),
 		admissionTickets: make(chan job, 128),
@@ -277,8 +286,14 @@ func (e *Engine) Enter(token string, c Connection, request uint32) {
 			rejectEntry(c, request, persistence.Code(err), "invalid ticket")
 			return nil
 		}
+		// runStore 取自批准的运行服表；非本节点或过期代次的票据不能进入房间分片。
+		runStore := e.storeForTicket(t)
+		if runStore == nil {
+			rejectEntry(c, request, p.CodeRouteChanged, "ticket run not hosted")
+			return nil
+		}
 		c.SetRole(t.RoleID)
-		e.postEntry(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: &t, frame: wire.Frame{Request: request}})
+		e.postEntry(e.worker(t.RoleID), command{role: t.RoleID, conn: c, ticket: &t, runStore: runStore, frame: wire.Frame{Request: request}})
 		return nil
 	}}
 	if !offerDatabaseJob(e.admissionTickets, j) {
@@ -443,6 +458,11 @@ func (w *worker) command(c command) {
 	// r 保存从房间集合取出的房间集合中的指定项。
 	r := w.rooms[c.role]
 	if c.ticket != nil {
+		// 同一角色保持原分片，其他运行服不能借用现有世界或待确认结算。
+		if r != nil && r.runStore != c.runStore {
+			rejectEntry(c.conn, c.frame.Request, p.CodeRouteChanged, "room belongs to another run")
+			return
+		}
 		if r != nil && r.Isolated {
 			rejectEntry(c.conn, c.frame.Request, p.CodeLineRecovering, "room authority isolated")
 			return
@@ -460,7 +480,7 @@ func (w *worker) command(c command) {
 					return
 				}
 			}
-			r = &room{Role: domain.Role{ID: c.role}, worldState: &worldState{}}
+			r = &room{Role: domain.Role{ID: c.role}, worldState: &worldState{}, runStore: c.runStore}
 			w.rooms[c.role] = r
 		}
 		w.join(r, c)

@@ -325,11 +325,17 @@ func TestFirstLoopMongoWS(t *testing.T) {
 	// f 记录协议帧。
 	c.until(func(f wire.Frame) bool { return f.ID == p.MsgS2CSceneBaseline })
 	c.close()
-	time.Sleep(2300 * time.Millisecond)
-	persisted, err = inspection.Role(ctx, persisted.ID)
-	must(t, err)
-	if persisted.HostingSeconds >= 21600 || persisted.Report.UsedSeconds < 1 {
-		t.Fatalf("离线托管未实际扣时: %+v", persisted.Report)
+	// 托管整秒可随击杀先提交。没有击杀时需等三秒检查点及数据库确认。
+	for hostingDeadline := time.Now().Add(6 * time.Second); ; {
+		persisted, err = inspection.Role(ctx, persisted.ID)
+		must(t, err)
+		if persisted.HostingSeconds < 21600 && persisted.Report.UsedSeconds >= 1 {
+			break
+		}
+		if !time.Now().Before(hostingDeadline) {
+			t.Fatalf("离线托管未实际扣时: %+v", persisted.Report)
+		}
+		time.Sleep(100 * time.Millisecond)
 	}
 	c = join(t, cfg.GameAddress, issue(t, accountURL, token, role.Key))
 	defer c.close()

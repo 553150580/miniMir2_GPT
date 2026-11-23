@@ -23,14 +23,18 @@ func (s *Store) PreserveRetiredDeath(ctx context.Context, a Auth, deathID string
 		if err := s.fence(tc, a); err != nil {
 			return err
 		}
-		// result 保存由更新“one”取得的结果，err 接收更新“one”过程中可能产生的错误，供后续失败分支处理。
-		result, err := s.DB.Collection("roles").UpdateOne(tc, bson.M{
+		// 保存退役标记的条件也要标明当前运行服。同节点的两个运行服可能恰好拥有相同运行代次。
+		filter := bson.M{
 			"_id": a.RoleID, "account_id": a.AccountID, "owner_instance": s.Instance,
-			"run_epoch": s.Epoch, "session_epoch": a.SessionEpoch,
+			"run_server_id": s.Cfg.RunID, "run_epoch": s.Epoch, "session_epoch": a.SessionEpoch,
 			"$or": bson.A{
 				bson.M{"retired_death_id": bson.M{"$exists": false}}, bson.M{"retired_death_id": deathID},
 			},
-		}, bson.M{"$set": bson.M{"retired_death_id": deathID}})
+		}
+		if s.acceptsLegacyRoleScope() {
+			filter["run_server_id"] = bson.M{"$in": bson.A{s.Cfg.RunID, 0, nil}}
+		}
+		result, err := s.DB.Collection("roles").UpdateOne(tc, filter, bson.M{"$set": bson.M{"retired_death_id": deathID}})
 		if err != nil {
 			return err
 		}

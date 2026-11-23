@@ -4,6 +4,44 @@ package devconfig
 
 import "testing"
 
+// TestHostedRunIDs 保留旧单服入口，验证新配置的精确集合与旧编号一致，并避免外部修改配置切片。
+func TestHostedRunIDs(t *testing.T) {
+	for _, tt := range []struct {
+		name string // 断言场景。
+		raw  string // 最小节点配置文本。
+		want int    // 授权集合大小，零表示应拒绝。
+	}{
+		{"旧单服", `{"node_id":"game-a","run_id":10}`, 1},
+		{"多运行服", `{"game_node_id":"game-a","run_server_ids":[10,20]}`, 2},
+		{"兼容字段一致", `{"run_id":10,"run_server_ids":[10,20]}`, 2},
+		{"兼容字段冲突", `{"run_id":20,"run_server_ids":[10,20]}`, 0},
+		{"编号重复", `{"run_server_ids":[10,10]}`, 0},
+		{"显式空集", `{"run_id":10,"run_server_ids":[]}`, 0},
+		{"非法编号", `{"run_server_ids":[0,10]}`, 0},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			var cfg Config
+			if err := cfg.decodeNodeConfiguration([]byte(tt.raw)); err != nil {
+				t.Fatal(err)
+			}
+			ids, err := cfg.HostedRunIDs()
+			if tt.want == 0 {
+				if err == nil {
+					t.Fatalf("不应接受运行服 %v", ids)
+				}
+				return
+			}
+			if err != nil || len(ids) != tt.want || ids[0] != 10 || cfg.RunID != 10 {
+				t.Fatalf("运行服 %v，归一的首服 %d，错误 %v", ids, cfg.RunID, err)
+			}
+			ids[0] = 30
+			if again, err := cfg.HostedRunIDs(); err != nil || again[0] != 10 {
+				t.Fatalf("配置运行服集合被返回值改写：%v，错误 %v", again, err)
+			}
+		})
+	}
+}
+
 // TestGameNodeIDConfigAliases 保留旧试玩配置格式，并拒绝同一进程声明两种不同节点身份。
 func TestGameNodeIDConfigAliases(t *testing.T) {
 	// tests 指定配置文本及读取后传给游戏运行时的规范身份，空值表示应拒绝。

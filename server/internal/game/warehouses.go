@@ -33,10 +33,12 @@ func (w *worker) warehouseQuery(r *room, f wire.Frame) {
 	r.PreviewInFlight = true
 	// b 建立带初始值的技能预览会话绑定，供本段继续处理。
 	b := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
+	// store 按当前房间的运行服授权读取独立或共享仓库。
+	store := w.roomStore(r)
 	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{target: w, run: func() func(*worker) {
 		// page 保存由查询仓库取得的页面或分页，err 接收查询仓库过程中可能产生的错误，供后续失败分支处理。
-		page, err := w.e.Store.QueryWarehouse(w.e.ctx, b.auth, q)
+		page, err := store.QueryWarehouse(w.e.ctx, b.auth, q)
 		// w 记录房间执行器。
 		return func(w *worker) { w.finishWarehouseQuery(b, f, page, err) }
 	}}

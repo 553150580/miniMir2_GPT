@@ -23,11 +23,12 @@ import (
 
 // Server 路由当前节点允许的请求，只有游戏节点挂载内存运行时。
 type Server struct {
-	Store   *persistence.Store // 节点使用的专用库连接及身份。
-	Mode    string             // 选择账号、游戏或 GM 路由集合。
-	NodeKey string             // 内部登记和 GM 只读接口的共享密钥。
-	Engine  *game.Engine       // 游戏节点将已校验的连接交给此运行时。
-	active  atomic.Int64       // 游戏连接数，用于升级前的接入配额。
+	Store        *persistence.Store // 节点使用的专用库连接及身份。
+	Mode         string             // 选择账号、游戏或 GM 路由集合。
+	NodeKey      string             // 内部登记和 GM 只读接口的共享密钥。
+	Engine       *game.Engine       // 游戏节点将已校验的连接交给此运行时。
+	HostedRunIDs []uint64           // 游戏节点启动时确认为可用的运行服身份。
+	active       atomic.Int64       // 游戏连接数，用于升级前的接入配额。
 }
 
 // Handler 只挂载当前节点的路由，并统一约束请求来源和体积。
@@ -37,7 +38,12 @@ func (s *Server) Handler() http.Handler {
 	mux := http.NewServeMux()
 	// w 写入当前 HTTP 响应头和正文，r 提供当前 HTTP 请求、请求头和取消信号。
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, r *http.Request) {
-		respond(w, map[string]any{"status": "ok", "mode": s.Mode, "development_only": true, "runtime_ready": false, "instance": s.Store.Instance, "rule_version": s.Store.Cfg.Fixture.RuleVersion, "fixture_hash": s.Store.Cfg.Fixture.Hash})
+		health := map[string]any{"status": "ok", "mode": s.Mode, "development_only": true, "runtime_ready": false, "instance": s.Store.Instance, "rule_version": s.Store.Cfg.Fixture.RuleVersion, "fixture_hash": s.Store.Cfg.Fixture.Hash}
+		if s.Mode == "game" {
+			health["game_node_id"] = s.Store.Cfg.NodeID
+			health["run_server_ids"] = s.HostedRunIDs
+		}
+		respond(w, health)
 	})
 	if s.Mode == "account" {
 		mux.HandleFunc("POST /rpc", s.rpc)
@@ -223,12 +229,13 @@ func (s *Server) registerGame(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var q struct {
-		GameNodeID string `json:"game_node_id"`  // 稳定的游戏部署身份。
-		BootID     string `json:"boot_id"`       // 本次启动生成的实例身份。
-		RunID      uint64 `json:"run_server_id"` // 当前进程申请运行的逻辑服。
-		Node       string `json:"node_id"`       // 旧版登记字段。
-		Instance   string `json:"instance_id"`   // 旧版登记字段。
-		Run        uint64 `json:"run_id"`        // 旧版登记字段。
+		GameNodeID string   `json:"game_node_id"`   // 稳定的游戏部署身份。
+		BootID     string   `json:"boot_id"`        // 本次启动生成的实例身份。
+		RunIDs     []uint64 `json:"run_server_ids"` // 当前进程同时申请的逻辑运行服。
+		RunID      uint64   `json:"run_server_id"`  // 兼容只登记一服的接口调用。
+		Node       string   `json:"node_id"`        // 旧版节点字段。
+		Instance   string   `json:"instance_id"`    // 旧版启动身份字段。
+		Run        uint64   `json:"run_id"`         // 旧版单运行服字段。
 	}
 	// e 接收解码供后续步骤使用。
 	if e := json.NewDecoder(r.Body).Decode(&q); e != nil {
@@ -250,6 +257,22 @@ func (s *Server) registerGame(w http.ResponseWriter, r *http.Request) {
 	}
 	if q.RunID == 0 {
 		q.RunID = q.Run
+	}
+	if q.RunIDs != nil {
+		// 同时发送兼容字段时，兼容字段只能表示数组中的唯一运行服。
+		if q.RunID != 0 && (len(q.RunIDs) != 1 || q.RunIDs[0] != q.RunID) {
+			jsonError(w, persistence.Fail(p.CodeInvalidArgument, "单运行服字段与登记数组冲突"))
+			return
+		}
+		runs, e := s.Store.ApproveGameRuns(r.Context(), q.GameNodeID, q.BootID, q.RunIDs)
+		if e != nil {
+			jsonError(w, e)
+			return
+		}
+		respond(w, struct {
+			Runs []persistence.Run `json:"runs"` // 单事务确认的全部运行服所有权。
+		}{Runs: runs})
+		return
 	}
 	run, e := s.Store.ApproveGame(r.Context(), q.GameNodeID, q.BootID, q.RunID)
 	if e != nil {

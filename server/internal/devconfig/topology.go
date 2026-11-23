@@ -41,6 +41,46 @@ func ValidGameNodeID(id string) bool {
 	return stableDirectoryID.MatchString(id)
 }
 
+// ValidRunID 判断运行服身份是否落在 MongoDB 可精确保留的整数范围内。
+func ValidRunID(id uint64) bool {
+	return id > 0 && id <= math.MaxInt64
+}
+
+// ValidateHostedRunIDs 校验单个启动实例声明的运行服集合及唯一性。
+func ValidateHostedRunIDs(runIDs []uint64) error {
+	if len(runIDs) == 0 {
+		return errors.New("游戏进程需要登记至少一个运行服")
+	}
+	seen := make(map[uint64]struct{}, len(runIDs))
+	for _, id := range runIDs {
+		if !ValidRunID(id) {
+			return fmt.Errorf("无效运行服编号 %d", id)
+		}
+		if _, duplicate := seen[id]; duplicate {
+			return fmt.Errorf("重复运行服编号 %d", id)
+		}
+		seen[id] = struct{}{}
+	}
+	return nil
+}
+
+// HostedRunIDs 返回本进程申请的运行服集合。旧配置仅申请 run_id 对应的一服。
+func (c Config) HostedRunIDs() ([]uint64, error) {
+	if c.RunServerIDs == nil {
+		if !ValidRunID(c.RunID) {
+			return nil, errors.New("旧配置缺少有效的运行服编号")
+		}
+		return []uint64{c.RunID}, nil
+	}
+	if err := ValidateHostedRunIDs(c.RunServerIDs); err != nil {
+		return nil, err
+	}
+	if c.RunID != 0 && c.RunID != c.RunServerIDs[0] {
+		return nil, errors.New("run_id 与 run_server_ids 首项不一致")
+	}
+	return append([]uint64(nil), c.RunServerIDs...), nil
+}
+
 // ValidateGameWSURL 允许同源试玩代理或显式的本机游戏 WebSocket 连接地址。
 func ValidateGameWSURL(endpoint string) error {
 	if endpoint == "/game/ws" {
@@ -74,13 +114,19 @@ func (c *Config) decodeNodeConfiguration(raw []byte) error {
 	} else if encoded.LegacyNodeID != "" && c.NodeID != encoded.LegacyNodeID {
 		return errors.New("game_node_id 与旧 node_id 配置不一致")
 	}
+	if c.RunID == 0 && len(c.RunServerIDs) > 0 {
+		c.RunID = c.RunServerIDs[0]
+	}
 	return nil
 }
 
 // validateTopology 验证显式的初始目录。旧单节点配置由持久层按实际监听参数初始化。
 func (c Config) validateTopology() error {
-	if !ValidGameNodeID(c.NodeID) || c.OriginID == 0 || c.OriginID > math.MaxInt64 || c.RunID == 0 || c.RunID > math.MaxInt64 {
-		return errors.New("游戏节点、永久入口服和运行服需要有效的稳定身份")
+	if !ValidGameNodeID(c.NodeID) || c.OriginID == 0 || c.OriginID > math.MaxInt64 {
+		return errors.New("游戏节点与永久入口服需要有效的稳定身份")
+	}
+	if _, err := c.HostedRunIDs(); err != nil {
+		return err
 	}
 	if c.OriginRoutes == nil && c.RunServers == nil {
 		return nil
@@ -92,8 +138,9 @@ func (c Config) validateTopology() error {
 	runs := make(map[uint64]struct{}, len(c.RunServers))
 	// 公告地址需要能把连接交给唯一的部署节点。多个入口或运行服可复用同一节点地址。
 	endpointOwners := make(map[string]string)
+	nodeEndpoints := make(map[string]string)
 	for _, run := range c.RunServers {
-		if _, duplicate := runs[run.RunID]; duplicate || run.RunID == 0 || run.RunID > math.MaxInt64 || !ValidGameNodeID(run.GameNodeID) {
+		if _, duplicate := runs[run.RunID]; duplicate || !ValidRunID(run.RunID) || !ValidGameNodeID(run.GameNodeID) {
 			return fmt.Errorf("无效或重复的运行服分配 %d", run.RunID)
 		}
 		if err := ValidateGameWSURL(run.GameWSURL); err != nil {
@@ -102,7 +149,11 @@ func (c Config) validateTopology() error {
 		if owner := endpointOwners[run.GameWSURL]; owner != "" && owner != run.GameNodeID {
 			return fmt.Errorf("游戏节点 %s 与 %s 不能共用本机公告地址", owner, run.GameNodeID)
 		}
+		if endpoint := nodeEndpoints[run.GameNodeID]; endpoint != "" && endpoint != run.GameWSURL {
+			return fmt.Errorf("同一游戏节点 %s 下的运行服需要共用公告地址", run.GameNodeID)
+		}
 		endpointOwners[run.GameWSURL] = run.GameNodeID
+		nodeEndpoints[run.GameNodeID] = run.GameWSURL
 		runs[run.RunID] = struct{}{}
 	}
 	// origins 防止同一入口登记多套路由，regions 防止同一区域出现不同的显示定义。

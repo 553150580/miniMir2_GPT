@@ -97,12 +97,14 @@ func (w *worker) submitSafeZoneBinding(r *room, fact *safeZoneBindingFact, now t
 	r.Pending = true
 	r.PendingOperationID = fact.request.EventID
 	r.PendingFingerprint = fact.fingerprint
+	// store 保存产生绑定事实时的运行服视图，原操作重试不改所属围栏。
+	store := w.roomStore(r)
 	// pending 记录待确认，使用任务或职业编号表示。
 	var pending job
 	pending = job{target: w, run: func() func(*worker) {
 		// role 保存由绑定安全区域带有回执取得的角色，receipt 保存由绑定安全区域带有回执取得的回执。
 		// err 接收绑定安全区域带有回执过程中可能产生的错误，供后续失败分支处理。
-		role, receipt, err := w.e.Store.BindSafeZoneWithReceipt(w.e.ctx, fact.auth, fact.request)
+		role, receipt, err := store.BindSafeZoneWithReceipt(w.e.ctx, fact.auth, fact.request)
 		// w 记录房间执行器。
 		return func(w *worker) { w.finishSafeZoneBinding(fact, role, receipt, err, &pending) }
 	}}

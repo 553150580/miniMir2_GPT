@@ -444,6 +444,7 @@ func (s *Store) EnterTicket(ctx context.Context, t Ticket, attempt string, allow
 		}
 		// 每次接管都推进会话代次和角色版本，使原连接的后续命令失效。
 		r.Owner = s.Instance
+		r.RunServerID = s.Cfg.RunID
 		r.RunEpoch = s.Epoch
 		r.SessionEpoch++
 		r.Revision++

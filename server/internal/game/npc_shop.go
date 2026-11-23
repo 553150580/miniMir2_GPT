@@ -57,10 +57,12 @@ func (w *worker) vendorPreview(r *room, f wire.Frame) {
 	r.PreviewInFlight = true
 	// binding 初始化用作会话绑定的技能预览会话绑定。
 	binding := skillPreviewBinding{room: r, conn: r.Conn, auth: r.Auth, scene: r.Scene, generation: r.PreviewGeneration}
+	// store 以报价发起方房间的运行服核对角色授权。
+	store := w.roomStore(r)
 	// j 初始化用作当前位置的下标的任务或职业编号。
 	j := job{target: w, run: func() func(*worker) {
 		// result 保存由预览商人取得的结果，err 接收预览商人过程中可能产生的错误，供后续失败分支处理。
-		result, err := w.e.Store.PreviewVendor(w.e.ctx, binding.auth, shop.Key, q)
+		result, err := store.PreviewVendor(w.e.ctx, binding.auth, shop.Key, q)
 		// w 记录房间执行器。
 		return func(w *worker) {
 			if !w.claimPreview(binding) {

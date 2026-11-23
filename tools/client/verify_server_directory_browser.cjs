@@ -1,4 +1,4 @@
-// 在独立试玩入口用正常触屏走完两个区服的选服、建角和入场，只记录连接目标与确认帧。
+// 在独立试玩入口逐服触屏选服、建角和入场，核对票据目标与首场景确认。
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -12,12 +12,32 @@ assert(manifestPath.startsWith(work + path.sep), '选服验收清单必须在独
 const { baseUrl, entries } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(baseUrl);
 assert(base.protocol === 'http:' && base.hostname === '127.0.0.1' && base.port !== '18080', '仅允许独立回环试玩入口');
-assert.equal(entries.length, 2);
-assert.notEqual(entries[0].origin, entries[1].origin);
-assert.notEqual(entries[0].endpoint, entries[1].endpoint);
+assert.equal(entries.length, 4);
+assert.equal(new Set(entries.map(entry => entry.origin)).size, 4);
+assert.equal(new Set(entries.map(entry => entry.run)).size, 4);
+const endpoints = new Map();
 for (const entry of entries) {
     const target = new URL(entry.endpoint);
     assert(target.protocol === 'ws:' && target.hostname === '127.0.0.1' && target.pathname === '/ws');
+    const assigned = endpoints.get(entry.node) ?? [];
+    assigned.push(entry.endpoint);
+    endpoints.set(entry.node, assigned);
+}
+assert.equal(endpoints.size, 2);
+for (const urls of endpoints.values()) {
+    assert.equal(urls.length, 2);
+    assert.equal(urls[0], urls[1]);
+}
+assert.equal(new Set(Array.from(endpoints.values(), urls => urls[0])).size, 2);
+
+// 账号协议帧先跳过请求序号和连接代次，余下部分供对应的 protobuf 类型解码。
+function accountPayload(raw, message) {
+    if (!raw || raw.length < 6 || raw[0] !== 1 || raw[1] !== 0 || raw.readUInt16BE(2) !== message) return null;
+    let offset = 4;
+    for (let field = 0; field < 2; field++) {
+        while (offset < raw.length && raw[offset++] & 0x80) {}
+    }
+    return raw.subarray(offset);
 }
 
 async function main() {
@@ -31,13 +51,23 @@ async function main() {
         page.on('pageerror', error => report.errors.push(error.message));
         const connections = [];
         const createdOrigins = [];
+        const ticketResponses = [];
         page.on('request', request => {
             if (new URL(request.url()).pathname !== '/account/rpc') return;
-            const raw = request.postDataBuffer();
-            if (!raw || raw.length < 6 || raw[1] !== 0 || raw.readUInt16BE(2) !== 10005) return;
-            let offset = 4;
-            for (let field = 0; field < 2; field++) while (offset < raw.length && raw[offset++] & 0x80) {}
-            createdOrigins.push(pb.CreateRoleRequest.decode(raw.subarray(offset)).origin_server_id.toString());
+            const payload = accountPayload(request.postDataBuffer(), 10005);
+            if (payload) createdOrigins.push(pb.CreateRoleRequest.decode(payload).origin_server_id.toString());
+        });
+        page.on('response', response => {
+            const request = response.request();
+            if (new URL(request.url()).pathname !== '/account/rpc' || !accountPayload(request.postDataBuffer(), 10007)) return;
+            // 只保留目标字段，票据原文不写进报告。
+            const route = response.body().then(raw => {
+                const payload = accountPayload(raw, 10008);
+                if (!payload) return null;
+                const ticket = pb.EntryTicketResult.decode(payload);
+                return { run: ticket.run_server_id.toString(), node: ticket.game_node_id, endpoint: ticket.game_wss_url };
+            }).catch(() => null);
+            ticketResponses.push(route);
         });
         page.on('websocket', socket => {
             const state = { endpoint: socket.url(), ready: false };
@@ -93,8 +123,13 @@ async function main() {
             await tap('RegionList/View/Content', entry.region);
             await tap('ServerList/View/Content', entry.server);
             await scene('RoleSelect');
-            await page.waitForFunction(name => cc.find('Canvas/Safe/Title')?.getComponent(cc.Label)?.string.startsWith(name + ' · '), entry.server);
-            assert.equal(await page.evaluate(() => cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string), '空角色槽');
+            // 场景标题先更新，角色目录回包后才用服务端数据替换场景占位文本。
+            report.step = '等待角色目录 · ' + entry.server;
+            await page.waitForFunction(name => {
+                const title = cc.find('Canvas/Safe/Title')?.getComponent(cc.Label)?.string;
+                const slot = cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string;
+                return title?.startsWith(name + ' · ') && slot === '空角色槽';
+            }, entry.server, { timeout: 30000 });
             const role = '路由' + crypto.randomBytes(2).toString('hex');
             await edit('Name', role);
             await tap('Create');
@@ -107,7 +142,10 @@ async function main() {
                 null, { timeout: 30000 });
             const opened = connections.slice(before);
             assert.deepEqual(opened, [{ endpoint: entry.endpoint, ready: true }]);
-            report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...opened[0] });
+            assert.equal(ticketResponses.length, index + 1);
+            const route = await ticketResponses[index];
+            assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
+            report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');
                 await scene('RoleSelect');
@@ -124,6 +162,8 @@ async function main() {
             const rows = name => cc.find('Canvas/Safe/' + name + '/View/Content')?.children.map(
                 node => node.getChildByName('Text')?.getComponent(cc.Label)?.string).filter(Boolean);
             return { scene, status: cc.find('Canvas/Safe/Status')?.getComponent(cc.Label)?.string,
+                title: cc.find('Canvas/Safe/Title')?.getComponent(cc.Label)?.string,
+                firstSlot: cc.find('Canvas/Safe/Role0/Label')?.getComponent(cc.Label)?.string,
                 regions: rows('RegionList'), servers: rows('ServerList') };
         }).catch(() => null);
         throw new Error(`${report.step}: ${error.message}${report.observed ? ' ' + JSON.stringify(report.observed) : ''}`);

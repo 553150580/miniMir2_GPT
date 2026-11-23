@@ -207,12 +207,14 @@ func (s *Store) warehouse(ctx context.Context, r domain.Role, scope uint32) (War
 // 只读核验不递增run_guards/accountGuard，不冻结角色，也不建立空仓库。
 // s 是调用该方法的持久层存储实例，ctx 向下传递当前请求的截止时间和取消信号，a 保存本次调用使用的账号或角色授权。
 func (s *Store) warehouseReadFence(ctx context.Context, a Auth) error {
-	// err 保存当前调用返回的错误，供后续失败分支处理。
-	if err := s.DB.Collection("run_control").FindOne(ctx, bson.M{"_id": s.Cfg.RunID, "owner_instance": s.Instance, "run_epoch": s.Epoch, "state": "active", "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Err(); err != nil {
+	member := gameRunMembership{RunID: s.Cfg.RunID, Epoch: s.Epoch}
+	run := activeRunOwnership(s.Cfg.NodeID, s.Instance, member)
+	run["$expr"] = leaseFilter()
+	if err := s.DB.Collection("run_control").FindOne(ctx, run).Err(); err != nil {
 		return authorityReadError(err, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	// err 保存当前调用返回的错误，供后续失败分支处理。
-	if err := s.DB.Collection("node_leases").FindOne(ctx, bson.M{"_id": s.Cfg.NodeID, "owner_instance": s.Instance, "$expr": bson.M{"$gt": bson.A{"$lease_until", "$$NOW"}}}).Err(); err != nil {
+	if err := s.DB.Collection("node_leases").FindOne(ctx, nodeLeaseFilter(s.Cfg.NodeID, s.Instance, member)).Err(); err != nil {
 		return authorityReadError(err, p.CodeRouteChanged, "节点许可已失效")
 	}
 	// err 保存当前调用返回的错误，供后续失败分支处理。

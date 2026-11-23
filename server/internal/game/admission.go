@@ -29,12 +29,14 @@ func (w *worker) join(r *room, c command) {
 
 // entryJob 保留原票据和尝试身份。断连后仍查证在途结果，且不再发起新接管。
 func (w *worker) entryJob(r *room, c command, attempt string, reconciling bool) job {
+	// store 固定原房间选中的运行服，健康接管和未知提交查证沿用同一授权代次。
+	store := w.roomStore(r)
 	return job{target: w, admission: true, run: func() func(*worker) {
 		var role domain.Role
 		var auth persistence.Auth
 		err := context.Canceled
 		if alive := c.conn.Alive(); alive || reconciling {
-			role, auth, err = w.e.Store.EnterTicket(w.e.ctx, *c.ticket, attempt, alive)
+			role, auth, err = store.EnterTicket(w.e.ctx, *c.ticket, attempt, alive)
 		}
 		return func(w *worker) {
 			w.finishEntry(r, c, attempt, reconciling, role, auth, err)
@@ -65,7 +67,8 @@ func (w *worker) finishEntry(r *room, c command, attempt string, reconciling boo
 		rejectEntry(c.conn, c.frame.Request, code, "entry rejected")
 	}
 	// 只有持久围栏内确认旧绑定仍有效，才能让它继续推进。已失效的现场由下一张有效票重建。
-	if r.Scene == 0 || reconciling && (auth != r.Auth || role.Owner != r.Role.Owner || role.RunEpoch != r.Role.RunEpoch) {
+	if r.Scene == 0 || reconciling && (auth != r.Auth || role.Owner != r.Role.Owner ||
+		role.RunServerID != r.Role.RunServerID || role.RunEpoch != r.Role.RunEpoch) {
 		if r.Conn != nil {
 			r.Conn.Close("entry authority changed")
 		}

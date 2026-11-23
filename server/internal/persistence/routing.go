@@ -44,18 +44,14 @@ type routedRun struct {
 	run        Run
 }
 
-// leasedGameNode 保存用数据库时钟筛选后的节点租约，目录由它判断真实节点可用性。
-type leasedGameNode struct {
-	ID    string `bson:"_id"`
-	Owner string `bson:"owner_instance"`
-	RunID uint64 `bson:"run_server_id"`
-	Epoch int64  `bson:"run_epoch"`
-}
-
 // seedRoutingCatalog 只建立缺失记录和补齐历史展示字段，不覆盖持续运营中的路由与部署。
 func (s *Store) seedRoutingCatalog(ctx context.Context) error {
 	origins := s.Cfg.OriginRoutes
 	runs := s.Cfg.RunServers
+	// 多运行服进程可从账号节点读取已有运营分配，启动成员清单不会隐式生成第一服的路由。
+	if len(s.Cfg.RunServerIDs) > 1 && len(origins) == 0 && len(runs) == 0 {
+		return nil
+	}
 	if len(origins) == 0 {
 		origins = []devconfig.OriginRouteSeed{{
 			OriginID: s.Cfg.OriginID, Name: fmt.Sprintf("%d服", s.Cfg.OriginID),
@@ -134,11 +130,6 @@ func matchingRun(assignment runAssignment, run Run) bool {
 		run.GameNodeID == assignment.GameNodeID && run.AssignmentVersion == assignment.AssignmentVersion
 }
 
-// matchingNode 确认节点租约对应相同的运行服、实例和代次。
-func matchingNode(node leasedGameNode, run Run) bool {
-	return node.Owner == run.Owner && node.RunID == run.ID && node.Epoch == run.Epoch
-}
-
 // liveRoute 解析入口、部署和双份有效租约。不存在或失效的运营状态返回明确业务错误。
 func (s *Store) liveRoute(ctx context.Context, origin uint64) (routedRun, error) {
 	var result routedRun
@@ -160,10 +151,8 @@ func (s *Store) liveRoute(ctx context.Context, origin uint64) (routedRun, error)
 	if !matchingRun(result.assignment, result.run) {
 		return result, Fail(p.CodeLineRecovering, "运行服尚未取得当前部署的许可")
 	}
-	if err = s.DB.Collection("node_leases").FindOne(ctx, bson.M{
-		"_id": result.assignment.GameNodeID, "kind": "game", "owner_instance": result.run.Owner,
-		"run_server_id": result.run.ID, "run_epoch": result.run.Epoch, "$expr": leaseFilter(),
-	}).Err(); err != nil {
+	member := gameRunMembership{RunID: result.run.ID, Epoch: result.run.Epoch}
+	if err = s.DB.Collection("node_leases").FindOne(ctx, nodeLeaseFilter(result.assignment.GameNodeID, result.run.Owner, member)).Err(); err != nil {
 		return result, authorityReadError(err, p.CodeLineRecovering, "游戏节点尚未就绪")
 	}
 	return result, nil

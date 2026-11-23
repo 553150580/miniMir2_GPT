@@ -15,11 +15,13 @@ func (w *worker) retireRoomDeath(r *room) bool {
 	}
 	// auth 保存当前处理所用的授权，deathID 标识当前业务使用的死亡，idleSince 保存当前处理所用的闲置“since”。
 	auth, deathID, idleSince := r.Auth, r.DeathID, r.idleSince
+	// store 使用原运行服围栏保存死亡标记；闲置回收不借用另一运行服身份。
+	store := w.roomStore(r)
 	// j 记录当前位置的下标，使用任务或职业编号表示。
 	var j job
 	j = job{target: w, run: func() func(*worker) {
 		// err 接收“preserve”已退役死亡过程中可能产生的错误，供后续失败分支处理。
-		err := w.e.Store.PreserveRetiredDeath(w.e.ctx, auth, deathID)
+		err := store.PreserveRetiredDeath(w.e.ctx, auth, deathID)
 		// w 记录房间执行器。
 		return func(w *worker) {
 			if w.rooms[auth.RoleID] != r || r.Isolated || r.Auth != auth || r.DeathID != deathID {

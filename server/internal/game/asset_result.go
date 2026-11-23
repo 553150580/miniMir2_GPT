@@ -33,12 +33,14 @@ func (w *worker) submitAsset(r *room, q persistence.AssetRequest, f wire.Frame, 
 	r.Pending = true
 	r.PendingOperationID = binding.id
 	r.PendingFingerprint = binding.fingerprint
+	// store 是原房间的运行服视图，事务和重试都用它核对角色的持久围栏。
+	store := w.roomStore(r)
 	// j 记录当前位置的下标，使用任务或职业编号表示。
 	var j job
 	j = job{target: w, run: func() func(*worker) {
 		// role 保存由资产带有回执取得的角色，result 保存由资产带有回执取得的结果，receipt 保存由资产带有回执取得的回执。
 		// err 接收资产带有回执过程中可能产生的错误，供后续失败分支处理。
-		role, result, receipt, err := w.e.Store.AssetWithReceipt(w.e.ctx, binding.auth, q)
+		role, result, receipt, err := store.AssetWithReceipt(w.e.ctx, binding.auth, q)
 		// w 记录房间执行器。
 		return func(w *worker) {
 			w.finishAsset(binding, q, f, reviveID, role, result, receipt, err, &j)
