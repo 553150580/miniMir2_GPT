@@ -35,11 +35,14 @@ func (b *personalNavigationWorkspace) markActor(m *devconfig.MapTemplate, actor,
 func (b *personalNavigationWorkspace) findFirstStep(m *devconfig.MapTemplate, r *room, self *entity, target devconfig.Point) (devconfig.Point, bool) {
 	// 动态占格和已访问格都会禁止重复入队，可在本次搜索内共用一份位图。
 	clear(b.unavailable[:])
-	b.markActor(m, &r.Player, self)
-	b.markActor(m, r.worldPet(r.currentWorld()), self)
-	// monster 接收遍历怪物集合中的范围时当前的元素。
-	for _, monster := range r.Monsters[:r.MonsterCount] {
-		b.markActor(m, monster, self)
+	if arena := r.worldBossCombat; arena != nil {
+		arena.eachLiving(func(actor *entity) { b.markActor(m, actor, self) })
+	} else {
+		b.markActor(m, &r.Player, self)
+		b.markActor(m, r.worldPet(r.currentWorld()), self)
+		for _, monster := range r.Monsters[:r.MonsterCount] {
+			b.markActor(m, monster, self)
+		}
 	}
 
 	// start 保存位置，用于当前步骤中的起点或开始时间。

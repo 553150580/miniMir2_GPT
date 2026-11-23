@@ -29,29 +29,34 @@ type skillHandler struct {
 
 // preparedCast 冻结施法目标、费用、效果和原身体身份，供后续安全提交。
 type preparedCast struct {
-	Scene                                 uint64          // 原附着身份独立于执行actorRef。
-	Skill                                 devconfig.Skill // 通过职业和已学等级门禁后的技能配置。
-	Level                                 uint32          // 当前已受理技能的等级。
-	Caster, Target                        actorRef        // 施法者与目标的原世界出生身份。
-	Origin, Point                         devconfig.Point // 原施法位置和选定地格，用于判定命中及观察。
-	Direction                             uint32          // 接受计划时冻结的施法方向。
-	Cost, Amount, DelayMS, BuffDurationMS int64           // 待扣魔法值、效果量、命中延时与状态持续时间。
-	Summon                                *summonPetPlan  // 需要新生或召回宠物时保留的专用计划。
-	ExecuteTarget                         bool            // 圣言术已通过等级和概率判定，可安排原目标的延迟处决。
+	Scene                                 uint64                // 原附着身份独立于执行actorRef。
+	Skill                                 devconfig.Skill       // 通过职业和已学等级门禁后的技能配置。
+	Level                                 uint32                // 当前已受理技能的等级。
+	Caster, Target                        actorRef              // 施法者与目标的原世界出生身份。
+	Origin, Point                         devconfig.Point       // 原施法位置和选定地格，用于判定命中及观察。
+	Direction                             uint32                // 接受计划时冻结的施法方向。
+	Cost, Amount, DelayMS, BuffDurationMS int64                 // 待扣魔法值、效果量、命中延时与状态持续时间。
+	Summon                                *summonPetPlan        // 需要新生或召回宠物时保留的专用计划。
+	ExecuteTarget                         bool                  // 圣言术已通过等级和概率判定，可安排原目标的延迟处决。
+	PoisonColor                           devconfig.PoisonColor // 由持久扣料同一原药粉实例判定的色别。
 }
 
 // skillHandlers 以配置行为名称标识服务端可执行的技能分支。
 var skillHandlers = map[string]skillHandler{
-	"fencing": {Passive: true}, "spirit_sword": {Passive: true},
+	devconfig.TrapHexagonBehavior: {Area: true},
+	"fencing":                     {Passive: true}, "spirit_sword": {Passive: true},
 	"fireball": {}, "great_fireball": {}, "thunderbolt": {UndeadBonus: true},
 	"firebang": {Area: true}, "fire_wall": {Area: true}, "healing": {Healing: true}, "mass_healing": {Healing: true, Area: true},
 	"magic_shield": {Status: true}, "soul_shield": {Status: true, Area: true}, "blessed_armour": {Status: true, Area: true},
 	"slaying": {Passive: true}, "thrusting": {Passive: true}, "half_moon": {Passive: true}, "flaming_sword": {Passive: true},
 	"hell_fire": {Direction: true}, "lightning": {Direction: true}, "ice_storm": {Area: true}, "thunder_storm": {Area: true, SelfArea: true},
 	"repulsion": {SelfArea: true, Displacement: true}, "shoulder_dash": {Direction: true, Displacement: true},
-	"teleport":    {Teleport: true},
-	"summon_pet":  {Summon: true},
-	"turn_undead": {TurnUndead: true},
+	"teleport":       {Teleport: true},
+	"summon_pet":     {Summon: true},
+	"turn_undead":    {TurnUndead: true},
+	"soul_fire_ball": {},
+	"poisoning":      {},
+	"hiding":         {Status: true},
 }
 
 // targetKind 根据技能配置决定默认目标类别。
@@ -217,7 +222,14 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		return nil, p.CodeSkillNotLearned
 	}
 	// 未接入角色 owner 的永久消耗前，私有挑战只运行本场的可独立结算动作。
-	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0) {
+	if r.bossBattle != nil && (handler.Teleport || handler.Summon || s.MaterialQuantity > 0) || r.worldBossObservation != nil && handler.Teleport {
+		return nil, p.CodeSkillStateBlocked
+	}
+	// 共享地格持续技能还需统一落格、冲突和拥有者归属，候选阶段只受理已具备场次语义的技能。
+	if r.worldBossCombat != nil && s.Behavior == "fire_wall" {
+		return nil, p.CodeSkillStateBlocked
+	}
+	if s.Behavior == devconfig.TrapHexagonBehavior && !w.trapHexagonScope(r, r.currentWorld()) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
@@ -280,6 +292,9 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	if skillRequiresFlight(s) && !w.lineOfSight(r, r.Player.Pos, point) {
 		return nil, p.CodeSkillTarget
 	}
+	if s.Behavior == devconfig.TrapHexagonBehavior && !hasTrapHexagonTarget(r.currentWorld(), point, r.Role.Level) {
+		return nil, p.CodeSkillTarget
+	}
 	// cost 保存由瞬移魔法值消耗取得的消耗，validCost 保存由瞬移魔法值消耗取得的有效消耗。
 	cost, validCost := teleportManaCost(&r.Player, s, level)
 	if !validCost {
@@ -324,8 +339,8 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 	amount := int64(0)
 	// duration 保存由整数“64”取得的持续时间。
 	duration := int64(0)
-	if handler.Teleport || handler.Summon || handler.TurnUndead {
-		// 这些行为使用各自的迁移、召唤或处决规则。
+	if handler.Teleport || handler.Summon || handler.TurnUndead || s.Behavior == devconfig.TrapHexagonBehavior {
+		// 这些行为使用各自的迁移、召唤、处决或围困规则。
 	} else if handler.Status {
 		switch definition.DurationKind {
 		case "mc_source_power":
@@ -359,6 +374,9 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		if addLevel {
 			amount += int64(r.Role.Level)
 		}
+	} else if s.Behavior == "soul_fire_ball" || s.Behavior == "poisoning" {
+		// 两种道士攻击技能的原始威力来自道术，后续各按弹道与药粉结算。
+		amount = w.magicAmount(s, level, w.interval(stats.TaoMin, stats.TaoMax))
 	} else {
 		amount = w.magicAmount(s, level, w.interval(stats.MagicMin, stats.MagicMax))
 	}
@@ -394,6 +412,9 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	}
 	// s 保存当前处理所用的技能，level 保存当前处理所用的等级。
 	s, level := plan.Skill, plan.Level
+	if s.Behavior == "poisoning" && plan.PoisonColor == devconfig.PoisonNone {
+		return p.CodeSkillMaterialRequired
+	}
 	// id 区分当前步骤指向的目标对象。
 	id := s.ID
 	// point 保存当前处理所用的点位，amount 保存当前处理所用的数量，delay 保存“delay”毫秒，用于当前步骤中的“delay”，cost 保存当前处理所用的消耗。
@@ -420,6 +441,7 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	// event 初始化用作事件的待确认施法。
 	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
 	event.Summon = plan.Summon
+	event.PoisonColor = plan.PoisonColor
 	if s.Behavior == "hell_fire" {
 		event.LineRemaining = s.LineCells
 	}
@@ -469,6 +491,14 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 	}
 	if c.Skill.Behavior == "fire_wall" {
 		w.resolveFireWall(r, world, caster, c, now)
+		return
+	}
+	if c.Skill.Behavior == "poisoning" {
+		w.resolvePoisoning(r, world, caster, c, now)
+		return
+	}
+	if c.Skill.Behavior == devconfig.TrapHexagonBehavior {
+		w.resolveTrapHexagon(r, world, caster, c, now)
 		return
 	}
 	if !registered || caster == nil {
@@ -644,7 +674,7 @@ func (w *worker) autoSkill(r *room, now time.Time) bool {
 				}
 			}
 			if s.MaterialQuantity > 0 {
-				if w.autoMaterialCast(r, s, center, now, &manaNeeded) {
+				if w.autoMaterialCast(r, s, 0, direction, pointPB(center), now, &manaNeeded) {
 					return true
 				}
 			} else if w.castAutomatically(r, s.ID, 0, direction, now, &manaNeeded, pointPB(center)) {

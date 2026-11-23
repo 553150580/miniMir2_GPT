@@ -67,6 +67,7 @@ func (w *worker) sourceTimeline() bool {
 
 // hitContext 提供命中时刻以及冻结的特权和托管归属。
 type hitContext struct {
+	PeriodicPoison    bool      // 毒的旧效果按自身节拍扣血，不算一次解除围困的直接攻击。
 	At                time.Time // 本次命中正式发生的时刻。
 	HostSession       string    // 该事件所在离线托管区段的会话编号。
 	PrivilegeUntil    time.Time // 用于判断 Bind 属性的归属区段特权截止时刻。
@@ -140,6 +141,7 @@ func transitionEventHosting(r *room, at time.Time, session string) {
 // 围栏/身份硬失败不能给旧事实升级授权或重新抽奖；只隔离本房间，等待明确恢复。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) isolateRoom(r *room) {
+	w.detachWorldBoss(r)
 	r.PetBornReady = nil
 	w.leaveSharedTown(r)
 	w.cancelTownNavigation(r)
@@ -393,7 +395,7 @@ func (w *worker) resolveAttackInWorld(r *room, world *worldState, a pendingAttac
 		if a.Defence != defenceAgility {
 			armour = w.interval(defender.DefenceMin, defender.DefenceMax)
 		}
-		damage = statusDamage(target, a.Amount, armour)
+		damage = statusDamage(target, a.Amount, poisonArmour(target, armour))
 	}
 	if damage < 0 {
 		damage = 0

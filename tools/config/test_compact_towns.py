@@ -36,6 +36,7 @@ class CompactTownTests(unittest.TestCase):
         tables = deepcopy(self.tables)
         profile = tables['dev_first_loop_profile'][0]['parameters']
         profile['rule_version'] = 23
+        del profile['boss_template_ids']
         del profile['compact_towns'], profile['map_regions']
         for key in module.npc_shops.PROFILE_KEYS:
             del profile[key]

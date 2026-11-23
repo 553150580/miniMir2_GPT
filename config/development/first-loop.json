@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 27,
+  "rule_version": 28,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -1539,6 +1539,140 @@
         "allow_accepted_dead": true,
         "check_source_map_at_due": true
       }
+    },
+    {
+      "id": 22,
+      "name": "火墙",
+      "job_id": 1,
+      "book_item_id": 15,
+      "learn_level": 24,
+      "learned_level": 0,
+      "max_level": 3,
+      "behavior": "fire_wall",
+      "cooldown_base_ms": 1800,
+      "target_kind": "enemy_grid",
+      "range_cells": 9,
+      "target_move_tolerance_cells": 0,
+      "area_radius": 1,
+      "require_line_of_sight": false,
+      "auto_priority": 0,
+      "auto_min_targets": 1,
+      "auto_enabled": false,
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_stop_on_blocked": false,
+      "activation_kind": "cast",
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "delay_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "secondary_impact_ms": 0,
+      "charge_window_ms": 0,
+      "line_step_ms": 0,
+      "buff_id": 0,
+      "mp_base_cost": 30,
+      "mp_level_cost": 5,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "accuracy_per_level": 0,
+      "power_base": 3,
+      "power_bonus": 0,
+      "mpower_base": 3,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "healing_stat_multiplier": 0,
+      "add_caster_level": false,
+      "undead_multiplier_ppm": 1000000,
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "ready_proc_denominator": 0,
+      "ready_proc_numerators": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "non_undead_divisor": 1
+    },
+    {
+      "id": 32,
+      "name": "圣言术",
+      "job_id": 1,
+      "book_item_id": 19,
+      "learn_level": 32,
+      "learned_level": 0,
+      "max_level": 3,
+      "behavior": "turn_undead",
+      "cooldown_base_ms": 1800,
+      "target_kind": "enemy_entity",
+      "range_cells": 9,
+      "target_move_tolerance_cells": 0,
+      "area_radius": 0,
+      "require_line_of_sight": false,
+      "auto_priority": 0,
+      "auto_min_targets": 1,
+      "auto_enabled": false,
+      "secondary_direction_offsets": [],
+      "secondary_distance_cells": 0,
+      "line_cells": 0,
+      "line_stop_on_blocked": false,
+      "activation_kind": "cast",
+      "cooldown_reduction_ms": 0,
+      "global_spell_ms": 1800,
+      "action_ms": 600,
+      "delay_base_ms": 500,
+      "projectile_ms_per_cell": 0,
+      "secondary_impact_ms": 0,
+      "charge_window_ms": 0,
+      "line_step_ms": 0,
+      "buff_id": 0,
+      "mp_base_cost": 52,
+      "mp_level_cost": 13,
+      "material_item_id": 0,
+      "material_quantity": 0,
+      "accuracy_per_level": 0,
+      "power_base": 0,
+      "power_bonus": 0,
+      "mpower_base": 0,
+      "mpower_bonus": 0,
+      "multiplier_base_ppm": 1000000,
+      "multiplier_bonus_ppm": 0,
+      "accuracy_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "healing_stat_multiplier": 0,
+      "add_caster_level": false,
+      "undead_multiplier_ppm": 1000000,
+      "max_attack_bonus_by_level": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "ready_proc_denominator": 0,
+      "ready_proc_numerators": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "non_undead_divisor": 1
     }
   ],
   "buffs": [
@@ -2597,6 +2731,84 @@
       ],
       "page_item_id": 900001,
       "page_cost": 20
+    },
+    {
+      "skill_id": 22,
+      "level": 1,
+      "required_role_level": 24,
+      "book_costs": [
+        {
+          "item_id": 15,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 22,
+      "level": 2,
+      "required_role_level": 28,
+      "book_costs": [
+        {
+          "item_id": 15,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 22,
+      "level": 3,
+      "required_role_level": 33,
+      "book_costs": [
+        {
+          "item_id": 15,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
+    },
+    {
+      "skill_id": 32,
+      "level": 1,
+      "required_role_level": 32,
+      "book_costs": [
+        {
+          "item_id": 19,
+          "quantity": 2
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 5
+    },
+    {
+      "skill_id": 32,
+      "level": 2,
+      "required_role_level": 35,
+      "book_costs": [
+        {
+          "item_id": 19,
+          "quantity": 3
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 10
+    },
+    {
+      "skill_id": 32,
+      "level": 3,
+      "required_role_level": 39,
+      "book_costs": [
+        {
+          "item_id": 19,
+          "quantity": 4
+        }
+      ],
+      "page_item_id": 900001,
+      "page_cost": 20
     }
   ],
   "skill_shop": [
@@ -2836,6 +3048,26 @@
       "quantity": 1,
       "currency": "gold",
       "price_units": 2000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32
+    },
+    {
+      "id": 28,
+      "item_id": 15,
+      "quantity": 1,
+      "currency": "gold",
+      "price_units": 4000,
+      "required_role_level": 1,
+      "output_bound": true,
+      "max_purchase_quantity": 32
+    },
+    {
+      "id": 29,
+      "item_id": 19,
+      "quantity": 1,
+      "currency": "gold",
+      "price_units": 18000,
       "required_role_level": 1,
       "output_bound": true,
       "max_purchase_quantity": 32
@@ -3627,6 +3859,78 @@
     },
     {
       "item_id": 13,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 15,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 15,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 15,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 15,
+      "book_quality": 4,
+      "page_item_id": 900001,
+      "pages_per_book": 50,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 19,
+      "book_quality": 1,
+      "page_item_id": 900001,
+      "pages_per_book": 5,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 19,
+      "book_quality": 2,
+      "page_item_id": 900001,
+      "pages_per_book": 10,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 19,
+      "book_quality": 3,
+      "page_item_id": 900001,
+      "pages_per_book": 20,
+      "allowed_source_kinds": [
+        "monster_drop"
+      ]
+    },
+    {
+      "item_id": 19,
       "book_quality": 4,
       "page_item_id": 900001,
       "pages_per_book": 50,
@@ -4497,6 +4801,50 @@
       ]
     },
     {
+      "id": 15,
+      "name": "《火墙》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 22,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "max_stack": 1,
+      "drop_quality": 1,
+      "allowed_jobs": [
+        1
+      ]
+    },
+    {
+      "id": 19,
+      "name": "《圣言术》",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "book_skill_id": 32,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": false,
+      "max_stack": 1,
+      "drop_quality": 1,
+      "allowed_jobs": [
+        1
+      ]
+    },
+    {
       "id": 900001,
       "name": "书页",
       "equipment_slot": 0,
@@ -4664,6 +5012,16 @@
           "id": 2,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:381；client/assets/resources/development/manifest.json；资料参考/crystal/Server/MirDatabase/MonsterInfo.cs:39；资料参考/crystal/Server/MirObjects/MonsterObject.cs:1035-1093",
           "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 本轮Undead仅按原CSV字段显式投影，不能凭名称推断。；CanPush采用Crystal MonsterInfo默认true作为当前形象开发候选，并非MYF实库已认证；宠物从其monster_template_id同一怪物attributes引用，不另维护。"
+        },
+        {
+          "id": 80001,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 80002,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
         }
       ],
       "game_items": [
@@ -4826,6 +5184,16 @@
           "id": 594,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:596",
           "note": "来源Stdmode30及OverLap0；仅开放商店买卖，不赋予照明效果。"
+        },
+        {
+          "id": 15,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:17（原书15，原价4000）",
+          "note": "MYF同名书作为规则28开发候选原书身份。"
+        },
+        {
+          "id": 19,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:21（原书19，原报价18000）",
+          "note": "MYF同名书用于候选原书身份；Shape为职业组，不作技能ID。原书像素图标待映射。NPC购买绑定且不能拆页。"
         }
       ],
       "game_equipment": [
@@ -4855,6 +5223,16 @@
           "id": 2,
           "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证；MiniMap.txt:98图号101与mmap原帧100视觉候选对齐，原引擎编号基址未认证",
           "note": "完整700×700来源地图，源坐标不裁剪；银杏/边界/比奇同属地图0。入口633,613仅取来源银杏传送坐标，不认证新生点。非战斗城镇原生48×32，与个人17×17菱形地图分开；门关闭候选，室内/NPC/实际切图业务另验收。"
+        },
+        {
+          "id": 80,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 81,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
         }
       ],
       "game_map_collisions": [
@@ -4867,6 +5245,16 @@
           "id": 2,
           "source_ref": "用户明确先接来源城镇及安全区；docs/来源城镇地图与安全区实施边界.md；资料索引/来源城镇地图补充.json；MYF MapInfo.txt L5与StartPoint.txt原字节副本；跨来源开发候选，非目标1.80认证",
           "note": "不可走位由本行唯一原图引用逐格生成，不把490000格复制进Excel文本单元格；静态位/门位/运行OR位分别可核验。关闭门候选不代表门开关与室内已实现；寻路禁止切角沿当前开发适配。"
+        },
+        {
+          "id": 80,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 81,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
         }
       ],
       "game_map_regions": [
@@ -4951,6 +5339,16 @@
           "id": 8,
           "source_ref": "用户2026-11-22要求：普通个人挂机图为13×13、无建筑或装饰、土层侧厚减半、怪物在随机空格复活；原1.80客户端地图0地表仅作美术裁片。；最终策划案.md：普通怪10秒复活。",
           "note": "保留第一批怪的八个槽位及相对布局，裁边移除的旧坐标贴新边界。以下为首次生成坐标，死亡后在可用空格随机复活。"
+        },
+        {
+          "id": 80,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 81,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
         }
       ],
       "game_pet_templates": [
@@ -5797,6 +6195,16 @@
           "id": 17,
           "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署",
           "note": "仅独立候选；同名存活有居民节点先Recall且不耗符，新生才材料1；主22技能不选17。MYF19/23/26与Crystal19/22/26不同，三阶另由171–173候选维护，主升级未选入。"
+        },
+        {
+          "id": 22,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv:23；资料参考/crystal/Server/MirEnvir/Envir.cs:675-691；资料参考/crystal/Server/MirObjects/HumanObject.cs:4149-4180",
+          "note": "规则28开发候选，原格对象500ms后放置，中心及正交四格。同格不覆盖，2秒处理一次，移入另触发。原值寿命10秒+威力整数除2。保持默认手动。"
+        },
+        {
+          "id": 32,
+          "source_ref": "资料参考/crystal/Server/MirObjects/HumanObject.cs:4216-4249,6211-6222；资料参考/crystal/Server/MirEnvir/Envir.cs:765-780；资料参考/myf/Mud2/DB/ApexM2_Magic.csv:33",
+          "note": "仅开发候选。源随机等级门禁与分阶概率；成功500ms后核对同世界同生命，来源结算只发生一次。无飞行遮挡和目标漂移限制。原行为失败有拉仇恨，开发个人怪物持续追索；无PK或共用怪物规则外推。动作600ms沿项目已有施法适配。默认手动；未认证目标1.80。"
         }
       ],
       "game_buffs": [
@@ -6188,6 +6596,36 @@
           "id": 173,
           "source_ref": "本任务rule17关闭的开发候选；MYF ApexM2_Magic.csv:18技能17、ApexM2_stditems.csv:27书25；Crystal MirEnvir/Envir.cs:997–1012 MP12+4/range0/learn19；HumanObject.cs:3424–3451,4399–4438；MagicInfo.cs:18默认CD1800；不是MYF16困魔咒，不认证原服部署；本任务已选Crystal19/22/26作开发候选，明确区别MYF19/23/26；书目标阶+1为既定公式，页数沿已审5/10/20候选",
           "note": "仅关闭召唤catalog逐阶合同，保证完整Cfg.Validate；不进主22技能升级，不开商店/赠书/随机练功。"
+        },
+        {
+          "id": 221,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv:23；资料参考/crystal/Server/MirEnvir/Envir.cs:675-691；资料参考/crystal/Server/MirObjects/HumanObject.cs:4149-4180；本作既定原书与书页升级管线",
+          "note": "初学可用，逐阶级别采用Crystal 24、28、33，MYF中阶29保留为跨来源差异。"
+        },
+        {
+          "id": 222,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv:23；资料参考/crystal/Server/MirEnvir/Envir.cs:675-691；资料参考/crystal/Server/MirObjects/HumanObject.cs:4149-4180；本作既定原书与书页升级管线",
+          "note": "初学可用，逐阶级别采用Crystal 24、28、33，MYF中阶29保留为跨来源差异。"
+        },
+        {
+          "id": 223,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Magic.csv:23；资料参考/crystal/Server/MirEnvir/Envir.cs:675-691；资料参考/crystal/Server/MirObjects/HumanObject.cs:4149-4180；本作既定原书与书页升级管线",
+          "note": "初学可用，逐阶级别采用Crystal 24、28、33，MYF中阶29保留为跨来源差异。"
+        },
+        {
+          "id": 321,
+          "source_ref": "资料参考/crystal/Server/MirObjects/HumanObject.cs:4216-4249,6211-6222；资料参考/crystal/Server/MirEnvir/Envir.cs:765-780；资料参考/myf/Mud2/DB/ApexM2_Magic.csv:33；目标阶+1书本和现有逐阶书页规则",
+          "note": "原生Level1/2/3作为开发训练升级门槛；升级仅调整概率阈值与原生阶魔法消耗，保留单亡灵目标和500ms时序。"
+        },
+        {
+          "id": 322,
+          "source_ref": "资料参考/crystal/Server/MirObjects/HumanObject.cs:4216-4249,6211-6222；资料参考/crystal/Server/MirEnvir/Envir.cs:765-780；资料参考/myf/Mud2/DB/ApexM2_Magic.csv:33；目标阶+1书本和现有逐阶书页规则",
+          "note": "原生Level1/2/3作为开发训练升级门槛；升级仅调整概率阈值与原生阶魔法消耗，保留单亡灵目标和500ms时序。"
+        },
+        {
+          "id": 323,
+          "source_ref": "资料参考/crystal/Server/MirObjects/HumanObject.cs:4216-4249,6211-6222；资料参考/crystal/Server/MirEnvir/Envir.cs:765-780；资料参考/myf/Mud2/DB/ApexM2_Magic.csv:33；目标阶+1书本和现有逐阶书页规则",
+          "note": "原生Level1/2/3作为开发训练升级门槛；升级仅调整概率阈值与原生阶魔法消耗，保留单亡灵目标和500ms时序。"
         }
       ],
       "game_shop_prices": [
@@ -6325,6 +6763,16 @@
           "id": 27,
           "source_ref": "MYF Mud2/DB/ApexM2_stditems.csv:1,15（Idx13、Stdmode4、原名瞬息移动、Price2000）；仅开发来源候选，非原服实际成交认证",
           "note": "沿既有金币绑定优先、产物绑定及NPC品质0禁拆页；此候选不认证原服实际成交。"
+        },
+        {
+          "id": 28,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:17（原书15，原价4000）",
+          "note": "金币绑定优先；本轮固定产物绑定，NPC书不允许拆页；金币回收价未定，暂拒绝分解。"
+        },
+        {
+          "id": 29,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:21（原书19，原报价18000）；本作开发定价候选",
+          "note": "金币绑定优先；本轮固定产物绑定，NPC书不允许拆页；金币回收价未定，暂拒绝分解。"
         }
       ],
       "game_book_recycle": [
@@ -6565,6 +7013,277 @@
           "id": 5,
           "source_ref": "最终策划案4.17、4.21；本轮开发闭环",
           "note": "首测目标及奖量候选，验证进度和绑定领取，正式平衡待核验。"
+        }
+      ],
+      "game_boss_templates": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
+          "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        }
+      ],
+      "game_challenge_rules": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 4,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": "失败重试冷却须配置。"
+        },
+        {
+          "id": 5,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 8,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 9,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 10,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 11,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 14,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 15,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 16,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 17,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 18,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 19,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 20,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 21,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 22,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 23,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": null
+        },
+        {
+          "id": 26,
+          "source_ref": "最终策划案.md:445-471、1011-1060；4.18、7.2",
+          "note": "有效参与、退出、宠物归属、排名与材料总预算需逐项审定。"
+        }
+      ],
+      "game_entitlement_rules": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 3,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 4,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 5,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 8,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 9,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 10,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 11,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 14,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 15,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 16,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 17,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 18,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 19,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 20,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "无购买后24h总上限。"
+        },
+        {
+          "id": 21,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 22,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 23,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 24,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": null
+        },
+        {
+          "id": 25,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "须配置合法购买粒度。"
+        },
+        {
+          "id": 26,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "激励视频首测候选，回调核验及账号/IP/设备限额待配置。"
+        },
+        {
+          "id": 27,
+          "source_ref": "最终策划案.md:95-105、346-376；4.1、4.12",
+          "note": "策划要求联合限额但未给数量。"
         }
       ],
       "game_drop_categories": [
@@ -7063,6 +7782,37 @@
       "compiler_sha256": "df8a1d7bc97d2ba0d9254a7ad80748e1b2a176f849219928ac7a50bc50e53250",
       "scope": "开发候选目标及绑定奖励。正式数值、图鉴属性预算和特殊玩法任务未启用。"
     },
+    "boss_challenges": {
+      "monster_profiles": [
+        {
+          "definition_id": 80001,
+          "name": "林地守卫",
+          "profile": "monster_scarecrow",
+          "can_push": false
+        },
+        {
+          "definition_id": 80002,
+          "name": "林地首领",
+          "profile": "monster_scarecrow",
+          "can_push": false
+        }
+      ],
+      "floor_map_ids": {
+        "80": "1",
+        "81": "1"
+      },
+      "tables": [
+        "game_boss_templates",
+        "game_challenge_rules",
+        "game_entitlement_rules",
+        "game_maps",
+        "game_map_collisions",
+        "game_monster_spawns",
+        "game_monsters"
+      ],
+      "compiler_sha256": "b783694d656a06e905658b04d60780cbe02ba713a5edcd5a2862e28b45777f24",
+      "scope": "个人与世界首领可玩开发候选。地图、首领数值、容量及失败等待用于隔离体验，个人与世界均未投影经济奖励。"
+    },
     "workbook_sync": "exported_from_current_unique_excel",
     "source_locks": [
       {
@@ -7184,9 +7934,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "f6ed8e5bcd677baae0130e87137254f8f0c13159905c11f680af1c355bc9b996"
+      "sha256": "6c976d04ff222cf6b8640e2d7596eaecc594bff7d12c159467fd83e3be75ae94"
     },
-    "exporter_sha256": "f830a2d44bf43cadfc024404d385f460d190b1e8d6813d58d0a515961dc07cc9",
+    "exporter_sha256": "6aa1c981c54862f3da36f99a492f0e534decb1dbac4ef8043745097d668095f9",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -7198,7 +7948,7 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "f6ed8e5bcd677baae0130e87137254f8f0c13159905c11f680af1c355bc9b996"
+          "sha256": "6c976d04ff222cf6b8640e2d7596eaecc594bff7d12c159467fd83e3be75ae94"
         }
       ]
     },
@@ -7628,6 +8378,26 @@
           "required_role_level": 1,
           "output_bound": true,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 28,
+          "item_id": 15,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 4000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 29,
+          "item_id": 19,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 18000,
+          "required_role_level": 1,
+          "output_bound": true,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
@@ -7718,6 +8488,14 @@
         {
           "item_id": 13,
           "price_gold": 1000
+        },
+        {
+          "item_id": 15,
+          "price_gold": 2000
+        },
+        {
+          "item_id": 19,
+          "price_gold": 9000
         }
       ],
       "can_repair": false
@@ -8607,5 +9385,148 @@
     "daily_pool_size": 10,
     "daily_claim_limit": 6,
     "daily_activity_target": 100
+  },
+  "challenge_monsters": [
+    {
+      "job_id": 0,
+      "definition_id": 80001,
+      "level": 8,
+      "hp": 60,
+      "mp": 0,
+      "attack_min": 1,
+      "attack_max": 3,
+      "defence": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 5,
+      "agility": 10,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 1800,
+      "move_ms": 1000,
+      "undead": false,
+      "can_push": false,
+      "id": 80001,
+      "exp": 0,
+      "gold_min": 0,
+      "gold_max": 0,
+      "respawn_ms": 0
+    },
+    {
+      "job_id": 0,
+      "definition_id": 80002,
+      "level": 8,
+      "hp": 600,
+      "mp": 0,
+      "attack_min": 1,
+      "attack_max": 4,
+      "defence": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 5,
+      "agility": 10,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 2000,
+      "move_ms": 1100,
+      "undead": false,
+      "can_push": false,
+      "id": 80002,
+      "exp": 0,
+      "gold_min": 0,
+      "gold_max": 0,
+      "respawn_ms": 0
+    }
+  ],
+  "personal_boss": {
+    "enabled": true,
+    "template_id": 1,
+    "display_name": "林地守卫",
+    "map": {
+      "id": 80,
+      "display_name": "个人首领挑战",
+      "scene_kind": 3,
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "no_teleport": true,
+      "no_pets": false,
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "pet_spawn": {
+        "x": 6,
+        "y": 5
+      },
+      "monster_spawns": [
+        {
+          "x": 9,
+          "y": 6
+        }
+      ]
+    },
+    "monster_id": 80001,
+    "minimum_level": 1,
+    "duration_ms": 180000,
+    "success_cooldown_ms": 600000,
+    "retry_cooldown_ms": 15000,
+    "daily_success_limit": 5,
+    "privilege_success_bonus": 1,
+    "history_limit": 20
+  },
+  "world_boss": {
+    "enabled": true,
+    "template_id": 2,
+    "display_name": "林地首领",
+    "map": {
+      "id": 81,
+      "display_name": "世界首领战场",
+      "scene_kind": 4,
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "no_teleport": true,
+      "no_pets": false,
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "pet_spawn": {
+        "x": 6,
+        "y": 5
+      },
+      "monster_spawns": [
+        {
+          "x": 9,
+          "y": 7
+        }
+      ]
+    },
+    "monster_id": 80002,
+    "minimum_level": 1,
+    "daily_open_offsets_ms": [
+      43200000,
+      72000000
+    ],
+    "window_ms": 3600000,
+    "return_delay_ms": 5000,
+    "participant_limit": 16
   }
 }

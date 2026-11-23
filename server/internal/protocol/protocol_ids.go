@@ -66,6 +66,12 @@ const (
 	MsgC2SPersonalBossEnter uint16 = 20012
 	MsgC2SPersonalBossLeave uint16 = 20013
 	MsgS2CPersonalBossState uint16 = 20014
+	MsgC2SPersonalBossQuery uint16 = 20015
+	MsgS2CPersonalBossInfo uint16 = 20016
+	MsgC2SWorldBossQuery uint16 = 20017
+	MsgC2SWorldBossEnter uint16 = 20018
+	MsgC2SWorldBossLeave uint16 = 20019
+	MsgS2CWorldBossState uint16 = 20020
 	MsgC2SWarehouseQuery uint16 = 40020
 	MsgS2CWarehousePage uint16 = 40021
 	MsgC2SWarehouseAction uint16 = 40022

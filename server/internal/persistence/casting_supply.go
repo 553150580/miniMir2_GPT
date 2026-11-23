@@ -27,7 +27,7 @@ type CastingReceipt struct {
 func CastingSupplyGate(r domain.Role, q AssetRequest, f devconfig.Fixture) uint32 {
 	// skill 接收技能供后续步骤使用，exists 保存由技能取得的存在。
 	skill, exists := f.Skill(q.SkillID)
-	if !exists || skill.MaterialItemID == 0 || skill.MaterialQuantity <= 0 || !f.CastingSupply.Enabled {
+	if !exists || skill.MaterialQuantity <= 0 || !f.CastingSupply.Enabled {
 		return p.CodeSkillMaterialRequired
 	}
 	// rank 保存由技能取得的排序位次，learned 保存由技能取得的已学习。
@@ -45,7 +45,7 @@ func CastingSupplyGate(r domain.Role, q AssetRequest, f devconfig.Fixture) uint3
 		if item.ID != q.ItemID || q.ItemVersion == 0 || q.ItemVersion > math.MaxInt64 || item.Version != int64(q.ItemVersion) {
 			return p.CodeSkillMaterialChanged
 		}
-		if !f.IsCastingSupply(item.ItemID) || item.ItemID != skill.MaterialItemID || item.Quantity < skill.MaterialQuantity {
+		if !f.IsCastingSupply(item.ItemID) || !skill.AcceptsMaterial(item.ItemID) || item.Quantity < skill.MaterialQuantity {
 			return p.CodeSkillMaterialRequired
 		}
 		if item.Version == math.MaxInt64 {

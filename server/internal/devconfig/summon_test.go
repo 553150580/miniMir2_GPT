@@ -46,7 +46,11 @@ func TestSummonCandidatesPreserveSourceAndClosedProfile(t *testing.T) {
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := cfg.Fixture
-	if f.RuleVersion < 23 || len(f.Skills) != 22 || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
+	expectedSkills := 22
+	if f.RuleVersion >= 28 {
+		expectedSkills = 24
+	}
+	if f.RuleVersion < 23 || len(f.Skills) != expectedSkills || f.CastingSupply.Enabled || f.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
 		t.Fatal("候选载入不能开启主profile或更换免费开发宠物模式")
 	}
 	// ok 表明查询、校验或类型转换是否成功。

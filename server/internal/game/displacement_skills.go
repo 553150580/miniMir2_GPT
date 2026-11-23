@@ -22,6 +22,9 @@ func (w *worker) relocate(r *room, e *entity, point devconfig.Point) bool {
 // 仅供已完成各自来源地形校验的受信动作使用，不把Teleport规则混进普通walk/pushed。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，e 记录实体，point 记录点位。
 func (w *worker) commitRelocation(r *room, e *entity, point devconfig.Point) bool {
+	if arena := r.worldBossCombat; arena != nil && arena.occupied(point, e) {
+		return false
+	}
 	if r.CellEntrySequence == math.MaxUint64 {
 		w.isolateRoom(r)
 		return false

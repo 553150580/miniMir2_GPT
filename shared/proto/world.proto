@@ -226,6 +226,8 @@ message SceneBaselineChunk {
   uint64 safe_zone_id = 9;
   // 每块元数据完全一致；只有整组基线就绪后才能替换活宠观察。
   OwnedPetState owned_pet = 10;
+  // 服务端已经建立且尚未到期的火墙格；完整基线为空时清除旧表现。
+  repeated GridPoint fire_wall_cells = 11;
 }
 message MoveIntent {
   uint64 scene_epoch = 1;

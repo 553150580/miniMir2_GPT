@@ -144,7 +144,8 @@ class ConfigurationTests(unittest.TestCase):
                 contracts.append((contract['shape']['properties']['players']['items'],'can_push'))
         selected=set(self.data['dev_first_loop_profile'][0]['parameters']['skill_ids'])
         selected.update(row['summon_skill_id'] for row in self.data['game_pet_templates'] if row['summon_skill_id'] is not None)
-        self.assertEqual(len(contracts),len(selected)+3)
+        monster_sources=sum('can_push' in row['attributes'] for row in self.data['game_monsters'])
+        self.assertEqual(len(contracts),len(selected)+monster_sources+1)
         for shape,key in contracts:
             with self.subTest(field=key):
                 field_shape=shape['properties'][key]

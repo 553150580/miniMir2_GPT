@@ -95,6 +95,8 @@ type Monster struct {
 	RespawnMS int64 `json:"respawn_ms"`
 	// Undead 标记是否处于“undead”状态。
 	Undead bool `json:"undead"`
+	// CoolEye 对应原怪物的冷眼能力，等级足够时可识破隐身。
+	CoolEye bool `json:"cool_eye,omitempty"`
 }
 
 // Item 定义商品和掉落引用的物品模板及其用途和属性。
@@ -203,8 +205,16 @@ func (p PotionRules) Effect(itemID uint32) (PotionEffect, bool) {
 
 // Fixture 集中持有当前只读开发规则快照，供各玩法读取同一版本。
 type Fixture struct {
-	// PersonalBoss 只供隔离开发装配显式注入，待唯一配置工作簿审定后再开放发布数据。
+	// WorldBoss 暂由隔离装配提供，经玩法源校验后才注册可发布模板。
+	WorldBoss *WorldBossConfig `json:"-"`
+	// WorldBossRelease 是配置工作簿中已批准且显式开放的共享首领候选。
+	WorldBossRelease *WorldBossDefinition `json:"world_boss,omitempty"`
+	// PersonalBossRelease 是唯一工作簿的显式开发候选定义。
+	PersonalBossRelease *PersonalBossDefinition `json:"personal_boss,omitempty"`
+	// PersonalBoss 保存已由来源编号解析完成的挑战配置。
 	PersonalBoss *PersonalBossConfig `json:"-"`
+	// ChallengeMonsters 保存特殊挑战的怪物来源，不并入普通挂机的刷怪集合。
+	ChallengeMonsters []Monster `json:"challenge_monsters,omitempty"`
 	// TasksCodex 保存已经获得发布数据的任务和图鉴定义。
 	TasksCodex *TaskCodexRules `json:"tasks_codex,omitempty"`
 	// Warehouses 记录仓库集合，使用仓库规则集合表示。
@@ -403,6 +413,12 @@ func (f *Fixture) Validate() error {
 	}
 	// err 接收校验地图过程中可能产生的错误，供后续失败分支处理。
 	if err := f.ValidateMap(); err != nil {
+		return err
+	}
+	if err := f.validatePersonalBossRelease(); err != nil {
+		return err
+	}
+	if err := f.validateWorldBossRelease(); err != nil {
 		return err
 	}
 	// err 接收校验会话绑定过程中可能产生的错误，供后续失败分支处理。

@@ -21,10 +21,16 @@ test('雷电巨大原始纵向帧保留997像素与WIL偏移，动作与旧资�
     for(const key of ['Magic:0','Magic:179','Magic:370'])assert(manifest.frames[key]);
     assert.equal(manifest.official_180_restoration_verified,false);
 });
-test('实际public投影的主动技能均有同kind完整资源，被动精神力读取独立准确阶表',()=>{
+test('主动技能资源逐项匹配，火墙和圣言术沿各自反馈路径',()=>{
     const gameplay=JSON.parse(fs.readFileSync(path.join(base,'gameplay.json'),'utf8'));
-    assert.equal(gameplay.skills.length,22);
+    assert.equal(gameplay.skills.length,24);
     for(const skill of gameplay.skills){
+        if(skill.kind==='fire_wall'||skill.kind==='turn_undead'){
+            assert.equal(skill.auto_enabled,false);
+            assert.equal(skill.target_kind,skill.kind==='fire_wall'?'enemy_grid':'enemy_entity');
+            assert(gameplay.items.some(item=>item.item_id===skill.book_item_id&&item.skill_id===skill.id));
+            continue;
+        }
         if(skill.active){assert.equal(manifest.effects[String(skill.id)]?.kind,skill.kind);if(skill.target_kind.endsWith('_grid'))assert.equal(manifest.effects[String(skill.id)].hit_anchor,'grid');}
     }
     const spirit=gameplay.skills.find(skill=>skill.id===4);assert.equal(spirit.kind,'spirit_sword');assert.equal(spirit.active,false);assert.equal(spirit.target_kind,'passive');assert.deepEqual(spirit.accuracy_by_level,[0,3,5,8]);

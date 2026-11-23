@@ -1939,7 +1939,9 @@ type SceneBaselineChunk struct {
 	// 当前角色原格对应的来源安全区；0表示区外。仅观察，不授予免疫或永久绑定。
 	SafeZoneId uint64 `protobuf:"varint,9,opt,name=safe_zone_id,json=safeZoneId,proto3" json:"safe_zone_id,omitempty"`
 	// 每块元数据完全一致；只有整组基线就绪后才能替换活宠观察。
-	OwnedPet      *OwnedPetState `protobuf:"bytes,10,opt,name=owned_pet,json=ownedPet,proto3" json:"owned_pet,omitempty"`
+	OwnedPet *OwnedPetState `protobuf:"bytes,10,opt,name=owned_pet,json=ownedPet,proto3" json:"owned_pet,omitempty"`
+	// 服务端已经建立且尚未到期的火墙格；完整基线为空时清除旧表现。
+	FireWallCells []*GridPoint `protobuf:"bytes,11,rep,name=fire_wall_cells,json=fireWallCells,proto3" json:"fire_wall_cells,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2040,6 +2042,13 @@ func (x *SceneBaselineChunk) GetSafeZoneId() uint64 {
 func (x *SceneBaselineChunk) GetOwnedPet() *OwnedPetState {
 	if x != nil {
 		return x.OwnedPet
+	}
+	return nil
+}
+
+func (x *SceneBaselineChunk) GetFireWallCells() []*GridPoint {
+	if x != nil {
+		return x.FireWallCells
 	}
 	return nil
 }
@@ -3627,7 +3636,7 @@ const file_world_proto_rawDesc = "" +
 	" \x01(\x03R\x0fspiritAttackMax\x12\x1a\n" +
 	"\baccuracy\x18\v \x01(\x03R\baccuracy\x12\x18\n" +
 	"\aagility\x18\f \x01(\x03R\aagility\x128\n" +
-	"\x18damage_reduction_percent\x18\r \x01(\rR\x16damageReductionPercent\"\xdc\x03\n" +
+	"\x18damage_reduction_percent\x18\r \x01(\rR\x16damageReductionPercent\"\x9b\x04\n" +
 	"\x12SceneBaselineChunk\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12\x1f\n" +
@@ -3644,7 +3653,8 @@ const file_world_proto_rawDesc = "" +
 	"\fsafe_zone_id\x18\t \x01(\x04R\n" +
 	"safeZoneId\x126\n" +
 	"\towned_pet\x18\n" +
-	" \x01(\v2\x19.minimir.v1.OwnedPetStateR\bownedPet\"\x83\x02\n" +
+	" \x01(\v2\x19.minimir.v1.OwnedPetStateR\bownedPet\x12=\n" +
+	"\x0ffire_wall_cells\x18\v \x03(\v2\x15.minimir.v1.GridPointR\rfireWallCells\"\x83\x02\n" +
 	"\n" +
 	"MoveIntent\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
@@ -3869,23 +3879,24 @@ var file_world_proto_depIdxs = []int32{
 	25, // 18: minimir.v1.SceneBaselineChunk.skill_mode_state:type_name -> minimir.v1.SkillModeState
 	16, // 19: minimir.v1.SceneBaselineChunk.navigation_state:type_name -> minimir.v1.NavigationState
 	12, // 20: minimir.v1.SceneBaselineChunk.owned_pet:type_name -> minimir.v1.OwnedPetState
-	36, // 21: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
-	36, // 22: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
-	24, // 23: minimir.v1.SkillModeState.states:type_name -> minimir.v1.SkillModeEntry
-	36, // 24: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
-	36, // 25: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
-	36, // 26: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	36, // 27: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
-	36, // 28: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
-	36, // 29: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
-	30, // 30: minimir.v1.AutoBattleIntent.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
-	30, // 31: minimir.v1.HostingState.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
-	38, // 32: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
-	33, // [33:33] is the sub-list for method output_type
-	33, // [33:33] is the sub-list for method input_type
-	33, // [33:33] is the sub-list for extension type_name
-	33, // [33:33] is the sub-list for extension extendee
-	0,  // [0:33] is the sub-list for field type_name
+	36, // 21: minimir.v1.SceneBaselineChunk.fire_wall_cells:type_name -> minimir.v1.GridPoint
+	36, // 22: minimir.v1.MoveIntent.destination:type_name -> minimir.v1.GridPoint
+	36, // 23: minimir.v1.CastIntent.target_grid:type_name -> minimir.v1.GridPoint
+	24, // 24: minimir.v1.SkillModeState.states:type_name -> minimir.v1.SkillModeEntry
+	36, // 25: minimir.v1.CastStep.grid:type_name -> minimir.v1.GridPoint
+	36, // 26: minimir.v1.CastAccepted.origin:type_name -> minimir.v1.GridPoint
+	36, // 27: minimir.v1.CastAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 28: minimir.v1.AttackAccepted.origin:type_name -> minimir.v1.GridPoint
+	36, // 29: minimir.v1.AttackAccepted.target_grid:type_name -> minimir.v1.GridPoint
+	36, // 30: minimir.v1.CombatImpact.target_grid:type_name -> minimir.v1.GridPoint
+	30, // 31: minimir.v1.AutoBattleIntent.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
+	30, // 32: minimir.v1.HostingState.auto_skill_settings:type_name -> minimir.v1.AutoSkillSettings
+	38, // 33: minimir.v1.ReviveChoice.operation:type_name -> minimir.v1.OperationContext
+	34, // [34:34] is the sub-list for method output_type
+	34, // [34:34] is the sub-list for method input_type
+	34, // [34:34] is the sub-list for extension type_name
+	34, // [34:34] is the sub-list for extension extendee
+	0,  // [0:34] is the sub-list for field type_name
 }
 
 func init() { file_world_proto_init() }

@@ -68,7 +68,25 @@ func (w *worker) prepareMaterialCast(r *room, q persistence.AssetRequest, reques
 	if code := persistence.CastingSupplyGate(r.Role, q, w.e.Store.Cfg.Fixture); code != 0 {
 		return nil, code
 	}
-	return w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
+	// plan 与 code 分别保存目标准入后的冻结施法和受理状态。
+	plan, code := w.prepareCast(r, request.SkillId, request.TargetHandle, request.Direction, now, true, request.TargetGrid)
+	if code == 0 {
+		freezePoisonMaterial(r, q, plan)
+	}
+	return plan, code
+}
+
+// freezePoisonMaterial 锁定通过材料校验的同一实例的毒色；后续装备变化不重新选色。
+func freezePoisonMaterial(r *room, q persistence.AssetRequest, plan *preparedCast) {
+	if plan.Skill.Behavior != "poisoning" {
+		return
+	}
+	for _, equipped := range r.Role.Equipped {
+		if equipped.Slot == devconfig.CastingSupplySlot && equipped.Item.ID == q.ItemID {
+			plan.PoisonColor = plan.Skill.PoisonColorForMaterial(equipped.Item.ItemID)
+			return
+		}
+	}
 }
 
 // applyMaterialReceipt 核对持久回执和原施法生命，首次确认才接受冻结技能。
@@ -210,9 +228,9 @@ func hardAuthorityFailure(code uint32) bool {
 	return code == p.CodeRouteChanged || code == p.CodeUnauthenticated || code == p.CodeStaleSession
 }
 
-// autoMaterialCast 在自动施法中准备合法地格和配置材料，保持统一事务约束。
-// w 为房间 r 检验 skill 与目标格 grid，now 用于施法门禁，need 汇总合法技能仅缺魔法值时的消耗门槛。
-func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, grid devconfig.Point, now time.Time, need *automaticManaNeed) bool {
+// autoMaterialCast 为自动施法冻结原材料、目标及施法计划，再提交同一扣料事务。
+// w 持有房间 r，skill 是本次技能，handle、direction 和 grid 分别表示实体、方向和地格，now 与 need 提供时钟和魔法值门槛。
+func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, handle, direction uint32, grid *pb.GridPoint, now time.Time, need *automaticManaNeed) bool {
 	if !w.e.Store.Cfg.Fixture.CastingSupply.Enabled {
 		return false
 	}
@@ -230,12 +248,17 @@ func (w *worker) autoMaterialCast(r *room, skill devconfig.Skill, grid devconfig
 		return false
 	}
 	// plan 保存通过校验的自动施法方案，code 区分可释放、仅缺魔法值和其他门禁拒绝。
-	plan, code := w.prepareCastRecordingMana(r, skill.ID, 0, r.Player.Direction, now, true, pointPB(grid))
+	plan, code := w.prepareCastRecordingMana(r, skill.ID, handle, direction, now, true, grid)
 	if !need.ready(r, plan, code) {
 		return false
 	}
+	freezePoisonMaterial(r, q, plan)
 	q.Context = &pb.OperationContext{OpId: domain.Bytes(domain.ID()), ExpectedRevision: uint64(r.Role.Revision), ExpectedRuleVersion: w.e.Store.Cfg.Fixture.RuleVersion}
-	q.Fingerprint = persistence.Hash([]byte(fmt.Sprintf("auto:%d:%d:%d:%d:%s:%d:%d,%d", q.SourceSeq, q.SceneEpoch, q.CasterLife, q.SkillID, q.ItemID, q.ItemVersion, grid.X, grid.Y)))
+	if handle > 0 {
+		q.Fingerprint = persistence.Hash([]byte(fmt.Sprintf("auto-target:%d:%d:%d:%d:%s:%d:%d:%d", q.SourceSeq, q.SceneEpoch, q.CasterLife, q.SkillID, q.ItemID, q.ItemVersion, handle, plan.Target.Life)))
+	} else {
+		q.Fingerprint = persistence.Hash([]byte(fmt.Sprintf("auto:%d:%d:%d:%d:%s:%d:%d,%d", q.SourceSeq, q.SceneEpoch, q.CasterLife, q.SkillID, q.ItemID, q.ItemVersion, grid.GetX(), grid.GetY())))
+	}
 	w.submitMaterialCast(r, q, plan, 0, nil)
 	return true
 }

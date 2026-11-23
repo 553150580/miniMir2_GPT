@@ -34,7 +34,7 @@ class PetRuntimeProjectionTests(unittest.TestCase):
         self.assertEqual(f['pet_runtime']['bootstrap_mode'],'legacy_untrained_pet')
         self.assertEqual(f['pet_runtime']['definitions'],pets.compile_definitions(self.tables,[1]))
         self.assertEqual(self.definition(self.tables)['summon_skill_id'],17)
-        self.assertEqual(len(f['skills']),22)
+        self.assertEqual(len(f['skills']),24)
         self.assertNotIn(17,[skill['id'] for skill in f['skills']])
         self.assertIs(f['casting_supply']['enabled'],False)
         body=f['pet_runtime']['definitions'][0]

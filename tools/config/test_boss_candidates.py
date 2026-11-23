@@ -1,0 +1,52 @@
+"""验证个人与世界首领的独立工作簿投影和公共展示边界。"""
+
+from copy import deepcopy
+import unittest
+
+import export_configs as config
+from test_source_map_projection import module, ROOT
+
+
+class BossCandidateProjectionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        schema = config.load_json(ROOT / 'config/schema/catalog.json')
+        cls.tables, errors, _, _ = config.collect(schema)
+        assert not errors, errors
+
+    def test_challenge_maps_do_not_join_normal_catalog_or_rewards(self):
+        fixture = module.fixture_from_rows(self.tables)
+        client = module.public_gameplay(fixture)
+        challenge_maps = client['challenge_maps']
+        self.assertEqual([(row['id'], row['scene_kind'], row['floor_map_id']) for row in challenge_maps], [('80', 3, '1'), ('81', 4, '1')])
+        for row in challenge_maps:
+            self.assertEqual((row['width'], row['height'], row['blocked'], row['resource_key']), (13, 13, [], 'development/maps/personal-map'))
+        self.assertTrue({'80', '81'}.isdisjoint(row['id'] for row in client['map_catalog']))
+        self.assertTrue(all('80' not in region['map_ids'] and '81' not in region['map_ids'] for region in client['map_regions']))
+        self.assertEqual([row['id'] for row in fixture['monsters']], [1])
+        self.assertEqual([row['id'] for row in fixture['challenge_monsters']], [80001, 80002])
+        for row in fixture['challenge_monsters']:
+            self.assertEqual([row[field] for field in ('respawn_ms', 'exp', 'gold_min', 'gold_max')], [0] * 4)
+        self.assertNotIn('kill_reward_gold', fixture['personal_boss'])
+        self.assertEqual(client['world_boss']['daily_open_offsets_ms'], [43_200_000, 72_000_000])
+        self.assertEqual((client['world_boss']['window_ms'], client['world_boss']['return_delay_ms']), (3_600_000, 5_000))
+        self.assertTrue(all(row['profile'] == 'monster_scarecrow' for row in client['monster_profiles']))
+
+    def test_unsupported_cooldown_map_and_loot_are_rejected(self):
+        for key, value in (('map_id', 1), ('monster_id', 1), ('rank_reward_group_id', 1), ('failure_cooldown_seconds', 0)):
+            tables = deepcopy(self.tables)
+            personal = next(row for row in tables['game_boss_templates'] if row['boss_kind'] == 'personal')
+            personal[key] = value
+            with self.subTest(field=key), self.assertRaises(ValueError):
+                module.fixture_from_rows(tables)
+
+    def test_explicit_development_selection_is_required(self):
+        tables = deepcopy(self.tables)
+        profile = tables['dev_first_loop_profile'][0]['parameters']
+        profile['rule_version'] = 27
+        with self.assertRaises(ValueError):
+            module.fixture_from_rows(tables)
+        del profile['boss_template_ids']
+        fixture = module.fixture_from_rows(tables)
+        self.assertNotIn('personal_boss', fixture)
+        self.assertNotIn('challenge_maps', module.public_gameplay(fixture))

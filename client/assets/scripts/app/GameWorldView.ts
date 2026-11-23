@@ -7,6 +7,7 @@ import { DamageNumbers } from './DamageNumbers';
 import { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
 import { compareProjectedDepth, GridProjection, ProjectedDepth } from './GridProjection';
 import { prepareMapSurface } from './MapSurface';
+import { FireWallView } from './FireWallView';
 import { entityDisplayName, entityHeadLabels } from './EntityHeadAnchor';
 import type { SpriteFrame } from 'cc';
 import { StatusEffects } from './StatusEffects';
@@ -303,8 +304,15 @@ export class GameWorldView {
         return cell && walkable ? cell : null;
     }
 
+    private fireWalls?: FireWallView;
+
     apply(baseline: any): void {
         if (this.disposed || !this.assets) return;
+        if (!this.fireWalls && baseline.fireWallCells?.length && !this.sourceView) {
+            const ground = this.world.getChildByName('GroundEffects')?.getComponent(Graphics);
+            if (ground) this.fireWalls = new FireWallView(ground, (x, y) => this.grid(x, y));
+        }
+        this.fireWalls?.apply(baseline.fireWallCells ?? [], this.map.width, this.map.height);
         const now = game.totalTime;
         const alive = new Set<number>();
         for (const state of baseline.entities) {
@@ -590,10 +598,12 @@ export class GameWorldView {
         this.props.length = 0;
         for (const npc of this.townNpcs.splice(0)) npc.dispose();
         if (isValid(this.world, true) && surfaceOwners.get(this.world) === this) {
+            this.fireWalls?.clear();
             const surface = this.world.getChildByName('Surface')?.getComponent(Sprite);
             if (surface) { surface.spriteFrame = null; surface.enabled = false; }
             surfaceOwners.delete(this.world);
         }
+        this.fireWalls = undefined;
     }
     dispose(): void {
         if (this.disposed && !this.assets) return;

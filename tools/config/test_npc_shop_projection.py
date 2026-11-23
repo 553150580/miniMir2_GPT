@@ -40,7 +40,7 @@ class NPCShopProjectionTests(unittest.TestCase):
         self.assertEqual(books['offers'], fixture['skill_shop'])
         expected = {offer['item_id']: offer['price_units'] // (2 * offer['quantity']) for offer in books['offers']
                     if offer['currency'] == 'gold' and offer['item_id'] != fixture['skill_economy']['page_item_id']}
-        self.assertEqual(len(expected), 22)
+        self.assertEqual(len(expected), 24)
         self.assertEqual({price['item_id']: price['price_gold'] for price in books['sell_prices']}, expected)
         sources = next(town for town in fixture['_source_evidence']['compact_towns'] if town['map_id'] == 5)
         self.assertEqual({row['id']: row['line'] for row in sources['npcs'] if row['id'] in (5008, 5009)}, {5008: 78, 5009: 79})

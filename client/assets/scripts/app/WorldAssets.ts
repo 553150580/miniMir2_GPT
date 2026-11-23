@@ -7,6 +7,9 @@ interface WorldMapEntry {
     readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
     readonly width?: number; readonly height?: number; readonly safe_zones?: readonly unknown[];
     readonly compact_town?: boolean;
+    readonly floor_map_id?: string;
+    readonly blocked?: readonly { x: number; y: number }[];
+    readonly player_spawn?: { x: number; y: number };
 }
 export type WorldAssetsInvalidation = 'dispose' | 'source';
 function mapIdString(value: unknown): string {
@@ -22,13 +25,16 @@ export function selectWorldMap(gameplay: any, mapId?: { toString(): string } | s
         if (requested !== undefined && requested !== '1') throw new Error('旧profile未配置请求的地图');
         return { id: '1', resource_key: 'development/maps/first-map', scene_kind: 1 };
     }
-    const catalog = gameplay.map_catalog;
-    if (!Array.isArray(catalog) || !catalog.length || catalog[0]?.scene_kind !== 1) throw new Error('地图目录缺少首项个人地图');
+    const ordinary = gameplay.map_catalog, challenges = gameplay.challenge_maps ?? [];
+    if (!Array.isArray(ordinary) || !ordinary.length || ordinary[0]?.scene_kind !== 1 || !Array.isArray(challenges)) throw new Error('地图目录缺少首项个人地图');
+    if (ordinary.some(entry => ![1, 2].includes(entry?.scene_kind)) || challenges.some(entry => ![3, 4].includes(entry?.scene_kind)))
+        throw new Error('地图目录场景分类不匹配');
+    const catalog = [...ordinary, ...challenges];
     const ids = new Set<string>();
     for (const entry of catalog) {
         if (!entry || typeof entry.id !== 'string') throw new Error('地图目录ID必须是十进制字符串');
         const id = mapIdString(entry.id);
-        if (ids.has(id) || ![1, 2].includes(entry.scene_kind) || ![entry.width, entry.height].every(value => Number.isSafeInteger(value) && value > 0)
+        if (ids.has(id) || ![entry.width, entry.height].every(value => Number.isSafeInteger(value) && value > 0)
             || typeof entry.resource_key !== 'string' || !entry.resource_key || /[\\:]/.test(entry.resource_key)
             || entry.resource_key.split('/').some((part: string) => !part || part === '.' || part === '..')) throw new Error('地图目录条目无效');
         ids.add(id);
@@ -125,7 +131,12 @@ export class WorldAssets {
             } else {
                 const floor = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
                 if (!floor) throw new Error('地图缺少地板数据');
-                result.map = selected.compact_town ? compactTownMap(floor, selected) : floor;
+                const challenge = selected.scene_kind >= 3;
+                if (challenge && (selected.floor_map_id !== String(floor.id) || !Array.isArray(selected.blocked) || !selected.player_spawn))
+                    throw new Error('首领地图与地板身份不匹配');
+                result.map = challenge ? Object.freeze({ ...floor, id: selected.id, name: selected.name, scene_kind: selected.scene_kind,
+                    blocked: selected.blocked, player_spawn: selected.player_spawn, safe_zones: [], props: [], npcs: [] })
+                    : selected.compact_town ? compactTownMap(floor, selected) : floor;
                 if (selected.width !== undefined || result.map.id !== undefined) {
                     const id = typeof result.map.id === 'number' && Number.isSafeInteger(result.map.id) && result.map.id >= 0 ? String(result.map.id) : mapIdString(result.map.id);
                     if (id !== selected.id) throw new Error('个人地图资源与目录身份不一致');
@@ -133,7 +144,7 @@ export class WorldAssets {
                 const projection = new GridProjection(result.map), mapInfo = result.manifest.map;
                 // 新开阔挂机图独立裁切。同一份历史清单仍核对城镇17格地台和旧个人图。
                 const openField = selected.resource_key === 'development/maps/personal-map';
-                const floorMatches = openField ? selected.scene_kind === 1 && floor.collision_basis === 'open_personal_field'
+                const floorMatches = openField ? (selected.scene_kind === 1 || challenge) && floor.collision_basis === 'open_personal_field'
                     && floor.background === 'maps/personal-map.png' && Array.isArray(floor.blocked) && !floor.blocked.length
                     && Array.isArray(floor.props) && !floor.props.length && floor.source_fronts_rendered === false
                     : ['width', 'height', 'tile_width', 'tile_height', 'projection', 'soil_thickness_px', 'surface_width', 'surface_height',
@@ -155,7 +166,7 @@ export class WorldAssets {
             if (!player) throw new Error('当前职业缺少外观资源');
             profileIds.add(player.profile);
             // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
-            if (result.sceneKind === 2) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
+            if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
             for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();
@@ -182,8 +193,10 @@ export class WorldAssets {
                 }
             }
             for (const skill of result.gameplay.skills ?? []) {
-                if (skill.job_id !== job || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
+                if ((skill.job_id !== job && result.sceneKind !== 4) || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
                 const effect = result.manifest.effects?.[String(skill.id)];
+                // 火墙使用有效地格绘制；圣言术使用施法动作和实际命中反馈。
+                if (!effect && (skill.kind === 'fire_wall' || skill.kind === 'turn_undead')) continue;
                 if (!effect) throw new Error(`缺少技能表现资源：${skill.id}`);
                 for (const key of effectFrameKeys(effect)) {
                     if (!result.manifest.frames[key]) throw new Error(`缺少技能帧定义：${key}`);

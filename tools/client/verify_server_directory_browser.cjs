@@ -9,7 +9,7 @@ const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js'
 const manifestPath = path.resolve(process.argv[2] ?? '');
 const work = path.resolve('.work');
 assert(manifestPath.startsWith(work + path.sep), '选服验收清单必须在独立工作目录');
-const { baseUrl, entries, tasksCodex } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const { baseUrl, entries, tasksCodex, bossChallenges } = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(baseUrl);
 assert(base.protocol === 'http:' && base.hostname === '127.0.0.1' && base.port !== '18080', '仅允许独立回环试玩入口');
 assert.equal(entries.length, 4);
@@ -178,6 +178,47 @@ async function main() {
             await page.touchscreen.tap(20, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
         };
+        const verifyBossChallenges = async () => {
+            const panel = 'UIMgr/Panels/BossChallenge';
+            const boss = 'BottomHUD/QuickNav/Boss';
+            const sceneKind = async kind => {
+                report.step = '等待首领附着 ' + kind;
+                const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+                try {
+                    const result = await page.waitForFunction(({ kind, session }) => {
+                        const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
+                        return session.ready && session.entry.sceneKind === kind && app?.world?.isMapReady && !app?.attaching
+                            && { map: session.entry.roomId.toString(), version: session.entry.resourceVersion.toString() };
+                    }, { kind, session }, { timeout: 25000 });
+                    try { return await result.jsonValue(); } finally { await result.dispose(); }
+                } finally { await session.dispose(); }
+            };
+            const expectLabel = async (node, substring) => {
+                report.step = '核对首领面板 ' + node + ' ' + substring;
+                await page.waitForFunction(({ node, substring }) => cc.find('Canvas/Safe/' + node)?.getComponent(cc.Label)?.string.includes(substring),
+                    { node: panel + '/' + node, substring }, { timeout: 15000 });
+            };
+            const home = await sceneKind(1);
+            await tap(boss);
+            await expectLabel('Status', '可入场');
+            await tap(panel + '/Action');
+            const personal = await sceneKind(3);
+            assert.notEqual(personal.map, home.map);
+            assert.equal(personal.version, home.version);
+            await tap(boss);
+            await expectLabel('Status', '挑战中');
+            await tap(panel + '/Action');
+            assert.deepEqual(await sceneKind(1), home);
+            await tap(boss);
+            await expectLabel('Results', '中断');
+            await tap(panel + '/World');
+            await expectLabel('Details', '上海时间');
+            const worldStatus = await page.evaluate(path => cc.find('Canvas/Safe/' + path + '/Status')?.getComponent(cc.Label)?.string, panel);
+            assert.match(worldStatus, /等待开放|开放中|已击杀|已超时/);
+            await page.touchscreen.tap(20, 200);
+            await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
+            report.bossChallenges = { home, personal, leaveAndHistory: true, worldStatus };
+        };
         await page.goto(base.href);
         await scene('Login');
         await edit('Account', 'scope_' + crypto.randomBytes(5).toString('hex'));
@@ -211,6 +252,7 @@ async function main() {
             const route = await ticketResponses[index];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
+            if (bossChallenges && index === 0) await verifyBossChallenges();
             if (tasksCodex && index === 0) await verifyTasks();
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');

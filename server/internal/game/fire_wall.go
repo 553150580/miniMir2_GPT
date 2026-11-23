@@ -6,6 +6,7 @@ import (
 	"slices"
 	"time"
 
+	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 )
 
@@ -36,6 +37,22 @@ func fireWallLifetime(amount int64) time.Duration {
 // covers 查询该场是否包含 point，地形阻挡或同格已有火墙时该点未被写入。
 func (field *fireWallField) covers(point devconfig.Point) bool {
 	return slices.Contains(field.Cells[:field.Count], point)
+}
+
+// fireWallCells 投影当前实体能踏入的有效火墙格，排除尚未生效、已离图和过期地格。
+func (world *worldState) fireWallCells(now time.Time) []*pb.GridPoint {
+	if world == nil {
+		return nil
+	}
+	var points []*pb.GridPoint
+	for _, field := range world.FireWalls {
+		if !now.After(field.Expires) {
+			for _, cell := range field.Cells[:field.Count] {
+				points = append(points, pointPB(cell))
+			}
+		}
+	}
+	return points
 }
 
 // addFireWall 建立中心和四邻接触格。同格旧火墙保留其原伤害、拥有者和期限。

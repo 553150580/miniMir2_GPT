@@ -95,6 +95,7 @@ func (w *worker) commitWalk(r *room, e *entity, point devconfig.Point, direction
 	}
 	// 共享城镇的占格可能被另一分片先提交，只有真正落格的行走才推进修订。
 	w.beginMovement(r, e, movementWalk)
+	breakHidingOnWalk(e)
 	e.Direction = direction
 	e.Action, e.ActionUntil = 1, now.Add(200*time.Millisecond)
 	e.NextMove = now.Add(time.Duration(interval) * time.Millisecond)

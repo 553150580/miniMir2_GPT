@@ -48,6 +48,10 @@ type personalBossSnapshot struct {
 // personalBossCommand 在原连接上分流入口、退出、ACK和战斗指令。
 func (w *worker) personalBossCommand(owner *room, c command) bool {
 	frame := c.frame
+	if frame.ID == p.MsgC2SPersonalBossQuery {
+		w.personalBossQuery(owner, frame)
+		return true
+	}
 	if frame.ID == p.MsgC2SPersonalBossEnter {
 		w.beginPersonalBoss(owner, frame, time.Now())
 		return true
@@ -134,7 +138,7 @@ func (w *worker) beginPersonalBoss(owner *room, frame wire.Frame, now time.Time)
 		w.failure(owner, frame, p.CodeLineForbidden)
 		return
 	}
-	if !owner.Ready || owner.Pending || owner.Travel != nil && owner.Travel.Phase < travelCommitted || pendingPersonalBossTransfer(owner) {
+	if !owner.Ready || owner.Pending || owner.worldBossObservation != nil || owner.Travel != nil && owner.Travel.Phase < travelCommitted || pendingPersonalBossTransfer(owner) {
 		w.failure(owner, frame, p.CodeLineRecovering)
 		return
 	}

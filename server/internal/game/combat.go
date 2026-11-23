@@ -58,6 +58,9 @@ func (w *worker) free(r *room, q devconfig.Point, self *entity) bool {
 	if !w.walkable(r, q) || !w.townCellFree(r, self, q) {
 		return false
 	}
+	if arena := r.worldBossCombat; arena != nil {
+		return !arena.occupied(q, self)
+	}
 	// all 初始化用作全部的实体列表。
 	all := []*entity{&r.Player}
 	// pet 保存由场景世界宠物取得的宠物。
@@ -298,12 +301,20 @@ func (w *worker) applyDamage(r *room, from, target *entity, damage int64, now ti
 // target 记录目标，使用实体表示，damage 记录伤害，使用数值表示，now 提供当前时点，作为状态有效期和计时判断的基准。
 // context 记录上下文，使用可变数量的命中上下文表示。
 func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *entity, damage int64, now time.Time, context ...hitContext) {
+	if from != nil && len(from.Statuses) != 0 && target.HP > 0 && world == r.currentWorld() {
+		exposeHiddenAttacker(world, from, target)
+	}
 	if damage <= 0 || target.HP <= 0 {
 		return
 	}
 	if r.bossBattle != nil {
-		w.applyPersonalBossDamage(r, from, target, damage, now, context)
+		if world == r.currentWorld() {
+			w.applyPersonalBossDamage(r, from, target, damage, now, context)
+		}
 		return
+	}
+	if from != nil && (len(context) == 0 || !context[0].PeriodicPoison) {
+		world.clearTrapHexagon(target)
 	}
 	wearStatuses(target, damage)
 	target.HP -= damage
@@ -316,6 +327,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 	target.Action = 3
 	target.ActionUntil = now.Add(200 * time.Millisecond)
 	if target.HP == 0 {
+		world.clearTrapHexagon(target)
 		removeDeathStatuses(target)
 		target.Action = 4
 		if target.Kind == 3 {
@@ -519,8 +531,10 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	}
 	clearFinishedAction(&r.Player, now)
 	// monster 接收遍历怪物集合时当前的元素。
-	for _, monster := range r.Monsters {
-		clearFinishedAction(monster, now)
+	if r.worldBossCombat == nil {
+		for _, monster := range r.Monsters {
+			clearFinishedAction(monster, now)
+		}
 	}
 	clearFinishedAction(r.Pet, now)
 	if r.bossBattle == nil {
@@ -581,15 +595,24 @@ func (w *worker) stepGridCombat(r *room, mapTemplate *devconfig.MapTemplate, now
 	if r.Pending || r.Isolated {
 		return
 	}
+	if r.worldBossCombat != nil {
+		if now.Sub(r.LastBroadcast) >= 200*time.Millisecond {
+			r.LastBroadcast = now
+			w.snapshot(r)
+		}
+		return // 共享场次随后统一更新首领，只运行一次移动和攻击 AI。
+	}
+	// world 固定本帧怪物索敌和隐身暴露所使用的原执行地图。
+	world := r.currentWorld()
 	// m 接收遍历怪物集合中的范围时当前的元素。
 	for _, m := range r.Monsters[:r.MonsterCount] {
-		if m.HP <= 0 {
+		if m.HP <= 0 || world.trapHexagonHeld(m, now) {
 			continue
 		}
-		// target 保存当前处理所用的目标。
-		target := &r.Player
-		if pet != nil && pet.HP > 0 && distance(m.Pos, pet.Pos) < distance(m.Pos, r.Player.Pos) {
-			target = pet
+		// target 是本轮能被原怪物察觉的玩家或宠物；没有目标时留在当前格。
+		target := visibleMonsterTarget(world, m, &r.Player, pet, r.Role.Level)
+		if target == nil {
+			continue
 		}
 		if distance(m.Pos, target.Pos) <= 1 {
 			w.attack(r, m, target, now)

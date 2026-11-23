@@ -7,7 +7,7 @@ export interface SkillDefinition {
     kind: 'fireball' | 'healing' | 'fencing' | 'spirit_sword' | 'great_fireball' | 'thunderbolt' | 'firebang' | 'mass_healing'
         | 'slaying' | 'thrusting' | 'half_moon' | 'flaming_sword' | 'hell_fire' | 'lightning' | 'thunder_storm' | 'ice_storm'
         | 'magic_shield' | 'soul_shield' | 'blessed_armour' | 'repulsion' | 'shoulder_dash' | 'teleport' | 'summon_pet'
-        | 'turn_undead'; active: boolean; range: number;
+        | 'fire_wall' | 'turn_undead'; active: boolean; range: number;
     displacement?: { distance_base_by_level: readonly number[]; distance_random_bound: number; step_display_ms: number };
     activation_kind?: 'passive' | 'passive_proc' | 'cast' | 'toggle' | 'charge';
     target_kind?: 'passive' | 'enemy_entity' | 'enemy_grid' | 'friendly_entity' | 'friendly_grid' | 'friendly_self' | 'attack_mode' | 'attack_charge' | 'enemy_direction' | 'enemy_self';
@@ -193,6 +193,7 @@ export function skillDescriptionLines(row: SkillRow, snapshot: SkillSnapshot): s
         if (status?.duration_rule?.kind === 'fixed_ms') lines.push(`成功后获得${Math.ceil((status.duration_rule.duration_ms ?? 0) / 1000)}秒传送耗蓝状态`);
         if (reduction !== undefined) lines.push(`状态期间仅传送技能的魔法消耗增加${reduction}%`, '再次成功刷新持续时间');
     }
+    if (definition.kind === 'fire_wall') lines.push('选择地格，在中心及相邻四格布下火墙', '怪物入格及停留时受到伤害');
     if (definition.kind === 'turn_undead') lines.push('先点选一只存活的亡灵怪物', '按双方等级和技能等级判定，成功后延迟消灭原目标', '对合法目标施放失败仍消耗魔法与冷却');
     if (status?.attribute_effects.target_level_divisor) lines.push(`防御上限加成＝受益者等级÷${status.attribute_effects.target_level_divisor}取整＋${status.attribute_effects.target_level_add ?? 0}`);
     if ((definition.kind === 'soul_shield' || definition.kind === 'blessed_armour') && status?.duration_rule?.stat_multiplier)

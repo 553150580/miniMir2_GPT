@@ -38,6 +38,8 @@ type Skill struct {
 	MaterialItemID uint32 `json:"material_item_id"`
 	// MaterialQuantity 记录材料数量，使用数值表示。
 	MaterialQuantity int64 `json:"material_quantity"`
+	// Poison 仅为施毒技能指定可实际装入和消耗的两色药粉。
+	Poison *PoisonMaterials `json:"poison,omitempty"`
 	// ActivationKind 记录“activation”类型，使用文本表示。
 	ActivationKind string `json:"activation_kind"`
 	// MPBaseCost 记录魔法值基础值消耗，使用数值表示。

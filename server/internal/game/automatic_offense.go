@@ -151,7 +151,14 @@ func (w *worker) autoOffensiveCast(r *room, skill devconfig.Skill, handler skill
 	}
 	// ref 接收引用供后续步骤使用。
 	ref := reference(r, target)
-	if !w.castAutomatically(r, skill.ID, handle, direction, now, need, grid) {
+	// accepted 表示本次动作已受理，耗材技能先提交永久扣料任务。
+	var accepted bool
+	if skill.MaterialQuantity > 0 {
+		accepted = w.autoMaterialCast(r, skill, handle, direction, grid, now, need)
+	} else {
+		accepted = w.castAutomatically(r, skill.ID, handle, direction, now, need, grid)
+	}
+	if !accepted {
 		return false
 	}
 	r.lockAutoTarget(ref)

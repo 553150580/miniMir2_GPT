@@ -15,6 +15,7 @@ type worldRef struct{ Epoch, ID uint64 }
 
 // worldState 保存每张已访问地图独立存在的临时战斗现场。
 type worldState struct {
+	TrapHexagon    map[actorRef]time.Time // 有围困时才分配，按原怪物出生身份和期限保存。
 	BossMap        *devconfig.MapTemplate // 私有挑战采用经过校验的独立地图，不混入普通地图表。
 	Ref            worldRef               // 场景执行身份，限定事件和实体引用。
 	MapID          uint64                 // 该世界对应的配置地图编号。
@@ -188,7 +189,8 @@ func (w *worker) worldMap(world *worldState) (*devconfig.MapTemplate, bool) {
 		return nil, false
 	}
 	if world.BossMap != nil {
-		return world.BossMap, world.MapID == world.BossMap.ID && world.BossMap.SceneKindValue() == devconfig.SceneKindPersonalBoss
+		kind := world.BossMap.SceneKindValue()
+		return world.BossMap, world.MapID == world.BossMap.ID && (kind == devconfig.SceneKindPersonalBoss || kind == devconfig.SceneKindWorldBoss)
 	}
 	// f 保存当前处理所用的开发测试配置。
 	f := &w.e.Store.Cfg.Fixture
@@ -343,7 +345,7 @@ func (w *worker) reactiveWorlds(r *room) []*worldState {
 		}
 		// cast 接收遍历施法集合时当前的元素。
 		for _, cast := range world.Casts {
-			if cast.Skill.Behavior == "hell_fire" && w.resolveCredit(r, cast.Caster) != nil {
+			if (cast.Skill.Behavior == "hell_fire" || cast.Poison != nil) && w.resolveCredit(r, cast.Caster) != nil {
 				worlds = append(worlds, world)
 				break
 			}
@@ -364,6 +366,7 @@ func (w *worker) worldDeadlines(r *room, world *worldState, now time.Time) {
 	if !world.LootUntil.IsZero() && !now.Before(world.LootUntil) {
 		world.Loot = nil
 	}
+	world.expireTrapHexagons(now)
 	// i 定位怪物集合中正在处理的成员，monster 接收遍历怪物集合时当前的元素。
 	for i, monster := range world.Monsters {
 		if monster.HP == 0 && !monster.RespawnAt.IsZero() && !now.Before(monster.RespawnAt) {

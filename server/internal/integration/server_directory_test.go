@@ -236,7 +236,8 @@ func TestServerDirectoryTwoGameNodesMongoWS(t *testing.T) {
 	t.Log("已拒绝错误节点票据、重复节点、争抢运行服和旧路由票据，新票正常接管")
 
 	if root := os.Getenv("MINIMIR_SERVER_DIRECTORY_WEB_ROOT"); root != "" {
-		verifyDirectoryBrowser(t, cfg.AccountAddress, root, entries, cfg.Fixture.TasksCodex != nil)
+		verifyDirectoryBrowser(t, cfg.AccountAddress, root, entries, cfg.Fixture.TasksCodex != nil,
+			cfg.Fixture.PersonalBoss != nil && cfg.Fixture.WorldBoss != nil)
 	}
 	stopWest()
 	requireStoppedRuns(t, ctx, inspection, west.RunServerIDs)
@@ -452,7 +453,7 @@ func registerDirectoryNode(t *testing.T, accountAddress, nodeID, bootID string, 
 }
 
 // verifyDirectoryBrowser 在独立浏览器入口提供实际构建和账号代理，让游戏连接按票据直连。
-func verifyDirectoryBrowser(t *testing.T, account string, webRoot string, entries []directoryTestEntry, tasksCodex bool) {
+func verifyDirectoryBrowser(t *testing.T, account string, webRoot string, entries []directoryTestEntry, tasksCodex, bossChallenges bool) {
 	t.Helper()
 	repo, err := filepath.Abs("../../..")
 	must(t, err)
@@ -486,7 +487,8 @@ func verifyDirectoryBrowser(t *testing.T, account string, webRoot string, entrie
 			"node": entry.assignment.GameNodeID, "endpoint": entry.assignment.GameWSURL,
 		})
 	}
-	raw, err := json.Marshal(map[string]any{"baseUrl": web.URL, "entries": browserEntries, "tasksCodex": tasksCodex})
+	raw, err := json.Marshal(map[string]any{"baseUrl": web.URL, "entries": browserEntries,
+		"tasksCodex": tasksCodex, "bossChallenges": bossChallenges})
 	must(t, err)
 	must(t, os.WriteFile(manifest, raw, 0600))
 	t.Logf("浏览器验收证据目录 %s", resultDir)

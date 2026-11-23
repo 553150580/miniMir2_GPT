@@ -87,6 +87,7 @@ type worker struct {
 	roll               func(int64) int64           // 供测试注入可复现掷点的函数。
 	townNavigation     *townNavigationWorker       // 该分片的城镇寻路队列、预算与工作区。
 	personalNavigation personalNavigationWorkspace // 可在分片内跨个人房间复用的寻路数组。
+	worldBossArenas    map[uint64]*worldBossArena  // 本分片唯一拥有的运行服共享首领场次。
 }
 
 // entity 保存当前进程中的战斗身体、动作时钟和空间身份。
@@ -100,6 +101,7 @@ type entity struct {
 	MP               int64                    // 当前魔法值，供施法和恢复逻辑使用。
 	MaxMP            int64                    // 魔法上限，恢复时用来裁剪。
 	MaxHP            int64                    // 生命上限，恢复或复活时用来裁剪。
+	Poisons          *monsterPoisons          // 只在原生命受到施毒时分配，记录当前红绿毒。
 	Action           uint32                   // 向客户端观察的当前动作类型。
 	AttackSequence   uint32                   // 观察端用来区别相邻攻击动作的单调序号。
 	AttackSkillID    uint32                   // 这次攻击动作使用的技能定义编号。
@@ -133,6 +135,9 @@ type room struct {
 	townMembership        townMembership            // 角色当前的共享城镇席位，由所属分片管理。
 	personalBoss          *personalBossRun          // 永久角色房间正在批准、观察或结算的独享挑战。
 	bossBattle            *personalBossBattle       // 独享挑战子房间只持有临时战斗能力，不能直接写永久数据。
+	worldBossObservation  *worldBossObservation     // 原角色控制分片上的共享场次观察身份。
+	worldBossResume       worldBossOccurrence       // 健康掉线或会话接管时原场次的接回提示。
+	worldBossCombat       *worldBossArena           // 仅场次分片的临时战斗角色保存此共享实体空间。
 	ExecutionEpoch        uint64                    // 此房间在当前进程中的唯一执行代次。
 	WorldSequence         uint64                    // 从同一执行代次分配世界编号的水位。
 	InflightEvents        int                       // 已移入到期处理批次的事件数量。
@@ -434,6 +439,7 @@ func (w *worker) loop() {
 				continue
 			}
 			if !c.tick.IsZero() {
+				w.tickWorldBosses(c.tick)
 				w.beginTownNavigationTick(c.tick)
 				// roleID 定位房间集合中正在处理的成员，r 接收遍历房间集合时当前的元素。
 				for roleID, r := range w.rooms {
@@ -476,6 +482,9 @@ func (w *worker) command(c command) {
 		}
 		if !c.conn.Alive() {
 			return
+		}
+		if r != nil && r.worldBossObservation != nil {
+			w.suspendWorldBossObservation(r)
 		}
 		if r != nil && r.personalBoss != nil {
 			w.interruptPersonalBoss(r, time.Now())
@@ -523,6 +532,7 @@ func (w *worker) command(c command) {
 	}
 	if c.disconnect {
 		if r.Conn == c.conn {
+			w.suspendWorldBossObservation(r)
 			w.interruptPersonalBoss(r, time.Now())
 			w.leaveSharedTown(r)
 			w.cancelMapTravelOnDetach(r)
@@ -558,6 +568,9 @@ func (w *worker) command(c command) {
 	}
 	if r.entryAttempt != "" {
 		w.failure(r, c.frame, p.CodeLineRecovering)
+		return
+	}
+	if w.worldBossCommand(r, c) {
 		return
 	}
 	if w.personalBossCommand(r, c) {
@@ -596,6 +609,7 @@ func (w *worker) roomCommand(r *room, c command) {
 			w.deathNotice(r)
 		}
 		w.sendSyncReady(r, c.frame.Request, &pb.SyncReady{SceneEpoch: r.Scene, BaselineId: r.Baseline, NextEconomicCommandSeq: uint64(r.Role.EconomicSeq + 1)})
+		w.resumeWorldBossObservation(r, time.Now())
 		return
 	}
 	if c.frame.ID == p.MsgC2SMapTravelPrepare {
@@ -968,6 +982,7 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 	r.Sequence++
 	// out 保存当前处理所用的输出。
 	out := &pb.SceneBaselineChunk{SceneEpoch: r.Scene, BaselineId: r.Baseline, ChunkCount: 1, StateSequence: r.Sequence, SkillModeState: w.modeState(r, time.Now()), NavigationState: r.Navigation.Proto(), OwnedPet: w.ownedPetPB(r)}
+	out.FireWallCells = r.currentWorld().fireWallCells(time.Now())
 	// m 接收当前状态地图供后续步骤使用，ok 表明查询、校验或类型转换是否成功。
 	if m, ok := w.currentMap(r); ok {
 		// zone 保存由安全区域发生时间取得的区域，inside 保存由安全区域发生时间取得的“inside”。
@@ -1005,6 +1020,7 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 		out.Entities = append(out.Entities, &pb.EntityState{EntityHandle: e.Handle, EntityKind: e.Kind, DefinitionId: e.Def, Position: pointPB(e.Pos), Direction: e.Direction, Hp: e.HP, HpMax: e.MaxHP, Mp: e.MP, MpMax: e.MaxMP, Action: e.Action, MoveIntervalMs: moveMS, AttackSequence: e.AttackSequence, CastSequence: e.CastSequence, CastSkillId: e.CastSkillID, Life: e.Life, AttackIntervalMs: attackMS, AttackSkillId: e.AttackSkillID, AttackSkillLevel: e.AttackSkillLevel, Statuses: statusesPB(e, time.Now()), CombatAttributes: attributes, MovementRevision: e.MovementRevision, MovementKind: e.MovementKind, PetTraining: petTrainingPB(e), IsPetCorpse: e.IsPetCorpse})
 	}
 	w.appendSharedTownViews(r, out)
+	w.appendWorldBossViews(r, out)
 	return splitBaseline(out, requestID, uint64(r.Auth.SessionEpoch))
 }
 

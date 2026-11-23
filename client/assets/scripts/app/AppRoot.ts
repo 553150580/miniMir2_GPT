@@ -26,6 +26,7 @@ import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPr
 import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
 import { GameTasksCodex } from './GameTasksCodex';
+import { GameBoss } from './GameBoss';
 import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
@@ -77,6 +78,7 @@ export class AppRoot extends Component {
     private messages?: GameMessages;
     private skills?: GameSkills;
     private tasksCodex?: GameTasksCodex;
+    private boss?: GameBoss;
     private skillAssets?: GameSkillAssets;
     private npcShop?: GameNpcShop;
     private npcShopContext?: { npc: TownNpc; scope: string };
@@ -448,6 +450,14 @@ export class AppRoot extends Component {
         id => this.world?.monsterCodexFrame(id) ?? null,
         error => this.error(error));
         this.cleanups.push(() => this.tasksCodex?.dispose());
+        const bossPanel = this.find('UIMgr/Panels/BossChallenge');
+        this.boss = new GameBoss(bossPanel, session.connection, () => session.entry && {
+            sceneEpoch: session.entry.sceneEpoch, sceneKind: session.entry.sceneKind,
+            ready: session.ready && !this.attaching && !session.travel.active && !session.teleport.blocksInput,
+            level: session.inventory?.level ?? session.role?.level ?? 0,
+            worldBoss: this.world?.gameplay.world_boss,
+        }, () => { if (this.ui?.top === bossPanel) this.ui.back(); });
+        this.cleanups.push(() => this.boss?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
         this.npcShop = new GameNpcShop(safe, this.popup, {
@@ -583,10 +593,18 @@ export class AppRoot extends Component {
         this.button('UIMgr/Panels/SkillAssets/Preview', () => this.previewSkillAsset());
         this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Minus', () => this.skillAssets!.adjustPurchase(-1));
         this.button('UIMgr/Panels/SkillAssets/PurchaseQuantity/Plus', () => this.skillAssets!.adjustPurchase(1));
-        for (const [path, title, message] of [
-            ['BottomHUD/QuickNav/Boss','BOSS挑战','BOSS挑战暂未开放。'],
-            ['MapViewport/Mission','战斗状态','点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。'],
-        ] as const) this.button(path, () => this.popup!.show('Help', { title, message }));
+        this.button('MapViewport/Mission', () => this.popup!.show('Help', { title: '战斗状态', message: '点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。' }));
+        this.button('BottomHUD/QuickNav/Boss', () => {
+            this.ui!.open('BossChallenge');
+            return this.boss!.open();
+        });
+        const bossPath = 'UIMgr/Panels/BossChallenge/';
+        this.button(bossPath + 'Personal', () => this.boss!.show(3));
+        this.button(bossPath + 'World', () => this.boss!.show(4));
+        this.button(bossPath + 'Refresh', () => this.boss!.reload());
+        this.button(bossPath + 'Action', () => this.boss!.action());
+        this.button(bossPath + 'Previous', () => this.boss!.turn(-1));
+        this.button(bossPath + 'Next', () => this.boss!.turn(1));
         this.button('BottomHUD/QuickNav/Quest', () => {
             this.ui!.open('TasksCodex');
             return this.tasksCodex!.reload();
@@ -706,7 +724,7 @@ export class AppRoot extends Component {
                 if (!isCurrentEntry(identity) || session.entry !== entry || this.world !== view || !view.isMapReady
                     || session.baseline?.sceneEpoch.toString() !== identity.scene.toString() || session.baseline?.baselineId.toString() !== identity.baseline.toString()) throw new StaleMapAttachmentError('旧地图准备不得确认新场景');
                 if (identity.travelId && !session.travel.acknowledge(identity)) throw new StaleMapAttachmentError('旅行附着确认代次已经变化');
-                if (identity.serverTransitionId && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
+                if (identity.serverTransitionId && !session.entryBossTransition && !session.teleport.acknowledge(identity)) throw new StaleMapAttachmentError('瞬移附着确认代次已经变化');
                 const autoSkillSettings = savedAutoSkillSettings(sys?.localStorage, identity.role);
                 session.connection.send(4, { sceneEpoch: entry.sceneEpoch, baselineId: entry.baselineId, ...(autoSkillSettings && { autoSkillSettings }) });
             },
@@ -915,8 +933,10 @@ export class AppRoot extends Component {
         if (this.disposed || !this.world || !this.isWorldCurrent()) return;
         const baseline = session.baseline;
         const town = session.entry?.sceneKind === 2;
+        const challenge = session.entry?.sceneKind >= 3;
+        if (this.ui?.top?.name === 'BossChallenge') this.boss?.render();
         if (session.inventory) this.tasksCodex?.observe(session.inventory.revision);
-        if (town) this.auto = false;
+        if (town || challenge) this.auto = false;
         else if (session.hosting) this.auto = session.hosting.autoBattleEnabled;
         if (baseline) this.count = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
         if (baseline && this.lastBaseline !== baseline.stateSequence.toString()) {
@@ -935,10 +955,10 @@ export class AppRoot extends Component {
             auto: this.auto, count: this.count, gameplay: this.world.gameplay, map: this.world.map,
             quickSkillLabel: quick ? skillQuickStateLabel(skills, quick) : undefined };
         this.hud?.refresh(presentation);
-        this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !this.attaching;
-        this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !this.attaching;
+        this.find('MapViewport/Actions/Auto').getComponent(Toggle)!.interactable = session.ready && !town && !challenge && !this.attaching;
+        this.find('MapViewport/Actions/Count').getComponent(Button)!.interactable = session.ready && !town && !challenge && !this.attaching;
         const travel = this.find('BottomHUD/Footer/Map').getComponent(Button)!;
-        travel.interactable = (session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled);
+        travel.interactable = !challenge && ((session.travel.phase === 'uncertain' && session.connection.connected) || !!(session.ready && !this.attaching && !session.travel.active && this.world.gameplay.town_travel?.enabled));
         this.text('BottomHUD/Footer/Map/Label', this.usesMapDirectory() ? '地图' : session.travel.phase === 'uncertain' ? '核对' : town ? '返回' : '城镇');
         this.skills?.refresh(skills, quick?.definition.id ?? 0, boundQuick);
         this.combatStatus?.refresh(baseline, session.ready);

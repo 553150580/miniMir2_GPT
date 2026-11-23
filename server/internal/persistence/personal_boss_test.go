@@ -62,8 +62,9 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	grid.ID, grid.SceneKind = 777, devconfig.SceneKindPersonalBoss
 	grid.MonsterSpawns = grid.MonsterSpawns[:1]
 	grid.SafeZones, grid.NPCs = nil, nil
-	template := &devconfig.PersonalBossConfig{TemplateID: 13, Map: grid, Monster: cfg.Fixture.Monsters[0],
-		Duration: time.Minute, SuccessCooldown: time.Minute, RetryCooldown: time.Second}
+	template := &devconfig.PersonalBossConfig{TemplateID: 13, DisplayName: "隔离首领", MinimumLevel: 1, Map: grid, Monster: cfg.Fixture.Monsters[0],
+		Duration: time.Minute, SuccessCooldown: time.Minute, RetryCooldown: time.Second, DailySuccessLimit: 5, PrivilegeSuccessBonus: 1, HistoryLimit: 2,
+		KillRewardGold: 11}
 	cfg.Fixture.PersonalBoss = template
 	if !cfg.Fixture.ValidPersonalBoss() {
 		t.Fatal("隔离个人首领模板无效")
@@ -133,7 +134,26 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	game.Cfg.Fixture.PersonalBoss = nil
 	_, _, err = game.BeginPersonalBoss(ctx, auth, request)
 	requireCode(err, p.CodeLineForbidden, "尚未开放")
+	closed, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	if closed.Open || closed.EligibilityReason != PersonalBossUnavailable {
+		t.Fatalf("关闭时仍向角色展示可报名资格：%+v", closed)
+	}
 	game.Cfg.Fixture.PersonalBoss = template
+	template.MinimumLevel = r.Level + 1
+	locked, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	if !locked.Open || locked.EligibilityReason != PersonalBossLevelRequired || locked.MinimumLevel != r.Level+1 {
+		t.Fatalf("角色等级未限制首领资格：%+v", locked)
+	}
+	_, _, err = game.BeginPersonalBoss(ctx, auth, request)
+	requireCode(err, p.CodeLineForbidden, "所需等级")
+	template.MinimumLevel = 1
+	beforeAdmission, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	if !beforeAdmission.Open || beforeAdmission.EligibilityReason != PersonalBossEligible || beforeAdmission.Successes != 4 || beforeAdmission.DailyLimit != 5 || len(beforeAdmission.History) != 0 {
+		t.Fatalf("角色当前资格与次数没有使用确认状态：%+v", beforeAdmission)
+	}
 	badTemplate := request
 	badTemplate.BossHP++
 	_, _, err = game.BeginPersonalBoss(ctx, auth, badTemplate)
@@ -142,6 +162,11 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	require(err)
 	if grant.Outcome != PersonalBossActive || grant.DailyLimit != 5 || grant.ExpiresAt.Sub(grant.StartedAt) != template.Duration || r.PersonalBoss.ActiveChallengeID != grant.ChallengeID {
 		t.Fatalf("预约槽或原挑战身份错误：%+v", grant)
+	}
+	activeInfo, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	if activeInfo.EligibilityReason != PersonalBossAlreadyActive || activeInfo.ActiveChallengeID != grant.ChallengeID || !activeInfo.ActiveExpiresAt.Equal(grant.ExpiresAt) || len(activeInfo.History) != 0 {
+		t.Fatalf("查询没有返回原活动预约：%+v", activeInfo)
 	}
 	replayed, same, err := game.BeginPersonalBoss(ctx, auth, request)
 	require(err)
@@ -162,13 +187,22 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	before := r
 	r, result, err := game.FinishPersonalBoss(ctx, auth, finish)
 	require(err)
+	boundReward := before.Wallet
+	boundReward.BoundGold += template.KillRewardGold
 	if result.Outcome != PersonalBossDefeated || result.SuccessDay != day || result.Successes != 5 || result.AvailableAt.Sub(result.FinishedAt) != template.SuccessCooldown ||
-		r.PersonalBoss.ActiveChallengeID != "" || r.PersonalBoss.Successes != 5 || r.Wallet != before.Wallet || r.SourceSeq != before.SourceSeq {
-		t.Fatalf("成功未原子释放预约、记录次数和冷却，或出现未配置奖励：%+v", result)
+		r.PersonalBoss.ActiveChallengeID != "" || r.PersonalBoss.Successes != 5 || r.Wallet != boundReward || r.SourceSeq != before.SourceSeq ||
+		result.RewardGold != template.KillRewardGold || !result.RewardBound {
+		t.Fatalf("胜利次数、冷却和绑定金币未原子确认，或产生了普通收益来源：%+v", result)
+	}
+	cooled, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	if cooled.EligibilityReason != PersonalBossCoolingDown || cooled.Successes != 5 || cooled.AvailableAt != result.AvailableAt || cooled.ActiveChallengeID != "" ||
+		len(cooled.History) != 1 || cooled.History[0] != result {
+		t.Fatalf("冷却、成功次数或历史没有反映首次真实结算：%+v", cooled)
 	}
 	replayed, same, err = game.FinishPersonalBoss(ctx, auth, finish)
 	require(err)
-	if same != result || replayed.Revision != r.Revision {
+	if same != result || replayed.Revision != r.Revision || replayed.Wallet != r.Wallet {
 		t.Fatal("原击杀结果重放重复变更了角色")
 	}
 	_, _, err = game.BeginPersonalBoss(ctx, auth, makeBegin(r))
@@ -215,12 +249,24 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	// 次日重新按上海日计数，原场次回执保留，用独立角色验证会话接管的取消。
 	yesterday := shanghaiOperatingDay(time.Now().Add(-24 * time.Hour))
 	r = seed(r.ID, bson.M{"personal_boss.success_day": yesterday, "personal_boss.successes": 6, "personal_boss.cooldowns." + bossTemplateKey(template.TemplateID): clearCooldown})
+	priorWallet := r.Wallet
 	_, tomorrowGrant, err := game.BeginPersonalBoss(ctx, auth, makeBegin(r))
 	require(err)
-	r, _, err = game.FinishPersonalBoss(ctx, auth, makeFinish(tomorrowGrant))
+	credit := makeFinish(tomorrowGrant)
+	// 模拟击杀后当前角色卡状态改变，账本仍应使用预约冻结的原击杀时间判绑。
+	seed(r.ID, bson.M{"privilege_until": credit.FinishedAt.Add(-time.Second)})
+	r, win, err := game.FinishPersonalBoss(ctx, auth, credit)
 	require(err)
-	if r.PersonalBoss.SuccessDay != day || r.PersonalBoss.Successes != 1 {
-		t.Fatal("上海运营日切换后延续了原计数")
+	priorWallet.Gold += template.KillRewardGold
+	if r.PersonalBoss.SuccessDay != day || r.PersonalBoss.Successes != 1 || win.RewardBound || win.RewardGold != template.KillRewardGold || r.Wallet != priorWallet {
+		t.Fatal("上海运营日或原击杀时间的特权金币确认异常")
+	}
+	latest, err := game.QueryPersonalBoss(ctx, auth)
+	require(err)
+	total, err := game.DB.Collection(personalBossCollection).CountDocuments(ctx, bson.M{"role_id": r.ID})
+	require(err)
+	if total != 3 || len(latest.History) != 2 || latest.History[0].ChallengeID != tomorrowGrant.ChallengeID || latest.History[1].ChallengeID != stored.ChallengeID {
+		t.Fatalf("历史没有按配置限制为最近记录，或永久场次遭到截断：%d %+v", total, latest.History)
 	}
 	otherKey := create(2, "首领第二角色")
 	other, oldAuth := enter(otherKey)
@@ -234,6 +280,8 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	}
 	late := makeFinish(orphan)
 	_, _, err = game.FinishPersonalBoss(ctx, oldAuth, late)
+	requireCode(err, p.CodeStaleSession, "失效")
+	_, err = game.QueryPersonalBoss(ctx, oldAuth)
 	requireCode(err, p.CodeStaleSession, "失效")
 	_, _, err = game.FinishPersonalBoss(ctx, newAuth, late)
 	requireCode(err, p.CodeOperationConflict, "原执行")

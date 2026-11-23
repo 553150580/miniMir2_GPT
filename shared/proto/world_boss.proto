@@ -1,0 +1,40 @@
+syntax = "proto3";
+package minimir.v1;
+option go_package = "minimir/api/generated/minimirv1";
+
+// 查询当前运行服的世界首领场次。
+message WorldBossQuery {
+  uint64 scene_epoch = 1;
+}
+
+// 序号由场次查询下发，服务端重新核验开放时间与入场资格。
+message WorldBossEnter {
+  uint64 scene_epoch = 1;
+  uint32 template_id = 2;
+  string occurrence_id = 3;
+}
+
+message WorldBossLeave {
+  uint64 scene_epoch = 1;
+  string occurrence_id = 2;
+}
+
+message WorldBossState {
+  uint64 scene_epoch = 1;
+  string occurrence_id = 2;
+  uint32 template_id = 3;
+  // 1 预告、2 等待基线确认、3 开放、4 击杀、5 超时、6 已离开、7 战败。
+  uint32 state = 4;
+  int64 opens_at_unix_ms = 5;
+  int64 expires_at_unix_ms = 6;
+  int64 hp = 7;
+  int64 hp_max = 8;
+  repeated WorldBossRank ranks = 9;
+  uint32 error_code = 10;
+}
+
+message WorldBossRank {
+  uint32 position = 1;
+  string display_name = 2;
+  int64 damage = 3;
+}

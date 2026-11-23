@@ -119,6 +119,9 @@ func (f *Fixture) EquipmentMagicArithmeticSafe(a Fighter) bool {
 		}
 		// base 保存魔法最大，用于当前步骤中的基础值。
 		base := a.MagicMax
+		if s.Behavior == "soul_fire_ball" || s.Behavior == "poisoning" {
+			base = a.TaoMax
+		}
 		if s.Behavior == "healing" || s.Behavior == "mass_healing" {
 			base, ok = equipmentMultiply(a.TaoMax, s.HealingStatMultiplier)
 			if !ok {

@@ -12,7 +12,7 @@ import (
 func supportedSkill(behavior string) bool {
 	switch behavior {
 	case "fencing", "spirit_sword", "fireball", "great_fireball", "thunderbolt", "firebang", "fire_wall", "healing", "mass_healing",
-		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet", "turn_undead":
+		"slaying", "thrusting", "half_moon", "flaming_sword", "hell_fire", "lightning", "ice_storm", "thunder_storm", "magic_shield", "soul_shield", "blessed_armour", "repulsion", "shoulder_dash", "teleport", "summon_pet", "turn_undead", "soul_fire_ball", "poisoning", "hiding", TrapHexagonBehavior:
 		return true
 	}
 	return false
@@ -164,13 +164,30 @@ func (f *Fixture) ValidateCombat() error {
 			wanted = "friendly_grid"
 		case "soul_shield", "blessed_armour":
 			wanted = "friendly_grid"
-		case "magic_shield", "teleport":
+		case "magic_shield", "teleport", "hiding":
 			wanted = "friendly_self"
-		case "firebang", "ice_storm", "fire_wall":
+		case "firebang", "ice_storm", "fire_wall", TrapHexagonBehavior:
 			wanted = "enemy_grid"
+		}
+		if s.Behavior == TrapHexagonBehavior {
+			if err := validateTrapHexagonSkill(s); err != nil {
+				return err
+			}
 		}
 		if s.Behavior == "fire_wall" && (s.AreaRadius != 1 || s.AutoEnabled || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0) {
 			return errors.New("开发火墙必须手动指定中心，500毫秒后建立正交邻格")
+		}
+		if s.Behavior == "soul_fire_ball" && (s.JobID != 2 || s.AreaRadius != 0 || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 50 || s.TargetMoveToleranceCells != 2 || !s.RequireLineOfSight) {
+			return errors.New("灵魂火符必须使用道士单体弹道、飞行视线和原目标两格容差")
+		}
+		if s.Behavior == "poisoning" && (s.JobID != 2 || s.BuffID != 0 || s.AreaRadius != 0 || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0 || s.RequireLineOfSight) {
+			return errors.New("施毒必须以道士单体非弹道技能延迟500毫秒施加")
+		}
+		if s.Behavior == "hiding" && (s.JobID != 2 || s.BuffID == 0 || s.AreaRadius != 0 || s.RangeCells != 0 || s.DelayBaseMS != 500 || s.ProjectileMSPerCell != 0 || s.RequireLineOfSight || s.AutoEnabled) {
+			return errors.New("隐身术隔离候选必须手动对自身施放，并在500毫秒后应用状态")
+		}
+		if s.Behavior != "poisoning" && s.Poison != nil {
+			return errors.New("仅施毒可携带药粉色别配置")
 		}
 		if s.TargetKind != wanted || s.AutoPriority < 0 || s.AutoMinTargets < 0 || s.AutoMinTargets > len(f.Map.MonsterSpawns)+2 {
 			return errors.New("技能行为、目标或自动策略不一致")

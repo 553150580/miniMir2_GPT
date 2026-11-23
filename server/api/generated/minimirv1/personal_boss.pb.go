@@ -221,6 +221,325 @@ func (x *PersonalBossState) GetErrorCode() uint32 {
 	return 0
 }
 
+// 查询当前角色的挑战资格和最近结算。
+type PersonalBossQuery struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PersonalBossQuery) Reset() {
+	*x = PersonalBossQuery{}
+	mi := &file_personal_boss_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PersonalBossQuery) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PersonalBossQuery) ProtoMessage() {}
+
+func (x *PersonalBossQuery) ProtoReflect() protoreflect.Message {
+	mi := &file_personal_boss_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PersonalBossQuery.ProtoReflect.Descriptor instead.
+func (*PersonalBossQuery) Descriptor() ([]byte, []int) {
+	return file_personal_boss_proto_rawDescGZIP(), []int{3}
+}
+
+type PersonalBossInfo struct {
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	ErrorCode    uint32                 `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	Open         bool                   `protobuf:"varint,2,opt,name=open,proto3" json:"open,omitempty"`
+	TemplateId   uint32                 `protobuf:"varint,3,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	DisplayName  string                 `protobuf:"bytes,4,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	MapId        uint64                 `protobuf:"varint,5,opt,name=map_id,json=mapId,proto3" json:"map_id,omitempty"`
+	MonsterId    uint32                 `protobuf:"varint,6,opt,name=monster_id,json=monsterId,proto3" json:"monster_id,omitempty"`
+	MinimumLevel uint32                 `protobuf:"varint,7,opt,name=minimum_level,json=minimumLevel,proto3" json:"minimum_level,omitempty"`
+	Day          string                 `protobuf:"bytes,8,opt,name=day,proto3" json:"day,omitempty"`
+	Successes    uint32                 `protobuf:"varint,9,opt,name=successes,proto3" json:"successes,omitempty"`
+	DailyLimit   uint32                 `protobuf:"varint,10,opt,name=daily_limit,json=dailyLimit,proto3" json:"daily_limit,omitempty"`
+	CanEnter     bool                   `protobuf:"varint,11,opt,name=can_enter,json=canEnter,proto3" json:"can_enter,omitempty"`
+	// 0 可开、1 未开放、2 等级不足、3 挑战进行中、4 冷却、5 次数用完、6 场景不允许。
+	EligibilityReason     uint32                      `protobuf:"varint,12,opt,name=eligibility_reason,json=eligibilityReason,proto3" json:"eligibility_reason,omitempty"`
+	AvailableAtUnixMs     int64                       `protobuf:"varint,13,opt,name=available_at_unix_ms,json=availableAtUnixMs,proto3" json:"available_at_unix_ms,omitempty"`
+	ActiveChallengeId     string                      `protobuf:"bytes,14,opt,name=active_challenge_id,json=activeChallengeId,proto3" json:"active_challenge_id,omitempty"`
+	ActiveExpiresAtUnixMs int64                       `protobuf:"varint,15,opt,name=active_expires_at_unix_ms,json=activeExpiresAtUnixMs,proto3" json:"active_expires_at_unix_ms,omitempty"`
+	History               []*PersonalBossHistoryEntry `protobuf:"bytes,16,rep,name=history,proto3" json:"history,omitempty"`
+	unknownFields         protoimpl.UnknownFields
+	sizeCache             protoimpl.SizeCache
+}
+
+func (x *PersonalBossInfo) Reset() {
+	*x = PersonalBossInfo{}
+	mi := &file_personal_boss_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PersonalBossInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PersonalBossInfo) ProtoMessage() {}
+
+func (x *PersonalBossInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_personal_boss_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PersonalBossInfo.ProtoReflect.Descriptor instead.
+func (*PersonalBossInfo) Descriptor() ([]byte, []int) {
+	return file_personal_boss_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PersonalBossInfo) GetErrorCode() uint32 {
+	if x != nil {
+		return x.ErrorCode
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetOpen() bool {
+	if x != nil {
+		return x.Open
+	}
+	return false
+}
+
+func (x *PersonalBossInfo) GetTemplateId() uint32 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetDisplayName() string {
+	if x != nil {
+		return x.DisplayName
+	}
+	return ""
+}
+
+func (x *PersonalBossInfo) GetMapId() uint64 {
+	if x != nil {
+		return x.MapId
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetMonsterId() uint32 {
+	if x != nil {
+		return x.MonsterId
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetMinimumLevel() uint32 {
+	if x != nil {
+		return x.MinimumLevel
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetDay() string {
+	if x != nil {
+		return x.Day
+	}
+	return ""
+}
+
+func (x *PersonalBossInfo) GetSuccesses() uint32 {
+	if x != nil {
+		return x.Successes
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetDailyLimit() uint32 {
+	if x != nil {
+		return x.DailyLimit
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetCanEnter() bool {
+	if x != nil {
+		return x.CanEnter
+	}
+	return false
+}
+
+func (x *PersonalBossInfo) GetEligibilityReason() uint32 {
+	if x != nil {
+		return x.EligibilityReason
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetAvailableAtUnixMs() int64 {
+	if x != nil {
+		return x.AvailableAtUnixMs
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetActiveChallengeId() string {
+	if x != nil {
+		return x.ActiveChallengeId
+	}
+	return ""
+}
+
+func (x *PersonalBossInfo) GetActiveExpiresAtUnixMs() int64 {
+	if x != nil {
+		return x.ActiveExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *PersonalBossInfo) GetHistory() []*PersonalBossHistoryEntry {
+	if x != nil {
+		return x.History
+	}
+	return nil
+}
+
+type PersonalBossHistoryEntry struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	ChallengeId string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
+	TemplateId  uint32                 `protobuf:"varint,2,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	RuleVersion uint64                 `protobuf:"varint,3,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
+	// 1 胜利、2 超时、3 中断、4 战败。
+	Outcome          uint32 `protobuf:"varint,4,opt,name=outcome,proto3" json:"outcome,omitempty"`
+	FinishedAtUnixMs int64  `protobuf:"varint,5,opt,name=finished_at_unix_ms,json=finishedAtUnixMs,proto3" json:"finished_at_unix_ms,omitempty"`
+	Damage           int64  `protobuf:"varint,6,opt,name=damage,proto3" json:"damage,omitempty"`
+	HpRemaining      int64  `protobuf:"varint,7,opt,name=hp_remaining,json=hpRemaining,proto3" json:"hp_remaining,omitempty"`
+	Recovered        bool   `protobuf:"varint,8,opt,name=recovered,proto3" json:"recovered,omitempty"`
+	RewardGold       int64  `protobuf:"varint,9,opt,name=reward_gold,json=rewardGold,proto3" json:"reward_gold,omitempty"`
+	RewardBound      bool   `protobuf:"varint,10,opt,name=reward_bound,json=rewardBound,proto3" json:"reward_bound,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *PersonalBossHistoryEntry) Reset() {
+	*x = PersonalBossHistoryEntry{}
+	mi := &file_personal_boss_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PersonalBossHistoryEntry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PersonalBossHistoryEntry) ProtoMessage() {}
+
+func (x *PersonalBossHistoryEntry) ProtoReflect() protoreflect.Message {
+	mi := &file_personal_boss_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PersonalBossHistoryEntry.ProtoReflect.Descriptor instead.
+func (*PersonalBossHistoryEntry) Descriptor() ([]byte, []int) {
+	return file_personal_boss_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PersonalBossHistoryEntry) GetChallengeId() string {
+	if x != nil {
+		return x.ChallengeId
+	}
+	return ""
+}
+
+func (x *PersonalBossHistoryEntry) GetTemplateId() uint32 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetRuleVersion() uint64 {
+	if x != nil {
+		return x.RuleVersion
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetOutcome() uint32 {
+	if x != nil {
+		return x.Outcome
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetFinishedAtUnixMs() int64 {
+	if x != nil {
+		return x.FinishedAtUnixMs
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetDamage() int64 {
+	if x != nil {
+		return x.Damage
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetHpRemaining() int64 {
+	if x != nil {
+		return x.HpRemaining
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetRecovered() bool {
+	if x != nil {
+		return x.Recovered
+	}
+	return false
+}
+
+func (x *PersonalBossHistoryEntry) GetRewardGold() int64 {
+	if x != nil {
+		return x.RewardGold
+	}
+	return 0
+}
+
+func (x *PersonalBossHistoryEntry) GetRewardBound() bool {
+	if x != nil {
+		return x.RewardBound
+	}
+	return false
+}
+
 var File_personal_boss_proto protoreflect.FileDescriptor
 
 const file_personal_boss_proto_rawDesc = "" +
@@ -246,7 +565,44 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x05state\x18\x04 \x01(\rR\x05state\x12+\n" +
 	"\x12expires_at_unix_ms\x18\x05 \x01(\x03R\x0fexpiresAtUnixMs\x12\x1d\n" +
 	"\n" +
-	"error_code\x18\x06 \x01(\rR\terrorCodeB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"error_code\x18\x06 \x01(\rR\terrorCode\"\x13\n" +
+	"\x11PersonalBossQuery\"\xdc\x04\n" +
+	"\x10PersonalBossInfo\x12\x1d\n" +
+	"\n" +
+	"error_code\x18\x01 \x01(\rR\terrorCode\x12\x12\n" +
+	"\x04open\x18\x02 \x01(\bR\x04open\x12\x1f\n" +
+	"\vtemplate_id\x18\x03 \x01(\rR\n" +
+	"templateId\x12!\n" +
+	"\fdisplay_name\x18\x04 \x01(\tR\vdisplayName\x12\x15\n" +
+	"\x06map_id\x18\x05 \x01(\x04R\x05mapId\x12\x1d\n" +
+	"\n" +
+	"monster_id\x18\x06 \x01(\rR\tmonsterId\x12#\n" +
+	"\rminimum_level\x18\a \x01(\rR\fminimumLevel\x12\x10\n" +
+	"\x03day\x18\b \x01(\tR\x03day\x12\x1c\n" +
+	"\tsuccesses\x18\t \x01(\rR\tsuccesses\x12\x1f\n" +
+	"\vdaily_limit\x18\n" +
+	" \x01(\rR\n" +
+	"dailyLimit\x12\x1b\n" +
+	"\tcan_enter\x18\v \x01(\bR\bcanEnter\x12-\n" +
+	"\x12eligibility_reason\x18\f \x01(\rR\x11eligibilityReason\x12/\n" +
+	"\x14available_at_unix_ms\x18\r \x01(\x03R\x11availableAtUnixMs\x12.\n" +
+	"\x13active_challenge_id\x18\x0e \x01(\tR\x11activeChallengeId\x128\n" +
+	"\x19active_expires_at_unix_ms\x18\x0f \x01(\x03R\x15activeExpiresAtUnixMs\x12>\n" +
+	"\ahistory\x18\x10 \x03(\v2$.minimir.v1.PersonalBossHistoryEntryR\ahistory\"\xe7\x02\n" +
+	"\x18PersonalBossHistoryEntry\x12!\n" +
+	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x1f\n" +
+	"\vtemplate_id\x18\x02 \x01(\rR\n" +
+	"templateId\x12!\n" +
+	"\frule_version\x18\x03 \x01(\x04R\vruleVersion\x12\x18\n" +
+	"\aoutcome\x18\x04 \x01(\rR\aoutcome\x12-\n" +
+	"\x13finished_at_unix_ms\x18\x05 \x01(\x03R\x10finishedAtUnixMs\x12\x16\n" +
+	"\x06damage\x18\x06 \x01(\x03R\x06damage\x12!\n" +
+	"\fhp_remaining\x18\a \x01(\x03R\vhpRemaining\x12\x1c\n" +
+	"\trecovered\x18\b \x01(\bR\trecovered\x12\x1f\n" +
+	"\vreward_gold\x18\t \x01(\x03R\n" +
+	"rewardGold\x12!\n" +
+	"\freward_bound\x18\n" +
+	" \x01(\bR\vrewardBoundB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_personal_boss_proto_rawDescOnce sync.Once
@@ -260,18 +616,22 @@ func file_personal_boss_proto_rawDescGZIP() []byte {
 	return file_personal_boss_proto_rawDescData
 }
 
-var file_personal_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_personal_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_personal_boss_proto_goTypes = []any{
-	(*PersonalBossEnter)(nil), // 0: minimir.v1.PersonalBossEnter
-	(*PersonalBossLeave)(nil), // 1: minimir.v1.PersonalBossLeave
-	(*PersonalBossState)(nil), // 2: minimir.v1.PersonalBossState
+	(*PersonalBossEnter)(nil),        // 0: minimir.v1.PersonalBossEnter
+	(*PersonalBossLeave)(nil),        // 1: minimir.v1.PersonalBossLeave
+	(*PersonalBossState)(nil),        // 2: minimir.v1.PersonalBossState
+	(*PersonalBossQuery)(nil),        // 3: minimir.v1.PersonalBossQuery
+	(*PersonalBossInfo)(nil),         // 4: minimir.v1.PersonalBossInfo
+	(*PersonalBossHistoryEntry)(nil), // 5: minimir.v1.PersonalBossHistoryEntry
 }
 var file_personal_boss_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	5, // 0: minimir.v1.PersonalBossInfo.history:type_name -> minimir.v1.PersonalBossHistoryEntry
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_personal_boss_proto_init() }
@@ -285,7 +645,7 @@ func file_personal_boss_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_personal_boss_proto_rawDesc), len(file_personal_boss_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

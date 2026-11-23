@@ -20,6 +20,7 @@ import prepare_compact_towns as compact_towns
 import prepare_npc_shops as npc_shops
 import personal_map_contract as personal_map
 import prepare_tasks_codex as tasks_codex
+import prepare_boss as bosses
 WORK=ROOT/'.work/first-loop'
 DEST=ROOT/'config/development/first-loop.json'
 CSV_ROOT=ROOT/'资料参考/myf/Mud2/DB'
@@ -29,7 +30,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile',*tasks_codex.TABLES]
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -174,7 +175,7 @@ SKILL_DAMAGE_FIELDS='accuracy_per_level power_base power_bonus mpower_base mpowe
 SKILL_INT_FIELDS='id job_id book_item_id learn_level learned_level max_level mp_base_cost mp_level_cost cooldown_base_ms cooldown_reduction_ms global_spell_ms action_ms range_cells delay_base_ms projectile_ms_per_cell target_move_tolerance_cells accuracy_per_level power_base power_bonus mpower_base mpower_bonus multiplier_base_ppm multiplier_bonus_ppm area_radius healing_stat_multiplier undead_multiplier_ppm auto_priority auto_min_targets secondary_distance_cells secondary_impact_ms charge_window_ms line_cells line_step_ms non_undead_divisor ready_proc_denominator buff_id material_item_id material_quantity'.split()
 SKILL_BOOL_FIELDS=['require_line_of_sight','add_caster_level','line_stop_on_blocked','auto_enabled']
 SKILL_ARRAY_FIELDS=['accuracy_by_level','max_attack_bonus_by_level','ready_proc_numerators','secondary_direction_offsets']
-SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour','repulsion','shoulder_dash','teleport','summon_pet']
+SKILL_BEHAVIORS=['fencing','spirit_sword','fireball','great_fireball','thunderbolt','firebang','fire_wall','healing','mass_healing','slaying','thrusting','half_moon','flaming_sword','hell_fire','lightning','ice_storm','thunder_storm','magic_shield','soul_shield','blessed_armour','repulsion','shoulder_dash','teleport','summon_pet','turn_undead']
 SKILL_TARGETS=['passive','enemy_entity','enemy_grid','friendly_entity','friendly_grid','attack_mode','attack_charge','enemy_direction','enemy_self','friendly_self']
 BUFF_BEHAVIORS={'magic_shield':'magic_shield','soul_shield':'max_magic_defence','blessed_armour':'max_physical_defence','teleport':'teleport_mana_penalty'}
 BUFF_ATTRIBUTE_FIELDS='kind value_by_level target_level_divisor target_level_add hit_duration_loss_ms_per_hp'.split()
@@ -329,7 +330,7 @@ def validate_skills(profile,skills):
         if skill['cooldown_reduction_ms']*skill['max_level']>skill['cooldown_base_ms']:raise ValueError('技能最高阶冷却不能为负')
         passive=skill['behavior'] in ['fencing','spirit_sword','slaying']
         if passive!=(skill['target_kind']=='passive'):raise ValueError('被动技能与目标类型不匹配')
-        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid','repulsion':'enemy_self','shoulder_dash':'enemy_direction','teleport':'friendly_self','summon_pet':'friendly_self'}
+        targets={'fencing':'passive','spirit_sword':'passive','slaying':'passive','thrusting':'attack_mode','half_moon':'attack_mode','flaming_sword':'attack_charge','fireball':'enemy_entity','great_fireball':'enemy_entity','thunderbolt':'enemy_entity','firebang':'enemy_grid','fire_wall':'enemy_grid','healing':'friendly_entity','mass_healing':'friendly_grid','hell_fire':'enemy_direction','lightning':'enemy_direction','ice_storm':'enemy_grid','thunder_storm':'enemy_self','magic_shield':'friendly_self','soul_shield':'friendly_grid','blessed_armour':'friendly_grid','repulsion':'enemy_self','shoulder_dash':'enemy_direction','teleport':'friendly_self','summon_pet':'friendly_self','turn_undead':'enemy_entity'}
         if skill['target_kind']!=targets[skill['behavior']]:raise ValueError('技能行为与合法目标种类不一致')
         activation={'fencing':'passive','spirit_sword':'passive','slaying':'passive_proc','thrusting':'toggle','half_moon':'toggle','flaming_sword':'charge'}.get(skill['behavior'],'cast')
         if skill['activation_kind']!=activation:raise ValueError('技能激活方式与执行管线不一致')
@@ -995,10 +996,18 @@ def fixture_from_rows(tables):
             'tables':list(tasks_codex.TABLES),
             'compiler_sha256':config.sha256(Path(tasks_codex.__file__)),
             'scope':'开发候选目标及绑定奖励。正式数值、图鉴属性预算和特殊玩法任务未启用。'}
+    boss_config,boss_evidence=bosses.project(tables,profile,result['map'],[row['id'] for row in [result['map'],*result.get('maps',[])]],fighter)
+    if boss_config:
+        result.update(boss_config)
+        result['_source_evidence']['boss_challenges']={**boss_evidence,
+            'tables':[*bosses.TABLES,'game_maps','game_map_collisions','game_monster_spawns','game_monsters'],
+            'compiler_sha256':config.sha256(Path(bosses.__file__)),
+            'scope':'个人与世界首领可玩开发候选。地图、首领数值、容量及失败等待用于隔离体验，个人与世界均未投影经济奖励。'}
     return result
 
 def public_gameplay(fixture):
     """客户端只接收显式展示白名单，来源、夹具说明和服务端内部字段留在源侧。"""
+    boss_fields,boss_monsters=bosses.public_fields(fixture)
     potions=fixture['potions'];effects={effect['item_id']:effect for effect in potions['effects']}
     shared={field:potions[field] for field in POTION_FIELDS}
     items=[]
@@ -1051,7 +1060,8 @@ def public_gameplay(fixture):
             'jobs':[{'job_id':p['job_id'],'name':['战士','法师','道士'][p['job_id']],'profile':'player_female' if p['job_id']==1 else 'player_male','can_push':p['can_push']} for p in fixture['players']],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
             **({'progression':{key:deepcopy(value) for key,value in fixture['progression'].items() if key!='exp_per_level'}} if fixture['rule_version']>=20 else {}),
-            'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']],
+            'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']]+boss_monsters,
+            **boss_fields,
             'pet_profiles':[{'definition_id':fixture['pet']['definition_id'],'name':'变异骷髅','profile':'pet_skeleton','job_id':2,'can_push':fixture['pet']['can_push']}],
             **({'map_catalog':[{'id':str(row['id']),'name':row['display_name'],'resource_key':row['resource_key'],
                    'width':row['width'],'height':row['height'],'scene_kind':row.get('scene_kind',1),

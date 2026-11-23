@@ -794,6 +794,78 @@
       "source_ref": "最终策划案4.18/7.2"
     },
     {
+      "value": 20015,
+      "name": "MsgC2SPersonalBossQuery",
+      "proto_message": "PersonalBossQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2"
+    },
+    {
+      "value": 20016,
+      "name": "MsgS2CPersonalBossInfo",
+      "proto_message": "PersonalBossInfo",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.18/7.2"
+    },
+    {
+      "value": 20017,
+      "name": "MsgC2SWorldBossQuery",
+      "proto_message": "WorldBossQuery",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.19/7.2"
+    },
+    {
+      "value": 20018,
+      "name": "MsgC2SWorldBossEnter",
+      "proto_message": "WorldBossEnter",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.19/7.2"
+    },
+    {
+      "value": 20019,
+      "name": "MsgC2SWorldBossLeave",
+      "proto_message": "WorldBossLeave",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.19/7.2"
+    },
+    {
+      "value": 20020,
+      "name": "MsgS2CWorldBossState",
+      "proto_message": "WorldBossState",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.19/7.2"
+    },
+    {
       "value": 40020,
       "name": "MsgC2SWarehouseQuery",
       "proto_message": "WarehouseQuery",

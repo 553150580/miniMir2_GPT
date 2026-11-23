@@ -9,6 +9,9 @@ const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.b<b.t&&a.t>b.b;
 test('仓库只追加保存子树与Functions入口；原1191对象只父children各追加一次，原地图/HUD/ItemLock全部字节语义保持',()=>{
  const beforeDirectory=require('./helpers/inventory_grid_layout.cjs')(require('./helpers/skill_layout.cjs')(structuredClone(scene))).slice(0,1373);
  beforeDirectory[253]._children=beforeDirectory[253]._children.filter(x=>x.__id__<1373);
+ const ground=beforeDirectory[26]._children.filter(ref=>ref.__id__>=1373);
+ assert.deepEqual(ground.map(ref=>scene[ref.__id__]._name),['GroundEffects']);
+ beforeDirectory[26]._children=beforeDirectory[26]._children.filter(ref=>ref.__id__<1373);
  const reconnect=beforeDirectory[2]._children.filter(ref=>ref.__id__>=1373);
  assert.deepEqual(reconnect.map(ref=>scene[ref.__id__]._name),['ReconnectDialog']);
  beforeDirectory[2]._children=beforeDirectory[2]._children.filter(ref=>ref.__id__<1373);

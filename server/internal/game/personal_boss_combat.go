@@ -50,7 +50,7 @@ func minBossTime(a, b time.Time) time.Time {
 
 // suppressOrdinaryObservation 把普通挂机继续保留在线，但不向正在观察挑战的连接串发普通场景表现。
 func suppressOrdinaryObservation(owner *room, messageID uint16) bool {
-	if owner.personalBoss == nil || !owner.personalBoss.shown {
+	if (owner.personalBoss == nil || !owner.personalBoss.shown) && (owner.worldBossObservation == nil || !owner.worldBossObservation.shown) {
 		return false
 	}
 	switch messageID {
@@ -105,7 +105,7 @@ func (w *worker) applyPersonalBossDamage(r *room, from, target *entity, amount i
 	}
 	removeDeathStatuses(target)
 	target.Action = 4
-	if target == &r.Player {
+	if target == &r.Player && r.worldBossCombat == nil {
 		battle.challenge.playerDefeated(battle.grant, at)
 	}
 	if target == r.Pet && w.petRuntimeEnabled() && !w.archivePetDeath(r, r.currentWorld(), reference(r, target), now) {

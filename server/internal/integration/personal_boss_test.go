@@ -38,10 +38,11 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	monster.ID = 80_001
 	monster.AttackMin, monster.AttackMax, monster.AttackMS, monster.Exp = 0, 0, 4000, 0
 	monster.GoldMin, monster.GoldMax = 0, 0
-	cfg.Fixture.PersonalBoss = &devconfig.PersonalBossConfig{TemplateID: 1,
+	cfg.Fixture.PersonalBoss = &devconfig.PersonalBossConfig{TemplateID: 1, DisplayName: "隔离首领", MinimumLevel: 1,
 		Map: devconfig.MapTemplate{ID: 80, Width: 13, Height: 13, SceneKind: devconfig.SceneKindPersonalBoss,
 			PlayerSpawn: devconfig.Point{X: 5, Y: 5}, MonsterSpawns: []devconfig.Point{{X: 6, Y: 5}}},
-		Monster: monster, Duration: 30 * time.Second, SuccessCooldown: time.Minute, RetryCooldown: time.Second}
+		Monster: monster, Duration: 30 * time.Second, SuccessCooldown: time.Minute, RetryCooldown: time.Second,
+		DailySuccessLimit: 5, PrivilegeSuccessBonus: 1, HistoryLimit: 20}
 	if !cfg.Fixture.ValidPersonalBoss() {
 		t.Fatal("隔离首领模板未通过配置校验")
 	}
@@ -79,6 +80,27 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
 	defer c.close()
 	c.auto(false, 1)
+	queryBoss := func() *pb.PersonalBossInfo {
+		t.Helper()
+		request := c.send(p.MsgC2SPersonalBossQuery, &pb.PersonalBossQuery{})
+		info := &pb.PersonalBossInfo{}
+		travelUntilWithin(c, 3*time.Second, func(frame wire.Frame) bool {
+			if frame.Request != request {
+				return false
+			}
+			if frame.ID != p.MsgS2CPersonalBossInfo || frame.Error != 0 {
+				t.Fatalf("首领目录没有返回同一原请求：%v", frame)
+			}
+			must(t, proto.Unmarshal(frame.Payload, info))
+			return true
+		})
+		return info
+	}
+	initialInfo := queryBoss()
+	if !initialInfo.Open || !initialInfo.CanEnter || initialInfo.ErrorCode != 0 || initialInfo.TemplateId != 1 || initialInfo.MonsterId != monster.ID ||
+		initialInfo.MapId != cfg.Fixture.PersonalBoss.Map.ID || initialInfo.DailyLimit != 5 || len(initialInfo.History) != 0 {
+		t.Fatalf("新角色没有拿到服务器权威首领资格：%v", initialInfo)
+	}
 	var weapon *pb.ItemView
 	for _, item := range c.inventory.Items {
 		if item.ItemId == 218 {
@@ -177,6 +199,12 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	}
 	if final := readRole(); final.PersonalBoss == nil || final.PersonalBoss.ActiveChallengeID != "" {
 		t.Fatal("首领击杀后未退役独享预约")
+	}
+	finishedInfo := queryBoss()
+	if finishedInfo.ErrorCode != 0 || finishedInfo.CanEnter || finishedInfo.EligibilityReason != persistence.PersonalBossCoolingDown ||
+		finishedInfo.Successes != 1 || finishedInfo.ActiveChallengeId != "" || finishedInfo.AvailableAtUnixMs != terminal.AvailableAt.UnixMilli() ||
+		len(finishedInfo.History) != 1 || finishedInfo.History[0].ChallengeId != booking.ChallengeId || finishedInfo.History[0].RewardGold != 0 {
+		t.Fatalf("查询没有反映真实挑战终态，或默认候选发放了金币：%v", finishedInfo)
 	}
 	count, err := audit.CountDocuments(ctx, bson.M{"kind": "settlement", "role_id": roleID, "$or": bson.A{
 		bson.M{"settlement.map_id": cfg.Fixture.PersonalBoss.Map.ID}, bson.M{"settlement.monster_id": monster.ID},

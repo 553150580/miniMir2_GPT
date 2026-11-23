@@ -11,6 +11,7 @@ class Connection{constructor(){this.generation=0;this.binding=Long.UONE;}subscri
 const compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS,esModuleInterop:true}});
 const moduleLike={exports:{}};
 new Function('require','module','exports',compiled.outputText)(id=>id==='long'?Long:id==='./GameConnection'?{GameConnection:Connection}
+    :id==='./BossTransition'?require('../../../.work/ui-tests/app/BossTransition.js')
     :id==='./BaselineAssembler'?{BaselineAssembler:class{reset(){}accept(value){return value;}}}:id==='./GameErrors'?{protocolErrorMessage:()=>''}
     :id==='./WarehouseModel'?require('../../../.work/ui-tests/app/WarehouseModel.js'):id==='./SkillModel'?require('../../../.work/ui-tests/app/SkillModel.js'):id==='./TeleportModel'?require('../../../.work/ui-tests/app/TeleportModel.js'):id==='./RoleBindingModel'?require('../../../.work/ui-tests/app/RoleBindingModel.js'):id==='./PetBornModel'?require('../../../.work/ui-tests/app/PetBornModel.js'):id==='./AutoRecycleModel'?require('../../../.work/ui-tests/app/AutoRecycleModel.js'):id==='./LevelGrowthModel'?require('../../../.work/ui-tests/app/LevelGrowthModel.js'):id==='./MapTravelModel'?require('../../../.work/ui-tests/app/MapTravelModel.js'):{},moduleLike,moduleLike.exports);
 const {session}=moduleLike.exports;

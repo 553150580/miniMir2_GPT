@@ -25,3 +25,40 @@ message PersonalBossState {
   int64 expires_at_unix_ms = 5;
   uint32 error_code = 6;
 }
+
+// 查询当前角色的挑战资格和最近结算。
+message PersonalBossQuery {}
+
+message PersonalBossInfo {
+  uint32 error_code = 1;
+  bool open = 2;
+  uint32 template_id = 3;
+  string display_name = 4;
+  uint64 map_id = 5;
+  uint32 monster_id = 6;
+  uint32 minimum_level = 7;
+  string day = 8;
+  uint32 successes = 9;
+  uint32 daily_limit = 10;
+  bool can_enter = 11;
+  // 0 可开、1 未开放、2 等级不足、3 挑战进行中、4 冷却、5 次数用完、6 场景不允许。
+  uint32 eligibility_reason = 12;
+  int64 available_at_unix_ms = 13;
+  string active_challenge_id = 14;
+  int64 active_expires_at_unix_ms = 15;
+  repeated PersonalBossHistoryEntry history = 16;
+}
+
+message PersonalBossHistoryEntry {
+  string challenge_id = 1;
+  uint32 template_id = 2;
+  uint64 rule_version = 3;
+  // 1 胜利、2 超时、3 中断、4 战败。
+  uint32 outcome = 4;
+  int64 finished_at_unix_ms = 5;
+  int64 damage = 6;
+  int64 hp_remaining = 7;
+  bool recovered = 8;
+  int64 reward_gold = 9;
+  bool reward_bound = 10;
+}

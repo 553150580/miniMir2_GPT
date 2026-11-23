@@ -199,6 +199,15 @@ func (f *Fixture) ValidateBuffs() error {
 			}
 		}
 		switch b.Kind {
+		case "hiding":
+			if b.DurationKind != "sc_rank_linear" || b.StatMultiplier != 1 || b.StatAdd != 0 || b.StackPolicy != "refresh_duration_keep_values" || !b.RemoveOnPlayerDeath || b.AllowDeadTargets || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.HitDurationLossMSPerHP != 0 {
+				return errors.New("隐身状态必须具备原道术时长、原生命和重施规则")
+			}
+			for rank, seconds := range b.DurationSecondsByLevel {
+				if seconds != int64(rank+1)*5 || rank >= len(b.ValueByLevel) || b.ValueByLevel[rank] != 0 {
+					return errors.New("隐身只允许逐阶五秒持续基数")
+				}
+			}
 		case "teleport_mana_penalty":
 			if f.RuleVersion < 15 || b.DurationKind != "fixed_ms" || b.DurationMS <= 0 || !b.present["duration_ms"] || b.StackPolicy != "refresh_duration_keep_values" || b.RemoveOnPlayerDeath || !b.AllowDeadTargets || len(b.DurationSecondsByLevel) != 0 || b.TargetLevelDivisor != 0 || b.TargetLevelAdd != 0 || b.StatAdd != 0 || b.StatMultiplier != 0 || b.HitDurationLossMSPerHP != 0 {
 				return errors.New("传送耗蓝惩罚须明确单一固定时长、尸体及重施保留规则")
@@ -255,6 +264,18 @@ func (f *Fixture) ValidateBuffs() error {
 			}
 		}
 		if s.BuffID == 0 {
+			if s.Behavior == "poisoning" {
+				if err := validatePoisonMaterials(s, supplies); err != nil {
+					return err
+				}
+				continue
+			}
+			if s.Behavior == "soul_fire_ball" || s.Behavior == TrapHexagonBehavior {
+				if !supplies[s.MaterialItemID] || s.MaterialQuantity != 1 {
+					return errors.New("灵魂火符与困魔咒必须消耗白名单中的一个原护符单位")
+				}
+				continue
+			}
 			if s.Behavior == "summon_pet" {
 				// err 接收校验召唤技能过程中可能产生的错误，供后续失败分支处理。
 				if err := validateSummonSkill(s); err != nil {
@@ -277,11 +298,14 @@ func (f *Fixture) ValidateBuffs() error {
 		}
 		used[b.ID] = true
 		// wanted 保存从按文本索引的文本映射取出的期望状态。
-		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence", "teleport": "teleport_mana_penalty"}[s.Behavior]
+		wanted := map[string]string{"magic_shield": "magic_shield", "soul_shield": "max_magic_defence", "blessed_armour": "max_physical_defence", "teleport": "teleport_mana_penalty", "hiding": "hiding"}[s.Behavior]
 		// withoutMaterial 保存根据类型与当前数据的计算结果与类型与当前数据的计算结果计算的“without”材料。
 		withoutMaterial := b.Kind == "magic_shield" || b.Kind == "teleport_mana_penalty"
 		if b.Kind != wanted || withoutMaterial && (s.MaterialItemID != 0 || s.MaterialQuantity != 0) || !withoutMaterial && (!supplies[s.MaterialItemID] || s.MaterialQuantity <= 0) {
 			return errors.New("状态技能行为与永久耗材引用不一致")
+		}
+		if s.Behavior == "hiding" && s.MaterialQuantity != 1 {
+			return errors.New("隐身术须消费原护符一个单位")
 		}
 	}
 	if len(used) != len(f.Buffs) {

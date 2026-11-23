@@ -43,6 +43,8 @@ type combatStatus struct {
 	DamageWearMS int64
 	// RemoveOnDeath 标记是否处于移除启用状态死亡状态。
 	RemoveOnDeath bool
+	// HiddenAware 保存被隐身者主动打到的怪物出生身份，普通搜索对其它怪物仍不可见。
+	HiddenAware map[uint32]actorRef
 }
 
 // buffDurationSeconds 返回状态效果持续时间秒集合供调用方使用。
@@ -131,6 +133,8 @@ func wearStatuses(e *entity, damage int64) {
 // removeDeathStatuses 移除死亡状态集合。
 // e 记录实体。
 func removeDeathStatuses(e *entity) {
+	// 中毒只附着当前活体，后继事件也会再次核验原出生身份。
+	e.Poisons = nil
 	// id 定位状态集合中正在处理的成员，status 接收遍历状态集合时当前的元素。
 	for id, status := range e.Statuses {
 		if status.RemoveOnDeath {
@@ -219,6 +223,10 @@ func (w *worker) applyBuff(r *room, c pendingCast, target *entity, now time.Time
 		}
 		// 来源刷新仅替换剩余时长；首次数值、来源施法者以及Last/Next时钟全部保留。
 		old.RemainingMS = c.BuffDurationMS
+		if definition.Kind == "hiding" {
+			// 原重新隐身会使不能识破隐身的怪物再次丢失目标。
+			old.HiddenAware = nil
+		}
 		if definition.DurationKind == "fixed_ms" {
 			old.LastProcess = now
 			old.NextProcess = now.Add(time.Duration(definition.TickMS) * time.Millisecond)

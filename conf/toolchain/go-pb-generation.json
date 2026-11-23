@@ -5,17 +5,19 @@
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
     "assets.proto": "caa3d594c988fce3e384130b9a14d6c75a96d35a1c4db6ea3a50e860b3f1834b",
     "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
-    "personal_boss.proto": "14d2023435160bb941f42c873273bf34e296acfa73cb5266c47a59cdf9e86312",
+    "personal_boss.proto": "7363afde4f0843de8e412992741529aa46554c5f9206e7a37af85f3a73a9dff2",
     "tasks_codex.proto": "2d72442ba3da69dcc5ff44813f7cecdf6a6089895d1cde50a53eb153f1728b4e",
-    "world.proto": "282ba01b862f3889a5630e8d63b82908ea89239ac83f74bdc27d884af6961c13"
+    "world.proto": "57196433a90dcaba614fb03372e7c37a8a5c956830f64d16fb3782b02bfc4846",
+    "world_boss.proto": "fd5c26644882acf777fcbc09b2804c956da3e71d0a3ccc10e2a2f2374931e2bf"
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
     "server/api/generated/minimirv1/assets.pb.go": "fff7ed0d785271c714421dcb4f4f5471b20e0e3690656f93b4b224319c80eb2e",
     "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
-    "server/api/generated/minimirv1/personal_boss.pb.go": "85dfc340b36447774d0c7fdd415ba365f111d78c5c757e51afaa2ea498a07802",
+    "server/api/generated/minimirv1/personal_boss.pb.go": "f07206b00536b0525f1342c402cb38e0f805b99031a321673c4b88832d5a1673",
     "server/api/generated/minimirv1/tasks_codex.pb.go": "c39b7d50ac84fa06d49967d45a0c895806ff3741d17998ff4851a1f7d2e8e5a2",
-    "server/api/generated/minimirv1/world.pb.go": "5306962637c2c0d816a7312366477967a4bd0e39ea87b17646ad6fab2e3feea4"
+    "server/api/generated/minimirv1/world.pb.go": "5aee4bb9238223a49ea7106060477735917c2c21ee0f0d4af96a3f2f4fc599e9",
+    "server/api/generated/minimirv1/world_boss.pb.go": "d751d0e7fd8704c105206aea535a9ff2abd8592b4d7eef67767b8576ad0d9841"
   },
   "business_implemented": false
 }

@@ -38,7 +38,8 @@ class SummonCandidateProjectionTests(unittest.TestCase):
         self.assertEqual([row['id'] for row in c['books']],[25])
         self.assertEqual(len(c['upgrades']),3)
         self.assertGreaterEqual(f['rule_version'],17)
-        self.assertEqual(len(f['skills']),22)
+        self.assertEqual(len(f['skills']),24)
+        self.assertTrue({22,32}.issubset(row['id'] for row in f['skills']))
         self.assertFalse(any(row['id']==17 for row in f['skills']))
         self.assertFalse(any(row['id']==25 for row in f['items']))
         self.assertFalse(any(row['skill_id']==17 for row in f['skill_upgrades']))
@@ -125,12 +126,15 @@ class SummonCandidateProjectionTests(unittest.TestCase):
             with self.subTest(kind=kind),self.assertRaises(ValueError):self.compile(tables)
 
     def test_visual_protocol_version_preserves_minimum_summon_contract(self):
-        for version in range(17,28):
-            tables=self.changed();self.profile(tables)['rule_version']=version
-            if version<20:self.profile(tables).pop('progression')
-            if version<19:self.profile(tables).pop('equipment_recycling')
+        for version in range(17,29):
+            tables=self.changed();profile=self.profile(tables);profile['rule_version']=version
+            if version<28:
+                profile['skill_ids']=[ident for ident in profile['skill_ids'] if ident not in (22,32)]
+                profile.pop('boss_template_ids')
+            if version<20:profile.pop('progression')
+            if version<19:profile.pop('equipment_recycling')
             self.assertEqual(self.compile(tables)['required_rule_version'],17)
-        tables=self.changed();self.profile(tables)['rule_version']=28
+        tables=self.changed();self.profile(tables)['rule_version']=29
         with self.assertRaises(ValueError):self.compile(tables)
 
     def test_definition_link_and_material_cannot_be_guessed(self):

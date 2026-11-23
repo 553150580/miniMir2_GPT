@@ -17,8 +17,7 @@ import (
 )
 
 const (
-	personalBossCollection  = "personal_boss_challenges" // 永久预约和终态记录的集合。
-	personalBossDailyNormal = 5                          // 无特权角色的每日成功次数。
+	personalBossCollection = "personal_boss_challenges" // 永久预约和终态记录的集合。
 )
 
 // PersonalBossOutcome 区分正在进行、真实击杀、逃走、中断与玩家阵亡。
@@ -86,6 +85,8 @@ type PersonalBossChallenge struct {
 	SuccessDay      string              `bson:"success_day,omitempty"`  // 成功归属的上海运营日。
 	Successes       uint32              `bson:"successes,omitempty"`    // 该运营日确认后的成功次数。
 	Recovered       bool                `bson:"recovered,omitempty"`    // 新所有者取消了失去原执行身份的挑战。
+	RewardGold      int64               `bson:"reward_gold,omitempty"`  // 此次击杀实际入账的直接金币。
+	RewardBound     bool                `bson:"reward_bound,omitempty"` // 该金币依据原击杀时刻进入绑定账户。
 }
 
 // personalBossRecord 额外保存仅持久层使用的所有者围栏和幂等指纹。
@@ -96,6 +97,9 @@ type personalBossRecord struct {
 	SessionEpoch          int64  `bson:"session_epoch"`           // 初次预约的角色会话代次。
 	BeginDigest           string `bson:"begin_digest"`            // 初次预约内容摘要。
 	FinishDigest          string `bson:"finish_digest,omitempty"` // 首次确认的结束提案内容摘要。
+
+	KillRewardGold int64     `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
+	PrivilegeUntil time.Time `bson:"privilege_until_at_entry,omitempty"` // 原角色授权的卡到期时刻，当前挑战不受理卡资产操作。
 }
 
 // BeginPersonalBoss 在角色 owner 的事务内确认独占场次，返回的活动预约才能启动新的场景。
@@ -146,23 +150,17 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 			return Fail(p.CodeOperationConflict, "原个人首领预约已错过启动窗口")
 		}
 		state := personalBossProgress(r)
-		if state.ActiveChallengeID != "" || state.Cooldowns[bossTemplateKey(q.TemplateID)].After(q.StartedAt) {
-			return Fail(p.CodeLineForbidden, "已有个人首领场次或本模板仍在冷却")
-		}
-		limit := uint32(personalBossDailyNormal)
-		if r.PrivilegeUntil.After(q.StartedAt) {
-			limit++
-		}
-		day := shanghaiOperatingDay(q.StartedAt)
-		if state.SuccessDay > day || state.SuccessDay == day && state.Successes >= limit {
-			return Fail(p.CodeLineForbidden, "个人首领已达到本日成功次数上限")
+		availability := personalBossAvailability(r, state, template, q.StartedAt)
+		if err := personalBossAdmissionError(availability.EligibilityReason); err != nil {
+			return err
 		}
 		// 回执编号和所有者代次同源冻结，不能由其他角色或新执行接管旧预约。
 		grant = PersonalBossChallenge{ChallengeID: q.ChallengeID, ReservationID: domain.ID(), RoleID: r.ID,
 			RunID: s.Cfg.RunID, Execution: q.Execution, TemplateID: q.TemplateID, RuleVersion: q.RuleVersion,
 			ConfigHash: q.ConfigHash, CombatSnapshot: q.CombatSnapshot, StartedAt: q.StartedAt, ExpiresAt: expires,
-			BossHP: q.BossHP, DailyLimit: limit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown}
-		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch}
+			BossHP: q.BossHP, DailyLimit: availability.DailyLimit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown}
+		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
+			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil}
 		state.ActiveChallengeID = grant.ChallengeID
 		r.PersonalBoss = &state
 		r.Revision++
@@ -290,6 +288,9 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		state.Successes++
 		record.SuccessDay, record.Successes = day, state.Successes
 		cooldown = record.SuccessCooldown
+		if err := applyPersonalBossGold(&r, record); err != nil {
+			return r, err
+		}
 	}
 	record.AvailableAt = bossTime(record.FinishedAt.Add(cooldown))
 	state.Cooldowns = maps.Clone(state.Cooldowns)
@@ -311,6 +312,25 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		return r, Fail(p.CodeOperationConflict, "个人首领场次已有终态")
 	}
 	return r, s.writePersonalBossAudit(ctx, *record, "finish", r.Revision)
+}
+
+// applyPersonalBossGold 将独立金币在原击杀时刻判绑，结果和永久胜利一起提交。
+func applyPersonalBossGold(r *domain.Role, record *personalBossRecord) error {
+	if record.KillRewardGold == 0 {
+		return nil
+	}
+	bound := !record.PrivilegeUntil.After(record.FinishedAt)
+	wallet := &r.Wallet.Gold
+	if bound {
+		wallet = &r.Wallet.BoundGold
+	}
+	total, err := add(*wallet, record.KillRewardGold)
+	if err != nil {
+		return err
+	}
+	*wallet = total
+	record.RewardGold, record.RewardBound = record.KillRewardGold, bound
+	return nil
 }
 
 // personalBossRole 同时以运行服和账号围栏保护永久角色所有者。

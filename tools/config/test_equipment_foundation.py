@@ -115,7 +115,7 @@ class EquipmentFoundationTests(unittest.TestCase):
             with self.subTest(value=value):self.assertTrue(config.check_json_contracts(self.schema,tables))
 
     def test_legacy_is_explicit_and_cannot_activate_new_attributes_by_downgrade(self):
-        tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21;profile.pop('warehouses')
+        tables=deepcopy(self.tables);profile=self.profile(tables);profile['rule_version']=21;profile.pop('warehouses');profile.pop('boss_template_ids')
         for key in module.npc_shops.PROFILE_KEYS:del profile[key]
         with self.assertRaisesRegex(ValueError,'rule22'):module.fixture_from_rows(tables)
         profile.pop('base_item_ids');fixture=module.fixture_from_rows(tables)

@@ -19,14 +19,17 @@ DEST=ROOT/'config/development/summon-candidates.json'
 
 def compile_catalog(tables,evidence):
     profile=deepcopy(pets.one(tables,'dev_first_loop_profile',1)['parameters'])
-    if type(profile['rule_version']) is not int or not 17 <= profile['rule_version'] <= 27:
-        raise ValueError('关闭召唤候选须使用第17至27版开发规则，候选最低规则仍为17')
+    if type(profile['rule_version']) is not int or not 17 <= profile['rule_version'] <= 28:
+        raise ValueError('关闭召唤候选须使用第17至28版开发规则，候选最低规则仍为17')
     references=[(row['id'],row['summon_skill_id']) for row in tables['game_pet_templates'] if row['record_status']!='historical' and row['summon_skill_id'] is not None]
     ids=[skill for _,skill in references]
     if not ids or len(set(ids))!=len(ids) or any(type(id) is not int or id<=0 for id in ids):
         raise ValueError('独立召唤候选必须由PetDefs唯一显式引用技能，不猜默认17')
-    if len(profile['skill_ids'])!=22 or any(id in profile['skill_ids'] for id in ids) or profile['casting_supply']['enabled'] or profile['pet_runtime']['bootstrap_mode']!='legacy_untrained_pet':
-        raise ValueError('本阶段主profile须保持22技能范围、材料关闭与legacy不训练，候选不得暗启')
+    expected_count=24 if profile['rule_version']>=28 else 22
+    main_ids=profile['skill_ids']
+    if (len(main_ids)!=expected_count or (profile['rule_version']>=28 and not {22,32}.issubset(main_ids)) or
+            any(id in main_ids for id in ids) or profile['casting_supply']['enabled'] or profile['pet_runtime']['bootstrap_mode']!='legacy_untrained_pet'):
+        raise ValueError('主profile须采用对应规则的已选技能，召唤材料关闭，旧免费宠物保持未训')
     profile['skill_ids']+=ids
     all_skills=loop.skill_definitions(tables,profile)
     loop.validate_skills(profile,all_skills)

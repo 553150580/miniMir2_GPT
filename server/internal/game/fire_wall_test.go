@@ -65,6 +65,9 @@ func TestFireWallCrossTilesDamageAndWalkEntry(t *testing.T) {
 	if field.Count != 4 || field.covers(north) || field.covers(diagonal) || !field.covers(east) || field.Expires.Sub(cast.Due) != fireWallLifetime(cast.Amount) {
 		t.Fatalf("火墙正交、地形或持续时间不符，场 %+v", field)
 	}
+	if active := world.fireWallCells(cast.Due); len(active) != field.Count {
+		t.Fatalf("基线应同步实际生效的四个火墙格，得到 %d 格", len(active))
+	}
 	target.Pos = diagonal
 	// enter 是怪物真实行走进入东格的时刻，它不能推迟下一周期。
 	enter := cast.Due.Add(time.Second)
@@ -88,6 +91,9 @@ func TestFireWallCrossTilesDamageAndWalkEntry(t *testing.T) {
 	w.advanceEvents(r, field.Expires.Add(time.Nanosecond))
 	if target.HP != 1000-4*cast.Amount || len(world.FireWalls) != 0 || r.eventCount() != 0 {
 		t.Fatal("火墙逾期仍有伤害或遗留任务")
+	}
+	if active := world.fireWallCells(field.Expires.Add(time.Nanosecond)); len(active) != 0 {
+		t.Fatal("完整基线仍投影已到期的火墙")
 	}
 }
 

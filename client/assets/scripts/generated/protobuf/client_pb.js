@@ -12246,6 +12246,7 @@ $root.minimir = (function() {
              * @property {minimir.v1.NavigationState.$Properties|null} [navigation_state] SceneBaselineChunk navigation_state
              * @property {Long|null} [safe_zone_id] SceneBaselineChunk safe_zone_id
              * @property {minimir.v1.OwnedPetState.$Properties|null} [owned_pet] SceneBaselineChunk owned_pet
+             * @property {Array.<minimir.v1.GridPoint.$Properties>|null} [fire_wall_cells] SceneBaselineChunk fire_wall_cells
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -12272,6 +12273,7 @@ $root.minimir = (function() {
              */
             var SceneBaselineChunk = function (properties) {
                 this.entities = [];
+                this.fire_wall_cells = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -12359,6 +12361,14 @@ $root.minimir = (function() {
             SceneBaselineChunk.prototype.owned_pet = null;
 
             /**
+             * SceneBaselineChunk fire_wall_cells.
+             * @member {Array.<minimir.v1.GridPoint.$Properties>} fire_wall_cells
+             * @memberof minimir.v1.SceneBaselineChunk
+             * @instance
+             */
+            SceneBaselineChunk.prototype.fire_wall_cells = $util.emptyArray;
+
+            /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @function create
              * @memberof minimir.v1.SceneBaselineChunk
@@ -12411,6 +12421,9 @@ $root.minimir = (function() {
                     writer.uint32(/* id 9, wireType 0 =*/72).uint64(message.safe_zone_id);
                 if (message.owned_pet != null && $Object.hasOwnProperty.call(message, "owned_pet"))
                     $root.minimir.v1.OwnedPetState.encode(message.owned_pet, writer.uint32(/* id 10, wireType 2 =*/82).fork(), _depth + 1).ldelim();
+                if (message.fire_wall_cells != null && message.fire_wall_cells.length)
+                    for (var i = 0; i < message.fire_wall_cells.length; ++i)
+                        $root.minimir.v1.GridPoint.encode(message.fire_wall_cells[i], writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -12548,6 +12561,14 @@ $root.minimir = (function() {
                             message.owned_pet = $root.minimir.v1.OwnedPetState.decode(reader, reader.size(), $undefined, _depth + 1, message.owned_pet);
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.fire_wall_cells && message.fire_wall_cells.length))
+                                message.fire_wall_cells = [];
+                            message.fire_wall_cells.push($root.minimir.v1.GridPoint.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -12637,6 +12658,15 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.OwnedPetState.verify(message.owned_pet, _depth + 1);
                     if (error)
                         return "owned_pet." + error;
+                }
+                if (message.fire_wall_cells != null && $Object.hasOwnProperty.call(message, "fire_wall_cells")) {
+                    if (!$Array.isArray(message.fire_wall_cells))
+                        return "fire_wall_cells: array expected";
+                    for (var i = 0; i < message.fire_wall_cells.length; ++i) {
+                        var error = $root.minimir.v1.GridPoint.verify(message.fire_wall_cells[i], _depth + 1);
+                        if (error)
+                            return "fire_wall_cells." + error;
+                    }
                 }
                 return null;
             };
@@ -32635,6 +32665,2596 @@ $root.minimir = (function() {
             };
 
             return PersonalBossState;
+        })();
+
+        v1.PersonalBossQuery = (function() {
+
+            /**
+             * Properties of a PersonalBossQuery.
+             * @typedef {Object} minimir.v1.PersonalBossQuery.$Properties
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossQuery.
+             * @memberof minimir.v1
+             * @interface IPersonalBossQuery
+             * @augments minimir.v1.PersonalBossQuery.$Properties
+             * @deprecated Use minimir.v1.PersonalBossQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossQuery.
+             * @typedef {minimir.v1.PersonalBossQuery.$Properties} minimir.v1.PersonalBossQuery.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossQuery.
+             * @constructor
+             * @param {minimir.v1.PersonalBossQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * Creates a new PersonalBossQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {minimir.v1.PersonalBossQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossQuery} PersonalBossQuery instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossQuery.$Shape): minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape;
+             *   (properties?: minimir.v1.PersonalBossQuery.$Properties): minimir.v1.PersonalBossQuery;
+             * }}
+             */
+            PersonalBossQuery.create = function(properties) {
+                return new PersonalBossQuery(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossQuery message. Does not implicitly {@link minimir.v1.PersonalBossQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {minimir.v1.PersonalBossQuery.$Properties} message PersonalBossQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossQuery message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {minimir.v1.PersonalBossQuery.$Properties} message PersonalBossQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape} PersonalBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    reader.skipType(tag & 7, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape} PersonalBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossQuery message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossQuery";
+            };
+
+            return PersonalBossQuery;
+        })();
+
+        v1.PersonalBossInfo = (function() {
+
+            /**
+             * Properties of a PersonalBossInfo.
+             * @typedef {Object} minimir.v1.PersonalBossInfo.$Properties
+             * @property {number|null} [error_code] PersonalBossInfo error_code
+             * @property {boolean|null} [open] PersonalBossInfo open
+             * @property {number|null} [template_id] PersonalBossInfo template_id
+             * @property {string|null} [display_name] PersonalBossInfo display_name
+             * @property {Long|null} [map_id] PersonalBossInfo map_id
+             * @property {number|null} [monster_id] PersonalBossInfo monster_id
+             * @property {number|null} [minimum_level] PersonalBossInfo minimum_level
+             * @property {string|null} [day] PersonalBossInfo day
+             * @property {number|null} [successes] PersonalBossInfo successes
+             * @property {number|null} [daily_limit] PersonalBossInfo daily_limit
+             * @property {boolean|null} [can_enter] PersonalBossInfo can_enter
+             * @property {number|null} [eligibility_reason] PersonalBossInfo eligibility_reason
+             * @property {Long|null} [available_at_unix_ms] PersonalBossInfo available_at_unix_ms
+             * @property {string|null} [active_challenge_id] PersonalBossInfo active_challenge_id
+             * @property {Long|null} [active_expires_at_unix_ms] PersonalBossInfo active_expires_at_unix_ms
+             * @property {Array.<minimir.v1.PersonalBossHistoryEntry.$Properties>|null} [history] PersonalBossInfo history
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossInfo.
+             * @memberof minimir.v1
+             * @interface IPersonalBossInfo
+             * @augments minimir.v1.PersonalBossInfo.$Properties
+             * @deprecated Use minimir.v1.PersonalBossInfo.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossInfo.
+             * @typedef {minimir.v1.PersonalBossInfo.$Properties} minimir.v1.PersonalBossInfo.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossInfo.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossInfo.
+             * @constructor
+             * @param {minimir.v1.PersonalBossInfo.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossInfo = function (properties) {
+                this.history = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossInfo error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.error_code = 0;
+
+            /**
+             * PersonalBossInfo open.
+             * @member {boolean} open
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.open = false;
+
+            /**
+             * PersonalBossInfo template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.template_id = 0;
+
+            /**
+             * PersonalBossInfo display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.display_name = "";
+
+            /**
+             * PersonalBossInfo map_id.
+             * @member {Long} map_id
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.map_id = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossInfo monster_id.
+             * @member {number} monster_id
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.monster_id = 0;
+
+            /**
+             * PersonalBossInfo minimum_level.
+             * @member {number} minimum_level
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.minimum_level = 0;
+
+            /**
+             * PersonalBossInfo day.
+             * @member {string} day
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.day = "";
+
+            /**
+             * PersonalBossInfo successes.
+             * @member {number} successes
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.successes = 0;
+
+            /**
+             * PersonalBossInfo daily_limit.
+             * @member {number} daily_limit
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.daily_limit = 0;
+
+            /**
+             * PersonalBossInfo can_enter.
+             * @member {boolean} can_enter
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.can_enter = false;
+
+            /**
+             * PersonalBossInfo eligibility_reason.
+             * @member {number} eligibility_reason
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.eligibility_reason = 0;
+
+            /**
+             * PersonalBossInfo available_at_unix_ms.
+             * @member {Long} available_at_unix_ms
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.available_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossInfo active_challenge_id.
+             * @member {string} active_challenge_id
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.active_challenge_id = "";
+
+            /**
+             * PersonalBossInfo active_expires_at_unix_ms.
+             * @member {Long} active_expires_at_unix_ms
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.active_expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossInfo history.
+             * @member {Array.<minimir.v1.PersonalBossHistoryEntry.$Properties>} history
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.history = $util.emptyArray;
+
+            /**
+             * Creates a new PersonalBossInfo instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {minimir.v1.PersonalBossInfo.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossInfo} PersonalBossInfo instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossInfo.$Shape): minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape;
+             *   (properties?: minimir.v1.PersonalBossInfo.$Properties): minimir.v1.PersonalBossInfo;
+             * }}
+             */
+            PersonalBossInfo.create = function(properties) {
+                return new PersonalBossInfo(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossInfo message. Does not implicitly {@link minimir.v1.PersonalBossInfo.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {minimir.v1.PersonalBossInfo.$Properties} message PersonalBossInfo message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossInfo.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.error_code);
+                if (message.open != null && $Object.hasOwnProperty.call(message, "open") && message.open !== false)
+                    writer.uint32(/* id 2, wireType 0 =*/16).bool(message.open);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.template_id);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.display_name);
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id") && (typeof message.map_id === "object" ? message.map_id.low || message.map_id.high : message.map_id !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint64(message.map_id);
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id") && message.monster_id !== 0)
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint32(message.monster_id);
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level") && message.minimum_level !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.minimum_level);
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day") && message.day !== "")
+                    writer.uint32(/* id 8, wireType 2 =*/66).string(message.day);
+                if (message.successes != null && $Object.hasOwnProperty.call(message, "successes") && message.successes !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.successes);
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit") && message.daily_limit !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.daily_limit);
+                if (message.can_enter != null && $Object.hasOwnProperty.call(message, "can_enter") && message.can_enter !== false)
+                    writer.uint32(/* id 11, wireType 0 =*/88).bool(message.can_enter);
+                if (message.eligibility_reason != null && $Object.hasOwnProperty.call(message, "eligibility_reason") && message.eligibility_reason !== 0)
+                    writer.uint32(/* id 12, wireType 0 =*/96).uint32(message.eligibility_reason);
+                if (message.available_at_unix_ms != null && $Object.hasOwnProperty.call(message, "available_at_unix_ms") && (typeof message.available_at_unix_ms === "object" ? message.available_at_unix_ms.low || message.available_at_unix_ms.high : message.available_at_unix_ms !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).int64(message.available_at_unix_ms);
+                if (message.active_challenge_id != null && $Object.hasOwnProperty.call(message, "active_challenge_id") && message.active_challenge_id !== "")
+                    writer.uint32(/* id 14, wireType 2 =*/114).string(message.active_challenge_id);
+                if (message.active_expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "active_expires_at_unix_ms") && (typeof message.active_expires_at_unix_ms === "object" ? message.active_expires_at_unix_ms.low || message.active_expires_at_unix_ms.high : message.active_expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).int64(message.active_expires_at_unix_ms);
+                if (message.history != null && message.history.length)
+                    for (var i = 0; i < message.history.length; ++i)
+                        $root.minimir.v1.PersonalBossHistoryEntry.encode(message.history[i], writer.uint32(/* id 16, wireType 2 =*/130).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossInfo message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossInfo.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {minimir.v1.PersonalBossInfo.$Properties} message PersonalBossInfo message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossInfo.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossInfo message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape} PersonalBossInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossInfo.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossInfo();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.open = value;
+                            else
+                                delete message.open;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.map_id = value;
+                            else
+                                delete message.map_id;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.monster_id = value;
+                            else
+                                delete message.monster_id;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.minimum_level = value;
+                            else
+                                delete message.minimum_level;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.day = value;
+                            else
+                                delete message.day;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.successes = value;
+                            else
+                                delete message.successes;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.daily_limit = value;
+                            else
+                                delete message.daily_limit;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.can_enter = value;
+                            else
+                                delete message.can_enter;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.eligibility_reason = value;
+                            else
+                                delete message.eligibility_reason;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.available_at_unix_ms = value;
+                            else
+                                delete message.available_at_unix_ms;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.active_challenge_id = value;
+                            else
+                                delete message.active_challenge_id;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.active_expires_at_unix_ms = value;
+                            else
+                                delete message.active_expires_at_unix_ms;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.history && message.history.length))
+                                message.history = [];
+                            message.history.push($root.minimir.v1.PersonalBossHistoryEntry.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossInfo message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape} PersonalBossInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossInfo.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossInfo message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossInfo.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                if (message.open != null && $Object.hasOwnProperty.call(message, "open"))
+                    if (typeof message.open !== "boolean")
+                        return "open: boolean expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
+                if (message.map_id != null && $Object.hasOwnProperty.call(message, "map_id"))
+                    if (!$util.isInteger(message.map_id) && !(message.map_id && $util.isInteger(message.map_id.low) && $util.isInteger(message.map_id.high)))
+                        return "map_id: integer|Long expected";
+                if (message.monster_id != null && $Object.hasOwnProperty.call(message, "monster_id"))
+                    if (!$util.isInteger(message.monster_id))
+                        return "monster_id: integer expected";
+                if (message.minimum_level != null && $Object.hasOwnProperty.call(message, "minimum_level"))
+                    if (!$util.isInteger(message.minimum_level))
+                        return "minimum_level: integer expected";
+                if (message.day != null && $Object.hasOwnProperty.call(message, "day"))
+                    if (!$util.isString(message.day))
+                        return "day: string expected";
+                if (message.successes != null && $Object.hasOwnProperty.call(message, "successes"))
+                    if (!$util.isInteger(message.successes))
+                        return "successes: integer expected";
+                if (message.daily_limit != null && $Object.hasOwnProperty.call(message, "daily_limit"))
+                    if (!$util.isInteger(message.daily_limit))
+                        return "daily_limit: integer expected";
+                if (message.can_enter != null && $Object.hasOwnProperty.call(message, "can_enter"))
+                    if (typeof message.can_enter !== "boolean")
+                        return "can_enter: boolean expected";
+                if (message.eligibility_reason != null && $Object.hasOwnProperty.call(message, "eligibility_reason"))
+                    if (!$util.isInteger(message.eligibility_reason))
+                        return "eligibility_reason: integer expected";
+                if (message.available_at_unix_ms != null && $Object.hasOwnProperty.call(message, "available_at_unix_ms"))
+                    if (!$util.isInteger(message.available_at_unix_ms) && !(message.available_at_unix_ms && $util.isInteger(message.available_at_unix_ms.low) && $util.isInteger(message.available_at_unix_ms.high)))
+                        return "available_at_unix_ms: integer|Long expected";
+                if (message.active_challenge_id != null && $Object.hasOwnProperty.call(message, "active_challenge_id"))
+                    if (!$util.isString(message.active_challenge_id))
+                        return "active_challenge_id: string expected";
+                if (message.active_expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "active_expires_at_unix_ms"))
+                    if (!$util.isInteger(message.active_expires_at_unix_ms) && !(message.active_expires_at_unix_ms && $util.isInteger(message.active_expires_at_unix_ms.low) && $util.isInteger(message.active_expires_at_unix_ms.high)))
+                        return "active_expires_at_unix_ms: integer|Long expected";
+                if (message.history != null && $Object.hasOwnProperty.call(message, "history")) {
+                    if (!$Array.isArray(message.history))
+                        return "history: array expected";
+                    for (var i = 0; i < message.history.length; ++i) {
+                        var error = $root.minimir.v1.PersonalBossHistoryEntry.verify(message.history[i], _depth + 1);
+                        if (error)
+                            return "history." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossInfo
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossInfo
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossInfo.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossInfo";
+            };
+
+            return PersonalBossInfo;
+        })();
+
+        v1.PersonalBossHistoryEntry = (function() {
+
+            /**
+             * Properties of a PersonalBossHistoryEntry.
+             * @typedef {Object} minimir.v1.PersonalBossHistoryEntry.$Properties
+             * @property {string|null} [challenge_id] PersonalBossHistoryEntry challenge_id
+             * @property {number|null} [template_id] PersonalBossHistoryEntry template_id
+             * @property {Long|null} [rule_version] PersonalBossHistoryEntry rule_version
+             * @property {number|null} [outcome] PersonalBossHistoryEntry outcome
+             * @property {Long|null} [finished_at_unix_ms] PersonalBossHistoryEntry finished_at_unix_ms
+             * @property {Long|null} [damage] PersonalBossHistoryEntry damage
+             * @property {Long|null} [hp_remaining] PersonalBossHistoryEntry hp_remaining
+             * @property {boolean|null} [recovered] PersonalBossHistoryEntry recovered
+             * @property {Long|null} [reward_gold] PersonalBossHistoryEntry reward_gold
+             * @property {boolean|null} [reward_bound] PersonalBossHistoryEntry reward_bound
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a PersonalBossHistoryEntry.
+             * @memberof minimir.v1
+             * @interface IPersonalBossHistoryEntry
+             * @augments minimir.v1.PersonalBossHistoryEntry.$Properties
+             * @deprecated Use minimir.v1.PersonalBossHistoryEntry.$Properties instead.
+             */
+
+            /**
+             * Shape of a PersonalBossHistoryEntry.
+             * @typedef {minimir.v1.PersonalBossHistoryEntry.$Properties} minimir.v1.PersonalBossHistoryEntry.$Shape
+             */
+
+            /**
+             * Constructs a new PersonalBossHistoryEntry.
+             * @memberof minimir.v1
+             * @classdesc Represents a PersonalBossHistoryEntry.
+             * @constructor
+             * @param {minimir.v1.PersonalBossHistoryEntry.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var PersonalBossHistoryEntry = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * PersonalBossHistoryEntry challenge_id.
+             * @member {string} challenge_id
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.challenge_id = "";
+
+            /**
+             * PersonalBossHistoryEntry template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.template_id = 0;
+
+            /**
+             * PersonalBossHistoryEntry rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * PersonalBossHistoryEntry outcome.
+             * @member {number} outcome
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.outcome = 0;
+
+            /**
+             * PersonalBossHistoryEntry finished_at_unix_ms.
+             * @member {Long} finished_at_unix_ms
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.finished_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossHistoryEntry damage.
+             * @member {Long} damage
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.damage = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossHistoryEntry hp_remaining.
+             * @member {Long} hp_remaining
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.hp_remaining = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossHistoryEntry recovered.
+             * @member {boolean} recovered
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.recovered = false;
+
+            /**
+             * PersonalBossHistoryEntry reward_gold.
+             * @member {Long} reward_gold
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.reward_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * PersonalBossHistoryEntry reward_bound.
+             * @member {boolean} reward_bound
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @instance
+             */
+            PersonalBossHistoryEntry.prototype.reward_bound = false;
+
+            /**
+             * Creates a new PersonalBossHistoryEntry instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {minimir.v1.PersonalBossHistoryEntry.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.PersonalBossHistoryEntry} PersonalBossHistoryEntry instance
+             * @type {{
+             *   (properties: minimir.v1.PersonalBossHistoryEntry.$Shape): minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape;
+             *   (properties?: minimir.v1.PersonalBossHistoryEntry.$Properties): minimir.v1.PersonalBossHistoryEntry;
+             * }}
+             */
+            PersonalBossHistoryEntry.create = function(properties) {
+                return new PersonalBossHistoryEntry(properties);
+            };
+
+            /**
+             * Encodes the specified PersonalBossHistoryEntry message. Does not implicitly {@link minimir.v1.PersonalBossHistoryEntry.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {minimir.v1.PersonalBossHistoryEntry.$Properties} message PersonalBossHistoryEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossHistoryEntry.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id") && message.challenge_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.challenge_id);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.template_id);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.rule_version);
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome") && message.outcome !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.outcome);
+                if (message.finished_at_unix_ms != null && $Object.hasOwnProperty.call(message, "finished_at_unix_ms") && (typeof message.finished_at_unix_ms === "object" ? message.finished_at_unix_ms.low || message.finished_at_unix_ms.high : message.finished_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.finished_at_unix_ms);
+                if (message.damage != null && $Object.hasOwnProperty.call(message, "damage") && (typeof message.damage === "object" ? message.damage.low || message.damage.high : message.damage !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.damage);
+                if (message.hp_remaining != null && $Object.hasOwnProperty.call(message, "hp_remaining") && (typeof message.hp_remaining === "object" ? message.hp_remaining.low || message.hp_remaining.high : message.hp_remaining !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.hp_remaining);
+                if (message.recovered != null && $Object.hasOwnProperty.call(message, "recovered") && message.recovered !== false)
+                    writer.uint32(/* id 8, wireType 0 =*/64).bool(message.recovered);
+                if (message.reward_gold != null && $Object.hasOwnProperty.call(message, "reward_gold") && (typeof message.reward_gold === "object" ? message.reward_gold.low || message.reward_gold.high : message.reward_gold !== 0))
+                    writer.uint32(/* id 9, wireType 0 =*/72).int64(message.reward_gold);
+                if (message.reward_bound != null && $Object.hasOwnProperty.call(message, "reward_bound") && message.reward_bound !== false)
+                    writer.uint32(/* id 10, wireType 0 =*/80).bool(message.reward_bound);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified PersonalBossHistoryEntry message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossHistoryEntry.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {minimir.v1.PersonalBossHistoryEntry.$Properties} message PersonalBossHistoryEntry message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            PersonalBossHistoryEntry.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a PersonalBossHistoryEntry message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape} PersonalBossHistoryEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossHistoryEntry.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.PersonalBossHistoryEntry();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.challenge_id = value;
+                            else
+                                delete message.challenge_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.outcome = value;
+                            else
+                                delete message.outcome;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.finished_at_unix_ms = value;
+                            else
+                                delete message.finished_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.damage = value;
+                            else
+                                delete message.damage;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hp_remaining = value;
+                            else
+                                delete message.hp_remaining;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.recovered = value;
+                            else
+                                delete message.recovered;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.reward_gold = value;
+                            else
+                                delete message.reward_gold;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.reward_bound = value;
+                            else
+                                delete message.reward_bound;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a PersonalBossHistoryEntry message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape} PersonalBossHistoryEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            PersonalBossHistoryEntry.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a PersonalBossHistoryEntry message.
+             * @function verify
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            PersonalBossHistoryEntry.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.challenge_id != null && $Object.hasOwnProperty.call(message, "challenge_id"))
+                    if (!$util.isString(message.challenge_id))
+                        return "challenge_id: string expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.outcome != null && $Object.hasOwnProperty.call(message, "outcome"))
+                    if (!$util.isInteger(message.outcome))
+                        return "outcome: integer expected";
+                if (message.finished_at_unix_ms != null && $Object.hasOwnProperty.call(message, "finished_at_unix_ms"))
+                    if (!$util.isInteger(message.finished_at_unix_ms) && !(message.finished_at_unix_ms && $util.isInteger(message.finished_at_unix_ms.low) && $util.isInteger(message.finished_at_unix_ms.high)))
+                        return "finished_at_unix_ms: integer|Long expected";
+                if (message.damage != null && $Object.hasOwnProperty.call(message, "damage"))
+                    if (!$util.isInteger(message.damage) && !(message.damage && $util.isInteger(message.damage.low) && $util.isInteger(message.damage.high)))
+                        return "damage: integer|Long expected";
+                if (message.hp_remaining != null && $Object.hasOwnProperty.call(message, "hp_remaining"))
+                    if (!$util.isInteger(message.hp_remaining) && !(message.hp_remaining && $util.isInteger(message.hp_remaining.low) && $util.isInteger(message.hp_remaining.high)))
+                        return "hp_remaining: integer|Long expected";
+                if (message.recovered != null && $Object.hasOwnProperty.call(message, "recovered"))
+                    if (typeof message.recovered !== "boolean")
+                        return "recovered: boolean expected";
+                if (message.reward_gold != null && $Object.hasOwnProperty.call(message, "reward_gold"))
+                    if (!$util.isInteger(message.reward_gold) && !(message.reward_gold && $util.isInteger(message.reward_gold.low) && $util.isInteger(message.reward_gold.high)))
+                        return "reward_gold: integer|Long expected";
+                if (message.reward_bound != null && $Object.hasOwnProperty.call(message, "reward_bound"))
+                    if (typeof message.reward_bound !== "boolean")
+                        return "reward_bound: boolean expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for PersonalBossHistoryEntry
+             * @function getTypeUrl
+             * @memberof minimir.v1.PersonalBossHistoryEntry
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            PersonalBossHistoryEntry.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.PersonalBossHistoryEntry";
+            };
+
+            return PersonalBossHistoryEntry;
+        })();
+
+        v1.WorldBossQuery = (function() {
+
+            /**
+             * Properties of a WorldBossQuery.
+             * @typedef {Object} minimir.v1.WorldBossQuery.$Properties
+             * @property {Long|null} [scene_epoch] WorldBossQuery scene_epoch
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossQuery.
+             * @memberof minimir.v1
+             * @interface IWorldBossQuery
+             * @augments minimir.v1.WorldBossQuery.$Properties
+             * @deprecated Use minimir.v1.WorldBossQuery.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossQuery.
+             * @typedef {minimir.v1.WorldBossQuery.$Properties} minimir.v1.WorldBossQuery.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossQuery.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossQuery.
+             * @constructor
+             * @param {minimir.v1.WorldBossQuery.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossQuery = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossQuery scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WorldBossQuery
+             * @instance
+             */
+            WorldBossQuery.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * Creates a new WorldBossQuery instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {minimir.v1.WorldBossQuery.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossQuery} WorldBossQuery instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossQuery.$Shape): minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape;
+             *   (properties?: minimir.v1.WorldBossQuery.$Properties): minimir.v1.WorldBossQuery;
+             * }}
+             */
+            WorldBossQuery.create = function(properties) {
+                return new WorldBossQuery(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossQuery message. Does not implicitly {@link minimir.v1.WorldBossQuery.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {minimir.v1.WorldBossQuery.$Properties} message WorldBossQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossQuery.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossQuery message, length delimited. Does not implicitly {@link minimir.v1.WorldBossQuery.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {minimir.v1.WorldBossQuery.$Properties} message WorldBossQuery message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossQuery.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossQuery message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape} WorldBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossQuery.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossQuery();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossQuery message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape} WorldBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossQuery.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossQuery message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossQuery.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossQuery
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossQuery
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossQuery.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossQuery";
+            };
+
+            return WorldBossQuery;
+        })();
+
+        v1.WorldBossEnter = (function() {
+
+            /**
+             * Properties of a WorldBossEnter.
+             * @typedef {Object} minimir.v1.WorldBossEnter.$Properties
+             * @property {Long|null} [scene_epoch] WorldBossEnter scene_epoch
+             * @property {number|null} [template_id] WorldBossEnter template_id
+             * @property {string|null} [occurrence_id] WorldBossEnter occurrence_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossEnter.
+             * @memberof minimir.v1
+             * @interface IWorldBossEnter
+             * @augments minimir.v1.WorldBossEnter.$Properties
+             * @deprecated Use minimir.v1.WorldBossEnter.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossEnter.
+             * @typedef {minimir.v1.WorldBossEnter.$Properties} minimir.v1.WorldBossEnter.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossEnter.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossEnter.
+             * @constructor
+             * @param {minimir.v1.WorldBossEnter.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossEnter = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossEnter scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WorldBossEnter
+             * @instance
+             */
+            WorldBossEnter.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WorldBossEnter template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.WorldBossEnter
+             * @instance
+             */
+            WorldBossEnter.prototype.template_id = 0;
+
+            /**
+             * WorldBossEnter occurrence_id.
+             * @member {string} occurrence_id
+             * @memberof minimir.v1.WorldBossEnter
+             * @instance
+             */
+            WorldBossEnter.prototype.occurrence_id = "";
+
+            /**
+             * Creates a new WorldBossEnter instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {minimir.v1.WorldBossEnter.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossEnter} WorldBossEnter instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossEnter.$Shape): minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape;
+             *   (properties?: minimir.v1.WorldBossEnter.$Properties): minimir.v1.WorldBossEnter;
+             * }}
+             */
+            WorldBossEnter.create = function(properties) {
+                return new WorldBossEnter(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossEnter message. Does not implicitly {@link minimir.v1.WorldBossEnter.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {minimir.v1.WorldBossEnter.$Properties} message WorldBossEnter message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossEnter.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.template_id);
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id") && message.occurrence_id !== "")
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.occurrence_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossEnter message, length delimited. Does not implicitly {@link minimir.v1.WorldBossEnter.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {minimir.v1.WorldBossEnter.$Properties} message WorldBossEnter message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossEnter.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossEnter message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape} WorldBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossEnter.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossEnter();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.occurrence_id = value;
+                            else
+                                delete message.occurrence_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossEnter message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape} WorldBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossEnter.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossEnter message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossEnter.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id"))
+                    if (!$util.isString(message.occurrence_id))
+                        return "occurrence_id: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossEnter
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossEnter
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossEnter.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossEnter";
+            };
+
+            return WorldBossEnter;
+        })();
+
+        v1.WorldBossLeave = (function() {
+
+            /**
+             * Properties of a WorldBossLeave.
+             * @typedef {Object} minimir.v1.WorldBossLeave.$Properties
+             * @property {Long|null} [scene_epoch] WorldBossLeave scene_epoch
+             * @property {string|null} [occurrence_id] WorldBossLeave occurrence_id
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossLeave.
+             * @memberof minimir.v1
+             * @interface IWorldBossLeave
+             * @augments minimir.v1.WorldBossLeave.$Properties
+             * @deprecated Use minimir.v1.WorldBossLeave.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossLeave.
+             * @typedef {minimir.v1.WorldBossLeave.$Properties} minimir.v1.WorldBossLeave.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossLeave.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossLeave.
+             * @constructor
+             * @param {minimir.v1.WorldBossLeave.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossLeave = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossLeave scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WorldBossLeave
+             * @instance
+             */
+            WorldBossLeave.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WorldBossLeave occurrence_id.
+             * @member {string} occurrence_id
+             * @memberof minimir.v1.WorldBossLeave
+             * @instance
+             */
+            WorldBossLeave.prototype.occurrence_id = "";
+
+            /**
+             * Creates a new WorldBossLeave instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {minimir.v1.WorldBossLeave.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossLeave} WorldBossLeave instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossLeave.$Shape): minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape;
+             *   (properties?: minimir.v1.WorldBossLeave.$Properties): minimir.v1.WorldBossLeave;
+             * }}
+             */
+            WorldBossLeave.create = function(properties) {
+                return new WorldBossLeave(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossLeave message. Does not implicitly {@link minimir.v1.WorldBossLeave.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {minimir.v1.WorldBossLeave.$Properties} message WorldBossLeave message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossLeave.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id") && message.occurrence_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.occurrence_id);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossLeave message, length delimited. Does not implicitly {@link minimir.v1.WorldBossLeave.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {minimir.v1.WorldBossLeave.$Properties} message WorldBossLeave message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossLeave.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossLeave message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape} WorldBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossLeave.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossLeave();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.occurrence_id = value;
+                            else
+                                delete message.occurrence_id;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossLeave message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape} WorldBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossLeave.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossLeave message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossLeave.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id"))
+                    if (!$util.isString(message.occurrence_id))
+                        return "occurrence_id: string expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossLeave
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossLeave
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossLeave.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossLeave";
+            };
+
+            return WorldBossLeave;
+        })();
+
+        v1.WorldBossState = (function() {
+
+            /**
+             * Properties of a WorldBossState.
+             * @typedef {Object} minimir.v1.WorldBossState.$Properties
+             * @property {Long|null} [scene_epoch] WorldBossState scene_epoch
+             * @property {string|null} [occurrence_id] WorldBossState occurrence_id
+             * @property {number|null} [template_id] WorldBossState template_id
+             * @property {number|null} [state] WorldBossState state
+             * @property {Long|null} [opens_at_unix_ms] WorldBossState opens_at_unix_ms
+             * @property {Long|null} [expires_at_unix_ms] WorldBossState expires_at_unix_ms
+             * @property {Long|null} [hp] WorldBossState hp
+             * @property {Long|null} [hp_max] WorldBossState hp_max
+             * @property {Array.<minimir.v1.WorldBossRank.$Properties>|null} [ranks] WorldBossState ranks
+             * @property {number|null} [error_code] WorldBossState error_code
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossState.
+             * @memberof minimir.v1
+             * @interface IWorldBossState
+             * @augments minimir.v1.WorldBossState.$Properties
+             * @deprecated Use minimir.v1.WorldBossState.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossState.
+             * @typedef {minimir.v1.WorldBossState.$Properties} minimir.v1.WorldBossState.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossState.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossState.
+             * @constructor
+             * @param {minimir.v1.WorldBossState.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossState = function (properties) {
+                this.ranks = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossState scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * WorldBossState occurrence_id.
+             * @member {string} occurrence_id
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.occurrence_id = "";
+
+            /**
+             * WorldBossState template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.template_id = 0;
+
+            /**
+             * WorldBossState state.
+             * @member {number} state
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.state = 0;
+
+            /**
+             * WorldBossState opens_at_unix_ms.
+             * @member {Long} opens_at_unix_ms
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.opens_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WorldBossState expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WorldBossState hp.
+             * @member {Long} hp
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.hp = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WorldBossState hp_max.
+             * @member {Long} hp_max
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.hp_max = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WorldBossState ranks.
+             * @member {Array.<minimir.v1.WorldBossRank.$Properties>} ranks
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.ranks = $util.emptyArray;
+
+            /**
+             * WorldBossState error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.error_code = 0;
+
+            /**
+             * Creates a new WorldBossState instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {minimir.v1.WorldBossState.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossState} WorldBossState instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossState.$Shape): minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape;
+             *   (properties?: minimir.v1.WorldBossState.$Properties): minimir.v1.WorldBossState;
+             * }}
+             */
+            WorldBossState.create = function(properties) {
+                return new WorldBossState(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossState message. Does not implicitly {@link minimir.v1.WorldBossState.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {minimir.v1.WorldBossState.$Properties} message WorldBossState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossState.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id") && message.occurrence_id !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.occurrence_id);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.template_id);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.state);
+                if (message.opens_at_unix_ms != null && $Object.hasOwnProperty.call(message, "opens_at_unix_ms") && (typeof message.opens_at_unix_ms === "object" ? message.opens_at_unix_ms.low || message.opens_at_unix_ms.high : message.opens_at_unix_ms !== 0))
+                    writer.uint32(/* id 5, wireType 0 =*/40).int64(message.opens_at_unix_ms);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).int64(message.expires_at_unix_ms);
+                if (message.hp != null && $Object.hasOwnProperty.call(message, "hp") && (typeof message.hp === "object" ? message.hp.low || message.hp.high : message.hp !== 0))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.hp);
+                if (message.hp_max != null && $Object.hasOwnProperty.call(message, "hp_max") && (typeof message.hp_max === "object" ? message.hp_max.low || message.hp_max.high : message.hp_max !== 0))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.hp_max);
+                if (message.ranks != null && message.ranks.length)
+                    for (var i = 0; i < message.ranks.length; ++i)
+                        $root.minimir.v1.WorldBossRank.encode(message.ranks[i], writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.error_code);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossState message, length delimited. Does not implicitly {@link minimir.v1.WorldBossState.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {minimir.v1.WorldBossState.$Properties} message WorldBossState message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossState.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossState message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape} WorldBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossState.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossState();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.occurrence_id = value;
+                            else
+                                delete message.occurrence_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.opens_at_unix_ms = value;
+                            else
+                                delete message.opens_at_unix_ms;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hp = value;
+                            else
+                                delete message.hp;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.hp_max = value;
+                            else
+                                delete message.hp_max;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.ranks && message.ranks.length))
+                                message.ranks = [];
+                            message.ranks.push($root.minimir.v1.WorldBossRank.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossState message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape} WorldBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossState.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossState message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossState.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id"))
+                    if (!$util.isString(message.occurrence_id))
+                        return "occurrence_id: string expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.opens_at_unix_ms != null && $Object.hasOwnProperty.call(message, "opens_at_unix_ms"))
+                    if (!$util.isInteger(message.opens_at_unix_ms) && !(message.opens_at_unix_ms && $util.isInteger(message.opens_at_unix_ms.low) && $util.isInteger(message.opens_at_unix_ms.high)))
+                        return "opens_at_unix_ms: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.hp != null && $Object.hasOwnProperty.call(message, "hp"))
+                    if (!$util.isInteger(message.hp) && !(message.hp && $util.isInteger(message.hp.low) && $util.isInteger(message.hp.high)))
+                        return "hp: integer|Long expected";
+                if (message.hp_max != null && $Object.hasOwnProperty.call(message, "hp_max"))
+                    if (!$util.isInteger(message.hp_max) && !(message.hp_max && $util.isInteger(message.hp_max.low) && $util.isInteger(message.hp_max.high)))
+                        return "hp_max: integer|Long expected";
+                if (message.ranks != null && $Object.hasOwnProperty.call(message, "ranks")) {
+                    if (!$Array.isArray(message.ranks))
+                        return "ranks: array expected";
+                    for (var i = 0; i < message.ranks.length; ++i) {
+                        var error = $root.minimir.v1.WorldBossRank.verify(message.ranks[i], _depth + 1);
+                        if (error)
+                            return "ranks." + error;
+                    }
+                }
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossState
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossState
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossState.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossState";
+            };
+
+            return WorldBossState;
+        })();
+
+        v1.WorldBossRank = (function() {
+
+            /**
+             * Properties of a WorldBossRank.
+             * @typedef {Object} minimir.v1.WorldBossRank.$Properties
+             * @property {number|null} [position] WorldBossRank position
+             * @property {string|null} [display_name] WorldBossRank display_name
+             * @property {Long|null} [damage] WorldBossRank damage
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossRank.
+             * @memberof minimir.v1
+             * @interface IWorldBossRank
+             * @augments minimir.v1.WorldBossRank.$Properties
+             * @deprecated Use minimir.v1.WorldBossRank.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossRank.
+             * @typedef {minimir.v1.WorldBossRank.$Properties} minimir.v1.WorldBossRank.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossRank.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossRank.
+             * @constructor
+             * @param {minimir.v1.WorldBossRank.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossRank = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossRank position.
+             * @member {number} position
+             * @memberof minimir.v1.WorldBossRank
+             * @instance
+             */
+            WorldBossRank.prototype.position = 0;
+
+            /**
+             * WorldBossRank display_name.
+             * @member {string} display_name
+             * @memberof minimir.v1.WorldBossRank
+             * @instance
+             */
+            WorldBossRank.prototype.display_name = "";
+
+            /**
+             * WorldBossRank damage.
+             * @member {Long} damage
+             * @memberof minimir.v1.WorldBossRank
+             * @instance
+             */
+            WorldBossRank.prototype.damage = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new WorldBossRank instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {minimir.v1.WorldBossRank.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossRank} WorldBossRank instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossRank.$Shape): minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape;
+             *   (properties?: minimir.v1.WorldBossRank.$Properties): minimir.v1.WorldBossRank;
+             * }}
+             */
+            WorldBossRank.create = function(properties) {
+                return new WorldBossRank(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossRank message. Does not implicitly {@link minimir.v1.WorldBossRank.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {minimir.v1.WorldBossRank.$Properties} message WorldBossRank message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossRank.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position") && message.position !== 0)
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.position);
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name") && message.display_name !== "")
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.display_name);
+                if (message.damage != null && $Object.hasOwnProperty.call(message, "damage") && (typeof message.damage === "object" ? message.damage.low || message.damage.high : message.damage !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.damage);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossRank message, length delimited. Does not implicitly {@link minimir.v1.WorldBossRank.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {minimir.v1.WorldBossRank.$Properties} message WorldBossRank message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossRank.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossRank message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape} WorldBossRank
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossRank.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossRank();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.position = value;
+                            else
+                                delete message.position;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.display_name = value;
+                            else
+                                delete message.display_name;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.damage = value;
+                            else
+                                delete message.damage;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossRank message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape} WorldBossRank
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossRank.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossRank message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossRank.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.position != null && $Object.hasOwnProperty.call(message, "position"))
+                    if (!$util.isInteger(message.position))
+                        return "position: integer expected";
+                if (message.display_name != null && $Object.hasOwnProperty.call(message, "display_name"))
+                    if (!$util.isString(message.display_name))
+                        return "display_name: string expected";
+                if (message.damage != null && $Object.hasOwnProperty.call(message, "damage"))
+                    if (!$util.isInteger(message.damage) && !(message.damage && $util.isInteger(message.damage.low) && $util.isInteger(message.damage.high)))
+                        return "damage: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossRank
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossRank
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossRank.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossRank";
+            };
+
+            return WorldBossRank;
         })();
 
         return v1;

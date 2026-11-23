@@ -46,6 +46,9 @@ type pendingCast struct {
 	Summon *summonPetPlan
 	// FireWall 保存已建立的火墙。字段为空时仍是第一次放置。
 	FireWall *fireWallField
+	// PoisonColor 来自事务核对过的原药粉；Poison 非空时为已经应用的状态后继。
+	PoisonColor devconfig.PoisonColor
+	Poison      *poisonEffect
 }
 
 // acceptInput 受理输入。
@@ -107,7 +110,7 @@ func (w *worker) physicalDamage(r *room, from, target *entity) int64 {
 	if w.draw(b.Agility+1) > a.Accuracy {
 		return 0
 	}
-	return statusDamage(target, w.interval(a.AttackMin, a.AttackMax), w.interval(b.DefenceMin, b.DefenceMax))
+	return statusDamage(target, w.interval(a.AttackMin, a.AttackMax), poisonArmour(target, w.interval(b.DefenceMin, b.DefenceMax)))
 }
 
 // magicDamage 返回魔法伤害供调用方使用。
@@ -118,7 +121,7 @@ func (w *worker) magicDamage(r *room, target *entity, amount int64) int64 {
 	if b.MagicResist > 0 && w.draw(b.MagicResistWeight) < b.MagicResist {
 		return 0
 	}
-	return statusDamage(target, amount, w.interval(b.MagicDefenceMin, b.MagicDefenceMax))
+	return statusDamage(target, amount, poisonArmour(target, w.interval(b.MagicDefenceMin, b.MagicDefenceMax)))
 }
 
 // Crystal MagicInfo.cs:180–211：基础区间、技能随机项、四分之一取偶舍入及倍率分开。

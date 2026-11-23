@@ -4778,6 +4778,9 @@ export namespace minimir {
             /** SceneBaselineChunk owned_pet. */
             owned_pet?: (minimir.v1.OwnedPetState.$Properties|null);
 
+            /** SceneBaselineChunk fire_wall_cells. */
+            fire_wall_cells: minimir.v1.GridPoint.$Properties[];
+
             /**
              * Creates a new SceneBaselineChunk instance using the specified properties.
              * @param [properties] Properties to set
@@ -4870,6 +4873,9 @@ export namespace minimir {
 
                 /** SceneBaselineChunk owned_pet */
                 owned_pet?: (minimir.v1.OwnedPetState.$Properties|null);
+
+                /** SceneBaselineChunk fire_wall_cells */
+                fire_wall_cells?: (minimir.v1.GridPoint.$Properties[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -12407,6 +12413,996 @@ export namespace minimir {
 
             /** Shape of a PersonalBossState. */
             type $Shape = minimir.v1.PersonalBossState.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossQuery.
+         * @deprecated Use minimir.v1.PersonalBossQuery.$Properties instead.
+         */
+        interface IPersonalBossQuery extends minimir.v1.PersonalBossQuery.$Properties {
+        }
+
+        /** Represents a PersonalBossQuery. */
+        class PersonalBossQuery {
+
+            /**
+             * Constructs a new PersonalBossQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /**
+             * Creates a new PersonalBossQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossQuery instance
+             */
+            static create(properties: minimir.v1.PersonalBossQuery.$Shape): minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape;
+            static create(properties?: minimir.v1.PersonalBossQuery.$Properties): minimir.v1.PersonalBossQuery;
+
+            /**
+             * Encodes the specified PersonalBossQuery message. Does not implicitly {@link minimir.v1.PersonalBossQuery.verify|verify} messages.
+             * @param message PersonalBossQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossQuery message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossQuery.verify|verify} messages.
+             * @param message PersonalBossQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape} PersonalBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape;
+
+            /**
+             * Decodes a PersonalBossQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape} PersonalBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossQuery & minimir.v1.PersonalBossQuery.$Shape;
+
+            /**
+             * Verifies a PersonalBossQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossQuery {
+
+            /** Properties of a PersonalBossQuery. */
+            interface $Properties {
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossQuery. */
+            type $Shape = minimir.v1.PersonalBossQuery.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossInfo.
+         * @deprecated Use minimir.v1.PersonalBossInfo.$Properties instead.
+         */
+        interface IPersonalBossInfo extends minimir.v1.PersonalBossInfo.$Properties {
+        }
+
+        /** Represents a PersonalBossInfo. */
+        class PersonalBossInfo {
+
+            /**
+             * Constructs a new PersonalBossInfo.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossInfo.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossInfo error_code. */
+            error_code: number;
+
+            /** PersonalBossInfo open. */
+            open: boolean;
+
+            /** PersonalBossInfo template_id. */
+            template_id: number;
+
+            /** PersonalBossInfo display_name. */
+            display_name: string;
+
+            /** PersonalBossInfo map_id. */
+            map_id: Long;
+
+            /** PersonalBossInfo monster_id. */
+            monster_id: number;
+
+            /** PersonalBossInfo minimum_level. */
+            minimum_level: number;
+
+            /** PersonalBossInfo day. */
+            day: string;
+
+            /** PersonalBossInfo successes. */
+            successes: number;
+
+            /** PersonalBossInfo daily_limit. */
+            daily_limit: number;
+
+            /** PersonalBossInfo can_enter. */
+            can_enter: boolean;
+
+            /** PersonalBossInfo eligibility_reason. */
+            eligibility_reason: number;
+
+            /** PersonalBossInfo available_at_unix_ms. */
+            available_at_unix_ms: Long;
+
+            /** PersonalBossInfo active_challenge_id. */
+            active_challenge_id: string;
+
+            /** PersonalBossInfo active_expires_at_unix_ms. */
+            active_expires_at_unix_ms: Long;
+
+            /** PersonalBossInfo history. */
+            history: minimir.v1.PersonalBossHistoryEntry.$Properties[];
+
+            /**
+             * Creates a new PersonalBossInfo instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossInfo instance
+             */
+            static create(properties: minimir.v1.PersonalBossInfo.$Shape): minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape;
+            static create(properties?: minimir.v1.PersonalBossInfo.$Properties): minimir.v1.PersonalBossInfo;
+
+            /**
+             * Encodes the specified PersonalBossInfo message. Does not implicitly {@link minimir.v1.PersonalBossInfo.verify|verify} messages.
+             * @param message PersonalBossInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossInfo.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossInfo message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossInfo.verify|verify} messages.
+             * @param message PersonalBossInfo message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossInfo.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossInfo message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape} PersonalBossInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape;
+
+            /**
+             * Decodes a PersonalBossInfo message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape} PersonalBossInfo
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossInfo & minimir.v1.PersonalBossInfo.$Shape;
+
+            /**
+             * Verifies a PersonalBossInfo message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossInfo
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossInfo {
+
+            /** Properties of a PersonalBossInfo. */
+            interface $Properties {
+
+                /** PersonalBossInfo error_code */
+                error_code?: (number|null);
+
+                /** PersonalBossInfo open */
+                open?: (boolean|null);
+
+                /** PersonalBossInfo template_id */
+                template_id?: (number|null);
+
+                /** PersonalBossInfo display_name */
+                display_name?: (string|null);
+
+                /** PersonalBossInfo map_id */
+                map_id?: (Long|null);
+
+                /** PersonalBossInfo monster_id */
+                monster_id?: (number|null);
+
+                /** PersonalBossInfo minimum_level */
+                minimum_level?: (number|null);
+
+                /** PersonalBossInfo day */
+                day?: (string|null);
+
+                /** PersonalBossInfo successes */
+                successes?: (number|null);
+
+                /** PersonalBossInfo daily_limit */
+                daily_limit?: (number|null);
+
+                /** PersonalBossInfo can_enter */
+                can_enter?: (boolean|null);
+
+                /** PersonalBossInfo eligibility_reason */
+                eligibility_reason?: (number|null);
+
+                /** PersonalBossInfo available_at_unix_ms */
+                available_at_unix_ms?: (Long|null);
+
+                /** PersonalBossInfo active_challenge_id */
+                active_challenge_id?: (string|null);
+
+                /** PersonalBossInfo active_expires_at_unix_ms */
+                active_expires_at_unix_ms?: (Long|null);
+
+                /** PersonalBossInfo history */
+                history?: (minimir.v1.PersonalBossHistoryEntry.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossInfo. */
+            type $Shape = minimir.v1.PersonalBossInfo.$Properties;
+        }
+
+        /**
+         * Properties of a PersonalBossHistoryEntry.
+         * @deprecated Use minimir.v1.PersonalBossHistoryEntry.$Properties instead.
+         */
+        interface IPersonalBossHistoryEntry extends minimir.v1.PersonalBossHistoryEntry.$Properties {
+        }
+
+        /** Represents a PersonalBossHistoryEntry. */
+        class PersonalBossHistoryEntry {
+
+            /**
+             * Constructs a new PersonalBossHistoryEntry.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.PersonalBossHistoryEntry.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** PersonalBossHistoryEntry challenge_id. */
+            challenge_id: string;
+
+            /** PersonalBossHistoryEntry template_id. */
+            template_id: number;
+
+            /** PersonalBossHistoryEntry rule_version. */
+            rule_version: Long;
+
+            /** PersonalBossHistoryEntry outcome. */
+            outcome: number;
+
+            /** PersonalBossHistoryEntry finished_at_unix_ms. */
+            finished_at_unix_ms: Long;
+
+            /** PersonalBossHistoryEntry damage. */
+            damage: Long;
+
+            /** PersonalBossHistoryEntry hp_remaining. */
+            hp_remaining: Long;
+
+            /** PersonalBossHistoryEntry recovered. */
+            recovered: boolean;
+
+            /** PersonalBossHistoryEntry reward_gold. */
+            reward_gold: Long;
+
+            /** PersonalBossHistoryEntry reward_bound. */
+            reward_bound: boolean;
+
+            /**
+             * Creates a new PersonalBossHistoryEntry instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns PersonalBossHistoryEntry instance
+             */
+            static create(properties: minimir.v1.PersonalBossHistoryEntry.$Shape): minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape;
+            static create(properties?: minimir.v1.PersonalBossHistoryEntry.$Properties): minimir.v1.PersonalBossHistoryEntry;
+
+            /**
+             * Encodes the specified PersonalBossHistoryEntry message. Does not implicitly {@link minimir.v1.PersonalBossHistoryEntry.verify|verify} messages.
+             * @param message PersonalBossHistoryEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.PersonalBossHistoryEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified PersonalBossHistoryEntry message, length delimited. Does not implicitly {@link minimir.v1.PersonalBossHistoryEntry.verify|verify} messages.
+             * @param message PersonalBossHistoryEntry message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.PersonalBossHistoryEntry.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a PersonalBossHistoryEntry message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape} PersonalBossHistoryEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape;
+
+            /**
+             * Decodes a PersonalBossHistoryEntry message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape} PersonalBossHistoryEntry
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.PersonalBossHistoryEntry & minimir.v1.PersonalBossHistoryEntry.$Shape;
+
+            /**
+             * Verifies a PersonalBossHistoryEntry message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for PersonalBossHistoryEntry
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace PersonalBossHistoryEntry {
+
+            /** Properties of a PersonalBossHistoryEntry. */
+            interface $Properties {
+
+                /** PersonalBossHistoryEntry challenge_id */
+                challenge_id?: (string|null);
+
+                /** PersonalBossHistoryEntry template_id */
+                template_id?: (number|null);
+
+                /** PersonalBossHistoryEntry rule_version */
+                rule_version?: (Long|null);
+
+                /** PersonalBossHistoryEntry outcome */
+                outcome?: (number|null);
+
+                /** PersonalBossHistoryEntry finished_at_unix_ms */
+                finished_at_unix_ms?: (Long|null);
+
+                /** PersonalBossHistoryEntry damage */
+                damage?: (Long|null);
+
+                /** PersonalBossHistoryEntry hp_remaining */
+                hp_remaining?: (Long|null);
+
+                /** PersonalBossHistoryEntry recovered */
+                recovered?: (boolean|null);
+
+                /** PersonalBossHistoryEntry reward_gold */
+                reward_gold?: (Long|null);
+
+                /** PersonalBossHistoryEntry reward_bound */
+                reward_bound?: (boolean|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a PersonalBossHistoryEntry. */
+            type $Shape = minimir.v1.PersonalBossHistoryEntry.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossQuery.
+         * @deprecated Use minimir.v1.WorldBossQuery.$Properties instead.
+         */
+        interface IWorldBossQuery extends minimir.v1.WorldBossQuery.$Properties {
+        }
+
+        /** Represents a WorldBossQuery. */
+        class WorldBossQuery {
+
+            /**
+             * Constructs a new WorldBossQuery.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossQuery.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossQuery scene_epoch. */
+            scene_epoch: Long;
+
+            /**
+             * Creates a new WorldBossQuery instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossQuery instance
+             */
+            static create(properties: minimir.v1.WorldBossQuery.$Shape): minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape;
+            static create(properties?: minimir.v1.WorldBossQuery.$Properties): minimir.v1.WorldBossQuery;
+
+            /**
+             * Encodes the specified WorldBossQuery message. Does not implicitly {@link minimir.v1.WorldBossQuery.verify|verify} messages.
+             * @param message WorldBossQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossQuery message, length delimited. Does not implicitly {@link minimir.v1.WorldBossQuery.verify|verify} messages.
+             * @param message WorldBossQuery message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossQuery.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossQuery message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape} WorldBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape;
+
+            /**
+             * Decodes a WorldBossQuery message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape} WorldBossQuery
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossQuery & minimir.v1.WorldBossQuery.$Shape;
+
+            /**
+             * Verifies a WorldBossQuery message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossQuery
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossQuery {
+
+            /** Properties of a WorldBossQuery. */
+            interface $Properties {
+
+                /** WorldBossQuery scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossQuery. */
+            type $Shape = minimir.v1.WorldBossQuery.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossEnter.
+         * @deprecated Use minimir.v1.WorldBossEnter.$Properties instead.
+         */
+        interface IWorldBossEnter extends minimir.v1.WorldBossEnter.$Properties {
+        }
+
+        /** Represents a WorldBossEnter. */
+        class WorldBossEnter {
+
+            /**
+             * Constructs a new WorldBossEnter.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossEnter.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossEnter scene_epoch. */
+            scene_epoch: Long;
+
+            /** WorldBossEnter template_id. */
+            template_id: number;
+
+            /** WorldBossEnter occurrence_id. */
+            occurrence_id: string;
+
+            /**
+             * Creates a new WorldBossEnter instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossEnter instance
+             */
+            static create(properties: minimir.v1.WorldBossEnter.$Shape): minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape;
+            static create(properties?: minimir.v1.WorldBossEnter.$Properties): minimir.v1.WorldBossEnter;
+
+            /**
+             * Encodes the specified WorldBossEnter message. Does not implicitly {@link minimir.v1.WorldBossEnter.verify|verify} messages.
+             * @param message WorldBossEnter message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossEnter.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossEnter message, length delimited. Does not implicitly {@link minimir.v1.WorldBossEnter.verify|verify} messages.
+             * @param message WorldBossEnter message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossEnter.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossEnter message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape} WorldBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape;
+
+            /**
+             * Decodes a WorldBossEnter message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape} WorldBossEnter
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossEnter & minimir.v1.WorldBossEnter.$Shape;
+
+            /**
+             * Verifies a WorldBossEnter message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossEnter
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossEnter {
+
+            /** Properties of a WorldBossEnter. */
+            interface $Properties {
+
+                /** WorldBossEnter scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WorldBossEnter template_id */
+                template_id?: (number|null);
+
+                /** WorldBossEnter occurrence_id */
+                occurrence_id?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossEnter. */
+            type $Shape = minimir.v1.WorldBossEnter.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossLeave.
+         * @deprecated Use minimir.v1.WorldBossLeave.$Properties instead.
+         */
+        interface IWorldBossLeave extends minimir.v1.WorldBossLeave.$Properties {
+        }
+
+        /** Represents a WorldBossLeave. */
+        class WorldBossLeave {
+
+            /**
+             * Constructs a new WorldBossLeave.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossLeave.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossLeave scene_epoch. */
+            scene_epoch: Long;
+
+            /** WorldBossLeave occurrence_id. */
+            occurrence_id: string;
+
+            /**
+             * Creates a new WorldBossLeave instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossLeave instance
+             */
+            static create(properties: minimir.v1.WorldBossLeave.$Shape): minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape;
+            static create(properties?: minimir.v1.WorldBossLeave.$Properties): minimir.v1.WorldBossLeave;
+
+            /**
+             * Encodes the specified WorldBossLeave message. Does not implicitly {@link minimir.v1.WorldBossLeave.verify|verify} messages.
+             * @param message WorldBossLeave message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossLeave.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossLeave message, length delimited. Does not implicitly {@link minimir.v1.WorldBossLeave.verify|verify} messages.
+             * @param message WorldBossLeave message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossLeave.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossLeave message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape} WorldBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape;
+
+            /**
+             * Decodes a WorldBossLeave message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape} WorldBossLeave
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossLeave & minimir.v1.WorldBossLeave.$Shape;
+
+            /**
+             * Verifies a WorldBossLeave message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossLeave
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossLeave {
+
+            /** Properties of a WorldBossLeave. */
+            interface $Properties {
+
+                /** WorldBossLeave scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WorldBossLeave occurrence_id */
+                occurrence_id?: (string|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossLeave. */
+            type $Shape = minimir.v1.WorldBossLeave.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossState.
+         * @deprecated Use minimir.v1.WorldBossState.$Properties instead.
+         */
+        interface IWorldBossState extends minimir.v1.WorldBossState.$Properties {
+        }
+
+        /** Represents a WorldBossState. */
+        class WorldBossState {
+
+            /**
+             * Constructs a new WorldBossState.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossState.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossState scene_epoch. */
+            scene_epoch: Long;
+
+            /** WorldBossState occurrence_id. */
+            occurrence_id: string;
+
+            /** WorldBossState template_id. */
+            template_id: number;
+
+            /** WorldBossState state. */
+            state: number;
+
+            /** WorldBossState opens_at_unix_ms. */
+            opens_at_unix_ms: Long;
+
+            /** WorldBossState expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** WorldBossState hp. */
+            hp: Long;
+
+            /** WorldBossState hp_max. */
+            hp_max: Long;
+
+            /** WorldBossState ranks. */
+            ranks: minimir.v1.WorldBossRank.$Properties[];
+
+            /** WorldBossState error_code. */
+            error_code: number;
+
+            /**
+             * Creates a new WorldBossState instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossState instance
+             */
+            static create(properties: minimir.v1.WorldBossState.$Shape): minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape;
+            static create(properties?: minimir.v1.WorldBossState.$Properties): minimir.v1.WorldBossState;
+
+            /**
+             * Encodes the specified WorldBossState message. Does not implicitly {@link minimir.v1.WorldBossState.verify|verify} messages.
+             * @param message WorldBossState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossState message, length delimited. Does not implicitly {@link minimir.v1.WorldBossState.verify|verify} messages.
+             * @param message WorldBossState message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossState.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossState message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape} WorldBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape;
+
+            /**
+             * Decodes a WorldBossState message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape} WorldBossState
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossState & minimir.v1.WorldBossState.$Shape;
+
+            /**
+             * Verifies a WorldBossState message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossState
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossState {
+
+            /** Properties of a WorldBossState. */
+            interface $Properties {
+
+                /** WorldBossState scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** WorldBossState occurrence_id */
+                occurrence_id?: (string|null);
+
+                /** WorldBossState template_id */
+                template_id?: (number|null);
+
+                /** WorldBossState state */
+                state?: (number|null);
+
+                /** WorldBossState opens_at_unix_ms */
+                opens_at_unix_ms?: (Long|null);
+
+                /** WorldBossState expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** WorldBossState hp */
+                hp?: (Long|null);
+
+                /** WorldBossState hp_max */
+                hp_max?: (Long|null);
+
+                /** WorldBossState ranks */
+                ranks?: (minimir.v1.WorldBossRank.$Properties[]|null);
+
+                /** WorldBossState error_code */
+                error_code?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossState. */
+            type $Shape = minimir.v1.WorldBossState.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossRank.
+         * @deprecated Use minimir.v1.WorldBossRank.$Properties instead.
+         */
+        interface IWorldBossRank extends minimir.v1.WorldBossRank.$Properties {
+        }
+
+        /** Represents a WorldBossRank. */
+        class WorldBossRank {
+
+            /**
+             * Constructs a new WorldBossRank.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossRank.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossRank position. */
+            position: number;
+
+            /** WorldBossRank display_name. */
+            display_name: string;
+
+            /** WorldBossRank damage. */
+            damage: Long;
+
+            /**
+             * Creates a new WorldBossRank instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossRank instance
+             */
+            static create(properties: minimir.v1.WorldBossRank.$Shape): minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape;
+            static create(properties?: minimir.v1.WorldBossRank.$Properties): minimir.v1.WorldBossRank;
+
+            /**
+             * Encodes the specified WorldBossRank message. Does not implicitly {@link minimir.v1.WorldBossRank.verify|verify} messages.
+             * @param message WorldBossRank message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossRank.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossRank message, length delimited. Does not implicitly {@link minimir.v1.WorldBossRank.verify|verify} messages.
+             * @param message WorldBossRank message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossRank.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossRank message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape} WorldBossRank
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape;
+
+            /**
+             * Decodes a WorldBossRank message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape} WorldBossRank
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossRank & minimir.v1.WorldBossRank.$Shape;
+
+            /**
+             * Verifies a WorldBossRank message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossRank
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossRank {
+
+            /** Properties of a WorldBossRank. */
+            interface $Properties {
+
+                /** WorldBossRank position */
+                position?: (number|null);
+
+                /** WorldBossRank display_name */
+                display_name?: (string|null);
+
+                /** WorldBossRank damage */
+                damage?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossRank. */
+            type $Shape = minimir.v1.WorldBossRank.$Properties;
         }
     }
 }
