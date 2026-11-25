@@ -21,6 +21,14 @@ import (
 	"time"
 )
 
+// setTestOrdinaryEquipmentDrop 固定历史和各怪物新池的装备选择，用于容量和回收回归。
+func setTestOrdinaryEquipmentDrop(f *devconfig.Fixture, itemID uint32) {
+	f.Drops.EquipmentItemIDs = []uint32{itemID}
+	for i := range f.OrdinaryDropPools {
+		f.OrdinaryDropPools[i].Equipment = []devconfig.OrdinaryDropEntry{{ItemID: itemID, Weight: 1, QuantityMin: 1, QuantityMax: 1}}
+	}
+}
+
 // TestFullBagOfflineCombatAndChargingMongoWS 持续观察满背包角色的离线战斗和计时扣减，核对没有覆盖原物品。
 // t 提供断言失败报告、子用例和清理注册。
 func TestFullBagOfflineCombatAndChargingMongoWS(t *testing.T) {
@@ -59,7 +67,7 @@ func TestFullBagOfflineCombatAndChargingMongoWS(t *testing.T) {
 	}
 	cfg.Fixture.InitialInventory[30] = 193
 	cfg.Fixture.InitialBoundGold = offer.PriceUnits
-	cfg.Fixture.Drops.EquipmentItemIDs = []uint32{218}
+	setTestOrdinaryEquipmentDrop(&cfg.Fixture, 218)
 	cfg.Fixture.Monsters[0].HP = 1
 	cfg.Fixture.Monsters[0].AttackMin, cfg.Fixture.Monsters[0].AttackMax, cfg.Fixture.Monsters[0].Agility = 0, 0, 0
 	// raw 保存由序列化取得的原始值。

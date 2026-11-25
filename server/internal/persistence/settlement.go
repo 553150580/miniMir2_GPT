@@ -25,6 +25,7 @@ type SettlementReceipt struct {
 	Kills         int64                     `bson:"kills,omitempty"`            // 本来源实际确认的击杀次数。
 	MonsterID     uint32                    `bson:"monster_id,omitempty"`       // 已确认击杀的真实怪物配置号。
 	MapID         uint64                    `bson:"map_id,omitempty"`           // 击杀归属的原地图配置号。
+	DropPoolID    uint32                    `bson:"drop_pool_id,omitempty"`     // 击杀时使用的原掉落池号。
 	GrantedItem   bool                      `bson:"granted_item"`               // 本次原掉落是否进入角色背包。
 	Recycling     EquipmentRecyclingReceipt `bson:"recycling"`                  // 回收的实例、保护跳过和金币结果。
 	Experience    *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"` // 经验转换、限制和迁移明细。
@@ -174,7 +175,7 @@ func applySettlement(r domain.Role, q Settlement, f devconfig.Fixture) (domain.R
 	// details 建立带初始值的结算回执，供本段继续处理。
 	details := SettlementReceipt{
 		RuleVersion: f.RuleVersion, ConfigHash: f.Hash, HostSeconds: q.HostSeconds, Kills: q.Kills,
-		MonsterID: q.MonsterID, MapID: q.MapID,
+		MonsterID: q.MonsterID, MapID: q.MapID, DropPoolID: q.DropPoolID,
 		Recycling: EquipmentRecyclingReceipt{PolicyRevision: r.AutoRecycle.Revision, Policy: policySnapshot(r.AutoRecycle), Trigger: 1},
 	}
 	if q.HostSeconds < 0 || r.HostingSeconds < q.HostSeconds || q.Kills < 0 || r.Level == 0 || r.Revision == math.MaxInt64 {

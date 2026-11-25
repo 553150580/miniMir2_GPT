@@ -23,14 +23,18 @@ class BossCandidateProjectionTests(unittest.TestCase):
             self.assertEqual((row['width'], row['height'], row['blocked'], row['resource_key']), (13, 13, [], 'development/maps/personal-map'))
         self.assertTrue({'80', '81'}.isdisjoint(row['id'] for row in client['map_catalog']))
         self.assertTrue(all('80' not in region['map_ids'] and '81' not in region['map_ids'] for region in client['map_regions']))
-        self.assertEqual([row['id'] for row in fixture['monsters']], [1])
-        self.assertEqual([row['id'] for row in fixture['challenge_monsters']], [80001, 80002])
+        ordinary_ids = [row['id'] for row in fixture['monsters']]
+        challenge_ids = [row['id'] for row in fixture['challenge_monsters']]
+        self.assertEqual(ordinary_ids, [1, 3, 4, 5])
+        self.assertEqual(challenge_ids, [80001, 80002])
         for row in fixture['challenge_monsters']:
             self.assertEqual([row[field] for field in ('respawn_ms', 'exp', 'gold_min', 'gold_max')], [0] * 4)
         self.assertNotIn('kill_reward_gold', fixture['personal_boss'])
         self.assertEqual(client['world_boss']['daily_open_offsets_ms'], [43_200_000, 72_000_000])
         self.assertEqual((client['world_boss']['window_ms'], client['world_boss']['return_delay_ms']), (3_600_000, 5_000))
-        self.assertTrue(all(row['profile'] == 'monster_scarecrow' for row in client['monster_profiles']))
+        self.assertEqual({row['definition_id']: row['profile'] for row in client['monster_profiles']
+                          if row['definition_id'] in challenge_ids},
+                         {80001: 'monster_scarecrow', 80002: 'monster_scarecrow'})
 
     def test_unsupported_cooldown_map_and_loot_are_rejected(self):
         for key, value in (('map_id', 1), ('monster_id', 1), ('rank_reward_group_id', 1), ('failure_cooldown_seconds', 0)):

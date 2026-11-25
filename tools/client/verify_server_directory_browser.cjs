@@ -136,10 +136,12 @@ async function main() {
             await tap(bag + '/Equip');
             await tap('PopupView/Panels/Confirm/ConfirmButton');
             report.step = '等待权威装备回执';
-            await page.waitForFunction(async () => {
-                const { session } = await System.import('chunks:///_virtual/GameSession.ts');
-                return session.inventory?.equipped?.some(entry => entry.slot === 0 && entry.item.itemId === 218);
-            }, null, { timeout: 15000 });
+            const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+            try {
+                const equipped = await page.waitForFunction(session => session.inventory?.equipped?.some(
+                    entry => entry.slot === 0 && entry.item.itemId === 218), session, { timeout: 15000 });
+                await equipped.dispose();
+            } finally { await session.dispose(); }
             await page.touchscreen.tap(10, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, bag);
             report.step = '开启自动战斗并观察任务进度';
@@ -219,6 +221,34 @@ async function main() {
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
             report.bossChallenges = { home, personal, leaveAndHistory: true, worldStatus };
         };
+        const verifyOrdinaryMap = async () => {
+            const version = await page.evaluate(async () => {
+                const { session } = await System.import('chunks:///_virtual/GameSession.ts');
+                return Number(session.entry?.resourceVersion.toString());
+            });
+            if (version < 30) return;
+            const list = 'UIMgr/Panels/TownDirectory';
+            await tap('BottomHUD/Footer/Map');
+            await tap(list + '/RegionList/View/Content', '谷地');
+            await tap(list + '/MapList/View/Content', '谷地南坡 · 野外');
+            report.step = '核对规则30普通地图真实怪物外观';
+            // 模块只加载一次，让页面轮询实际等待地图附着和怪物贴图完成。
+            const session = await page.evaluateHandle(async () => (await System.import('chunks:///_virtual/GameSession.ts')).session);
+            try {
+                const view = await page.waitForFunction(session => {
+                    const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+                    if (!world?.isMapReady || !session.ready || session.entry.roomId.toString() !== '6') return null;
+                    const monster = Array.from(world.visuals.values()).find(visual => visual.state.entityKind === 3 && visual.state.definitionId === 3);
+                    if (!monster?.body[0]?.spriteFrame || !/^Hunt:\d+$/.test(monster.keys[0])) return null;
+                    return { map: world.map.id, rows: world.map.height, columns: world.map.width, profile: monster.profile.id, frame: monster.keys[0] };
+                }, session, { timeout: 35000 });
+                try { report.ordinaryMap = await view.jsonValue(); } finally { await view.dispose(); }
+                assert.equal(String(report.ordinaryMap.map), '6');
+                assert.equal(report.ordinaryMap.profile, 'monster_m1_flower');
+                assert.equal(report.ordinaryMap.rows, 13);
+                assert.equal(report.ordinaryMap.columns, 13);
+            } finally { await session.dispose(); }
+        };
         await page.goto(base.href);
         await scene('Login');
         await edit('Account', 'scope_' + crypto.randomBytes(5).toString('hex'));
@@ -254,6 +284,7 @@ async function main() {
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
             if (bossChallenges && index === 0) await verifyBossChallenges();
             if (tasksCodex && index === 0) await verifyTasks();
+            if (index === 0) await verifyOrdinaryMap();
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');
                 await scene('RoleSelect');

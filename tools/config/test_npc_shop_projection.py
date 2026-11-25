@@ -22,12 +22,15 @@ class NPCShopProjectionTests(unittest.TestCase):
         self.assertEqual(public['equipment_durability'], self.fixture['equipment_durability'])
         for catalog, keys in ((self.fixture['items'], ('id', 'equipment_slot')),
                               (public['items'], ('item_id', 'equip_slot'))):
-            expected = {218: (0, 4000, 50), 193: (1, 10000, 400), 259: (3, 8000, 500)}
+            expected = {218: (0, 4000, 50), 193: (1, 10000, 400), 259: (3, 8000, 500),
+                        223: (0, 6000, 900), 220: (0, 7000, 3000), 225: (0, 8000, 1000),
+                        195: (1, 12000, 3000), 261: (3, 7000, 3000)}
             actual = {item[keys[0]]: (item[keys[1]], item['original_durability_u'], item['repair_base_price'])
                       for item in catalog if 'original_durability_u' in item}
             self.assertEqual(actual, expected)
         ordinary = {item['item_id']: item for item in public['items'] if item['kind'] in ('meat', 'misc')}
-        self.assertEqual({item_id: item['kind'] for item_id, item in ordinary.items()}, {92: 'meat', 594: 'misc'})
+        self.assertEqual({item_id: item['kind'] for item_id, item in ordinary.items()},
+                         {92: 'meat', 594: 'misc', 95: 'misc', 96: 'misc', 97: 'misc'})
         self.assertTrue(all(not item['use_enabled'] for item in ordinary.values()))
 
     def test_source_npcs_sell_only_eligible_goods_and_reuse_book_catalogue(self):
@@ -35,7 +38,9 @@ class NPCShopProjectionTests(unittest.TestCase):
         shops = {shop['key']: shop for shop in fixture['npc_shops']}
         self.assertEqual({shop['key'] for shop in shops.values() if shop['can_repair']}, {'weapon', 'clothing', 'jewelry'})
         self.assertEqual({price['item_id']: price['price_gold'] for shop in shops.values() if shop['key'] != 'books'
-                          for price in shop['sell_prices']}, {218: 25, 193: 200, 259: 250, 92: 100, 35: 5, 36: 5, 594: 5, 181: 4, 182: 4, 187: 2})
+                          for price in shop['sell_prices']},
+                         {218: 25, 193: 200, 259: 250, 92: 100, 35: 5, 36: 5, 594: 5, 181: 4, 182: 4, 187: 2,
+                          223: 450, 220: 1500, 225: 500, 195: 1500, 261: 1500, 95: 25, 96: 25, 97: 150})
         books = shops['books']
         self.assertEqual(books['offers'], fixture['skill_shop'])
         expected = {offer['item_id']: offer['price_units'] // (2 * offer['quantity']) for offer in books['offers']

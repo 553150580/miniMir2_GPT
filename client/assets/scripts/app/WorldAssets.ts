@@ -11,6 +11,8 @@ interface WorldMapEntry {
     readonly floor_map_id?: string;
     readonly blocked?: readonly { x: number; y: number }[];
     readonly player_spawn?: { x: number; y: number };
+    readonly monster_definition_ids?: readonly number[];
+    readonly initial_monster_count?: number;
 }
 export type WorldAssetsInvalidation = 'dispose' | 'source';
 function mapIdString(value: unknown): string {
@@ -152,11 +154,14 @@ export class WorldAssets {
                 const floor = result.own(await load<JsonAsset>(selected.resource_key, JsonAsset)).json;
                 if (!floor) throw new Error('地图缺少地板数据');
                 const challenge = selected.scene_kind >= 3;
-                if (challenge && (selected.floor_map_id !== String(floor.id) || !Array.isArray(selected.blocked) || !selected.player_spawn))
-                    throw new Error('首领地图与地板身份不匹配');
-                result.map = challenge ? Object.freeze({ ...floor, id: selected.id, name: selected.name, scene_kind: selected.scene_kind,
+                const sharedFloor = challenge || selected.scene_kind === 1 && selected.floor_map_id !== undefined;
+                if (sharedFloor && (selected.floor_map_id !== String(floor.id) || !Array.isArray(selected.blocked) || !selected.player_spawn))
+                    throw new Error('地图与地板身份不匹配');
+                result.map = sharedFloor ? Object.freeze({ ...floor, id: selected.id, name: selected.name, scene_kind: selected.scene_kind,
+                    initial_monster_count: selected.initial_monster_count,
                     blocked: selected.blocked, player_spawn: selected.player_spawn, safe_zones: [], props: [], npcs: [] })
-                    : selected.compact_town ? compactTownMap(floor, selected) : floor;
+                    : selected.compact_town ? compactTownMap(floor, selected) : selected.initial_monster_count === undefined
+                        ? floor : Object.freeze({ ...floor, initial_monster_count: selected.initial_monster_count });
                 if (selected.width !== undefined || result.map.id !== undefined) {
                     const id = typeof result.map.id === 'number' && Number.isSafeInteger(result.map.id) && result.map.id >= 0 ? String(result.map.id) : mapIdString(result.map.id);
                     if (id !== selected.id) throw new Error('个人地图资源与目录身份不一致');
@@ -187,7 +192,21 @@ export class WorldAssets {
             profileIds.add(player.profile);
             // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
             if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
-            for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
+            const visibleMonsters = selected.monster_definition_ids === undefined
+                ? result.gameplay.monster_profiles.filter((row: any) => !String(row.profile).startsWith('monster_m1_'))
+                : result.gameplay.monster_profiles.filter((row: any) => selected.monster_definition_ids!.includes(row.definition_id));
+            // 独立原创包只在有对应怪物槽的普通地图加载。
+            if (visibleMonsters.some((row: any) => String(row.profile).startsWith('monster_m1_'))) {
+                const extras = result.own(await load<JsonAsset>('development/hunt/actors', JsonAsset)).json as any;
+                if (extras?.schema_version !== 1 || !extras.profiles || !extras.frames
+                    || Object.entries(extras.frames).some(([key, frame]: [string, any]) => !/^Hunt:\d+$/.test(key)
+                        || !/^hunt\/frames\/[a-z_0-9]+\.png$/.test(frame?.png) || result.manifest.frames[key]))
+                    throw new Error('普通地图怪物资源清单无效');
+                result.manifest = { ...result.manifest,
+                    profiles: { ...result.manifest.profiles, ...extras.profiles },
+                    frames: { ...result.manifest.frames, ...extras.frames } };
+            }
+            for (const row of visibleMonsters) profileIds.add(row.profile);
             // 共享首领场的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
             for (const row of result.gameplay.pet_profiles) {
                 if (result.sceneKind !== 4 && row.job_id !== job) continue;
@@ -218,7 +237,8 @@ export class WorldAssets {
                 }
             }
             for (const skill of result.gameplay.skills ?? []) {
-                if ((skill.job_id !== job && result.sceneKind !== 4) || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
+                if ((skill.job_id !== job && result.sceneKind !== 2 && result.sceneKind !== 4)
+                    || (!skill.active && skill.activation_kind !== 'passive_proc')) continue;
                 const effect = result.manifest.effects?.[String(skill.id)];
                 const independentSummon = skill.kind !== 'summon_pet' || skill.id === 30;
                 if (!effect && independentSummon && skillsWithActorFeedback.has(skill.kind)) continue;

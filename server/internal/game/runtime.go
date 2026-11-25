@@ -123,7 +123,7 @@ type entity struct {
 	CellEntry            uint64                   // 此次进入逻辑格的唯一序号。
 	PetRuntime           *petRuntimeState         // 宠物出生后才有的运行配置与成长状态。
 	IsPetCorpse          bool                     // 表示实体仅作为已归档的宠物尸体显示。
-	CapturedUntilRespawn bool                     // 原怪物已转为宠物，此占位只等待普通刷新，不展示尸体。
+	DeferredUntilRespawn bool                     // 被诱惑或继承旧图复活截止的怪物槽等待刷新期间不产生虚假尸体。
 	ShockUntilMS         int64                    // 怪物停止主动移动、攻击的 Unix 毫秒截止时间。
 }
 
@@ -132,6 +132,8 @@ type room struct {
 	*worldState                                     // 当前活动世界；匿名嵌入让常用战斗代码直接访问场景状态。
 	runStore              *persistence.Store        // 房间创建时选定的运行服视图，在整个房间生命周期中固定。
 	PersonalWorld         *worldState               // 此角色独有的挂机世界，切到城镇时仍可保留原现场。
+	TravelPersonalWorld   *worldState               // 只在普通图换图提交中暂存新现场，成功后接替原个人图。
+	PetHoldingWorld       *worldState               // 禁宠换图暂留的活宠原驻留引用，没有旧图战斗现场。
 	TownWorld             *worldState               // 当前持有的城镇世界引用。
 	TownWorlds            []*worldState             // 已创建的其他城镇现场，用于按地图查找和保留事件归属。
 	townMembership        townMembership            // 角色当前的共享城镇席位，由所属分片管理。
@@ -788,6 +790,7 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.Travel, r.SavedPersonal, r.TravelHistory = nil, nil, nil
 	r.worldState = &worldState{}
 	r.PersonalWorld, r.TownWorld = nil, nil
+	r.TravelPersonalWorld, r.PetHoldingWorld = nil, nil
 	r.TownWorlds = nil
 	r.ExecutionEpoch, r.WorldSequence, r.InflightEvents = 0, 0, 0
 	r.Pet, r.PetWorld, r.PetLifeSequence = nil, worldRef{}, 0
@@ -812,7 +815,6 @@ func (w *worker) initialize(r *room, role domain.Role) {
 	r.AutoTarget = actorRef{}
 	r.MaterialEconomicSeq, r.MaterialSourceSeq = role.EconomicSeq, role.SourceSeq
 	r.Auto = true
-	r.MonsterCount = 1
 	r.Player = entity{Handle: 1, Kind: 1, Def: role.Job, Pos: f.Map.PlayerSpawn, HP: player.HP, MaxHP: player.HP, MP: player.MP, MaxMP: player.MP}
 	w.refreshPlayerStats(r)
 	r.Player.HP, r.Player.MP = r.Player.MaxHP, r.Player.MaxMP
@@ -828,13 +830,8 @@ func (w *worker) initialize(r *room, role domain.Role) {
 		}
 	}
 	w.applyPetMapEntryPolicy(r, &f.Map)
-	// i 标记循环或列表中的当前位置。
-	for i := 0; i < 8; i++ {
-		// def 保存从怪物集合取出的“def”。
-		def := f.Monsters[i%len(f.Monsters)]
-		// hp 保存当前处理所用的生命值。
-		hp := def.HP
-		r.Monsters = append(r.Monsters, &entity{Handle: uint32(10 + i), Kind: 3, Def: def.ID, Pos: f.Map.MonsterSpawns[i], HP: hp, MaxHP: def.HP, Monster: &def})
+	if !populateOrdinaryMonsters(f, r.currentWorld(), &f.Map, nil, time.Time{}) {
+		w.isolateRoom(r)
 	}
 }
 
@@ -1006,7 +1003,7 @@ func (w *worker) buildBaseline(r *room, requestID uint32) ([]*pb.SceneBaselineCh
 	entities = append(entities, r.Loot...)
 	// e 接收遍历实体时当前的元素。
 	for _, e := range entities {
-		if e.CapturedUntilRespawn {
+		if e.DeferredUntilRespawn {
 			continue
 		}
 		// moveMS 保存由无符号整数“32”取得的移动毫秒。

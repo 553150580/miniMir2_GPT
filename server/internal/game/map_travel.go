@@ -247,10 +247,11 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 			mapID = f.TownTravel.TownMapID
 		}
 		// fromPersonal 表示源地图是角色的个人图，而且尚未保留另一份个人现场。
-		fromPersonal := current.SceneKindValue() == devconfig.SceneKindPersonal && r.MapID == f.Map.ID && r.SavedPersonal == nil
+		fromPersonal := current.SceneKindValue() == devconfig.SceneKindPersonal && r.SavedPersonal == nil &&
+			(r.MapID == f.Map.ID || f.OrdinaryMonsterRosterEnabled() && r.currentWorld() == r.PersonalWorld)
 		// fromTown 表示当前规则允许已验证城镇间互转，原个人世界仍匹配已保存的返回现场。
 		fromTown := f.RuleVersion >= 24 && current.SceneKindValue() == devconfig.SceneKindTown && f.TownDestination(r.MapID) &&
-			r.SavedPersonal != nil && r.SavedPersonal == r.PersonalWorld && r.SavedPersonal.MapID == f.Map.ID
+			r.SavedPersonal != nil && r.SavedPersonal == r.PersonalWorld && (r.SavedPersonal.MapID == f.Map.ID || f.OrdinaryMonsterRosterEnabled())
 		if (!fromPersonal && !fromTown) || !f.TownDestination(mapID) || mapID == r.MapID {
 			w.travelFailure(r, frame, p.CodeLineForbidden)
 			return
@@ -261,6 +262,12 @@ func (w *worker) prepareMapTravelAt(r *room, frame wire.Frame, now time.Time) {
 			return
 		}
 		position = target.PlayerSpawn
+	} else if f.OrdinaryMonsterRosterEnabled() {
+		target, position, ok = w.selectOrdinaryDestination(r, current, q.TargetMapId)
+		if !ok {
+			w.travelFailure(r, frame, p.CodeLineForbidden)
+			return
+		}
 	} else {
 		if current.SceneKindValue() != devconfig.SceneKindTown || !f.TownDestination(r.MapID) || r.SavedPersonal == nil ||
 			q.TargetMapId != 0 && q.TargetMapId != r.SavedPersonal.MapID {
@@ -464,20 +471,27 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 	count := 0
 	// preferred 保存宠物可优先恢复的目标格，以目标世界的真实驻留位置优先。
 	var preferred *devconfig.Point
-	if plan.Destination == travelToPersonal {
-		if r.SavedPersonal == nil || r.SavedPersonal != plan.Personal {
-			ok = false
-		} else {
-			monsters, count = r.SavedPersonal.Monsters, r.SavedPersonal.MonsterCount
-			if r.Pet != nil && r.SavedPersonal.HasPet && r.SavedPersonal.PetLife == r.Pet.Life {
-				preferred = &r.SavedPersonal.PetPosition
-			}
-		}
-	}
-	// residentWorld 是目标地图已经保留的世界，可用于查找同一驻留宠物。
+	// residentWorld 是已经保留的目标世界；不同普通图只在提交时分配新现场。
 	residentWorld := r.townWorld(plan.TargetMapID)
+	newPersonal := false
 	if plan.Destination == travelToPersonal {
 		residentWorld = r.SavedPersonal
+		if f.OrdinaryMonsterRosterEnabled() && ok && r.PersonalWorld != nil {
+			if r.PersonalWorld.MapID != plan.TargetMapID {
+				residentWorld, newPersonal = nil, true
+				preferred = &target.PetSpawn
+			} else {
+				residentWorld = r.PersonalWorld
+			}
+		}
+		if r.SavedPersonal != plan.Personal || residentWorld == nil && !newPersonal {
+			ok = false
+		} else if residentWorld != nil {
+			monsters, count = residentWorld.Monsters, residentWorld.MonsterCount
+			if r.Pet != nil && residentWorld.HasPet && residentWorld.PetLife == r.Pet.Life {
+				preferred = &residentWorld.PetPosition
+			}
+		}
 	}
 	// pet 保存由场景世界宠物取得的宠物。
 	if pet := r.worldPet(residentWorld); pet != nil {
@@ -530,8 +544,18 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 			r.PersonalWorld = r.currentWorld()
 		}
 		destinationWorld.Auto, destinationWorld.Destination, destinationWorld.Navigation = false, nil, navigationState{}
+	} else if newPersonal {
+		destinationWorld = r.allocateWorld(plan.TargetMapID, math.MaxUint64)
+		if destinationWorld == nil || !populateOrdinaryMonsters(f, destinationWorld, target, r.PersonalWorld, now) {
+			plan.Phase = travelCancelled
+			w.sendTravelState(r, plan, plan.Request)
+			return false
+		}
+		destinationWorld.Auto = r.PersonalWorld.Auto
+		r.TravelPersonalWorld = destinationWorld
+		defer func() { r.TravelPersonalWorld = nil }()
 	} else {
-		destinationWorld = r.SavedPersonal
+		destinationWorld = residentWorld
 		// 原复活/掉落截止原样恢复，由正常step按当前时钟处理一次；不回放休眠期攻击或收益。
 	}
 	var petLanding *devconfig.Point // 只在需要迁移宠物时保留它的落点。
@@ -544,7 +568,8 @@ func (w *worker) finishMapTravel(r *room, plan *mapTravelPlan, now time.Time) bo
 		return false
 	}
 	if plan.Destination == travelToPersonal {
-		r.SavedPersonal = nil
+		r.adoptOrdinaryWorld(destinationWorld)
+		plan.Personal = nil // 终态重放不应持有已经弃用的普通现场。
 	}
 	plan.Position = r.Player.Pos // 城镇出生格被占时同步服务端最终分配的落点。
 	r.Scene, r.Baseline = r.Scene+1, baseline

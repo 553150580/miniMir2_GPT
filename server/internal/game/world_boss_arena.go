@@ -23,6 +23,8 @@ type worldBossArena struct {
 	resumable  map[string]*worldBossSeat  // 已确认战斗但连接失效的身体和动作冷却。
 	names      map[string]string          // 已加入角色的显示名，离场后用于当前榜单。
 	nextHandle uint32                     // 本场唯一的玩家和宠物句柄分配水位。
+	castID     uint64                     // 同场全部角色共用的施法去重水位。
+	eventID    uint64                     // 同场战斗观察事件的有序分配水位。
 	lastTick   time.Time                  // 避免旧逻辑帧回拨全场时钟。
 	lastState  time.Time                  // 最近一次合并发送共享排行榜的时刻。
 }
@@ -280,6 +282,12 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 		}
 		child.Ready, child.LastTick = true, now
 		w.snapshot(child)
+		// 其它端先收到该新身体，再能依据句柄和出生代次播放它的首个施法。
+		for _, peer := range arena.seats {
+			if peer != seat && visibleBossSeat(arena, peer) {
+				w.snapshot(peer.room)
+			}
+		}
 		w.modes(child, now)
 		w.sendSyncReady(child, frame.Request, &pb.SyncReady{SceneEpoch: obs.scene, BaselineId: obs.baseline, NextEconomicCommandSeq: uint64(child.Role.EconomicSeq + 1)})
 		w.send(child, p.MsgS2CWorldBossState, 0, arena.state(obs.scene, worldBossFighting))

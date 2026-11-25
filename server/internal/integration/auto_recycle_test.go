@@ -290,7 +290,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		cfg.Fixture.InitialInventory[i] = 218
 	}
 	cfg.Fixture.InitialInventory[30] = 193
-	cfg.Fixture.Drops.EquipmentItemIDs = []uint32{218}
+	setTestOrdinaryEquipmentDrop(&cfg.Fixture, 218)
 	cfg.Fixture.Monsters[0].HP = 1
 	cfg.Fixture.Monsters[0].AttackMin = 0
 	cfg.Fixture.Monsters[0].AttackMax = 0

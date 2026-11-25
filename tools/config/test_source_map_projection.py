@@ -14,8 +14,20 @@ SPEC=importlib.util.spec_from_file_location('prepare_source_map_projection',ROOT
 module=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(module)
 
 
+def restore_rule29_hunting_selection(profile):
+    """旧版投影测试移除新增普通挂机地图和定制掉落池。"""
+    extra_maps = set(profile.pop('ordinary_map_ids')[1:])
+    profile.pop('ordinary_initial_monster_count')
+    profile.pop('ordinary_drop_pool_pairs')
+    if 'map_regions' in profile:
+        for region in profile['map_regions']:
+            region['map_ids'] = [map_id for map_id in region['map_ids'] if map_id not in extra_maps]
+        profile['map_regions'] = [region for region in profile['map_regions'] if region['map_ids']]
+
+
 def restore_rule28_skill_selection(profile):
-    """旧版投影测试隔离规则29的技能、商品和宠物选择。"""
+    """旧版投影测试隔离规则29及之后加入的技能、商品、宠物和普通图配置。"""
+    restore_rule29_hunting_selection(profile)
     new_skills={6,13,16,17,18,19,20,28,30}
     new_books={9,23,24,25,26,27,30,31,33}
     supply_items={181,182,187}
@@ -106,13 +118,17 @@ class SourceMapProjectionTests(unittest.TestCase):
 
     def test_public_map_catalog_preserves_id_text_and_hides_raw_source_data(self):
         public=module.public_gameplay(module.fixture_from_rows(self.tables))
-        self.assertEqual([row['id'] for row in public['map_catalog']],['1','2','3','4','5'])
+        self.assertEqual([row['id'] for row in public['map_catalog']],['1','2','3','4','5','6','7'])
         self.assertEqual(public['map_catalog'][1]['resource_key'],'source-maps/map-2/manifest')
         self.assertEqual(public['source_map_streaming'],{'load_concurrency':4,'cache_capacity':49})
         for row in public['map_catalog']:
             expected={'id','name','resource_key','width','height','scene_kind','safe_zones','no_teleport','no_pets'}
             if row.get('compact_town'):
                 expected.update({'compact_town','player_spawn','blocked','npcs'})
+            if row['id'] in ('1','6','7'):
+                expected.update({'monster_definition_ids','initial_monster_count'})
+            if row['id'] in ('6','7'):
+                expected.update({'floor_map_id','player_spawn','blocked'})
             self.assertEqual(set(row),expected)
             for key in ['source_ref','source','collision_bits','source_sha256','manifest_sha256','initial_binding_pool_verified']:
                 self.assertNotIn(key,row)

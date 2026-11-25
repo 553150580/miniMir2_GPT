@@ -16,6 +16,7 @@ sys.path.insert(0,str(ROOT/'tools/config'))
 import export_configs as config
 sys.path.insert(0,str(ROOT/'tools/resources'))
 import prepare_pet_runtime as pet_runtime
+import prepare_ordinary_hunt as ordinary_hunt
 import prepare_compact_towns as compact_towns
 import prepare_npc_shops as npc_shops
 import personal_map_contract as personal_map
@@ -30,7 +31,7 @@ ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
            'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
-           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
+           'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
 def read(path):return json.loads(path.read_text(encoding='utf-8'))
@@ -876,8 +877,9 @@ def fixture_from_rows(tables):
         foundation=equipment_foundation(eq,profile) if eq else {}
         repair_fields=npc_shops.equipment_fields(eq,vendor_prices,profile) if eq else {}
         trade_goods=r['item_type'] in ('meat','misc')
-        if trade_goods and (type(r['max_stack']) is not int or not 1<=r['max_stack']<=2**32-1):
-            raise ValueError('肉和杂货须显式配置堆叠上限')
+        has_stack_fields=trade_goods or (profile['rule_version']>=30 and r['item_type']=='potion')
+        if has_stack_fields and (type(r['max_stack']) is not int or not 1<=r['max_stack']<=2**32-1):
+            raise ValueError('药水、肉和杂货须显式配置堆叠上限')
         if eq and profile['rule_version']>=19 and 'required_level' not in eq:
             raise ValueError('已选装备缺少唯一装备表required_level')
         if eq and profile['rule_version']>=19:
@@ -893,7 +895,7 @@ def fixture_from_rows(tables):
                       'recycle_gold':0 if trade_goods else profile['recycle_test_gold_by_item'][str(r['id'])],
                       'stackable':r['max_stack']>1 if trade_goods else eq is None,
                       'allowed_jobs':eq['class_restriction'] if eq else [0,1,2],
-                      **({'kind':r['item_type'],'max_stack':r['max_stack']} if trade_goods else {}),
+                      **({'kind':r['item_type'],'max_stack':r['max_stack']} if has_stack_fields else {}),
                       **({'required_level':eq['required_level'],'drop_quality':eq['quality']} if eq and profile['rule_version']>=19 else {}),
                       **foundation,**repair_fields})
     for skill in skills:
@@ -913,6 +915,12 @@ def fixture_from_rows(tables):
     if not supply['enabled'] and any(r['item_id'] in supply['item_ids'] for r in economy['skill_shop']):raise ValueError('护符单位/价格未授权，不得开启护符商品')
     categories={r['category_key']:r['prob_ppm'] for r in tables['game_drop_categories']}
     drop_gold=one('game_drop_entries',5)
+    guarantee=20
+    if profile['rule_version']>=30:
+        rule=next(row for row in tables['game_drop_guarantees'] if row['rule_key']=='ordinary_equipment_force_kill')
+        guarantee=rule['rule_value']
+        if rule['record_status']!='confirmed' or type(guarantee) is not int or guarantee<=0:
+            raise ValueError('普通装备保底从已确认规则读取')
     potions=potion_rules(profile,items)
     result={'schema_version':1,'rule_version':profile['rule_version'],'development_only':True,'runtime_ready':False,'source_status':'candidate',
         'damage_formula':profile['damage_formula'],'allow_free_dev_revive':profile['allow_free_dev_revive'],
@@ -923,7 +931,7 @@ def fixture_from_rows(tables):
                     'gold_min':drop_gold['quantity_min'],'gold_max':drop_gold['quantity_max'],'respawn_ms':10000}],
         'items':items,'drops':{'equipment_item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==1],
                              'item_ids':[r['item_id'] for r in tables['game_drop_entries'] if r['pool_id']==2],
-                             **{key+'_ppm':categories[key] for key in ['empty','gold','item','equipment']},'equipment_guarantee':20},
+                             **{key+'_ppm':categories[key] for key in ['empty','gold','item','equipment']},'equipment_guarantee':guarantee},
         'progression':progression_rules(tables,profile),
         'initial_inventory':profile['initial_inventory'],'initial_bound_gold':profile['initial_bound_gold'],'inventory_capacity':profile['inventory_capacity'],
         '_source_evidence':{'status':'candidate','official_180_restoration_verified':False,
@@ -955,8 +963,16 @@ def fixture_from_rows(tables):
         catalog,catalog_evidence=source_map_catalog(tables,profile)
         compact_maps,compact_evidence=compact_towns.compile_compact_towns(profile,catalog,result['map'])
         catalog.extend(compact_maps)
+        ordinary_maps=[]
+        if profile['rule_version']>=30:
+            ordinary_maps, respawns=ordinary_hunt.compile_maps(tables,profile,validate_map_inputs,map_policy)
+            result['map']=ordinary_maps[0]
+            result['monsters'], appearances=ordinary_hunt.compile_monsters(tables,fighter,respawns,drop_gold)
+            result['ordinary_drop_pools']=ordinary_hunt.compile_pools(tables,profile,result['monsters'],items)
+            result['_source_evidence']['ordinary_monster_appearances']=appearances
+            catalog.extend(ordinary_maps[1:])
         if profile['rule_version']>=24:
-            result['map_regions']=compact_towns.compile_map_regions(profile,[result['map'],*compact_maps])
+            result['map_regions']=compact_towns.compile_map_regions(profile,[result['map'],*compact_maps,*ordinary_maps[1:]])
             result['_source_evidence']['compact_towns']=compact_evidence
         if profile['rule_version']>=25:
             result['npc_shops']=npc_shops.compile_shops(profile,items,compact_maps,economy['skill_shop'],vendor_prices)
@@ -1084,8 +1100,16 @@ def public_gameplay(fixture):
                      'profile':row['resource_key'],'job_id':row['owner_job_id'],'can_push':row['base']['can_push'],
                      **({'appearance_optional':True} if row['resource_key']=='pet_shinsu' else {})}
                     for row in fixture['pet_runtime']['definitions'] if row['base']['definition_id']!=fixture['pet']['definition_id'])
-        pets.extend({'definition_id':row['definition_id'],'name':'稻草人（宠物）','profile':'monster_scarecrow','job_id':1,'can_push':row['can_push']}
-                    for row in fixture['monsters'] if row.get('can_tame'))
+        appearances=fixture['_source_evidence'].get('ordinary_monster_appearances',[])
+        for row in fixture['monsters']:
+            if row.get('can_tame'):
+                profile=next((entry for entry in appearances if entry['definition_id']==row['definition_id']),{'name':'稻草人','profile':'monster_scarecrow'})
+                pets.append({'definition_id':row['definition_id'],'name':profile['name']+'（宠物）','profile':profile['profile'],
+                             'job_id':1,'can_push':row['can_push']})
+    monsters=fixture['_source_evidence'].get('ordinary_monster_appearances')
+    if monsters is None:
+        monsters=[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']]
+    monster_definitions={row['id']:row['definition_id'] for row in fixture['monsters']}
     return {'schema_version':1,'rule_version':fixture['rule_version'],'development_only':True,'runtime_ready':False,'status':'candidate',
             'skills':skills,'statuses':statuses,'casting_supply':deepcopy(fixture['casting_supply']),
             **({'equipment_recycling':deepcopy(fixture['equipment_recycling'])} if fixture['rule_version']>=19 else {}),
@@ -1099,7 +1123,7 @@ def public_gameplay(fixture):
             'jobs':[{'job_id':p['job_id'],'name':['战士','法师','道士'][p['job_id']],'profile':'player_female' if p['job_id']==1 else 'player_male','can_push':p['can_push']} for p in fixture['players']],
             'experience':[{'level':i+1,'next_level_exp':n} for i,n in enumerate(fixture['progression']['exp_per_level'])],
             **({'progression':{key:deepcopy(value) for key,value in fixture['progression'].items() if key!='exp_per_level'}} if fixture['rule_version']>=20 else {}),
-            'monster_profiles':[{'definition_id':m['definition_id'],'name':'稻草人','profile':'monster_scarecrow','can_push':m['can_push']} for m in fixture['monsters']]+boss_monsters,
+            'monster_profiles':monsters+boss_monsters,
             **boss_fields,
             'pet_profiles':pets,
             **({'map_catalog':[{'id':str(row['id']),'name':row['display_name'],'resource_key':row['resource_key'],
@@ -1107,7 +1131,7 @@ def public_gameplay(fixture):
                    'safe_zones':[{'id':str(zone['id']),'center':deepcopy(zone['center']),'radius':zone['radius']} for zone in row.get('safe_zones',[])],
                    **({'no_teleport':row['no_teleport']} if fixture['rule_version']>=15 else {}),
                    **({'no_pets':row['no_pets']} if fixture['rule_version']>=17 else {}),
-                   **compact_towns.public_fields(row)}
+                   **compact_towns.public_fields(row),**ordinary_hunt.public_fields(row,fixture['map']['id'],monster_definitions)}
                  for row in [fixture['map']]+fixture['maps']],
                 'source_map_streaming':deepcopy(fixture['source_map_streaming'])} if fixture['rule_version']>=12 else {}),
             **({'map_regions':[{**row,'map_ids':list(map(str,row['map_ids']))} for row in fixture['map_regions']]} if fixture['rule_version']>=24 else {}),

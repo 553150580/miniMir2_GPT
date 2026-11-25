@@ -53,12 +53,21 @@ async function edit(page, name, value) {
 }
 
 async function scene(page, name) {
-    await page.waitForFunction(name => {
-        const current = window.cc?.director?.getScene();
-        return current?.name === name && current.getComponentsInChildren('AppRoot').length
-            && cc.find('Canvas/Safe')?.activeInHierarchy && !cc.find('Canvas/Loading')?.activeInHierarchy;
-    // 角色入场会先加载完整的本机原帧。此等待只覆盖触屏冷启动，网络 ACK 仍按服务端期限分别核对。
-    }, name, { timeout: name === 'Game' ? 75000 : 30000 });
+    try {
+        await page.waitForFunction(name => {
+            const current = window.cc?.director?.getScene();
+            return current?.name === name && current.getComponentsInChildren('AppRoot').length
+                && cc.find('Canvas/Safe')?.activeInHierarchy && !cc.find('Canvas/Loading')?.activeInHierarchy;
+        // 此等待只覆盖触屏冷启动，网络 ACK 仍按服务端期限分别核对。
+        }, name, { timeout: name === 'Game' ? 75000 : 30000 });
+    } catch (error) {
+        const state = await page.evaluate(() => ({
+            scene: window.cc?.director?.getScene()?.name,
+            visibleText: cc.director.getScene()?.getComponentsInChildren(cc.Label)
+                .filter(label => label.node.activeInHierarchy && label.string).map(label => label.string).slice(0, 20),
+        })).catch(() => null);
+        throw new Error(`等待场景 ${name}：${error.message} ${JSON.stringify(state)}`, { cause: error });
+    }
 }
 
 // 协议头只有消息、序号及连接绑定；验收仅解码地图入场与 ACK 的必要身份字段。
@@ -219,6 +228,63 @@ async function selectWorldTab(client) {
     }
 }
 
+// 使用真实账号初始发放的治愈术书，经技能学习交易进入共享场，不注入客户端表现数据。
+async function learnObserverSpell(caster) {
+    await caster.page.waitForFunction(session => session.inventory?.items.some(row => row.itemId === 21), caster.session,
+        { timeout: 10000 });
+    await caster.page.evaluate(async session => {
+        const { operation } = await System.import('chunks:///_virtual/GameSession.ts');
+        const book = session.inventory.items.find(row => row.itemId === 21);
+        const result = await session.connection.request(40010, { itemInstanceId: book.instanceId, skillId: 2, operation: operation() });
+        if (result.errorCode) throw new Error('治愈术真实学习失败：' + result.errorCode);
+    }, caster.session);
+}
+
+// 持有旁观端真实资源，让两端确认入场时只差一次触屏操作。正常入场仍负责获取和挂载资源。
+async function warmObserverAssets(observer) {
+    await observer.page.bringToFront();
+    return observer.page.evaluateHandle(async ({ session, map }) => {
+        const { WorldAssets } = await System.import('chunks:///_virtual/WorldAssets.ts');
+        return WorldAssets.prepare(session.role.job, () => {}, map);
+    }, { session: observer.session, map: String(expected.map) });
+}
+
+// 由道士连接主动施法，在战士所属视图核对同一远端施法事件及实际 SpriteFrame。
+async function observeOtherSpell(observer, caster, casterHandle) {
+    await observer.page.bringToFront();
+    const samples = await observer.page.evaluateHandle(({ session, casterHandle }) => {
+        const events = [];
+        const observe = event => {
+            if (event.skillId === 2 && event.casterHandle === casterHandle)
+                events.push({ cast: event.castId.toString(), scene: event.sceneEpoch.toString() });
+        };
+        session.casts.add(observe);
+        return { events, stop: () => session.casts.delete(observe) };
+    }, { session: observer.session, casterHandle });
+    try {
+        await caster.page.evaluate(session => {
+            const player = session.baseline.entities.find(entity => entity.entityHandle === session.entry.playerHandle);
+            const app = cc.director.getScene().getComponentsInChildren('AppRoot')[0];
+            session.connection.send(30003, { sceneEpoch: session.entry.sceneEpoch, inputSequence: ++app.inputSequence, skillId: 2,
+                targetHandle: player.entityHandle, targetGrid: player.position, direction: player.direction });
+        }, caster.session);
+        const visible = await observer.page.waitForFunction(({ samples, session }) => {
+            const world = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.world;
+            for (const event of samples.events) {
+                if (event.scene !== session.entry.sceneEpoch.toString()) continue;
+                const effect = world?.effects?.nodes.get(event.cast + ':cast');
+                if (effect?.sprite?.spriteFrame && /^Magic:20[0-9]$/.test(effect.frame))
+                    return { cast: event.cast, frame: effect.frame };
+            }
+            return null;
+        }, { samples, session: observer.session }, { timeout: 8000 });
+        try { return await visible.jsonValue(); } finally { await visible.dispose(); }
+    } finally {
+        await observer.page.evaluate(samples => samples.stop(), samples);
+        await samples.dispose();
+    }
+}
+
 async function pet(client, corpse, handle = 0, timeout = 15000) {
     const { page, session } = client;
     const result = await page.waitForFunction(({ session, corpse, handle, definition }) => {
@@ -286,7 +352,7 @@ async function main() {
     const report = { passed: false, errors: [], ruleVersion: expected.version, opensAt: expected.opensAt, expiresAt: expected.expiresAt };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-    let warrior, tao;
+    let warrior, tao, warmObserver;
     try {
         report.step = '走正常触屏注册、选服和建角';
         // 保持两个独立客户端存活。开闭验收端在等待期间置于前台。
@@ -309,6 +375,11 @@ async function main() {
         assert(warrior.frames.queries > initialQueries && warrior.frames.entries === 0);
         report.autoOpened = true;
 
+        if (expected.version >= 30) {
+            report.step = '预热战士端世界首领资源并由道士学习治疗术';
+            await learnObserverSpell(tao);
+            warmObserver = await warmObserverAssets(warrior);
+        }
         report.step = '先由道士带着宠物入场，再让战士加入同一场次';
         await touch(tao.page, safe + 'BottomHUD/QuickNav/Boss');
         await selectWorldTab(tao);
@@ -319,6 +390,11 @@ async function main() {
         const warriorPressedAt = await touch(warrior.page, safe + bossRoot + '/Action');
         report.step = '等待战士确认共享首领场景';
         const warriorRoom = await map(warrior, 4);
+        if (warmObserver) {
+            await warrior.page.evaluate(assets => assets.dispose(), warmObserver);
+            await warmObserver.dispose();
+            warmObserver = undefined;
+        }
         report.tapToEntryMs = {
             warrior: warrior.frames.transitions.findLast(row => row.sceneKind === 4).receivedAt - warriorPressedAt,
             tao: tao.frames.transitions.findLast(row => row.sceneKind === 4).receivedAt - taoPressedAt,
@@ -327,6 +403,11 @@ async function main() {
         assert.equal(warriorRoom.map, String(expected.map));
         assert.equal(warriorRoom.map, taoRoom.map);
         assert(warriorRoom.occurrence.length > 0 && warriorRoom.occurrence === taoRoom.occurrence);
+        if (expected.version >= 30) {
+            report.step = '战士观察真实道士治疗特效';
+            report.otherPlayerSpell = await observeOtherSpell(warrior, tao, taoRoom.roleHandle);
+        }
+        report.step = '核对战士可见的道士活宠';
         const alive = await pet(warrior, false);
         const own = await pet(tao, false, alive.handle);
         assert.equal(alive.life, own.life);
@@ -401,6 +482,7 @@ async function main() {
         report.observations = { warrior: await diagnose(warrior), tao: await diagnose(tao) };
         throw error;
     } finally {
+        if (warmObserver) await warrior.page.evaluate(assets => assets.dispose(), warmObserver).catch(() => {});
         await Promise.allSettled([warrior, tao].filter(Boolean).map(client =>
             client.page.evaluate(data => data.stop(), client.progress)));
         await browser.close();

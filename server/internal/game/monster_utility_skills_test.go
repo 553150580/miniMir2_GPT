@@ -65,11 +65,11 @@ func TestElectricShockCapturesSingleLivingMonster(t *testing.T) {
 	w.advanceEvents(r, cast.Due)
 	pet, replacement := r.Pet, world.Monsters[0]
 	if pet == nil || pet.HP != 7 || pet.Def != monster.Def || pet.Handle == monster.Handle || pet.Pos != monster.Pos || r.PetWorld != world.Ref ||
-		!replacement.CapturedUntilRespawn || replacement.HP != 0 || w.resolveInWorld(r, world, original) != nil || len(r.KillFacts) != 0 || r.AutoTarget.Handle != 0 {
+		!replacement.DeferredUntilRespawn || replacement.HP != 0 || w.resolveInWorld(r, world, original) != nil || len(r.KillFacts) != 0 || r.AutoTarget.Handle != 0 {
 		t.Fatal("原出生身份没有与宠物彻底分离，或错误产生了击杀或继续选中")
 	}
 	w.worldDeadlines(r, world, replacement.RespawnAt)
-	if replacement.CapturedUntilRespawn || replacement.HP != replacement.MaxHP || replacement.Life != original.Life+1 {
+	if replacement.DeferredUntilRespawn || replacement.HP != replacement.MaxHP || replacement.Life != original.Life+1 {
 		t.Fatal("捕获后普通补怪机制未恢复原刷怪入口")
 	}
 	if w.applyElectricShock(r, world, replacement, 0, now.Add(time.Minute)) || r.Pet != pet || replacement.HP <= 0 {

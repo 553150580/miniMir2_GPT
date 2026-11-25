@@ -29,10 +29,11 @@ type townMembership struct {
 
 // sharedTownResident 存放跨分片所需的值，不引用可变角色房间或战斗实体。
 type sharedTownResident struct {
-	handle   uint32          // 其他玩家观察此角色时使用的句柄。
-	position devconfig.Point // 当前玩家占格；已死亡的玩家保留表现但不占格。
-	blocking bool            // 活玩家占格或正在确认入场的出生格。
-	view     *pb.EntityState // 当前确认附着的不可变表现，nil 表示等待入场确认。
+	handle   uint32             // 其他玩家观察此角色时使用的句柄。
+	position devconfig.Point    // 当前玩家占格；已死亡的玩家保留表现但不占格。
+	blocking bool               // 活玩家占格或正在确认入场的出生格。
+	view     *pb.EntityState    // 当前确认附着的不可变表现，nil 表示等待入场确认。
+	combat   townCombatObserver // 由同一个已确认场景发布的表现投递身份。
 }
 
 // sharedTown 保存一条城镇线的玩家席位和权威占格。
@@ -40,6 +41,8 @@ type sharedTown struct {
 	capacity  int                            // 以可走格数限制席位，死亡角色恢复时仍保有空格。
 	residents map[uint64]*sharedTownResident // 按角色执行代次索引入镇席位。
 	occupied  map[devconfig.Point]uint64     // 当前位置到该占格执行代次的唯一映射。
+	castID    uint64                         // 同城所有施法的有序展示编号。
+	eventID   uint64                         // 同城自己和旁观者共用的有序命中编号。
 }
 
 // sharedTownDirectory 以短临界区交换占格和观察值，角色战斗仍由各自分片执行。
@@ -165,6 +168,7 @@ func (w *worker) reserveSharedTown(r *room, m *devconfig.MapTemplate, preferred 
 	}
 	if hide {
 		resident.view = nil
+		resident.combat = townCombatObserver{}
 	}
 	resident.position, resident.blocking = point, r.Player.HP > 0
 	if resident.blocking {
@@ -318,7 +322,9 @@ func (w *worker) appendSharedTownViews(r *room, out *pb.SceneBaselineChunk) {
 		}
 		resident.view = &pb.EntityState{EntityHandle: resident.handle, EntityKind: player.EntityKind, DefinitionId: player.DefinitionId,
 			DisplayName: r.Role.Name, Position: pointPB(r.Player.Pos), Direction: player.Direction, Hp: player.Hp, HpMax: player.HpMax, Action: player.Action,
-			MoveIntervalMs: player.MoveIntervalMs, Life: player.Life, MovementRevision: player.MovementRevision, MovementKind: player.MovementKind}
+			MoveIntervalMs: player.MoveIntervalMs, Life: player.Life, MovementRevision: player.MovementRevision, MovementKind: player.MovementKind,
+			CastSequence: player.CastSequence, CastSkillId: player.CastSkillId, Statuses: player.Statuses}
+		resident.combat = townCombatObserver{conn: r.Conn, scene: r.Scene, binding: uint64(r.Auth.SessionEpoch)}
 	}
 	start := len(out.Entities)
 	for owner, resident := range town.residents {

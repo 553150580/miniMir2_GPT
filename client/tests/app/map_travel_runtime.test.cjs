@@ -230,7 +230,7 @@ test('真实AppRoot导航status5仅当前目标产生一次系统消息，不发
 });
 test('真实AppRoot Town刷新不发送AutoBattle，按钮禁用；回个人按真实baseline恢复自动状态和怪数',async()=>{
     const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1','2',2));t.baseline(e);s.preparedWorld=t.asset('2',true);await t.a.attachCurrentEntry();t.a.quickSkill=()=>null;t.a.skillSnapshot=()=>({});t.a.skillAssetsSnapshot=()=>({});t.a.combatStatus.refresh=()=>{};
-    const requests=[];s.connection.request=async(code,value)=>requests.push({code,value});s.hosting={autoBattleEnabled:true};t.realRefresh();assert.equal(t.a.auto,false);assert.equal(t.a.count,0);assert.equal(t.getNode('MapViewport/Actions/Auto').getComponent().interactable,false);assert.equal(t.getNode('MapViewport/Actions/Count').getComponent().interactable,false);await assert.rejects(t.a.autoState(),/城镇不刷怪/);assert.equal(requests.length,0);
+    const requests=[];s.connection.request=async(code,value)=>requests.push({code,value});s.hosting={autoBattleEnabled:true};t.realRefresh();assert.equal(t.a.auto,false);assert.equal(t.a.count,1);assert.equal(t.getNode('MapViewport/Actions/Auto').getComponent().interactable,false);assert.equal(t.getNode('MapViewport/Actions/Count').getComponent().interactable,false);await assert.rejects(t.a.autoState(),/城镇不刷怪/);assert.equal(requests.length,0);
     // 当前入口身份改成个人后，沿服务端快照恢复，刷新本身不造初始化请求。
     e.sceneKind=1;s.baseline.entities.push({entityHandle:8,entityKind:3});s.hosting={autoBattleEnabled:true};t.realRefresh();assert.equal(t.a.auto,true);assert.equal(t.a.count,1);assert.equal(t.getNode('MapViewport/Actions/Auto').getComponent().interactable,true);assert.equal(requests.length,0);t.a.attachment.dispose();
 });

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 29,
+  "rule_version": 30,
   "development_only": true,
   "runtime_ready": false,
   "status": "candidate",
@@ -1831,12 +1831,54 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 223,
+          "item_id": 223,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 900,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 220,
+          "item_id": 220,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 225,
+          "item_id": 225,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 218,
           "price_gold": 25
+        },
+        {
+          "item_id": 223,
+          "price_gold": 450
+        },
+        {
+          "item_id": 220,
+          "price_gold": 1500
+        },
+        {
+          "item_id": 225,
+          "price_gold": 500
         }
       ],
       "can_repair": true
@@ -1856,12 +1898,26 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 195,
+          "item_id": 195,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 193,
           "price_gold": 200
+        },
+        {
+          "item_id": 195,
+          "price_gold": 1500
         }
       ],
       "can_repair": true
@@ -1881,12 +1937,26 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 261,
+          "item_id": 261,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 259,
           "price_gold": 250
+        },
+        {
+          "item_id": 261,
+          "price_gold": 1500
         }
       ],
       "can_repair": true
@@ -2000,6 +2070,36 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 95,
+          "item_id": 95,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 96,
+          "item_id": 96,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 97,
+          "item_id": 97,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 300,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
@@ -2018,6 +2118,18 @@
         {
           "item_id": 187,
           "price_gold": 2
+        },
+        {
+          "item_id": 95,
+          "price_gold": 25
+        },
+        {
+          "item_id": 96,
+          "price_gold": 25
+        },
+        {
+          "item_id": 97,
+          "price_gold": 150
         }
       ],
       "can_repair": false
@@ -5589,6 +5701,194 @@
       "use_enabled": false
     },
     {
+      "item_id": 223,
+      "name": "青铜剑",
+      "kind": "equipment",
+      "equip_slot": 0,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 5,
+      "recycle_gold": 900,
+      "quality": 0,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 3,
+        "physical_attack_max": 7,
+        "physical_defence_min": 0,
+        "physical_defence_max": 0,
+        "magic_defence_min": 0,
+        "magic_defence_max": 0,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      },
+      "original_durability_u": 6000,
+      "repair_base_price": 900
+    },
+    {
+      "item_id": 220,
+      "name": "乌木剑",
+      "kind": "equipment",
+      "equip_slot": 0,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 1,
+      "recycle_gold": 3000,
+      "quality": 1,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 4,
+        "physical_attack_max": 8,
+        "physical_defence_min": 0,
+        "physical_defence_max": 0,
+        "magic_defence_min": 0,
+        "magic_defence_max": 0,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 1,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      },
+      "original_durability_u": 7000,
+      "repair_base_price": 3000
+    },
+    {
+      "item_id": 225,
+      "name": "短剑",
+      "kind": "equipment",
+      "equip_slot": 0,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 10,
+      "recycle_gold": 1000,
+      "quality": 0,
+      "equipment_stage": 0,
+      "base_attributes": {
+        "physical_attack_min": 3,
+        "physical_attack_max": 11,
+        "physical_defence_min": 0,
+        "physical_defence_max": 0,
+        "magic_defence_min": 0,
+        "magic_defence_max": 0,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      },
+      "original_durability_u": 8000,
+      "repair_base_price": 1000
+    },
+    {
+      "item_id": 195,
+      "name": "轻型盔甲",
+      "kind": "equipment",
+      "equip_slot": 1,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 11,
+      "recycle_gold": 3000,
+      "quality": 0,
+      "equipment_stage": 1,
+      "base_attributes": {
+        "physical_attack_min": 0,
+        "physical_attack_max": 0,
+        "physical_defence_min": 3,
+        "physical_defence_max": 3,
+        "magic_defence_min": 1,
+        "magic_defence_max": 2,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 0,
+        "spirit_attack_max": 0
+      },
+      "original_durability_u": 12000,
+      "repair_base_price": 3000
+    },
+    {
+      "item_id": 261,
+      "name": "白色虎齿项链",
+      "kind": "equipment",
+      "equip_slot": 3,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false,
+      "required_level": 11,
+      "recycle_gold": 3000,
+      "quality": 0,
+      "equipment_stage": 1,
+      "base_attributes": {
+        "physical_attack_min": 0,
+        "physical_attack_max": 0,
+        "physical_defence_min": 0,
+        "physical_defence_max": 2,
+        "magic_defence_min": 0,
+        "magic_defence_max": 0,
+        "attack_speed": 0,
+        "magic_attack_min": 0,
+        "magic_attack_max": 0,
+        "spirit_attack_min": 1,
+        "spirit_attack_max": 1
+      },
+      "original_durability_u": 7000,
+      "repair_base_price": 3000
+    },
+    {
+      "item_id": 95,
+      "name": "食人树叶",
+      "kind": "misc",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 96,
+      "name": "毒蜘蛛牙齿",
+      "kind": "misc",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
+      "item_id": 97,
+      "name": "食人树果实",
+      "kind": "misc",
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "use_enabled": false
+    },
+    {
       "item_id": 7,
       "name": "《火球术》",
       "kind": "book",
@@ -6209,6 +6509,24 @@
       "can_push": true
     },
     {
+      "definition_id": 3,
+      "name": "食人花",
+      "profile": "monster_m1_flower",
+      "can_push": true
+    },
+    {
+      "definition_id": 4,
+      "name": "多钩猫",
+      "profile": "monster_m1_cat",
+      "can_push": true
+    },
+    {
+      "definition_id": 5,
+      "name": "毒蜘蛛",
+      "profile": "monster_m1_spider",
+      "can_push": true
+    },
+    {
       "definition_id": 80001,
       "name": "林地守卫",
       "profile": "monster_scarecrow",
@@ -6299,7 +6617,11 @@
       "scene_kind": 1,
       "safe_zones": [],
       "no_teleport": false,
-      "no_pets": false
+      "no_pets": false,
+      "monster_definition_ids": [
+        1
+      ],
+      "initial_monster_count": 1
     },
     {
       "id": "2",
@@ -6733,6 +7055,50 @@
           "profile": "player_male"
         }
       ]
+    },
+    {
+      "id": "6",
+      "name": "谷地南坡",
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "scene_kind": 1,
+      "safe_zones": [],
+      "no_teleport": false,
+      "no_pets": false,
+      "monster_definition_ids": [
+        3,
+        4
+      ],
+      "initial_monster_count": 1,
+      "floor_map_id": "1",
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "blocked": []
+    },
+    {
+      "id": "7",
+      "name": "蛛穴外围",
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "scene_kind": 1,
+      "safe_zones": [],
+      "no_teleport": false,
+      "no_pets": false,
+      "monster_definition_ids": [
+        5,
+        3
+      ],
+      "initial_monster_count": 1,
+      "floor_map_id": "1",
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "blocked": []
     }
   ],
   "source_map_streaming": {
@@ -6748,6 +7114,20 @@
         "3",
         "4",
         "5"
+      ]
+    },
+    {
+      "id": "south",
+      "name": "谷地",
+      "map_ids": [
+        "6"
+      ]
+    },
+    {
+      "id": "spider",
+      "name": "荒地",
+      "map_ids": [
+        "7"
       ]
     }
   ],

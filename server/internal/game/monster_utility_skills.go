@@ -83,7 +83,7 @@ func (w *worker) captureMonster(r *room, world *worldState, target *entity, now 
 			r.AutoTarget = actorRef{}
 		}
 		world.Monsters[index] = &entity{Handle: target.Handle, Kind: 3, Def: target.Def, Pos: target.Pos, MaxHP: target.MaxHP, MaxMP: target.MaxMP,
-			Life: target.Life, Monster: target.Monster, CapturedUntilRespawn: true, RespawnAt: now.Add(time.Duration(target.Monster.RespawnMS) * time.Millisecond)}
+			Life: target.Life, Monster: target.Monster, DeferredUntilRespawn: true, RespawnAt: now.Add(normalMonsterRespawnDelay(target.Monster))}
 		return true
 	}
 	return false

@@ -724,6 +724,8 @@ export class AppRoot extends Component {
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
             },
             mount: assets => {
+                if (assets.sceneKind === 1 && this.attached?.map.toString() !== identity.map.toString())
+                    this.count = assets.map.initial_monster_count ?? 1;
                 session.progressionCurve = typeof assets.gameplay.progression?.curve_version === 'string' ? assets.gameplay.progression.curve_version : null;
                 this.releaseCombatStatusInvalidation?.(); this.releaseCombatStatusInvalidation = undefined;
                 this.combatStatus?.dispose(); this.combatStatus = undefined;
@@ -1106,7 +1108,10 @@ export class AppRoot extends Component {
         if (session.inventory) this.tasksCodex?.observe(session.inventory.revision);
         if (town || challenge) this.auto = false;
         else if (session.hosting) this.auto = session.hosting.autoBattleEnabled;
-        if (baseline) this.count = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
+        if (baseline && !town && !challenge) {
+            const observed = baseline.entities.filter((entity: any) => entity.entityKind === 3).length;
+            if (observed) this.count = observed;
+        }
         if (baseline && this.lastBaseline !== baseline.stateSequence.toString()) {
             this.lastBaseline = baseline.stateSequence.toString(); this.world.apply(baseline);
             this.nav.observeAuthority(baseline.navigationState);

@@ -58,6 +58,10 @@ type MapTemplate struct {
 	PetSpawn Point `json:"pet_spawn"`
 	// MonsterSpawns 记录怪物生成或出生点集合，使用点位列表表示。
 	MonsterSpawns []Point `json:"monster_spawns,omitempty"`
+	// MonsterSpawnIDs 按出生槽顺序引用本图的普通怪模板。
+	MonsterSpawnIDs []uint32 `json:"monster_spawn_ids,omitempty"`
+	// InitialMonsterCount 是冷入本图时启用的普通怪槽位数。
+	InitialMonsterCount int `json:"initial_monster_count,omitempty"`
 	// SafeZones 记录安全区域集合，使用安全区域列表表示。
 	SafeZones []SafeZone `json:"safe_zones,omitempty"`
 	// LegacySafeZoneIDs 记录兼容旧数据安全区域i“ds”，使用数值列表表示。
@@ -90,7 +94,7 @@ type SafeZone struct {
 	Radius int `json:"radius"`
 }
 
-// 旧个人图没有scene_kind；目录中的额外地图仍必须显式声明城镇类型。
+// 旧主个人图没有 scene_kind，额外地图须显式声明场景类型。
 // m 是调用该方法的地图模板实例。
 func (m *MapTemplate) SceneKindValue() uint32 {
 	if m.SceneKind == 0 {
@@ -231,15 +235,20 @@ func (f *Fixture) MapByID(id uint64) (*MapTemplate, bool) {
 // 规则26接入13格挂机图，历史16格和17格模板仍可读取。
 // f 是调用该方法的开发测试配置实例。
 func (f *Fixture) GridCellBudget() int {
-	if f.Map.SceneKindValue() != SceneKindPersonal || f.Map.Width != f.Map.Height {
+	return f.Map.personalGridCellBudget(f.RuleVersion)
+}
+
+// personalGridCellBudget 检查指定普通地图能否使用受限格子战斗工作区。
+func (m *MapTemplate) personalGridCellBudget(ruleVersion uint64) int {
+	if m.SceneKindValue() != SceneKindPersonal || m.Width != m.Height {
 		return 0
 	}
-	switch f.Map.Width {
+	switch m.Width {
 	case 16, maxPersonalGridSide:
-		return f.Map.CellBudget()
+		return m.CellBudget()
 	case 13:
-		if f.RuleVersion >= 26 {
-			return f.Map.CellBudget()
+		if ruleVersion >= 26 {
+			return m.CellBudget()
 		}
 	}
 	return 0
@@ -248,19 +257,29 @@ func (f *Fixture) GridCellBudget() int {
 // ValidateMap 校验地图。
 // f 是调用该方法的开发测试配置实例。
 func (f *Fixture) ValidateMap() error {
-	// budget 保存由网格地图格预算取得的预算。
-	budget := f.GridCellBudget()
-	if budget == 0 || f.Map.ID == 0 || f.Map.ID > math.MaxInt64 || f.Map.CompactTown || len(f.Map.LegacySafeZoneIDs) != 0 || len(f.Map.NPCs) != 0 || len(f.Map.CollisionBits) != 0 || len(f.Map.MonsterSpawns) < 8 {
+	if err := f.validatePersonalMap(&f.Map); err != nil {
+		return err
+	}
+	return f.validateMapDirectory()
+}
+
+// validatePersonalMap 校验普通地图的出生槽、静态连通性及模板引用。
+func (f *Fixture) validatePersonalMap(m *MapTemplate) error {
+	budget := m.personalGridCellBudget(f.RuleVersion)
+	if budget == 0 || m.ID == 0 || m.ID > math.MaxInt64 || m.CompactTown || len(m.LegacySafeZoneIDs) != 0 || len(m.NPCs) != 0 || len(m.CollisionBits) != 0 || len(m.MonsterSpawns) < 8 {
 		return errors.New("开发地图须为16×16、17×17或规则26起的13×13，并提供至少8个怪物槽位")
+	}
+	if err := f.validateOrdinaryMonsterRoster(m); err != nil {
+		return err
 	}
 	// inBounds 封装输入“bounds”对应的后续处理，p 记录点位。
 	inBounds := func(p Point) bool {
-		return p.X >= 0 && p.Y >= 0 && p.X < f.Map.Width && p.Y < f.Map.Height
+		return p.X >= 0 && p.Y >= 0 && p.X < m.Width && p.Y < m.Height
 	}
 	// blocked 创建用于维护阻挡的容器或通道。
-	blocked := make(map[Point]bool, len(f.Map.Blocked))
+	blocked := make(map[Point]bool, len(m.Blocked))
 	// p 接收遍历阻挡时当前的元素。
-	for _, p := range f.Map.Blocked {
+	for _, p := range m.Blocked {
 		if !inBounds(p) || blocked[p] {
 			return fmt.Errorf("地图阻挡格越界或重复：(%d,%d)", p.X, p.Y)
 		}
@@ -269,7 +288,7 @@ func (f *Fixture) ValidateMap() error {
 	// walkable 封装可走格对应的后续处理，p 记录点位。
 	walkable := func(p Point) bool { return inBounds(p) && !blocked[p] }
 	// spawns 保留加入新条目后的生成或出生点集合。
-	spawns := append([]Point{f.Map.PlayerSpawn, f.Map.PetSpawn}, f.Map.MonsterSpawns...)
+	spawns := append([]Point{m.PlayerSpawn, m.PetSpawn}, m.MonsterSpawns...)
 	// occupied 创建用于维护已占用的容器或通道。
 	occupied := make(map[Point]bool, len(spawns))
 	// p 接收遍历生成或出生点集合时当前的元素。
@@ -281,9 +300,9 @@ func (f *Fixture) ValidateMap() error {
 	}
 	// 只检查配置出生点的静态连通性；运行时由各自房间处理动态占位。
 	// queue 初始化用作队列的点位列表。
-	queue := []Point{f.Map.PlayerSpawn}
+	queue := []Point{m.PlayerSpawn}
 	// seen 建立带初始值的按点位索引的布尔状态映射，供本段继续处理。
-	seen := map[Point]bool{f.Map.PlayerSpawn: true}
+	seen := map[Point]bool{m.PlayerSpawn: true}
 	// head 规定头部的初始取值。
 	for head := 0; head < len(queue) && head < budget; head++ {
 		// cur 保存从队列取出的“cur”。
@@ -314,11 +333,7 @@ func (f *Fixture) ValidateMap() error {
 			return fmt.Errorf("地图出生格与玩家出生点静态不连通：(%d,%d)", p.X, p.Y)
 		}
 	}
-	// err 接收校验安全区域集合过程中可能产生的错误，供后续失败分支处理。
-	if err := f.Map.validateSafeZones(); err != nil {
-		return err
-	}
-	return f.validateMapDirectory()
+	return m.validateSafeZones()
 }
 
 // validateMapDirectory 校验地图目录。
@@ -330,10 +345,25 @@ func (f *Fixture) validateMapDirectory() error {
 	for i := range f.Maps {
 		// m 保存当前处理所用的地图集合中的指定项。
 		m := &f.Maps[i]
-		if m.ID == 0 || m.ID > math.MaxInt64 || seen[m.ID] || m.SceneKind != SceneKindTown {
-			return errors.New("额外地图须显式为城镇，地图ID须唯一且可持久化")
+		if m.ID == 0 || m.ID > math.MaxInt64 || seen[m.ID] {
+			return errors.New("地图目录ID须唯一且可持久化")
 		}
 		seen[m.ID] = true
+		if m.SceneKind == SceneKindPersonal && f.OrdinaryMonsterRosterEnabled() {
+			if m.Width != 13 || m.Height != 13 || m.Source != nil || len(m.SourceStaticBits) != 0 || strings.TrimSpace(m.DisplayName) == "" || strings.TrimSpace(m.ResourceKey) == "" {
+				return errors.New("额外普通地图须显式提供13×13地形、名称和资源键")
+			}
+			if err := f.validatePersonalMap(m); err != nil {
+				return fmt.Errorf("普通地图%d：%w", m.ID, err)
+			}
+			continue
+		}
+		if m.SceneKind != SceneKindTown {
+			return errors.New("额外地图须显式为城镇或启用当前普通怪物目录的个人图")
+		}
+		if len(m.MonsterSpawnIDs) != 0 || m.InitialMonsterCount != 0 {
+			return errors.New("城镇不能配置普通怪物目录")
+		}
 		if f.RuleVersion < 24 && m.CompactTown || !m.CompactTown && (len(m.LegacySafeZoneIDs) != 0 || len(m.NPCs) != 0) {
 			return errors.New("紧凑城镇及历史安全区映射仅供rule24及后续紧凑地图")
 		}

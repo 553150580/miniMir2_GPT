@@ -100,6 +100,12 @@ func (r *room) worlds() []*worldState {
 			all = append(all, world)
 		}
 	}
+	// 交换目标只短暂存在，禁宠驻留也不持有第二个完整普通战斗场景。
+	for _, world := range []*worldState{r.TravelPersonalWorld, r.PetHoldingWorld} {
+		if world != nil && world != active && world != r.PersonalWorld && world != r.TownWorld {
+			all = append(all, world)
+		}
+	}
 	// world 接收遍历城镇场景世界集合时当前的元素。
 	for _, world := range r.TownWorlds {
 		if world != nil && world != active && world != r.PersonalWorld && world != r.TownWorld {
@@ -174,7 +180,12 @@ func (w *worker) ensureTownWorld(r *room, mapID uint64) *worldState {
 		return r.townWorld(mapID)
 	}
 	// world 保存由“allocate”场景世界取得的场景世界。
-	world := r.allocateWorld(mapID, 1+uint64(len(f.TownTravel.DestinationMapIDs)))
+	limit := 1 + uint64(len(f.TownTravel.DestinationMapIDs))
+	if f.OrdinaryMonsterRosterEnabled() {
+		// 普通图可反复换并回收；已发布城镇目录仍保持实际持有的城镇数量有界。
+		limit = math.MaxUint64
+	}
+	world := r.allocateWorld(mapID, limit)
 	if world != nil {
 		// 按首次到访顺序登记。后续遍历不受Go map迭代顺序影响。
 		r.TownWorlds = append(r.TownWorlds, world)
@@ -229,7 +240,7 @@ func (w *worker) resolveInWorld(r *room, world *worldState, ref actorRef) *entit
 	all = append(all[:len(all):len(all)], r.petBodies(world)...)
 	// e 接收遍历全部时当前的元素。
 	for _, e := range all {
-		if e != nil && !e.CapturedUntilRespawn && e.Handle == ref.Handle && e.Life == ref.Life {
+		if e != nil && !e.DeferredUntilRespawn && e.Handle == ref.Handle && e.Life == ref.Life {
 			return e
 		}
 	}
@@ -321,6 +332,7 @@ func (w *worker) activateWorldAt(r *room, target *worldState, point devconfig.Po
 		r.PetWorld = target.Ref
 		w.commitRelocation(r, r.Pet, *petPoint)
 	}
+	r.releasePetHoldingWorld()
 	if mapChanged {
 		w.applyPetMapEntryPolicy(r, m)
 	}
@@ -393,7 +405,7 @@ func (w *worker) worldDeadlines(r *room, world *worldState, now time.Time) {
 			monster.HP, monster.Life, monster.Statuses = monster.MaxHP, monster.Life+1, nil
 			monster.MovementRevision, monster.MovementKind = 0, movementInitial
 			monster.RespawnAt, monster.Action = time.Time{}, 0
-			monster.CapturedUntilRespawn, monster.ShockUntilMS = false, 0
+			monster.DeferredUntilRespawn, monster.ShockUntilMS = false, 0
 		}
 	}
 }

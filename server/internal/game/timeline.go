@@ -52,6 +52,7 @@ type killFact struct {
 	StopReason          uint32             // 托管停止原因，非零时只结算停止状态。
 	Roll                int64              // 击杀时抽取的一个百万分位随机值。
 	EquipmentID, ItemID uint32             // 预先抽中的装备与普通物品候选编号。
+	ItemQuantity        int64              // 按普通道具条目的范围在击杀时已确定的堆叠数量。
 	Gold                int64              // 已经抽好的本次金币数量。
 	InstanceID          string             // 若生成物品时使用的唯一资产编号。
 	Prepared            bool               // 首部事实已经转换为来源事务，防止再次准备。
@@ -330,6 +331,12 @@ func facing(from, to devconfig.Point, fallback uint32) uint32 {
 // nextEvent 分配客户端可见的下一战斗事件流水。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) nextEvent(r *room) uint64 {
+	if arena := r.worldBossCombat; arena != nil {
+		if arena.eventID < math.MaxUint64 {
+			arena.eventID++
+		}
+		return arena.eventID
+	}
 	if r.EventID < math.MaxUint64 {
 		r.EventID++
 	}
@@ -341,7 +348,7 @@ func (w *worker) nextEvent(r *room) uint64 {
 // life 记录生命代次，使用数值表示，grid 记录网格，使用点位表示，amount 记录数量，使用数值表示，outcome 记录“outcome”，使用数值表示。
 // healing 标记是否处于治疗状态，cast 记录施法，使用数值表示，attack 记录攻击，使用数值表示。
 func (w *worker) impact(r *room, skill, caster, target uint32, life uint64, grid devconfig.Point, amount int64, outcome uint32, healing bool, cast uint64, attack uint32) {
-	w.send(r, p.MsgS2CCombatImpact, 0, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster, TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing, CastId: cast, AttackSequence: attack})
+	w.sendCombatObservation(r, p.MsgS2CCombatImpact, &pb.CombatImpact{SceneEpoch: r.Scene, EventId: w.nextEvent(r), SkillId: skill, CasterHandle: caster, TargetHandle: target, TargetLife: life, TargetGrid: pointPB(grid), Amount: amount, Outcome: outcome, Healing: healing, CastId: cast, AttackSequence: attack})
 }
 
 // impactInWorld 只向当前可观察原世界的连接发送命中表现。
@@ -444,8 +451,6 @@ func (w *worker) enqueueKillFact(r *room, m *entity, at time.Time, caster *entit
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，world 记录场景世界，使用场景世界状态表示，m 记录实体，at 记录发生时间，使用时间点表示。
 // caster 记录施法者，使用实体表示，session 记录会话，使用文本表示，privilegeUntil 记录“privilege”有效截止时间，使用时间点表示。
 func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, at time.Time, caster *entity, session string, privilegeUntil time.Time) {
-	// f 保存当前处理所用的开发测试配置。
-	f := w.e.Store.Cfg.Fixture
 	r.FactOrder++
 	// point 保存玩家位置，用于当前步骤中的点位。
 	point := world.PlayerPosition
@@ -457,13 +462,11 @@ func (w *worker) enqueueKillFactInWorld(r *room, world *worldState, m *entity, a
 	if world == r.currentWorld() {
 		fact.ProgressionActor = referenceIn(world, &r.Player)
 	}
+	if !w.captureOrdinaryDrop(&fact) {
+		w.isolateRoom(r)
+		return
+	}
 	fact.PetTraining = w.capturePetTraining(r, fact.ID)
-	if len(f.Drops.EquipmentItemIDs) > 0 {
-		fact.EquipmentID = f.Drops.EquipmentItemIDs[w.draw(int64(len(f.Drops.EquipmentItemIDs)))]
-	}
-	if len(f.Drops.ItemIDs) > 0 {
-		fact.ItemID = f.Drops.ItemIDs[w.draw(int64(len(f.Drops.ItemIDs)))]
-	}
 	fact.Gold = m.Monster.GoldMin + w.draw(m.Monster.GoldMax-m.Monster.GoldMin+1)
 	r.KillFacts = append(r.KillFacts, fact)
 }
@@ -551,11 +554,13 @@ func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {
 		f := w.e.Store.Cfg.Fixture
 		q.Kills = 1
 		q.MonsterID, q.MapID = fact.Monster.ID, fact.MapID
+		q.DropPoolID = fact.Monster.DropPoolID
 		q.Experience = fact.Monster.Exp
 		q.Bound = fact.Bound
 		q.NoEquipmentKills = r.Role.NoEquipmentKills + 1
-		// itemID 标识当前业务使用的道具。
+		// itemID 和 quantity 保存互斥分支最终获选的物品和一个原堆叠的数量。
 		itemID := uint32(0)
+		quantity := int64(1)
 		// goldEnd 是百万分位掷点中空掉落区与金币区的累计上界。
 		goldEnd := int64(f.Drops.EmptyPPM + f.Drops.GoldPPM)
 		// itemEnd 是再累加普通物品区后的上界，其上属于装备掉落分支。
@@ -567,11 +572,12 @@ func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {
 			q.Gold = fact.Gold
 		} else if fact.Roll >= goldEnd {
 			itemID = fact.ItemID
+			quantity = max(1, fact.ItemQuantity)
 		}
 		if itemID != 0 {
 			// definition 是掉落物品的配置定义，提供本次资产的品质。
 			definition, _ := f.Item(itemID)
-			q.Item = &domain.Item{ID: fact.InstanceID, ItemID: itemID, Quantity: 1, Version: 1, Bound: fact.Bound, SourceKind: "monster_drop", SourceID: fmt.Sprint(q.SourceSeq), Quality: definition.DropQuality}
+			q.Item = &domain.Item{ID: fact.InstanceID, ItemID: itemID, Quantity: quantity, Version: 1, Bound: fact.Bound, SourceKind: "monster_drop", SourceID: fmt.Sprint(q.SourceSeq), Quality: definition.DropQuality}
 		}
 	}
 	return q

@@ -335,7 +335,7 @@ func (w *worker) applyDamageInWorld(r *room, world *worldState, from, target *en
 			if r.AutoTarget == referenceIn(world, target) {
 				r.AutoTarget = actorRef{}
 			}
-			target.RespawnAt = now.Add(10 * time.Second)
+			target.RespawnAt = now.Add(normalMonsterRespawnDelay(target.Monster))
 			if len(context) > 0 && w.sourceTimeline() {
 				// until 是作用于该命中时段的特权有效截止时刻。
 				until := r.Role.PrivilegeUntil

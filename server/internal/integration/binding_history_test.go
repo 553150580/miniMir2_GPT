@@ -32,11 +32,12 @@ func TestRule24BichengBindingRemainsTrustedAfterShopUpgradeMongo(t *testing.T) {
 	current := cfg.Fixture
 	// historical 保存当前处理所用的“historical”。
 	historical := current
+	historicalOrdinaryFixture(t, &historical)
 	historical.RuleVersion = 24
 	historical.Hash = "074726ce1df63b58ea21a4ea2892c74bd58815cf591dbbd2adc43c19c9adc418"
 	historical.Map.Width, historical.Map.Height = 17, 17
 	historical.NPCShops, historical.EquipmentDurability = nil, nil
-	historical.Maps = slices.Clone(current.Maps)
+	historical.Maps = slices.Clone(historical.Maps)
 	// oldTown 保存由地图“by”标识取得的原状态城镇，ok 表明查询、校验或类型转换是否成功。
 	oldTown, ok := historical.MapByID(5)
 	if !ok {

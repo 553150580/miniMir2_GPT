@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "rule_version": 29,
+  "rule_version": 30,
   "development_only": true,
   "runtime_ready": false,
   "source_status": "candidate",
@@ -5421,6 +5421,17 @@
         "y": 10
       }
     ],
+    "monster_spawn_ids": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "initial_monster_count": 1,
     "no_teleport": false,
     "no_pets": false
   },
@@ -5560,7 +5571,110 @@
       "exp": 15,
       "gold_min": 30,
       "gold_max": 30,
-      "respawn_ms": 10000
+      "respawn_ms": 10000,
+      "drop_pool_id": 11
+    },
+    {
+      "job_id": 0,
+      "definition_id": 3,
+      "level": 10,
+      "hp": 28,
+      "mp": 0,
+      "attack_min": 6,
+      "attack_max": 9,
+      "defence": 2,
+      "defence_min": 2,
+      "defence_max": 2,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 12,
+      "agility": 14,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 2500,
+      "move_ms": 1500,
+      "undead": true,
+      "can_push": true,
+      "can_tame": false,
+      "id": 3,
+      "exp": 28,
+      "gold_min": 30,
+      "gold_max": 30,
+      "respawn_ms": 10000,
+      "drop_pool_id": 13
+    },
+    {
+      "job_id": 0,
+      "definition_id": 4,
+      "level": 12,
+      "hp": 22,
+      "mp": 0,
+      "attack_min": 2,
+      "attack_max": 4,
+      "defence": 0,
+      "defence_min": 0,
+      "defence_max": 0,
+      "magic_defence_min": 0,
+      "magic_defence_max": 0,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 5,
+      "agility": 12,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 2500,
+      "move_ms": 1500,
+      "undead": false,
+      "can_push": true,
+      "can_tame": false,
+      "id": 4,
+      "exp": 22,
+      "gold_min": 30,
+      "gold_max": 30,
+      "respawn_ms": 10000,
+      "drop_pool_id": 13
+    },
+    {
+      "job_id": 0,
+      "definition_id": 5,
+      "level": 16,
+      "hp": 42,
+      "mp": 0,
+      "attack_min": 6,
+      "attack_max": 9,
+      "defence": 2,
+      "defence_min": 2,
+      "defence_max": 2,
+      "magic_defence_min": 1,
+      "magic_defence_max": 1,
+      "magic_min": 0,
+      "magic_max": 0,
+      "tao_min": 0,
+      "tao_max": 0,
+      "accuracy": 8,
+      "agility": 15,
+      "magic_resist": 0,
+      "magic_resist_weight": 10,
+      "attack_speed": 0,
+      "attack_ms": 2500,
+      "move_ms": 900,
+      "undead": false,
+      "can_push": true,
+      "can_tame": false,
+      "id": 5,
+      "exp": 42,
+      "gold_min": 30,
+      "gold_max": 30,
+      "respawn_ms": 10000,
+      "drop_pool_id": 15
     }
   ],
   "items": [
@@ -5646,7 +5760,9 @@
         0,
         1,
         2
-      ]
+      ],
+      "kind": "potion",
+      "max_stack": 200
     },
     {
       "id": 36,
@@ -5668,7 +5784,9 @@
         0,
         1,
         2
-      ]
+      ],
+      "kind": "potion",
+      "max_stack": 200
     },
     {
       "id": 92,
@@ -5748,6 +5866,233 @@
       ],
       "kind": "misc",
       "max_stack": 1
+    },
+    {
+      "id": 223,
+      "name": "青铜剑",
+      "equipment_slot": 0,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 3,
+      "attack_max_bonus": 7,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 900,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "required_level": 5,
+      "drop_quality": 0,
+      "equipment_stage": 0,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0,
+      "original_durability_u": 6000,
+      "repair_base_price": 900
+    },
+    {
+      "id": 220,
+      "name": "乌木剑",
+      "equipment_slot": 0,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 4,
+      "attack_max_bonus": 8,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 3000,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "required_level": 1,
+      "drop_quality": 1,
+      "equipment_stage": 0,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 1,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0,
+      "original_durability_u": 7000,
+      "repair_base_price": 3000
+    },
+    {
+      "id": 225,
+      "name": "短剑",
+      "equipment_slot": 0,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 3,
+      "attack_max_bonus": 11,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 1000,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "required_level": 10,
+      "drop_quality": 0,
+      "equipment_stage": 0,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0,
+      "original_durability_u": 8000,
+      "repair_base_price": 1000
+    },
+    {
+      "id": 195,
+      "name": "轻型盔甲",
+      "equipment_slot": 1,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 3,
+      "defence_min_bonus": 3,
+      "defence_max_bonus": 3,
+      "magic_defence_min_bonus": 1,
+      "magic_defence_max_bonus": 2,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 3000,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "required_level": 11,
+      "drop_quality": 0,
+      "equipment_stage": 1,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 0,
+      "tao_max_bonus": 0,
+      "original_durability_u": 12000,
+      "repair_base_price": 3000
+    },
+    {
+      "id": 261,
+      "name": "白色虎齿项链",
+      "equipment_slot": 3,
+      "is_equipment": true,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 2,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 3000,
+      "stackable": false,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "required_level": 11,
+      "drop_quality": 0,
+      "equipment_stage": 1,
+      "magic_min_bonus": 0,
+      "magic_max_bonus": 0,
+      "tao_min_bonus": 1,
+      "tao_max_bonus": 1,
+      "original_durability_u": 7000,
+      "repair_base_price": 3000
+    },
+    {
+      "id": 95,
+      "name": "食人树叶",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "kind": "misc",
+      "max_stack": 100
+    },
+    {
+      "id": 96,
+      "name": "毒蜘蛛牙齿",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "kind": "misc",
+      "max_stack": 100
+    },
+    {
+      "id": 97,
+      "name": "食人树果实",
+      "equipment_slot": 0,
+      "is_equipment": false,
+      "attack_bonus": 0,
+      "attack_min_bonus": 0,
+      "attack_max_bonus": 0,
+      "defence_bonus": 0,
+      "defence_min_bonus": 0,
+      "defence_max_bonus": 0,
+      "magic_defence_min_bonus": 0,
+      "magic_defence_max_bonus": 0,
+      "attack_speed_bonus": 0,
+      "recycle_gold": 0,
+      "stackable": true,
+      "allowed_jobs": [
+        0,
+        1,
+        2
+      ],
+      "kind": "misc",
+      "max_stack": 100
     },
     {
       "id": 7,
@@ -6700,6 +7045,21 @@
           "id": 80030,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:386；资料参考/crystal/Server/MirObjects/Monsters/Shinsu.cs",
           "note": "跨来源开发模板。技能新生决定训练初值；只在正向两格使用喷焰。"
+        },
+        {
+          "id": 3,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:27；最终策划案.md §4.1、§5.2",
+          "note": "项目原创开发外观。基础属性沿来源行，采用本项目现有的近身普通怪管线。"
+        },
+        {
+          "id": 4,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:18；最终策划案.md §4.1、§5.2",
+          "note": "项目原创开发外观。基础属性沿来源行，采用本项目现有的近身普通怪管线。"
+        },
+        {
+          "id": 5,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_Monster.csv:24；最终策划案.md §4.1、§5.2",
+          "note": "项目原创开发外观。基础属性沿来源行，采用本项目现有的近身普通怪管线。"
         }
       ],
       "game_items": [
@@ -6716,12 +7076,12 @@
         {
           "id": 35,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:37",
-          "note": "正式堆叠与药效映射仍待核验；本轮仅development启用逐件消费候选，恢复量和时序由开发首循环夹具统一维护。原Looks/Shape不作为已核验图标或药效证据。"
+          "note": "本作普通挂机补给采用显式开发堆叠上限，每次使用仍消费一单位。"
         },
         {
           "id": 36,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:38",
-          "note": "正式堆叠与药效映射仍待核验；本轮仅development启用逐件消费候选，恢复量和时序由开发首循环夹具统一维护。原Looks/Shape不作为已核验图标或药效证据。"
+          "note": "本作普通挂机补给采用显式开发堆叠上限，每次使用仍消费一单位。"
         },
         {
           "id": 7,
@@ -6922,6 +7282,46 @@
           "id": 182,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:184（物品身份）；本作开发小额单价与堆叠候选",
           "note": "独立材料槽一次装一类；消耗成功有原实例回执并可去重。开发每组上限200。"
+        },
+        {
+          "id": 223,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:225；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 220,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:222；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 225,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:227；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 195,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:197；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 261,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:263；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 95,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:97；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 96,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:98；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
+        },
+        {
+          "id": 97,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:99；最终策划案.md §4.2、§5.2",
+          "note": "开发候选，原表身份为唯一来源；物品堆叠及品质为本作候选。"
         }
       ],
       "game_equipment": [
@@ -6939,6 +7339,31 @@
           "id": 259,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:261",
           "note": "DuraMax及基础属性来自同一MYF行；普通饰品、全职业和阶段按现有开发约定。"
+        },
+        {
+          "id": 223,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:225；最终策划案.md §4.2、§5.2",
+          "note": "白或蓝品质开发候选。需求等级、耐久和基础属性来自同一来源行，使用现有穿戴和修理路径。"
+        },
+        {
+          "id": 220,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:222；最终策划案.md §4.2、§5.2",
+          "note": "白或蓝品质开发候选。需求等级、耐久和基础属性来自同一来源行，使用现有穿戴和修理路径。"
+        },
+        {
+          "id": 225,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:227；最终策划案.md §4.2、§5.2",
+          "note": "白或蓝品质开发候选。需求等级、耐久和基础属性来自同一来源行，使用现有穿戴和修理路径。"
+        },
+        {
+          "id": 195,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:197；最终策划案.md §4.2、§5.2",
+          "note": "白或蓝品质开发候选。需求等级、耐久和基础属性来自同一来源行，使用现有穿戴和修理路径。"
+        },
+        {
+          "id": 261,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:263；最终策划案.md §4.2、§5.2",
+          "note": "白或蓝品质开发候选。需求等级、耐久和基础属性来自同一来源行，使用现有穿戴和修理路径。"
         }
       ],
       "game_maps": [
@@ -6961,6 +7386,16 @@
           "id": 81,
           "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
           "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "独享的开阔普通挂机场，与林间战场共用地板资源，独立维护布局及怪物槽。"
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "独享的开阔普通挂机场，与林间战场共用地板资源，独立维护布局及怪物槽。"
         }
       ],
       "game_map_collisions": [
@@ -6983,6 +7418,16 @@
           "id": 81,
           "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
           "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 6,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "169格均无固定地形阻挡。原地图阻挡仅属来源证据；寻路切角及实体动态占格规则继续适用。"
+        },
+        {
+          "id": 7,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "169格均无固定地形阻挡。原地图阻挡仅属来源证据；寻路切角及实体动态占格规则继续适用。"
         }
       ],
       "game_map_regions": [
@@ -7025,6 +7470,26 @@
           "id": 202,
           "source_ref": "本任务rule15候选采用Crystal当前源图NoTeleport到期检查；Crystal Server/MirDatabase/MapInfo.cs:24、MirObjects/HumanObject.cs:6096–6100；原MYF Mir200/Envir/MapInfo.txt:5只读白名单为[0\\t比奇省] NOMANNOMON，原文件SHA358056b0f13e0c26968b08cbde08d4742137c0453f6d634203b495addf7b6707；跨引擎candidate，不认证标记完全等价；本任务rule17显式NoPets=false候选，保持当前可携宠地图开发范围；Crystal HumanObject.cs:4401、MonsterObject.cs:1334–1367；不从MYF NOMANNOMON或NoTeleport推定原服NoPets",
           "note": "本map唯一全图政策行；不得作为safe_zone参与绑定首匹配或ZoneSetHash，不配置怪物或NPC。 rule17独立no_pets布尔；不加入安全区或ZoneSetHash，受理与Recall到期时点按各自源规则。"
+        },
+        {
+          "id": 606,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "槽位分布与同一地图的八条生成记录一致。"
+        },
+        {
+          "id": 626,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "全图政策独立登记，本轮允许携宠及瞬移。"
+        },
+        {
+          "id": 607,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "槽位分布与同一地图的八条生成记录一致。"
+        },
+        {
+          "id": 627,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "全图政策独立登记，本轮允许携宠及瞬移。"
         }
       ],
       "game_monster_spawns": [
@@ -7077,6 +7542,86 @@
           "id": 81,
           "source_ref": "最终策划案.md:445-457、1028-1032；首领格战和独立角色所有者；场次开放纪律取已确认挑战规则。",
           "note": "显式开发候选；共用本项目13格地板和既有稻草人形象。HP、攻击、移动、时限/容量、失败等待均未完成平衡，不产生金币、经验、物品或正式产出。"
+        },
+        {
+          "id": 600,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 601,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 602,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 603,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 604,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 605,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 606,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 607,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 700,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 701,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 702,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 703,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 704,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 705,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 706,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
+        },
+        {
+          "id": 707,
+          "source_ref": "最终策划案.md §4.1、§5.2；沿用户确认的13格普通挂机图尺寸、空地和随机复活规则",
+          "note": "首刷采用已保存的空格，复活由运行服选择随机空格。"
         }
       ],
       "game_pet_templates": [
@@ -7739,6 +8284,36 @@
           "id": 3,
           "source_ref": "最终策划案.md:602-614；../MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人.txt",
           "note": "仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。 仅采纳来源条目与金币数量，旧独立掉率废弃；类别后子集等权是开发选择。"
+        },
+        {
+          "id": 11,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
+        },
+        {
+          "id": 14,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
+        },
+        {
+          "id": 15,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
+        },
+        {
+          "id": 16,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "互斥分类后一次按相对权重选条目，优先保障正常补给；产出速率仍需整体经济复算。"
         }
       ],
       "game_drop_entries": [
@@ -7846,6 +8421,236 @@
           "id": 21,
           "source_ref": "最终策划4.8/5.11书页特殊条目；本轮development普通道具子集适配",
           "note": "开发分类内等权加入精良职业书，不新增独立概率池，不称目标稻草人原掉落或正式精英/BOSS来源已验收。"
+        },
+        {
+          "id": 22,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 23,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 24,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 25,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 26,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 27,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 28,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 29,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 30,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 31,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 32,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 33,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 34,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 35,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 36,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 37,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 38,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 39,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 40,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 41,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 42,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 43,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 44,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 45,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 46,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 47,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 48,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 49,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 50,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 51,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 52,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 53,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 54,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 55,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 56,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 57,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 58,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 59,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 60,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 61,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 62,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 63,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 64,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 65,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 66,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
+        },
+        {
+          "id": 67,
+          "source_ref": "最终策划案.md §5.2；规则30暂用可追溯的普通与精良权重候选",
+          "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
         }
       ],
       "game_skills": [
@@ -8879,6 +9684,28 @@
           "note": "策划未给出背包初始容量，不能沿用来源服。"
         }
       ],
+      "game_drop_guarantees": [
+        {
+          "id": 1,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 2,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 12,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": null
+        },
+        {
+          "id": 13,
+          "source_ref": "最终策划案.md:600-614；5.2",
+          "note": "精英候选每20分钟，活动上限不无限叠加。"
+        }
+      ],
       "dev_first_loop_profile": [
         {
           "id": 1,
@@ -9318,8 +10145,8 @@
       ]
     },
     "player_stats": "Crystal Shared/BaseStats.cs 默认三职业成长与float32 Calculate；项目独立副本/摘要见docs/技能来源核验与实施清单.md；非目标1.80认证；HumanObject.cs:1766–1768攻击间隔随等级重算；2974–2975、3201普通前格时序。",
-    "technical_parameters": "rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。；rule17显式NoPets/RecallName与关闭的召唤独立候选，主仍22技能、legacy不训练、材料关闭；不认证17/购符业务。；规则29开启三职业33项开发技能，以显式材料槽和原账本回执扣除单个用途单位；角色冷进不恢复临时宠物。",
-    "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。",
+    "technical_parameters": "rule15仅开发来源瞬移：200ms延迟、完整绑定图随机、MP10+rank×3及Flux候选由对应唯一基础表维护。承接原streaming/旅行/导航受控参数；不改变事务/租约时限，不持久坐标/MP/CD/临时世界，不作容量或完整目标1.80认证。；rule16同owner保留身体/尸体有界；独立训练定义来自PetDefs/Growth，原免费bootstrap不训练，17与护符仍关闭，不认证容量。；rule17显式NoPets/RecallName与关闭的召唤独立候选，主仍22技能、legacy不训练、材料关闭；不认证17/购符业务。；规则29开启三职业33项开发技能，以显式材料槽和原账本回执扣除单个用途单位；角色冷进不恢复临时宠物。；规则30三处13格普通场使用工作簿槽位怪物及不同的互斥分类子池，默认一只。",
+    "damage_scope": "开发来源候选：DC/MC/SC、AC/MAC区间、准确敏捷、基础剑术被动；火球延迟单体、治愈独立队列。元素、幸运、完整职业技能/升级仍未验收。 本轮补单体与3×3范围、雷电不死倍率、逐杀序号与原事件时刻；仍不包含幸运/元素/完整Buff。 本轮补攻杀/刺杀/半月/烈火及疾光/冰咆哮/地雷，binary32逐步运算；地狱火所有阶固定正前4格已由用户审定。仍非完整1.80核验。；新增普通怪先沿项目现有近身攻击、追击和复活行为，保留来源基础属性。",
     "revive": "开发测试行为，不是已核验正式死亡/复活规则；不收费、不掉经验、不掉装；健康重连不回血，主动操作幂等恢复。",
     "potion_effects": {
       "status": "candidate",
@@ -9346,6 +10173,32 @@
       "formal_skill_and_upgrade_tables_populated": true,
       "economy_reference": "docs/技能获取与升级实施边界.md；书本=目标阶+1用户确定，页与来源渠道候选"
     },
+    "ordinary_monster_appearances": [
+      {
+        "definition_id": 1,
+        "name": "稻草人",
+        "profile": "monster_scarecrow",
+        "can_push": true
+      },
+      {
+        "definition_id": 3,
+        "name": "食人花",
+        "profile": "monster_m1_flower",
+        "can_push": true
+      },
+      {
+        "definition_id": 4,
+        "name": "多钩猫",
+        "profile": "monster_m1_cat",
+        "can_push": true
+      },
+      {
+        "definition_id": 5,
+        "name": "毒蜘蛛",
+        "profile": "monster_m1_spider",
+        "can_push": true
+      }
+    ],
     "compact_towns": [
       {
         "map_id": 3,
@@ -9718,6 +10571,46 @@
             "item_id": 187,
             "price_gold": 5,
             "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:189（物品身份）；本作开发小额单价与堆叠候选"
+          },
+          {
+            "item_id": 223,
+            "price_gold": 900,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:225；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 220,
+            "price_gold": 3000,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:222；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 225,
+            "price_gold": 1000,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:227；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 195,
+            "price_gold": 3000,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:197；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 261,
+            "price_gold": 3000,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:263；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 95,
+            "price_gold": 50,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:97；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 96,
+            "price_gold": 50,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:98；最终策划案.md §4.2、§5.2（Price）"
+          },
+          {
+            "item_id": 97,
+            "price_gold": 300,
+            "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:99；最终策划案.md §4.2、§5.2（Price）"
           }
         ],
         "sell_ratio_numerator": 1,
@@ -9766,7 +10659,15 @@
         218,
         92,
         259,
-        594
+        594,
+        223,
+        220,
+        225,
+        195,
+        261,
+        95,
+        96,
+        97
       ],
       "attributes_source": "唯一玩法Excel/game_equipment.base_attributes；MC/SC逐列取来源Mc/Mc2/Sc/Sc2",
       "stage_source": "唯一玩法Excel/game_equipment.stage；floor((required_level−1)/10)",
@@ -9782,6 +10683,26 @@
         {
           "item_id": 259,
           "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:261"
+        },
+        {
+          "item_id": 223,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:225；最终策划案.md §4.2、§5.2"
+        },
+        {
+          "item_id": 220,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:222；最终策划案.md §4.2、§5.2"
+        },
+        {
+          "item_id": 225,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:227；最终策划案.md §4.2、§5.2"
+        },
+        {
+          "item_id": 195,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:197；最终策划案.md §4.2、§5.2"
+        },
+        {
+          "item_id": 261,
+          "source_ref": "资料参考/myf/Mud2/DB/ApexM2_stditems.csv:263；最终策划案.md §4.2、§5.2"
         }
       ],
       "appearance_mapping_verified": false,
@@ -9967,9 +10888,9 @@
     ],
     "workbook": {
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-      "sha256": "dd2ca625def65324cde6ed02bf03bdabce27726f132600933fefeb25a6761f07"
+      "sha256": "060dfc3b3d4a82010b608c3d6f9d0b8f1a72450b1adf860e5538f32084e5222e"
     },
-    "exporter_sha256": "01cfcb82eb31c1f6659fa64c7c223c2c4b5f42e574ac28b41f3f15dd128f23c3",
+    "exporter_sha256": "9f1e82dfd8f331e71fd8d33237911ccef98b0b55bb27470c76d76ed9d20cce83",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [
@@ -9981,13 +10902,312 @@
         {
           "group": "gameplay",
           "path": "outputs/development-prep-20261026/玩法配置.xlsx",
-          "sha256": "dd2ca625def65324cde6ed02bf03bdabce27726f132600933fefeb25a6761f07"
+          "sha256": "060dfc3b3d4a82010b608c3d6f9d0b8f1a72450b1adf860e5538f32084e5222e"
         }
       ]
     },
     "compact_town_compiler_sha256": "62f908de23d0a1e0de18c31a936f858bc302b85ec730f54e9b3921d76d514759",
     "npc_shop_compiler_sha256": "65e958bbac05507af632022718c11673b8ded2e997cf7b54eca330621090935c"
   },
+  "ordinary_drop_pools": [
+    {
+      "id": 11,
+      "equipment": [
+        {
+          "item_id": 218,
+          "weight": 5,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 193,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 259,
+          "weight": 3,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 223,
+          "weight": 2,
+          "quantity_min": 1,
+          "quantity_max": 1
+        }
+      ],
+      "items": [
+        {
+          "item_id": 35,
+          "weight": 18,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 36,
+          "weight": 18,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 187,
+          "weight": 8,
+          "quantity_min": 1,
+          "quantity_max": 3
+        },
+        {
+          "item_id": 7,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 21,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 1,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 22,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 12,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 11,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 14,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 32,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 2,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 3,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 4,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 6,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 16,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 20,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 17,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 10,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "equipment": [
+        {
+          "item_id": 193,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 223,
+          "weight": 5,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 220,
+          "weight": 1,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 225,
+          "weight": 2,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 259,
+          "weight": 3,
+          "quantity_min": 1,
+          "quantity_max": 1
+        }
+      ],
+      "items": [
+        {
+          "item_id": 35,
+          "weight": 8,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 36,
+          "weight": 8,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 95,
+          "weight": 14,
+          "quantity_min": 1,
+          "quantity_max": 3
+        },
+        {
+          "item_id": 97,
+          "weight": 7,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 187,
+          "weight": 8,
+          "quantity_min": 1,
+          "quantity_max": 3
+        },
+        {
+          "item_id": 181,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 3
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "equipment": [
+        {
+          "item_id": 223,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 220,
+          "weight": 2,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 225,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 195,
+          "weight": 4,
+          "quantity_min": 1,
+          "quantity_max": 1
+        },
+        {
+          "item_id": 261,
+          "weight": 2,
+          "quantity_min": 1,
+          "quantity_max": 1
+        }
+      ],
+      "items": [
+        {
+          "item_id": 35,
+          "weight": 6,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 36,
+          "weight": 6,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 96,
+          "weight": 16,
+          "quantity_min": 1,
+          "quantity_max": 3
+        },
+        {
+          "item_id": 97,
+          "weight": 3,
+          "quantity_min": 1,
+          "quantity_max": 2
+        },
+        {
+          "item_id": 187,
+          "weight": 8,
+          "quantity_min": 2,
+          "quantity_max": 4
+        },
+        {
+          "item_id": 181,
+          "weight": 7,
+          "quantity_min": 1,
+          "quantity_max": 3
+        },
+        {
+          "item_id": 182,
+          "weight": 9,
+          "quantity_min": 1,
+          "quantity_max": 3
+        }
+      ]
+    }
+  ],
   "map_regions": [
     {
       "id": "0",
@@ -9997,6 +11217,20 @@
         3,
         4,
         5
+      ]
+    },
+    {
+      "id": "south",
+      "name": "谷地",
+      "map_ids": [
+        6
+      ]
+    },
+    {
+      "id": "spider",
+      "name": "荒地",
+      "map_ids": [
+        7
       ]
     }
   ],
@@ -10017,12 +11251,54 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 223,
+          "item_id": 223,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 900,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 220,
+          "item_id": 220,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 225,
+          "item_id": 225,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 1000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 218,
           "price_gold": 25
+        },
+        {
+          "item_id": 223,
+          "price_gold": 450
+        },
+        {
+          "item_id": 220,
+          "price_gold": 1500
+        },
+        {
+          "item_id": 225,
+          "price_gold": 500
         }
       ],
       "can_repair": true
@@ -10042,12 +11318,26 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 195,
+          "item_id": 195,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 193,
           "price_gold": 200
+        },
+        {
+          "item_id": 195,
+          "price_gold": 1500
         }
       ],
       "can_repair": true
@@ -10067,12 +11357,26 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 261,
+          "item_id": 261,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 3000,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
         {
           "item_id": 259,
           "price_gold": 250
+        },
+        {
+          "item_id": 261,
+          "price_gold": 1500
         }
       ],
       "can_repair": true
@@ -10186,6 +11490,36 @@
           "required_role_level": 1,
           "output_bound": false,
           "max_purchase_quantity": 32
+        },
+        {
+          "id": 95,
+          "item_id": 95,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 96,
+          "item_id": 96,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 50,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
+        },
+        {
+          "id": 97,
+          "item_id": 97,
+          "quantity": 1,
+          "currency": "gold",
+          "price_units": 300,
+          "required_role_level": 1,
+          "output_bound": false,
+          "max_purchase_quantity": 32
         }
       ],
       "sell_prices": [
@@ -10204,6 +11538,18 @@
         {
           "item_id": 187,
           "price_gold": 2
+        },
+        {
+          "item_id": 95,
+          "price_gold": 25
+        },
+        {
+          "item_id": 96,
+          "price_gold": 25
+        },
+        {
+          "item_id": 97,
+          "price_gold": 150
         }
       ],
       "can_repair": false
@@ -11173,6 +12519,134 @@
           "profile": "player_male"
         }
       ]
+    },
+    {
+      "id": 6,
+      "scene_kind": 1,
+      "display_name": "谷地南坡",
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "pet_spawn": {
+        "x": 6,
+        "y": 5
+      },
+      "monster_spawns": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 12
+        },
+        {
+          "x": 12,
+          "y": 0
+        },
+        {
+          "x": 12,
+          "y": 12
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 12
+        },
+        {
+          "x": 0,
+          "y": 10
+        }
+      ],
+      "monster_spawn_ids": [
+        3,
+        4,
+        3,
+        4,
+        3,
+        4,
+        3,
+        4
+      ],
+      "initial_monster_count": 1,
+      "no_teleport": false,
+      "no_pets": false
+    },
+    {
+      "id": 7,
+      "scene_kind": 1,
+      "display_name": "蛛穴外围",
+      "resource_key": "development/maps/personal-map",
+      "width": 13,
+      "height": 13,
+      "blocked": [],
+      "player_spawn": {
+        "x": 6,
+        "y": 6
+      },
+      "pet_spawn": {
+        "x": 6,
+        "y": 5
+      },
+      "monster_spawns": [
+        {
+          "x": 0,
+          "y": 0
+        },
+        {
+          "x": 0,
+          "y": 12
+        },
+        {
+          "x": 12,
+          "y": 0
+        },
+        {
+          "x": 12,
+          "y": 12
+        },
+        {
+          "x": 0,
+          "y": 2
+        },
+        {
+          "x": 1,
+          "y": 0
+        },
+        {
+          "x": 2,
+          "y": 12
+        },
+        {
+          "x": 0,
+          "y": 10
+        }
+      ],
+      "monster_spawn_ids": [
+        5,
+        3,
+        5,
+        5,
+        3,
+        5,
+        5,
+        3
+      ],
+      "initial_monster_count": 1,
+      "no_teleport": false,
+      "no_pets": false
     }
   ],
   "binding": {

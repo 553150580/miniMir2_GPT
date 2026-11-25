@@ -78,7 +78,7 @@ func (w *worker) worldBossBodyView(child *room, body *entity) *pb.EntityState {
 		Hp: body.HP, HpMax: body.MaxHP, Mp: body.MP, MpMax: body.MaxMP, Action: body.Action, MoveIntervalMs: uint32(stats.MoveMS),
 		AttackSequence: body.AttackSequence, CastSequence: body.CastSequence, CastSkillId: body.CastSkillID, AttackSkillId: body.AttackSkillID,
 		AttackSkillLevel: body.AttackSkillLevel, AttackIntervalMs: uint32(stats.AttackMS), Life: body.Life, MovementRevision: body.MovementRevision,
-		MovementKind: body.MovementKind, IsPetCorpse: body.IsPetCorpse}
+		MovementKind: body.MovementKind, IsPetCorpse: body.IsPetCorpse, Statuses: statusesPB(body, time.Now())}
 }
 
 // worldBossDue 把每个角色行动的原世界身份和到期时间合并进入同一场次顺序。

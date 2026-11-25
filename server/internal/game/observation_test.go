@@ -22,6 +22,11 @@ func observedWorker(t *testing.T, r *room) *worker {
 	}
 	// 本组只验证动作观察/死亡推送；源命中与零伤害另由技能回归覆盖。
 	cfg.Fixture.DamageFormula = "development_range_minus_defence"
+	// 手造怪沿用原全局池。专属池测试自行给出同一模板和掉落合同。
+	cfg.Fixture.OrdinaryDropPools = nil
+	for i := range cfg.Fixture.Monsters {
+		cfg.Fixture.Monsters[i].DropPoolID = 0
+	}
 	// m 接收遍历怪物集合时当前的元素。
 	for _, m := range r.Monsters {
 		if m.Monster == nil {

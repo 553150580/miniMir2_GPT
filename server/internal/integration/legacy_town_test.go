@@ -5,8 +5,29 @@ package integration
 import (
 	"minimir/internal/devconfig"
 	"minimir/internal/persistence"
+	"slices"
 	"testing"
 )
+
+// historicalOrdinaryFixture 用主图首槽的原模板恢复旧规则，仅作用于本次验收配置。
+func historicalOrdinaryFixture(t *testing.T, f *devconfig.Fixture) {
+	t.Helper()
+	if len(f.Map.MonsterSpawnIDs) == 0 {
+		return
+	}
+	original, ok := f.MonsterByID(f.Map.MonsterSpawnIDs[0])
+	if !ok {
+		t.Fatal("当前主图缺少用于历史验收的首槽怪物")
+	}
+	oldMonster := *original
+	oldMonster.DropPoolID = 0
+	f.Monsters = []devconfig.Monster{oldMonster}
+	f.OrdinaryDropPools = nil
+	f.Map.MonsterSpawnIDs, f.Map.InitialMonsterCount = nil, 0
+	f.Maps = slices.DeleteFunc(slices.Clone(f.Maps), func(m devconfig.MapTemplate) bool {
+		return m.SceneKind == devconfig.SceneKindPersonal
+	})
+}
 
 // 历史WS回归沿用目录保留的原图与原区坐标，并固定旧旅行协议及大图寻路预算。
 // t 提供断言失败报告、子用例和清理注册。
@@ -17,6 +38,7 @@ func historicalSourceTownConfig(t *testing.T) devconfig.Config {
 	must(t, err)
 	// f 保存当前处理所用的开发测试配置。
 	f := &cfg.Fixture
+	historicalOrdinaryFixture(t, f)
 	// legacy 保存由地图“by”标识取得的兼容旧数据，exists 保存由地图“by”标识取得的存在。
 	legacy, exists := f.MapByID(f.TownTravel.TownMapID)
 	if !exists || legacy.CompactTown || legacy.Source == nil {

@@ -31,7 +31,7 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)
 	// 仅随机测试库启用未审定运行起点的业务合同；(0,0)故意与角色出生点不同。
-	cfg.Fixture = bindingInitializationRule12Fixture(cfg.Fixture)
+	cfg.Fixture = bindingInitializationRule12Fixture(t, cfg.Fixture)
 	cfg.Fixture.Binding = &devconfig.BindingRules{Enabled: true, StartPoints: []devconfig.BindingPoint{{MapID: cfg.Fixture.Map.ID, X: 0, Y: 0}}}
 	must(t, cfg.Fixture.Validate())
 	// ctx 传递从调用方派生的上下文，供取消或控制截止时间，cancel 取消对应上下文或停止计时，释放其关联资源。
@@ -160,7 +160,8 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 // 从当前唯一输入派生受测的rule12合同，不把后来的瞬移/城镇运行字段带回旧版本。
 // 只改变本例随机库夹具；生产Validate及唯一Excel保持原样。
 // f 记录开发测试配置。
-func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
+func bindingInitializationRule12Fixture(t *testing.T, f devconfig.Fixture) devconfig.Fixture {
+	t.Helper()
 	// 按后来开放的技能身份同时移除其书、状态和经济条目，重建独立的规则12。
 	later := []uint32{6, 13, 16, 17, 18, 19, 20, 21, 28, 30}
 	books, buffs := map[uint32]bool{}, map[uint32]bool{}
@@ -174,6 +175,7 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	}
 	f.CastingSupply.Enabled = false
 	f.CastingSupply.ItemIDs = []uint32{187}
+	historicalOrdinaryFixture(t, &f)
 	f.RuleVersion = 12
 	if f.Map.Width == 13 {
 		f.Map.Width, f.Map.Height = 17, 17
@@ -206,8 +208,11 @@ func bindingInitializationRule12Fixture(f devconfig.Fixture) devconfig.Fixture {
 	// item 记录道具。
 	f.Items = slices.DeleteFunc(f.Items, func(item devconfig.Item) bool { return books[item.ID] || item.ID == 181 || item.ID == 182 })
 	for i := range f.Items {
-		if f.Items[i].ID == 187 {
-			f.Items[i].MaxStack = 0
+		item := &f.Items[i]
+		// 本例恢复规则12装备意义，保留原附加属性并移除后来启用的法道属性和阶段。
+		item.MagicMinBonus, item.MagicMaxBonus, item.TaoMinBonus, item.TaoMaxBonus, item.EquipmentStage = 0, 0, 0, 0, 0
+		if item.ID == 187 {
+			item.MaxStack = 0
 		}
 	}
 	// row 记录行记录，使用技能升级表示。

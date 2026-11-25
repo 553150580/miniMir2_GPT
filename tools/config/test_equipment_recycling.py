@@ -3,7 +3,7 @@ import copy
 import unittest
 
 import export_configs as config
-from test_source_map_projection import module, ROOT
+from test_source_map_projection import module, ROOT, restore_rule29_hunting_selection
 
 
 class EquipmentRecyclingProjectionTests(unittest.TestCase):
@@ -25,7 +25,9 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
         f=self.fixture
         self.assertGreaterEqual(f['rule_version'],19)
         self.assertEqual(f['equipment_recycling'],{'mode':'development_gold_only','outputs':[]})
-        self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],[(218,1,0,50),(193,1,0,400),(259,2,0,0)])
+        self.assertEqual([(r['id'],r['required_level'],r['drop_quality'],r['recycle_gold']) for r in f['items'] if r['is_equipment']],
+                         [(218,1,0,50),(193,1,0,400),(259,2,0,0),(223,5,0,900),(220,1,1,3000),
+                          (225,10,0,1000),(195,11,0,3000),(261,11,0,3000)])
         evidence=f['_source_evidence']['equipment_recycling']
         self.assertIs(evidence['formal_recipe_published'],False)
         self.assertIs(evidence['formal_recycle_values_consumed'],False)
@@ -33,22 +35,28 @@ class EquipmentRecyclingProjectionTests(unittest.TestCase):
 
     def test_required_level_and_gold_follow_their_existing_unique_cells(self):
         tables=self.changed();before=copy.deepcopy(tables)
+        profile=self.profile(tables)
+        profile['rule_version']=29
+        restore_rule29_hunting_selection(profile)
         next(r for r in tables['game_equipment'] if r['item_id']==218).update(required_level=37,stage=3)
-        self.profile(tables)['recycle_test_gold_by_item']['218']=73
+        profile['recycle_test_gold_by_item']['218']=73
         f=module.fixture_from_rows(tables)
         item=next(r for r in f['items'] if r['id']==218)
         self.assertEqual((item['required_level'],item['recycle_gold']),(37,73))
         self.assertEqual(before['game_recycle_values'],tables['game_recycle_values'])
 
     def test_quality_is_explicit_and_equipment_and_item_must_agree(self):
+        isolated=self.changed();profile=self.profile(isolated)
+        profile['rule_version']=29
+        restore_rule29_hunting_selection(profile)
         for value in [None,False,-1,5,1.5,'0','missing','mismatch']:
-            tables=self.changed();row=next(r for r in tables['game_equipment'] if r['item_id']==218)
+            tables=copy.deepcopy(isolated);row=next(r for r in tables['game_equipment'] if r['item_id']==218)
             item=next(r for r in tables['game_items'] if r['id']==218)
             if value=='missing':del row['quality']
             elif value=='mismatch':item['quality']=1
             else:row['quality']=value
             with self.subTest(value=value),self.assertRaises(ValueError):module.fixture_from_rows(tables)
-        tables=self.changed()
+        tables=copy.deepcopy(isolated)
         for key in ['game_equipment','game_items']:
             next(r for r in tables[key] if r['id']==218)['quality']=3
         item=next(r for r in module.fixture_from_rows(tables)['items'] if r['id']==218)

@@ -233,5 +233,6 @@ func (w *worker) expirePetCorpses(r *room, now time.Time) bool {
 		clear(before[len(keep):])
 		world.PetCorpses = keep
 	}
+	r.releasePetHoldingWorld()
 	return changed
 }

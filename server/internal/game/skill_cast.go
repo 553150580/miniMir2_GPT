@@ -239,7 +239,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 		s.Behavior == "revelation" && (r.worldBossCombat != nil || r.worldBossObservation != nil) {
 		return nil, p.CodeSkillStateBlocked
 	}
-	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
+	if handler.Passive || r.Pending || r.ScheduleID == math.MaxUint64 || r.castSequenceFull() || r.Player.HP <= 0 || now.Before(r.Player.NextMove) || now.Before(r.Player.ActionReadyAt) || r.eventCount() >= w.eventCapacity() || !w.killBudgetAvailable(r) {
 		return nil, p.CodeSkillStateBlocked
 	}
 	if now.Before(r.NextSpell) || now.Before(r.SkillCooldowns[id]) {
@@ -416,7 +416,7 @@ func (w *worker) prepareCastWithMana(r *room, id, targetHandle, direction uint32
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，plan 记录计划，使用“prepared”施法表示，input 记录输入，使用数值表示。
 // now 提供当前时点，作为状态有效期和计时判断的基准。
 func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, now time.Time) uint32 {
-	if plan == nil || r.ScheduleID == math.MaxUint64 || r.CastID == math.MaxUint64 || plan.Scene != r.Scene || plan.Caster.World != r.currentWorld().Ref || plan.Caster.Life != r.Player.Life || r.Player.HP <= 0 || !w.summonPlanCurrent(r, plan) {
+	if plan == nil || r.ScheduleID == math.MaxUint64 || r.castSequenceFull() || plan.Scene != r.Scene || plan.Caster.World != r.currentWorld().Ref || plan.Caster.Life != r.Player.Life || r.Player.HP <= 0 || !w.summonPlanCurrent(r, plan) {
 		return p.CodeSkillStateBlocked
 	}
 	// s 保存当前处理所用的技能，level 保存当前处理所用的等级。
@@ -437,7 +437,7 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	r.Player.NextAttack = r.Player.ActionReadyAt
 	r.Player.CastSequence++
 	r.Player.CastSkillID = id
-	r.CastID++
+	r.advanceCastID()
 	r.ScheduleID++
 	r.Player.Direction = plan.Direction
 	r.NextSpell = now.Add(time.Duration(s.GlobalSpellMS) * time.Millisecond)
@@ -447,8 +447,13 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	r.SkillCooldowns[id] = now.Add(time.Duration(s.CooldownBaseMS-int64(level)*s.CooldownReductionMS) * time.Millisecond)
 	// handle 保存当前处理所用的实体句柄，life 保存当前处理所用的生命代次。
 	handle, life := plan.Target.Handle, plan.Target.Life
+	// 先将同一动作编号向共享观察流登记，再用该编号安排实际命中与宠物新生来源。
+	start := &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle,
+		Origin: pointPB(plan.Origin), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay),
+		InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level}
+	w.sendCombatObservation(r, p.MsgS2CCastAccepted, start)
 	// event 初始化用作事件的待确认施法。
-	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: r.CastID, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
+	event := pendingCast{Scene: r.Scene, Skill: s, Target: handle, TargetLife: life, TargetPoint: point, Due: now.Add(time.Duration(delay) * time.Millisecond), Amount: amount, Caster: plan.Caster, ID: start.CastId, Order: r.ScheduleID, Direction: r.Player.Direction, PrivilegeUntil: r.Role.PrivilegeUntil, PrivilegeCaptured: true, SkillLevel: level, BuffDurationMS: plan.BuffDurationMS}
 	event.Summon = plan.Summon
 	event.PoisonColor = plan.PoisonColor
 	if s.Behavior == "hell_fire" {
@@ -462,13 +467,12 @@ func (w *worker) acceptPreparedCast(r *room, plan *preparedCast, input uint32, n
 	if !handler.Displacement && (!handler.TurnUndead || plan.ExecuteTarget) {
 		r.Casts = append(r.Casts, event)
 	}
-	w.send(r, p.MsgS2CCastAccepted, 0, &pb.CastAccepted{SceneEpoch: r.Scene, CastId: r.CastID, SkillId: id, CasterHandle: r.Player.Handle, TargetHandle: handle, Origin: pointPB(plan.Origin), TargetGrid: pointPB(point), Direction: r.Player.Direction, DelayMs: uint32(delay), InputSequence: input, CasterLife: r.Player.Life, TargetLife: life, SkillLevel: level})
 	if handler.Displacement {
 		w.resolveDisplacementSkill(r, event, now)
 		return 0
 	}
 	if handler.TurnUndead && !plan.ExecuteTarget {
-		w.impact(r, id, r.Player.Handle, handle, life, point, 0, 2, false, r.CastID, 0)
+		w.impact(r, id, r.Player.Handle, handle, life, point, 0, 2, false, event.ID, 0)
 	}
 	w.snapshot(r)
 	return 0
@@ -542,7 +546,7 @@ func (w *worker) resolveCastInWorld(r *room, world *worldState, c pendingCast, n
 				return
 			}
 			if r.observesWorld(world, c.Scene) {
-				w.send(r, p.MsgS2CCastStep, 0, &pb.CastStep{SceneEpoch: r.Scene, CastId: c.ID, SkillId: c.Skill.ID, CasterHandle: c.Caster.Handle, CasterLife: c.Caster.Life, Grid: pointPB(point), Direction: c.Direction, StepIndex: uint32(c.Skill.LineCells - c.LineRemaining + 1), SkillLevel: c.SkillLevel})
+				w.sendCombatObservation(r, p.MsgS2CCastStep, &pb.CastStep{SceneEpoch: r.Scene, CastId: c.ID, SkillId: c.Skill.ID, CasterHandle: c.Caster.Handle, CasterLife: c.Caster.Life, Grid: pointPB(point), Direction: c.Direction, StepIndex: uint32(c.Skill.LineCells - c.LineRemaining + 1), SkillLevel: c.SkillLevel})
 			}
 			if c.LineRemaining > 1 {
 				// Crystal Map.CompleteMagic按本次实际处理时间创建下一格，不追赶卡帧。

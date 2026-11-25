@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
@@ -51,6 +52,10 @@ func TestSharedTownMongoWS(t *testing.T) {
 	healthy(t, cfg.AccountAddress)
 	healthy(t, cfg.GameAddress)
 	endpoint := "http://" + cfg.AccountAddress + "/rpc"
+	shield, ok := cfg.Fixture.Skill(31)
+	if !ok || shield.Behavior != "magic_shield" {
+		t.Fatal("城镇真实施法需要当前法师的魔法盾")
+	}
 	create := func(job uint32) (string, *pb.RoleSummary, *client) {
 		t.Helper()
 		login, role := &pb.LoginResult{}, &pb.RoleSummary{}
@@ -58,6 +63,13 @@ func TestSharedTownMongoWS(t *testing.T) {
 		rpc(t, endpoint, login.AccountToken, p.MsgC2SCreateRole, &pb.CreateRoleRequest{
 			OriginServerId: 1, Slot: 1, Job: job, Name: "同游" + domain.ID()[:6], OpId: domain.Bytes(domain.ID()),
 		}, role, 0)
+		if job == shield.JobID {
+			// 只准备正常可学习的技能前态，入镇后的施法走客户端真实命令。
+			_, err := store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": domain.Hex(role.Key.RoleId)}, bson.M{
+				"$set": bson.M{"level": shield.LearnLevel, "learned_skills": []domain.LearnedSkill{{SkillID: shield.ID}}},
+			})
+			must(t, err)
+		}
 		connection := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
 		connection.auto(false, 1)
 		return login.AccountToken, role, connection
@@ -90,6 +102,24 @@ func TestSharedTownMongoWS(t *testing.T) {
 		return f.ID == p.MsgS2CSceneBaseline && townPeer(first, secondRole.Name) != nil
 	})
 	before := townPeer(first, secondRole.Name)
+	second.send(p.MsgC2SCastIntent, &pb.CastIntent{SceneEpoch: second.entry.SceneEpoch, SkillId: shield.ID, InputSequence: 1})
+	readCast := func(c *client) *pb.CastAccepted {
+		t.Helper()
+		accepted := &pb.CastAccepted{}
+		f := travelUntilWithin(c, 4*time.Second, func(frame wire.Frame) bool { return frame.ID == p.MsgS2CCastAccepted })
+		must(t, proto.Unmarshal(f.Payload, accepted))
+		if f.Binding != c.binding || f.Request != 0 || accepted.SceneEpoch != c.entry.SceneEpoch ||
+			accepted.SkillId != shield.ID || accepted.CastId == 0 {
+			t.Fatal("施法表现未使用当前端附着和场景", accepted)
+		}
+		return accepted
+	}
+	original, shared := readCast(second), readCast(first)
+	if original.CasterHandle != second.entry.PlayerHandle || original.InputSequence != 1 ||
+		shared.CasterHandle != before.EntityHandle || shared.CasterLife != before.Life ||
+		shared.InputSequence != 0 || shared.CastId != original.CastId {
+		t.Fatal("同镇施法未保留原事件身份并映射共享角色", original, shared)
+	}
 	step := travelNearbyGround(t, town, second.scene, second.player().Position)
 	second.send(p.MsgC2SMoveIntent, &pb.MoveIntent{SceneEpoch: second.entry.SceneEpoch, Destination: step})
 	travelUntilWithin(first, 8*time.Second, func(f wire.Frame) bool {

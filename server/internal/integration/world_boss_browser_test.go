@@ -62,6 +62,10 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	}
 	world.DailyOpenOffsets = []time.Duration{local.Sub(midnight) % shanghaiDay}
 	world.Window = 160 * time.Second
+	if cfg.Fixture.RuleVersion >= 30 {
+		// 双端冷准备和旁观施法需要额外窗口，场景确认期限保持不变。
+		world.Window = 185 * time.Second
+	}
 	world.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 4}}
 	world.Monster.HP = 10_000
 	world.Monster.Accuracy = 100
@@ -73,6 +77,15 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	}
 	// 本双端投影回归从一个已拥有骷髅的测试账号起步。
 	cfg.Fixture.PetRuntime.BootstrapMode = "legacy_untrained_pet"
+	// 隔离新角色以一级验证正常购取之外的初始书学习、施法和旁观帧，正式等级要求由技能专项覆盖。
+	if cfg.Fixture.RuleVersion >= 30 {
+		for i := range cfg.Fixture.Skills {
+			if cfg.Fixture.Skills[i].ID == 2 {
+				cfg.Fixture.Skills[i].LearnLevel = 1
+				break
+			}
+		}
+	}
 	if !cfg.Fixture.ValidWorldBoss() || cfg.Fixture.Pet.JobID != 2 {
 		t.Fatal("首领双端隔离配置无效")
 	}

@@ -77,7 +77,7 @@ func (w *worker) validateAutoSkillSettings(r *room, incoming *pb.AutoSkillSettin
 func (w *worker) autoBattleIntent(r *room, frame wire.Frame) {
 	// q 记录自动战斗意图。
 	var q pb.AutoBattleIntent
-	if proto.Unmarshal(frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.MonsterCount > 8 {
+	if proto.Unmarshal(frame.Payload, &q) != nil || q.SceneEpoch != r.Scene || q.MonsterCount > devconfig.OrdinaryMonsterSlots {
 		w.failure(r, frame, p.CodeInvalidArgument)
 		return
 	}

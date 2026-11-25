@@ -13885,6 +13885,165 @@
     },
     {
       "table_id": "game_monsters",
+      "id": 3,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          },
+          "can_tame": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则30普通怪物开发候选"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 4,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          },
+          "can_tame": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则30普通怪物开发候选"
+    },
+    {
+      "table_id": "game_monsters",
+      "id": 5,
+      "field": "attributes",
+      "rule_key": null,
+      "shape": {
+        "type": "object",
+        "properties": {
+          "mp": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_attack_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_min": {
+            "type": "int",
+            "minimum": 0
+          },
+          "physical_defence_max": {
+            "type": "int",
+            "minimum": 0
+          },
+          "magic_defence": {
+            "type": "int",
+            "minimum": 0
+          },
+          "accuracy": {
+            "type": "int",
+            "minimum": 0
+          },
+          "agility": {
+            "type": "int",
+            "minimum": 0
+          },
+          "undead": {
+            "type": "boolean"
+          },
+          "can_push": {
+            "type": "boolean"
+          },
+          "can_tame": {
+            "type": "boolean"
+          }
+        }
+      },
+      "source_ref": "唯一玩法Excel；规则30普通怪物开发候选"
+    },
+    {
+      "table_id": "game_monsters",
       "id": 2,
       "field": "attributes",
       "rule_key": null,
@@ -14613,6 +14772,37 @@
             "type": "int",
             "minimum": 0
           },
+          "ordinary_map_ids": {
+            "type": "array",
+            "items": {
+              "type": "int",
+              "minimum": 1,
+              "maximum": 4294967295
+            }
+          },
+          "ordinary_initial_monster_count": {
+            "type": "int",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "ordinary_drop_pool_pairs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "int",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                },
+                "item_pool_id": {
+                  "type": "int",
+                  "minimum": 1,
+                  "maximum": 4294967295
+                }
+              }
+            }
+          },
           "boss_template_ids": {
             "type": "array",
             "items": {
@@ -14756,6 +14946,11 @@
           "recycle_test_gold_by_item": {
             "type": "object",
             "properties": {
+              "195": {"type": "int", "minimum": 0},
+              "220": {"type": "int", "minimum": 0},
+              "223": {"type": "int", "minimum": 0},
+              "225": {"type": "int", "minimum": 0},
+              "261": {"type": "int", "minimum": 0},
               "259": {
                 "type": "int",
                 "minimum": 0

@@ -99,6 +99,8 @@ type Monster struct {
 	CoolEye bool `json:"cool_eye,omitempty"`
 	// CanTame 标记可被诱惑之光转化为临时宠物的普通怪物。
 	CanTame bool `json:"can_tame,omitempty"`
+	// DropPoolID 指向普通击杀的道具与装备子池。历史配置使用全局掉落池。
+	DropPoolID uint32 `json:"drop_pool_id,omitempty"`
 }
 
 // Item 定义商品和掉落引用的物品模板及其用途和属性。
@@ -300,6 +302,8 @@ type Fixture struct {
 		// EquipmentGuarantee 记录装备“guarantee”，使用数值表示。
 		EquipmentGuarantee int `json:"equipment_guarantee"`
 	} `json:"drops"`
+	// OrdinaryDropPools 收录可由普通怪物模板引用的每组掉落候选。
+	OrdinaryDropPools []OrdinaryDropPool `json:"ordinary_drop_pools,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
 	Progression ProgressionRules `json:"progression"`
 	// InitialInventory 记录初始值背包资产，使用数值列表表示。
@@ -493,10 +497,19 @@ func (f *Fixture) Validate() error {
 	if !valid(f.Pet) {
 		return errors.New("宠物fixture缺失")
 	}
-	// m 接收遍历怪物集合时当前的元素。
+	// 模板编号在目录内唯一。各地图出生槽可以反复引用同一明确模板。
+	seenMonsters := make(map[uint32]bool, len(f.Monsters))
+	seenAppearances := make(map[uint32]bool, len(f.Monsters))
 	for _, m := range f.Monsters {
-		if !valid(m.Fighter) || m.ID == 0 || m.Exp < 0 || m.GoldMin < 0 || m.GoldMax < m.GoldMin || m.RespawnMS != 10000 {
+		if !valid(m.Fighter) || m.ID == 0 || seenMonsters[m.ID] || m.Exp < 0 || m.GoldMin < 0 || m.GoldMax < m.GoldMin || m.RespawnMS != 10000 {
 			return errors.New("怪物参数须明确，普通怪独立10秒复活")
+		}
+		seenMonsters[m.ID] = true
+		if f.OrdinaryMonsterRosterEnabled() {
+			if m.DefinitionID == 0 || seenAppearances[m.DefinitionID] {
+				return errors.New("普通怪物须有明确且唯一的客户端定义编号")
+			}
+			seenAppearances[m.DefinitionID] = true
 		}
 	}
 	// i 接收遍历道具集合时当前的元素。
@@ -525,6 +538,9 @@ func (f *Fixture) Validate() error {
 	}
 	if f.Drops.EmptyPPM != 650000 || f.Drops.GoldPPM != 200000 || f.Drops.ItemPPM != 100000 || f.Drops.EquipmentPPM != 50000 || f.Drops.EquipmentGuarantee != 20 || len(f.Drops.EquipmentItemIDs) == 0 {
 		return errors.New("普通掉落须互斥65/20/10/5与20杀保底")
+	}
+	if err := f.validateOrdinaryDropPools(); err != nil {
+		return err
 	}
 	// id 接收遍历“append”时当前的元素。
 	for _, id := range append(append([]uint32{}, f.Drops.EquipmentItemIDs...), f.InitialInventory...) {

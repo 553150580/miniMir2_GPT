@@ -3,7 +3,7 @@ from copy import deepcopy
 import unittest
 
 import export_configs as config
-from test_source_map_projection import module, ROOT, restore_rule28_skill_selection
+from test_source_map_projection import module, ROOT, restore_rule28_skill_selection, restore_rule29_hunting_selection
 
 
 class EquipmentFoundationTests(unittest.TestCase):
@@ -20,15 +20,20 @@ class EquipmentFoundationTests(unittest.TestCase):
     @staticmethod
     def equipment(tables,id=218):return next(row for row in tables['game_equipment'] if row['item_id']==id)
 
-    def test_current_source_selection_and_four_explicit_zeros(self):
+    def test_current_source_selection_and_explicit_magic_tao_attributes(self):
         self.assertGreaterEqual(self.fixture['rule_version'],22)
-        self.assertEqual(self.profile(self.tables)['base_item_ids'],[35,36,193,218,92,259,594])
-        self.assertNotIn(220,[item['id'] for item in self.fixture['items']])
+        self.assertEqual(self.profile(self.tables)['base_item_ids'],
+                         [35,36,193,218,92,259,594,223,220,225,195,261,95,96,97])
+        self.assertEqual([(i['id'],i['equipment_stage'],i['recycle_gold']) for i in self.fixture['items'] if i['is_equipment']],
+                         [(218,0,50),(193,0,400),(259,0,0),(223,0,900),(220,0,3000),(225,0,1000),(195,1,3000),(261,1,3000)])
+        fields = ('magic_min_bonus','magic_max_bonus','tao_min_bonus','tao_max_bonus')
+        bonuses = {220:(0,1,0,0), 261:(0,0,1,1)}
         for item in self.fixture['items']:
-            for field in ['magic_min_bonus','magic_max_bonus','tao_min_bonus','tao_max_bonus']:
-                if item['is_equipment']:self.assertIn(field,item)
-                self.assertEqual(item.get(field,0),0)
-        self.assertEqual([(i['id'],i['equipment_stage'],i['recycle_gold']) for i in self.fixture['items'] if i['is_equipment']],[(218,0,50),(193,0,400),(259,0,0)])
+            with self.subTest(item_id=item['id']):
+                if item['is_equipment']:
+                    self.assertEqual(tuple(item[field] for field in fields), bonuses.get(item['id'], (0,0,0,0)))
+                else:
+                    self.assertTrue(all(item.get(field,0) == 0 for field in fields))
 
     def test_mc_sc_projection_uses_unique_equipment_values_and_public_whitelist(self):
         tables=deepcopy(self.tables);row=self.equipment(tables)
@@ -47,9 +52,13 @@ class EquipmentFoundationTests(unittest.TestCase):
                 self.assertNotIn('base_attributes',item);self.assertNotIn('equipment_stage',item)
 
     def test_selection_comes_from_profile_not_fixed_four_or_all_equipment(self):
-        tables=deepcopy(self.tables);profile=self.profile(tables);profile['base_item_ids'].remove(218)
+        tables=deepcopy(self.tables);profile=self.profile(tables)
+        profile['rule_version']=29
+        restore_rule29_hunting_selection(profile)
+        profile['base_item_ids'].remove(218)
         profile['npc_shop_prices']['items']=[row for row in profile['npc_shop_prices']['items'] if row['item_id']!=218]
-        next(row for row in profile['npc_shops'] if row['key']=='weapon')['item_ids']=[]
+        weapon_shop=next(row for row in profile['npc_shops'] if row['key']=='weapon')
+        weapon_shop['item_ids'].remove(218)
         self.assertNotIn(218,[row['id'] for row in module.fixture_from_rows(tables)['items']])
         self.assertIn(218,[row['id'] for row in tables['game_equipment']])
 
@@ -87,14 +96,17 @@ class EquipmentFoundationTests(unittest.TestCase):
                 with self.subTest(version=version,value=value),self.assertRaises(ValueError):module.fixture_from_rows(tables)
 
     def test_stage_uses_row_and_exact_requirement_formula_at_boundaries(self):
+        isolated=deepcopy(self.tables);profile=self.profile(isolated)
+        profile['rule_version']=29
+        restore_rule29_hunting_selection(profile)
         for level in [1,10,11,20,21,50,2**32-1]:
-            tables=deepcopy(self.tables);stage=(level-1)//10;self.equipment(tables).update(required_level=level,stage=stage)
+            tables=deepcopy(isolated);stage=(level-1)//10;self.equipment(tables).update(required_level=level,stage=stage)
             fixture=module.fixture_from_rows(tables);item=next(i for i in fixture['items'] if i['id']==218)
             self.assertEqual(item['equipment_stage'],stage)
             public=next(i for i in module.public_gameplay(fixture)['items'] if i['item_id']==218)
             self.assertEqual((public['equipment_stage'],public['required_level']),(stage,level))
         for value in ['missing',None,False,-1,1.5,'0',1]:
-            tables=deepcopy(self.tables);row=self.equipment(tables)
+            tables=deepcopy(isolated);row=self.equipment(tables)
             if value=='missing':del row['stage']
             else:row['stage']=value
             with self.subTest(value=value),self.assertRaises(ValueError):module.fixture_from_rows(tables)

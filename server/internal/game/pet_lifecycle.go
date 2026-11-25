@@ -178,5 +178,7 @@ func (w *worker) relocatePet(r *room, expected actorRef, target *worldState, poi
 	}
 	r.recordPetPosition()
 	r.PetWorld = target.Ref
-	return w.commitRelocation(r, r.Pet, point)
+	moved := w.commitRelocation(r, r.Pet, point)
+	r.releasePetHoldingWorld()
+	return moved
 }

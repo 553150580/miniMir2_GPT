@@ -23,7 +23,11 @@ class CompactTownTests(unittest.TestCase):
     def test_compact_towns_and_menu_share_public_design_without_source_data(self):
         public = module.public_gameplay(self.fixture)
         towns = [row for row in public['map_catalog'] if row.get('compact_town')]
-        self.assertEqual(public['map_regions'], [{'id': '0', 'name': '比奇省', 'map_ids': ['1', '3', '4', '5']}])
+        self.assertEqual(public['map_regions'], [
+            {'id': '0', 'name': '比奇省', 'map_ids': ['1', '3', '4', '5']},
+            {'id': 'south', 'name': '谷地', 'map_ids': ['6']},
+            {'id': 'spider', 'name': '荒地', 'map_ids': ['7']},
+        ])
         self.assertEqual(public['town_travel']['destination_map_ids'], [town['id'] for town in towns])
         self.assertEqual([(town['name'], len(town['npcs'])) for town in towns],
                          [('银杏山谷', 6), ('边界村', 6), ('比奇城', 9)])

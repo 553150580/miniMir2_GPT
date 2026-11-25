@@ -404,8 +404,9 @@ func consumePotion(r domain.Role, q AssetRequest, fixture devconfig.Fixture) (do
 type Settlement struct {
 	SourceSeq        int64           // 同角色必须连续递增的来源序号。
 	Kills            int64           // 本来源对应的击杀次数。
-	MonsterID        uint32          `json:"monster_id,omitempty"` // 实际击杀的怪物配置号，旧来源或非击杀为零。
-	MapID            uint64          `json:"map_id,omitempty"`     // 原击杀发生的地图配置号，不随之后换图而变。
+	MonsterID        uint32          `json:"monster_id,omitempty"`   // 实际击杀的怪物配置号，旧来源或非击杀为零。
+	MapID            uint64          `json:"map_id,omitempty"`       // 原击杀发生的地图配置号，不随之后换图而变。
+	DropPoolID       uint32          `json:"drop_pool_id,omitempty"` // 怪物原掉落池号，历史全局掉落和非击杀为零。
 	Experience       int64           // 应用等级及经验规则前的原始经验。
 	Gold             int64           // 本来源直接产生的金币，不含装备回收。
 	Bound            bool            // 直接金币应计入绑定钱包还是普通钱包。
