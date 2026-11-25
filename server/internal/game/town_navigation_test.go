@@ -3,10 +3,13 @@ package game
 
 import (
 	"fmt"
+	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
+	p "minimir/internal/protocol"
 	"minimir/internal/townnav"
+	"minimir/internal/wire"
 	"slices"
 	"testing"
 	"time"
@@ -277,6 +280,76 @@ func TestTownNavigationReplansWhenGoalBecomesOccupied(t *testing.T) {
 	}
 	if r.Player.Pos != target || r.TownNavigation[0] != request || r.Navigation.Destination == nil || *r.Navigation.Destination != target {
 		t.Fatalf("占位解除后没有继续到原目标：位置 %v，导航 %+v", r.Player.Pos, r.Navigation)
+	}
+}
+
+// TestTownNavigationOwnPetYieldsClickedCell 核验点击自家宠物占据的地格不会长期停在邻格。
+func TestTownNavigationOwnPetYieldsClickedCell(t *testing.T) {
+	w, r := navigationTownWorker(t, 17, 17, 64, 128, 1, 2)
+	definition := &w.e.Store.Cfg.Fixture.Maps[0]
+	definition.CompactTown, definition.CollisionBits = true, nil
+	// 正东让开格由 NPC 占据。宠物必须按现有斜角规则找另一格。
+	definition.Blocked = []devconfig.Point{{X: 10, Y: 13}}
+	w.townNavigation = nil
+	if err := w.e.initializeTownNavigation(); err != nil {
+		t.Fatal(err)
+	}
+	start, goal := devconfig.Point{X: 8, Y: 13}, devconfig.Point{X: 9, Y: 13}
+	r.Player.Pos = start
+	r.Pet = &entity{Handle: 2, Kind: 2, Life: 1, HP: 10, MaxHP: 10, Pos: goal}
+	requestTownGround(r, goal)
+	startTime := time.Unix(1, 0)
+	r.Pet.NextMove = startTime.Add(3 * time.Second)
+	navigationTownTick(w, r, goal, startTime)
+	request := r.TownNavigation[0]
+	if request == nil || !request.adjacent || request.state != townnav.Arrived {
+		t.Fatal("尚未建立等待占位的原邻格请求")
+	}
+	for frame := 1; frame <= 10 && r.Player.Pos != goal; frame++ {
+		navigationTownTick(w, r, goal, startTime.Add(time.Duration(frame)*time.Second))
+		if r.TownNavigation[0] != request || r.Navigation.Revision != request.inputRevision {
+			t.Fatal("目标格让步时更换了原点击身份")
+		}
+		if frame < 3 && (r.Pet.Pos != goal || r.Player.Pos != start) {
+			t.Fatal("宠物行走尚不可用时抢占了动作时钟")
+		}
+	}
+	if r.Player.Pos != goal || r.Pet.Pos == goal || r.Pet.MovementKind != movementWalk || r.Pet.MovementRevision != 1 ||
+		!w.neighbor(r, goal, r.Pet.Pos, r.Pet) || r.Pet.Pos == start {
+		t.Fatalf("主人或宠物没有按地形正常落格：玩家 %v 宠物 %v", r.Player.Pos, r.Pet.Pos)
+	}
+}
+
+// TestTownNavigationNewTapRetiresOldPathWhileWalking 用真实 MoveIntent 确定开始下一次导航的权威落脚格。
+func TestTownNavigationNewTapRetiresOldPathWhileWalking(t *testing.T) {
+	w, r := navigationTownWorker(t, 17, 17, 64, 128, 1, 2)
+	start := devconfig.Point{X: 8, Y: 8}
+	r.Player.Pos = start
+	send := func(input uint32, target devconfig.Point) {
+		w.command(command{role: r.Role.ID, conn: r.Conn, frame: wire.Message(p.MsgC2SMoveIntent, input, uint64(r.Auth.SessionEpoch),
+			&pb.MoveIntent{SceneEpoch: r.Scene, InputSequence: input, Destination: pointPB(target)})})
+	}
+	first, second := devconfig.Point{X: 16, Y: 9}, devconfig.Point{X: 7, Y: 7}
+	now := time.Unix(1, 0)
+	send(1, first)
+	navigationTownTick(w, r, first, now)
+	old := r.TownNavigation[0]
+	navigationTownTick(w, r, first, now.Add(time.Second))
+	if r.Player.Pos != (devconfig.Point{X: 9, Y: 8}) || old == nil {
+		t.Fatalf("第一条浅斜率路径未真正完成第一步：%v", r.Player.Pos)
+	}
+	// 同一动作时钟内发第二次点击，任何旧任务回调都不能继续推进第一条路线。
+	send(2, second)
+	navigationTownTick(w, r, second, now.Add(time.Second))
+	if r.TownNavigation[0] == old || w.validTownRequest(old) || r.Navigation.Revision != 2 || r.Navigation.InputSequence != 2 ||
+		r.Player.Pos != (devconfig.Point{X: 9, Y: 8}) {
+		t.Fatalf("点地重定向改错当前脚点或仍使用旧路线：%+v", r.Navigation)
+	}
+	for step := 2; step <= 5 && r.Player.Pos != second; step++ {
+		navigationTownTick(w, r, second, now.Add(time.Duration(step)*time.Second))
+	}
+	if r.Player.Pos != second || r.Player.MovementRevision != 3 || r.Navigation.Destination == nil || *r.Navigation.Destination != second {
+		t.Fatalf("未从权威脚点沿最短路径转向第二次点击：位置 %v，移动 %d", r.Player.Pos, r.Player.MovementRevision)
 	}
 }
 

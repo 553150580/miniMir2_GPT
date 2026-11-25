@@ -102,6 +102,36 @@ func TestClearTownRoutesFollowEightDirections(t *testing.T) {
 	}
 }
 
+// TestClearTownRoutesNearGridAxes 核对八种 8:1 浅斜率，等长路径的每一步尽量贴近点击线。
+func TestClearTownRoutesNearGridAxes(t *testing.T) {
+	grid := testGrid(t, 17, 17)
+	start := Point{X: 8, Y: 8}
+	dynamic := Dynamic{Revision: 1}
+	for _, offset := range []Point{{8, 1}, {8, -1}, {-8, 1}, {-8, -1}, {1, 8}, {-1, 8}, {1, -8}, {-1, -8}} {
+		goal := Point{start.X + offset.X, start.Y + offset.Y}
+		task, _ := testTask(t, grid, start, goal, testLimits(grid.Cells()), dynamic)
+		finish(t, task, 4)
+		position := start
+		for stepIndex := range 8 {
+			step, ok, err := task.Next(testKey(), position, dynamic)
+			if err != nil || !ok || !grid.StepAllowed(position, step) || distance(step, goal) != 7-stepIndex {
+				t.Fatalf("浅斜率 %v 在第 %d 步绕路或失去八向关系，格 %v，错误 %v", offset, stepIndex+1, step, err)
+			}
+			deviation := abs((step.X-start.X)*offset.Y - (step.Y-start.Y)*offset.X)
+			if deviation > 4 {
+				t.Fatalf("浅斜率 %v 第 %d 步偏离最近格，格 %v", offset, stepIndex+1, step)
+			}
+			if err := task.CommitStep(testKey(), position, step); err != nil {
+				t.Fatal(err)
+			}
+			position = step
+		}
+		if task.State() != Arrived || position != goal {
+			t.Fatalf("浅斜率 %v 未在八步到达原点击点", offset)
+		}
+	}
+}
+
 // 独立的坐标邻接图BFS，不调用候选的Walkable/StepAllowed/heap或启发式。
 // width 记录宽度，使用数值表示，height 记录高度，使用数值表示，mask 记录掩码，使用数值表示，start 记录起点或开始时间，使用点位表示。
 // goal 记录目标格，使用点位表示。

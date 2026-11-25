@@ -492,7 +492,8 @@ export class AppRoot extends Component {
         const viewport = this.find('MapViewport'); const world = viewport.getChildByName('World')!;
         this.attachment = new MapAttachmentCoordinator<WorldAssets, GameWorldView>();
         this.cleanups.push(() => { this.releaseCombatStatusInvalidation?.(); this.combatStatus?.dispose(); });
-        this.skills = new GameSkills(safe, this.popup, (title, lines) => this.combatStatus!.showDetails(title, lines));
+        this.skills = new GameSkills(safe, this.popup, index => this.configureAttackSlot(index),
+            (title, lines) => this.combatStatus!.showDetails(title, lines));
         this.cleanups.push(() => this.skills?.dispose());
         this.tasksCodex = new GameTasksCodex(this.find('UIMgr/Panels/TasksCodex'), () => {
             const identity = currentEntryIdentity();
@@ -672,7 +673,7 @@ export class AppRoot extends Component {
         this.button('BottomHUD/Skills/SkillsPanel', () => { this.ui!.open('Skills'); this.refreshGame(); });
         this.button('UIMgr/Panels/Skills/Learn', () => this.learnSkill());
         for (let index = 0; index < attackSkillSlotCount; index++) {
-            this.optionalButton(`UIMgr/Panels/Skills/AttackSlot${index + 1}`, () => this.configureAttackSlot(index));
+            this.optionalButton(`UIMgr/Panels/Skills/AttackSlot${index + 1}`, () => this.skills?.chooseAttackSlot(index));
         }
         this.optionalButton('UIMgr/Panels/Skills/ClearSlots', () => this.configureAttackSlot());
         for (const panel of ['Role', 'Inventory']) {

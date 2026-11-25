@@ -66,6 +66,7 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 		t.Fatal("已建道士没有通常可选的正式目录入口")
 	}
 	roleID := domain.Hex(role.Key.RoleId)
+	slotFirst := os.Getenv("MINIMIR_SLOTS_BROWSER_SLOT_FIRST") == "1"
 	// 只在本独立库准备适龄角色和两本原书，浏览器仍需真正学习后才能配置。
 	var level uint32
 	books := make([]domain.Item, 0, 2)
@@ -77,9 +78,15 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 		level = max(level, skill.LearnLevel)
 		books = append(books, domain.Item{ID: domain.ID(), ItemID: skill.BookItemID, Quantity: 1, Bound: true, Version: 1})
 	}
+	learned := []domain.LearnedSkill{{SkillID: 2}}
+	if slotFirst {
+		// 使用已学骷髅、治愈术在第四槽的老角色前态，避免只有刚学书才能通过验收。
+		level = 32
+		learned = append(learned, domain.LearnedSkill{SkillID: devconfig.SummonSkeletonSkillID})
+		books = books[:0]
+	}
 	_, err = store.DB.Collection("roles").UpdateOne(ctx, bson.M{"_id": roleID}, bson.M{
-		"$set": bson.M{"level": level, "learned_skills": []domain.LearnedSkill{{SkillID: 2}},
-			"skill_slot_ids": []uint32{0, 0, 0, 2}},
+		"$set":  bson.M{"level": level, "learned_skills": learned, "skill_slot_ids": []uint32{0, 0, 0, 2}},
 		"$push": bson.M{"items": bson.M{"$each": books}},
 	})
 	must(t, err)
@@ -117,16 +124,22 @@ func TestSkillAttackSlotsSummonBrowserMongoWS(t *testing.T) {
 		}
 	}
 	for _, id := range []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID} {
-		if _, learned := stored.Skill(id); !learned {
+		if _, known := stored.Skill(id); known != (!slotFirst || id == devconfig.SummonSkeletonSkillID) {
 			t.Fatal("浏览器学习未持久化技能", id)
 		}
 	}
-	if !slices.Equal(stored.SkillSlotIDs, []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 2}) {
+	wantSlots := []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 2}
+	wantCommands := int64(4)
+	if slotFirst {
+		wantSlots = []uint32{0, 0, devconfig.SummonSkeletonSkillID, 2}
+		wantCommands = 2
+	}
+	if !slices.Equal(stored.SkillSlotIDs, wantSlots) {
 		t.Fatal("触屏两次配置未持久化四槽", stored.SkillSlotIDs)
 	}
 	count, err := store.DB.Collection("operations").CountDocuments(ctx, bson.M{"role_id": roleID, "kind": persistence.AssetSetSkillSlots, "code": 0})
 	must(t, err)
-	if count != 2 || stored.EconomicSeq != 4 {
+	if count != 2 || stored.EconomicSeq != wantCommands {
 		t.Fatalf("学书、槽位点击或健康重连产生非预期永久操作次数：技能槽%d、角色流水%d", count, stored.EconomicSeq)
 	}
 }

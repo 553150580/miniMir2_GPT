@@ -15,6 +15,7 @@ assert(endpoint.protocol === 'ws:' && endpoint.hostname === '127.0.0.1' && !['18
 const safe = 'Canvas/Safe/', panel = `${safe}UIMgr/Panels/Skills`, reconnect = 'Canvas/ReconnectDialog';
 const confirm = `${safe}PopupView/Panels/Confirm/ConfirmButton`;
 const testRevisionGap = process.env.MINIMIR_SLOTS_BROWSER_REVISION_GAP === '1';
+const testSlotFirst = process.env.MINIMIR_SLOTS_BROWSER_SLOT_FIRST === '1';
 
 async function scene(page, name) {
     await page.waitForFunction(name => {
@@ -71,7 +72,8 @@ async function selectSkill(page, cdp, id, learned) {
                 const position = pointIn(list.viewport, fraction);
                 return { x: rect.x + position.x / size.width * rect.width, y: rect.y + (size.height - position.y) / size.height * rect.height };
             };
-            const up = cellY !== undefined ? cellY < viewBottom : index > Math.max(...Array.from(list.rows.keys()));
+            // 接近裁剪边时也往视窗中心滑，避免目标刚进下边缘时测试反向退出。
+            const up = cellY !== undefined ? cellY < (viewBottom + viewTop) / 2 : index > Math.max(...Array.from(list.rows.keys()));
             return { index, onScreen: !!onScreen, start: point(up ? .2 : .8), end: point(up ? .8 : .2),
                 rows: Array.from(list.rows.keys()), offset: list.scrollView.getScrollOffset().y, maximum: list.scrollView.getMaxScrollOffset().y,
                 cellY, viewBottom };
@@ -126,6 +128,58 @@ async function observe(page, session, slots, fromBinding = '') {
     try { return await seen.jsonValue(); } finally { await seen.dispose(); }
 }
 
+// 配对原请求、编辑时看到的四槽及真实回执，跳过学习和重连消息。
+function recordAssignment(report, requests, replies, ids, previous, gap) {
+    const item = Array.from(requests).find(([, request]) => request.type === 40031 && JSON.stringify(request.value.skill_slot_ids) === JSON.stringify(ids));
+    assert(item, '技能槽按钮没有发送40031');
+    const [key, { value: request }] = item, reply = replies.get(key);
+    assert(reply && reply.error_code === 0 && reply.new_revision.toString() !== '0', '40031缺少真实成功回执');
+    assert.equal(request.operation.op_id.length, 16);
+    assert.deepEqual(Buffer.from(reply.op_id), Buffer.from(request.operation.op_id));
+    assert.equal(reply.command_seq.toString(), request.operation.command_seq.toString());
+    assert.deepEqual(request.expected_skill_slot_ids, previous, '技能槽比较字段必须保留触摸时看到的四槽');
+    if (gap) assert.equal(request.operation.expected_revision.toString(), gap.inventory, '修订错位时必须提交读到的实际库存修订');
+    report.assignments.push({ ids, previous, commandSeq: reply.command_seq.toString(), revision: reply.new_revision.toString(), sameOperation: true });
+}
+
+// 已学骷髅且第 4 槽保留治愈术时，先点空槽应等待点选，并保护已有槽和未学习技能。
+async function assignKnownSummonBySlot(page, cdp, session, report, requests, replies, first) {
+    const target = `${panel}/AttackSlot1`, targetLabel = target + '/Label';
+    const waitForLabel = value => page.waitForFunction(({ path, value }) => cc.find(path)?.getComponent(cc.Label)?.string === value,
+        { path: targetLabel, value }, { timeout: 3500 });
+    report.step = '旧道士先点空的第一槽';
+    await touch(page, target);
+    await waitForLabel('1 · 待选');
+    const hint = await page.evaluate(path => cc.find(path)?.getComponent(cc.Label)?.string, `${panel}/Hint`);
+    assert.match(hint, /第 1 槽待选.*已学技能/);
+    await observe(page, session, first.slots);
+    assert.equal(requests.size, 0, '点空槽不能立即将默认预览技能移入');
+    await page.screenshot({ path: path.join(output, 'summon-slot-awaiting-selection.png') });
+    await selectSkill(page, cdp, 30, false);
+    await waitForLabel('1 · 待选');
+    assert.equal(requests.size, 0, '未学技能不能保存到待选槽');
+    await touch(page, target);
+    await waitForLabel('1 · 空位');
+    assert.equal(requests.size, 0, '取消待选不能发送资产操作');
+    report.slotFirst = { hint, inactiveSkillIgnored: true, cancelledWithoutWrite: true };
+    report.step = '先点槽位，再通过触屏滚动选已学召唤骷髅';
+    await touch(page, target);
+    await waitForLabel('1 · 待选');
+    const swipes = await selectSkill(page, cdp, 17, true);
+    assert(swipes > 0);
+    const intermediate = [17, 0, 0, 2];
+    await observe(page, session, intermediate);
+    recordAssignment(report, requests, replies, intermediate, first.slots);
+    await waitForLabel('1 · 召唤骷髅');
+    report.step = '重新选技能后点第 3 槽，沿用原操作顺序';
+    await selectSkill(page, cdp, 17, true);
+    await touch(page, `${panel}/AttackSlot3`);
+    const final = [0, 0, 17, 2];
+    await observe(page, session, final);
+    recordAssignment(report, requests, replies, final, intermediate);
+    return final;
+}
+
 async function main() {
     const report = { passed: false, errors: [], learning: [], assignments: [], connectedSockets: 0 };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
@@ -175,12 +229,12 @@ async function main() {
         }
         report.automaticBattle = true;
         await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
+        const finalSlots = testSlotFirst ? await assignKnownSummonBySlot(page, cdp, session, report, requests, replies, first) : [17, 30, 0, 2];
         let previous = first.slots;
-        for (const [slot, skill, ids] of [[1, 17, [17, 0, 0, 2]], [2, 30, [17, 30, 0, 2]]]) {
+        const lessons = testSlotFirst ? [] : [[1, 17, [17, 0, 0, 2]], [2, 30, finalSlots]];
+        for (const [slot, skill, ids] of lessons) {
             report.step = `触屏滚动选择并学习技能${skill}`;
             const swipes = await selectSkill(page, cdp, skill, false);
-            const wasDisabled = await page.evaluate(path => !cc.find(path).getComponent(cc.Button).interactable, `${panel}/AttackSlot${slot}`);
-            assert(wasDisabled, '未学技能不应允许提交技能槽');
             await touch(page, panel + '/Learn');
             await touch(page, confirm);
             await page.waitForFunction(({ session, skill }) => session.inventory?.learnedSkills?.some(row => row.skillId === skill), { session, skill });
@@ -210,40 +264,34 @@ async function main() {
                     await beforeBinding.dispose();
                 }
             }
-            const item = Array.from(requests).find(([, request]) => request.type === 40031 && JSON.stringify(request.value.skill_slot_ids) === JSON.stringify(ids));
-            assert(item, '技能槽按钮没有发送40031');
-            const [key, { value: request }] = item, reply = replies.get(key);
-            assert(reply && reply.error_code === 0 && reply.new_revision.toString() !== '0', '40031缺少真实成功回执');
-            assert.equal(request.operation.op_id.length, 16);
-            assert.deepEqual(Buffer.from(reply.op_id), Buffer.from(request.operation.op_id));
-            assert.equal(reply.command_seq.toString(), request.operation.command_seq.toString());
-            assert.deepEqual(request.expected_skill_slot_ids, previous, '技能槽比较字段必须保留触摸时看到的四槽');
-            if (exerciseGap) assert.equal(request.operation.expected_revision.toString(), report.revisionGap.inventory, '修订错位时必须提交读到的实际库存修订');
-            report.assignments.push({ ids, previous, commandSeq: reply.command_seq.toString(), revision: reply.new_revision.toString(), sameOperation: true });
+            recordAssignment(report, requests, replies, ids, previous, exerciseGap ? report.revisionGap : undefined);
             previous = ids;
         }
         await page.screenshot({ path: path.join(output, 'summon-slots.png') });
         report.step = '用保存的重连按钮取新票并复核原技能槽';
         await page.evaluate(session => session.connection.socket.close(4001, '隔离召唤槽触屏验收'), session);
         await touch(page, `${reconnect}/Panel/Reconnect`);
-        const after = await observe(page, session, [17, 30, 0, 2], first.binding);
+        const after = await observe(page, session, finalSlots, first.binding);
         await page.waitForFunction(path => !cc.find(path)?.activeInHierarchy, reconnect);
         if (!await page.evaluate(path => cc.find(path)?.activeInHierarchy ?? false, panel)) await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
-        await page.waitForFunction(path => {
+        await page.waitForFunction(({ path, testSlotFirst }) => {
             const label = name => cc.find(`${path}/${name}/Label`)?.getComponent(cc.Label)?.string;
-            return label('AttackSlot1')?.includes('召唤骷髅') && label('AttackSlot2')?.includes('召唤神兽');
-        }, panel);
+            return label('AttackSlot4')?.includes('治愈术') && (testSlotFirst
+                ? label('AttackSlot1')?.includes('空位') && label('AttackSlot3')?.includes('召唤骷髅')
+                : label('AttackSlot1')?.includes('召唤骷髅') && label('AttackSlot2')?.includes('召唤神兽'));
+        }, { path: panel, testSlotFirst });
         await page.screenshot({ path: path.join(output, 'summon-slots-reconnected.png') });
         assert.equal(after.role, first.role);
         assert.equal(report.connectedSockets, 2);
-        assert.equal(requests.size, 4);
+        assert.equal(requests.size, testSlotFirst ? 2 : 4);
         assert(report.learning.every(row => row.swipes > 0), '两种召唤都应覆盖实际触屏滚动');
         assert.deepEqual(report.errors, []);
         report.reconnect = { newBinding: true, sameRole: true, slots: after.slots };
         report.passed = true;
         delete report.step;
     } catch (error) {
-        report.failure = { error: error.message, sent: Array.from(requests.values(), request => request.type),
+        report.failure = { error: error.message, sent: Array.from(requests.values(), request => request.type === 40031
+            ? { id: request.type, slots: request.value.skill_slot_ids } : request.type),
             client: session ? await page.evaluate(session => session.lastError, session).catch(() => '') : '' };
         throw error;
     } finally {
@@ -252,7 +300,8 @@ async function main() {
         await browser.close();
         fs.writeFileSync(path.join(output, 'summon-slots-browser-report.json'), JSON.stringify(report, null, 2) + '\n', 'utf8');
     }
-    console.log('实际触屏滚动、学习并保存骷髅/神兽，重连后保留已配置四槽');
+    console.log(testSlotFirst ? '既有道士先点空槽再选骷髅可保存，反向流程与重连也正常'
+        : '实际触屏滚动、学习并保存骷髅/神兽，重连后保留已配置四槽');
 }
 
 main().catch(error => { console.error(error.stack); process.exitCode = 1; });

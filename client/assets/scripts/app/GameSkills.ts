@@ -1,25 +1,37 @@
 import { Button, isValid, Label, Node, Toggle } from 'cc';
 import { List } from '../ui/List';
 import { PopupView } from '../ui/PopupView';
+import { UIMgr } from '../ui/UIMgr';
 import { attackSkillSlotIDs, canQueueSkill, canSetAutomaticSkill, isDirectionalSkill, isGroundSkill, isSummonRecall, SkillRow, SkillSnapshot, skillActionLabel, skillActivation, skillDescriptionLines, skillMode, skillModeStatus, skillPassiveText, skillRows, skillUseBlock } from './SkillModel';
 
 // 仅绑定保存的技能面板与条目；布局、按钮和模板均由Creator资产提供。
 export class GameSkills {
     private readonly panel: Node;
     private readonly list: List;
+    private readonly ui: Node;
     private selectedId = 0;
     private rows: SkillRow[] = [];
     private input: SkillSnapshot | null = null;
     private key = '';
     private quickSkillId = 0;
     private boundQuickSkillId = 0;
+    // 默认展示的技能只用于预览。只有本次打开后手动点选的技能才会直接入槽。
+    private choseSkill = false;
+    // 先点槽位时仅记住编辑目标，服务端原确认槽位仍保留。
+    private slotTarget: number | null = null;
+    private slotSaving = false;
+    private slotMessage = '';
 
-    constructor(safe: Node, private readonly popup: PopupView, private readonly showDetails?: (title: string, lines: readonly string[]) => void) {
+    constructor(safe: Node, private readonly popup: PopupView, private readonly saveSlot: (index: number) => Promise<void>,
+        private readonly showDetails?: (title: string, lines: readonly string[]) => void) {
         const panel = safe.getChildByPath('UIMgr/Panels/Skills');
         const list = panel?.getChildByName('List')?.getComponent(List);
-        if (!panel || !list) throw new Error('技能面板尚未保存为Creator资产');
+        const ui = safe.getChildByName('UIMgr');
+        if (!panel || !list || !ui) throw new Error('技能面板尚未保存为Creator资产');
         this.panel = panel; this.list = list;
+        this.ui = ui;
         list.node.on(List.EVENT_ITEM_CLICK, this.onSelected, this);
+        ui.on(UIMgr.EVENT_CHANGED, this.onPanelChanged, this);
     }
 
     get selected(): SkillRow | null { return this.rows.find(row => row.definition.id === this.selectedId) ?? null; }
@@ -35,6 +47,8 @@ export class GameSkills {
     refresh(input: SkillSnapshot, quickSkillId = this.quickSkillId, boundQuickSkillId = this.boundQuickSkillId): void {
         this.quickSkillId = quickSkillId;
         this.boundQuickSkillId = boundQuickSkillId;
+        if (this.input && (this.input.roleIdentity !== input.roleIdentity || this.input.sceneEpoch.toString() !== input.sceneEpoch.toString()
+            || this.input.ready && !input.ready)) this.resetSlotChoice();
         this.input = input; this.rows = skillRows(input);
         if (!this.rows.some(row => row.definition.id === this.selectedId)) this.selectedId = this.rows[0]?.definition.id ?? 0;
         this.renderAttackSlots(input);
@@ -79,39 +93,88 @@ export class GameSkills {
             this.automaticLabel(input, selected));
     }
 
-    // 固定按钮保存在技能页；服务端库存确认前不改变槽位文字。
+    // 用已保存按钮显示待选状态和权威槽位，不在回执前展示新技能。
     private renderAttackSlots(input: SkillSnapshot): void {
         const slots = attackSkillSlotIDs(input.inventory?.skillSlotIds);
-        const selected = this.selected, available = !!input.canConfigureSlots && canQueueSkill(selected);
+        const selected = this.selected, available = !!input.canConfigureSlots && !this.slotSaving;
         for (const [index, id] of slots.entries()) {
             const button = this.panel.getChildByName(`AttackSlot${index + 1}`);
             const definition = input.definitions.find(skill => skill.id === id);
             const label = button?.getChildByName('Label')?.getComponent(Label);
             const control = button?.getComponent(Button);
-            if (label) label.string = `${index + 1} · ${definition?.name ?? '空位'}`;
+            if (label) label.string = `${index + 1} · ${index === this.slotTarget ? '待选' : definition?.name ?? '空位'}`;
             if (control) control.interactable = available;
         }
-        this.setButton('ClearSlots', !!input.canConfigureSlots && slots.some(id => id !== 0));
+        this.setButton('ClearSlots', available && slots.some(id => id !== 0));
         const activeSlot = selected ? slots.indexOf(selected.definition.id) + 1 : 0;
-        let hint = '选择已学技能，再轻触槽位';
+        let hint = '轻触槽位或选择已学技能';
         if (!input.ready || !input.inventory) hint = '技能槽正在同步';
         else if (input.sceneKind !== 1 && input.sceneKind !== 2) hint = '回城镇或普通野外可调整技能槽';
+        else if (this.slotSaving) hint = '正在保存技能槽';
         else if (!input.canConfigureSlots) hint = '正在核对操作，请稍候';
-        else if (selected && !selected.learned) hint = '学习此技能后，再设置技能槽';
-        else if (selected && !available) hint = '此技能不能放入攻击槽';
-        else if (activeSlot) hint = `已在第 ${activeSlot} 槽，点同槽移除`;
-        else if (available) hint = '轻触槽位保存所选技能';
+        else if (this.slotMessage) hint = this.slotMessage;
+        else if (this.slotTarget !== null) hint = `第 ${this.slotTarget + 1} 槽待选，请点已学技能`;
+        else if (this.choseSkill && selected) {
+            if (!selected.learned) hint = '学习此技能后，再设置技能槽';
+            else if (!canQueueSkill(selected)) hint = '此技能不能放入攻击槽';
+            else if (activeSlot) hint = `已在第 ${activeSlot} 槽，点同槽移除`;
+            else hint = '轻触槽位保存所选技能';
+        }
         this.text('Hint', hint);
+    }
+
+    // 先选技能时直接保存。先点槽位时等待下一次有效技能点击，再提交同一权威操作。
+    chooseAttackSlot(index: number): void | Promise<void> {
+        const input = this.input;
+        if (!input?.canConfigureSlots || this.slotSaving) return;
+        this.slotMessage = '';
+        if (this.slotTarget === null && this.choseSkill && canQueueSkill(this.selected)) return this.saveChosenSlot(index);
+        this.slotTarget = this.slotTarget === index ? null : index;
+        this.choseSkill = false;
+        this.renderAttackSlots(input);
     }
 
     dispose(): void {
         if (isValid(this.list, true) && isValid(this.list.node, true)) this.list.node.off(List.EVENT_ITEM_CLICK, this.onSelected, this);
+        if (isValid(this.ui, true)) this.ui.off(UIMgr.EVENT_CHANGED, this.onPanelChanged, this);
         this.input = null;
     }
 
     private onSelected(_index: number, row: SkillRow): void {
         this.selectedId = row.definition.id;
-        if (this.input) this.refresh(this.input);
+        if (!this.input) return;
+        const target = this.slotTarget;
+        this.choseSkill = target === null;
+        this.slotMessage = '';
+        this.refresh(this.input);
+        if (target !== null && this.input.canConfigureSlots && canQueueSkill(this.selected) && !this.slotSaving) void this.saveChosenSlot(target);
+    }
+
+    private onPanelChanged(top: Node | null): void {
+        if (top === this.panel) return;
+        this.resetSlotChoice();
+        if (this.input) this.renderAttackSlots(this.input);
+    }
+
+    private resetSlotChoice(): void {
+        this.choseSkill = false;
+        this.slotTarget = null;
+        this.slotMessage = '';
+    }
+
+    private async saveChosenSlot(index: number): Promise<void> {
+        this.slotSaving = true;
+        this.slotTarget = null;
+        if (this.input) this.renderAttackSlots(this.input);
+        try {
+            await this.saveSlot(index);
+            if (!this.choseSkill && this.panel.activeInHierarchy) this.slotMessage = `第 ${index + 1} 槽已保存`;
+        } catch (error) {
+            if (this.panel.activeInHierarchy) this.slotMessage = error instanceof Error ? error.message : '技能槽保存失败，请重试';
+        } finally {
+            this.slotSaving = false;
+            if (this.input) this.renderAttackSlots(this.input);
+        }
     }
     private automaticLabel(input: SkillSnapshot, row: SkillRow | null): string {
         if (!row?.learned) return '学习后可设置';

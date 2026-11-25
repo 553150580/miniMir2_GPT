@@ -32,7 +32,8 @@ test('倒计时归零只更新文字，不授予烈火ready；开关文字反映
 test('真实保存技能面板保留三行条目，模式用开启关闭、烈火用充能就绪；未同步禁止误提交',()=>{
     const file=path.resolve(__dirname,'../../assets/scripts/app/GameSkills.ts'),compiled=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2020,module:ts.ModuleKind.CommonJS}});
     class List{}List.EVENT_ITEM_CLICK='item';class Label{}class Button{}class Toggle{}
-    const module={exports:{}};new Function('require','module','exports',compiled.outputText)(id=>id==='cc'?{Label,Button,Toggle,isValid:()=>true}:id==='../ui/List'?{List}:id==='./SkillModel'?model:{},module,module.exports);
+    const UIMgr={EVENT_CHANGED:'ui-stack-changed'};
+    const module={exports:{}};new Function('require','module','exports',compiled.outputText)(id=>id==='cc'?{Label,Button,Toggle,isValid:()=>true}:id==='../ui/List'?{List}:id==='../ui/UIMgr'?{UIMgr}:id==='./SkillModel'?model:{},module,module.exports);
     const labels=new Map(),buttons=new Map(),nodes=new Map(),toggle={isChecked:false,setIsCheckedWithoutNotify(value){this.isChecked=value;}},texts=[],list={node:{on(){},off(){}},setItems(rows,render){
         texts.length=0;for(const row of rows){const label={string:''};render({getChildByName:name=>name==='Text'?{getComponent:()=>label}:{active:false}},row);texts.push(label.string);}
     }};
@@ -41,11 +42,17 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
             if(type===Toggle)return toggle;const values=type===Label?labels:buttons;if(!values.has(name))values.set(name,{});return values.get(name);
         }});return nodes.get(name);
     }};
-    const opened=[];
-    const controller=new module.exports.GameSkills({getChildByPath:()=>panel},{show:(...args)=>opened.push(args)}),modes=state();
+    const opened=[],saves=[],uiEvents=new Map();
+    const ui={on(event,handler,owner){uiEvents.set(event,handler.bind(owner));},off(event){uiEvents.delete(event);}};
+    const controller=new module.exports.GameSkills({getChildByPath:()=>panel,getChildByName:()=>ui},
+        {show:(...args)=>opened.push(args)},async index=>{saves.push(index);}),modes=state();
     const input={ready:true,job:0,sceneKind:1,canConfigureSlots:true,sceneEpoch:modes.sceneEpoch,modes,modesReceivedAt:Date.now(),definitions:[definition({id:7,name:'攻杀剑术',kind:'slaying',active:false,activation_kind:'passive_proc',accuracy_by_level:[0,1,2,3],max_attack_bonus_by_level:[5,6,7,8]}),definition(),definition({id:26,name:'烈火剑法',kind:'flaming_sword',activation_kind:'charge',target_kind:'attack_charge'})],inventory:{level:40,items:[],learnedSkills:[{skillId:7,level:0},{skillId:12,level:0},{skillId:26,level:0}],skillSlotIds:[0,0,0,0]}};
     controller.refresh(input);assert(texts.every(value=>value.split('\n').length<=3));assert.match(labels.get('Message').string,/攻击上限 \+5/);
-    assert.equal(labels.get('SkillAuto/Label').string,'被动生效');assert.match(labels.get('Hint').string,/不能放入/);
+    assert.equal(labels.get('SkillAuto/Label').string,'被动生效');assert.match(labels.get('Hint').string,/轻触槽位/);
+    controller.chooseAttackSlot(0);assert.match(labels.get('Hint').string,/第 1 槽待选/);
+    assert.equal(labels.get('AttackSlot1/Label').string,'1 · 待选');assert.deepEqual(saves,[]);
+    uiEvents.get(UIMgr.EVENT_CHANGED)(null);assert.equal(labels.get('AttackSlot1/Label').string,'1 · 空位');
+    controller.onSelected(0,model.skillRows(input)[0]);assert.match(labels.get('Hint').string,/不能放入/);
     controller.onSelected(1,model.skillRows(input)[1]);assert.equal(opened.length,0);
     assert.equal(labels.get('SkillAuto/Label').string,'随普攻');
     assert.match(labels.get('Hint').string,/保存所选技能/);assert.equal(buttons.get('AttackSlot1').interactable,true);
@@ -61,7 +68,7 @@ test('真实保存技能面板保留三行条目，模式用开启关闭、烈�
     controller.refresh(input,12,12);assert.equal(labels.get('BindQuick/Label').string,'当前手动快捷');
     assert.equal(labels.get('Use/Label').string,'关闭');assert.equal(buttons.get('Use').interactable,true);
     assert.equal(nodes.get('Use').active,false);assert.equal(nodes.get('ModeToggle').active,true);assert.equal(toggle.isChecked,true);assert.equal(toggle.interactable,true);assert.equal(labels.get('ModeToggle/Label').string,'已开启');
-    for(const sceneKind of [3,4]){controller.refresh({...input,sceneKind,canConfigureSlots:false});assert.equal(toggle.interactable,true);assert.equal(labels.get('Use/Label').string,'关闭');assert.match(labels.get('Hint').string,/回城镇或普通野外/);}
+    for(const sceneKind of [3,4,5]){controller.refresh({...input,sceneKind,canConfigureSlots:false});assert.equal(toggle.interactable,true);assert.equal(labels.get('Use/Label').string,'关闭');assert.match(labels.get('Hint').string,/回城镇或普通野外/);assert.equal(buttons.get('AttackSlot1').interactable,false);}
     toggle.isChecked=false;controller.refresh(input);assert.equal(toggle.isChecked,true);
     controller.refresh({...input,modePending:{skillId:12,enabled:false}});assert.equal(toggle.interactable,false);assert.equal(labels.get('ModeToggle/Label').string,'正在关闭');
     controller.refresh({...input,modes:null});assert.equal(buttons.get('Use').interactable,false);assert.equal(toggle.interactable,false);

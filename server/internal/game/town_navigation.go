@@ -679,6 +679,12 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 	if q.task == nil {
 		return true
 	}
+	if i == 0 && m.CompactTown && q.inputRevision != 0 && q.adjacent && q.state == townnav.Arrived && w.yieldTownPet(r, target, now) {
+		if !w.updateTownOccupancy(q) {
+			w.cancelTownRequest(q)
+			return true
+		}
+	}
 	if q.adjacent && !townBlocked(q, target) && q.task.SetAdjacentGoal(q.key, false) {
 		q.adjacent = false
 		// 立即归还旧邻格路线的工作区和缓冲，再沿同一次点击重新排队。
@@ -738,4 +744,26 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 		}
 	}
 	return true
+}
+
+// yieldTownPet 让占据本次点击点的本角色驻留宠物走开一格。
+// 只在主人已走到合法邻格时执行，保持原动作时钟和其他角色的占格。
+func (w *worker) yieldTownPet(r *room, goal devconfig.Point, now time.Time) bool {
+	pet := r.worldPet(r.currentWorld())
+	if pet == nil || pet.HP <= 0 || pet.Pos != goal || distance(r.Player.Pos, goal) != 1 ||
+		now.Before(pet.NextMove) || now.Before(pet.ActionReadyAt) || pet.PetRuntime != nil && pet.PetRuntime.FollowSuppressed {
+		return false
+	}
+	// 优先沿着主人到目标格的反向间距继续走。正前有阻挡时依次尝试相邻方向。
+	away := int(facing(r.Player.Pos, goal, pet.Direction))
+	for _, turn := range [...]int{0, -1, 1, -2, 2, -3, 3, 4} {
+		direction := (away + turn + len(directions)) % len(directions)
+		offset := directions[direction]
+		next := devconfig.Point{X: goal.X + offset.X, Y: goal.Y + offset.Y}
+		if w.neighbor(r, goal, next, pet) && w.commitWalk(r, pet, next, uint32(direction), now, w.fighter(r, pet).MoveMS) {
+			w.cancelTownRequest(r.TownNavigation[1])
+			return true
+		}
+	}
+	return false
 }
