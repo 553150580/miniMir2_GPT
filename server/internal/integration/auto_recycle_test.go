@@ -17,7 +17,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -31,7 +30,7 @@ func TestAutoRecyclePermanentReceiptsProtectionAndSourceMongo(t *testing.T) {
 		t.Skip("显式真实Mongo回收事务验收")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 19 {
 		t.Fatal("自动回收必须使用当前rule19或以上完整配置")
@@ -278,7 +277,7 @@ func TestAutoRecyclePolicyLockAndOnlineOfflineMongoWS(t *testing.T) {
 		t.Skip("显式真实Mongo/WS自动回收闭环")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 19 {
 		t.Fatal("自动回收要求当前rule19以上配置")

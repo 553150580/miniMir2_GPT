@@ -82,6 +82,46 @@ test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有�
  }
  view.dispose();assertReleased(resources);
 });
+test('战士在世界首领场按模板预载道士宠物并显示无主尸体，普通图保留职业范围', async () => {
+ const resources = fakeResources(), assets = await WorldAssets.prepare(0, () => {}, '81');
+ const {view, world, entities} = scene(assets);
+ const definition = assets.gameplay.pet_profiles.find(row => row.job_id === 2);
+ const profile = assets.manifest.profiles[definition.profile];
+ const standingKey = profile.layers[0].actions.standing.directions[0].frames[0];
+ const corpseKey = profile.layers[0].actions.die.directions[0].frames.at(-1);
+ const warrior = state(1, 1, 4, 4), taoist = state(7, 1, 5, 5, {definitionId: 2, displayName: '同场道士'});
+ const pet = state(8, 2, 5, 6, {definitionId: definition.definition_id});
+ try {
+  assert.equal(assets.sceneKind, 4);
+  assert(assets.frames.has(standingKey));
+  assert(assets.frames.has(corpseKey));
+  assert.equal(assets.profile(pet, 0), profile);
+  assert.equal(assets.profile({...pet, definitionId: 999}, 0), null);
+  const loaded = resources.requested.length;
+  view.apply({entities: [warrior, taoist, pet]});
+  const living = view.visuals.get(8);
+  assert.equal(living.node.parent, entities);
+  assert.equal(living.node.getChildByName('Name').getComponent(cc.Label).string, definition.name);
+  assert(living.body[0].spriteFrame);
+  const corpse = state(9, 2, 5, 6, {definitionId: definition.definition_id, hp: Long.UZERO, isPetCorpse: true});
+  // 无主尸体可随基线单独出现，名称与帧都由自己的模板取得。
+  view.apply({entities: [warrior, corpse]});
+  const fallen = view.visuals.get(9);
+  assert.equal(fallen.node.parent, world);
+  assert(fallen.node.getSiblingIndex() < entities.getSiblingIndex());
+  assert.equal(fallen.node.getChildByName('Name').getComponent(cc.Label).string, `${definition.name}·尸体`);
+  assert.equal(fallen.pose.action, 'die');
+  assert.equal(fallen.pose.frame, profile.layers[0].actions.die.count - 1);
+  assert(fallen.body[0].spriteFrame);
+  assert.equal(living.body[0].spriteFrame, null);
+  assert.equal(resources.requested.length, loaded);
+ } finally { view.dispose(); assertReleased(resources); }
+ const ordinary = fakeResources(), ordinaryAssets = await WorldAssets.prepare(0, () => {}, '1');
+ try {
+  assert.equal(ordinaryAssets.profile(pet, 0), null);
+  assert.equal(ordinaryAssets.frames.has(standingKey), false);
+ } finally { ordinaryAssets.dispose(); assertReleased(ordinary); }
+});
 test('目录选择与来源资源身份完整保留最大uint64，拒绝数字资源ID冒充另一张图',async()=>{
  const id='18446744073709551615',resources=fakeResources({changeGameplay:g=>g.map_catalog[1].id=id,changeResource:(key,json)=>{if(key==='source-maps/map-2/manifest')json.id=id;}});
  const assets=await WorldAssets.prepare(0,()=>{},Long.MAX_UNSIGNED_VALUE);assert.equal(assets.mapId,id);assert.equal(assets.map.id,id);assets.dispose();assertReleased(resources);

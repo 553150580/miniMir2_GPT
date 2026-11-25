@@ -318,7 +318,7 @@ export class GameWorldView {
         for (const state of baseline.entities) {
             alive.add(state.entityHandle);
             let visual = this.visuals.get(state.entityHandle);
-            // 城镇远端角色使用服务端同步的职业，其余实体继续使用当前角色的资源范围。
+            // 共享场远端角色使用服务端同步的职业，宠物由资源层读取权威模板。
             const entityJob = state.entityKind === 1 && state.entityHandle !== this.playerHandle ? state.definitionId : this.job;
             const profile = this.assets.profile(state, entityJob);
             // 句柄是实体槽位；同槽位换定义或外观时，层数、头顶和动作必须取新模板。
@@ -389,7 +389,8 @@ export class GameWorldView {
             }
             const name = visual.node.getChildByName('Name')!;
             const displayName = entityDisplayName(state.entityKind, state.definitionId,
-                state.entityHandle === this.playerHandle ? this.playerName : state.displayName ?? '', this.job, this.gameplay);
+                state.entityHandle === this.playerHandle ? this.playerName : state.displayName ?? '',
+                this.assets.sceneKind === 4 ? undefined : this.job, this.gameplay);
             const showHead = state.entityKind !== 3 || !state.hp.isZero();
             name.active = showHead && !!displayName;
             name.getComponent(Label)!.string = state.isPetCorpse && displayName ? `${displayName}·尸体` : displayName;
@@ -605,6 +606,15 @@ export class GameWorldView {
         }
         this.fireWalls = undefined;
     }
+    // 健康重连可把世界首领资源交给下一次挂接。旧视图的节点与事件仍随视图正常销毁。
+    takeWorldBossAssets(): WorldAssets | undefined {
+        const assets = this.assets;
+        if (this.disposed || assets?.sceneKind !== 4) return;
+        this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined;
+        this.assets = undefined;
+        return assets;
+    }
+
     dispose(): void {
         if (this.disposed && !this.assets) return;
         this.releaseVisuals(); this.disposed = true;

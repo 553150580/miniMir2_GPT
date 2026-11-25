@@ -25,11 +25,8 @@ func receiptMigrationDB(t *testing.T) (context.Context, devconfig.Config, *mongo
 		t.Skip("真实索引迁移需显式MINIMIR_MONGO_E2E=1")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
-	if cfg.MongoURI != devconfig.DevelopmentMongoURI() {
-		t.Fatal("拒绝连接本任务专属开发Mongo之外的地址")
-	}
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	// ctx 传递从调用方派生的上下文，供取消或控制截止时间，cancel 取消对应上下文或停止计时，释放其关联资源。
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

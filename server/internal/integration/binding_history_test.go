@@ -25,7 +25,7 @@ func TestRule24BichengBindingRemainsTrustedAfterShopUpgradeMongo(t *testing.T) {
 		t.Skip("显式开启独立Mongo验证历史比奇城绑定留存")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_bicheng_" + domain.ID()
 	// current 保存开发测试配置，用于当前步骤中的当前状态。

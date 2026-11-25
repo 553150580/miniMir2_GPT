@@ -55,7 +55,7 @@ func TestSkillAssetEconomyMongoWS(t *testing.T) {
 		t.Skip("设置MINIMIR_MONGO_E2E=1以验证购买/分解/升级真实事务")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)

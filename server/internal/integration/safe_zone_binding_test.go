@@ -26,7 +26,7 @@ func TestSafeZoneBindingPermanentReceiptColdEnterAndOwnershipMongo(t *testing.T)
 		t.Skip("显式真实Mongo验证来源绑定永久事务")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	// enabled 保存当前处理所用的已开启。

@@ -19,7 +19,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -33,7 +32,7 @@ func TestWarehouseConcurrentFifthRoleAndSixthRejectedMongoHTTP(t *testing.T) {
 		t.Skip("显式真实Mongo/HTTP抢第五槽")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_wh5_" + domain.ID()
 	cfg.AccountAddress = address(t)
@@ -223,7 +222,7 @@ func TestWarehousePermanentOriginsShareRunButNotAssetsMongo(t *testing.T) {
 		t.Skip("显式真实Mongo永久origin隔离")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_whorg_" + domain.ID()
 	// ctx 保存由“background”取得的上下文。

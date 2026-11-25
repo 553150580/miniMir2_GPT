@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -30,7 +29,7 @@ func TestLevelGrowthMigrationCapReceiptsAndEquipmentMongo(t *testing.T) {
 		t.Skip("显式真实Mongo成长/迁移事务")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须使用已启用的完整成长配置")
@@ -221,7 +220,7 @@ func TestLevelGrowthNaturalStarterLearningRecoveryAndReconnectMongoWS(t *testing
 		t.Skip("显式真实Mongo/WS自然新手成长")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须使用已启用的完整成长配置")

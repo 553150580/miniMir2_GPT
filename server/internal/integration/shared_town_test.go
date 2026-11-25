@@ -11,7 +11,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -23,7 +22,7 @@ func TestSharedTownMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("需要已核验的专属 MongoDB 副本集")
 	}
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_st_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)

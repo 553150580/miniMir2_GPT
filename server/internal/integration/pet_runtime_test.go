@@ -30,7 +30,7 @@ func TestPetRuntimeCorpseHealthyExpiryAndColdEntryMongoWS(t *testing.T) {
 		t.Skip("设置MINIMIR_MONGO_E2E=1连接本任务专属Mongo副本集，验证真实宠物尸体WS生命周期")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 16 || cfg.Fixture.PetRuntime == nil || !cfg.Fixture.PetRuntime.Enabled || cfg.Fixture.PetRuntime.BootstrapMode != "legacy_untrained_pet" {
 		t.Fatal("真实用例必须从当前生命周期及显式legacy_untrained_pet合同开始")

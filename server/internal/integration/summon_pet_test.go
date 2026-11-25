@@ -30,7 +30,7 @@ func TestSummonPetMaterialRecallTrainingNoPetsAndColdMongoWS(t *testing.T) {
 		t.Skip("显式开启专属Mongo副本集，验证17真实协议隔离链路")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	// catalog 保存由加载召唤候选集合取得的目录。
 	catalog, err := devconfig.LoadSummonCandidates("../../../config/development/summon-candidates.json")

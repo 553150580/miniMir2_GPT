@@ -12,7 +12,6 @@ import (
 	"io"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -32,7 +31,7 @@ func TestFirstLoopMongoWS(t *testing.T) {
 		t.Skip("设置MINIMIR_MONGO_E2E=1以连接当前平台本任务专属开发副本集")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	// 独立测试库和回环端口承载完整节点装配，结束时先停节点再删除本轮数据。
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()

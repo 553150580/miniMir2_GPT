@@ -26,7 +26,7 @@ func TestRoleBindingInitializationBackfillAndHealthyReconnectMongoWS(t *testing.
 		t.Skip("显式真实Mongo/WS验证绑定初始化和旧角色接管迁移")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)

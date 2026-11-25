@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/bootstrap"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -30,7 +29,7 @@ func TestDormantRoomChurnAndHealthyReconnectMongoWS(t *testing.T) {
 		t.Skip("显式开启独立 MongoDB 验证房间回收和真实持续换人")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_churn_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)

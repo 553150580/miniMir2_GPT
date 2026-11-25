@@ -24,12 +24,19 @@ export function entityHeadLabels(profile: HeadProfile, frames: Readonly<Record<s
     const delta = headTop - savedTop;
     return { headTop, nameY: template.nameY + delta, hpY: template.hpY + delta };
 }
-export function entityDisplayName(kind: number, definitionId: number, playerName: string, job: number, gameplay: {
+// 世界首领观察采用权威身体模板编号。此编号在宠物配置中全局唯一，独享场景仍限制本职业。
+export function petAppearanceFor<T extends { definition_id: number; job_id: number }>(
+    profiles: readonly T[] | undefined, definitionId: number, job: number | undefined,
+): T | undefined {
+    return profiles?.find(row => row.definition_id === definitionId && (job === undefined || row.job_id === job));
+}
+
+export function entityDisplayName(kind: number, definitionId: number, playerName: string, job: number | undefined, gameplay: {
     monster_profiles?: readonly { definition_id: number; name: string }[];
     pet_profiles?: readonly { definition_id: number; name: string; job_id: number }[];
 }): string {
     if (kind === 1) return playerName;
-    if (kind === 2) return gameplay.pet_profiles?.find(row => row.definition_id === definitionId && row.job_id === job)?.name ?? '';
+    if (kind === 2) return petAppearanceFor(gameplay.pet_profiles, definitionId, job)?.name ?? '';
     if (kind === 3) return gameplay.monster_profiles?.find(row => row.definition_id === definitionId)?.name ?? '';
     return kind === 4 ? '掉落' : '';
 }

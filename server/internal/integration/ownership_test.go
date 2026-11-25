@@ -6,7 +6,6 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	pb "minimir/api/generated/minimirv1"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -23,7 +22,7 @@ func TestMongoOwnershipFence(t *testing.T) {
 		t.Skip("真实开发副本集需显式MINIMIR_MONGO_E2E=1")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_" + domain.ID()
 	// ctx 保存由“background”取得的上下文。

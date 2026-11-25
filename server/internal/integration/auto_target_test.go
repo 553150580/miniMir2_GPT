@@ -28,7 +28,7 @@ func TestAutoTargetStaysOnSelectedLifeAcrossHostingAndManualMoveMongoWS(t *testi
 		t.Skip("显式开启独立Mongo以验证定点锁怪、恢复射程和健康重入")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_lock_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)

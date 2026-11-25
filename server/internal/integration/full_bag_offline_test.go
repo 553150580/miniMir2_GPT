@@ -28,7 +28,7 @@ func TestFullBagOfflineCombatAndChargingMongoWS(t *testing.T) {
 		t.Skip("显式真实Mongo/WS离线满包AI、原结算与扣时")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 21 {
 		t.Fatal("必须使用当前容量政策21以上配置")

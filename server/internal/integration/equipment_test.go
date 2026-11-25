@@ -30,7 +30,7 @@ func TestEquipmentTransactionsVersionsReceiptsMongo(t *testing.T) {
 		t.Skip("显式真实Mongo装备事务")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须使用已启用的装备合同")
@@ -194,7 +194,7 @@ func TestEquipmentWearSwapUnequipAndReconnectMongoWS(t *testing.T) {
 		t.Skip("显式真实WS装备穿脱")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须使用已启用的装备合同")
@@ -430,7 +430,7 @@ func TestEquipmentNonZeroMagicSpiritRoundtripMongoWS(t *testing.T) {
 		t.Skip("显式真实WS非零MC/SC隔离资格")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须从已启用的装备合同派生非零管线资格")
@@ -664,7 +664,7 @@ func TestEquipmentLegacyWearCanBeRemovedAndReplacedMongo(t *testing.T) {
 		t.Skip("显式真实Mongo旧穿戴物解除资格")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 23 {
 		t.Fatal("必须使用已启用的装备合同")

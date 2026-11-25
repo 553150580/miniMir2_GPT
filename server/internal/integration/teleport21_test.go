@@ -277,7 +277,7 @@ func TestTeleport21LearningBindingAndHealthyColdEntryMongoWS(t *testing.T) {
 	}
 	// 停止本用例的旧实例，保留随机库中通过正常行走取得的原回执，按当前规则重入。
 	// current 保存由加载取得的当前状态。
-	current, err := devconfig.Load("../../../conf/dev/server.json")
+	current, err := loadIntegrationConfig()
 	must(t, err)
 	current.Database, current.AccountAddress, current.GameAddress, current.GMAddress = cfg.Database, cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress
 	// mapped 保存由城镇瞬移会话绑定取得的“mapped”，ok 表明查询、校验或类型转换是否成功。

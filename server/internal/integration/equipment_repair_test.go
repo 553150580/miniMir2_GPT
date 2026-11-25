@@ -27,7 +27,7 @@ func TestEquipmentWearAndOrdinaryRepairMongoWS(t *testing.T) {
 		t.Skip("设置MINIMIR_MONGO_E2E=1以验证真实磨损与NPC修理")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	// f 保存当前处理所用的开发测试配置。
 	f := &cfg.Fixture

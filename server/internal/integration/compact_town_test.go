@@ -26,7 +26,7 @@ func TestCompactTownDirectoryMongoWS(t *testing.T) {
 		t.Skip("显式开启专属Mongo副本集，验证当前规则24地图目录与真实WS")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 24 || len(cfg.Fixture.TownTravel.DestinationMapIDs) != 3 {
 		t.Fatal("本组必须测试当前三座紧凑城镇")

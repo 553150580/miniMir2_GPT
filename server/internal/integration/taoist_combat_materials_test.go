@@ -26,7 +26,7 @@ func TestTaoistCombatMaterialsMongoWS(t *testing.T) {
 		t.Skip("道士材料WS用例要求专用 MongoDB 副本集")
 	}
 	// cfg 仍使用本任务专属副本集，真实服务只访问本用例随机分配的子数据库。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_taoist_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress, cfg.GMAddress = address(t), address(t), address(t)

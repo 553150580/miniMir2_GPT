@@ -26,7 +26,7 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" {
 		t.Skip("需要已核验的专属 MongoDB 副本集")
 	}
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	cfg.Database = "minimir_dev_game_test_pb_" + domain.ID()
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)

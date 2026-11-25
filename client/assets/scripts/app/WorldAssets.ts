@@ -2,6 +2,7 @@ import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc'
 import { GridProjection } from './GridProjection';
 import { SourceMapAssets } from './SourceMapAssets';
 import { compactTownMap, townNpcFrames } from './TownMapModel';
+import { petAppearanceFor } from './EntityHeadAnchor';
 
 interface WorldMapEntry {
     readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
@@ -53,7 +54,7 @@ function load<T extends Asset>(path: string, type: any): Promise<T> {
     return new Promise((resolve, reject) => resources.load(path, type, (error, value) => error ? reject(error) : resolve(value as T)));
 }
 
-// 入场取票前准备本职业实际需要的整套动作，播放过程中不临时请求帧。
+// 入场前准备当前地图可见实体的整套动作，播放过程中不临时请求帧。
 export class WorldAssets {
     manifest: any;
     map: any;
@@ -168,7 +169,8 @@ export class WorldAssets {
             // 同一运行服的城镇会出现其他职业角色。入场前准备其外观，收到基线后直接显示。
             if (result.sceneKind === 2 || result.sceneKind === 4) for (const resident of result.gameplay.jobs) profileIds.add(resident.profile);
             for (const row of result.gameplay.monster_profiles) profileIds.add(row.profile);
-            for (const row of result.gameplay.pet_profiles) if (row.job_id === job) profileIds.add(row.profile);
+            // 共享首领场的基线含其他职业的宠物和无主尸体，按模板预载全部可见外观。
+            for (const row of result.gameplay.pet_profiles) if (result.sceneKind === 4 || row.job_id === job) profileIds.add(row.profile);
             const keys = new Set<string>();
             // 可接收的常驻状态与职业无关，入场前持有，不在受益时临时异步加载。
             for (const key of [...effectFrameKeys(result.manifest.statuses), ...effectFrameKeys(result.manifest.teleport)]) {
@@ -230,7 +232,8 @@ export class WorldAssets {
 
     profile(state: any, job: number): any {
         const row = state.entityKind === 1 ? this.gameplay.jobs.find((value: any) => value.job_id === job)
-            : state.entityKind === 2 ? this.gameplay.pet_profiles.find((value: any) => value.definition_id === state.definitionId && value.job_id === job)
+            : state.entityKind === 2 ? petAppearanceFor<{ definition_id: number; job_id: number; profile: string }>(
+                this.gameplay.pet_profiles, state.definitionId, this.sceneKind === 4 ? undefined : job)
             : state.entityKind === 3 ? this.gameplay.monster_profiles.find((value: any) => value.definition_id === state.definitionId) : null;
         return row ? this.manifest.profiles[row.profile] : null;
     }

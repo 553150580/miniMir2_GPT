@@ -27,6 +27,7 @@ import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErro
 import { GameSkills } from './GameSkills';
 import { GameTasksCodex } from './GameTasksCodex';
 import { GameBoss } from './GameBoss';
+import type { WorldBossEntryPreparation, WorldBossEntryTarget } from './GameBoss';
 import { createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, needsCastingSupply, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
 import type { AttackEvent, CastEvent, CastStepEvent, ImpactEvent } from './CastPlayback';
@@ -66,6 +67,17 @@ function selectedRoleIdentity(role: any): string {
     return `${role.key.originServerId.toString()}:${accountIdentity(role.key.roleId)}`;
 }
 
+interface PreparedBossEntry {
+    target: WorldBossEntryTarget;
+    source: AttachmentIdentity;
+    rule: string;
+    sent: boolean;
+    assets?: WorldAssets;
+    timer?: ReturnType<typeof setTimeout>;
+    release(): void;
+    detach(): void;
+}
+
 @ccclass('AppRoot')
 export class AppRoot extends Component {
     @property sceneKind = 'Boot';
@@ -86,6 +98,7 @@ export class AppRoot extends Component {
     private warehouse?: GameWarehouse;
     private townDirectory?: TownDirectory;
     private combatStatus?: GameCombatStatus;
+    private releaseCombatStatusInvalidation?: () => void;
     private ui?: UIMgr;
     private popup?: PopupView;
     private selectedRole = -1;
@@ -117,6 +130,8 @@ export class AppRoot extends Component {
     private inputBarrier = false;
     private inputEnabled: { map: boolean; joystick: boolean } | null = null;
     private preparedTravel?: { id: string; assets: WorldAssets; viewport: MapViewportPreparation };
+    private bossEntry?: PreparedBossEntry;
+    private bossReconnect?: { target: string; connection: number; role: string; assets: WorldAssets; timer: ReturnType<typeof setTimeout> };
     private travelSource?: TravelContext;
     private travelDestination = 1;
     private travelDestinationMap?: Long;
@@ -174,6 +189,7 @@ export class AppRoot extends Component {
         this.disposed = true;
         for (const cancel of Array.from(this.mapWaiters)) cancel();
         this.enterAttempt++; this.attachment?.dispose(); this.world?.dispose(); this.releasePreparedTravel(); this.navigationUnsubscribe?.();
+        this.bossEntry?.release(); this.releaseBossReconnect();
         for (const [node, eventType, handler] of this.buttons) if (isValid(node, true)) node.off(eventType, handler, this);
         for (const cleanup of this.cleanups) cleanup();
         game.off(Game.EVENT_HIDE, this.releaseInput, this);
@@ -438,7 +454,7 @@ export class AppRoot extends Component {
         this.button('BottomHUD/Footer/ChangeRole', () => this.leave(false));
         const viewport = this.find('MapViewport'); const world = viewport.getChildByName('World')!;
         this.attachment = new MapAttachmentCoordinator<WorldAssets, GameWorldView>();
-        this.cleanups.push(() => this.combatStatus?.dispose());
+        this.cleanups.push(() => { this.releaseCombatStatusInvalidation?.(); this.combatStatus?.dispose(); });
         this.skills = new GameSkills(safe, this.popup, (title, lines) => this.combatStatus!.showDetails(title, lines));
         this.cleanups.push(() => this.skills?.dispose());
         this.tasksCodex = new GameTasksCodex(this.find('UIMgr/Panels/TasksCodex'), () => {
@@ -456,7 +472,7 @@ export class AppRoot extends Component {
             ready: session.ready && !this.attaching && !session.travel.active && !session.teleport.blocksInput,
             level: session.inventory?.level ?? session.role?.level ?? 0,
             worldBoss: this.world?.gameplay.world_boss,
-        }, () => { if (this.ui?.top === bossPanel) this.ui.back(); });
+        }, () => { if (this.ui?.top === bossPanel) this.ui.back(); }, (target, signal) => this.prepareBossEntry(target, signal));
         this.cleanups.push(() => this.boss?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
@@ -486,7 +502,15 @@ export class AppRoot extends Component {
         game.on(Game.EVENT_HIDE, this.releaseInput, this);
         if (typeof window !== 'undefined') window.addEventListener('blur', this.releaseInput);
         this.ui.node.on(UIMgr.EVENT_CHANGED, this.releaseInput, this); this.popup.node.on(PopupView.EVENT_CHANGED, this.releaseInput, this);
-        this.cleanups.push(() => { if (this.ui && isValid(this.ui.node, true)) this.ui.node.off(UIMgr.EVENT_CHANGED, this.releaseInput, this); if (this.popup && isValid(this.popup.node, true)) this.popup.node.off(PopupView.EVENT_CHANGED, this.releaseInput, this); });
+        const bossVisibilityChanged = (): void => this.boss?.visibilityChanged();
+        this.ui.node.on(UIMgr.EVENT_CHANGED, bossVisibilityChanged, this);
+        this.cleanups.push(() => {
+            if (this.ui && isValid(this.ui.node, true)) {
+                this.ui.node.off(UIMgr.EVENT_CHANGED, this.releaseInput, this);
+                this.ui.node.off(UIMgr.EVENT_CHANGED, bossVisibilityChanged, this);
+            }
+            if (this.popup && isValid(this.popup.node, true)) this.popup.node.off(PopupView.EVENT_CHANGED, this.releaseInput, this);
+        });
         this.bindGameButtons();
         const refresh = (): void => this.handleSessionUpdate(); session.update.add(refresh); this.cleanups.push(() => session.update.delete(refresh));
         const reconnect = new GameReconnect(this.node.getChildByName('ReconnectDialog')!,
@@ -641,6 +665,8 @@ export class AppRoot extends Component {
         if (this.disposed) return;
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
+        if (this.bossEntry && !isCurrentEntry(this.bossEntry.source) && (!identity || !this.matchesBossEntry(identity))) this.bossEntry.release();
+        if (this.bossReconnect && (!identity || !isCurrentEntry(identity) || identity.connection !== this.bossReconnect.connection)) this.releaseBossReconnect();
         if (!identity || !isCurrentEntry(identity)) {
             this.closeMapDirectory();
             this.closeNpcShop();
@@ -673,7 +699,7 @@ export class AppRoot extends Component {
                 try {
                     if (this.preparedTravel?.id === identity.travelId && this.preparedTravel.assets.mapId === identity.map.toString()) {
                         assets = this.preparedTravel.assets; prime = this.preparedTravel.viewport; this.preparedTravel = undefined;
-                    } else {
+                    } else if (!(assets = this.takeBossAssets(identity))) {
                         const warm = session.preparedWorld;
                         if (warm?.mapId === identity.map.toString()) { assets = warm; session.preparedWorld = null; }
                         else {
@@ -685,11 +711,14 @@ export class AppRoot extends Component {
                     }
                     if (this.disposed || session.entry !== entry || !isCurrentEntry(identity)) throw new StaleMapAttachmentError('旧地图资源准备已经失效');
                     if (assets.mapId !== identity.map.toString() || assets.sceneKind !== entry.sceneKind || String(assets.gameplay.rule_version) !== entry.resourceVersion.toString()) throw new Error('地图资源或规则版本与真实入场身份不一致');
-                    await this.waitBaseline(identity); return assets;
+                    await this.waitBaseline(identity);
+                    if (entry.sceneKind === 1 && isCurrentEntry(identity)) this.retainBossForReconnect(identity, entry.resourceVersion.toString());
+                    return assets;
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
             },
             mount: assets => {
                 session.progressionCurve = typeof assets.gameplay.progression?.curve_version === 'string' ? assets.gameplay.progression.curve_version : null;
+                this.releaseCombatStatusInvalidation?.(); this.releaseCombatStatusInvalidation = undefined;
                 this.combatStatus?.dispose(); this.combatStatus = undefined;
                 this.selectedTarget = null; this.aim = null; this.pendingSkillMode = undefined; this.lastBaseline = ''; this.lastInventory = null; this.reconciliationStarted = false;
                 const viewport = this.find('MapViewport'), world = viewport.getChildByName('World')!;
@@ -705,8 +734,12 @@ export class AppRoot extends Component {
                 const releaseStatus = assets.onBeforeInvalidation(reason => {
                     if (reason !== 'dispose') return;
                     combatStatus.dispose(); releaseStatus();
-                    if (this.combatStatus === combatStatus) this.combatStatus = undefined;
+                    if (this.combatStatus === combatStatus) {
+                        this.combatStatus = undefined;
+                        this.releaseCombatStatusInvalidation = undefined;
+                    }
                 });
+                this.releaseCombatStatusInvalidation = releaseStatus;
                 this.bindNavigation(identity); return view;
             },
             prepare: async view => {
@@ -927,6 +960,105 @@ export class AppRoot extends Component {
     private releasePreparedTravel(owner?: NonNullable<typeof this.preparedTravel>): void {
         const prepared = this.preparedTravel; if (!prepared || (owner && prepared !== owner)) return;
         this.preparedTravel = undefined; prepared.viewport.release(); prepared.assets.dispose();
+    }
+
+    // 首领场只有服务端发预留席位后才允许附着。昂贵的资源加载在请求席位之前完成。
+    private async prepareBossEntry(target: WorldBossEntryTarget, signal: AbortSignal): Promise<WorldBossEntryPreparation> {
+        const source = currentEntryIdentity(), entry = session.entry, role = session.role;
+        const config = this.world?.gameplay.world_boss;
+        if (this.disposed || this.leaving || this.attaching || signal.aborted || !source || !role || !isCurrentEntry(source) || !session.ready
+            || entry.sceneKind !== 1 || session.travel.active || session.teleport.blocksInput || config?.enabled !== true
+            || config.map_id !== target.mapId || config.template_id !== target.templateId) throw new StaleMapAttachmentError('世界首领准备身份已变化');
+        this.bossEntry?.release();
+        const candidate: PreparedBossEntry = {
+            target, source, rule: entry.resourceVersion.toString(), sent: false, release: () => {
+                if (this.bossEntry !== candidate) return;
+                this.bossEntry = undefined;
+                candidate.detach(); candidate.assets?.dispose();
+                if (isCurrentEntry(source) && !this.attaching) this.showMapLoading(false);
+            },
+            detach: () => {
+                clearTimeout(candidate.timer);
+                signal.removeEventListener('abort', candidate.release);
+            },
+        };
+        this.bossEntry = candidate;
+        signal.addEventListener('abort', candidate.release, { once: true });
+        const current = (): boolean => this.bossEntry === candidate && !signal.aborted && !this.disposed && !this.leaving
+            && !this.attaching && isCurrentEntry(source) && session.ready && !session.travel.active && !session.teleport.blocksInput;
+        this.releaseInput();
+        this.showMapLoading(true, '准备世界首领资源', 0, 1);
+        try {
+            const assets = await WorldAssets.prepare(role.job, (done, total) => {
+                if (!current()) throw new StaleMapAttachmentError('世界首领资源准备已取消');
+                this.showMapLoading(true, `准备世界首领资源 ${done}/${total}`, done, total);
+            }, target.mapId);
+            if (this.bossEntry !== candidate) {
+                assets.dispose();
+                throw new StaleMapAttachmentError('世界首领资源准备已失效');
+            }
+            candidate.assets = assets;
+            if (!current() || assets.mapId !== target.mapId || assets.sceneKind !== 4 || String(assets.gameplay.rule_version) !== candidate.rule)
+                throw new StaleMapAttachmentError('世界首领资源与原场次不一致');
+            this.showMapLoading(true, '重新核对世界首领场次');
+            return {
+                dispatch: () => {
+                    if (!current()) throw new StaleMapAttachmentError('世界首领入场已失效');
+                    candidate.sent = true;
+                    candidate.timer = setTimeout(candidate.release, 10000);
+                    this.showMapLoading(true, '等待服务端确认入场');
+                },
+                release: candidate.release,
+            };
+        } catch (error) {
+            candidate.release();
+            throw error;
+        }
+    }
+
+    private matchesBossEntry(identity: AttachmentIdentity): boolean {
+        const prepared = this.bossEntry;
+        return !!prepared?.assets && prepared.sent && session.entryBossTransition && session.entry.sceneKind === 4
+            && identity.serverTransitionId === prepared.target.occurrenceId && identity.map.toString() === prepared.target.mapId
+            && identity.connection === prepared.source.connection && identity.role === prepared.source.role
+            && identity.binding.toString() === prepared.source.binding.toString() && session.entry.resourceVersion.toString() === prepared.rule;
+    }
+
+    private takeBossAssets(identity: AttachmentIdentity): WorldAssets | undefined {
+        const prepared = this.bossEntry;
+        if (prepared?.assets && this.matchesBossEntry(identity)) {
+            this.bossEntry = undefined;
+            prepared.detach();
+            return prepared.assets;
+        }
+        const warm = this.bossReconnect;
+        if (warm && session.entryBossTransition && session.entry.sceneKind === 4 && identity.serverTransitionId === warm.target
+            && identity.connection === warm.connection && identity.role === warm.role && identity.map.toString() === warm.assets.mapId
+            && session.entry.resourceVersion.toString() === String(warm.assets.gameplay.rule_version)) {
+            this.bossReconnect = undefined;
+            clearTimeout(warm.timer);
+            return warm.assets;
+        }
+    }
+
+    // 健康重连先确认普通图，再由服务端恢复同一首领席位。跨这次普通图挂接保留旧视图已加载的资源。
+    private retainBossForReconnect(identity: AttachmentIdentity, rule: string): void {
+        const previous = this.attached;
+        if (!previous?.serverTransitionId || previous.connection === identity.connection || previous.role !== identity.role
+            || !this.world?.isMapReady || String(this.world.gameplay.rule_version) !== rule) return;
+        const assets = this.world.takeWorldBossAssets();
+        if (!assets) return;
+        this.releaseBossReconnect();
+        this.bossReconnect = { target: previous.serverTransitionId, connection: identity.connection, role: identity.role, assets,
+            timer: setTimeout(() => this.releaseBossReconnect(), 35000) };
+    }
+
+    private releaseBossReconnect(): void {
+        const warm = this.bossReconnect;
+        if (!warm) return;
+        this.bossReconnect = undefined;
+        clearTimeout(warm.timer);
+        warm.assets.dispose();
     }
 
     private refreshGame(): void {

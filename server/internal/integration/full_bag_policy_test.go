@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	pb "minimir/api/generated/minimirv1"
-	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
@@ -24,7 +23,7 @@ func TestFullBagContinuousSourceRewardsAndHostingReceiptsMongo(t *testing.T) {
 		t.Skip("显式真实Mongo满包连续来源/托管账")
 	}
 	// cfg 保存由加载取得的服务配置，err 接收加载过程中可能产生的错误，供后续失败分支处理。
-	cfg, err := devconfig.Load("../../../conf/dev/server.json")
+	cfg, err := loadIntegrationConfig()
 	must(t, err)
 	if cfg.Fixture.RuleVersion < 21 {
 		t.Fatal("本候选须在下一阶段唯一Excel受控升级后应用")
