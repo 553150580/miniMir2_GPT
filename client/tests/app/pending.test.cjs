@@ -30,6 +30,22 @@ function pending(seed = 1) {
     } } };
 }
 
+test('金币补时仅保存原报价和整数秒，重连保持同一操作的协议字节', () => {
+    const storage = new MemoryStorage(), original = { id: 40007, value: { requestedSeconds: 86400, quoteId: id(8), operation: pending().value.operation } };
+    const ledger = new PendingOperations(storage, key);
+    ledger.set('roleA', original);
+    const restored = new PendingOperations(storage, key).get('roleA');
+    const encode = value => pb.BuyHostingTimeRequest.encode({ requested_seconds: value.requestedSeconds, quote_id: value.quoteId,
+        operation: { op_id: value.operation.opId, command_seq: value.operation.commandSeq, expected_revision: value.operation.expectedRevision,
+            expected_rule_version: value.operation.expectedRuleVersion } }).finish();
+    assert.deepEqual(encode(restored.value), encode(original.value));
+    assert.throws(() => ledger.set('roleA', { ...original, value: { ...original.value, quoteId: id(7) } }), { code: 'PENDING_EXISTS' });
+    for (const changes of [{ requestedSeconds: 0 }, { requestedSeconds: 86401 }, { requestedSeconds: 0.5 },
+        { quoteId: new Uint8Array(15) }, { price: 3 }, { quoteVersion: Long.UONE }]) {
+        assert.throws(() => new PendingOperations().set('roleA', { ...original, value: { ...original.value, ...changes } }), { code: 'INVALID_OPERATION' });
+    }
+});
+
 test('技能学习未决保存原书与原经济身份，拒绝补造等级、数量、错误ID或凭据', () => {
     const storage = new MemoryStorage(), original = { id: 40010, value: { itemInstanceId: id(7), skillId: 1, operation: pending().value.operation } };
     new PendingOperations(storage,key).set('roleA', original);

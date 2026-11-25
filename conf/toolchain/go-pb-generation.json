@@ -3,8 +3,8 @@
   "protoc_gen_go": "protoc-gen-go v1.36.12",
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
-    "assets.proto": "c0afd6e88ebbd025800c0428dbed2c90c21411893fccde23adddc17a4ffb1d67",
-    "common.proto": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98",
+    "assets.proto": "31b499c2f40da6ea695267bf16af0c4ae29fc4432ce4c7deaa7fb04c7c0ef3d2",
+    "common.proto": "c627a05ce5d10c029813838374c563c91cf8f51234e000f9a66abcf330a3e36b",
     "personal_boss.proto": "ae7f8c8e5b44f3ee9ab882ba40132a6ca31015b7b90b4a5187d3c0ac34e8150b",
     "tasks_codex.proto": "2d72442ba3da69dcc5ff44813f7cecdf6a6089895d1cde50a53eb153f1728b4e",
     "world.proto": "9babe5e3430e6bd8ebe3cc7037f7840408d05557fe09e481599c509695a226c6",
@@ -12,8 +12,8 @@
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
-    "server/api/generated/minimirv1/assets.pb.go": "185d9717be38974a23e98d91dcc4c2909297dab09afb012a3330b2c75536d360",
-    "server/api/generated/minimirv1/common.pb.go": "734e9db2b736c6f4b49e7cccde1ab871b70c263edea511d679baa0450a5b7c18",
+    "server/api/generated/minimirv1/assets.pb.go": "a8f21ac0bcb9ee3bcedd250b19fbe7de41bc0c1401a20a5e693f36644ada451b",
+    "server/api/generated/minimirv1/common.pb.go": "b6be9920d3201fd79686e25dd3b38d463f3622184c4afaeafdc064dc31474566",
     "server/api/generated/minimirv1/personal_boss.pb.go": "685262d7cd4a9b6609f71a46551655cff80acea8cbcd42be3ba42493862b20f6",
     "server/api/generated/minimirv1/tasks_codex.pb.go": "c39b7d50ac84fa06d49967d45a0c895806ff3741d17998ff4851a1f7d2e8e5a2",
     "server/api/generated/minimirv1/world.pb.go": "f9da184201cf673ed84ba12b64521bac5c143fee8bd0def0d0c751d466dbb144",

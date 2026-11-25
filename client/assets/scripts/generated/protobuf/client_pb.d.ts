@@ -359,6 +359,9 @@ export namespace minimir {
             /** OperationResult pending. */
             pending: boolean;
 
+            /** OperationResult hosting_purchase. */
+            hosting_purchase?: (minimir.v1.HostingPurchaseReceipt.$Properties|null);
+
             /**
              * Creates a new OperationResult instance using the specified properties.
              * @param [properties] Properties to set
@@ -437,12 +440,315 @@ export namespace minimir {
                 /** OperationResult pending */
                 pending?: (boolean|null);
 
+                /** OperationResult hosting_purchase */
+                hosting_purchase?: (minimir.v1.HostingPurchaseReceipt.$Properties|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of an OperationResult. */
             type $Shape = minimir.v1.OperationResult.$Properties;
+        }
+
+        /**
+         * Properties of a HostingQuoteResult.
+         * @deprecated Use minimir.v1.HostingQuoteResult.$Properties instead.
+         */
+        interface IHostingQuoteResult extends minimir.v1.HostingQuoteResult.$Properties {
+        }
+
+        /** Represents a HostingQuoteResult. */
+        class HostingQuoteResult {
+
+            /**
+             * Constructs a new HostingQuoteResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.HostingQuoteResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** HostingQuoteResult quote_id. */
+            quote_id: Uint8Array;
+
+            /** HostingQuoteResult scene_epoch. */
+            scene_epoch: Long;
+
+            /** HostingQuoteResult role_revision. */
+            role_revision: Long;
+
+            /** HostingQuoteResult rule_version. */
+            rule_version: Long;
+
+            /** HostingQuoteResult config_hash. */
+            config_hash: string;
+
+            /** HostingQuoteResult quote_version. */
+            quote_version: Long;
+
+            /** HostingQuoteResult band_min_level. */
+            band_min_level: number;
+
+            /** HostingQuoteResult band_max_level. */
+            band_max_level: number;
+
+            /** HostingQuoteResult granularity_seconds. */
+            granularity_seconds: number;
+
+            /** HostingQuoteResult requested_seconds. */
+            requested_seconds: number;
+
+            /** HostingQuoteResult reference_gold_per_hour. */
+            reference_gold_per_hour: Long;
+
+            /** HostingQuoteResult gold_per_hour. */
+            gold_per_hour: Long;
+
+            /** HostingQuoteResult total_gold. */
+            total_gold: Long;
+
+            /** HostingQuoteResult before_seconds. */
+            before_seconds: Long;
+
+            /** HostingQuoteResult bound_gold_cost. */
+            bound_gold_cost: Long;
+
+            /** HostingQuoteResult gold_cost. */
+            gold_cost: Long;
+
+            /** HostingQuoteResult expires_at_unix_ms. */
+            expires_at_unix_ms: Long;
+
+            /** HostingQuoteResult error_code. */
+            error_code: number;
+
+            /**
+             * Creates a new HostingQuoteResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns HostingQuoteResult instance
+             */
+            static create(properties: minimir.v1.HostingQuoteResult.$Shape): minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape;
+            static create(properties?: minimir.v1.HostingQuoteResult.$Properties): minimir.v1.HostingQuoteResult;
+
+            /**
+             * Encodes the specified HostingQuoteResult message. Does not implicitly {@link minimir.v1.HostingQuoteResult.verify|verify} messages.
+             * @param message HostingQuoteResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.HostingQuoteResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified HostingQuoteResult message, length delimited. Does not implicitly {@link minimir.v1.HostingQuoteResult.verify|verify} messages.
+             * @param message HostingQuoteResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.HostingQuoteResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a HostingQuoteResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape} HostingQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape;
+
+            /**
+             * Decodes a HostingQuoteResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape} HostingQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape;
+
+            /**
+             * Verifies a HostingQuoteResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for HostingQuoteResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace HostingQuoteResult {
+
+            /** Properties of a HostingQuoteResult. */
+            interface $Properties {
+
+                /** HostingQuoteResult quote_id */
+                quote_id?: (Uint8Array|null);
+
+                /** HostingQuoteResult scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** HostingQuoteResult role_revision */
+                role_revision?: (Long|null);
+
+                /** HostingQuoteResult rule_version */
+                rule_version?: (Long|null);
+
+                /** HostingQuoteResult config_hash */
+                config_hash?: (string|null);
+
+                /** HostingQuoteResult quote_version */
+                quote_version?: (Long|null);
+
+                /** HostingQuoteResult band_min_level */
+                band_min_level?: (number|null);
+
+                /** HostingQuoteResult band_max_level */
+                band_max_level?: (number|null);
+
+                /** HostingQuoteResult granularity_seconds */
+                granularity_seconds?: (number|null);
+
+                /** HostingQuoteResult requested_seconds */
+                requested_seconds?: (number|null);
+
+                /** HostingQuoteResult reference_gold_per_hour */
+                reference_gold_per_hour?: (Long|null);
+
+                /** HostingQuoteResult gold_per_hour */
+                gold_per_hour?: (Long|null);
+
+                /** HostingQuoteResult total_gold */
+                total_gold?: (Long|null);
+
+                /** HostingQuoteResult before_seconds */
+                before_seconds?: (Long|null);
+
+                /** HostingQuoteResult bound_gold_cost */
+                bound_gold_cost?: (Long|null);
+
+                /** HostingQuoteResult gold_cost */
+                gold_cost?: (Long|null);
+
+                /** HostingQuoteResult expires_at_unix_ms */
+                expires_at_unix_ms?: (Long|null);
+
+                /** HostingQuoteResult error_code */
+                error_code?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a HostingQuoteResult. */
+            type $Shape = minimir.v1.HostingQuoteResult.$Properties;
+        }
+
+        /**
+         * Properties of a HostingPurchaseReceipt.
+         * @deprecated Use minimir.v1.HostingPurchaseReceipt.$Properties instead.
+         */
+        interface IHostingPurchaseReceipt extends minimir.v1.HostingPurchaseReceipt.$Properties {
+        }
+
+        /** Represents a HostingPurchaseReceipt. */
+        class HostingPurchaseReceipt {
+
+            /**
+             * Constructs a new HostingPurchaseReceipt.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.HostingPurchaseReceipt.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** HostingPurchaseReceipt quote. */
+            quote?: (minimir.v1.HostingQuoteResult.$Properties|null);
+
+            /** HostingPurchaseReceipt balance_seconds. */
+            balance_seconds: Long;
+
+            /**
+             * Creates a new HostingPurchaseReceipt instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns HostingPurchaseReceipt instance
+             */
+            static create(properties: minimir.v1.HostingPurchaseReceipt.$Shape): minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape;
+            static create(properties?: minimir.v1.HostingPurchaseReceipt.$Properties): minimir.v1.HostingPurchaseReceipt;
+
+            /**
+             * Encodes the specified HostingPurchaseReceipt message. Does not implicitly {@link minimir.v1.HostingPurchaseReceipt.verify|verify} messages.
+             * @param message HostingPurchaseReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.HostingPurchaseReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified HostingPurchaseReceipt message, length delimited. Does not implicitly {@link minimir.v1.HostingPurchaseReceipt.verify|verify} messages.
+             * @param message HostingPurchaseReceipt message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.HostingPurchaseReceipt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a HostingPurchaseReceipt message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape} HostingPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape;
+
+            /**
+             * Decodes a HostingPurchaseReceipt message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape} HostingPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape;
+
+            /**
+             * Verifies a HostingPurchaseReceipt message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for HostingPurchaseReceipt
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace HostingPurchaseReceipt {
+
+            /** Properties of a HostingPurchaseReceipt. */
+            interface $Properties {
+
+                /** HostingPurchaseReceipt quote */
+                quote?: (minimir.v1.HostingQuoteResult.$Properties|null);
+
+                /** HostingPurchaseReceipt balance_seconds */
+                balance_seconds?: (Long|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a HostingPurchaseReceipt. */
+            type $Shape = minimir.v1.HostingPurchaseReceipt.$Properties;
         }
 
         /**
@@ -10076,6 +10382,108 @@ export namespace minimir {
         }
 
         /**
+         * Properties of a HostingQuoteRequest.
+         * @deprecated Use minimir.v1.HostingQuoteRequest.$Properties instead.
+         */
+        interface IHostingQuoteRequest extends minimir.v1.HostingQuoteRequest.$Properties {
+        }
+
+        /** Represents a HostingQuoteRequest. */
+        class HostingQuoteRequest {
+
+            /**
+             * Constructs a new HostingQuoteRequest.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.HostingQuoteRequest.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** HostingQuoteRequest scene_epoch. */
+            scene_epoch: Long;
+
+            /** HostingQuoteRequest requested_seconds. */
+            requested_seconds: number;
+
+            /**
+             * Creates a new HostingQuoteRequest instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns HostingQuoteRequest instance
+             */
+            static create(properties: minimir.v1.HostingQuoteRequest.$Shape): minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape;
+            static create(properties?: minimir.v1.HostingQuoteRequest.$Properties): minimir.v1.HostingQuoteRequest;
+
+            /**
+             * Encodes the specified HostingQuoteRequest message. Does not implicitly {@link minimir.v1.HostingQuoteRequest.verify|verify} messages.
+             * @param message HostingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.HostingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified HostingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.HostingQuoteRequest.verify|verify} messages.
+             * @param message HostingQuoteRequest message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.HostingQuoteRequest.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a HostingQuoteRequest message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape} HostingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape;
+
+            /**
+             * Decodes a HostingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape} HostingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape;
+
+            /**
+             * Verifies a HostingQuoteRequest message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for HostingQuoteRequest
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace HostingQuoteRequest {
+
+            /** Properties of a HostingQuoteRequest. */
+            interface $Properties {
+
+                /** HostingQuoteRequest scene_epoch */
+                scene_epoch?: (Long|null);
+
+                /** HostingQuoteRequest requested_seconds */
+                requested_seconds?: (number|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a HostingQuoteRequest. */
+            type $Shape = minimir.v1.HostingQuoteRequest.$Properties;
+        }
+
+        /**
          * Properties of a BuyHostingTimeRequest.
          * @deprecated Use minimir.v1.BuyHostingTimeRequest.$Properties instead.
          */
@@ -10099,6 +10507,9 @@ export namespace minimir {
 
             /** BuyHostingTimeRequest operation. */
             operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /** BuyHostingTimeRequest quote_id. */
+            quote_id: Uint8Array;
 
             /**
              * Creates a new BuyHostingTimeRequest instance using the specified properties.
@@ -10168,6 +10579,9 @@ export namespace minimir {
 
                 /** BuyHostingTimeRequest operation */
                 operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** BuyHostingTimeRequest quote_id */
+                quote_id?: (Uint8Array|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

@@ -4,12 +4,14 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 112,
+  "message_count": 115,
   "message_names": [
     "RoleKey",
     "GridPoint",
     "OperationContext",
     "OperationResult",
+    "HostingQuoteResult",
+    "HostingPurchaseReceipt",
     "Heartbeat",
     "HeartbeatResult",
     "Batch",
@@ -87,6 +89,7 @@
     "SkillAssetPreview",
     "SkillAssetCommitRequest",
     "ClaimHostingTimeRequest",
+    "HostingQuoteRequest",
     "BuyHostingTimeRequest",
     "HostingReport",
     "WarehouseQuery",
@@ -119,8 +122,8 @@
     "WorldBossRank",
     "WorldBossResult"
   ],
-  "int64_field_count": 257,
-  "int64_boundary_cases": 857,
+  "int64_field_count": 270,
+  "int64_boundary_cases": 904,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -157,6 +160,78 @@
       "field": "new_revision",
       "type": "uint64",
       "cases": 3
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "role_revision",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "rule_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "quote_version",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "reference_gold_per_hour",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "gold_per_hour",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "total_gold",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "before_seconds",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "bound_gold_cost",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "gold_cost",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "expires_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
+      "message": "HostingPurchaseReceipt",
+      "field": "balance_seconds",
+      "type": "int64",
+      "cases": 4
     },
     {
       "message": "Heartbeat",
@@ -1161,6 +1236,12 @@
       "cases": 4
     },
     {
+      "message": "HostingQuoteRequest",
+      "field": "scene_epoch",
+      "type": "uint64",
+      "cases": 3
+    },
+    {
       "message": "HostingReport",
       "field": "used_seconds",
       "type": "uint64",
@@ -1665,7 +1746,7 @@
       "cases": 4
     }
   ],
-  "bytes_field_count": 29,
+  "bytes_field_count": 31,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1680,6 +1761,11 @@
     {
       "message": "OperationResult",
       "field": "op_id",
+      "repeated": false
+    },
+    {
+      "message": "HostingQuoteResult",
+      "field": "quote_id",
       "repeated": false
     },
     {
@@ -1768,6 +1854,11 @@
       "repeated": false
     },
     {
+      "message": "BuyHostingTimeRequest",
+      "field": "quote_id",
+      "repeated": false
+    },
+    {
       "message": "HostingReport",
       "field": "hosting_session_id",
       "repeated": false
@@ -1819,7 +1910,7 @@
   "proto_sources": [
     {
       "path": "shared/proto/common.proto",
-      "sha256": "8f06d574798d3b6f0d4aca4c55090ed790eaa8eddeee7e7f28916c609b5ceb98"
+      "sha256": "c627a05ce5d10c029813838374c563c91cf8f51234e000f9a66abcf330a3e36b"
     },
     {
       "path": "shared/proto/account.proto",
@@ -1831,7 +1922,7 @@
     },
     {
       "path": "shared/proto/assets.proto",
-      "sha256": "c0afd6e88ebbd025800c0428dbed2c90c21411893fccde23adddc17a4ffb1d67"
+      "sha256": "31b499c2f40da6ea695267bf16af0c4ae29fc4432ce4c7deaa7fb04c7c0ef3d2"
     },
     {
       "path": "shared/proto/tasks_codex.proto",
@@ -1849,13 +1940,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "150dca03b0aa97acf66da9b3ed4f688c1f7b09345faf3ab5ee78976f40d294dd",
-      "bytes": 1906798
+      "sha256": "e3a73708e2dd29d9576dfc4114da476331e9ad6e0a211704c098ad224c123f0a",
+      "bytes": 1969002
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "a0084f0b7422fed294ded72376e0b3ea8dd79548c640bc076d88ccaa48433b0c",
-      "bytes": 604132
+      "sha256": "805b1d232223e1857b429c39cfecfbddad99b431ec5813feb786400a060b079a",
+      "bytes": 622291
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

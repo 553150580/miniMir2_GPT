@@ -55,7 +55,7 @@ test('实际中文验收名与12汉字名字有足够单行宽度，24字号不�
     assert(6*label._fontSize>140,'保留6汉字超过旧140宽度的真实裁切触发条件');
 });
 function previousLayout(count){
-    const projection=structuredClone(scene);
+    const projection=require('./helpers/hosting_purchase_layout.cjs')(structuredClone(scene));
     require('./helpers/skill_layout.cjs')(projection);
     require('./helpers/inventory_grid_layout.cjs')(projection);
     require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projection);

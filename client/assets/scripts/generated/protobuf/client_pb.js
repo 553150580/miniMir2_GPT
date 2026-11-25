@@ -801,6 +801,7 @@ $root.minimir = (function() {
              * @property {Long|null} [new_revision] OperationResult new_revision
              * @property {number|null} [error_code] OperationResult error_code
              * @property {boolean|null} [pending] OperationResult pending
+             * @property {minimir.v1.HostingPurchaseReceipt.$Properties|null} [hosting_purchase] OperationResult hosting_purchase
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -873,6 +874,14 @@ $root.minimir = (function() {
             OperationResult.prototype.pending = false;
 
             /**
+             * OperationResult hosting_purchase.
+             * @member {minimir.v1.HostingPurchaseReceipt.$Properties|null|undefined} hosting_purchase
+             * @memberof minimir.v1.OperationResult
+             * @instance
+             */
+            OperationResult.prototype.hosting_purchase = null;
+
+            /**
              * Creates a new OperationResult instance using the specified properties.
              * @function create
              * @memberof minimir.v1.OperationResult
@@ -914,6 +923,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 4, wireType 0 =*/32).uint32(message.error_code);
                 if (message.pending != null && $Object.hasOwnProperty.call(message, "pending") && message.pending !== false)
                     writer.uint32(/* id 5, wireType 0 =*/40).bool(message.pending);
+                if (message.hosting_purchase != null && $Object.hasOwnProperty.call(message, "hosting_purchase"))
+                    $root.minimir.v1.HostingPurchaseReceipt.encode(message.hosting_purchase, writer.uint32(/* id 6, wireType 2 =*/50).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -1016,6 +1027,12 @@ $root.minimir = (function() {
                                 delete message.pending;
                             continue;
                         }
+                    case 6: {
+                            if (wireType !== 2)
+                                break;
+                            message.hosting_purchase = $root.minimir.v1.HostingPurchaseReceipt.decode(reader, reader.size(), $undefined, _depth + 1, message.hosting_purchase);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -1079,6 +1096,11 @@ $root.minimir = (function() {
                 if (message.pending != null && $Object.hasOwnProperty.call(message, "pending"))
                     if (typeof message.pending !== "boolean")
                         return "pending: boolean expected";
+                if (message.hosting_purchase != null && $Object.hasOwnProperty.call(message, "hosting_purchase")) {
+                    var error = $root.minimir.v1.HostingPurchaseReceipt.verify(message.hosting_purchase, _depth + 1);
+                    if (error)
+                        return "hosting_purchase." + error;
+                }
                 return null;
             };
 
@@ -1097,6 +1119,851 @@ $root.minimir = (function() {
             };
 
             return OperationResult;
+        })();
+
+        v1.HostingQuoteResult = (function() {
+
+            /**
+             * Properties of a HostingQuoteResult.
+             * @typedef {Object} minimir.v1.HostingQuoteResult.$Properties
+             * @property {Uint8Array|null} [quote_id] HostingQuoteResult quote_id
+             * @property {Long|null} [scene_epoch] HostingQuoteResult scene_epoch
+             * @property {Long|null} [role_revision] HostingQuoteResult role_revision
+             * @property {Long|null} [rule_version] HostingQuoteResult rule_version
+             * @property {string|null} [config_hash] HostingQuoteResult config_hash
+             * @property {Long|null} [quote_version] HostingQuoteResult quote_version
+             * @property {number|null} [band_min_level] HostingQuoteResult band_min_level
+             * @property {number|null} [band_max_level] HostingQuoteResult band_max_level
+             * @property {number|null} [granularity_seconds] HostingQuoteResult granularity_seconds
+             * @property {number|null} [requested_seconds] HostingQuoteResult requested_seconds
+             * @property {Long|null} [reference_gold_per_hour] HostingQuoteResult reference_gold_per_hour
+             * @property {Long|null} [gold_per_hour] HostingQuoteResult gold_per_hour
+             * @property {Long|null} [total_gold] HostingQuoteResult total_gold
+             * @property {Long|null} [before_seconds] HostingQuoteResult before_seconds
+             * @property {Long|null} [bound_gold_cost] HostingQuoteResult bound_gold_cost
+             * @property {Long|null} [gold_cost] HostingQuoteResult gold_cost
+             * @property {Long|null} [expires_at_unix_ms] HostingQuoteResult expires_at_unix_ms
+             * @property {number|null} [error_code] HostingQuoteResult error_code
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a HostingQuoteResult.
+             * @memberof minimir.v1
+             * @interface IHostingQuoteResult
+             * @augments minimir.v1.HostingQuoteResult.$Properties
+             * @deprecated Use minimir.v1.HostingQuoteResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a HostingQuoteResult.
+             * @typedef {minimir.v1.HostingQuoteResult.$Properties} minimir.v1.HostingQuoteResult.$Shape
+             */
+
+            /**
+             * Constructs a new HostingQuoteResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a HostingQuoteResult.
+             * @constructor
+             * @param {minimir.v1.HostingQuoteResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var HostingQuoteResult = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * HostingQuoteResult quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.quote_id = $util.newBuffer([]);
+
+            /**
+             * HostingQuoteResult scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingQuoteResult role_revision.
+             * @member {Long} role_revision
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.role_revision = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingQuoteResult rule_version.
+             * @member {Long} rule_version
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.rule_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingQuoteResult config_hash.
+             * @member {string} config_hash
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.config_hash = "";
+
+            /**
+             * HostingQuoteResult quote_version.
+             * @member {Long} quote_version
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.quote_version = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingQuoteResult band_min_level.
+             * @member {number} band_min_level
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.band_min_level = 0;
+
+            /**
+             * HostingQuoteResult band_max_level.
+             * @member {number} band_max_level
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.band_max_level = 0;
+
+            /**
+             * HostingQuoteResult granularity_seconds.
+             * @member {number} granularity_seconds
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.granularity_seconds = 0;
+
+            /**
+             * HostingQuoteResult requested_seconds.
+             * @member {number} requested_seconds
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.requested_seconds = 0;
+
+            /**
+             * HostingQuoteResult reference_gold_per_hour.
+             * @member {Long} reference_gold_per_hour
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.reference_gold_per_hour = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult gold_per_hour.
+             * @member {Long} gold_per_hour
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.gold_per_hour = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult total_gold.
+             * @member {Long} total_gold
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.total_gold = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult before_seconds.
+             * @member {Long} before_seconds
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.before_seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult bound_gold_cost.
+             * @member {Long} bound_gold_cost
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.bound_gold_cost = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult gold_cost.
+             * @member {Long} gold_cost
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.gold_cost = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult expires_at_unix_ms.
+             * @member {Long} expires_at_unix_ms
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.expires_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * HostingQuoteResult error_code.
+             * @member {number} error_code
+             * @memberof minimir.v1.HostingQuoteResult
+             * @instance
+             */
+            HostingQuoteResult.prototype.error_code = 0;
+
+            /**
+             * Creates a new HostingQuoteResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {minimir.v1.HostingQuoteResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.HostingQuoteResult} HostingQuoteResult instance
+             * @type {{
+             *   (properties: minimir.v1.HostingQuoteResult.$Shape): minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape;
+             *   (properties?: minimir.v1.HostingQuoteResult.$Properties): minimir.v1.HostingQuoteResult;
+             * }}
+             */
+            HostingQuoteResult.create = function(properties) {
+                return new HostingQuoteResult(properties);
+            };
+
+            /**
+             * Encodes the specified HostingQuoteResult message. Does not implicitly {@link minimir.v1.HostingQuoteResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {minimir.v1.HostingQuoteResult.$Properties} message HostingQuoteResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingQuoteResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.quote_id);
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.scene_epoch);
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision") && (typeof message.role_revision === "object" ? message.role_revision.low || message.role_revision.high : message.role_revision !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.role_revision);
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version") && (typeof message.rule_version === "object" ? message.rule_version.low || message.rule_version.high : message.rule_version !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.rule_version);
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash") && message.config_hash !== "")
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.config_hash);
+                if (message.quote_version != null && $Object.hasOwnProperty.call(message, "quote_version") && (typeof message.quote_version === "object" ? message.quote_version.low || message.quote_version.high : message.quote_version !== 0))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.quote_version);
+                if (message.band_min_level != null && $Object.hasOwnProperty.call(message, "band_min_level") && message.band_min_level !== 0)
+                    writer.uint32(/* id 7, wireType 0 =*/56).uint32(message.band_min_level);
+                if (message.band_max_level != null && $Object.hasOwnProperty.call(message, "band_max_level") && message.band_max_level !== 0)
+                    writer.uint32(/* id 8, wireType 0 =*/64).uint32(message.band_max_level);
+                if (message.granularity_seconds != null && $Object.hasOwnProperty.call(message, "granularity_seconds") && message.granularity_seconds !== 0)
+                    writer.uint32(/* id 9, wireType 0 =*/72).uint32(message.granularity_seconds);
+                if (message.requested_seconds != null && $Object.hasOwnProperty.call(message, "requested_seconds") && message.requested_seconds !== 0)
+                    writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.requested_seconds);
+                if (message.reference_gold_per_hour != null && $Object.hasOwnProperty.call(message, "reference_gold_per_hour") && (typeof message.reference_gold_per_hour === "object" ? message.reference_gold_per_hour.low || message.reference_gold_per_hour.high : message.reference_gold_per_hour !== 0))
+                    writer.uint32(/* id 11, wireType 0 =*/88).int64(message.reference_gold_per_hour);
+                if (message.gold_per_hour != null && $Object.hasOwnProperty.call(message, "gold_per_hour") && (typeof message.gold_per_hour === "object" ? message.gold_per_hour.low || message.gold_per_hour.high : message.gold_per_hour !== 0))
+                    writer.uint32(/* id 12, wireType 0 =*/96).int64(message.gold_per_hour);
+                if (message.total_gold != null && $Object.hasOwnProperty.call(message, "total_gold") && (typeof message.total_gold === "object" ? message.total_gold.low || message.total_gold.high : message.total_gold !== 0))
+                    writer.uint32(/* id 13, wireType 0 =*/104).int64(message.total_gold);
+                if (message.before_seconds != null && $Object.hasOwnProperty.call(message, "before_seconds") && (typeof message.before_seconds === "object" ? message.before_seconds.low || message.before_seconds.high : message.before_seconds !== 0))
+                    writer.uint32(/* id 14, wireType 0 =*/112).int64(message.before_seconds);
+                if (message.bound_gold_cost != null && $Object.hasOwnProperty.call(message, "bound_gold_cost") && (typeof message.bound_gold_cost === "object" ? message.bound_gold_cost.low || message.bound_gold_cost.high : message.bound_gold_cost !== 0))
+                    writer.uint32(/* id 15, wireType 0 =*/120).int64(message.bound_gold_cost);
+                if (message.gold_cost != null && $Object.hasOwnProperty.call(message, "gold_cost") && (typeof message.gold_cost === "object" ? message.gold_cost.low || message.gold_cost.high : message.gold_cost !== 0))
+                    writer.uint32(/* id 16, wireType 0 =*/128).int64(message.gold_cost);
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms") && (typeof message.expires_at_unix_ms === "object" ? message.expires_at_unix_ms.low || message.expires_at_unix_ms.high : message.expires_at_unix_ms !== 0))
+                    writer.uint32(/* id 17, wireType 0 =*/136).int64(message.expires_at_unix_ms);
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.error_code);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified HostingQuoteResult message, length delimited. Does not implicitly {@link minimir.v1.HostingQuoteResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {minimir.v1.HostingQuoteResult.$Properties} message HostingQuoteResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingQuoteResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a HostingQuoteResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape} HostingQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingQuoteResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.HostingQuoteResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.role_revision = value;
+                            else
+                                delete message.role_revision;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.rule_version = value;
+                            else
+                                delete message.rule_version;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.config_hash = value;
+                            else
+                                delete message.config_hash;
+                            continue;
+                        }
+                    case 6: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.quote_version = value;
+                            else
+                                delete message.quote_version;
+                            continue;
+                        }
+                    case 7: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.band_min_level = value;
+                            else
+                                delete message.band_min_level;
+                            continue;
+                        }
+                    case 8: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.band_max_level = value;
+                            else
+                                delete message.band_max_level;
+                            continue;
+                        }
+                    case 9: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.granularity_seconds = value;
+                            else
+                                delete message.granularity_seconds;
+                            continue;
+                        }
+                    case 10: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.requested_seconds = value;
+                            else
+                                delete message.requested_seconds;
+                            continue;
+                        }
+                    case 11: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.reference_gold_per_hour = value;
+                            else
+                                delete message.reference_gold_per_hour;
+                            continue;
+                        }
+                    case 12: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold_per_hour = value;
+                            else
+                                delete message.gold_per_hour;
+                            continue;
+                        }
+                    case 13: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.total_gold = value;
+                            else
+                                delete message.total_gold;
+                            continue;
+                        }
+                    case 14: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.before_seconds = value;
+                            else
+                                delete message.before_seconds;
+                            continue;
+                        }
+                    case 15: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.bound_gold_cost = value;
+                            else
+                                delete message.bound_gold_cost;
+                            continue;
+                        }
+                    case 16: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.gold_cost = value;
+                            else
+                                delete message.gold_cost;
+                            continue;
+                        }
+                    case 17: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.expires_at_unix_ms = value;
+                            else
+                                delete message.expires_at_unix_ms;
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.error_code = value;
+                            else
+                                delete message.error_code;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a HostingQuoteResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingQuoteResult & minimir.v1.HostingQuoteResult.$Shape} HostingQuoteResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingQuoteResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a HostingQuoteResult message.
+             * @function verify
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            HostingQuoteResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.role_revision != null && $Object.hasOwnProperty.call(message, "role_revision"))
+                    if (!$util.isInteger(message.role_revision) && !(message.role_revision && $util.isInteger(message.role_revision.low) && $util.isInteger(message.role_revision.high)))
+                        return "role_revision: integer|Long expected";
+                if (message.rule_version != null && $Object.hasOwnProperty.call(message, "rule_version"))
+                    if (!$util.isInteger(message.rule_version) && !(message.rule_version && $util.isInteger(message.rule_version.low) && $util.isInteger(message.rule_version.high)))
+                        return "rule_version: integer|Long expected";
+                if (message.config_hash != null && $Object.hasOwnProperty.call(message, "config_hash"))
+                    if (!$util.isString(message.config_hash))
+                        return "config_hash: string expected";
+                if (message.quote_version != null && $Object.hasOwnProperty.call(message, "quote_version"))
+                    if (!$util.isInteger(message.quote_version) && !(message.quote_version && $util.isInteger(message.quote_version.low) && $util.isInteger(message.quote_version.high)))
+                        return "quote_version: integer|Long expected";
+                if (message.band_min_level != null && $Object.hasOwnProperty.call(message, "band_min_level"))
+                    if (!$util.isInteger(message.band_min_level))
+                        return "band_min_level: integer expected";
+                if (message.band_max_level != null && $Object.hasOwnProperty.call(message, "band_max_level"))
+                    if (!$util.isInteger(message.band_max_level))
+                        return "band_max_level: integer expected";
+                if (message.granularity_seconds != null && $Object.hasOwnProperty.call(message, "granularity_seconds"))
+                    if (!$util.isInteger(message.granularity_seconds))
+                        return "granularity_seconds: integer expected";
+                if (message.requested_seconds != null && $Object.hasOwnProperty.call(message, "requested_seconds"))
+                    if (!$util.isInteger(message.requested_seconds))
+                        return "requested_seconds: integer expected";
+                if (message.reference_gold_per_hour != null && $Object.hasOwnProperty.call(message, "reference_gold_per_hour"))
+                    if (!$util.isInteger(message.reference_gold_per_hour) && !(message.reference_gold_per_hour && $util.isInteger(message.reference_gold_per_hour.low) && $util.isInteger(message.reference_gold_per_hour.high)))
+                        return "reference_gold_per_hour: integer|Long expected";
+                if (message.gold_per_hour != null && $Object.hasOwnProperty.call(message, "gold_per_hour"))
+                    if (!$util.isInteger(message.gold_per_hour) && !(message.gold_per_hour && $util.isInteger(message.gold_per_hour.low) && $util.isInteger(message.gold_per_hour.high)))
+                        return "gold_per_hour: integer|Long expected";
+                if (message.total_gold != null && $Object.hasOwnProperty.call(message, "total_gold"))
+                    if (!$util.isInteger(message.total_gold) && !(message.total_gold && $util.isInteger(message.total_gold.low) && $util.isInteger(message.total_gold.high)))
+                        return "total_gold: integer|Long expected";
+                if (message.before_seconds != null && $Object.hasOwnProperty.call(message, "before_seconds"))
+                    if (!$util.isInteger(message.before_seconds) && !(message.before_seconds && $util.isInteger(message.before_seconds.low) && $util.isInteger(message.before_seconds.high)))
+                        return "before_seconds: integer|Long expected";
+                if (message.bound_gold_cost != null && $Object.hasOwnProperty.call(message, "bound_gold_cost"))
+                    if (!$util.isInteger(message.bound_gold_cost) && !(message.bound_gold_cost && $util.isInteger(message.bound_gold_cost.low) && $util.isInteger(message.bound_gold_cost.high)))
+                        return "bound_gold_cost: integer|Long expected";
+                if (message.gold_cost != null && $Object.hasOwnProperty.call(message, "gold_cost"))
+                    if (!$util.isInteger(message.gold_cost) && !(message.gold_cost && $util.isInteger(message.gold_cost.low) && $util.isInteger(message.gold_cost.high)))
+                        return "gold_cost: integer|Long expected";
+                if (message.expires_at_unix_ms != null && $Object.hasOwnProperty.call(message, "expires_at_unix_ms"))
+                    if (!$util.isInteger(message.expires_at_unix_ms) && !(message.expires_at_unix_ms && $util.isInteger(message.expires_at_unix_ms.low) && $util.isInteger(message.expires_at_unix_ms.high)))
+                        return "expires_at_unix_ms: integer|Long expected";
+                if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
+                    if (!$util.isInteger(message.error_code))
+                        return "error_code: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for HostingQuoteResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.HostingQuoteResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            HostingQuoteResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.HostingQuoteResult";
+            };
+
+            return HostingQuoteResult;
+        })();
+
+        v1.HostingPurchaseReceipt = (function() {
+
+            /**
+             * Properties of a HostingPurchaseReceipt.
+             * @typedef {Object} minimir.v1.HostingPurchaseReceipt.$Properties
+             * @property {minimir.v1.HostingQuoteResult.$Properties|null} [quote] HostingPurchaseReceipt quote
+             * @property {Long|null} [balance_seconds] HostingPurchaseReceipt balance_seconds
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a HostingPurchaseReceipt.
+             * @memberof minimir.v1
+             * @interface IHostingPurchaseReceipt
+             * @augments minimir.v1.HostingPurchaseReceipt.$Properties
+             * @deprecated Use minimir.v1.HostingPurchaseReceipt.$Properties instead.
+             */
+
+            /**
+             * Shape of a HostingPurchaseReceipt.
+             * @typedef {minimir.v1.HostingPurchaseReceipt.$Properties} minimir.v1.HostingPurchaseReceipt.$Shape
+             */
+
+            /**
+             * Constructs a new HostingPurchaseReceipt.
+             * @memberof minimir.v1
+             * @classdesc Represents a HostingPurchaseReceipt.
+             * @constructor
+             * @param {minimir.v1.HostingPurchaseReceipt.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var HostingPurchaseReceipt = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * HostingPurchaseReceipt quote.
+             * @member {minimir.v1.HostingQuoteResult.$Properties|null|undefined} quote
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @instance
+             */
+            HostingPurchaseReceipt.prototype.quote = null;
+
+            /**
+             * HostingPurchaseReceipt balance_seconds.
+             * @member {Long} balance_seconds
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @instance
+             */
+            HostingPurchaseReceipt.prototype.balance_seconds = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new HostingPurchaseReceipt instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {minimir.v1.HostingPurchaseReceipt.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.HostingPurchaseReceipt} HostingPurchaseReceipt instance
+             * @type {{
+             *   (properties: minimir.v1.HostingPurchaseReceipt.$Shape): minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape;
+             *   (properties?: minimir.v1.HostingPurchaseReceipt.$Properties): minimir.v1.HostingPurchaseReceipt;
+             * }}
+             */
+            HostingPurchaseReceipt.create = function(properties) {
+                return new HostingPurchaseReceipt(properties);
+            };
+
+            /**
+             * Encodes the specified HostingPurchaseReceipt message. Does not implicitly {@link minimir.v1.HostingPurchaseReceipt.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {minimir.v1.HostingPurchaseReceipt.$Properties} message HostingPurchaseReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingPurchaseReceipt.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote"))
+                    $root.minimir.v1.HostingQuoteResult.encode(message.quote, writer.uint32(/* id 1, wireType 2 =*/10).fork(), _depth + 1).ldelim();
+                if (message.balance_seconds != null && $Object.hasOwnProperty.call(message, "balance_seconds") && (typeof message.balance_seconds === "object" ? message.balance_seconds.low || message.balance_seconds.high : message.balance_seconds !== 0))
+                    writer.uint32(/* id 2, wireType 0 =*/16).int64(message.balance_seconds);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified HostingPurchaseReceipt message, length delimited. Does not implicitly {@link minimir.v1.HostingPurchaseReceipt.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {minimir.v1.HostingPurchaseReceipt.$Properties} message HostingPurchaseReceipt message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingPurchaseReceipt.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a HostingPurchaseReceipt message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape} HostingPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingPurchaseReceipt.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.HostingPurchaseReceipt();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            message.quote = $root.minimir.v1.HostingQuoteResult.decode(reader, reader.size(), $undefined, _depth + 1, message.quote);
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.balance_seconds = value;
+                            else
+                                delete message.balance_seconds;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a HostingPurchaseReceipt message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingPurchaseReceipt & minimir.v1.HostingPurchaseReceipt.$Shape} HostingPurchaseReceipt
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingPurchaseReceipt.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a HostingPurchaseReceipt message.
+             * @function verify
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            HostingPurchaseReceipt.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.quote != null && $Object.hasOwnProperty.call(message, "quote")) {
+                    var error = $root.minimir.v1.HostingQuoteResult.verify(message.quote, _depth + 1);
+                    if (error)
+                        return "quote." + error;
+                }
+                if (message.balance_seconds != null && $Object.hasOwnProperty.call(message, "balance_seconds"))
+                    if (!$util.isInteger(message.balance_seconds) && !(message.balance_seconds && $util.isInteger(message.balance_seconds.low) && $util.isInteger(message.balance_seconds.high)))
+                        return "balance_seconds: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for HostingPurchaseReceipt
+             * @function getTypeUrl
+             * @memberof minimir.v1.HostingPurchaseReceipt
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            HostingPurchaseReceipt.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.HostingPurchaseReceipt";
+            };
+
+            return HostingPurchaseReceipt;
         })();
 
         v1.Heartbeat = (function() {
@@ -26440,6 +27307,245 @@ $root.minimir = (function() {
             return ClaimHostingTimeRequest;
         })();
 
+        v1.HostingQuoteRequest = (function() {
+
+            /**
+             * Properties of a HostingQuoteRequest.
+             * @typedef {Object} minimir.v1.HostingQuoteRequest.$Properties
+             * @property {Long|null} [scene_epoch] HostingQuoteRequest scene_epoch
+             * @property {number|null} [requested_seconds] HostingQuoteRequest requested_seconds
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a HostingQuoteRequest.
+             * @memberof minimir.v1
+             * @interface IHostingQuoteRequest
+             * @augments minimir.v1.HostingQuoteRequest.$Properties
+             * @deprecated Use minimir.v1.HostingQuoteRequest.$Properties instead.
+             */
+
+            /**
+             * Shape of a HostingQuoteRequest.
+             * @typedef {minimir.v1.HostingQuoteRequest.$Properties} minimir.v1.HostingQuoteRequest.$Shape
+             */
+
+            /**
+             * Constructs a new HostingQuoteRequest.
+             * @memberof minimir.v1
+             * @classdesc Represents a HostingQuoteRequest.
+             * @constructor
+             * @param {minimir.v1.HostingQuoteRequest.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var HostingQuoteRequest = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * HostingQuoteRequest scene_epoch.
+             * @member {Long} scene_epoch
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @instance
+             */
+            HostingQuoteRequest.prototype.scene_epoch = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+            /**
+             * HostingQuoteRequest requested_seconds.
+             * @member {number} requested_seconds
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @instance
+             */
+            HostingQuoteRequest.prototype.requested_seconds = 0;
+
+            /**
+             * Creates a new HostingQuoteRequest instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {minimir.v1.HostingQuoteRequest.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.HostingQuoteRequest} HostingQuoteRequest instance
+             * @type {{
+             *   (properties: minimir.v1.HostingQuoteRequest.$Shape): minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape;
+             *   (properties?: minimir.v1.HostingQuoteRequest.$Properties): minimir.v1.HostingQuoteRequest;
+             * }}
+             */
+            HostingQuoteRequest.create = function(properties) {
+                return new HostingQuoteRequest(properties);
+            };
+
+            /**
+             * Encodes the specified HostingQuoteRequest message. Does not implicitly {@link minimir.v1.HostingQuoteRequest.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {minimir.v1.HostingQuoteRequest.$Properties} message HostingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingQuoteRequest.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch") && (typeof message.scene_epoch === "object" ? message.scene_epoch.low || message.scene_epoch.high : message.scene_epoch !== 0))
+                    writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.scene_epoch);
+                if (message.requested_seconds != null && $Object.hasOwnProperty.call(message, "requested_seconds") && message.requested_seconds !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.requested_seconds);
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified HostingQuoteRequest message, length delimited. Does not implicitly {@link minimir.v1.HostingQuoteRequest.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {minimir.v1.HostingQuoteRequest.$Properties} message HostingQuoteRequest message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            HostingQuoteRequest.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a HostingQuoteRequest message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape} HostingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingQuoteRequest.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.HostingQuoteRequest();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.uint64()) === "object" ? value.low || value.high : value !== 0)
+                                message.scene_epoch = value;
+                            else
+                                delete message.scene_epoch;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.requested_seconds = value;
+                            else
+                                delete message.requested_seconds;
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a HostingQuoteRequest message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.HostingQuoteRequest & minimir.v1.HostingQuoteRequest.$Shape} HostingQuoteRequest
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            HostingQuoteRequest.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a HostingQuoteRequest message.
+             * @function verify
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            HostingQuoteRequest.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.scene_epoch != null && $Object.hasOwnProperty.call(message, "scene_epoch"))
+                    if (!$util.isInteger(message.scene_epoch) && !(message.scene_epoch && $util.isInteger(message.scene_epoch.low) && $util.isInteger(message.scene_epoch.high)))
+                        return "scene_epoch: integer|Long expected";
+                if (message.requested_seconds != null && $Object.hasOwnProperty.call(message, "requested_seconds"))
+                    if (!$util.isInteger(message.requested_seconds))
+                        return "requested_seconds: integer expected";
+                return null;
+            };
+
+            /**
+             * Gets the type url for HostingQuoteRequest
+             * @function getTypeUrl
+             * @memberof minimir.v1.HostingQuoteRequest
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            HostingQuoteRequest.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.HostingQuoteRequest";
+            };
+
+            return HostingQuoteRequest;
+        })();
+
         v1.BuyHostingTimeRequest = (function() {
 
             /**
@@ -26447,6 +27553,7 @@ $root.minimir = (function() {
              * @typedef {Object} minimir.v1.BuyHostingTimeRequest.$Properties
              * @property {number|null} [requested_seconds] BuyHostingTimeRequest requested_seconds
              * @property {minimir.v1.OperationContext.$Properties|null} [operation] BuyHostingTimeRequest operation
+             * @property {Uint8Array|null} [quote_id] BuyHostingTimeRequest quote_id
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -26495,6 +27602,14 @@ $root.minimir = (function() {
             BuyHostingTimeRequest.prototype.operation = null;
 
             /**
+             * BuyHostingTimeRequest quote_id.
+             * @member {Uint8Array} quote_id
+             * @memberof minimir.v1.BuyHostingTimeRequest
+             * @instance
+             */
+            BuyHostingTimeRequest.prototype.quote_id = $util.newBuffer([]);
+
+            /**
              * Creates a new BuyHostingTimeRequest instance using the specified properties.
              * @function create
              * @memberof minimir.v1.BuyHostingTimeRequest
@@ -26530,6 +27645,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.requested_seconds);
                 if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
                     $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id") && message.quote_id.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.quote_id);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -26602,6 +27719,15 @@ $root.minimir = (function() {
                             message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
                             continue;
                         }
+                    case 3: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.quote_id = value;
+                            else
+                                delete message.quote_id;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -26658,6 +27784,9 @@ $root.minimir = (function() {
                     if (error)
                         return "operation." + error;
                 }
+                if (message.quote_id != null && $Object.hasOwnProperty.call(message, "quote_id"))
+                    if (!(message.quote_id && typeof message.quote_id.length === "number" || $util.isString(message.quote_id)))
+                        return "quote_id: buffer expected";
                 return null;
             };
 

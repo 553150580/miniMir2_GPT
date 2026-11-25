@@ -17,7 +17,31 @@ message OperationResult {
   uint64 new_revision = 3;
   uint32 error_code = 4;
   bool pending = 5;
+  HostingPurchaseReceipt hosting_purchase = 6;
 }
+// 报价冻结规则、档位、时长和两个钱包的扣款；仅成功的实时报价携带报价身份。
+message HostingQuoteResult {
+  bytes quote_id = 1;
+  uint64 scene_epoch = 2;
+  uint64 role_revision = 3;
+  uint64 rule_version = 4;
+  string config_hash = 5;
+  uint64 quote_version = 6;
+  uint32 band_min_level = 7;
+  uint32 band_max_level = 8;
+  uint32 granularity_seconds = 9;
+  uint32 requested_seconds = 10;
+  int64 reference_gold_per_hour = 11;
+  int64 gold_per_hour = 12;
+  int64 total_gold = 13;
+  int64 before_seconds = 14;
+  int64 bound_gold_cost = 15;
+  int64 gold_cost = 16;
+  int64 expires_at_unix_ms = 17;
+  uint32 error_code = 18;
+}
+// 成交回执保留原报价及到账快照，用于同一操作的持久重放。
+message HostingPurchaseReceipt { HostingQuoteResult quote = 1; int64 balance_seconds = 2; }
 message Heartbeat { uint64 client_monotonic_ms = 1; }
 message HeartbeatResult { uint64 server_unix_ms = 1; }
 // 批次内每项为带msg_id/request_seq/binding_epoch等头的完整应用body。

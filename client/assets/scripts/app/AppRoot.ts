@@ -22,6 +22,8 @@ import { GameWorldView } from './GameWorldView';
 import { WorldAssets } from './WorldAssets';
 import { GameHUD } from './GameHUD';
 import { GameMessages } from './GameMessages';
+import { GameHosting } from './GameHosting';
+import { hostingReceiptMessage, type HostingPurchaseRequest } from './HostingPurchaseModel';
 import { createPotionPreview, potionInstanceId, PotionSnapshot, validatePotionPreview } from './PotionModel';
 import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErrors';
 import { GameSkills } from './GameSkills';
@@ -91,6 +93,7 @@ export class AppRoot extends Component {
     private world?: GameWorldView;
     private hud?: GameHUD;
     private messages?: GameMessages;
+    private hosting?: GameHosting;
     private skills?: GameSkills;
     private tasksCodex?: GameTasksCodex;
     private boss?: GameBoss;
@@ -518,6 +521,18 @@ export class AppRoot extends Component {
         }, this.itemActions);
         this.cleanups.push(() => this.npcShop?.dispose());
         this.autoRecycle = new GameAutoRecycle(this.find('UIMgr/Panels/Settings'));
+        this.hosting = new GameHosting(this.find('UIMgr/Panels/Hosting'), this.popup, () => {
+            const identity = currentEntryIdentity(), { entry, inventory, wallet, hosting } = session;
+            if (this.disposed || !session.ready || this.attaching || this.leaving || session.travel.blocksInput || session.teleport.blocksInput
+                || !identity || !isCurrentEntry(identity) || !inventory || !wallet || !hosting || ![1, 2].includes(entry.sceneKind)) return undefined;
+            return { scope: attachmentKey(identity), role: identity.role, level: inventory.level, sceneEpoch: entry.sceneEpoch,
+                ruleVersion: entry.resourceVersion, revision: inventory.revision, balance: hosting.remainHostingSec,
+                boundGold: wallet.boundGold, gold: wallet.gold, pending: this.economicBusy || this.unresolved };
+        }, {
+            quote: (context, requestedSeconds) => session.connection.request(40032, { sceneEpoch: context.sceneEpoch, requestedSeconds }),
+            buy: request => this.economic(40007, request), reason: code => protocolErrorMessage(40032, code),
+        });
+        this.cleanups.push(() => this.hosting?.dispose());
         this.warehouse = new GameWarehouse(safe, () => this.warehouseInput(), request => session.connection.request(40020, request));
         const warehouse = this.warehouse; this.cleanups.push(() => warehouse.dispose());
         const directory = new TownDirectory(this.find('UIMgr/Panels/TownDirectory'), row => this.selectTownDestination(row));
@@ -596,9 +611,9 @@ export class AppRoot extends Component {
                 ? progressionDetailLines(session.inventory?.level, session.inventory?.experience, session.inventory?.progression) : null);
         }, Node.EventType.TOUCH_END);
         for (const panel of ['Role','Inventory','Hosting','Report','Messages','Settings']) {
-            this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => { this.ui!.open(panel); this.refreshGame(); });
+            this.button(`UIMgr/Panels/Functions/Pages/Page0/${panel}`, () => this.openGamePanel(panel));
         }
-        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => { this.ui!.open(panel); this.refreshGame(); });
+        for (const [path, panel] of [['BottomHUD/QuickNav/Inventory','Inventory'],['BottomHUD/QuickNav/Role','Role'],['BottomHUD/QuickNav/Hosting','Hosting'],['BottomHUD/QuickNav/Report','Report'],['BottomHUD/Footer/Functions','Functions'],['BottomHUD/Skills/Settings','Settings'],['BottomHUD/Footer/Inventory','Inventory'],['TopHUD/Avatar','Role'],['BottomHUD/Chat','Messages']] as const) this.button(path, () => this.openGamePanel(panel));
         this.button('BottomHUD/Footer/Map', () => this.openMapDirectory());
         if (session.entry?.resourceVersion.greaterThanOrEqual(Long.fromInt(24, true))) this.text('BottomHUD/Footer/Map/Label', '地图');
         const yuanbao = (value: Long): string => `${value.div(10)}.${value.mod(10)}`;
@@ -689,8 +704,17 @@ export class AppRoot extends Component {
             + (session.role?.job === 0 ? '\n刺杀、半月需手动开启；烈火需手动充能。自动战斗仅使用已开启的模式和已就绪的烈火。' : '') }));
         this.button('UIMgr/Panels/Hosting/Leave', () => this.leave(true));
         this.button('UIMgr/Panels/Hosting/Claim', () => this.economic(40006, { benefitKind: 0 }));
+        this.button('UIMgr/Panels/Hosting/BuyMinus', () => this.hosting?.adjust(-1));
+        this.button('UIMgr/Panels/Hosting/BuyPlus', () => this.hosting?.adjust(1));
+        this.button('UIMgr/Panels/Hosting/BuyQuote', () => this.hosting?.confirmPurchase());
         this.button('UIMgr/Panels/Inventory/Equip', () => this.changeEquipment(false));
         this.button('UIMgr/Panels/Inventory/Recycle', () => this.recycleSelectedInventory());
+    }
+
+    private openGamePanel(panel: string): void {
+        this.ui!.open(panel);
+        if (panel === 'Hosting') this.hosting?.open();
+        this.refreshGame();
     }
 
     private handleSessionUpdate(): void {
@@ -1266,7 +1290,7 @@ export class AppRoot extends Component {
         }
         this.lastInventory = session.inventory;
         this.itemActions?.refresh();
-        this.text('UIMgr/Panels/Hosting/Message', `剩余托管 ${session.hosting?.remainHostingSec ?? 0} 秒\n在线自动战斗不扣托管时间`);
+        this.hosting?.refresh(session.hosting?.remainHostingSec);
         const report = session.report;
         this.text('UIMgr/Panels/Report/Message', autoRecycleReportLines(report).join('\n'));
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
@@ -1865,10 +1889,19 @@ export class AppRoot extends Component {
             throw new Error('操作回执身份不匹配，保留原请求等待核对');
         }
         if (result.pending) { this.unresolved = true; throw new Error('操作仍在处理中，请重新认证查询结果'); }
+        let hostingReceipt: string | undefined;
+        if (pending.id === 40007 && !result.errorCode) {
+            try { hostingReceipt = hostingReceiptMessage(result.hostingPurchase, pending.value as unknown as HostingPurchaseRequest); }
+            catch (error) { this.unresolved = true; throw error; }
+        }
         ledger!.clear(role); this.unresolved = false;
         if (result.errorCode) {
             if (pending.id === 40022) session.warehouseReceipts.cancel(expected);
             throw new ProtocolResponseError(pending.id, result.errorCode);
+        }
+        if (hostingReceipt) {
+            this.hosting?.acceptReceipt(role, hostingReceipt);
+            this.hosting?.refresh(session.hosting?.remainHostingSec);
         }
         if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
         this.status('操作已由服务端确认');

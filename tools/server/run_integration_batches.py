@@ -24,6 +24,7 @@ GROUP_PREFIXES = {
                   'MongoPermanent', 'MongoReceipt', 'PotionMongo'),
     'warehouses': ('Warehouse', 'SkillAsset', 'SkillPageMerge'),
     'hosting': ('ManaPotion', 'AutoTarget', 'CompactTown', 'FirstLoop', 'FullBagOffline',
+                'HostingPurchase',
                 'LevelGrowthNatural', 'MapTravel'),
     'scene-lifecycle': ('MonsterRespawn', 'SharedTown'),
     'skills': ('Combat', 'Displacement', 'PetRuntime', 'SkillAttackSlots', 'SkillLearning', 'SummonPet', 'Taoist', 'Teleport'),
@@ -33,6 +34,7 @@ GROUP_PREFIXES = {
 EXTERNAL_CASES = {
     'TestServerDirectoryNodeProcess': '由四服联机父用例启动',
     'TestWorldBossTwoClientBrowserMongoWS': '由双客户端真实构建专项执行',
+    'TestHostingPurchaseBrowserMongoWS': '由托管补时真实构建专项执行',
 }
 GO = [sys.executable, str(ROOT / 'tools/dev'), 'go', 'test']
 

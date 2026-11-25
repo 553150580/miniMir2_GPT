@@ -1008,6 +1008,30 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "2026-11-25 用户指定每角色四个技能槽与攻击释放队列"
+    },
+    {
+      "value": 40032,
+      "name": "MsgC2SHostingQuote",
+      "proto_message": "HostingQuoteRequest",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 金币购买托管时长"
+    },
+    {
+      "value": 40033,
+      "name": "MsgS2CHostingQuote",
+      "proto_message": "HostingQuoteResult",
+      "direction": "s2c",
+      "binding_required": true,
+      "scene_required": true,
+      "economic": false,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.12 金币购买托管时长"
     }
   ],
   "error_codes": [
@@ -1369,6 +1393,38 @@
       "display_zh": "运营日已切换，请刷新任务",
       "status": "draft",
       "source_ref": "最终策划案4.21",
+      "active_in_scope": true
+    },
+    {
+      "value": 3801,
+      "name": "CodeHostingPurchaseUnavailable",
+      "display_zh": "当前等级档还没有生效的托管时长价格",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3802,
+      "name": "CodeHostingPurchaseQuoteStale",
+      "display_zh": "托管补时报价已变化，请重新报价",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3803,
+      "name": "CodeHostingPurchaseBalance",
+      "display_zh": "托管余量低于24小时后可购买",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
+      "active_in_scope": true
+    },
+    {
+      "value": 3804,
+      "name": "CodeHostingPurchaseFunds",
+      "display_zh": "绑定金币与普通金币合计不足",
+      "status": "draft",
+      "source_ref": "最终策划案4.12",
       "active_in_scope": true
     }
   ]

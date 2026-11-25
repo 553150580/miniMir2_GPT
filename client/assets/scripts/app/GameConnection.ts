@@ -43,6 +43,7 @@ const codecs: Record<number, MessageType> = {
     40024: pb.VendorQuoteRequest, 40025: pb.VendorQuoteResult, 40026: pb.VendorCommitRequest,
     40027: pb.TaskCodexStateRequest, 40028: pb.TaskCodexStateResult, 40029: pb.TaskCodexClaimRequest,
     40030: pb.ClaimChallengeReward, 40031: pb.SetSkillSlotsRequest,
+    40032: pb.HostingQuoteRequest, 40033: pb.HostingQuoteResult,
 };
 
 function variable(value: Long): number[] {
@@ -246,7 +247,7 @@ export class GameConnection {
         return new Promise((ok, fail) => {
             const timer = setTimeout(() => { this.pending.delete(seq); fail(new Error(cancelNavigation ? '导航取消确认超时，请稍后重新退出' : '操作回执超时；经济操作需沿原身份核对，不能自动创建新操作')); }, 10000);
             const bossResponses: Partial<Record<number, number>> = { 20012: 20014, 20015: 20016, 20017: 20020, 20018: 20020 };
-            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 1 ? 2 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : id === 40024 ? 40025 : id === 40027 ? 40028 : bossResponses[id] ?? 40005];
+            const responses = id === 20007 ? [20008, 20010] : [cancelNavigation ? 5 : id === 1 ? 2 : id === 20001 ? 20002 : id === 20009 ? 20010 : id === 30004 ? 30005 : id === 30009 ? 30010 : id === 40011 ? 40012 : id === 40020 ? 40021 : id === 40024 ? 40025 : id === 40027 ? 40028 : id === 40032 ? 40033 : bossResponses[id] ?? 40005];
             this.pending.set(seq, { responses, assemble, ok, fail, timer });
             try {
                 this.socket!.send(encodePacket(id, seq, this.binding, value));

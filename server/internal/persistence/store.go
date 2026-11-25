@@ -111,6 +111,7 @@ type Operation struct {
 	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
 	SkillSlotIDs      []uint32                       `bson:"skill_slot_ids,omitempty"`         // 已确认的四个技能槽位。
 	HostingClaim      *HostingClaimReceipt           `bson:"hosting_claim,omitempty"`          // 首次确认的日领时长及原权益快照。
+	HostingPurchase   *HostingPurchaseReceipt        `bson:"hosting_purchase,omitempty"`       // 首次购买确认的账本来源、价格和扣款。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。

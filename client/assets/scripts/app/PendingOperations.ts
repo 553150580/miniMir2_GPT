@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40007, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 40031, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -126,6 +126,12 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
     } else if (id === 40006) {
         const item = record(input.value, ['benefitKind', 'operation']);
         payload = { benefitKind: uint32(item.benefitKind), operation: operation(item.operation, stored) };
+    } else if (id === 40007) {
+        // 补时跨连接沿用原报价和原操作，不在重放时提交新的数量、报价或版本。
+        const item = record(input.value, ['requestedSeconds', 'quoteId', 'operation']);
+        const requestedSeconds = uint32(item.requestedSeconds);
+        if (!requestedSeconds || requestedSeconds > 24 * 3600) return invalid('原补时时长必须在1秒至24小时之间');
+        payload = { requestedSeconds, quoteId: bytes16(item.quoteId, stored), operation: operation(item.operation, stored) };
     } else if (id === 40009) {
         const item = record(input.value, ['itemInstanceId', 'itemId', 'sceneEpoch', 'operation']);
         const itemId = uint32(item.itemId), epoch = longValue(item.sceneEpoch, stored);

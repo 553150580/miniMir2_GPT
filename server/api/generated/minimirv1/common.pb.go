@@ -195,14 +195,15 @@ func (x *OperationContext) GetExpectedRuleVersion() uint64 {
 }
 
 type OperationResult struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	OpId          []byte                 `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
-	CommandSeq    uint64                 `protobuf:"varint,2,opt,name=command_seq,json=commandSeq,proto3" json:"command_seq,omitempty"`
-	NewRevision   uint64                 `protobuf:"varint,3,opt,name=new_revision,json=newRevision,proto3" json:"new_revision,omitempty"`
-	ErrorCode     uint32                 `protobuf:"varint,4,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
-	Pending       bool                   `protobuf:"varint,5,opt,name=pending,proto3" json:"pending,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState  `protogen:"open.v1"`
+	OpId            []byte                  `protobuf:"bytes,1,opt,name=op_id,json=opId,proto3" json:"op_id,omitempty"`
+	CommandSeq      uint64                  `protobuf:"varint,2,opt,name=command_seq,json=commandSeq,proto3" json:"command_seq,omitempty"`
+	NewRevision     uint64                  `protobuf:"varint,3,opt,name=new_revision,json=newRevision,proto3" json:"new_revision,omitempty"`
+	ErrorCode       uint32                  `protobuf:"varint,4,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	Pending         bool                    `protobuf:"varint,5,opt,name=pending,proto3" json:"pending,omitempty"`
+	HostingPurchase *HostingPurchaseReceipt `protobuf:"bytes,6,opt,name=hosting_purchase,json=hostingPurchase,proto3" json:"hosting_purchase,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *OperationResult) Reset() {
@@ -270,6 +271,247 @@ func (x *OperationResult) GetPending() bool {
 	return false
 }
 
+func (x *OperationResult) GetHostingPurchase() *HostingPurchaseReceipt {
+	if x != nil {
+		return x.HostingPurchase
+	}
+	return nil
+}
+
+// 报价冻结规则、档位、时长和两个钱包的扣款；仅成功的实时报价携带报价身份。
+type HostingQuoteResult struct {
+	state                protoimpl.MessageState `protogen:"open.v1"`
+	QuoteId              []byte                 `protobuf:"bytes,1,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
+	SceneEpoch           uint64                 `protobuf:"varint,2,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	RoleRevision         uint64                 `protobuf:"varint,3,opt,name=role_revision,json=roleRevision,proto3" json:"role_revision,omitempty"`
+	RuleVersion          uint64                 `protobuf:"varint,4,opt,name=rule_version,json=ruleVersion,proto3" json:"rule_version,omitempty"`
+	ConfigHash           string                 `protobuf:"bytes,5,opt,name=config_hash,json=configHash,proto3" json:"config_hash,omitempty"`
+	QuoteVersion         uint64                 `protobuf:"varint,6,opt,name=quote_version,json=quoteVersion,proto3" json:"quote_version,omitempty"`
+	BandMinLevel         uint32                 `protobuf:"varint,7,opt,name=band_min_level,json=bandMinLevel,proto3" json:"band_min_level,omitempty"`
+	BandMaxLevel         uint32                 `protobuf:"varint,8,opt,name=band_max_level,json=bandMaxLevel,proto3" json:"band_max_level,omitempty"`
+	GranularitySeconds   uint32                 `protobuf:"varint,9,opt,name=granularity_seconds,json=granularitySeconds,proto3" json:"granularity_seconds,omitempty"`
+	RequestedSeconds     uint32                 `protobuf:"varint,10,opt,name=requested_seconds,json=requestedSeconds,proto3" json:"requested_seconds,omitempty"`
+	ReferenceGoldPerHour int64                  `protobuf:"varint,11,opt,name=reference_gold_per_hour,json=referenceGoldPerHour,proto3" json:"reference_gold_per_hour,omitempty"`
+	GoldPerHour          int64                  `protobuf:"varint,12,opt,name=gold_per_hour,json=goldPerHour,proto3" json:"gold_per_hour,omitempty"`
+	TotalGold            int64                  `protobuf:"varint,13,opt,name=total_gold,json=totalGold,proto3" json:"total_gold,omitempty"`
+	BeforeSeconds        int64                  `protobuf:"varint,14,opt,name=before_seconds,json=beforeSeconds,proto3" json:"before_seconds,omitempty"`
+	BoundGoldCost        int64                  `protobuf:"varint,15,opt,name=bound_gold_cost,json=boundGoldCost,proto3" json:"bound_gold_cost,omitempty"`
+	GoldCost             int64                  `protobuf:"varint,16,opt,name=gold_cost,json=goldCost,proto3" json:"gold_cost,omitempty"`
+	ExpiresAtUnixMs      int64                  `protobuf:"varint,17,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
+	ErrorCode            uint32                 `protobuf:"varint,18,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *HostingQuoteResult) Reset() {
+	*x = HostingQuoteResult{}
+	mi := &file_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HostingQuoteResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HostingQuoteResult) ProtoMessage() {}
+
+func (x *HostingQuoteResult) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HostingQuoteResult.ProtoReflect.Descriptor instead.
+func (*HostingQuoteResult) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *HostingQuoteResult) GetQuoteId() []byte {
+	if x != nil {
+		return x.QuoteId
+	}
+	return nil
+}
+
+func (x *HostingQuoteResult) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetRoleRevision() uint64 {
+	if x != nil {
+		return x.RoleRevision
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetRuleVersion() uint64 {
+	if x != nil {
+		return x.RuleVersion
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetConfigHash() string {
+	if x != nil {
+		return x.ConfigHash
+	}
+	return ""
+}
+
+func (x *HostingQuoteResult) GetQuoteVersion() uint64 {
+	if x != nil {
+		return x.QuoteVersion
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetBandMinLevel() uint32 {
+	if x != nil {
+		return x.BandMinLevel
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetBandMaxLevel() uint32 {
+	if x != nil {
+		return x.BandMaxLevel
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetGranularitySeconds() uint32 {
+	if x != nil {
+		return x.GranularitySeconds
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetRequestedSeconds() uint32 {
+	if x != nil {
+		return x.RequestedSeconds
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetReferenceGoldPerHour() int64 {
+	if x != nil {
+		return x.ReferenceGoldPerHour
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetGoldPerHour() int64 {
+	if x != nil {
+		return x.GoldPerHour
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetTotalGold() int64 {
+	if x != nil {
+		return x.TotalGold
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetBeforeSeconds() int64 {
+	if x != nil {
+		return x.BeforeSeconds
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetBoundGoldCost() int64 {
+	if x != nil {
+		return x.BoundGoldCost
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetGoldCost() int64 {
+	if x != nil {
+		return x.GoldCost
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetExpiresAtUnixMs() int64 {
+	if x != nil {
+		return x.ExpiresAtUnixMs
+	}
+	return 0
+}
+
+func (x *HostingQuoteResult) GetErrorCode() uint32 {
+	if x != nil {
+		return x.ErrorCode
+	}
+	return 0
+}
+
+// 成交回执保留原报价及到账快照，用于同一操作的持久重放。
+type HostingPurchaseReceipt struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Quote          *HostingQuoteResult    `protobuf:"bytes,1,opt,name=quote,proto3" json:"quote,omitempty"`
+	BalanceSeconds int64                  `protobuf:"varint,2,opt,name=balance_seconds,json=balanceSeconds,proto3" json:"balance_seconds,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *HostingPurchaseReceipt) Reset() {
+	*x = HostingPurchaseReceipt{}
+	mi := &file_common_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HostingPurchaseReceipt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HostingPurchaseReceipt) ProtoMessage() {}
+
+func (x *HostingPurchaseReceipt) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HostingPurchaseReceipt.ProtoReflect.Descriptor instead.
+func (*HostingPurchaseReceipt) Descriptor() ([]byte, []int) {
+	return file_common_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *HostingPurchaseReceipt) GetQuote() *HostingQuoteResult {
+	if x != nil {
+		return x.Quote
+	}
+	return nil
+}
+
+func (x *HostingPurchaseReceipt) GetBalanceSeconds() int64 {
+	if x != nil {
+		return x.BalanceSeconds
+	}
+	return 0
+}
+
 type Heartbeat struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	ClientMonotonicMs uint64                 `protobuf:"varint,1,opt,name=client_monotonic_ms,json=clientMonotonicMs,proto3" json:"client_monotonic_ms,omitempty"`
@@ -279,7 +521,7 @@ type Heartbeat struct {
 
 func (x *Heartbeat) Reset() {
 	*x = Heartbeat{}
-	mi := &file_common_proto_msgTypes[4]
+	mi := &file_common_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -291,7 +533,7 @@ func (x *Heartbeat) String() string {
 func (*Heartbeat) ProtoMessage() {}
 
 func (x *Heartbeat) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[4]
+	mi := &file_common_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -304,7 +546,7 @@ func (x *Heartbeat) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Heartbeat.ProtoReflect.Descriptor instead.
 func (*Heartbeat) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{4}
+	return file_common_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Heartbeat) GetClientMonotonicMs() uint64 {
@@ -323,7 +565,7 @@ type HeartbeatResult struct {
 
 func (x *HeartbeatResult) Reset() {
 	*x = HeartbeatResult{}
-	mi := &file_common_proto_msgTypes[5]
+	mi := &file_common_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -335,7 +577,7 @@ func (x *HeartbeatResult) String() string {
 func (*HeartbeatResult) ProtoMessage() {}
 
 func (x *HeartbeatResult) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[5]
+	mi := &file_common_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -348,7 +590,7 @@ func (x *HeartbeatResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HeartbeatResult.ProtoReflect.Descriptor instead.
 func (*HeartbeatResult) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{5}
+	return file_common_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *HeartbeatResult) GetServerUnixMs() uint64 {
@@ -368,7 +610,7 @@ type Batch struct {
 
 func (x *Batch) Reset() {
 	*x = Batch{}
-	mi := &file_common_proto_msgTypes[6]
+	mi := &file_common_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -380,7 +622,7 @@ func (x *Batch) String() string {
 func (*Batch) ProtoMessage() {}
 
 func (x *Batch) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[6]
+	mi := &file_common_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -393,7 +635,7 @@ func (x *Batch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Batch.ProtoReflect.Descriptor instead.
 func (*Batch) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{6}
+	return file_common_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Batch) GetApplicationBodies() [][]byte {
@@ -415,7 +657,7 @@ type ConfigVersion struct {
 
 func (x *ConfigVersion) Reset() {
 	*x = ConfigVersion{}
-	mi := &file_common_proto_msgTypes[7]
+	mi := &file_common_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -427,7 +669,7 @@ func (x *ConfigVersion) String() string {
 func (*ConfigVersion) ProtoMessage() {}
 
 func (x *ConfigVersion) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_msgTypes[7]
+	mi := &file_common_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -440,7 +682,7 @@ func (x *ConfigVersion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfigVersion.ProtoReflect.Descriptor instead.
 func (*ConfigVersion) Descriptor() ([]byte, []int) {
-	return file_common_proto_rawDescGZIP(), []int{7}
+	return file_common_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ConfigVersion) GetRuleVersion() uint64 {
@@ -488,7 +730,7 @@ const file_common_proto_rawDesc = "" +
 	"\vcommand_seq\x18\x02 \x01(\x04R\n" +
 	"commandSeq\x12+\n" +
 	"\x11expected_revision\x18\x03 \x01(\x04R\x10expectedRevision\x122\n" +
-	"\x15expected_rule_version\x18\x04 \x01(\x04R\x13expectedRuleVersion\"\xa3\x01\n" +
+	"\x15expected_rule_version\x18\x04 \x01(\x04R\x13expectedRuleVersion\"\xf2\x01\n" +
 	"\x0fOperationResult\x12\x13\n" +
 	"\x05op_id\x18\x01 \x01(\fR\x04opId\x12\x1f\n" +
 	"\vcommand_seq\x18\x02 \x01(\x04R\n" +
@@ -496,7 +738,35 @@ const file_common_proto_rawDesc = "" +
 	"\fnew_revision\x18\x03 \x01(\x04R\vnewRevision\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x04 \x01(\rR\terrorCode\x12\x18\n" +
-	"\apending\x18\x05 \x01(\bR\apending\";\n" +
+	"\apending\x18\x05 \x01(\bR\apending\x12M\n" +
+	"\x10hosting_purchase\x18\x06 \x01(\v2\".minimir.v1.HostingPurchaseReceiptR\x0fhostingPurchase\"\xba\x05\n" +
+	"\x12HostingQuoteResult\x12\x19\n" +
+	"\bquote_id\x18\x01 \x01(\fR\aquoteId\x12\x1f\n" +
+	"\vscene_epoch\x18\x02 \x01(\x04R\n" +
+	"sceneEpoch\x12#\n" +
+	"\rrole_revision\x18\x03 \x01(\x04R\froleRevision\x12!\n" +
+	"\frule_version\x18\x04 \x01(\x04R\vruleVersion\x12\x1f\n" +
+	"\vconfig_hash\x18\x05 \x01(\tR\n" +
+	"configHash\x12#\n" +
+	"\rquote_version\x18\x06 \x01(\x04R\fquoteVersion\x12$\n" +
+	"\x0eband_min_level\x18\a \x01(\rR\fbandMinLevel\x12$\n" +
+	"\x0eband_max_level\x18\b \x01(\rR\fbandMaxLevel\x12/\n" +
+	"\x13granularity_seconds\x18\t \x01(\rR\x12granularitySeconds\x12+\n" +
+	"\x11requested_seconds\x18\n" +
+	" \x01(\rR\x10requestedSeconds\x125\n" +
+	"\x17reference_gold_per_hour\x18\v \x01(\x03R\x14referenceGoldPerHour\x12\"\n" +
+	"\rgold_per_hour\x18\f \x01(\x03R\vgoldPerHour\x12\x1d\n" +
+	"\n" +
+	"total_gold\x18\r \x01(\x03R\ttotalGold\x12%\n" +
+	"\x0ebefore_seconds\x18\x0e \x01(\x03R\rbeforeSeconds\x12&\n" +
+	"\x0fbound_gold_cost\x18\x0f \x01(\x03R\rboundGoldCost\x12\x1b\n" +
+	"\tgold_cost\x18\x10 \x01(\x03R\bgoldCost\x12+\n" +
+	"\x12expires_at_unix_ms\x18\x11 \x01(\x03R\x0fexpiresAtUnixMs\x12\x1d\n" +
+	"\n" +
+	"error_code\x18\x12 \x01(\rR\terrorCode\"w\n" +
+	"\x16HostingPurchaseReceipt\x124\n" +
+	"\x05quote\x18\x01 \x01(\v2\x1e.minimir.v1.HostingQuoteResultR\x05quote\x12'\n" +
+	"\x0fbalance_seconds\x18\x02 \x01(\x03R\x0ebalanceSeconds\";\n" +
 	"\tHeartbeat\x12.\n" +
 	"\x13client_monotonic_ms\x18\x01 \x01(\x04R\x11clientMonotonicMs\"7\n" +
 	"\x0fHeartbeatResult\x12$\n" +
@@ -521,23 +791,27 @@ func file_common_proto_rawDescGZIP() []byte {
 	return file_common_proto_rawDescData
 }
 
-var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_common_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_common_proto_goTypes = []any{
-	(*RoleKey)(nil),          // 0: minimir.v1.RoleKey
-	(*GridPoint)(nil),        // 1: minimir.v1.GridPoint
-	(*OperationContext)(nil), // 2: minimir.v1.OperationContext
-	(*OperationResult)(nil),  // 3: minimir.v1.OperationResult
-	(*Heartbeat)(nil),        // 4: minimir.v1.Heartbeat
-	(*HeartbeatResult)(nil),  // 5: minimir.v1.HeartbeatResult
-	(*Batch)(nil),            // 6: minimir.v1.Batch
-	(*ConfigVersion)(nil),    // 7: minimir.v1.ConfigVersion
+	(*RoleKey)(nil),                // 0: minimir.v1.RoleKey
+	(*GridPoint)(nil),              // 1: minimir.v1.GridPoint
+	(*OperationContext)(nil),       // 2: minimir.v1.OperationContext
+	(*OperationResult)(nil),        // 3: minimir.v1.OperationResult
+	(*HostingQuoteResult)(nil),     // 4: minimir.v1.HostingQuoteResult
+	(*HostingPurchaseReceipt)(nil), // 5: minimir.v1.HostingPurchaseReceipt
+	(*Heartbeat)(nil),              // 6: minimir.v1.Heartbeat
+	(*HeartbeatResult)(nil),        // 7: minimir.v1.HeartbeatResult
+	(*Batch)(nil),                  // 8: minimir.v1.Batch
+	(*ConfigVersion)(nil),          // 9: minimir.v1.ConfigVersion
 }
 var file_common_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	5, // 0: minimir.v1.OperationResult.hosting_purchase:type_name -> minimir.v1.HostingPurchaseReceipt
+	4, // 1: minimir.v1.HostingPurchaseReceipt.quote:type_name -> minimir.v1.HostingQuoteResult
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_common_proto_init() }
@@ -551,7 +825,7 @@ func file_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_proto_rawDesc), len(file_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

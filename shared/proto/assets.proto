@@ -199,7 +199,13 @@ message SkillAssetPreview {
 }
 message SkillAssetCommitRequest { bytes preview_id = 1; OperationContext operation = 2; }
 message ClaimHostingTimeRequest { uint32 benefit_kind = 1; OperationContext operation = 2; }
-message BuyHostingTimeRequest { uint32 requested_seconds = 1; OperationContext operation = 2; }
+// 零秒查询当前档位与购买粒度，正数请求一张绑定当前角色和场景的短时报价。
+message HostingQuoteRequest { uint64 scene_epoch = 1; uint32 requested_seconds = 2; }
+message BuyHostingTimeRequest {
+  uint32 requested_seconds = 1;
+  OperationContext operation = 2;
+  bytes quote_id = 3;
+}
 // 战报展示已提交收益，卡到期前后绑定分账；此消息不触发重抽或重判绑定。
 message HostingReport {
   bytes hosting_session_id = 1;

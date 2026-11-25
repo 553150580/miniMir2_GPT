@@ -3,6 +3,7 @@ import { CodeItemUseBlocked, CodeItemUseCooldown, CodeSkillCooldown, CodeSkillNo
     CodeSkillMaterialRequired, CodeSkillMaterialChanged, CodeLineForbidden, CodeEquipmentBagFull, CodeEquipmentChanged, CodeEquipmentBlocked,
     CodeWarehouseFull, CodeWarehouseChanged, CodeWarehouseBlocked, CodeWarehousePrivilegeRequired,
     CodeVendorUnavailable, CodeVendorQuoteStale, CodeVendorFunds, CodeVendorItemBlocked,
+    CodeHostingPurchaseUnavailable, CodeHostingPurchaseQuoteStale, CodeHostingPurchaseBalance, CodeHostingPurchaseFunds, CodeOperationConflict,
     CodeTaskCodexUnavailable, CodeTaskCodexDayChanged,
     CodeRoleSlotOrNameOccupied, CodeRouteChanged, CodeServerBusy, CodeUnauthenticated } from '../generated/protocol_ids';
 
@@ -33,6 +34,10 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (errorCode === CodeVendorQuoteStale) return '商店报价已失效，请重新报价';
     if (errorCode === CodeVendorFunds) return '当前钱包余额不足';
     if (errorCode === CodeVendorItemBlocked) return '物品或数量不满足当前商店服务条件';
+    if (errorCode === CodeHostingPurchaseUnavailable) return '当前规则未开放金币补时';
+    if (errorCode === CodeHostingPurchaseQuoteStale || errorCode === CodeOperationConflict && messageId === 40007) return '补时报价或原资产已变化，请重新报价';
+    if (errorCode === CodeHostingPurchaseBalance) return '剩余托管时长达到24小时，暂不可购买';
+    if (errorCode === CodeHostingPurchaseFunds) return '绑定金币与金币余额不足';
     if (errorCode === CodeTaskCodexUnavailable) return '当前奖励不可领取，请查看任务进度';
     if (errorCode === CodeTaskCodexDayChanged) return '运营日已切换，请刷新任务';
     if (errorCode === CodeEquipmentBagFull && messageId === 40030) return '背包已满，奖励仍在待领取';

@@ -209,6 +209,8 @@ type room struct {
 	Melee                 meleeState                // 普攻模式、蓄力和修订状态。
 	CellEntrySequence     uint64                    // 分配角色及实体格进入身份的单调水位。
 	DeferMovementSnapshot bool                      // 暂缓中途位移快照，留待同一组合动作完整提交后再观察。
+
+	hostingQuote *persistence.HostingPurchaseQuote // 当前附着最近签发、尚可提交的补时报价。
 }
 
 // New 为单运行服启动持有共享分片、数据库队列与逻辑时钟的引擎。
@@ -534,6 +536,7 @@ func (w *worker) command(c command) {
 			w.cancelTownNavigation(r)
 			r.PreviewGeneration++
 			r.PreviewInFlight = false
+			r.hostingQuote = nil
 			r.Conn = nil
 			r.Ready = false
 			r.PetBornReady = nil
@@ -672,6 +675,8 @@ func (w *worker) roomCommand(r *room, c command) {
 		w.skillAssetPreview(r, c.frame)
 	case p.MsgC2SVendorQuote:
 		w.vendorPreview(r, c.frame)
+	case p.MsgC2SHostingQuote:
+		w.quoteHostingPurchase(r, c.frame, time.Now())
 	case p.MsgC2SWarehouseQuery:
 		w.warehouseQuery(r, c.frame)
 	case p.MsgC2STaskCodexState:
@@ -1167,8 +1172,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 		q.Context = x.Operation
 		q.Benefit = x.BenefitKind
 	case p.MsgC2SBuyHostingTime:
-		w.send(r, p.MsgS2COperationResult, f.Request, &pb.OperationResult{OpId: operationID(f), ErrorCode: p.CodeInvalidArgument, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision)})
-		return
+		var request pb.BuyHostingTimeRequest // 只接受原购买量和服务端签发的报价标识。
+		if proto.Unmarshal(f.Payload, &request) != nil || len(request.QuoteId) != 16 || len(request.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.Context, q.SceneEpoch = persistence.AssetBuyHostingTime, request.Operation, r.Scene
+		q.HostingPurchase = r.hostingPurchaseTerms(&request)
 	case p.MsgC2SReviveChoice:
 		// x 记录复活选择。
 		var x pb.ReviveChoice

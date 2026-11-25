@@ -27,10 +27,11 @@ type AssetRequest struct {
 	Slot             uint32                  // 换装或卸装指定的装备槽。
 	Benefit          uint32                  // 当前领取托管时长所请求的权益类型。
 	HostingClaimAt   time.Time               `json:"-"` // 服务端受理原领取的时刻，由同一任务重试复用。
+	HostingPurchase  *HostingPurchaseTerms   // 玩家在确认页看到并提交的原补时交易事实。
 	ValidRevive      bool                    // 房间判断本次复活选择是否有对应的有效现场。
 	ReviveDeathID    string                  // 请求复活的原死亡身份。
 	ItemDefinitionID uint32                  // 需要和物品实例一致的配置物品编号。
-	SceneEpoch       uint64                  // 药效等临时结果所属场景代次。
+	SceneEpoch       uint64                  // 药效或可信补时报价所属的场景代次。
 	PotionGateCode   uint32                  // 房间对用药条件的预先判定。
 	SkillID          uint32                  // 学习、配置耗材或实际施法对应的技能。
 	PreviewID        string                  // 提交时必须复核的短期技能资产计划标识。
@@ -179,6 +180,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
 		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		var hostingClaim *HostingClaimReceipt              // 首次确认的日领时长及原权益快照。
+		var hostingPurchase *HostingPurchaseReceipt        // 首次补时确认的原价格、扣款与到账。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetVendor:
@@ -214,6 +216,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			if e != nil {
 				return e
 			}
+		case AssetBuyHostingTime:
+			// 仅对首次写入检查事务当前的价档和时钟。更早的确定回执已在前面按原操作身份返回。
+			r, hostingPurchase, businessCode = applyHostingPurchase(r, &s.Cfg.Fixture, q.HostingPurchase, q.SceneEpoch, time.Now())
 		case "revive":
 			if !q.ValidRevive || r.RetiredDeathID != "" && r.RetiredDeathID != q.ReviveDeathID {
 				businessCode = p.CodeInvalidArgument
@@ -293,6 +298,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			op.SkillSlotIDs = r.SkillSlotIDs
 		}
 		op.HostingClaim = hostingClaim
+		op.HostingPurchase = hostingPurchase
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -351,6 +357,11 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 			audit["rule_version"] = s.Cfg.Fixture.RuleVersion
 			audit["config_hash"] = s.Cfg.Fixture.Hash
 		}
+		if hostingPurchase != nil {
+			audit["hosting_purchase"] = hostingPurchase
+			audit["rule_version"] = hostingPurchase.Quote.RuleVersion
+			audit["config_hash"] = hostingPurchase.Quote.ConfigHash
+		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e
 		}
@@ -364,6 +375,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 	if e != nil {
 		result.ErrorCode = Code(e)
 		result.Pending = result.ErrorCode == p.CodeOperationPending
+	} else {
+		result.HostingPurchase = receipt.HostingPurchase.Proto()
 	}
 	return out, result, receipt, e
 }

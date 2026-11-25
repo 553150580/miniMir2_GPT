@@ -2125,17 +2125,71 @@ func (x *ClaimHostingTimeRequest) GetOperation() *OperationContext {
 	return nil
 }
 
+// 零秒查询当前档位与购买粒度，正数请求一张绑定当前角色和场景的短时报价。
+type HostingQuoteRequest struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	SceneEpoch       uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
+	RequestedSeconds uint32                 `protobuf:"varint,2,opt,name=requested_seconds,json=requestedSeconds,proto3" json:"requested_seconds,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *HostingQuoteRequest) Reset() {
+	*x = HostingQuoteRequest{}
+	mi := &file_assets_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *HostingQuoteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HostingQuoteRequest) ProtoMessage() {}
+
+func (x *HostingQuoteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_assets_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HostingQuoteRequest.ProtoReflect.Descriptor instead.
+func (*HostingQuoteRequest) Descriptor() ([]byte, []int) {
+	return file_assets_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *HostingQuoteRequest) GetSceneEpoch() uint64 {
+	if x != nil {
+		return x.SceneEpoch
+	}
+	return 0
+}
+
+func (x *HostingQuoteRequest) GetRequestedSeconds() uint32 {
+	if x != nil {
+		return x.RequestedSeconds
+	}
+	return 0
+}
+
 type BuyHostingTimeRequest struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	RequestedSeconds uint32                 `protobuf:"varint,1,opt,name=requested_seconds,json=requestedSeconds,proto3" json:"requested_seconds,omitempty"`
 	Operation        *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	QuoteId          []byte                 `protobuf:"bytes,3,opt,name=quote_id,json=quoteId,proto3" json:"quote_id,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
 
 func (x *BuyHostingTimeRequest) Reset() {
 	*x = BuyHostingTimeRequest{}
-	mi := &file_assets_proto_msgTypes[25]
+	mi := &file_assets_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2147,7 +2201,7 @@ func (x *BuyHostingTimeRequest) String() string {
 func (*BuyHostingTimeRequest) ProtoMessage() {}
 
 func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[25]
+	mi := &file_assets_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2160,7 +2214,7 @@ func (x *BuyHostingTimeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BuyHostingTimeRequest.ProtoReflect.Descriptor instead.
 func (*BuyHostingTimeRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{25}
+	return file_assets_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *BuyHostingTimeRequest) GetRequestedSeconds() uint32 {
@@ -2173,6 +2227,13 @@ func (x *BuyHostingTimeRequest) GetRequestedSeconds() uint32 {
 func (x *BuyHostingTimeRequest) GetOperation() *OperationContext {
 	if x != nil {
 		return x.Operation
+	}
+	return nil
+}
+
+func (x *BuyHostingTimeRequest) GetQuoteId() []byte {
+	if x != nil {
+		return x.QuoteId
 	}
 	return nil
 }
@@ -2204,7 +2265,7 @@ type HostingReport struct {
 
 func (x *HostingReport) Reset() {
 	*x = HostingReport{}
-	mi := &file_assets_proto_msgTypes[26]
+	mi := &file_assets_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2216,7 +2277,7 @@ func (x *HostingReport) String() string {
 func (*HostingReport) ProtoMessage() {}
 
 func (x *HostingReport) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[26]
+	mi := &file_assets_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2229,7 +2290,7 @@ func (x *HostingReport) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HostingReport.ProtoReflect.Descriptor instead.
 func (*HostingReport) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{26}
+	return file_assets_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *HostingReport) GetHostingSessionId() []byte {
@@ -2364,7 +2425,7 @@ type WarehouseQuery struct {
 
 func (x *WarehouseQuery) Reset() {
 	*x = WarehouseQuery{}
-	mi := &file_assets_proto_msgTypes[27]
+	mi := &file_assets_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2376,7 +2437,7 @@ func (x *WarehouseQuery) String() string {
 func (*WarehouseQuery) ProtoMessage() {}
 
 func (x *WarehouseQuery) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[27]
+	mi := &file_assets_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2389,7 +2450,7 @@ func (x *WarehouseQuery) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseQuery.ProtoReflect.Descriptor instead.
 func (*WarehouseQuery) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{27}
+	return file_assets_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *WarehouseQuery) GetScope() uint32 {
@@ -2423,7 +2484,7 @@ type WarehouseItem struct {
 
 func (x *WarehouseItem) Reset() {
 	*x = WarehouseItem{}
-	mi := &file_assets_proto_msgTypes[28]
+	mi := &file_assets_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2435,7 +2496,7 @@ func (x *WarehouseItem) String() string {
 func (*WarehouseItem) ProtoMessage() {}
 
 func (x *WarehouseItem) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[28]
+	mi := &file_assets_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2448,7 +2509,7 @@ func (x *WarehouseItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseItem.ProtoReflect.Descriptor instead.
 func (*WarehouseItem) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{28}
+	return file_assets_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *WarehouseItem) GetSlot() uint64 {
@@ -2482,7 +2543,7 @@ type WarehousePage struct {
 
 func (x *WarehousePage) Reset() {
 	*x = WarehousePage{}
-	mi := &file_assets_proto_msgTypes[29]
+	mi := &file_assets_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2494,7 +2555,7 @@ func (x *WarehousePage) String() string {
 func (*WarehousePage) ProtoMessage() {}
 
 func (x *WarehousePage) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[29]
+	mi := &file_assets_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2507,7 +2568,7 @@ func (x *WarehousePage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehousePage.ProtoReflect.Descriptor instead.
 func (*WarehousePage) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{29}
+	return file_assets_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *WarehousePage) GetRole() *RoleKey {
@@ -2593,7 +2654,7 @@ type WarehouseAction struct {
 
 func (x *WarehouseAction) Reset() {
 	*x = WarehouseAction{}
-	mi := &file_assets_proto_msgTypes[30]
+	mi := &file_assets_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2605,7 +2666,7 @@ func (x *WarehouseAction) String() string {
 func (*WarehouseAction) ProtoMessage() {}
 
 func (x *WarehouseAction) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[30]
+	mi := &file_assets_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2618,7 +2679,7 @@ func (x *WarehouseAction) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseAction.ProtoReflect.Descriptor instead.
 func (*WarehouseAction) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{30}
+	return file_assets_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *WarehouseAction) GetScope() uint32 {
@@ -2702,7 +2763,7 @@ type WarehouseItemChange struct {
 
 func (x *WarehouseItemChange) Reset() {
 	*x = WarehouseItemChange{}
-	mi := &file_assets_proto_msgTypes[31]
+	mi := &file_assets_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2714,7 +2775,7 @@ func (x *WarehouseItemChange) String() string {
 func (*WarehouseItemChange) ProtoMessage() {}
 
 func (x *WarehouseItemChange) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[31]
+	mi := &file_assets_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2727,7 +2788,7 @@ func (x *WarehouseItemChange) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseItemChange.ProtoReflect.Descriptor instead.
 func (*WarehouseItemChange) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{31}
+	return file_assets_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *WarehouseItemChange) GetSlot() uint64 {
@@ -2771,7 +2832,7 @@ type WarehouseActionResult struct {
 
 func (x *WarehouseActionResult) Reset() {
 	*x = WarehouseActionResult{}
-	mi := &file_assets_proto_msgTypes[32]
+	mi := &file_assets_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2783,7 +2844,7 @@ func (x *WarehouseActionResult) String() string {
 func (*WarehouseActionResult) ProtoMessage() {}
 
 func (x *WarehouseActionResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[32]
+	mi := &file_assets_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2796,7 +2857,7 @@ func (x *WarehouseActionResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WarehouseActionResult.ProtoReflect.Descriptor instead.
 func (*WarehouseActionResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{32}
+	return file_assets_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *WarehouseActionResult) GetRole() *RoleKey {
@@ -2885,7 +2946,7 @@ type VendorQuoteRequest struct {
 
 func (x *VendorQuoteRequest) Reset() {
 	*x = VendorQuoteRequest{}
-	mi := &file_assets_proto_msgTypes[33]
+	mi := &file_assets_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2897,7 +2958,7 @@ func (x *VendorQuoteRequest) String() string {
 func (*VendorQuoteRequest) ProtoMessage() {}
 
 func (x *VendorQuoteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[33]
+	mi := &file_assets_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2910,7 +2971,7 @@ func (x *VendorQuoteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorQuoteRequest.ProtoReflect.Descriptor instead.
 func (*VendorQuoteRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{33}
+	return file_assets_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *VendorQuoteRequest) GetSceneEpoch() uint64 {
@@ -2992,7 +3053,7 @@ type VendorQuoteResult struct {
 
 func (x *VendorQuoteResult) Reset() {
 	*x = VendorQuoteResult{}
-	mi := &file_assets_proto_msgTypes[34]
+	mi := &file_assets_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3004,7 +3065,7 @@ func (x *VendorQuoteResult) String() string {
 func (*VendorQuoteResult) ProtoMessage() {}
 
 func (x *VendorQuoteResult) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[34]
+	mi := &file_assets_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3017,7 +3078,7 @@ func (x *VendorQuoteResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorQuoteResult.ProtoReflect.Descriptor instead.
 func (*VendorQuoteResult) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{34}
+	return file_assets_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *VendorQuoteResult) GetQuoteId() []byte {
@@ -3179,7 +3240,7 @@ type VendorCommitRequest struct {
 
 func (x *VendorCommitRequest) Reset() {
 	*x = VendorCommitRequest{}
-	mi := &file_assets_proto_msgTypes[35]
+	mi := &file_assets_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3191,7 +3252,7 @@ func (x *VendorCommitRequest) String() string {
 func (*VendorCommitRequest) ProtoMessage() {}
 
 func (x *VendorCommitRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_assets_proto_msgTypes[35]
+	mi := &file_assets_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3204,7 +3265,7 @@ func (x *VendorCommitRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VendorCommitRequest.ProtoReflect.Descriptor instead.
 func (*VendorCommitRequest) Descriptor() ([]byte, []int) {
-	return file_assets_proto_rawDescGZIP(), []int{35}
+	return file_assets_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *VendorCommitRequest) GetOperation() *OperationContext {
@@ -3441,10 +3502,15 @@ const file_assets_proto_rawDesc = "" +
 	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"x\n" +
 	"\x17ClaimHostingTimeRequest\x12!\n" +
 	"\fbenefit_kind\x18\x01 \x01(\rR\vbenefitKind\x12:\n" +
-	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x80\x01\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"c\n" +
+	"\x13HostingQuoteRequest\x12\x1f\n" +
+	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
+	"sceneEpoch\x12+\n" +
+	"\x11requested_seconds\x18\x02 \x01(\rR\x10requestedSeconds\"\x9b\x01\n" +
 	"\x15BuyHostingTimeRequest\x12+\n" +
 	"\x11requested_seconds\x18\x01 \x01(\rR\x10requestedSeconds\x12:\n" +
-	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xbf\x05\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x12\x19\n" +
+	"\bquote_id\x18\x03 \x01(\fR\aquoteId\"\xbf\x05\n" +
 	"\rHostingReport\x12,\n" +
 	"\x12hosting_session_id\x18\x01 \x01(\fR\x10hostingSessionId\x12!\n" +
 	"\fused_seconds\x18\x02 \x01(\x04R\vusedSeconds\x12\x14\n" +
@@ -3570,7 +3636,7 @@ func file_assets_proto_rawDescGZIP() []byte {
 	return file_assets_proto_rawDescData
 }
 
-var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
+var file_assets_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_assets_proto_goTypes = []any{
 	(*WalletState)(nil),              // 0: minimir.v1.WalletState
 	(*ItemView)(nil),                 // 1: minimir.v1.ItemView
@@ -3597,20 +3663,21 @@ var file_assets_proto_goTypes = []any{
 	(*SkillAssetPreview)(nil),        // 22: minimir.v1.SkillAssetPreview
 	(*SkillAssetCommitRequest)(nil),  // 23: minimir.v1.SkillAssetCommitRequest
 	(*ClaimHostingTimeRequest)(nil),  // 24: minimir.v1.ClaimHostingTimeRequest
-	(*BuyHostingTimeRequest)(nil),    // 25: minimir.v1.BuyHostingTimeRequest
-	(*HostingReport)(nil),            // 26: minimir.v1.HostingReport
-	(*WarehouseQuery)(nil),           // 27: minimir.v1.WarehouseQuery
-	(*WarehouseItem)(nil),            // 28: minimir.v1.WarehouseItem
-	(*WarehousePage)(nil),            // 29: minimir.v1.WarehousePage
-	(*WarehouseAction)(nil),          // 30: minimir.v1.WarehouseAction
-	(*WarehouseItemChange)(nil),      // 31: minimir.v1.WarehouseItemChange
-	(*WarehouseActionResult)(nil),    // 32: minimir.v1.WarehouseActionResult
-	(*VendorQuoteRequest)(nil),       // 33: minimir.v1.VendorQuoteRequest
-	(*VendorQuoteResult)(nil),        // 34: minimir.v1.VendorQuoteResult
-	(*VendorCommitRequest)(nil),      // 35: minimir.v1.VendorCommitRequest
-	(*OperationContext)(nil),         // 36: minimir.v1.OperationContext
-	(*RoleKey)(nil),                  // 37: minimir.v1.RoleKey
-	(*GridPoint)(nil),                // 38: minimir.v1.GridPoint
+	(*HostingQuoteRequest)(nil),      // 25: minimir.v1.HostingQuoteRequest
+	(*BuyHostingTimeRequest)(nil),    // 26: minimir.v1.BuyHostingTimeRequest
+	(*HostingReport)(nil),            // 27: minimir.v1.HostingReport
+	(*WarehouseQuery)(nil),           // 28: minimir.v1.WarehouseQuery
+	(*WarehouseItem)(nil),            // 29: minimir.v1.WarehouseItem
+	(*WarehousePage)(nil),            // 30: minimir.v1.WarehousePage
+	(*WarehouseAction)(nil),          // 31: minimir.v1.WarehouseAction
+	(*WarehouseItemChange)(nil),      // 32: minimir.v1.WarehouseItemChange
+	(*WarehouseActionResult)(nil),    // 33: minimir.v1.WarehouseActionResult
+	(*VendorQuoteRequest)(nil),       // 34: minimir.v1.VendorQuoteRequest
+	(*VendorQuoteResult)(nil),        // 35: minimir.v1.VendorQuoteResult
+	(*VendorCommitRequest)(nil),      // 36: minimir.v1.VendorCommitRequest
+	(*OperationContext)(nil),         // 37: minimir.v1.OperationContext
+	(*RoleKey)(nil),                  // 38: minimir.v1.RoleKey
+	(*GridPoint)(nil),                // 39: minimir.v1.GridPoint
 }
 var file_assets_proto_depIdxs = []int32{
 	1,  // 0: minimir.v1.EquippedItem.item:type_name -> minimir.v1.ItemView
@@ -3619,40 +3686,40 @@ var file_assets_proto_depIdxs = []int32{
 	3,  // 3: minimir.v1.InventoryResult.learned_skills:type_name -> minimir.v1.LearnedSkill
 	8,  // 4: minimir.v1.InventoryResult.auto_recycle:type_name -> minimir.v1.AutoRecyclePolicy
 	6,  // 5: minimir.v1.InventoryResult.progression:type_name -> minimir.v1.ProgressionState
-	36, // 6: minimir.v1.SetSkillSlotsRequest.operation:type_name -> minimir.v1.OperationContext
-	37, // 7: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
+	37, // 6: minimir.v1.SetSkillSlotsRequest.operation:type_name -> minimir.v1.OperationContext
+	38, // 7: minimir.v1.ExperienceGrantResult.role:type_name -> minimir.v1.RoleKey
 	6,  // 8: minimir.v1.ExperienceGrantResult.state:type_name -> minimir.v1.ProgressionState
 	8,  // 9: minimir.v1.SetAutoRecycleRequest.policy:type_name -> minimir.v1.AutoRecyclePolicy
-	36, // 10: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 11: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
-	37, // 12: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
-	36, // 13: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 14: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 15: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 16: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 17: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
-	38, // 18: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
-	36, // 19: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 10: minimir.v1.SetAutoRecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 11: minimir.v1.SetItemLockRequest.operation:type_name -> minimir.v1.OperationContext
+	38, // 12: minimir.v1.EquipmentRecycleResult.role:type_name -> minimir.v1.RoleKey
+	37, // 13: minimir.v1.EquipRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 14: minimir.v1.RecycleRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 15: minimir.v1.UseItemRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 16: minimir.v1.LearnSkillRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 17: minimir.v1.SetCastingSupplyRequest.operation:type_name -> minimir.v1.OperationContext
+	39, // 18: minimir.v1.CastWithMaterialRequest.target_grid:type_name -> minimir.v1.GridPoint
+	37, // 19: minimir.v1.CastWithMaterialRequest.operation:type_name -> minimir.v1.OperationContext
 	18, // 20: minimir.v1.SkillAssetPreviewRequest.materials:type_name -> minimir.v1.ItemConsumption
 	1,  // 21: minimir.v1.SkillMaterialView.item:type_name -> minimir.v1.ItemView
 	0,  // 22: minimir.v1.SkillAssetPreview.spend:type_name -> minimir.v1.WalletState
 	20, // 23: minimir.v1.SkillAssetPreview.materials:type_name -> minimir.v1.SkillMaterialView
 	1,  // 24: minimir.v1.SkillAssetPreview.outputs:type_name -> minimir.v1.ItemView
 	21, // 25: minimir.v1.SkillAssetPreview.stats:type_name -> minimir.v1.SkillNumericComparison
-	36, // 26: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 27: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
-	36, // 28: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 26: minimir.v1.SkillAssetCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 27: minimir.v1.ClaimHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
+	37, // 28: minimir.v1.BuyHostingTimeRequest.operation:type_name -> minimir.v1.OperationContext
 	0,  // 29: minimir.v1.HostingReport.earned:type_name -> minimir.v1.WalletState
 	1,  // 30: minimir.v1.HostingReport.drops:type_name -> minimir.v1.ItemView
 	1,  // 31: minimir.v1.WarehouseItem.item:type_name -> minimir.v1.ItemView
-	37, // 32: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
-	28, // 33: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
-	36, // 34: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
+	38, // 32: minimir.v1.WarehousePage.role:type_name -> minimir.v1.RoleKey
+	29, // 33: minimir.v1.WarehousePage.items:type_name -> minimir.v1.WarehouseItem
+	37, // 34: minimir.v1.WarehouseAction.operation:type_name -> minimir.v1.OperationContext
 	1,  // 35: minimir.v1.WarehouseItemChange.before:type_name -> minimir.v1.ItemView
 	1,  // 36: minimir.v1.WarehouseItemChange.after:type_name -> minimir.v1.ItemView
-	37, // 37: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
-	31, // 38: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
-	36, // 39: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
+	38, // 37: minimir.v1.WarehouseActionResult.role:type_name -> minimir.v1.RoleKey
+	32, // 38: minimir.v1.WarehouseActionResult.changes:type_name -> minimir.v1.WarehouseItemChange
+	37, // 39: minimir.v1.VendorCommitRequest.operation:type_name -> minimir.v1.OperationContext
 	40, // [40:40] is the sub-list for method output_type
 	40, // [40:40] is the sub-list for method input_type
 	40, // [40:40] is the sub-list for extension type_name
@@ -3672,7 +3739,7 @@ func file_assets_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_assets_proto_rawDesc), len(file_assets_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   36,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

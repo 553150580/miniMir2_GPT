@@ -56,7 +56,7 @@ test('施毒接受实际装槽且公开允许的两种毒粉，护符和其它�
 });
 test('状态资产只追加布局：旧988对象/Entity21对象原样保持，滚动覆盖详情与普通层分离',()=>{
     const root=path.resolve(__dirname,'../../..'),read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8')),scene=read('client/assets/scenes/Game.scene');
-    const projection=structuredClone(scene);require('./helpers/skill_layout.cjs')(projection);require('./helpers/inventory_grid_layout.cjs')(projection);require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projection);require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
+    const projection=require('./helpers/hosting_purchase_layout.cjs')(structuredClone(scene));require('./helpers/skill_layout.cjs')(projection);require('./helpers/inventory_grid_layout.cjs')(projection);require('./helpers/auto_recycle_layout.cjs').normalizeConfirmTextWrap(projection);require('./helpers/auto_recycle_layout.cjs').normalizeInventoryViewport(projection);
     const old=projection.slice(0,988);for(const row of old)if(row._children)row._children=row._children.filter(ref=>ref.__id__<988);
     require('./helpers/auto_recycle_layout.cjs')(old);
     assert.equal(crypto.createHash('sha256').update(JSON.stringify(old)).digest('hex'),'e22c27b81e71cdab6349819ed528c85a495419112e2e5776fbbd705cdd445fb8');

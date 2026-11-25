@@ -316,6 +316,8 @@ type Fixture struct {
 	OrdinaryEquipmentQuotas []OrdinaryEquipmentQuota `json:"drop_quotas,omitempty"`
 	// HostingBenefits 包含当日领时和真实普通击杀按权益发放的加成。
 	HostingBenefits *HostingBenefits `json:"hosting_benefits,omitempty"`
+	// HostingTimePrices 仅包含显式发布的补时价格版本，缺省时关闭金币购时。
+	HostingTimePrices []HostingTimePriceVersion `json:"hosting_time_prices,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
 	Progression ProgressionRules `json:"progression"`
 	// InitialInventory 记录初始值背包资产，使用数值列表表示。
@@ -555,6 +557,9 @@ func (f *Fixture) Validate() error {
 		return err
 	}
 	if err := f.validateHostingBenefits(); err != nil {
+		return err
+	}
+	if err := f.validateHostingTimePrices(); err != nil {
 		return err
 	}
 	// id 接收遍历“append”时当前的元素。

@@ -84,6 +84,8 @@ const (
 	MsgC2STaskCodexClaim uint16 = 40029
 	MsgC2SClaimChallengeReward uint16 = 40030
 	MsgC2SSetSkillSlots uint16 = 40031
+	MsgC2SHostingQuote uint16 = 40032
+	MsgS2CHostingQuote uint16 = 40033
 )
 
 const (
@@ -132,4 +134,8 @@ const (
 	CodeVendorItemBlocked uint32 = 3604
 	CodeTaskCodexUnavailable uint32 = 3701
 	CodeTaskCodexDayChanged uint32 = 3702
+	CodeHostingPurchaseUnavailable uint32 = 3801
+	CodeHostingPurchaseQuoteStale uint32 = 3802
+	CodeHostingPurchaseBalance uint32 = 3803
+	CodeHostingPurchaseFunds uint32 = 3804
 )
