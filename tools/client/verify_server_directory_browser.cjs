@@ -63,6 +63,7 @@ async function main() {
         const connections = [];
         const createdOrigins = [];
         const ticketResponses = [];
+        let personalLeaves = 0;
         page.on('request', request => {
             if (new URL(request.url()).pathname !== '/account/rpc') return;
             const payload = accountPayload(request.postDataBuffer(), 10005);
@@ -83,6 +84,9 @@ async function main() {
         page.on('websocket', socket => {
             const state = { endpoint: socket.url(), ready: false };
             connections.push(state);
+            socket.on('framesent', ({ payload }) => {
+                if (accountPayload(payload, 20013)) personalLeaves++;
+            });
             socket.on('framereceived', ({ payload }) => {
                 // 消息 6 是首基线确认后的 SyncReady。观察不保存账号、口令、网络票据或资产正文。
                 if (typeof payload !== 'string' && payload.length >= 6 && payload[0] === 1 && payload[1] === 0
@@ -305,10 +309,33 @@ async function main() {
                 try { report.personalBossAppearance = await appearance.jsonValue(); } finally { await appearance.dispose(); }
                 assert.equal(report.personalBossAppearance.archive, '18.Lib');
             }
-            await tap(boss);
-            await expectLabel('Status', '挑战中');
-            await tap(panel + '/Action');
-            assert.deepEqual(await sceneKind(1), home);
+            // 保持场内面板的只读查询未返回，验证已启用的离场按钮首次触摸仍发原请求。
+            const held = await page.evaluateHandle(async () => {
+                const { session } = await System.import('chunks:///_virtual/GameSession.ts');
+                const connection = session.connection, request = connection.request;
+                let release;
+                const gate = new Promise(resolve => { release = resolve; });
+                const state = { started: false, dispose() { connection.request = request; release(); } };
+                connection.request = function (...args) {
+                    const response = request.apply(this, args);
+                    if (args[0] !== 20015 || session.entry?.sceneKind !== 3) return response;
+                    state.started = true;
+                    return Promise.all([response, gate]).then(([value]) => value);
+                };
+                return state;
+            });
+            try {
+                await tap(boss);
+                await expectLabel('Status', '挑战中');
+                await page.waitForFunction(state => state.started, held);
+                const before = personalLeaves;
+                await tap(panel + '/Action');
+                assert.deepEqual(await sceneKind(1), home);
+                assert.equal(personalLeaves, before + 1);
+            } finally {
+                await page.evaluate(state => state.dispose(), held);
+                await held.dispose();
+            }
             await tap(boss);
             await expectLabel('Results', '中断');
             await tap(panel + '/World');
@@ -317,7 +344,7 @@ async function main() {
             assert.match(worldStatus, /等待开放|开放中|已击杀|已超时/);
             await page.touchscreen.tap(20, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
-            report.bossChallenges = { home, personal, leaveAndHistory: true, worldStatus };
+            report.bossChallenges = { home, personal, leaveAndHistory: true, personalLeaveDuringQuery: true, worldStatus };
         };
         const verifyOrdinaryMap = async () => {
             const version = await page.evaluate(async () => {

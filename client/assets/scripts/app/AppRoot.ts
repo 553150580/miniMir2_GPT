@@ -683,7 +683,8 @@ export class AppRoot extends Component {
         this.button('MapViewport/Mission', () => this.popup!.show('Help', { title: '战斗状态', message: '点击空地寻路，推动摇杆接管方向。自动战斗与离线托管分别设置。' }));
         this.button('BottomHUD/QuickNav/Boss', () => {
             this.ui!.open('BossChallenge');
-            return this.boss!.open();
+            // 面板刷新只读，已经获准的离场动作仍可由 GameBoss 自己受理。
+            void this.boss!.open().catch(error => this.error(error));
         });
         const bossPath = 'UIMgr/Panels/BossChallenge/';
         this.button(bossPath + 'Personal', () => this.boss!.show(3));

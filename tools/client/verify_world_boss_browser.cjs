@@ -847,7 +847,8 @@ async function main() {
         report.reconnectAckMs = entryAckMs(rejoined, bossEntry, '重连共享首领');
 
         report.step = '首领真实击杀，道士原出生的宠物尸体在战士地板层可见';
-        const corpse = await pet(warrior, true, alive.handle, 65000);
+        // 道士保留自动治愈。满血宠物可多承受两轮十秒伤害，不能从战士重连时刻压缩原击杀窗口。
+        const corpse = await pet(warrior, true, alive.handle, 90000);
         assert.equal(corpse.life, alive.life);
         assert.equal(corpse.name, alive.name + '·尸体');
         assert.deepEqual(corpse.position, alive.position);
