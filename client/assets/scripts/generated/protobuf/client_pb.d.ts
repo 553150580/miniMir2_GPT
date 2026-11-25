@@ -13694,6 +13694,9 @@ export namespace minimir {
             /** WorldBossState error_code. */
             error_code: number;
 
+            /** WorldBossState latest_result. */
+            latest_result?: (minimir.v1.WorldBossResult.$Properties|null);
+
             /**
              * Creates a new WorldBossState instance using the specified properties.
              * @param [properties] Properties to set
@@ -13786,6 +13789,9 @@ export namespace minimir {
 
                 /** WorldBossState error_code */
                 error_code?: (number|null);
+
+                /** WorldBossState latest_result */
+                latest_result?: (minimir.v1.WorldBossResult.$Properties|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
@@ -13901,6 +13907,126 @@ export namespace minimir {
 
             /** Shape of a WorldBossRank. */
             type $Shape = minimir.v1.WorldBossRank.$Properties;
+        }
+
+        /**
+         * Properties of a WorldBossResult.
+         * @deprecated Use minimir.v1.WorldBossResult.$Properties instead.
+         */
+        interface IWorldBossResult extends minimir.v1.WorldBossResult.$Properties {
+        }
+
+        /** Represents a WorldBossResult. */
+        class WorldBossResult {
+
+            /**
+             * Constructs a new WorldBossResult.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.WorldBossResult.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** WorldBossResult occurrence_id. */
+            occurrence_id: string;
+
+            /** WorldBossResult template_id. */
+            template_id: number;
+
+            /** WorldBossResult state. */
+            state: number;
+
+            /** WorldBossResult finished_at_unix_ms. */
+            finished_at_unix_ms: Long;
+
+            /** WorldBossResult ranks. */
+            ranks: minimir.v1.WorldBossRank.$Properties[];
+
+            /**
+             * Creates a new WorldBossResult instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns WorldBossResult instance
+             */
+            static create(properties: minimir.v1.WorldBossResult.$Shape): minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape;
+            static create(properties?: minimir.v1.WorldBossResult.$Properties): minimir.v1.WorldBossResult;
+
+            /**
+             * Encodes the specified WorldBossResult message. Does not implicitly {@link minimir.v1.WorldBossResult.verify|verify} messages.
+             * @param message WorldBossResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.WorldBossResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified WorldBossResult message, length delimited. Does not implicitly {@link minimir.v1.WorldBossResult.verify|verify} messages.
+             * @param message WorldBossResult message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.WorldBossResult.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a WorldBossResult message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape} WorldBossResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape;
+
+            /**
+             * Decodes a WorldBossResult message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape} WorldBossResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape;
+
+            /**
+             * Verifies a WorldBossResult message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for WorldBossResult
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace WorldBossResult {
+
+            /** Properties of a WorldBossResult. */
+            interface $Properties {
+
+                /** WorldBossResult occurrence_id */
+                occurrence_id?: (string|null);
+
+                /** WorldBossResult template_id */
+                template_id?: (number|null);
+
+                /** WorldBossResult state */
+                state?: (number|null);
+
+                /** WorldBossResult finished_at_unix_ms */
+                finished_at_unix_ms?: (Long|null);
+
+                /** WorldBossResult ranks */
+                ranks?: (minimir.v1.WorldBossRank.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a WorldBossResult. */
+            type $Shape = minimir.v1.WorldBossResult.$Properties;
         }
     }
 }

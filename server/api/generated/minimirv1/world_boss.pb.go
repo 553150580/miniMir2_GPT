@@ -184,7 +184,7 @@ type WorldBossState struct {
 	SceneEpoch   uint64                 `protobuf:"varint,1,opt,name=scene_epoch,json=sceneEpoch,proto3" json:"scene_epoch,omitempty"`
 	OccurrenceId string                 `protobuf:"bytes,2,opt,name=occurrence_id,json=occurrenceId,proto3" json:"occurrence_id,omitempty"`
 	TemplateId   uint32                 `protobuf:"varint,3,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
-	// 1 预告、2 等待基线确认、3 开放、4 击杀、5 超时、6 已离开、7 战败。
+	// 1 预告、2 等待基线确认、3 开放、4 击杀、5 超时、6 已离开、7 战败、8 中断、9 等待结算。
 	State           uint32           `protobuf:"varint,4,opt,name=state,proto3" json:"state,omitempty"`
 	OpensAtUnixMs   int64            `protobuf:"varint,5,opt,name=opens_at_unix_ms,json=opensAtUnixMs,proto3" json:"opens_at_unix_ms,omitempty"`
 	ExpiresAtUnixMs int64            `protobuf:"varint,6,opt,name=expires_at_unix_ms,json=expiresAtUnixMs,proto3" json:"expires_at_unix_ms,omitempty"`
@@ -192,6 +192,7 @@ type WorldBossState struct {
 	HpMax           int64            `protobuf:"varint,8,opt,name=hp_max,json=hpMax,proto3" json:"hp_max,omitempty"`
 	Ranks           []*WorldBossRank `protobuf:"bytes,9,rep,name=ranks,proto3" json:"ranks,omitempty"`
 	ErrorCode       uint32           `protobuf:"varint,10,opt,name=error_code,json=errorCode,proto3" json:"error_code,omitempty"`
+	LatestResult    *WorldBossResult `protobuf:"bytes,11,opt,name=latest_result,json=latestResult,proto3" json:"latest_result,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -296,6 +297,13 @@ func (x *WorldBossState) GetErrorCode() uint32 {
 	return 0
 }
 
+func (x *WorldBossState) GetLatestResult() *WorldBossResult {
+	if x != nil {
+		return x.LatestResult
+	}
+	return nil
+}
+
 type WorldBossRank struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Position      uint32                 `protobuf:"varint,1,opt,name=position,proto3" json:"position,omitempty"`
@@ -356,6 +364,83 @@ func (x *WorldBossRank) GetDamage() int64 {
 	return 0
 }
 
+// 最近一场已确认的永久结果。下一场预告和正在开放的生命不使用历史值。
+type WorldBossResult struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	OccurrenceId     string                 `protobuf:"bytes,1,opt,name=occurrence_id,json=occurrenceId,proto3" json:"occurrence_id,omitempty"`
+	TemplateId       uint32                 `protobuf:"varint,2,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	State            uint32                 `protobuf:"varint,3,opt,name=state,proto3" json:"state,omitempty"`
+	FinishedAtUnixMs int64                  `protobuf:"varint,4,opt,name=finished_at_unix_ms,json=finishedAtUnixMs,proto3" json:"finished_at_unix_ms,omitempty"`
+	Ranks            []*WorldBossRank       `protobuf:"bytes,5,rep,name=ranks,proto3" json:"ranks,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *WorldBossResult) Reset() {
+	*x = WorldBossResult{}
+	mi := &file_world_boss_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WorldBossResult) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WorldBossResult) ProtoMessage() {}
+
+func (x *WorldBossResult) ProtoReflect() protoreflect.Message {
+	mi := &file_world_boss_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WorldBossResult.ProtoReflect.Descriptor instead.
+func (*WorldBossResult) Descriptor() ([]byte, []int) {
+	return file_world_boss_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *WorldBossResult) GetOccurrenceId() string {
+	if x != nil {
+		return x.OccurrenceId
+	}
+	return ""
+}
+
+func (x *WorldBossResult) GetTemplateId() uint32 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+func (x *WorldBossResult) GetState() uint32 {
+	if x != nil {
+		return x.State
+	}
+	return 0
+}
+
+func (x *WorldBossResult) GetFinishedAtUnixMs() int64 {
+	if x != nil {
+		return x.FinishedAtUnixMs
+	}
+	return 0
+}
+
+func (x *WorldBossResult) GetRanks() []*WorldBossRank {
+	if x != nil {
+		return x.Ranks
+	}
+	return nil
+}
+
 var File_world_boss_proto protoreflect.FileDescriptor
 
 const file_world_boss_proto_rawDesc = "" +
@@ -374,7 +459,7 @@ const file_world_boss_proto_rawDesc = "" +
 	"\x0eWorldBossLeave\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12#\n" +
-	"\roccurrence_id\x18\x02 \x01(\tR\foccurrenceId\"\xda\x02\n" +
+	"\roccurrence_id\x18\x02 \x01(\tR\foccurrenceId\"\x9c\x03\n" +
 	"\x0eWorldBossState\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12#\n" +
@@ -389,11 +474,19 @@ const file_world_boss_proto_rawDesc = "" +
 	"\x05ranks\x18\t \x03(\v2\x19.minimir.v1.WorldBossRankR\x05ranks\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\n" +
-	" \x01(\rR\terrorCode\"f\n" +
+	" \x01(\rR\terrorCode\x12@\n" +
+	"\rlatest_result\x18\v \x01(\v2\x1b.minimir.v1.WorldBossResultR\flatestResult\"f\n" +
 	"\rWorldBossRank\x12\x1a\n" +
 	"\bposition\x18\x01 \x01(\rR\bposition\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12\x16\n" +
-	"\x06damage\x18\x03 \x01(\x03R\x06damageB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
+	"\x06damage\x18\x03 \x01(\x03R\x06damage\"\xcd\x01\n" +
+	"\x0fWorldBossResult\x12#\n" +
+	"\roccurrence_id\x18\x01 \x01(\tR\foccurrenceId\x12\x1f\n" +
+	"\vtemplate_id\x18\x02 \x01(\rR\n" +
+	"templateId\x12\x14\n" +
+	"\x05state\x18\x03 \x01(\rR\x05state\x12-\n" +
+	"\x13finished_at_unix_ms\x18\x04 \x01(\x03R\x10finishedAtUnixMs\x12/\n" +
+	"\x05ranks\x18\x05 \x03(\v2\x19.minimir.v1.WorldBossRankR\x05ranksB!Z\x1fminimir/api/generated/minimirv1b\x06proto3"
 
 var (
 	file_world_boss_proto_rawDescOnce sync.Once
@@ -407,21 +500,24 @@ func file_world_boss_proto_rawDescGZIP() []byte {
 	return file_world_boss_proto_rawDescData
 }
 
-var file_world_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_world_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_world_boss_proto_goTypes = []any{
-	(*WorldBossQuery)(nil), // 0: minimir.v1.WorldBossQuery
-	(*WorldBossEnter)(nil), // 1: minimir.v1.WorldBossEnter
-	(*WorldBossLeave)(nil), // 2: minimir.v1.WorldBossLeave
-	(*WorldBossState)(nil), // 3: minimir.v1.WorldBossState
-	(*WorldBossRank)(nil),  // 4: minimir.v1.WorldBossRank
+	(*WorldBossQuery)(nil),  // 0: minimir.v1.WorldBossQuery
+	(*WorldBossEnter)(nil),  // 1: minimir.v1.WorldBossEnter
+	(*WorldBossLeave)(nil),  // 2: minimir.v1.WorldBossLeave
+	(*WorldBossState)(nil),  // 3: minimir.v1.WorldBossState
+	(*WorldBossRank)(nil),   // 4: minimir.v1.WorldBossRank
+	(*WorldBossResult)(nil), // 5: minimir.v1.WorldBossResult
 }
 var file_world_boss_proto_depIdxs = []int32{
 	4, // 0: minimir.v1.WorldBossState.ranks:type_name -> minimir.v1.WorldBossRank
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5, // 1: minimir.v1.WorldBossState.latest_result:type_name -> minimir.v1.WorldBossResult
+	4, // 2: minimir.v1.WorldBossResult.ranks:type_name -> minimir.v1.WorldBossRank
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_world_boss_proto_init() }
@@ -435,7 +531,7 @@ func file_world_boss_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_world_boss_proto_rawDesc), len(file_world_boss_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

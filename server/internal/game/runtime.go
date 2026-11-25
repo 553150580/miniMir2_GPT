@@ -88,6 +88,7 @@ type worker struct {
 	townNavigation     *townNavigationWorker       // 该分片的城镇寻路队列、预算与工作区。
 	personalNavigation personalNavigationWorkspace // 可在分片内跨个人房间复用的寻路数组。
 	worldBossArenas    map[uint64]*worldBossArena  // 本分片唯一拥有的运行服共享首领场次。
+	worldBossLedgers   map[uint64]*worldBossLedger // 场次分片缓存每个运行服的恢复确认、原预约和最近永久结果。
 }
 
 // entity 保存当前进程中的战斗身体、动作时钟和空间身份。
@@ -829,6 +830,10 @@ func (w *worker) initialize(r *room, role domain.Role) {
 // after 在当前操作结束后依次重放尚可处理的房间等待命令。
 // w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间。
 func (w *worker) after(r *room) {
+	// 在处理新的等待命令前，用已确认的普通房间状态生成首领离场后的基线。
+	if obs := r.worldBossObservation; obs != nil && obs.returnRequested && !r.Pending {
+		w.finishWorldBossObservation(obs)
+	}
 	for len(r.Waiting) > 0 && !r.Pending && !r.Isolated {
 		// c 保存从等待取出的等待中的指定项。
 		c := r.Waiting[0]

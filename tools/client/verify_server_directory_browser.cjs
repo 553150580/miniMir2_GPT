@@ -106,7 +106,8 @@ async function main() {
                     const value = child.getChildByName('Text')?.getComponent(cc.Label)?.string;
                     return value?.replace(/^● /u, '') === label;
                 });
-                if (!target?.activeInHierarchy || label != null && !target.getComponent(cc.Button)?.interactable) return null;
+                const button = target?.getComponent(cc.Button);
+                if (!target?.activeInHierarchy || button && !button.interactable || label != null && !button) return null;
                 const transform = target._uiProps?.uiTransformComp;
                 if (!transform) return null;
                 const box = transform.getBoundingBoxToWorld();

@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 111,
+  "message_count": 112,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -116,10 +116,11 @@
     "WorldBossEnter",
     "WorldBossLeave",
     "WorldBossState",
-    "WorldBossRank"
+    "WorldBossRank",
+    "WorldBossResult"
   ],
-  "int64_field_count": 256,
-  "int64_boundary_cases": 853,
+  "int64_field_count": 257,
+  "int64_boundary_cases": 857,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1656,6 +1657,12 @@
       "field": "damage",
       "type": "int64",
       "cases": 4
+    },
+    {
+      "message": "WorldBossResult",
+      "field": "finished_at_unix_ms",
+      "type": "int64",
+      "cases": 4
     }
   ],
   "bytes_field_count": 29,
@@ -1836,19 +1843,19 @@
     },
     {
       "path": "shared/proto/world_boss.proto",
-      "sha256": "fd5c26644882acf777fcbc09b2804c956da3e71d0a3ccc10e2a2f2374931e2bf"
+      "sha256": "4780f801334ee49b2e7c0b627ff58d8b78d69525acc5b4311ea12e8463ba9cdd"
     }
   ],
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "16e24c9aa82e865b02dea30e60f1fc90ec79facfc506ceb01ac875f14a90be55",
-      "bytes": 1889621
+      "sha256": "150dca03b0aa97acf66da9b3ed4f688c1f7b09345faf3ab5ee78976f40d294dd",
+      "bytes": 1906798
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "bafb55582dc2b9ec811f1fa267604499a4c455140cfff402dbb5bffb534e6026",
-      "bytes": 598665
+      "sha256": "a0084f0b7422fed294ded72376e0b3ea8dd79548c640bc076d88ccaa48433b0c",
+      "bytes": 604132
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

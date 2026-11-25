@@ -152,7 +152,7 @@ async function openedClient(browser, report, job, nickname) {
     const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
     const page = await context.newPage();
     const requests = await coldNetwork(context, page);
-    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [],
+    const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [], worldHistory: [],
         skillIntents: [], skillSlots: [], autoIntents: [] };
     page.on('pageerror', error => report.errors.push(error.message));
     page.on('websocket', connection => {
@@ -192,7 +192,7 @@ async function openedClient(browser, report, job, nickname) {
         connection.on('framereceived', ({ payload }) => {
             if (typeof payload === 'string' || payload.length < 6) return;
             const message = payload.readUInt16BE(2);
-            if (!(payload[1] & 1) && message !== 20002) return;
+            if (!(payload[1] & 1) && message !== 20002 && message !== 20020) return;
             let offset = bodyOffset(payload);
             if (payload[1] & 1) {
                 let code = 0;
@@ -202,6 +202,19 @@ async function openedClient(browser, report, job, nickname) {
                     if (!(byte & 0x80)) break;
                 }
                 if (frames.failures.length < 20) frames.failures.push({ connection: transport.connection, at: Date.now(), message, code });
+                return;
+            }
+            if (message === 20020) {
+                const state = pb.WorldBossState.decode(payload.subarray(offset));
+                const result = state.latest_result;
+                if (state.state === 1 && result && state.occurrence_id !== result.occurrence_id) {
+                    frames.worldHistory.push({ connection: transport.connection, scene: state.scene_epoch.toString(),
+                        occurrence: state.occurrence_id, opensAt: Number(state.opens_at_unix_ms.toString()), currentRanks: state.ranks.length,
+                        latest: { occurrence: result.occurrence_id, template: result.template_id, state: result.state,
+                            finishedAt: Number(result.finished_at_unix_ms.toString()), ranks: result.ranks.map(row => ({
+                                position: row.position, name: row.display_name, damage: row.damage.toString(),
+                            })) } });
+                }
                 return;
             }
             const entry = pb.EnterLineResult.decode(payload.subarray(offset));
@@ -372,6 +385,35 @@ async function bossPanel(client, status, enabled, timeout = 18000) {
             && panel.getChildByName('Status')?.getComponent(cc.Label)?.string === status
             && (enabled === undefined || panel.getChildByName('Action')?.getComponent(cc.Button)?.interactable === enabled);
     }, { status, enabled, session }, { timeout });
+}
+
+// 对照真实 20020 与保存结果区，排除把下一场的开场时刻或当前排行当作上场成绩。
+async function observeWorldHistory(client, previous) {
+    const { page, session, frames } = client;
+    const handle = await page.waitForFunction(({ session, path, occurrence }) => {
+        const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];
+        const world = app?.boss?.world;
+        const panel = cc.find(path);
+        if (!session.ready || session.entry?.sceneKind !== 1 || !panel?.activeInHierarchy || world?.state !== 1
+            || world.occurrenceId === occurrence || world.latestResult?.occurrenceId !== occurrence) return null;
+        const results = panel.getChildByName('Results')?.getComponent(cc.Label)?.string;
+        if (!results?.startsWith('上场 ')) return null;
+        return { scene: session.entry.sceneEpoch.toString(), occurrence: world.occurrenceId, results };
+    }, { session, path: safe + bossRoot, occurrence: previous.occurrence }, { timeout: 12000 });
+    try {
+        const observed = await handle.jsonValue();
+        const state = frames.worldHistory.findLast(row => row.connection === frames.connections && row.scene === observed.scene
+            && row.occurrence === observed.occurrence && row.latest.occurrence === previous.occurrence);
+        assert(state && state.opensAt > expected.expiresAt, '下一场预告缺少同一连接的原场次永久成绩');
+        assert.equal(state.latest.template, previous.template);
+        assert.equal(state.latest.state, 5, '超时场次只允许显示原已确认超时结果');
+        assert.equal(state.latest.finishedAt, expected.expiresAt, '永久成绩沿用原场次截止时间');
+        assert.equal(state.currentRanks, 0, '下一场预告不能继承前一场排行榜');
+        const shanghaiTime = new Date(state.latest.finishedAt + 8 * 3600000).toISOString().slice(5, 16).replace('T', ' ');
+        const ranks = state.latest.ranks.slice(0, 4).map(row => `${row.position}. ${row.name}  伤害 ${row.damage}`);
+        assert.deepEqual(observed.results.split('\n'), [`上场 ${previous.title} · 已超时 ${shanghaiTime}`, ...ranks]);
+        return { nextOccurrence: state.occurrence, nextOpensAt: state.opensAt, latest: state.latest, results: observed.results };
+    } finally { await handle.dispose(); }
 }
 
 // Chrome 切换到另一端时首个触屏事件可能只恢复前台。核对真实页签选中后再继续。
@@ -708,6 +750,11 @@ async function main() {
         await bossPanel(warrior, '开放中', true, 65000);
         assert(warrior.frames.queries > initialQueries && warrior.frames.entries === 0);
         report.autoOpened = true;
+        const previousWorld = await warrior.page.evaluate(path => {
+            const boss = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0]?.boss;
+            return { title: cc.find(path)?.getComponent(cc.Label)?.string, template: boss?.world?.templateId };
+        }, safe + bossRoot + '/Headline');
+        assert(previousWorld.title && previousWorld.template > 0, '开放面板缺少原首领名称或模板');
 
         if (expected.version >= 30) {
             report.step = '由道士在普通场景学习治疗术';
@@ -741,6 +788,7 @@ async function main() {
         assert.equal(warriorRoom.map, String(expected.map));
         assert.equal(warriorRoom.map, taoRoom.map);
         assert(warriorRoom.occurrence.length > 0 && warriorRoom.occurrence === taoRoom.occurrence);
+        previousWorld.occurrence = warriorRoom.occurrence;
         assert.notEqual(warriorRoom.roleHandle, taoRoom.roleHandle);
         if (expectedBossProfile) {
             report.step = '确认两端场内首领纹理和动作帧';
@@ -835,11 +883,21 @@ async function main() {
         await bossPanel(warrior, '等待开放', false, Math.max(15000, expected.expiresAt - Date.now() + 15000));
         assert(warrior.frames.queries > beforeCloseQueries && warrior.frames.entries === 1);
         report.autoClosed = true;
+        report.step = '战士保持打开的下场预告显示已确认的上场结果';
+        const warriorHistory = await observeWorldHistory(warrior, previousWorld);
+        await warrior.page.screenshot({ path: path.join(resultDir, 'warrior-world-boss-next-preview.png') });
+        report.step = '道士重新触屏打开预告，核对相同的永久结果';
+        await touch(tao.page, safe + 'BottomHUD/QuickNav/Boss');
+        await selectWorldTab(tao);
+        await bossPanel(tao, '等待开放', false);
+        const taoHistory = await observeWorldHistory(tao, previousWorld);
+        assert.deepEqual(taoHistory, warriorHistory);
+        report.nextPreviewResult = { warrior: warriorHistory, tao: taoHistory };
         report.clientCounts = { warrior: warrior.frames, tao: tao.frames };
         assert.deepEqual(report.errors, []);
         delete report.step;
         report.passed = true;
-        console.log('双客户端世界首领自动开闭、跨职业活宠与尸体、原席重连和返回通过。');
+        console.log('双客户端世界首领自动开闭、跨职业活宠与尸体、原席重连、返回及下场预告保留永久成绩通过。');
     } catch (error) {
         report.observations = { warrior: await diagnose(warrior), tao: await diagnose(tao) };
         throw error;

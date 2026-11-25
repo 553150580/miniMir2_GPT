@@ -70,7 +70,8 @@ func TestSharedTownMongoWS(t *testing.T) {
 			})
 			must(t, err)
 		}
-		connection := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+		// 首个基线即停自动施法，避免法师在普通图先开盾，使入镇后手动验证碰上原冷却。
+		connection := joinWithAutoSkills(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key), &pb.AutoSkillSettings{})
 		connection.auto(false, 1)
 		return login.AccountToken, role, connection
 	}

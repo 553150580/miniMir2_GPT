@@ -19,7 +19,7 @@ export class BossTransition {
         const currentEpoch = travelInteger(current.sceneEpoch, true);
         if (state === 2 && current.sceneKind === 1 && BigInt(epoch) > BigInt(currentEpoch) && !this.visit?.inside) {
             this.visit = { id, kind, target: epoch, home: travelInteger(current.roomId, true), inside: false, finished: false };
-        } else if (state >= 4 && state <= 7 && this.visit?.id === id && this.visit.kind === kind) {
+        } else if (state >= 4 && state <= (kind === 4 ? 8 : 7) && this.visit?.id === id && this.visit.kind === kind) {
             // 终态可能紧跟首基线，仍须核对终态发生在此次挑战场景。
             if (epoch === this.visit.target) this.visit.finished = true;
         }

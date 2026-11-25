@@ -48,6 +48,8 @@ func (e *Engine) DrainSettlements(ctx context.Context) error {
 			}
 			status.pending = pending || status.pending
 		}
+		pendingBoss, failedBoss := w.drainWorldBossLedger(now)
+		status.pending, status.isolated = status.pending || pendingBoss, status.isolated+failedBoss
 		results <- status
 	}}
 	for {

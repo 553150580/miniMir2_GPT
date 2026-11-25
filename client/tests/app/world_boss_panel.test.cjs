@@ -184,6 +184,43 @@ test('晚场轮到祖玛教主时显示并准备实际地图，沿晚场模板�
     assert.deepEqual(f.requests.at(-1).payload, { sceneEpoch: epoch, templateId: 5, occurrenceId: 'evening' });
 });
 
+test('世界首领结算与中断不可入场，下场独立展示上场永久时间和榜单', async t => {
+    const f = fixture(t);
+    const evening = { display_name: '祖玛教主', minimum_level: 20, map_id: '84', template_id: 5 };
+    f.current.worldBosses = [f.current.worldBoss, evening];
+    f.current.level = 20;
+    const rank = { position: 1, displayName: '原战士', damage: Long.fromInt(472) };
+    const latestResult = { occurrenceId: 'first', templateId: 2, state: 8, finishedAtUnixMs: timestamp(8000), ranks: [rank] };
+    f.change(freshState(9, 3000, 12000));
+    await f.view.show(4);
+    assert.equal(f.rows.get('Status').string, '正在结算');
+    assert.equal(f.rows.get('Action').interactable, false);
+
+    f.change({ ...freshState(8, 3000, 12000), ranks: [rank], latestResult });
+    await f.view.reload();
+    assert.equal(f.rows.get('Status').string, '已中断');
+    assert.equal(f.rows.get('Results').string, '1. 原战士  伤害 472');
+    assert.equal(f.rows.get('Next').interactable, false);
+
+    const next = { ...freshState(1, dayMs + 3000, dayMs + 12000), occurrenceId: 'evening', templateId: 5, latestResult };
+    f.change(next);
+    await f.view.reload();
+    const finishTime = new Date(startedAt + 8000 + 8 * 3600000).toISOString().slice(5, 16).replace('T', ' ');
+    const history = `上场 林地首领 · 已中断 ${finishTime}\n1. 原战士  伤害 472`;
+    assert.equal(f.rows.get('Headline').string, '祖玛教主');
+    assert.equal(f.rows.get('Status').string, '等待开放');
+    assert.equal(f.rows.get('Results').string, history);
+
+    f.change({ ...next, state: 3, ranks: [{ position: 1, displayName: '本场道士', damage: Long.fromInt(52) }] });
+    await f.view.reload();
+    assert.equal(f.rows.get('Action').interactable, true);
+    assert.equal(f.rows.get('Results').string, '1. 本场道士  伤害 52');
+    assert.equal(f.rows.get('Next').interactable, true);
+    f.view.turn(1);
+    assert.equal(f.rows.get('Results').string, history);
+    assert.equal(f.rows.get('Page').string, '2/2');
+});
+
 test('个人首领分页使用该模板的等级资格、冷却、历史和入场编号', async t => {
     const f = fixture(t);
     const choices = [

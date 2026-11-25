@@ -9,24 +9,30 @@ import (
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
+	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
 )
 
 // worldBossArena 只由承载本 run 的场次分片读写。共享首领在这里始终只有一个实体。
 type worldBossArena struct {
-	occurrence worldBossOccurrence        // 运营窗口和逻辑运行服。
-	config     *devconfig.WorldBossConfig // 当前装配冻结的地图、怪物和席位约束。
-	challenge  *bossChallenge             // 共享生命、命中事实、贡献和唯一终态。
-	boss       *entity                    // 所有参战角色在同一个坐标系统观察的唯一身体。
-	seats      map[string]*worldBossSeat  // 仍占场的原会话席位。
-	resumable  map[string]*worldBossSeat  // 已确认战斗但连接失效的身体和动作冷却。
-	names      map[string]string          // 已加入角色的显示名，离场后用于当前榜单。
-	nextHandle uint32                     // 本场唯一的玩家和宠物句柄分配水位。
-	castID     uint64                     // 同场全部角色共用的施法去重水位。
-	eventID    uint64                     // 同场战斗观察事件的有序分配水位。
-	lastTick   time.Time                  // 避免旧逻辑帧回拨全场时钟。
-	lastState  time.Time                  // 最近一次合并发送共享排行榜的时刻。
+	spec          persistence.WorldBossSpec    // 数据库已经确认的原预约身份。
+	result        *persistence.WorldBossResult // 永久确认后才发布的终态与榜单。
+	finishing     bool                         // 原终态正在数据库中确认。
+	finishRetryAt time.Time                    // 结果未知或队列拥塞时沿用原提案重试的时间。
+	finishError   uint32                       // 硬围栏或证据错误，不再向客户端发送未确认结果。
+	occurrence    worldBossOccurrence          // 运营窗口和逻辑运行服。
+	config        *devconfig.WorldBossConfig   // 当前装配冻结的地图、怪物和席位约束。
+	challenge     *bossChallenge               // 共享生命、命中事实、贡献和唯一终态。
+	boss          *entity                      // 所有参战角色在同一个坐标系统观察的唯一身体。
+	seats         map[string]*worldBossSeat    // 仍占场的原会话席位。
+	resumable     map[string]*worldBossSeat    // 已确认战斗但连接失效的身体和动作冷却。
+	names         map[string]string            // 已加入角色的显示名，离场后用于当前榜单。
+	nextHandle    uint32                       // 本场唯一的玩家和宠物句柄分配水位。
+	castID        uint64                       // 同场全部角色共用的施法去重水位。
+	eventID       uint64                       // 同场战斗观察事件的有序分配水位。
+	lastTick      time.Time                    // 避免旧逻辑帧回拨全场时钟。
+	lastState     time.Time                    // 最近一次合并发送共享排行榜的时刻。
 }
 
 // worldBossSeat 保存世界 actor 自行拥有的战斗身体和只读原入场授权。
@@ -44,24 +50,37 @@ func (w *worker) worldBossStatus(fixture *devconfig.Fixture, runID, scene uint64
 	if cfg == nil {
 		return &pb.WorldBossState{SceneEpoch: scene, ErrorCode: p.CodeLineForbidden}
 	}
-	if arena := w.worldBossArenas[runID]; arena != nil && arena.occurrence.id == occurrence.id {
-		return arena.state(scene, worldBossFighting)
+	if arena := w.worldBossArenas[runID]; arena != nil {
+		phase := worldBossFighting
+		if arena.result == nil && !now.Before(arena.occurrence.closesAt) {
+			phase = worldBossSettling // 到期后的下一个预告须等原结果确认，面板才会带着原成绩更新。
+		}
+		if arena.occurrence.id == occurrence.id || phase == worldBossSettling {
+			state := arena.state(scene, phase)
+			state.LatestResult = w.latestWorldBoss(runID)
+			return state
+		}
 	}
 	state := worldBossClosed
 	if open {
 		state = worldBossFighting
 	}
-	return &pb.WorldBossState{SceneEpoch: scene, OccurrenceId: occurrence.id, TemplateId: cfg.TemplateID, State: state,
+	current := &pb.WorldBossState{SceneEpoch: scene, OccurrenceId: occurrence.id, TemplateId: cfg.TemplateID, State: state,
 		OpensAtUnixMs: occurrence.opensAt.UnixMilli(), ExpiresAtUnixMs: occurrence.closesAt.UnixMilli(), Hp: cfg.Monster.HP, HpMax: cfg.Monster.HP}
+	if ledger := w.worldBossLedgers[runID]; ledger != nil && ledger.latest != nil && ledger.latest.OccurrenceID == occurrence.id {
+		current = worldBossResultState(ledger.latest, scene)
+	}
+	current.LatestResult = w.latestWorldBoss(runID)
+	return current
 }
 
 // state 冻结当前观察的共享生命和榜单，顺序以有效伤害、后以原角色身份确定。
 func (a *worldBossArena) state(scene uint64, phase uint32) *pb.WorldBossState {
 	if phase == worldBossFighting && a.challenge.finish != nil {
-		phase = worldBossExpired
-		if a.challenge.finish.kind == bossDefeated {
-			phase = worldBossKilled
+		if a.result != nil {
+			return worldBossResultState(a.result, scene)
 		}
+		phase = worldBossSettling
 	}
 	contributions := make([]*bossContribution, 0, len(a.challenge.participants))
 	for _, contribution := range a.challenge.participants {
@@ -82,7 +101,18 @@ func (a *worldBossArena) state(scene uint64, phase uint32) *pb.WorldBossState {
 }
 
 // reserveWorldBoss 只在相同真实窗口内接受原 owner 的有界申请。
-func (w *worker) reserveWorldBoss(enter worldBossEnter, now time.Time) {
+func (w *worker) reserveWorldBoss(enter worldBossEnter) {
+	w.withWorldBossLedger(enter.store, func(code uint32) {
+		if code != 0 {
+			w.rejectWorldBoss(enter, code)
+			return
+		}
+		w.reserveRecoveredWorldBoss(enter, time.Now())
+	})
+}
+
+// reserveRecoveredWorldBoss 仅在旧运行结果完成对账后进入现有场或申请原窗口。
+func (w *worker) reserveRecoveredWorldBoss(enter worldBossEnter, now time.Time) {
 	obs := enter.observation
 	if obs.revoked.Load() || !obs.conn.Alive() || obs.conn.Binding() != uint64(obs.auth.SessionEpoch) {
 		return
@@ -93,26 +123,18 @@ func (w *worker) reserveWorldBoss(enter worldBossEnter, now time.Time) {
 		w.rejectWorldBoss(enter, p.CodeLineForbidden)
 		return
 	}
-	if w.worldBossArenas == nil {
-		w.worldBossArenas = make(map[uint64]*worldBossArena)
-	}
 	arena := w.worldBossArenas[occurrence.runID]
 	if arena == nil || arena.occurrence.id != occurrence.id {
 		if arena != nil && len(arena.seats) > 0 {
 			w.rejectWorldBoss(enter, p.CodeLineRecovering)
 			return
 		}
-		identity := bossChallengeIdentity{runID: occurrence.runID, challengeID: occurrence.id, execution: ownerExecutionEpoch.Add(1), ruleVersion: fixture.RuleVersion, configHash: fixture.Hash}
-		challenge, err := newBossChallenge(identity, "", occurrence.opensAt, occurrence.closesAt, cfg.Monster.HP, cfg.ParticipantLimit)
-		if err != nil {
+		if enter.resumeOnly {
 			w.rejectWorldBoss(enter, p.CodeLineForbidden)
 			return
 		}
-		boss := &entity{Handle: 10, Kind: 3, Def: cfg.Monster.ID, Monster: &cfg.Monster, Pos: cfg.Map.MonsterSpawns[0],
-			HP: cfg.Monster.HP, MaxHP: cfg.Monster.HP, MP: cfg.Monster.MP, MaxMP: cfg.Monster.MP, Life: 1}
-		arena = &worldBossArena{occurrence: occurrence, config: cfg, challenge: challenge, boss: boss,
-			seats: make(map[string]*worldBossSeat), resumable: make(map[string]*worldBossSeat), names: make(map[string]string), nextHandle: 100}
-		w.worldBossArenas[occurrence.runID] = arena
+		w.openWorldBoss(enter, occurrence, cfg, now)
+		return
 	}
 	if arena.challenge.finish == nil {
 		if previous := arena.seats[enter.role.ID]; previous != nil && shouldSuspendWorldBoss(previous) {
@@ -319,8 +341,9 @@ func (w *worker) applyWorldBossCommand(obs *worldBossObservation, frame wire.Fra
 // removeWorldBossSeat 归还战斗占格，由原角色 owner 完成连接返回。
 func (w *worker) removeWorldBossSeat(arena *worldBossArena, seat *worldBossSeat, phase uint32) {
 	obs := seat.observation
+	obs.finalReturn.Store(true)
 	delete(arena.seats, obs.auth.RoleID)
-	if !seat.room.Ready {
+	if arena.challenge.participants[obs.auth.RoleID] == nil {
 		delete(arena.names, obs.auth.RoleID)
 	}
 	if seat.shown && !obs.revoked.Load() && obs.conn.Alive() && (phase != worldBossFighting || !seat.done) {

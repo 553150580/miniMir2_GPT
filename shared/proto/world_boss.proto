@@ -23,7 +23,7 @@ message WorldBossState {
   uint64 scene_epoch = 1;
   string occurrence_id = 2;
   uint32 template_id = 3;
-  // 1 预告、2 等待基线确认、3 开放、4 击杀、5 超时、6 已离开、7 战败。
+  // 1 预告、2 等待基线确认、3 开放、4 击杀、5 超时、6 已离开、7 战败、8 中断、9 等待结算。
   uint32 state = 4;
   int64 opens_at_unix_ms = 5;
   int64 expires_at_unix_ms = 6;
@@ -31,10 +31,20 @@ message WorldBossState {
   int64 hp_max = 8;
   repeated WorldBossRank ranks = 9;
   uint32 error_code = 10;
+  WorldBossResult latest_result = 11;
 }
 
 message WorldBossRank {
   uint32 position = 1;
   string display_name = 2;
   int64 damage = 3;
+}
+
+// 最近一场已确认的永久结果。下一场预告和正在开放的生命不使用历史值。
+message WorldBossResult {
+  string occurrence_id = 1;
+  uint32 template_id = 2;
+  uint32 state = 3;
+  int64 finished_at_unix_ms = 4;
+  repeated WorldBossRank ranks = 5;
 }

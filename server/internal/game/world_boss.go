@@ -2,10 +2,7 @@
 package game
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"math"
 	"sync/atomic"
 	"time"
@@ -20,13 +17,15 @@ import (
 )
 
 const (
-	worldBossClosed   uint32 = iota + 1 // 下一场的开放时间已确定，当前不可进入。
-	worldBossEntering                   // 席位已保留，客户端正在确认场景。
-	worldBossFighting                   // 场次正在开放，确认席位可参与格子战斗。
-	worldBossKilled                     // 本场共享首领已被击杀。
-	worldBossExpired                    // 开放窗口结束，首领尚未击杀。
-	worldBossLeft                       // 原席位离开或失去附着。
-	worldBossDefeated                   // 原角色在本场先被击败。
+	worldBossClosed      uint32 = iota + 1 // 下一场的开放时间已确定，当前不可进入。
+	worldBossEntering                      // 席位已保留，客户端正在确认场景。
+	worldBossFighting                      // 场次正在开放，确认席位可参与格子战斗。
+	worldBossKilled                        // 本场共享首领已被击杀。
+	worldBossExpired                       // 开放窗口结束，首领尚未击杀。
+	worldBossLeft                          // 原席位离开或失去附着。
+	worldBossDefeated                      // 原角色在本场先被击败。
+	worldBossInterrupted                   // 原执行已被永久标记中断。
+	worldBossSettling                      // 场次已停止战斗，正在确认唯一终态。
 )
 
 // worldBossOccurrence 由运行服和运营时钟计算，客户端不能创建或延长场次。
@@ -38,7 +37,7 @@ type worldBossOccurrence struct {
 }
 
 // worldBossObservation 跨分片传递的原会话身份在初始化后只读。
-// shown 仅归角色 owner 写，revoked 供共享场次分片检查原附着是否已失效。
+// shown 和 returnRequested 仅归角色 owner 使用，revoked 在两处分片间同步原附着失效。
 type worldBossObservation struct {
 	occurrence worldBossOccurrence // 本次申请的场次身份。
 	owner      *worker             // 保留永久写权限和原挂机角色的分片。
@@ -52,6 +51,9 @@ type worldBossObservation struct {
 	started    atomic.Bool         // 已由场次分片真正提交新场景首帧，离开时据此决定是否发返回场景。
 	revoked    atomic.Bool         // 本席位的原命令和投递已经失效。
 	rejoin     atomic.Bool         // 原连接断开或接管，允许保留已确认席位等候新认证。
+
+	returnRequested bool        // 已离开共享场次，待普通房间的在途操作确认后返回。
+	finalReturn     atomic.Bool // 场次分片永久释放席位，旧连接不能再申请接回。
 }
 
 // worldBossEnter 将原角色确认过的战斗属性交给场次分片，内容不引用原角色的可变背包或身体。
@@ -77,8 +79,7 @@ func worldBossWindow(cfg *devconfig.WorldBossConfig, runID uint64, now time.Time
 			if !now.Before(end) {
 				continue
 			}
-			key := sha256.Sum256([]byte(fmt.Sprintf("%d:%d:%d", runID, cfg.TemplateID, start.UnixMilli())))
-			return worldBossOccurrence{runID: runID, id: hex.EncodeToString(key[:16]), opensAt: start, closesAt: end}, !now.Before(start)
+			return worldBossOccurrence{runID: runID, id: persistence.WorldBossOccurrenceID(runID, cfg.TemplateID, start), opensAt: start, closesAt: end}, !now.Before(start)
 		}
 	}
 	return worldBossOccurrence{}, false
@@ -113,7 +114,7 @@ func (w *worker) worldBossCommand(owner *room, c command) bool {
 		return true
 	}
 	obs := owner.worldBossObservation
-	if obs == nil || !obs.shown {
+	if obs == nil || !obs.shown || obs.revoked.Load() {
 		if f.ID == p.MsgC2SWorldBossLeave || obs != nil {
 			w.failure(owner, f, p.CodeLineRecovering)
 			return true
@@ -164,9 +165,16 @@ func (w *worker) queryWorldBoss(owner *room, f wire.Frame) {
 	runID, fixture := store.Cfg.RunID, &store.Cfg.Fixture
 	actor := w.e.workers[runID%uint64(len(w.e.workers))]
 	if !w.postWorldBoss(actor, func(actor *worker) {
-		if conn.Alive() && conn.Binding() == uint64(auth.SessionEpoch) {
+		actor.withWorldBossLedger(store, func(code uint32) {
+			if !conn.Alive() || conn.Binding() != uint64(auth.SessionEpoch) {
+				return
+			}
+			if code != 0 {
+				conn.Deliver(wire.Frame{ID: f.ID, Request: f.Request, Binding: uint64(auth.SessionEpoch), Error: code})
+				return
+			}
 			conn.Deliver(wire.Message(p.MsgS2CWorldBossState, f.Request, uint64(auth.SessionEpoch), actor.worldBossStatus(fixture, runID, scene, time.Now())))
-		}
+		})
 	}) {
 		w.failure(owner, f, p.CodeServerBusy)
 	}
@@ -230,7 +238,7 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, cfg 
 		SkillSlotIDs: snapshot.SkillSlotIDs}
 	enter := worldBossEnter{observation: obs, snapshot: snapshot, role: role, store: store, snapshotID: snapshotID, request: frame.Request, resumeOnly: resumeOnly}
 	owner.worldBossObservation = obs
-	if !w.postWorldBoss(obs.actor, func(actor *worker) { actor.reserveWorldBoss(enter, time.Now()) }) {
+	if !w.postWorldBoss(obs.actor, func(actor *worker) { actor.reserveWorldBoss(enter) }) {
 		w.detachWorldBoss(owner)
 		if !resumeOnly {
 			w.failure(owner, frame, p.CodeServerBusy)
@@ -240,7 +248,7 @@ func (w *worker) submitWorldBossSeat(owner *room, store *persistence.Store, cfg 
 
 // suspendWorldBossObservation 撤销旧会话输入权，并记住普通场景新 ACK 后应接回的场次。
 func (w *worker) suspendWorldBossObservation(owner *room) {
-	if obs := owner.worldBossObservation; obs != nil && obs.started.Load() {
+	if obs := owner.worldBossObservation; obs != nil && obs.started.Load() && !obs.finalReturn.Load() {
 		obs.rejoin.Store(true)
 		owner.worldBossResume = obs.occurrence
 	}
@@ -278,10 +286,17 @@ func (w *worker) finishWorldBossObservation(obs *worldBossObservation) {
 	if owner == nil || owner.worldBossObservation != obs {
 		return
 	}
-	w.detachWorldBoss(owner)
+	obs.revoked.Store(true)
 	if !obs.started.Load() || owner.Conn != obs.conn || owner.Auth != obs.auth || !obs.conn.Alive() || owner.Isolated {
+		w.detachWorldBoss(owner)
 		return
 	}
+	// 普通房间的扣料回执仍需原 Scene 才能应用已确认的技能。先撤销场内输入，同时保持普通投影隔离。
+	if owner.Pending {
+		obs.returnRequested = true
+		return
+	}
+	w.detachWorldBoss(owner)
 	baseline, ok := w.nextTravelBaseline(obs.baseline)
 	if !ok {
 		w.isolateRoom(owner)

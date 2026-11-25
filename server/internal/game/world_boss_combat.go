@@ -141,9 +141,12 @@ func (w *worker) tickWorldBosses(now time.Time) {
 	if w.e.stopped.Load() {
 		return
 	}
+	for _, ledger := range w.worldBossLedgers {
+		w.advanceWorldBossOpening(ledger, now)
+	}
 	// 每个已承载的运行服只保留最后一场终态，直到下一场替换。
 	for _, arena := range w.worldBossArenas {
-		if arena.challenge.finish != nil && len(arena.seats) == 0 {
+		if (arena.result != nil || arena.finishError != 0) && len(arena.seats) == 0 {
 			continue
 		}
 		w.stepWorldBoss(arena, now)
@@ -176,6 +179,22 @@ func (w *worker) stepWorldBoss(arena *worldBossArena, now time.Time) {
 	if arena.challenge.finish != nil {
 		finish := arena.challenge.finish
 		clear(arena.resumable)
+		w.persistWorldBossFinish(arena, now)
+		if arena.result == nil {
+			if arena.finishError != 0 {
+				for _, seat := range arena.sortedSeats() {
+					w.removeWorldBossSeat(arena, seat, worldBossLeft)
+				}
+			} else if now.Sub(arena.lastState) >= 200*time.Millisecond {
+				arena.lastState = now
+				for _, seat := range arena.sortedSeats() {
+					if seat.shown {
+						w.send(seat.room, p.MsgS2CWorldBossState, 0, arena.state(seat.room.Scene, worldBossFighting))
+					}
+				}
+			}
+			return
+		}
 		for _, seat := range arena.sortedSeats() {
 			if !seat.done && seat.shown {
 				w.snapshot(seat.room)

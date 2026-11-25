@@ -35930,6 +35930,7 @@ $root.minimir = (function() {
              * @property {Long|null} [hp_max] WorldBossState hp_max
              * @property {Array.<minimir.v1.WorldBossRank.$Properties>|null} [ranks] WorldBossState ranks
              * @property {number|null} [error_code] WorldBossState error_code
+             * @property {minimir.v1.WorldBossResult.$Properties|null} [latest_result] WorldBossState latest_result
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -36043,6 +36044,14 @@ $root.minimir = (function() {
             WorldBossState.prototype.error_code = 0;
 
             /**
+             * WorldBossState latest_result.
+             * @member {minimir.v1.WorldBossResult.$Properties|null|undefined} latest_result
+             * @memberof minimir.v1.WorldBossState
+             * @instance
+             */
+            WorldBossState.prototype.latest_result = null;
+
+            /**
              * Creates a new WorldBossState instance using the specified properties.
              * @function create
              * @memberof minimir.v1.WorldBossState
@@ -36095,6 +36104,8 @@ $root.minimir = (function() {
                         $root.minimir.v1.WorldBossRank.encode(message.ranks[i], writer.uint32(/* id 9, wireType 2 =*/74).fork(), _depth + 1).ldelim();
                 if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code") && message.error_code !== 0)
                     writer.uint32(/* id 10, wireType 0 =*/80).uint32(message.error_code);
+                if (message.latest_result != null && $Object.hasOwnProperty.call(message, "latest_result"))
+                    $root.minimir.v1.WorldBossResult.encode(message.latest_result, writer.uint32(/* id 11, wireType 2 =*/90).fork(), _depth + 1).ldelim();
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -36241,6 +36252,12 @@ $root.minimir = (function() {
                                 delete message.error_code;
                             continue;
                         }
+                    case 11: {
+                            if (wireType !== 2)
+                                break;
+                            message.latest_result = $root.minimir.v1.WorldBossResult.decode(reader, reader.size(), $undefined, _depth + 1, message.latest_result);
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -36325,6 +36342,11 @@ $root.minimir = (function() {
                 if (message.error_code != null && $Object.hasOwnProperty.call(message, "error_code"))
                     if (!$util.isInteger(message.error_code))
                         return "error_code: integer expected";
+                if (message.latest_result != null && $Object.hasOwnProperty.call(message, "latest_result")) {
+                    var error = $root.minimir.v1.WorldBossResult.verify(message.latest_result, _depth + 1);
+                    if (error)
+                        return "latest_result." + error;
+                }
                 return null;
             };
 
@@ -36605,6 +36627,321 @@ $root.minimir = (function() {
             };
 
             return WorldBossRank;
+        })();
+
+        v1.WorldBossResult = (function() {
+
+            /**
+             * Properties of a WorldBossResult.
+             * @typedef {Object} minimir.v1.WorldBossResult.$Properties
+             * @property {string|null} [occurrence_id] WorldBossResult occurrence_id
+             * @property {number|null} [template_id] WorldBossResult template_id
+             * @property {number|null} [state] WorldBossResult state
+             * @property {Long|null} [finished_at_unix_ms] WorldBossResult finished_at_unix_ms
+             * @property {Array.<minimir.v1.WorldBossRank.$Properties>|null} [ranks] WorldBossResult ranks
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a WorldBossResult.
+             * @memberof minimir.v1
+             * @interface IWorldBossResult
+             * @augments minimir.v1.WorldBossResult.$Properties
+             * @deprecated Use minimir.v1.WorldBossResult.$Properties instead.
+             */
+
+            /**
+             * Shape of a WorldBossResult.
+             * @typedef {minimir.v1.WorldBossResult.$Properties} minimir.v1.WorldBossResult.$Shape
+             */
+
+            /**
+             * Constructs a new WorldBossResult.
+             * @memberof minimir.v1
+             * @classdesc Represents a WorldBossResult.
+             * @constructor
+             * @param {minimir.v1.WorldBossResult.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var WorldBossResult = function (properties) {
+                this.ranks = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * WorldBossResult occurrence_id.
+             * @member {string} occurrence_id
+             * @memberof minimir.v1.WorldBossResult
+             * @instance
+             */
+            WorldBossResult.prototype.occurrence_id = "";
+
+            /**
+             * WorldBossResult template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.WorldBossResult
+             * @instance
+             */
+            WorldBossResult.prototype.template_id = 0;
+
+            /**
+             * WorldBossResult state.
+             * @member {number} state
+             * @memberof minimir.v1.WorldBossResult
+             * @instance
+             */
+            WorldBossResult.prototype.state = 0;
+
+            /**
+             * WorldBossResult finished_at_unix_ms.
+             * @member {Long} finished_at_unix_ms
+             * @memberof minimir.v1.WorldBossResult
+             * @instance
+             */
+            WorldBossResult.prototype.finished_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * WorldBossResult ranks.
+             * @member {Array.<minimir.v1.WorldBossRank.$Properties>} ranks
+             * @memberof minimir.v1.WorldBossResult
+             * @instance
+             */
+            WorldBossResult.prototype.ranks = $util.emptyArray;
+
+            /**
+             * Creates a new WorldBossResult instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {minimir.v1.WorldBossResult.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.WorldBossResult} WorldBossResult instance
+             * @type {{
+             *   (properties: minimir.v1.WorldBossResult.$Shape): minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape;
+             *   (properties?: minimir.v1.WorldBossResult.$Properties): minimir.v1.WorldBossResult;
+             * }}
+             */
+            WorldBossResult.create = function(properties) {
+                return new WorldBossResult(properties);
+            };
+
+            /**
+             * Encodes the specified WorldBossResult message. Does not implicitly {@link minimir.v1.WorldBossResult.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {minimir.v1.WorldBossResult.$Properties} message WorldBossResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossResult.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id") && message.occurrence_id !== "")
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.occurrence_id);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.template_id);
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state") && message.state !== 0)
+                    writer.uint32(/* id 3, wireType 0 =*/24).uint32(message.state);
+                if (message.finished_at_unix_ms != null && $Object.hasOwnProperty.call(message, "finished_at_unix_ms") && (typeof message.finished_at_unix_ms === "object" ? message.finished_at_unix_ms.low || message.finished_at_unix_ms.high : message.finished_at_unix_ms !== 0))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.finished_at_unix_ms);
+                if (message.ranks != null && message.ranks.length)
+                    for (var i = 0; i < message.ranks.length; ++i)
+                        $root.minimir.v1.WorldBossRank.encode(message.ranks[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified WorldBossResult message, length delimited. Does not implicitly {@link minimir.v1.WorldBossResult.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {minimir.v1.WorldBossResult.$Properties} message WorldBossResult message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            WorldBossResult.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a WorldBossResult message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape} WorldBossResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossResult.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.WorldBossResult();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.stringVerify()).length)
+                                message.occurrence_id = value;
+                            else
+                                delete message.occurrence_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.state = value;
+                            else
+                                delete message.state;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.finished_at_unix_ms = value;
+                            else
+                                delete message.finished_at_unix_ms;
+                            continue;
+                        }
+                    case 5: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.ranks && message.ranks.length))
+                                message.ranks = [];
+                            message.ranks.push($root.minimir.v1.WorldBossRank.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a WorldBossResult message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.WorldBossResult & minimir.v1.WorldBossResult.$Shape} WorldBossResult
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            WorldBossResult.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a WorldBossResult message.
+             * @function verify
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            WorldBossResult.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.occurrence_id != null && $Object.hasOwnProperty.call(message, "occurrence_id"))
+                    if (!$util.isString(message.occurrence_id))
+                        return "occurrence_id: string expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.state != null && $Object.hasOwnProperty.call(message, "state"))
+                    if (!$util.isInteger(message.state))
+                        return "state: integer expected";
+                if (message.finished_at_unix_ms != null && $Object.hasOwnProperty.call(message, "finished_at_unix_ms"))
+                    if (!$util.isInteger(message.finished_at_unix_ms) && !(message.finished_at_unix_ms && $util.isInteger(message.finished_at_unix_ms.low) && $util.isInteger(message.finished_at_unix_ms.high)))
+                        return "finished_at_unix_ms: integer|Long expected";
+                if (message.ranks != null && $Object.hasOwnProperty.call(message, "ranks")) {
+                    if (!$Array.isArray(message.ranks))
+                        return "ranks: array expected";
+                    for (var i = 0; i < message.ranks.length; ++i) {
+                        var error = $root.minimir.v1.WorldBossRank.verify(message.ranks[i], _depth + 1);
+                        if (error)
+                            return "ranks." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for WorldBossResult
+             * @function getTypeUrl
+             * @memberof minimir.v1.WorldBossResult
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            WorldBossResult.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.WorldBossResult";
+            };
+
+            return WorldBossResult;
         })();
 
         return v1;

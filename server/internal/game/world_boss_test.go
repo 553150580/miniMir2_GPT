@@ -113,8 +113,19 @@ func TestWorldBossTimeoutUsesOriginalDeadline(t *testing.T) {
 	w.stepWorldBoss(arena, closeAt.Add(time.Second))
 	state := arena.state(10, worldBossFighting)
 	result, ok := challenge.proposal()
-	if !ok || result.kind != bossEscaped || !result.finishedAt.Equal(closeAt) || state.State != worldBossExpired || state.Hp != 4 || len(state.Ranks) != 1 || state.Ranks[0].Damage != 2 {
-		t.Fatal("超时被错误转换为击杀，或终态没有使用原到期时刻", state, result)
+	if !ok || result.kind != bossEscaped || !result.finishedAt.Equal(closeAt) || state.State != worldBossSettling || state.LatestResult != nil {
+		t.Fatal("到期瞬间应冻结逃走提案，等待永久确认后再发送终态", state, result)
+	}
+	arena.result = &persistence.WorldBossResult{
+		WorldBossSpec: persistence.WorldBossSpec{RunID: 3, OccurrenceID: identity.challengeID, TemplateID: 1, OpensAt: start, ClosesAt: closeAt, HPMax: 6},
+		WorldBossFinish: persistence.WorldBossFinish{Outcome: persistence.WorldBossExpired, FinishedAt: closeAt, HPRemaining: 4,
+			Contributions: []persistence.WorldBossContribution{{RoleID: "role", DisplayName: "角色", Damage: 2}}},
+		ProgressKnown: true,
+	}
+	state = arena.state(10, worldBossFighting)
+	if state.State != worldBossExpired || state.Hp != 4 || state.LatestResult.GetFinishedAtUnixMs() != closeAt.UnixMilli() ||
+		len(state.Ranks) != 1 || state.Ranks[0].Damage != 2 {
+		t.Fatal("确认的超时应使用原到期时刻和永久榜单", state)
 	}
 }
 

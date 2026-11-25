@@ -76,11 +76,20 @@ interface WorldBossObservation {
     expiresAtUnixMs: { toString(): string };
     hp: { toString(): string };
     hpMax: { toString(): string };
-    ranks: { position: number; displayName: string; damage: { toString(): string } }[];
+    ranks: WorldBossRank[];
+    latestResult?: {
+        occurrenceId: string;
+        templateId: number;
+        state: number;
+        finishedAtUnixMs: { toString(): string };
+        ranks: WorldBossRank[];
+    };
 }
 
+interface WorldBossRank { position: number; displayName: string; damage: { toString(): string } }
+
 const personalState = ['','预约中','正在载入','挑战中','胜利','超时','已离开','战败'];
-const worldState = ['','等待开放','正在载入','开放中','已击杀','已超时','已离开','战败'];
+const worldState = ['','等待开放','正在载入','开放中','已击杀','已超时','已离开','战败','已中断','正在结算'];
 const qualifications = ['可入场','尚未开放','等级不足','已有挑战进行中','冷却中','今日次数已用完','请先返回普通挂机地图','背包已满','待领取队列已满'];
 const historyOutcomes = ['','胜利','超时','中断','战败'];
 const pageSize = 5;
@@ -240,8 +249,8 @@ export class GameBoss {
         const value = this.personal, world = this.world;
         const inside = context?.sceneKind === this.section;
         const personalPages = local ? this.personalPages(inside ? this.active?.templateId : undefined) : [];
-        const ranks = (world?.ranks ?? []).map(row => `${row.position}. ${row.displayName}  伤害 ${row.damage}`);
-        const pages = Math.max(1, local ? personalPages.length : Math.ceil(ranks.length / pageSize));
+        const worldPages = local ? [] : this.worldResultPages(context, world);
+        const pages = Math.max(1, local ? personalPages.length : worldPages.length);
         this.page = Math.max(0, Math.min(this.page, pages - 1));
         const detail = personalPages[this.page], offer = detail?.offer;
         if (local) {
@@ -253,9 +262,10 @@ export class GameBoss {
         } else {
             this.label('Headline', this.worldOffer(context, world?.templateId)?.display_name || '世界首领');
             this.label('Status', context?.worldBoss ? worldState[world?.state ?? 0] || '等待查询' : '尚未开放');
-            this.label('Details', world ? `上海时间 ${dateText(world.opensAtUnixMs)} 开场 / ${dateText(world.expiresAtUnixMs)} 结束\n首领生命 ${world.hp}/${world.hpMax}` : '');
+            const hp = world?.hpMax?.toString() === '0' ? '未知' : `${world?.hp}/${world?.hpMax}`;
+            this.label('Details', world ? `上海时间 ${dateText(world.opensAtUnixMs)} 开场 / ${dateText(world.expiresAtUnixMs)} 结束\n首领生命 ${hp}` : '');
         }
-        const rows = local ? detail?.rows ?? [] : ranks.slice(this.page * pageSize, (this.page + 1) * pageSize);
+        const rows = local ? detail?.rows ?? [] : worldPages[this.page] ?? [];
         this.label('Results', rows.join('\n') || (local ? '暂无挑战记录' : '暂无伤害排行'));
         this.label('Page', `${this.page + 1}/${pages}`);
         this.label('Action/Label', inside ? '离开挑战' : '进入挑战');
@@ -267,6 +277,21 @@ export class GameBoss {
     }
 
     private get pendingRewards(): PendingChallengeReward[] { return this.personal?.pendingRewards ?? []; }
+
+    // 当前榜与最近的永久成绩分页展示，新窗口可正常预告和入场。
+    private worldResultPages(context: BossContext | null, world?: WorldBossObservation): string[][] {
+        const rankRows = (ranks: WorldBossRank[]) => ranks.map(row => `${row.position}. ${row.displayName}  伤害 ${row.damage}`);
+        const current = rankRows(world?.ranks ?? []);
+        const pages = Array.from({ length: Math.ceil(current.length / pageSize) }, (_, index) => current.slice(index * pageSize, (index + 1) * pageSize));
+        const latest = world?.latestResult;
+        if (latest && latest.occurrenceId !== world?.occurrenceId) {
+            const title = this.worldOffer(context, latest.templateId)?.display_name ?? '世界首领';
+            const heading = `上场 ${title} · ${worldState[latest.state] ?? '已结束'} ${dateText(latest.finishedAtUnixMs)}`;
+            const saved = rankRows(latest.ranks ?? []), size = pageSize - 1;
+            for (let offset = 0; offset < Math.max(1, saved.length); offset += size) pages.push([heading, ...saved.slice(offset, offset + size)]);
+        }
+        return pages;
+    }
 
     // 复用保存的前后页按钮；每页只显示一个首领和该首领的最近明细。
     private personalPages(active?: number): { offer: PersonalBossOffer; rows: string[] }[] {
@@ -451,7 +476,7 @@ export class GameBoss {
         if (!this.canRefreshWorld(context)) { this.cancelWorldTimer(); return; }
         if (this.worldTimer !== undefined || this.worldQuery) return;
         const boundary = this.worldBoundary();
-        const waiting = this.world?.state === 1 || this.world?.state === 4;
+        const waiting = this.world?.state === 1 || this.world?.state === 4 || this.world?.state === 5 || this.world?.state === 8;
         const polling = this.lastWorldQueryAt + (this.serverClock ? worldActiveRefreshMs : worldClockFallbackMs);
         const next = boundary === undefined ? polling : waiting ? boundary : Math.min(boundary, polling);
         const due = Math.max(this.lastWorldQueryAt + worldQueryMinIntervalMs, next);

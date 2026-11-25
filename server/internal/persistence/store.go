@@ -197,7 +197,8 @@ func (s *Store) Migrate(ctx context.Context) error {
 		"warehouse_items": {{Keys: bson.D{{Key: "warehouse_id", Value: 1}, {Key: "slot", Value: 1}}, Options: options.Index().SetUnique(true)}},
 
 		// 按角色定位挑战记录和结束时间，永久回执不设过期索引。
-		personalBossCollection: {{Keys: bson.D{{Key: "role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}}},
+		personalBossCollection:    {{Keys: bson.D{{Key: "role_id", Value: 1}, {Key: "finished_at", Value: -1}, {Key: "_id", Value: -1}}}},
+		worldBossResultCollection: worldBossResultIndexes(),
 	}
 	// name 定位目标集合，models 是为该集合建立的索引列表。
 	for name, models := range indexes {
@@ -427,6 +428,20 @@ func (s *Store) fence(ctx context.Context, a Auth) error {
 // fenceWrites 读取当前运行授权和节点租约，构造待与业务变更一起提交的两道条件写。
 // s 提供节点、运行服与数据库，ctx 关联当前事务，a 决定账号围栏和对应哈希组。
 func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrite, error) {
+	runWrite, err := s.runFenceWrite(ctx, runGuardGroup(a.AccountID))
+	if err != nil {
+		return nil, err
+	}
+	// 原角色资产操作仍保留独立账号围栏，以及合批操作预留的容量。
+	writes := make([]mongo.ClientBulkWrite, 2, 5)
+	writes[0] = runWrite
+	writes[1] = mongo.ClientBulkWrite{Database: s.DB.Name(), Collection: "accounts", Model: mongo.NewClientUpdateOneModel().
+		SetFilter(accountGuardFilter(a)).SetUpdate(bson.M{"$inc": bson.M{"auth_guard_seq": 1}})}
+	return writes, nil
+}
+
+// runFenceWrite 提取角色和运行服公共操作共用的节点租约校验及唯一分组写屏障。
+func (s *Store) runFenceWrite(ctx context.Context, group uint64) (mongo.ClientBulkWrite, error) {
 	// filter 选择仍在有效租约内、实例与运行代次都匹配的运行服状态。
 	runMember := gameRunMembership{RunID: s.Cfg.RunID, Epoch: s.Epoch}
 	filter := activeRunOwnership(s.Cfg.NodeID, s.Instance, runMember)
@@ -442,27 +457,20 @@ func (s *Store) fenceWrites(ctx context.Context, a Auth) ([]mongo.ClientBulkWrit
 	runFields := options.FindOne().SetProjection(bson.M{"_id": 0, "control_version": 1, "lease_until": 1})
 	// e 区分运行服已失权与数据库暂时无法完成核验。
 	if e := s.DB.Collection("run_control").FindOne(ctx, filter, runFields).Decode(&run); e != nil {
-		return nil, authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
+		return mongo.ClientBulkWrite{}, authorityReadError(e, p.CodeRouteChanged, "运行所有权已失效")
 	}
 	// node 选择仍持有有效租约的当前游戏进程节点记录。
 	node := nodeLeaseFilter(s.Cfg.NodeID, s.Instance, runMember)
 	// e 区分节点租约已失效与查询失败。
 	if e := s.DB.Collection("node_leases").FindOne(ctx, node, options.FindOne().SetProjection(bson.M{"_id": 1})).Err(); e != nil {
-		return nil, authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
+		return mongo.ClientBulkWrite{}, authorityReadError(e, p.CodeRouteChanged, "节点许可已失效")
 	}
 	// 围栏携带运行服代次和控制版本，防止旧游戏进程在所有权换代后通过。
-	// guard 限定正在写入的账号分组同时匹配运行实例、代次和控制版本。
-	guard := bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, runGuardGroup(a.AccountID)),
+	// guard 限定正在写入的组同时匹配运行实例、代次和控制版本。
+	guard := bson.M{"_id": fmt.Sprintf("%d:%d", s.Cfg.RunID, group),
 		"owner_instance": s.Instance, "run_epoch": s.Epoch, "control_version": run.ControlVersion}
-	// database 是运行组与账号集合共同所在的库名。
-	database := s.DB.Name()
-	// writes 暂存围栏更新并预留容量，结算可在同一批中附加角色、回执及审计。
-	writes := make([]mongo.ClientBulkWrite, 2, 5)
-	writes[0] = mongo.ClientBulkWrite{Database: database, Collection: "run_guards", Model: mongo.NewClientUpdateOneModel().
-		SetFilter(guard).SetUpdate(bson.M{"$inc": bson.M{"seq": 1}})}
-	writes[1] = mongo.ClientBulkWrite{Database: database, Collection: "accounts", Model: mongo.NewClientUpdateOneModel().
-		SetFilter(accountGuardFilter(a)).SetUpdate(bson.M{"$inc": bson.M{"auth_guard_seq": 1}})}
-	return writes, nil
+	return mongo.ClientBulkWrite{Database: s.DB.Name(), Collection: "run_guards", Model: mongo.NewClientUpdateOneModel().
+		SetFilter(guard).SetUpdate(bson.M{"$inc": bson.M{"seq": 1}})}, nil
 }
 
 // writeFence 在当前事务执行独立围栏写入，供其他资产和历史回执重放使用。
