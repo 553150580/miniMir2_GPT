@@ -34,6 +34,46 @@ function view(a,saved=savedWorld()){const v=new GameWorldView(saved.viewport,sav
 function actor(){return{entityHandle:1,entityKind:1,definitionId:0,position:{x:8,y:8},direction:4,action:0,attackSequence:0,castSequence:0,life:Long.UZERO,hp:Long.fromInt(100),hpMax:Long.fromInt(100),moveIntervalMs:400,movementRevision:Long.UZERO,movementKind:0,statuses:[]};}
 function owned(a,key){const f=frame(key);a.own(f);a.frames.set(key,f);return f;}
 
+test('外图首领图鉴绕过同名野外占位帧，只借用一张原画并归还引用', async () => {
+    const original = frame('首领原画');
+    const catalog = {
+        schema_version: 1,
+        challenge_profiles: { 80001: 'boss' },
+        profiles: { boss: { layers: [{ actions: { standing: { directions: [{ frames: ['Hunt:18000'] }] } } }] } },
+        frames: { 'Hunt:18000': { png: 'original-monsters/frames/frame_18_0000.png' } },
+    };
+    const catalogAsset = Object.assign(frame('原图目录'), { json: catalog });
+    const sources = new Map([
+        ['development/original-monsters/actors', catalogAsset],
+        ['development/original-monsters/frames/frame_18_0000/spriteFrame', original],
+    ]);
+    const requests = [];
+    const { WorldAssets: CodexAssets } = load('client/assets/scripts/app/WorldAssets.ts', id => id === 'cc' ? {
+        ...cc, JsonAsset: class {}, SpriteFrame: class {}, resources: {
+            getInfoWithPath: name => sources.has(name),
+            load(name, _type, callback) { requests.push(name); callback(null, sources.get(name)); },
+        },
+    } : {});
+    const world = new CodexAssets();
+    world.manifest = { profiles: { dummy: catalog.profiles.boss } };
+    world.gameplay = { challenge_maps: [{ monster_definition_ids: [80001] }], monster_profiles: [
+        { definition_id: 1, profile: 'dummy' }, { definition_id: 80001, profile: 'dummy' },
+    ] };
+    const ordinary = owned(world, 'Hunt:18000');
+    assert.equal(world.monsterCodexFrame(1), ordinary);
+    assert.equal(world.monsterCodexFrame(80001), null);
+    assert.deepEqual(requests, []);
+    const portrait = await world.loadMonsterCodexFrame(80001);
+    assert.equal(portrait, original);
+    assert.deepEqual(requests, Array.from(sources.keys()));
+    assert.equal(catalogAsset.refs, 0);
+    assert.equal(original.refs, 1);
+    portrait.decRef();
+    world.dispose();
+    assert.equal(original.refs, 0);
+    assert.equal(ordinary.refs, 0);
+});
+
 test('实际primary WorldView.prepare + HUD完整owner + WorldView.dispose：保存双Surface在背景ref0前解绑',()=>{
  const a=assets(),background=a.background,w=view(a),h=hud(a),savedSurface=w.world.getChildByName('Surface');assert.equal(w.sprite.spriteFrame,background);assert.equal(h.sprite.spriteFrame,background);
  w.view.dispose();assert.equal(background.refs,0);assert.deepEqual(background.violations,[]);assert.equal(w.sprite.spriteFrame,null);assert.equal(h.sprite.spriteFrame,null);assert.equal(w.world.getChildByName('Surface'),savedSurface);assert.equal(savedSurface.destroyRequested,undefined);h.hud.onDestroy();

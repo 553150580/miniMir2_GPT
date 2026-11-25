@@ -136,6 +136,17 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 			{ItemID: 218, Quantity: 1, BindPolicy: devconfig.DungeonRewardBindOnKill},
 			{ItemID: 35, Quantity: 1, BindPolicy: devconfig.DungeonRewardAlwaysBound},
 		}}}}}}
+	template := &gameCfg.Fixture.Dungeons[0]
+	template.Map.ID = 711
+	monster := devconfig.DungeonEnemy{Monster: devconfig.Monster{ID: gameCfg.Fixture.ChallengeMonsters[0].ID}}
+	template.Stages = []devconfig.DungeonStage{
+		{Enemies: []devconfig.DungeonEnemy{monster}}, {Enemies: []devconfig.DungeonEnemy{monster}},
+		{Enemies: []devconfig.DungeonEnemy{monster}}, {Enemies: []devconfig.DungeonEnemy{monster, monster}},
+	}
+	gameCfg.Fixture.TasksCodex = &devconfig.TaskCodexRules{Definitions: []devconfig.TaskCodexDefinition{
+		{ID: 1, Kind: devconfig.TaskCodexAchievement, Event: devconfig.TaskCodexDungeonClear, TemplateID: template.TemplateID, Target: 2},
+		{ID: 1, Kind: devconfig.TaskCodexMonster, Event: devconfig.TaskCodexMonsterKill, MonsterID: monster.Monster.ID, MapID: template.Map.ID, Target: 10},
+	}}
 	game := open(gameCfg)
 	type player struct {
 		account Auth        // 负责签发实际角色票的本测试账号。
@@ -172,6 +183,12 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 	require(err)
 	proposal := DungeonFinish{ChallengeID: begin.ChallengeID, ReservationID: begin.ReservationID, Execution: begin.Execution,
 		Outcome: DungeonSucceeded, RewardAt: begin.StartedAt.Add(time.Second), FinishedAt: begin.StartedAt.Add(1500 * time.Millisecond)}
+	proposal.KillEvidence = []DungeonKillEvidence{
+		{Stage: 0, At: begin.StartedAt.Add(100 * time.Millisecond)},
+		{Stage: 1, At: begin.StartedAt.Add(300 * time.Millisecond)},
+		{Stage: 2, At: begin.StartedAt.Add(600 * time.Millisecond)},
+		{Stage: 3, At: proposal.RewardAt}, {Stage: 3, Enemy: 1, At: proposal.FinishedAt},
+	}
 	for i, member := range begin.Members {
 		until := proposal.RewardAt
 		if i == 0 {
@@ -189,6 +206,12 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 		if _, _, err := game.FinishOwnedDungeon(ctx, invalid); Code(err) != p.CodeInvalidArgument {
 			t.Fatal("非法奖励提案未拒绝", invalid, err)
 		}
+	}
+	duplicateKill := proposal
+	duplicateKill.KillEvidence = slices.Clone(proposal.KillEvidence)
+	duplicateKill.KillEvidence[0].Stage = 1
+	if _, _, err := game.FinishOwnedDungeon(ctx, duplicateKill); Code(err) != p.CodeInvalidArgument {
+		t.Fatal("重复击杀不能替代遗漏的一只原怪物", err)
 	}
 	record, err := game.readDungeon(ctx, begin.ChallengeID)
 	require(err)
@@ -209,13 +232,13 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 	require(err)
 	count, err := collection.CountDocuments(ctx, bson.M{"_id": rows[0].ID})
 	require(err)
-	if active.Outcome != DungeonActive || !active.RewardAt.IsZero() || count != 0 {
+	if active.Outcome != DungeonActive || !active.RewardAt.IsZero() || len(active.KillEvidence) != 0 || count != 0 {
 		t.Fatal("失败事务留下了部分终态或部分奖励", active, count)
 	}
 	for _, member := range begin.Members {
 		role, err := game.Role(ctx, member.RoleID)
 		require(err)
-		if role.Revision != players[member.RoleID].role.Revision+1 || role.Dungeon.ActiveChallengeID != begin.ChallengeID {
+		if role.Revision != players[member.RoleID].role.Revision+1 || role.Dungeon.ActiveChallengeID != begin.ChallengeID || role.TasksCodex != nil {
 			t.Fatal("失败事务写完了某个原队员的终态", role.ID, role.Revision, role.Dungeon)
 		}
 	}
@@ -225,6 +248,8 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 	reordered := proposal
 	reordered.RewardEvidence = slices.Clone(proposal.RewardEvidence)
 	slices.Reverse(reordered.RewardEvidence)
+	reordered.KillEvidence = slices.Clone(proposal.KillEvidence)
+	slices.Reverse(reordered.KillEvidence)
 	var group sync.WaitGroup
 	for _, attempt := range []DungeonFinish{proposal, reordered} {
 		group.Go(func() {
@@ -244,10 +269,27 @@ func TestDungeonRewardDurableMongo(t *testing.T) {
 	if !reflect.DeepEqual(terminal.RewardDecisions, decisions) || count != 3 || auditCount != 3 {
 		t.Fatal("原多人抽选或审计被重复生成", terminal.RewardDecisions, count, auditCount)
 	}
+	if !reflect.DeepEqual(terminal.KillEvidence, proposal.KillEvidence) {
+		t.Fatal("终态未保留原死亡事实", terminal.KillEvidence)
+	}
+	for _, member := range terminal.Members {
+		role, err := game.Role(ctx, member.RoleID)
+		require(err)
+		if role.TasksCodex == nil || role.TasksCodex.Permanent[taskCodexKey(devconfig.TaskCodexAchievement, 1)].Count != 1 ||
+			role.TasksCodex.Permanent[taskCodexKey(devconfig.TaskCodexMonster, 1)].Count != 5 {
+			t.Fatal("并发重放不应重复推进原真人进度", member.RoleID, role.TasksCodex)
+		}
+	}
 	invalidReplay := proposal
 	invalidReplay.RewardAt = proposal.RewardAt.Add(time.Millisecond)
 	if _, _, err := game.FinishOwnedDungeon(ctx, invalidReplay); Code(err) != p.CodeOperationConflict {
 		t.Fatal("同场已确认击杀时刻被改写", err)
+	}
+	invalidReplay = proposal
+	invalidReplay.KillEvidence = slices.Clone(proposal.KillEvidence)
+	invalidReplay.KillEvidence[0].At = invalidReplay.KillEvidence[0].At.Add(time.Millisecond)
+	if _, _, err := game.FinishOwnedDungeon(ctx, invalidReplay); Code(err) != p.CodeOperationConflict {
+		t.Fatal("同场已确认独立击杀时刻被改写", err)
 	}
 
 	first, other := players[rows[0].RoleID], players[rows[1].RoleID]

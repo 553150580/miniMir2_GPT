@@ -46,3 +46,33 @@ func TestTaskCodexConfigRequiresConfirmedDefinitions(t *testing.T) {
 		})
 	}
 }
+
+func TestChallengeTaskConfigUsesDeclaredTemplatesAndParticipation(t *testing.T) {
+	personal := &PersonalBossConfig{TemplateID: 1, Map: MapTemplate{ID: 80}, Monster: Monster{ID: 80001}}
+	world := &WorldBossConfig{TemplateID: 1, Map: MapTemplate{ID: 81}, Monster: Monster{ID: 80002}}
+	fixture := Fixture{PersonalBoss: personal, WorldBoss: world}
+	personalQuest := TaskCodexDefinition{Kind: TaskCodexAchievement, ID: 1, Name: "个人胜利", Target: 2,
+		Event: TaskCodexPersonalBossClear, TemplateID: 1, MapID: 80}
+	worldQuest := TaskCodexDefinition{Kind: TaskCodexAchievement, ID: 2, Name: "世界参战", Target: 2,
+		Event: TaskCodexWorldBossKill, TemplateID: 1, MapID: 81}
+	fixture.TasksCodex = &TaskCodexRules{Definitions: []TaskCodexDefinition{personalQuest, worldQuest}}
+	if err := fixture.ValidateTasksCodex(); err == nil {
+		t.Fatalf("未配置有效世界参与资格却开启了任务进度：%v", err)
+	}
+	world.Rewards = &WorldBossRewards{}
+	fixture.TasksCodex.Definitions = append(fixture.TasksCodex.Definitions, TaskCodexDefinition{Kind: TaskCodexMonster, ID: 1,
+		Name: "世界首领", Target: 2, Event: TaskCodexMonsterKill, MapID: 81, MonsterID: 80002})
+	if err := fixture.ValidateTasksCodex(); err != nil || !fixture.HasWorldBossTaskProgress() {
+		t.Fatalf("有效地图、怪物和资格未注册：%v", err)
+	}
+	fixture.TasksCodex.Definitions[1].MapID = 80
+	if err := fixture.ValidateTasksCodex(); err == nil {
+		t.Fatal("同模板编号的另一玩法地图不能作为世界击杀来源")
+	}
+	fixture.WorldBoss = nil
+	fixture.TasksCodex.Definitions = []TaskCodexDefinition{personalQuest, {Kind: TaskCodexAchievement, ID: 2,
+		Name: "跨挑战累计", Target: 2, Event: TaskCodexChallengeMonsterKill}}
+	if err := fixture.ValidateTasksCodex(); err != nil || !fixture.HasWorldBossTaskProgress() {
+		t.Fatalf("关闭世界首领后仍需合并既有跨挑战计数：%v", err)
+	}
+}

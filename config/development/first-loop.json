@@ -10809,7 +10809,7 @@
         "game_reward_groups",
         "game_reward_entries"
       ],
-      "compiler_sha256": "df8a1d7bc97d2ba0d9254a7ad80748e1b2a176f849219928ac7a50bc50e53250",
+      "compiler_sha256": "405e945f435783d9f573eaf1a2e2dbbb9ff0063a7dbc5aab4e0ad6ea54ea8409",
       "scope": "开发候选目标及绑定奖励。正式数值、图鉴属性预算和特殊玩法任务未启用。"
     },
     "boss_challenges": {

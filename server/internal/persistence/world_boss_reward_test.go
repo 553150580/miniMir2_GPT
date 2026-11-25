@@ -93,6 +93,10 @@ func TestWorldBossRewardDurableMongo(t *testing.T) {
 	template.Rewards = &devconfig.WorldBossRewards{MinimumDamage: 1, AllowDisconnected: true,
 		Participation: []devconfig.ChallengeRewardItem{{ItemID: 35, Quantity: 2}},
 		Ranks:         []devconfig.WorldBossRankReward{{FirstRank: 1, LastRank: 1, Items: []devconfig.ChallengeRewardItem{{ItemID: 218, Quantity: 1}}}}}
+	cfg.Fixture.TasksCodex = &devconfig.TaskCodexRules{Definitions: []devconfig.TaskCodexDefinition{
+		{ID: 1, Kind: devconfig.TaskCodexAchievement, Name: "隔离首领成就", Event: devconfig.TaskCodexWorldBossKill, TemplateID: template.TemplateID, Target: 4},
+	}}
+	require(cfg.Fixture.ValidateTasksCodex())
 	account, err := Open(ctx, cfg)
 	require(err)
 	t.Cleanup(func() {
@@ -171,7 +175,29 @@ func TestWorldBossRewardDurableMongo(t *testing.T) {
 	if active.Outcome != WorldBossActive || count != 0 {
 		t.Fatal("首领结果或附件部分写入未回滚", active.Outcome, count)
 	}
+	progress, err := game.ReadWorldBossTaskProgress(ctx, first)
+	require(err)
+	if len(progress.Permanent) != 0 {
+		t.Fatal("世界首领终态未确认时生成了任务进度", progress)
+	}
 	_, err = collection.DeleteOne(ctx, bson.M{"_id": rows[1].ID})
+	require(err)
+	// 让侧表读取失败发生在奖励插入之后，确认任何一个参与角色的进度失败都会回滚原终态和整批奖励。
+	progressCollection := account.DB.Collection(worldBossTaskProgressCollection)
+	badProgressID := worldBossTaskProgressKey(last.ID, last.Origin)
+	_, err = progressCollection.InsertOne(ctx, bson.M{"_id": badProgressID, "progress": "隔离测试无效进度"})
+	require(err)
+	if result, err := game.FinishWorldBoss(ctx, spec, finish); err == nil || result != nil {
+		t.Fatal("任务侧表写入失效仍确认了原终态", result, err)
+	}
+	active, err = game.readWorldBoss(ctx, bson.M{"_id": worldBossKey(spec.RunID, spec.OccurrenceID)})
+	require(err)
+	count, err = collection.CountDocuments(ctx, bson.M{})
+	require(err)
+	if active.Outcome != WorldBossActive || count != 0 {
+		t.Fatal("任务进度故障未回滚原终态与所有奖励", active.Outcome, count)
+	}
+	_, err = progressCollection.DeleteOne(ctx, bson.M{"_id": badProgressID})
 	require(err)
 	_, err = game.FinishWorldBoss(ctx, spec, finish)
 	require(err)
@@ -181,6 +207,25 @@ func TestWorldBossRewardDurableMongo(t *testing.T) {
 	require(err)
 	if count != 2 {
 		t.Fatal("同场重放重复生成附件", count)
+	}
+	for _, role := range []domain.Role{first, last} {
+		progress, err = game.ReadWorldBossTaskProgress(ctx, role)
+		require(err)
+		if got := progress.Permanent[taskCodexKey(devconfig.TaskCodexAchievement, 1)]; got.Count != 1 || got.Claimed {
+			t.Fatal("原终态重放重复累计或生成非计数状态", progress)
+		}
+		stored, err := game.Role(ctx, role.ID)
+		require(err)
+		if stored.Revision != role.Revision || stored.SourceSeq != role.SourceSeq || stored.EconomicSeq != role.EconomicSeq || stored.TasksCodex != nil {
+			t.Fatal("世界分片覆盖了原角色资产", stored)
+		}
+	}
+	wrongOrigin := first
+	wrongOrigin.Origin++
+	progress, err = game.ReadWorldBossTaskProgress(ctx, wrongOrigin)
+	require(err)
+	if len(progress.Permanent) != 0 {
+		t.Fatal("相同角色编号读取了其它永久入口的世界进度", progress)
 	}
 
 	// 缩到恰好满包是本测试实例的前态。真实领取和所有账本写均走正常资产事务。
@@ -211,9 +256,15 @@ func TestWorldBossRewardDurableMongo(t *testing.T) {
 	coldSettings := cfg
 	coldTemplate := *template
 	coldTemplate.Rewards, coldSettings.Fixture.WorldBoss = nil, &coldTemplate
+	coldSettings.Fixture.TasksCodex = nil
 	cold := open(coldSettings)
 	setCapacity(len(first.Items) + 2)
 	first, firstAuth = attach(cold, firstAccount, firstKey)
+	progress, err = cold.ReadWorldBossTaskProgress(ctx, first)
+	require(err)
+	if progress.Permanent[taskCodexKey(devconfig.TaskCodexAchievement, 1)].Count != 1 {
+		t.Fatal("世界进度没有跨执行代次保留", progress)
+	}
 	info, err := cold.QueryPersonalBoss(ctx, firstAuth)
 	require(err)
 	if len(info.WorldPendingRewards) != 1 || !reflect.DeepEqual(info.WorldPendingRewards[0], rows[0].ChallengePendingReward) || info.WorldPendingRewardsMore {

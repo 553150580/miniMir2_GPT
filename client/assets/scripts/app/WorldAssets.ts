@@ -93,6 +93,8 @@ export class WorldAssets {
     get mapBackground(): SpriteFrame | null { return this.background; }
     // 复用当前地图已预载的怪物站立帧，用于图鉴显示。
     monsterCodexFrame(id: number): SpriteFrame | null {
+        // 挑战目录的早期占位外观可能恰好等于已加载的普通怪物，外图应走原画查找。
+        if (this.sceneKind < 3 && this.isChallengeCodexMonster(id)) return null;
         const found = this.gameplay.monster_profiles?.find((row: { definition_id: number }) => row.definition_id === id);
         const standing = found && this.manifest.profiles[found.profile]?.layers[0]?.actions?.standing;
         const keys: string[] = standing?.directions?.[0]?.frames ?? [];
@@ -101,6 +103,45 @@ export class WorldAssets {
             if (frame) return frame;
         }
         return null;
+    }
+
+    // 图鉴在原地图只取选中怪物的一张站立帧，入场资源仍按当前地图准备。
+    async loadMonsterCodexFrame(id: number): Promise<SpriteFrame | null> {
+        const found = this.gameplay.monster_profiles?.find((row: { definition_id: number }) => row.definition_id === id);
+        if (!found || this.disposed) return null;
+        let manifest = this.manifest, profile = found.profile;
+        if (!manifest.profiles[profile]?.layers[0]?.actions?.standing || this.isChallengeCodexMonster(id)) {
+            const path = 'development/original-monsters/actors';
+            if (resources.getInfoWithPath(path, JsonAsset)) {
+                const original = await load<JsonAsset>(path, JsonAsset);
+                original.addRef();
+                try {
+                    const source = original.json;
+                    const originalProfile = source?.challenge_profiles?.[String(id)] ?? profile;
+                    if (source?.schema_version === 1 && source.profiles?.[originalProfile]) {
+                        manifest = source;
+                        profile = originalProfile;
+                    }
+                } finally { original.decRef(); }
+            }
+        }
+        if (this.disposed) return null;
+        const frames: string[] = manifest.profiles[profile]?.layers[0]?.actions?.standing?.directions?.[0]?.frames ?? [];
+        for (const key of frames) {
+            const definition = manifest.frames[key];
+            if (!definition || definition.declared_empty || !/^[a-zA-Z0-9_/-]+\.png$/.test(definition.png)) continue;
+            const path = `development/${definition.png.slice(0, -4)}/spriteFrame`;
+            if (!resources.getInfoWithPath(path, SpriteFrame)) continue;
+            // 调用方用结束回调归还本次引用，面板当前预览另持有自己的引用。
+            const frame = await load<SpriteFrame>(path, SpriteFrame);
+            frame.addRef();
+            return frame;
+        }
+        return null;
+    }
+
+    private isChallengeCodexMonster(id: number): boolean {
+        return (this.gameplay.challenge_maps ?? []).some((map: WorldMapEntry) => map.monster_definition_ids?.includes(id));
     }
     readonly frames = new Map<string, SpriteFrame>();
     readonly audioClips = new Map<string, AudioClip>();

@@ -45,7 +45,9 @@ func (w *worker) persistDungeonBattleFinish(arena *dungeonArena, now time.Time) 
 			Execution: arena.grant.Execution, Outcome: arena.outcome, FinishedAt: arena.finishedAt}
 		if arena.outcome == persistence.DungeonSucceeded {
 			ledger.proposal.RewardAt, ledger.proposal.RewardEvidence = arena.rewardAt, arena.rewardEvidence
+			ledger.proposal.KillEvidence = arena.killEvidence
 		}
+		arena.killEvidence = nil // 终态提案已固定，失败不携带临时击杀记录。
 	}
 	store := arena.store
 	if store == nil {

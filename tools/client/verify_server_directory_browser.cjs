@@ -233,6 +233,23 @@ async function main() {
                 }, panel, { timeout: 12000 });
                 report.tasksCodex.mapGroupAndMonsterPreview = true;
             }
+            if (process.env.MINIMIR_VERIFY_CHALLENGE_CODEX === '1') {
+                report.step = '从原野外图查看个人首领图鉴剪影';
+                await tap(panel + '/RecordList/View/Content', '林地守卫  0/1');
+                const preview = await page.waitForFunction(path => {
+                    const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
+                    const root = cc.find('Canvas/Safe/' + path);
+                    const sprite = root?.getChildByName('CodexPreview')?.getComponent(cc.Sprite);
+                    const frame = sprite?.spriteFrame;
+                    const detail = root?.getChildByName('Detail')?.getComponent(cc.Label)?.string;
+                    if (!detail?.includes('个人首领挑战 · 林地守卫  0/1') || frame?.originalSize.width !== 100
+                        || frame.originalSize.height !== 84 || sprite.color.r !== 18
+                        || world.assets.mapId !== '1' || world.monsterCodexFrame(80001)) return null;
+                    return { map: world.assets.mapId, previewWidth: frame.originalSize.width, previewHeight: frame.originalSize.height };
+                }, panel, { timeout: 12000 });
+                report.tasksCodex.challengePreview = await preview.jsonValue();
+                await preview.dispose();
+            }
             // 左上角的背景位于保存布局的任务面板外。
             await page.touchscreen.tap(20, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);

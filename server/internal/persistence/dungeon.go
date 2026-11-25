@@ -92,6 +92,7 @@ type dungeonRecord struct {
 	FinishDigest     string                  `bson:"finish_digest,omitempty"`    // 原终态提案摘要，拒绝同场再次改判。
 	RewardSeed       string                  `bson:"reward_seed,omitempty"`      // 原有奖预约的服务端秘密，永不下发给客户端。
 	RewardDecisions  []dungeonRewardDecision `bson:"reward_decisions,omitempty"` // 每位原真人的抽选结果，包括空包。
+	KillEvidence     []DungeonKillEvidence   `bson:"kill_evidence,omitempty"`    // 已确认成功的真实死亡记录，与角色进度同事务。
 }
 
 func dungeonIndexes() []mongo.IndexModel {

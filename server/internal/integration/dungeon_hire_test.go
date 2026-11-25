@@ -29,6 +29,7 @@ func configureDungeonTrialHire(cfg *devconfig.Config) {
 func TestDungeonBattleHiresGoldAndRewardsMongoWS(t *testing.T) {
 	store, endpoint, route, _ := startDungeonRecruitmentServer(t, true, func(cfg *devconfig.Config) {
 		configureDungeonTrialHire(cfg)
+		configureDungeonTrialTasks(cfg)
 		monster := &cfg.Fixture.ChallengeMonsters[0]
 		monster.HP, monster.AttackMin, monster.AttackMax, monster.DefenceMin, monster.DefenceMax = 1, 0, 0, 0, 0
 		monster.MagicDefenceMin, monster.MagicDefenceMax, monster.MagicResist = 0, 0, 0
@@ -43,6 +44,8 @@ func TestDungeonBattleHiresGoldAndRewardsMongoWS(t *testing.T) {
 	_, err := store.DB.Collection("roles").UpdateByID(t.Context(), leaderID, bson.M{"$set": bson.M{"wallet.gold": int64(70), "wallet.bound_gold": int64(11)}})
 	must(t, err)
 	leader, peer := leaderProfile.attach(t), peerProfile.attach(t)
+	assertDungeonTaskProgress(t, leader, 0, 0)
+	assertDungeonTaskProgress(t, peer, 0, 0)
 	players := []*client{leader, peer}
 	original := []*pb.EnterLineResult{proto.Clone(leader.entry).(*pb.EnterLineResult), proto.Clone(peer.entry).(*pb.EnterLineResult)}
 
@@ -96,11 +99,18 @@ func TestDungeonBattleHiresGoldAndRewardsMongoWS(t *testing.T) {
 		return frame.ID == p.MsgS2CCastAccepted && proto.Unmarshal(frame.Payload, &cast) == nil &&
 			cast.CasterHandle == hireHandle && cast.SkillId == dungeonBattleFireball && cast.SceneEpoch == peer.entry.SceneEpoch
 	})
-	for _, player := range players {
-		waitDungeonBattleState(player, challenge, 4, 4)
-		waitDungeonSceneBaseline(player, challenge, devconfig.SceneKindPersonal)
-		travelAcknowledge(player, false)
+	// 原已就绪的真人临时掉线，继续按原名单结算，重新签票读取同一批永久进度。
+	peerBinding := peer.binding
+	peer.close()
+	waitDungeonBattleState(leader, challenge, 4, 4)
+	waitDungeonSceneBaseline(leader, challenge, devconfig.SceneKindPersonal)
+	travelAcknowledge(leader, false)
+	assertDungeonTaskProgress(t, leader, 1, 4)
+	peer = peerProfile.attach(t)
+	if peer.binding <= peerBinding || peer.entry.SceneKind != devconfig.SceneKindPersonal || peer.entry.ServerTransitionId != "" {
+		t.Fatal("新票没有从已确认的讨伐终态返回原个人地图", peer.entry)
 	}
+	assertDungeonTaskProgress(t, peer, 1, 4)
 	final := dungeonFinishRecord(t, store, challenge)
 	if final.Outcome != persistence.DungeonSucceeded || len(final.Members) != 2 || len(final.HireOptionIDs) != 1 ||
 		final.HireOptionIDs[0] != dungeonTrialMageID || final.HireCharge == nil || final.HireCharge.RoleID != leaderID ||
@@ -124,5 +134,17 @@ func TestDungeonBattleHiresGoldAndRewardsMongoWS(t *testing.T) {
 	if count != 2 {
 		t.Fatal("虚拟席位不应创建永久奖励份额", count)
 	}
-	t.Log("两真人与一法师佣兵完成四段，原火球跨端可见，队长两钱包支付，奖励只确认给两真人")
+	var facts struct {
+		Kills []persistence.DungeonKillEvidence `bson:"kill_evidence"` // 原每段实际死亡记录。
+	}
+	must(t, store.DB.Collection("dungeon_challenges").FindOne(t.Context(), bson.M{"_id": challenge}).Decode(&facts))
+	if len(facts.Kills) != 4 || !facts.Kills[3].At.Equal(final.FinishedAt) {
+		t.Fatal("终态未保留导致原真人进度增长的完整击杀证据", facts.Kills)
+	}
+	for i, kill := range facts.Kills {
+		if kill.Stage != i || kill.Enemy != 0 || kill.At.Before(final.StartedAt) || i != 0 && kill.At.Before(facts.Kills[i-1].At) {
+			t.Fatal("实际击杀证据缺段、重叠或时刻不一致", facts.Kills)
+		}
+	}
+	t.Log("两真人与一法师佣兵完成四段，原火球跨端可见，队长两钱包支付，在场及断线真人各确认一次通关和四次击杀")
 }

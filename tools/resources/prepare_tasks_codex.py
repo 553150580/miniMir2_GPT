@@ -4,7 +4,8 @@ from collections import defaultdict
 
 
 TABLES = ('game_quests', 'game_daily_tasks', 'game_achievements', 'game_codex', 'game_reward_groups', 'game_reward_entries')
-EVENTS = {'monster_kill', 'item_recycle', 'skill_learn', 'level_reached'}
+EVENTS = {'monster_kill', 'item_recycle', 'skill_learn', 'level_reached',
+          'challenge_monster_kill', 'personal_boss_clear', 'dungeon_clear', 'world_boss_kill'}
 RUNNABLE = {'confirmed', 'candidate'}
 MAX_INT64 = (1 << 63) - 1
 MAX_UINT32 = (1 << 32) - 1
@@ -72,14 +73,16 @@ def project(tables):
         goal, gates = row['objective_events'], row['prerequisites']
         add(row, 1, goal.get('name'), goal.get('target'), goal.get('event'),
             prerequisite_id=gates.get('quest_id'), minimum_level=gates.get('level'),
-            monster_id=goal.get('monster_id'), map_id=goal.get('map_id'))
+            monster_id=goal.get('monster_id'), map_id=goal.get('map_id'), template_id=goal.get('template_id'))
     for row in rows('game_daily_tasks'):
         gates = row['unlock_conditions']
         add(row, 2, gates.get('name'), row['target_count'], row['objective_event'],
-            activity=row['activity_points'], minimum_level=gates.get('level'))
+            activity=row['activity_points'], minimum_level=gates.get('level'),
+            monster_id=gates.get('monster_id'), map_id=gates.get('map_id'), template_id=gates.get('template_id'))
     for row in rows('game_achievements'):
         goal = row['objective_events']
-        add(row, 3, goal.get('name'), row['required_progress'], goal.get('event'), monster_id=goal.get('monster_id'))
+        add(row, 3, goal.get('name'), row['required_progress'], goal.get('event'),
+            monster_id=goal.get('monster_id'), map_id=goal.get('map_id'), template_id=goal.get('template_id'))
     monsters = {row['id']: row['display_name'] for row in tables['game_monsters']}
     for row in rows('game_codex'):
         if row['qualification_rule'] != 'confirmed_kill' or row.get('budgeted_attributes'):

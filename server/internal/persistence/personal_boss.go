@@ -12,6 +12,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"minimir/internal/devconfig"
 	"minimir/internal/domain"
 	p "minimir/internal/protocol"
 )
@@ -104,6 +105,8 @@ type personalBossRecord struct {
 	PrivilegeUntil     time.Time     `bson:"privilege_until_at_entry,omitempty"` // 原角色授权的卡到期时刻，当前挑战不受理卡资产操作。
 	KillRewardItems    []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
 	PendingRewardLimit uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
+	KillMapID          uint64        `bson:"kill_map_id,omitempty"`              // 预约时采用的地图，用于确认胜利后的任务来源。
+	KillMonsterID      uint32        `bson:"kill_monster_id,omitempty"`          // 原地图中的首领身份，用于唯一图鉴计数。
 }
 
 // BeginPersonalBoss 在角色 owner 的事务内确认独占场次，返回的活动预约才能启动新的场景。
@@ -164,7 +167,7 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 			ConfigHash: q.ConfigHash, CombatSnapshot: q.CombatSnapshot, StartedAt: q.StartedAt, ExpiresAt: expires,
 			BossHP: q.BossHP, DailyLimit: availability.DailyLimit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown}
 		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
-			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil}
+			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil, KillMapID: template.Map.ID, KillMonsterID: template.Monster.ID}
 		freezePersonalBossItems(cfg, &record, template.ItemReward)
 		state.ActiveChallengeID = grant.ChallengeID
 		r.PersonalBoss = &state
@@ -299,6 +302,7 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		if err := applyPersonalBossItems(&r, record); err != nil {
 			return r, err
 		}
+		r = s.advancePersonalBossTasks(r, record)
 	}
 	record.AvailableAt = bossTime(record.FinishedAt.Add(cooldown))
 	state.Cooldowns = maps.Clone(state.Cooldowns)
@@ -320,6 +324,26 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		return r, Fail(p.CodeOperationConflict, "个人首领场次已有终态")
 	}
 	return r, s.writePersonalBossAudit(ctx, *record, "finish", r.Revision)
+}
+
+// advancePersonalBossTasks 只使用原预约冻结的击杀身份；旧活动预约允许从同一版配置补读。
+func (s *Store) advancePersonalBossTasks(r domain.Role, record *personalBossRecord) domain.Role {
+	fixture := &s.Cfg.Fixture
+	if fixture.TasksCodex == nil {
+		return r
+	}
+	mapID, monsterID := record.KillMapID, record.KillMonsterID
+	if mapID == 0 || monsterID == 0 {
+		if mapID != 0 || monsterID != 0 || fixture.RuleVersion != record.RuleVersion || fixture.Hash != record.ConfigHash {
+			return r
+		}
+		template := fixture.PersonalBossByTemplate(record.TemplateID)
+		if template == nil || template.Monster.HP != record.BossHP {
+			return r
+		}
+		mapID, monsterID = template.Map.ID, template.Monster.ID
+	}
+	return advanceChallengeTasks(r, fixture, devconfig.TaskCodexPersonalBossClear, record.TemplateID, mapID, monsterID, record.FinishedAt)
 }
 
 // applyPersonalBossGold 将独立金币在原击杀时刻判绑，结果和永久胜利一起提交。

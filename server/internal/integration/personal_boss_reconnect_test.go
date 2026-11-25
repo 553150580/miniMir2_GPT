@@ -37,7 +37,20 @@ func TestPersonalBossHealthyReconnectMongoWS(t *testing.T) {
 		if !cfg.Fixture.ValidPersonalBoss() {
 			t.Fatal("个人首领健康重连隔离模板不合法")
 		}
+		cfg.Fixture.TasksCodex = &devconfig.TaskCodexRules{Definitions: []devconfig.TaskCodexDefinition{
+			{ID: 1, Kind: devconfig.TaskCodexAchievement, Name: "个人首领通关", Event: devconfig.TaskCodexPersonalBossClear, Target: 1},
+			{ID: 1, Kind: devconfig.TaskCodexMonster, Name: "个人首领图鉴", Event: devconfig.TaskCodexMonsterKill, MonsterID: boss.Monster.ID, MapID: boss.Map.ID, Target: 1},
+		}}
+		must(t, cfg.Fixture.ValidateTasksCodex())
 	})
+	assertNoTaskProgress := func(t *testing.T, final domain.Role, settledAt time.Time) {
+		t.Helper()
+		for _, row := range persistence.TaskCodexState(final, &store.Cfg.Fixture, settledAt).Rows {
+			if row.Progress != 0 || row.Claimable {
+				t.Fatalf("失败或退出的个人首领场次累计了进度：%v", row)
+			}
+		}
+	}
 
 	t.Run("原受伤首领和角色现场续接，旧附着失权，主动退出只记原场一次", func(t *testing.T) {
 		origin, role, token := joinWorldBossTestRole(t, endpoint, route)
@@ -112,6 +125,7 @@ func TestPersonalBossHealthyReconnectMongoWS(t *testing.T) {
 		final, err := store.Role(ctx, roleID)
 		must(t, err)
 		travelAssertEconomy(t, economy, final, "个人首领健康续战后主动退出")
+		assertNoTaskProgress(t, final, finish.FinishedAt)
 	})
 
 	t.Run("未重新连接时仍按原时限结束，后来新票返回普通场景并可查唯一终态", func(t *testing.T) {
@@ -166,6 +180,7 @@ func TestPersonalBossHealthyReconnectMongoWS(t *testing.T) {
 		final, err := store.Role(ctx, roleID)
 		must(t, err)
 		travelAssertEconomy(t, economy, final, "个人首领离线到期")
+		assertNoTaskProgress(t, final, finish.FinishedAt)
 	})
 }
 

@@ -24,6 +24,7 @@ type DungeonFinish struct {
 	Members        []Auth                  // 各角色原所有者确认的当前场内会话，不能由旧请求补写。
 	RewardAt       time.Time               `json:"RewardAt,omitzero"`        // 最终首领实际死亡时刻，仅有奖通关时提交。
 	RewardEvidence []DungeonRewardEvidence `json:"RewardEvidence,omitempty"` // 原真实队员在击杀时刻观察的特权截止。
+	KillEvidence   []DungeonKillEvidence   `json:"KillEvidence,omitempty"`   // 原四段每个死亡实体的时刻，仅成功通关时提交。
 }
 
 // DungeonResume 使用健康原场的确切回执和旧席位会话显式接管新认证绑定。
@@ -69,6 +70,11 @@ func (s *Store) finishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 	for i := range q.RewardEvidence {
 		q.RewardEvidence[i].PrivilegeUntil = bossTime(q.RewardEvidence[i].PrivilegeUntil)
 	}
+	kills, err := normalizeDungeonKills(q.Outcome, q.KillEvidence)
+	if err != nil {
+		return DungeonChallenge{}, nil, err
+	}
+	q.KillEvidence = kills
 	digest, err := bossDigest(q)
 	if err != nil {
 		return DungeonChallenge{}, nil, err
@@ -100,6 +106,9 @@ func (s *Store) finishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 		}
 		record.Outcome, record.FinishedAt, record.FinishDigest = q.Outcome, q.FinishedAt, digest
 		record.Refunded = q.Outcome == DungeonSystemInterrupted
+		if err = s.advanceDungeonTasks(&record, q, roles); err != nil {
+			return err
+		}
 		if err = s.writeDungeonRewards(tc, &record, q); err != nil {
 			return err
 		}

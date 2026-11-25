@@ -16,10 +16,14 @@ const (
 )
 
 const (
-	TaskCodexMonsterKill  = "monster_kill"  // 已落账的怪物击杀。
-	TaskCodexItemRecycle  = "item_recycle"  // 已完成的装备回收。
-	TaskCodexSkillLearn   = "skill_learn"   // 已确认的新技能习得。
-	TaskCodexLevelReached = "level_reached" // 角色已确认的等级。
+	TaskCodexMonsterKill          = "monster_kill"           // 已落账的野外击杀，或按编号指定的挑战怪物击杀。
+	TaskCodexItemRecycle          = "item_recycle"           // 已完成的装备回收。
+	TaskCodexSkillLearn           = "skill_learn"            // 已确认的新技能习得。
+	TaskCodexLevelReached         = "level_reached"          // 角色已确认的等级。
+	TaskCodexChallengeMonsterKill = "challenge_monster_kill" // 符合对应玩法资格的挑战怪物实际击杀。
+	TaskCodexPersonalBossClear    = "personal_boss_clear"    // 已确认成功的个人首领场次。
+	TaskCodexDungeonClear         = "dungeon_clear"          // 已确认通关的讨伐链场次。
+	TaskCodexWorldBossKill        = "world_boss_kill"        // 世界首领击杀及该角色的有效参与。
 )
 
 // TaskCodexRules 只保存已经可执行的定义和奖励；缺少定义时功能保持未开放。
@@ -39,6 +43,7 @@ type TaskCodexDefinition struct {
 	Target         int64           `json:"target"`                    // 完成所需数量或达到的等级。
 	MonsterID      uint32          `json:"monster_id,omitempty"`      // 目标怪物编号，零接受所有符合条件的怪物。
 	MapID          uint64          `json:"map_id,omitempty"`          // 展示所属地图，非图鉴目标用作地图过滤条件。
+	TemplateID     uint32          `json:"template_id,omitempty"`     // 同类挑战的模板编号，零接受该玩法全部合格模板。
 	MinimumLevel   uint32          `json:"minimum_level,omitempty"`   // 开放最低等级，零不限。
 	PrerequisiteID uint32          `json:"prerequisite_id,omitempty"` // 主线前置任务，需已经领取。
 	Activity       uint32          `json:"activity,omitempty"`        // 首次领取该每日任务确认的活跃度。
@@ -66,10 +71,6 @@ func (f *Fixture) ValidateTasksCodex() error {
 	}
 	// 每个种类、编号的组合独立，图鉴另按怪物唯一身份去重。
 	seen := make(map[[2]uint32]bool)
-	monsters := make(map[uint32]bool)
-	for _, monster := range f.Monsters {
-		monsters[monster.ID] = true
-	}
 	codexMonsters := make(map[uint32]bool)
 	quests := make(map[uint32]uint32)
 	dailyCount, activityCount, frameSize := 0, 0, 64
@@ -83,13 +84,8 @@ func (f *Fixture) ValidateTasksCodex() error {
 		if frameSize > wire.MaxFrame {
 			return fmt.Errorf("任务图鉴列表超过单帧容量")
 		}
-		if def.MonsterID != 0 && (!monsters[def.MonsterID] || def.Event != TaskCodexMonsterKill) {
-			return fmt.Errorf("任务图鉴定义 %v 的怪物来源不合法", identity)
-		}
-		if def.MapID != 0 {
-			if _, valid := f.MapByID(def.MapID); !valid || def.Event != TaskCodexMonsterKill {
-				return fmt.Errorf("任务图鉴定义 %v 的地图来源不合法", identity)
-			}
+		if !f.validTaskCodexSource(def) {
+			return fmt.Errorf("任务图鉴定义 %v 的事件、挑战模板、怪物或地图来源不合法", identity)
 		}
 		if def.Kind != TaskCodexDaily && def.Activity != 0 || def.Kind != TaskCodexMain && def.PrerequisiteID != 0 {
 			return fmt.Errorf("任务图鉴定义 %v 的前置或活跃配置不合法", identity)
@@ -103,7 +99,7 @@ func (f *Fixture) ValidateTasksCodex() error {
 			}
 			dailyCount++
 		case TaskCodexMonster:
-			if def.MonsterID == 0 || codexMonsters[def.MonsterID] {
+			if def.Event != TaskCodexMonsterKill || def.MonsterID == 0 || codexMonsters[def.MonsterID] {
 				return fmt.Errorf("怪物图鉴 %d 必须按唯一怪物身份累计", def.ID)
 			}
 			if def.Reward.BoundGold != 0 || len(def.Reward.Items) != 0 {
@@ -115,13 +111,6 @@ func (f *Fixture) ValidateTasksCodex() error {
 				return fmt.Errorf("每日活跃奖励定义不合法")
 			}
 			activityCount++
-		}
-		if def.Kind != TaskCodexActivity {
-			switch def.Event {
-			case TaskCodexMonsterKill, TaskCodexItemRecycle, TaskCodexSkillLearn, TaskCodexLevelReached:
-			default:
-				return fmt.Errorf("任务图鉴定义 %v 未配置可确认事件", identity)
-			}
 		}
 		if def.Reward.BoundGold < 0 || def.Reward.BoundYuanbaoUnits < 0 {
 			return fmt.Errorf("任务图鉴定义 %v 的绑定货币不合法", identity)

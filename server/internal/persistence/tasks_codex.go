@@ -16,11 +16,12 @@ const AssetTaskCodexClaim = "tasks_codex_claim"
 
 // taskCodexEvent 是来源事务已验证的事实，同一来源的永久回执重放不会再次产生事件。
 type taskCodexEvent struct {
-	kind      string    // 事件在配置中使用的名称。
-	count     int64     // 本来源实际数量或已达到的等级。
-	monsterID uint32    // 实际击杀的怪物模板，非击杀为零。
-	mapID     uint64    // 事件发生的原地图，非场景事件为零。
-	at        time.Time // 事实发生时刻，用于归属上海运营日。
+	kind       string    // 事件在配置中使用的名称。
+	count      int64     // 本来源实际数量或已达到的等级。
+	monsterID  uint32    // 实际击杀的怪物模板，非击杀为零。
+	mapID      uint64    // 事件发生的原地图，非场景事件为零。
+	templateID uint32    // 挑战模板的稳定编号，普通来源为零。
+	at         time.Time // 事实发生时刻，用于归属上海运营日。
 }
 
 // TaskCodexClaimReceipt 冻结首次领取所用的目标身份、发布版本和完整奖励。
@@ -79,8 +80,12 @@ func taskCodexCounter(state domain.TaskCodexProgress, today domain.TaskCodexDail
 }
 
 // taskCodexVisibleCounter 用已经持久化的等级核对主线与成就的等级目标，支持旧角色与前置刚解锁的角色。
-func taskCodexVisibleCounter(r domain.Role, state domain.TaskCodexProgress, today domain.TaskCodexDailyProgress, def devconfig.TaskCodexDefinition, key string) domain.TaskCodexCounter {
+func taskCodexVisibleCounter(r domain.Role, state domain.TaskCodexProgress, today domain.TaskCodexDailyProgress, world domain.TaskCodexProgress, def devconfig.TaskCodexDefinition, key string) domain.TaskCodexCounter {
 	counter := taskCodexCounter(state, today, def, key)
+	if def.Kind != devconfig.TaskCodexActivity && counter.Count < def.Target {
+		confirmed := taskCodexCounter(world, taskCodexToday(world, today.Day), def, key)
+		counter.Count += min(confirmed.Count, def.Target-counter.Count)
+	}
 	if def.Event == devconfig.TaskCodexLevelReached && !taskCodexDailyKind(def.Kind) && taskCodexUnlocked(r, state, def) {
 		counter.Count = max(counter.Count, min(int64(r.Level), def.Target))
 	}
@@ -95,6 +100,11 @@ func taskCodexCanClaim(r domain.Role, state domain.TaskCodexProgress, today doma
 
 // TaskCodexState 只从原角色的已确认持久状态构造结果，读列表不增加角色修订版本。
 func TaskCodexState(r domain.Role, f *devconfig.Fixture, at time.Time) *pb.TaskCodexStateResult {
+	return TaskCodexStateWithWorldBossProgress(r, f, domain.TaskCodexProgress{}, at)
+}
+
+// TaskCodexStateWithWorldBossProgress 同时读取角色与世界进度；世界进度始终独立于角色经济修订。
+func TaskCodexStateWithWorldBossProgress(r domain.Role, f *devconfig.Fixture, world domain.TaskCodexProgress, at time.Time) *pb.TaskCodexStateResult {
 	day := shanghaiOperatingDay(at)
 	out := &pb.TaskCodexStateResult{RoleRevision: uint64(r.Revision), RuleVersion: f.RuleVersion, Day: day}
 	rules := f.TasksCodex
@@ -107,7 +117,7 @@ func TaskCodexState(r domain.Role, f *devconfig.Fixture, at time.Time) *pb.TaskC
 	out.Activity, out.DailyClaimed = today.Activity, today.Claimed
 	for _, def := range rules.Definitions {
 		key := taskCodexKey(def.Kind, def.ID)
-		counter := taskCodexVisibleCounter(r, state, today, def, key)
+		counter := taskCodexVisibleCounter(r, state, today, world, def, key)
 		row := &pb.TaskCodexStateRow{
 			Kind: def.Kind, Id: def.ID, Name: def.Name, Progress: min(counter.Count, def.Target), Target: def.Target,
 			Available: taskCodexUnlocked(r, state, def), Claimed: counter.Claimed,
@@ -127,24 +137,32 @@ func TaskCodexState(r domain.Role, f *devconfig.Fixture, at time.Time) *pb.TaskC
 
 // advanceTasksCodex 将单个可信事件计入适用定义，仅为发生变化的进度复制数据。
 func advanceTasksCodex(r domain.Role, f *devconfig.Fixture, event taskCodexEvent) domain.Role {
-	if f.TasksCodex == nil || event.count <= 0 {
-		return r
+	progress := taskCodexProgress(r)
+	if next, changed := advanceTaskCodexProgress(r, progress, f, event); changed {
+		r.TasksCodex = &next
 	}
-	state := taskCodexProgress(r)
+	return r
+}
+
+// advanceTaskCodexProgress 可写本地进度或独立世界进度；等级和主线门禁始终取原角色。
+func advanceTaskCodexProgress(r domain.Role, progress domain.TaskCodexProgress, f *devconfig.Fixture, event taskCodexEvent) (domain.TaskCodexProgress, bool) {
+	if f.TasksCodex == nil || event.count <= 0 {
+		return progress, false
+	}
+	local := taskCodexProgress(r)
 	day := shanghaiOperatingDay(event.at)
 	updatedPermanent, updatedDaily := false, false
 	for _, def := range f.TasksCodex.Definitions {
-		if def.Event != event.kind || def.MonsterID != 0 && def.MonsterID != event.monsterID ||
-			def.Kind != devconfig.TaskCodexMonster && (def.MapID != 0 && def.MapID != event.mapID || !taskCodexUnlocked(r, state, def)) {
+		if !event.matches(def) || def.Kind != devconfig.TaskCodexMonster && !taskCodexUnlocked(r, local, def) {
 			continue
 		}
 		daily := def.Kind == devconfig.TaskCodexDaily
-		if daily && (event.at.IsZero() || day < state.Daily.Day) {
+		if daily && (event.at.IsZero() || day < max(local.Daily.Day, progress.Daily.Day)) {
 			continue
 		}
 		key := taskCodexKey(def.Kind, def.ID)
-		counter := taskCodexCounter(state, taskCodexToday(state, day), def, key)
-		if counter.Claimed || counter.Count >= def.Target {
+		counter := taskCodexCounter(progress, taskCodexToday(progress, day), def, key)
+		if taskCodexCounter(local, taskCodexToday(local, day), def, key).Claimed || counter.Count >= def.Target {
 			continue
 		}
 		if event.kind == devconfig.TaskCodexLevelReached {
@@ -154,23 +172,20 @@ func advanceTasksCodex(r domain.Role, f *devconfig.Fixture, event taskCodexEvent
 		}
 		if daily {
 			if !updatedDaily {
-				state.Daily = taskCodexToday(state, day)
-				state.Daily.Counters = copyTaskCodexCounters(state.Daily.Counters)
+				progress.Daily = taskCodexToday(progress, day)
+				progress.Daily.Counters = copyTaskCodexCounters(progress.Daily.Counters)
 				updatedDaily = true
 			}
-			state.Daily.Counters[key] = counter
+			progress.Daily.Counters[key] = counter
 		} else {
 			if !updatedPermanent {
-				state.Permanent = copyTaskCodexCounters(state.Permanent)
+				progress.Permanent = copyTaskCodexCounters(progress.Permanent)
 				updatedPermanent = true
 			}
-			state.Permanent[key] = counter
+			progress.Permanent[key] = counter
 		}
 	}
-	if updatedDaily || updatedPermanent {
-		r.TasksCodex = &state
-	}
-	return r
+	return progress, updatedDaily || updatedPermanent
 }
 
 // copyTaskCodexCounters 为成功写入创建新映射，保持旧角色状态及失败回滚内容安全。
@@ -207,7 +222,7 @@ func advanceSettlementTasks(before, next domain.Role, f *devconfig.Fixture, q Se
 }
 
 // claimTaskCodex 核对当日或永久资格，在现有资产事务内同时提交进度和所有奖励。
-func claimTaskCodex(r domain.Role, f *devconfig.Fixture, q *pb.TaskCodexClaimRequest, at time.Time, opID string) (domain.Role, *TaskCodexClaimReceipt, uint32) {
+func claimTaskCodex(r domain.Role, f *devconfig.Fixture, q *pb.TaskCodexClaimRequest, at time.Time, opID string, world domain.TaskCodexProgress) (domain.Role, *TaskCodexClaimReceipt, uint32) {
 	if q.Kind < devconfig.TaskCodexMain || q.Kind > devconfig.TaskCodexActivity || q.Id == 0 || !taskCodexDailyKind(q.Kind) && q.Day != "" {
 		return r, nil, p.CodeInvalidArgument
 	}
@@ -226,7 +241,7 @@ func claimTaskCodex(r domain.Role, f *devconfig.Fixture, q *pb.TaskCodexClaimReq
 			continue
 		}
 		key := taskCodexKey(def.Kind, def.ID)
-		counter := taskCodexVisibleCounter(r, state, today, def, key)
+		counter := taskCodexVisibleCounter(r, state, today, world, def, key)
 		if !taskCodexCanClaim(r, state, today, def, counter, rules.DailyClaimLimit) {
 			break
 		}
@@ -236,6 +251,8 @@ func claimTaskCodex(r domain.Role, f *devconfig.Fixture, q *pb.TaskCodexClaimReq
 		if code != 0 {
 			return r, nil, code
 		}
+		// 世界进度只用于资格。角色事务只保存自己原有的计数与首次领取标记。
+		counter = taskCodexVisibleCounter(r, state, today, domain.TaskCodexProgress{}, def, key)
 		counter.Claimed = true
 		if taskCodexDailyKind(def.Kind) {
 			receipt.Day = day

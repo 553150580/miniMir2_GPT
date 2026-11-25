@@ -2,6 +2,7 @@
 package game
 
 import (
+	"slices"
 	"testing"
 	"time"
 
@@ -60,6 +61,7 @@ func dungeonBattleFixture(t *testing.T) (*worker, *dungeonArena, *room, *room, *
 // TestDungeonBattleTransitionsFromSharedEnemyDeaths 验证每段只能由当前的全部真实敌人死亡推进。
 func TestDungeonBattleTransitionsFromSharedEnemyDeaths(t *testing.T) {
 	w, a, first, second, _, now := dungeonBattleFixture(t)
+	a.captureKills = true
 	firstEnemy, lastEnemy := a.monsters[0], a.monsters[1]
 	firstEnemy.NextMove, lastEnemy.NextMove = a.grant.ExpiresAt, a.grant.ExpiresAt
 	firstEnemy.NextAttack, lastEnemy.NextAttack = a.grant.ExpiresAt, a.grant.ExpiresAt
@@ -80,6 +82,7 @@ func TestDungeonBattleTransitionsFromSharedEnemyDeaths(t *testing.T) {
 		t.Fatal("接受了其它席位的冒名攻击")
 	}
 	w.applyDamage(first, &first.Player, firstEnemy, firstEnemy.HP, now)
+	w.applyDungeonDamage(first, &first.Player, firstEnemy, firstEnemy.MaxHP, now, nil) // 原身体已经死亡，重复命中不得再次生成证据。
 	w.stepDungeonArena(a, now)
 	if a.stage != 0 || second.Monsters[0].HP != 0 || w.walkable(second, nextArea) {
 		t.Fatal("第一只敌人死亡就错误推进或同场观察到不同生命值")
@@ -109,6 +112,13 @@ func TestDungeonBattleTransitionsFromSharedEnemyDeaths(t *testing.T) {
 	if a.stage != 3 || a.outcome != persistence.DungeonSucceeded || !a.finishedAt.Equal(finished) ||
 		len(first.KillFacts)+len(second.KillFacts) != 0 || first.Role.SourceSeq != 0 || second.Role.SourceSeq != 0 {
 		t.Fatal("最终段未生成唯一通关终态，或临时伤害泄漏为普通结算")
+	}
+	expected := []persistence.DungeonKillEvidence{
+		{Stage: 0, At: now}, {Stage: 0, Enemy: 1, At: now.Add(time.Millisecond)},
+		{Stage: 1, At: now.Add(2 * time.Second)}, {Stage: 2, At: now.Add(3 * time.Second)}, {Stage: 3, At: finished},
+	}
+	if !a.rewardAt.IsZero() || !slices.Equal(a.killEvidence, expected) {
+		t.Fatal("没有奖表也应逐只保存首次死亡，不采纳冒名、未确认或旧段伤害", a.killEvidence)
 	}
 }
 

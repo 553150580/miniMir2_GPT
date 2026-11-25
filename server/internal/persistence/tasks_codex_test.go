@@ -14,6 +14,38 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
+func TestChallengeTaskProgressCombinesSourcesWithoutCopyingClaimedCounts(t *testing.T) {
+	at := time.Date(2026, 11, 26, 15, 59, 59, 0, time.UTC)
+	f := &devconfig.Fixture{TasksCodex: &devconfig.TaskCodexRules{DailyClaimLimit: 1, DailyActivityTarget: 100, Definitions: []devconfig.TaskCodexDefinition{
+		{ID: 1, Kind: devconfig.TaskCodexAchievement, Event: devconfig.TaskCodexMonsterKill, Target: 4},
+		{ID: 2, Kind: devconfig.TaskCodexAchievement, Event: devconfig.TaskCodexChallengeMonsterKill, Target: 2},
+		{ID: 1, Kind: devconfig.TaskCodexMonster, Event: devconfig.TaskCodexMonsterKill, MonsterID: 80001, MapID: 80, Target: 2,
+			Reward: devconfig.TaskCodexReward{BoundYuanbaoUnits: 11}},
+		{ID: 1, Kind: devconfig.TaskCodexDaily, Event: devconfig.TaskCodexWorldBossKill, TemplateID: 1, Target: 1, Activity: 100},
+	}}}
+	role := domain.Role{Revision: 7, Level: 1}
+	role = advanceChallengeTasks(role, f, devconfig.TaskCodexPersonalBossClear, 1, 80, 80001, at)
+	world := advanceWorldBossTaskProgress(role, domain.TaskCodexProgress{}, f, 1, 81, 80001, at)
+	state := TaskCodexStateWithWorldBossProgress(role, f, world, at)
+	if state.RoleRevision != 7 || state.Rows[0].Progress != 0 || state.Rows[1].Progress != 2 || !state.Rows[2].Claimable || !state.Rows[3].Claimable {
+		t.Fatalf("挑战事件混入野外或未按原身份合并：%+v", state)
+	}
+	request := &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexMonster, Id: 1}
+	claimed, _, code := claimTaskCodex(role, f, request, at, "三类源验证", world)
+	key := taskCodexKey(devconfig.TaskCodexMonster, 1)
+	if code != 0 || claimed.Wallet.BoundYuanbao != 11 || claimed.TasksCodex.Permanent[key].Count != 1 || !claimed.TasksCodex.Permanent[key].Claimed || world.Permanent[key].Count != 1 {
+		t.Fatalf("独立世界计数进入了原角色账或领奖失败：%+v %d", claimed.TasksCodex, code)
+	}
+	if _, _, code = claimTaskCodex(claimed, f, request, at, "重复图鉴", world); code != p.CodeTaskCodexUnavailable {
+		t.Fatalf("已领取项目再次进入奖励事务：%d", code)
+	}
+	afterMidnight := at.Add(2 * time.Second)
+	state = TaskCodexStateWithWorldBossProgress(claimed, f, world, afterMidnight)
+	if state.Rows[2].Progress != 2 || !state.Rows[2].Claimed || state.Rows[3].Progress != 0 {
+		t.Fatalf("跨日未正确保留永久图鉴并清零昨日世界任务：%+v", state)
+	}
+}
+
 // TestTaskCodexQualifiedKillsAcrossMaps 确认全局怪物图鉴与指定地图主线采用各自资格。
 func TestTaskCodexQualifiedKillsAcrossMaps(t *testing.T) {
 	at := time.Date(2026, 11, 23, 10, 0, 0, 0, time.UTC)
@@ -29,7 +61,7 @@ func TestTaskCodexQualifiedKillsAcrossMaps(t *testing.T) {
 	if before.TasksCodex != nil || old.Rows[0].Progress != 0 || old.Rows[2].Progress != 1 || next.Rows[0].Progress != 1 || next.Rows[2].Progress != 2 || next.Rows[1].Available {
 		t.Fatalf("跨地图击杀、原状态或前置不正确：原 %v，新 %v", old, next)
 	}
-	completed, _, code := claimTaskCodex(confirm, f, &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexMain, Id: 1}, at, "quest")
+	completed, _, code := claimTaskCodex(confirm, f, &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexMain, Id: 1}, at, "quest", domain.TaskCodexProgress{})
 	if state := TaskCodexState(completed, f, at); code != 0 || !state.Rows[1].Claimable || !state.Rows[0].Claimed {
 		t.Fatalf("完成前置后未识别角色已有等级：结果 %d，%v", code, state)
 	}
@@ -55,7 +87,7 @@ func TestTaskCodexShanghaiDailyClaims(t *testing.T) {
 	r := advanceTasksCodex(domain.Role{Level: 5}, f, taskCodexEvent{kind: devconfig.TaskCodexItemRecycle, count: 1, at: beforeMidnight})
 	for id := uint32(1); id <= rules.DailyClaimLimit; id++ {
 		var code uint32
-		r, _, code = claimTaskCodex(r, f, &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexDaily, Id: id, Day: "2026-11-23"}, beforeMidnight, "daily")
+		r, _, code = claimTaskCodex(r, f, &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexDaily, Id: id, Day: "2026-11-23"}, beforeMidnight, "daily", domain.TaskCodexProgress{})
 		if code != 0 {
 			t.Fatalf("第 %d 个每日任务未成功：%d", id, code)
 		}
@@ -65,18 +97,18 @@ func TestTaskCodexShanghaiDailyClaims(t *testing.T) {
 		t.Fatalf("每日领取或活跃上限有误：%v", state)
 	}
 	activity := &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexActivity, Id: 1, Day: state.Day}
-	r, receipt, code := claimTaskCodex(r, f, activity, beforeMidnight, "activity")
+	r, receipt, code := claimTaskCodex(r, f, activity, beforeMidnight, "activity", domain.TaskCodexProgress{})
 	if code != 0 || receipt.Day != state.Day || r.Wallet.BoundGold != 50 {
 		t.Fatal("活跃奖励没有进入绑定余额", code, receipt)
 	}
-	if _, _, code = claimTaskCodex(r, f, activity, beforeMidnight, "activity-duplicate"); code != p.CodeTaskCodexUnavailable {
+	if _, _, code = claimTaskCodex(r, f, activity, beforeMidnight, "activity-duplicate", domain.TaskCodexProgress{}); code != p.CodeTaskCodexUnavailable {
 		t.Fatal("已经领取的活跃资格被再次使用", code)
 	}
 	state = TaskCodexState(r, f, afterMidnight)
 	if state.Day != "2026-11-24" || state.DailyClaimed != 0 || state.Activity != 0 || state.Rows[0].Progress != 0 || state.Rows[3].Claimed {
 		t.Fatalf("上海零点没有切换到新运营日：%v", state)
 	}
-	if _, _, code = claimTaskCodex(r, f, activity, afterMidnight, "late-activity"); code != p.CodeTaskCodexDayChanged {
+	if _, _, code = claimTaskCodex(r, f, activity, afterMidnight, "late-activity", domain.TaskCodexProgress{}); code != p.CodeTaskCodexDayChanged {
 		t.Fatal("跨日沿用了旧日期的奖励领取", code)
 	}
 	r = advanceTasksCodex(r, f, taskCodexEvent{kind: devconfig.TaskCodexItemRecycle, count: 1, at: afterMidnight})
@@ -95,11 +127,11 @@ func TestTaskCodexRewardBoundAndBagAtomic(t *testing.T) {
 	}}}
 	q := &pb.TaskCodexClaimRequest{Kind: devconfig.TaskCodexMain, Id: 1}
 	r := domain.Role{Level: 1, Capacity: 1, PrivilegeUntil: at.Add(time.Hour)}
-	if got, receipt, code := claimTaskCodex(r, f, q, at, "original-op"); code != p.CodeEquipmentBagFull || receipt != nil || got.TasksCodex != nil || got.Wallet != r.Wallet || len(got.Items) != 0 {
+	if got, receipt, code := claimTaskCodex(r, f, q, at, "original-op", domain.TaskCodexProgress{}); code != p.CodeEquipmentBagFull || receipt != nil || got.TasksCodex != nil || got.Wallet != r.Wallet || len(got.Items) != 0 {
 		t.Fatalf("背包不足时出现部分领奖：%+v %+v %d", got, receipt, code)
 	}
 	r.Capacity = 2
-	next, receipt, code := claimTaskCodex(r, f, q, at, "success-op")
+	next, receipt, code := claimTaskCodex(r, f, q, at, "success-op", domain.TaskCodexProgress{})
 	if code != 0 || len(next.Items) != 2 || len(receipt.Items) != 2 || next.Wallet.BoundGold != 7 || next.Wallet.BoundYuanbao != 9 || next.Wallet.Gold != 0 || next.Wallet.Yuanbao != 0 {
 		t.Fatalf("绑定奖励到账有误：%+v %+v %d", next, receipt, code)
 	}

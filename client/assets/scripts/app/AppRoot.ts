@@ -495,10 +495,11 @@ export class AppRoot extends Component {
             const identity = currentEntryIdentity();
             return identity && session.ready && !this.disposed ? attachmentKey(identity) : '';
         }, () => session.connection.request(40027, {}), request => this.economic(40029, request),
-        id => this.world?.gameplay.map_catalog?.find((row: { id: string }) => row.id === id)?.name,
+        id => this.world?.gameplay.map_catalog?.find((row: { id: string }) => row.id === id)?.name
+            ?? this.world?.gameplay.challenge_maps?.find((row: { id: string }) => row.id === id)?.name,
         id => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === id)?.name,
         id => this.world?.monsterCodexFrame(id) ?? null,
-        error => this.error(error));
+        error => this.error(error), id => this.world?.loadMonsterCodexFrame(id) ?? Promise.resolve(null));
         this.cleanups.push(() => this.tasksCodex?.dispose());
         const bossPanel = this.find('UIMgr/Panels/BossChallenge');
         this.boss = new GameBoss(bossPanel, session.connection, () => session.entry && {

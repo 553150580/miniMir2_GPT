@@ -59,6 +59,7 @@ func (w *worker) installDungeonBattle(store *persistence.Store, template *devcon
 		arena = &dungeonArena{grant: grant, template: template, outcome: persistence.DungeonSystemInterrupted, finishedAt: now}
 	}
 	arena.store = store
+	arena.captureKills = arena.outcome == persistence.DungeonActive && store.Cfg.Fixture.HasDungeonTaskTargets(template)
 	arena.observations = make(map[string]*dungeonAttachment, len(prepared))
 	w.dungeonArenas[grant.ChallengeID] = arena
 	result := make([]*dungeonAttachment, len(prepared))
@@ -176,6 +177,7 @@ func (w *worker) returnDungeonOwner(roleID string, challenge persistence.Dungeon
 			owner.Role = confirmed
 		} else {
 			owner.Role.Dungeon = confirmed.Dungeon
+			owner.Role.TasksCodex = confirmed.TasksCodex
 		}
 		w.acceptRolePrivilege(owner, time.Now(), prior)
 	}

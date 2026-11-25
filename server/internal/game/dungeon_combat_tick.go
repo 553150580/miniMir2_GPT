@@ -131,10 +131,11 @@ func (w *worker) applyDungeonDamage(r *room, from, target *entity, damage int64,
 	if len(context) > 0 && !context[0].At.IsZero() {
 		at = context[0].At
 	}
-	if seat == nil || seat.room != r || !seat.started || r.Isolated || from == nil || from.HP <= 0 || !a.acceptsActions(at) {
+	if seat == nil || seat.room != r || !seat.started || r.Isolated || from == nil || from.HP <= 0 || damage <= 0 || target.HP <= 0 || !a.acceptsActions(at) {
 		return
 	}
-	enemy := slices.Contains(a.monsters, target)
+	enemyIndex := slices.Index(a.monsters, target)
+	enemy := enemyIndex >= 0
 	if enemy {
 		if from != &r.Player && from != r.Pet {
 			return
@@ -154,13 +155,19 @@ func (w *worker) applyDungeonDamage(r *room, from, target *entity, damage int64,
 	}
 	removeDeathStatuses(target)
 	target.Action = 4
-	if enemy && a.stage+1 == len(a.template.Stages) && target == a.monsters[0] {
-		w.freezeDungeonRewards(a, at)
-	}
-	if enemy && !slices.ContainsFunc(a.monsters, func(body *entity) bool { return body.HP > 0 }) {
-		a.clearedAt = at
-		if a.stage+1 == len(a.template.Stages) {
-			a.end(persistence.DungeonSucceeded, at)
+	if enemy {
+		if a.captureKills {
+			a.killEvidence = append(a.killEvidence, persistence.DungeonKillEvidence{Stage: a.stage, Enemy: enemyIndex, At: at})
+		}
+		lastStage := a.stage+1 == len(a.template.Stages)
+		if lastStage && enemyIndex == 0 {
+			w.freezeDungeonRewards(a, at)
+		}
+		if !slices.ContainsFunc(a.monsters, func(body *entity) bool { return body.HP > 0 }) {
+			a.clearedAt = at
+			if lastStage {
+				a.end(persistence.DungeonSucceeded, at)
+			}
 		}
 	} else if target == &r.Player {
 		r.AutoTarget = actorRef{}

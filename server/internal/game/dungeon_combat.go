@@ -27,6 +27,8 @@ type dungeonArena struct {
 	rewardAt       time.Time                           // 最终首领实际死亡的逻辑时刻，可能早于最终段清空。
 	rewardWatches  []*challengePrivilegeWitness        // 按原真人席位顺序观察普通角色已确认的特权变化。
 	rewardEvidence []persistence.DungeonRewardEvidence // 击杀时冻结的原真人权益，失败时不交给资产事务。
+	captureKills   bool                                // 当前原模板的任务或图鉴会消费讨伐事实。
+	killEvidence   []persistence.DungeonKillEvidence   // 四段真实死亡记录，只在原场成功时交给终态事务。
 	outcome        persistence.DungeonOutcome          // 互斥的成功、战败或系统中断。
 	ledger         dungeonFinishState                  // 原终态提案和提交结果。
 	castID         uint64                              // 全场唯一施法流水。

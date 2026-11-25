@@ -66,12 +66,28 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	grid.ID, grid.SceneKind = 777, devconfig.SceneKindPersonalBoss
 	grid.MonsterSpawns = grid.MonsterSpawns[:1]
 	grid.SafeZones, grid.NPCs = nil, nil
-	template := &devconfig.PersonalBossConfig{TemplateID: 13, DisplayName: "隔离首领", MinimumLevel: 1, Map: grid, Monster: cfg.Fixture.Monsters[0],
+	monster := cfg.Fixture.Monsters[0]
+	monster.ID, monster.RespawnMS, monster.Exp, monster.GoldMin, monster.GoldMax = 80_101, 0, 0, 0, 0
+	template := &devconfig.PersonalBossConfig{TemplateID: 13, DisplayName: "隔离首领", MinimumLevel: 1, Map: grid, Monster: monster,
 		Duration: time.Minute, SuccessCooldown: time.Minute, RetryCooldown: time.Second, DailySuccessLimit: 5, PrivilegeSuccessBonus: 1, HistoryLimit: 2,
 		KillRewardGold: 11}
 	cfg.Fixture.PersonalBoss = template
 	if !cfg.Fixture.ValidPersonalBoss() {
 		t.Fatal("隔离个人首领模板无效")
+	}
+	cfg.Fixture.ChallengeMonsters = append(cfg.Fixture.ChallengeMonsters, monster)
+	cfg.Fixture.TasksCodex = &devconfig.TaskCodexRules{Definitions: []devconfig.TaskCodexDefinition{
+		{ID: 1, Kind: devconfig.TaskCodexAchievement, Name: "首领通关成就", Event: devconfig.TaskCodexPersonalBossClear, TemplateID: template.TemplateID, Target: 10},
+		{ID: 1, Kind: devconfig.TaskCodexMonster, Name: "首领图鉴", Event: devconfig.TaskCodexMonsterKill, MonsterID: monster.ID, MapID: template.Map.ID, Target: 10},
+	}}
+	require(cfg.Fixture.ValidateTasksCodex())
+	assertProgress := func(r domain.Role, at time.Time, want int64) {
+		t.Helper()
+		for _, row := range TaskCodexState(r, &cfg.Fixture, at).Rows {
+			if row.Progress != want || row.Claimable || row.Claimed {
+				t.Fatalf("原个人首领结果累计错误：期望进度 %d，得到 %v", want, row)
+			}
+		}
 	}
 	ctx, cancel := context.WithTimeout(t.Context(), 20*time.Second)
 	defer cancel()
@@ -167,6 +183,12 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	if grant.Outcome != PersonalBossActive || grant.DailyLimit != 5 || grant.ExpiresAt.Sub(grant.StartedAt) != template.Duration || r.PersonalBoss.ActiveChallengeID != grant.ChallengeID {
 		t.Fatalf("预约槽或原挑战身份错误：%+v", grant)
 	}
+	frozen, err := game.readPersonalBoss(ctx, grant.ChallengeID)
+	require(err)
+	if frozen.KillMapID != template.Map.ID || frozen.KillMonsterID != template.Monster.ID {
+		t.Fatal("原预约未固定任务图鉴的地图和首领身份", frozen)
+	}
+	assertProgress(r, grant.StartedAt, 0)
 	activeInfo, err := game.QueryPersonalBoss(ctx, auth)
 	require(err)
 	if activeInfo.EligibilityReason != PersonalBossAlreadyActive || activeInfo.ActiveChallengeID != grant.ChallengeID || !activeInfo.ActiveExpiresAt.Equal(grant.ExpiresAt) || len(activeInfo.History) != 0 {
@@ -198,6 +220,7 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 		result.RewardGold != template.KillRewardGold || !result.RewardBound {
 		t.Fatalf("胜利次数、冷却和绑定金币未原子确认，或产生了普通收益来源：%+v", result)
 	}
+	assertProgress(r, result.FinishedAt, 1)
 	cooled, err := game.QueryPersonalBoss(ctx, auth)
 	require(err)
 	if cooled.EligibilityReason != PersonalBossCoolingDown || cooled.Successes != 5 || cooled.AvailableAt != result.AvailableAt || cooled.ActiveChallengeID != "" ||
@@ -209,6 +232,7 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	if !reflect.DeepEqual(same, result) || replayed.Revision != r.Revision || replayed.Wallet != r.Wallet {
 		t.Fatal("原击杀结果重放重复变更了角色")
 	}
+	assertProgress(replayed, result.FinishedAt, 1)
 	_, _, err = game.BeginPersonalBoss(ctx, auth, makeBegin(r))
 	requireCode(err, p.CodeLineForbidden, "仍在冷却")
 	clearCooldown := bossTime(time.Now().Add(-time.Second))
@@ -244,6 +268,11 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 		stored.Outcome == PersonalBossDefeated && r.PersonalBoss.Successes != 6 {
 		t.Fatalf("未成功的终态改变次数或未盖上重试冷却：%+v", stored)
 	}
+	confirmedWins := int64(1)
+	if stored.Outcome == PersonalBossDefeated {
+		confirmedWins++
+	}
+	assertProgress(r, stored.FinishedAt, confirmedWins)
 	audits, err := game.DB.Collection("audit_outbox").CountDocuments(ctx, bson.M{"_id": "personal_boss:" + stored.ChallengeID + ":finish"})
 	require(err)
 	if audits != 1 {
@@ -256,6 +285,10 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	priorWallet := r.Wallet
 	_, tomorrowGrant, err := game.BeginPersonalBoss(ctx, auth, makeBegin(r))
 	require(err)
+	// 模拟旧版活动预约。只要原发布摘要和模板仍匹配，首次胜利仍可确认正确的来源进度。
+	_, err = game.DB.Collection(personalBossCollection).UpdateOne(ctx, bson.M{"_id": tomorrowGrant.ChallengeID},
+		bson.M{"$unset": bson.M{"kill_map_id": "", "kill_monster_id": ""}})
+	require(err)
 	credit := makeFinish(tomorrowGrant)
 	// 模拟击杀后当前角色卡状态改变，账本仍应使用预约冻结的原击杀时间判绑。
 	seed(r.ID, bson.M{"privilege_until": credit.FinishedAt.Add(-time.Second)})
@@ -265,6 +298,7 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	if r.PersonalBoss.SuccessDay != day || r.PersonalBoss.Successes != 1 || win.RewardBound || win.RewardGold != template.KillRewardGold || r.Wallet != priorWallet {
 		t.Fatal("上海运营日或原击杀时间的特权金币确认异常")
 	}
+	assertProgress(r, win.FinishedAt, confirmedWins+1)
 	latest, err := game.QueryPersonalBoss(ctx, auth)
 	require(err)
 	total, err := game.DB.Collection(personalBossCollection).CountDocuments(ctx, bson.M{"role_id": r.ID})
@@ -294,6 +328,7 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	if !recovered.Recovered || recovered.Outcome != PersonalBossInterrupted || other.PersonalBoss.ActiveChallengeID != "" || other.PersonalBoss.Successes != 0 {
 		t.Fatalf("新会话未可靠取消失权的挑战：%+v", recovered)
 	}
+	assertProgress(other, recovered.FinishedAt, 0)
 	unchanged, _, err := game.RecoverPersonalBoss(ctx, newAuth)
 	require(err)
 	if unchanged.Revision != other.Revision {
@@ -337,4 +372,5 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 		expected.Execution != original.Execution || !reflect.DeepEqual(sameResult, expected) {
 		t.Fatal("新会话没有接续原执行，或原首领奖励未做到一次确认")
 	}
+	assertProgress(repeated, expected.FinishedAt, 1)
 }

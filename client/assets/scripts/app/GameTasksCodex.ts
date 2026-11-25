@@ -55,10 +55,12 @@ export class GameTasksCodex {
     private readonly claimButton: Button;
     private readonly preview: Sprite;
     private previewFrame: SpriteFrame | null = null;
+    private previewRequest?: { scope: string; monsterId: number };
     private category = categories[0];
     private selected = 0;
     private state?: TaskState;
     private loadedScope = '';
+    private nextProgressRead = 0;
     private busy = false;
     private disposed = false;
 
@@ -66,7 +68,7 @@ export class GameTasksCodex {
         private readonly query: () => Promise<TaskState>, private readonly award: (value: TaskClaim) => Promise<void>,
         private readonly mapName: (id: string) => string | undefined, private readonly itemName: (id: number) => string | undefined,
         private readonly monsterFrame: (id: number) => SpriteFrame | null,
-        private readonly report: (error: unknown) => void) {
+        private readonly report: (error: unknown) => void, private readonly loadMonsterFrame: (id: number) => Promise<SpriteFrame | null>) {
         this.categoryList = panel.getChildByName('CategoryList')!.getComponent(List)!;
         this.recordList = panel.getChildByName('RecordList')!.getComponent(List)!;
         this.summary = panel.getChildByName('Summary')!.getComponent(Label)!;
@@ -87,6 +89,7 @@ export class GameTasksCodex {
             this.selected = 0;
         }
         this.busy = true;
+        this.nextProgressRead = Date.now() + 5000;
         this.showSelection();
         try {
             const result = await this.query();
@@ -103,11 +106,12 @@ export class GameTasksCodex {
 
     observe(revision: Long): void {
         if (!this.panel.activeInHierarchy) {
+            this.previewRequest = undefined;
             this.updatePreview(null, false);
             return;
         }
         if (this.state && !this.busy && this.scope()
-            && (this.loadedScope !== this.scope() || !this.state.roleRevision.equals(revision))) {
+            && (this.loadedScope !== this.scope() || !this.state.roleRevision.equals(revision) || Date.now() >= this.nextProgressRead)) {
             void this.reload().catch(this.report);
         }
     }
@@ -128,6 +132,7 @@ export class GameTasksCodex {
 
     dispose(): void {
         this.disposed = true;
+        this.previewRequest = undefined;
         this.updatePreview(null, false);
         if (isValid(this.categoryList.node, true)) this.categoryList.node.off(List.EVENT_ITEM_CLICK, this.chooseCategory, this);
         if (isValid(this.recordList.node, true)) this.recordList.node.off(List.EVENT_ITEM_CLICK, this.chooseRecord, this);
@@ -193,7 +198,7 @@ export class GameTasksCodex {
     private showSelection(): void {
         const row = this.row;
         const showMonster = row?.kind === 4 && this.panel.activeInHierarchy && this.scope() === this.loadedScope;
-        this.updatePreview(showMonster ? this.monsterFrame(row.monsterId) : null, Boolean(row?.progress.isZero()));
+        this.showMonsterPreview(showMonster ? row : undefined);
         this.claimButton.interactable = !!row?.claimable && !this.busy && this.loadedScope === this.scope();
         this.summary.string = this.state && (this.category.kind === 2 || this.category.kind === 5)
             ? `活跃 ${this.state.activity}/100 · 已领 ${this.state.dailyClaimed}/${this.state.dailyClaimLimit}`
@@ -212,6 +217,37 @@ export class GameTasksCodex {
         const map = this.mapName(row.mapId.toString());
         const reward = rewards.length ? '\n奖励  ' + rewards.join('、') : '';
         this.detail.string = `${map ? map + ' · ' : ''}${row.name}  ${row.progress}/${row.target}${reward}`;
+    }
+
+    private showMonsterPreview(row?: TaskRow): void {
+        if (!row) {
+            this.previewRequest = undefined;
+            this.updatePreview(null, false);
+            return;
+        }
+        const scope = this.loadedScope;
+        const firstFrame = this.monsterFrame(row.monsterId);
+        if (firstFrame) {
+            this.previewRequest = undefined;
+            this.updatePreview(firstFrame, row.progress.isZero());
+            return;
+        }
+        if (this.previewRequest?.scope === scope && this.previewRequest.monsterId === row.monsterId) {
+            this.updatePreview(this.previewFrame, row.progress.isZero());
+            return;
+        }
+        const request = { scope, monsterId: row.monsterId };
+        this.previewRequest = request;
+        this.updatePreview(null, false);
+        void this.loadMonsterFrame(row.monsterId).then(frame => {
+            try {
+                const current = this.row;
+                if (this.previewRequest === request && !this.disposed && this.panel.activeInHierarchy && this.scope() === scope
+                    && current?.kind === 4 && current.monsterId === request.monsterId) this.updatePreview(frame, current.progress.isZero());
+            } finally { frame?.decRef(); }
+        }).catch(error => {
+            if (this.previewRequest === request && !this.disposed && this.panel.activeInHierarchy && this.scope() === scope) this.report(error);
+        });
     }
 
     private updatePreview(frame: SpriteFrame | null, silhouette: boolean): void {

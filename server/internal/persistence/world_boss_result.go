@@ -188,6 +188,9 @@ func (s *Store) FinishWorldBoss(ctx context.Context, spec WorldBossSpec, finish 
 		if err = s.writeWorldBossRewards(tc, spec, finish, template.Rewards); err != nil {
 			return err
 		}
+		if err = s.writeWorldBossTaskProgress(tc, template, finish); err != nil {
+			return err
+		}
 		record.WorldBossFinish, record.ProgressKnown, record.FinishHash = finish, true, digest
 		write, err := collection.ReplaceOne(tc, bson.M{"_id": record.ID, "outcome": WorldBossActive}, record)
 		if err != nil {

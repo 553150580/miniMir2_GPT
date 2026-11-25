@@ -2,6 +2,7 @@
 package integration
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"os"
@@ -35,9 +36,9 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	ordinary.AttackMin, ordinary.AttackMax, ordinary.AttackMS = 0, 0, 4000
 	monster := *ordinary
 	// 让可区分的首领怪物编号和独立地图编号同时出现在禁止普通奖励的断言中。
-	monster.ID = 80_001
+	monster.ID = 80_991
 	monster.AttackMin, monster.AttackMax, monster.AttackMS, monster.Exp = 0, 0, 4000, 0
-	monster.GoldMin, monster.GoldMax = 0, 0
+	monster.GoldMin, monster.GoldMax, monster.RespawnMS = 0, 0, 0
 	cfg.Fixture.PersonalBoss = &devconfig.PersonalBossConfig{TemplateID: 1, DisplayName: "隔离首领", MinimumLevel: 1,
 		Map: devconfig.MapTemplate{ID: 80, Width: 13, Height: 13, SceneKind: devconfig.SceneKindPersonalBoss,
 			PlayerSpawn: devconfig.Point{X: 5, Y: 5}, MonsterSpawns: []devconfig.Point{{X: 6, Y: 5}}},
@@ -46,6 +47,18 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	if !cfg.Fixture.ValidPersonalBoss() {
 		t.Fatal("隔离首领模板未通过配置校验")
 	}
+	// 仅为本轮隔离验收开放通关目标和图鉴，首领击杀没有普通挂机奖励。
+	bossTemplate := cfg.Fixture.PersonalBoss
+	cfg.Fixture.ChallengeMonsters = append(cfg.Fixture.ChallengeMonsters, monster)
+	cfg.Fixture.TasksCodex = &devconfig.TaskCodexRules{DailyPoolSize: 1, DailyClaimLimit: 1, DailyActivityTarget: 100,
+		Definitions: []devconfig.TaskCodexDefinition{
+			{ID: 1, Kind: devconfig.TaskCodexDaily, Name: "今日挑战", Event: devconfig.TaskCodexPersonalBossClear, TemplateID: bossTemplate.TemplateID, Target: 1, Activity: 100},
+			{ID: 1, Kind: devconfig.TaskCodexAchievement, Name: "个人首领二胜", Event: devconfig.TaskCodexPersonalBossClear, Target: 2},
+			{ID: 1, Kind: devconfig.TaskCodexMonster, Name: "隔离首领图鉴", Event: devconfig.TaskCodexMonsterKill, MonsterID: monster.ID, MapID: bossTemplate.Map.ID, Target: 1,
+				Reward: devconfig.TaskCodexReward{BoundYuanbaoUnits: 11}},
+			{ID: 1, Kind: devconfig.TaskCodexActivity, Name: "今日活跃", Target: 100},
+		}}
+	must(t, cfg.Fixture.ValidateTasksCodex())
 	ctx, cancel := context.WithCancel(context.Background())
 	store, err := persistence.Open(ctx, cfg)
 	if err != nil {
@@ -80,6 +93,25 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	c := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
 	defer c.close()
 	c.auto(false, 1)
+	queryTasks := func(conn *client) *pb.TaskCodexStateResult {
+		t.Helper()
+		request := conn.send(p.MsgC2STaskCodexState, &pb.TaskCodexStateRequest{})
+		frame := travelUntilWithin(conn, 3*time.Second, func(frame wire.Frame) bool { return frame.Request == request })
+		state := &pb.TaskCodexStateResult{}
+		if frame.ID != p.MsgS2CTaskCodexState || frame.Error != 0 {
+			t.Fatalf("挑战任务查询未返回同一请求的状态：%+v", frame)
+		}
+		must(t, proto.Unmarshal(frame.Payload, state))
+		if state.ErrorCode != 0 || len(state.Rows) != len(cfg.Fixture.TasksCodex.Definitions) {
+			t.Fatalf("隔离的挑战任务、成就和图鉴未开放：%v", state)
+		}
+		return state
+	}
+	for _, row := range queryTasks(c).Rows {
+		if row.Progress != 0 || row.Claimable || row.Claimed {
+			t.Fatalf("未进场的角色提前收到挑战进度：%v", row)
+		}
+	}
 	queryBoss := func() *pb.PersonalBossInfo {
 		t.Helper()
 		request := c.send(p.MsgC2SPersonalBossQuery, &pb.PersonalBossQuery{})
@@ -214,6 +246,55 @@ func TestPersonalBossGridMongoWS(t *testing.T) {
 	if count != 0 {
 		t.Fatal("首领地图或模板写入了普通挂机收益", count)
 	}
+	c.auto(false, 1)
+	confirmed := readRole()
+	state := queryTasks(c)
+	durable := persistence.TaskCodexState(confirmed, &cfg.Fixture, terminal.FinishedAt)
+	if confirmed.TasksCodex == nil || confirmed.TasksCodex.Daily.Day != terminal.SuccessDay ||
+		durable.Rows[0].Kind != devconfig.TaskCodexDaily || durable.Rows[0].Progress != 1 {
+		t.Fatalf("胜利未按原击杀运营日持久计入每日任务：%+v", confirmed.TasksCodex)
+	}
+	for _, row := range state.Rows {
+		switch row.Kind {
+		case devconfig.TaskCodexDaily:
+			if state.Day == terminal.SuccessDay && (row.Progress != 1 || !row.Claimable) {
+				t.Fatal("实际首领击杀未计入当日任务", row)
+			}
+		case devconfig.TaskCodexAchievement:
+			if row.Progress != 1 || row.Claimable {
+				t.Fatal("通关成就没记录一次真实胜利", row)
+			}
+		case devconfig.TaskCodexMonster:
+			if row.Progress != 1 || !row.Claimable || row.MapId != bossTemplate.Map.ID || row.MonsterId != monster.ID {
+				t.Fatal("图鉴没有收到原首领地图和唯一击杀", row)
+			}
+		case devconfig.TaskCodexActivity:
+			if row.Progress != 0 || row.Claimable {
+				t.Fatal("首领死亡时擅自确认活跃奖励", row)
+			}
+		}
+	}
+	claim := &pb.TaskCodexClaimRequest{Operation: c.operation(), Kind: devconfig.TaskCodexMonster, Id: 1}
+	claim.Operation.ExpectedRevision = state.RoleRevision
+	first := c.asset(p.MsgC2STaskCodexClaim, claim)
+	if first.ErrorCode != 0 || first.Pending || readRole().Wallet.BoundYuanbao != confirmed.Wallet.BoundYuanbao+11 {
+		t.Fatal("首领图鉴未成功发放原绑定奖励", first)
+	}
+	c.close()
+	resumed := join(t, cfg.GameAddress, issue(t, endpoint, login.AccountToken, role.Key))
+	defer resumed.close()
+	resumed.auto(false, 1)
+	for _, row := range queryTasks(resumed).Rows {
+		if row.Kind == devconfig.TaskCodexMonster && (row.Progress != 1 || row.Claimable || !row.Claimed) {
+			t.Fatal("新票入场没有恢复已领取的个人首领图鉴", row)
+		}
+	}
+	replayed := resumed.asset(p.MsgC2STaskCodexClaim, claim)
+	if replayed.ErrorCode != 0 || replayed.Pending || !bytes.Equal(first.OpId, replayed.OpId) || replayed.CommandSeq != first.CommandSeq ||
+		readRole().Wallet.BoundYuanbao != confirmed.Wallet.BoundYuanbao+11 {
+		t.Fatal("跨重连重放的图鉴奖励回执不一致或重复发放", first, replayed)
+	}
+	t.Log("个人首领真实击杀只记一次每日、成就和图鉴；绑定领奖经过新票重连不重发")
 }
 
 // requireChallengeAuto 核对已确认挑战附着的独立自动战斗开关。

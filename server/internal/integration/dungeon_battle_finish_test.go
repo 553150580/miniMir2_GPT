@@ -18,6 +18,7 @@ import (
 func TestDungeonBattleTimeoutMongoWS(t *testing.T) {
 	const duration = 5 * time.Second
 	store, endpoint, route, _, _ := startDungeonServer(t, true, func(cfg *devconfig.Config) {
+		configureDungeonTrialTasks(cfg)
 		cfg.Fixture.DungeonReleases[0].DurationMS = duration.Milliseconds()
 		monster := &cfg.Fixture.ChallengeMonsters[0]
 		monster.AttackMin, monster.AttackMax, monster.AttackMS = 0, 0, 60_000
@@ -58,6 +59,10 @@ func TestDungeonBattleTimeoutMongoWS(t *testing.T) {
 		t.Fatal("普通超时改变了原日已用次数或保留了原活动标记", after.Dungeon)
 	}
 	travelAssertEconomy(t, before, after, "讨伐普通超时")
+	assertDungeonTaskProgress(t, c, 0, 0)
+	if after.TasksCodex != nil {
+		t.Fatal("超时写入了不应产生的永久进度", after.TasksCodex)
+	}
 	assertDungeonFinishAudits(t, store, closed, roleID)
 	t.Logf("原倒计时 %s 到期后正常返场，原日 %s 持续保留 1 次入场扣次", duration, after.Dungeon.EntryDay)
 }

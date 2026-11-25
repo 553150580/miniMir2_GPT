@@ -69,6 +69,7 @@ export class GameWorldView {
     private retirePresentation: () => void = () => {};
     get audioAudit() { return this.audio?.audit ?? null; }
     monsterCodexFrame(id: number): SpriteFrame | null { return this.assets?.monsterCodexFrame(id) ?? null; }
+    loadMonsterCodexFrame(id: number): Promise<SpriteFrame | null> { return this.assets?.loadMonsterCodexFrame(id) ?? Promise.resolve(null); }
     get petAppearanceAudit() { return Object.freeze(Array.from(this.visuals.values()).filter(value => value.state.entityKind === 2).map(value => Object.freeze({
         handle: value.state.entityHandle, life: value.state.life.toString(), definitionId: value.state.definitionId, action: value.pose?.action ?? '',
         frame: value.pose?.frame ?? -1, direction: value.pose?.direction ?? -1, frames: Object.freeze(value.keys.slice()),

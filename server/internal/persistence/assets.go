@@ -245,7 +245,14 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				businessCode = p.CodeInvalidArgument
 				break
 			}
-			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID)
+			var worldProgress domain.TaskCodexProgress
+			if s.Cfg.Fixture.HasWorldBossTaskProgress() {
+				worldProgress, e = s.ReadWorldBossTaskProgress(tc, r)
+				if e != nil {
+					return e
+				}
+			}
+			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID, worldProgress)
 		case AssetChallengeRewardClaim:
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
 			if businessCode == p.CodeOperationConflict {

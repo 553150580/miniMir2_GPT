@@ -33,6 +33,7 @@ import (
 )
 
 const directoryChildConfig = "MINIMIR_SERVER_DIRECTORY_CHILD_CONFIG"
+const directoryChallengeCodex = "MINIMIR_VERIFY_CHALLENGE_CODEX"
 
 // directoryNodeProcess 记录由父测试传给独立子进程的装配信息和退出控制。
 type directoryNodeProcess struct {
@@ -52,6 +53,7 @@ func TestServerDirectoryNodeProcess(t *testing.T) {
 	must(t, err)
 	node := directoryNodeProcess{Config: base}
 	must(t, json.Unmarshal(raw, &node))
+	installDirectoryChallengeCodex(t, &node.Config.Fixture)
 	ctx, stop := context.WithCancel(context.Background())
 	defer stop()
 	go func() {
@@ -127,6 +129,7 @@ func TestServerDirectoryTwoGameNodesMongoWS(t *testing.T) {
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
 	cfg = directoryMongoTarget(t, cfg)
+	installDirectoryChallengeCodex(t, &cfg.Fixture)
 	cfg.AccountAddress, cfg.GameAddress = address(t), address(t)
 	cfg.OriginID, cfg.RunID, cfg.NodeID = 101, 11, "game-east"
 	cfg.RunServerIDs = []uint64{11, 12}
@@ -246,6 +249,23 @@ func TestServerDirectoryTwoGameNodesMongoWS(t *testing.T) {
 	requireStoppedRuns(t, stoppedCtx, inspection, west.RunServerIDs)
 	verifyDirectory(t, accountURL, login.AccountToken, entries, false)
 	t.Log("西区停服同时释放两个运行服，东区两个运行服维持在线")
+}
+
+// installDirectoryChallengeCodex 用原版已装包的首领测试外图预览，测试资格只存在于本轮独立浏览器环境。
+func installDirectoryChallengeCodex(t *testing.T, fixture *devconfig.Fixture) {
+	t.Helper()
+	if os.Getenv(directoryChallengeCodex) != "1" || os.Getenv("MINIMIR_SERVER_DIRECTORY_WEB_ROOT") == "" {
+		return
+	}
+	boss := fixture.PersonalBoss
+	if boss == nil || fixture.TasksCodex == nil {
+		t.Fatal("外图图鉴验收缺少原个人首领或任务目录")
+	}
+	fixture.TasksCodex.Definitions = append(fixture.TasksCodex.Definitions, devconfig.TaskCodexDefinition{
+		ID: 80, Kind: devconfig.TaskCodexMonster, Name: boss.DisplayName, Target: 1, Event: devconfig.TaskCodexMonsterKill,
+		MonsterID: boss.Monster.ID, MapID: boss.Map.ID,
+	})
+	must(t, fixture.ValidateTasksCodex())
 }
 
 // makeDirectoryEntry 使用同一部署节点为其各运行服公告同一个 WebSocket 路径。
