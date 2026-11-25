@@ -240,7 +240,10 @@ func TestServerDirectoryTwoGameNodesMongoWS(t *testing.T) {
 			cfg.Fixture.PersonalBoss != nil && cfg.Fixture.WorldBoss != nil)
 	}
 	stopWest()
-	requireStoppedRuns(t, ctx, inspection, west.RunServerIDs)
+	// 三城触屏会占用单独的浏览器预算，停服后的数据库核对需要从此处单独计时。
+	stoppedCtx, cancelStopped := context.WithTimeout(t.Context(), 8*time.Second)
+	defer cancelStopped()
+	requireStoppedRuns(t, stoppedCtx, inspection, west.RunServerIDs)
 	verifyDirectory(t, accountURL, login.AccountToken, entries, false)
 	t.Log("西区停服同时释放两个运行服，东区两个运行服维持在线")
 }
