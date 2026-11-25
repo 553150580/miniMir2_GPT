@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"minimir/internal/devconfig"
+	"minimir/internal/domain"
+	"minimir/internal/persistence"
 )
 
 // TestOrdinaryMonsterDropPoolsUseOriginalKillAndSharedPity 验证两地图原怪掉落和同一角色第20杀保底。
@@ -55,5 +57,54 @@ func TestOrdinaryMonsterDropPoolsUseOriginalKillAndSharedPity(t *testing.T) {
 		second.NoEquipmentKills != 0 || second.HostingSession != "hosting" || second.Item == nil ||
 		second.Item.ItemID != 193 || second.Item.Quantity != 1 || !second.Item.Bound || second.Gold != 0 {
 		t.Fatalf("第二张图的保底装备或绑定不符：%+v", second)
+	}
+}
+
+func TestOrdinaryEquipmentDropFreezesPityAndUsesConfirmedLoot(t *testing.T) {
+	w, r, _ := stageAWorker(t, 0)
+	f := &w.e.Store.Cfg.Fixture
+	pool := devconfig.OrdinaryDropPool{ID: 11, Items: []devconfig.OrdinaryDropEntry{{ItemID: 35, Weight: 1, QuantityMin: 1, QuantityMax: 1}}}
+	base, _ := f.Item(218)
+	for quality := uint32(0); quality <= 3; quality++ {
+		item := base
+		item.ID, item.DropQuality = 61001+quality, quality
+		f.Items = append(f.Items, item)
+		pool.Equipment = append(pool.Equipment, devconfig.OrdinaryDropEntry{ItemID: item.ID, Weight: 1, QuantityMin: 1, QuantityMax: 1})
+	}
+	f.OrdinaryDropPools = []devconfig.OrdinaryDropPool{pool}
+	f.OrdinaryEquipmentQuotas = []devconfig.OrdinaryEquipmentQuota{
+		{Stage: base.EquipmentStage, Quality: 3, SourceKind: devconfig.OrdinaryMonsterDropSource,
+			ExhaustedDowngradeWeights: map[uint32]int64{0: 5, 2: 7}},
+		{Stage: base.EquipmentStage, Quality: 2, SourceKind: devconfig.OrdinaryMonsterDropSource,
+			ExhaustedDowngradeWeights: map[uint32]int64{0: 8, 1: 1}},
+	}
+	w.roll = func(n int64) int64 { return n - 1 }
+	fact := killFact{Monster: devconfig.Monster{DropPoolID: pool.ID}, InstanceID: domain.ID(), Bound: true}
+	if !w.captureOrdinaryDrop(&fact) {
+		t.Fatal("同池同阶段高品质链未成功冻结")
+	}
+	// 空白掷点在连续19杀后才改为装备，已冻结的候选从史诗逐级降为稀有、精良。
+	if early := w.killSettlement(r, fact); early.Item != nil || early.OrdinaryEquipment != nil {
+		t.Fatalf("未达保底的空白结果产生装备：%+v", early)
+	}
+	r.Role.NoEquipmentKills = f.Drops.EquipmentGuarantee - 1
+	q := w.killSettlement(r, fact)
+	if q.OrdinaryEquipment == nil || len(q.OrdinaryEquipment.Fallbacks) != 2 || q.NoEquipmentKills != 0 ||
+		q.Item.ItemID != 61004 || q.OrdinaryEquipment.Fallbacks[0].ItemID != 61003 || q.OrdinaryEquipment.Fallbacks[1].ItemID != 61002 {
+		t.Fatalf("第二十杀的原装备或冻结降档不符：%+v", q)
+	}
+	actual := q.OrdinaryEquipment.Fallbacks[1]
+	details := &persistence.SettlementReceipt{GrantedItem: true, OrdinaryEquipment: &persistence.OrdinaryEquipmentReceipt{Item: actual}}
+	op := persistence.Operation{Kind: "settlement", SourceSeq: q.SourceSeq, Settlement: details}
+	if loot, ok := confirmedSettlementLoot(q, op); !ok || loot == nil || *loot != actual {
+		t.Fatalf("掉落展示未采用已确认的精良装备：%+v", loot)
+	}
+	details.GrantedItem = false
+	if loot, ok := confirmedSettlementLoot(q, op); !ok || loot != nil {
+		t.Fatal("未入包的装备不能作为已确认战利品展示")
+	}
+	details.OrdinaryEquipment.Item.ItemID = 62222
+	if _, ok := confirmedSettlementLoot(q, op); ok {
+		t.Fatal("不接受与冻结候选无关的回执")
 	}
 }

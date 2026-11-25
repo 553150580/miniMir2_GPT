@@ -19,7 +19,16 @@ func (w *worker) finishSettlementReceipt(b settlementBinding, q persistence.Sett
 	if owned && err == nil && !confirmedWear(q, receipt) {
 		err = persistence.Fail(p.CodeOperationConflict, "磨损确认回执与原事实不一致")
 	}
-	w.finishSettlement(b, q, role, err, retry, func() {
+	// observed 只修改广播所用的物品。永久事实、回执校验和原内容重试仍使用 q。
+	observed := q
+	if owned && err == nil {
+		var valid bool
+		observed.Item, valid = confirmedSettlementLoot(q, receipt)
+		if !valid || q.OrdinaryEquipment != nil && receipt.RoleID != b.auth.RoleID {
+			err = persistence.Fail(p.CodeOperationConflict, "装备掉落回执与原击杀候选不一致")
+		}
+	}
+	w.finishSettlement(b, observed, role, err, retry, func() {
 		if w.e.Store.Cfg.Fixture.RuleVersion >= 20 {
 			w.applyExperienceRecovery(r, b, q, receipt)
 		}

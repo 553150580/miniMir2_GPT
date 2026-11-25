@@ -122,8 +122,9 @@ def compile_entries(tables, pool_id, category, entries, available):
     if equipment:
         stages = pool['equipment_stage_range']
         if (not isinstance(stages, list) or len(stages) != 2 or any(type(stage) is not int for stage in stages)
-                or not 0 <= stages[0] <= stages[1] or pool['max_random_quality'] not in (0,1) or pool['quality_weights'] is not None):
-            raise ValueError('普通新装备须声明阶段和白蓝上限，权重由单条条目维护')
+                or not 0 <= stages[0] <= stages[1] or pool['max_random_quality'] not in (0, 1, 2, 3)
+                or pool['quality_weights'] is not None):
+            raise ValueError('普通装备池须声明阶段和随机品质上限，具体权重由装备条目维护')
     seen, result = set(), []
     for row in entries[pool_id]:
         id = row['item_id']
@@ -144,6 +145,56 @@ def compile_entries(tables, pool_id, category, entries, available):
     if not result:
         raise ValueError(f'普通掉落子池不得为空：{pool_id}')
     return result
+
+
+def compile_quotas(tables, pools, items):
+    """只投影当前普通怪池用到的阶段与品质，不把未选中的配额视为已启用。"""
+    equipment = {row['id']: (row['equipment_stage'], row['drop_quality']) for row in items if row['is_equipment']}
+    selected = [(pool['id'], {equipment[row['item_id']] for row in pool['equipment']}) for pool in pools]
+    needed = {key for _, entries in selected for key in entries if key[1] > 1}
+    quotas = {}
+    for row in tables.get('game_drop_quotas', []):
+        key = row['stage'], row['quality']
+        if (row['source_kind'] != 'ordinary_monster' or key not in needed
+                or row['record_status'] not in ('confirmed', 'candidate')):
+            continue
+        if key in quotas:
+            raise ValueError(f'阶段与品质存在多份普通怪配额：{key}')
+        validate_quota(row)
+        quotas[key] = {field: deepcopy(row[field]) for field in (
+            'id', 'stage', 'quality', 'source_kind', 'window_seconds', 'quota_units',
+            'refill_schedule', 'exhausted_downgrade_weights')}
+    if missing := sorted(needed - quotas.keys()):
+        raise ValueError(f'普通装备缺少显式高品质额度：{missing}')
+    for pool_id, entries in selected:
+        for stage, quality in entries & needed:
+            for target in quotas[stage, quality]['exhausted_downgrade_weights']:
+                if (stage, int(target)) not in entries:
+                    raise ValueError(f'掉落池{pool_id}缺少阶段{stage}的降档品质{target}装备')
+    return [quotas[key] for key in sorted(quotas)]
+
+
+def validate_quota(row):
+    """校验工作簿的分时补充与降档权重，禁止把历史经济样本补作默认值。"""
+    window, capacity = row['window_seconds'], row['quota_units']
+    schedule, weights = row['refill_schedule'], row['exhausted_downgrade_weights']
+    if (not positive(window, (2**63-1) // 10**9) or not positive(capacity, 2**63-1)
+            or not isinstance(schedule, list) or not schedule):
+        raise ValueError(f'高品质额度{row["id"]}需明确正窗口、额度和释放计划')
+    previous, total = -1, 0
+    for refill in schedule:
+        if not isinstance(refill, dict) or refill.keys() != {'offset_seconds', 'units'}:
+            raise ValueError(f'高品质额度{row["id"]}需明确释放偏移与件数')
+        offset, units = refill['offset_seconds'], refill['units']
+        if type(offset) is not int or not previous < offset < window or not positive(units, capacity - total):
+            raise ValueError(f'高品质额度{row["id"]}的释放偏移或件数无效')
+        previous, total = offset, total + units
+    if total != capacity or previous == 0:
+        raise ValueError(f'高品质额度{row["id"]}须完整分时释放，窗首不能一次给足')
+    possible = {str(quality) for quality in range(row['quality'])}
+    if (not isinstance(weights, dict) or not weights or not weights.keys() <= possible
+            or any(not positive(weight, 2**63-1) for weight in weights.values()) or sum(weights.values()) > 2**63-1):
+        raise ValueError(f'高品质额度{row["id"]}的降档权重无效')
 
 
 def public_fields(row, floor_id, definitions):

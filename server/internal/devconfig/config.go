@@ -304,6 +304,8 @@ type Fixture struct {
 	} `json:"drops"`
 	// OrdinaryDropPools 收录可由普通怪物模板引用的每组掉落候选。
 	OrdinaryDropPools []OrdinaryDropPool `json:"ordinary_drop_pools,omitempty"`
+	// OrdinaryEquipmentQuotas 收录明确启用的普通怪稀有和史诗装备额度。
+	OrdinaryEquipmentQuotas []OrdinaryEquipmentQuota `json:"drop_quotas,omitempty"`
 	// Progression 记录成长，使用成长规则集合表示。
 	Progression ProgressionRules `json:"progression"`
 	// InitialInventory 记录初始值背包资产，使用数值列表表示。

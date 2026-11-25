@@ -32,6 +32,26 @@ test('真实资源预载在取票前拒绝新旧地图混包并释放已持有�
     await assert.rejects(WorldAssets.prepare(0,()=>{}),/地图地板、投影与来源清单不一致/);
     assert.deepEqual(loaded,['development/manifest','development/gameplay','development/maps/first-map']);assert.deepEqual(released,loaded);
 });
+test('地图与玩法清单并行请求，失败也等待后到引用归还',async()=>{
+    const pending=new Map(),resources={load(path,_type,done){pending.set(path,done);}};
+    const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),id=>id==='cc'?{resources}:{});
+    const original=new Error('原清单请求失败');let settled=false,refs=0;
+    const task=WorldAssets.prepare(0,()=>{}).finally(()=>{settled=true;});
+    assert.deepEqual(Array.from(pending.keys()),['development/manifest','development/gameplay']);
+    pending.get('development/manifest')(original);await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(settled,false);
+    pending.get('development/gameplay')(null,{json:{},addRef(){refs++;},decRef(){refs--;}});
+    await assert.rejects(task,error=>error===original);assert.equal(refs,0);
+});
+test('回程缓存只接收不超过64MiB的非流式普通地图或个人挑战',()=>{
+    const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),()=>({}));
+    const assets=new WorldAssets(),key='Magic:200';
+    assets.manifest={frames:{[key]:{width:4096,height:4096}}};assets.frames.set(key,{});
+    assert.equal(assets.canRetainAfterTravel,true);
+    assets.background={texture:{width:1,height:1}};assert.equal(assets.canRetainAfterTravel,false);
+    assets.background=null;assets.sceneKind=4;assert.equal(assets.canRetainAfterTravel,false);
+    assets.sceneKind=2;assets.sourceMap={};assert.equal(assets.canRetainAfterTravel,false);
+});
 test('真实地图绘制只使用保存节点：两侧48像素土层、18+18网格、独立Surface与菱形目标',()=>{
     const world=new Node('World');world.add(Sprite,new Sprite());
     for(const [name,type]of [['Soil',Graphics],['Surface',Sprite],['GridLines',Graphics],['TargetMarker',Sprite]]){const n=new Node(name);n.parent=world;n.add(type,new type());}
@@ -115,7 +135,7 @@ test('真实预载会为无该职业技能的角色加载常驻状态六帧、�
     const values={'development/manifest':new JsonAsset(manifest),'development/maps/first-map':new JsonAsset(map),'development/gameplay':new JsonAsset({jobs:[{job_id:0,profile:'player'}],monster_profiles:[],pet_profiles:[],skills:[]})};
     for(const key of keys){const id=key.split(':')[1],png=`frames/Magic/frame_${id.padStart(6,'0')}.png`;frames[key]={png,declared_empty:false};values['development/'+png.replace('.png','')+'/spriteFrame']=new SpriteFrame();}manifest.frames=frames;
     for(const name of ['Entity','Effect','MapProp','Beam','StatusBadge','DamageNumber'])values['prefabs/'+name]=new Prefab();values['development/maps/first-map/spriteFrame']=new SpriteFrame();
-    const requested=[],ccAssets={Asset,JsonAsset,Prefab,SpriteFrame,resources:{load(key,type,callback){requested.push(key);queueMicrotask(()=>callback(values[key]?null:new Error(key),values[key]));}}};
+    const requested=[],ccAssets={Asset,JsonAsset,Prefab,SpriteFrame,resources:{getInfoWithPath(){return null;},load(key,type,callback){requested.push(key);queueMicrotask(()=>callback(values[key]?null:new Error(key),values[key]));}}};
     const {WorldAssets}=load(path.join(source,'WorldAssets.ts'),id=>id==='cc'?ccAssets:id==='./GridProjection'?{GridProjection}:{});
     const assets=await WorldAssets.prepare(0,()=>{});assert.equal(assets.frames.size,6);assert(requested.includes('prefabs/StatusBadge'));assert(keys.every(key=>assets.frames.has(key)));
     assert.equal(assets.damageNumberPrefab,values['prefabs/DamageNumber']);

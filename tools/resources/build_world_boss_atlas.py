@@ -119,12 +119,20 @@ def write_json(path, value):
 
 
 def build(source):
-    """生成 Creator 原生纹理页与帧索引，并复核每页裁出的像素。"""
+    """世界首领沿用独立的打包范围与资源路径。"""
     frames = frame_catalog(source)
-    pages = pack(frames)
-    destination = source / ATLAS
+    return build_atlas(source, ATLAS, [frames])
+
+
+def build_atlas(source, package, groups):
+    """为不同可见帧集合生成原生纹理页，并复核逐帧原始像素。"""
+    frames = {key: frame for group in groups for key, frame in group.items()}
+    if len(frames) != sum(len(group) for group in groups):
+        raise ValueError('图集分组不能重复定义同一原帧')
+    pages = [page for group in groups for page in pack(group)]
+    destination = source / package
     destination.mkdir(exist_ok=True)
-    write_json(destination.with_suffix('.meta'), base_meta('directory', '1.2.0', stable_uuid(ATLAS), []))
+    write_json(destination.with_suffix('.meta'), base_meta('directory', '1.2.0', stable_uuid(package), []))
     index = {'schema_version': 1, 'pages': [], 'frames': {}}
     for page_id, page in enumerate(pages):
         name = f'page-{page_id:02d}'
@@ -156,7 +164,7 @@ def build(source):
                     raise ValueError(f'图集导出未保留原像素：{key}')
         # 旧页面可能仍持有上一版索引。图像字节变化后，所有原生纹理和纹理元数据都用新 UUID。
         page_digest = hashlib.sha256(output.read_bytes()).hexdigest()
-        metadata = image_meta(f'{ATLAS}-{name}-{page_digest}', width, height, 0)
+        metadata = image_meta(f'{package}-{name}-{page_digest}', width, height, 0)
         texture = metadata['subMetas']['6c48a']
         texture['displayName'] = name
         metadata['subMetas'] = {'6c48a': texture}
@@ -172,10 +180,11 @@ def build(source):
     index_path = destination / 'index.json'
     write_json(index_path, index)
     digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
-    write_json(destination / 'index.json.meta', base_meta('json', '2.0.1', stable_uuid(f'{ATLAS}-index-{digest}'), ['.json']))
-    print(json.dumps({'world_boss_atlas_pages': len(pages), 'source_frames': len(frames),
+    write_json(destination / 'index.json.meta', base_meta('json', '2.0.1', stable_uuid(f'{package}-index-{digest}'), ['.json']))
+    print(json.dumps({f'{package.replace("-", "_")}_pages': len(pages), 'source_frames': len(frames),
                       'page_bytes': sum((destination / f'{page["name"]}.png').stat().st_size for page in index['pages']),
                       'texture_bytes_rgba': sum(page['width'] * page['height'] * 4 for page in index['pages'])}))
+    return index
 
 
 if __name__ == '__main__':

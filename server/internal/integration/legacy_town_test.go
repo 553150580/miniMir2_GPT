@@ -23,6 +23,7 @@ func historicalOrdinaryFixture(t *testing.T, f *devconfig.Fixture) {
 	oldMonster.DropPoolID = 0
 	f.Monsters = []devconfig.Monster{oldMonster}
 	f.OrdinaryDropPools = nil
+	f.OrdinaryEquipmentQuotas = nil // 历史规则没有普通怪专属高品质配额。
 	f.Map.MonsterSpawnIDs, f.Map.InitialMonsterCount = nil, 0
 	f.Maps = slices.DeleteFunc(slices.Clone(f.Maps), func(m devconfig.MapTemplate) bool {
 		return m.SceneKind == devconfig.SceneKindPersonal

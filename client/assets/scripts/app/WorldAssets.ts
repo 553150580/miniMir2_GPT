@@ -1,9 +1,10 @@
 import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 import { GridProjection } from './GridProjection';
-import { WorldBossFrameAtlas } from './WorldBossFrameAtlas';
+import { mapTravelAtlasDirectory, WorldBossFrameAtlas } from './WorldBossFrameAtlas';
 import { SourceMapAssets } from './SourceMapAssets';
 import { compactTownMap, mergeTownNpcAppearances, townNpcPreloadFrames } from './TownMapModel';
 import { petAppearanceFor } from './EntityHeadAnchor';
+import { regionalMapStyle, regionalMapStylesPath } from './MapStyleAssets';
 
 interface WorldMapEntry {
     readonly id: string; readonly name?: string; readonly resource_key: string; readonly scene_kind: number;
@@ -62,6 +63,17 @@ function load<T extends Asset>(path: string, type: any): Promise<T> {
     return new Promise((resolve, reject) => resources.load(path, type, (error, value) => error ? reject(error) : resolve(value as T)));
 }
 
+// 同一批依赖可以并行取得，失败时等已启动的回调都持有完成，随后统一释放。
+async function loadBatch<T>(jobs: Array<Promise<T>>): Promise<T[]> {
+    const results = await Promise.allSettled(jobs);
+    return results.map(result => {
+        if (result.status === 'rejected') throw result.reason;
+        return result.value;
+    });
+}
+
+const maxRetainedMapTextureBytes = 64 * 1024 * 1024;
+
 // 入场前准备当前地图可见实体的整套动作，播放过程中不临时请求帧。
 export class WorldAssets {
     manifest: any;
@@ -75,6 +87,7 @@ export class WorldAssets {
     statusBadgePrefab!: Prefab;
     background: SpriteFrame | null = null;
     sourceMap?: SourceMapAssets;
+    regionalFloor?: string; // 实际挂载的区域原版地表资源路径。
     mapId = '1';
     sceneKind = 1;
     get mapBackground(): SpriteFrame | null { return this.background; }
@@ -121,11 +134,29 @@ export class WorldAssets {
         return asset;
     }
 
-    static async prepare(job: number, progress: (completed: number, total: number) => void, mapId?: { toString(): string } | string): Promise<WorldAssets> {
+    // 缓存只保留一个小地图。流式城镇和已独立管理的世界首领由原生命周期回收。
+    get canRetainAfterTravel(): boolean {
+        if (this.sourceMap || this.sceneKind === 4) return false;
+        const background = this.background?.texture;
+        const floorBytes = background ? background.width * background.height * 4 : 0;
+        let actorBytes = this.bossAtlas?.textureBytes;
+        if (actorBytes === undefined) {
+            actorBytes = 0;
+            for (const key of Array.from(this.frames.keys())) {
+                const frame = this.manifest.frames[key];
+                actorBytes += frame.width * frame.height * 4;
+            }
+        }
+        return floorBytes + actorBytes <= maxRetainedMapTextureBytes;
+    }
+
+    static async prepare(job: number, progress: (completed: number, total: number) => void, mapId?: { toString(): string } | string,
+        travelling = false): Promise<WorldAssets> {
         const result = new WorldAssets();
         try {
-            result.manifest = result.own(await load<JsonAsset>('development/manifest', JsonAsset)).json;
-            result.gameplay = result.own(await load<JsonAsset>('development/gameplay', JsonAsset)).json;
+            const [manifest, gameplay] = await loadBatch(['development/manifest', 'development/gameplay']
+                .map(async path => result.own(await load<JsonAsset>(path, JsonAsset))));
+            result.manifest = manifest.json; result.gameplay = gameplay.json;
             const selected = selectWorldMap(result.gameplay, mapId); result.mapId = selected.id; result.sceneKind = selected.scene_kind;
             // 开发神兽资源可独立导入。原开发清单和骷髅帧无需重新生成。
             const shinsuPath = 'development/pets/shinsu/profile';
@@ -180,14 +211,31 @@ export class WorldAssets {
                     || result.map.world_height !== projection.worldHeight || result.map.background_offset_y !== projection.floorCenterY
                     || !floorMatches
                     || (selected.width !== undefined && selected.width !== result.map.width) || (selected.height !== undefined && selected.height !== result.map.height)) throw new Error('地图地板、投影与来源清单不一致，请更新同一份资源');
-                result.propPrefab = result.own(await load<Prefab>('prefabs/MapProp', Prefab));
-                result.background = result.own(await load<SpriteFrame>(`${selected.resource_key}/spriteFrame`, SpriteFrame));
             }
-            result.prefab = result.own(await load<Prefab>('prefabs/Entity', Prefab));
-            result.effectPrefab = result.own(await load<Prefab>('prefabs/Effect', Prefab));
-            result.damageNumberPrefab = result.own(await load<Prefab>('prefabs/DamageNumber', Prefab));
-            result.beamPrefab = result.own(await load<Prefab>('prefabs/Beam', Prefab));
-            result.statusBadgePrefab = result.own(await load<Prefab>('prefabs/StatusBadge', Prefab));
+            const prefabNames = ['Entity', 'Effect', 'DamageNumber', 'Beam', 'StatusBadge'];
+            if (!result.sourceMap) prefabNames.push('MapProp');
+            const layout = loadBatch(prefabNames.map(async name => result.own(await load<Prefab>(`prefabs/${name}`, Prefab))));
+            const floor = async (): Promise<SpriteFrame | null> => {
+                if (result.sourceMap) return result.background;
+                let floorPath = selected.resource_key;
+                if (selected.scene_kind <= 2 && resources.getInfoWithPath(regionalMapStylesPath, JsonAsset)) {
+                    const styles = result.own(await load<JsonAsset>(regionalMapStylesPath, JsonAsset)).json;
+                    const style = regionalMapStyle(styles, selected);
+                    if (style) floorPath = result.regionalFloor = style.frame;
+                }
+                const frame = result.own(await load<SpriteFrame>(`${floorPath}/spriteFrame`, SpriteFrame));
+                if (result.regionalFloor && (frame.originalSize.width !== result.map.surface_width
+                    || frame.originalSize.height !== result.map.surface_height)) throw new Error('区域地表贴图像素尺寸与菱形地图不一致');
+                return frame;
+            };
+            const [layoutResult, floorResult] = await Promise.allSettled([layout, floor()] as const);
+            if (layoutResult.status === 'rejected') throw layoutResult.reason;
+            if (floorResult.status === 'rejected') throw floorResult.reason;
+            const [entity, effect, damage, beam, badge, prop] = layoutResult.value;
+            result.prefab = entity; result.effectPrefab = effect; result.damageNumberPrefab = damage;
+            result.beamPrefab = beam; result.statusBadgePrefab = badge;
+            if (prop) result.propPrefab = prop;
+            result.background = floorResult.value;
             const npcArtPath = 'development/town-npcs/manifest';
             if (selected.compact_town && resources.getInfoWithPath(npcArtPath, JsonAsset)) {
                 const npcArt = result.own(await load<JsonAsset>(npcArtPath, JsonAsset)).json;
@@ -263,17 +311,23 @@ export class WorldAssets {
             }
             const pending = Array.from(keys);
             progress(0, pending.length);
-            if (result.sceneKind === 4 && WorldBossFrameAtlas.available()) {
-                result.bossAtlas = new WorldBossFrameAtlas();
+            const atlasDirectory = result.sceneKind === 4 ? undefined : mapTravelAtlasDirectory;
+            const preparingAtlas = result.sceneKind === 4 || travelling && !result.sourceMap;
+            if (preparingAtlas && WorldBossFrameAtlas.available(atlasDirectory)) {
+                result.bossAtlas = new WorldBossFrameAtlas(atlasDirectory);
                 await result.bossAtlas.populate(pending, result.manifest.frames, result.frames,
                     completed => progress(completed, pending.length));
             } else {
                 await result.loadIndividualFrames(pending, progress);
             }
             // 出场与施法声音只使用已核原音频。
-            if (job === 2) for (const [key, value] of Object.entries(result.manifest.audio ?? {}) as Array<[string, any]>) {
-                if (!/^[a-z0-9_]+$/.test(key) || typeof value.path !== 'string' || !/^audio\/[a-z0-9_]+\.wav$/.test(value.path)) throw new Error('音频资源路径无效');
-                result.audioClips.set(key, result.own(await load<AudioClip>(`development/${value.path.replace(/\.wav$/, '')}`, AudioClip)));
+            if (job === 2) {
+                const sounds = Object.entries(result.manifest.audio ?? {}) as Array<[string, any]>;
+                if (sounds.some(([key, value]) => !/^[a-z0-9_]+$/.test(key) || typeof value.path !== 'string' || !/^audio\/[a-z0-9_]+\.wav$/.test(value.path)))
+                    throw new Error('音频资源路径无效');
+                await loadBatch(sounds.map(async ([key, value]) => {
+                    result.audioClips.set(key, result.own(await load<AudioClip>(`development/${value.path.replace(/\.wav$/, '')}`, AudioClip)));
+                }));
             }
             return result;
         } catch (error) { result.dispose(); throw error; }

@@ -38,26 +38,27 @@ type pendingAttack struct {
 
 // killFact 在怪物死亡当下保存来源归属和掉落候选，随后按原内容持久化。
 type killFact struct {
-	World               worldRef           // 击杀实际发生的原世界。
-	Order               uint64             // 在房间内协调击杀和绑定事实的受理顺序。
-	DropPoint           devconfig.Point    // 战利品在原世界显示的逻辑坐标。
-	ID                  string             // 应用或核对该击杀事实时使用的唯一编号。
-	Target              actorRef           // 死亡怪物的世界、句柄和生命代次。
-	Caster              actorRef           // 击杀者的世界、句柄和生命代次。
-	Monster             devconfig.Monster  // 击杀时冻结的怪物数值，供经验和掉落结算。
-	MapID               uint64             // 实际发生击杀的地图配置号，后续换图不改归属。
-	At                  time.Time          // 事件实际到期时刻，决定收益归属与绑定。
-	Bound               bool               // 击杀时已经确定的资产绑定属性。
-	HostSession         string             // 应该累加战报的原托管会话。
-	StopReason          uint32             // 托管停止原因，非零时只结算停止状态。
-	Roll                int64              // 击杀时抽取的一个百万分位随机值。
-	EquipmentID, ItemID uint32             // 预先抽中的装备与普通物品候选编号。
-	ItemQuantity        int64              // 按普通道具条目的范围在击杀时已确定的堆叠数量。
-	Gold                int64              // 已经抽好的本次金币数量。
-	InstanceID          string             // 若生成物品时使用的唯一资产编号。
-	Prepared            bool               // 首部事实已经转换为来源事务，防止再次准备。
-	PetTraining         *petTrainingCredit // 为原代宠物冻结的训练资格。
-	ProgressionActor    actorRef           // 原世界中允许接收升级恢复效果的角色出生身份。
+	World               worldRef              // 击杀实际发生的原世界。
+	Order               uint64                // 在房间内协调击杀和绑定事实的受理顺序。
+	DropPoint           devconfig.Point       // 战利品在原世界显示的逻辑坐标。
+	ID                  string                // 应用或核对该击杀事实时使用的唯一编号。
+	Target              actorRef              // 死亡怪物的世界、句柄和生命代次。
+	Caster              actorRef              // 击杀者的世界、句柄和生命代次。
+	Monster             devconfig.Monster     // 击杀时冻结的怪物数值，供经验和掉落结算。
+	MapID               uint64                // 实际发生击杀的地图配置号，后续换图不改归属。
+	At                  time.Time             // 事件实际到期时刻，决定收益归属与绑定。
+	Bound               bool                  // 击杀时已经确定的资产绑定属性。
+	HostSession         string                // 应该累加战报的原托管会话。
+	StopReason          uint32                // 托管停止原因，非零时只结算停止状态。
+	Roll                int64                 // 击杀时抽取的一个百万分位随机值。
+	EquipmentID, ItemID uint32                // 预先抽中的装备与普通物品候选编号。
+	EquipmentDowngrades []frozenEquipmentDrop // 同池同阶段的降档装备，品质从高到低排列。
+	ItemQuantity        int64                 // 按普通道具条目的范围在击杀时已确定的堆叠数量。
+	Gold                int64                 // 已经抽好的本次金币数量。
+	InstanceID          string                // 若生成物品时使用的唯一资产编号。
+	Prepared            bool                  // 首部事实已经转换为来源事务，防止再次准备。
+	PetTraining         *petTrainingCredit    // 为原代宠物冻结的训练资格。
+	ProgressionActor    actorRef              // 原世界中允许接收升级恢复效果的角色出生身份。
 }
 
 // sourceTimeline 判断当前规则是否启用来源公式和统一动作时钟。
@@ -578,6 +579,9 @@ func (w *worker) killSettlement(r *room, fact killFact) persistence.Settlement {
 			// definition 是掉落物品的配置定义，提供本次资产的品质。
 			definition, _ := f.Item(itemID)
 			q.Item = &domain.Item{ID: fact.InstanceID, ItemID: itemID, Quantity: quantity, Version: 1, Bound: fact.Bound, SourceKind: "monster_drop", SourceID: fmt.Sprint(q.SourceSeq), Quality: definition.DropQuality}
+			if len(fact.EquipmentDowngrades) != 0 && itemID == fact.EquipmentID {
+				q.OrdinaryEquipment = ordinaryEquipmentPlan(*q.Item, fact.EquipmentDowngrades)
+			}
 		}
 	}
 	return q

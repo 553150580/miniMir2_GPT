@@ -18,8 +18,8 @@ function appHarness(options={}){
     const nodes=new Map();const getNode=path=>{if(!nodes.has(path)){const component={interactable:true,setItems(){}};const node={active:false,on(){},getComponent:()=>component};component.node=node;nodes.set(path,node);}return nodes.get(path);};
     class View{constructor(_v,world,_e,_name,_job,scene){this.world=world;this.sceneEpoch=scene;this.isMapReady=false;this.disposed=0;views.push(this);log.push('mount:'+scene);}bindPresentation(identity,current,retire){this.presentationIdentity=identity;this.presentationCurrent=current;this.retirePresentation=retire;}observeEquipment(identity,playerHandle,inventory){this.equipmentObservation={identity,playerHandle,inventory};}prepare(assets){this.assets=assets;this.manifest=assets.manifest;this.gameplay=assets.gameplay;this.map=assets.map;}apply(b){this.baseline=b;}update(){}async prepareViewport(position){this.position=position;log.push('viewport:'+this.sceneEpoch);await gate?.promise;this.isMapReady=true;}dispose(){if(this.disposed++)return;log.push('view.dispose:'+this.sceneEpoch);this.assets?.dispose();}
         presentTeleportDeparture(value){this.teleportDeparture=value;}
-        takeAssets(kind){
-            if(!this.isMapReady || this.assets?.sceneKind!==kind)return;
+        takeAssets(kind, forReturn){
+            if(!this.isMapReady || !this.assets || (kind!==undefined && this.assets.sceneKind!==kind) || (forReturn && !this.assets.canRetainAfterTravel))return;
             const assets=this.assets;this.assets=undefined;return assets;
         }
     }
@@ -147,6 +147,42 @@ test('真实AppRoot初次Town重入使用Entry.roomId替换默认primary，首�
     const t=appHarness(),s=t.h.session,e=ready(t.h,entry('1','2',2)),warm=t.asset('1');t.baseline(e);s.preparedWorld=warm;const gate=deferred();t.setGate(gate);
     const task=t.a.attachCurrentEntry();await flush();assert.deepEqual(t.loads,['2']);assert.equal(warm.disposed,1);assert.equal(t.views.length,1);assert.equal(t.views[0].map.width,700);assert.equal(s.connection.sent.length,0);assert.equal(t.a.canSendInput(),false);
     gate.resolve();await task;assert.deepEqual(s.connection.sent.map(p=>p.id),[4]);assert.equal(s.connection.sent[0].value.sceneEpoch.toString(),'1');assert.deepEqual(t.views[0].position,{x:633,y:613});assert.equal(t.a.canSendInput(),true);t.a.attachment.dispose();
+});
+test('快速返回沿用原地图资源，但仍等权威计划、最新基线和首视口才发送ACK',async test=>{
+    const t=appHarness(),s=t.h.session,a=t.a,initial=ready(t.h,entry('1'));
+    const home=Object.assign(t.asset('1'),{canRetainAfterTravel:true});
+    const town=Object.assign(t.asset('2',false,2),{canRetainAfterTravel:true});
+    s.preparedWorld=home;t.baseline(initial);await a.attachCurrentEntry();
+    test.after(()=>{a.attachment.dispose();a.releaseRetainedMap();});
+    t.pendingLoads.push({promise:Promise.resolve(town)});
+    a.popup={confirm:async()=>true};
+    const requests=[];let plan;
+    s.connection.request=async(code,value)=>{
+        requests.push(code);
+        if(code===20007){
+            plan={travelId:value.travelId,fromSceneEpoch:value.sceneEpoch,targetMapId:Long.fromInt(value.destination===1?2:1,true),
+                targetSceneKind:value.destination===1?2:1,position:{x:8,y:8},expiresAtUnixMs:String(Date.now()+60000)};
+            return plan;
+        }
+        assert.equal(code,20009);assert.equal(value.travelId,plan.travelId);
+        const scene=plan.fromSceneEpoch.add(1),committed={...plan,sceneEpoch:scene,phase:2};
+        s.connection.deliver(20010,committed);
+        const next=entry(scene.toString(),plan.targetMapId.toString(),plan.targetSceneKind);
+        s.connection.deliver(20002,next);t.baseline(next);await a.attachCurrentEntry();s.connection.deliver(6,next);
+        return committed;
+    };
+    await a.travelMap();
+    assert.equal(a.retainedMap.assets,home);assert.equal(home.disposed,0);
+    assert.equal(a.takeRetainedMap('其他角色','13','1',1),undefined);
+    assert.equal(a.takeRetainedMap(t.h.roleIdentity(),'14','1',1),undefined);
+    const gate=deferred();t.setGate(gate);
+    const returned=a.travelMap();await flush();
+    assert.deepEqual(t.loads,['2']);assert.deepEqual(requests,[20007,20009,20007,20009]);
+    assert.equal(a.canSendInput(),false);assert.deepEqual(s.connection.sent.map(frame=>frame.value.sceneEpoch.toString()),['1','2']);
+    gate.resolve();await returned;
+    assert.equal(a.world.assets,home);assert.equal(a.retainedMap.assets,town);
+    assert.deepEqual(s.connection.sent.map(frame=>frame.value.sceneEpoch.toString()),['1','2','3']);
+    a.releaseRetainedMap();assert.equal(town.disposed,1);assert.equal(home.disposed,0);
 });
 test('地图资源准备后的真实ACK只携当前角色已保存的自动施法偏好',async()=>{
     const {saveSkillPreference}=require('../../../.work/ui-tests/app/SkillPreferences.js');

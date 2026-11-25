@@ -34,7 +34,14 @@ func (f *Fixture) OrdinaryDropPool(id uint32) (OrdinaryDropPool, bool) {
 
 // validateOrdinaryDropPools 验证普通怪物到掉落池及物品定义的完整引用。
 func (f *Fixture) validateOrdinaryDropPools() error {
+	usedQuotas, err := f.validateOrdinaryEquipmentQuotas()
+	if err != nil {
+		return err
+	}
 	if len(f.OrdinaryDropPools) == 0 {
+		if len(usedQuotas) != 0 {
+			return errors.New("普通怪装备额度没有可关联的掉落池")
+		}
 		if f.RuleVersion >= 30 {
 			return errors.New("规则30的普通怪物必须使用各模板绑定的掉落池")
 		}
@@ -63,6 +70,9 @@ func (f *Fixture) validateOrdinaryDropPools() error {
 		if err := f.validateOrdinaryDropEntries(pool.ID, pool.Equipment, true); err != nil {
 			return err
 		}
+		if err := f.validateOrdinaryPoolQuotaLinks(pool, usedQuotas); err != nil {
+			return err
+		}
 	}
 	for _, monster := range f.Monsters {
 		if _, exists := used[monster.DropPoolID]; !exists {
@@ -73,6 +83,11 @@ func (f *Fixture) validateOrdinaryDropPools() error {
 	for id, selected := range used {
 		if !selected {
 			return fmt.Errorf("普通掉落池%d未被怪物引用", id)
+		}
+	}
+	for key, selected := range usedQuotas {
+		if !selected {
+			return fmt.Errorf("阶段%d品质%d的普通怪装备额度未被任何掉落池使用", key.stage, key.quality)
 		}
 	}
 	return nil
@@ -97,8 +112,8 @@ func (f *Fixture) validateOrdinaryDropEntries(poolID uint32, rows []OrdinaryDrop
 			(!item.Stackable && row.QuantityMax != 1) || (item.Stackable && row.QuantityMax > item.MaxStack) {
 			return fmt.Errorf("普通掉落池%d的物品%d数量与堆叠规则不符", poolID, row.ItemID)
 		}
-		if equipment && (row.QuantityMax != 1 || item.DropQuality > 1) {
-			return fmt.Errorf("普通掉落池%d只开放单件普通或精良装备，高品质需要额度规则", poolID)
+		if equipment && (row.QuantityMax != 1 || item.DropQuality > 3) {
+			return fmt.Errorf("普通掉落池%d只允许单件非传说装备", poolID)
 		}
 		seen[row.ItemID] = true
 		total += row.Weight

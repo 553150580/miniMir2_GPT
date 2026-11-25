@@ -130,6 +130,7 @@ export class AppRoot extends Component {
     private inputBarrier = false;
     private inputEnabled: { map: boolean; joystick: boolean } | null = null;
     private preparedTravel?: { id: string; assets: WorldAssets; viewport: MapViewportPreparation };
+    private retainedMap?: { role: string; assets: WorldAssets; timer: ReturnType<typeof setTimeout> };
     private bossEntry?: PreparedBossEntry;
     private bossReconnect?: { target: string; connection: number; role: string; assets: WorldAssets; timer: ReturnType<typeof setTimeout> };
     // 世界首领期间保留一个原个人图资源所有者，用于返回和健康重连。
@@ -191,7 +192,7 @@ export class AppRoot extends Component {
         this.disposed = true;
         for (const cancel of Array.from(this.mapWaiters)) cancel();
         this.enterAttempt++; this.attachment?.dispose(); this.world?.dispose(); this.releasePreparedTravel(); this.navigationUnsubscribe?.();
-        this.bossEntry?.release(); this.releaseBossReconnect(); this.releaseBossReturn();
+        this.bossEntry?.release(); this.releaseBossReconnect(); this.releaseBossReturn(); this.releaseRetainedMap();
         for (const [node, eventType, handler] of this.buttons) if (isValid(node, true)) node.off(eventType, handler, this);
         for (const cleanup of this.cleanups) cleanup();
         game.off(Game.EVENT_HIDE, this.releaseInput, this);
@@ -673,6 +674,8 @@ export class AppRoot extends Component {
         if (this.disposed) return;
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
+        if (this.retainedMap && identity && isCurrentEntry(identity) && (identity.role !== this.retainedMap.role ||
+            session.entry.resourceVersion.toString() !== String(this.retainedMap.assets.gameplay.rule_version))) this.releaseRetainedMap();
         if (this.bossReturn && identity && isCurrentEntry(identity) &&
             (identity.role !== this.bossReturn.role || (session.entry.sceneKind !== 1 && session.entry.sceneKind !== 4))) this.releaseBossReturn();
         if (this.bossEntry && !isCurrentEntry(this.bossEntry.source) && (!identity || !this.matchesBossEntry(identity))) this.bossEntry.release();
@@ -709,13 +712,14 @@ export class AppRoot extends Component {
                 try {
                     if (this.preparedTravel?.id === identity.travelId && this.preparedTravel.assets.mapId === identity.map.toString()) {
                         assets = this.preparedTravel.assets; prime = this.preparedTravel.viewport; this.preparedTravel = undefined;
-                    } else if (!(assets = this.takeBossAssets(identity) ?? this.takeBossReturn(identity, entry.resourceVersion.toString()))) {
+                    } else if (!(assets = this.takeBossAssets(identity) ?? this.takeBossReturn(identity, entry.resourceVersion.toString()) ??
+                        this.takeRetainedMap(identity.role, entry.resourceVersion.toString(), identity.map.toString(), entry.sceneKind))) {
                         const warm = session.preparedWorld;
                         if (warm?.mapId === identity.map.toString()) { assets = warm; session.preparedWorld = null; }
                         else {
                             assets = await WorldAssets.prepare(role.job, (done, total) => {
                                 if (!this.disposed && isCurrentEntry(identity)) this.showMapLoading(true, `准备地图资源 ${done}/${total}`, done, total);
-                            }, entry.roomId);
+                            }, entry.roomId, !!this.attached);
                             if (warm && session.preparedWorld === warm) { session.preparedWorld = null; warm.dispose(); }
                         }
                     }
@@ -725,6 +729,7 @@ export class AppRoot extends Component {
                     if (isCurrentEntry(identity)) {
                         if (entry.sceneKind === 4 && session.entryBossTransition) this.retainBossReturn(identity, entry.resourceVersion.toString());
                         if (entry.sceneKind === 1) this.retainBossForReconnect(identity, entry.resourceVersion.toString());
+                        if (entry.sceneKind !== 4) this.retainMapForReturn(identity, entry.resourceVersion.toString());
                     }
                     return assets;
                 } catch (error) { prime?.release(); prime = undefined; assets?.dispose(); throw error; }
@@ -889,9 +894,10 @@ export class AppRoot extends Component {
             if (!current()) throw new StaleMapAttachmentError('旧旅行计划回调已经失效');
             if (plan.phase !== undefined) throw new Error('服务端已终止或处理本次旅行计划');
             session.travel.acceptPlan(plan, this.travelContext(), Date.now()); this.validateTravel();
-            const assets = await WorldAssets.prepare(session.role.job, (done, total) => {
-                if (current() && session.travel.active) this.showMapLoading(true, `准备目标资源 ${done}/${total}`, done, total);
-            }, plan.targetMapId);
+            const assets = this.takeRetainedMap(source.role, source.rule.toString(), plan.targetMapId.toString(), plan.targetSceneKind) ??
+                await WorldAssets.prepare(session.role.job, (done, total) => {
+                    if (current() && session.travel.active) this.showMapLoading(true, `准备目标资源 ${done}/${total}`, done, total);
+                }, plan.targetMapId, true);
             const prime = new MapViewportPreparation(assets);
             let valid = false;
             try { valid = current() && session.travel.active && session.travel.matches(this.travelContext()); } catch { /* 原身份已丢失，仍须归还刚完成的资源。 */ }
@@ -975,6 +981,32 @@ export class AppRoot extends Component {
     private releasePreparedTravel(owner?: NonNullable<typeof this.preparedTravel>): void {
         const prepared = this.preparedTravel; if (!prepared || (owner && prepared !== owner)) return;
         this.preparedTravel = undefined; prepared.viewport.release(); prepared.assets.dispose();
+    }
+
+    // 保留刚离开的轻量地图供快速往返。仅转移素材引用，基线、场景节点和首视口仍独立确认。
+    private retainMapForReturn(identity: AttachmentIdentity, rule: string): void {
+        const previous = this.attached, view = this.world;
+        if (!previous || previous.role !== identity.role || previous.connection !== identity.connection ||
+            previous.map.toString() === identity.map.toString() || !view?.isMapReady || String(view.gameplay.rule_version) !== rule) return;
+        const assets = view.takeAssets(undefined, true);
+        if (!assets) return;
+        this.releaseRetainedMap();
+        const timer = setTimeout(() => this.releaseRetainedMap(), 45000);
+        this.retainedMap = { role: identity.role, assets, timer };
+    }
+
+    private takeRetainedMap(role: string, rule: string, map: string, kind: number): WorldAssets | undefined {
+        const retained = this.retainedMap;
+        if (!retained || retained.role !== role || String(retained.assets.gameplay.rule_version) !== rule ||
+            retained.assets.mapId !== map || retained.assets.sceneKind !== kind) return;
+        clearTimeout(retained.timer); this.retainedMap = undefined;
+        return retained.assets;
+    }
+
+    private releaseRetainedMap(): void {
+        const retained = this.retainedMap;
+        if (!retained) return;
+        clearTimeout(retained.timer); this.retainedMap = undefined; retained.assets.dispose();
     }
 
     // 首领场只有服务端发预留席位后才允许附着。昂贵的资源加载在请求席位之前完成。

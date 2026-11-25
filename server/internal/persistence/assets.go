@@ -429,4 +429,6 @@ type Settlement struct {
 	CasterHandle     uint32          // 产生该事实的施法者或攻击者句柄。
 	EquipmentWear    []EquipmentWear `json:"equipment_wear,omitempty"` // 并入本来源提交的磨损事实明细。
 	WearDeathID      string          `json:"wear_death_id,omitempty"`  // 死亡磨损对应的原死亡标识。
+
+	OrdinaryEquipment *OrdinaryEquipmentPlan `json:"ordinary_equipment,omitempty"` // 高品质掉落在原击杀冻结的降档方案。
 }

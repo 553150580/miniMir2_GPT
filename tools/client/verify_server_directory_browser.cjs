@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require(path.join(process.env.MINIMIR_TOOLCHAIN_ROOT, 'browser-tools/node_modules/playwright-core'));
 const pb = require('../../client/assets/scripts/generated/protobuf/client_pb.js').minimir.v1;
+const { observeTravel, measureTravel } = require('./map_travel_benchmark.cjs');
 
 const manifestPath = path.resolve(process.argv[2] ?? '');
 const work = path.resolve('.work');
@@ -48,6 +49,12 @@ async function main() {
     try {
         const context = await browser.newContext({ viewport: { width: 720, height: 1280 }, hasTouch: true, isMobile: true, deviceScaleFactor: 1 });
         page = await context.newPage();
+        if (process.env.MINIMIR_BENCHMARK_MAP_TRAVEL === '1') {
+            const network = await context.newCDPSession(page);
+            await network.send('Network.enable');
+            await network.send('Network.setCacheDisabled', { cacheDisabled: true });
+        }
+        const travelBenchmark = process.env.MINIMIR_BENCHMARK_MAP_TRAVEL === '1' ? observeTravel(page) : undefined;
         page.on('pageerror', error => report.errors.push(error.message));
         const connections = [];
         const createdOrigins = [];
@@ -105,7 +112,9 @@ async function main() {
             }, { suffix, label }, { timeout: 30000 });
             const point = await handle.jsonValue();
             await handle.dispose();
+            const tappedAt = performance.now();
             await page.touchscreen.tap(point.x, point.y);
+            return tappedAt;
         };
         const edit = async (name, value) => {
             await tap(name);
@@ -296,6 +305,11 @@ async function main() {
             const route = await ticketResponses[index];
             assert.deepEqual(route, { run: entry.run, node: entry.node, endpoint: entry.endpoint });
             report.reached.push({ region: entry.region, server: entry.server, origin: createdOrigins[index], ...route, ready: true });
+            if (index === 0 && travelBenchmark) {
+                report.step = '测量五处目标地图及原路返回';
+                report.travelBenchmark = await measureTravel(page, tap, travelBenchmark, path.dirname(manifestPath),
+                    process.env.MINIMIR_EXPECT_REGIONAL_MAP_STYLES === '1');
+            }
             if (bossChallenges && index === 0) await verifyBossChallenges();
             if (tasksCodex && index === 0) await verifyTasks();
             if (index === 0) await verifyOrdinaryMap();

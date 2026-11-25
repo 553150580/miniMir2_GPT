@@ -11,6 +11,7 @@ if json.loads((development/'gameplay.json').read_text(encoding='utf-8'))['rule_v
     missing=[name for name in required if not (development/name).is_file()]
     if missing:raise SystemExit('请先运行 tools/resources/prepare_classic_actor_art.py 导入原版素材：'+', '.join(missing))
 subprocess.run([sys.executable, str(ROOT/'tools/resources/build_world_boss_atlas.py')], cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT/'tools/resources/build_map_travel_atlas.py')], cwd=ROOT, check=True)
 def snapshots():
     return {p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for suffix in ['*.scene','*.prefab'] for p in (ROOT/'client/assets').rglob(suffix)}
 def scripts():

@@ -31,6 +31,8 @@ type SettlementReceipt struct {
 	Experience    *ExperienceGrantReceipt   `bson:"experience_grant,omitempty"` // 经验转换、限制和迁移明细。
 	EquipmentWear []EquipmentWearReceipt    `bson:"equipment_wear,omitempty"`   // 本次扣除耐久对应的原装备实例。
 	WearDeathID   string                    `bson:"wear_death_id,omitempty"`    // 并入此次结算的死亡磨损标识。
+
+	OrdinaryEquipment *OrdinaryEquipmentReceipt `bson:"ordinary_equipment,omitempty"` // 高品质候选实际发放或降档的永久事实。
 }
 
 // Settle 提交固定来源的战斗或托管事实，只返回已确认的角色状态。
@@ -100,7 +102,7 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 			if !errors.Is(err, mongo.ErrNoDocuments) {
 				return err
 			}
-			if r.SettlementReceiptStartSeq > 0 && q.SourceSeq >= r.SettlementReceiptStartSeq {
+			if q.OrdinaryEquipment != nil || (r.SettlementReceiptStartSeq > 0 && q.SourceSeq >= r.SettlementReceiptStartSeq) {
 				return Fail(p.CodeOperationConflict, "新收益来源缺少永久回执")
 			}
 			// 升级前的历史来源只有水位；不构造或补播不存在的回收结果。
@@ -113,9 +115,21 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 		// 新来源先基于当前角色算出完整资产变更，再与两道围栏、回执和审计合批。
 		// before 是计算收益前的角色修订号，用作数据库的并发更新条件。
 		before := r.Revision
-		// next 记录本次收益及扣时应用后的候选角色状态，details 保存本次实际产生的经验、掉落、回收、整秒扣减与磨损明细。
-		next, details, err := applySettlement(r, q, s.Cfg.Fixture)
+		// effective 只供本事务应用实际结果，原请求身份和摘要不随可用额度变化。
+		effective := q
+		choice, err := s.resolveOrdinaryEquipment(tc, q)
 		if err != nil {
+			return err
+		}
+		if choice != nil {
+			effective.Item = &choice.receipt.Item
+		}
+		// next 记录本次收益及扣时应用后的候选角色状态，details 保存本次实际产生的经验、掉落、回收、整秒扣减与磨损明细。
+		next, details, err := applySettlement(r, effective, s.Cfg.Fixture)
+		if err != nil {
+			return err
+		}
+		if err = s.confirmOrdinaryEquipment(tc, choice, &details); err != nil {
 			return err
 		}
 		// proposed 是候选永久回执，事务确认后才会作为结算结果返回。
@@ -126,7 +140,7 @@ func (s *Store) SettleWithReceipt(ctx context.Context, a Auth, q Settlement) (do
 			eventAt = time.Now()
 		}
 		// audit 记录与候选永久回执同主键的来源证据和实际结算详情。
-		audit := bson.M{"_id": id, "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": q.Item, "host_seconds": q.HostSeconds, "hosting_session": q.HostingSession, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": details.RuleVersion, "config_hash": details.ConfigHash, "settlement": details, "at": time.Now()}
+		audit := bson.M{"_id": id, "kind": "settlement", "role_id": r.ID, "source_seq": q.SourceSeq, "event_at": eventAt, "bound": q.Bound, "kills": q.Kills, "experience": q.Experience, "gold": q.Gold, "item": effective.Item, "host_seconds": q.HostSeconds, "hosting_session": q.HostingSession, "target_handle": q.TargetHandle, "target_life": q.TargetLife, "caster_handle": q.CasterHandle, "rule_version": details.RuleVersion, "config_hash": details.ConfigHash, "settlement": details, "at": time.Now()}
 		if err = s.writeSettlement(tc, fence, next, before, proposed, audit); err != nil {
 			if mongo.IsDuplicateKeyError(err) {
 				return Fail(p.CodeOperationConflict, "收益来源回执或审计先于角色水位")

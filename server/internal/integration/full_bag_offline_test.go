@@ -24,6 +24,8 @@ import (
 // setTestOrdinaryEquipmentDrop 固定历史和各怪物新池的装备选择，用于容量和回收回归。
 func setTestOrdinaryEquipmentDrop(f *devconfig.Fixture, itemID uint32) {
 	f.Drops.EquipmentItemIDs = []uint32{itemID}
+	// 用例的白装覆盖全部装备掉落池，原配置的高品质额度在该隔离服没有来源。
+	f.OrdinaryEquipmentQuotas = nil
 	for i := range f.OrdinaryDropPools {
 		f.OrdinaryDropPools[i].Equipment = []devconfig.OrdinaryDropEntry{{ItemID: itemID, Weight: 1, QuantityMin: 1, QuantityMax: 1}}
 	}

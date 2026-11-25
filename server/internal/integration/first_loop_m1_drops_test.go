@@ -49,7 +49,7 @@ func selectFieldDropCase(t *testing.T, fixture *devconfig.Fixture) fieldDropCase
 			var equipment, potion devconfig.OrdinaryDropEntry
 			for _, row := range pool.Equipment {
 				definition, known := fixture.Item(row.ItemID)
-				if !known || !definition.IsEquipment || definition.RequiredLevel != nil && *definition.RequiredLevel > fieldFixtureLevel ||
+				if !known || !definition.IsEquipment || definition.DropQuality > 1 || definition.RequiredLevel != nil && *definition.RequiredLevel > fieldFixtureLevel ||
 					len(definition.AllowedJobs) != 0 && !slices.Contains(definition.AllowedJobs, 1) {
 					continue
 				}
@@ -76,11 +76,18 @@ func selectFieldDropCase(t *testing.T, fixture *devconfig.Fixture) fieldDropCase
 // qualifyFieldDropCase 在独立服缩小子池、降低怪物生命并聚拢刷怪点。类别概率、保底和复活时长沿用原候选。
 func qualifyFieldDropCase(t *testing.T, fixture *devconfig.Fixture, selected fieldDropCase) {
 	t.Helper()
+	// 这个用例固定旧普通装备来源。高品质额度由使用对应档位和账本的专项覆盖。
+	fixture.OrdinaryEquipmentQuotas = nil
 	for i := range fixture.OrdinaryDropPools {
 		pool := &fixture.OrdinaryDropPools[i]
 		if pool.ID == selected.PoolID {
 			pool.Equipment = []devconfig.OrdinaryDropEntry{selected.Equipment}
 			pool.Items = []devconfig.OrdinaryDropEntry{selected.Potion}
+		} else {
+			pool.Equipment = slices.DeleteFunc(pool.Equipment, func(entry devconfig.OrdinaryDropEntry) bool {
+				item, found := fixture.Item(entry.ItemID)
+				return found && item.DropQuality > 1
+			})
 		}
 	}
 	monster, _ := fixture.MonsterByID(selected.Monster.ID)

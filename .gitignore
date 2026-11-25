@@ -36,6 +36,9 @@ client/assets/resources/audio/*.wav.meta
 # 世界首领图集从现有本机帧生成，随实际构建发布。
 client/assets/resources/development/world-boss-atlas/
 client/assets/resources/development/world-boss-atlas.meta
+# 切图图集按实际地图和职业可见范围从同一批本机原帧生成。
+client/assets/resources/development/map-travel-atlas/
+client/assets/resources/development/map-travel-atlas.meta
 # 动作素材由本机原版资源生成，使用独立的可核对清单。
 client/assets/resources/development/original-monsters/
 client/assets/resources/development/original-monsters.meta
@@ -44,6 +47,9 @@ client/assets/resources/development/town-npcs.meta
 client/assets/resources/development/pets/shinsu/
 client/assets/resources/development/pets/shinsu.meta
 client/assets/resources/development/pets.meta
+# 区域地表由本机原地图和瓦片库生成，包含独立 Creator 导入元数据。
+client/assets/resources/development/map-styles/
+client/assets/resources/development/map-styles.meta
 server/minimir
 outputs/server-dev/nbserver
 conf/dev/*.local.json

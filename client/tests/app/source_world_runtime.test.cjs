@@ -2,6 +2,8 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const runtime=require('../support/world_runtime.cjs'),{cc,UITransform,Sprite,Vec3,Long,state,event}=runtime;
 const root=path.resolve(__dirname,'../../..'),resourceRoot=path.join(root,'client/assets/resources');
 const shinsuProfilePath='development/pets/shinsu/profile';
+const mapStylesPath='development/map-styles/manifest';
+const optionalLocalPackages=new Set([shinsuProfilePath,mapStylesPath,'development/map-travel-atlas/index','development/world-boss-atlas/index']);
 const primary=runtime.makeWorld(1),GameWorldView=primary.view.constructor,WorldAssets=primary.assets.constructor;primary.view.dispose();
 cc.Node.prototype.setScale=function(x,y,z){this.scale=new Vec3(x,y,z);};
 function ancestry(node){const nodes=[];while(node){nodes.push(node);node=node.parent;}return nodes;}
@@ -17,8 +19,8 @@ function fakeResources(options={}){
  const pool=new Map(),requested=[],pending=[],callbacks=[],sourceActive={now:0,max:0};
  const gameplay=JSON.parse(fs.readFileSync(path.join(resourceRoot,'development/gameplay.json'),'utf8'));
  options.changeGameplay?.(gameplay);
- // 本机试玩可以额外装神兽资源；本处只有显式传入的夹具才参与缺图或有图测试。
- const localFile=key=>key===shinsuProfilePath?null:path.join(resourceRoot,key+'.json');
+ // 神兽、区域地表和图集只使用显式测试夹具，避免拾取本机试玩生成的输入。
+ const localFile=key=>optionalLocalPackages.has(key)?null:path.join(resourceRoot,key+'.json');
  const hasLocalFile=key=>{const file=localFile(key);return file!==null&&fs.existsSync(file);};
  const load=(key,_type,callback)=>{
   requested.push(key);const source=key.startsWith('source-maps/');if(source){sourceActive.now++;sourceActive.max=Math.max(sourceActive.max,sourceActive.now);}
@@ -26,7 +28,9 @@ function fakeResources(options={}){
    let asset=pool.get(key),error=null;
    try{if(!asset){const json=key==='development/gameplay'?gameplay:options.extraResources?.[key]??(hasLocalFile(key)?JSON.parse(fs.readFileSync(localFile(key),'utf8')):undefined);
     options.changeResource?.(key,json);
-    asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status',DamageNumber:'damage-number'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};pool.set(key,asset);}
+    asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status',DamageNumber:'damage-number'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};
+    if(options.spriteSizes?.[key])asset.originalSize=options.spriteSizes[key];
+    pool.set(key,asset);}
    }catch(failure){error=failure;}
    if(source)sourceActive.now--;callback(error,asset);
   };
@@ -86,6 +90,18 @@ test('WorldAssets紧凑城镇使用17格菱形资源，正常预载并挂接有�
   assert(node.getChildByName('Body').getComponent(Sprite).spriteFrame);
  }
  view.dispose();assertReleased(resources);
+});
+test('显式城镇地表只替换贴图，保留地图碰撞、出生位置和NPC，尺寸错误完整释放',async()=>{
+ const frame='development/map-styles/ginkgo',key=frame+'/spriteFrame';
+ const styles={schema_version:1,styles:[{map_id:'3',scene_kind:2,width:17,height:17,frame}]};
+ const styleOptions=height=>({extraResources:{[mapStylesPath]:styles},spriteSizes:{[key]:{width:1088,height}}});
+ const resources=fakeResources(styleOptions(544));
+ const original=resources.gameplay.map_catalog.find(map=>map.id==='3'),assets=await WorldAssets.prepare(0,()=>{},'3');
+ assert.equal(assets.background,resources.pool.get(key));
+ assert(!resources.requested.includes('development/maps/first-map/spriteFrame'));
+ assert.deepEqual(assets.map.blocked,original.blocked);assert.deepEqual(assets.map.player_spawn,original.player_spawn);assert.deepEqual(assets.map.npcs,original.npcs);
+ assets.dispose();assertReleased(resources);
+ const wrong=fakeResources(styleOptions(543));await assert.rejects(WorldAssets.prepare(0,()=>{},'3'),/区域地表贴图像素尺寸/);assertReleased(wrong);
 });
 test('原版NPC按原序列换帧，保留碰撞脚点并在离场时解除全部图片', async () => {
  const npcPath = 'development/town-npcs/manifest';

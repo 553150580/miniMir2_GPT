@@ -8653,6 +8653,7 @@
           "note": "原角色击杀时特权决定绑定，分类后只出一个条目。"
         }
       ],
+      "game_drop_quotas": [],
       "game_skills": [
         {
           "id": 0,
@@ -10890,7 +10891,7 @@
       "path": "outputs/development-prep-20261026/玩法配置.xlsx",
       "sha256": "060dfc3b3d4a82010b608c3d6f9d0b8f1a72450b1adf860e5538f32084e5222e"
     },
-    "exporter_sha256": "d7519937168b22a5328f15f83e75b5d3c17f1c73c2be41399a82f7392d8e4164",
+    "exporter_sha256": "47ab74a5be5adc50ec61bdc724d5097ac01d3a547acdbf81b9be2b43332d3b27",
     "pet_runtime_inputs": {
       "compiler_sha256": "d4c7ccf25501efed02a7180cacfc2793e2a06e2f7fcf42a6e0eacc7cd6ac3603",
       "workbooks": [

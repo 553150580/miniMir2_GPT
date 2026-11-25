@@ -30,7 +30,7 @@ MON_DROPS=ROOT.parent/'MirServer沉默世界_MYF/Mir200/Envir/MonItems/稻草人
 ASSETS=ROOT/'client/assets/resources/development'
 NOTE='仅显式development配置使用的跨来源候选；未通过目标1.80行为/数值/真机验收，不进入正式发布。'
 TABLE_IDS=['game_monsters','game_items','game_equipment','game_maps','game_map_collisions','game_map_regions',
-           'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries',
+           'game_monster_spawns','game_pet_templates','game_pet_growth','arch_runtime_budgets','game_exp_levels','game_progression_rules','game_drop_pools','game_drop_entries','game_drop_quotas',
            'game_skills','game_buffs','game_effects','game_skill_upgrades','game_shop_prices','game_book_recycle','game_recycle_values','game_warehouse_rules','game_drop_guarantees','dev_first_loop_profile',*tasks_codex.TABLES,*bosses.TABLES]
 
 def save(path,value):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n')
@@ -969,6 +969,9 @@ def fixture_from_rows(tables):
             result['map']=ordinary_maps[0]
             result['monsters'], appearances=ordinary_hunt.compile_monsters(tables,fighter,respawns,drop_gold)
             result['ordinary_drop_pools']=ordinary_hunt.compile_pools(tables,profile,result['monsters'],items)
+            quotas=ordinary_hunt.compile_quotas(tables,result['ordinary_drop_pools'],items)
+            if quotas:
+                result['drop_quotas']=quotas
             result['_source_evidence']['ordinary_monster_appearances']=appearances
             catalog.extend(ordinary_maps[1:])
         if profile['rule_version']>=24:

@@ -630,10 +630,11 @@ export class GameWorldView {
         }
         this.fireWalls = undefined;
     }
-    // 在个人图与世界首领间转移资源所有权，旧视图仍负责解除自身的节点与事件。
-    takeAssets(sceneKind: 1 | 4): WorldAssets | undefined {
+    // 取走已准备地图的资源所有权，旧视图仍负责解除自身的节点与事件。
+    takeAssets(sceneKind: number | undefined, forReturn = false): WorldAssets | undefined {
         const assets = this.assets;
-        if (this.disposed || !this.mapReady || assets?.sceneKind !== sceneKind) return;
+        if (this.disposed || !this.isMapReady || !assets || (sceneKind !== undefined && assets.sceneKind !== sceneKind)
+            || (forReturn && !assets.canRetainAfterTravel)) return;
         this.releaseAssetsInvalidation?.(); this.releaseAssetsInvalidation = undefined;
         this.assets = undefined;
         return assets;

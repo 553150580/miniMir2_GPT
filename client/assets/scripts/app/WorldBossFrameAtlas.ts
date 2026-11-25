@@ -1,6 +1,7 @@
 import { JsonAsset, Rect, Size, SpriteFrame, Texture2D, resources } from 'cc';
 
-const directory = 'development/world-boss-atlas';
+const worldBossDirectory = 'development/world-boss-atlas';
+export const mapTravelAtlasDirectory = 'development/map-travel-atlas';
 
 interface AtlasPage {
     readonly name: string;
@@ -27,13 +28,19 @@ export class WorldBossFrameAtlas {
     private readonly textures = new Set<Texture2D>();
     private readonly sprites = new Set<SpriteFrame>();
 
-    static available(): boolean {
+    constructor(private readonly directory = worldBossDirectory) {}
+
+    static available(directory = worldBossDirectory): boolean {
         return !!resources.getInfoWithPath(`${directory}/index`, JsonAsset);
+    }
+
+    get textureBytes(): number {
+        return Array.from(this.textures).reduce((total, texture) => total + texture.width * texture.height * 4, 0);
     }
 
     async populate(keys: readonly string[], originals: Readonly<Record<string, OriginalFrame>>,
         target: Map<string, SpriteFrame>, progress: (loaded: number) => void): Promise<void> {
-        const asset = await this.load<JsonAsset>(`${directory}/index`, JsonAsset);
+        const asset = await this.load<JsonAsset>(`${this.directory}/index`, JsonAsset);
         asset.addRef();
         try {
             const catalog = asset.json as AtlasCatalog;
@@ -42,7 +49,7 @@ export class WorldBossFrameAtlas {
             const pages = new Map<number, { key: string; source: AtlasRectangle }[]>();
             for (const key of keys) {
                 const source = catalog.frames[key], original = originals[key];
-                if (!Array.isArray(source) || source.length !== 6) throw new Error(`世界首领图集缺少原帧：${key}`);
+                if (!Array.isArray(source) || source.length !== 6) throw new Error(`地图图集缺少原帧：${key}`);
                 const [pageId, x, y, width, height, digest] = source;
                 const page = catalog.pages[pageId];
                 if (!page || !/^page-[0-9]+$/.test(page.name) || ![pageId, x, y, width, height, page.width, page.height].every(Number.isSafeInteger)
@@ -57,7 +64,7 @@ export class WorldBossFrameAtlas {
             let done = 0;
             const jobs = Array.from(pages, async ([pageId, entries]) => {
                 const page = catalog.pages[pageId];
-                const texture = await this.load<Texture2D>(`${directory}/${page.name}/texture`, Texture2D);
+                const texture = await this.load<Texture2D>(`${this.directory}/${page.name}/texture`, Texture2D);
                 if (!this.textures.has(texture)) { texture.addRef(); this.textures.add(texture); }
                 if (texture.width !== page.width || texture.height !== page.height) throw new Error(`世界首领图集纹理尺寸不符：${page.name}`);
                 for (const { key, source: [, x, y, width, height] } of entries) {

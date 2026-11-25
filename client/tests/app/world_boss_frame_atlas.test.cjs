@@ -9,7 +9,7 @@ const { outputText } = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
     compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS },
 });
 
-function fixture(catalog, loadTexture) {
+function fixture(catalog, loadTexture, directory) {
     const releases = [];
     const requests = [];
     const index = { json: catalog, references: 0, addRef() { this.references++; }, decRef() { this.references--; } };
@@ -45,7 +45,7 @@ function fixture(catalog, loadTexture) {
         assert.equal(name, 'cc');
         return engine;
     }, module, module.exports);
-    return { atlas: new module.exports.WorldBossFrameAtlas(), requests, releases, index, texture };
+    return { atlas: new module.exports.WorldBossFrameAtlas(directory), requests, releases, index, texture };
 }
 
 const page = name => ({ name, width: 20, height: 20 });
@@ -82,6 +82,19 @@ test('过期的原帧索引在请求纹理前失败并释放索引引用', async
     await assert.rejects(atlas.populate(keys, originals, new Map(), () => {}), /来源不符/);
     assert.equal(requests.length, 1);
     assert.equal(index.references, 0);
+});
+
+test('旅行图集只加载当前地图的页面并计入实际纹理字节', async () => {
+    const frames = { ...rectangles, 'Magic:201': [1, 6, 2, 3, 4, '原帧乙'] };
+    const { atlas, requests } = fixture({ schema_version: 1, pages: [page('page-00'), page('page-01')], frames },
+        undefined, 'development/map-travel-atlas');
+    const target = new Map();
+    await atlas.populate(['Magic:201'], originals, target, () => {});
+    assert.deepEqual(requests, ['development/map-travel-atlas/index', 'development/map-travel-atlas/page-01/texture']);
+    assert.deepEqual(Array.from(target.keys()), ['Magic:201']);
+    assert.equal(atlas.textureBytes, 20 * 20 * 4);
+    atlas.dispose();
+    assert.equal(atlas.textureBytes, 0);
 });
 
 test('其中一页失败仍等并发页结束，离场可清理后到的帧和纹理', async () => {
