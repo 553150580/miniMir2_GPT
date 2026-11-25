@@ -494,11 +494,15 @@ async function main() {
                 report.travelBenchmark = await measureTravel(page, tap, travelBenchmark, path.dirname(manifestPath),
                     process.env.MINIMIR_EXPECT_REGIONAL_MAP_STYLES === '1');
             }
-            // 城镇专项专注地图点击。个人首领另有双场及旧票专用矩阵。
-            if (bossChallenges && index === 0 && !checkTownGround) await verifyBossChallenges();
-            if (tasksCodex && index === 0) await verifyTasks();
-            if (index === 0) await verifyOrdinaryMap();
-            if (index === 0 && checkTownGround) report.townGroundNavigation = await verifyTownGround();
+            if (index === 0) {
+                // 城镇专项保留四服选服与入场，独立覆盖三座城镇的点地导航。
+                if (checkTownGround) report.townGroundNavigation = await verifyTownGround();
+                else {
+                    if (bossChallenges) await verifyBossChallenges();
+                    if (tasksCodex) await verifyTasks();
+                    await verifyOrdinaryMap();
+                }
+            }
             if (entry !== entries.at(-1)) {
                 await tap('BottomHUD/Footer/ChangeRole');
                 await scene('RoleSelect');

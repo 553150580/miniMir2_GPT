@@ -23,6 +23,9 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
         return '当前连接认证已失效，请重新连接。';
     }
     if (errorCode === CodeRouteChanged && messageId === 20002) return '游戏线路已更新，请重试进入，或重新登录。';
+    if (messageId === 40031 && (errorCode === CodeServerBusy || errorCode === CodeOperationConflict)) {
+        return '技能槽未保存，请稍后再次点击槽位。';
+    }
     if (errorCode === CodeServerBusy) return '服务暂时繁忙，请稍后重试。';
     if (errorCode === CodeRoleSlotOrNameOccupied) return '角色槽位或名称已被占用，请查看角色列表或更换名称后重试';
     if (errorCode === CodeLineForbidden) return messageId === 30004 ? '当前场景不允许调整自动战斗' : SCENE_FORBIDDEN_MESSAGE;

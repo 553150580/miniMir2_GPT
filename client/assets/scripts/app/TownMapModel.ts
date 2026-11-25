@@ -1,4 +1,5 @@
 import { travelInteger } from './MapTravelModel';
+import { decodeSourceBase64 } from './SourceMapModel';
 import type { HeadProfile } from './EntityHeadAnchor';
 
 export interface TownDirectoryMapRow {
@@ -89,18 +90,26 @@ export function mergeTownNpcAppearances(manifest: any, extra: any, npcs: readonl
             throw new Error(`城镇NPC原画外观无效：${id}`);
         }
     }
+    const townNpcHitMasks: Record<string, Uint8Array> = Object.create(null);
     for (const [key, raw] of Object.entries(extra.frames)) {
         const frame = raw as any;
         if (!/^Npc:\d+$/.test(key) || manifest.frames[key] || !/^town-npcs\/frames\/frame_\d+\.png$/.test(frame?.png)
             || ![frame.width, frame.height, frame.offset_x, frame.offset_y].every(Number.isSafeInteger)
             || frame.width < 1 || frame.height < 1 || frame.declared_empty !== false) throw new Error(`城镇NPC原画帧无效：${key}`);
+        // 旧资源包可以继续读取。新包的原画命中位图每帧解码一次，由同外观的 NPC 共享。
+        if (frame.hit_mask_base64 !== undefined) {
+            const pixels = frame.width * frame.height, field = `城镇NPC透明遮罩 ${key}`;
+            const mask = decodeSourceBase64(frame.hit_mask_base64, Math.ceil(pixels / 8), field);
+            if (pixels % 8 && mask[mask.length - 1] >>> (pixels % 8)) throw new Error(`${field}尾位无效`);
+            townNpcHitMasks[key] = mask;
+        }
     }
     for (const npc of npcs) {
         const profile = extra.npc_profiles[npc.id];
         if (typeof profile !== 'string' || !owns(extra.profiles, profile)) throw new Error(`城镇NPC缺少原画：${npc.id}`);
     }
     return { ...manifest, profiles: { ...manifest.profiles, ...extra.profiles }, frames: { ...manifest.frames, ...extra.frames },
-        townNpcProfiles: extra.npc_profiles };
+        townNpcProfiles: extra.npc_profiles, townNpcHitMasks };
 }
 
 function plainRecord(value: unknown): value is Record<string, unknown> {

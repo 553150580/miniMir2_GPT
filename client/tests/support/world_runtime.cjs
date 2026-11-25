@@ -2,8 +2,17 @@ const fs=require('node:fs'),path=require('node:path'),{createRequire}=require('n
 const ts=require('../../../tools/client/creator_paths.cjs').typescript;
 const source=path.resolve(__dirname,'../../assets/scripts/app');
 const Long=createRequire(path.join(source,'GameWorldView.ts'))('long');
-class Vec3{constructor(x=0,y=0,z=0){Object.assign(this,{x,y,z});}}
-class UITransform{constructor(){this.width=64;this.height=96;this.anchorPoint={x:.5,y:.5};}setContentSize(width,height){Object.assign(this,{width,height});}setAnchorPoint(x,y){this.anchorPoint={x,y};}convertToNodeSpaceAR(point){return point;}}
+class Vec3{constructor(x=0,y=0,z=0){this.set(x,y,z);}set(x,y,z){Object.assign(this,{x,y,z});return this;}}
+class UITransform{
+ constructor(){this.width=64;this.height=96;this.anchorPoint={x:.5,y:.5};}
+ setContentSize(width,height){Object.assign(this,{width,height});}
+ setAnchorPoint(x,y){this.anchorPoint={x,y};}
+ convertToNodeSpaceAR(point,out){return out ? out.set(point.x,point.y,point.z) : point;}
+ hitTest(point){
+  return point.x>=-this.width*this.anchorPoint.x&&point.x<=this.width*(1-this.anchorPoint.x)
+   &&point.y>=-this.height*this.anchorPoint.y&&point.y<=this.height*(1-this.anchorPoint.y);
+ }
+}
 class Material{copy(_base,options){this.passes=[{blendState:options.states.blendState}];}destroy(){this.destroyed=true;}}
 class Sprite{static Type={SIMPLE:0};static SizeMode={CUSTOM:0};getSharedMaterial(){return {}}getRenderMaterial(){return this.customMaterial}}class Label{}class ProgressBar{}
 class UIOpacity{constructor(){this.opacity=255;}}
@@ -21,6 +30,7 @@ class Node{
 const sprite=name=>{const node=new Node(name);node.add(Sprite,new Sprite());return node;};
 const touchListeners=new Set();
 const cc={Node,UITransform,Sprite,Label,ProgressBar,UIOpacity,Vec3,AudioSource,Material,Input:{EventType:{TOUCH_END:'touch-end'}},
+ view:{getViewportRect:()=>({x:0,y:0}),getScaleX:()=>1,getScaleY:()=>1},
  input:{on(_e,callback,owner){touchListeners.add({callback,owner});},off(_e,callback,owner){for(const value of touchListeners)if(value.callback===callback&&value.owner===owner)touchListeners.delete(value);},touch(){for(const value of Array.from(touchListeners))value.callback.call(value.owner);}},
  gfx:{BlendFactor:{SRC_ALPHA:2,ONE:1,ONE_MINUS_SRC_ALPHA:4}},isValid:node=>!node?.destroyed,game:{totalTime:0},instantiate(prefab){
  if(prefab==='damage-number'){const node=new Node('DamageNumber');node.addComponent(Label);node.addComponent(UIOpacity);return node;}

@@ -1,4 +1,4 @@
-import { instantiate, isValid, Label, Node, Sprite, UITransform } from 'cc';
+import { instantiate, isValid, Label, Node, Sprite, UITransform, Vec3, view } from 'cc';
 import { profileHeadTop } from './EntityHeadAnchor';
 import { GridProjection } from './GridProjection';
 import { townNpcAppearance } from './TownMapModel';
@@ -10,6 +10,7 @@ interface NpcLayer {
     readonly frames: readonly string[];
     readonly frameMs: number;
     current?: string;
+    hitMask?: Uint8Array;
 }
 
 export class TownNpcView {
@@ -31,9 +32,10 @@ export class TownNpcView {
             if (index > 0) { part.parent = node; part.setSiblingIndex(index); }
             const sprite = part.getComponent(Sprite)!;
             sprite.trim = false; sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-            this.layers.push({ ...sequence, sprite });
-            this.paint(this.layers[index], sequence.frames[0]);
-            // 只让可见站立图层响应点击，脚点根节点的透明区域交还地图寻路。
+            const layer: NpcLayer = { ...sequence, sprite };
+            this.layers.push(layer);
+            this.paint(layer, sequence.frames[0]);
+            this.bindVisibleHit(layer);
             part.on(Node.EventType.TOUCH_END, selectBody);
         }
         const foot = projection.project(npc.position.x, npc.position.y);
@@ -50,6 +52,27 @@ export class TownNpcView {
         }
     }
 
+    // 先保留 Creator 的相机、视口和父遮罩判定，再过滤当前站立帧的透明像素。
+    // 在触摸开始前完成过滤，空地仍由原地图视口认领整次手势。
+    private bindVisibleHit(layer: NpcLayer): void {
+        if (!layer.frames.some(key => this.assets.manifest.townNpcHitMasks?.[key])) return;
+        const transform = layer.sprite.node.getComponent(UITransform)!;
+        const hitRectangle = transform.hitTest.bind(transform);
+        const uiPoint = new Vec3(), localPoint = new Vec3();
+        transform.hitTest = (screenPoint, windowId) => {
+            if (!hitRectangle(screenPoint, windowId)) return false;
+            if (!layer.hitMask) return true;
+            const viewport = view.getViewportRect();
+            uiPoint.set((screenPoint.x - viewport.x) / view.getScaleX(), (screenPoint.y - viewport.y) / view.getScaleY(), 0);
+            transform.convertToNodeSpaceAR(uiPoint, localPoint);
+            // 站姿图层的锚点固定在左上。原图行号向下增长。
+            const x = Math.floor(localPoint.x), y = Math.floor(-localPoint.y);
+            if (x < 0 || y < 0 || x >= transform.width || y >= transform.height) return false;
+            const pixel = y * transform.width + x;
+            return (layer.hitMask[pixel >> 3] & (1 << (pixel & 7))) !== 0;
+        };
+    }
+
     private paint(layer: NpcLayer, key: string): void {
         if (layer.current === key) return;
         const frame = this.assets.frames.get(key), definition = this.assets.manifest.frames[key];
@@ -58,6 +81,7 @@ export class TownNpcView {
         const part = layer.sprite.node, transform = part.getComponent(UITransform)!;
         transform.setAnchorPoint(0, 1); transform.setContentSize(definition.width, definition.height);
         part.setPosition(definition.offset_x - 24, 16 - definition.offset_y);
+        layer.hitMask = this.assets.manifest.townNpcHitMasks?.[key];
         layer.current = key;
     }
 

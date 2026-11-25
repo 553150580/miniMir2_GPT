@@ -345,8 +345,12 @@ test('骷髅和神兽通过保存槽进入攻击队列，未入槽时不打开�
  assert.deepEqual(calls[0],{id:40031,value:{skillSlotIds:[17,0,0,0]}});
  session.inventory.skillSlotIds=calls[0].value.skillSlotIds;
  assert.equal(models.canSetAutomaticSkill(instance.skillSnapshot(),row(17)),true);
+ session.entry.sceneKind=2;
  instance.skills={selected:row(30)};await instance.configureAttackSlot(1);
  assert.deepEqual(calls[1],{id:40031,value:{skillSlotIds:[17,30,0,0]}});
+ session.entry.sceneKind=3;
+ assert.throws(()=>instance.configureAttackSlot(2),/请在城镇或普通野外调整技能槽/);
+ assert.equal(calls.length,2);
  assert.equal(models.canQueueSkill({...row(17),learned:false}),false);
 });
 const ownedSummon=(changes={})=>({entityHandle:20,definitionId:1,life:Long.UZERO,mapId:Long.fromString('9007199254740993',true),hp:Long.fromInt(60),hpMax:Long.fromInt(60),petTraining:null,recallSkillIds:[17],followSuppressed:false,...changes});

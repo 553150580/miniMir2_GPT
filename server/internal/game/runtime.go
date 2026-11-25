@@ -659,8 +659,8 @@ func (w *worker) roomCommand(r *room, c command) {
 	if w.flushWearBeforeAsset(r, c.frame, time.Now()) {
 		return
 	}
-	if (c.frame.ID == p.MsgC2SUseItem || c.frame.ID == p.MsgC2SLearnSkill || c.frame.ID == p.MsgC2SSkillAssetCommit || c.frame.ID == p.MsgC2SCastWithMaterial || c.frame.ID == p.MsgC2SSetCastingSupply) && r.Pending {
-		w.queuePotion(r, c)
+	if r.Pending && waitsForAssetSlot(c.frame.ID) {
+		w.queueAssetCommand(r, c)
 		return
 	}
 	switch c.frame.ID {
@@ -1087,7 +1087,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	// reviveID 标识当前业务使用的复活。
 	reviveID := ""
 	// q 组装资产请求所需的数据。
-	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
+	q := persistence.AssetRequest{Fingerprint: assetCommandFingerprint(f)}
 	switch f.ID {
 	case p.MsgC2SSetSkillSlots:
 		var request pb.SetSkillSlotsRequest

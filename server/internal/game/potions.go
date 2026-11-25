@@ -2,12 +2,8 @@
 package game
 
 import (
-	"bytes"
-	pb "minimir/api/generated/minimirv1"
-	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
-	"minimir/internal/wire"
 	"strconv"
 	"time"
 )
@@ -41,57 +37,6 @@ func potionGate(r *room, scene uint64, now time.Time) uint32 {
 		return p.CodeItemUseCooldown
 	}
 	return 0
-}
-
-// potionFingerprint 计算原用药帧的内容指纹，防止历史编号对应不同请求。
-// f 记录协议帧。
-func potionFingerprint(f wire.Frame) string {
-	return persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))
-}
-
-// queuePotion 暂存忙时的原用药请求，保留后续核对所需身份。
-// w 是调用该方法的房间执行器实例，r 指向当前执行器拥有并更新的目标房间，c 记录命令。
-func (w *worker) queuePotion(r *room, c command) {
-	const waitingLimit = 2 // 与现有重连等待共用有界队列，不能无限积累请求。
-	// op 保存由操作上下文取得的操作。
-	op := operationContext(c.frame)
-	if op == nil || len(op.OpId) != 16 {
-		w.failure(r, c.frame, p.CodeInvalidArgument)
-		return
-	}
-	// id 区分当前步骤指向的目标对象。
-	id := op.OpId
-	// digest 保存由药水“fingerprint”取得的摘要。
-	digest := potionFingerprint(c.frame)
-	// known 保存根据待确认操作标识与十六进制计算的已知状态。
-	known := r.PendingOperationID == domain.Hex(id)
-	// conflict 保存根据已知状态与摘要与待确认“fingerprint”的计算结果计算的冲突。
-	conflict := known && digest != r.PendingFingerprint
-	// waiting 接收遍历等待时当前的元素。
-	for _, waiting := range r.Waiting {
-		if economic(waiting.frame.ID) && bytes.Equal(operationID(waiting.frame), id) {
-			known = true
-			conflict = conflict || potionFingerprint(waiting.frame) != digest
-		}
-	}
-	if conflict {
-		w.failure(r, c.frame, p.CodeOperationConflict)
-		return
-	}
-	if len(r.Waiting) >= waitingLimit {
-		// historical 保存根据客户端操作序号与当前数据的计算结果与经济操作序号与当前数据的计算结果的计算结果与客户端操作序号与无符号整数“64”的计算结果计算的“historical”。
-		historical := op.CommandSeq > 0 && r.Role.EconomicSeq >= 0 && op.CommandSeq <= uint64(r.Role.EconomicSeq)
-		if known || historical {
-			// 已在途或落在历史经济水位内的请求可能已经提交；未查原回执前不能当作未受理。
-			w.send(r, p.MsgS2COperationResult, c.frame.Request, &pb.OperationResult{OpId: id, CommandSeq: uint64(r.Role.EconomicSeq), NewRevision: uint64(r.Role.Revision), ErrorCode: p.CodeOperationPending, Pending: true})
-		} else {
-			w.failure(r, c.frame, p.CodeServerBusy)
-		}
-		return
-	}
-	c.frame.Payload = append([]byte(nil), c.frame.Payload...)
-	r.Waiting = append(r.Waiting, c)
-	// 首次排队不发假Pending，原request保留到真正执行完毕。
 }
 
 // queueAdd 在设定恢复上限内合并已确认的剩余恢复量。

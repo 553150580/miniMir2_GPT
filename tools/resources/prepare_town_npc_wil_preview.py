@@ -1,6 +1,7 @@
 """只读导入当前紧凑城镇使用的原 NPC 帧，产物仅进入本机隔离 Creator 工程。"""
 
 import argparse
+import base64
 import hashlib
 import io
 import json
@@ -9,6 +10,7 @@ from pathlib import Path
 from PIL import Image
 
 from build_hud_assets import base_meta, image_meta, stable_uuid
+from creator_json_meta import content_meta_bytes
 from inspect_wil import decode_frame, probe, sha256_file
 
 
@@ -42,16 +44,21 @@ def source_identities(fixture, starts):
 
 
 def encode_frame(wil, source, palette):
-    """保留原透明度、尺寸与脚点，不裁切可见区域。"""
+    """保留原透明度、尺寸与脚点，另外导出同一帧自左至右、自上而下的可触摸像素。"""
     raw = decode_frame(wil, source, palette)
     width, height = source['width'], source['height']
-    visible = sum(alpha != 0 for alpha in raw[3::4])
+    mask = bytearray((width * height + 7) // 8)
+    visible = 0
+    for pixel, alpha in enumerate(raw[3::4]):
+        if alpha:
+            mask[pixel // 8] |= 1 << (pixel % 8)
+            visible += 1
     if width <= 1 or height <= 1 or visible <= 4:
         raise ValueError(f'NPC 原站立帧空白：{source["frame_index"]}')
     output = io.BytesIO()
     with Image.frombytes('RGBA', (width, height), raw) as image:
         image.save(output, format='PNG')
-    return output.getvalue(), visible
+    return output.getvalue(), visible, base64.b64encode(mask).decode('ascii')
 
 
 def compile_preview(source, contract, fixture):
@@ -77,7 +84,7 @@ def compile_preview(source, contract, fixture):
             keys = []
             for index in range(start, start + action['count']):
                 row = table['frames'][index]
-                png, visible = encode_frame(wil, row, table['palette'])
+                png, visible, hit_mask = encode_frame(wil, row, table['palette'])
                 stem, key = f'frame_{index:04d}', f'Npc:{index}'
                 path = f'{PACKAGE}/frames/{stem}.png'
                 files[path] = png
@@ -87,15 +94,16 @@ def compile_preview(source, contract, fixture):
                 files[path + '.meta'] = json_bytes(metadata)
                 frames[key] = {field: row[field] for field in ('width', 'height', 'offset_x', 'offset_y')}
                 frames[key].update(png=path, png_sha256=hashlib.sha256(png).hexdigest(), declared_empty=False,
-                                   visible_alpha_pixels=visible, raw_frame=index)
+                                   visible_alpha_pixels=visible, raw_frame=index, hit_mask_base64=hit_mask)
                 keys.append(key)
             directions.append({'direction': direction, 'frames': keys})
         standing = {'count': action['count'], 'duration_ms': action['duration_ms'], 'directions': directions}
         profiles[profile_id] = {'id': profile_id, 'layers': [{'package': 'Npc', 'actions': {'standing': standing}}]}
     manifest = {'schema_version': 1, 'npc_profiles': npc_profiles, 'profiles': profiles, 'frames': frames,
                 'source_archives': archive_hashes, 'source_reference': contract['reference']}
-    files[f'{PACKAGE}/manifest.json'] = json_bytes(manifest)
-    files[f'{PACKAGE}/manifest.json.meta'] = json_bytes(base_meta('json', '2.0.1', stable_uuid(f'{PACKAGE}-manifest'), ['.json']))
+    manifest_path = f'{PACKAGE}/manifest.json'
+    files[manifest_path] = json_bytes(manifest)
+    files[manifest_path + '.meta'] = content_meta_bytes(f'development/{manifest_path}', files[manifest_path])
     for name in (PACKAGE, f'{PACKAGE}/frames'):
         files[name + '.meta'] = json_bytes(base_meta('directory', '1.2.0', stable_uuid(name), []))
     return manifest, files

@@ -4,16 +4,21 @@ const fs = require('node:fs');
 const path = require('node:path');
 const ts = require('../../../tools/client/creator_paths.cjs').typescript;
 
-const file = path.resolve(__dirname, '../../assets/scripts/app/TownMapModel.ts');
-const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
-    compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS },
-}).outputText;
-const bindings = { exports: {} };
-new Function('require', 'module', 'exports', code)(name => {
+function load(name, dependencies) {
+    const file = path.resolve(__dirname, '../../assets/scripts/app', name + '.ts');
+    const code = ts.transpileModule(fs.readFileSync(file, 'utf8'), {
+        compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS },
+    }).outputText;
+    const bindings = { exports: {} };
+    new Function('require', 'module', 'exports', code)(dependencies, bindings, bindings.exports);
+    return bindings.exports;
+}
+const sourceMap = load('SourceMapModel');
+const { mergeTownNpcAppearances, townNpcAppearance, townNpcPreloadFrames } = load('TownMapModel', name => {
+    if (name === './SourceMapModel') return sourceMap;
     assert.equal(name, './MapTravelModel');
     return {};
-}, bindings, bindings.exports);
-const { mergeTownNpcAppearances, townNpcAppearance, townNpcPreloadFrames } = bindings.exports;
+});
 
 const npc = { id: '4002', name: '边界守将', role: '守卫', position: { x: 3, y: 4 }, profile: 'player_male' };
 
@@ -57,6 +62,21 @@ test('旧版包只持有当前NPC需要的玩家静态身体和头发', () => {
     const { manifest } = inputs();
     assert.deepEqual(townNpcPreloadFrames(manifest, npc), ['Hum', 'Hair']);
     assert.deepEqual(townNpcAppearance(manifest, npc).parts.map(part => part.frameMs), [0, 0]);
+});
+
+test('同帧透明命中位图按原像素顺序解码并保持旧外观清单兼容', () => {
+    const { original, manifest } = inputs();
+    const frame = original.frames['Npc:1680'];
+    // 三行各三像素，行首和下一字节的末像素均可保留。
+    Object.assign(frame, { width: 3, height: 3, hit_mask_base64: 'EQE=' });
+    const merged = mergeTownNpcAppearances(manifest, original, [npc]);
+    assert.deepEqual(merged.townNpcHitMasks['Npc:1680'], new Uint8Array([17, 1]));
+    assert.equal(merged.townNpcHitMasks['Npc:1681'], undefined);
+    assert.equal(original.frames['Npc:1680'].hit_mask_base64, 'EQE=');
+    frame.hit_mask_base64 = 'EQI=';
+    assert.throws(() => mergeTownNpcAppearances(manifest, original, [npc]), /遮罩.*尾位/);
+    frame.hit_mask_base64 = 'EQ==';
+    assert.throws(() => mergeTownNpcAppearances(manifest, original, [npc]), /城镇NPC透明遮罩/);
 });
 
 test('拒绝缺失城镇身份、缺少原站姿方向帧和非法纹理路径', async t => {

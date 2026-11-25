@@ -3,6 +3,12 @@ const assert = require('node:assert/strict');
 const { SystemMessageLog } = require('../../../.work/ui-tests/app/SystemMessageLog.js');
 const { protocolErrorMessage } = require('../../../.work/ui-tests/app/GameErrors.js');
 
+test('技能槽遇到明确未受理或修订变化时提示再次选择，其他业务提示保留', () => {
+    for (const code of [1003, 4301]) assert.equal(protocolErrorMessage(40031, code), '技能槽未保存，请稍后再次点击槽位。');
+    assert.equal(protocolErrorMessage(40009, 1003), '服务暂时繁忙，请稍后重试。');
+    assert.equal(protocolErrorMessage(40031, 4302), '操作失败，错误码4302');
+});
+
 function state(overrides = {}) {
     return {
         roleIdentity: '1:role-a', role: { name: '道士甲', level: 1 }, ready: true, lastError: '',

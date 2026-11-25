@@ -2,13 +2,16 @@
 package game
 
 import (
+	"bytes"
 	"slices"
 	"testing"
 	"time"
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
+	"minimir/internal/domain"
 	p "minimir/internal/protocol"
+	"minimir/internal/wire"
 )
 
 // TestAttackSkillSlotsSortsReadyTimes 验证就绪时间早者优先，同一截止按保存槽位选取。
@@ -124,5 +127,60 @@ func TestAttackSkillSlotsWarriorMeleeUsesSourceCosts(t *testing.T) {
 	}
 	if code := w.attackFromConfiguredSlots(r, request, r.Player.NextAttack); code != 0 || r.Player.AttackSkillID != 0 || r.Player.MP != mana-7 {
 		t.Fatalf("烈火仍冷却却再次消耗，错误码%d", code)
+	}
+}
+
+// TestAttackSkillSlotsWaitsForSettlement 验证挂机写入占用角色时，已学召唤的槽位命令不会被误报为未知提交。
+func TestAttackSkillSlotsWaitsForSettlement(t *testing.T) {
+	w, r, conn := stageBWorker(t, 2, 17, 30)
+	w.e.jobs = make(chan job, 1)
+	r.Auto, r.Pending = true, true
+	r.Auth.RoleID = "role"
+	r.Role.EconomicSeq, r.Role.Revision = 11, 17
+	settlementID := domain.ID()
+	r.PendingOperationID = settlementID
+	slots := &pb.SetSkillSlotsRequest{SkillSlotIds: []uint32{17, 30, 0, 0}, Operation: &pb.OperationContext{
+		OpId: domain.Bytes(domain.ID()), CommandSeq: 12, ExpectedRevision: 17,
+		ExpectedRuleVersion: w.e.Store.Cfg.Fixture.RuleVersion,
+	}}
+	frame := wire.Message(p.MsgC2SSetSkillSlots, 1, uint64(r.Auth.SessionEpoch), slots)
+	issue := func(frame wire.Frame) { w.command(command{role: r.Auth.RoleID, conn: conn, frame: frame}) }
+	issue(frame)
+	if len(r.Waiting) != 1 || len(conn.frames) != 0 || r.PendingOperationID != settlementID || len(w.e.jobs) != 0 || len(r.Role.SkillSlotIDs) != 0 {
+		t.Fatal("技能槽应等待原结算，不能提前报未知或修改槽位")
+	}
+	// 当前结算结束后才把保存原槽位及原操作号的任务交给资产执行器。
+	r.resumeAfterPending(time.Now())
+	w.after(r)
+	if len(r.Waiting) != 0 || len(conn.frames) != 0 || !r.Pending || r.PendingOperationID != domain.Hex(slots.Operation.OpId) ||
+		r.PendingFingerprint != assetCommandFingerprint(frame) || len(w.e.jobs) != 1 || len(r.Role.SkillSlotIDs) != 0 {
+		t.Fatal("结算结束后未按原技能槽请求提交，或在持久确认前修改槽位")
+	}
+
+	// 队列已满时区别原请求重放、历史命令和首次提交。
+	for _, request := range []struct {
+		id       []byte
+		sequence uint64
+		code     uint32
+		pending  bool
+	}{
+		{slots.Operation.OpId, 12, p.CodeOperationPending, true},
+		{domain.Bytes(domain.ID()), 11, p.CodeOperationPending, true},
+		{domain.Bytes(domain.ID()), 12, p.CodeServerBusy, false},
+	} {
+		r.Waiting = make([]command, 2)
+		duplicate := proto.CloneOf(slots)
+		duplicate.Operation.OpId, duplicate.Operation.CommandSeq = request.id, request.sequence
+		issue(wire.Message(p.MsgC2SSetSkillSlots, 2, uint64(r.Auth.SessionEpoch), duplicate))
+		var reply pb.OperationResult
+		if len(conn.frames) == 0 {
+			t.Fatal("满队列没有回传技能槽状态")
+		}
+		last := conn.frames[len(conn.frames)-1]
+		if err := proto.Unmarshal(last.Payload, &reply); err != nil || last.ID != p.MsgS2COperationResult || last.Request != 2 ||
+			!bytes.Equal(reply.OpId, request.id) || reply.ErrorCode != request.code || reply.Pending != request.pending ||
+			reply.CommandSeq != 11 || reply.NewRevision != 17 || len(r.Waiting) != 2 {
+			t.Fatalf("技能槽待确认与未受理回执混淆：%v，解析错误%v", &reply, err)
+		}
 	}
 }

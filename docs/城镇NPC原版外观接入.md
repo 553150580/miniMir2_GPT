@@ -11,4 +11,6 @@
 .\tools\dev.ps1 python tools/resources/prepare_town_npc_wil_preview.py 'D:/123DownLoad/Miro2_1.80/传奇1.80客户端/Data' --output '<独立工程>/assets/resources/development' --check
 ```
 
+当前导出同时保存每一张原站姿的透明命中位图。客户端按正在播放的原画帧判定触摸，点击透明地面交给地图的原导航，点击可见像素仍可打开对应 NPC 交互。位图来自原 WIL 帧，原 PNG、脚点和碰撞格不变。重新运行原版素材导入可以刷新项目的生成清单。清单按内容生成 Creator 导入地址，原试玩旧索引仍可读取历史清单。
+
 联机核验应逐城观察全部 NPC，确认边界守将没有借用通用玩家形象，站立帧可循环，脚点与头顶名牌一致，NPC 仍挡住原格并打开对应商店。离开城镇时清理动作引用，回城时只预载该城镇使用的展示序列。原图生成目录和本机 Web Mobile 包保留在独立试玩范围内。

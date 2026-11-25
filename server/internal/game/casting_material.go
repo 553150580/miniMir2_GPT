@@ -24,7 +24,7 @@ func (w *worker) materialCast(r *room, frame wire.Frame) {
 		return
 	}
 	// q 汇集扣料事务需要的身份、版本、材料实例与内容摘要。
-	q := persistence.AssetRequest{Kind: "cast_material", Fingerprint: potionFingerprint(frame), Context: request.Operation, ItemID: domain.Hex(request.MaterialInstanceId), ItemVersion: request.MaterialVersion, SkillID: request.SkillId, SceneEpoch: request.SceneEpoch, CasterLife: request.CasterLife}
+	q := persistence.AssetRequest{Kind: "cast_material", Fingerprint: assetCommandFingerprint(frame), Context: request.Operation, ItemID: domain.Hex(request.MaterialInstanceId), ItemVersion: request.MaterialVersion, SkillID: request.SkillId, SceneEpoch: request.SceneEpoch, CasterLife: request.CasterLife}
 	// plan 只在新的施法通过门禁后保存冻结的执行计划。
 	var plan *preparedCast
 	var mana automaticManaNeed // 仅原施法合法但缺蓝时，供拒绝回执确认后自动用药。
