@@ -46,7 +46,7 @@ type worldBossSeat struct {
 	done        bool                  // 已通知唯一场次终态，等待自动返回。
 	priorEpoch  int64                 // 暂挂时最后认证代次，防止旧票进入已撤销的席位。
 
-	privilegeOffer *worldBossPrivilegeWitness // 首基线确认前暂存的原角色特权观察引用。
+	privilegeOffer *challengePrivilegeWitness // 首基线确认前暂存的原角色特权观察引用。
 }
 
 // worldBossStatus 为查询返回当前开放、终态或下一场的日程与共享进度。
@@ -249,7 +249,7 @@ func (w *worker) showWorldBoss(enter worldBossEnter, arena *worldBossArena) {
 	owner.Manual, owner.Destination, owner.PetBornReady = false, nil, nil
 	owner.Navigation = navigationState{}
 	obs.shown = true
-	key := worldBossPrivilegeKey{runID: obs.occurrence.runID, roleID: owner.Role.ID}
+	key := challengePrivilegeKey{runID: obs.occurrence.runID, roleID: owner.Role.ID}
 	watch := w.e.worldBossPrivileges.offer(key, obs.occurrence.id, time.Now(), owner.Role.PrivilegeUntil)
 	if !w.postWorldBoss(obs.actor, func(actor *worker) {
 		seat := arena.seats[obs.auth.RoleID]

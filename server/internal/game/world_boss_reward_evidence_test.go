@@ -50,7 +50,7 @@ func TestWorldBossRewardEvidenceUsesKillTimeAndOriginalMembership(t *testing.T) 
 		child := &room{worldState: &worldState{}, runStore: store, Role: domain.Role{ID: member.id, Origin: member.origin},
 			Player:     entity{Handle: uint32(i + 101), Kind: 1, Life: 1, HP: 10},
 			bossBattle: &personalBossBattle{challenge: challenge, grant: grant, boss: boss}, worldBossCombat: arena}
-		key := worldBossPrivilegeKey{runID: identity.runID, roleID: member.id}
+		key := challengePrivilegeKey{runID: identity.runID, roleID: member.id}
 		obs := &worldBossObservation{suspension: &worldBossSuspension{}}
 		seat := &worldBossSeat{room: child, observation: obs, privilegeOffer: book.offer(key, identity.challengeID, start, killAt)}
 		actor.confirmWorldBossRewardMember(arena, seat, joined)
@@ -79,7 +79,7 @@ func TestWorldBossRewardEvidenceUsesKillTimeAndOriginalMembership(t *testing.T) 
 	}
 	// 一次普通房间接管即可刷新离场角色的原特权观察，无需还原首领席位。
 	owner := &worker{e: actor.e}
-	owner.observeWorldBossPrivilege(leftOwner, before.Add(time.Second))
+	owner.observeChallengePrivilege(leftOwner, before.Add(time.Second))
 	actor.applyPersonalBossDamage(attacker, attacker.Pet, boss, 11, killAt.Add(2*time.Second), []hitContext{{At: killAt}})
 	proposal, ok := challenge.proposal()
 	if !ok || proposal.kind != bossDefeated || proposal.finishedAt != killAt || len(proposal.contributions) != len(members) {
@@ -102,7 +102,7 @@ func TestWorldBossRewardEvidenceUsesKillTimeAndOriginalMembership(t *testing.T) 
 		t.Fatal("永久终态仍挂着原参与者的临时跨分片观察")
 	}
 	beforeRetry := arena.rewardEvidence["left"]
-	owner.observeWorldBossPrivilege(leftOwner, killAt.Add(time.Minute))
+	owner.observeChallengePrivilege(leftOwner, killAt.Add(time.Minute))
 	actor.freezeWorldBossRewardEvidence(arena)
 	if beforeRetry != arena.rewardEvidence["left"] || !beforeRetry.PrivilegeUntil.Equal(until) {
 		t.Fatal("终态重试改写了玩家原特权证据")
@@ -111,8 +111,8 @@ func TestWorldBossRewardEvidenceUsesKillTimeAndOriginalMembership(t *testing.T) 
 
 // TestWorldBossPrivilegeWatchReleaseKeepsNewOccurrence 验证未 ACK、健康会话挂接和旧场次清理的边界。
 func TestWorldBossPrivilegeWatchReleaseKeepsNewOccurrence(t *testing.T) {
-	var book worldBossPrivilegeBook
-	key := worldBossPrivilegeKey{runID: 1, roleID: "role"}
+	var book challengePrivilegeBook
+	key := challengePrivilegeKey{runID: 1, roleID: "role"}
 	at := time.Unix(1800000000, 0)
 	first := book.offer(key, "first", at, time.Time{})
 	alsoFirst := book.offer(key, "first", at.Add(time.Second), at.Add(time.Hour))

@@ -2043,7 +2043,7 @@
     },
     {
       "path": "shared/proto/personal_boss.proto",
-      "sha256": "e2975cdffd249cdcfca723d5edcd11614cd020fb7f140787124c931a941a7046"
+      "sha256": "dfcd79a3dff681373fad424e628658c4d086192e39d185b14f405620219da6df"
     },
     {
       "path": "shared/proto/world_boss.proto",
@@ -2057,13 +2057,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "a3815ab198ed4cdaf08ce3688d7198daa5d32c673d934b14038aed1a5653e79d",
-      "bytes": 2103780
+      "sha256": "44c97f61af175b813ab17782c25699756e770ef715870c4ae47afd0dab866682",
+      "bytes": 2107323
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "8d17fcd5b3713afe87bb564a4d1d58323e18713c96e47225cba26b8631e17a47",
-      "bytes": 663429
+      "sha256": "e0d4da40c9bb76a9ddd746f1e054b849d6fa84d79e83f373bdb5dfbac2262ace",
+      "bytes": 663991
     }
   ],
   "runtime_dependency_scope": "client/node_modules",

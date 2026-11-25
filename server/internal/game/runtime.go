@@ -70,7 +70,8 @@ type Engine struct {
 	TownGrids        map[uint64]*townnav.Grid      // 按城镇地图编号保存可共用的导航静态网格。
 	sharedTowns      sharedTownDirectory           // 当前引擎每个运行服的共享城镇席位与动态占格。
 
-	worldBossPrivileges worldBossPrivilegeBook // 跨分片记录关联场次的原角色特权确认时序。
+	worldBossPrivileges challengePrivilegeBook // 世界首领各有效席位的原角色权益时序。
+	dungeonPrivileges   challengePrivilegeBook // 讨伐链各有效席位的原角色权益时序。
 }
 
 // workerCount 固定角色散列的分片数量。

@@ -58,9 +58,18 @@ test('新票须重新接收讨伐授权，迟到段号和终态不能倒拨本�
     progress(1, 2);
     progress(4, 4, home.sceneEpoch);
     assert.equal(h.session.dungeonTransition.objective, '讨伐 · 第 2/4 段');
+    assert.equal(h.session.dungeonTransition.confirmedVictory(challengeId), false);
     progress(4, 3);
     assert.equal(h.session.dungeonTransition.objective, '正在结算');
+    socket.deliver(20023, { challengeId, sceneEpoch: battle.sceneEpoch, stage: 4, stageCount: 4, state: 4 }, { binding: Long.UONE });
+    assert.equal(h.session.dungeonTransition.confirmedVictory(challengeId), false);
     progress(4, 4);
     progress(4, 6);
     assert.equal(h.session.dungeonTransition.objective, '已通关');
+    assert.equal(h.session.dungeonTransition.confirmedVictory(challengeId), true);
+    assert.equal(h.session.dungeonTransition.confirmedVictory(new Uint8Array(16).fill(19)), false);
+    const back = enter('14', '1', 1);
+    socket.deliver(20024, grant(battle, back));
+    socket.deliver(20002, back);
+    assert.equal(h.session.dungeonTransition.confirmedVictory(challengeId), false);
 });

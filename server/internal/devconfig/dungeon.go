@@ -57,13 +57,14 @@ type DungeonStageDefinition struct {
 
 // DungeonDefinition 是候选配置的原始投影，缺少显式开启标记的模板不可使用。
 type DungeonDefinition struct {
-	Enabled      bool                     `json:"enabled"`       // 启用本模板的实验装配。
-	TemplateID   uint32                   `json:"template_id"`   // 讨伐链目录中的稳定编号。
-	DisplayName  string                   `json:"display_name"`  // 招募时显示的名称。
-	MinimumLevel uint32                   `json:"minimum_level"` // 各真人都必须达到的等级。
-	Map          MapTemplate              `json:"map"`           // 四段共用的独立挑战地图。
-	DurationMS   int64                    `json:"duration_ms"`   // 候选总时长，以毫秒装配。
-	Stages       []DungeonStageDefinition `json:"stages"`        // 原工作簿要求的四段顺序。
+	Enabled      bool                     `json:"enabled"`           // 启用本模板的实验装配。
+	TemplateID   uint32                   `json:"template_id"`       // 讨伐链目录中的稳定编号。
+	DisplayName  string                   `json:"display_name"`      // 招募时显示的名称。
+	MinimumLevel uint32                   `json:"minimum_level"`     // 各真人都必须达到的等级。
+	Map          MapTemplate              `json:"map"`               // 四段共用的独立挑战地图。
+	DurationMS   int64                    `json:"duration_ms"`       // 候选总时长，以毫秒装配。
+	Stages       []DungeonStageDefinition `json:"stages"`            // 原工作簿要求的四段顺序。
+	Rewards      *DungeonRewards          `json:"rewards,omitempty"` // 已配置的独立通关抽奖候选。
 }
 
 // DungeonEnemy 是运行时读取的原怪物数值与出生格快照。
@@ -82,12 +83,13 @@ type DungeonStage struct {
 
 // DungeonConfig 提供招募、原次数事务和挑战场次共用的配置快照。
 type DungeonConfig struct {
-	TemplateID   uint32         // 讨伐链目录编号。
-	DisplayName  string         // 客户端显示名称。
-	MinimumLevel uint32         // 每位真人的准入等级。
-	Map          MapTemplate    // 独立的场景底图。
-	Duration     time.Duration  // 整场原时长，不按战斗段重置。
-	Stages       []DungeonStage // 在同一地图内顺序开放的四段。
+	TemplateID   uint32          // 讨伐链目录编号。
+	DisplayName  string          // 客户端显示名称。
+	MinimumLevel uint32          // 每位真人的准入等级。
+	Map          MapTemplate     // 独立的场景底图。
+	Duration     time.Duration   // 整场原时长，不按战斗段重置。
+	Stages       []DungeonStage  // 在同一地图内顺序开放的四段。
+	Rewards      *DungeonRewards // 装配时冻结的通关奖表，缺失时不发放附件。
 }
 
 // DungeonTemplateByID 返回显式开启且已校验的模板快照。
@@ -148,8 +150,11 @@ func (f *Fixture) assembleDungeon(release DungeonDefinition) (DungeonConfig, err
 		!validDungeonMap(&release.Map) {
 		return DungeonConfig{}, fmt.Errorf("目录、时长、地图或四段数量不合法")
 	}
+	if !f.ValidDungeonRewards(release.Rewards) {
+		return DungeonConfig{}, fmt.Errorf("讨伐链奖励的选项、权重、物品或绑定策略不合法")
+	}
 	config := DungeonConfig{TemplateID: release.TemplateID, DisplayName: release.DisplayName, MinimumLevel: release.MinimumLevel,
-		Map: cloneDungeonMap(release.Map), Duration: time.Duration(release.DurationMS) * time.Millisecond}
+		Map: cloneDungeonMap(release.Map), Duration: time.Duration(release.DurationMS) * time.Millisecond, Rewards: release.Rewards.clone()}
 	var previous map[Point]struct{} // 前一段从原落点能走到的格子。
 	for index, definition := range release.Stages {
 		if definition.Kind != kinds[index] || !config.Map.Contains(definition.Area.Min) || !config.Map.Contains(definition.Area.Max) ||

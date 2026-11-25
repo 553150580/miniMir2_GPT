@@ -25,6 +25,7 @@ interface BossContext {
     ready: boolean;
     level: number;
     canClaimRewards: boolean;
+    confirmedDungeonVictory?: (challengeId: Uint8Array) => boolean; // 原场次的通关消息已经通过场景授权核对。
     worldBoss?: WorldBossOffer;
     worldBosses?: readonly WorldBossOffer[];
 }
@@ -43,7 +44,7 @@ interface PendingChallengeReward {
     templateId: number;
     earnedAtUnixMs: { toString(): string };
     items: RewardItem[];
-    sourceKind?: string; // 原奖励来自个人击杀、世界击杀或独立超时奖。
+    sourceKind?: string; // 原奖励来自个人击杀、世界击杀、独立超时或讨伐链通关。
     sourceRank?: number; // 击杀时原榜名次；无排名的独立奖励为零。
 }
 
@@ -117,7 +118,7 @@ export class GameBoss {
     private personalQuery?: Promise<void>;
     private personalDirty = false;
     private personalCurrent = false;
-    private worldRewardDirty = false; // 原世界场有新终态时，允许在世界页上重新核对待领。
+    private refreshRewardsOnWorldTab = false; // 收到新挑战结果后，世界页也需要重新查询待领。
     private world?: WorldBossObservation;
     private active: any;
     private page = 0;
@@ -237,7 +238,7 @@ export class GameBoss {
         if (this.disposed) return;
         const context = this.context();
         this.syncWorldScene(context);
-        if (this.personalDirty && !this.personalQuery && this.panel.activeInHierarchy && (this.section !== 4 || this.worldRewardDirty)
+        if (this.personalDirty && !this.personalQuery && this.panel.activeInHierarchy && (this.section !== 4 || this.refreshRewardsOnWorldTab)
             && context?.ready && (context.sceneKind === 1 || context.sceneKind === 2)) {
             void this.queryPersonal(context).catch(this.rewardActions.report);
         }
@@ -280,7 +281,7 @@ export class GameBoss {
     }
 
     private get pendingRewards(): PendingChallengeReward[] {
-        return (this.personal?.pendingRewards ?? []).concat(this.personal?.worldPendingRewards ?? []);
+        return (this.personal?.pendingRewards ?? []).concat(this.personal?.worldPendingRewards ?? [], this.personal?.dungeonPendingRewards ?? []);
     }
 
     // 当前榜与最近的永久成绩分页展示，新窗口可正常预告和入场。
@@ -333,15 +334,20 @@ export class GameBoss {
         const page = pages[this.page], capacity = this.personal?.pendingRewardCapacity;
         this.label('Headline', '挑战奖励');
         const individual = this.personal?.pendingRewards?.length ?? 0, world = this.personal?.worldPendingRewards?.length ?? 0;
+        const dungeon = this.personal?.dungeonPendingRewards?.length ?? 0;
         const personalCount = `${individual}${capacity ? '/' + capacity : ''}`;
-        this.label('Status', this.personal ? world ? `个人 ${personalCount} · 世界 ${world}${this.personal.worldPendingRewardsMore ? '+' : ''}`
-            : `待领取 ${personalCount}` : '等待查询');
+        const counts: string[] = [];
+        if (individual || capacity) counts.push(`个人 ${personalCount}`);
+        if (world) counts.push(`世界 ${world}${this.personal.worldPendingRewardsMore ? '+' : ''}`);
+        if (dungeon) counts.push(`讨伐 ${dungeon}${this.personal.dungeonPendingRewardsMore ? '+' : ''}`);
+        this.label('Status', this.personal ? world || dungeon ? counts.join(' · ') : `待领取 ${personalCount}` : '等待查询');
         if (page) {
             const reward = page.reward, fromWorld = reward.sourceKind === 'world_boss' || reward.sourceKind === 'world_boss_timeout';
+            const fromDungeon = reward.sourceKind === 'dungeon';
             const source = fromWorld ? this.worldOffer(context, reward.templateId)?.display_name ?? '世界首领'
-                : this.personalPages(reward.templateId)[0]?.offer.displayName ?? `首领 ${reward.templateId}`;
+                : fromDungeon ? '讨伐链' : this.personalPages(reward.templateId)[0]?.offer.displayName ?? `首领 ${reward.templateId}`;
             const outcome = reward.sourceKind === 'world_boss_timeout' ? ' · 超时奖励'
-                : fromWorld && reward.sourceRank ? ` · 第${reward.sourceRank}名` : '';
+                : fromWorld && reward.sourceRank ? ` · 第${reward.sourceRank}名` : fromDungeon ? ' · 通关奖励' : '';
             this.label('Details', `${source}${outcome} · ${dateText(reward.earnedAtUnixMs)}\n${reward.items?.length ?? 0} 项物品`);
         } else this.label('Details', context && context.sceneKind >= 3 ? '请返回原场景后领取' : '');
         const lines = page?.items.map(item => `${this.rewardActions.itemName(item.itemId) ?? `物品 ${item.itemId}`} ×${item.quantity}  ${item.bound ? '绑定' : '非绑定'}`
@@ -414,7 +420,7 @@ export class GameBoss {
             this.personalQuery = undefined;
             this.personalDirty = true;
             this.personalCurrent = false;
-            this.worldRewardDirty = false;
+            this.refreshRewardsOnWorldTab = false;
             this.pendingPersonal = '';
             this.generation = this.connection.generation;
             this.serverClock = undefined;
@@ -435,7 +441,7 @@ export class GameBoss {
         if (this.personalQuery) return this.personalQuery;
         this.personalDirty = false;
         this.personalCurrent = false;
-        this.worldRewardDirty = false;
+        this.refreshRewardsOnWorldTab = false;
         const generation = this.generation, scene = context.sceneEpoch.toString();
         const query = this.connection.request(20015, {}).then(value => {
             if (this.disposed || this.connection.generation !== generation || this.context()?.sceneEpoch.toString() !== scene) return;
@@ -472,11 +478,16 @@ export class GameBoss {
     private installWorld(value: WorldBossObservation): void {
         const recent = value.latestResult;
         if (recent && (recent.state === 4 || recent.state === 5) && recent.occurrenceId !== this.world?.latestResult?.occurrenceId) {
-            this.personalDirty = true;
-            this.personalCurrent = false;
-            this.worldRewardDirty = true;
+            this.invalidateRewardsAfterChallenge();
         }
         this.world = value;
+    }
+
+    // 保留现有面板页签，回到可领取地图后再读取已结算附件。
+    private invalidateRewardsAfterChallenge(): void {
+        this.personalDirty = true;
+        this.personalCurrent = false;
+        this.refreshRewardsOnWorldTab = true;
     }
 
     // 将服务端秒表和场次时间换算到浏览器单调时钟，电脑时区或手调时间不改判定。
@@ -519,7 +530,7 @@ export class GameBoss {
 
     private observe(packet: Packet): void {
         const { id, value } = packet;
-        if (packet.error || this.disposed || (id !== 2 && id !== 20014 && id !== 20020)) return;
+        if (packet.error || this.disposed || (id !== 2 && id !== 20014 && id !== 20020 && id !== 20023)) return;
         const context = this.context();
         this.syncWorldScene(context);
         if (id === 2) {
@@ -542,6 +553,9 @@ export class GameBoss {
         } else if (id === 20020 && packet.seq === 0 && value.sceneEpoch.toString() === this.worldScene) {
             this.installWorld(value);
             this.cancelWorldTimer();
+        } else if (id === 20023 && packet.seq === 0 && context?.sceneKind === 5 && value.state === 4 &&
+            value.sceneEpoch.toString() === this.worldScene && context.confirmedDungeonVictory?.(value.challengeId)) {
+            this.invalidateRewardsAfterChallenge();
         }
         else return;
         this.render();

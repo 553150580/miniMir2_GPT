@@ -77,14 +77,17 @@ type DungeonChallenge struct {
 	Members       []DungeonMember `bson:"members"`               // 仅包含实际扣次的真实队员。
 	Outcome       DungeonOutcome  `bson:"outcome"`               // 首次确认的终态。
 	FinishedAt    time.Time       `bson:"finished_at,omitempty"` // 原执行确认结果或合法回收的时刻。
+	RewardAt      time.Time       `bson:"reward_at,omitempty"`   // 通关有奖时最终首领实际死亡的时刻，可能早于清场。
 	Refunded      bool            `bson:"refunded,omitempty"`    // 原系统中断退款已和终态同事务确认。
 	Recovered     bool            `bson:"recovered,omitempty"`   // 中断由新运行服代次确认。
 }
 
 type dungeonRecord struct {
 	DungeonChallenge `bson:",inline"`
-	BeginDigest      string `bson:"begin_digest"`            // 原开始参数摘要，拒绝同编号换队或修改配置。
-	FinishDigest     string `bson:"finish_digest,omitempty"` // 原终态提案摘要，拒绝同场再次改判。
+	BeginDigest      string                  `bson:"begin_digest"`               // 原开始参数摘要，拒绝同编号换队或修改配置。
+	FinishDigest     string                  `bson:"finish_digest,omitempty"`    // 原终态提案摘要，拒绝同场再次改判。
+	RewardSeed       string                  `bson:"reward_seed,omitempty"`      // 原有奖预约的服务端秘密，永不下发给客户端。
+	RewardDecisions  []dungeonRewardDecision `bson:"reward_decisions,omitempty"` // 每位原真人的抽选结果，包括空包。
 }
 
 func dungeonIndexes() []mongo.IndexModel {
@@ -179,6 +182,9 @@ func (s *Store) BeginDungeon(ctx context.Context, q DungeonBegin) (DungeonChalle
 			result.Members = append(result.Members, member)
 		}
 		record = dungeonRecord{DungeonChallenge: result, BeginDigest: digest}
+		if template.Rewards != nil {
+			record.RewardSeed = domain.ID()
+		}
 		if _, err = s.DB.Collection(dungeonCollection).InsertOne(tc, record); err != nil {
 			if mongo.IsDuplicateKeyError(err) {
 				return Fail(p.CodeOperationConflict, "讨伐链场次编号已存在")

@@ -55,6 +55,9 @@ message PersonalBossInfo {
   // 世界奖励按永久角色查找，独立于个人首领奖励的容量。
   repeated ChallengePendingReward world_pending_rewards = 20;
   bool world_pending_rewards_more = 21;
+  // 讨伐链的独立通关附件，永久保留原队员各自的抽取结果。
+  repeated ChallengePendingReward dungeon_pending_rewards = 22;
+  bool dungeon_pending_rewards_more = 23;
 }
 
 // 单个可选个人首领的入场资格；每日成功次数及活动场次仍为角色共用。

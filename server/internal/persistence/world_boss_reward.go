@@ -34,16 +34,6 @@ type WorldBossRewardEvidence struct {
 	PrivilegeUntil time.Time         `bson:"privilege_until,omitempty"` // 已确认的原特权卡截止时间。
 }
 
-// worldBossRewardRecord 是原终态与领奖事务共享的业务记录，附件冻结后不再变更。
-type worldBossRewardRecord struct {
-	ID                            string           `bson:"_id"`     // 由运行服、场次和永久角色推导的附件键。
-	RoleID                        string           `bson:"role_id"` // 原有效参与者，按角色和永久入口共同隔离。
-	domain.ChallengePendingReward `bson:",inline"` // 原物品、场次、时刻、名次和配置事实。
-	Claimed                       bool             `bson:"claimed"`                   // 附件是否已随角色资产事务领取。
-	ClaimedAt                     time.Time        `bson:"claimed_at,omitempty"`      // 首次领取落在同一事务的时刻。
-	ClaimOperation                string           `bson:"claim_operation,omitempty"` // 同事务永久资产操作的唯一键。
-}
-
 // writeWorldBossRewards 将附件插入确认同一场终态的事务。事务重试按稳定场次键得到相同实例。
 func (s *Store) writeWorldBossRewards(ctx context.Context, spec WorldBossSpec, finish WorldBossFinish, rules *devconfig.WorldBossRewards) error {
 	rows, err := freezeWorldBossRewards(&s.Cfg.Fixture, spec, finish, rules)
@@ -55,7 +45,7 @@ func (s *Store) writeWorldBossRewards(ctx context.Context, spec WorldBossSpec, f
 }
 
 // freezeWorldBossRewards 只消耗已经校验、排序、不可变的场次贡献。未配置或中断场不产生奖励。
-func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish WorldBossFinish, rules *devconfig.WorldBossRewards) ([]worldBossRewardRecord, error) {
+func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish WorldBossFinish, rules *devconfig.WorldBossRewards) ([]externalChallengeRewardRecord, error) {
 	if rules == nil || finish.Outcome != WorldBossKilled && finish.Outcome != WorldBossExpired {
 		return nil, nil
 	}
@@ -66,7 +56,7 @@ func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish Wor
 			return nil, nil
 		}
 	}
-	var rewards []worldBossRewardRecord // 至多每位已确认角色一笔，按原稳定榜单顺序生成。
+	var rewards []externalChallengeRewardRecord // 至多每位已确认角色一笔，按原稳定榜单顺序生成。
 	for index, row := range finish.Contributions {
 		if row.Damage < rules.MinimumDamage {
 			continue
@@ -106,7 +96,7 @@ func freezeWorldBossRewards(f *devconfig.Fixture, spec WorldBossSpec, finish Wor
 				items = append(items, InitializeItemDurability(item, f))
 			}
 		}
-		rewards = append(rewards, worldBossRewardRecord{ID: id, RoleID: row.RoleID, ChallengePendingReward: domain.ChallengePendingReward{
+		rewards = append(rewards, externalChallengeRewardRecord{ID: id, RoleID: row.RoleID, ChallengePendingReward: domain.ChallengePendingReward{
 			RewardID: id, SourceKind: sourceKind, SourceID: spec.OccurrenceID, Origin: evidence.Origin, TemplateID: spec.TemplateID,
 			RuleVersion: spec.RuleVersion, EarnedAt: finish.FinishedAt, Items: items, SourceRunID: spec.RunID, SourceRank: rank,
 			ConfigHash: spec.ConfigHash, PrivilegeUntil: evidence.PrivilegeUntil,

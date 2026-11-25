@@ -16,12 +16,14 @@ import (
 
 // DungeonFinish 来自原场景权威执行器。普通失败及超时均用 DungeonFailed。
 type DungeonFinish struct {
-	ChallengeID   string         // 原队伍扣次的业务键。
-	ReservationID string         // 初次扣次确认的场次回执。
-	Execution     uint64         // 冻结原场次的执行代次。
-	Outcome       DungeonOutcome // 原场景确认的唯一终态。
-	FinishedAt    time.Time      // 原终态的业务时刻。
-	Members       []Auth         // 各角色原所有者确认的当前场内会话，不能由旧请求补写。
+	ChallengeID    string                  // 原队伍扣次的业务键。
+	ReservationID  string                  // 初次扣次确认的场次回执。
+	Execution      uint64                  // 冻结原场次的执行代次。
+	Outcome        DungeonOutcome          // 原场景确认的唯一终态。
+	FinishedAt     time.Time               // 原终态的业务时刻。
+	Members        []Auth                  // 各角色原所有者确认的当前场内会话，不能由旧请求补写。
+	RewardAt       time.Time               `json:"RewardAt,omitzero"`        // 最终首领实际死亡时刻，仅有奖通关时提交。
+	RewardEvidence []DungeonRewardEvidence `json:"RewardEvidence,omitempty"` // 原真实队员在击杀时刻观察的特权截止。
 }
 
 // DungeonResume 使用健康原场的确切回执和旧席位会话显式接管新认证绑定。
@@ -58,6 +60,15 @@ func (s *Store) finishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 	auths := slices.Clone(q.Members)
 	slices.SortFunc(auths, func(left, right Auth) int { return cmp.Compare(left.RoleID, right.RoleID) })
 	q.FinishedAt, q.Members = bossTime(q.FinishedAt), nil // 会话可经专用接回推进，终态摘要只保留不可变业务事实。
+	if len(q.RewardEvidence) > devconfig.DungeonMaxPlayers {
+		return DungeonChallenge{}, nil, Fail(p.CodeInvalidArgument, "讨伐奖励原队员证据超出上限")
+	}
+	q.RewardAt = bossTime(q.RewardAt)
+	q.RewardEvidence = slices.Clone(q.RewardEvidence)
+	slices.SortFunc(q.RewardEvidence, func(left, right DungeonRewardEvidence) int { return cmp.Compare(left.RoleID, right.RoleID) })
+	for i := range q.RewardEvidence {
+		q.RewardEvidence[i].PrivilegeUntil = bossTime(q.RewardEvidence[i].PrivilegeUntil)
+	}
 	digest, err := bossDigest(q)
 	if err != nil {
 		return DungeonChallenge{}, nil, err
@@ -89,6 +100,9 @@ func (s *Store) finishDungeon(ctx context.Context, q DungeonFinish) (DungeonChal
 		}
 		record.Outcome, record.FinishedAt, record.FinishDigest = q.Outcome, q.FinishedAt, digest
 		record.Refunded = q.Outcome == DungeonSystemInterrupted
+		if err = s.writeDungeonRewards(tc, &record, q); err != nil {
+			return err
+		}
 		result = record.DungeonChallenge
 		return s.closeDungeon(tc, record, roles)
 	})

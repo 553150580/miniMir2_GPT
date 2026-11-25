@@ -12,24 +12,27 @@ import (
 
 // dungeonArena 由同一个战斗分片串行更新。所有成员引用同一组地图格和敌人。
 type dungeonArena struct {
-	grant         persistence.DungeonChallenge  // 原扣次事务固定的场次、成员和截止时刻。
-	template      *devconfig.DungeonConfig      // 原版本的四段配置快照。
-	store         *persistence.Store            // 本场运行服的持久化入口。
-	seats         map[string]*dungeonCombatSeat // 按真实角色编号查找批准的席位。
-	geometry      devconfig.MapTemplate         // 已开放小区构成的共享可通行地形。
-	monsters      []*entity                     // 仅含当前段的共享敌人身体。
-	stage         int                           // 当前段的零基索引。
-	openedAt      time.Time                     // 当前段开始接受本段动作的时刻。
-	clearedAt     time.Time                     // 当前段最后一头敌人死亡的权威时刻。
-	lastTick      time.Time                     // 场次已推进的逻辑时刻。
-	finishedAt    time.Time                     // 第一次权威终态形成的时刻。
-	outcome       persistence.DungeonOutcome    // 互斥的成功、战败或系统中断。
-	ledger        dungeonFinishState            // 原终态提案和提交结果。
-	castID        uint64                        // 全场唯一施法流水。
-	eventID       uint64                        // 全场唯一可见战斗事件流水。
-	nextHandle    uint32                        // 下一只敌人的场内句柄，不复用旧段编号。
-	observations  map[string]*dungeonAttachment // 临时战斗身体附着的当前输入和观测。
-	reportedStage int                           // 已向席位报告的段索引。
+	grant          persistence.DungeonChallenge        // 原扣次事务固定的场次、成员和截止时刻。
+	template       *devconfig.DungeonConfig            // 原版本的四段配置快照。
+	store          *persistence.Store                  // 本场运行服的持久化入口。
+	seats          map[string]*dungeonCombatSeat       // 按真实角色编号查找批准的席位。
+	geometry       devconfig.MapTemplate               // 已开放小区构成的共享可通行地形。
+	monsters       []*entity                           // 仅含当前段的共享敌人身体。
+	stage          int                                 // 当前段的零基索引。
+	openedAt       time.Time                           // 当前段开始接受本段动作的时刻。
+	clearedAt      time.Time                           // 当前段最后一头敌人死亡的权威时刻。
+	lastTick       time.Time                           // 场次已推进的逻辑时刻。
+	finishedAt     time.Time                           // 第一次权威终态形成的时刻。
+	rewardAt       time.Time                           // 最终首领实际死亡的逻辑时刻，可能早于最终段清空。
+	rewardWatches  []*challengePrivilegeWitness        // 按原真人席位顺序观察普通角色已确认的特权变化。
+	rewardEvidence []persistence.DungeonRewardEvidence // 击杀时冻结的原真人权益，失败时不交给资产事务。
+	outcome        persistence.DungeonOutcome          // 互斥的成功、战败或系统中断。
+	ledger         dungeonFinishState                  // 原终态提案和提交结果。
+	castID         uint64                              // 全场唯一施法流水。
+	eventID        uint64                              // 全场唯一可见战斗事件流水。
+	nextHandle     uint32                              // 下一只敌人的场内句柄，不复用旧段编号。
+	observations   map[string]*dungeonAttachment       // 临时战斗身体附着的当前输入和观测。
+	reportedStage  int                                 // 已向席位报告的段索引。
 }
 
 // dungeonCombatSeat 保存原角色的临时战斗身体和首次确认状态。

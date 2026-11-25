@@ -151,6 +151,9 @@ func (w *worker) applyDungeonDamage(r *room, from, target *entity, damage int64,
 	}
 	removeDeathStatuses(target)
 	target.Action = 4
+	if enemy && a.stage+1 == len(a.template.Stages) && target == a.monsters[0] {
+		w.freezeDungeonRewards(a, at)
+	}
 	if enemy && !slices.ContainsFunc(a.monsters, func(body *entity) bool { return body.HP > 0 }) {
 		a.clearedAt = at
 		if a.stage+1 == len(a.template.Stages) {

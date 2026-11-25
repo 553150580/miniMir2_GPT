@@ -68,6 +68,7 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		AvailableAtUnixMs: optionalBossUnixMillis(info.AvailableAt), ActiveChallengeId: info.ActiveChallengeID, ActiveExpiresAtUnixMs: optionalBossUnixMillis(info.ActiveExpiresAt)}
 	out.PendingRewardCapacity = info.PendingRewardCapacity
 	out.WorldPendingRewardsMore = info.WorldPendingRewardsMore
+	out.DungeonPendingRewardsMore = info.DungeonPendingRewardsMore
 	for _, option := range info.Templates {
 		reason := option.EligibilityReason
 		if outside && reason == persistence.PersonalBossEligible {
@@ -82,6 +83,9 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 	}
 	for _, reward := range info.WorldPendingRewards {
 		out.WorldPendingRewards = append(out.WorldPendingRewards, pendingChallengeRewardPB(reward))
+	}
+	for _, reward := range info.DungeonPendingRewards {
+		out.DungeonPendingRewards = append(out.DungeonPendingRewards, pendingChallengeRewardPB(reward))
 	}
 	for _, previous := range info.History {
 		out.History = append(out.History, &pb.PersonalBossHistoryEntry{ChallengeId: previous.ChallengeID, TemplateId: previous.TemplateID,

@@ -283,8 +283,11 @@ type PersonalBossInfo struct {
 	// 世界奖励按永久角色查找，独立于个人首领奖励的容量。
 	WorldPendingRewards     []*ChallengePendingReward `protobuf:"bytes,20,rep,name=world_pending_rewards,json=worldPendingRewards,proto3" json:"world_pending_rewards,omitempty"`
 	WorldPendingRewardsMore bool                      `protobuf:"varint,21,opt,name=world_pending_rewards_more,json=worldPendingRewardsMore,proto3" json:"world_pending_rewards_more,omitempty"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	// 讨伐链的独立通关附件，永久保留原队员各自的抽取结果。
+	DungeonPendingRewards     []*ChallengePendingReward `protobuf:"bytes,22,rep,name=dungeon_pending_rewards,json=dungeonPendingRewards,proto3" json:"dungeon_pending_rewards,omitempty"`
+	DungeonPendingRewardsMore bool                      `protobuf:"varint,23,opt,name=dungeon_pending_rewards_more,json=dungeonPendingRewardsMore,proto3" json:"dungeon_pending_rewards_more,omitempty"`
+	unknownFields             protoimpl.UnknownFields
+	sizeCache                 protoimpl.SizeCache
 }
 
 func (x *PersonalBossInfo) Reset() {
@@ -460,6 +463,20 @@ func (x *PersonalBossInfo) GetWorldPendingRewards() []*ChallengePendingReward {
 func (x *PersonalBossInfo) GetWorldPendingRewardsMore() bool {
 	if x != nil {
 		return x.WorldPendingRewardsMore
+	}
+	return false
+}
+
+func (x *PersonalBossInfo) GetDungeonPendingRewards() []*ChallengePendingReward {
+	if x != nil {
+		return x.DungeonPendingRewards
+	}
+	return nil
+}
+
+func (x *PersonalBossInfo) GetDungeonPendingRewardsMore() bool {
+	if x != nil {
+		return x.DungeonPendingRewardsMore
 	}
 	return false
 }
@@ -846,7 +863,7 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x12expires_at_unix_ms\x18\x05 \x01(\x03R\x0fexpiresAtUnixMs\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x06 \x01(\rR\terrorCode\"\x13\n" +
-	"\x11PersonalBossQuery\"\xbc\a\n" +
+	"\x11PersonalBossQuery\"\xd9\b\n" +
 	"\x10PersonalBossInfo\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x01 \x01(\rR\terrorCode\x12\x12\n" +
@@ -873,7 +890,9 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x17pending_reward_capacity\x18\x12 \x01(\rR\x15pendingRewardCapacity\x12D\n" +
 	"\ttemplates\x18\x13 \x03(\v2&.minimir.v1.PersonalBossTemplateChoiceR\ttemplates\x12V\n" +
 	"\x15world_pending_rewards\x18\x14 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x13worldPendingRewards\x12;\n" +
-	"\x1aworld_pending_rewards_more\x18\x15 \x01(\bR\x17worldPendingRewardsMore\"\xb8\x02\n" +
+	"\x1aworld_pending_rewards_more\x18\x15 \x01(\bR\x17worldPendingRewardsMore\x12Z\n" +
+	"\x17dungeon_pending_rewards\x18\x16 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x15dungeonPendingRewards\x12?\n" +
+	"\x1cdungeon_pending_rewards_more\x18\x17 \x01(\bR\x19dungeonPendingRewardsMore\"\xb8\x02\n" +
 	"\x1aPersonalBossTemplateChoice\x12\x1f\n" +
 	"\vtemplate_id\x18\x01 \x01(\rR\n" +
 	"templateId\x12!\n" +
@@ -944,13 +963,14 @@ var file_personal_boss_proto_depIdxs = []int32{
 	6,  // 1: minimir.v1.PersonalBossInfo.pending_rewards:type_name -> minimir.v1.ChallengePendingReward
 	5,  // 2: minimir.v1.PersonalBossInfo.templates:type_name -> minimir.v1.PersonalBossTemplateChoice
 	6,  // 3: minimir.v1.PersonalBossInfo.world_pending_rewards:type_name -> minimir.v1.ChallengePendingReward
-	9,  // 4: minimir.v1.ChallengePendingReward.items:type_name -> minimir.v1.ItemView
-	10, // 5: minimir.v1.ClaimChallengeReward.operation:type_name -> minimir.v1.OperationContext
-	6,  // [6:6] is the sub-list for method output_type
-	6,  // [6:6] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	6,  // 4: minimir.v1.PersonalBossInfo.dungeon_pending_rewards:type_name -> minimir.v1.ChallengePendingReward
+	9,  // 5: minimir.v1.ChallengePendingReward.items:type_name -> minimir.v1.ItemView
+	10, // 6: minimir.v1.ClaimChallengeReward.operation:type_name -> minimir.v1.OperationContext
+	7,  // [7:7] is the sub-list for method output_type
+	7,  // [7:7] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_personal_boss_proto_init() }

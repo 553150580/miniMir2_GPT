@@ -13127,6 +13127,12 @@ export namespace minimir {
             /** PersonalBossInfo world_pending_rewards_more. */
             world_pending_rewards_more: boolean;
 
+            /** PersonalBossInfo dungeon_pending_rewards. */
+            dungeon_pending_rewards: minimir.v1.ChallengePendingReward.$Properties[];
+
+            /** PersonalBossInfo dungeon_pending_rewards_more. */
+            dungeon_pending_rewards_more: boolean;
+
             /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -13252,6 +13258,12 @@ export namespace minimir {
 
                 /** PersonalBossInfo world_pending_rewards_more */
                 world_pending_rewards_more?: (boolean|null);
+
+                /** PersonalBossInfo dungeon_pending_rewards */
+                dungeon_pending_rewards?: (minimir.v1.ChallengePendingReward.$Properties[]|null);
+
+                /** PersonalBossInfo dungeon_pending_rewards_more */
+                dungeon_pending_rewards_more?: (boolean|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

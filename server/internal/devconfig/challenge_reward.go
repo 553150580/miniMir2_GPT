@@ -42,3 +42,8 @@ func (i Item) validChallengeRewardQuantity(quantity int64) bool {
 	}
 	return quantity == 1
 }
+
+// validUnbudgetedChallengeReward 验证尚未接入独立供给预算的挑战来源可以发放该物品。
+func (i Item) validUnbudgetedChallengeReward(quantity int64) bool {
+	return i.ID != 0 && (!i.IsEquipment || i.DropQuality < 2) && i.validChallengeRewardQuantity(quantity)
+}

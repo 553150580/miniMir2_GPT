@@ -69,7 +69,7 @@ func (f *Fixture) validWorldBossRewardItems(items []ChallengeRewardItem) bool {
 	}
 	for _, line := range items {
 		item, found := f.Item(line.ItemID)
-		if !found || line.ItemID == 0 || !item.validChallengeRewardQuantity(line.Quantity) || item.IsEquipment && item.DropQuality >= 2 {
+		if !found || !item.validUnbudgetedChallengeReward(line.Quantity) {
 			return false
 		}
 	}

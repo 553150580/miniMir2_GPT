@@ -64,7 +64,7 @@ function panelFixture(t, initial) {
     return { connection, scope, requests, claims, notices, view, named, panel,
         state(value) { response = value; }, query(value) { query = value; }, award(value) { award = value; },
         label(name) { return named(name).value.string; }, enabled(name) { return named(name).value.interactable; },
-        push(value) { listener({ id: 20014, error: 0, value }); } };
+        push(value, id = 20014) { listener({ id, seq: 0, error: 0, value }); } };
 }
 
 const flush = () => new Promise(resolve => setImmediate(resolve));
@@ -112,20 +112,68 @@ test('满包拒绝和未决领取后，原奖励可见且禁止在挑战或经�
     assert.deepEqual(f.claims, [bytes(7)]);
 });
 
-test('世界击杀与超时奖励各保留来源、原排名和领取编号，独立显示待领数量', async t => {
+test('三类挑战附件各自显示原来源和数量，讨伐链沿原附件编号领取', async t => {
     const ranked = { ...reward(11), sourceKind: 'world_boss', sourceRank: 2 };
     const timeout = { ...reward(12), sourceKind: 'world_boss_timeout', sourceRank: 0 };
+    const dungeon = { ...reward(13), templateId: 23, sourceKind: 'dungeon' };
     const f = panelFixture(t, personal({ pendingRewardCapacity: 8, pendingRewards: [reward(3)],
-        worldPendingRewards: [ranked, timeout], worldPendingRewardsMore: true }));
+        worldPendingRewards: [ranked, timeout], worldPendingRewardsMore: true,
+        dungeonPendingRewards: [dungeon], dungeonPendingRewardsMore: true }));
     await f.view.show('rewards');
-    assert.equal(f.label('Status'), '个人 1/8 · 世界 2+');
+    assert.equal(f.label('Status'), '个人 1/8 · 世界 2+ · 讨伐 1+');
     assert.match(f.label('Details'), /首领 1/);
     f.view.turn(1);
     assert.match(f.label('Details'), /世界首领 · 第2名/);
     f.view.turn(1);
     assert.match(f.label('Details'), /世界首领 · 超时奖励/);
     await f.view.action();
-    assert.deepEqual(f.claims, [timeout.rewardId]);
+    await flush();
+    f.view.turn(1);
+    assert.match(f.label('Details'), /^讨伐链 · 通关奖励 · /);
+    await f.view.action();
+    assert.deepEqual(f.claims, [timeout.rewardId, dungeon.rewardId]);
+    assert.notEqual(f.claims[1], dungeon.rewardId);
+});
+
+test('原场通关后回场刷新讨伐待领，世界页保留且不会在战斗中查询', async t => {
+    const f = panelFixture(t, personal());
+    const original = f.scope.sceneEpoch, victory = bytes(19);
+    f.scope.confirmedDungeonVictory = id => id === victory;
+    await f.view.open();
+    assert.equal(f.named('Rewards').active, false);
+    await f.view.show(4);
+    f.scope.sceneKind = 5;
+    f.scope.sceneEpoch = original.add(1);
+    const send = (args = {}) => f.push({ state: 4, sceneEpoch: f.scope.sceneEpoch, challengeId: victory, ...args }, 20023);
+    send({ challengeId: bytes(18) });
+    send({ sceneEpoch: original });
+    send({ state: 3 });
+    f.scope.sceneKind = 1;
+    f.scope.sceneEpoch = original.add(2);
+    f.view.render();
+    assert.equal(f.requests.length, 1);
+
+    f.scope.sceneKind = 5;
+    f.scope.sceneEpoch = original.add(3);
+    f.panel.activeInHierarchy = false;
+    send();
+    assert.equal(f.requests.length, 1);
+    f.scope.sceneKind = 1;
+    f.scope.sceneEpoch = original.add(4);
+    f.scope.ready = false;
+    f.panel.activeInHierarchy = true;
+    f.view.render();
+    assert.equal(f.requests.length, 1);
+    f.scope.ready = true;
+    f.state(personal({ dungeonPendingRewards: [{ ...reward(19), sourceKind: 'dungeon' }] }));
+    f.view.render();
+    await flush();
+    assert.deepEqual(f.requests.map(row => row.id), [20015, 20015]);
+    assert.equal(f.label('Headline'), '世界首领');
+    assert.equal(f.named('Rewards').active, true);
+    await f.view.show('rewards');
+    assert.equal(f.label('Status'), '讨伐 1');
+    assert.match(f.label('Details'), /^讨伐链 · 通关奖励 · /);
 });
 
 test('掉线后原场景的迟到查询不能覆盖新队列，终态后自动刷新可领取状态', async t => {
@@ -158,7 +206,7 @@ test('掉线后原场景的迟到查询不能覆盖新队列，终态后自动�
     await flush();
 });
 
-test('实际 40030 编码与 AppRoot 经济账本在新绑定重放原奖包、原操作及大整数版本', async () => {
+test('讨伐链待领按钮经 AppRoot 编码 40030，新绑定重放原奖包、原操作及大整数版本', async t => {
     const h = harness(), session = h.session;
     ready(h, entry());
     session.inventory = { revision: integer('9007199254740997') };
@@ -184,7 +232,16 @@ test('实际 40030 编码与 AppRoot 经济账本在新绑定重放原奖包、�
         assert.deepEqual(decodePacket(original).value.rewardId, bytes(2));
         throw Error('连接结果未知');
     };
-    await assert.rejects(app.economic(40030, { rewardId: bytes(2) }), /结果未知/);
+    const pendingDungeon = [{ ...reward(2), sourceKind: 'dungeon' }];
+    const encodedInfo = encodePacket(20016, 1, Long.UONE, personal({ dungeonPendingRewards: pendingDungeon }));
+    const decodedInfo = decodePacket(encodedInfo).value;
+    assert.deepEqual(decodedInfo.dungeonPendingRewards[0].rewardId, pendingDungeon[0].rewardId);
+    assert.equal(decodedInfo.dungeonPendingRewards[0].items[0].quantity.toString(), longQuantity.toString());
+    const panel = panelFixture(t, decodedInfo);
+    panel.award(rewardId => app.economic(40030, { rewardId }));
+    await panel.view.show('rewards');
+    assert.equal(panel.enabled('Action'), true);
+    await assert.rejects(panel.view.action(), /结果未知/);
     const originalPending = session.pending.get(h.roleIdentity());
     assert.equal(originalPending.value.operation.expectedRevision.toString(), '9007199254740997');
     session.connection.status('连接已断开');

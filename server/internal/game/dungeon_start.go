@@ -279,6 +279,8 @@ func (w *worker) confirmDungeonStart(start *dungeonStartAttempt, grant persisten
 		}
 		member.assets = assets
 		member.role.Revision = role.Revision
+		// 战斗属性仍用冻结快照，只有击杀判绑以扣次事务确认的原权益为观察起点。
+		member.role.PrivilegeUntil = role.PrivilegeUntil
 	}
 	if !valid {
 		slog.Error("讨伐链开战原持久结果不一致", "challenge", begin.ChallengeID)

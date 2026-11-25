@@ -39,8 +39,13 @@ func (w *worker) persistDungeonBattleFinish(arena *dungeonArena, now time.Time) 
 		return
 	}
 	if ledger.proposal.ChallengeID == "" {
+		// 未击杀首领的场次在此释放权益观察；成功前已于真实击杀时固定证据。
+		w.freezeDungeonRewards(arena, time.Time{})
 		ledger.proposal = persistence.DungeonFinish{ChallengeID: arena.grant.ChallengeID, ReservationID: arena.grant.ReservationID,
 			Execution: arena.grant.Execution, Outcome: arena.outcome, FinishedAt: arena.finishedAt}
+		if arena.outcome == persistence.DungeonSucceeded {
+			ledger.proposal.RewardAt, ledger.proposal.RewardEvidence = arena.rewardAt, arena.rewardEvidence
+		}
 	}
 	store := arena.store
 	if store == nil {
@@ -86,7 +91,8 @@ func validDungeonReturn(grant persistence.DungeonChallenge, proposal persistence
 	if result.ChallengeID != grant.ChallengeID || result.ReservationID != grant.ReservationID || result.Execution != grant.Execution ||
 		result.RunID != grant.RunID || result.RunEpoch != grant.RunEpoch || result.OwnerInstance != grant.OwnerInstance ||
 		result.Outcome != proposal.Outcome || result.Recovered || result.Refunded != (proposal.Outcome == persistence.DungeonSystemInterrupted) ||
-		result.FinishedAt.UnixMilli() != proposal.FinishedAt.UnixMilli() || len(result.Members) != len(grant.Members) || len(roles) != len(grant.Members) {
+		result.FinishedAt.UnixMilli() != proposal.FinishedAt.UnixMilli() || optionalBossUnixMillis(result.RewardAt) != optionalBossUnixMillis(proposal.RewardAt) ||
+		len(result.Members) != len(grant.Members) || len(roles) != len(grant.Members) {
 		return false
 	}
 	for i, role := range roles {

@@ -72,6 +72,7 @@ func (w *worker) installDungeonBattle(store *persistence.Store, template *devcon
 			arena.outcome, arena.finishedAt = persistence.DungeonSystemInterrupted, now
 		}
 	}
+	w.observeDungeonRewards(arena)
 	return result
 }
 

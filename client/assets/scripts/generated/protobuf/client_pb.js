@@ -34372,6 +34372,8 @@ $root.minimir = (function() {
              * @property {Array.<minimir.v1.PersonalBossTemplateChoice.$Properties>|null} [templates] PersonalBossInfo templates
              * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [world_pending_rewards] PersonalBossInfo world_pending_rewards
              * @property {boolean|null} [world_pending_rewards_more] PersonalBossInfo world_pending_rewards_more
+             * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [dungeon_pending_rewards] PersonalBossInfo dungeon_pending_rewards
+             * @property {boolean|null} [dungeon_pending_rewards_more] PersonalBossInfo dungeon_pending_rewards_more
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -34401,6 +34403,7 @@ $root.minimir = (function() {
                 this.pending_rewards = [];
                 this.templates = [];
                 this.world_pending_rewards = [];
+                this.dungeon_pending_rewards = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -34576,6 +34579,22 @@ $root.minimir = (function() {
             PersonalBossInfo.prototype.world_pending_rewards_more = false;
 
             /**
+             * PersonalBossInfo dungeon_pending_rewards.
+             * @member {Array.<minimir.v1.ChallengePendingReward.$Properties>} dungeon_pending_rewards
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.dungeon_pending_rewards = $util.emptyArray;
+
+            /**
+             * PersonalBossInfo dungeon_pending_rewards_more.
+             * @member {boolean} dungeon_pending_rewards_more
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.dungeon_pending_rewards_more = false;
+
+            /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @function create
              * @memberof minimir.v1.PersonalBossInfo
@@ -34653,6 +34672,11 @@ $root.minimir = (function() {
                         $root.minimir.v1.ChallengePendingReward.encode(message.world_pending_rewards[i], writer.uint32(/* id 20, wireType 2 =*/162).fork(), _depth + 1).ldelim();
                 if (message.world_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "world_pending_rewards_more") && message.world_pending_rewards_more !== false)
                     writer.uint32(/* id 21, wireType 0 =*/168).bool(message.world_pending_rewards_more);
+                if (message.dungeon_pending_rewards != null && message.dungeon_pending_rewards.length)
+                    for (var i = 0; i < message.dungeon_pending_rewards.length; ++i)
+                        $root.minimir.v1.ChallengePendingReward.encode(message.dungeon_pending_rewards[i], writer.uint32(/* id 22, wireType 2 =*/178).fork(), _depth + 1).ldelim();
+                if (message.dungeon_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "dungeon_pending_rewards_more") && message.dungeon_pending_rewards_more !== false)
+                    writer.uint32(/* id 23, wireType 0 =*/184).bool(message.dungeon_pending_rewards_more);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -34895,6 +34919,23 @@ $root.minimir = (function() {
                                 delete message.world_pending_rewards_more;
                             continue;
                         }
+                    case 22: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.dungeon_pending_rewards && message.dungeon_pending_rewards.length))
+                                message.dungeon_pending_rewards = [];
+                            message.dungeon_pending_rewards.push($root.minimir.v1.ChallengePendingReward.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 23: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.bool())
+                                message.dungeon_pending_rewards_more = value;
+                            else
+                                delete message.dungeon_pending_rewards_more;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -35030,6 +35071,18 @@ $root.minimir = (function() {
                 if (message.world_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "world_pending_rewards_more"))
                     if (typeof message.world_pending_rewards_more !== "boolean")
                         return "world_pending_rewards_more: boolean expected";
+                if (message.dungeon_pending_rewards != null && $Object.hasOwnProperty.call(message, "dungeon_pending_rewards")) {
+                    if (!$Array.isArray(message.dungeon_pending_rewards))
+                        return "dungeon_pending_rewards: array expected";
+                    for (var i = 0; i < message.dungeon_pending_rewards.length; ++i) {
+                        var error = $root.minimir.v1.ChallengePendingReward.verify(message.dungeon_pending_rewards[i], _depth + 1);
+                        if (error)
+                            return "dungeon_pending_rewards." + error;
+                    }
+                }
+                if (message.dungeon_pending_rewards_more != null && $Object.hasOwnProperty.call(message, "dungeon_pending_rewards_more"))
+                    if (typeof message.dungeon_pending_rewards_more !== "boolean")
+                        return "dungeon_pending_rewards_more: boolean expected";
                 return null;
             };
 

@@ -62,6 +62,11 @@ export class DungeonTransition {
         this.progress = { stage: value.stage, state: value.state };
     }
 
+    // 只报告原场次已经确认的最终段胜利，供回场后的待领查询使用。
+    confirmedVictory(challengeId: Uint8Array): boolean {
+        return this.progress?.stage === 4 && this.progress.state === 4 && this.home?.id === challengeIdentity(challengeId);
+    }
+
     get objective(): string {
         const p = this.progress;
         if (!p || p.state === 1) return '讨伐 · 等待队伍就绪';

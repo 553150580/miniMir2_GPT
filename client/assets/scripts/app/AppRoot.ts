@@ -506,6 +506,7 @@ export class AppRoot extends Component {
             ready: session.ready && !this.attaching && !session.travel.active && !session.teleport.blocksInput,
             level: session.inventory?.level ?? session.role?.level ?? 0,
             canClaimRewards: !!session.inventory && !this.economicBusy && !this.unresolved,
+            confirmedDungeonVictory: challengeId => session.dungeonTransition.confirmedVictory(challengeId),
             worldBoss: this.world?.gameplay.world_boss,
             worldBosses: this.world?.gameplay.world_bosses,
         }, () => { if (this.ui?.top === bossPanel) this.ui.back(); }, (target, signal) => this.prepareBossEntry(target, signal), {

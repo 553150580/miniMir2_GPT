@@ -248,8 +248,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		case AssetChallengeRewardClaim:
 			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
 			if businessCode == p.CodeOperationConflict {
-				// 个人附件没有原编号时，再查同角色、同永久入口的世界首领附件。
-				r, challengeReward, businessCode, e = s.claimWorldBossReward(tc, r, q.ChallengeRewardID, opID)
+				// 个人挑战无此编号时，再按原永久角色查询世界和讨伐附件。
+				r, challengeReward, businessCode, e = s.claimExternalChallengeReward(tc, r, q.ChallengeRewardID, opID)
 				if e != nil {
 					return e
 				}

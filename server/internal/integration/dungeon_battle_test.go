@@ -28,11 +28,18 @@ func TestDungeonBattleThreeRolesMongoWS(t *testing.T) {
 		monster.HP, monster.AttackMin, monster.AttackMax, monster.DefenceMin, monster.DefenceMax = 1, 0, 0, 0, 0
 		monster.MagicDefenceMin, monster.MagicDefenceMax, monster.MagicResist = 0, 0, 0
 		monster.MoveMS, monster.AttackMS = 60_000, 60_000
+		// 仅隔离样本，固定单个候选包以便逐一比对两种绑定规则和原物品实例。
+		cfg.Fixture.DungeonReleases[0].Rewards = &devconfig.DungeonRewards{Options: []devconfig.DungeonRewardOption{
+			{Weight: 1, Items: []devconfig.DungeonRewardItem{
+				{ItemID: 35, Quantity: 2, BindPolicy: devconfig.DungeonRewardBindOnKill},
+				{ItemID: 36, Quantity: 1, BindPolicy: devconfig.DungeonRewardAlwaysBound},
+			}},
+		}}
 	})
 	recruits := []dungeonRecruit{newDungeonRecruit(t, endpoint, route, 0), newDungeonRecruit(t, endpoint, route, 1), newDungeonRecruit(t, endpoint, route, 2)}
 	mageID := domain.Hex(recruits[1].summary.Key.RoleId)
 	// 技能学习与技能槽另有专项。这里仅准备能使用原火球的法师，不写次数或战斗结果。
-	_, err := store.DB.Collection("roles").UpdateByID(t.Context(), mageID, bson.M{"$set": bson.M{"level": 15,
+	_, err := store.DB.Collection("roles").UpdateByID(t.Context(), mageID, bson.M{"$set": bson.M{"level": 15, "privilege_until": time.Now().Add(time.Hour),
 		"learned_skills": []domain.LearnedSkill{{SkillID: dungeonBattleFireball, Level: 0}}}})
 	must(t, err)
 	connections := make([]*client, len(recruits))
@@ -140,7 +147,8 @@ func TestDungeonBattleThreeRolesMongoWS(t *testing.T) {
 	number, err := store.DB.Collection("dungeon_challenges").CountDocuments(t.Context(), bson.M{})
 	must(t, err)
 	if record.RunID != route.assignment.RunID || record.Outcome != persistence.DungeonSucceeded || record.Refunded || len(record.Members) != 3 ||
-		!record.FinishedAt.After(record.StartedAt) || !record.FinishedAt.Before(record.ExpiresAt) || number != 1 {
+		!record.FinishedAt.After(record.StartedAt) || !record.FinishedAt.Before(record.ExpiresAt) || record.RewardAt.IsZero() ||
+		record.RewardAt.Before(record.StartedAt) || record.RewardAt.After(record.FinishedAt) || number != 1 {
 		t.Fatal("原挑战未提交同队唯一通关结果", record)
 	}
 	for i, recruit := range recruits {
@@ -156,7 +164,54 @@ func TestDungeonBattleThreeRolesMongoWS(t *testing.T) {
 			t.Fatal("永久席位未记录原一次扣次和最终会话围栏", roleID, record.Members)
 		}
 	}
+	verifyDungeonRewardClaims(t, connections, record)
 	t.Log("四段通过真实命中推进，三席确认原地图，永久回执唯一且各扣一次")
+}
+
+// verifyDungeonRewardClaims 逐连接观察同场的独立原奖包，再通过已有的领取入口核对实际到包实例。
+func verifyDungeonRewardClaims(t *testing.T, players []*client, record persistence.DungeonChallenge) {
+	t.Helper()
+	seen := make(map[string]bool)
+	for index, player := range players {
+		request := player.send(p.MsgC2SPersonalBossQuery, &pb.PersonalBossQuery{})
+		response := travelUntilWithin(player, 6*time.Second, func(frame wire.Frame) bool {
+			return frame.ID == p.MsgS2CPersonalBossInfo && frame.Request == request
+		})
+		info := &pb.PersonalBossInfo{}
+		must(t, proto.Unmarshal(response.Payload, info))
+		if info.ErrorCode != 0 || len(info.DungeonPendingRewards) != 1 || info.DungeonPendingRewardsMore ||
+			len(info.PendingRewards) != 0 || len(info.WorldPendingRewards) != 0 {
+			t.Fatalf("讨伐奖包与其它挑战串账或遗漏原队员：%v", info)
+		}
+		reward := info.DungeonPendingRewards[0]
+		id := domain.Hex(reward.RewardId)
+		if len(reward.RewardId) != 16 || seen[id] || reward.SourceKind != "dungeon" || reward.TemplateId != record.TemplateID ||
+			reward.EarnedAtUnixMs != record.RewardAt.UnixMilli() || len(reward.Items) != 2 {
+			t.Fatalf("领取前的原讨伐附件无效：%v", reward)
+		}
+		seen[id] = true
+		first, second := reward.Items[0], reward.Items[1]
+		if first.ItemId != 35 || first.Quantity != 2 || first.Bound != (index != 1) || second.ItemId != 36 || !second.Bound ||
+			first.SourceId != record.ChallengeID || second.SourceId != record.ChallengeID {
+			t.Fatalf("原击杀时特权或来源固定绑定未正确应用：%v", reward.Items)
+		}
+		result := player.asset(p.MsgC2SClaimChallengeReward, &pb.ClaimChallengeReward{RewardId: reward.RewardId, Operation: player.operation()})
+		if result.ErrorCode != 0 || result.Pending {
+			t.Fatalf("原奖包未进入真实角色资产事务：%v", result)
+		}
+		player.inventoryAt(result.NewRevision)
+		for _, item := range reward.Items {
+			owned := 0
+			for _, current := range player.inventory.Items {
+				if proto.Equal(current, item) {
+					owned++
+				}
+			}
+			if owned != 1 {
+				t.Fatalf("原附件实例未按一次原样进包：%v", item)
+			}
+		}
+	}
 }
 
 // dungeonOwnBody 按入场下发的真实席位句柄取当前己方身体。
