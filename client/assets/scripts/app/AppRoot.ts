@@ -29,6 +29,7 @@ import { ACCOUNT_AUTHENTICATION_MESSAGE, protocolErrorMessage } from './GameErro
 import { GameSkills } from './GameSkills';
 import { GameTasksCodex } from './GameTasksCodex';
 import { GameBoss } from './GameBoss';
+import { GameDungeonParty } from './GameDungeonParty';
 import type { WorldBossEntryPreparation, WorldBossEntryTarget } from './GameBoss';
 import { attackSkillSlotCount, attackSkillSlotIDs, canQueueSkill, canSetAutomaticSkill, createSkillLearnPreview, gridDirection, isDirectionalSkill, isSummonRecall, isGroundSkill, primarySkill, selectSkillTarget, skillActivation, skillMode, skillQuickStateLabel, skillRows, SkillRow, SkillSnapshot, skillBookInstance, skillUseBlock, validateCaster, validateDirectionTarget, validateGroundTarget, validateSkillLearnPreview } from './SkillModel';
 import { observeAutoSkillSettings, savedAutoSkillSettings, savedQuickSkill, saveSkillPreference } from './SkillPreferences';
@@ -97,6 +98,7 @@ export class AppRoot extends Component {
     private skills?: GameSkills;
     private tasksCodex?: GameTasksCodex;
     private boss?: GameBoss;
+    private dungeonParty?: GameDungeonParty;
     private skillAssets?: GameSkillAssets;
     private npcShop?: GameNpcShop;
     private npcShopContext?: { npc: TownNpc; scope: string };
@@ -512,6 +514,18 @@ export class AppRoot extends Component {
             report: error => this.error(error),
         });
         this.cleanups.push(() => this.boss?.dispose());
+        this.dungeonParty = new GameDungeonParty(this.find('UIMgr/Panels/DungeonParty'), this.popup, {
+            context: () => {
+                const identity = currentEntryIdentity(), { entry, role } = session;
+                if (!entry || !role || !identity || !isCurrentEntry(identity) || this.disposed || this.leaving || this.attaching ||
+                    session.travel.blocksInput || session.teleport.blocksInput || ![1, 2].includes(entry.sceneKind)) return null;
+                return { attachment: identity, sceneKind: entry.sceneKind, ready: session.ready,
+                    job: role.job, level: session.inventory?.level ?? role.level ?? 0 };
+            },
+            request: request => session.connection.request(20021, request),
+            sound: () => this.tapSound?.(),
+        });
+        this.cleanups.push(() => this.dungeonParty?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error),
             this.itemActions, () => this.previewSkillAsset());
         this.cleanups.push(() => this.skillAssets?.dispose());
@@ -553,7 +567,10 @@ export class AppRoot extends Component {
         game.on(Game.EVENT_HIDE, this.releaseInput, this);
         if (typeof window !== 'undefined') window.addEventListener('blur', this.releaseInput);
         this.ui.node.on(UIMgr.EVENT_CHANGED, this.releaseInput, this); this.popup.node.on(PopupView.EVENT_CHANGED, this.releaseInput, this);
-        const bossVisibilityChanged = (): void => this.boss?.visibilityChanged();
+        const bossVisibilityChanged = (): void => {
+            this.boss?.visibilityChanged();
+            this.dungeonParty?.refreshVisibility();
+        };
         this.ui.node.on(UIMgr.EVENT_CHANGED, bossVisibilityChanged, this);
         this.cleanups.push(() => {
             if (this.ui && isValid(this.ui.node, true)) {
@@ -687,6 +704,7 @@ export class AppRoot extends Component {
             void this.boss!.open().catch(error => this.error(error));
         });
         const bossPath = 'UIMgr/Panels/BossChallenge/';
+        this.button(bossPath + 'Dungeon', () => { this.ui!.open('DungeonParty'); });
         this.button(bossPath + 'Personal', () => this.boss!.show(3));
         this.button(bossPath + 'World', () => this.boss!.show(4));
         this.button(bossPath + 'Rewards', () => this.boss!.show('rewards'));
@@ -720,6 +738,7 @@ export class AppRoot extends Component {
 
     private handleSessionUpdate(): void {
         if (this.disposed) return;
+        this.dungeonParty?.refreshVisibility();
         if (!session.travel.active) { this.releasePreparedTravel(); this.travelSource = undefined; }
         const identity = currentEntryIdentity();
         if (this.retainedMap && identity && isCurrentEntry(identity) && (identity.role !== this.retainedMap.role ||
@@ -736,6 +755,10 @@ export class AppRoot extends Component {
             this.setInputBarrier(true); this.releasePreparedTravel(); this.status(session.lastError || '连接已变化，请重新进入'); return;
         }
         if (!this.attached || attachmentKey(this.attached) !== attachmentKey(identity)) {
+            // 队长开战也会切换其他队员，已打开的招募和首领面板随原场景退出。
+            if (session.entry.sceneKind === 5) while (this.ui?.top?.name === 'DungeonParty' || this.ui?.top?.name === 'BossChallenge') {
+                if (!this.ui.back()) break;
+            }
             this.closeMapDirectory();
             this.closeNpcShop();
             this.warehouse?.detach();
@@ -1191,7 +1214,11 @@ export class AppRoot extends Component {
         const baseline = session.baseline;
         const town = session.entry?.sceneKind === 2;
         const challenge = session.entry?.sceneKind >= 3;
-        if (this.ui?.top?.name === 'BossChallenge') this.boss?.render();
+        if (this.ui?.top?.name === 'BossChallenge') {
+            const dungeon = this.find('UIMgr/Panels/BossChallenge/Dungeon').getComponent(Button)!;
+            dungeon.interactable = session.ready && !this.attaching && !challenge;
+            this.boss?.render();
+        }
         if (session.inventory) this.tasksCodex?.observe(session.inventory.revision);
         this.auto = !town && !!session.hosting?.autoBattleEnabled;
         if (baseline && !town && !challenge) {

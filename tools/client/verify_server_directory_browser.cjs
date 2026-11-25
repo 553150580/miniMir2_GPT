@@ -342,6 +342,19 @@ async function main() {
             await expectLabel('Details', '上海时间');
             const worldStatus = await page.evaluate(path => cc.find('Canvas/Safe/' + path + '/Status')?.getComponent(cc.Label)?.string, panel);
             assert.match(worldStatus, /等待开放|开放中|已击杀|已超时/);
+            if (process.env.MINIMIR_EXPECT_DUNGEON_UNAVAILABLE === '1') {
+                const dungeon = 'UIMgr/Panels/DungeonParty';
+                await tap(panel + '/Dungeon');
+                await page.waitForFunction(path => {
+                    const root = cc.find('Canvas/Safe/' + path);
+                    if (!root?.activeInHierarchy || root.getChildByName('Status').getComponent(cc.Label).string !== '本服暂未开放讨伐链') return false;
+                    return ['Create', 'Join', 'Start'].every(name => !root.getChildByName(name).getComponent(cc.Button).interactable);
+                }, dungeon, { timeout: 15000 });
+                await page.touchscreen.tap(20, 200);
+                await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, dungeon);
+                assert.equal(await page.evaluate(path => !!cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel), true);
+                report.dungeonUnavailable = true;
+            }
             await page.touchscreen.tap(20, 200);
             await page.waitForFunction(path => !cc.find('Canvas/Safe/' + path)?.activeInHierarchy, panel);
             report.bossChallenges = { home, personal, leaveAndHistory: true, personalLeaveDuringQuery: true, worldStatus };
