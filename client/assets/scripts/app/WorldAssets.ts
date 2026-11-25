@@ -1,5 +1,6 @@
 import { Asset, AudioClip, JsonAsset, Prefab, resources, SpriteFrame } from 'cc';
 import { GridProjection } from './GridProjection';
+import { WorldBossFrameAtlas } from './WorldBossFrameAtlas';
 import { SourceMapAssets } from './SourceMapAssets';
 import { compactTownMap, townNpcFrames } from './TownMapModel';
 import { petAppearanceFor } from './EntityHeadAnchor';
@@ -90,6 +91,7 @@ export class WorldAssets {
     }
     readonly frames = new Map<string, SpriteFrame>();
     readonly audioClips = new Map<string, AudioClip>();
+    private bossAtlas?: WorldBossFrameAtlas;
     private owned = new Set<Asset>();
     private disposed = false;
     private disposing = false;
@@ -249,28 +251,38 @@ export class WorldAssets {
                 }
             }
             const pending = Array.from(keys);
-            let next = 0, completed = 0;
-            let failure: unknown = null;
             progress(0, pending.length);
-            // 有界并发，出错后等待已开始的请求结束，再统一释放持有引用。
-            await Promise.all(Array.from({ length: Math.min(12, pending.length) }, async () => {
-                while (!failure && next < pending.length) {
-                    const key = pending[next++];
-                    try {
-                        const path = `development/${result.manifest.frames[key].png.replace(/\.png$/i, '')}/spriteFrame`;
-                        result.frames.set(key, result.own(await load<SpriteFrame>(path, SpriteFrame)));
-                        progress(++completed, pending.length);
-                    } catch (error) { failure = error; }
-                }
-            }));
-            if (failure) throw failure;
-            // 出场与施法声音只使用已核原音频；与身体帧一样在入场前持有，不能让加载延后服务器出生。
+            if (result.sceneKind === 4 && WorldBossFrameAtlas.available()) {
+                result.bossAtlas = new WorldBossFrameAtlas();
+                await result.bossAtlas.populate(pending, result.manifest.frames, result.frames,
+                    completed => progress(completed, pending.length));
+            } else {
+                await result.loadIndividualFrames(pending, progress);
+            }
+            // 出场与施法声音只使用已核原音频。
             if (job === 2) for (const [key, value] of Object.entries(result.manifest.audio ?? {}) as Array<[string, any]>) {
                 if (!/^[a-z0-9_]+$/.test(key) || typeof value.path !== 'string' || !/^audio\/[a-z0-9_]+\.wav$/.test(value.path)) throw new Error('音频资源路径无效');
                 result.audioClips.set(key, result.own(await load<AudioClip>(`development/${value.path.replace(/\.wav$/, '')}`, AudioClip)));
             }
             return result;
         } catch (error) { result.dispose(); throw error; }
+    }
+
+    // 单帧路径用于原始开发工程和其他场景。出错后先等待已开始的请求结束。
+    private async loadIndividualFrames(pending: readonly string[], progress: (completed: number, total: number) => void): Promise<void> {
+        let next = 0, completed = 0;
+        let failure: unknown = null;
+        await Promise.all(Array.from({ length: Math.min(12, pending.length) }, async () => {
+            while (!failure && next < pending.length) {
+                const key = pending[next++];
+                try {
+                    const path = `development/${this.manifest.frames[key].png.replace(/\.png$/i, '')}/spriteFrame`;
+                    this.frames.set(key, this.own(await load<SpriteFrame>(path, SpriteFrame)));
+                    progress(++completed, pending.length);
+                } catch (error) { failure = error; }
+            }
+        }));
+        if (failure) throw failure;
     }
 
     profile(state: any, job: number): any {
@@ -290,6 +302,7 @@ export class WorldAssets {
             this.sourceMap?.dispose(); this.sourceMap = undefined;
             this.releaseSourceInvalidation?.(); this.releaseSourceInvalidation = undefined;
             this.disposed = true; this.background = null;
+            this.bossAtlas?.dispose(); this.bossAtlas = undefined;
             for (const asset of Array.from(this.owned)) asset.decRef();
             this.owned.clear(); this.frames.clear(); this.audioClips.clear(); this.beforeInvalidation.clear();
         } finally { this.disposing = false; }

@@ -12,6 +12,7 @@ assert(manifestPath.startsWith(path.resolve('.work') + path.sep), '双端验收�
 const expected = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const base = new URL(expected.baseUrl);
 const socket = new URL(expected.endpoint);
+const atlasTextures = new Set(expected.atlasTexturePaths ?? []);
 assert.equal(base.protocol, 'http:');
 assert(base.hostname === '127.0.0.1' && base.port !== '18080');
 assert(socket.protocol === 'ws:' && socket.hostname === '127.0.0.1' && socket.pathname === '/ws' && !['18101', '18103'].includes(socket.port));
@@ -20,6 +21,7 @@ const safe = 'Canvas/Safe/';
 const bossRoot = 'UIMgr/Panels/BossChallenge';
 const reconnect = 'Canvas/ReconnectDialog';
 const viewport = { width: 720, height: 1280 };
+const coldEntryTimeoutMs = 90000;
 
 // 此等待只读取游戏真实 Cocos 节点，点击继续走 touch 和 Button 的正常处理。
 async function touch(page, fullPath, choice) {
@@ -77,9 +79,68 @@ function bodyOffset(payload) {
     return offset;
 }
 
+// CDP 对两个隔离上下文分别禁用 HTTP 缓存和 Service Worker，资源记录只保留本地静态文件路径。
+async function coldNetwork(context, page) {
+    const network = await context.newCDPSession(page);
+    await network.send('Network.enable');
+    await network.send('Network.setCacheDisabled', { cacheDisabled: true });
+    await network.send('Network.setBypassServiceWorker', { bypass: true });
+    const requests = new Map();
+    network.on('Network.requestWillBeSent', event => {
+        const url = new URL(event.request.url);
+        if (url.origin !== base.origin || !url.pathname.startsWith('/assets/') || event.request.method !== 'GET') return;
+        requests.set(event.requestId, { path: url.pathname, at: event.wallTime * 1000, monotonic: event.timestamp,
+            type: event.type, cached: false });
+    });
+    network.on('Network.requestServedFromCache', ({ requestId }) => {
+        const row = requests.get(requestId);
+        if (row) row.cached = true;
+    });
+    network.on('Network.responseReceived', ({ requestId, response }) => {
+        const row = requests.get(requestId);
+        if (!row) return;
+        row.cached ||= Boolean(response.fromDiskCache || response.fromServiceWorker || response.fromPrefetchCache);
+        row.status = response.status;
+        const timing = response.timing;
+        if (timing?.sendEnd >= 0 && timing.receiveHeadersEnd >= timing.sendEnd)
+            row.headersMs = Math.round(timing.receiveHeadersEnd - timing.sendEnd);
+    });
+    network.on('Network.loadingFinished', ({ requestId, timestamp, encodedDataLength }) => {
+        const row = requests.get(requestId);
+        if (row) Object.assign(row, { durationMs: Math.round((timestamp - row.monotonic) * 1000), bytes: encodedDataLength });
+    });
+    network.on('Network.loadingFailed', ({ requestId }) => {
+        const row = requests.get(requestId);
+        if (row) row.failed = true;
+    });
+    return requests;
+}
+
+function coldRequestSummary(requests, from, until) {
+    const rows = [...requests.values()].filter(row => row.at >= from && row.at <= until);
+    const finished = rows.filter(row => row.durationMs !== undefined && row.at + row.durationMs <= until + 1);
+    const cached = rows.filter(row => row.cached || row.status === 304).length;
+    const byType = {};
+    for (const row of rows) {
+        const type = row.type ?? 'Other';
+        byType[type] = (byType[type] ?? 0) + 1;
+    }
+    return {
+        count: rows.length, uniquePaths: new Set(rows.map(row => row.path)).size, cached,
+        completed: finished.length, failed: rows.filter(row => row.failed).length,
+        wireBytes: finished.reduce((total, row) => total + row.bytes, 0),
+        firstRequestMs: rows.length ? Math.round(rows[0].at - from) : null,
+        lastCompletedMs: finished.length ? Math.round(Math.max(...finished.map(row => row.at + row.durationMs)) - from) : null,
+        byType,
+        slowest: finished.sort((left, right) => right.durationMs - left.durationMs).slice(0, 5)
+            .map(({ path, durationMs, headersMs }) => ({ path, durationMs, headersMs })),
+    };
+}
+
 async function openedClient(browser, report, job, nickname) {
-    const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1 });
+    const context = await browser.newContext({ viewport, hasTouch: true, isMobile: true, deviceScaleFactor: 1, serviceWorkers: 'block' });
     const page = await context.newPage();
+    const requests = await coldNetwork(context, page);
     const frames = { queries: 0, entries: 0, connections: 0, ackAt: [], transitions: [], failures: [], sockets: [] };
     page.on('pageerror', error => report.errors.push(error.message));
     page.on('websocket', connection => {
@@ -124,6 +185,7 @@ async function openedClient(browser, report, job, nickname) {
             frames.transitions.push(transition);
         });
     });
+    const navigationAt = Date.now();
     await page.goto(base.href);
     await scene(page, 'Login');
     await edit(page, 'Account', 'wb_' + crypto.randomBytes(6).toString('hex'));
@@ -159,8 +221,9 @@ async function openedClient(browser, report, job, nickname) {
         }, 200);
         return { steps, stop: () => clearInterval(timer) };
     }, session);
-    const client = { page, session, progress, frames, roleName };
+    const client = { page, session, progress, frames, roleName, requests, navigationAt };
     await map(client, 1);
+    client.initialMapReadyAt = Date.now();
     assert.equal(await page.evaluate(session => session.role.job, session), job);
     // 使用正常自动战斗开关，避免首领申请与两个新角色的普通挂机结算争抢同一事务时点。
     await page.waitForFunction(session => !!session.hosting, session, { timeout: 5000 });
@@ -179,7 +242,7 @@ async function map(client, kind) {
         if (!session.ready || entry?.sceneKind !== kind || !app?.world?.isMapReady || app.attaching) return null;
         return { map: entry.roomId.toString(), version: entry.resourceVersion.toString(), occurrence: entry.serverTransitionId ?? '',
             generation: session.connection.generation, roleHandle: entry.playerHandle };
-    }, { kind, session }, { timeout: kind === 4 ? 75000 : 25000 });
+    }, { kind, session }, { polling: 50, timeout: kind === 4 ? coldEntryTimeoutMs : 25000 });
     try {
         const state = await handle.jsonValue();
         assert.equal(state.version, String(expected.version));
@@ -187,10 +250,83 @@ async function map(client, kind) {
     } finally { await handle.dispose(); }
 }
 
-// 发起参战前允许准备资源，收到实际进场帧后仍须按服务端线上的十秒期限确认。
-function worldAckMs(client) {
-    const entry = client.frames.transitions.findLast(row => row.sceneKind === 4);
-    return entryAckMs(client.frames.sockets.find(row => row.connection === entry?.connection), entry, '共享首领');
+// 点击前只订阅首次场景状态。Ready、首个实际地图和输入可用分别计时。
+async function measureColdEntry(client) {
+    const { page, session } = client;
+    const monitor = await page.evaluateHandle(({ session, map }) => {
+        const state = {};
+        const sample = () => {
+            const entry = session.entry;
+            if (entry?.sceneKind !== 4 || entry.roomId.toString() !== map) return;
+            const at = Date.now();
+            const app = cc.director.getScene()?.getComponentsInChildren('AppRoot')[0];
+            const mapReady = app?.world?.isMapReady && String(app.world.map.id) === map;
+            if (session.ready) state.readyAt ??= at;
+            if (mapReady) state.mapReadyAt ??= at;
+            if (session.ready && mapReady && !app.attaching) state.playableAt ??= at;
+        };
+        session.update.add(sample);
+        const timer = setInterval(sample, 25);
+        return { read: () => { sample(); return { ...state }; }, stop: () => {
+            session.update.delete(sample);
+            clearInterval(timer);
+        } };
+    }, { session, map: String(expected.map) });
+    return monitor;
+}
+
+async function coldEntry(client, role, report) {
+    const monitor = await measureColdEntry(client);
+    const row = report.coldEntry[role] = {};
+    try {
+        const pressedAt = await touch(client.page, safe + bossRoot + '/Action');
+        row.pressedAt = pressedAt;
+        const room = await map(client, 4);
+        const times = await client.page.evaluate(monitor => monitor.read(), monitor);
+        Object.assign(row, {
+            tapToReadyMs: times.readyAt - pressedAt,
+            tapToMapReadyMs: times.mapReadyAt - pressedAt,
+            tapToPlayableMs: times.playableAt - pressedAt,
+        });
+        assert([row.tapToReadyMs, row.tapToMapReadyMs, row.tapToPlayableMs].every(ms => Number.isFinite(ms) && ms >= 0));
+        const entry = coldWorldTransition(client, pressedAt);
+        assert(entry, '缺少首次世界首领入场帧');
+        row.tapToEntryMs = entry.receivedAt - pressedAt;
+        row.entryToAckMs = entryAckMs(client.frames.sockets.find(transport => transport.connection === entry.connection), entry, '共享首领');
+        recordColdResources(client, row, times.playableAt, entry);
+        assert.equal(row.resources.cached, 0, '首次入场静态资源须绕过浏览器缓存');
+        assert.equal(row.resourcePhases.boot.cached, 0, '冷客户端启动静态资源须绕过浏览器缓存');
+        assert.equal(row.atlasRequestsBeforeTap, 0, '点击入场前不应请求世界首领图集纹理');
+        if (atlasTextures.size) assert(row.atlasRequestsThroughPlayable > 0, '冷入场应按需请求当前包的图集纹理');
+        return room;
+    } finally {
+        if (row.pressedAt && !row.resources) {
+            const entry = coldWorldTransition(client, row.pressedAt);
+            if (entry) row.tapToEntryMs = entry.receivedAt - row.pressedAt;
+            recordColdResources(client, row, Date.now(), entry);
+        }
+        await client.page.evaluate(monitor => monitor.stop(), monitor).catch(() => {});
+        await monitor.dispose();
+    }
+}
+
+function coldWorldTransition(client, pressedAt) {
+    return client.frames.transitions.find(row => row.sceneKind === 4 && row.receivedAt >= pressedAt);
+}
+
+function recordColdResources(client, row, until, entry) {
+    const { requests, navigationAt, initialMapReadyAt } = client;
+    const entryAt = entry?.receivedAt ?? until;
+    row.resources = coldRequestSummary(requests, row.pressedAt, until);
+    row.resourcePhases = {
+        boot: coldRequestSummary(requests, navigationAt, initialMapReadyAt),
+        personalMapBeforeTap: coldRequestSummary(requests, initialMapReadyAt, row.pressedAt),
+        tapToEntry: coldRequestSummary(requests, row.pressedAt, entryAt),
+        entryToPlayable: coldRequestSummary(requests, entryAt, until),
+    };
+    const atlas = [...requests.values()].filter(request => atlasTextures.has(request.path));
+    row.atlasRequestsBeforeTap = atlas.filter(request => request.at < row.pressedAt).length;
+    row.atlasRequestsThroughPlayable = atlas.filter(request => request.at >= row.pressedAt && request.at <= until).length;
 }
 
 // 必须由同一条连接确认同一场景和基线，旧普通图或其它连接的 ACK 不得充当重连验证。
@@ -240,15 +376,6 @@ async function learnObserverSpell(caster) {
     }, caster.session);
 }
 
-// 持有旁观端真实资源，让两端确认入场时只差一次触屏操作。正常入场仍负责获取和挂载资源。
-async function warmObserverAssets(observer) {
-    await observer.page.bringToFront();
-    return observer.page.evaluateHandle(async ({ session, map }) => {
-        const { WorldAssets } = await System.import('chunks:///_virtual/WorldAssets.ts');
-        return WorldAssets.prepare(session.role.job, () => {}, map);
-    }, { session: observer.session, map: String(expected.map) });
-}
-
 // 由道士连接主动施法，在战士所属视图核对同一远端施法事件及实际 SpriteFrame。
 async function observeOtherSpell(observer, caster, casterHandle) {
     await observer.page.bringToFront();
@@ -273,12 +400,23 @@ async function observeOtherSpell(observer, caster, casterHandle) {
             for (const event of samples.events) {
                 if (event.scene !== session.entry.sceneEpoch.toString()) continue;
                 const effect = world?.effects?.nodes.get(event.cast + ':cast');
-                if (effect?.sprite?.spriteFrame && /^Magic:20[0-9]$/.test(effect.frame))
-                    return { cast: event.cast, frame: effect.frame };
+                const sprite = effect?.sprite?.spriteFrame;
+                if (!effect?.sprite?.node.activeInHierarchy || !sprite?.texture || !/^Magic:20[0-9]$/.test(effect.frame)) continue;
+                const native = sprite.texture.image?.nativeUrl;
+                return { cast: event.cast, frame: effect.frame, texture: {
+                    path: native ? new URL(native, window.location.href).pathname : '',
+                    width: sprite.texture.width, height: sprite.texture.height,
+                    frameWidth: sprite.rect.width, frameHeight: sprite.rect.height,
+                } };
             }
             return null;
         }, { samples, session: observer.session }, { timeout: 8000 });
-        try { return await visible.jsonValue(); } finally { await visible.dispose(); }
+        try {
+            const presentation = await visible.jsonValue();
+            presentation.atlasTexture = atlasTextures.has(presentation.texture.path);
+            if (atlasTextures.size) assert(presentation.atlasTexture, '旁观施法必须绘制当前包图集中的实际原帧');
+            return presentation;
+        } finally { await visible.dispose(); }
     } finally {
         await observer.page.evaluate(samples => samples.stop(), samples);
         await samples.dispose();
@@ -349,10 +487,12 @@ async function diagnose(client) {
 }
 
 async function main() {
-    const report = { passed: false, errors: [], ruleVersion: expected.version, opensAt: expected.opensAt, expiresAt: expected.expiresAt };
+    const report = { passed: false, errors: [], ruleVersion: expected.version, opensAt: expected.opensAt, expiresAt: expected.expiresAt,
+        coldEntryOnly: expected.coldEntryOnly === true, cache: { isolatedContexts: 2, httpDisabled: true, serviceWorkersBlocked: true },
+        atlasTextureCount: atlasTextures.size, coldEntry: {} };
     const browser = await chromium.launch({ channel: 'chrome', headless: true,
         args: ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
-    let warrior, tao, warmObserver;
+    let warrior, tao;
     try {
         report.step = '走正常触屏注册、选服和建角';
         // 保持两个独立客户端存活。开闭验收端在等待期间置于前台。
@@ -376,36 +516,42 @@ async function main() {
         report.autoOpened = true;
 
         if (expected.version >= 30) {
-            report.step = '预热战士端世界首领资源并由道士学习治疗术';
+            report.step = '由道士在普通场景学习治疗术';
             await learnObserverSpell(tao);
-            warmObserver = await warmObserverAssets(warrior);
         }
         report.step = '先由道士带着宠物入场，再让战士加入同一场次';
         await touch(tao.page, safe + 'BottomHUD/QuickNav/Boss');
         await selectWorldTab(tao);
         await bossPanel(tao, '开放中', true);
-        const taoPressedAt = await touch(tao.page, safe + bossRoot + '/Action');
         report.step = '等待道士确认共享首领场景';
-        const taoRoom = await map(tao, 4);
-        const warriorPressedAt = await touch(warrior.page, safe + bossRoot + '/Action');
+        const taoRoom = await coldEntry(tao, 'tao', report);
         report.step = '等待战士确认共享首领场景';
-        const warriorRoom = await map(warrior, 4);
-        if (warmObserver) {
-            await warrior.page.evaluate(assets => assets.dispose(), warmObserver);
-            await warmObserver.dispose();
-            warmObserver = undefined;
-        }
+        const warriorRoom = await coldEntry(warrior, 'warrior', report);
         report.tapToEntryMs = {
-            warrior: warrior.frames.transitions.findLast(row => row.sceneKind === 4).receivedAt - warriorPressedAt,
-            tao: tao.frames.transitions.findLast(row => row.sceneKind === 4).receivedAt - taoPressedAt,
+            warrior: report.coldEntry.warrior.tapToEntryMs,
+            tao: report.coldEntry.tao.tapToEntryMs,
         };
-        report.entryAckMs = { warrior: worldAckMs(warrior), tao: worldAckMs(tao) };
+        report.entryAckMs = { warrior: report.coldEntry.warrior.entryToAckMs, tao: report.coldEntry.tao.entryToAckMs };
         assert.equal(warriorRoom.map, String(expected.map));
         assert.equal(warriorRoom.map, taoRoom.map);
         assert(warriorRoom.occurrence.length > 0 && warriorRoom.occurrence === taoRoom.occurrence);
+        assert.notEqual(warriorRoom.roleHandle, taoRoom.roleHandle);
         if (expected.version >= 30) {
             report.step = '战士观察真实道士治疗特效';
             report.otherPlayerSpell = await observeOtherSpell(warrior, tao, taoRoom.roleHandle);
+        }
+        // 先落入场实测数据，完整回归继续等待宠物、重连和场次关闭。
+        report.coldEntryMeasuredAt = Date.now();
+        fs.writeFileSync(path.join(resultDir, 'world-boss-cold-entry-report.json'), JSON.stringify({
+            measuredAt: report.coldEntryMeasuredAt, ruleVersion: report.ruleVersion, cache: report.cache,
+            atlasTextureCount: report.atlasTextureCount, coldEntry: report.coldEntry, otherPlayerSpell: report.otherPlayerSpell,
+        }, null, 2) + '\n', 'utf8');
+        if (report.coldEntryOnly) {
+            assert.deepEqual(report.errors, []);
+            delete report.step;
+            report.passed = true;
+            console.log('双客户端世界首领冷入场与共享场景旁观施法通过。');
+            return;
         }
         report.step = '核对战士可见的道士活宠';
         const alive = await pet(warrior, false);
@@ -413,7 +559,6 @@ async function main() {
         assert.equal(alive.life, own.life);
         assert.equal(alive.name, own.name);
         assert.deepEqual(alive.position, own.position);
-        assert.notEqual(warriorRoom.roleHandle, taoRoom.roleHandle);
         report.alivePet = alive;
         await warrior.page.screenshot({ path: path.join(resultDir, 'warrior-observes-taoist-pet.png') });
         report.step = '战士导航到活宠所在格被权威占位阻挡';
@@ -482,7 +627,6 @@ async function main() {
         report.observations = { warrior: await diagnose(warrior), tao: await diagnose(tao) };
         throw error;
     } finally {
-        if (warmObserver) await warrior.page.evaluate(assets => assets.dispose(), warmObserver).catch(() => {});
         await Promise.allSettled([warrior, tao].filter(Boolean).map(client =>
             client.page.evaluate(data => data.stop(), client.progress)));
         await browser.close();

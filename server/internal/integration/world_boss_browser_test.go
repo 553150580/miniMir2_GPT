@@ -11,6 +11,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"sort"
+	"strconv"
 	"sync"
 	"testing"
 	"time"
@@ -23,6 +26,7 @@ import (
 // TestWorldBossTwoClientBrowserMongoWS 仅接受本轮隔离副本集和工作目录内的真实构建。
 func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	webRoot := os.Getenv("MINIMIR_WORLD_BOSS_BROWSER_WEB_ROOT")
+	coldEntryOnly := os.Getenv("MINIMIR_WORLD_BOSS_COLD_ENTRY_ONLY") == "1"
 	if os.Getenv("MINIMIR_MONGO_E2E") != "1" || webRoot == "" {
 		t.Skip("由独立世界首领双客户端验收启动")
 	}
@@ -43,6 +47,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	}
 	_, err = os.Stat(filepath.Join(build, "index.html"))
 	must(t, err)
+	atlasTexturePaths := worldBossAtlasTexturePaths(t, build)
 
 	cfg, err := devconfig.Load("../../../conf/dev/server.json")
 	must(t, err)
@@ -53,7 +58,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 	cfg.RunServers = []devconfig.RunServerSeed{entry.assignment}
 	// 使用真实服务端时钟。隔离场次给两端冷加载原帧预留时间，线上十秒基线确认门槛保持不变。
 	const shanghaiDay = 24 * time.Hour
-	openAt := time.Now().Add(55 * time.Second).Truncate(time.Millisecond)
+	openAt := time.Now().Add(70 * time.Second).Truncate(time.Millisecond)
 	local := openAt.In(time.FixedZone("Asia/Shanghai", 8*60*60))
 	midnight := time.Date(local.Year(), local.Month(), local.Day(), 0, 0, 0, 0, local.Location())
 	world := cfg.Fixture.WorldBoss
@@ -61,11 +66,7 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 		t.Fatal("首领双端验收需要工作区规则启用世界首领")
 	}
 	world.DailyOpenOffsets = []time.Duration{local.Sub(midnight) % shanghaiDay}
-	world.Window = 160 * time.Second
-	if cfg.Fixture.RuleVersion >= 30 {
-		// 双端冷准备和旁观施法需要额外窗口，场景确认期限保持不变。
-		world.Window = 185 * time.Second
-	}
+	world.Window = 220 * time.Second
 	world.Map.MonsterSpawns = []devconfig.Point{{X: 6, Y: 4}}
 	world.Monster.HP = 10_000
 	world.Monster.Accuracy = 100
@@ -128,12 +129,12 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 		"baseUrl": web.URL, "endpoint": entry.assignment.GameWSURL, "region": entry.origin.RegionName,
 		"server": entry.origin.Name, "version": cfg.Fixture.RuleVersion, "map": world.Map.ID,
 		"opensAt": openAt.UnixMilli(), "expiresAt": openAt.Add(world.Window).UnixMilli(),
-		"petDefinition": cfg.Fixture.Pet.DefinitionID,
+		"petDefinition": cfg.Fixture.Pet.DefinitionID, "coldEntryOnly": coldEntryOnly, "atlasTexturePaths": atlasTexturePaths,
 	})
 	must(t, err)
 	must(t, os.WriteFile(manifest, raw, 0600))
 	t.Logf("世界首领双端触屏证据目录 %s", evidence)
-	browserCtx, stop := context.WithTimeout(ctx, 270*time.Second)
+	browserCtx, stop := context.WithTimeout(ctx, 325*time.Second)
 	defer stop()
 	command := exec.CommandContext(browserCtx, "node", filepath.Join(repo, "tools/client/verify_world_boss_browser.cjs"), manifest)
 	command.Dir = repo
@@ -142,4 +143,51 @@ func TestWorldBossTwoClientBrowserMongoWS(t *testing.T) {
 		t.Fatalf("世界首领双端触屏未完成: %v\n%s", err, log)
 	}
 	t.Logf("%s", log)
+}
+
+// worldBossAtlasTexturePaths 从当前 Creator 包映射逻辑图集页到浏览器实际请求的纹理路径。
+func worldBossAtlasTexturePaths(t *testing.T, build string) []string {
+	t.Helper()
+	assets := filepath.Join("assets", "resources")
+	raw, err := os.ReadFile(filepath.Join(build, assets, "config.json"))
+	must(t, err)
+	var catalog struct {
+		NativeBase string                       `json:"nativeBase"`
+		Paths      map[string][]json.RawMessage `json:"paths"`
+		UUIDs      []string                     `json:"uuids"`
+	}
+	must(t, json.Unmarshal(raw, &catalog))
+	if catalog.NativeBase != "native" || len(catalog.Paths) == 0 {
+		t.Fatal("Creator 资源目录缺少原生纹理路径索引")
+	}
+	page := regexp.MustCompile(`^development/world-boss-atlas/page-[0-9]+$`)
+	fullUUID := regexp.MustCompile(`^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$`)
+	paths := []string{}
+	for key, fields := range catalog.Paths {
+		if len(fields) == 0 {
+			continue
+		}
+		var logicalPath string
+		must(t, json.Unmarshal(fields[0], &logicalPath))
+		if !page.MatchString(logicalPath) {
+			continue
+		}
+		uuid := key
+		if index, parseErr := strconv.Atoi(key); parseErr == nil && index >= 0 && index < len(catalog.UUIDs) {
+			uuid = catalog.UUIDs[index]
+		}
+		if !fullUUID.MatchString(uuid) {
+			t.Fatalf("图集页 %s 缺少可追溯 Creator 纹理标识", logicalPath)
+		}
+		candidates, globErr := filepath.Glob(filepath.Join(build, assets, catalog.NativeBase, uuid[:2], uuid+".*"))
+		must(t, globErr)
+		if len(candidates) != 1 || filepath.Ext(candidates[0]) != ".png" {
+			t.Fatalf("图集页 %s 缺少唯一的 PNG 原生输出", logicalPath)
+		}
+		relative, relativeErr := filepath.Rel(build, candidates[0])
+		must(t, relativeErr)
+		paths = append(paths, "/"+filepath.ToSlash(relative))
+	}
+	sort.Strings(paths)
+	return paths
 }

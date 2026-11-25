@@ -33,6 +33,9 @@ client/settings/v2/packages/information.json
 # 从本机原客户端按原版音频来源清单导入，音频原件和对应导入元数据保存在本机。
 client/assets/resources/audio/*.wav
 client/assets/resources/audio/*.wav.meta
+# 世界首领图集从现有本机帧生成，随实际构建发布。
+client/assets/resources/development/world-boss-atlas/
+client/assets/resources/development/world-boss-atlas.meta
 server/minimir
 outputs/server-dev/nbserver
 conf/dev/*.local.json
