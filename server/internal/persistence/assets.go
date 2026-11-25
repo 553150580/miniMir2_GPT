@@ -45,7 +45,8 @@ type AssetRequest struct {
 	Vendor           *pb.VendorCommitRequest // NPC 买卖或修理的报价提交参数。
 	VendorShop       string                  // 房间根据 NPC 与当前地图确定的商店身份。
 
-	TaskCodex *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
+	TaskCodex         *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
+	ChallengeRewardID string                    // 领取的原挑战待领编号。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -165,7 +166,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		var warehouse *WarehouseReceipt
 		// vendor 保存实际成交的商人买卖或修理结果。
 		var vendor *VendorReceipt
-		var taskCodex *TaskCodexClaimReceipt // 首次领取确认的任务或图鉴奖励。
+		var taskCodex *TaskCodexClaimReceipt               // 首次领取确认的任务或图鉴奖励。
+		var challengeReward *domain.ChallengePendingReward // 首次领取的原挑战资产。
 		// 计算本次领域变更，并为需要专属回执的操作保留分类结果。
 		switch q.Kind {
 		case AssetVendor:
@@ -254,6 +256,8 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 				break
 			}
 			r, taskCodex, businessCode = claimTaskCodex(r, &s.Cfg.Fixture, q.TaskCodex, taskEventAt, opID)
+		case AssetChallengeRewardClaim:
+			r, challengeReward, businessCode = claimChallengeReward(r, q.ChallengeRewardID)
 		case "set_casting_supply":
 			r, businessCode = setCastingSupply(r, q, s.Cfg.Fixture)
 		case "cast_material":
@@ -298,6 +302,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		op.Warehouse = cloneWarehouseReceipt(warehouse)
 		op.Vendor = vendor
 		op.TaskCodex = taskCodex
+		op.ChallengeReward = challengeReward
 		if q.Kind == "set_auto_recycle" && businessCode == 0 {
 			op.AutoRecyclePolicy = policySnapshot(r.AutoRecycle)
 		}
@@ -344,6 +349,9 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		}
 		if taskCodex != nil {
 			audit["tasks_codex_claim"] = taskCodex
+		}
+		if challengeReward != nil {
+			audit["challenge_reward_claim"] = challengeReward
 		}
 		if _, e = s.DB.Collection("audit_outbox").InsertOne(tc, audit); e != nil {
 			return e

@@ -762,7 +762,7 @@ func (w *worker) roomCommand(r *room, c command) {
 				break
 			}
 		}
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward:
 		w.asset(r, c.frame)
 	default:
 		w.failure(r, c.frame, p.CodeInvalidArgument)
@@ -1038,6 +1038,13 @@ func (w *worker) asset(r *room, f wire.Frame) {
 	// q 组装资产请求所需的数据。
 	q := persistence.AssetRequest{Fingerprint: persistence.Hash(append([]byte{byte(f.ID >> 8), byte(f.ID)}, f.Payload...))}
 	switch f.ID {
+	case p.MsgC2SClaimChallengeReward:
+		var request pb.ClaimChallengeReward
+		if proto.Unmarshal(f.Payload, &request) != nil || len(request.RewardId) != 16 || len(request.ProtoReflect().GetUnknown()) != 0 {
+			w.failure(r, f, p.CodeInvalidArgument)
+			return
+		}
+		q.Kind, q.ChallengeRewardID, q.Context = persistence.AssetChallengeRewardClaim, domain.Hex(request.RewardId), request.Operation
 	case p.MsgC2STaskCodexClaim:
 		// 领取只携带目录编号和查询时的运营日，进度及奖励由角色事务重新校验。
 		var x pb.TaskCodexClaimRequest
@@ -1196,7 +1203,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 // id 区分当前步骤指向的目标对象。
 func economic(id uint16) bool {
 	switch id {
-	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim:
+	case p.MsgC2SEquip, p.MsgC2SRecycle, p.MsgC2SClaimHostingTime, p.MsgC2SBuyHostingTime, p.MsgC2SReviveChoice, p.MsgC2SUseItem, p.MsgC2SLearnSkill, p.MsgC2SSkillAssetCommit, p.MsgC2SSetCastingSupply, p.MsgC2SCastWithMaterial, p.MsgC2SSetAutoRecycle, p.MsgC2SSetItemLock, p.MsgC2SWarehouseAction, p.MsgC2SVendorCommit, p.MsgC2STaskCodexClaim, p.MsgC2SClaimChallengeReward:
 		return true
 	}
 	return false
@@ -1208,6 +1215,11 @@ func operationContext(f wire.Frame) *pb.OperationContext {
 	// op 记录操作，使用操作上下文表示。
 	var op *pb.OperationContext
 	switch f.ID {
+	case p.MsgC2SClaimChallengeReward:
+		var request pb.ClaimChallengeReward
+		if proto.Unmarshal(f.Payload, &request) == nil {
+			op = request.Operation
+		}
 	case p.MsgC2STaskCodexClaim:
 		// 提取同一领取请求的幂等身份，供错误回包和原请求对账使用。
 		q := &pb.TaskCodexClaimRequest{}

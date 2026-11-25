@@ -473,8 +473,13 @@ export class AppRoot extends Component {
             sceneEpoch: session.entry.sceneEpoch, sceneKind: session.entry.sceneKind,
             ready: session.ready && !this.attaching && !session.travel.active && !session.teleport.blocksInput,
             level: session.inventory?.level ?? session.role?.level ?? 0,
+            canClaimRewards: !!session.inventory && !this.economicBusy && !this.unresolved,
             worldBoss: this.world?.gameplay.world_boss,
-        }, () => { if (this.ui?.top === bossPanel) this.ui.back(); }, (target, signal) => this.prepareBossEntry(target, signal));
+        }, () => { if (this.ui?.top === bossPanel) this.ui.back(); }, (target, signal) => this.prepareBossEntry(target, signal), {
+            claim: rewardId => this.economic(40030, { rewardId }),
+            itemName: itemId => this.world?.gameplay.items?.find((row: { item_id: number }) => row.item_id === itemId)?.name,
+            report: error => this.error(error),
+        });
         this.cleanups.push(() => this.boss?.dispose());
         this.skillAssets = new GameSkillAssets(safe, this.popup, error => this.error(error));
         this.cleanups.push(() => this.skillAssets?.dispose());
@@ -627,6 +632,7 @@ export class AppRoot extends Component {
         const bossPath = 'UIMgr/Panels/BossChallenge/';
         this.button(bossPath + 'Personal', () => this.boss!.show(3));
         this.button(bossPath + 'World', () => this.boss!.show(4));
+        this.button(bossPath + 'Rewards', () => this.boss!.show('rewards'));
         this.button(bossPath + 'Refresh', () => this.boss!.reload());
         this.button(bossPath + 'Action', () => this.boss!.action());
         this.button(bossPath + 'Previous', () => this.boss!.turn(-1));
@@ -1209,7 +1215,7 @@ export class AppRoot extends Component {
         this.status(session.lastError || (session.ready ? '' : '正在同步场景'));
         if (session.ready && !this.reconciliationStarted) {
             this.reconciliationStarted = true;
-            try { if (session.pending?.get(roleIdentity())) void this.submitPending().catch(error => this.error(error)); }
+            try { if (session.pending?.get(roleIdentity())) void this.submitPending(true).catch(error => this.error(error)); }
             catch (error) { this.unresolved = true; this.error(error); }
         }
     }
@@ -1692,7 +1698,7 @@ export class AppRoot extends Component {
         await this.submitPending();
     }
 
-    private async submitPending(): Promise<void> {
+    private async submitPending(recovering = false): Promise<void> {
         const role = roleIdentity();
         const identity = currentEntryIdentity();
         const ledger = session.pending;
@@ -1720,6 +1726,7 @@ export class AppRoot extends Component {
             if (pending.id === 40022) session.warehouseReceipts.cancel(expected);
             throw new ProtocolResponseError(pending.id, result.errorCode);
         }
+        if (recovering && pending.id === 40030) this.boss?.refreshPersonal();
         this.status('操作已由服务端确认');
     }
 

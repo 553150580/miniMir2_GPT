@@ -32878,6 +32878,8 @@ $root.minimir = (function() {
              * @property {string|null} [active_challenge_id] PersonalBossInfo active_challenge_id
              * @property {Long|null} [active_expires_at_unix_ms] PersonalBossInfo active_expires_at_unix_ms
              * @property {Array.<minimir.v1.PersonalBossHistoryEntry.$Properties>|null} [history] PersonalBossInfo history
+             * @property {Array.<minimir.v1.ChallengePendingReward.$Properties>|null} [pending_rewards] PersonalBossInfo pending_rewards
+             * @property {number|null} [pending_reward_capacity] PersonalBossInfo pending_reward_capacity
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -32904,6 +32906,7 @@ $root.minimir = (function() {
              */
             var PersonalBossInfo = function (properties) {
                 this.history = [];
+                this.pending_rewards = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -33039,6 +33042,22 @@ $root.minimir = (function() {
             PersonalBossInfo.prototype.history = $util.emptyArray;
 
             /**
+             * PersonalBossInfo pending_rewards.
+             * @member {Array.<minimir.v1.ChallengePendingReward.$Properties>} pending_rewards
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.pending_rewards = $util.emptyArray;
+
+            /**
+             * PersonalBossInfo pending_reward_capacity.
+             * @member {number} pending_reward_capacity
+             * @memberof minimir.v1.PersonalBossInfo
+             * @instance
+             */
+            PersonalBossInfo.prototype.pending_reward_capacity = 0;
+
+            /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @function create
              * @memberof minimir.v1.PersonalBossInfo
@@ -33103,6 +33122,11 @@ $root.minimir = (function() {
                 if (message.history != null && message.history.length)
                     for (var i = 0; i < message.history.length; ++i)
                         $root.minimir.v1.PersonalBossHistoryEntry.encode(message.history[i], writer.uint32(/* id 16, wireType 2 =*/130).fork(), _depth + 1).ldelim();
+                if (message.pending_rewards != null && message.pending_rewards.length)
+                    for (var i = 0; i < message.pending_rewards.length; ++i)
+                        $root.minimir.v1.ChallengePendingReward.encode(message.pending_rewards[i], writer.uint32(/* id 17, wireType 2 =*/138).fork(), _depth + 1).ldelim();
+                if (message.pending_reward_capacity != null && $Object.hasOwnProperty.call(message, "pending_reward_capacity") && message.pending_reward_capacity !== 0)
+                    writer.uint32(/* id 18, wireType 0 =*/144).uint32(message.pending_reward_capacity);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -33303,6 +33327,23 @@ $root.minimir = (function() {
                             message.history.push($root.minimir.v1.PersonalBossHistoryEntry.decode(reader, reader.size(), $undefined, _depth + 1));
                             continue;
                         }
+                    case 17: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.pending_rewards && message.pending_rewards.length))
+                                message.pending_rewards = [];
+                            message.pending_rewards.push($root.minimir.v1.ChallengePendingReward.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    case 18: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.pending_reward_capacity = value;
+                            else
+                                delete message.pending_reward_capacity;
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -33405,6 +33446,18 @@ $root.minimir = (function() {
                             return "history." + error;
                     }
                 }
+                if (message.pending_rewards != null && $Object.hasOwnProperty.call(message, "pending_rewards")) {
+                    if (!$Array.isArray(message.pending_rewards))
+                        return "pending_rewards: array expected";
+                    for (var i = 0; i < message.pending_rewards.length; ++i) {
+                        var error = $root.minimir.v1.ChallengePendingReward.verify(message.pending_rewards[i], _depth + 1);
+                        if (error)
+                            return "pending_rewards." + error;
+                    }
+                }
+                if (message.pending_reward_capacity != null && $Object.hasOwnProperty.call(message, "pending_reward_capacity"))
+                    if (!$util.isInteger(message.pending_reward_capacity))
+                        return "pending_reward_capacity: integer expected";
                 return null;
             };
 
@@ -33423,6 +33476,536 @@ $root.minimir = (function() {
             };
 
             return PersonalBossInfo;
+        })();
+
+        v1.ChallengePendingReward = (function() {
+
+            /**
+             * Properties of a ChallengePendingReward.
+             * @typedef {Object} minimir.v1.ChallengePendingReward.$Properties
+             * @property {Uint8Array|null} [reward_id] ChallengePendingReward reward_id
+             * @property {number|null} [template_id] ChallengePendingReward template_id
+             * @property {Long|null} [earned_at_unix_ms] ChallengePendingReward earned_at_unix_ms
+             * @property {Array.<minimir.v1.ItemView.$Properties>|null} [items] ChallengePendingReward items
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ChallengePendingReward.
+             * @memberof minimir.v1
+             * @interface IChallengePendingReward
+             * @augments minimir.v1.ChallengePendingReward.$Properties
+             * @deprecated Use minimir.v1.ChallengePendingReward.$Properties instead.
+             */
+
+            /**
+             * Shape of a ChallengePendingReward.
+             * @typedef {minimir.v1.ChallengePendingReward.$Properties} minimir.v1.ChallengePendingReward.$Shape
+             */
+
+            /**
+             * Constructs a new ChallengePendingReward.
+             * @memberof minimir.v1
+             * @classdesc Represents a ChallengePendingReward.
+             * @constructor
+             * @param {minimir.v1.ChallengePendingReward.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ChallengePendingReward = function (properties) {
+                this.items = [];
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ChallengePendingReward reward_id.
+             * @member {Uint8Array} reward_id
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.reward_id = $util.newBuffer([]);
+
+            /**
+             * ChallengePendingReward template_id.
+             * @member {number} template_id
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.template_id = 0;
+
+            /**
+             * ChallengePendingReward earned_at_unix_ms.
+             * @member {Long} earned_at_unix_ms
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.earned_at_unix_ms = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * ChallengePendingReward items.
+             * @member {Array.<minimir.v1.ItemView.$Properties>} items
+             * @memberof minimir.v1.ChallengePendingReward
+             * @instance
+             */
+            ChallengePendingReward.prototype.items = $util.emptyArray;
+
+            /**
+             * Creates a new ChallengePendingReward instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {minimir.v1.ChallengePendingReward.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ChallengePendingReward} ChallengePendingReward instance
+             * @type {{
+             *   (properties: minimir.v1.ChallengePendingReward.$Shape): minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape;
+             *   (properties?: minimir.v1.ChallengePendingReward.$Properties): minimir.v1.ChallengePendingReward;
+             * }}
+             */
+            ChallengePendingReward.create = function(properties) {
+                return new ChallengePendingReward(properties);
+            };
+
+            /**
+             * Encodes the specified ChallengePendingReward message. Does not implicitly {@link minimir.v1.ChallengePendingReward.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {minimir.v1.ChallengePendingReward.$Properties} message ChallengePendingReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ChallengePendingReward.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.reward_id != null && $Object.hasOwnProperty.call(message, "reward_id") && message.reward_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.reward_id);
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id") && message.template_id !== 0)
+                    writer.uint32(/* id 2, wireType 0 =*/16).uint32(message.template_id);
+                if (message.earned_at_unix_ms != null && $Object.hasOwnProperty.call(message, "earned_at_unix_ms") && (typeof message.earned_at_unix_ms === "object" ? message.earned_at_unix_ms.low || message.earned_at_unix_ms.high : message.earned_at_unix_ms !== 0))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int64(message.earned_at_unix_ms);
+                if (message.items != null && message.items.length)
+                    for (var i = 0; i < message.items.length; ++i)
+                        $root.minimir.v1.ItemView.encode(message.items[i], writer.uint32(/* id 4, wireType 2 =*/34).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ChallengePendingReward message, length delimited. Does not implicitly {@link minimir.v1.ChallengePendingReward.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {minimir.v1.ChallengePendingReward.$Properties} message ChallengePendingReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ChallengePendingReward.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ChallengePendingReward message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape} ChallengePendingReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ChallengePendingReward.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ChallengePendingReward();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.reward_id = value;
+                            else
+                                delete message.reward_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 0)
+                                break;
+                            if (value = reader.uint32())
+                                message.template_id = value;
+                            else
+                                delete message.template_id;
+                            continue;
+                        }
+                    case 3: {
+                            if (wireType !== 0)
+                                break;
+                            if (typeof (value = reader.int64()) === "object" ? value.low || value.high : value !== 0)
+                                message.earned_at_unix_ms = value;
+                            else
+                                delete message.earned_at_unix_ms;
+                            continue;
+                        }
+                    case 4: {
+                            if (wireType !== 2)
+                                break;
+                            if (!(message.items && message.items.length))
+                                message.items = [];
+                            message.items.push($root.minimir.v1.ItemView.decode(reader, reader.size(), $undefined, _depth + 1));
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ChallengePendingReward message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape} ChallengePendingReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ChallengePendingReward.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ChallengePendingReward message.
+             * @function verify
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ChallengePendingReward.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.reward_id != null && $Object.hasOwnProperty.call(message, "reward_id"))
+                    if (!(message.reward_id && typeof message.reward_id.length === "number" || $util.isString(message.reward_id)))
+                        return "reward_id: buffer expected";
+                if (message.template_id != null && $Object.hasOwnProperty.call(message, "template_id"))
+                    if (!$util.isInteger(message.template_id))
+                        return "template_id: integer expected";
+                if (message.earned_at_unix_ms != null && $Object.hasOwnProperty.call(message, "earned_at_unix_ms"))
+                    if (!$util.isInteger(message.earned_at_unix_ms) && !(message.earned_at_unix_ms && $util.isInteger(message.earned_at_unix_ms.low) && $util.isInteger(message.earned_at_unix_ms.high)))
+                        return "earned_at_unix_ms: integer|Long expected";
+                if (message.items != null && $Object.hasOwnProperty.call(message, "items")) {
+                    if (!$Array.isArray(message.items))
+                        return "items: array expected";
+                    for (var i = 0; i < message.items.length; ++i) {
+                        var error = $root.minimir.v1.ItemView.verify(message.items[i], _depth + 1);
+                        if (error)
+                            return "items." + error;
+                    }
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ChallengePendingReward
+             * @function getTypeUrl
+             * @memberof minimir.v1.ChallengePendingReward
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ChallengePendingReward.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ChallengePendingReward";
+            };
+
+            return ChallengePendingReward;
+        })();
+
+        v1.ClaimChallengeReward = (function() {
+
+            /**
+             * Properties of a ClaimChallengeReward.
+             * @typedef {Object} minimir.v1.ClaimChallengeReward.$Properties
+             * @property {Uint8Array|null} [reward_id] ClaimChallengeReward reward_id
+             * @property {minimir.v1.OperationContext.$Properties|null} [operation] ClaimChallengeReward operation
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+
+            /**
+             * Properties of a ClaimChallengeReward.
+             * @memberof minimir.v1
+             * @interface IClaimChallengeReward
+             * @augments minimir.v1.ClaimChallengeReward.$Properties
+             * @deprecated Use minimir.v1.ClaimChallengeReward.$Properties instead.
+             */
+
+            /**
+             * Shape of a ClaimChallengeReward.
+             * @typedef {minimir.v1.ClaimChallengeReward.$Properties} minimir.v1.ClaimChallengeReward.$Shape
+             */
+
+            /**
+             * Constructs a new ClaimChallengeReward.
+             * @memberof minimir.v1
+             * @classdesc Represents a ClaimChallengeReward.
+             * @constructor
+             * @param {minimir.v1.ClaimChallengeReward.$Properties=} [properties] Properties to set
+             * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
+             */
+            var ClaimChallengeReward = function (properties) {
+                if (properties)
+                    for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                            this[keys[i]] = properties[keys[i]];
+            };
+
+            /**
+             * ClaimChallengeReward reward_id.
+             * @member {Uint8Array} reward_id
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @instance
+             */
+            ClaimChallengeReward.prototype.reward_id = $util.newBuffer([]);
+
+            /**
+             * ClaimChallengeReward operation.
+             * @member {minimir.v1.OperationContext.$Properties|null|undefined} operation
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @instance
+             */
+            ClaimChallengeReward.prototype.operation = null;
+
+            /**
+             * Creates a new ClaimChallengeReward instance using the specified properties.
+             * @function create
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {minimir.v1.ClaimChallengeReward.$Properties=} [properties] Properties to set
+             * @returns {minimir.v1.ClaimChallengeReward} ClaimChallengeReward instance
+             * @type {{
+             *   (properties: minimir.v1.ClaimChallengeReward.$Shape): minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape;
+             *   (properties?: minimir.v1.ClaimChallengeReward.$Properties): minimir.v1.ClaimChallengeReward;
+             * }}
+             */
+            ClaimChallengeReward.create = function(properties) {
+                return new ClaimChallengeReward(properties);
+            };
+
+            /**
+             * Encodes the specified ClaimChallengeReward message. Does not implicitly {@link minimir.v1.ClaimChallengeReward.verify|verify} messages.
+             * @function encode
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {minimir.v1.ClaimChallengeReward.$Properties} message ClaimChallengeReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ClaimChallengeReward.encode = function (message, writer, _depth) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    throw $Error("max depth exceeded");
+                if (message.reward_id != null && $Object.hasOwnProperty.call(message, "reward_id") && message.reward_id.length)
+                    writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.reward_id);
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
+                    $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
+                    for (var i = 0; i < message.$unknowns.length; ++i)
+                        writer.raw(message.$unknowns[i]);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified ClaimChallengeReward message, length delimited. Does not implicitly {@link minimir.v1.ClaimChallengeReward.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {minimir.v1.ClaimChallengeReward.$Properties} message ClaimChallengeReward message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            ClaimChallengeReward.encodeDelimited = function(message, writer) {
+                return this.encode(message, (writer || $Writer.create()).fork()).ldelim();
+            };
+
+            /**
+             * Decodes a ClaimChallengeReward message from the specified reader or buffer.
+             * @function decode
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape} ClaimChallengeReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ClaimChallengeReward.decode = function (reader, length, _end, _depth, _target) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $Reader.recursionLimit)
+                    throw $Error("max depth exceeded");
+                var end, message, value;
+                if (length === $undefined)
+                    end = reader.len;
+                else {
+                    end = reader.pos + length;
+                    if (end > reader.len)
+                        throw $RangeError("index out of range");
+                    length = reader.len;
+                    reader.len = end;
+                }
+                message = _target || new $root.minimir.v1.ClaimChallengeReward();
+                while (reader.pos < end) {
+                    var start = reader.pos;
+                    var tag = reader.tag();
+                    if (tag === _end) {
+                        _end = $undefined;
+                        break;
+                    }
+                    var wireType = tag & 7;
+                    switch (tag >>>= 3) {
+                    case 1: {
+                            if (wireType !== 2)
+                                break;
+                            if ((value = reader.bytes()).length)
+                                message.reward_id = value;
+                            else
+                                delete message.reward_id;
+                            continue;
+                        }
+                    case 2: {
+                            if (wireType !== 2)
+                                break;
+                            message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
+                            continue;
+                        }
+                    }
+                    reader.skipType(wireType, _depth, tag);
+                    if (!reader.discardUnknown) {
+                        $util.makeProp(message, "$unknowns", false);
+                        (message.$unknowns || (message.$unknowns = [])).push(reader.raw(start, reader.pos));
+                    }
+                }
+                if (length !== $undefined) {
+                    if (reader.pos !== end)
+                        throw $RangeError("index out of range");
+                    reader.len = length;
+                }
+                if (_end !== $undefined)
+                    throw $Error("missing end group");
+                return message;
+            };
+
+            /**
+             * Decodes a ClaimChallengeReward message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape} ClaimChallengeReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            ClaimChallengeReward.decodeDelimited = function(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.size());
+            };
+
+            /**
+             * Verifies a ClaimChallengeReward message.
+             * @function verify
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            ClaimChallengeReward.verify = function (message, _depth) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (_depth === $undefined)
+                    _depth = 0;
+                if (_depth > $util.recursionLimit)
+                    return "max depth exceeded";
+                if (message.reward_id != null && $Object.hasOwnProperty.call(message, "reward_id"))
+                    if (!(message.reward_id && typeof message.reward_id.length === "number" || $util.isString(message.reward_id)))
+                        return "reward_id: buffer expected";
+                if (message.operation != null && $Object.hasOwnProperty.call(message, "operation")) {
+                    var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
+                    if (error)
+                        return "operation." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Gets the type url for ClaimChallengeReward
+             * @function getTypeUrl
+             * @memberof minimir.v1.ClaimChallengeReward
+             * @static
+             * @param {string} [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns {string} The type url
+             */
+            ClaimChallengeReward.getTypeUrl = function(prefix) {
+                if (prefix === $undefined)
+                    prefix = "type.googleapis.com";
+                return prefix + "/minimir.v1.ClaimChallengeReward";
+            };
+
+            return ClaimChallengeReward;
         })();
 
         v1.PersonalBossHistoryEntry = (function() {

@@ -984,6 +984,18 @@
       "status": "draft",
       "assignment_source": "development_contract",
       "source_ref": "最终策划案4.17/4.21"
+    },
+    {
+      "value": 40030,
+      "name": "MsgC2SClaimChallengeReward",
+      "proto_message": "ClaimChallengeReward",
+      "direction": "c2s",
+      "binding_required": true,
+      "scene_required": false,
+      "economic": true,
+      "status": "draft",
+      "assignment_source": "development_contract",
+      "source_ref": "最终策划案4.2/7.4"
     }
   ],
   "error_codes": [

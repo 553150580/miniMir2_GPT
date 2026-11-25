@@ -271,12 +271,14 @@ type PersonalBossInfo struct {
 	Successes    uint32                 `protobuf:"varint,9,opt,name=successes,proto3" json:"successes,omitempty"`
 	DailyLimit   uint32                 `protobuf:"varint,10,opt,name=daily_limit,json=dailyLimit,proto3" json:"daily_limit,omitempty"`
 	CanEnter     bool                   `protobuf:"varint,11,opt,name=can_enter,json=canEnter,proto3" json:"can_enter,omitempty"`
-	// 0 可开、1 未开放、2 等级不足、3 挑战进行中、4 冷却、5 次数用完、6 场景不允许。
+	// 0 可开、1 未开放、2 等级不足、3 进行中、4 冷却、5 次数用完、6 场景不允许、7 背包已满、8 待领已满。
 	EligibilityReason     uint32                      `protobuf:"varint,12,opt,name=eligibility_reason,json=eligibilityReason,proto3" json:"eligibility_reason,omitempty"`
 	AvailableAtUnixMs     int64                       `protobuf:"varint,13,opt,name=available_at_unix_ms,json=availableAtUnixMs,proto3" json:"available_at_unix_ms,omitempty"`
 	ActiveChallengeId     string                      `protobuf:"bytes,14,opt,name=active_challenge_id,json=activeChallengeId,proto3" json:"active_challenge_id,omitempty"`
 	ActiveExpiresAtUnixMs int64                       `protobuf:"varint,15,opt,name=active_expires_at_unix_ms,json=activeExpiresAtUnixMs,proto3" json:"active_expires_at_unix_ms,omitempty"`
 	History               []*PersonalBossHistoryEntry `protobuf:"bytes,16,rep,name=history,proto3" json:"history,omitempty"`
+	PendingRewards        []*ChallengePendingReward   `protobuf:"bytes,17,rep,name=pending_rewards,json=pendingRewards,proto3" json:"pending_rewards,omitempty"`
+	PendingRewardCapacity uint32                      `protobuf:"varint,18,opt,name=pending_reward_capacity,json=pendingRewardCapacity,proto3" json:"pending_reward_capacity,omitempty"`
 	unknownFields         protoimpl.UnknownFields
 	sizeCache             protoimpl.SizeCache
 }
@@ -423,6 +425,142 @@ func (x *PersonalBossInfo) GetHistory() []*PersonalBossHistoryEntry {
 	return nil
 }
 
+func (x *PersonalBossInfo) GetPendingRewards() []*ChallengePendingReward {
+	if x != nil {
+		return x.PendingRewards
+	}
+	return nil
+}
+
+func (x *PersonalBossInfo) GetPendingRewardCapacity() uint32 {
+	if x != nil {
+		return x.PendingRewardCapacity
+	}
+	return 0
+}
+
+// 每笔待领对应已确认的原挑战。物品的实例、数量和绑定在挑战结算时冻结。
+type ChallengePendingReward struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	RewardId       []byte                 `protobuf:"bytes,1,opt,name=reward_id,json=rewardId,proto3" json:"reward_id,omitempty"`
+	TemplateId     uint32                 `protobuf:"varint,2,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	EarnedAtUnixMs int64                  `protobuf:"varint,3,opt,name=earned_at_unix_ms,json=earnedAtUnixMs,proto3" json:"earned_at_unix_ms,omitempty"`
+	Items          []*ItemView            `protobuf:"bytes,4,rep,name=items,proto3" json:"items,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ChallengePendingReward) Reset() {
+	*x = ChallengePendingReward{}
+	mi := &file_personal_boss_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChallengePendingReward) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChallengePendingReward) ProtoMessage() {}
+
+func (x *ChallengePendingReward) ProtoReflect() protoreflect.Message {
+	mi := &file_personal_boss_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChallengePendingReward.ProtoReflect.Descriptor instead.
+func (*ChallengePendingReward) Descriptor() ([]byte, []int) {
+	return file_personal_boss_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ChallengePendingReward) GetRewardId() []byte {
+	if x != nil {
+		return x.RewardId
+	}
+	return nil
+}
+
+func (x *ChallengePendingReward) GetTemplateId() uint32 {
+	if x != nil {
+		return x.TemplateId
+	}
+	return 0
+}
+
+func (x *ChallengePendingReward) GetEarnedAtUnixMs() int64 {
+	if x != nil {
+		return x.EarnedAtUnixMs
+	}
+	return 0
+}
+
+func (x *ChallengePendingReward) GetItems() []*ItemView {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+// 领取整笔待领；库存不足时保留原记录。
+type ClaimChallengeReward struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RewardId      []byte                 `protobuf:"bytes,1,opt,name=reward_id,json=rewardId,proto3" json:"reward_id,omitempty"`
+	Operation     *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ClaimChallengeReward) Reset() {
+	*x = ClaimChallengeReward{}
+	mi := &file_personal_boss_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClaimChallengeReward) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClaimChallengeReward) ProtoMessage() {}
+
+func (x *ClaimChallengeReward) ProtoReflect() protoreflect.Message {
+	mi := &file_personal_boss_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClaimChallengeReward.ProtoReflect.Descriptor instead.
+func (*ClaimChallengeReward) Descriptor() ([]byte, []int) {
+	return file_personal_boss_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ClaimChallengeReward) GetRewardId() []byte {
+	if x != nil {
+		return x.RewardId
+	}
+	return nil
+}
+
+func (x *ClaimChallengeReward) GetOperation() *OperationContext {
+	if x != nil {
+		return x.Operation
+	}
+	return nil
+}
+
 type PersonalBossHistoryEntry struct {
 	state       protoimpl.MessageState `protogen:"open.v1"`
 	ChallengeId string                 `protobuf:"bytes,1,opt,name=challenge_id,json=challengeId,proto3" json:"challenge_id,omitempty"`
@@ -442,7 +580,7 @@ type PersonalBossHistoryEntry struct {
 
 func (x *PersonalBossHistoryEntry) Reset() {
 	*x = PersonalBossHistoryEntry{}
-	mi := &file_personal_boss_proto_msgTypes[5]
+	mi := &file_personal_boss_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -454,7 +592,7 @@ func (x *PersonalBossHistoryEntry) String() string {
 func (*PersonalBossHistoryEntry) ProtoMessage() {}
 
 func (x *PersonalBossHistoryEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_personal_boss_proto_msgTypes[5]
+	mi := &file_personal_boss_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -467,7 +605,7 @@ func (x *PersonalBossHistoryEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PersonalBossHistoryEntry.ProtoReflect.Descriptor instead.
 func (*PersonalBossHistoryEntry) Descriptor() ([]byte, []int) {
-	return file_personal_boss_proto_rawDescGZIP(), []int{5}
+	return file_personal_boss_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *PersonalBossHistoryEntry) GetChallengeId() string {
@@ -545,7 +683,7 @@ var File_personal_boss_proto protoreflect.FileDescriptor
 const file_personal_boss_proto_rawDesc = "" +
 	"\n" +
 	"\x13personal_boss.proto\x12\n" +
-	"minimir.v1\"x\n" +
+	"minimir.v1\x1a\fassets.proto\x1a\fcommon.proto\"x\n" +
 	"\x11PersonalBossEnter\x12\x1f\n" +
 	"\vscene_epoch\x18\x01 \x01(\x04R\n" +
 	"sceneEpoch\x12!\n" +
@@ -566,7 +704,7 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x12expires_at_unix_ms\x18\x05 \x01(\x03R\x0fexpiresAtUnixMs\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x06 \x01(\rR\terrorCode\"\x13\n" +
-	"\x11PersonalBossQuery\"\xdc\x04\n" +
+	"\x11PersonalBossQuery\"\xe1\x05\n" +
 	"\x10PersonalBossInfo\x12\x1d\n" +
 	"\n" +
 	"error_code\x18\x01 \x01(\rR\terrorCode\x12\x12\n" +
@@ -588,7 +726,18 @@ const file_personal_boss_proto_rawDesc = "" +
 	"\x14available_at_unix_ms\x18\r \x01(\x03R\x11availableAtUnixMs\x12.\n" +
 	"\x13active_challenge_id\x18\x0e \x01(\tR\x11activeChallengeId\x128\n" +
 	"\x19active_expires_at_unix_ms\x18\x0f \x01(\x03R\x15activeExpiresAtUnixMs\x12>\n" +
-	"\ahistory\x18\x10 \x03(\v2$.minimir.v1.PersonalBossHistoryEntryR\ahistory\"\xe7\x02\n" +
+	"\ahistory\x18\x10 \x03(\v2$.minimir.v1.PersonalBossHistoryEntryR\ahistory\x12K\n" +
+	"\x0fpending_rewards\x18\x11 \x03(\v2\".minimir.v1.ChallengePendingRewardR\x0ependingRewards\x126\n" +
+	"\x17pending_reward_capacity\x18\x12 \x01(\rR\x15pendingRewardCapacity\"\xad\x01\n" +
+	"\x16ChallengePendingReward\x12\x1b\n" +
+	"\treward_id\x18\x01 \x01(\fR\brewardId\x12\x1f\n" +
+	"\vtemplate_id\x18\x02 \x01(\rR\n" +
+	"templateId\x12)\n" +
+	"\x11earned_at_unix_ms\x18\x03 \x01(\x03R\x0eearnedAtUnixMs\x12*\n" +
+	"\x05items\x18\x04 \x03(\v2\x14.minimir.v1.ItemViewR\x05items\"o\n" +
+	"\x14ClaimChallengeReward\x12\x1b\n" +
+	"\treward_id\x18\x01 \x01(\fR\brewardId\x12:\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\xe7\x02\n" +
 	"\x18PersonalBossHistoryEntry\x12!\n" +
 	"\fchallenge_id\x18\x01 \x01(\tR\vchallengeId\x12\x1f\n" +
 	"\vtemplate_id\x18\x02 \x01(\rR\n" +
@@ -616,22 +765,29 @@ func file_personal_boss_proto_rawDescGZIP() []byte {
 	return file_personal_boss_proto_rawDescData
 }
 
-var file_personal_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_personal_boss_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_personal_boss_proto_goTypes = []any{
 	(*PersonalBossEnter)(nil),        // 0: minimir.v1.PersonalBossEnter
 	(*PersonalBossLeave)(nil),        // 1: minimir.v1.PersonalBossLeave
 	(*PersonalBossState)(nil),        // 2: minimir.v1.PersonalBossState
 	(*PersonalBossQuery)(nil),        // 3: minimir.v1.PersonalBossQuery
 	(*PersonalBossInfo)(nil),         // 4: minimir.v1.PersonalBossInfo
-	(*PersonalBossHistoryEntry)(nil), // 5: minimir.v1.PersonalBossHistoryEntry
+	(*ChallengePendingReward)(nil),   // 5: minimir.v1.ChallengePendingReward
+	(*ClaimChallengeReward)(nil),     // 6: minimir.v1.ClaimChallengeReward
+	(*PersonalBossHistoryEntry)(nil), // 7: minimir.v1.PersonalBossHistoryEntry
+	(*ItemView)(nil),                 // 8: minimir.v1.ItemView
+	(*OperationContext)(nil),         // 9: minimir.v1.OperationContext
 }
 var file_personal_boss_proto_depIdxs = []int32{
-	5, // 0: minimir.v1.PersonalBossInfo.history:type_name -> minimir.v1.PersonalBossHistoryEntry
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	7, // 0: minimir.v1.PersonalBossInfo.history:type_name -> minimir.v1.PersonalBossHistoryEntry
+	5, // 1: minimir.v1.PersonalBossInfo.pending_rewards:type_name -> minimir.v1.ChallengePendingReward
+	8, // 2: minimir.v1.ChallengePendingReward.items:type_name -> minimir.v1.ItemView
+	9, // 3: minimir.v1.ClaimChallengeReward.operation:type_name -> minimir.v1.OperationContext
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_personal_boss_proto_init() }
@@ -639,13 +795,15 @@ func file_personal_boss_proto_init() {
 	if File_personal_boss_proto != nil {
 		return
 	}
+	file_assets_proto_init()
+	file_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_personal_boss_proto_rawDesc), len(file_personal_boss_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

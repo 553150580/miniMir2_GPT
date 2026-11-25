@@ -62,31 +62,33 @@ type PersonalBossFinish struct {
 
 // PersonalBossChallenge 是永久预约与最新唯一终态，不持久化临时地图或战斗对象。
 type PersonalBossChallenge struct {
-	ChallengeID     string              `bson:"_id"`                    // 永久场次编号。
-	ReservationID   string              `bson:"reservation_id"`         // 初次预约事务生成的回执身份。
-	RoleID          string              `bson:"role_id"`                // 拥有该独享挑战的角色。
-	RunID           uint64              `bson:"run_server_id"`          // 获准执行的运行服。
-	Execution       uint64              `bson:"execution"`              // 场景执行代次。
-	RuleVersion     uint64              `bson:"rule_version"`           // 冻结的首领与战斗规则版本。
-	ConfigHash      string              `bson:"config_hash"`            // 原配置的不可变哈希。
-	TemplateID      uint32              `bson:"template_id"`            // 同模板复战冷却对应的编号。
-	CombatSnapshot  string              `bson:"combat_snapshot"`        // 原入场属性、装备及技能快照引用。
-	StartedAt       time.Time           `bson:"started_at"`             // 首次预约时采用的场景开始时间。
-	ExpiresAt       time.Time           `bson:"expires_at"`             // 场景时钟上的首领逃走时间。
-	BossHP          int64               `bson:"boss_hp"`                // 原入场模板的完整首领生命。
-	DailyLimit      uint32              `bson:"daily_limit"`            // 此次预约冻结的特权成功次数上限。
-	SuccessCooldown time.Duration       `bson:"success_cooldown"`       // 原规则成功时的模板冷却。
-	RetryCooldown   time.Duration       `bson:"retry_cooldown"`         // 原规则未成功时的模板冷却。
-	Outcome         PersonalBossOutcome `bson:"outcome"`                // 是否确认唯一终态。
-	FinishedAt      time.Time           `bson:"finished_at,omitempty"`  // 原事件实际结束时间。
-	AvailableAt     time.Time           `bson:"available_at,omitempty"` // 该模板原冷却的明确终点。
-	Damage          int64               `bson:"damage,omitempty"`       // 原执行确认的累计有效伤害。
-	HPRemaining     int64               `bson:"hp_remaining,omitempty"` // 原执行确认的首领剩余生命。
-	SuccessDay      string              `bson:"success_day,omitempty"`  // 成功归属的上海运营日。
-	Successes       uint32              `bson:"successes,omitempty"`    // 该运营日确认后的成功次数。
-	Recovered       bool                `bson:"recovered,omitempty"`    // 新所有者取消了失去原执行身份的挑战。
-	RewardGold      int64               `bson:"reward_gold,omitempty"`  // 此次击杀实际入账的直接金币。
-	RewardBound     bool                `bson:"reward_bound,omitempty"` // 该金币依据原击杀时刻进入绑定账户。
+	ChallengeID     string              `bson:"_id"`                     // 永久场次编号。
+	ReservationID   string              `bson:"reservation_id"`          // 初次预约事务生成的回执身份。
+	RoleID          string              `bson:"role_id"`                 // 拥有该独享挑战的角色。
+	RunID           uint64              `bson:"run_server_id"`           // 获准执行的运行服。
+	Execution       uint64              `bson:"execution"`               // 场景执行代次。
+	RuleVersion     uint64              `bson:"rule_version"`            // 冻结的首领与战斗规则版本。
+	ConfigHash      string              `bson:"config_hash"`             // 原配置的不可变哈希。
+	TemplateID      uint32              `bson:"template_id"`             // 同模板复战冷却对应的编号。
+	CombatSnapshot  string              `bson:"combat_snapshot"`         // 原入场属性、装备及技能快照引用。
+	StartedAt       time.Time           `bson:"started_at"`              // 首次预约时采用的场景开始时间。
+	ExpiresAt       time.Time           `bson:"expires_at"`              // 场景时钟上的首领逃走时间。
+	BossHP          int64               `bson:"boss_hp"`                 // 原入场模板的完整首领生命。
+	DailyLimit      uint32              `bson:"daily_limit"`             // 此次预约冻结的特权成功次数上限。
+	SuccessCooldown time.Duration       `bson:"success_cooldown"`        // 原规则成功时的模板冷却。
+	RetryCooldown   time.Duration       `bson:"retry_cooldown"`          // 原规则未成功时的模板冷却。
+	Outcome         PersonalBossOutcome `bson:"outcome"`                 // 是否确认唯一终态。
+	FinishedAt      time.Time           `bson:"finished_at,omitempty"`   // 原事件实际结束时间。
+	AvailableAt     time.Time           `bson:"available_at,omitempty"`  // 该模板原冷却的明确终点。
+	Damage          int64               `bson:"damage,omitempty"`        // 原执行确认的累计有效伤害。
+	HPRemaining     int64               `bson:"hp_remaining,omitempty"`  // 原执行确认的首领剩余生命。
+	SuccessDay      string              `bson:"success_day,omitempty"`   // 成功归属的上海运营日。
+	Successes       uint32              `bson:"successes,omitempty"`     // 该运营日确认后的成功次数。
+	Recovered       bool                `bson:"recovered,omitempty"`     // 新所有者取消了失去原执行身份的挑战。
+	RewardGold      int64               `bson:"reward_gold,omitempty"`   // 此次击杀实际入账的直接金币。
+	RewardBound     bool                `bson:"reward_bound,omitempty"`  // 该金币依据原击杀时刻进入绑定账户。
+	RewardItems     []domain.Item       `bson:"reward_items,omitempty"`  // 胜利时确认的原实例，后续领取不会改写历史。
+	RewardQueued    bool                `bson:"reward_queued,omitempty"` // 胜利时是否转入永久待领。
 }
 
 // personalBossRecord 额外保存仅持久层使用的所有者围栏和幂等指纹。
@@ -98,8 +100,10 @@ type personalBossRecord struct {
 	BeginDigest           string `bson:"begin_digest"`            // 初次预约内容摘要。
 	FinishDigest          string `bson:"finish_digest,omitempty"` // 首次确认的结束提案内容摘要。
 
-	KillRewardGold int64     `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
-	PrivilegeUntil time.Time `bson:"privilege_until_at_entry,omitempty"` // 原角色授权的卡到期时刻，当前挑战不受理卡资产操作。
+	KillRewardGold     int64         `bson:"kill_reward_gold,omitempty"`         // 预约时固化的独立金币奖励，旧场次默认为零。
+	PrivilegeUntil     time.Time     `bson:"privilege_until_at_entry,omitempty"` // 原角色授权的卡到期时刻，当前挑战不受理卡资产操作。
+	KillRewardItems    []domain.Item `bson:"kill_reward_items,omitempty"`        // 预约时已冻结的原附件实例。
+	PendingRewardLimit uint32        `bson:"pending_reward_limit,omitempty"`     // 单活动预约所占用的待领名额上限。
 }
 
 // BeginPersonalBoss 在角色 owner 的事务内确认独占场次，返回的活动预约才能启动新的场景。
@@ -161,6 +165,7 @@ func (s *Store) BeginPersonalBoss(ctx context.Context, a Auth, q PersonalBossBeg
 			BossHP: q.BossHP, DailyLimit: availability.DailyLimit, SuccessCooldown: q.SuccessCooldown, RetryCooldown: q.RetryCooldown}
 		record := personalBossRecord{PersonalBossChallenge: grant, OwnerInstance: s.Instance, BeginDigest: digest, RunEpoch: s.Epoch, SessionEpoch: r.SessionEpoch,
 			KillRewardGold: template.KillRewardGold, PrivilegeUntil: r.PrivilegeUntil}
+		freezePersonalBossItems(cfg, &record, template.ItemReward)
 		state.ActiveChallengeID = grant.ChallengeID
 		r.PersonalBoss = &state
 		r.Revision++
@@ -289,6 +294,9 @@ func (s *Store) closePersonalBoss(ctx context.Context, r domain.Role, record *pe
 		record.SuccessDay, record.Successes = day, state.Successes
 		cooldown = record.SuccessCooldown
 		if err := applyPersonalBossGold(&r, record); err != nil {
+			return r, err
+		}
+		if err := applyPersonalBossItems(&r, record); err != nil {
 			return r, err
 		}
 	}

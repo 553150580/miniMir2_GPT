@@ -20,35 +20,43 @@ const (
 	PersonalBossCoolingDown                  // 当前模板还在冷却。
 	PersonalBossDailyCap                     // 当前运营日的成功次数已经用完。
 	PersonalBossSceneForbidden               // 角色当前场景或状态不接受新的预约。
+	PersonalBossBagFull                      // 发附件的挑战要求入场时至少一个空位。
+	PersonalBossPendingFull                  // 当前待领已达到上限，无法为本场预留名额。
 )
 
 // PersonalBossInfo 是一次只读快照中的模板、角色资格及历史记录。
 type PersonalBossInfo struct {
-	Open              bool                    // 是否存在已开放的个人首领模板。
-	TemplateID        uint32                  // 当前允许进入的模板编号。
-	DisplayName       string                  // 发布配置中供界面显示的名称。
-	MapID             uint64                  // 专属于此模板的挑战地图编号。
-	MonsterID         uint32                  // 模板实际使用的怪物来源编号。
-	MinimumLevel      uint32                  // 资格所需的最低等级。
-	Day               string                  // 当前资格对应的上海运营日。
-	Successes         uint32                  // 当日已经确认的成功次数。
-	DailyLimit        uint32                  // 当前角色按特权结算的当日上限。
-	EligibilityReason uint32                  // 当前不能进入的状态；零允许入场。
-	AvailableAt       time.Time               // 当前模板原冷却截止时间。
-	ActiveChallengeID string                  // 角色尚未终结的原预约身份。
-	ActiveExpiresAt   time.Time               // 该预约使用的原场景时限。
-	History           []PersonalBossChallenge // 角色最近已终结场次，按结束时间倒序。
+	Open                  bool                            // 是否存在已开放的个人首领模板。
+	TemplateID            uint32                          // 当前允许进入的模板编号。
+	DisplayName           string                          // 发布配置中供界面显示的名称。
+	MapID                 uint64                          // 专属于此模板的挑战地图编号。
+	MonsterID             uint32                          // 模板实际使用的怪物来源编号。
+	MinimumLevel          uint32                          // 资格所需的最低等级。
+	Day                   string                          // 当前资格对应的上海运营日。
+	Successes             uint32                          // 当日已经确认的成功次数。
+	DailyLimit            uint32                          // 当前角色按特权结算的当日上限。
+	EligibilityReason     uint32                          // 当前不能进入的状态；零允许入场。
+	AvailableAt           time.Time                       // 当前模板原冷却截止时间。
+	ActiveChallengeID     string                          // 角色尚未终结的原预约身份。
+	ActiveExpiresAt       time.Time                       // 该预约使用的原场景时限。
+	History               []PersonalBossChallenge         // 角色最近已终结场次，按结束时间倒序。
+	PendingRewards        []domain.ChallengePendingReward // 该永久绑定角色的全部未领原附件。
+	PendingRewardCapacity uint32                          // 当前发布允许为新挑战预留的待领笔数。
 }
 
 // personalBossAvailability 让目录查询和预约事务采用同一等级、次数与冷却规则。
 func personalBossAvailability(r domain.Role, state domain.PersonalBossProgress, cfg *devconfig.PersonalBossConfig, at time.Time) PersonalBossInfo {
 	day := shanghaiOperatingDay(at)
-	out := PersonalBossInfo{Day: day, ActiveChallengeID: state.ActiveChallengeID, EligibilityReason: PersonalBossUnavailable}
+	out := PersonalBossInfo{Day: day, ActiveChallengeID: state.ActiveChallengeID, EligibilityReason: PersonalBossUnavailable,
+		PendingRewards: r.PendingChallengeRewards}
 	if cfg == nil {
 		return out
 	}
 	out.Open, out.TemplateID, out.DisplayName = true, cfg.TemplateID, cfg.DisplayName
 	out.MapID, out.MonsterID, out.MinimumLevel = cfg.Map.ID, cfg.Monster.ID, cfg.MinimumLevel
+	if cfg.ItemReward != nil {
+		out.PendingRewardCapacity = cfg.ItemReward.PendingLimit
+	}
 	out.DailyLimit = cfg.DailySuccessLimit
 	if r.PrivilegeUntil.After(at) {
 		out.DailyLimit += cfg.PrivilegeSuccessBonus
@@ -66,6 +74,10 @@ func personalBossAvailability(r domain.Role, state domain.PersonalBossProgress, 
 		out.EligibilityReason = PersonalBossCoolingDown
 	case state.SuccessDay > day || out.Successes >= out.DailyLimit:
 		out.EligibilityReason = PersonalBossDailyCap
+	case cfg.ItemReward != nil && len(r.Items) >= r.Capacity:
+		out.EligibilityReason = PersonalBossBagFull
+	case cfg.ItemReward != nil && len(r.PendingChallengeRewards) >= int(cfg.ItemReward.PendingLimit):
+		out.EligibilityReason = PersonalBossPendingFull
 	default:
 		out.EligibilityReason = PersonalBossEligible
 	}
@@ -85,6 +97,10 @@ func personalBossAdmissionError(reason uint32) error {
 		return Fail(p.CodeLineForbidden, "个人首领模板仍在冷却")
 	case PersonalBossDailyCap:
 		return Fail(p.CodeLineForbidden, "个人首领已达到本日成功次数上限")
+	case PersonalBossBagFull:
+		return Fail(p.CodeEquipmentBagFull, "背包已满，不能进入会发放物品的挑战")
+	case PersonalBossPendingFull:
+		return Fail(p.CodeEquipmentBagFull, "挑战奖励待领取已满")
 	default:
 		return Fail(p.CodeLineForbidden, "个人首领模板尚未开放")
 	}

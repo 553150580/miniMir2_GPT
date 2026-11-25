@@ -42,6 +42,7 @@ const codecs: Record<number, MessageType> = {
     40020: pb.WarehouseQuery, 40021: pb.WarehousePage, 40022: pb.WarehouseAction, 40023: pb.WarehouseActionResult,
     40024: pb.VendorQuoteRequest, 40025: pb.VendorQuoteResult, 40026: pb.VendorCommitRequest,
     40027: pb.TaskCodexStateRequest, 40028: pb.TaskCodexStateResult, 40029: pb.TaskCodexClaimRequest,
+    40030: pb.ClaimChallengeReward,
 };
 
 function variable(value: Long): number[] {

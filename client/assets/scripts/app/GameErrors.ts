@@ -35,6 +35,8 @@ export function protocolErrorMessage(messageId: number, errorCode: number): stri
     if (errorCode === CodeVendorItemBlocked) return '物品或数量不满足当前商店服务条件';
     if (errorCode === CodeTaskCodexUnavailable) return '当前奖励不可领取，请查看任务进度';
     if (errorCode === CodeTaskCodexDayChanged) return '运营日已切换，请刷新任务';
+    if (errorCode === CodeEquipmentBagFull && messageId === 40030) return '背包已满，奖励仍在待领取';
+    if (errorCode === CodeEquipmentBagFull && messageId === 20012) return '背包或待领取队列已满，请查看个人首领面板';
     if (errorCode === CodeEquipmentBagFull) return '背包空间不足，装备保持原位';
     if (errorCode === CodeEquipmentChanged) return '原装备或所在部位已变化，请重新选择';
     if (errorCode === CodeEquipmentBlocked) return '当前职业、等级或装备状态不允许穿脱';

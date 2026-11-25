@@ -4,6 +4,7 @@ package persistence
 import (
 	"context"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -170,7 +171,7 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	}
 	replayed, same, err := game.BeginPersonalBoss(ctx, auth, request)
 	require(err)
-	if same != grant || replayed.Revision != r.Revision {
+	if !reflect.DeepEqual(same, grant) || replayed.Revision != r.Revision {
 		t.Fatal("原预约重放改变了活动场次或角色版本")
 	}
 	_, _, err = game.BeginPersonalBoss(ctx, auth, makeBegin(r))
@@ -197,12 +198,12 @@ func TestPersonalBossDurableAuthorityMongo(t *testing.T) {
 	cooled, err := game.QueryPersonalBoss(ctx, auth)
 	require(err)
 	if cooled.EligibilityReason != PersonalBossCoolingDown || cooled.Successes != 5 || cooled.AvailableAt != result.AvailableAt || cooled.ActiveChallengeID != "" ||
-		len(cooled.History) != 1 || cooled.History[0] != result {
+		len(cooled.History) != 1 || !reflect.DeepEqual(cooled.History[0], result) {
 		t.Fatalf("冷却、成功次数或历史没有反映首次真实结算：%+v", cooled)
 	}
 	replayed, same, err = game.FinishPersonalBoss(ctx, auth, finish)
 	require(err)
-	if same != result || replayed.Revision != r.Revision || replayed.Wallet != r.Wallet {
+	if !reflect.DeepEqual(same, result) || replayed.Revision != r.Revision || replayed.Wallet != r.Wallet {
 		t.Fatal("原击杀结果重放重复变更了角色")
 	}
 	_, _, err = game.BeginPersonalBoss(ctx, auth, makeBegin(r))

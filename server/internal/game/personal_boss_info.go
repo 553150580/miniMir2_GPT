@@ -7,6 +7,7 @@ import (
 
 	"google.golang.org/protobuf/proto"
 	pb "minimir/api/generated/minimirv1"
+	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 	"minimir/internal/wire"
@@ -64,6 +65,14 @@ func (w *worker) finishPersonalBossQuery(bound skillPreviewBinding, frame wire.F
 		MonsterId: info.MonsterID, MinimumLevel: info.MinimumLevel, Day: info.Day, Successes: info.Successes, DailyLimit: info.DailyLimit,
 		CanEnter: info.EligibilityReason == persistence.PersonalBossEligible, EligibilityReason: info.EligibilityReason,
 		AvailableAtUnixMs: optionalBossUnixMillis(info.AvailableAt), ActiveChallengeId: info.ActiveChallengeID, ActiveExpiresAtUnixMs: optionalBossUnixMillis(info.ActiveExpiresAt)}
+	out.PendingRewardCapacity = info.PendingRewardCapacity
+	for _, reward := range info.PendingRewards {
+		entry := &pb.ChallengePendingReward{RewardId: domain.Bytes(reward.RewardID), TemplateId: reward.TemplateID, EarnedAtUnixMs: reward.EarnedAt.UnixMilli()}
+		for _, item := range reward.Items {
+			entry.Items = append(entry.Items, item.Proto())
+		}
+		out.PendingRewards = append(out.PendingRewards, entry)
+	}
 	for _, previous := range info.History {
 		out.History = append(out.History, &pb.PersonalBossHistoryEntry{ChallengeId: previous.ChallengeID, TemplateId: previous.TemplateID,
 			RuleVersion: previous.RuleVersion, Outcome: uint32(previous.Outcome), FinishedAtUnixMs: previous.FinishedAt.UnixMilli(),

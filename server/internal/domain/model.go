@@ -167,7 +167,8 @@ type Role struct {
 
 	TasksCodex *TaskCodexProgress `bson:"tasks_codex,omitempty" json:"tasks_codex,omitempty"` // 角色的已确认任务、成就和图鉴进度，旧角色从空进度开始。
 
-	PersonalBoss *PersonalBossProgress `bson:"personal_boss,omitempty" json:"personal_boss,omitempty"` // 个人首领预约、成功次数及冷却。
+	PersonalBoss            *PersonalBossProgress    `bson:"personal_boss,omitempty" json:"personal_boss,omitempty"`                         // 个人首领预约、成功次数及冷却。
+	PendingChallengeRewards []ChallengePendingReward `bson:"pending_challenge_rewards,omitempty" json:"pending_challenge_rewards,omitempty"` // 永久待领附件。
 }
 
 // 绑定是永久重入业务事实，不是当前地图位置；移动、重连和故障重建不得覆盖它。

@@ -12572,6 +12572,12 @@ export namespace minimir {
             /** PersonalBossInfo history. */
             history: minimir.v1.PersonalBossHistoryEntry.$Properties[];
 
+            /** PersonalBossInfo pending_rewards. */
+            pending_rewards: minimir.v1.ChallengePendingReward.$Properties[];
+
+            /** PersonalBossInfo pending_reward_capacity. */
+            pending_reward_capacity: number;
+
             /**
              * Creates a new PersonalBossInfo instance using the specified properties.
              * @param [properties] Properties to set
@@ -12683,12 +12689,234 @@ export namespace minimir {
                 /** PersonalBossInfo history */
                 history?: (minimir.v1.PersonalBossHistoryEntry.$Properties[]|null);
 
+                /** PersonalBossInfo pending_rewards */
+                pending_rewards?: (minimir.v1.ChallengePendingReward.$Properties[]|null);
+
+                /** PersonalBossInfo pending_reward_capacity */
+                pending_reward_capacity?: (number|null);
+
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];
             }
 
             /** Shape of a PersonalBossInfo. */
             type $Shape = minimir.v1.PersonalBossInfo.$Properties;
+        }
+
+        /**
+         * Properties of a ChallengePendingReward.
+         * @deprecated Use minimir.v1.ChallengePendingReward.$Properties instead.
+         */
+        interface IChallengePendingReward extends minimir.v1.ChallengePendingReward.$Properties {
+        }
+
+        /** Represents a ChallengePendingReward. */
+        class ChallengePendingReward {
+
+            /**
+             * Constructs a new ChallengePendingReward.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ChallengePendingReward.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ChallengePendingReward reward_id. */
+            reward_id: Uint8Array;
+
+            /** ChallengePendingReward template_id. */
+            template_id: number;
+
+            /** ChallengePendingReward earned_at_unix_ms. */
+            earned_at_unix_ms: Long;
+
+            /** ChallengePendingReward items. */
+            items: minimir.v1.ItemView.$Properties[];
+
+            /**
+             * Creates a new ChallengePendingReward instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ChallengePendingReward instance
+             */
+            static create(properties: minimir.v1.ChallengePendingReward.$Shape): minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape;
+            static create(properties?: minimir.v1.ChallengePendingReward.$Properties): minimir.v1.ChallengePendingReward;
+
+            /**
+             * Encodes the specified ChallengePendingReward message. Does not implicitly {@link minimir.v1.ChallengePendingReward.verify|verify} messages.
+             * @param message ChallengePendingReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ChallengePendingReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ChallengePendingReward message, length delimited. Does not implicitly {@link minimir.v1.ChallengePendingReward.verify|verify} messages.
+             * @param message ChallengePendingReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ChallengePendingReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ChallengePendingReward message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape} ChallengePendingReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape;
+
+            /**
+             * Decodes a ChallengePendingReward message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape} ChallengePendingReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ChallengePendingReward & minimir.v1.ChallengePendingReward.$Shape;
+
+            /**
+             * Verifies a ChallengePendingReward message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ChallengePendingReward
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ChallengePendingReward {
+
+            /** Properties of a ChallengePendingReward. */
+            interface $Properties {
+
+                /** ChallengePendingReward reward_id */
+                reward_id?: (Uint8Array|null);
+
+                /** ChallengePendingReward template_id */
+                template_id?: (number|null);
+
+                /** ChallengePendingReward earned_at_unix_ms */
+                earned_at_unix_ms?: (Long|null);
+
+                /** ChallengePendingReward items */
+                items?: (minimir.v1.ItemView.$Properties[]|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ChallengePendingReward. */
+            type $Shape = minimir.v1.ChallengePendingReward.$Properties;
+        }
+
+        /**
+         * Properties of a ClaimChallengeReward.
+         * @deprecated Use minimir.v1.ClaimChallengeReward.$Properties instead.
+         */
+        interface IClaimChallengeReward extends minimir.v1.ClaimChallengeReward.$Properties {
+        }
+
+        /** Represents a ClaimChallengeReward. */
+        class ClaimChallengeReward {
+
+            /**
+             * Constructs a new ClaimChallengeReward.
+             * @param [properties] Properties to set
+             */
+            constructor(properties?: minimir.v1.ClaimChallengeReward.$Properties);
+
+            /** Unknown fields preserved while decoding when enabled */
+            $unknowns?: Uint8Array[];
+
+            /** ClaimChallengeReward reward_id. */
+            reward_id: Uint8Array;
+
+            /** ClaimChallengeReward operation. */
+            operation?: (minimir.v1.OperationContext.$Properties|null);
+
+            /**
+             * Creates a new ClaimChallengeReward instance using the specified properties.
+             * @param [properties] Properties to set
+             * @returns ClaimChallengeReward instance
+             */
+            static create(properties: minimir.v1.ClaimChallengeReward.$Shape): minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape;
+            static create(properties?: minimir.v1.ClaimChallengeReward.$Properties): minimir.v1.ClaimChallengeReward;
+
+            /**
+             * Encodes the specified ClaimChallengeReward message. Does not implicitly {@link minimir.v1.ClaimChallengeReward.verify|verify} messages.
+             * @param message ClaimChallengeReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encode(message: minimir.v1.ClaimChallengeReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Encodes the specified ClaimChallengeReward message, length delimited. Does not implicitly {@link minimir.v1.ClaimChallengeReward.verify|verify} messages.
+             * @param message ClaimChallengeReward message or plain object to encode
+             * @param [writer] Writer to encode to
+             * @returns Writer
+             */
+            static encodeDelimited(message: minimir.v1.ClaimChallengeReward.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+
+            /**
+             * Decodes a ClaimChallengeReward message from the specified reader or buffer.
+             * @param reader Reader or buffer to decode from
+             * @param [length] Message length if known beforehand
+             * @returns {minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape} ClaimChallengeReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape;
+
+            /**
+             * Decodes a ClaimChallengeReward message from the specified reader or buffer, length delimited.
+             * @param reader Reader or buffer to decode from
+             * @returns {minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape} ClaimChallengeReward
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): minimir.v1.ClaimChallengeReward & minimir.v1.ClaimChallengeReward.$Shape;
+
+            /**
+             * Verifies a ClaimChallengeReward message.
+             * @param message Plain object to verify
+             * @returns `null` if valid, otherwise the reason why it is not
+             */
+            static verify(message: { [k: string]: any }): (string|null);
+
+            /**
+             * Gets the type url for ClaimChallengeReward
+             * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
+             * @returns The type url
+             */
+            static getTypeUrl(prefix?: string): string;
+        }
+
+        namespace ClaimChallengeReward {
+
+            /** Properties of a ClaimChallengeReward. */
+            interface $Properties {
+
+                /** ClaimChallengeReward reward_id */
+                reward_id?: (Uint8Array|null);
+
+                /** ClaimChallengeReward operation */
+                operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** Unknown fields preserved while decoding when enabled */
+                $unknowns?: Uint8Array[];
+            }
+
+            /** Shape of a ClaimChallengeReward. */
+            type $Shape = minimir.v1.ClaimChallengeReward.$Properties;
         }
 
         /**

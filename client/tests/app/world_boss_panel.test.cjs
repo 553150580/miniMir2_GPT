@@ -39,7 +39,9 @@ function fixture(t) {
             return answer ? answer() : Promise.resolve(id === 20017 ? nextState : {});
         },
     };
-    const view = new GameBoss(panel, connection, () => current, () => { closed++; }, (target, signal) => prepare(target, signal));
+    const view = new GameBoss(panel, connection, () => current, () => { closed++; }, (target, signal) => prepare(target, signal), {
+        claim() { assert.fail('世界首领页不领取个人待领'); }, itemName() {}, report: error => { throw error; },
+    });
     const tick = async milliseconds => {
         now += milliseconds;
         t.mock.timers.tick(milliseconds);

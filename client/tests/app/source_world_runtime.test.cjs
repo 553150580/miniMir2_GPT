@@ -1,6 +1,7 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const runtime=require('../support/world_runtime.cjs'),{cc,UITransform,Sprite,Vec3,Long,state,event}=runtime;
 const root=path.resolve(__dirname,'../../..'),resourceRoot=path.join(root,'client/assets/resources');
+const shinsuProfilePath='development/pets/shinsu/profile';
 const primary=runtime.makeWorld(1),GameWorldView=primary.view.constructor,WorldAssets=primary.assets.constructor;primary.view.dispose();
 cc.Node.prototype.setScale=function(x,y,z){this.scale=new Vec3(x,y,z);};
 function ancestry(node){const nodes=[];while(node){nodes.push(node);node=node.parent;}return nodes;}
@@ -16,11 +17,14 @@ function fakeResources(options={}){
  const pool=new Map(),requested=[],pending=[],callbacks=[],sourceActive={now:0,max:0};
  const gameplay=JSON.parse(fs.readFileSync(path.join(resourceRoot,'development/gameplay.json'),'utf8'));
  options.changeGameplay?.(gameplay);
+ // 本机试玩可以额外装神兽资源；本处只有显式传入的夹具才参与缺图或有图测试。
+ const localFile=key=>key===shinsuProfilePath?null:path.join(resourceRoot,key+'.json');
+ const hasLocalFile=key=>{const file=localFile(key);return file!==null&&fs.existsSync(file);};
  const load=(key,_type,callback)=>{
   requested.push(key);const source=key.startsWith('source-maps/');if(source){sourceActive.now++;sourceActive.max=Math.max(sourceActive.max,sourceActive.now);}
   const finish=()=>{
    let asset=pool.get(key),error=null;
-   try{if(!asset){const json=key==='development/gameplay'?gameplay:options.extraResources?.[key]??(fs.existsSync(path.join(resourceRoot,key+'.json'))?JSON.parse(fs.readFileSync(path.join(resourceRoot,key+'.json'),'utf8')):undefined);
+   try{if(!asset){const json=key==='development/gameplay'?gameplay:options.extraResources?.[key]??(hasLocalFile(key)?JSON.parse(fs.readFileSync(localFile(key),'utf8')):undefined);
     options.changeResource?.(key,json);
     asset={key,json,kind:key.startsWith('prefabs/')?({Entity:'entity',Effect:'effect',MapProp:'prop',Beam:'beam',StatusBadge:'status',DamageNumber:'damage-number'})[key.split('/')[1]]:undefined,refs:0,addRef(){this.refs++;},decRef(){assert(this.refs>0,`${key}重复释放`);this.refs--;if(!this.refs)for(const sprite of allSprites)if(sprite.spriteFrame===this&&!ancestry(sprite.node).some(node=>node.destroyed))assert.fail(`${key}引用归零时仍绑定可用Sprite`);}};pool.set(key,asset);}
    }catch(failure){error=failure;}
@@ -28,7 +32,7 @@ function fakeResources(options={}){
   };
   if(options.delayChunks&&key.includes('/chunks/'))pending.push(finish);else queueMicrotask(finish);
  };
- const getInfoWithPath=key=>options.extraResources?.[key]||fs.existsSync(path.join(resourceRoot,key+'.json'))?{path:key}:null;
+ const getInfoWithPath=key=>options.extraResources?.[key]||hasLocalFile(key)?{path:key}:null;
  cc.resources={load,getInfoWithPath};return{pool,requested,pending,gameplay,sourceActive,flush(){for(const finish of pending.splice(0))finish();}};
 }
 function scene(assets){
@@ -179,7 +183,7 @@ test('开发神兽缺少外观包时仍可按独立名字、身体与尸体观�
  } finally { view.dispose(); assertReleased(resources); }
 });
 test('独立神兽帧按原资源租约预载，拼接引用越界会拒绝',async()=>{
- const path='development/pets/shinsu/profile', key='Shinsu:0', png='pets/shinsu/frames/frame_00000.png';
+ const path=shinsuProfilePath, key='Shinsu:0', png='pets/shinsu/frames/frame_00000.png';
  const directions=Array.from({length:8},(_,direction)=>({direction,frames:[key]}));
  const animation={count:1,duration_ms:80,directions};
  const actions=Object.fromEntries(['standing','walking','attack','struck','die','appear'].map(name=>[name,animation]));

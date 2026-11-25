@@ -8,7 +8,35 @@ interface BossContext {
     sceneKind: number;
     ready: boolean;
     level: number;
+    canClaimRewards: boolean;
     worldBoss?: { display_name: string; minimum_level: number; map_id: string; template_id: number };
+}
+
+type BossSection = 3 | 4 | 'rewards';
+
+interface RewardItem {
+    itemId: number;
+    quantity: { toString(): string };
+    bound: boolean;
+    quality: number;
+}
+
+interface PendingChallengeReward {
+    rewardId: Uint8Array;
+    templateId: number;
+    earnedAtUnixMs: { toString(): string };
+    items: RewardItem[];
+}
+
+interface RewardPage {
+    reward: PendingChallengeReward;
+    items: RewardItem[];
+}
+
+interface ChallengeRewardActions {
+    claim(rewardId: Uint8Array): Promise<void>;
+    itemName(itemId: number): string | undefined;
+    report(error: unknown): void;
 }
 
 export interface WorldBossEntryTarget {
@@ -36,7 +64,7 @@ interface WorldBossObservation {
 
 const personalState = ['','预约中','正在载入','挑战中','胜利','超时','已离开','战败'];
 const worldState = ['','等待开放','正在载入','开放中','已击杀','已超时','已离开','战败'];
-const qualifications = ['可入场','尚未开放','等级不足','已有挑战进行中','冷却中','今日次数已用完','请先返回普通挂机地图'];
+const qualifications = ['可入场','尚未开放','等级不足','已有挑战进行中','冷却中','今日次数已用完','请先返回普通挂机地图','背包已满','待领取队列已满'];
 const historyOutcomes = ['','胜利','超时','中断','战败'];
 const pageSize = 5;
 // 心跳校时前短轮询，战斗开放期间定期读取提前击杀，失败最早下一秒重试。
@@ -56,8 +84,11 @@ function dateText(value: { toString(): string } | undefined): string {
 
 // 面板只展示服务端状态，入场、退场和成绩都以当前连接的回执为准。
 export class GameBoss {
-    private section: 3 | 4 = 3;
+    private section: BossSection = 3;
     private personal: any;
+    private personalQuery?: Promise<void>;
+    private personalDirty = false;
+    private personalCurrent = false;
     private world?: WorldBossObservation;
     private active: any;
     private page = 0;
@@ -76,7 +107,8 @@ export class GameBoss {
 
     constructor(private readonly panel: Node, private readonly connection: GameConnection,
         private readonly context: () => BossContext | null, private readonly closePanel: () => void,
-        private readonly prepareWorldEntry: (target: WorldBossEntryTarget, signal: AbortSignal) => Promise<WorldBossEntryPreparation>) {
+        private readonly prepareWorldEntry: (target: WorldBossEntryTarget, signal: AbortSignal) => Promise<WorldBossEntryPreparation>,
+        private readonly rewardActions: ChallengeRewardActions) {
         this.generation = connection.generation;
         this.detach = connection.subscribe(packet => this.observe(packet));
         game.on(Game.EVENT_HIDE, this.onAppHide, this);
@@ -113,7 +145,7 @@ export class GameBoss {
         await this.show(this.section);
     }
 
-    async show(section: 3 | 4): Promise<void> {
+    async show(section: BossSection): Promise<void> {
         if (section !== 4) this.preparingEntry?.abort();
         this.section = section; this.page = 0;
         await this.reload();
@@ -125,8 +157,17 @@ export class GameBoss {
         this.render();
         const context = this.context();
         if (!context?.ready) return;
-        if (this.section === 3) await this.connection.request(20015, {});
-        else if (context.worldBoss) await this.queryWorld(context);
+        if (this.section !== 4) {
+            if (context.sceneKind !== 4) await this.queryPersonal(context);
+        } else if (context.worldBoss) await this.queryWorld(context);
+    }
+
+    // 持久终态和原领取操作恢复都要求重新读取队列，旧快照不能再触发领取。
+    refreshPersonal(): void {
+        if (this.disposed) return;
+        this.personalDirty = true;
+        this.personalCurrent = false;
+        if (this.panel.activeInHierarchy) this.render();
     }
 
     async action(): Promise<void> {
@@ -135,13 +176,20 @@ export class GameBoss {
         const { sceneEpoch, sceneKind } = context;
         this.busy = true; this.render();
         try {
-            if (this.section === 3 && sceneKind === 3 && this.active?.state === 3) {
+            if (this.section === 'rewards') {
+                const reward = this.rewardPages()[this.page]?.reward;
+                if (!this.canClaimReward(context, reward)) return;
+                await this.rewardActions.claim(new Uint8Array(reward.rewardId));
+                this.refreshPersonal();
+                return;
+            } else if (this.section === 3 && sceneKind === 3 && this.active?.state === 3) {
                 this.connection.send(20013, { sceneEpoch, challengeId: this.active.challengeId });
             } else if (this.section === 4 && sceneKind === 4 && this.world?.state === 3) {
                 this.connection.send(20019, { sceneEpoch, occurrenceId: this.world.occurrenceId });
             } else if (this.section === 3 && sceneKind === 1 && this.personal?.canEnter) {
                 this.pendingPersonal ||= Array.from(newOperationId(), byte => byte.toString(16).padStart(2, '0')).join('');
-                await this.connection.request(20012, { sceneEpoch, challengeId: this.pendingPersonal, templateId: this.personal.templateId });
+                const response = await this.connection.request(20012, { sceneEpoch, challengeId: this.pendingPersonal, templateId: this.personal.templateId });
+                if (response?.errorCode) return;
             } else if (this.section === 4 && this.world && context.worldBoss && this.canEnterWorld(context)) {
                 if (!await this.enterWorld(context, this.world)) return;
             } else return;
@@ -153,8 +201,20 @@ export class GameBoss {
 
     render(): void {
         if (this.disposed) return;
-        const context = this.context(), local = this.section === 3;
+        const context = this.context();
         this.syncWorldScene(context);
+        if (this.personalDirty && !this.personalQuery && this.panel.activeInHierarchy && this.section !== 4
+            && context?.ready && (context.sceneKind === 1 || context.sceneKind === 2)) {
+            void this.queryPersonal(context).catch(this.rewardActions.report);
+        }
+        const pending = this.pendingRewards;
+        const showRewards = !this.personal || !!(this.personal.pendingRewardCapacity || pending.length);
+        this.panel.getChildByName('Rewards')!.active = showRewards;
+        if (this.section === 'rewards') {
+            if (this.personal && !showRewards) { this.section = 3; this.page = 0; }
+            else { this.renderRewards(context); this.cancelWorldTimer(); return; }
+        }
+        const local = this.section === 3;
         const value = this.personal, world = this.world;
         const inside = context?.sceneKind === this.section;
         const rows: string[] = local ? (value?.history ?? []).map((row: any) =>
@@ -181,6 +241,44 @@ export class GameBoss {
         this.enable('Previous', this.page > 0);
         this.enable('Next', this.page + 1 < pages);
         this.scheduleWorldRefresh(context);
+    }
+
+    private get pendingRewards(): PendingChallengeReward[] { return this.personal?.pendingRewards ?? []; }
+
+    // 一个可领取奖包的附件超过原保存结果区时继续翻页，每页仍领取整个奖包。
+    private rewardPages(): RewardPage[] {
+        return this.pendingRewards.flatMap(reward => {
+            const items = reward.items ?? [];
+            return Array.from({ length: Math.max(1, Math.ceil(items.length / pageSize)) }, (_, page) =>
+                ({ reward, items: items.slice(page * pageSize, (page + 1) * pageSize) }));
+        });
+    }
+
+    private canClaimReward(context: BossContext | null, reward: PendingChallengeReward | undefined): reward is PendingChallengeReward {
+        return !!context?.ready && context.canClaimRewards && (context.sceneKind === 1 || context.sceneKind === 2)
+            && !(this.active?.state > 0 && this.active.state < 4) && this.personalCurrent && !this.personalQuery
+            && reward?.rewardId instanceof Uint8Array && reward.rewardId.length === 16;
+    }
+
+    private renderRewards(context: BossContext | null): void {
+        const pages = this.rewardPages();
+        this.page = Math.max(0, Math.min(this.page, pages.length - 1));
+        const page = pages[this.page], capacity = this.personal?.pendingRewardCapacity;
+        this.label('Headline', '挑战奖励');
+        this.label('Status', this.personal ? `待领取 ${this.pendingRewards.length}${capacity ? '/' + capacity : ''}` : '等待查询');
+        if (page) {
+            const source = this.personal?.templateId === page.reward.templateId && this.personal.displayName
+                ? this.personal.displayName : `首领 ${page.reward.templateId}`;
+            this.label('Details', `${source} · ${dateText(page.reward.earnedAtUnixMs)}\n${page.reward.items?.length ?? 0} 项物品`);
+        } else this.label('Details', context && context.sceneKind >= 3 ? '请返回原场景后领取' : '');
+        const lines = page?.items.map(item => `${this.rewardActions.itemName(item.itemId) ?? `物品 ${item.itemId}`} ×${item.quantity}  ${item.bound ? '绑定' : '非绑定'}`
+            + (item.quality ? `  品质 ${item.quality}` : ''));
+        this.label('Results', lines?.join('\n') || (this.personal ? '暂无待领取奖励' : '尚未同步待领取奖励'));
+        this.label('Page', `${this.page + 1}/${Math.max(1, pages.length)}`);
+        this.label('Action/Label', '领取');
+        this.enable('Action', !this.busy && this.canClaimReward(context, page?.reward));
+        this.enable('Previous', this.page > 0);
+        this.enable('Next', this.page + 1 < pages.length);
     }
 
     private canEnterWorld(context: BossContext): boolean {
@@ -233,6 +331,9 @@ export class GameBoss {
     private syncWorldScene(context: BossContext | null): void {
         if (this.generation !== this.connection.generation) {
             this.personal = this.active = null;
+            this.personalQuery = undefined;
+            this.personalDirty = true;
+            this.personalCurrent = false;
             this.pendingPersonal = '';
             this.generation = this.connection.generation;
             this.serverClock = undefined;
@@ -241,10 +342,31 @@ export class GameBoss {
         const scene = context?.sceneEpoch.toString() ?? '';
         if (this.worldScene === scene) return;
         this.worldScene = scene;
+        if (this.personalQuery) this.personalDirty = true;
+        this.personalQuery = undefined;
         this.world = undefined;
         this.worldQuery = undefined;
         this.lastWorldQueryAt = -Infinity;
         this.cancelWorldTimer();
+    }
+
+    private queryPersonal(context: BossContext): Promise<void> {
+        if (this.personalQuery) return this.personalQuery;
+        this.personalDirty = false;
+        this.personalCurrent = false;
+        const generation = this.generation, scene = context.sceneEpoch.toString();
+        const query = this.connection.request(20015, {}).then(value => {
+            if (this.disposed || this.connection.generation !== generation || this.context()?.sceneEpoch.toString() !== scene) return;
+            if (value.errorCode) throw new Error(protocolErrorMessage(20015, value.errorCode));
+            this.personal = value;
+            this.personalCurrent = !this.personalDirty;
+        }).finally(() => {
+            if (this.personalQuery !== query) return;
+            this.personalQuery = undefined;
+            this.render();
+        });
+        this.personalQuery = query;
+        return query;
     }
 
     private queryWorld(context: BossContext): Promise<void> {
@@ -304,7 +426,7 @@ export class GameBoss {
 
     private observe(packet: Packet): void {
         const { id, value } = packet;
-        if (packet.error || this.disposed || (id !== 2 && id !== 20014 && id !== 20016 && id !== 20020)) return;
+        if (packet.error || this.disposed || (id !== 2 && id !== 20014 && id !== 20020)) return;
         const context = this.context();
         this.syncWorldScene(context);
         if (id === 2) {
@@ -316,10 +438,14 @@ export class GameBoss {
             }
             return;
         }
-        if (id === 20016) this.personal = value;
-        else if (id === 20014) {
+        if (id === 20014) {
             this.active = value;
-            if (value.state >= 4) this.pendingPersonal = '';
+            if (value.state >= 4) {
+                this.pendingPersonal = '';
+                if (value.errorCode) this.rewardActions.report(new Error(protocolErrorMessage(20012, value.errorCode)));
+                this.personalDirty = true;
+                this.personalCurrent = false;
+            }
         } else if (id === 20020 && packet.seq === 0 && value.sceneEpoch.toString() === this.worldScene) {
             this.world = value;
             this.cancelWorldTimer();

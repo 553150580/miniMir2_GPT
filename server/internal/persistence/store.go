@@ -87,27 +87,28 @@ type Run struct {
 
 // Operation 保存首个确定结果。重试读取这份回执核对请求内容和返回原结果。
 type Operation struct {
-	ID                string                     `bson:"_id"`                           // 包含业务前缀和作用域的唯一操作键。
-	Digest            string                     `bson:"digest"`                        // 首次提交请求的内容摘要，检测同键参数变化。
-	RoleID            string                     `bson:"role_id"`                       // 操作或收益所属的角色持久键。
-	CommandSeq        int64                      `bson:"command_seq"`                   // 首次处理时的客户端经济命令水位。
-	SourceSeq         int64                      `bson:"source_seq,omitempty"`          // 由服务端发起的收益或自动操作来源水位。
-	Revision          int64                      `bson:"revision"`                      // 首次操作完成时的角色版本。
-	Code              uint32                     `bson:"code"`                          // 首次确定结果，零表示成功。
-	Kind              string                     `bson:"kind"`                          // 区分建角、战斗结算与各类资产操作。
-	Created           time.Time                  `bson:"created_at"`                    // 首次结果的记录时间，供查询和审计。
-	Potion            *PotionReceipt             `bson:"potion,omitempty"`              // 已扣库存及归属场景的药水效果。
-	Casting           *CastingReceipt            `bson:"casting_use,omitempty"`         // 施法扣除的材料和原生命代次。
-	Binding           *BindingReceipt            `bson:"binding_use,omitempty"`         // 安全区绑定变更的地图和材料来源。
-	Recycling         *EquipmentRecyclingReceipt `bson:"equipment_recycling,omitempty"` // 自动或批量回收的资产增减。
-	Settlement        *SettlementReceipt         `bson:"settlement,omitempty"`          // 战斗收益、托管扣时与磨损明细。
-	AutoRecyclePolicy *domain.AutoRecyclePolicy  `bson:"auto_recycle_policy,omitempty"` // 已提交的回收策略快照。
-	Experience        *ExperienceGrantReceipt    `bson:"experience_grant,omitempty"`    // 经验派发及成长迁移明细。
-	Skill             *skillPlan                 `bson:"skill_plan,omitempty"`          // 首次应用后用于回放的技能资产计划。
-	Equipment         *EquipmentReceipt          `bson:"equipment,omitempty"`           // 装备相关操作产生的确定资产回执。
-	Warehouse         *WarehouseReceipt          `bson:"warehouse,omitempty"`           // 仓库资产、页号与版本变化。
-	Vendor            *VendorReceipt             `bson:"npc_trade,omitempty"`           // NPC 买卖或修理的原成交参数和结果。
-	TaskCodex         *TaskCodexClaimReceipt     `bson:"tasks_codex_claim,omitempty"`   // 原任务或图鉴领取确认的定义及绑定奖励。
+	ID                string                         `bson:"_id"`                              // 包含业务前缀和作用域的唯一操作键。
+	Digest            string                         `bson:"digest"`                           // 首次提交请求的内容摘要，检测同键参数变化。
+	RoleID            string                         `bson:"role_id"`                          // 操作或收益所属的角色持久键。
+	CommandSeq        int64                          `bson:"command_seq"`                      // 首次处理时的客户端经济命令水位。
+	SourceSeq         int64                          `bson:"source_seq,omitempty"`             // 由服务端发起的收益或自动操作来源水位。
+	Revision          int64                          `bson:"revision"`                         // 首次操作完成时的角色版本。
+	Code              uint32                         `bson:"code"`                             // 首次确定结果，零表示成功。
+	Kind              string                         `bson:"kind"`                             // 区分建角、战斗结算与各类资产操作。
+	Created           time.Time                      `bson:"created_at"`                       // 首次结果的记录时间，供查询和审计。
+	Potion            *PotionReceipt                 `bson:"potion,omitempty"`                 // 已扣库存及归属场景的药水效果。
+	Casting           *CastingReceipt                `bson:"casting_use,omitempty"`            // 施法扣除的材料和原生命代次。
+	Binding           *BindingReceipt                `bson:"binding_use,omitempty"`            // 安全区绑定变更的地图和材料来源。
+	Recycling         *EquipmentRecyclingReceipt     `bson:"equipment_recycling,omitempty"`    // 自动或批量回收的资产增减。
+	Settlement        *SettlementReceipt             `bson:"settlement,omitempty"`             // 战斗收益、托管扣时与磨损明细。
+	AutoRecyclePolicy *domain.AutoRecyclePolicy      `bson:"auto_recycle_policy,omitempty"`    // 已提交的回收策略快照。
+	Experience        *ExperienceGrantReceipt        `bson:"experience_grant,omitempty"`       // 经验派发及成长迁移明细。
+	Skill             *skillPlan                     `bson:"skill_plan,omitempty"`             // 首次应用后用于回放的技能资产计划。
+	Equipment         *EquipmentReceipt              `bson:"equipment,omitempty"`              // 装备相关操作产生的确定资产回执。
+	Warehouse         *WarehouseReceipt              `bson:"warehouse,omitempty"`              // 仓库资产、页号与版本变化。
+	Vendor            *VendorReceipt                 `bson:"npc_trade,omitempty"`              // NPC 买卖或修理的原成交参数和结果。
+	TaskCodex         *TaskCodexClaimReceipt         `bson:"tasks_codex_claim,omitempty"`      // 原任务或图鉴领取确认的定义及绑定奖励。
+	ChallengeReward   *domain.ChallengePendingReward `bson:"challenge_reward_claim,omitempty"` // 由挑战待领转入背包的原实例。
 }
 
 // 保存首次受理的消耗身份与效果参数；不保存角色HP/MP、恢复队列或冷却现场。

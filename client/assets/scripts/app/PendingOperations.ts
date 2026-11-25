@@ -23,7 +23,7 @@ export class PendingOperationError extends Error {
 
 const MAX_ROLES = 5;
 const MAX_BYTES = 64 * 1024;
-const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 30002]);
+const ALLOWED_IDS = new Set([40001, 40002, 40006, 40009, 40010, 40013, 40014, 40015, 40016, 40017, 40022, 40026, 40029, 40030, 30002]);
 type ObjectValue = Record<string, unknown>;
 
 function invalid(message: string): never {
@@ -211,6 +211,10 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         if (kind < 1 || kind > 5 || !target || typeof item.day !== 'string' ||
             (daily ? !/^\d{4}-\d{2}-\d{2}$/.test(item.day) : item.day !== '')) return invalid('任务领奖身份或运营日无效');
         payload = { kind, id: target, day: item.day, operation: operation(item.operation, stored) };
+    } else if (id === 40030) {
+        // 待领奖包独立于背包物品和场景，跨连接重放保留同一个原奖包编号。
+        const item = record(input.value, ['rewardId', 'operation']);
+        payload = { rewardId: bytes16(item.rewardId, stored), operation: operation(item.operation, stored) };
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

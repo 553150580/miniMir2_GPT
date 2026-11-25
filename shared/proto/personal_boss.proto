@@ -1,6 +1,8 @@
 syntax = "proto3";
 package minimir.v1;
 option go_package = "minimir/api/generated/minimirv1";
+import "assets.proto";
+import "common.proto";
 
 // 从当前活动场景发起一次个人挑战，重复请求沿用同一挑战编号。
 message PersonalBossEnter {
@@ -41,12 +43,28 @@ message PersonalBossInfo {
   uint32 successes = 9;
   uint32 daily_limit = 10;
   bool can_enter = 11;
-  // 0 可开、1 未开放、2 等级不足、3 挑战进行中、4 冷却、5 次数用完、6 场景不允许。
+  // 0 可开、1 未开放、2 等级不足、3 进行中、4 冷却、5 次数用完、6 场景不允许、7 背包已满、8 待领已满。
   uint32 eligibility_reason = 12;
   int64 available_at_unix_ms = 13;
   string active_challenge_id = 14;
   int64 active_expires_at_unix_ms = 15;
   repeated PersonalBossHistoryEntry history = 16;
+  repeated ChallengePendingReward pending_rewards = 17;
+  uint32 pending_reward_capacity = 18;
+}
+
+// 每笔待领对应已确认的原挑战。物品的实例、数量和绑定在挑战结算时冻结。
+message ChallengePendingReward {
+  bytes reward_id = 1;
+  uint32 template_id = 2;
+  int64 earned_at_unix_ms = 3;
+  repeated ItemView items = 4;
+}
+
+// 领取整笔待领；库存不足时保留原记录。
+message ClaimChallengeReward {
+  bytes reward_id = 1;
+  OperationContext operation = 2;
 }
 
 message PersonalBossHistoryEntry {

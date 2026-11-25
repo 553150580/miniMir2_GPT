@@ -11,35 +11,37 @@ import (
 
 // PersonalBossDefinition 保存唯一工作簿投影下来的个人挑战、地图和资格。
 type PersonalBossDefinition struct {
-	Enabled               bool        `json:"enabled"`                    // 仅显式开放的候选可预约挑战。
-	TemplateID            uint32      `json:"template_id"`                // 原模板唯一编号和冷却键。
-	DisplayName           string      `json:"display_name"`               // 界面使用的挑战名称。
-	Map                   MapTemplate `json:"map"`                        // 独享挑战地图，绕开通用换图目录。
-	MonsterID             uint32      `json:"monster_id"`                 // 特殊挑战怪物来源的稳定编号。
-	MinimumLevel          uint32      `json:"minimum_level"`              // 开始挑战的最低角色等级。
-	DurationMS            int64       `json:"duration_ms"`                // 未击杀时首领离开的时限。
-	SuccessCooldownMS     int64       `json:"success_cooldown_ms"`        // 击杀后的同模板等待时间。
-	RetryCooldownMS       int64       `json:"retry_cooldown_ms"`          // 未击杀后的同模板等待时间。
-	DailySuccessLimit     uint32      `json:"daily_success_limit"`        // 每个上海运营日的基础成功次数。
-	PrivilegeSuccessBonus uint32      `json:"privilege_success_bonus"`    // 入场时有效特权所增加的成功次数。
-	HistoryLimit          uint32      `json:"history_limit"`              // 界面显示的最新场次上限。
-	KillRewardGold        int64       `json:"kill_reward_gold,omitempty"` // 独立配置的击杀金币，零表示候选不产生金币。
+	Enabled               bool                 `json:"enabled"`                    // 仅显式开放的候选可预约挑战。
+	TemplateID            uint32               `json:"template_id"`                // 原模板唯一编号和冷却键。
+	DisplayName           string               `json:"display_name"`               // 界面使用的挑战名称。
+	Map                   MapTemplate          `json:"map"`                        // 独享挑战地图，绕开通用换图目录。
+	MonsterID             uint32               `json:"monster_id"`                 // 特殊挑战怪物来源的稳定编号。
+	MinimumLevel          uint32               `json:"minimum_level"`              // 开始挑战的最低角色等级。
+	DurationMS            int64                `json:"duration_ms"`                // 未击杀时首领离开的时限。
+	SuccessCooldownMS     int64                `json:"success_cooldown_ms"`        // 击杀后的同模板等待时间。
+	RetryCooldownMS       int64                `json:"retry_cooldown_ms"`          // 未击杀后的同模板等待时间。
+	DailySuccessLimit     uint32               `json:"daily_success_limit"`        // 每个上海运营日的基础成功次数。
+	PrivilegeSuccessBonus uint32               `json:"privilege_success_bonus"`    // 入场时有效特权所增加的成功次数。
+	HistoryLimit          uint32               `json:"history_limit"`              // 界面显示的最新场次上限。
+	KillRewardGold        int64                `json:"kill_reward_gold,omitempty"` // 独立配置的击杀金币，零表示候选不产生金币。
+	ItemReward            *ChallengeItemReward `json:"item_reward,omitempty"`      // 显式配置的胜利附件及待领容量。
 }
 
 // PersonalBossConfig 冻结已解析的独享挑战地图、原怪物定义和规则。
 type PersonalBossConfig struct {
-	TemplateID            uint32        // 原挑战档位的稳定编号。
-	DisplayName           string        // 来自发布定义的挑战名称。
-	Map                   MapTemplate   // 只由挑战场景使用的独立逻辑网格。
-	Monster               Monster       // 格子战斗使用的怪物属性与表现定义。
-	MinimumLevel          uint32        // 允许预约的最低角色等级。
-	Duration              time.Duration // 挑战实际时限。
-	SuccessCooldown       time.Duration // 击杀后重复挑战同档位的等待时间。
-	RetryCooldown         time.Duration // 未击杀后重复挑战同档位的等待时间。
-	DailySuccessLimit     uint32        // 普通角色单运营日最大成功次数。
-	PrivilegeSuccessBonus uint32        // 有效特权角色的次数加成。
-	HistoryLimit          uint32        // 最多下发给当前观察者的场次记录。
-	KillRewardGold        int64         // 独立的击杀金币产量，预约时固定。
+	TemplateID            uint32               // 原挑战档位的稳定编号。
+	DisplayName           string               // 来自发布定义的挑战名称。
+	Map                   MapTemplate          // 只由挑战场景使用的独立逻辑网格。
+	Monster               Monster              // 格子战斗使用的怪物属性与表现定义。
+	MinimumLevel          uint32               // 允许预约的最低角色等级。
+	Duration              time.Duration        // 挑战实际时限。
+	SuccessCooldown       time.Duration        // 击杀后重复挑战同档位的等待时间。
+	RetryCooldown         time.Duration        // 未击杀后重复挑战同档位的等待时间。
+	DailySuccessLimit     uint32               // 普通角色单运营日最大成功次数。
+	PrivilegeSuccessBonus uint32               // 有效特权角色的次数加成。
+	HistoryLimit          uint32               // 最多下发给当前观察者的场次记录。
+	KillRewardGold        int64                // 独立的击杀金币产量，预约时固定。
+	ItemReward            *ChallengeItemReward // 只有配置了附件的场次预留待领容量。
 }
 
 // ChallengeMonster 只从独立挑战怪物目录解析编号。
@@ -82,7 +84,8 @@ func (f *Fixture) validatePersonalBossRelease() error {
 	f.PersonalBoss = &PersonalBossConfig{TemplateID: def.TemplateID, DisplayName: def.DisplayName, Map: def.Map, Monster: monster,
 		MinimumLevel: def.MinimumLevel, Duration: time.Duration(def.DurationMS) * time.Millisecond,
 		SuccessCooldown: time.Duration(def.SuccessCooldownMS) * time.Millisecond, RetryCooldown: time.Duration(def.RetryCooldownMS) * time.Millisecond,
-		DailySuccessLimit: def.DailySuccessLimit, PrivilegeSuccessBonus: def.PrivilegeSuccessBonus, HistoryLimit: def.HistoryLimit, KillRewardGold: def.KillRewardGold}
+		DailySuccessLimit: def.DailySuccessLimit, PrivilegeSuccessBonus: def.PrivilegeSuccessBonus, HistoryLimit: def.HistoryLimit,
+		KillRewardGold: def.KillRewardGold, ItemReward: def.ItemReward}
 	if !f.ValidPersonalBoss() {
 		return errors.New("个人首领开发候选的地图或角色次数规则不合法")
 	}
@@ -99,7 +102,8 @@ func (f *Fixture) ValidPersonalBoss() bool {
 		cfg.Duration%time.Millisecond != 0 || cfg.SuccessCooldown%time.Millisecond != 0 || cfg.RetryCooldown%time.Millisecond != 0 ||
 		cfg.SuccessCooldown > 24*time.Hour || cfg.RetryCooldown > 24*time.Hour || !validChallengeMonster(cfg.Monster) ||
 		cfg.DailySuccessLimit == 0 || cfg.PrivilegeSuccessBonus > math.MaxUint32-cfg.DailySuccessLimit || cfg.HistoryLimit == 0 || cfg.HistoryLimit > 100 || cfg.KillRewardGold < 0 ||
-		cfg.Map.CompactTown || len(cfg.Map.CollisionBits) != 0 || len(cfg.Map.SafeZones) != 0 || len(cfg.Map.LegacySafeZoneIDs) != 0 || len(cfg.Map.NPCs) != 0 {
+		cfg.Map.CompactTown || len(cfg.Map.CollisionBits) != 0 || len(cfg.Map.SafeZones) != 0 || len(cfg.Map.LegacySafeZoneIDs) != 0 || len(cfg.Map.NPCs) != 0 ||
+		!f.validChallengeItemReward(cfg.ItemReward) {
 		return false
 	}
 	_, exists := f.MapByID(cfg.Map.ID)

@@ -4,7 +4,7 @@
   "node_version": "v24.22.1",
   "runtime_long_loaded": true,
   "int64_number_conversion": false,
-  "message_count": 107,
+  "message_count": 109,
   "message_names": [
     "RoleKey",
     "GridPoint",
@@ -107,6 +107,8 @@
     "PersonalBossState",
     "PersonalBossQuery",
     "PersonalBossInfo",
+    "ChallengePendingReward",
+    "ClaimChallengeReward",
     "PersonalBossHistoryEntry",
     "WorldBossQuery",
     "WorldBossEnter",
@@ -114,8 +116,8 @@
     "WorldBossState",
     "WorldBossRank"
   ],
-  "int64_field_count": 252,
-  "int64_boundary_cases": 839,
+  "int64_field_count": 253,
+  "int64_boundary_cases": 843,
   "int64_checks": [
     {
       "message": "RoleKey",
@@ -1546,6 +1548,12 @@
       "cases": 4
     },
     {
+      "message": "ChallengePendingReward",
+      "field": "earned_at_unix_ms",
+      "type": "int64",
+      "cases": 4
+    },
+    {
       "message": "PersonalBossHistoryEntry",
       "field": "rule_version",
       "type": "uint64",
@@ -1630,7 +1638,7 @@
       "cases": 4
     }
   ],
-  "bytes_field_count": 27,
+  "bytes_field_count": 29,
   "bytes_checks": [
     {
       "message": "RoleKey",
@@ -1766,6 +1774,16 @@
       "message": "VendorCommitRequest",
       "field": "quote_id",
       "repeated": false
+    },
+    {
+      "message": "ChallengePendingReward",
+      "field": "reward_id",
+      "repeated": false
+    },
+    {
+      "message": "ClaimChallengeReward",
+      "field": "reward_id",
+      "repeated": false
     }
   ],
   "nested_wallet_and_drops": "passed",
@@ -1794,7 +1812,7 @@
     },
     {
       "path": "shared/proto/personal_boss.proto",
-      "sha256": "7363afde4f0843de8e412992741529aa46554c5f9206e7a37af85f3a73a9dff2"
+      "sha256": "a54c4a30a863d3a121b96d002d1391cfacf29b7562db10db8277144992d0ccba"
     },
     {
       "path": "shared/proto/world_boss.proto",
@@ -1804,13 +1822,13 @@
   "generated_files": [
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.js",
-      "sha256": "c6b0648fb3ad98fcc7fdf27293887988920486fa549a11d6076b9bebeab96f4e",
-      "bytes": 1818201
+      "sha256": "6e3c4e720e6f7d6e6287b7de4488180eb8056ca01a5133d76bb69b7aec57b5bd",
+      "bytes": 1848602
     },
     {
       "path": "client\\assets\\scripts\\generated\\protobuf\\client_pb.d.ts",
-      "sha256": "294228bc60b795e85db3544cc4c9a1eb80cebf3c3b58242bef45e04a2cfd55d0",
-      "bytes": 575520
+      "sha256": "f3ed88f1197f49cd31f0dbc829b2ac53cb50c3606ec717967577e228c957c428",
+      "bytes": 586312
     }
   ],
   "runtime_dependency_scope": "client/node_modules",
