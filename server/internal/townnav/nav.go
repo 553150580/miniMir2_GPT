@@ -495,14 +495,14 @@ func (t *Task) stepAllowed(from, to Point) bool {
 	return t.grid.StepAllowed(from, to)
 }
 
-// ResumeExactGoal在占格对象离开后恢复原地面目标，不清累计展开/重规划预算。
+// ResumeExactGoal 在占格对象离开时停用旧邻格路线，保留原任务及累计预算。
 // t 是调用该方法的任务实例，key 记录键。
 func (t *Task) ResumeExactGoal(key Key) bool {
-	if !t.sync(key) || t.goalRadius != 1 || t.state != Arrived {
+	if !t.sync(key) || t.goalRadius != 1 || t.state == NoPath || t.state == Limited {
 		return false
 	}
 	t.goalRadius = 0
-	t.state = NeedsReplan
+	t.stop(NeedsReplan, "原目标格已腾空，恢复精确寻路")
 	return true
 }
 

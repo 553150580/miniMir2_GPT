@@ -129,11 +129,13 @@ async function main() {
         const first = await observe(page, session, [0, 0, 0, 0]);
         assert.equal(first.ruleVersion, String(expected.ruleVersion));
         await page.waitForFunction(session => !!session.hosting, session, { timeout: 5000 });
-        if (await page.evaluate(session => session.hosting.autoBattleEnabled, session)) {
+        if (!await page.evaluate(session => session.hosting.autoBattleEnabled, session)) {
             await touch(page, safe + 'MapViewport/Actions/Auto');
-            await page.waitForFunction(session => session.hosting?.autoBattleEnabled === false, session, { timeout: 10000 });
+            await page.waitForFunction(session => session.hosting?.autoBattleEnabled === true, session, { timeout: 10000 });
         }
+        report.automaticBattle = true;
         await touch(page, safe + 'BottomHUD/Skills/SkillsPanel');
+        let previous = first.slots;
         for (const [slot, skill, ids] of [[1, 17, [17, 0, 0, 0]], [2, 30, [17, 30, 0, 0]]]) {
             report.step = `从保存的技能页选择技能${skill}并设置第${slot}槽`;
             await selectSkill(page, skill);
@@ -146,7 +148,9 @@ async function main() {
             assert.equal(request.operation.op_id.length, 16);
             assert.deepEqual(Buffer.from(reply.op_id), Buffer.from(request.operation.op_id));
             assert.equal(reply.command_seq.toString(), request.operation.command_seq.toString());
-            report.assignments.push({ ids, commandSeq: reply.command_seq.toString(), revision: reply.new_revision.toString(), sameOperation: true });
+            assert.deepEqual(request.expected_skill_slot_ids, previous, '技能槽比较字段必须保留触摸时看到的四槽');
+            report.assignments.push({ ids, previous, commandSeq: reply.command_seq.toString(), revision: reply.new_revision.toString(), sameOperation: true });
+            previous = ids;
         }
         await page.screenshot({ path: path.join(output, 'summon-slots.png') });
         report.step = '用保存的重连按钮取新票并复核原技能槽';

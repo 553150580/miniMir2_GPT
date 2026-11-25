@@ -15,10 +15,12 @@ export class MapTouchNavigator extends Component {
     private previewTap?: (target: GridPoint) => void;
     private touchId: number | null = null;
     private startPoint = new Vec2();
+    private startTarget: GridPoint | null = null;
     private startTime = 0;
     private moved = false;
 
     bind(navigation: NavigationIntent, screenToGrid: ScreenToGrid, consumeTap?: (target: GridPoint) => boolean, previewTap?: (target: GridPoint) => void): void {
+        this.resetTouch();
         this.navigation = navigation;
         this.screenToGrid = screenToGrid;
         this.consumeTap = consumeTap; this.previewTap = previewTap;
@@ -54,14 +56,17 @@ export class MapTouchNavigator extends Component {
         this.startPoint.set(event.getUILocation());
         this.startTime = game.totalTime;
         this.moved = false;
-        this.preview(event);
+        // 镜头会随上一段路线继续移动。轻触目标取按下时显示的地格，松开时只核对手势。
+        try {
+            this.startTarget = this.screenToGrid?.(this.startPoint) ?? null;
+            if (this.startTarget) this.previewTap?.(this.startTarget);
+        } catch (error) { warn('地图坐标转换失败，保留原导航目标', error); }
         event.propagationStopped = true;
     }
 
     private onMove(event: EventTouch): void {
         if (event.getID() !== this.touchId || this.touchId === null) return;
         if (Vec2.distance(this.startPoint, event.getUILocation()) > Math.max(0, this.tapSlop)) this.moved = true;
-        this.preview(event);
         event.propagationStopped = true;
     }
 
@@ -70,18 +75,14 @@ export class MapTouchNavigator extends Component {
         event.propagationStopped = true;
         const valid = !this.moved && game.totalTime - this.startTime <= Math.max(0, this.maxTapSeconds) * 1000
             && Vec2.distance(this.startPoint, event.getUILocation()) <= Math.max(0, this.tapSlop);
+        const target = this.startTarget;
         this.resetTouch();
-        if (!valid || !this.navigation || !this.screenToGrid) return;
+        if (!valid || !target || !this.navigation) return;
         try {
-            const target = this.screenToGrid(event.getUILocation());
-            if (target && this.consumeTap?.(target)) return;
-            if (target && this.navigation.setGroundTarget(target)) this.node.emit(MapTouchNavigator.EVENT_GROUND_TARGET, target);
-        } catch (error) { warn('地图坐标转换失败，保留原导航目标', error); }
+            if (this.consumeTap?.(target)) return;
+            if (this.navigation.setGroundTarget(target)) this.node.emit(MapTouchNavigator.EVENT_GROUND_TARGET, target);
+        } catch (error) { warn('地图轻触未提交', error); }
     }
 
-    private resetTouch(): void { this.touchId = null; this.moved = false; }
-    private preview(event: EventTouch): void {
-        if (!this.previewTap || !this.screenToGrid) return;
-        const target = this.screenToGrid(event.getUILocation()); if (target) this.previewTap(target);
-    }
+    private resetTouch(): void { this.touchId = null; this.startTarget = null; this.moved = false; }
 }

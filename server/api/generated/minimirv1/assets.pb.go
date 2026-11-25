@@ -463,11 +463,13 @@ func (x *InventoryResult) GetSkillSlotIds() []uint32 {
 }
 
 type SetSkillSlotsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	SkillSlotIds  []uint32               `protobuf:"varint,1,rep,packed,name=skill_slot_ids,json=skillSlotIds,proto3" json:"skill_slot_ids,omitempty"`
-	Operation     *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state        protoimpl.MessageState `protogen:"open.v1"`
+	SkillSlotIds []uint32               `protobuf:"varint,1,rep,packed,name=skill_slot_ids,json=skillSlotIds,proto3" json:"skill_slot_ids,omitempty"`
+	Operation    *OperationContext      `protobuf:"bytes,2,opt,name=operation,proto3" json:"operation,omitempty"`
+	// 提交前看到的四个槽。缺省时继续用角色修订作比较。
+	ExpectedSkillSlotIds []uint32 `protobuf:"varint,3,rep,packed,name=expected_skill_slot_ids,json=expectedSkillSlotIds,proto3" json:"expected_skill_slot_ids,omitempty"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
 }
 
 func (x *SetSkillSlotsRequest) Reset() {
@@ -510,6 +512,13 @@ func (x *SetSkillSlotsRequest) GetSkillSlotIds() []uint32 {
 func (x *SetSkillSlotsRequest) GetOperation() *OperationContext {
 	if x != nil {
 		return x.Operation
+	}
+	return nil
+}
+
+func (x *SetSkillSlotsRequest) GetExpectedSkillSlotIds() []uint32 {
+	if x != nil {
+		return x.ExpectedSkillSlotIds
 	}
 	return nil
 }
@@ -3345,10 +3354,11 @@ const file_assets_proto_rawDesc = "" +
 	"\fauto_recycle\x18\b \x01(\v2\x1d.minimir.v1.AutoRecyclePolicyR\vautoRecycle\x12>\n" +
 	"\vprogression\x18\t \x01(\v2\x1c.minimir.v1.ProgressionStateR\vprogression\x12$\n" +
 	"\x0eskill_slot_ids\x18\n" +
-	" \x03(\rR\fskillSlotIds\"x\n" +
+	" \x03(\rR\fskillSlotIds\"\xaf\x01\n" +
 	"\x14SetSkillSlotsRequest\x12$\n" +
 	"\x0eskill_slot_ids\x18\x01 \x03(\rR\fskillSlotIds\x12:\n" +
-	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\"\x96\x04\n" +
+	"\toperation\x18\x02 \x01(\v2\x1c.minimir.v1.OperationContextR\toperation\x125\n" +
+	"\x17expected_skill_slot_ids\x18\x03 \x03(\rR\x14expectedSkillSlotIds\"\x96\x04\n" +
 	"\x10ProgressionState\x12%\n" +
 	"\x0eformat_version\x18\x01 \x01(\rR\rformatVersion\x12#\n" +
 	"\rcurve_version\x18\x02 \x01(\tR\fcurveVersion\x12\x1b\n" +

@@ -47,9 +47,10 @@ type AssetRequest struct {
 	Vendor           *pb.VendorCommitRequest // NPC 买卖或修理的报价提交参数。
 	VendorShop       string                  // 房间根据 NPC 与当前地图确定的商店身份。
 
-	TaskCodex         *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
-	ChallengeRewardID string                    // 领取的原挑战待领编号。
-	SkillSlotIDs      []uint32                  // 四个有序技能槽，零为合法空位。
+	TaskCodex            *pb.TaskCodexClaimRequest // 携带待领取定义及当日资格的完整请求。
+	ChallengeRewardID    string                    // 领取的原挑战待领编号。
+	SkillSlotIDs         []uint32                  // 四个有序技能槽，零为合法空位。
+	ExpectedSkillSlotIDs []uint32                  // 客户端编辑前看到的四槽，缺省时比较角色修订。
 }
 
 // AssetAutoUsePotion 区分服务端自动扣药和玩家主动用药。
@@ -156,7 +157,7 @@ func (s *Store) AssetWithReceipt(ctx context.Context, a Auth, q AssetRequest) (d
 		if r.Revision == math.MaxInt64 || q.SourceSeq == 0 && r.EconomicSeq == math.MaxInt64 || q.SourceSeq > 0 && r.SourceSeq == math.MaxInt64 {
 			return Fail(p.CodeOperationConflict, "资产序号已耗尽")
 		}
-		if !sequenceValid || q.Context.ExpectedRevision != uint64(r.Revision) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
+		if !sequenceValid || !matchesAssetRevision(r, &s.Cfg.Fixture, q) || q.Context.ExpectedRuleVersion != s.Cfg.Fixture.RuleVersion {
 			return Fail(p.CodeOperationConflict, "操作序列/版本变化，请刷新后保留原操作身份")
 		}
 		// oldRevision 保存修订号，用于当前步骤中的原状态修订号。

@@ -40,6 +40,20 @@ const townNpcWitnesses = {
     5: { id: '5007', target: { x: 10, y: 8 } },
 };
 
+function inspectTownAdjacentTap(destination) {
+    const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
+    const body = world.visuals.get(world.playerHandle).body[0].node;
+    const bounds = body._uiProps.uiTransformComp.getBoundingBoxToWorld();
+    const local = world.projection.project(destination.x, destination.y);
+    const ui = world.world._uiProps.uiTransformComp.convertToWorldSpaceAR(new cc.Vec3(local.x, local.y));
+    const box = document.querySelector('canvas').getBoundingClientRect();
+    const visible = cc.view.getVisibleSize();
+    return { x: box.left + ui.x * box.width / visible.width,
+        y: box.top + (visible.height - ui.y) * box.height / visible.height,
+        resolved: world.screenToGrid(ui),
+        overlapsOwnBody: ui.x >= bounds.x && ui.x <= bounds.x + bounds.width && ui.y >= bounds.y && ui.y <= bounds.y + bounds.height };
+}
+
 async function inspectNpcTap({ witness, body }) {
     const world = cc.director.getScene().getComponentsInChildren('AppRoot')[0].world;
     const npc = world.townNpcs.find(view => view.npc.id === witness.id);
@@ -195,6 +209,15 @@ async function verifyGroundDirections(page, { intents, positions }, town = false
         const start = await observePosition();
         const origin = { x: start.x, y: start.y };
         if (town) {
+            // 角色站在镜头中央时，正上方相邻格中心落在本人的身体矩形内。
+            // 这里直接触摸格中心，避免原八方向用例主动绕开身体而掩盖近距离走位问题。
+            const behind = { x: origin.x - 1, y: origin.y - 1 };
+            await travel(behind, 1, { name: '跨过自己身体的一步点地', exactSteps: true, click: async () => {
+                const point = await page.evaluate(inspectTownAdjacentTap, behind);
+                assert(point.overlapsOwnBody, JSON.stringify(point));
+                return point;
+            } });
+            await travel(origin, 1, { exactSteps: true });
             // 三座紧凑城镇的出生格周围两步皆为空地，可以精确比较来回的每一步。
             for (const [dx, dy] of [[0, -2], [2, -2], [2, 0], [2, 2], [0, 2], [-2, 2], [-2, 0], [-2, -2]]) {
                 await travel({ x: origin.x + dx, y: origin.y + dy }, 2, { balanced: true });

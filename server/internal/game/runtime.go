@@ -1097,6 +1097,7 @@ func (w *worker) asset(r *room, f wire.Frame) {
 			return
 		}
 		q.Kind, q.SkillSlotIDs, q.Context = persistence.AssetSetSkillSlots, request.SkillSlotIds, request.Operation
+		q.ExpectedSkillSlotIDs = request.ExpectedSkillSlotIds
 	case p.MsgC2SClaimChallengeReward:
 		var request pb.ClaimChallengeReward
 		if proto.Unmarshal(f.Payload, &request) != nil || len(request.RewardId) != 16 || len(request.ProtoReflect().GetUnknown()) != 0 {

@@ -7,6 +7,7 @@ import (
 	"minimir/internal/domain"
 	"minimir/internal/persistence"
 	"minimir/internal/townnav"
+	"slices"
 	"testing"
 	"time"
 )
@@ -173,6 +174,52 @@ func TestTownNavigationOccupiedGroundConvergesButRetainsOriginalRequest(t *testi
 	navigationTownTick(w, r, target, now.Add(10*time.Second))
 	if r.Player.Pos != target || r.Navigation.Destination == nil || *r.Navigation.Destination != target {
 		t.Fatal("宠物移开后未走到原精确目标")
+	}
+}
+
+// TestTownNavigationReplansWhenTargetOpensBeforeArrival 回归银杏山谷出生点附近的 NPC 拐角。
+func TestTownNavigationReplansWhenTargetOpensBeforeArrival(t *testing.T) {
+	walls := []devconfig.Point{{X: 4, Y: 5}, {X: 8, Y: 4}, {X: 12, Y: 5}, {X: 4, Y: 9}, {X: 12, Y: 9}, {X: 6, Y: 9}}
+	want := []devconfig.Point{{X: 7, Y: 12}, {X: 6, Y: 11}, {X: 5, Y: 10}, {X: 5, Y: 9}}
+	target := want[len(want)-1]
+	for _, phase := range []townnav.State{townnav.Searching, townnav.Building, townnav.Ready} {
+		t.Run(string(phase), func(t *testing.T) {
+			w, r := navigationTownWorker(t, 17, 17, 1, 1, 1, 2, walls...)
+			r.Player.Pos = devconfig.Point{X: 8, Y: 13}
+			r.Pet = &entity{Handle: 2, Kind: 2, HP: 10, Pos: target}
+			requestTownGround(r, target)
+			now := time.Unix(1, 0)
+			navigationTownTick(w, r, target, now)
+			request := r.TownNavigation[0]
+			for frame := 0; frame < 20 && request.state != phase; frame++ {
+				now = now.Add(time.Second)
+				w.beginTownNavigationTick(now)
+			}
+			if request.state != phase {
+				t.Fatalf("未准备好指定的旧邻格路线阶段：%s", request.state)
+			}
+			priorExpanded := request.task.Progress().TotalExpanded
+			r.Pet.Pos = devconfig.Point{X: 1, Y: 1}
+			var got []devconfig.Point
+			var retainedBudget bool
+			for frame := 0; frame < 36 && r.Player.Pos != target; frame++ {
+				now = now.Add(time.Second)
+				from := r.Player.Pos
+				navigationTownTick(w, r, target, now)
+				if r.Player.Pos != from {
+					got = append(got, r.Player.Pos)
+				}
+				if r.TownNavigation[0] != request || r.Navigation.Revision != request.inputRevision || w.townNavigation.used > 1 {
+					t.Fatal("恢复原目标时更换了导航身份或超出该帧预算")
+				}
+				if request.task != nil && request.task.Progress().Replans == 1 && request.task.Progress().TotalExpanded >= priorExpanded {
+					retainedBudget = true
+				}
+			}
+			if !slices.Equal(got, want) || !retainedBudget {
+				t.Fatalf("目标腾空后未及时走原目标的四步最短路或未保留预算：实际 %v，预期 %v，预算保留 %v", got, want, retainedBudget)
+			}
+		})
 	}
 }
 

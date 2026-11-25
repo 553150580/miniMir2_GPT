@@ -43,6 +43,15 @@ function record(value: unknown, fields: readonly string[]): ObjectValue {
     return result;
 }
 
+// 四个槽保持原次序，零可重复，正编号只能出现一次。
+function skillSlots(value: unknown): number[] {
+    if (!Array.isArray(value) || value.length !== 4) return invalid('原技能槽数量无效');
+    const ids = value.map(uint32);
+    const assigned = ids.filter(id => id !== 0);
+    if (new Set(assigned).size !== assigned.length) return invalid('原技能槽有重复技能');
+    return ids;
+}
+
 function roleId(role: unknown): string {
     if (typeof role !== 'string' || !/^[A-Za-z0-9:_-]{1,160}$/.test(role)) {
         throw new PendingOperationError('INVALID_ROLE', '需要明确的角色永久ID字符串');
@@ -222,12 +231,13 @@ function normalize(value: unknown, stored: boolean): PendingOperation {
         const item = record(input.value, ['rewardId', 'operation']);
         payload = { rewardId: bytes16(item.rewardId, stored), operation: operation(item.operation, stored) };
     } else if (id === 40031) {
-        const item = record(input.value, ['skillSlotIds', 'operation']);
-        if (!Array.isArray(item.skillSlotIds) || item.skillSlotIds.length !== 4) return invalid('原技能槽数量无效');
-        const skillSlotIds = item.skillSlotIds.map(uint32);
-        const assigned = skillSlotIds.filter(id => id !== 0);
-        if (new Set(assigned).size !== assigned.length) return invalid('原技能槽有重复技能');
-        payload = { skillSlotIds, operation: operation(item.operation, stored) };
+        const fields = ['skillSlotIds', 'operation'];
+        const comparesSlots = Object.prototype.hasOwnProperty.call(input.value ?? {}, 'expectedSkillSlotIds');
+        if (comparesSlots) fields.push('expectedSkillSlotIds');
+        const item = record(input.value, fields);
+        payload = { skillSlotIds: skillSlots(item.skillSlotIds), operation: operation(item.operation, stored) };
+        // 旧未决记录不能增加字段，否则和服务端原操作指纹不一致。
+        if (comparesSlots) payload.expectedSkillSlotIds = skillSlots(item.expectedSkillSlotIds);
     } else {
         const item = record(input.value, ['deathId', 'action', 'operation']);
         payload = { deathId: bytes16(item.deathId, stored), action: uint32(item.action),

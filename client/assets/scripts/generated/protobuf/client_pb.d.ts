@@ -7910,6 +7910,9 @@ export namespace minimir {
             /** SetSkillSlotsRequest operation. */
             operation?: (minimir.v1.OperationContext.$Properties|null);
 
+            /** SetSkillSlotsRequest expected_skill_slot_ids. */
+            expected_skill_slot_ids: number[];
+
             /**
              * Creates a new SetSkillSlotsRequest instance using the specified properties.
              * @param [properties] Properties to set
@@ -7978,6 +7981,9 @@ export namespace minimir {
 
                 /** SetSkillSlotsRequest operation */
                 operation?: (minimir.v1.OperationContext.$Properties|null);
+
+                /** SetSkillSlotsRequest expected_skill_slot_ids */
+                expected_skill_slot_ids?: (number[]|null);
 
                 /** Unknown fields preserved while decoding when enabled */
                 $unknowns?: Uint8Array[];

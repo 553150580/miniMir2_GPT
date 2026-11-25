@@ -3,7 +3,7 @@
   "protoc_gen_go": "protoc-gen-go v1.36.12",
   "sources": {
     "account.proto": "c7f9068dd978d3084949ea4a1ce06f61ac73899065dcfe1314fff32d6eca8d66",
-    "assets.proto": "31b499c2f40da6ea695267bf16af0c4ae29fc4432ce4c7deaa7fb04c7c0ef3d2",
+    "assets.proto": "b1508f2a19322c8bfd6d84e50af9a96198af326b781dc5a4f613175d9420a977",
     "common.proto": "c627a05ce5d10c029813838374c563c91cf8f51234e000f9a66abcf330a3e36b",
     "dungeon_party.proto": "b28ca1d893e51bd771311cdded254777d78e1664638c44460ec5f84626ff4cda",
     "personal_boss.proto": "dfcd79a3dff681373fad424e628658c4d086192e39d185b14f405620219da6df",
@@ -13,7 +13,7 @@
   },
   "outputs": {
     "server/api/generated/minimirv1/account.pb.go": "01c4655f0466f542cc2eb666c09e9067847cf4cf6d1e064d7b4fc572dc2b9b2a",
-    "server/api/generated/minimirv1/assets.pb.go": "a8f21ac0bcb9ee3bcedd250b19fbe7de41bc0c1401a20a5e693f36644ada451b",
+    "server/api/generated/minimirv1/assets.pb.go": "cc135e352478b68117b95ea8d2b705d0b35a5d728f50b953664a458ce6e5a3cf",
     "server/api/generated/minimirv1/common.pb.go": "b6be9920d3201fd79686e25dd3b38d463f3622184c4afaeafdc064dc31474566",
     "server/api/generated/minimirv1/dungeon_party.pb.go": "595ecf1c6522457004d1e3d90804ec457ad7e048dade7e6f3b036487f9877c9c",
     "server/api/generated/minimirv1/personal_boss.pb.go": "be2c57b1f4f330afbc0df74e0fad2edd65652be7bf78307eb773ed3cdea7f415",

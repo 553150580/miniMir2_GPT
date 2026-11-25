@@ -47,6 +47,8 @@ message InventoryResult {
 message SetSkillSlotsRequest {
   repeated uint32 skill_slot_ids = 1;
   OperationContext operation = 2;
+  // 提交前看到的四个槽。缺省时继续用角色修订作比较。
+  repeated uint32 expected_skill_slot_ids = 3;
 }
 // 只读永久成长观察；缺少目录或遗留超范围角色不凭数组长度猜上限。
 message ProgressionState {

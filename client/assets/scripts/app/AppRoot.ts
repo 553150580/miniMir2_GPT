@@ -1653,7 +1653,8 @@ export class AppRoot extends Component {
     private configureAttackSlot(index?: number): Promise<void> {
         const snapshot = this.skillSnapshot();
         if (!snapshot.canConfigureSlots) throw new Error('请在城镇或普通野外调整技能槽');
-        const ids = attackSkillSlotIDs(snapshot.inventory?.skillSlotIds);
+        const expectedSkillSlotIds = attackSkillSlotIDs(snapshot.inventory?.skillSlotIds);
+        const ids = expectedSkillSlotIds.slice();
         if (index === undefined) ids.fill(0);
         else {
             const row = this.skills?.selected;
@@ -1663,7 +1664,10 @@ export class AppRoot extends Component {
             if (source >= 0) ids[source] = 0;
             if (source !== index) ids[index] = id;
         }
-        return this.economic(40031, { skillSlotIds: ids });
+        // 同时提交修改前看到的四槽，让无关收益变化期间也可完成这次点击。
+        const saved = this.economic(40031, { skillSlotIds: ids, expectedSkillSlotIds });
+        this.refreshGame();
+        return saved.finally(() => this.refreshGame());
     }
 
     private async submitSkillMode(skillId: number, enabled: boolean, charge: boolean): Promise<void> {

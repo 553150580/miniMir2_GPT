@@ -8,11 +8,16 @@ func (s Skill) AttackSlotSummon() bool {
 	return s.Behavior == "summon_pet" && s.Summon != nil && s.Activation() == "cast"
 }
 
+// DefaultAttackSlotEligible 沿用配置为自动施放且无需移动的缺省技能。
+func (s Skill) DefaultAttackSlotEligible() bool {
+	return s.AutoEnabled && s.Activation() == "cast" && s.Displacement == nil && s.Teleport == nil
+}
+
 // AttackSlotEligible 保留定点战斗与手动控制的边界，另外允许原战士刀法和显式召唤。
 func (s Skill) AttackSlotEligible() bool {
 	switch s.Behavior {
 	case "half_moon", "thrusting", "flaming_sword":
 		return true
 	}
-	return s.AttackSlotSummon() || s.AutoEnabled && s.Activation() == "cast" && s.Displacement == nil && s.Teleport == nil
+	return s.AttackSlotSummon() || s.DefaultAttackSlotEligible()
 }

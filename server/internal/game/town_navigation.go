@@ -675,9 +675,10 @@ func (w *worker) moveTown(r *room, e *entity, target devconfig.Point, now time.T
 	if q.task == nil {
 		return true
 	}
-	if q.state == townnav.Arrived && q.adjacent && !townBlocked(q, target) && q.task.ResumeExactGoal(q.key) {
+	if q.adjacent && !townBlocked(q, target) && q.task.ResumeExactGoal(q.key) {
 		q.adjacent = false
-		q.state = townnav.NeedsReplan
+		// 立即归还旧邻格路线的工作区和缓冲，再沿同一次点击重新排队。
+		w.finishTownPlanning(q)
 	}
 	if q.state == townnav.WaitingDynamic && (q.dynamic.Revision != q.plannedDynamic || e.Pos != q.plannedPosition) || (q.state == townnav.NoPath || q.state == townnav.Arrived) && e.Pos != q.plannedPosition || q.state == townnav.NeedsReplan {
 		w.queueTownRequest(q)

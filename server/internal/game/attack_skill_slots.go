@@ -8,41 +8,14 @@ import (
 	pb "minimir/api/generated/minimirv1"
 	"minimir/internal/devconfig"
 	"minimir/internal/domain"
+	"minimir/internal/persistence"
 	p "minimir/internal/protocol"
 )
 
 // attackSlotsForRole 返回发给客户端的四个槽，缺省按原自动技能优先级生成。
 func attackSlotsForRole(role domain.Role, fixture devconfig.Fixture) []uint32 {
-	ids := resolvedAttackSlots(role, &fixture)
+	ids := persistence.ResolvedSkillSlots(role, &fixture)
 	return ids[:]
-}
-
-// resolvedAttackSlots 在有界数组中选择默认槽，挂机每轮无需复制并排序整个技能表。
-func resolvedAttackSlots(role domain.Role, fixture *devconfig.Fixture) [devconfig.AttackSkillSlotCount]uint32 {
-	var ids [devconfig.AttackSkillSlotCount]uint32
-	if len(role.SkillSlotIDs) == len(ids) {
-		copy(ids[:], role.SkillSlotIDs)
-		return ids
-	}
-	var priorities [devconfig.AttackSkillSlotCount]int
-	for _, skill := range fixture.Skills {
-		if !automaticSkillForJob(skill, role.Job) || !skill.AttackSlotEligible() {
-			continue
-		}
-		rank, learned := role.Skill(skill.ID)
-		if !learned || rank < skill.LearnedLevel || rank > skill.MaxLevel {
-			continue
-		}
-		for index, id := range ids {
-			if id == 0 || skill.AutoPriority > priorities[index] || skill.AutoPriority == priorities[index] && skill.ID < id {
-				copy(ids[index+1:], ids[index:])
-				copy(priorities[index+1:], priorities[index:])
-				ids[index], priorities[index] = skill.ID, skill.AutoPriority
-				break
-			}
-		}
-	}
-	return ids
 }
 
 // readyAttackSlot 持有原配置、当前技能等级和排序使用的最早可用时刻。
@@ -90,7 +63,7 @@ func (w *worker) tryAttackSkillSlots(r *room, focus *entity, direction, input ui
 	fixture := &w.e.Store.Cfg.Fixture
 	var candidates [devconfig.AttackSkillSlotCount]readyAttackSlot
 	count := 0
-	for _, id := range resolvedAttackSlots(r.Role, fixture) {
+	for _, id := range persistence.ResolvedSkillSlots(r.Role, fixture) {
 		if id == 0 || !manual && !r.AutoSkills.permits(id) {
 			continue
 		}

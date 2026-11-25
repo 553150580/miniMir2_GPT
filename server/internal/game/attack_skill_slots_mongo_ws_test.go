@@ -1,4 +1,4 @@
-// 本文件经真实 WebSocket 和隔离 MongoDB 验证挂机结算期间的技能槽冲突和重试。
+// 本文件经真实 WebSocket 和隔离 MongoDB 验证挂机结算与技能槽独立比较。
 package game
 
 import (
@@ -124,9 +124,9 @@ func TestAttackSkillSlotsSettlementCASMongoWS(t *testing.T) {
 		}
 	}
 	queued := []uint32{devconfig.SummonSkeletonSkillID, devconfig.SummonShinsuSkillID, 0, 0}
-	setSlots := func(request uint32, revision uint64) *pb.SetSkillSlotsRequest {
-		value := &pb.SetSkillSlotsRequest{SkillSlotIds: queued, Operation: &pb.OperationContext{
-			OpId: domain.Bytes(domain.ID()), CommandSeq: uint64(before.EconomicSeq + 1),
+	setSlots := func(request uint32, sequence, revision uint64, initial []uint32) *pb.SetSkillSlotsRequest {
+		value := &pb.SetSkillSlotsRequest{SkillSlotIds: queued, ExpectedSkillSlotIds: initial, Operation: &pb.OperationContext{
+			OpId: domain.Bytes(domain.ID()), CommandSeq: sequence,
 			ExpectedRevision: revision, ExpectedRuleVersion: owner.Cfg.Fixture.RuleVersion,
 		}}
 		send(p.MsgC2SSetSkillSlots, request, value)
@@ -137,7 +137,8 @@ func TestAttackSkillSlotsSettlementCASMongoWS(t *testing.T) {
 	w.settle(r, persistence.Settlement{SourceSeq: r.Role.SourceSeq + 1, Experience: 1, Gold: 1, EventAt: time.Now(),
 		Kills: 1, MonsterID: r.Monsters[0].Def, MapID: owner.Cfg.Fixture.Map.ID,
 	})
-	first := setSlots(1, uint64(before.Revision))
+	initial := attackSlotsForRole(before, owner.Cfg.Fixture)
+	first := setSlots(1, uint64(before.EconomicSeq+1), uint64(before.Revision), initial)
 	if len(r.Waiting) != 1 || r.PendingOperationID == domain.Hex(first.Operation.OpId) {
 		t.Fatal("原击杀结算忙时收到的槽位命令未保留在有界队列")
 	}
@@ -151,23 +152,30 @@ func TestAttackSkillSlotsSettlementCASMongoWS(t *testing.T) {
 	}
 	complete()
 	complete()
-	conflict := &pb.OperationResult{}
-	receive(p.MsgS2COperationResult, 1, conflict)
-	if conflict.Pending || conflict.ErrorCode != p.CodeOperationConflict || !bytes.Equal(conflict.OpId, first.Operation.OpId) ||
-		conflict.NewRevision != uint64(before.Revision+1) || conflict.CommandSeq != uint64(before.EconomicSeq) || r.Pending || len(r.Waiting) != 0 {
-		t.Fatalf("结算后的旧版提交未返回可重新操作的确定结果：%v", conflict)
-	}
-	second := setSlots(3, conflict.NewRevision)
-	complete()
 	saved := &pb.OperationResult{}
-	receive(p.MsgS2COperationResult, 3, saved)
-	if saved.Pending || saved.ErrorCode != 0 || !bytes.Equal(saved.OpId, second.Operation.OpId) || saved.NewRevision != conflict.NewRevision+1 {
-		t.Fatalf("原连接不能用确认后的版本再次配置技能槽：%v", saved)
+	receive(p.MsgS2COperationResult, 1, saved)
+	if saved.Pending || saved.ErrorCode != 0 || !bytes.Equal(saved.OpId, first.Operation.OpId) ||
+		saved.NewRevision != uint64(before.Revision+2) || saved.CommandSeq != uint64(before.EconomicSeq+1) || r.Pending || len(r.Waiting) != 0 {
+		t.Fatalf("只有挂机收益推进修订时，原技能槽点击必须一次完成：%v", saved)
 	}
-	send(p.MsgC2SSetSkillSlots, 4, second)
+	// 四槽其实已变化和缺省比较字段的旧请求都要拒绝。现行经济序号不得掩盖真实槽位冲突。
+	for _, check := range []struct {
+		request  uint32
+		baseline []uint32
+	}{{3, initial}, {4, nil}} {
+		next := setSlots(check.request, saved.CommandSeq+1, uint64(before.Revision), check.baseline)
+		complete()
+		conflict := &pb.OperationResult{}
+		receive(p.MsgS2COperationResult, check.request, conflict)
+		if conflict.Pending || conflict.ErrorCode != p.CodeOperationConflict || !bytes.Equal(conflict.OpId, next.Operation.OpId) ||
+			conflict.NewRevision != saved.NewRevision || conflict.CommandSeq != saved.CommandSeq {
+			t.Fatalf("过期槽位或旧格式请求未按原经济身份拒绝：%v", conflict)
+		}
+	}
+	send(p.MsgC2SSetSkillSlots, 5, first)
 	complete()
 	replayed := &pb.OperationResult{}
-	receive(p.MsgS2COperationResult, 4, replayed)
+	receive(p.MsgS2COperationResult, 5, replayed)
 	stored, err := owner.Role(ctx, roleID)
 	if err != nil {
 		t.Fatal(err)

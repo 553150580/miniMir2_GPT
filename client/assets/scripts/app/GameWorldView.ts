@@ -366,7 +366,8 @@ export class GameWorldView {
                 };
                 // 实体选择只使用实际身体。透明根容器和固定宽度的名字不阻挡地图点地。
                 const touchBody = profile ? body : placeholder ?? node;
-                touchBody.on(Node.EventType.TOUCH_END, selectEntity);
+                // 城镇里自己的身体会覆盖身后的相邻地格；让点地操作直接到达地图视口。
+                if (this.assets.sceneKind !== 2 || state.entityHandle !== this.playerHandle) touchBody.on(Node.EventType.TOUCH_END, selectEntity);
                 const sameLife = replaced && replaced.state.life?.toString() === state.life?.toString();
                 visual = { node, body: sprites, state: sameLife ? replaced.state : state, profile,
                     motion: sameLife ? replaced.motion : new EntityMotion(),

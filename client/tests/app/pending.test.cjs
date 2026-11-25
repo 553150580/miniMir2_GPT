@@ -60,6 +60,28 @@ test('技能学习未决保存原书与原经济身份，拒绝补造等级、�
     }
 });
 
+test('新旧技能槽都按原比较范围重放，重连不能修改观察到的四槽', () => {
+    const storage = new MemoryStorage();
+    const operation = pending().value.operation;
+    const encode = value => pb.SetSkillSlotsRequest.encode({ skill_slot_ids: value.skillSlotIds,
+        expected_skill_slot_ids: value.expectedSkillSlotIds, operation: { op_id: value.operation.opId,
+            command_seq: value.operation.commandSeq, expected_revision: value.operation.expectedRevision,
+            expected_rule_version: value.operation.expectedRuleVersion } }).finish();
+    for (const [role, original] of [
+        ['roleA', { skillSlotIds: [17, 0, 0, 0], operation }],
+        ['roleB', { skillSlotIds: [17, 30, 0, 0], expectedSkillSlotIds: [17, 0, 0, 0], operation }],
+    ]) {
+        new PendingOperations(storage, key).set(role, { id: 40031, value: original });
+        const restored = new PendingOperations(storage, key).get(role).value;
+        assert.deepEqual(encode(restored), encode(original));
+        assert.deepEqual(Object.keys(restored).sort(), Object.keys(original).sort());
+    }
+    for (const expectedSkillSlotIds of [[], [17, 17, 0, 0], [17, -1, 0, 0], [17, 0, 0, 0, 0]]) {
+        assert.throws(() => new PendingOperations().set('roleA', { id: 40031,
+            value: { skillSlotIds: [17, 30, 0, 0], expectedSkillSlotIds, operation } }), { code: 'INVALID_OPERATION' });
+    }
+});
+
 test('技能资产提交仅保存原previewId与经济身份，重连不能改报价或夹带价格材料',()=>{
     const storage=new MemoryStorage(),original={id:40013,value:{previewId:id(9),operation:pending().value.operation}};
     const store=new PendingOperations(storage,key);store.set('roleA',original);

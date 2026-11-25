@@ -20741,6 +20741,7 @@ $root.minimir = (function() {
              * @typedef {Object} minimir.v1.SetSkillSlotsRequest.$Properties
              * @property {Array.<number>|null} [skill_slot_ids] SetSkillSlotsRequest skill_slot_ids
              * @property {minimir.v1.OperationContext.$Properties|null} [operation] SetSkillSlotsRequest operation
+             * @property {Array.<number>|null} [expected_skill_slot_ids] SetSkillSlotsRequest expected_skill_slot_ids
              * @property {Array.<Uint8Array>} [$unknowns] Unknown fields preserved while decoding when enabled
              */
 
@@ -20767,6 +20768,7 @@ $root.minimir = (function() {
              */
             var SetSkillSlotsRequest = function (properties) {
                 this.skill_slot_ids = [];
+                this.expected_skill_slot_ids = [];
                 if (properties)
                     for (var keys = $Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null && keys[i] !== "__proto__")
@@ -20788,6 +20790,14 @@ $root.minimir = (function() {
              * @instance
              */
             SetSkillSlotsRequest.prototype.operation = null;
+
+            /**
+             * SetSkillSlotsRequest expected_skill_slot_ids.
+             * @member {Array.<number>} expected_skill_slot_ids
+             * @memberof minimir.v1.SetSkillSlotsRequest
+             * @instance
+             */
+            SetSkillSlotsRequest.prototype.expected_skill_slot_ids = $util.emptyArray;
 
             /**
              * Creates a new SetSkillSlotsRequest instance using the specified properties.
@@ -20825,6 +20835,8 @@ $root.minimir = (function() {
                     writer.uint32(/* id 1, wireType 2 =*/10).uint32s(message.skill_slot_ids);
                 if (message.operation != null && $Object.hasOwnProperty.call(message, "operation"))
                     $root.minimir.v1.OperationContext.encode(message.operation, writer.uint32(/* id 2, wireType 2 =*/18).fork(), _depth + 1).ldelim();
+                if (message.expected_skill_slot_ids != null && message.expected_skill_slot_ids.length)
+                    writer.uint32(/* id 3, wireType 2 =*/26).uint32s(message.expected_skill_slot_ids);
                 if (message.$unknowns != null && $Object.hasOwnProperty.call(message, "$unknowns"))
                     for (var i = 0; i < message.$unknowns.length; ++i)
                         writer.raw(message.$unknowns[i]);
@@ -20902,6 +20914,20 @@ $root.minimir = (function() {
                             message.operation = $root.minimir.v1.OperationContext.decode(reader, reader.size(), $undefined, _depth + 1, message.operation);
                             continue;
                         }
+                    case 3: {
+                            if (wireType === 2) {
+                                if (!(message.expected_skill_slot_ids && message.expected_skill_slot_ids.length))
+                                    message.expected_skill_slot_ids = [];
+                                reader.uint32s(message.expected_skill_slot_ids);
+                                continue;
+                            }
+                            if (wireType !== 0)
+                                break;
+                            if (!(message.expected_skill_slot_ids && message.expected_skill_slot_ids.length))
+                                message.expected_skill_slot_ids = [];
+                            message.expected_skill_slot_ids.push(reader.uint32());
+                            continue;
+                        }
                     }
                     reader.skipType(wireType, _depth, tag);
                     if (!reader.discardUnknown) {
@@ -20961,6 +20987,13 @@ $root.minimir = (function() {
                     var error = $root.minimir.v1.OperationContext.verify(message.operation, _depth + 1);
                     if (error)
                         return "operation." + error;
+                }
+                if (message.expected_skill_slot_ids != null && $Object.hasOwnProperty.call(message, "expected_skill_slot_ids")) {
+                    if (!$Array.isArray(message.expected_skill_slot_ids))
+                        return "expected_skill_slot_ids: array expected";
+                    for (var i = 0; i < message.expected_skill_slot_ids.length; ++i)
+                        if (!$util.isInteger(message.expected_skill_slot_ids[i]))
+                            return "expected_skill_slot_ids: integer[] expected";
                 }
                 return null;
             };

@@ -25,6 +25,32 @@ test('真实地图轻触拦截只提交瞄准回调，原地面导航不变；�
     nav.setGroundTarget({x:9,y:8});navigator.bind(nav,()=>null);navigator.onStart(event);game.totalTime=300;navigator.onEnd(event);assert.deepEqual(nav.state.target,{x:9,y:8});
 });
 
+test('移动中的镜头保持按下时的地格，拖动和重新绑定不发送旧地图目标', () => {
+    const nav = new NavigationIntent();
+    const navigator = new MapTouchNavigator();
+    navigator.node = { emit() {} };
+    let cameraCell = { x: 8, y: 6 };
+    const resolve = () => cameraCell;
+    navigator.bind(nav, resolve);
+    const touch = (x, y) => ({ target: navigator.node, getID: () => 1, getUILocation: () => new Vec2(x, y) });
+    const tap = touch(40, 60);
+    navigator.onStart(tap);
+    cameraCell = { x: 8, y: 7 };
+    game.totalTime += 120;
+    navigator.onEnd(tap);
+    assert.deepEqual(nav.state.target, { x: 8, y: 6 });
+
+    navigator.onStart(tap);
+    navigator.onMove(touch(40, 90));
+    navigator.onEnd(tap);
+    assert.deepEqual(nav.state.target, { x: 8, y: 6 });
+
+    navigator.onStart(tap);
+    navigator.bind(nav, resolve);
+    navigator.onEnd(tap);
+    assert.deepEqual(nav.state.target, { x: 8, y: 6 });
+});
+
 function app(){
     const definition=(id,kind,target_kind)=>({id,name:`技能${id}`,job_id:1,book_item_id:7,learn_level:1,initial_level:0,kind,target_kind,active:true,range:9,
         base_cost:3,level_cost:2,cast_ms:600,impact_base_ms:500,projectile_ms_per_cell:0,accuracy_per_level:0});
@@ -342,12 +368,12 @@ test('骷髅和神兽通过保存槽进入攻击队列，未入槽时不打开�
  assert.equal(models.canSetAutomaticSkill(instance.skillSnapshot(),row(17)),false);
  instance.economic=(id,value)=>{calls.push({id,value});return Promise.resolve();};
  instance.skills={selected:row(17)};await instance.configureAttackSlot(0);
- assert.deepEqual(calls[0],{id:40031,value:{skillSlotIds:[17,0,0,0]}});
+ assert.deepEqual(calls[0],{id:40031,value:{skillSlotIds:[17,0,0,0],expectedSkillSlotIds:[0,0,0,0]}});
  session.inventory.skillSlotIds=calls[0].value.skillSlotIds;
  assert.equal(models.canSetAutomaticSkill(instance.skillSnapshot(),row(17)),true);
  session.entry.sceneKind=2;
  instance.skills={selected:row(30)};await instance.configureAttackSlot(1);
- assert.deepEqual(calls[1],{id:40031,value:{skillSlotIds:[17,30,0,0]}});
+ assert.deepEqual(calls[1],{id:40031,value:{skillSlotIds:[17,30,0,0],expectedSkillSlotIds:[17,0,0,0]}});
  session.entry.sceneKind=3;
  assert.throws(()=>instance.configureAttackSlot(2),/请在城镇或普通野外调整技能槽/);
  assert.equal(calls.length,2);
